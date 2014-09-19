@@ -1,0 +1,207 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F637FAB6-4DA1-4CB7-AB7B-1BBAE9485A7A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>cloudscribe.Core.Web</RootNamespace>
+    <AssemblyName>cloudscribe.Core.Web</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="log4net">
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.1.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Owin">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.1.0\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.3.0.0\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.3.0.0\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.Security.3.0.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.3.0.0\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OAuth, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.3.0.0\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.0\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.0\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.0\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.0\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.0\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.0\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.0\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.0\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Filters\SiteContextFilter.cs" />
+    <Compile Include="HtmlHelpers.cs" />
+    <Compile Include="Identity\MultiTenantClaimsIdentity.cs" />
+    <Compile Include="Identity\MultiTenantClaimsIdentityFactory.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Routing\FilterConfig.cs" />
+    <Compile Include="Routing\IRegisterRoutes.cs" />
+    <Compile Include="Routing\RouteRegistrar.cs" />
+    <Compile Include="Routing\RoutesConfig.cs" />
+    <Compile Include="Routing\SiteFolderRouteConstraint.cs" />
+    <Compile Include="Routing\UrlRewriter.cs" />
+    <Compile Include="Routing\WebApiConfig.cs" />
+    <Compile Include="SiteContext.cs" />
+    <Compile Include="ViewModels\SiteUser\AccountIndexViewModel.cs" />
+    <Compile Include="ViewModels\SiteUser\AddPhoneNumberViewModel.cs" />
+    <Compile Include="ViewModels\SiteUser\ChangePasswordViewModel.cs" />
+    <Compile Include="ViewModels\SiteUser\ConfigureTwoFactorViewModel.cs" />
+    <Compile Include="ViewModels\SiteUser\ExternalLoginConfirmationViewModel.cs" />
+    <Compile Include="ViewModels\SiteUser\ExternalLoginListViewModel.cs" />
+    <Compile Include="ViewModels\SiteUser\FactorViewModel.cs" />
+    <Compile Include="ViewModels\SiteUser\ForgotPasswordViewModel.cs" />
+    <Compile Include="ViewModels\SiteUser\ForgotViewModel.cs" />
+    <Compile Include="ViewModels\SiteUser\LoginViewModel.cs" />
+    <Compile Include="ViewModels\SiteUser\ManageLoginsViewModel.cs" />
+    <Compile Include="ViewModels\SiteUser\RegisterViewModel.cs" />
+    <Compile Include="ViewModels\SiteUser\ResetPasswordViewModel.cs" />
+    <Compile Include="ViewModels\SiteUser\SendCodeViewModel.cs" />
+    <Compile Include="ViewModels\SiteUser\SetPasswordViewModel.cs" />
+    <Compile Include="ViewModels\SiteUser\VerifyCodeViewModel.cs" />
+    <Compile Include="ViewModels\SiteUser\VerifyPhoneNumberViewModel.cs" />
+    <Compile Include="Utils.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\cloudscribe.AspNet.Identity\cloudscribe.AspNet.Identity.csproj">
+      <Project>{e8e9bd82-73ba-4c16-8e5a-9ba04b105e85}</Project>
+      <Name>cloudscribe.AspNet.Identity</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\cloudscribe.Configuration\cloudscribe.Configuration.csproj">
+      <Project>{856564c7-44a6-4e90-bbaf-fbee23bd120d}</Project>
+      <Name>cloudscribe.Configuration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\cloudscribe.Core.Models\cloudscribe.Core.Models.csproj">
+      <Project>{21ff07b3-3179-4584-a09f-aa52f0dd0214}</Project>
+      <Name>cloudscribe.Core.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\cloudscribe.Core.Repositories.Caching\cloudscribe.Core.Repositories.Caching.csproj">
+      <Project>{df8eaedc-7955-46d8-ab03-e86d5b522d66}</Project>
+      <Name>cloudscribe.Core.Repositories.Caching</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\cloudscribe.Core.Repositories.Firebird\cloudscribe.Core.Repositories.Firebird.csproj">
+      <Project>{48157b2f-261d-4dea-b0cd-62c115e41f6b}</Project>
+      <Name>cloudscribe.Core.Repositories.Firebird</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\cloudscribe.Core.Repositories.MSSQL\cloudscribe.Core.Repositories.MSSQL.csproj">
+      <Project>{eabd27c2-3718-4702-84a1-fd95f675848e}</Project>
+      <Name>cloudscribe.Core.Repositories.MSSQL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\cloudscribe.Core.Repositories.MySql\cloudscribe.Core.Repositories.MySql.csproj">
+      <Project>{40fe3a7a-d79e-456b-8bde-59beb80f8145}</Project>
+      <Name>cloudscribe.Core.Repositories.MySql</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\cloudscribe.Core.Repositories.pgsql\cloudscribe.Core.Repositories.pgsql.csproj">
+      <Project>{75291803-6cab-44f9-bc4c-3db491338d60}</Project>
+      <Name>cloudscribe.Core.Repositories.pgsql</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\cloudscribe.Core.Repositories.SqlCe\cloudscribe.Core.Repositories.SqlCe.csproj">
+      <Project>{14865547-530d-423b-9006-48a9d86fedfb}</Project>
+      <Name>cloudscribe.Core.Repositories.SqlCe</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\cloudscribe.Resources\cloudscribe.Resources.csproj">
+      <Project>{b6f754e1-7bda-4f6b-97e2-e98afa10cd11}</Project>
+      <Name>cloudscribe.Resources</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

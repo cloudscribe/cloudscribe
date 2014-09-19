@@ -10,16 +10,18 @@
 [Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
-[Rr]eleases/
 x64/
-x86/
 build/
 bld/
 [Bb]in/
 [Oo]bj/
 
-# Roslyn cache directories
-*.ide/
+*Web.AppSettings.config
+src/cloudscribe.WebHost/files/
+src/cloudscribe.WebHost/App_Data/
+_bin*
+*SQLite.Interop.dll
+
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
@@ -96,6 +98,7 @@ _TeamCity*
 *.dotCover
 
 # NCrunch
+*.ncrunch*
 _NCrunch_*
 .*crunch*.local.xml
 
@@ -125,19 +128,15 @@ publish/
 # Publish Web Output
 *.[Pp]ublish.xml
 *.azurePubxml
-# TODO: Comment the next line if you want to checkin your web deploy settings 
-# but database connection strings (with potential passwords) will be unencrypted
-*.pubxml
-*.publishproj
 
-# NuGet Packages
-*.nupkg
-# The packages folder can be ignored because of Package Restore
-**/packages/*
-# except build/, which is used as an MSBuild target.
-!**/packages/build/
-# If using the old MSBuild-Integrated Package Restore, uncomment this:
-#!**/packages/repositories.config
+# NuGet Packages Directory
+packages/
+## TODO: If the tool you use requires repositories.config uncomment the next line
+#!packages/repositories.config
+
+# Enable "build/" folder in the NuGet Packages folder since NuGet packages use it for MSBuild targets
+# This line needs to be after the ignore of the build folder (and the packages folder if the line above has been uncommented)
+!packages/build/
 
 # Windows Azure Build Output
 csx/
@@ -162,9 +161,8 @@ node_modules/
 # RIA/Silverlight projects
 Generated_Code/
 
-# Backup & report files from converting an old project file
-# to a newer Visual Studio version. Backup files are not needed,
-# because we have git ;-)
+# Backup & report files from converting an old project file to a newer
+# Visual Studio version. Backup files are not needed, because we have git ;-)
 _UpgradeReport_Files/
 Backup*/
 UpgradeLog*.XML
@@ -181,3 +179,5 @@ UpgradeLog*.htm
 
 # Microsoft Fakes
 FakesAssemblies/
+src/cloudscribe.WebHost/files/currentlog.config
+src/cloudscribe.WebHost/files/currentlog.config
