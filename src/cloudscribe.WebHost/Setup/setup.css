@@ -1,0 +1,10 @@
+body{ font-family: Verdana, Helvetica, sans-serif;  background-color: white;  margin-left:25px;  }
+img { border: none; }
+
+.settinglabel {float:left; clear:left; width:20em; font-weight: bold;  padding: 1px; font-size:smaller; }
+.settingrow { padding: 4px 0px 4px 0px; clear:left; }
+.txterror {font-weight: bold; color: red }
+h1{ font-size: 1.5em; font-weight: bold; color: #75808A;}
+
+html[dir='rtl'] .settinglabel {float:right; }
+	

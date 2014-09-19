@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2006-09-30
-// Last Modified:		    2014-09-15
+// Last Modified:		    2014-09-19
 //
 // You must not remove this notice, or any other, from this software.
 
@@ -527,7 +527,7 @@ namespace cloudscribe.Setup
             if (!Directory.Exists(pathToScriptFolder))
             {
                 WritePageContent(
-                pathToScriptFolder + " " + SetupResources.ScriptFolderNotFoundMessage,
+                pathToScriptFolder + " " + SetupResources.ScriptFolderNotFoundAddendum,
                 false);
 
                 return false;
@@ -735,7 +735,7 @@ namespace cloudscribe.Setup
 
             successMessage.Append("<div class='settingrow'>");
             successMessage.Append("<span class='settinglabel'>");
-            successMessage.Append(SetupResources.DatabasePlatformLabel);
+            successMessage.Append(SetupResources.DatabasePlatform);
             successMessage.Append("</span>");
             successMessage.Append(db.DBPlatform);
             successMessage.Append("</div>");
@@ -747,14 +747,14 @@ namespace cloudscribe.Setup
 
                 successMessage.Append("<div class='settingrow'>");
                 successMessage.Append("<span class='settinglabel'>");
-                successMessage.Append(SetupResources.VersionLabel);
+                successMessage.Append(SetupResources.Version);
                 successMessage.Append("</span>");
                 successMessage.Append(dbCodeVersion.ToString());
                 successMessage.Append("</div>");
 
                 successMessage.Append("<div class='settingrow'>");
                 successMessage.Append("<span class='settinglabel'>");
-                successMessage.Append(SetupResources.DatabaseStatusLabel);
+                successMessage.Append(SetupResources.DatabaseStatus);
                 successMessage.Append("</span>");
 
                 if (dbCodeVersion > dbSchemaVersion)
@@ -865,9 +865,9 @@ namespace cloudscribe.Setup
                     SetupResources.FileSystemPermissionProblemsMessage,
                     false);
 
-                WritePageContent(
-                    "<div>" + GetFolderDetailsHtml() + "</div>",
-                    false);
+                //WritePageContent(
+                //    "<div>" + GetFolderDetailsHtml() + "</div>",
+                //    false);
             }
 
             canAccessDatabase = db.CanAccessDatabase();
@@ -877,11 +877,11 @@ namespace cloudscribe.Setup
             // add this to user.config <add key="TryToCreateMsSqlDatabase" value="true"/>
             // and make sure the connection string is configured with a user that has permission to create the database
 
-            if ((!canAccessDatabase) && (dbPlatform == "MSSQL") && WebConfigSettings.TryToCreateMsSqlDatabase)
+            if ((!canAccessDatabase) && (dbPlatform == "MSSQL") && AppSettings.TryToCreateMsSqlDatabase)
             {
                 WritePageContent(dbPlatform + " " + SetupResources.TryingToCreateDatabase, false);
-                DatabaseHelper.EnsureDatabase();
-                canAccessDatabase = DatabaseHelper.CanAccessDatabase();
+                db.EnsureDatabase();
+                canAccessDatabase = db.CanAccessDatabase();
                 if (canAccessDatabase)
                 {
                     WritePageContent(dbPlatform + " " + SetupResources.DatabaseCreationSucceeded, false);
@@ -931,7 +931,7 @@ namespace cloudscribe.Setup
                 else
                 {
 
-                    if (WebConfigSettings.SetupTryAnywayIfFailedAlterSchemaTest)
+                    if (AppSettings.SetupTryAnywayIfFailedAlterSchemaTest)
                     {
                         canAlterSchema = true;
                     }
@@ -944,7 +944,7 @@ namespace cloudscribe.Setup
                     }
                 }
 
-                schemaHasBeenCreated = DatabaseHelper.SchemaHasBeenCreated();
+                schemaHasBeenCreated = db.SitesTableExists();
 
                 if (schemaHasBeenCreated)
                 {
@@ -953,7 +953,7 @@ namespace cloudscribe.Setup
                         false);
 
 
-                    needSchemaUpgrade = mojoSetup.UpgradeIsNeeded();
+                    //needSchemaUpgrade = mojoSetup.UpgradeIsNeeded();
 
                     if (needSchemaUpgrade)
                     {
@@ -968,11 +968,11 @@ namespace cloudscribe.Setup
                             false);
                     }
 
-                    existingSiteCount = DatabaseHelper.ExistingSiteCount();
+                    existingSiteCount = db.ExistingSiteCount();
 
                     WritePageContent(
                         string.Format(
-                        SetupResources.ExistingSiteCountMessageMessage,
+                        SetupResources.ExistingSiteCountMessage,
                         existingSiteCount.ToString()),
                         false);
 
@@ -986,7 +986,7 @@ namespace cloudscribe.Setup
 
             }
 
-            if (!mojoSetup.RunningInFullTrust())
+            if (!SetupHelper.RunningInFullTrust())
             {
                 // inform of Medium trust configuration issues
                 WritePageContent(
@@ -1003,9 +1003,9 @@ namespace cloudscribe.Setup
 
             if (!canAccessDatabase) return false;
 
-            if (!DatabaseHelper.SchemaHasBeenCreated()) return false;
+            if (!db.SitesTableExists()) return false;
 
-            if (mojoSetup.UpgradeIsNeeded()) return false;
+            //if (mojoSetup.UpgradeIsNeeded()) return false;
 
 
 
@@ -1074,7 +1074,7 @@ namespace cloudscribe.Setup
 
         private string GetPathToIndexFolder()
         {
-            String result = Server.MapPath("~/Data/Sites/1/index");
+            String result = Server.MapPath("~/files/Sites/1/index");
             return result;
 
         }
@@ -1158,7 +1158,7 @@ namespace cloudscribe.Setup
             Exception rawException = Server.GetLastError();
             Server.ClearError();
             Response.Clear();
-            Response.Write(UIHelper.BuildHtmlErrorPage(rawException));
+            Response.Write(SetupHelper.BuildHtmlErrorPage(rawException));
             Response.End();
 
         }

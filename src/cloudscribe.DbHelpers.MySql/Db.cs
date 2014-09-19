@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2004-08-03
-// Last Modified:		    2014-09-15
+// Last Modified:		    2014-09-19
 
 using System;
 using System.Text;
@@ -69,6 +69,17 @@ namespace cloudscribe.DbHelpers.MySql
 
         }
 
+        public void EnsureDatabase()
+        {
+            //not applicable for this platform
+
+        }
+
+        public bool CanAccessDatabase()
+        {
+            return CanAccessDatabase(null);
+        }
+
         public bool CanAccessDatabase(String overrideConnectionInfo)
         {
             bool result = false;
@@ -105,10 +116,7 @@ namespace cloudscribe.DbHelpers.MySql
 
         }
 
-        public bool CanAccessDatabase()
-        {
-            return CanAccessDatabase(null);
-        }
+       
 
         public bool CanAlterSchema(string overrideConnectionInfo)
         {
@@ -453,6 +461,30 @@ namespace cloudscribe.DbHelpers.MySql
                 sqlCommand.ToString());
 
             return ds.Tables[0];
+
+        }
+
+
+        public int ExistingSiteCount()
+        {
+            int count = 0;
+            try
+            {
+                StringBuilder sqlCommand = new StringBuilder();
+                sqlCommand.Append("SELECT  Count(*) ");
+                sqlCommand.Append("FROM	mp_Sites ");
+                sqlCommand.Append(";");
+
+                count = Convert.ToInt32(AdoHelper.ExecuteScalar(
+                    ConnectionString.GetReadConnectionString(),
+                    sqlCommand.ToString(),
+                    null));
+
+            }
+            catch (DbException) { }
+            catch (InvalidOperationException) { }
+
+            return count;
 
         }
 

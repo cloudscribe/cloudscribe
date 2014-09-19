@@ -1,7 +1,7 @@
 ﻿// Original Author:					Joseph Hill
 // Created:							2005-02-16 
 // Additions and fixes have been added by Joe Audette, Dean Brettle, TJ Fontaine
-// Last Modified:                   2014-09-15
+// Last Modified:                   2014-09-19
 
 
 using System;
@@ -69,6 +69,19 @@ namespace cloudscribe.DbHelpers.pgsql
 
         }
 
+
+        public void EnsureDatabase()
+        {
+            //not applicable for this platform
+
+        }
+
+        public bool CanAccessDatabase()
+        {
+            return CanAccessDatabase(null);
+        }
+
+
         public bool CanAccessDatabase(string overrideConnectionInfo)
         {
             bool result = false;
@@ -105,10 +118,7 @@ namespace cloudscribe.DbHelpers.pgsql
 
         }
 
-        public bool CanAccessDatabase()
-        {
-            return CanAccessDatabase(null);
-        }
+        
 
         public bool CanAlterSchema(string overrideConnectionInfo)
         {
@@ -405,6 +415,30 @@ namespace cloudscribe.DbHelpers.pgsql
 
             return ds.Tables[0];
 
+        }
+
+
+        public int ExistingSiteCount()
+        {
+            int count = 0;
+            try
+            {
+                StringBuilder sqlCommand = new StringBuilder();
+                sqlCommand.Append("SELECT  Count(*) ");
+                sqlCommand.Append("FROM	mp_sites ");
+                sqlCommand.Append(";");
+
+                count = Convert.ToInt32(AdoHelper.ExecuteScalar(
+                    ConnectionString.GetReadConnectionString(),
+                    CommandType.Text,
+                    sqlCommand.ToString(),
+                    null));
+            }
+            catch (DbException) { }
+            catch (InvalidOperationException) { }
+
+
+            return count;
         }
 
         public bool SitesTableExists()

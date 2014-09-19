@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2007-07-17
-// Last Modified:		    2014-09-15
+// Last Modified:		    2014-09-19
 
 using System;
 using System.Collections;
@@ -77,7 +77,17 @@ namespace cloudscribe.DbHelpers.Firebird
 
         }
 
-        
+        public void EnsureDatabase()
+        {
+            //not applicable for this platform
+
+        }
+
+        public bool CanAccessDatabase()
+        {
+            return CanAccessDatabase(null);
+        }
+
         public bool CanAccessDatabase(string overrideConnectionInfo)
         {
             // TODO: FXCop says we should not swallow unspecific exceptions
@@ -116,10 +126,7 @@ namespace cloudscribe.DbHelpers.Firebird
 
         }
 
-        public bool CanAccessDatabase()
-        {
-            return CanAccessDatabase(null);
-        }
+        
 
         public bool CanAlterSchema(string overrideConnectionInfo)
         {
@@ -441,6 +448,29 @@ namespace cloudscribe.DbHelpers.Firebird
                 sqlCommand.ToString());
 
             return ds.Tables[0];
+
+        }
+
+        public int ExistingSiteCount()
+        {
+            int count = 0;
+            try
+            {
+                StringBuilder sqlCommand = new StringBuilder();
+                sqlCommand.Append("SELECT  Count(*) ");
+                sqlCommand.Append("FROM	mp_Sites ");
+                sqlCommand.Append(";");
+
+                count =  Convert.ToInt32(AdoHelper.ExecuteScalar(
+                    ConnectionString.GetReadConnectionString(),
+                    sqlCommand.ToString(),
+                    null));
+
+            }
+            catch (DbException) { }
+            catch (InvalidOperationException) { }
+            
+            return count;
 
         }
 

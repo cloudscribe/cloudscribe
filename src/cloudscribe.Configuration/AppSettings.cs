@@ -59,6 +59,11 @@ namespace cloudscribe.Configuration
             get { return GetBool("CacheMSSQLParameters", true); }
         }
 
+        public static bool TryToCreateMsSqlDatabase
+        {
+            get { return GetBool("TryToCreateMsSqlDatabase", false); }
+        }
+
         public static bool UseConnectionStringSection
         {
             get { return GetBool("UseConnectionStringSection", false); }
@@ -109,6 +114,11 @@ namespace cloudscribe.Configuration
         public static string SqliteConnectionString
         {
             get { return GetString("SqliteConnectionString", string.Empty); }
+        }
+
+        public static bool SetupTryAnywayIfFailedAlterSchemaTest
+        {
+            get { return GetBool("SetupTryAnywayIfFailedAlterSchemaTest", false); }
         }
 
         public static bool Cache_Disabled

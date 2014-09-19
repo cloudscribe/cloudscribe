@@ -8,6 +8,8 @@ namespace cloudscribe.Core.Models
 {
     public interface IDb
     {
+        void EnsureDatabase();
+        bool CanAccessDatabase();
         bool CanAccessDatabase(string overrideConnectionInfo);
         bool CanAlterSchema(string overrideConnectionInfo);
         bool CanCreateTemporaryTables();
@@ -19,7 +21,6 @@ namespace cloudscribe.Core.Models
         DataTable GetTable(string connectionString, string tableName, string whereClause);
         bool RunScript(FileInfo scriptFile, string overrideConnectionInfo);
         bool RunScript(string script, string overrideConnectionInfo);
-        bool SitesTableExists();
         bool TableExists(string tableName);
         bool UpdateTableField(
             string connectionString, 
@@ -37,6 +38,9 @@ namespace cloudscribe.Core.Models
             string dataFieldName, 
             string dataFieldValue, 
             string additionalWhere);
+
+        bool SitesTableExists();
+        int ExistingSiteCount();
 
         Guid GetSchemaApplicationId(string applicationName);
         Version GetSchemaVersion(Guid applicationId);

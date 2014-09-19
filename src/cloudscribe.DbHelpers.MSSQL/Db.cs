@@ -19,8 +19,59 @@ namespace cloudscribe.DbHelpers.MSSQL
 
         public string DBPlatform { get { return "MSSQL"; } }
 
+        public void EnsureDatabase()
+        {
+            //logic added by Luis Silva 2012-06-13
+            // only works if connection string has been configured and if you add this to user.config or Webc.onfig:
+            // <add key="TryToCreateMsSqlDatabase" value="true"/>
 
-        public bool CanAccessDatabase(String overrideConnectionInfo)
+            SqlConnection connection = new SqlConnection(ConnectionString.GetWriteConnectionString());
+            SqlConnection MasterConnection = new SqlConnection();
+
+            try
+            {
+                SqlConnectionStringBuilder master = new SqlConnectionStringBuilder();
+                master.ConnectionString = connection.ConnectionString;
+                master["server"] = connection.DataSource;
+                master["database"] = "master";
+
+                MasterConnection = new SqlConnection(master.ConnectionString);
+
+                StringBuilder sql = new StringBuilder();
+                sql.Append("IF not EXISTS (SELECT name FROM sys.databases WHERE name = @Name) CREATE DATABASE ");
+                sql.Append(connection.Database);
+                sql.Append(" else select 1");
+
+                SqlCommand command = new SqlCommand(sql.ToString(), MasterConnection);
+                command.Parameters.AddWithValue("@Name", connection.Database);
+                MasterConnection.Open();
+                int res = command.ExecuteNonQuery();
+
+                if (res == -1)
+                { log.Info("Successfully created MS SQL Database"); }
+                else
+                { log.Info("Failed to Create MS SQL Database"); }
+
+            }
+            catch (Exception ex)
+            {
+                log.Error("Failed to Create MS SQL Database", ex);
+            }
+            finally
+            {
+                if (MasterConnection.State == ConnectionState.Open)
+                    MasterConnection.Close();
+            }
+
+        }
+
+
+        public bool CanAccessDatabase()
+        {
+            return CanAccessDatabase(null);
+        }
+
+        public bool CanAccessDatabase(string overrideConnectionInfo)
         {
             // TODO: FxCop says not to swallow nonspecific exceptions
             // need to find all possible exceptions that could happen here and
@@ -488,6 +539,22 @@ namespace cloudscribe.DbHelpers.MSSQL
         public bool SitesTableExists()
         {
             return TableExists("mp_Sites");
+        }
+
+        public int ExistingSiteCount()
+        {
+            int count = 0;
+            try
+            {
+                SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_Sites_CountOtherSites", 1);
+                sph.DefineSqlParameter("@CurrentSiteID", SqlDbType.Int, ParameterDirection.Input, -1);
+                count = Convert.ToInt32(sph.ExecuteScalar());
+            }
+            catch (DbException) { }
+            catch (InvalidOperationException) { }
+           
+            return count;
+
         }
 
 

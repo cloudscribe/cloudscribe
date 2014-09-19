@@ -1,6 +1,6 @@
 ﻿// Author:         Joe Audette
 // Created:        2010-03-09
-// Last Modified   2014-09-15
+// Last Modified   2014-09-19
 
 
 using System;
@@ -28,6 +28,48 @@ namespace cloudscribe.DbHelpers.SqlCe
         public string DBPlatform
         {
             get { return "SqlCe"; }
+        }
+
+        public void EnsureDatabase()
+        {
+            try
+            {
+                if (ConfigurationManager.AppSettings["SqlCeApp_Data_FileName"] != null)
+                {
+                    string path 
+                        = System.Web.Hosting.HostingEnvironment.MapPath("~/App_Data/" + ConfigurationManager.AppSettings["SqlCeApp_Data_FileName"]);
+                    
+                    string connectionString = "Data Source=" + path + ";Persist Security Info=False;";
+
+                    if (!File.Exists(path))
+                    {
+                        lock (typeof(Db))
+                        {
+                            if (!File.Exists(path))
+                            {
+                                using (SqlCeEngine engine = new SqlCeEngine(connectionString))
+                                {
+                                    engine.CreateDatabase();
+                                }
+                            }
+
+                        }
+
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error("SqlCe database file is not present, tried to create it but this error occurred.", ex);
+
+            }
+
+        }
+
+        public bool CanAccessDatabase()
+        {
+            return CanAccessDatabase(null);
         }
 
         public bool CanAccessDatabase(string overrideConnectionInfo)
@@ -110,10 +152,7 @@ namespace cloudscribe.DbHelpers.SqlCe
 
         }
 
-        public bool CanAccessDatabase()
-        {
-            return CanAccessDatabase(null);
-        }
+        
 
         public bool CanAlterSchema(string overrideConnectionInfo)
         {
@@ -443,6 +482,36 @@ namespace cloudscribe.DbHelpers.SqlCe
 
         }
 
+
+        public int ExistingSiteCount()
+        {
+            int count = 0;
+            try
+            {
+                StringBuilder sqlCommand = new StringBuilder();
+                sqlCommand.Append("SELECT  Count(*) ");
+                sqlCommand.Append("FROM	mp_Sites ");
+                sqlCommand.Append(";");
+
+                count = Convert.ToInt32(AdoHelper.ExecuteScalar(
+                    ConnectionString.GetConnectionString(),
+                    CommandType.Text,
+                    sqlCommand.ToString(),
+                    null));
+
+            }
+            catch (DbException) { }
+            catch (InvalidOperationException) { }
+            catch (Exception)
+            {
+                //this is a needed hack because SqlCeException does not inherit from DbException like other data layers
+                //instead it inherits from System.Exception which we would rather not trap
+                
+            }
+
+            return count;
+
+        }
 
         public bool SitesTableExists()
         {

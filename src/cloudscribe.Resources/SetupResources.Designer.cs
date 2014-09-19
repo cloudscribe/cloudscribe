@@ -61,6 +61,186 @@ namespace cloudscribe.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to cloudscribe setup has detected that the database user does not have permission to alter the database schema. You need to correct this or provide a connection string with sufficient permission..
+        /// </summary>
+        public static string CantAlterSchemaWarning {
+            get {
+                return ResourceManager.GetString("CantAlterSchemaWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You need to upgrade the Web Site and Database Code to the same version as the Database Schema..
+        /// </summary>
+        public static string CodeUpgradeNeededMessage {
+            get {
+                return ResourceManager.GetString("CodeUpgradeNeededMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Creating site with default settings....
+        /// </summary>
+        public static string CreatingSiteMessage {
+            get {
+                return ResourceManager.GetString("CreatingSiteMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to database permissions are sufficient to alter schema..
+        /// </summary>
+        public static string DatabaseCanAlterSchemaMessage {
+            get {
+                return ResourceManager.GetString("DatabaseCanAlterSchemaMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to database connection ok..
+        /// </summary>
+        public static string DatabaseConnectionOKMessage {
+            get {
+                return ResourceManager.GetString("DatabaseConnectionOKMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Database Creation Succeeded.
+        /// </summary>
+        public static string DatabaseCreationSucceeded {
+            get {
+                return ResourceManager.GetString("DatabaseCreationSucceeded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Database Platform.
+        /// </summary>
+        public static string DatabasePlatform {
+            get {
+                return ResourceManager.GetString("DatabasePlatform", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to database initial schema already exists..
+        /// </summary>
+        public static string DatabaseSchemaAlreadyExistsMessage {
+            get {
+                return ResourceManager.GetString("DatabaseSchemaAlreadyExistsMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to database core schema needs upgrade..
+        /// </summary>
+        public static string DatabaseSchemaNeedsUpgradeMessage {
+            get {
+                return ResourceManager.GetString("DatabaseSchemaNeedsUpgradeMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to database initial schema needs to be created..
+        /// </summary>
+        public static string DatabaseSchemaNotCreatedYetMessage {
+            get {
+                return ResourceManager.GetString("DatabaseSchemaNotCreatedYetMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to database core schema is up to date..
+        /// </summary>
+        public static string DatabaseSchemaUpToDateMessage {
+            get {
+                return ResourceManager.GetString("DatabaseSchemaUpToDateMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Status.
+        /// </summary>
+        public static string DatabaseStatus {
+            get {
+                return ResourceManager.GetString("DatabaseStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} site(s) found..
+        /// </summary>
+        public static string ExistingSiteCountMessage {
+            get {
+                return ResourceManager.GetString("ExistingSiteCountMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The system cannot connect to the {0} database. Please check your connection string..
+        /// </summary>
+        public static string FailedToConnectToDatabase {
+            get {
+                return ResourceManager.GetString("FailedToConnectToDatabase", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File system permissions problems found..
+        /// </summary>
+        public static string FileSystemPermissionProblemsMessage {
+            get {
+                return ResourceManager.GetString("FileSystemPermissionProblemsMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File system permissions ok..
+        /// </summary>
+        public static string FileSystemPermissionsOKMesage {
+            get {
+                return ResourceManager.GetString("FileSystemPermissionsOKMesage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Site Home Page.
+        /// </summary>
+        public static string HomeLink {
+            get {
+                return ResourceManager.GetString("HomeLink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your installation is up to date..
+        /// </summary>
+        public static string InstallationUpToDateMessage {
+            get {
+                return ResourceManager.GetString("InstallationUpToDateMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This site appears to be running in a secured environment using Medium Trust policy or at least lower than Full Trust..
+        /// </summary>
+        public static string MediumTrustGeneralMessage {
+            get {
+                return ResourceManager.GetString("MediumTrustGeneralMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to In order for the Search Engine to work in Medium trust, you need to add this in Web.config in the AppSettings section:.
+        /// </summary>
+        public static string MediumTrustLuceneConfigPreambleMessage {
+            get {
+                return ResourceManager.GetString("MediumTrustLuceneConfigPreambleMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to In order to use MySQL under Medium Trust, The MySQL Connector for .NET must be installed in the Global Assembly Cache on the server. If you see a SecurityException in the error message then the Connector is not installed.
         ///You can download the MySql Connector for .NET from here: http://dev.mysql.com/downloads/connector/net/5.0.html.
         /// </summary>
@@ -90,6 +270,24 @@ namespace cloudscribe.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No upgrade scripts found for {0}. Probably up to date..
+        /// </summary>
+        public static string NoUpgradeScriptsFound {
+            get {
+                return ResourceManager.GetString("NoUpgradeScriptsFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Probing system....
+        /// </summary>
+        public static string ProbingSystemMessage {
+            get {
+                return ResourceManager.GetString("ProbingSystemMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Running script {0} - {1}.
         /// </summary>
         public static string RunningScriptMessage {
@@ -104,6 +302,15 @@ namespace cloudscribe.Resources {
         public static string RunningSetupForAdminUser {
             get {
                 return ResourceManager.GetString("RunningSetupForAdminUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You need to upgrade the Database Schema to make it the same version as the code..
+        /// </summary>
+        public static string SchemaUpgradeNeededMessage {
+            get {
+                return ResourceManager.GetString("SchemaUpgradeNeededMessage", resourceCulture);
             }
         }
         
@@ -140,6 +347,33 @@ namespace cloudscribe.Resources {
         public static string SetupEnabledMessage {
             get {
                 return ResourceManager.GetString("SetupEnabledMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Setup is complete, click the link below to go to the home page..
+        /// </summary>
+        public static string SetupSuccessMessage {
+            get {
+                return ResourceManager.GetString("SetupSuccessMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trying To Create Database.
+        /// </summary>
+        public static string TryingToCreateDatabase {
+            get {
+                return ResourceManager.GetString("TryingToCreateDatabase", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Version.
+        /// </summary>
+        public static string Version {
+            get {
+                return ResourceManager.GetString("Version", resourceCulture);
             }
         }
     }

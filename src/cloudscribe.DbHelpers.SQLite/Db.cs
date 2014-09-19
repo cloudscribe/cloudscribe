@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2004-08-03
-// Last Modified:		    2014-09-15
+// Last Modified:		    2014-09-19
 
 using System;
 using System.Collections;
@@ -65,6 +65,17 @@ namespace cloudscribe.DbHelpers.SQLite
 
         }
 
+        public void EnsureDatabase()
+        {
+            //not applicable for this platform
+
+        }
+
+        public bool CanAccessDatabase()
+        {
+            return CanAccessDatabase(null);
+        }
+
         public bool CanAccessDatabase(string overrideConnectionInfo)
         {
             bool result = false;
@@ -101,10 +112,7 @@ namespace cloudscribe.DbHelpers.SQLite
 
         }
 
-        public bool CanAccessDatabase()
-        {
-            return CanAccessDatabase(null);
-        }
+        
 
         public bool CanAlterSchema(string overrideConnectionInfo)
         {
@@ -392,6 +400,29 @@ namespace cloudscribe.DbHelpers.SQLite
 
         }
 
+
+        public int ExistingSiteCount()
+        {
+            int count = 0;
+            try
+            {
+                StringBuilder sqlCommand = new StringBuilder();
+                sqlCommand.Append("SELECT  Count(*) ");
+                sqlCommand.Append("FROM	mp_Sites ");
+                sqlCommand.Append(";");
+
+                count = Convert.ToInt32(AdoHelper.ExecuteScalar(
+                    ConnectionString.GetConnectionString(),
+                    sqlCommand.ToString(),
+                    null));
+            }
+            catch (DbException) { }
+            catch (InvalidOperationException) { }
+
+
+            return count;
+
+        }
 
         public bool SitesTableExists()
         {

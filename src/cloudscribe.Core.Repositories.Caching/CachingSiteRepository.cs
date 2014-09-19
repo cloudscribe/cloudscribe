@@ -273,7 +273,7 @@ namespace cloudscribe.Core.Repositories.Caching
 
         }
 
-        protected void Dispose(bool disposeManaged)
+        public void Dispose(bool disposeManaged)
         {
             repo.Dispose();
             GC.SuppressFinalize(this);

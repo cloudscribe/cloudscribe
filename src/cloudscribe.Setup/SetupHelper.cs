@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace cloudscribe.Setup
 {
@@ -68,5 +69,60 @@ namespace cloudscribe.Setup
             return version;
 
         }
+
+        public static bool RunningInFullTrust()
+        {
+            bool result = false;
+
+            AspNetHostingPermissionLevel currentTrustLevel = GetCurrentTrustLevel();
+
+            if (currentTrustLevel == AspNetHostingPermissionLevel.Unrestricted) { result = true; }
+
+            return result;
+
+        }
+
+        public static AspNetHostingPermissionLevel GetCurrentTrustLevel()
+        {
+            foreach (AspNetHostingPermissionLevel trustLevel in
+                    new AspNetHostingPermissionLevel[] {
+                AspNetHostingPermissionLevel.Unrestricted,
+                AspNetHostingPermissionLevel.High,
+                AspNetHostingPermissionLevel.Medium,
+                AspNetHostingPermissionLevel.Low,
+                AspNetHostingPermissionLevel.Minimal 
+            })
+            {
+                try
+                {
+                    new AspNetHostingPermission(trustLevel).Demand();
+                }
+                catch (System.Security.SecurityException)
+                {
+                    continue;
+                }
+
+                return trustLevel;
+            }
+
+            return AspNetHostingPermissionLevel.None;
+        }
+
+
+        public static string BuildHtmlErrorPage(Exception ex)
+        {
+            String errorHtml = "<html><head><title>Error</title>"
+                + "<link id='Link1' rel='stylesheet' href='" + "setup.css' type='text/css' /></head>"
+                + "<body><div class='settingrow'><label class='settinglabel' >An Error Occurred:</label>"
+                + ex.Message + "</div>"
+                + "<div class='settingrow'><label class='settinglabel' >Source:</label>" + ex.Source + "</div>"
+                + "<div class='settingrow'><label class='settinglabel' >Stack Trace</label>" + ex.StackTrace + "</div>"
+                + "</body></html>";
+
+            return errorHtml;
+
+        }
+
+
     }
 }

@@ -14,8 +14,6 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Ninject;
 using System;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
 using System.Security.Claims;
 using System.Collections.Generic;
 using System.Threading.Tasks;
