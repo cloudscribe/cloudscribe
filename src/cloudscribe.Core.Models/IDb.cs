@@ -42,7 +42,7 @@ namespace cloudscribe.Core.Models
         bool SitesTableExists();
         int ExistingSiteCount();
 
-        Guid GetSchemaApplicationId(string applicationName);
+        Guid GetOrGenerateSchemaApplicationId(string applicationName);
         Version GetSchemaVersion(Guid applicationId);
 
         bool AddSchemaVersion(

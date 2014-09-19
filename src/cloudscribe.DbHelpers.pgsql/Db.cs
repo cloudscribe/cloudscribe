@@ -4,16 +4,16 @@
 // Last Modified:                   2014-09-19
 
 
+using cloudscribe.Configuration;
+using cloudscribe.Core.Models;
+using log4net;
+using Npgsql;
+using NpgsqlTypes;
 using System;
-using System.Collections;
 using System.Data;
 using System.Data.Common;
 using System.IO;
 using System.Text;
-using log4net;
-using Npgsql;
-using NpgsqlTypes;
-using cloudscribe.Core.Models;
 
 namespace cloudscribe.DbHelpers.pgsql
 {
@@ -498,22 +498,36 @@ namespace cloudscribe.DbHelpers.pgsql
             return new Version(major, minor, build, revision);
         }
 
-        public Guid GetSchemaApplicationId(string applicationName)
+        public Guid GetOrGenerateSchemaApplicationId(string applicationName)
         {
-            //if (string.Equals(applicationName, "mojoportal-core", StringComparison.InvariantCultureIgnoreCase))
-            //    return new Guid("077e4857-f583-488e-836e-34a4b04be855");
 
+            if (string.Equals(applicationName, "cloudscribe-core", StringComparison.InvariantCultureIgnoreCase))
+                return new Guid("b7dcd727-91c3-477f-bc42-d4e5c8721daa");
+
+            if (string.Equals(applicationName, "cloudscribe-cms", StringComparison.InvariantCultureIgnoreCase))
+                return new Guid("2ba3e968-dd0b-44cb-9689-188963ed2664");
+
+            string sguid = AppSettings.GetString(applicationName + "_appGuid", string.Empty);
+            if (sguid.Length == 36) { return new Guid(sguid); }
 
             Guid appID = Guid.NewGuid();
 
-            using (IDataReader reader = GetSchemaId(applicationName))
+            try
             {
-                if (reader.Read())
+                using (IDataReader reader = GetSchemaId(applicationName))
                 {
-                    appID = new Guid(reader["ApplicationID"].ToString());
+                    if (reader.Read())
+                    {
+                        appID = new Guid(reader["ApplicationID"].ToString());
 
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+            }
+
 
             return appID;
 
@@ -618,7 +632,7 @@ namespace cloudscribe.DbHelpers.pgsql
                 "mp_schemaversion_update(:applicationid,:applicationname,:major,:minor,:build,:revision)",
                 arParams);
 
-            return (rowsAffected > -1);
+            return (rowsAffected > 0);
 
         }
 

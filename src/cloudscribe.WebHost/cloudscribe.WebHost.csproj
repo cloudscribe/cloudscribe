@@ -346,6 +346,18 @@
       <Project>{f637fab6-4da1-4cb7-ab7b-1bbae9485a7a}</Project>
       <Name>cloudscribe.Core.Web</Name>
     </ProjectReference>
+    <ProjectReference Include="..\cloudscribe.DbHelpers.MSSQL\cloudscribe.DbHelpers.MSSQL.csproj">
+      <Project>{bc615f11-b133-42d4-8c05-2d950d4a6d64}</Project>
+      <Name>cloudscribe.DbHelpers.MSSQL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\cloudscribe.Resources\cloudscribe.Resources.csproj">
+      <Project>{b6f754e1-7bda-4f6b-97e2-e98afa10cd11}</Project>
+      <Name>cloudscribe.Resources</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\cloudscribe.Setup\cloudscribe.Setup.csproj">
+      <Project>{8934d759-eab7-4372-8fed-05abd3a213ab}</Project>
+      <Name>cloudscribe.Setup</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

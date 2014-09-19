@@ -40,8 +40,8 @@ namespace cloudscribe.Setup
         private int scriptTimeout;
         private DateTime startTime;
         private string dbPlatform = string.Empty;
-        private Version dbCodeVersion;
-        private Version dbSchemaVersion;
+        private Version dbCodeVersion = new Version();
+        private Version dbSchemaVersion = new Version();
         private IDb db;
 
 
@@ -258,7 +258,7 @@ namespace cloudscribe.Setup
 
         private bool CreateInitialSchema(string applicationName)
         {
-            Guid appID = db.GetSchemaApplicationId(applicationName);
+            Guid appID = db.GetOrGenerateSchemaApplicationId(applicationName);
             Version currentSchemaVersion = db.GetSchemaVersion(appID);
             Version zeroVersion = new Version(0, 0, 0, 0);
 
@@ -274,13 +274,16 @@ namespace cloudscribe.Setup
 
             String pathToScriptFolder
                 = HttpContext.Current.Server.MapPath(
-                "~/Setup/applications/" + applicationName
+                "~/Config/applications/" + applicationName
                 + "/SchemaInstallScripts/"
                     + db.DBPlatform.ToLowerInvariant()
                     + "/");
 
             if (!Directory.Exists(pathToScriptFolder))
             {
+                WritePageContent(
+                pathToScriptFolder + " " + SetupResources.ScriptFolderNotFoundAddendum,
+                false);
 
                 return false;
 
@@ -385,13 +388,22 @@ namespace cloudscribe.Setup
                     && (newVersion != null)
                     )
                 {
-                    db.UpdateSchemaVersion(
+                    if(!db.UpdateSchemaVersion(
                         applicationId,
                         applicationName,
                         newVersion.Major,
                         newVersion.Minor,
                         newVersion.Build,
-                        newVersion.Revision);
+                        newVersion.Revision))
+                    {
+                        db.AddSchemaVersion(
+                            applicationId,
+                            applicationName,
+                            newVersion.Major,
+                            newVersion.Minor,
+                            newVersion.Build,
+                            newVersion.Revision);
+                    }
 
                     db.AddSchemaScriptHistory(
                         applicationId,
@@ -459,7 +471,7 @@ namespace cloudscribe.Setup
 
         private bool UpgradeSchema(string applicationName)
         {
-            Guid appID = db.GetSchemaApplicationId(applicationName);
+            Guid appID = db.GetOrGenerateSchemaApplicationId(applicationName);
             Version currentSchemaVersion = db.GetSchemaVersion(appID);
             Version versionToStopAt = null;
             Guid mojoAppGuid = new Guid("077e4857-f583-488e-836e-34a4b04be855");
@@ -470,7 +482,7 @@ namespace cloudscribe.Setup
 
             String pathToScriptFolder
                 = HttpContext.Current.Server.MapPath(
-                "~/Setup/applications/" + applicationName
+                "~/Config/applications/" + applicationName
                     + "/SchemaUpgradeScripts/"
                     + db.DBPlatform.ToLowerInvariant()
                     + "/");
