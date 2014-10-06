@@ -195,10 +195,12 @@ namespace cloudscribe.Core.Web
 
                     throw new Exception("could not resolve site id");
                 }
+                else
+                {
+                    siteSettings = siteRepo.Fetch(siteId);
+                }
 
-
-
-                siteSettings = siteRepo.Fetch(siteId);
+                
             }
             else
             {

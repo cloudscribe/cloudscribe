@@ -8,7 +8,7 @@ namespace cloudscribe.Core.Models
         int RoleId { get; set; }
         string RoleName { get; set; }
         Guid SiteGuid { get; set; }
-        int SiteID { get; set; }
+        int SiteId { get; set; }
         int MemberCount { get; set; }
     }
 }

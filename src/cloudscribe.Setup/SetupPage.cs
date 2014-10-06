@@ -1,21 +1,26 @@
 ﻿// Author:					Joe Audette
 // Created:				    2006-09-30
-// Last Modified:		    2014-09-19
+// Last Modified:		    2014-10-06
 //
 // You must not remove this notice, or any other, from this software.
 
+using cloudscribe.Configuration;
+using cloudscribe.Core.Models;
+using cloudscribe.Core.Web;
+using cloudscribe.Resources;
+using log4net;
 using System;
-using System.Globalization;
 using System.Data.Common;
+using System.Globalization;
 using System.IO;
 using System.Text;
-using System.Threading;
 using System.Web;
 using System.Web.UI;
-using log4net;
-using cloudscribe.Configuration;
-using cloudscribe.Resources;
-using cloudscribe.Core.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin;
+using Microsoft.Owin.Security;
+
 
 namespace cloudscribe.Setup
 {
@@ -43,6 +48,10 @@ namespace cloudscribe.Setup
         private Version dbCodeVersion = new Version();
         private Version dbSchemaVersion = new Version();
         private IDb db;
+        private ISiteRepository siteRepository;
+        private IUserRepository userRepository;
+
+        
 
 
         protected void Page_Load(object sender, EventArgs e)
@@ -52,6 +61,10 @@ namespace cloudscribe.Setup
 
             // TODO: pass in by dependency injection?
             db = new cloudscribe.DbHelpers.MSSQL.Db();
+            // TODO: dependency injection
+            siteRepository = SiteContext.GetSiteRepository();
+            userRepository = SiteContext.GetUserRepository();
+            
 
 
             setupIsDisabled = AppSettings.DisableSetup;
@@ -656,11 +669,16 @@ namespace cloudscribe.Setup
         private void CreateSiteAndAdminUser()
         {
             WritePageContent(SetupResources.CreatingSiteMessage, true);
-            //SiteSettings newSite = mojoSetup.CreateNewSite();
+            SiteSettings newSite = SetupHelper.CreateNewSite(siteRepository);
             //mojoSetup.CreateDefaultSiteFolders(newSite.SiteId);
             //mojoSetup.CreateOrRestoreSiteSkins(newSite.SiteId);
-            //WritePageContent(SetupResource.CreatingRolesAndAdminUserMessage, true);
-            //mojoSetup.CreateRequiredRolesAndAdminUser(newSite);
+            WritePageContent(SetupResources.CreatingRolesAndAdminUserMessage, true);
+            SetupHelper.CreateRequiredRolesAndAdminUser(
+                newSite,
+                siteRepository,
+                userRepository,
+                Request.GetOwinContext().Get<ISiteContext>().SiteUserManager
+                );
 
         }
 

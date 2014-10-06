@@ -34,7 +34,7 @@ namespace cloudscribe.Core.Models
 
         private int siteID = -1;
 
-        public int SiteID
+        public int SiteId
         {
             get { return siteID; }
             set { siteID = value; }

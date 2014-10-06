@@ -123,6 +123,9 @@
   <data name="CodeUpgradeNeededMessage" xml:space="preserve">
     <value>You need to upgrade the Web Site and Database Code to the same version as the Database Schema.</value>
   </data>
+  <data name="CreatingRolesAndAdminUserMessage" xml:space="preserve">
+    <value>Creating roles and admin user...</value>
+  </data>
   <data name="CreatingSiteMessage" xml:space="preserve">
     <value>Creating site with default settings...</value>
   </data>

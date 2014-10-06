@@ -1,8 +1,8 @@
-/// Author:					Joe Audette
-/// Created:				2007-11-03
-/// Last Modified:			2014-09-06
-/// 
-/// You must not remove this notice, or any other, from this software.
+// Author:					Joe Audette
+// Created:				    2007-11-03
+// Last Modified:			2014-09-06
+// 
+// You must not remove this notice, or any other, from this software.
 
 
 using System;

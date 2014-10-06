@@ -668,6 +668,8 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         private void LoadExpandoSettings(ISiteSettings site)
         {
+            if (site == null) { return; }
+
             DataTable expandoProperties = GetExpandoProperties(site.SiteId);
 
             string b = GetExpandoProperty(expandoProperties, "AllowPersistentLogin");
@@ -748,7 +750,11 @@ namespace cloudscribe.Core.Repositories.MSSQL
             site.SiteIsClosedMessage = GetExpandoProperty(expandoProperties, "SiteIsClosedMessage");
 
             g = GetExpandoProperty(expandoProperties, "SkinVersion");
-            if (g.Length == 36) { site.SkinVersion = new Guid(g); }
+            if(!string.IsNullOrEmpty(g))
+            {
+                if (g.Length == 36) { site.SkinVersion = new Guid(g); }
+            }
+           
 
             b = GetExpandoProperty(expandoProperties, "SMTPUseSsl");
             if (!string.IsNullOrEmpty(b)) { site.SMTPUseSsl = Convert.ToBoolean(b); }

@@ -891,11 +891,11 @@ namespace cloudscribe.Core.Repositories.SqlCe
         {
             if (role.RoleId == -1) // new role
             {
-                if (RoleExists(role.SiteID, role.DisplayName))
+                if (RoleExists(role.SiteId, role.DisplayName))
                 {
                     log.Error("attempt to create a duplicate role "
                         + role.DisplayName + " for site "
-                        + role.SiteID.ToString());
+                        + role.SiteId.ToString());
 
                     return false;
                 }
@@ -905,7 +905,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
                 role.RoleId = DBRoles.RoleCreate(
                     role.RoleGuid,
                     role.SiteGuid,
-                    role.SiteID,
+                    role.SiteId,
                     role.DisplayName
                     );
 
@@ -1215,7 +1215,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
         private void LoadFromReader(IDataReader reader, ISiteRole role)
         {
             role.RoleId = Convert.ToInt32(reader["RoleID"]);
-            role.SiteID = Convert.ToInt32(reader["SiteID"]);
+            role.SiteId = Convert.ToInt32(reader["SiteID"]);
             role.RoleName = reader["RoleName"].ToString();
             role.DisplayName = reader["DisplayName"].ToString();
             role.SiteGuid = new Guid(reader["SiteGuid"].ToString());

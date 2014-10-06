@@ -902,16 +902,16 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// <returns></returns>
         public bool SaveRole(ISiteRole role)
         {
-            if (role.SiteID == -1) { throw new ArgumentException("SiteId must be provided"); }
+            if (role.SiteId == -1) { throw new ArgumentException("SiteId must be provided"); }
             if (role.SiteGuid == Guid.Empty) { throw new ArgumentException("SiteGuid must be provided"); }
 
             if (role.RoleId == -1) // new role
             {
-                if (RoleExists(role.SiteID, role.DisplayName))
+                if (RoleExists(role.SiteId, role.DisplayName))
                 {
                     log.Error("attempt to create a duplicate role "
                         + role.DisplayName + " for site "
-                        + role.SiteID.ToString());
+                        + role.SiteId.ToString());
 
                     return false;
                 }
@@ -921,7 +921,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 role.RoleId = DBRoles.RoleCreate(
                     role.RoleGuid,
                     role.SiteGuid,
-                    role.SiteID,
+                    role.SiteId,
                     role.DisplayName
                     );
 
@@ -1238,7 +1238,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
         private void LoadFromReader(IDataReader reader, ISiteRole role)
         {
             role.RoleId = Convert.ToInt32(reader["RoleID"]);
-            role.SiteID = Convert.ToInt32(reader["SiteID"]);
+            role.SiteId = Convert.ToInt32(reader["SiteID"]);
             role.RoleName = reader["RoleName"].ToString();
             role.DisplayName = reader["DisplayName"].ToString();
             role.SiteGuid = new Guid(reader["SiteGuid"].ToString());

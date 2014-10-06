@@ -79,6 +79,15 @@ namespace cloudscribe.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Creating roles and admin user....
+        /// </summary>
+        public static string CreatingRolesAndAdminUserMessage {
+            get {
+                return ResourceManager.GetString("CreatingRolesAndAdminUserMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Creating site with default settings....
         /// </summary>
         public static string CreatingSiteMessage {

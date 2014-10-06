@@ -294,6 +294,14 @@ namespace cloudscribe.Configuration
         }
 
         /// <summary>
+        /// if IIS or apache is set to require ssl for all pages then set thsi to true.
+        /// </summary>
+        public static bool SslIsRequiredByWebServer
+        {
+            get { return GetBool("SSLIsRequiredByWebServer", false); }
+        }
+
+        /// <summary>
         /// enumerating items in memory cache is resource intensive and blocking
         /// should be avoided in production environments except for brief troubleshooting
         /// </summary>
@@ -310,6 +318,11 @@ namespace cloudscribe.Configuration
         public static string SetupHeaderConfigPathRtl
         {
             get { return GetString("SetupHeaderConfigPathRtl", "~/Setup/SetupHeader-rtl.config"); }
+        }
+
+        public static string DefaultInitialSkin
+        {
+            get { return GetString("DefaultInitialSkin", "bootstrap"); }
         }
 
     }
