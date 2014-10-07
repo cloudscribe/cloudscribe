@@ -676,8 +676,7 @@ namespace cloudscribe.Setup
             SetupHelper.CreateRequiredRolesAndAdminUser(
                 newSite,
                 siteRepository,
-                userRepository,
-                Request.GetOwinContext().Get<ISiteContext>().SiteUserManager
+                userRepository
                 );
 
         }

@@ -141,8 +141,7 @@ namespace cloudscribe.Setup
         public static void CreateRequiredRolesAndAdminUser(
             SiteSettings site,
             ISiteRepository siteRepository,
-            IUserRepository userRepository,
-            UserManager<SiteUser> siteUserManager)
+            IUserRepository userRepository)
         {
 
             SiteRole adminRole = new SiteRole();
@@ -207,7 +206,8 @@ namespace cloudscribe.Setup
 
             adminUser.EmailConfirmed = true;
             adminUser.ApprovedForLogin = true;
-            //adminUser.Password = "admin";
+            adminUser.Password = "admin";
+            adminUser.PasswordFormat = 0;
 
             //if (membership != null)
             //{
@@ -219,7 +219,7 @@ namespace cloudscribe.Setup
 
             userRepository.Save(adminUser);
 
-            siteUserManager.AddPassword(adminUser.UserGuid.ToString(), "admin");
+            //siteUserManager.AddPassword(adminUser.UserGuid.ToString(), "admin");
 
             //siteUserManager.Create(adminUser, "admin");
             //var result = siteUserManager.CreateAsync(adminUser, "admin");
