@@ -232,6 +232,21 @@ namespace cloudscribe.Setup
 
         }
 
+        public static bool NeedsUpgrade(string applicationName, IDb db)
+        {
+            if (VersionProviderManager.Providers[applicationName] == null) { return true; }
+
+            Version codeVersion = VersionProviderManager.Providers[applicationName].GetCodeVersion();
+
+            Guid appId = db.GetOrGenerateSchemaApplicationId(applicationName);
+            Version schemaVersion = db.GetSchemaVersion(appId);
+
+            bool result = false;
+            if (codeVersion > schemaVersion) { result = true; }
+
+            return result;
+        }
+
 
         public static bool RunningInFullTrust()
         {

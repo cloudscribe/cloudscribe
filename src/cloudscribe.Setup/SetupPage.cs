@@ -141,7 +141,7 @@ namespace cloudscribe.Setup
                     if (schemaHasBeenCreated)
                     {
                         //recheck
-                      //  needSchemaUpgrade = mojoSetup.UpgradeIsNeeded();
+                        needSchemaUpgrade = SetupHelper.NeedsUpgrade("cloudscribe-core", db);
                     }
 
                 }
@@ -487,10 +487,12 @@ namespace cloudscribe.Setup
             Guid appID = db.GetOrGenerateSchemaApplicationId(applicationName);
             Version currentSchemaVersion = db.GetSchemaVersion(appID);
             Version versionToStopAt = null;
-            Guid mojoAppGuid = new Guid("077e4857-f583-488e-836e-34a4b04be855");
-            if (appID == mojoAppGuid)
+            
+            if(VersionProviderManager.Providers[applicationName] != null)
             {
-                //versionToStopAt = DatabaseHelper.DBCodeVersion(); ;
+                VersionProvider appVersionProvider = VersionProviderManager.Providers[applicationName];
+                versionToStopAt = appVersionProvider.GetCodeVersion();
+                
             }
 
             String pathToScriptFolder
@@ -773,6 +775,11 @@ namespace cloudscribe.Setup
             {
                 //dbCodeVersion = DatabaseHelper.DBCodeVersion();
                 //dbSchemaVersion = DatabaseHelper.DBSchemaVersion();
+                if (VersionProviderManager.Providers["cloudscribe-core"] != null)
+                {
+                    VersionProvider coreVersionProvider = VersionProviderManager.Providers["cloudscribe-core"];
+                    dbCodeVersion = coreVersionProvider.GetCodeVersion();
+                }
 
                 successMessage.Append("<div class='settingrow'>");
                 successMessage.Append("<span class='settinglabel'>");
@@ -982,7 +989,7 @@ namespace cloudscribe.Setup
                         false);
 
 
-                    //needSchemaUpgrade = mojoSetup.UpgradeIsNeeded();
+                    needSchemaUpgrade = SetupHelper.NeedsUpgrade("cloudscribe-core", db);
 
                     if (needSchemaUpgrade)
                     {
@@ -1034,7 +1041,7 @@ namespace cloudscribe.Setup
 
             if (!db.SitesTableExists()) return false;
 
-            //if (mojoSetup.UpgradeIsNeeded()) return false;
+            if (SetupHelper.NeedsUpgrade("cloudscribe-core", db)) { return false; }
 
 
 

@@ -57,6 +57,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -77,6 +78,7 @@
     <Compile Include="Identity\UserClaim.cs" />
     <Compile Include="Identity\UserInfo.cs" />
     <Compile Include="Identity\UserLogin.cs" />
+    <Compile Include="Setup\VersionMismatch.cs" />
     <Compile Include="Site\ISiteContext.cs" />
     <Compile Include="Site\ISiteSettings.cs" />
     <Compile Include="Site\ISiteRepository.cs" />
