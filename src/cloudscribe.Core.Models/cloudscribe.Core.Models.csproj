@@ -66,6 +66,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CloudscribeCoreVersionProvider.cs" />
     <Compile Include="CommonExtensions.cs" />
     <Compile Include="IDb.cs" />
     <Compile Include="Identity\ISiteRole.cs" />

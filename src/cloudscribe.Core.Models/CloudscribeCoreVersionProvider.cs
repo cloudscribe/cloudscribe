@@ -4,8 +4,9 @@
 // 
 
 using System;
+using cloudscribe.Configuration;
 
-namespace cloudscribe.Configuration
+namespace cloudscribe.Core.Models
 {
     public class CloudscribeCoreVersionProvider : VersionProvider
     {

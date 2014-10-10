@@ -46,7 +46,6 @@
   <ItemGroup>
     <Compile Include="AppSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Setup\CloudscribeCoreVersionProvider.cs" />
     <Compile Include="Setup\VersionProvider.cs" />
     <Compile Include="Setup\VersionProviderCollection.cs" />
     <Compile Include="Setup\VersionProviderConfig.cs" />
