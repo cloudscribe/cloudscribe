@@ -10,6 +10,7 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using cloudscribe.Configuration;
+using cloudscribe.Core.Web;
 using cloudscribe.Core.Web.Helpers;
 using cloudscribe.Core.Web.Identity;
 
@@ -30,6 +31,9 @@ namespace cloudscribe.WebHost
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            ViewEngines.Engines.Clear();
+            ViewEngines.Engines.Add(new CoreViewEngine());
         }
 
         // this seems to be considered an ugly method to use
