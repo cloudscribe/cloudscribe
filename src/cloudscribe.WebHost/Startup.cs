@@ -11,6 +11,8 @@ using Owin;
 using System.Reflection;
 using System.Web;
 
+//http://www.codemag.com/Article/1405071
+
 
 [assembly: OwinStartupAttribute(typeof(cloudscribe.WebHost.Startup))]
 namespace cloudscribe.WebHost

@@ -70,6 +70,10 @@ namespace cloudscribe.Core.Web
                 "~/Areas/{2}/Views/Shared/{0}.cshtml",
                 "~/Areas/{2}/Views/Sys/{1}/{0}.cshtml"
             };
+
+
+
+            
         }
 
     }

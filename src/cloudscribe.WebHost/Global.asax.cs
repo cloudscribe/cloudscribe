@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using cloudscribe.Configuration;
+using cloudscribe.Core.Web;
+using cloudscribe.Core.Web.Helpers;
+using cloudscribe.Core.Web.Identity;
+using System;
 using System.Globalization;
-using System.Linq;
-using System.Security;
 using System.Security.Claims;
 using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
-using cloudscribe.Configuration;
-using cloudscribe.Core.Web;
-using cloudscribe.Core.Web.Helpers;
-using cloudscribe.Core.Web.Identity;
+using System.Web.WebPages;
 
 // this was needed in mojoportal is it needed in mvc
 //[assembly: log4net.Config.XmlConfigurator(ConfigFile = "log4net.config", Watch = true)]
@@ -34,9 +32,38 @@ namespace cloudscribe.WebHost
 
             ViewEngines.Engines.Clear();
             ViewEngines.Engines.Add(new CoreViewEngine());
+
+            // depends on the 51 degrees mobile detection
+            // http://51degrees.com/Support/Documentation/NET/Web-Applications/MVC
+
+            // the idea is if you want to override a view file foo.cshtml 
+            // make a copy foo.phone.cshtml and/or foo.tablet.cshtml
+            // based on the following display modes which will be selected 
+            // when the condition is true
+            // http://51degrees.com/Resources/Property-Dictionary#IsMobile
+            // unfortunately neither the IsSmartPhone nor IsTablet is
+            // available in the free open source lite version
+            // so it is commented out here 
+
+            //DisplayModeProvider.Instance.Modes.Insert(1, new DefaultDisplayMode("phone")
+            //{
+            //    ContextCondition = Context =>
+            //                    Context.Request.Browser["IsSmartPhone"] == "True"
+            //});   
+
+            //DisplayModeProvider.Instance.Modes.Insert(1, new DefaultDisplayMode("tablet")
+            //{
+            //    ContextCondition = Context =>
+            //                    Context.Request.Browser["IsTablet"] == "True"
+            //});   
+
+
+
+
+
         }
 
-        // this seems to be considered an ugly method to use
+        // Application_BeginRequest seems to be considered an ugly method to use
         // http://stackoverflow.com/questions/11726848/asp-net-mvc-4-intercept-all-incoming-requests
         // not sure if we can do the same in an mvc filter
         protected void Application_BeginRequest(Object sender, EventArgs e)
