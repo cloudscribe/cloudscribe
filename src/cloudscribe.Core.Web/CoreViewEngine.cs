@@ -1,6 +1,6 @@
 ﻿//  Author:                     Joe Audette
 //  Created:                    2014-10-13
-//	Last Modified:              2014-10-13
+//	Last Modified:              2014-10-17
 // 
 
 using System;
@@ -37,18 +37,21 @@ namespace cloudscribe.Core.Web
                 "~/Views/{1}/{0}.cshtml",
                 "~/Views/Shared/{0}.cshtml",
                 "~/Views/Sys/{1}/{0}.cshtml",
+                "~/Views/Sys/Shared/{0}.cshtml"
             };
 
             MasterLocationFormats = new string[] {
                 "~/Views/{1}/{0}.cshtml",
                 "~/Views/Shared/{0}.cshtml",
                 "~/Views/Sys/{1}/{0}.cshtml",
+                "~/ViewsSys/Shared/{0}.cshtml"
             };
 
             PartialViewLocationFormats = new string[] {
                 "~/Views/{1}/{0}.cshtml",
                 "~/Views/Shared/{0}.cshtml",
-                "~/Views/Sys/{1}/{0}.cshtml"
+                "~/Views/Sys/{1}/{0}.cshtml",
+                "~/Views/Sys/Shared/{0}.cshtml"
             };
 
 
@@ -56,22 +59,25 @@ namespace cloudscribe.Core.Web
             AreaViewLocationFormats = new string[] {
                 "~/Areas/{2}/Views/{1}/{0}.cshtml",
                 "~/Areas/{2}/Views/Shared/{0}.cshtml",
-                "~/Areas/{2}/Views/Sys/{1}/{0}.cshtml"
+                "~/Areas/{2}/Views/Sys/{1}/{0}.cshtml",
+                "~/Areas/{2}/Views/Sys/Shared/{0}.cshtml"
             };
 
             AreaMasterLocationFormats = new string[] {
                 "~/Areas/{2}/Views/{1}/{0}.cshtml",
                 "~/Areas/{2}/Views/Shared/{0}.cshtml",
-                "~/Areas/{2}/Views/Sys/{1}/{0}.cshtml"
+                "~/Areas/{2}/Views/Sys/{1}/{0}.cshtml",
+                "~/Areas/{2}/Views/Sys/Shared/{0}.cshtml"
             };
 
             AreaPartialViewLocationFormats = new string[] {
                 "~/Areas/{2}/Views/{1}/{0}.cshtml",
                 "~/Areas/{2}/Views/Shared/{0}.cshtml",
-                "~/Areas/{2}/Views/Sys/{1}/{0}.cshtml"
+                "~/Areas/{2}/Views/Sys/{1}/{0}.cshtml",
+                "~/Areas/{2}/Views/Sys/Shared/{0}.cshtml"
             };
 
-
+            
 
             
         }

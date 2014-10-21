@@ -349,6 +349,30 @@
       <Project>{21ff07b3-3179-4584-a09f-aa52f0dd0214}</Project>
       <Name>cloudscribe.Core.Models</Name>
     </ProjectReference>
+    <ProjectReference Include="..\cloudscribe.Core.Repositories.Caching\cloudscribe.Core.Repositories.Caching.csproj">
+      <Project>{df8eaedc-7955-46d8-ab03-e86d5b522d66}</Project>
+      <Name>cloudscribe.Core.Repositories.Caching</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\cloudscribe.Core.Repositories.Firebird\cloudscribe.Core.Repositories.Firebird.csproj">
+      <Project>{48157b2f-261d-4dea-b0cd-62c115e41f6b}</Project>
+      <Name>cloudscribe.Core.Repositories.Firebird</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\cloudscribe.Core.Repositories.MSSQL\cloudscribe.Core.Repositories.MSSQL.csproj">
+      <Project>{eabd27c2-3718-4702-84a1-fd95f675848e}</Project>
+      <Name>cloudscribe.Core.Repositories.MSSQL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\cloudscribe.Core.Repositories.MySql\cloudscribe.Core.Repositories.MySql.csproj">
+      <Project>{40fe3a7a-d79e-456b-8bde-59beb80f8145}</Project>
+      <Name>cloudscribe.Core.Repositories.MySql</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\cloudscribe.Core.Repositories.pgsql\cloudscribe.Core.Repositories.pgsql.csproj">
+      <Project>{75291803-6cab-44f9-bc4c-3db491338d60}</Project>
+      <Name>cloudscribe.Core.Repositories.pgsql</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\cloudscribe.Core.Repositories.SqlCe\cloudscribe.Core.Repositories.SqlCe.csproj">
+      <Project>{14865547-530d-423b-9006-48a9d86fedfb}</Project>
+      <Name>cloudscribe.Core.Repositories.SqlCe</Name>
+    </ProjectReference>
     <ProjectReference Include="..\cloudscribe.Core.Web\cloudscribe.Core.Web.csproj">
       <Project>{f637fab6-4da1-4cb7-ab7b-1bbae9485a7a}</Project>
       <Name>cloudscribe.Core.Web</Name>

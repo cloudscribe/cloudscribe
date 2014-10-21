@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2014-08-31
-// Last Modified:		    2014-09-08
+// Last Modified:		    2014-10-21
 // 
 //
 // You must not remove this notice, or any other, from this software.
@@ -251,73 +251,73 @@ namespace cloudscribe.Core.Web
             return folderName;
         }
 
-        public static ISiteRepository GetSiteRepository()
-        {
-            // TODO : dependency injection
+        //public static ISiteRepository GetSiteRepository()
+        //{
+        //    // TODO : dependency injection
 
-            ISiteRepository siteRepository
-                    = new CachingSiteRepository(
-                    new cloudscribe.Core.Repositories.MSSQL.SiteRepository()
-                    );
+        //    ISiteRepository siteRepository
+        //            = new CachingSiteRepository(
+        //            new cloudscribe.Core.Repositories.MSSQL.SiteRepository()
+        //            );
 
-            //ISiteRepository siteRepository
-            //        = new CachingSiteRepository(
-            //        new cloudscribe.Core.Repositories.MySql.SiteRepository()
-            //        );
+        //    //ISiteRepository siteRepository
+        //    //        = new CachingSiteRepository(
+        //    //        new cloudscribe.Core.Repositories.MySql.SiteRepository()
+        //    //        );
 
-            //ISiteRepository siteRepository
-            //        = new CachingSiteRepository(
-            //        new cloudscribe.Core.Repositories.pgsql.SiteRepository()
-            //        );
+        //    //ISiteRepository siteRepository
+        //    //        = new CachingSiteRepository(
+        //    //        new cloudscribe.Core.Repositories.pgsql.SiteRepository()
+        //    //        );
 
-            //ISiteRepository siteRepository
-            //        = new CachingSiteRepository(
-            //        new cloudscribe.Core.Repositories.SqlCe.SiteRepository()
-            //        );
+        //    //ISiteRepository siteRepository
+        //    //        = new CachingSiteRepository(
+        //    //        new cloudscribe.Core.Repositories.SqlCe.SiteRepository()
+        //    //        );
 
-            //ISiteRepository siteRepository
-            //        = new CachingSiteRepository(
-            //        new cloudscribe.Core.Repositories.Firebird.SiteRepository()
-            //        );
+        //    //ISiteRepository siteRepository
+        //    //        = new CachingSiteRepository(
+        //    //        new cloudscribe.Core.Repositories.Firebird.SiteRepository()
+        //    //        );
 
-            //ISiteRepository siteRepository
-            //        = new CachingSiteRepository(
-            //        new cloudscribe.Core.Repositories.SQLite.SiteRepository()
-            //        );
-
-
-            return siteRepository;
-        }
-
-        public static IUserRepository GetUserRepository()
-        {
-            IUserRepository userRepository = new CachingUserRepository(
-                new cloudscribe.Core.Repositories.MSSQL.UserRepository()
-                );
-
-            //IUserRepository userRepository = new CachingUserRepository(
-            //    new cloudscribe.Core.Repositories.MySql.UserRepository()
-            //    );
-
-            //IUserRepository userRepository = new CachingUserRepository(
-            //    new cloudscribe.Core.Repositories.pgsql.UserRepository()
-            //    );
-
-            //IUserRepository userRepository = new CachingUserRepository(
-            //    new cloudscribe.Core.Repositories.SqlCe.UserRepository()
-            //    );
-
-            //IUserRepository userRepository = new CachingUserRepository(
-            //    new cloudscribe.Core.Repositories.Firebird.UserRepository()
-            //    );
-
-            //IUserRepository userRepository = new CachingUserRepository(
-            //    new cloudscribe.Core.Repositories.SQLite.UserRepository()
-            //    );
+        //    //ISiteRepository siteRepository
+        //    //        = new CachingSiteRepository(
+        //    //        new cloudscribe.Core.Repositories.SQLite.SiteRepository()
+        //    //        );
 
 
-            return userRepository;
-        } 
+        //    return siteRepository;
+        //}
+
+        //public static IUserRepository GetUserRepository()
+        //{
+        //    IUserRepository userRepository = new CachingUserRepository(
+        //        new cloudscribe.Core.Repositories.MSSQL.UserRepository()
+        //        );
+
+        //    //IUserRepository userRepository = new CachingUserRepository(
+        //    //    new cloudscribe.Core.Repositories.MySql.UserRepository()
+        //    //    );
+
+        //    //IUserRepository userRepository = new CachingUserRepository(
+        //    //    new cloudscribe.Core.Repositories.pgsql.UserRepository()
+        //    //    );
+
+        //    //IUserRepository userRepository = new CachingUserRepository(
+        //    //    new cloudscribe.Core.Repositories.SqlCe.UserRepository()
+        //    //    );
+
+        //    //IUserRepository userRepository = new CachingUserRepository(
+        //    //    new cloudscribe.Core.Repositories.Firebird.UserRepository()
+        //    //    );
+
+        //    //IUserRepository userRepository = new CachingUserRepository(
+        //    //    new cloudscribe.Core.Repositories.SQLite.UserRepository()
+        //    //    );
+
+
+        //    return userRepository;
+        //} 
 
         //CA1063	Implement IDisposable correctly	Modify 'SiteContext.Dispose()' so that it calls Dispose(true), 
         //then calls GC.SuppressFinalize on the current object instance ('this' or 'Me' in Visual Basic), 

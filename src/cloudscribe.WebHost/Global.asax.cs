@@ -11,6 +11,7 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using System.Web.WebPages;
+using cloudscribe.Core.Web.DeviceDetection;
 
 // this was needed in mojoportal is it needed in mvc
 //[assembly: log4net.Config.XmlConfigurator(ConfigFile = "log4net.config", Watch = true)]
@@ -33,13 +34,30 @@ namespace cloudscribe.WebHost
             ViewEngines.Engines.Clear();
             ViewEngines.Engines.Add(new CoreViewEngine());
 
-            // depends on the 51 degrees mobile detection
-            // http://51degrees.com/Support/Documentation/NET/Web-Applications/MVC
-
             // the idea is if you want to override a view file foo.cshtml 
             // make a copy foo.phone.cshtml and/or foo.tablet.cshtml
             // based on the following display modes which will be selected 
             // when the condition is true
+            // however note that the logic for IsSmartPhone and IsTablet may not correctly detect all devices
+            // it should work for the iphone, android, blackberry, windows phone
+            // and ipad and android tablets
+
+            DisplayModeProvider.Instance.Modes.Insert(1, new DefaultDisplayMode("phone")
+            {
+                ContextCondition = Context =>
+                                Context.IsSmartPhone()
+            });
+
+            DisplayModeProvider.Instance.Modes.Insert(1, new DefaultDisplayMode("tablet")
+            {
+                ContextCondition = Context =>
+                                Context.IsTablet()
+            }); 
+
+            // depends on the 51 degrees mobile detection
+            // http://51degrees.com/Support/Documentation/NET/Web-Applications/MVC
+
+           
             // http://51degrees.com/Resources/Property-Dictionary#IsMobile
             // unfortunately neither the IsSmartPhone nor IsTablet is
             // available in the free open source lite version

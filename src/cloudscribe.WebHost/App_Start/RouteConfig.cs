@@ -8,8 +8,7 @@ using cloudscribe.Configuration;
 using cloudscribe.Web.Routing;
 using cloudscribe.Core.Models;
 using log4net;
-//using cloudscribe.Core.Repositories.MSSQL;
-
+using Ninject;
 
 
 //http://www.c-sharpcorner.com/UploadFile/ff2f08/custom-route-constraints-in-Asp-Net-mvc-5/
@@ -62,8 +61,9 @@ namespace cloudscribe.WebHost
 
         private static void RegisterFolderSiteDefaultRoutes(RouteCollection routes)
         {
-            // TODO: dependency injection here? how?
-            ISiteRepository siteRepo = cloudscribe.Core.Web.SiteContext.GetSiteRepository();
+            
+            StandardKernel kernel = Startup.GetKernel();
+            ISiteRepository siteRepo = kernel.Get<ISiteRepository>();
 
             List<SiteFolder> allFolders = siteRepo.GetAllSiteFolders();
             foreach (SiteFolder f in allFolders)

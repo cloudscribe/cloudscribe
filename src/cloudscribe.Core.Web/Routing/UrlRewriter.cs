@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using cloudscribe.Configuration;
+using cloudscribe.Core.Models;
+using log4net;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin;
+using Ninject;
+using System;
 using System.Threading.Tasks;
 using System.Web;
-using log4net;
-using cloudscribe.Configuration;
-using cloudscribe.Core.Models;
-using Microsoft.Owin;
 
 
 
@@ -41,7 +40,9 @@ namespace cloudscribe.Core.Web
             }
 
             HttpApplication app = (HttpApplication)sender;
-            ISiteRepository siteRepo = SiteContext.GetSiteRepository();
+            IOwinContext owinContext = app.Context.GetOwinContext();
+            StandardKernel ninjectKernel = owinContext.Get<StandardKernel>();
+            ISiteRepository siteRepo = ninjectKernel.Get<ISiteRepository>();
 
             string virtualFolderName = SiteContext.GetFirstFolderSegment(app.Request.Url.ToString());
             if (virtualFolderName.Length > 1)

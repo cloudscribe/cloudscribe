@@ -325,5 +325,19 @@ namespace cloudscribe.Configuration
             get { return GetString("DefaultInitialSkin", "bootstrap"); }
         }
 
+        public static string MobileDetectionExcludeUrlsCsv
+        {
+            get { return GetString("MobileDetectionExcludeUrlsCsv", string.Empty); }
+        }
+
+        //http://googlewebmastercentral.blogspot.com/2012/11/giving-tablet-users-full-sized-web.html
+        //https://www.mojoportal.com/Forums/Thread.aspx?pageid=5&t=11092~1#post46239
+        // Android phones can be differentiated by Android; Mobile;
+
+        public static string MobilePhoneUserAgents
+        {
+            get { return GetString("MobilePhoneUserAgents", "iphone,ipod,iemobile,android;blackberry"); }
+        }
+
     }
 }

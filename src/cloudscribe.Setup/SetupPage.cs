@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2006-09-30
-// Last Modified:		    2014-10-06
+// Last Modified:		    2014-10-21
 //
 // You must not remove this notice, or any other, from this software.
 
@@ -20,6 +20,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
+using Ninject;
 
 
 namespace cloudscribe.Setup
@@ -59,11 +60,17 @@ namespace cloudscribe.Setup
             scriptTimeout = Server.ScriptTimeout;
             Response.Cache.SetCacheability(HttpCacheability.ServerAndNoCache);
 
+            IOwinContext owinContext = Context.GetOwinContext();
+            StandardKernel ninjectKernel = owinContext.Get<StandardKernel>();
+            siteRepository = ninjectKernel.Get<ISiteRepository>();
+            userRepository = ninjectKernel.Get<IUserRepository>();
+            db = ninjectKernel.Get<IDb>();
+
             // TODO: pass in by dependency injection?
-            db = new cloudscribe.DbHelpers.MSSQL.Db();
+            //db = new cloudscribe.DbHelpers.MSSQL.Db();
             // TODO: dependency injection
-            siteRepository = SiteContext.GetSiteRepository();
-            userRepository = SiteContext.GetUserRepository();
+            //siteRepository = SiteContext.GetSiteRepository();
+            //userRepository = SiteContext.GetUserRepository();
             
 
 
@@ -278,11 +285,11 @@ namespace cloudscribe.Setup
             if (currentSchemaVersion > zeroVersion) { return true; } //already installed only run upgrade scripts
 
             Version versionToStopAt = null;
-            Guid mojoAppGuid = new Guid("077e4857-f583-488e-836e-34a4b04be855");
-            if (appID == mojoAppGuid)
-            {
-                //versionToStopAt = DatabaseHelper.DBCodeVersion(); ;
-            }
+            //Guid mojoAppGuid = new Guid("077e4857-f583-488e-836e-34a4b04be855");
+            //if (appID == mojoAppGuid)
+            //{
+            //    //versionToStopAt = DatabaseHelper.DBCodeVersion(); ;
+            //}
 
 
             String pathToScriptFolder
@@ -773,6 +780,9 @@ namespace cloudscribe.Setup
 
             if (schemaHasBeenCreated)
             {
+                Guid appID = db.GetOrGenerateSchemaApplicationId("cloudscribe-core");
+                dbSchemaVersion = db.GetSchemaVersion(appID);
+
                 //dbCodeVersion = DatabaseHelper.DBCodeVersion();
                 //dbSchemaVersion = DatabaseHelper.DBSchemaVersion();
                 if (VersionProviderManager.Providers["cloudscribe-core"] != null)

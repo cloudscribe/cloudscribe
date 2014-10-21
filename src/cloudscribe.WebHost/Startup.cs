@@ -2,14 +2,16 @@
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Web;
 using Microsoft.Owin;
-//using cloudscribe.Core.Repositories.Caching;
+using cloudscribe.Core.Repositories.Caching;
 using Microsoft.Owin.Security.DataProtection;
 using Ninject;
 using Ninject.Web.Common;
-//using Ninject.Web.Common.OwinHost;
+using Ninject.Web.Common.OwinHost;
+using Ninject.Web;
 using Owin;
 using System.Reflection;
 using System.Web;
+using System.Web.Http;
 
 //http://www.codemag.com/Article/1405071
 
@@ -28,8 +30,16 @@ namespace cloudscribe.WebHost
             // this broke with update to the latest Owin 
             // waiting for the next update to the ninject owin components
             //https://github.com/ninject/Ninject.Web.Common/wiki/Setting-up-a-OWIN-WebApi-application
-            //app.CreatePerOwinContext(CreateKernel);
-            //app.UseNinjectMiddleware(CreateKernel);
+           
+            app.CreatePerOwinContext(GetKernel);
+            app.UseNinjectMiddleware(GetKernel);
+
+
+            //HttpConfiguration config = new HttpConfiguration();
+
+            //config.DependencyResolver = new NinjectDependencyResolver(CreateKernel());
+
+            //app.UseWebApi(config);
 
             // unfortunately this does not seem to work
             // it changes the Request Path to one that matches a rout but still
@@ -46,31 +56,38 @@ namespace cloudscribe.WebHost
 
         private ISiteContext GetSiteContext()
         {
-            SiteContext siteContext 
-                =  new SiteContext(GetSiteRepository(), GetUserRepository(), dataProtectionProvider);
+            StandardKernel ninjectKernal = GetKernel();
+            ISiteRepository siteRepo = ninjectKernal.Get<ISiteRepository>();   //GetSiteRepository();
+            CachingSiteRepository siteCache = new CachingSiteRepository(siteRepo);
+
+            IUserRepository userRepo = ninjectKernal.Get<IUserRepository>(); //GetUserRepository();
+            CachingUserRepository userCache = new CachingUserRepository(userRepo);
+
+            SiteContext siteContext
+                = new SiteContext(siteCache, userCache, dataProtectionProvider);
             
             return siteContext;
         }
 
-        private static ISiteRepository GetSiteRepository()
-        {
+        //private static ISiteRepository GetSiteRepository()
+        //{
             
-            // TODO : dependency injection
-            return SiteContext.GetSiteRepository();
+        //    // TODO : dependency injection
+        //    return SiteContext.GetSiteRepository();
             
-        }
+        //}
 
 
 
-        private static IUserRepository GetUserRepository()
-        {
-            // TODO : dependency injection
-            return SiteContext.GetUserRepository();
+        //private static IUserRepository GetUserRepository()
+        //{
+        //    // TODO : dependency injection
+        //    return SiteContext.GetUserRepository();
 
-        } 
+        //} 
 
         private static StandardKernel _kernel = null;
-        public static StandardKernel CreateKernel()
+        public static StandardKernel GetKernel()
         {
             if (_kernel == null)
             {
@@ -92,12 +109,14 @@ namespace cloudscribe.WebHost
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
-            //TODO implement caching repositories that wrap caching logic around another passed in repo implementation
-            // at least for site settings
-
+            
             // here we could use conditional compilation to map alternate data layers
-            //kernel.Bind<ISiteRepository>().To<cloudscribe.Core.Repositories.MSSQL.SiteRepository>();
-            //kernel.Bind<IUserRepository>().To<cloudscribe.Core.Repositories.MSSQL.UserRepository>();
+            //
+            //kernel.Bind<ISiteContext>().To<cloudscribe.Core.Web.SiteContext>(); 
+
+            kernel.Bind<ISiteRepository>().To<cloudscribe.Core.Repositories.MSSQL.SiteRepository>();
+            kernel.Bind<IUserRepository>().To<cloudscribe.Core.Repositories.MSSQL.UserRepository>();
+            kernel.Bind<IDb>().To<cloudscribe.DbHelpers.MSSQL.Db>();
             
 
         } 
