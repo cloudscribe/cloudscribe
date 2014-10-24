@@ -145,6 +145,7 @@
     <Compile Include="Routing\UrlRewriter.cs" />
     <Compile Include="Routing\WebApiConfig.cs" />
     <Compile Include="SiteContext.cs" />
+    <Compile Include="ViewModels\SiteSettings\SiteBasicSettingsViewModel.cs" />
     <Compile Include="ViewModels\SiteUser\AccountIndexViewModel.cs" />
     <Compile Include="ViewModels\SiteUser\AddPhoneNumberViewModel.cs" />
     <Compile Include="ViewModels\SiteUser\ChangePasswordViewModel.cs" />
@@ -210,9 +211,7 @@
       <Name>cloudscribe.Resources</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ViewModels\SiteSettings\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

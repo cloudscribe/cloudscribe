@@ -47,6 +47,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cloudscribe.Core.Repositori
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cloudscribe.Setup", "cloudscribe.Setup\cloudscribe.Setup.csproj", "{8934D759-EAB7-4372-8FED-05ABD3A213AB}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notes", "Notes", "{C6E094A5-21E5-40CA-840E-B38D3C7D979C}"
+	ProjectSection(SolutionItems) = preProject
+		DeviceDetection.txt = DeviceDetection.txt
+		Identity.txt = Identity.txt
+		Localization.txt = Localization.txt
+		RazorViewEngine.txt = RazorViewEngine.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug - Firebird|Any CPU = Debug - Firebird|Any CPU

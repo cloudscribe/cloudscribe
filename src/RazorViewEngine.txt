@@ -1,0 +1,3 @@
+
+http://www.codeproject.com/Tips/256090/Add-namespaces-for-Razor-pages
+

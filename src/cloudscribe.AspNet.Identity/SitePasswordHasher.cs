@@ -1,19 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNet.Identity;
+using System;
 using System.Security.Cryptography;
-using Microsoft.AspNet.Identity;
+using System.Text;
 
 
 namespace cloudscribe.AspNet.Identity
 {
-    //http://www.asp.net/identity/overview/migrations/migrating-an-existing-website-from-sql-membership-to-aspnet-identity
-    //https://aspnetidentity.codeplex.com/workitem/2333
     
-
-
     public class SitePasswordHasher : PasswordHasher
     {
         /// <summary>

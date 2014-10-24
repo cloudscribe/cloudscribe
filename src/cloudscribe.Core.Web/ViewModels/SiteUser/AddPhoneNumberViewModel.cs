@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using cloudscribe.Resources;
 
 
 namespace cloudscribe.Core.Web.ViewModels.SiteUser
@@ -8,7 +9,7 @@ namespace cloudscribe.Core.Web.ViewModels.SiteUser
     {
         [Required]
         [Phone]
-        [Display(Name = "Phone Number")]
+        [Display(Name = "PhoneNumber", ResourceType = typeof(CommonResources))]
         public string Number { get; set; }
     }
 }

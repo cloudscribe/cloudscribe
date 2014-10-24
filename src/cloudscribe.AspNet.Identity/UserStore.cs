@@ -11,15 +11,9 @@ using log4net;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-// http://blogs.msdn.com/b/webdev/archive/2014/02/12/per-request-lifetime-management-for-usermanager-class-in-asp-net-identity.aspx
-
-//http://odetocode.com/blogs/scott/archive/2014/01/20/implementing-asp-net-identity.aspx
-//http://msdn.microsoft.com/en-us/library/microsoft.aspnet.identity%28v=vs.108%29.aspx
-//http://stackoverflow.com/questions/19487322/what-is-asp-net-identitys-iusersecuritystampstoretuser-interface
 
 namespace cloudscribe.AspNet.Identity
 {

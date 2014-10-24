@@ -1,0 +1,11 @@
+
+this is a replacement for the resx system, worth considering
+https://github.com/turquoiseowl/i18n
+
+
+http://www.hanselman.com/blog/GlobalizationInternationalizationAndLocalizationInASPNETMVC3JavaScriptAndJQueryPart1.aspx
+
+http://brianreiter.org/2011/03/23/simple-asp-net-mvc-globalization-with-graceful-fallback/
+
+http://www.chambaud.com/2013/02/27/localization-in-asp-net-mvc-4/
+

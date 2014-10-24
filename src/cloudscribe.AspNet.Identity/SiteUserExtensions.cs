@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2014-07-22
-// Last Modified:		    2014-09-08
+// Last Modified:		    2014-10-23
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -27,29 +27,30 @@ namespace cloudscribe.AspNet.Identity
             
             // Add custom user claims here
 
-            if(AppSettings.UseFoldersInsteadOfHostnamesForMultipleSites)
-            {
-                if(!AppSettings.UseRelatedSiteMode)
-                {
-                    // user needs a claim for the site which will be checked in MultiTenantClaimsIdentity
-                    ISiteContext site = HttpContext.Current.GetOwinContext().Get<ISiteContext>();
-                    // user could have accounts in multiple sites so we get all of them if he does
-                    List<ISiteUser> userlist = site.UserRepository.GetCrossSiteUserListByEmail(user.Email);
+            // the per site claims are not needed since we now have separate cookies per folder tenant
+            //if(AppSettings.UseFoldersInsteadOfHostnamesForMultipleSites)
+            //{
+            //    if(!AppSettings.UseRelatedSiteMode)
+            //    {
+            //        // user needs a claim for the site which will be checked in MultiTenantClaimsIdentity
+            //        ISiteContext site = HttpContext.Current.GetOwinContext().Get<ISiteContext>();
+            //        // user could have accounts in multiple sites so we get all of them if he does
+            //        List<ISiteUser> userlist = site.UserRepository.GetCrossSiteUserListByEmail(user.Email);
 
-                    foreach(ISiteUser u in userlist)
-                    {
-                        Claim siteClaim = new Claim("SiteMember", u.SiteGuid.ToString());
-                        if (!userIdentity.HasClaim(siteClaim.Type, siteClaim.Value))
-                        {
-                            userIdentity.AddClaim(siteClaim);
-                        }
+            //        foreach(ISiteUser u in userlist)
+            //        {
+            //            Claim siteClaim = new Claim("SiteMember", u.SiteGuid.ToString());
+            //            if (!userIdentity.HasClaim(siteClaim.Type, siteClaim.Value))
+            //            {
+            //                userIdentity.AddClaim(siteClaim);
+            //            }
 
-                    }
+            //        }
 
                     
 
-                }
-            }
+            //    }
+            //}
             
 
             
