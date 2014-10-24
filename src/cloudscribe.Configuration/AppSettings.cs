@@ -192,7 +192,7 @@ namespace cloudscribe.Configuration
         public static bool UseRelatedSiteMode
         {
             get {
-                if (UseFoldersInsteadOfHostnamesForMultipleSites) { return true; }
+                //if (UseFoldersInsteadOfHostnamesForMultipleSites) { return true; }
 
                 return GetBool("UseRelatedSiteMode", false); 
             }

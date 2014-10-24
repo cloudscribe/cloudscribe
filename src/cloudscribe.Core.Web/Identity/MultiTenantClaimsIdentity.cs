@@ -15,6 +15,10 @@ using System.Web;
 
 namespace cloudscribe.Core.Web.Identity
 {
+    /// <summary>
+    /// at first was using this for folder based multi tenants
+    /// but not used currently because we figured out how to use a different auth cookie per folder tenant
+    /// </summary>
     public class MultiTenantClaimsIdentity : ClaimsIdentity
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(MultiTenantClaimsIdentity));

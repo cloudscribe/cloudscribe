@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2014-08-31
-// Last Modified:		    2014-10-21
+// Last Modified:		    2014-10-23
 // 
 //
 // You must not remove this notice, or any other, from this software.
@@ -110,13 +110,15 @@ namespace cloudscribe.Core.Web
 
             SiteUserManager manager = new SiteUserManager(userStore);
 
-            if (AppSettings.UseFoldersInsteadOfHostnamesForMultipleSites)
-            {
-                if (!AppSettings.UseRelatedSiteMode)
-                {
-                    manager.ClaimsIdentityFactory = new MultiTenantClaimsIdentityFactory<SiteUser, string>();
-                }
-            }
+            // this turned out to not be needed once we figured out how
+            // to use a different auth cookie per folder tenant
+            //if (AppSettings.UseFoldersInsteadOfHostnamesForMultipleSites)
+            //{
+            //    if (!AppSettings.UseRelatedSiteMode)
+            //    {
+            //        manager.ClaimsIdentityFactory = new MultiTenantClaimsIdentityFactory<SiteUser, string>();
+            //    }
+            //}
 
             manager.UserValidator = new UserValidator<SiteUser>(manager)
             {

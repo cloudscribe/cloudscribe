@@ -13,8 +13,6 @@ using System.Web.Routing;
 using System.Web.WebPages;
 using cloudscribe.Core.Web.DeviceDetection;
 
-// this was needed in mojoportal is it needed in mvc
-//[assembly: log4net.Config.XmlConfigurator(ConfigFile = "log4net.config", Watch = true)]
 
 namespace cloudscribe.WebHost
 {
@@ -102,31 +100,12 @@ namespace cloudscribe.WebHost
             }
         }
 
-        protected void Application_PostAuthenticateRequest(Object sender, EventArgs e)
-        {
-            // this is needed because even though our MultiTenantClaimsIdentityFactory
-            // creates a MultiTenantClaimsIdentity, when the owin middleware deserializes
-            // it from the authentication cookie and puts it on the request it creates 
-            // a normal ClaimsIdentity, so we have to correct that here
-            // this is only needed in folder sites not using related sites mode
-            // otherwise logging into any site would be logging into all sites since
-            // they share a common authentication cookie
-            if (AppSettings.UseFoldersInsteadOfHostnamesForMultipleSites)
-            {
-                if (!AppSettings.UseRelatedSiteMode)
-                {
+        //protected void Application_PostAuthenticateRequest(Object sender, EventArgs e)
+        //{
+           
 
-                    if (HttpContext.Current.User != null)
-                    {
-                        MultiTenantClaimsIdentity id = MultiTenantClaimsIdentity.FromClaimsIdentity(
-                            (ClaimsIdentity)HttpContext.Current.User.Identity);
-
-                        ClaimsPrincipal claimsPricipal = new ClaimsPrincipal(id);
-                        HttpContext.Current.User = claimsPricipal;
-                    }
-                }
-            }
-        }
+           
+        //}
 
         
     }

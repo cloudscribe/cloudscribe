@@ -12,6 +12,7 @@ using Owin;
 using System.Reflection;
 using System.Web;
 using System.Web.Http;
+using log4net;
 
 //http://www.codemag.com/Article/1405071
 
@@ -21,16 +22,14 @@ namespace cloudscribe.WebHost
 {
     public partial class Startup
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(Startup));
+
         private IDataProtectionProvider dataProtectionProvider = null;
 
         public void Configuration(IAppBuilder app)
         {
             //http://benfoster.io/blog/how-to-write-owin-middleware-in-5-different-steps
 
-            // this broke with update to the latest Owin 
-            // waiting for the next update to the ninject owin components
-            //https://github.com/ninject/Ninject.Web.Common/wiki/Setting-up-a-OWIN-WebApi-application
-           
             app.CreatePerOwinContext(GetKernel);
             app.UseNinjectMiddleware(GetKernel);
 
@@ -57,10 +56,10 @@ namespace cloudscribe.WebHost
         private ISiteContext GetSiteContext()
         {
             StandardKernel ninjectKernal = GetKernel();
-            ISiteRepository siteRepo = ninjectKernal.Get<ISiteRepository>();   //GetSiteRepository();
+            ISiteRepository siteRepo = ninjectKernal.Get<ISiteRepository>();   
             CachingSiteRepository siteCache = new CachingSiteRepository(siteRepo);
 
-            IUserRepository userRepo = ninjectKernal.Get<IUserRepository>(); //GetUserRepository();
+            IUserRepository userRepo = ninjectKernal.Get<IUserRepository>(); 
             CachingUserRepository userCache = new CachingUserRepository(userRepo);
 
             SiteContext siteContext

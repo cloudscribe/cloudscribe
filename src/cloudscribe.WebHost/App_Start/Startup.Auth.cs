@@ -1,13 +1,20 @@
-﻿using cloudscribe.AspNet.Identity;
+﻿// Author:					Joe Audette
+// Created:					2014-08-16
+// Last Modified:			2014-10-23
+// 
+
+using cloudscribe.AspNet.Identity;
 using cloudscribe.Core.Models;
-//using cloudscribe.Core.Repositories.Caching;
 using cloudscribe.Core.Web;
+using cloudscribe.Configuration;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Owin;
 using System;
+using System.Collections.Generic;
+using Ninject;
 
 
 namespace cloudscribe.WebHost
@@ -24,19 +31,53 @@ namespace cloudscribe.WebHost
             //app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
             //app.CreatePerOwinContext<ApplicationSignInManager>(ApplicationSignInManager.Create);
 
-            
+            StandardKernel ninjectKernal = GetKernel();
+            ISiteRepository siteRepo = ninjectKernal.Get<ISiteRepository>();
+
+            //http://stackoverflow.com/questions/25393234/change-owin-auth-middleware-per-request-multi-tenant-oauth-api-keys-per-tenant/26534460#26534460
            
-           // refactored this because it really is not needed for evey request
-            // and it depends on sitesettings which also is not needed for every request
-            //app.CreatePerOwinContext<SiteUserManager>(SiteUserManager.Create);
-            //app.CreatePerOwinContext<SiteSignInManager>(SiteSignInManager.Create);
-            // sitecontext is now a container for the above and lazy loads them as needed
-            // see Startup.cs
+
+            if(AppSettings.UseFoldersInsteadOfHostnamesForMultipleSites)
+            {
+                try
+                {
+                    List<SiteFolder> allFolders = siteRepo.GetAllSiteFolders();
+                    ConfigureFolderTenantAuth(app, allFolders);
+                }
+                catch(Exception ex)
+                {
+                    log.Error(ex);
+                }
+                
+            }
+            else
+            {
+                try
+                {
+                    List<ISiteHost> allHosts = siteRepo.GetAllHosts();
+                    ConfigureHostTenantAuth(app, allHosts);
+                }
+                catch (Exception ex)
+                {
+                    log.Error(ex);
+                }
+                
+            }
+            
+            // below is the default configuration
+            // in the case no host name or folder is mapped
+            ConfigureDefaultTenantAuth(app);
+            
 
             //http://brockallen.com/2013/10/24/a-primer-on-owin-cookie-authentication-middleware-for-the-asp-net-developer/
 
             //http://msdn.microsoft.com/en-us/library/microsoft.owin.security.cookies.cookieauthenticationoptions%28v=vs.113%29.aspx
 
+            
+        }
+
+        private void ConfigureDefaultTenantAuth(IAppBuilder app)
+        {
             // Enable the application to use a cookie to store information for the signed in user
             // and to use a cookie to temporarily store information about a user logging in with a third party login provider
             // Configure the sign in cookie
@@ -50,9 +91,11 @@ namespace cloudscribe.WebHost
                         validateInterval: TimeSpan.FromMinutes(30),
                         regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager))
                 },
-                // here for folder sites we would like to be able to set this per site
+                // here for folder sites we would like to be able to set the cookie name per tenant
                 // ie based on the request, but it seems not possible except in startup
                 CookieName = "cloudscribe-app"
+
+                //http://aspnet.codeplex.com/SourceControl/latest#Samples/Katana/BranchingPipelines/Startup.cs
 
                 //http://leastprivilege.com/2012/10/08/custom-claims-principals-in-net-4-5/
                 // maybe we could add a per site claim
@@ -69,7 +112,7 @@ namespace cloudscribe.WebHost
             //http://msdn.microsoft.com/en-us/library/microsoft.owin.security.cookies.cookieauthenticationprovider%28v=vs.113%29.aspx
 
             //http://stackoverflow.com/questions/25393234/change-owin-auth-middleware-per-request-multi-tenant-oauth-api-keys-per-tenant
-            
+
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
             // Enables the application to temporarily store user information when they are verifying the second factor in the two-factor authentication process.
@@ -81,6 +124,10 @@ namespace cloudscribe.WebHost
             app.UseTwoFactorRememberBrowserCookie(DefaultAuthenticationTypes.TwoFactorRememberBrowserCookie);
 
             // Uncomment the following lines to enable logging in with third party login providers
+
+            // again this requirement to set at startup instead of determine per request
+            // makes it hard to use different settings per tenant in mutli site installations
+
             //app.UseMicrosoftAccountAuthentication(
             //    clientId: "",
             //    clientSecret: "");
@@ -98,8 +145,136 @@ namespace cloudscribe.WebHost
             //    ClientId = "",
             //    ClientSecret = ""
             //});
+
         }
 
+        private void ConfigureFolderTenantAuth(IAppBuilder app, List<SiteFolder> allFolders)
+        {
+            
+            foreach(SiteFolder f in allFolders)
+            {
+                // how to do multi tenant
+                //http://aspnet.codeplex.com/SourceControl/latest#Samples/Katana/BranchingPipelines/Startup.cs
+                app.Map("/" + f.FolderName, site =>
+                {
+                    site.UseCookieAuthentication(new CookieAuthenticationOptions
+                    {
+                        AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
+                        LoginPath = new PathString("/" + f.FolderName + "/Account/Login"),
+                        Provider = new CookieAuthenticationProvider
+                        {
+                            OnValidateIdentity = SecurityStampValidator.OnValidateIdentity<SiteUserManager, SiteUser>(
+                                validateInterval: TimeSpan.FromMinutes(30),
+                                regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager))
+                        },
+
+                        CookieName = f.FolderName + "-app"
+
+
+                    });
+
+
+                    site.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
+
+                    // Enables the application to temporarily store user information when they are verifying the second factor in the two-factor authentication process.
+                    site.UseTwoFactorSignInCookie(DefaultAuthenticationTypes.TwoFactorCookie, TimeSpan.FromMinutes(5));
+
+                    // Enables the application to remember the second login verification factor such as phone or email.
+                    // Once you check this option, your second step of verification during the login process will be remembered on the device where you logged in from.
+                    // This is similar to the RememberMe option when you log in.
+                    site.UseTwoFactorRememberBrowserCookie(DefaultAuthenticationTypes.TwoFactorRememberBrowserCookie);
+
+                    // Uncomment the following lines to enable logging in with third party login providers
+
+
+                    //site.UseMicrosoftAccountAuthentication(
+                    //    clientId: "",
+                    //    clientSecret: "");
+
+                    //site.UseTwitterAuthentication(
+                    //   consumerKey: "",
+                    //   consumerSecret: "");
+
+                    //site.UseFacebookAuthentication(
+                    //   appId: "",
+                    //   appSecret: "");
+
+                    //site.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
+                    //{
+                    //    ClientId = "",
+                    //    ClientSecret = ""
+                    //});
+
+                });
+
+            }
+
+        }
+
+        private void ConfigureHostTenantAuth(IAppBuilder app, List<ISiteHost> allHosts)
+        {
+            foreach(ISiteHost host in  allHosts)
+            {
+                app.MapWhen(host.IsDomain, site =>
+                {
+                    site.UseCookieAuthentication(new CookieAuthenticationOptions
+                    {
+                        AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
+                        LoginPath = new PathString("/Account/Login"),
+                        Provider = new CookieAuthenticationProvider
+                        {
+                            OnValidateIdentity = SecurityStampValidator.OnValidateIdentity<SiteUserManager, SiteUser>(
+                                validateInterval: TimeSpan.FromMinutes(30),
+                                regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager))
+                        },
+
+                        CookieName = host.HostName + "-app"
+
+
+                    });
+
+                    site.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
+
+                    // Enables the application to temporarily store user information when they are verifying the second factor in the two-factor authentication process.
+                    site.UseTwoFactorSignInCookie(DefaultAuthenticationTypes.TwoFactorCookie, TimeSpan.FromMinutes(5));
+
+                    // Enables the application to remember the second login verification factor such as phone or email.
+                    // Once you check this option, your second step of verification during the login process will be remembered on the device where you logged in from.
+                    // This is similar to the RememberMe option when you log in.
+                    site.UseTwoFactorRememberBrowserCookie(DefaultAuthenticationTypes.TwoFactorRememberBrowserCookie);
+
+                    // Uncomment the following lines to enable logging in with third party login providers
+
+
+                    //site.UseMicrosoftAccountAuthentication(
+                    //    clientId: "",
+                    //    clientSecret: "");
+
+                    //site.UseTwitterAuthentication(
+                    //   consumerKey: "",
+                    //   consumerSecret: "");
+
+                    //site.UseFacebookAuthentication(
+                    //   appId: "",
+                    //   appSecret: "");
+
+                    //site.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
+                    //{
+                    //    ClientId = "",
+                    //    ClientSecret = ""
+                    //});
+
+                });
+
+
+
+            }
+
+        }
+
+
+        
+        
             
 
        
