@@ -13,18 +13,15 @@ using System.Web.Mvc;
 namespace cloudscribe.Core.Web.Controllers
 {
     [Authorize]
-    public class ManageController : Controller
+    public class ManageController : CloudscribeBaseController
     {
         public ManageController()
         {
             
+            
         }
 
-        public ISiteContext Site
-        {
-            get { return HttpContext.GetOwinContext().Get<ISiteContext>(); }
-
-        }
+        
 
 
         // GET: /Manage/Index

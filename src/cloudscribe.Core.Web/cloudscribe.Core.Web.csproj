@@ -128,8 +128,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\CloudscribeBaseController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
-    <Compile Include="Controllers\SiteSettingsController.cs" />
+    <Compile Include="Controllers\SiteAdminController.cs" />
     <Compile Include="CoreViewEngine.cs" />
     <Compile Include="DeviceDetection\RequestExtensions.cs" />
     <Compile Include="Filters\SiteContextFilter.cs" />
@@ -146,6 +147,8 @@
     <Compile Include="Routing\WebApiConfig.cs" />
     <Compile Include="SiteContext.cs" />
     <Compile Include="ViewModels\SiteSettings\SiteBasicSettingsViewModel.cs" />
+    <Compile Include="ViewModels\SiteSettings\SiteMenuItemViewModel.cs" />
+    <Compile Include="ViewModels\SiteSettings\SiteMenuViewModel.cs" />
     <Compile Include="ViewModels\SiteUser\AccountIndexViewModel.cs" />
     <Compile Include="ViewModels\SiteUser\AddPhoneNumberViewModel.cs" />
     <Compile Include="ViewModels\SiteUser\ChangePasswordViewModel.cs" />

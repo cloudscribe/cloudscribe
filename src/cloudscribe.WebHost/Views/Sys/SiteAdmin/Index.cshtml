@@ -1,0 +1,14 @@
+﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.SiteMenuViewModel
+
+@{
+    
+}
+
+<h2>@Model.MenuTitle</h2>
+
+<ul>
+    @foreach (var menuItem in Model.Items)
+    {
+        <li class="@menuItem.CssClass"><a href="@Href(@menuItem.ItemUrl)">@menuItem.ItemText</a></li>
+    }
+</ul>
