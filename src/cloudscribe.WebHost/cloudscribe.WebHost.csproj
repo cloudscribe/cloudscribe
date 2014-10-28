@@ -279,6 +279,7 @@
     <Content Include="Views\Sys\Shared\_Layout.cshtml" />
     <Content Include="Views\Sys\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Sys\SiteAdmin\Index.cshtml" />
+    <Content Include="Views\Sys\SiteAdmin\SiteInfo.cshtml" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />

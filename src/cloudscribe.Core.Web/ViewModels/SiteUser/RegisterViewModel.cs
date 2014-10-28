@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using cloudscribe.Resources;
+using cloudscribe.Configuration;
+using cloudscribe.Configuration.DataAnnotations;
 
 namespace cloudscribe.Core.Web.ViewModels.SiteUser
 {
@@ -7,18 +10,19 @@ namespace cloudscribe.Core.Web.ViewModels.SiteUser
     {
         [Required]
         [EmailAddress]
-        [Display(Name = "Email")]
+        [Display(Name = "Email", ResourceType = typeof(CommonResources))]
         public string Email { get; set; }
 
+        //[StringLength(AppSettings.PasswordMaxLength, MinimumLength = AppSettings.PasswordMinLength, ErrorMessageResourceName = "PasswordLengthErrorFormat", ErrorMessageResourceType = typeof(CommonResources))]
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+        [StringLengthAppSettingsAttribute(MinimumLength = 6, MaximumLength=10, MinLengthKey="PasswordMinLength", MaxLengthKey="PasswordMaxLength", ErrorMessageResourceName = "PasswordLengthErrorFormat", ErrorMessageResourceType = typeof(CommonResources))]
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
+        [Display(Name = "Password", ResourceType = typeof(CommonResources))]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm password")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        [Display(Name = "ConfirmPassword", ResourceType = typeof(CommonResources))]
+        [Compare("Password", ErrorMessageResourceName = "ConfirmPasswordMatchErrorMessage", ErrorMessageResourceType = typeof(CommonResources))]
         public string ConfirmPassword { get; set; }
     }
 }

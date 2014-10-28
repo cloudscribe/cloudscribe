@@ -129,11 +129,20 @@
   <data name="ChangeYourPassword" xml:space="preserve">
     <value>Change your password</value>
   </data>
+  <data name="ConfirmPassword" xml:space="preserve">
+    <value>Confirm password</value>
+  </data>
+  <data name="ConfirmPasswordMatchErrorMessage" xml:space="preserve">
+    <value>The password and confirmation password do not match.</value>
+  </data>
   <data name="Create" xml:space="preserve">
     <value>Create</value>
   </data>
   <data name="Disabled" xml:space="preserve">
     <value>Disabled</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>Email</value>
   </data>
   <data name="Enabled" xml:space="preserve">
     <value>Enabled</value>
@@ -146,6 +155,9 @@
   </data>
   <data name="Password" xml:space="preserve">
     <value>Password</value>
+  </data>
+  <data name="PasswordLengthErrorFormat" xml:space="preserve">
+    <value>The password must be at least {0} characters long.</value>
   </data>
   <data name="PhoneNumber" xml:space="preserve">
     <value>Phone Number</value>

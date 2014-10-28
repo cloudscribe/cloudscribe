@@ -8,6 +8,8 @@ namespace cloudscribe.Configuration
     {
         public static bool GetBool(string key, bool defaultIfNotFound)
         {
+            if (string.IsNullOrEmpty(key)) { return defaultIfNotFound; }
+
             if (ConfigurationManager.AppSettings[key] == null) { return defaultIfNotFound; }
 
             if (string.Equals(ConfigurationManager.AppSettings[key], "true", StringComparison.InvariantCultureIgnoreCase))
@@ -23,18 +25,21 @@ namespace cloudscribe.Configuration
 
         public static string GetString(string key, string defaultIfNotFound)
         {
+            if (string.IsNullOrEmpty(key)) { return defaultIfNotFound; }
             if (ConfigurationManager.AppSettings[key] == null) return defaultIfNotFound;
             return ConfigurationManager.AppSettings[key];
         }
 
         public static int GetInt(string key, int defaultValue)
         {
+            if (string.IsNullOrEmpty(key)) { return defaultValue; }
             int setting;
             return int.TryParse(ConfigurationManager.AppSettings[key], out setting) ? setting : defaultValue;
         }
 
         public static long GetLong(string key, long defaultValue)
         {
+            if (string.IsNullOrEmpty(key)) { return defaultValue; }
             long setting;
             return long.TryParse(ConfigurationManager.AppSettings[key], out setting) ? setting : defaultValue;
         }
@@ -218,6 +223,16 @@ namespace cloudscribe.Configuration
         public static string PasswordGeneratorChars
         {
             get { return GetString("PasswordGeneratorChars", "abcdefgijkmnopqrstwxyzABCDEFGHJKLMNPQRSTWXYZ23456789*$"); }
+        }
+
+        public static int PasswordMaxLength
+        {
+            get { return GetInt("PasswordMaxLength", 100); }
+        }
+
+        public static int PasswordMinLength
+        {
+            get { return GetInt("PasswordMinLength", 7); }
         }
 
         public static string CacheProviderType
