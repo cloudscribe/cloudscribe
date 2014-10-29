@@ -15,7 +15,7 @@ namespace cloudscribe.Core.Web.ViewModels.SiteUser
 
         //[StringLength(AppSettings.PasswordMaxLength, MinimumLength = AppSettings.PasswordMinLength, ErrorMessageResourceName = "PasswordLengthErrorFormat", ErrorMessageResourceType = typeof(CommonResources))]
         [Required]
-        [StringLengthAppSettingsAttribute(MinimumLength = 6, MaximumLength=10, MinLengthKey="PasswordMinLength", MaxLengthKey="PasswordMaxLength", ErrorMessageResourceName = "PasswordLengthErrorFormat", ErrorMessageResourceType = typeof(CommonResources))]
+        [StringLengthAppSettings(MinimumLength = 7, MaximumLength=100, MinLengthKey="PasswordMinLength", MaxLengthKey="PasswordMaxLength", ErrorMessageResourceName = "PasswordLengthErrorFormat", ErrorMessageResourceType = typeof(CommonResources))]
         [DataType(DataType.Password)]
         [Display(Name = "Password", ResourceType = typeof(CommonResources))]
         public string Password { get; set; }

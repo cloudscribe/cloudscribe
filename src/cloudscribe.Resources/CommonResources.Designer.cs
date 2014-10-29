@@ -70,6 +70,15 @@ namespace cloudscribe.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Back To Administration Menu.
+        /// </summary>
+        public static string BackToAdministrationMenu {
+            get {
+                return ResourceManager.GetString("BackToAdministrationMenu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Change.
         /// </summary>
         public static string Change {
@@ -93,6 +102,96 @@ namespace cloudscribe.Resources {
         public static string ChangeYourPassword {
             get {
                 return ResourceManager.GetString("ChangeYourPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Company Address.
+        /// </summary>
+        public static string CompanyAddress1 {
+            get {
+                return ResourceManager.GetString("CompanyAddress1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Company Address 2.
+        /// </summary>
+        public static string CompanyAddress2 {
+            get {
+                return ResourceManager.GetString("CompanyAddress2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Company Country.
+        /// </summary>
+        public static string CompanyCountry {
+            get {
+                return ResourceManager.GetString("CompanyCountry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Company Fax.
+        /// </summary>
+        public static string CompanyFax {
+            get {
+                return ResourceManager.GetString("CompanyFax", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Company City.
+        /// </summary>
+        public static string CompanyLocality {
+            get {
+                return ResourceManager.GetString("CompanyLocality", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Company Name.
+        /// </summary>
+        public static string CompanyName {
+            get {
+                return ResourceManager.GetString("CompanyName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Company Phone.
+        /// </summary>
+        public static string CompanyPhone {
+            get {
+                return ResourceManager.GetString("CompanyPhone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Company Postal Code.
+        /// </summary>
+        public static string CompanyPostalCode {
+            get {
+                return ResourceManager.GetString("CompanyPostalCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Company Public Email.
+        /// </summary>
+        public static string CompanyPublicEmail {
+            get {
+                return ResourceManager.GetString("CompanyPublicEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Company State.
+        /// </summary>
+        public static string CompanyRegion {
+            get {
+                return ResourceManager.GetString("CompanyRegion", resourceCulture);
             }
         }
         
@@ -205,6 +304,15 @@ namespace cloudscribe.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Save.
+        /// </summary>
+        public static string Save {
+            get {
+                return ResourceManager.GetString("Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Security Code.
         /// </summary>
         public static string SecurityCode {
@@ -219,6 +327,51 @@ namespace cloudscribe.Resources {
         public static string SecurityCodeMessageFormat {
             get {
                 return ResourceManager.GetString("SecurityCodeMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Site Folder Name.
+        /// </summary>
+        public static string SiteFolderName {
+            get {
+                return ResourceManager.GetString("SiteFolderName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Site Name.
+        /// </summary>
+        public static string SiteName {
+            get {
+                return ResourceManager.GetString("SiteName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Site name must be between {0} and {1} characters.
+        /// </summary>
+        public static string SiteNameLengthErrorFormat {
+            get {
+                return ResourceManager.GetString("SiteNameLengthErrorFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Slogan.
+        /// </summary>
+        public static string SiteSlogan {
+            get {
+                return ResourceManager.GetString("SiteSlogan", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Time Zone.
+        /// </summary>
+        public static string TimeZone {
+            get {
+                return ResourceManager.GetString("TimeZone", resourceCulture);
             }
         }
         

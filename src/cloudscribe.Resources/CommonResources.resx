@@ -120,6 +120,9 @@
   <data name="Add" xml:space="preserve">
     <value>Add</value>
   </data>
+  <data name="BackToAdministrationMenu" xml:space="preserve">
+    <value>Back To Administration Menu</value>
+  </data>
   <data name="Change" xml:space="preserve">
     <value>Change</value>
   </data>
@@ -128,6 +131,36 @@
   </data>
   <data name="ChangeYourPassword" xml:space="preserve">
     <value>Change your password</value>
+  </data>
+  <data name="CompanyAddress1" xml:space="preserve">
+    <value>Company Address</value>
+  </data>
+  <data name="CompanyAddress2" xml:space="preserve">
+    <value>Company Address 2</value>
+  </data>
+  <data name="CompanyCountry" xml:space="preserve">
+    <value>Company Country</value>
+  </data>
+  <data name="CompanyFax" xml:space="preserve">
+    <value>Company Fax</value>
+  </data>
+  <data name="CompanyLocality" xml:space="preserve">
+    <value>Company City</value>
+  </data>
+  <data name="CompanyName" xml:space="preserve">
+    <value>Company Name</value>
+  </data>
+  <data name="CompanyPhone" xml:space="preserve">
+    <value>Company Phone</value>
+  </data>
+  <data name="CompanyPostalCode" xml:space="preserve">
+    <value>Company Postal Code</value>
+  </data>
+  <data name="CompanyPublicEmail" xml:space="preserve">
+    <value>Company Public Email</value>
+  </data>
+  <data name="CompanyRegion" xml:space="preserve">
+    <value>Company State</value>
   </data>
   <data name="ConfirmPassword" xml:space="preserve">
     <value>Confirm password</value>
@@ -165,11 +198,29 @@
   <data name="Remove" xml:space="preserve">
     <value>Remove</value>
   </data>
+  <data name="Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
   <data name="SecurityCode" xml:space="preserve">
     <value>Security Code</value>
   </data>
   <data name="SecurityCodeMessageFormat" xml:space="preserve">
     <value>Your security code is: {0}</value>
+  </data>
+  <data name="SiteFolderName" xml:space="preserve">
+    <value>Site Folder Name</value>
+  </data>
+  <data name="SiteName" xml:space="preserve">
+    <value>Site Name</value>
+  </data>
+  <data name="SiteNameLengthErrorFormat" xml:space="preserve">
+    <value>Site name must be between {0} and {1} characters</value>
+  </data>
+  <data name="SiteSlogan" xml:space="preserve">
+    <value>Slogan</value>
+  </data>
+  <data name="TimeZone" xml:space="preserve">
+    <value>Time Zone</value>
   </data>
   <data name="TwoFactorAuthentication" xml:space="preserve">
     <value>Two-Factor Authentication</value>

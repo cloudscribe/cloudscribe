@@ -1,4 +1,10 @@
-﻿using System;
+﻿// Author:					Joe Audette
+// Created:					2014-08-26
+// Last Modified:			2014-10-26
+// 
+
+
+using System;
 using System.Configuration;
 using System.Globalization;
 

@@ -9,3 +9,8 @@ http://brianreiter.org/2011/03/23/simple-asp-net-mvc-globalization-with-graceful
 
 http://www.chambaud.com/2013/02/27/localization-in-asp-net-mvc-4/
 
+there is a problem in unit testing things that use resx files because that is part of httpcontext and asp.net compilation process
+http://www.codeproject.com/Tips/790565/Unit-testing-MVC-controllers-which-are-using-globa
+
+
+
