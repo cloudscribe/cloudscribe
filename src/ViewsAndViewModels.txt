@@ -1,0 +1,4 @@
+
+http://stackoverflow.com/questions/14762680/how-should-i-structure-my-view-model-asp-net-mvc
+
+http://nerddinnerbook.s3.amazonaws.com/Part6.htm

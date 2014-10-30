@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2014-10-26
+// Last Modified:			2014-10-30
 // 
 
 using System;
@@ -37,8 +37,8 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
 
         private string siteName = string.Empty;
 
-        //[Required]
-        [StringLengthAppSettings(MinimumLength = 40, MaximumLength = 255, MinLengthKey = "SiteNameMinLength", MaxLengthKey = "SiteNameMaxLength",  ErrorMessageResourceName = "SiteNameLengthErrorFormat", ErrorMessageResourceType = typeof(CommonResources))]
+        [Required(ErrorMessageResourceName = "SiteNameRequired", ErrorMessageResourceType = typeof(CommonResources))]
+        [StringLengthWithConfig(MinimumLength = 3, MaximumLength = 255, MinLengthKey = "SiteNameMinLength", MaxLengthKey = "SiteNameMaxLength",  ErrorMessageResourceName = "SiteNameLengthErrorFormat", ErrorMessageResourceType = typeof(CommonResources))]
         [Display(Name = "SiteName", ResourceType = typeof(CommonResources))]
         public string SiteName
         {
@@ -67,6 +67,7 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
 
         private string slogan = string.Empty;
 
+        //[RequiredWithConfig(RequiredKey = "SloganRequired", ErrorMessageResourceName = "SiteNameRequired", ErrorMessageResourceType = typeof(CommonResources))]
         [StringLength(255, MinimumLength = 3, ErrorMessage = "Slogan Length Error")]
         [Display(Name = "SiteSlogan", ResourceType = typeof(CommonResources))]
         public string Slogan

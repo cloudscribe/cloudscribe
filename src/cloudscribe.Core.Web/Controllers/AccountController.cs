@@ -132,6 +132,7 @@ namespace cloudscribe.Core.Web.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
+            ViewBag.Title = "Register";
 
             ViewBag.SiteName = Site.SiteSettings.SiteName;
 

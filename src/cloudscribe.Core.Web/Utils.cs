@@ -1,4 +1,9 @@
-﻿using System;
+﻿// Author:					Joe Audette
+// Created:				    2014-08-31
+// Last Modified:		    2014-10-23
+// 
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

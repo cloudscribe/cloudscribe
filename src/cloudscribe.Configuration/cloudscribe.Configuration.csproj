@@ -74,7 +74,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppSettings.cs" />
-    <Compile Include="DataAnnotations\StringLengthAppSettingsAttribute.cs" />
+    <Compile Include="DataAnnotations\RequiredIfAttribute.cs" />
+    <Compile Include="DataAnnotations\RequiredWithConfigAttribute.cs" />
+    <Compile Include="DataAnnotations\StringLengthWithConfigAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Setup\VersionProvider.cs" />
     <Compile Include="Setup\VersionProviderCollection.cs" />

@@ -177,11 +177,23 @@
   <data name="Email" xml:space="preserve">
     <value>Email</value>
   </data>
+  <data name="EmailNotValid" xml:space="preserve">
+    <value>Email address is not valid</value>
+  </data>
+  <data name="EmailRequired" xml:space="preserve">
+    <value>Email is required</value>
+  </data>
   <data name="Enabled" xml:space="preserve">
     <value>Enabled</value>
   </data>
   <data name="ExternalLogins" xml:space="preserve">
     <value>External Logins</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Log in</value>
+  </data>
+  <data name="LogOff" xml:space="preserve">
+    <value>Log off</value>
   </data>
   <data name="Manage" xml:space="preserve">
     <value>Manage</value>
@@ -192,8 +204,14 @@
   <data name="PasswordLengthErrorFormat" xml:space="preserve">
     <value>The password must be at least {0} characters long.</value>
   </data>
+  <data name="PasswordRequired" xml:space="preserve">
+    <value>Password is required</value>
+  </data>
   <data name="PhoneNumber" xml:space="preserve">
     <value>Phone Number</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>Register</value>
   </data>
   <data name="Remove" xml:space="preserve">
     <value>Remove</value>
@@ -214,7 +232,10 @@
     <value>Site Name</value>
   </data>
   <data name="SiteNameLengthErrorFormat" xml:space="preserve">
-    <value>Site name must be between {0} and {1} characters</value>
+    <value>Site name must be between {0} and {1} characters.</value>
+  </data>
+  <data name="SiteNameRequired" xml:space="preserve">
+    <value>Site name is required.</value>
   </data>
   <data name="SiteSlogan" xml:space="preserve">
     <value>Slogan</value>
