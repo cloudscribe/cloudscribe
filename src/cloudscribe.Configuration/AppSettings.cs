@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-26
-// Last Modified:			2014-10-26
+// Last Modified:			2014-10-31
 // 
 
 
@@ -150,6 +150,17 @@ namespace cloudscribe.Configuration
         public static int CacheDurationInSeconds_SiteUserLogins
         {
             get { return GetInt("CacheDurationInSeconds_SiteUserLogins", 30); }
+        }
+
+
+        public static bool CacheTimeZoneList
+        {
+            get { return GetBool("CacheTimeZoneList", true); }
+        }
+
+        public static int CacheDurationInSeconds_TimeZoneList
+        {
+            get { return GetInt("CacheDurationInSeconds_TimeZoneList", 3600); } // 1 hour
         }
 
 
