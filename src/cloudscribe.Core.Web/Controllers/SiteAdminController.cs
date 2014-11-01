@@ -6,6 +6,7 @@
 using cloudscribe.AspNet.Identity;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Web.ViewModels.SiteSettings;
+using cloudscribe.Core.Web.Helpers;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
@@ -60,6 +61,7 @@ namespace cloudscribe.Core.Web.Controllers
             model.SiteName = Site.SiteSettings.SiteName;
             model.Slogan = Site.SiteSettings.Slogan;
             model.TimeZoneId = Site.SiteSettings.TimeZoneId;
+            model.AllTimeZones = DateTimeHelper.GetTimeZoneList();
             model.CompanyName = Site.SiteSettings.CompanyName;
             model.CompanyStreetAddress = Site.SiteSettings.CompanyStreetAddress;
             model.CompanyStreetAddress2 = Site.SiteSettings.CompanyStreetAddress2;

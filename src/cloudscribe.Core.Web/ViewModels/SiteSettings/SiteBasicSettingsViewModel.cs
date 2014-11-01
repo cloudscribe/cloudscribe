@@ -65,6 +65,14 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
             set { timeZoneId = value; }
         }
 
+        private List<TimeZoneInfo> allTimeZones = new List<TimeZoneInfo>();
+
+        public List<TimeZoneInfo> AllTimeZones
+        {
+            get { return allTimeZones; }
+            set { allTimeZones = value; }
+        }
+
         private string slogan = string.Empty;
 
         //[RequiredWithConfig(RequiredKey = "SloganRequired", ErrorMessageResourceName = "SiteNameRequired", ErrorMessageResourceType = typeof(CommonResources))]
