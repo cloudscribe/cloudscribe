@@ -63,6 +63,7 @@
     <Compile Include="DB\DBUserClaims.cs" />
     <Compile Include="DB\DBUserLocation.cs" />
     <Compile Include="DB\DBUserLogins.cs" />
+    <Compile Include="GeoRepository.cs" />
     <Compile Include="SiteRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserRepository.cs" />

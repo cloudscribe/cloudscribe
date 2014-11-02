@@ -9,3 +9,9 @@ http://www.hanselman.com/blog/aspnetvnextaugust2014statusrollup.aspx
 http://www.hanselman.com/blog/IntroducingASPNETVNext.aspx
 
 http://www.visualstudio.com/en-us/downloads/visual-studio-14-ctp-vs.aspx
+
+http://www.visualstudio.com/en-us/downloads/visual-studio-14-ctp-vs
+
+http://www.asp.net/vnext/overview/aspnet-vnext/getting-started-with-aspnet-vnext-and-visual-studio
+
+https://github.com/aspnet/Home/wiki/Assembly-Neutral-Interfaces
