@@ -1,0 +1,11 @@
+
+a lot of good posts here
+http://www.tugberkugurlu.com/
+
+http://blogs.msdn.com/b/webdev/archive/2014/06/17/dependency-injection-in-asp-net-vnext.aspx
+
+http://www.hanselman.com/blog/aspnetvnextaugust2014statusrollup.aspx
+
+http://www.hanselman.com/blog/IntroducingASPNETVNext.aspx
+
+http://www.visualstudio.com/en-us/downloads/visual-studio-14-ctp-vs.aspx

@@ -19,6 +19,8 @@ bld/
 *Web.AppSettings.config
 src/cloudscribe.WebHost/files/
 src/cloudscribe.WebHost/App_Data/
+src/cloudscribe.WebHost/Scripts/ckeditor/
+src/cloudscribe.WebHost/Scripts/tinymce/
 _bin*
 *SQLite.Interop.dll
 

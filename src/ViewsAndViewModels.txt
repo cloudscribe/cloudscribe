@@ -7,4 +7,41 @@ http://www.c-sharpcorner.com/UploadFile/4d9083/creating-simple-cascading-dropdow
 
 http://www.c-sharpcorner.com/UploadFile/4b0136/working-with-dropdownlist-in-mvc-5/
 
+How MVC 5 editor templates are selected
+@Html.Editor()
+@Html.EditorFor() -- same as above but strongl typed
+
+There are built in mvc templates in the runtime for common data types
+it is possible to override the template for built in html helpers and it is possible to implement custom templated helpers, and it is even possible to override the template used for custom ones
+System templates are compiled into the runtime, but custom templates are just .cshtml files aka views and are searched for the same way views are.
+See CoreViewEngine.cs to understand how views are searched
+// {0} represents the name of the view
+// {1} represents the name of the controller
+// {2} represents the name of the area
+
+ViewLocationFormats = new string[] {
+    "~/Views/{1}/{0}.cshtml",
+    "~/Views/Shared/{0}.cshtml",
+    "~/Views/Sys/{1}/{0}.cshtml",
+    "~/Views/Sys/Shared/{0}.cshtml"
+};
+
+views and editor templates are searched in the above locations and in the order shown from top to bottom, so the /Sys folders are the last ditch choices and higher priority is given to views in the upper folders.
+
+others should not modify our views that are under /Sys folders, to customize they would copy it up to a higher priority folder
+like /Views/Shared for example, then modify it
+
+Sys views may be updated during upgrades therefore one may need to review any custom views for corresponding changes that might be needed or possible. We can provide release notes for any important changes to Sys views
+
+Editor templates are searched in the following way according to Pro MVC 5 book
+1. The template named passed to the helper Html.EditorFor(m => m.SomeProperty, "MyTemplate") would lead to MyTemplate.cshtml being used
+2. Any template that is specified by meta data of the model using UIHint attribute
+3. The template associated with the DataType attribute
+4. Any template that corresponds to the .NET class name of the data type being processed
+5. The built in String template if the data type is a simple type
+6. Any template that corresponds ot the base classes of the data type
+7. If the data type implements IEnumerable then the built in Collection template will be used
+8. If all else fails the Object template will be used, subject to the rule that scaffolding is not recursive
+
+
 

@@ -24,6 +24,11 @@ namespace cloudscribe.Core.Web
     /// and then look first in /Views/[SkinName]
     /// ?
     /// Since this is instantiated in Startup it may not be possible to do that
+    /// however we might want to look into the Orchard project ThemeAwareViewEngine.cs
+    /// they seem to be pulling in views from theme specific folders and not using the normal mvc conventions
+    /// I think we should try not to deviate far from normal mvc conventions, ie views should still be below the Views folder
+    /// perhaps /Views/themes/[themename]
+    /// probably we should use the term theme as opposed to skin
     /// </summary>
     public class CoreViewEngine : RazorViewEngine
     {

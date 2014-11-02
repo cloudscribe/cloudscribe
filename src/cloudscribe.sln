@@ -49,6 +49,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cloudscribe.Setup", "clouds
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notes", "Notes", "{C6E094A5-21E5-40CA-840E-B38D3C7D979C}"
 	ProjectSection(SolutionItems) = preProject
+		aspnet-vnext.txt = aspnet-vnext.txt
 		DataAnnotations.txt = DataAnnotations.txt
 		DeviceDetection.txt = DeviceDetection.txt
 		Identity.txt = Identity.txt
