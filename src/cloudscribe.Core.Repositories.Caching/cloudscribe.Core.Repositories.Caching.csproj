@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CachingGeoRepository.cs" />
     <Compile Include="CachingSiteRepository.cs" />
     <Compile Include="CachingUserRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

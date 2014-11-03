@@ -66,11 +66,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Geography\Currency.cs" />
     <Compile Include="Geography\GeoCountry.cs" />
     <Compile Include="Geography\GeoZone.cs" />
+    <Compile Include="Geography\ICurrency.cs" />
     <Compile Include="Geography\IGeoCountry.cs" />
     <Compile Include="Geography\IGeoRepository.cs" />
     <Compile Include="Geography\IGeoZone.cs" />
+    <Compile Include="Geography\ILanguage.cs" />
+    <Compile Include="Geography\Language.cs" />
     <Compile Include="Setup\CloudscribeCoreVersionProvider.cs" />
     <Compile Include="CommonExtensions.cs" />
     <Compile Include="IDb.cs" />

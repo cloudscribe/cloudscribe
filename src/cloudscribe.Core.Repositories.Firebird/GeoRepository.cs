@@ -1,16 +1,15 @@
 ﻿// Author:					Joe Audette
-// Created:					2014-11-02
-// Last Modified:			2014-11-02
+// Created:					2014-11-03
+// Last Modified:			2014-11-03
 // 
 
 
+using cloudscribe.Core.Models.Geography;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Globalization;
-using cloudscribe.Core.Models.Geography;
 
-namespace cloudscribe.Core.Repositories.MSSQL
+namespace cloudscribe.Core.Repositories.Firebird
 {
     public class GeoRepository : IGeoRepository
     {
@@ -52,7 +51,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 if (reader.Read())
                 {
                     GeoCountry geoCountry = new GeoCountry();
-                    LoadFromReader(reader, geoCountry); 
+                    LoadFromReader(reader, geoCountry);
                     return geoCountry;
 
                 }
@@ -212,7 +211,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 while (reader.Read())
                 {
                     GeoZone geoZone = new GeoZone();
-                    LoadFromReader(reader, geoZone); 
+                    LoadFromReader(reader, geoZone);
                     geoZoneList.Add(geoZone);
 
                 }
@@ -252,7 +251,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 while (reader.Read())
                 {
                     GeoCountry geoCountry = new GeoCountry();
-                    LoadFromReader(reader, geoCountry); 
+                    LoadFromReader(reader, geoCountry);
                     geoCountryList.Add(geoCountry);
 
                 }
@@ -265,6 +264,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return geoCountryList;
 
         }
+
 
         public void Save(ILanguage language)
         {
@@ -470,8 +470,6 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return currencyList;
 
         }
-
-
 
     }
 }

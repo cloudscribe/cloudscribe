@@ -17,5 +17,17 @@ namespace cloudscribe.Core.Models.Geography
         List<IGeoZone> GetGeoZonesByCountry(Guid countryGuid);
         void Save(IGeoCountry geoCountry);
         void Save(IGeoZone geoZone);
+
+        void Save(ILanguage language);
+        ILanguage FetchLanguage(Guid guid);
+        bool DeleteLanguage(Guid guid);
+        int GetLanguageCount();
+        List<ILanguage> GetAllLanguages();
+        List<ILanguage> GetLanguagePage(int pageNumber, int pageSize, out int totalPages);
+
+        void Save(ICurrency currency);
+        ICurrency FetchCurrency(Guid guid);
+        bool DeleteCurrency(Guid guid);
+        List<ICurrency> GetAllCurrencies();
     }
 }
