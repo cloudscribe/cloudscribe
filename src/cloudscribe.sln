@@ -51,6 +51,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notes", "Notes", "{C6E094A5
 	ProjectSection(SolutionItems) = preProject
 		aspnet-vnext.txt = aspnet-vnext.txt
 		DataAnnotations.txt = DataAnnotations.txt
+		DateTime.txt = DateTime.txt
 		DeviceDetection.txt = DeviceDetection.txt
 		Identity.txt = Identity.txt
 		Localization.txt = Localization.txt

@@ -1,0 +1,9 @@
+
+
+http://adamalbrecht.com/2013/12/01/better-date-time-picker-in-angular-js/
+
+https://github.com/adamalbrecht/ngQuickDate
+
+https://github.com/g00fy-/angular-datepicker
+
+https://github.com/telerik/kendo-ui-core apache 2 license
