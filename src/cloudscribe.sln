@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cloudscribe.WebHost", "cloudscribe.WebHost\cloudscribe.WebHost.csproj", "{8DBF57E7-71A7-4817-9548-85DCDB873FAB}"
 EndProject
@@ -52,6 +52,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notes", "Notes", "{C6E094A5
 		aspnet-vnext.txt = aspnet-vnext.txt
 		DataAnnotations.txt = DataAnnotations.txt
 		DateTime.txt = DateTime.txt
+		DependencyInjection.txt = DependencyInjection.txt
 		DeviceDetection.txt = DeviceDetection.txt
 		Identity.txt = Identity.txt
 		Localization.txt = Localization.txt

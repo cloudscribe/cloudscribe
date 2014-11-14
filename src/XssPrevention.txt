@@ -23,4 +23,30 @@ However markdown or bbcode is not a friendly option for most people who are not 
 
 Untrusted html content should be filtered on output. In mojoPortal we used NeatHtml for this. For cloudscribe we need to investigate what is available.
 
+http://weblog.west-wind.com/posts/2012/Jul/19/NET-HTML-Sanitation-for-rich-HTML-Input
+https://github.com/RickStrahl/HtmlSanitizer
+
+http://htmlagilitypack.codeplex.com/
+http://www.nuget.org/packages/HtmlAgilityPack
+
+https://eksith.wordpress.com/2011/06/14/whitelist-santize-htmlagilitypack/
+
+https://gist.github.com/ntulip/814428
+
+CsQuery is like jquery implemented in C# with server side dom to manipulate
+https://github.com/jamietre/CsQuery
+
+https://www.owasp.org/index.php/Category:OWASP_AntiSamy_Project_.NET
+
+http://security.stackexchange.com/questions/49315/escaping-rich-text-editor-output/49342#49342
+
+
+Content Security Policy is another way to prevent unwanted external scripts/resources
+http://content-security-policy.com/
+browser support info for the Content-Security-Policy response header
+http://caniuse.com/contentsecuritypolicy
+
+need to google Content Security Policy for more info, I think I recal a .NET library
+probably can find or implement something that plugs into the owin pipeline
+
 

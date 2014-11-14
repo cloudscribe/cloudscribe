@@ -1,0 +1,28 @@
+
+Since there will be built in dependency injection in aspnet vnext I think we will use that instead of ninject
+
+Need to figure out how to inject logging. Seems like there are some issues injecting log4net for example because we want a typed logger to know what component is logging. if we just make a wrapper it will never know what component is doing the logging.
+
+maybe there are ways around that
+
+maybe we should consider nlog
+
+http://blog.tonysneed.com/2011/10/09/using-nlog-with-dependency-injection/
+
+http://stackoverflow.com/questions/6846342/how-to-inject-log4net-ilog-implementations-using-unity-2-0
+
+http://davidkeaveny.blogspot.com/2011/03/unity-and-log4net.html
+
+http://unity.codeplex.com/discussions/203744
+
+http://rationalgeek.com/blog/introducing-ninjectautologging/#more-318
+
+in vnext/aspnet 5 owin there is startup code like this:
+ // Configure is called after ConfigureServices is called.
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerfactory)
+        {
+            // Configure the HTTP request pipeline.
+            // Add the console logger.
+            loggerfactory.AddConsole();
+
+maybe we will be able to plugin log4net or other logger there?

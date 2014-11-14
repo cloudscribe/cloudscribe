@@ -1,4 +1,81 @@
 
+it seems premature to try to build cloudscribe on vnext mainly because certain dependencies are not available yet
+such as log4net, mysql.data etc. supposedly you can use that if you target the desktop framework instead of core but it seems not to work.
+I can add a reference to MtSql.Data but it gives a build error the type or namespace cannot be found.
+
+So, we will wait and make the needed changes soon after the final release of vnext aka aspnet 5, or until the needed dependencies are available.
+
+from my review of aspnet vnext cloud optimized core, the things that will change will be:
+
+the vs project files and solution structure
+new project.json files for projects instead of .csproj
+new wwwroot folder for web projects and only static files like js and css go below there, no code lives under there, files there are handled by static file handler only which is good security policy
+
+no more global.asax
+no more App_Start folder with partial startup classes, Startup.cs in the project root has everything for app configuration, depency injection via ConfigureServices
+
+new VS integration client side utilities Bower and npm (to add client side libraries)
+http://bower.io/
+
+https://www.npmjs.org/ node packaged modules sort of like client side nuget
+
+http://gruntjs.com/
+http://gruntjs.com/getting-started
+
+The package.json file belongs in the root directory of your project, next to the gruntfile.js, and should be committed with your project source. Running npm install in the same folder as a package.json file will install the correct version of each dependency listed therein.
+
+http://gulpjs.com/
+
+
+unification of routing for mvc and web api
+only difference is for api there is no action just http verbs get, post, put,delete
+
+app.UseMvc(routes =>
+{
+    routes.MapRoute(
+        name: "default",
+        template: "{controller}/{action}/{id?}",
+        defaults: new { controller = "Home", action = "Index" });
+
+    // Uncomment the following line to add a route for porting Web API 2 controllers.
+    // routes.MapWebApiRoute("DefaultApi", "api/{controller}/{id?}");
+});
+
+Razor view engine now has TagHelpers
+https://www.youtube.com/watch?v=Za89_-I25AI
+which gives more control over markup in the view as compared to helpers like EditorFor and DropdownListFor
+
+new concept of ViewComponents meant to replace child actions concept
+
+new built in dependency injection which we will use instead of ninject
+// This method gets called by the runtime.
+public void ConfigureServices(IServiceCollection services)
+{
+    // Add EF services to the services container.
+    services.AddEntityFramework(Configuration)
+        .AddSqlServer()
+        .AddDbContext<ApplicationDbContext>();
+
+    // Add Identity services to the services container.
+    services.AddDefaultIdentity<ApplicationDbContext, ApplicationUser, IdentityRole>(Configuration);
+
+    // Add MVC services to the services container.
+    services.AddMvc();
+
+    // Uncomment the following line to add Web API servcies which makes it easier to port Web API 2 controllers.
+    // You need to add Microsoft.AspNet.Mvc.WebApiCompatShim package to project.json
+    // services.AddWebApiConventions();
+
+}
+
+new configuration system, the old System.Configuration is still there but not sure it may be desktop framework only
+we will have to re-write some code perhaps but, the new lighter system seems very flexible
+you can have it look for multiple files and the last one has the top priority so
+we should be able to do similar kind of things as we did with appSettings in user.config in mojoportal
+new config classes can use json or xml
+
+
+
 a lot of good posts here
 http://www.tugberkugurlu.com/
 
