@@ -1,6 +1,11 @@
 
 http://stackoverflow.com/questions/14762680/how-should-i-structure-my-view-model-asp-net-mvc
 
+
+dropdown and cascading dropdown examples:
+
+http://www.c-sharpcorner.com/UploadFile/3d39b4/casecading-dropdown-list-with-mvc-linq-to-sql-and-ajax/
+
 http://nerddinnerbook.s3.amazonaws.com/Part6.htm
 
 http://www.c-sharpcorner.com/UploadFile/4d9083/creating-simple-cascading-dropdownlist-in-mvc-4-using-razor/
@@ -9,11 +14,13 @@ http://www.c-sharpcorner.com/UploadFile/4b0136/working-with-dropdownlist-in-mvc-
 
 How MVC 5 editor templates are selected
 @Html.Editor()
-@Html.EditorFor() -- same as above but strongl typed
+@Html.EditorFor() -- same as above but strongly typed
 
 There are built in mvc templates in the runtime for common data types
 it is possible to override the template for built in html helpers and it is possible to implement custom templated helpers, and it is even possible to override the template used for custom ones
 System templates are compiled into the runtime, but custom templates are just .cshtml files aka views and are searched for the same way views are.
+
+
 See CoreViewEngine.cs to understand how views are searched
 // {0} represents the name of the view
 // {1} represents the name of the controller

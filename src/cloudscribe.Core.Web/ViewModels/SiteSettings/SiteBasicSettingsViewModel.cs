@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2014-10-30
+// Last Modified:			2014-11-15
 // 
 
 using System;
@@ -11,11 +11,18 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using cloudscribe.Resources;
 using cloudscribe.Configuration.DataAnnotations;
+using System.Web.Mvc;
 
 namespace cloudscribe.Core.Web.ViewModels.SiteSettings
 {
     public class SiteBasicSettingsViewModel
     {
+        public SiteBasicSettingsViewModel()
+        {
+            AvailableCountries = new List<SelectListItem>();
+            AvailableStates = new List<SelectListItem>();
+        }
+
         private int siteID = -1;
 
         [Display(Name = "SiteId")]
@@ -120,6 +127,18 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
             set { companyLocality = value; }
         }
 
+        private string companyCountry = string.Empty;
+
+        [Display(Name = "CompanyCountry", ResourceType = typeof(CommonResources))]
+        public string CompanyCountry
+        {
+            get { return companyCountry; }
+            set { companyCountry = value; }
+        }
+
+        public IList<SelectListItem> AvailableCountries { get; set; }
+        public IList<SelectListItem> AvailableStates { get; set; }
+
         private string companyRegion = string.Empty;
 
         [Display(Name = "CompanyRegion", ResourceType = typeof(CommonResources))]
@@ -138,14 +157,7 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
             set { companyPostalCode = value; }
         }
 
-        private string companyCountry = string.Empty;
-
-        [Display(Name = "CompanyCountry", ResourceType = typeof(CommonResources))]
-        public string CompanyCountry
-        {
-            get { return companyCountry; }
-            set { companyCountry = value; }
-        }
+        
 
         private string companyPhone = string.Empty;
 

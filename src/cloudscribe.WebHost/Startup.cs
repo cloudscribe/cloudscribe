@@ -1,5 +1,6 @@
 ﻿
 using cloudscribe.Core.Models;
+using cloudscribe.Core.Models.Geography;
 using cloudscribe.Core.Web;
 using Microsoft.Owin;
 using cloudscribe.Core.Repositories.Caching;
@@ -115,6 +116,7 @@ namespace cloudscribe.WebHost
 
             kernel.Bind<ISiteRepository>().To<cloudscribe.Core.Repositories.MSSQL.SiteRepository>();
             kernel.Bind<IUserRepository>().To<cloudscribe.Core.Repositories.MSSQL.UserRepository>();
+            kernel.Bind<IGeoRepository>().To<cloudscribe.Core.Repositories.MSSQL.GeoRepository>();
             kernel.Bind<IDb>().To<cloudscribe.DbHelpers.MSSQL.Db>();
             
 

@@ -50,12 +50,15 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notes", "Notes", "{C6E094A5-21E5-40CA-840E-B38D3C7D979C}"
 	ProjectSection(SolutionItems) = preProject
 		aspnet-vnext.txt = aspnet-vnext.txt
+		CssFrameworks.txt = CssFrameworks.txt
 		DataAnnotations.txt = DataAnnotations.txt
 		DateTime.txt = DateTime.txt
 		DependencyInjection.txt = DependencyInjection.txt
 		DeviceDetection.txt = DeviceDetection.txt
 		Identity.txt = Identity.txt
+		JavaScript.txt = JavaScript.txt
 		Localization.txt = Localization.txt
+		ProjectGoals.txt = ProjectGoals.txt
 		RazorViewEngine.txt = RazorViewEngine.txt
 		ViewsAndViewModels.txt = ViewsAndViewModels.txt
 		XssPrevention.txt = XssPrevention.txt

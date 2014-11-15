@@ -129,6 +129,7 @@
   <ItemGroup>
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CloudscribeBaseController.cs" />
+    <Compile Include="Controllers\CoreDataController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\SiteAdminController.cs" />
     <Compile Include="CoreViewEngine.cs" />
@@ -136,6 +137,7 @@
     <Compile Include="Filters\SiteContextFilter.cs" />
     <Compile Include="Helpers\CKeditorHelpers.cs" />
     <Compile Include="Helpers\DateTimeHelper.cs" />
+    <Compile Include="Helpers\PagingHelpers.cs" />
     <Compile Include="HtmlHelpers.cs" />
     <Compile Include="Identity\MultiTenantClaimsIdentity.cs" />
     <Compile Include="Identity\MultiTenantClaimsIdentityFactory.cs" />
@@ -148,6 +150,8 @@
     <Compile Include="Routing\UrlRewriter.cs" />
     <Compile Include="Routing\WebApiConfig.cs" />
     <Compile Include="SiteContext.cs" />
+    <Compile Include="ViewModels\CoreData\CountryListPageViewModel.cs" />
+    <Compile Include="ViewModels\PagingInfo.cs" />
     <Compile Include="ViewModels\SiteSettings\SiteBasicSettingsViewModel.cs" />
     <Compile Include="ViewModels\SiteSettings\SiteMenuItemViewModel.cs" />
     <Compile Include="ViewModels\SiteSettings\SiteMenuViewModel.cs" />

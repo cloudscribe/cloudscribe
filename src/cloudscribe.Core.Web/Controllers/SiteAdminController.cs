@@ -1,24 +1,27 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2014-10-26
+// Last Modified:			2014-11-15
 // 
 
-using cloudscribe.AspNet.Identity;
-using cloudscribe.Core.Models;
-using cloudscribe.Core.Web.ViewModels.SiteSettings;
+using cloudscribe.Core.Models.Geography;
 using cloudscribe.Core.Web.Helpers;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security;
-using System.Linq;
+using cloudscribe.Core.Web.ViewModels.SiteSettings;
+using System;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 
 namespace cloudscribe.Core.Web.Controllers
 {
     public class SiteAdminController : CloudscribeBaseController
     {
+        private IGeoRepository geoRepo;
+
+        public SiteAdminController(IGeoRepository geoRepository)
+        {
+            geoRepo = geoRepository;
+        }
+
+        // GET: /SiteAdmin
         public async Task<ActionResult> Index(SiteAdminMessageId? message)
         {
             ViewBag.SiteName = Site.SiteSettings.SiteName;
@@ -32,24 +35,34 @@ namespace cloudscribe.Core.Web.Controllers
             SiteMenuItemViewModel item = new SiteMenuItemViewModel();
             item.ItemText = "Basic Settings";
             item.ItemUrl = "/SiteAdmin/SiteInfo";
-            item.CssClass = "menu_siteinfo";
+            item.CssClass = "mnu-siteinfo";
             model.Items.Add(item);
 
             item = new SiteMenuItemViewModel();
             item.ItemText = "Site List";
             item.ItemUrl = "/SiteAdmin/SiteList";
-            item.CssClass = "menu_sitelist";
+            item.CssClass = "mnu-sitelist";
             model.Items.Add(item);
 
             item = new SiteMenuItemViewModel();
             item.ItemText = "Roles";
             item.ItemUrl = "/SiteAdmin/Roles";
-            item.CssClass = "menu_roles";
+            item.CssClass = "mnu-roles";
             model.Items.Add(item);
+
+            if(Site.SiteSettings.IsServerAdminSite)
+            {
+                item = new SiteMenuItemViewModel();
+                item.ItemText = "Core Data";
+                item.ItemUrl = "/CoreData";
+                item.CssClass = "mnu-coredata";
+                model.Items.Add(item);
+            }
 
             return View(model);
         }
 
+        // GET: /SiteAdmin/SiteInfo
         public async Task<ActionResult> SiteInfo(SiteAdminMessageId? message)
         {
             ViewBag.SiteName = Site.SiteSettings.SiteName;
@@ -73,11 +86,43 @@ namespace cloudscribe.Core.Web.Controllers
             model.CompanyFax = Site.SiteSettings.CompanyFax;
             model.CompanyPublicEmail = Site.SiteSettings.CompanyPublicEmail;
             model.SiteFolderName = Site.SiteSettings.SiteFolderName;
+
+            model.AvailableCountries.Add(new SelectListItem { Text = "-Please select-", Value = "Selects items" });
+            var countries = geoRepo.GetAllCountries();
+            Guid selectedCountryGuid = Guid.Empty;
+            foreach (var country in countries)
+            {
+                if(country.ISOCode2 == model.CompanyCountry)
+                {
+                    selectedCountryGuid = country.Guid;
+                }
+                model.AvailableCountries.Add(new SelectListItem()
+                {
+                    Text = country.Name,
+                    Value = country.ISOCode2.ToString()
+
+                });
+            }
+
+            if (selectedCountryGuid != Guid.Empty)
+            {
+                var states = geoRepo.GetGeoZonesByCountry(selectedCountryGuid);
+                foreach (var state in states)
+                {
+                    model.AvailableStates.Add(new SelectListItem()
+                    {
+                        Text = state.Name,
+                        Value = state.Code
+                    });
+                }
+
+            }
            
 
             return View(model);
         }
 
+        // Post: /SiteAdmin/SiteInfo
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> SiteInfo(SiteBasicSettingsViewModel model)

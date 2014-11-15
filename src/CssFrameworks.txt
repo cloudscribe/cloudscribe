@@ -1,0 +1,28 @@
+
+MS seems to push bootstrap on us via project templates but Bootstrap is kind of large and bloated by default
+
+I think we need to carefully review alternatives and figure out ways to make it flexible to use others even if we settle on one.
+
+Even Dino Esposito in his 10 Good Practices for ASP.NET MVC Apps says Don't Use Bootstrap
+http://www.codemag.com/Article/1405071
+
+Obviously we have to use something. The challenge is how to stay loosely coupled.
+People can copy and modify views of course if they want to make major changes to markup, but it would be nice to at least have a way to plugin css class names somehow instead of hard coding them in the views
+
+http://www.monolinea.com/css-frameworks-comparison/
+
+http://xybu.me/a-comparison-of-light-weight-web-front-end-frameworks/
+
+http://foundation.zurb.com/
+
+http://getuikit.com/
+
+http://semantic-ui.com/introduction.html
+
+http://gumbyframework.com/
+
+http://purecss.io/
+
+http://matthewhartman.github.io/base/
+
+

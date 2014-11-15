@@ -1,0 +1,42 @@
+﻿@model cloudscribe.Core.Web.ViewModels.CoreData.CountryListPageViewModel
+
+@{
+    //ViewBag.Title = "CountryListPage";
+}
+
+<h2>@Model.Heading</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            Name
+        </th>
+        <th>
+            ISOCode2
+        </th>
+        <th>
+            ISOCode3
+        </th>
+    </tr>
+
+@foreach (var c in Model.Countries) {
+    <tr>
+        <td>
+            @c.Name
+        </td>
+        <td>
+            @c.ISOCode2
+        </td>
+        <td>
+            @c.ISOCode3
+        </td>
+    </tr>
+}
+
+</table>
+<div>
+    @Html.PageLinks(Model.Paging, x => Url.Action("CountryListPage", new { pageNumber = x }))
+</div>
