@@ -79,6 +79,15 @@ namespace cloudscribe.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Back To List.
+        /// </summary>
+        public static string BackToList {
+            get {
+                return ResourceManager.GetString("BackToList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Change.
         /// </summary>
         public static string Change {
@@ -223,6 +232,15 @@ namespace cloudscribe.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Create New.
+        /// </summary>
+        public static string CreateNew {
+            get {
+                return ResourceManager.GetString("CreateNew", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Disabled.
         /// </summary>
         public static string Disabled {
@@ -277,6 +295,42 @@ namespace cloudscribe.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ISOCode2.
+        /// </summary>
+        public static string ISOCode2 {
+            get {
+                return ResourceManager.GetString("ISOCode2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ISOCode2 is required.
+        /// </summary>
+        public static string ISOCode2Required {
+            get {
+                return ResourceManager.GetString("ISOCode2Required", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ISOCode3.
+        /// </summary>
+        public static string ISOCode3 {
+            get {
+                return ResourceManager.GetString("ISOCode3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ISOCode3 is required.
+        /// </summary>
+        public static string ISOCode3Required {
+            get {
+                return ResourceManager.GetString("ISOCode3Required", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Log in.
         /// </summary>
         public static string Login {
@@ -300,6 +354,24 @@ namespace cloudscribe.Resources {
         public static string Manage {
             get {
                 return ResourceManager.GetString("Manage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        public static string Name {
+            get {
+                return ResourceManager.GetString("Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name is required.
+        /// </summary>
+        public static string NameRequired {
+            get {
+                return ResourceManager.GetString("NameRequired", resourceCulture);
             }
         }
         
@@ -412,7 +484,7 @@ namespace cloudscribe.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Site name is required..
+        ///   Looks up a localized string similar to Site name is required.
         /// </summary>
         public static string SiteNameRequired {
             get {

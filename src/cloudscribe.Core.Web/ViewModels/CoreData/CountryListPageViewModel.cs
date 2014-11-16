@@ -3,12 +3,8 @@
 // Last Modified:			2014-11-15
 //
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using cloudscribe.Core.Models.Geography;
+using System.Collections.Generic;
 
 namespace cloudscribe.Core.Web.ViewModels.CoreData
 {

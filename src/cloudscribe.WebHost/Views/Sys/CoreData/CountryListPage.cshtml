@@ -5,25 +5,27 @@
 }
 
 <h2>@Model.Heading</h2>
-
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
 <table class="table">
     <tr>
         <th>
-            Name
+            @Html.ActionLink(@CommonResources.CreateNew, "CountryEdit")
         </th>
         <th>
-            ISOCode2
+            @CommonResources.Name
         </th>
         <th>
-            ISOCode3
+            @CommonResources.ISOCode2
+        </th>
+        <th>
+            @CommonResources.ISOCode3
         </th>
     </tr>
 
 @foreach (var c in Model.Countries) {
     <tr>
+        <td>
+            @Html.ActionLink("Edit", "CountryEdit", "CoreData", new { guid = c.Guid }, null)
+        </td>
         <td>
             @c.Name
         </td>

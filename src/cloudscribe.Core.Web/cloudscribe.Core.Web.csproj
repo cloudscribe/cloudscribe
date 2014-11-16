@@ -151,6 +151,7 @@
     <Compile Include="Routing\WebApiConfig.cs" />
     <Compile Include="SiteContext.cs" />
     <Compile Include="ViewModels\CoreData\CountryListPageViewModel.cs" />
+    <Compile Include="ViewModels\CoreData\GeoCountryViewModel.cs" />
     <Compile Include="ViewModels\PagingInfo.cs" />
     <Compile Include="ViewModels\SiteSettings\SiteBasicSettingsViewModel.cs" />
     <Compile Include="ViewModels\SiteSettings\SiteMenuItemViewModel.cs" />

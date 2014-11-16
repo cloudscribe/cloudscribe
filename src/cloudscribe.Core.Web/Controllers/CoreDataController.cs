@@ -73,5 +73,45 @@ namespace cloudscribe.Core.Web.Controllers
             return View(model);
         }
 
+        // GET: /SiteAdmin/SiteInfo
+        public async Task<ActionResult> CountryEdit(Guid? guid)
+        {
+            ViewBag.SiteName = Site.SiteSettings.SiteName;
+            ViewBag.Title = "Edit Country";
+
+            GeoCountryViewModel model;
+
+            if((guid != null)&&(guid.Value != Guid.Empty))
+            {
+                IGeoCountry country = geoRepo.FetchCountry(guid.Value);
+                model = GeoCountryViewModel.FromIGeoCountry(country);
+            }
+            else
+            {
+                ViewBag.Title = "New Country";
+                model = new GeoCountryViewModel();
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> CountryEdit(GeoCountryViewModel model)
+        {
+            ViewBag.SiteName = Site.SiteSettings.SiteName;
+            ViewBag.Title = "Edit Country";
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            geoRepo.Save(model);
+
+            return RedirectToAction("CountryListPage");
+
+        }
+
     }
 }

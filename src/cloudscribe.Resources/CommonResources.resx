@@ -235,7 +235,7 @@
     <value>Site name must be between {0} and {1} characters.</value>
   </data>
   <data name="SiteNameRequired" xml:space="preserve">
-    <value>Site name is required.</value>
+    <value>Site name is required</value>
   </data>
   <data name="SiteSlogan" xml:space="preserve">
     <value>Slogan</value>
@@ -245,5 +245,29 @@
   </data>
   <data name="TwoFactorAuthentication" xml:space="preserve">
     <value>Two-Factor Authentication</value>
+  </data>
+  <data name="NameRequired" xml:space="preserve">
+    <value>Name is required</value>
+  </data>
+  <data name="ISOCode2" xml:space="preserve">
+    <value>ISOCode2</value>
+  </data>
+  <data name="ISOCode2Required" xml:space="preserve">
+    <value>ISOCode2 is required</value>
+  </data>
+  <data name="ISOCode3" xml:space="preserve">
+    <value>ISOCode3</value>
+  </data>
+  <data name="ISOCode3Required" xml:space="preserve">
+    <value>ISOCode3 is required</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="BackToList" xml:space="preserve">
+    <value>Back To List</value>
+  </data>
+  <data name="CreateNew" xml:space="preserve">
+    <value>Create New</value>
   </data>
 </root>
