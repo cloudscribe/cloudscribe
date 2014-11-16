@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.ViewModels.SiteSettings
 {
-    public class SiteMenuItemViewModel
+    public class AdminMenuItemViewModel
     {
         public string ItemText { get; set; }
         public string ItemUrl { get; set; }

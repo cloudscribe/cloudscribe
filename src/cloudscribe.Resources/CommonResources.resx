@@ -270,4 +270,13 @@
   <data name="CreateNew" xml:space="preserve">
     <value>Create New</value>
   </data>
+  <data name="Code" xml:space="preserve">
+    <value>Code</value>
+  </data>
+  <data name="NewState" xml:space="preserve">
+    <value>New State</value>
+  </data>
+  <data name="BackToCountryList" xml:space="preserve">
+    <value>Back To Country List</value>
+  </data>
 </root>

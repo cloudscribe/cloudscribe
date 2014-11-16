@@ -7,7 +7,7 @@
 <h2>@Model.Heading</h2>
 <table class="table">
     <tr>
-        <th>
+        <th colspan="2">
             @Html.ActionLink(@CommonResources.CreateNew, "CountryEdit")
         </th>
         <th>
@@ -27,6 +27,9 @@
             @Html.ActionLink("Edit", "CountryEdit", "CoreData", new { guid = c.Guid }, null)
         </td>
         <td>
+            @Html.ActionLink("States", "StateListPage", "CoreData", new { countryGuid = c.Guid }, null)
+        </td>
+        <td>
             @c.Name
         </td>
         <td>
@@ -40,5 +43,5 @@
 
 </table>
 <div>
-    @Html.PageLinks(Model.Paging, x => Url.Action("CountryListPage", new { pageNumber = x }))
+    @Html.PageLinks(Model.Paging, x => Url.Action("CountryListPage", new { pageNumber = x, pageSize = Model.Paging.ItemsPerPage }))
 </div>

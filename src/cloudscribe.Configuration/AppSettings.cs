@@ -163,6 +163,10 @@ namespace cloudscribe.Configuration
             get { return GetInt("CacheDurationInSeconds_TimeZoneList", 3600); } // 1 hour
         }
 
+        public static int DefaultPageSize_CountryList
+        {
+            get { return GetInt("DefaultPageSize_CountryList", 10); }
+        }
 
         public static string RouteConfigPath
         {

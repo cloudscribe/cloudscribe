@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.ViewModels.SiteSettings
 {
-    public class SiteMenuViewModel
+    public class AdminMenuViewModel
     {
         public string MenuTitle { get; set; }
 
-        private List<SiteMenuItemViewModel> items = new List<SiteMenuItemViewModel>();
-        public List<SiteMenuItemViewModel> Items { get { return items; } }
+        private List<AdminMenuItemViewModel> items = new List<AdminMenuItemViewModel>();
+        public List<AdminMenuItemViewModel> Items { get { return items; } }
     }
 }

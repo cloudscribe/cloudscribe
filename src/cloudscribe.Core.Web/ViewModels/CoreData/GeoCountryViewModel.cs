@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-11-15
-// Last Modified:			2014-11-15
+// Last Modified:			2014-11-16
 //
 
 using System;
@@ -18,6 +18,7 @@ namespace cloudscribe.Core.Web.ViewModels.CoreData
 {
     public class GeoCountryViewModel : IGeoCountry
     {
+        
         private Guid guid = Guid.Empty;
 
         [Display(Name = "Guid")]

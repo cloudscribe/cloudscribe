@@ -27,24 +27,24 @@ namespace cloudscribe.Core.Web.Controllers
             ViewBag.SiteName = Site.SiteSettings.SiteName;
             ViewBag.Title = "Site Administration";
 
-            SiteMenuViewModel model = new SiteMenuViewModel
+            AdminMenuViewModel model = new AdminMenuViewModel
             {
                 MenuTitle = "Site Administration"
             };
 
-            SiteMenuItemViewModel item = new SiteMenuItemViewModel();
+            AdminMenuItemViewModel item = new AdminMenuItemViewModel();
             item.ItemText = "Basic Settings";
             item.ItemUrl = "/SiteAdmin/SiteInfo";
             item.CssClass = "mnu-siteinfo";
             model.Items.Add(item);
 
-            item = new SiteMenuItemViewModel();
+            item = new AdminMenuItemViewModel();
             item.ItemText = "Site List";
             item.ItemUrl = "/SiteAdmin/SiteList";
             item.CssClass = "mnu-sitelist";
             model.Items.Add(item);
 
-            item = new SiteMenuItemViewModel();
+            item = new AdminMenuItemViewModel();
             item.ItemText = "Roles";
             item.ItemUrl = "/SiteAdmin/Roles";
             item.CssClass = "mnu-roles";
@@ -52,7 +52,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             if(Site.SiteSettings.IsServerAdminSite)
             {
-                item = new SiteMenuItemViewModel();
+                item = new AdminMenuItemViewModel();
                 item.ItemText = "Core Data";
                 item.ItemUrl = "/CoreData";
                 item.CssClass = "mnu-coredata";

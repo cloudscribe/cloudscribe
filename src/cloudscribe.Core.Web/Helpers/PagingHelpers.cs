@@ -14,6 +14,14 @@ using cloudscribe.Core.Models;
 
 namespace cloudscribe.Core.Web.Helpers
 {
+    /// <summary>
+    /// started to write this but found a nice one here:
+    /// https://github.com/martijnboland/MvcPaging
+    /// but it expects totalitems not totalpages which we would prefer since our db methods work that way
+    /// if we continue to develop this we need a lot of improvements, especially a paging strategy like CutePager had or 
+    /// like Martijn has in his so that we can limit the total nujmber of pager links when there are more that can fit on the page easily
+    /// 
+    /// </summary>
     public static class PagingHelpers
     {
 

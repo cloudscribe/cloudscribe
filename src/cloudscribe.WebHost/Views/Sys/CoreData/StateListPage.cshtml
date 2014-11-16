@@ -1,0 +1,47 @@
+﻿@model cloudscribe.Core.Web.ViewModels.CoreData.StateListPageViewModel
+
+@{
+    
+}
+
+<h2>@Html.DisplayFor(model => model.Heading)</h2>
+<h3>@Model.Country.Name</h3>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.ActionLink(@CommonResources.NewState, "StateEdit", "CoreData", new { countryGuid = Model.Country.Guid })
+        </th>
+        <th>
+            @CommonResources.Name
+        </th>
+        <th>
+            @CommonResources.Code
+        </th>
+    </tr>
+
+@foreach (var item in Model.States) {
+    <tr>
+        <td>
+            @Html.ActionLink("Edit", "StateEdit", "CoreData", new { countryGuid = Model.Country.Guid, guid = item.Guid }) |
+            @Html.ActionLink("Delete", "StateDelete", "CoreData", new { countryGuid = Model.Country.Guid, guid = item.Guid })
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Code)
+        </td>
+        
+    </tr>
+}
+
+</table>
+<div>
+    @Html.PageLinks(Model.Paging, x => Url.Action("StateListPage", 
+    new { countryGuid = Model.Country.Guid, pageNumber = x, pageSize = Model.Paging.ItemsPerPage }))
+</div>
+<div>
+    @Html.ActionLink(@CommonResources.BackToCountryList, "CountryListPage")
+</div>
+

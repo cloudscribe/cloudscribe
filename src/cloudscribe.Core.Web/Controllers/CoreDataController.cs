@@ -1,12 +1,13 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-11-15
-// Last Modified:			2014-11-15
+// Last Modified:			2014-11-16
 // 
 
 using cloudscribe.Core.Models.Geography;
 using cloudscribe.Core.Web.Helpers;
 using cloudscribe.Core.Web.ViewModels.SiteSettings;
 using cloudscribe.Core.Web.ViewModels.CoreData;
+using cloudscribe.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -17,7 +18,7 @@ namespace cloudscribe.Core.Web.Controllers
     public class CoreDataController : CloudscribeBaseController
     {
         private IGeoRepository geoRepo;
-
+        
         public CoreDataController(IGeoRepository geoRepository)
         {
             geoRepo = geoRepository;
@@ -29,24 +30,24 @@ namespace cloudscribe.Core.Web.Controllers
             ViewBag.SiteName = Site.SiteSettings.SiteName;
             ViewBag.Title = "Core Data Administration";
 
-            SiteMenuViewModel model = new SiteMenuViewModel
+            AdminMenuViewModel model = new AdminMenuViewModel
             {
                 MenuTitle = "Core Data Administration"
             };
 
-            SiteMenuItemViewModel item = new SiteMenuItemViewModel();
+            AdminMenuItemViewModel item = new AdminMenuItemViewModel();
             item.ItemText = "Currency Administration";
             item.ItemUrl = "/CoreData/Currency";
             item.CssClass = "mnu-coredata mnu-currencyadmin";
             model.Items.Add(item);
 
-            item = new SiteMenuItemViewModel();
+            item = new AdminMenuItemViewModel();
             item.ItemText = "Country List Administration";
             item.ItemUrl = "/CoreData/CountryListPage";
             item.CssClass = "mnu-coredata mnu-country";
             model.Items.Add(item);
 
-            item = new SiteMenuItemViewModel();
+            item = new AdminMenuItemViewModel();
             item.ItemText = "State List Administration";
             item.ItemUrl = "/CoreData/States";
             item.CssClass = "mnu-coredata mnu-states";
@@ -55,19 +56,24 @@ namespace cloudscribe.Core.Web.Controllers
             return View(model);
         }
 
-        public async Task<ActionResult> CountryListPage(int pageNumber = 1, int pageSize = 10)
+        public async Task<ActionResult> CountryListPage(int pageNumber = 1, int pageSize = -1)
         {
             ViewBag.SiteName = Site.SiteSettings.SiteName;
             ViewBag.Title = "Country List Administration";
+            int itemsPerPage = AppSettings.DefaultPageSize_CountryList;
+            if(pageSize > 0)
+            {
+                itemsPerPage = pageSize;
+            }
 
             int totalPages = 0;
-            List<IGeoCountry> countries = geoRepo.GetCountriesPage(pageNumber, pageSize, out totalPages);
+            List<IGeoCountry> countries = geoRepo.GetCountriesPage(pageNumber, itemsPerPage, out totalPages);
 
             CountryListPageViewModel model = new CountryListPageViewModel();
             model.Countries = countries;
             model.Heading = "Country List Administration";
             model.Paging.CurrentPage = pageNumber;
-            model.Paging.ItemsPerPage = pageSize;
+            model.Paging.ItemsPerPage = itemsPerPage;
             model.Paging.TotalPages = totalPages;
 
             return View(model);
@@ -110,6 +116,40 @@ namespace cloudscribe.Core.Web.Controllers
             geoRepo.Save(model);
 
             return RedirectToAction("CountryListPage");
+
+        }
+
+        public async Task<ActionResult> StateListPage(Guid? countryGuid, int pageNumber = 1, int pageSize = -1)
+        {
+            if(!countryGuid.HasValue)
+            {
+                return RedirectToAction("CountryListPage");
+            }
+
+            ViewBag.SiteName = Site.SiteSettings.SiteName;
+            ViewBag.Title = "State List Administration";
+            int itemsPerPage = AppSettings.DefaultPageSize_CountryList;
+            if (pageSize > 0)
+            {
+                itemsPerPage = pageSize;
+            }
+
+            //geoRepo.
+
+            int totalPages = 0;
+            List<IGeoZone> states = geoRepo.GetGeoZonePage(countryGuid.Value, pageNumber, itemsPerPage, out totalPages);
+
+            StateListPageViewModel model = new StateListPageViewModel();
+
+            IGeoCountry country = geoRepo.FetchCountry(countryGuid.Value);
+            model.Country = GeoCountryViewModel.FromIGeoCountry(country);
+            model.States = states;
+
+            model.Paging.CurrentPage = pageNumber;
+            model.Paging.ItemsPerPage = itemsPerPage;
+            model.Paging.TotalPages = totalPages;
+
+            return View(model);
 
         }
 

@@ -152,10 +152,11 @@
     <Compile Include="SiteContext.cs" />
     <Compile Include="ViewModels\CoreData\CountryListPageViewModel.cs" />
     <Compile Include="ViewModels\CoreData\GeoCountryViewModel.cs" />
+    <Compile Include="ViewModels\CoreData\StateListPageViewModel.cs" />
     <Compile Include="ViewModels\PagingInfo.cs" />
     <Compile Include="ViewModels\SiteSettings\SiteBasicSettingsViewModel.cs" />
-    <Compile Include="ViewModels\SiteSettings\SiteMenuItemViewModel.cs" />
-    <Compile Include="ViewModels\SiteSettings\SiteMenuViewModel.cs" />
+    <Compile Include="ViewModels\Common\AdminMenuItemViewModel.cs" />
+    <Compile Include="ViewModels\Common\AdminMenuViewModel.cs" />
     <Compile Include="ViewModels\SiteUser\AccountIndexViewModel.cs" />
     <Compile Include="ViewModels\SiteUser\AddPhoneNumberViewModel.cs" />
     <Compile Include="ViewModels\SiteUser\ChangePasswordViewModel.cs" />

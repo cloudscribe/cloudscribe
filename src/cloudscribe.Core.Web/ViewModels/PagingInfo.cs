@@ -33,5 +33,12 @@ namespace cloudscribe.Core.Web.ViewModels
             get { return currentPage; }
             set { currentPage = value; } 
         }
+
+        private int maxPagerItems = 10;
+        public int MaxPagerItems
+        {
+            get { return maxPagerItems; }
+            set { maxPagerItems = value; }
+        }
     }
 }

@@ -79,6 +79,15 @@ namespace cloudscribe.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Back To Country List.
+        /// </summary>
+        public static string BackToCountryList {
+            get {
+                return ResourceManager.GetString("BackToCountryList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Back To List.
         /// </summary>
         public static string BackToList {
@@ -111,6 +120,15 @@ namespace cloudscribe.Resources {
         public static string ChangeYourPassword {
             get {
                 return ResourceManager.GetString("ChangeYourPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Code.
+        /// </summary>
+        public static string Code {
+            get {
+                return ResourceManager.GetString("Code", resourceCulture);
             }
         }
         
@@ -372,6 +390,15 @@ namespace cloudscribe.Resources {
         public static string NameRequired {
             get {
                 return ResourceManager.GetString("NameRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New State.
+        /// </summary>
+        public static string NewState {
+            get {
+                return ResourceManager.GetString("NewState", resourceCulture);
             }
         }
         
