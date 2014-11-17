@@ -15,6 +15,7 @@ using System.Web.Mvc;
 
 namespace cloudscribe.Core.Web.Controllers
 {
+    [Authorize(Roles = "Admins,Content Administrators")]
     public class CoreDataController : CloudscribeBaseController
     {
         private IGeoRepository geoRepo;
@@ -150,6 +151,71 @@ namespace cloudscribe.Core.Web.Controllers
             model.Paging.TotalPages = totalPages;
 
             return View(model);
+
+        }
+
+        public async Task<ActionResult> StateEdit(Guid countryGuid, Guid? guid, int? returnPageNumber)
+        {
+            if (countryGuid == Guid.Empty)
+            {
+                return RedirectToAction("CountryListPage");
+            }
+
+            int returnPage = 1;
+            if (returnPageNumber.HasValue) { returnPage = returnPageNumber.Value; }
+
+            ViewBag.SiteName = Site.SiteSettings.SiteName;
+            ViewBag.Title = "Edit State";
+
+            GeoZoneViewModel model;
+
+            if((guid.HasValue)&&(guid.Value != Guid.Empty))
+            {
+                IGeoZone state = geoRepo.FetchGeoZone(guid.Value);
+                if((state != null)&&(state.CountryGuid == countryGuid))
+                {
+                    model = GeoZoneViewModel.FromIGeoZone(state);
+                    model.Heading = "Edit State";
+                    
+                }
+                else
+                {
+                    return RedirectToAction("CountryListPage", new { pageNumber = returnPage });
+                }
+
+            }
+            else
+            {
+                model = new GeoZoneViewModel();
+                model.Heading = "Create New State";
+                model.CountryGuid = countryGuid;
+            }
+
+            model.ReturnPageNumber = returnPage;
+            
+            IGeoCountry country = geoRepo.FetchCountry(countryGuid);
+            model.Country = GeoCountryViewModel.FromIGeoCountry(country);
+
+            return View(model);
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> StateEdit(GeoZoneViewModel model)
+        {
+            ViewBag.SiteName = Site.SiteSettings.SiteName;
+            ViewBag.Title = "Edit Country";
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            geoRepo.Save(model);
+
+            return RedirectToAction("StateListPage", new { countryGuid = model.CountryGuid, pageNumber = model.ReturnPageNumber });
+            
 
         }
 

@@ -43,5 +43,12 @@
 
 </table>
 <div>
-    @Html.PageLinks(Model.Paging, x => Url.Action("CountryListPage", new { pageNumber = x, pageSize = Model.Paging.ItemsPerPage }))
+    @Html.Pager(Model.Paging.ItemsPerPage, Model.Paging.CurrentPage, Model.Paging.TotalPages).Options(o => o
+            .Action("CountryListPage")
+            .AddRouteValue("pageSize", Model.Paging.ItemsPerPage)
+            .DisplayTemplate("Bootstrap3Pagination")
+            .PageRouteValueKey("pageNumber")
+            .MaxNrOfPages(Model.Paging.MaxPagerItems)
+            .UseItemCountAsPageCount()
+    )
 </div>

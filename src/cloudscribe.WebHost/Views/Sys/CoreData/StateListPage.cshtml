@@ -4,13 +4,13 @@
     
 }
 
-<h2>@Html.DisplayFor(model => model.Heading)</h2>
+<h2>@Model.Heading</h2>
 <h3>@Model.Country.Name</h3>
 
 <table class="table">
     <tr>
         <th>
-            @Html.ActionLink(@CommonResources.NewState, "StateEdit", "CoreData", new { countryGuid = Model.Country.Guid })
+            @Html.ActionLink(@CommonResources.NewState, "StateEdit", "CoreData", new { countryGuid = Model.Country.Guid, returnPageNumber = Model.Paging.CurrentPage },null)
         </th>
         <th>
             @CommonResources.Name
@@ -23,8 +23,8 @@
 @foreach (var item in Model.States) {
     <tr>
         <td>
-            @Html.ActionLink("Edit", "StateEdit", "CoreData", new { countryGuid = Model.Country.Guid, guid = item.Guid }) |
-            @Html.ActionLink("Delete", "StateDelete", "CoreData", new { countryGuid = Model.Country.Guid, guid = item.Guid })
+            @Html.ActionLink("Edit", "StateEdit", "CoreData", new { countryGuid = Model.Country.Guid, guid = item.Guid, returnPageNumber = Model.Paging.CurrentPage }, null) |
+            @Html.ActionLink("Delete", "StateDelete", "CoreData", new { countryGuid = Model.Country.Guid, guid = item.Guid, returnPageNumber = Model.Paging.CurrentPage }, null)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Name)
@@ -38,10 +38,20 @@
 
 </table>
 <div>
-    @Html.PageLinks(Model.Paging, x => Url.Action("StateListPage", 
-    new { countryGuid = Model.Country.Guid, pageNumber = x, pageSize = Model.Paging.ItemsPerPage }))
+   
+    @Html.Pager(Model.Paging.ItemsPerPage, Model.Paging.CurrentPage, Model.Paging.TotalPages).Options(o => o
+            .Action("StateListPage")
+            .AddRouteValue("countryGuid", Model.Country.Guid)
+            .AddRouteValue("pageSize", Model.Paging.ItemsPerPage)
+            .DisplayTemplate("Bootstrap3Pagination")
+            .PageRouteValueKey("pageNumber")
+            .MaxNrOfPages(Model.Paging.MaxPagerItems)
+            .UseItemCountAsPageCount()
+    )
 </div>
 <div>
-    @Html.ActionLink(@CommonResources.BackToCountryList, "CountryListPage")
+    @Html.ActionLink(@CommonResources.BackToCountryList, 
+    "CountryListPage", new { pageNumber = Model.ReturnPageNumber },
+        new { @class = "btn btn-default" })
 </div>
 

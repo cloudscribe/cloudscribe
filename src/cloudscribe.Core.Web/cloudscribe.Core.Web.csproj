@@ -63,6 +63,9 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
+    <Reference Include="MvcPaging">
+      <HintPath>..\packages\MvcPaging.2.1.2\lib\net40\MvcPaging.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.6.0.5\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -137,7 +140,6 @@
     <Compile Include="Filters\SiteContextFilter.cs" />
     <Compile Include="Helpers\CKeditorHelpers.cs" />
     <Compile Include="Helpers\DateTimeHelper.cs" />
-    <Compile Include="Helpers\PagingHelpers.cs" />
     <Compile Include="HtmlHelpers.cs" />
     <Compile Include="Identity\MultiTenantClaimsIdentity.cs" />
     <Compile Include="Identity\MultiTenantClaimsIdentityFactory.cs" />
@@ -152,6 +154,7 @@
     <Compile Include="SiteContext.cs" />
     <Compile Include="ViewModels\CoreData\CountryListPageViewModel.cs" />
     <Compile Include="ViewModels\CoreData\GeoCountryViewModel.cs" />
+    <Compile Include="ViewModels\CoreData\GeoZoneViewModel.cs" />
     <Compile Include="ViewModels\CoreData\StateListPageViewModel.cs" />
     <Compile Include="ViewModels\PagingInfo.cs" />
     <Compile Include="ViewModels\SiteSettings\SiteBasicSettingsViewModel.cs" />

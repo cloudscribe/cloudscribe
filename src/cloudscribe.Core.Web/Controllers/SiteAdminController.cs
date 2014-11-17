@@ -12,6 +12,7 @@ using System.Web.Mvc;
 
 namespace cloudscribe.Core.Web.Controllers
 {
+    [Authorize(Roles="Admins,Content Administrators")]
     public class SiteAdminController : CloudscribeBaseController
     {
         private IGeoRepository geoRepo;
@@ -63,6 +64,7 @@ namespace cloudscribe.Core.Web.Controllers
         }
 
         // GET: /SiteAdmin/SiteInfo
+        [Authorize(Roles = "Admins")]
         public async Task<ActionResult> SiteInfo(SiteAdminMessageId? message)
         {
             ViewBag.SiteName = Site.SiteSettings.SiteName;
@@ -125,6 +127,7 @@ namespace cloudscribe.Core.Web.Controllers
         // Post: /SiteAdmin/SiteInfo
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admins")]
         public async Task<ActionResult> SiteInfo(SiteBasicSettingsViewModel model)
         {
             ViewBag.SiteName = Site.SiteSettings.SiteName;

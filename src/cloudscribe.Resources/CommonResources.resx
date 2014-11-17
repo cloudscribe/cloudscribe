@@ -279,4 +279,7 @@
   <data name="BackToCountryList" xml:space="preserve">
     <value>Back To Country List</value>
   </data>
+  <data name="CodeRequired" xml:space="preserve">
+    <value>Code is required</value>
+  </data>
 </root>

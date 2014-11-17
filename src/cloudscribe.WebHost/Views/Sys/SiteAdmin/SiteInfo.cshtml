@@ -4,6 +4,9 @@
     
 }
 <h2>@ViewBag.Title</h2>
+<div>
+    @Html.ActionLink(@CommonResources.BackToAdministrationMenu, "Index")
+</div>
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()

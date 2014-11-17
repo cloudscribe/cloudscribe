@@ -31,5 +31,13 @@ namespace cloudscribe.Core.Web.ViewModels.CoreData
         public List<IGeoZone> States { get; set; }
         public PagingInfo Paging { get; set; }
 
+        private int returnPageNumber = 1;
+
+        public int ReturnPageNumber
+        {
+            get { return returnPageNumber; }
+            set { returnPageNumber = value; }
+        }
+
     }
 }
