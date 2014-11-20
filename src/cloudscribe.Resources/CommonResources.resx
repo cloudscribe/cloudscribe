@@ -282,4 +282,10 @@
   <data name="CodeRequired" xml:space="preserve">
     <value>Code is required</value>
   </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="ConfirmDeleteFormat" xml:space="preserve">
+    <value>Are you sure you want to delete {0}?</value>
+  </data>
 </root>

@@ -7,7 +7,7 @@
 <h2>@Model.Heading</h2>
 <h3>@Model.Country.Name</h3>
 
-<table class="table">
+<table class="table table-striped">
     <tr>
         <th>
             @Html.ActionLink(@CommonResources.NewState, "StateEdit", "CoreData", new { countryGuid = Model.Country.Guid, returnPageNumber = Model.Paging.CurrentPage },null)
@@ -23,8 +23,27 @@
 @foreach (var item in Model.States) {
     <tr>
         <td>
-            @Html.ActionLink("Edit", "StateEdit", "CoreData", new { countryGuid = Model.Country.Guid, guid = item.Guid, returnPageNumber = Model.Paging.CurrentPage }, null) |
-            @Html.ActionLink("Delete", "StateDelete", "CoreData", new { countryGuid = Model.Country.Guid, guid = item.Guid, returnPageNumber = Model.Paging.CurrentPage }, null)
+            
+
+@using (Html.BeginForm("StateDelete", "CoreData"))
+{
+    @Html.AntiForgeryToken()
+    
+    @Html.ActionLink("Edit", "StateEdit", "CoreData",
+            new { countryGuid = Model.Country.Guid, guid = item.Guid, returnPageNumber = Model.Paging.CurrentPage }
+         , new { @class = "btn btn-default" })
+
+    
+    @Html.Hidden("countryGuid",item.CountryGuid)
+    @Html.Hidden("guid",item.Guid)
+    @Html.Hidden("returnPageNumber", Model.Paging.CurrentPage)
+          
+
+    <input type="submit" value="@CommonResources.Delete" 
+           onclick="javascript: return confirm('@Html.FormatValue(item.Name, CommonResources.ConfirmDeleteFormat)');" 
+           class="btn btn-default" />
+}
+
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Name)

@@ -1,7 +1,7 @@
 
 2014-11-15 it seems premature to try to build cloudscribe on vnext mainly because certain dependencies are not available yet
 such as log4net, mysql.data etc. supposedly you can use that if you target the desktop framework instead of core but it seems not to work.
-I can add a reference to MtSql.Data but it gives a build error the type or namespace cannot be found.
+I can add a reference to MySql.Data via NuGet but it gives a build error the type or namespace cannot be found as if the reference was not there.
 
 So, we will wait and make the needed changes soon after the final release of vnext aka aspnet 5, or until the needed dependencies are available.
 
@@ -43,7 +43,8 @@ app.UseMvc(routes =>
 
 Razor view engine now has TagHelpers
 https://www.youtube.com/watch?v=Za89_-I25AI
-which gives more control over markup in the view as compared to helpers like EditorFor and DropdownListFor
+which gives more control over markup in the view as compared to htmlhelpers like EditorFor and DropdownListFor
+http://www.hanselman.com/blog/ASPNET5VNextWorkInProgressExploringTagHelpers.aspx
 
 new concept of ViewComponents meant to replace child actions concept
 
@@ -92,3 +93,5 @@ http://www.visualstudio.com/en-us/downloads/visual-studio-14-ctp-vs
 http://www.asp.net/vnext/overview/aspnet-vnext/getting-started-with-aspnet-vnext-and-visual-studio
 
 https://github.com/aspnet/Home/wiki/Assembly-Neutral-Interfaces
+
+http://blogs.msdn.com/b/webdev/archive/2014/11/14/katana-asp-net-5-and-bridging-the-gap.aspx

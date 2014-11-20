@@ -1,3 +1,35 @@
 
+http://haacked.com/archive/2011/01/06/razor-syntax-quick-reference.aspx/
+
 http://www.codeproject.com/Tips/256090/Add-namespaces-for-Razor-pages
+
+confirming deletes and other actions
+
+http://rkandhal.com/07/07/reusable-modal-dialogs/
+
+http://jameschambers.com/2014/07/day-29-confirmation-dialogs-for-delete-actions/
+
+http://www.codeguru.com/csharp/.net/net_asp/mvc/article.php/c20139/Confirming-Delete-Operations-in-ASPNET-MVC.htm
+
+http://rohit-developer.blogspot.in/2014/08/crud-multiple-jquery-dialogs-in-aspnet.html
+
+http://stackoverflow.com/questions/4682107/delete-actionlink-with-confirm-dialog
+
+sitemap menus bread crumbs
+
+http://stackoverflow.com/questions/21494075/breadcrumbs-in-c-sharp-mvc-website-using-bootstrap
+
+http://stackoverflow.com/questions/18402684/create-breadcrumbs-path-in-asp-net-mvc
+
+
+http://joeylicc.wordpress.com/2014/10/03/asp-net-mvc-5-menu-using-site-map-provider-bootstrap-3-navbar/
+
+https://joeylicc.wordpress.com/2013/07/08/asp-net-mvc-sitemappath-using-site-map-provider-bootstrap-breadcrumbs/
+
+https://github.com/maartenba/MvcSiteMapProvider
+
+https://github.com/maartenba/MvcSiteMapProvider/wiki/Defining-sitemap-nodes-using-IDynamicNodeProvider
+
+
+
 

@@ -124,6 +124,12 @@
     <Reference Include="MvcPaging">
       <HintPath>..\packages\MvcPaging.2.1.2\lib\net40\MvcPaging.dll</HintPath>
     </Reference>
+    <Reference Include="MvcSiteMapProvider">
+      <HintPath>..\packages\MvcSiteMapProvider.MVC5.Core.4.6.17\lib\net45\MvcSiteMapProvider.dll</HintPath>
+    </Reference>
+    <Reference Include="MvcSiteMapProvider.WebActivator">
+      <HintPath>..\packages\MvcSiteMapProvider.MVC5.4.6.17\lib\net45\MvcSiteMapProvider.WebActivator.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.6.0.5\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -770,6 +776,16 @@
     <Content Include="Views\Sys\CoreData\StateListPage.cshtml" />
     <Content Include="Views\Sys\CoreData\CountryDetail.cshtml" />
     <Content Include="Views\Sys\CoreData\StateEdit.cshtml" />
+    <None Include="MvcSiteMapSchema.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="Views\Sys\Shared\DisplayTemplates\Bootstrap3Pagination.cshtml" />
+    <Content Include="Views\Sys\Shared\DisplayTemplates\BootstrapPagination.cshtml" />
+    <Content Include="Views\Sys\Shared\DisplayTemplates\MvcSiteMapHelperModel.cshtml" />
+    <Content Include="site.sitemap" />
+    <Content Include="Views\Sys\Shared\DisplayTemplates\MvcSiteMapPathHelperModel.cshtml">
+      <SubType>Code</SubType>
+    </Content>
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />

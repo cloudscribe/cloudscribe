@@ -1,0 +1,22 @@
+﻿@model MvcSiteMapProvider.Web.Html.Models.SiteMapPathHelperModel
+@using System.Web.Mvc.Html
+@using System.Linq
+@using MvcSiteMapProvider.Web.Html.Models
+
+@if (Model.Nodes.Count > 1)
+{
+    @:<ul class="breadcrumb">
+    foreach (var node in Model.Nodes)
+    {
+        if (node != Model.Nodes.Last())
+        {
+            string url = node.IsClickable ? node.Url : "#";
+            @:<li><a href="@url">@node.Title</a><span class="divider"></span></li>
+        }
+        else
+        {
+            @:<li class="active">@node.Title</li>
+        }
+    }
+    @:</ul>
+}

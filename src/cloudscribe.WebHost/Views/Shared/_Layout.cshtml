@@ -20,20 +20,21 @@
                 @Html.ActionLink((string)ViewBag.SiteName, "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                </ul>
+                @Html.MvcSiteMap().Menu("MvcSiteMapHelperModel")
                 @Html.Partial("_LoginPartial")
             </div>
-        </div>
+            
+            
+         </div>
     </div>
     <div class="container body-content">
+        
+        @Html.MvcSiteMap().SiteMapPath("MvcSiteMapPathHelperModel")
+       
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            <p>&copy; @DateTime.Now.Year - @ViewBag.SiteName</p>
         </footer>
     </div>
 

@@ -219,5 +219,14 @@ namespace cloudscribe.Core.Web.Controllers
 
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> StateDelete(Guid countryGuid, Guid guid, int returnPageNumber =1)
+        {
+            geoRepo.DeleteGeoZone(guid);
+
+            return RedirectToAction("StateListPage", new { countryGuid = countryGuid, pageNumber = returnPageNumber });
+        }
+
     }
 }
