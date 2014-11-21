@@ -39,5 +39,13 @@ namespace cloudscribe.Core.Web.ViewModels.CoreData
             set { returnPageNumber = value; }
         }
 
+        private int countryListReturnPageNumber = 1;
+
+        public int CountryListReturnPageNumber
+        {
+            get { return countryListReturnPageNumber; }
+            set { countryListReturnPageNumber = value; }
+        }
+
     }
 }

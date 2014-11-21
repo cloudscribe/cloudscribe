@@ -1,14 +1,16 @@
-﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.AdminMenuViewModel
-
+﻿
 @{
-    
+    bool startingNodeInChildLevel = true;
+    bool showStartingNode = false;
+    int maxDepth = 2;
 }
 
-<h2>@Model.MenuTitle</h2>
+<h2>@ViewBag.Heading</h2>
+@Html.MvcSiteMap().Menu(
+Html.MvcSiteMap().SiteMap.FindSiteMapNodeFromKey("SiteAdmin"),
+    startingNodeInChildLevel,
+    showStartingNode,
+    maxDepth,
+    new { name = "ChildMenu" }
+    )
 
-<ul>
-    @foreach (var menuItem in Model.Items)
-    {
-        <li class="@menuItem.CssClass"><a href="@Href(@menuItem.ItemUrl)">@menuItem.ItemText</a></li>
-    }
-</ul>

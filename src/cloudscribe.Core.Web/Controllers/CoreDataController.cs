@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-11-15
-// Last Modified:			2014-11-16
+// Last Modified:			2014-11-21
 // 
 
 using cloudscribe.Core.Models.Geography;
@@ -12,12 +12,15 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using MvcSiteMapProvider;
+
 
 namespace cloudscribe.Core.Web.Controllers
 {
     [Authorize(Roles = "Admins,Content Administrators")]
     public class CoreDataController : CloudscribeBaseController
     {
+
         private IGeoRepository geoRepo;
         
         public CoreDataController(IGeoRepository geoRepository)
@@ -30,31 +33,34 @@ namespace cloudscribe.Core.Web.Controllers
         {
             ViewBag.SiteName = Site.SiteSettings.SiteName;
             ViewBag.Title = "Core Data Administration";
+            ViewBag.Heading = "Core Data Administration";
 
-            AdminMenuViewModel model = new AdminMenuViewModel
-            {
-                MenuTitle = "Core Data Administration"
-            };
+            return View();
 
-            AdminMenuItemViewModel item = new AdminMenuItemViewModel();
-            item.ItemText = "Currency Administration";
-            item.ItemUrl = "/CoreData/Currency";
-            item.CssClass = "mnu-coredata mnu-currencyadmin";
-            model.Items.Add(item);
+            //AdminMenuViewModel model = new AdminMenuViewModel
+            //{
+            //    MenuTitle = "Core Data Administration"
+            //};
 
-            item = new AdminMenuItemViewModel();
-            item.ItemText = "Country List Administration";
-            item.ItemUrl = "/CoreData/CountryListPage";
-            item.CssClass = "mnu-coredata mnu-country";
-            model.Items.Add(item);
+            //AdminMenuItemViewModel item = new AdminMenuItemViewModel();
+            //item.ItemText = "Currency Administration";
+            //item.ItemUrl = "/CoreData/CurrencyList";
+            //item.CssClass = "mnu-coredata mnu-currencyadmin";
+            //model.Items.Add(item);
 
-            item = new AdminMenuItemViewModel();
-            item.ItemText = "State List Administration";
-            item.ItemUrl = "/CoreData/States";
-            item.CssClass = "mnu-coredata mnu-states";
-            model.Items.Add(item);
+            //item = new AdminMenuItemViewModel();
+            //item.ItemText = "Country List Administration";
+            //item.ItemUrl = "/CoreData/CountryListPage";
+            //item.CssClass = "mnu-coredata mnu-country";
+            //model.Items.Add(item);
 
-            return View(model);
+            //item = new AdminMenuItemViewModel();
+            //item.ItemText = "State List Administration";
+            //item.ItemUrl = "/CoreData/States";
+            //item.CssClass = "mnu-coredata mnu-states";
+            //model.Items.Add(item);
+
+            //return View(model);
         }
 
         public async Task<ActionResult> CountryListPage(int pageNumber = 1, int pageSize = -1)
@@ -81,7 +87,8 @@ namespace cloudscribe.Core.Web.Controllers
         }
 
         // GET: /SiteAdmin/SiteInfo
-        public async Task<ActionResult> CountryEdit(Guid? guid)
+        [MvcSiteMapNode(Title = "Edit Country", ParentKey = "CountryListPage", Key = "CountryEdit")] 
+        public async Task<ActionResult> CountryEdit(Guid? guid, int returnPageNumber = 1)
         {
             ViewBag.SiteName = Site.SiteSettings.SiteName;
             ViewBag.Title = "Edit Country";
@@ -104,7 +111,8 @@ namespace cloudscribe.Core.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CountryEdit(GeoCountryViewModel model)
+        
+        public async Task<ActionResult> CountryEdit(GeoCountryViewModel model, int returnPageNumber = 1)
         {
             ViewBag.SiteName = Site.SiteSettings.SiteName;
             ViewBag.Title = "Edit Country";
@@ -116,11 +124,16 @@ namespace cloudscribe.Core.Web.Controllers
 
             geoRepo.Save(model);
 
-            return RedirectToAction("CountryListPage");
+            return RedirectToAction("CountryListPage", new { pageNumber = returnPageNumber} );
 
         }
 
-        public async Task<ActionResult> StateListPage(Guid? countryGuid, int pageNumber = 1, int pageSize = -1)
+        //[MvcSiteMapNode(Title = "States", ParentKey = "CountryListPage", Key = "StateListPage")] 
+        public async Task<ActionResult> StateListPage(
+            Guid? countryGuid, 
+            int pageNumber = 1, 
+            int pageSize = -1,
+            int countryReturnPageNumber = 1)
         {
             if(!countryGuid.HasValue)
             {
@@ -149,11 +162,27 @@ namespace cloudscribe.Core.Web.Controllers
             model.Paging.CurrentPage = pageNumber;
             model.Paging.ItemsPerPage = itemsPerPage;
             model.Paging.TotalPages = totalPages;
+            model.CountryListReturnPageNumber = countryReturnPageNumber;
+
+            // below we are just manipiulating the bread crumbs
+            ISiteMap map = SiteMaps.GetSiteMap();
+            if (map.CurrentNode != null)
+            {
+                map.CurrentNode.Title = model.Country.Name + " States";
+                // parent node is country  list page
+                // unfortunately this does nothing
+                //map.CurrentNode.ParentNode.RouteValues.Add("pageNumber", countryReturnPageNumber);
+                
+                
+            }
+            
+            
 
             return View(model);
 
         }
 
+        [MvcSiteMapNode(Title = "Edit State", ParentKey = "StateListPage", Key = "StateEdit")] 
         public async Task<ActionResult> StateEdit(Guid countryGuid, Guid? guid, int? returnPageNumber)
         {
             if (countryGuid == Guid.Empty)
@@ -195,6 +224,13 @@ namespace cloudscribe.Core.Web.Controllers
             
             IGeoCountry country = geoRepo.FetchCountry(countryGuid);
             model.Country = GeoCountryViewModel.FromIGeoCountry(country);
+
+            ISiteMap map = SiteMaps.GetSiteMap();
+            if (map.CurrentNode != null)
+            {
+                map.CurrentNode.Title = model.Heading;
+                //map.CurrentNode.ParentNode.RouteValues.Add("pageNumber")
+            }
 
             return View(model);
 

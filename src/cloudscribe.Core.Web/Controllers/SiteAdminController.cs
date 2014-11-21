@@ -27,40 +27,42 @@ namespace cloudscribe.Core.Web.Controllers
         {
             ViewBag.SiteName = Site.SiteSettings.SiteName;
             ViewBag.Title = "Site Administration";
+            ViewBag.Heading = "Site Administration";
+            return View();
 
-            AdminMenuViewModel model = new AdminMenuViewModel
-            {
-                MenuTitle = "Site Administration"
-            };
+            //AdminMenuViewModel model = new AdminMenuViewModel
+            //{
+            //    MenuTitle = "Site Administration"
+            //};
 
-            AdminMenuItemViewModel item = new AdminMenuItemViewModel();
-            item.ItemText = "Basic Settings";
-            item.ItemUrl = "/SiteAdmin/SiteInfo";
-            item.CssClass = "mnu-siteinfo";
-            model.Items.Add(item);
+            //AdminMenuItemViewModel item = new AdminMenuItemViewModel();
+            //item.ItemText = "Basic Settings";
+            //item.ItemUrl = "/SiteAdmin/SiteInfo";
+            //item.CssClass = "mnu-siteinfo";
+            //model.Items.Add(item);
 
-            item = new AdminMenuItemViewModel();
-            item.ItemText = "Site List";
-            item.ItemUrl = "/SiteAdmin/SiteList";
-            item.CssClass = "mnu-sitelist";
-            model.Items.Add(item);
+            //item = new AdminMenuItemViewModel();
+            //item.ItemText = "Site List";
+            //item.ItemUrl = "/SiteAdmin/SiteList";
+            //item.CssClass = "mnu-sitelist";
+            //model.Items.Add(item);
 
-            item = new AdminMenuItemViewModel();
-            item.ItemText = "Roles";
-            item.ItemUrl = "/SiteAdmin/Roles";
-            item.CssClass = "mnu-roles";
-            model.Items.Add(item);
+            //item = new AdminMenuItemViewModel();
+            //item.ItemText = "Roles";
+            //item.ItemUrl = "/SiteAdmin/Roles";
+            //item.CssClass = "mnu-roles";
+            //model.Items.Add(item);
 
-            if(Site.SiteSettings.IsServerAdminSite)
-            {
-                item = new AdminMenuItemViewModel();
-                item.ItemText = "Core Data";
-                item.ItemUrl = "/CoreData";
-                item.CssClass = "mnu-coredata";
-                model.Items.Add(item);
-            }
+            //if(Site.SiteSettings.IsServerAdminSite)
+            //{
+            //    item = new AdminMenuItemViewModel();
+            //    item.ItemText = "Core Data";
+            //    item.ItemUrl = "/CoreData";
+            //    item.CssClass = "mnu-coredata";
+            //    model.Items.Add(item);
+            //}
 
-            return View(model);
+            //return View(model);
         }
 
         // GET: /SiteAdmin/SiteInfo

@@ -6,6 +6,15 @@
   <mvcSiteMapNode title="Home" controller="Home" action="Index">
     <mvcSiteMapNode title="About" controller="Home" action="About"/>
     <mvcSiteMapNode title="Contact" controller="Home" action="Contact"/>
+    <mvcSiteMapNode title="Admin" action="SiteAdmin" roles="Admins,Content Administrators" 
+                    dynamicNodeProvider="cloudscribe.Core.Web.Navigation.AdminMenuDynamicNodeProvider, cloudscribe.Core.Web">
+      <mvcSiteMapNode title="AdminItems" action="SiteAdmin" roles="Admins,Content Administrators" 
+                      visibility="SiteMapPathHelper,ChildMenu,!*"
+                      visibilityProvider="MvcSiteMapProvider.FilteredSiteMapNodeVisibilityProvider, MvcSiteMapProvider"
+                    dynamicNodeProvider="cloudscribe.Core.Web.Navigation.AdminMenuDynamicNodeProvider, cloudscribe.Core.Web">
+
+      </mvcSiteMapNode>
+    </mvcSiteMapNode>
   </mvcSiteMapNode>
 
 </mvcSiteMap>

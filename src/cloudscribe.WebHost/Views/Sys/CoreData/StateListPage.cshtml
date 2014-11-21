@@ -10,7 +10,9 @@
 <table class="table table-striped">
     <tr>
         <th>
-            @Html.ActionLink(@CommonResources.NewState, "StateEdit", "CoreData", new { countryGuid = Model.Country.Guid, returnPageNumber = Model.Paging.CurrentPage },null)
+            @Html.ActionLink(@CommonResources.NewState, "StateEdit", "CoreData", 
+            new { countryGuid = Model.Country.Guid, returnPageNumber = Model.Paging.CurrentPage },
+                     new { @class = "btn btn-default" })
         </th>
         <th>
             @CommonResources.Name
@@ -29,7 +31,7 @@
 {
     @Html.AntiForgeryToken()
     
-    @Html.ActionLink("Edit", "StateEdit", "CoreData",
+    @Html.ActionLink(CommonResources.Edit, "StateEdit", "CoreData",
             new { countryGuid = Model.Country.Guid, guid = item.Guid, returnPageNumber = Model.Paging.CurrentPage }
          , new { @class = "btn btn-default" })
 
@@ -54,10 +56,8 @@
         
     </tr>
 }
-
 </table>
 <div>
-   
     @Html.Pager(Model.Paging.ItemsPerPage, Model.Paging.CurrentPage, Model.Paging.TotalPages).Options(o => o
             .Action("StateListPage")
             .AddRouteValue("countryGuid", Model.Country.Guid)
@@ -70,7 +70,7 @@
 </div>
 <div>
     @Html.ActionLink(@CommonResources.BackToCountryList, 
-    "CountryListPage", new { pageNumber = Model.ReturnPageNumber },
+    "CountryListPage", new { pageNumber = Model.CountryListReturnPageNumber },
         new { @class = "btn btn-default" })
 </div>
 

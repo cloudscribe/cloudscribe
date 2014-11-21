@@ -1,10 +1,13 @@
 ﻿@model PaginationModel
-<ul class="pagination">
-	@foreach (var link in Model.PaginationLinks)
-	{
-		@BuildLink(link)
-	}
-</ul>
+           @if(Model.PageCount > 1)
+           { 
+            @:<ul class="pagination">
+	            foreach (var link in Model.PaginationLinks)
+	            {
+		            @BuildLink(link)
+	            }  
+            @:</ul>
+           }
 
 @helper BuildLink(PaginationLink link)
 {

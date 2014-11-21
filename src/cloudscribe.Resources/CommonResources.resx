@@ -288,4 +288,34 @@
   <data name="ConfirmDeleteFormat" xml:space="preserve">
     <value>Are you sure you want to delete {0}?</value>
   </data>
+  <data name="Administration" xml:space="preserve">
+    <value>Administration</value>
+  </data>
+  <data name="BasicSettings" xml:space="preserve">
+    <value>Basic Settings</value>
+  </data>
+  <data name="CoreData" xml:space="preserve">
+    <value>Core Data</value>
+  </data>
+  <data name="CountryListAdministration" xml:space="preserve">
+    <value>Country/State List Administration</value>
+  </data>
+  <data name="CurrencyAdministration" xml:space="preserve">
+    <value>Currency Administration</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="NewCountry" xml:space="preserve">
+    <value>New Country</value>
+  </data>
+  <data name="Roles" xml:space="preserve">
+    <value>Roles</value>
+  </data>
+  <data name="SiteList" xml:space="preserve">
+    <value>Site List</value>
+  </data>
+  <data name="States" xml:space="preserve">
+    <value>States</value>
+  </data>
 </root>
