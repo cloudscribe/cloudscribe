@@ -264,5 +264,78 @@ namespace cloudscribe.Core.Web.Controllers
             return RedirectToAction("StateListPage", new { countryGuid = countryGuid, pageNumber = returnPageNumber });
         }
 
+        public async Task<ActionResult> CurrencyList()
+        {
+            ViewBag.SiteName = Site.SiteSettings.SiteName;
+            ViewBag.Title = "Currency Administration";
+            ViewBag.Heading = "Currency Administration";
+
+            List<ICurrency> model = geoRepo.GetAllCurrencies();
+
+            return View(model);
+        }
+
+        [MvcSiteMapNode(Title = "Edit Currency", ParentKey = "CurrencyList", Key = "CurrencyEdit")]
+        public async Task<ActionResult> CurrencyEdit(Guid? currencyGuid)
+        {
+            ViewBag.SiteName = Site.SiteSettings.SiteName;
+            ViewBag.Title = "Edit Currency";
+            ViewBag.Heading = "Edit Currency";
+
+            CurrencyViewModel model = new CurrencyViewModel();
+
+            if(currencyGuid.HasValue)
+            {
+                ICurrency currency = geoRepo.FetchCurrency(currencyGuid.Value);
+                model.Guid = currency.Guid;
+                model.Title = currency.Title;
+                model.Code = currency.Code;
+            }
+
+
+            return View(model);
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> CurrencyEdit(CurrencyViewModel model)
+        {
+            ViewBag.SiteName = Site.SiteSettings.SiteName;
+            ViewBag.Title = "Edit Currency";
+            ViewBag.Heading = "Edit Currency";
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            ICurrency currency = null;
+            if(model.Guid != Guid.Empty)
+            {
+                currency = geoRepo.FetchCurrency(model.Guid);
+            }
+            else
+            {
+                currency = new Currency();
+            }
+
+            currency.Code = model.Code;
+            currency.Title = model.Title;
+
+            geoRepo.Save(currency);
+
+            return RedirectToAction("CurrencyList");
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> CurrencyDelete(Guid currencyGuid)
+        {
+            geoRepo.DeleteCurrency(currencyGuid);
+
+            return RedirectToAction("CurrencyList");
+        }
     }
 }

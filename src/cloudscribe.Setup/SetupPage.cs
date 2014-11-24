@@ -1,12 +1,13 @@
 ﻿// Author:					Joe Audette
 // Created:				    2006-09-30
-// Last Modified:		    2014-10-21
+// Last Modified:		    2014-11-24
 //
 // You must not remove this notice, or any other, from this software.
 
 using cloudscribe.Configuration;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Web;
+using cloudscribe.Core.Web.Components;
 using cloudscribe.Resources;
 using log4net;
 using System;
@@ -678,11 +679,11 @@ namespace cloudscribe.Setup
         private void CreateSiteAndAdminUser()
         {
             WritePageContent(SetupResources.CreatingSiteMessage, true);
-            SiteSettings newSite = SetupHelper.CreateNewSite(siteRepository);
+            SiteSettings newSite = NewSiteHelper.CreateNewSite(siteRepository);
             //mojoSetup.CreateDefaultSiteFolders(newSite.SiteId);
             //mojoSetup.CreateOrRestoreSiteSkins(newSite.SiteId);
             WritePageContent(SetupResources.CreatingRolesAndAdminUserMessage, true);
-            SetupHelper.CreateRequiredRolesAndAdminUser(
+            NewSiteHelper.CreateRequiredRolesAndAdminUser(
                 newSite,
                 siteRepository,
                 userRepository

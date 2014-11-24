@@ -133,6 +133,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\NewSiteHelper.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CloudscribeBaseController.cs" />
     <Compile Include="Controllers\CoreDataController.cs" />
@@ -157,6 +158,7 @@
     <Compile Include="Routing\WebApiConfig.cs" />
     <Compile Include="SiteContext.cs" />
     <Compile Include="ViewModels\CoreData\CountryListPageViewModel.cs" />
+    <Compile Include="ViewModels\CoreData\CurrencyViewModel.cs" />
     <Compile Include="ViewModels\CoreData\GeoCountryViewModel.cs" />
     <Compile Include="ViewModels\CoreData\GeoZoneViewModel.cs" />
     <Compile Include="ViewModels\CoreData\StateListPageViewModel.cs" />
@@ -164,6 +166,7 @@
     <Compile Include="ViewModels\SiteSettings\SiteBasicSettingsViewModel.cs" />
     <Compile Include="ViewModels\Common\AdminMenuItemViewModel.cs" />
     <Compile Include="ViewModels\Common\AdminMenuViewModel.cs" />
+    <Compile Include="ViewModels\SiteSettings\SiteListViewModel.cs" />
     <Compile Include="ViewModels\SiteUser\AccountIndexViewModel.cs" />
     <Compile Include="ViewModels\SiteUser\AddPhoneNumberViewModel.cs" />
     <Compile Include="ViewModels\SiteUser\ChangePasswordViewModel.cs" />

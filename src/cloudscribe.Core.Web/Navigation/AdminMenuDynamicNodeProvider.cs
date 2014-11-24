@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-11-21
-// Last Modified:			2014-11-21
+// Last Modified:			2014-11-24
 // 
 
 using System;
@@ -80,6 +80,15 @@ namespace cloudscribe.Core.Web.Navigation
             node.ParentKey = "SiteAdmin";
             node.Controller = "SiteAdmin";
             node.Action = "SiteList";
+            node.Roles.Add("Admins");
+            nodeList.Add(node);
+
+            node = new DynamicNode();
+            node.Title = CommonResources.NewSite;
+            node.Key = "NewSite";
+            node.ParentKey = "SiteList";
+            node.Controller = "SiteAdmin";
+            node.Action = "NewSite";
             node.Roles.Add("Admins");
             nodeList.Add(node);
 

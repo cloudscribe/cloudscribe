@@ -484,6 +484,15 @@ namespace cloudscribe.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to New Site.
+        /// </summary>
+        public static string NewSite {
+            get {
+                return ResourceManager.GetString("NewSite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to New State.
         /// </summary>
         public static string NewState {
@@ -651,6 +660,24 @@ namespace cloudscribe.Resources {
         public static string TimeZone {
             get {
                 return ResourceManager.GetString("TimeZone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Title.
+        /// </summary>
+        public static string Title {
+            get {
+                return ResourceManager.GetString("Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Title is required.
+        /// </summary>
+        public static string TitleRequired {
+            get {
+                return ResourceManager.GetString("TitleRequired", resourceCulture);
             }
         }
         

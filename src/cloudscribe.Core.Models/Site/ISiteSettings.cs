@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2014-08-16
+// Last Modified:			2014-11-24
 // 
 
 using System;
@@ -17,6 +17,9 @@ namespace cloudscribe.Core.Models
         int SiteId { get; set; }
         Guid SiteGuid { get; set; }
         string SiteName { get; set; }
+        string PreferredHostName { get; set; }
+        string SiteFolderName { get; set; }
+        bool IsServerAdminSite { get; set; }
        
     }
 
@@ -76,7 +79,7 @@ namespace cloudscribe.Core.Models
         string GoogleCustomSearchId { get; set; }
         string Icon { get; set; }
         string IntenseDebateAccountId { get; set; }
-        bool IsServerAdminSite { get; set; }
+        
         string LoginInfoBottom { get; set; }
         string LoginInfoTop { get; set; }
         string Logo { get; set; }
@@ -91,7 +94,7 @@ namespace cloudscribe.Core.Models
         int PasswordFormat { get; set; }
         string PasswordRegexWarning { get; set; }
         string PasswordStrengthRegularExpression { get; set; }
-        string PreferredHostName { get; set; }
+        
         string PrimarySearchEngine { get; set; }
         string PrivacyPolicyUrl { get; set; }
         bool ReallyDeleteUsers { get; set; }
@@ -125,7 +128,7 @@ namespace cloudscribe.Core.Models
         bool ShowAlternateSearchIfConfigured { get; set; }
         //bool ShowPasswordStrengthOnRegistration { get; set; }
 
-        string SiteFolderName { get; set; }
+        
         bool SiteIsClosed { get; set; }
         string SiteIsClosedMessage { get; set; }
         LdapSettings SiteLdapSettings { get; set; }

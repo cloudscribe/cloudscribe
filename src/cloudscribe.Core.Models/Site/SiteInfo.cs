@@ -1,4 +1,9 @@
-﻿using System;
+﻿// Author:					Joe Audette
+// Created:					2014-08-16
+// Last Modified:			2014-11-24
+// 
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,6 +37,29 @@ namespace cloudscribe.Core.Models
         {
             get { return siteName; }
             set { siteName = value; }
+        }
+
+        private string siteFolderName = string.Empty;
+
+        public string SiteFolderName
+        {
+            get { return siteFolderName; }
+            set { siteFolderName = value; }
+        }
+
+        private string preferredHostName = string.Empty;
+
+        public string PreferredHostName
+        {
+            get { return preferredHostName; }
+            set { preferredHostName = value; }
+        }
+
+        private bool isServerAdminSite = false;
+        public bool IsServerAdminSite
+        {
+            get { return isServerAdminSite; }
+            set { isServerAdminSite = value; }
         }
     }
 }

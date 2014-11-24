@@ -1,0 +1,43 @@
+﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.SiteListViewModel
+
+@{
+    ViewBag.Title = "SiteList";
+}
+
+<h2>@Model.Heading</h2>
+
+<p>
+    @Html.ActionLink("Create New", "NewSite")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            Site
+        </th>
+        <th>
+            Folder/Host
+        </th>
+        
+        <th></th>
+    </tr>
+
+@foreach (var item in Model.Sites) {
+    <tr>
+        
+        <td>
+            @Html.DisplayFor(modelItem => item.SiteName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SiteFolderName)
+            @Html.DisplayFor(modelItem => item.PreferredHostName)
+        </td>
+        
+        <td>
+            @Html.ActionLink("Basic Settings", "SiteInfo", new { siteId = item.SiteId }) |
+            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+        </td>
+    </tr>
+}
+
+</table>

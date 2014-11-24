@@ -1,12 +1,17 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2014-11-15
+// Last Modified:			2014-11-24
 // 
 
+using cloudscribe.Configuration;
+using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Geography;
+using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.Helpers;
 using cloudscribe.Core.Web.ViewModels.SiteSettings;
+
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
@@ -30,66 +35,79 @@ namespace cloudscribe.Core.Web.Controllers
             ViewBag.Heading = "Site Administration";
             return View();
 
-            //AdminMenuViewModel model = new AdminMenuViewModel
-            //{
-            //    MenuTitle = "Site Administration"
-            //};
+            
+        }
 
-            //AdminMenuItemViewModel item = new AdminMenuItemViewModel();
-            //item.ItemText = "Basic Settings";
-            //item.ItemUrl = "/SiteAdmin/SiteInfo";
-            //item.CssClass = "mnu-siteinfo";
-            //model.Items.Add(item);
+        // GET: /SiteAdmin
+        public async Task<ActionResult> SiteList(int pageNumber = 1, int pageSize = -1)
+        {
+            ViewBag.SiteName = Site.SiteSettings.SiteName;
+            ViewBag.Title = "Site List";
+            ViewBag.Heading = "Site List";
 
-            //item = new AdminMenuItemViewModel();
-            //item.ItemText = "Site List";
-            //item.ItemUrl = "/SiteAdmin/SiteList";
-            //item.CssClass = "mnu-sitelist";
-            //model.Items.Add(item);
+            int itemsPerPage = AppSettings.DefaultPageSize_SiteList;
+            if (pageSize > 0)
+            {
+                itemsPerPage = pageSize;
+            }
 
-            //item = new AdminMenuItemViewModel();
-            //item.ItemText = "Roles";
-            //item.ItemUrl = "/SiteAdmin/Roles";
-            //item.CssClass = "mnu-roles";
-            //model.Items.Add(item);
+            int totalPages = 0;
+            int filteredSiteId = -1; //nothing filtered
+            List<ISiteInfo> sites = Site.SiteRepository.GetPageOtherSites(
+                filteredSiteId,
+                pageNumber,
+                itemsPerPage,
+                out totalPages);
 
-            //if(Site.SiteSettings.IsServerAdminSite)
-            //{
-            //    item = new AdminMenuItemViewModel();
-            //    item.ItemText = "Core Data";
-            //    item.ItemUrl = "/CoreData";
-            //    item.CssClass = "mnu-coredata";
-            //    model.Items.Add(item);
-            //}
+            SiteListViewModel model = new SiteListViewModel();
+            model.Heading = "Site List";
+            model.Sites = sites;
+            model.Paging.CurrentPage = pageNumber;
+            model.Paging.ItemsPerPage = itemsPerPage;
+            model.Paging.TotalPages = totalPages;
 
-            //return View(model);
+            return View(model);
+
+
         }
 
         // GET: /SiteAdmin/SiteInfo
         [Authorize(Roles = "Admins")]
-        public async Task<ActionResult> SiteInfo(SiteAdminMessageId? message)
+        public async Task<ActionResult> SiteInfo(int? siteId, SiteAdminMessageId? message)
         {
             ViewBag.SiteName = Site.SiteSettings.SiteName;
             ViewBag.Title = "Site Basic Settings";
 
+            ISiteSettings selectedSite;
+            // only server admin site can edit other sites settings
+            if((siteId.HasValue)&&(Site.SiteSettings.IsServerAdminSite))
+            {
+                selectedSite = Site.SiteRepository.Fetch(siteId.Value);
+            }
+            else
+            {
+                selectedSite = Site.SiteSettings;
+            }
+
             SiteBasicSettingsViewModel model = new SiteBasicSettingsViewModel();
-            model.SiteId = Site.SiteSettings.SiteId;
-            model.SiteGuid = Site.SiteSettings.SiteGuid;
-            model.SiteName = Site.SiteSettings.SiteName;
-            model.Slogan = Site.SiteSettings.Slogan;
-            model.TimeZoneId = Site.SiteSettings.TimeZoneId;
             model.AllTimeZones = DateTimeHelper.GetTimeZoneList();
-            model.CompanyName = Site.SiteSettings.CompanyName;
-            model.CompanyStreetAddress = Site.SiteSettings.CompanyStreetAddress;
-            model.CompanyStreetAddress2 = Site.SiteSettings.CompanyStreetAddress2;
-            model.CompanyLocality = Site.SiteSettings.CompanyLocality;
-            model.CompanyRegion = Site.SiteSettings.CompanyRegion;
-            model.CompanyPostalCode = Site.SiteSettings.CompanyPostalCode;
-            model.CompanyCountry = Site.SiteSettings.CompanyCountry;
-            model.CompanyPhone = Site.SiteSettings.CompanyPhone;
-            model.CompanyFax = Site.SiteSettings.CompanyFax;
-            model.CompanyPublicEmail = Site.SiteSettings.CompanyPublicEmail;
-            model.SiteFolderName = Site.SiteSettings.SiteFolderName;
+
+            model.SiteId = selectedSite.SiteId;
+            model.SiteGuid = selectedSite.SiteGuid;
+            model.SiteName = selectedSite.SiteName;
+            model.Slogan = selectedSite.Slogan;
+            model.TimeZoneId = selectedSite.TimeZoneId;
+            model.CompanyName = selectedSite.CompanyName;
+            model.CompanyStreetAddress = selectedSite.CompanyStreetAddress;
+            model.CompanyStreetAddress2 = selectedSite.CompanyStreetAddress2;
+            model.CompanyLocality = selectedSite.CompanyLocality;
+            model.CompanyRegion = selectedSite.CompanyRegion;
+            model.CompanyPostalCode = selectedSite.CompanyPostalCode;
+            model.CompanyCountry = selectedSite.CompanyCountry;
+            model.CompanyPhone = selectedSite.CompanyPhone;
+            model.CompanyFax = selectedSite.CompanyFax;
+            model.CompanyPublicEmail = selectedSite.CompanyPublicEmail;
+            model.SiteFolderName = selectedSite.SiteFolderName;
 
             model.AvailableCountries.Add(new SelectListItem { Text = "-Please select-", Value = "Selects items" });
             var countries = geoRepo.GetAllCountries();
@@ -126,6 +144,9 @@ namespace cloudscribe.Core.Web.Controllers
             return View(model);
         }
 
+        
+
+
         // Post: /SiteAdmin/SiteInfo
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -141,25 +162,159 @@ namespace cloudscribe.Core.Web.Controllers
 
             //model.SiteId = Site.SiteSettings.SiteId;
             //model.SiteGuid = Site.SiteSettings.SiteGuid;
+            ISiteSettings selectedSite = null;
+            if(model.SiteGuid == Site.SiteSettings.SiteGuid)
+            {
+                selectedSite = Site.SiteSettings;
+            }
+            else if(Site.SiteSettings.IsServerAdminSite)
+            {
+                selectedSite = Site.SiteRepository.Fetch(model.SiteGuid);
+            }
 
-            Site.SiteSettings.SiteName = model.SiteName;
-            Site.SiteSettings.Slogan = model.Slogan;
-            Site.SiteSettings.TimeZoneId = model.TimeZoneId;
-            Site.SiteSettings.CompanyName = model.CompanyName;
-            Site.SiteSettings.CompanyStreetAddress = model.CompanyStreetAddress;
-            Site.SiteSettings.CompanyStreetAddress2 = model.CompanyStreetAddress2;
-            Site.SiteSettings.CompanyLocality = model.CompanyLocality;
-            Site.SiteSettings.CompanyRegion = model.CompanyRegion;
-            Site.SiteSettings.CompanyPostalCode = model.CompanyPostalCode;
-            Site.SiteSettings.CompanyCountry = model.CompanyCountry;
-            Site.SiteSettings.CompanyPhone = model.CompanyPhone;
-            Site.SiteSettings.CompanyFax = model.CompanyFax;
-            Site.SiteSettings.CompanyPublicEmail = model.CompanyPublicEmail;
-            Site.SiteSettings.SiteFolderName = model.SiteFolderName;
+            if(selectedSite == null)
+            {
+                return RedirectToAction("Index", new { Message = SiteAdminMessageId.Error });
+            }
 
-            Site.SiteRepository.Save(Site.SiteSettings);
+            selectedSite.SiteName = model.SiteName;
+            selectedSite.Slogan = model.Slogan;
+            selectedSite.TimeZoneId = model.TimeZoneId;
+            selectedSite.CompanyName = model.CompanyName;
+            selectedSite.CompanyStreetAddress = model.CompanyStreetAddress;
+            selectedSite.CompanyStreetAddress2 = model.CompanyStreetAddress2;
+            selectedSite.CompanyLocality = model.CompanyLocality;
+            selectedSite.CompanyRegion = model.CompanyRegion;
+            selectedSite.CompanyPostalCode = model.CompanyPostalCode;
+            selectedSite.CompanyCountry = model.CompanyCountry;
+            selectedSite.CompanyPhone = model.CompanyPhone;
+            selectedSite.CompanyFax = model.CompanyFax;
+            selectedSite.CompanyPublicEmail = model.CompanyPublicEmail;
+            selectedSite.SiteFolderName = model.SiteFolderName;
+
+            Site.SiteRepository.Save(selectedSite);
 
             SiteAdminMessageId? message = SiteAdminMessageId.UpdateSettingsSuccess;
+
+            if((Site.SiteSettings.IsServerAdminSite)
+                &&(Site.SiteSettings.SiteGuid != selectedSite.SiteGuid))
+            {
+                // just edited from site list so redirect there
+                return RedirectToAction("SiteList");
+            }
+
+            return RedirectToAction("Index", new { Message = message });
+
+        }
+
+        // GET: /SiteAdmin/NewSite
+        [Authorize(Roles = "Admins")]
+        public async Task<ActionResult> NewSite(SiteAdminMessageId? message)
+        {
+            ViewBag.SiteName = Site.SiteSettings.SiteName;
+            ViewBag.Title = "Create New Site";
+
+            SiteBasicSettingsViewModel model = new SiteBasicSettingsViewModel();
+            model.SiteId = -1;
+            model.SiteGuid = Guid.Empty;
+           // model.SiteName = Site.SiteSettings.SiteName;
+            //model.Slogan = Site.SiteSettings.Slogan;
+            model.TimeZoneId = Site.SiteSettings.TimeZoneId;
+            model.AllTimeZones = DateTimeHelper.GetTimeZoneList();
+            //model.CompanyName = Site.SiteSettings.CompanyName;
+            //model.CompanyStreetAddress = Site.SiteSettings.CompanyStreetAddress;
+            //model.CompanyStreetAddress2 = Site.SiteSettings.CompanyStreetAddress2;
+            //model.CompanyLocality = Site.SiteSettings.CompanyLocality;
+            //model.CompanyRegion = Site.SiteSettings.CompanyRegion;
+            //model.CompanyPostalCode = Site.SiteSettings.CompanyPostalCode;
+            //model.CompanyCountry = Site.SiteSettings.CompanyCountry;
+            //model.CompanyPhone = Site.SiteSettings.CompanyPhone;
+            //model.CompanyFax = Site.SiteSettings.CompanyFax;
+            //model.CompanyPublicEmail = Site.SiteSettings.CompanyPublicEmail;
+            //.SiteFolderName = Site.SiteSettings.SiteFolderName;
+
+            model.AvailableCountries.Add(new SelectListItem { Text = "-Please select-", Value = "Selects items" });
+            var countries = geoRepo.GetAllCountries();
+            Guid selectedCountryGuid = Guid.Empty;
+            foreach (var country in countries)
+            {
+                if (country.ISOCode2 == model.CompanyCountry)
+                {
+                    selectedCountryGuid = country.Guid;
+                }
+                model.AvailableCountries.Add(new SelectListItem()
+                {
+                    Text = country.Name,
+                    Value = country.ISOCode2.ToString()
+
+                });
+            }
+
+            if (selectedCountryGuid != Guid.Empty)
+            {
+                var states = geoRepo.GetGeoZonesByCountry(selectedCountryGuid);
+                foreach (var state in states)
+                {
+                    model.AvailableStates.Add(new SelectListItem()
+                    {
+                        Text = state.Name,
+                        Value = state.Code
+                    });
+                }
+
+            }
+
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admins")]
+        public async Task<ActionResult> NewSite(SiteBasicSettingsViewModel model)
+        {
+            ViewBag.SiteName = Site.SiteSettings.SiteName;
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            //model.SiteId = Site.SiteSettings.SiteId;
+            //model.SiteGuid = Site.SiteSettings.SiteGuid;
+            SiteSettings newSite = new SiteSettings();
+
+
+            newSite.SiteName = model.SiteName;
+            newSite.Slogan = model.Slogan;
+            newSite.TimeZoneId = model.TimeZoneId;
+            newSite.CompanyName = model.CompanyName;
+            newSite.CompanyStreetAddress = model.CompanyStreetAddress;
+            newSite.CompanyStreetAddress2 = model.CompanyStreetAddress2;
+            newSite.CompanyLocality = model.CompanyLocality;
+            newSite.CompanyRegion = model.CompanyRegion;
+            newSite.CompanyPostalCode = model.CompanyPostalCode;
+            newSite.CompanyCountry = model.CompanyCountry;
+            newSite.CompanyPhone = model.CompanyPhone;
+            newSite.CompanyFax = model.CompanyFax;
+            newSite.CompanyPublicEmail = model.CompanyPublicEmail;
+            newSite.SiteFolderName = model.SiteFolderName;
+
+            //Site.SiteRepository.Save(newSite);
+            NewSiteHelper.CreateNewSite(Site.SiteRepository, newSite);
+            NewSiteHelper.CreateRequiredRolesAndAdminUser(newSite, Site.SiteRepository, Site.UserRepository);
+
+            if(AppSettings.UseFoldersInsteadOfHostnamesForMultipleSites)
+            {
+                SiteFolder folder = new SiteFolder();
+                folder.FolderName = newSite.SiteFolderName;
+                folder.SiteGuid = newSite.SiteGuid;
+                Site.SiteRepository.Save(folder);
+            }
+
+
+
+            SiteAdminMessageId? message = SiteAdminMessageId.CreateSiteSuccess;
 
             return RedirectToAction("Index", new { Message = message });
 

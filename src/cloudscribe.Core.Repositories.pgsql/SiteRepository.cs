@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2014-09-07
+// Last Modified:			2014-11-24
 // 
 
 
@@ -73,8 +73,8 @@ namespace cloudscribe.Core.Repositories.pgsql
                     site.AddThisDotComUsername, //apiKeyExtra2
                     site.GoogleAnalyticsAccountCode, //apiKeyExtra2
                     string.Empty, //legacy apiKeyExtra3
-                    string.Empty, // legacy apiKeyExtra4
-                    string.Empty, // legacy apiKeyExtra5
+                    site.SiteFolderName, // legacy apiKeyExtra4
+                    site.PreferredHostName, // legacy apiKeyExtra5
                     site.DisableDbAuth); 
     
             }
@@ -124,8 +124,8 @@ namespace cloudscribe.Core.Repositories.pgsql
                     site.AddThisDotComUsername, //apiKeyExtra2
                     site.GoogleAnalyticsAccountCode, //apiKeyExtra2
                     string.Empty, //legacy apiKeyExtra3
-                    string.Empty, // legacy apiKeyExtra4
-                    string.Empty, // legacy apiKeyExtra5
+                    site.SiteFolderName, // legacy apiKeyExtra4
+                    site.PreferredHostName, // legacy apiKeyExtra5
                     site.DisableDbAuth);
 
             }
@@ -632,8 +632,8 @@ namespace cloudscribe.Core.Repositories.pgsql
             site.AddThisDotComUsername = reader["ApiKeyExtra1"].ToString();
             site.GoogleAnalyticsAccountCode = reader["ApiKeyExtra2"].ToString();
             //site.ApiKeyExtra3 = reader["ApiKeyExtra3"].ToString();
-            //site.ApiKeyExtra4 = reader["ApiKeyExtra4"].ToString();
-            //site.ApiKeyExtra5 = reader["ApiKeyExtra5"].ToString();
+            site.SiteFolderName = reader["ApiKeyExtra4"].ToString();
+            site.PreferredHostName = reader["ApiKeyExtra5"].ToString();
             site.DisableDbAuth = Convert.ToBoolean(reader["DisableDbAuth"]);
 
         }
@@ -644,6 +644,9 @@ namespace cloudscribe.Core.Repositories.pgsql
             site.SiteId = Convert.ToInt32(reader["SiteID"]);
             site.SiteGuid = new Guid(reader["SiteGuid"].ToString());
             site.SiteName = reader["SiteName"].ToString();
+            site.SiteFolderName = reader["ApiKeyExtra4"].ToString();
+            site.PreferredHostName = reader["ApiKeyExtra5"].ToString();
+            site.IsServerAdminSite = Convert.ToBoolean(reader["IsServerAdminSite"]);
         }
 
         private void LoadFromReader(IDataReader reader, ISiteHost host)
