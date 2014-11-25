@@ -322,6 +322,15 @@ namespace cloudscribe.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Code must be between {0} and {1} characters.
+        /// </summary>
+        public static string CurrencyCodeLengthErrorFormat {
+            get {
+                return ResourceManager.GetString("CurrencyCodeLengthErrorFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Delete.
         /// </summary>
         public static string Delete {
@@ -484,6 +493,15 @@ namespace cloudscribe.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to New Currency.
+        /// </summary>
+        public static string NewCurrency {
+            get {
+                return ResourceManager.GetString("NewCurrency", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to New Site.
         /// </summary>
         public static string NewSite {
@@ -601,6 +619,15 @@ namespace cloudscribe.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Host Name/Domain Name.
+        /// </summary>
+        public static string SiteHostName {
+            get {
+                return ResourceManager.GetString("SiteHostName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Site List.
         /// </summary>
         public static string SiteList {
@@ -619,7 +646,7 @@ namespace cloudscribe.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Site name must be between {0} and {1} characters..
+        ///   Looks up a localized string similar to Site name must be between {0} and {1} characters.
         /// </summary>
         public static string SiteNameLengthErrorFormat {
             get {

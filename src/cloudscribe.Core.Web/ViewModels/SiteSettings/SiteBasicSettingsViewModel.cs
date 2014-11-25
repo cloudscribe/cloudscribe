@@ -1,16 +1,13 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2014-11-15
+// Last Modified:			2014-11-25
 // 
 
+using cloudscribe.Configuration.DataAnnotations;
+using cloudscribe.Resources;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
-using cloudscribe.Resources;
-using cloudscribe.Configuration.DataAnnotations;
 using System.Web.Mvc;
 
 namespace cloudscribe.Core.Web.ViewModels.SiteSettings
@@ -60,6 +57,14 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         {
             get { return siteFolderName; }
             set { siteFolderName = value; }
+        }
+
+        private string hostName = string.Empty;
+        [Display(Name = "SiteHostName", ResourceType = typeof(CommonResources))]
+        public string HostName
+        {
+            get { return hostName; }
+            set { hostName = value; }
         }
 
         private string timeZoneId = "Eastern Standard Time";

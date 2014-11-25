@@ -3,16 +3,10 @@
 // Last Modified:			2014-11-16
 //
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.ComponentModel.DataAnnotations;
-using cloudscribe.Resources;
-using cloudscribe.Configuration.DataAnnotations;
 using cloudscribe.Core.Models.Geography;
-using System.Web.Mvc;
+using cloudscribe.Resources;
+using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace cloudscribe.Core.Web.ViewModels.CoreData
 {

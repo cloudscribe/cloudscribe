@@ -29,6 +29,7 @@ http://gulpjs.com/
 
 unification of routing for mvc and web api
 only difference is for api there is no action just http verbs get, post, put,delete
+http://blogs.msdn.com/b/webdev/archive/2014/11/24/content-negotiation-in-mvc-5-or-how-can-i-just-write-json.aspx
 
 app.UseMvc(routes =>
 {

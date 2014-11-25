@@ -3,55 +3,41 @@
 @{
     
 }
-
 <h2>@ViewBag.Heading</h2>
-
 <table class="table table-striped">
     <tr>
         <th>
-            @Html.ActionLink("Create New", "CurrencyEdit",
+            @Html.ActionLink(CommonResources.NewCurrency, "CurrencyEdit",
                      null, new { @class = "btn btn-default" })
         </th>
         <th>
-            Title
+            @CommonResources.Title
         </th>
         <th>
-            Code
+            @CommonResources.Code
         </th>
-        
-        
     </tr>
-
 @foreach (var item in Model) {
     <tr>
         <td>
-
             @using (Html.BeginForm("CurrencyDelete", "CoreData"))
             {
                 @Html.AntiForgeryToken()
-
                 @Html.ActionLink(CommonResources.Edit, "CurrencyEdit", "CoreData",
                     new { currencyGuid = item.Guid }
                  , new { @class = "btn btn-default" })
-
                 @Html.Hidden("currencyGuid", item.Guid)
-               
                 <input type="submit" value="@CommonResources.Delete"
                        onclick="javascript: return confirm('@Html.FormatValue(item.Title, CommonResources.ConfirmDeleteFormat)');"
                        class="btn btn-default" />
             }
-
         </td>
-        
         <td>
             @Html.DisplayFor(modelItem => item.Title)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Code)
         </td>
-        
-        
     </tr>
 }
-
 </table>

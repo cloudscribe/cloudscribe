@@ -1,43 +1,38 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.SiteListViewModel
 
 @{
-    ViewBag.Title = "SiteList";
+    
 }
-
 <h2>@Model.Heading</h2>
-
-<p>
-    @Html.ActionLink("Create New", "NewSite")
-</p>
 <table class="table">
     <tr>
         <th>
-            Site
+            @Html.ActionLink(CommonResources.NewSite, "NewSite", null, new { @class = "btn btn-default" })
+        </th>
+        <th>
+            @CommonResources.SiteName
         </th>
         <th>
             Folder/Host
-        </th>
-        
-        <th></th>
+        </th>  
     </tr>
-
 @foreach (var item in Model.Sites) {
-    <tr>
-        
+    <tr> 
+        <td>
+            @Html.ActionLink(CommonResources.BasicSettings, "SiteInfo", new { siteId = item.SiteId }, new { @class = "btn btn-default" }) 
+            
+        </td>
         <td>
             @Html.DisplayFor(modelItem => item.SiteName)
         </td>
         <td>
+            @if (AppSettings.UseFoldersInsteadOfHostnamesForMultipleSites) { 
             @Html.DisplayFor(modelItem => item.SiteFolderName)
+            }
+            else { 
             @Html.DisplayFor(modelItem => item.PreferredHostName)
-        </td>
-        
-        <td>
-            @Html.ActionLink("Basic Settings", "SiteInfo", new { siteId = item.SiteId }) |
-            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            }
         </td>
     </tr>
 }
-
 </table>

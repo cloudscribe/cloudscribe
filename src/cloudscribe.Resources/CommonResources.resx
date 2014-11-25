@@ -232,7 +232,7 @@
     <value>Site Name</value>
   </data>
   <data name="SiteNameLengthErrorFormat" xml:space="preserve">
-    <value>Site name must be between {0} and {1} characters.</value>
+    <value>Site name must be between {0} and {1} characters</value>
   </data>
   <data name="SiteNameRequired" xml:space="preserve">
     <value>Site name is required</value>
@@ -326,5 +326,14 @@
   </data>
   <data name="TitleRequired" xml:space="preserve">
     <value>Title is required</value>
+  </data>
+  <data name="CurrencyCodeLengthErrorFormat" xml:space="preserve">
+    <value>Code must be between {0} and {1} characters</value>
+  </data>
+  <data name="NewCurrency" xml:space="preserve">
+    <value>New Currency</value>
+  </data>
+  <data name="SiteHostName" xml:space="preserve">
+    <value>Host Name/Domain Name</value>
   </data>
 </root>

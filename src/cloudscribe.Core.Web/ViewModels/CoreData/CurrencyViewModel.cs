@@ -1,11 +1,12 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-11-24
-// Last Modified:			2014-11-24
+// Last Modified:			2014-11-25
 //
 
 using cloudscribe.Resources;
 using System;
 using System.ComponentModel.DataAnnotations;
+using cloudscribe.Configuration.DataAnnotations;
 
 namespace cloudscribe.Core.Web.ViewModels.CoreData
 {
@@ -33,6 +34,7 @@ namespace cloudscribe.Core.Web.ViewModels.CoreData
 
         [Display(Name = "Code", ResourceType = typeof(CommonResources))]
         [Required(ErrorMessageResourceName = "CodeRequired", ErrorMessageResourceType = typeof(CommonResources))]
+        [StringLengthWithConfig(MinimumLength = 1, MaximumLength = 3, MinLengthKey = "CurrencyCodeMinLength", MaxLengthKey = "CurrencyCodeMaxLength", ErrorMessageResourceName = "CurrencyCodeLengthErrorFormat", ErrorMessageResourceType = typeof(CommonResources))]
         public string Code
         {
             get { return code; }
