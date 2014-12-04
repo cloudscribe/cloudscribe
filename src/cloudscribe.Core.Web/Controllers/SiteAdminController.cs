@@ -330,6 +330,21 @@ namespace cloudscribe.Core.Web.Controllers
 
         //}
 
+        public async Task<ActionResult> Roles()
+        {
+            ViewBag.SiteName = Site.SiteSettings.SiteName;
+            ViewBag.Title = "Role Management";
+            //ViewBag.Heading = "Role Management";
+
+            RoleListViewModel model = new RoleListViewModel();
+            model.Heading = "Role Management";
+            model.SiteRoles = Site.UserRepository.GetRolesBySite(Site.SiteSettings.SiteId);
+
+            return View(model);
+
+
+        }
+
 
         public enum SiteAdminMessageId
         {

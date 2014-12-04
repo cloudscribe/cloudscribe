@@ -1,0 +1,55 @@
+﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.RoleListViewModel
+
+@{
+    
+}
+
+<h2>@Model.Heading</h2>
+
+
+<p>
+    @Html.ActionLink(@CommonResources.NewRole, "RoleEdit", "SiteAdmin",
+            null,
+                     new { @class = "btn btn-default" })
+</p>
+               
+<ul class="btn-group list-group">
+    @foreach (var item in Model.SiteRoles)
+    {
+        <li class="list-group-item">
+            <span>
+                @Html.DisplayFor(modelItem => item.DisplayName)
+                &nbsp;       
+            </span>    
+                <div class="btn-group pull-right" role="group">
+                    @using (Html.BeginForm("RoleDelete", "SiteAdmin"))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.Hidden("roleId", item.RoleId)
+                        @Html.Hidden("roleGuid", item.RoleGuid)
+                       
+    <span class="btn btn-default btn-xs">
+        @Html.ActionLink(CommonResources.Members, "RoleMembers", "SiteAdmin",
+                         new { roleId = item.RoleId, roleGuid = item.RoleGuid }, null)
+        <span class="badge">@Html.DisplayFor(modelItem => item.MemberCount)</span>
+    </span>
+
+                        @Html.ActionLink(CommonResources.Edit, "RoleEdit", "SiteAdmin", new { roleId = item.RoleId, roleGuid = item.RoleGuid }, new { @class = "btn btn-default btn-xs" })
+                        if (item.IsDeletable(AppSettings.RolesThatCannotBeDeleted))
+                        {
+                            <button type="submit"
+                                    onclick="javascript: return confirm('@Html.FormatValue(item.DisplayName, CommonResources.ConfirmDeleteFormat)');"
+                                    class="btn btn-default btn-xs">
+                                @CommonResources.Delete
+                            </button>
+                        }
+
+                    }
+                </div>
+
+
+</li>
+    }
+
+</ul>
+

@@ -1,10 +1,11 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-20
-// Last Modified:			2014-08-20
+// Last Modified:			2014-12-04
 // 
 // You must not remove this notice, or any other, from this software.
 
 using System;
+using System.Collections.Generic;
 
 
 namespace cloudscribe.Core.Models
@@ -75,6 +76,8 @@ namespace cloudscribe.Core.Models
             get { return memberCount; }
             set { memberCount = value; }
         }
+
+        
 
       
     }

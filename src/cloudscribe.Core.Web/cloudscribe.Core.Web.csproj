@@ -163,6 +163,8 @@
     <Compile Include="ViewModels\CoreData\GeoZoneViewModel.cs" />
     <Compile Include="ViewModels\CoreData\StateListPageViewModel.cs" />
     <Compile Include="ViewModels\PagingInfo.cs" />
+    <Compile Include="ViewModels\SiteSettings\RoleListViewModel.cs" />
+    <Compile Include="ViewModels\SiteSettings\RoleViewModel.cs" />
     <Compile Include="ViewModels\SiteSettings\SiteBasicSettingsViewModel.cs" />
     <Compile Include="ViewModels\Common\AdminMenuItemViewModel.cs" />
     <Compile Include="ViewModels\Common\AdminMenuViewModel.cs" />

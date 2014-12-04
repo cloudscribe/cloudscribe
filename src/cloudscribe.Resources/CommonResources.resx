@@ -336,4 +336,10 @@
   <data name="SiteHostName" xml:space="preserve">
     <value>Host Name/Domain Name</value>
   </data>
+  <data name="Members" xml:space="preserve">
+    <value>Members</value>
+  </data>
+  <data name="NewRole" xml:space="preserve">
+    <value>New Role</value>
+  </data>
 </root>

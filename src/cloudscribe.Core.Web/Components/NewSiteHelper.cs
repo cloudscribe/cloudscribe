@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2014-11-24
-// Last Modified:		    2014-11-24
+// Last Modified:		    2014-12-04
 
 
 using System;
@@ -108,9 +108,12 @@ namespace cloudscribe.Core.Web.Components
             userRepository.SaveRole(adminRole);
 
             SiteRole roleAdminRole = new SiteRole();
-            roleAdminRole.DisplayName = "Role Administrators";
+            roleAdminRole.RoleName = "Role Admins";
             roleAdminRole.SiteId = site.SiteId;
             roleAdminRole.SiteGuid = site.SiteGuid;
+            userRepository.SaveRole(roleAdminRole);
+
+            roleAdminRole.DisplayName = "Role Administrators";
             userRepository.SaveRole(roleAdminRole);
 
             SiteRole contentAdminRole = new SiteRole();

@@ -466,6 +466,15 @@ namespace cloudscribe.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Members.
+        /// </summary>
+        public static string Members {
+            get {
+                return ResourceManager.GetString("Members", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Name.
         /// </summary>
         public static string Name {
@@ -498,6 +507,15 @@ namespace cloudscribe.Resources {
         public static string NewCurrency {
             get {
                 return ResourceManager.GetString("NewCurrency", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New Role.
+        /// </summary>
+        public static string NewRole {
+            get {
+                return ResourceManager.GetString("NewRole", resourceCulture);
             }
         }
         

@@ -220,6 +220,11 @@ namespace cloudscribe.Configuration
             get { return GetBool("UseUrlRewriteForFolderSites", false); }
         }
 
+        public static string RolesThatCannotBeDeleted
+        {
+            get { return GetString("RolesThatCannotBeDeleted", string.Empty); }
+        }
+
         public static bool UseRelatedSiteMode
         {
             get {
