@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2014-11-24
+// Last Modified:			2014-12-06
 // 
 
 using cloudscribe.Configuration;
@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using MvcSiteMapProvider;
 
 namespace cloudscribe.Core.Web.Controllers
 {
@@ -330,20 +331,96 @@ namespace cloudscribe.Core.Web.Controllers
 
         //}
 
-        public async Task<ActionResult> Roles()
-        {
-            ViewBag.SiteName = Site.SiteSettings.SiteName;
-            ViewBag.Title = "Role Management";
-            //ViewBag.Heading = "Role Management";
+        //[Authorize(Roles = "Admins,Role Admins")]
+        //public async Task<ActionResult> Roles()
+        //{
+        //    ViewBag.SiteName = Site.SiteSettings.SiteName;
+        //    ViewBag.Title = "Role Management";
+        //    //ViewBag.Heading = "Role Management";
 
-            RoleListViewModel model = new RoleListViewModel();
-            model.Heading = "Role Management";
-            model.SiteRoles = Site.UserRepository.GetRolesBySite(Site.SiteSettings.SiteId);
+        //    RoleListViewModel model = new RoleListViewModel();
+        //    model.Heading = "Role Management";
+        //    model.SiteRoles = Site.UserRepository.GetRolesBySite(Site.SiteSettings.SiteId);
 
-            return View(model);
+        //    return View(model);
 
 
-        }
+        //}
+
+        //// GET: /SiteAdmin/SiteInfo
+        //[Authorize(Roles = "Admins,Role Admins")]
+        //[MvcSiteMapNode(Title = "Edit Role", ParentKey = "Roles", Key = "RoleEdit")] 
+        //public async Task<ActionResult> RoleEdit(int? roleId)
+        //{
+        //    ViewBag.SiteName = Site.SiteSettings.SiteName;
+        //    ViewBag.Title = "Role Edit";
+
+        //    //Site.UserRepository.FetchRole()
+
+        //    RoleViewModel model = new RoleViewModel();
+
+        //    if(roleId.HasValue)
+        //    {
+        //        ISiteRole role = Site.UserRepository.FetchRole(roleId.Value);
+        //        if((role != null) &&(role.SiteId == Site.SiteSettings.SiteId || Site.SiteSettings.IsServerAdminSite))
+        //        {
+        //            model = RoleViewModel.FromISiteRole(role);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        model.SiteGuid = Site.SiteSettings.SiteGuid;
+        //        model.SiteId = Site.SiteSettings.SiteId;
+        //    }
+
+        //    model.Heading = "Role Edit";
+
+        //    return View(model);
+
+
+        //}
+
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //[Authorize(Roles = "Admins,Role Admins")]
+        //public async Task<ActionResult> RoleEdit(RoleViewModel model, int returnPageNumber = 1)
+        //{
+        //    ViewBag.SiteName = Site.SiteSettings.SiteName;
+        //    ViewBag.Title = "Edit Role";
+
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return View(model);
+        //    }
+
+        //    if((model.SiteId == -1)||(model.SiteGuid == Guid.Empty))
+        //    {
+        //        model.SiteId = Site.SiteSettings.SiteId;
+        //        model.SiteGuid = Site.SiteSettings.SiteGuid;
+        //    }
+
+        //    Site.UserRepository.SaveRole(model);
+
+        //    return RedirectToAction("Roles", new { pageNumber = returnPageNumber });
+
+        //}
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //[Authorize(Roles = "Admins,Role Admins")]
+        //public async Task<ActionResult> RoleDelete(int roleId, int returnPageNumber =1)
+        //{
+        //    ISiteRole role = Site.UserRepository.FetchRole(roleId);
+        //    if (role != null && role.IsDeletable(AppSettings.RolesThatCannotBeDeleted))
+        //    {
+        //        Site.UserRepository.DeleteRole(roleId);
+        //    }
+
+            
+        //    return RedirectToAction("Roles", new { pageNumber = returnPageNumber });
+        //}
+
 
 
         public enum SiteAdminMessageId

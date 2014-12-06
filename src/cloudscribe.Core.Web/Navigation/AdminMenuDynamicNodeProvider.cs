@@ -96,8 +96,8 @@ namespace cloudscribe.Core.Web.Navigation
             node.Title = CommonResources.Roles;
             node.Key = "Roles";
             node.ParentKey = "SiteAdmin";
-            node.Controller = "SiteAdmin";
-            node.Action = "Roles";
+            node.Controller = "RoleAdmin";
+            node.Action = "Index";
             node.Roles.Add("Admins");
             nodeList.Add(node);
 

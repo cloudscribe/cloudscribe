@@ -6,7 +6,7 @@
 using cloudscribe.Core.Models;
 using System.Collections.Generic;
 
-namespace cloudscribe.Core.Web.ViewModels.SiteSettings
+namespace cloudscribe.Core.Web.ViewModels.RoleAdmin
 {
     public class RoleListViewModel
     {

@@ -791,8 +791,10 @@
     <Content Include="Views\Sys\SiteAdmin\SiteList.cshtml" />
     <Content Include="Views\Sys\CoreData\CurrencyList.cshtml" />
     <Content Include="Views\Sys\CoreData\CurrencyEdit.cshtml" />
-    <Content Include="Views\Sys\SiteAdmin\Roles.cshtml" />
-    <Content Include="Views\Sys\SiteAdmin\RoleEdit.cshtml" />
+    <Content Include="Views\Sys\RoleAdmin\Index.cshtml" />
+    <Content Include="Views\Sys\RoleAdmin\RoleEdit.cshtml" />
+    <Content Include="Views\Sys\RoleAdmin\RoleMembers.cshtml" />
+    <Content Include="Views\Sys\UserAdmin\UserListPartial.cshtml" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />

@@ -173,6 +173,11 @@ namespace cloudscribe.Configuration
             get { return GetInt("DefaultPageSize_CountryList", 10); }
         }
 
+        public static int DefaultPageSize_RoleMemberList
+        {
+            get { return GetInt("DefaultPageSize_RoleMemberList", 10); }
+        }
+
         public static string RouteConfigPath
         {
             get { return GetString("RouteConfigPath", "~/Config/RouteRegistrars/"); }

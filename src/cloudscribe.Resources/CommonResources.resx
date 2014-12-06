@@ -342,4 +342,13 @@
   <data name="NewRole" xml:space="preserve">
     <value>New Role</value>
   </data>
+  <data name="RoleName" xml:space="preserve">
+    <value>Role Name</value>
+  </data>
+  <data name="RoleNameLengthError" xml:space="preserve">
+    <value>Role Name must be between 3 and 50 characters long</value>
+  </data>
+  <data name="RoleNameRequired" xml:space="preserve">
+    <value>Role Name is required</value>
+  </data>
 </root>

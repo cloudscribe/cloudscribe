@@ -1,0 +1,61 @@
+﻿@model cloudscribe.Core.Web.ViewModels.RoleAdmin.RoleMemberListViewModel
+
+@{
+    
+}
+
+<h2>@Model.Heading</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        
+        <th>
+            Email
+        </th>
+        <th>
+           UserName
+        </th>
+        <th>
+            DisplayName
+        </th>
+        <th>
+            FirstName)
+        </th>
+        <th>
+            LastName
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model.Members) {
+    <tr>
+        
+        <td>
+            @Html.Hidden("UserGuid",item.UserGuid)
+            @Html.Hidden("UserId", item.UserId)
+            @Html.DisplayFor(modelItem => item.Email)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UserName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DisplayName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FirstName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LastName)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+        </td>
+    </tr>
+}
+
+</table>

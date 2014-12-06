@@ -1,4 +1,4 @@
-﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.RoleListViewModel
+﻿@model cloudscribe.Core.Web.ViewModels.RoleAdmin.RoleListViewModel
 
 @{
     
@@ -22,22 +22,22 @@
                 &nbsp;       
             </span>    
                 <div class="btn-group pull-right" role="group">
-                    @using (Html.BeginForm("RoleDelete", "SiteAdmin"))
+                    @using (Html.BeginForm("RoleDelete", "RoleAdmin"))
                     {
                         @Html.AntiForgeryToken()
                         @Html.Hidden("roleId", item.RoleId)
                         @Html.Hidden("roleGuid", item.RoleGuid)
                        
     <span class="btn btn-default btn-xs">
-        @Html.ActionLink(CommonResources.Members, "RoleMembers", "SiteAdmin",
+        @Html.ActionLink(CommonResources.Members, "RoleMembers", "RoleAdmin",
                          new { roleId = item.RoleId, roleGuid = item.RoleGuid }, null)
         <span class="badge">@Html.DisplayFor(modelItem => item.MemberCount)</span>
     </span>
 
-                        @Html.ActionLink(CommonResources.Edit, "RoleEdit", "SiteAdmin", new { roleId = item.RoleId, roleGuid = item.RoleGuid }, new { @class = "btn btn-default btn-xs" })
+                        @Html.ActionLink(CommonResources.Edit, "RoleEdit", "RoleAdmin", new { roleId = item.RoleId }, new { @class = "btn btn-default btn-xs" })
                         if (item.IsDeletable(AppSettings.RolesThatCannotBeDeleted))
                         {
-                            <button type="submit"
+                            <button type="submit" disabled="@(item.MemberCount > 0)"
                                     onclick="javascript: return confirm('@Html.FormatValue(item.DisplayName, CommonResources.ConfirmDeleteFormat)');"
                                     class="btn btn-default btn-xs">
                                 @CommonResources.Delete

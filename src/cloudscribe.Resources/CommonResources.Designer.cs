@@ -592,6 +592,33 @@ namespace cloudscribe.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Role Name.
+        /// </summary>
+        public static string RoleName {
+            get {
+                return ResourceManager.GetString("RoleName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Role Name must be between 3 and 50 characters long.
+        /// </summary>
+        public static string RoleNameLengthError {
+            get {
+                return ResourceManager.GetString("RoleNameLengthError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Role Name is required.
+        /// </summary>
+        public static string RoleNameRequired {
+            get {
+                return ResourceManager.GetString("RoleNameRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Roles.
         /// </summary>
         public static string Roles {

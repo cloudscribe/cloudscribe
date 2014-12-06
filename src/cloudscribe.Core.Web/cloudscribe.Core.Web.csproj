@@ -138,6 +138,7 @@
     <Compile Include="Controllers\CloudscribeBaseController.cs" />
     <Compile Include="Controllers\CoreDataController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\RoleAdminController.cs" />
     <Compile Include="Controllers\SiteAdminController.cs" />
     <Compile Include="CoreViewEngine.cs" />
     <Compile Include="DeviceDetection\RequestExtensions.cs" />
@@ -163,8 +164,9 @@
     <Compile Include="ViewModels\CoreData\GeoZoneViewModel.cs" />
     <Compile Include="ViewModels\CoreData\StateListPageViewModel.cs" />
     <Compile Include="ViewModels\PagingInfo.cs" />
-    <Compile Include="ViewModels\SiteSettings\RoleListViewModel.cs" />
-    <Compile Include="ViewModels\SiteSettings\RoleViewModel.cs" />
+    <Compile Include="ViewModels\RoleAdmin\RoleListViewModel.cs" />
+    <Compile Include="ViewModels\RoleAdmin\RoleMemberListViewModel.cs" />
+    <Compile Include="ViewModels\RoleAdmin\RoleViewModel.cs" />
     <Compile Include="ViewModels\SiteSettings\SiteBasicSettingsViewModel.cs" />
     <Compile Include="ViewModels\Common\AdminMenuItemViewModel.cs" />
     <Compile Include="ViewModels\Common\AdminMenuViewModel.cs" />
