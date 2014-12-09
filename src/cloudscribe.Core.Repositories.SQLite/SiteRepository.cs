@@ -1,10 +1,11 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2014-11-24
+// Last Modified:			2014-12-09
 // 
 
 
 using cloudscribe.Core.Models;
+using cloudscribe.Core.Models.DataExtensions;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -138,99 +139,7 @@ namespace cloudscribe.Core.Repositories.SQLite
             DataTable expandoProperties = GetExpandoProperties(passedInSiteId); //-1 on new sites to get the default values
             
             // update a local data table of expando properties if the value changed and mark the row dirty
-
-            SetExpandoProperty(expandoProperties, "AvatarSystem", site.AvatarSystem);
-            //SetExpandoProperty(expandoProperties, "AllowUserEditorPreference", site.AllowUserEditorPreference);
-            SetExpandoProperty(expandoProperties, "CommentProvider", site.CommentProvider);
-            SetExpandoProperty(expandoProperties, "CompanyPublicEmail", site.CompanyPublicEmail);
-            SetExpandoProperty(expandoProperties, "CompanyFax", site.CompanyFax);
-            SetExpandoProperty(expandoProperties, "CompanyPhone", site.CompanyPhone);
-            SetExpandoProperty(expandoProperties, "CompanyCountry", site.CompanyCountry);
-            SetExpandoProperty(expandoProperties, "CompanyPostalCode", site.CompanyPostalCode);
-            SetExpandoProperty(expandoProperties, "CompanyRegion", site.CompanyRegion);
-            SetExpandoProperty(expandoProperties, "CompanyLocality", site.CompanyLocality);
-            SetExpandoProperty(expandoProperties, "CompanyStreetAddress", site.CompanyStreetAddress);
-            SetExpandoProperty(expandoProperties, "CompanyStreetAddress2", site.CompanyStreetAddress2);
-            SetExpandoProperty(expandoProperties, "CompanyName", site.CompanyName);
-            SetExpandoProperty(expandoProperties, "CurrencyGuid", site.CurrencyGuid.ToString());
-            SetExpandoProperty(expandoProperties, "DefaultStateGuid", site.DefaultStateGuid.ToString());
-            SetExpandoProperty(expandoProperties, "DefaultCountryGuid", site.DefaultCountryGuid.ToString());
-            SetExpandoProperty(expandoProperties, "DefaultRootPageCreateChildPageRoles", site.DefaultRootPageCreateChildPageRoles);
-            SetExpandoProperty(expandoProperties, "DefaultRootPageEditRoles", site.DefaultRootPageEditRoles);
-            SetExpandoProperty(expandoProperties, "DefaultRootPageViewRoles", site.DefaultRootPageViewRoles);
-            SetExpandoProperty(expandoProperties, "DisqusSiteShortName", site.DisqusSiteShortName);
-            SetExpandoProperty(expandoProperties, "EmailAdressesForUserApprovalNotification", site.EmailAdressesForUserApprovalNotification);
-            SetExpandoProperty(expandoProperties, "EnableContentWorkflow", site.EnableContentWorkflow.ToString());
-            SetExpandoProperty(expandoProperties, "FacebookAppId", site.FacebookAppId);
-            SetExpandoProperty(expandoProperties, "ForceContentVersioning", site.ForceContentVersioning.ToString());
-            SetExpandoProperty(expandoProperties, "GoogleAnalyticsSettings", site.GoogleAnalyticsSettings);
-            SetExpandoProperty(expandoProperties, "GoogleAnalyticsProfileId", site.GoogleAnalyticsProfileId);
-            //SetExpandoProperty(expandoProperties, "GoogleAnalyticsPassword", site.GoogleAnalyticsPassword);
-            //SetExpandoProperty(expandoProperties, "GoogleAnalyticsEmail", site.GoogleAnalyticsEmail);
-            SetExpandoProperty(expandoProperties, "IntenseDebateAccountId", site.IntenseDebateAccountId);
-            SetExpandoProperty(expandoProperties, "LoginInfoBottom", site.LoginInfoBottom);
-            SetExpandoProperty(expandoProperties, "LoginInfoTop", site.LoginInfoBottom);
-            SetExpandoProperty(expandoProperties, "MetaProfile", site.MetaProfile);
-            SetExpandoProperty(expandoProperties, "NewsletterEditor", site.NewsletterEditor);
-            SetExpandoProperty(expandoProperties, "PasswordRegexWarning", site.PasswordRegexWarning);
-            SetExpandoProperty(expandoProperties, "PrivacyPolicyUrl", site.PrivacyPolicyUrl);
-            SetExpandoProperty(expandoProperties, "RegistrationAgreement", site.RegistrationAgreement);
-            SetExpandoProperty(expandoProperties, "RegistrationPreamble", site.RegistrationPreamble);
-            SetExpandoProperty(expandoProperties, "RequireApprovalBeforeLogin", site.RequireApprovalBeforeLogin.ToString());
-
-            // permission roles
-            SetExpandoProperty(expandoProperties, "RolesThatCanApproveNewUsers", site.RolesThatCanApproveNewUsers);
-            SetExpandoProperty(expandoProperties, "RolesThatCanManageSkins", site.RolesThatCanManageSkins);
-            SetExpandoProperty(expandoProperties, "RolesThatCanAssignSkinsToPages", site.RolesThatCanAssignSkinsToPages);
-            SetExpandoProperty(expandoProperties, "RolesThatCanDeleteFilesInEditor", site.RolesThatCanDeleteFilesInEditor);
-            SetExpandoProperty(expandoProperties, "UserFilesBrowseAndUploadRoles", site.UserFilesBrowseAndUploadRoles);
-            SetExpandoProperty(expandoProperties, "GeneralBrowseAndUploadRoles", site.GeneralBrowseAndUploadRoles);
-            SetExpandoProperty(expandoProperties, "RolesThatCanEditContentTemplates", site.RolesThatCanEditContentTemplates);
-            SetExpandoProperty(expandoProperties, "RolesNotAllowedToEditModuleSettings", site.RolesNotAllowedToEditModuleSettings);
-            SetExpandoProperty(expandoProperties, "RolesThatCanLookupUsers", site.RolesThatCanLookupUsers);
-            SetExpandoProperty(expandoProperties, "RolesThatCanFullyManageUsers", site.RolesThatCanManageUsers);
-            SetExpandoProperty(expandoProperties, "RolesThatCanManageUsers", site.RolesThatCanCreateUsers);
-            SetExpandoProperty(expandoProperties, "RolesThatCanViewMemberList", site.RolesThatCanViewMemberList);
-            SetExpandoProperty(expandoProperties, "RolesThatCanCreateRootPages", site.RolesThatCanCreateRootPages);
-            SetExpandoProperty(expandoProperties, "CommerceReportViewRoles", site.CommerceReportViewRoles);
-            SetExpandoProperty(expandoProperties, "SiteRootDraftApprovalRoles", site.SiteRootDraftApprovalRoles);
-            SetExpandoProperty(expandoProperties, "SiteRootDraftEditRoles", site.SiteRootDraftEditRoles);
-            SetExpandoProperty(expandoProperties, "SiteRootEditRoles", site.SiteRootEditRoles);
-
-            // end roles
-            
-            SetExpandoProperty(expandoProperties, "SiteIsClosed", site.SiteIsClosed.ToString());
-            SetExpandoProperty(expandoProperties, "SiteIsClosedMessage", site.SiteIsClosedMessage);
-            SetExpandoProperty(expandoProperties, "SkinVersion", site.SkinVersion.ToString());
-            SetExpandoProperty(expandoProperties, "SMTPUseSsl", site.SMTPUseSsl.ToString());
-            SetExpandoProperty(expandoProperties, "SMTPRequiresAuthentication", site.SMTPRequiresAuthentication.ToString());
-            SetExpandoProperty(expandoProperties, "SMTPServer", site.SMTPServer);
-            SetExpandoProperty(expandoProperties, "SMTPPreferredEncoding", site.SMTPPreferredEncoding);
-            SetExpandoProperty(expandoProperties, "SMTPPort", site.SMTPPort.ToString(CultureInfo.InvariantCulture));
-            SetExpandoProperty(expandoProperties, "SMTPPassword", site.SMTPPassword);
-            SetExpandoProperty(expandoProperties, "SMTPUser", site.SMTPUser);
-            SetExpandoProperty(expandoProperties, "Slogan", site.Slogan);
-            SetExpandoProperty(expandoProperties, "ShowAlternateSearchIfConfigured", site.ShowAlternateSearchIfConfigured.ToString());
-            SetExpandoProperty(expandoProperties, "PrimarySearchEngine", site.PrimarySearchEngine);
-            SetExpandoProperty(expandoProperties, "GoogleCustomSearchId", site.GoogleCustomSearchId);
-            SetExpandoProperty(expandoProperties, "BingAPIId", site.BingAPIId);
-            SetExpandoProperty(expandoProperties, "OpenSearchName", site.OpenSearchName);
-            SetExpandoProperty(expandoProperties, "RpxNowAdminUrl", site.RpxNowAdminUrl);
-            SetExpandoProperty(expandoProperties, "RpxNowApplicationName", site.RpxNowApplicationName);
-            SetExpandoProperty(expandoProperties, "RpxNowApiKey", site.RpxNowApiKey);
-            //SetExpandoProperty(expandoProperties, "AppLogoForWindowsLive", site.AppLogoForWindowsLive);
-
-            SetExpandoProperty(expandoProperties, "SiteMapSkin", site.SiteMapSkin);
-            SetExpandoProperty(expandoProperties, "TimeZoneId", site.TimeZoneId);
-            //SetExpandoProperty(expandoProperties, "ShowPasswordStrengthOnRegistration", site.ShowPasswordStrengthOnRegistration);
-            //SetExpandoProperty(expandoProperties, "RequireEnterEmailTwiceOnRegistration", site.RequireEnterEmailTwiceOnRegistration);
-            SetExpandoProperty(expandoProperties, "RequireCaptchaOnLogin", site.RequireCaptchaOnLogin.ToString());
-            SetExpandoProperty(expandoProperties, "RequireCaptchaOnRegistration", site.RequireCaptchaOnRegistration.ToString());
-            SetExpandoProperty(expandoProperties, "AllowPersistentLogin", site.AllowPersistentLogin.ToString());
-            
-
-
-
+            site.SetExpandoSettings(expandoProperties);
             // finally update the database only with properties in the table marked as dirty
             SaveExpandoProperties(site.SiteId, site.SiteGuid, expandoProperties);
             
@@ -246,14 +155,15 @@ namespace cloudscribe.Core.Repositories.SQLite
             {
                 if (reader.Read())
                 {
-                    LoadFromReader(reader, site);
+                    site.LoadFromReader(reader);
                 }
 
             }
 
             if (site.SiteGuid == Guid.Empty) { return null; }//not found 
 
-            LoadExpandoSettings(site);
+            DataTable expandoProperties = GetExpandoProperties(site.SiteId);
+            site.LoadExpandoSettings(expandoProperties);
 
             return site;
 
@@ -268,14 +178,15 @@ namespace cloudscribe.Core.Repositories.SQLite
             {
                 if (reader.Read())
                 {
-                    LoadFromReader(reader, site);
+                    site.LoadFromReader(reader);
                 }
 
             }
 
             if (site.SiteGuid == Guid.Empty) { return null; }//not found 
 
-            LoadExpandoSettings(site);
+            DataTable expandoProperties = GetExpandoProperties(site.SiteId);
+            site.LoadExpandoSettings(expandoProperties);
 
             return site;
 
@@ -290,14 +201,15 @@ namespace cloudscribe.Core.Repositories.SQLite
             {
                 if (reader.Read())
                 {
-                    LoadFromReader(reader, site);
+                    site.LoadFromReader(reader);
                 }
 
             }
 
             if (site.SiteGuid == Guid.Empty) { return null; }//not found 
 
-            LoadExpandoSettings(site);
+            DataTable expandoProperties = GetExpandoProperties(site.SiteId);
+            site.LoadExpandoSettings(expandoProperties);
 
             return site;
 
@@ -325,7 +237,7 @@ namespace cloudscribe.Core.Repositories.SQLite
                 while (reader.Read())
                 {
                     SiteInfo site = new SiteInfo();
-                    LoadFromReader(reader, site);
+                    site.LoadFromReader(reader);
                     sites.Add(site);
                 }
 
@@ -355,7 +267,7 @@ namespace cloudscribe.Core.Repositories.SQLite
                 while (reader.Read())
                 {
                     SiteInfo site = new SiteInfo();
-                    LoadFromReader(reader, site);
+                    site.LoadFromReader(reader);
                     sites.Add(site);
                 }
             }
@@ -371,7 +283,7 @@ namespace cloudscribe.Core.Repositories.SQLite
                 while (reader.Read())
                 {
                     SiteHost host = new SiteHost();
-                    LoadFromReader(reader, host);
+                    host.LoadFromReader(reader);
                     hosts.Add(host);
                 }
 
@@ -391,7 +303,7 @@ namespace cloudscribe.Core.Repositories.SQLite
                 while (reader.Read())
                 {
                     SiteHost host = new SiteHost();
-                    LoadFromReader(reader, host);
+                    host.LoadFromReader(reader);
                     hosts.Add(host);
                 }
 
@@ -408,7 +320,7 @@ namespace cloudscribe.Core.Repositories.SQLite
                 while (reader.Read())
                 {
                     SiteHost host = new SiteHost();
-                    LoadFromReader(reader, host);
+                    host.LoadFromReader(reader);
                     hosts.Add(host);
                 }
 
@@ -443,7 +355,7 @@ namespace cloudscribe.Core.Repositories.SQLite
                 while (reader.Read())
                 {
                     SiteFolder siteFolder = new SiteFolder();
-                    LoadFromReader(reader, siteFolder);
+                    siteFolder.LoadFromReader(reader);
                     siteFolderList.Add(siteFolder);
                 }
             }
@@ -462,7 +374,7 @@ namespace cloudscribe.Core.Repositories.SQLite
                 while (reader.Read())
                 {
                     SiteFolder siteFolder = new SiteFolder();
-                    LoadFromReader(reader, siteFolder);
+                    siteFolder.LoadFromReader(reader);
                     siteFolderList.Add(siteFolder);
                 }
             }
@@ -484,7 +396,7 @@ namespace cloudscribe.Core.Repositories.SQLite
                 while (reader.Read())
                 {
                     SiteFolder siteFolder = new SiteFolder();
-                    LoadFromReader(reader, siteFolder);
+                    siteFolder.LoadFromReader(reader);
                     siteFolderList.Add(siteFolder);
                 }
             }
@@ -574,232 +486,6 @@ namespace cloudscribe.Core.Repositories.SQLite
 
         #region private methods
 
-        private void LoadFromReader(IDataReader reader, ISiteSettings site)
-        {
-
-            site.SiteId = Convert.ToInt32(reader["SiteID"]);
-            site.SiteGuid = new Guid(reader["SiteGuid"].ToString());
-            //site.SiteAlias = reader["SiteAlias"].ToString();
-            site.SiteName = reader["SiteName"].ToString();
-            site.Skin = reader["Skin"].ToString();
-            site.Logo = reader["Logo"].ToString();
-            site.Icon = reader["Icon"].ToString();
-            site.AllowUserSkins = Convert.ToBoolean(reader["AllowUserSkins"]);
-            site.AllowPageSkins = Convert.ToBoolean(reader["AllowPageSkins"]);
-            site.AllowHideMenuOnPages = Convert.ToBoolean(reader["AllowHideMenuOnPages"]);
-            site.AllowNewRegistration = Convert.ToBoolean(reader["AllowNewRegistration"]);
-            site.UseSecureRegistration = Convert.ToBoolean(reader["UseSecureRegistration"]);
-            site.UseSslOnAllPages = Convert.ToBoolean(reader["UseSSLOnAllPages"]);
-
-            site.IsServerAdminSite = Convert.ToBoolean(reader["IsServerAdminSite"]);
-            site.UseLdapAuth = Convert.ToBoolean(reader["UseLdapAuth"]);
-            site.AutoCreateLdapUserOnFirstLogin = Convert.ToBoolean(reader["AutoCreateLdapUserOnFirstLogin"]);
-
-            if (site.SiteLdapSettings == null) { site.SiteLdapSettings = new LdapSettings(); }
-            site.SiteLdapSettings.Server = reader["LdapServer"].ToString();
-            site.SiteLdapSettings.Port = Convert.ToInt32(reader["LdapPort"]);
-            site.SiteLdapSettings.Domain = reader["LdapDomain"].ToString();
-            site.SiteLdapSettings.RootDN = reader["LdapRootDN"].ToString();
-            site.SiteLdapSettings.UserDNKey = reader["LdapUserDNKey"].ToString();
-
-            site.ReallyDeleteUsers = Convert.ToBoolean(reader["ReallyDeleteUsers"]);
-            site.UseEmailForLogin = Convert.ToBoolean(reader["UseEmailForLogin"]);
-            site.AllowUserFullNameChange = Convert.ToBoolean(reader["AllowUserFullNameChange"]);
-            //site.EditorSkin = reader["EditorSkin"].ToString();
-            //site.DefaultFriendlyUrlPatternEnum = reader["DefaultFriendlyUrlPatternEnum"].ToString();
-            site.AllowPasswordRetrieval = Convert.ToBoolean(reader["AllowPasswordRetrieval"]);
-            site.AllowPasswordReset = Convert.ToBoolean(reader["AllowPasswordReset"]);
-            site.RequiresQuestionAndAnswer = Convert.ToBoolean(reader["RequiresQuestionAndAnswer"]);
-            site.MaxInvalidPasswordAttempts = Convert.ToInt32(reader["MaxInvalidPasswordAttempts"]);
-            site.PasswordAttemptWindowMinutes = Convert.ToInt32(reader["PasswordAttemptWindowMinutes"]);
-            //site.RequiresUniqueEmail = Convert.ToBoolean(reader["RequiresUniqueEmail"]);
-            site.PasswordFormat = Convert.ToInt32(reader["PasswordFormat"]);
-            site.MinRequiredPasswordLength = Convert.ToInt32(reader["MinRequiredPasswordLength"]);
-            site.MinRequiredNonAlphanumericCharacters = Convert.ToInt32(reader["MinReqNonAlphaChars"]);
-            site.PasswordStrengthRegularExpression = reader["PwdStrengthRegex"].ToString();
-            site.DefaultEmailFromAddress = reader["DefaultEmailFromAddress"].ToString();
-            //site.EnableMyPageFeature = Convert.ToBoolean(reader["EnableMyPageFeature"]);
-            site.EditorProviderName = reader["EditorProvider"].ToString();
-            site.CaptchaProvider = reader["CaptchaProvider"].ToString();
-            //site.DatePickerProvider = reader["DatePickerProvider"].ToString();
-            site.RecaptchaPrivateKey = reader["RecaptchaPrivateKey"].ToString();
-            site.RecaptchaPublicKey = reader["RecaptchaPublicKey"].ToString();
-            site.WordpressApiKey = reader["WordpressAPIKey"].ToString();
-            site.WindowsLiveAppId = reader["WindowsLiveAppID"].ToString();
-            site.WindowsLiveKey = reader["WindowsLiveKey"].ToString();
-            //site.AllowOpenIDAuth = Convert.ToBoolean(reader["AllowOpenIDAuth"]);
-            //site.AllowWindowsLiveAuth = Convert.ToBoolean(reader["AllowWindowsLiveAuth"]);
-            site.GmapApiKey = reader["GmapApiKey"].ToString();
-            site.AddThisDotComUsername = reader["ApiKeyExtra1"].ToString();
-            site.GoogleAnalyticsAccountCode = reader["ApiKeyExtra2"].ToString();
-            //site.ApiKeyExtra3 = reader["ApiKeyExtra3"].ToString();
-            site.SiteFolderName = reader["ApiKeyExtra4"].ToString();
-            site.PreferredHostName = reader["ApiKeyExtra5"].ToString();
-            site.DisableDbAuth = Convert.ToBoolean(reader["DisableDbAuth"]);
-
-        }
-
-        private void LoadFromReader(IDataReader reader, ISiteInfo site)
-        {
-
-            site.SiteId = Convert.ToInt32(reader["SiteID"]);
-            site.SiteGuid = new Guid(reader["SiteGuid"].ToString());
-            site.SiteName = reader["SiteName"].ToString();
-            site.SiteFolderName = reader["ApiKeyExtra4"].ToString();
-            site.PreferredHostName = reader["ApiKeyExtra5"].ToString();
-            site.IsServerAdminSite = Convert.ToBoolean(reader["IsServerAdminSite"]);
-        }
-
-        private void LoadFromReader(IDataReader reader, ISiteHost host)
-        {
-
-            host.HostId = Convert.ToInt32(reader["HostID"]);
-            host.HostName = reader["HostName"].ToString();
-            host.SiteGuid = new Guid(reader["SiteGuid"].ToString());
-            host.SiteId = Convert.ToInt32(reader["SiteID"]);
-        }
-
-        private void LoadFromReader(IDataReader reader, ISiteFolder folder)
-        {
-            folder.Guid = new Guid(reader["Guid"].ToString());
-            folder.SiteGuid = new Guid(reader["SiteGuid"].ToString());
-            folder.FolderName = reader["FolderName"].ToString();
-        }
-
-        private void LoadExpandoSettings(ISiteSettings site)
-        {
-            if (site == null) { return; }
-
-            DataTable expandoProperties = GetExpandoProperties(site.SiteId);
-
-            string b = GetExpandoProperty(expandoProperties, "AllowPersistentLogin");
-            if (!string.IsNullOrEmpty(b)) { site.AllowPersistentLogin = Convert.ToBoolean(b); }
-
-            site.AvatarSystem = GetExpandoProperty(expandoProperties, "AvatarSystem");
-            site.CommentProvider = GetExpandoProperty(expandoProperties, "CommentProvider");
-            site.CompanyPublicEmail = GetExpandoProperty(expandoProperties, "CompanyPublicEmail");
-            site.CompanyFax = GetExpandoProperty(expandoProperties, "CompanyFax");
-            site.CompanyPhone = GetExpandoProperty(expandoProperties, "CompanyPhone");
-            site.CompanyCountry = GetExpandoProperty(expandoProperties, "CompanyCountry");
-            site.CompanyPostalCode = GetExpandoProperty(expandoProperties, "CompanyPostalCode");
-            site.CompanyRegion = GetExpandoProperty(expandoProperties, "CompanyRegion");
-            site.CompanyLocality = GetExpandoProperty(expandoProperties, "CompanyLocality");
-            site.CompanyStreetAddress = GetExpandoProperty(expandoProperties, "CompanyStreetAddress");
-            site.CompanyStreetAddress2 = GetExpandoProperty(expandoProperties, "CompanyStreetAddress2");
-            site.CompanyName = GetExpandoProperty(expandoProperties, "CompanyName");
-
-            string g = GetExpandoProperty(expandoProperties, "CurrencyGuid");
-            if (g.Length == 36) { site.CurrencyGuid = new Guid(g); }
-            g = GetExpandoProperty(expandoProperties, "DefaultStateGuid");
-            if (g.Length == 36) { site.DefaultStateGuid = new Guid(g); }
-            g = GetExpandoProperty(expandoProperties, "DefaultCountryGuid");
-            if (g.Length == 36) { site.DefaultCountryGuid = new Guid(g); }
-
-            site.DefaultRootPageCreateChildPageRoles = GetExpandoProperty(expandoProperties, "DefaultRootPageCreateChildPageRoles");
-
-            site.DefaultRootPageEditRoles = GetExpandoProperty(expandoProperties, "DefaultRootPageEditRoles");
-            site.DefaultRootPageViewRoles = GetExpandoProperty(expandoProperties, "DefaultRootPageViewRoles");
-            site.DisqusSiteShortName = GetExpandoProperty(expandoProperties, "DisqusSiteShortName");
-            site.EmailAdressesForUserApprovalNotification = GetExpandoProperty(expandoProperties, "EmailAdressesForUserApprovalNotification");
-            b = GetExpandoProperty(expandoProperties, "EnableContentWorkflow");
-            if (!string.IsNullOrEmpty(b)) { site.EnableContentWorkflow = Convert.ToBoolean(b); }
-            site.FacebookAppId = GetExpandoProperty(expandoProperties, "FacebookAppId");
-            b = GetExpandoProperty(expandoProperties, "ForceContentVersioning");
-            if (!string.IsNullOrEmpty(b)) { site.ForceContentVersioning = Convert.ToBoolean(b); }
-            site.GoogleAnalyticsSettings = GetExpandoProperty(expandoProperties, "GoogleAnalyticsSettings");
-            site.GoogleAnalyticsProfileId = GetExpandoProperty(expandoProperties, "GoogleAnalyticsProfileId");
-            //SetExpandoProperty(expandoProperties, "GoogleAnalyticsPassword", site.GoogleAnalyticsPassword);
-            //SetExpandoProperty(expandoProperties, "GoogleAnalyticsEmail", site.GoogleAnalyticsEmail);
-            site.IntenseDebateAccountId = GetExpandoProperty(expandoProperties, "IntenseDebateAccountId");
-            site.LoginInfoBottom = GetExpandoProperty(expandoProperties, "LoginInfoBottom");
-            site.LoginInfoBottom = GetExpandoProperty(expandoProperties, "LoginInfoTop");
-            site.MetaProfile = GetExpandoProperty(expandoProperties, "MetaProfile");
-            site.NewsletterEditor = GetExpandoProperty(expandoProperties, "NewsletterEditor");
-            site.PasswordRegexWarning = GetExpandoProperty(expandoProperties, "PasswordRegexWarning");
-            site.PrivacyPolicyUrl = GetExpandoProperty(expandoProperties, "PrivacyPolicyUrl");
-            site.RegistrationAgreement = GetExpandoProperty(expandoProperties, "RegistrationAgreement");
-            site.RegistrationPreamble = GetExpandoProperty(expandoProperties, "RegistrationPreamble");
-
-            b = GetExpandoProperty(expandoProperties, "RequireApprovalBeforeLogin");
-            if (!string.IsNullOrEmpty(b)) { site.RequireApprovalBeforeLogin = Convert.ToBoolean(b); }
-
-            // permission roles
-            site.RolesThatCanApproveNewUsers = GetExpandoProperty(expandoProperties, "RolesThatCanApproveNewUsers");
-            site.RolesThatCanManageSkins = GetExpandoProperty(expandoProperties, "RolesThatCanManageSkins");
-            site.RolesThatCanAssignSkinsToPages = GetExpandoProperty(expandoProperties, "RolesThatCanAssignSkinsToPages");
-            site.RolesThatCanDeleteFilesInEditor = GetExpandoProperty(expandoProperties, "RolesThatCanDeleteFilesInEditor");
-            site.UserFilesBrowseAndUploadRoles = GetExpandoProperty(expandoProperties, "UserFilesBrowseAndUploadRoles");
-            site.GeneralBrowseAndUploadRoles = GetExpandoProperty(expandoProperties, "GeneralBrowseAndUploadRoles");
-            site.RolesThatCanEditContentTemplates = GetExpandoProperty(expandoProperties, "RolesThatCanEditContentTemplates");
-            site.RolesNotAllowedToEditModuleSettings = GetExpandoProperty(expandoProperties, "RolesNotAllowedToEditModuleSettings");
-            site.RolesThatCanLookupUsers = GetExpandoProperty(expandoProperties, "RolesThatCanLookupUsers");
-            site.RolesThatCanManageUsers = GetExpandoProperty(expandoProperties, "RolesThatCanFullyManageUsers");
-            site.RolesThatCanCreateUsers = GetExpandoProperty(expandoProperties, "RolesThatCanManageUsers");
-            site.RolesThatCanViewMemberList = GetExpandoProperty(expandoProperties, "RolesThatCanViewMemberList");
-            site.RolesThatCanCreateRootPages = GetExpandoProperty(expandoProperties, "RolesThatCanCreateRootPages");
-            site.CommerceReportViewRoles = GetExpandoProperty(expandoProperties, "CommerceReportViewRoles");
-            site.SiteRootDraftApprovalRoles = GetExpandoProperty(expandoProperties, "SiteRootDraftApprovalRoles");
-            site.SiteRootDraftEditRoles = GetExpandoProperty(expandoProperties, "SiteRootDraftEditRoles");
-            site.SiteRootEditRoles = GetExpandoProperty(expandoProperties, "SiteRootEditRoles");
-
-            // end roles
-
-            b = GetExpandoProperty(expandoProperties, "SiteIsClosed");
-            if (!string.IsNullOrEmpty(b)) { site.SiteIsClosed = Convert.ToBoolean(b); }
-
-            site.SiteIsClosedMessage = GetExpandoProperty(expandoProperties, "SiteIsClosedMessage");
-
-            g = GetExpandoProperty(expandoProperties, "SkinVersion");
-            if (!string.IsNullOrEmpty(g))
-            {
-                if (g.Length == 36) { site.SkinVersion = new Guid(g); }
-            }
-
-            b = GetExpandoProperty(expandoProperties, "SMTPUseSsl");
-            if (!string.IsNullOrEmpty(b)) { site.SMTPUseSsl = Convert.ToBoolean(b); }
-
-            b = GetExpandoProperty(expandoProperties, "SMTPRequiresAuthentication");
-            if (!string.IsNullOrEmpty(b)) { site.SMTPRequiresAuthentication = Convert.ToBoolean(b); }
-
-
-            site.SMTPServer = GetExpandoProperty(expandoProperties, "SMTPServer");
-            site.SMTPPreferredEncoding = GetExpandoProperty(expandoProperties, "SMTPPreferredEncoding");
-            string i = GetExpandoProperty(expandoProperties, "SMTPPort");
-            if (!string.IsNullOrEmpty(i)) { site.SMTPPort = Convert.ToInt32(i); }
-            site.SMTPPassword = GetExpandoProperty(expandoProperties, "SMTPPassword");
-            site.SMTPUser = GetExpandoProperty(expandoProperties, "SMTPUser");
-            site.Slogan = GetExpandoProperty(expandoProperties, "Slogan");
-
-            b = GetExpandoProperty(expandoProperties, "ShowAlternateSearchIfConfigured");
-            if (!string.IsNullOrEmpty(b)) { site.ShowAlternateSearchIfConfigured = Convert.ToBoolean(b); }
-
-            site.PrimarySearchEngine = GetExpandoProperty(expandoProperties, "PrimarySearchEngine");
-            site.GoogleCustomSearchId = GetExpandoProperty(expandoProperties, "GoogleCustomSearchId");
-            site.BingAPIId = GetExpandoProperty(expandoProperties, "BingAPIId");
-            site.OpenSearchName = GetExpandoProperty(expandoProperties, "OpenSearchName");
-            site.RpxNowAdminUrl = GetExpandoProperty(expandoProperties, "RpxNowAdminUrl");
-            site.RpxNowApplicationName = GetExpandoProperty(expandoProperties, "RpxNowApplicationName");
-            site.RpxNowApiKey = GetExpandoProperty(expandoProperties, "RpxNowApiKey");
-            //site.AppLogoForWindowsLive = GetExpandoProperty(expandoProperties, "AppLogoForWindowsLive");
-
-            site.SiteMapSkin = GetExpandoProperty(expandoProperties, "SiteMapSkin");
-            site.TimeZoneId = GetExpandoProperty(expandoProperties, "TimeZoneId");
-            //SetExpandoProperty(expandoProperties, "ShowPasswordStrengthOnRegistration", site.ShowPasswordStrengthOnRegistration);
-            //SetExpandoProperty(expandoProperties, "RequireEnterEmailTwiceOnRegistration", site.RequireEnterEmailTwiceOnRegistration);
-
-            b = GetExpandoProperty(expandoProperties, "RequireCaptchaOnLogin");
-            if (!string.IsNullOrEmpty(b)) { site.RequireCaptchaOnLogin = Convert.ToBoolean(b); }
-
-            b = GetExpandoProperty(expandoProperties, "RequireCaptchaOnRegistration");
-            if (!string.IsNullOrEmpty(b)) { site.RequireCaptchaOnRegistration = Convert.ToBoolean(b); }
-
-
-
-
-
-
-
-        }
 
         private void SaveExpandoProperties(int siteId, Guid siteGuid, DataTable exapandoProperties)
         {
@@ -823,56 +509,13 @@ namespace cloudscribe.Core.Repositories.SQLite
 
         }
 
-        private string GetExpandoProperty(DataTable exapandoProperties, string keyName)
-        {
-            //EnsureExpandoProperties();
-
-            foreach (DataRow row in exapandoProperties.Rows)
-            {
-                if (row["KeyName"].ToString().Trim().Equals(keyName, StringComparison.InvariantCulture))
-                {
-                    return row["KeyValue"].ToString();
-                }
-
-            }
-
-            return null;
-
-        }
-
-        private void SetExpandoProperty(DataTable exapandoProperties, string keyName, string keyValue)
-        {
-            //EnsureExpandoProperties();
-            //bool found = false;
-            foreach (DataRow row in exapandoProperties.Rows)
-            {
-                if (row["KeyName"].ToString().Trim().Equals(keyName, StringComparison.InvariantCulture))
-                {
-                    if (row["KeyValue"].ToString() != keyValue)
-                    {
-                        row["KeyValue"] = keyValue;
-                        row["IsDirty"] = true;
-                    }
-
-                    //found = true;
-                    break;
-                }
-
-            }
-
-
-
-        }
-
-
-
+       
         private static DataTable GetExpandoProperties(int siteId)
         {
             if (siteId == -1) { return GetDefaultExpandoProperties(); } //new site
 
-            DataTable dataTable = CreateExpandoTable();
-            dataTable.TableName = "expandoProperties";
-
+            DataTable dataTable = ModelDataExtensions.CreateExpandoTable();
+            
 
             using (IDataReader reader = DBSiteSettingsEx.GetSiteSettingsExList(siteId))
             {
@@ -897,7 +540,7 @@ namespace cloudscribe.Core.Repositories.SQLite
         private static DataTable GetDefaultExpandoProperties()
         {
 
-            DataTable dataTable = CreateExpandoTable();
+            DataTable dataTable = ModelDataExtensions.CreateExpandoTable();
 
             using (IDataReader reader = DBSiteSettingsEx.GetDefaultExpandoSettings())
             {
@@ -920,18 +563,7 @@ namespace cloudscribe.Core.Repositories.SQLite
             return dataTable;
         }
 
-        private static DataTable CreateExpandoTable()
-        {
-            DataTable dataTable = new DataTable();
-            dataTable.Columns.Add("SiteID", typeof(int));
-            dataTable.Columns.Add("KeyName", typeof(string));
-            dataTable.Columns.Add("KeyValue", typeof(string));
-            dataTable.Columns.Add("GroupName", typeof(string));
-            dataTable.Columns.Add("IsDirty", typeof(bool));
-
-            return dataTable;
-
-        }
+        
 
 
         #endregion

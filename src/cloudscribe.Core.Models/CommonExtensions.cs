@@ -1,9 +1,13 @@
-﻿using System;
-using System.Globalization;
+﻿// Author:					Joe Audette
+// Created:					2014-11-15
+// Last Modified:			2014-12-09
+// 
+
+using cloudscribe.Configuration;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Data;
+using System.Globalization;
 
 namespace cloudscribe.Core.Models
 {
@@ -36,29 +40,6 @@ namespace cloudscribe.Core.Models
             return list;
         }
 
-        public static bool IsDeletable(this ISiteRole role, string undeletableRolesSemiColonSeparated)
-        {
-            List<string> rolesThatCannotBeDelete = undeletableRolesSemiColonSeparated.SplitOnChar(';');
-            return role.IsDeletable(rolesThatCannotBeDelete);
-        }
-
-        public static bool IsDeletable(this ISiteRole role, List<string> rolesThatCannotBeDeleted)
-        {
-            if (role.RoleName == "Admins") { return false; }
-            if (role.RoleName == "Content Administrators") { return false; }
-            if (role.RoleName == "Authenticated Users") { return false; }
-            if (role.RoleName == "Role Admins") { return false; }
-
-            if (rolesThatCannotBeDeleted != null)
-            {
-                foreach (string roleName in rolesThatCannotBeDeleted)
-                {
-                    if (role.RoleName == roleName) { return false; }
-                    if (role.DisplayName == roleName) { return false; }
-                }
-            }
-
-            return true;
-        }
+        
     }
 }

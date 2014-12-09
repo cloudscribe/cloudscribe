@@ -1,11 +1,12 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-18
-// Last Modified:			2014-09-09
+// Last Modified:			2014-12-09
 // 
 
 
 using cloudscribe.Configuration;
 using cloudscribe.Core.Models;
+using cloudscribe.Core.Models.DataExtensions;
 using log4net;
 using System;
 using System.Collections;
@@ -325,7 +326,7 @@ namespace cloudscribe.Core.Repositories.SQLite
                 {
                     SiteUser user = new SiteUser();
 
-                    LoadFromReader(reader, user);
+                    user.LoadFromReader(reader);
 
                     if (user.SiteId == siteId) { return user; }
 
@@ -344,7 +345,7 @@ namespace cloudscribe.Core.Repositories.SQLite
                 {
                     SiteUser user = new SiteUser();
 
-                    LoadFromReader(reader, user);
+                    user.LoadFromReader(reader);
 
                     if (user.SiteId == siteId) { return user; }
 
@@ -362,7 +363,7 @@ namespace cloudscribe.Core.Repositories.SQLite
                 {
                     SiteUser user = new SiteUser();
 
-                    LoadFromReader(reader, user);
+                    user.LoadFromReader(reader);
 
                     if (user.SiteId == siteId) { return user; }
 
@@ -381,7 +382,7 @@ namespace cloudscribe.Core.Repositories.SQLite
                 {
                     SiteUser user = new SiteUser();
 
-                    LoadFromReader(reader, user);
+                    user.LoadFromReader(reader);
 
                     return user;
 
@@ -399,7 +400,7 @@ namespace cloudscribe.Core.Repositories.SQLite
                 {
                     SiteUser user = new SiteUser();
 
-                    LoadFromReader(reader, user);
+                    user.LoadFromReader(reader);
 
                     return user;
 
@@ -413,9 +414,9 @@ namespace cloudscribe.Core.Repositories.SQLite
 
 
 
-        public List<ISiteUser> GetByIPAddress(Guid siteGuid, string ipv4Address)
+        public List<IUserInfo> GetByIPAddress(Guid siteGuid, string ipv4Address)
         {
-            List<ISiteUser> userList = new List<ISiteUser>();
+            List<IUserInfo> userList = new List<IUserInfo>();
 
             //if (UseRelatedSiteMode) { siteGuid = Guid.Empty; }
 
@@ -423,8 +424,8 @@ namespace cloudscribe.Core.Repositories.SQLite
             {
                 while (reader.Read())
                 {
-                    SiteUser user = new SiteUser();
-                    LoadFromReader(reader, user);
+                    UserInfo user = new UserInfo();
+                    user.LoadFromReader(reader);
                     userList.Add(user);
 
                 }
@@ -434,16 +435,16 @@ namespace cloudscribe.Core.Repositories.SQLite
 
         }
 
-        public List<ISiteUser> GetCrossSiteUserListByEmail(string email)
+        public List<IUserInfo> GetCrossSiteUserListByEmail(string email)
         {
-            List<ISiteUser> userList = new List<ISiteUser>();
+            List<IUserInfo> userList = new List<IUserInfo>();
 
             using (IDataReader reader = DBSiteUser.GetCrossSiteUserListByEmail(email))
             {
                 while (reader.Read())
                 {
-                    SiteUser user = new SiteUser();
-                    LoadFromReader(reader, user);
+                    UserInfo user = new UserInfo();
+                    user.LoadFromReader(reader);
                     userList.Add(user);
 
                 }
@@ -453,7 +454,7 @@ namespace cloudscribe.Core.Repositories.SQLite
 
         }
 
-        public List<ISiteUser> GetPage(
+        public List<IUserInfo> GetPage(
             int siteId,
             int pageNumber,
             int pageSize,
@@ -465,7 +466,7 @@ namespace cloudscribe.Core.Repositories.SQLite
 
             totalPages = 1;
 
-            List<ISiteUser> userList = new List<ISiteUser>();
+            List<IUserInfo> userList = new List<IUserInfo>();
 
             //if (UseRelatedSiteMode) { siteId = RelatedSiteID; }
 
@@ -476,8 +477,8 @@ namespace cloudscribe.Core.Repositories.SQLite
 
                 while (reader.Read())
                 {
-                    SiteUser user = new SiteUser();
-                    LoadFromReader(reader, user);
+                    UserInfo user = new UserInfo();
+                    user.LoadFromReader(reader);
                     userList.Add(user);
                     //totalPages = Convert.ToInt32(reader["TotalPages"]);
                 }
@@ -487,7 +488,7 @@ namespace cloudscribe.Core.Repositories.SQLite
 
         }
 
-        public List<ISiteUser> GetUserSearchPage(
+        public List<IUserInfo> GetUserSearchPage(
             int siteId,
             int pageNumber,
             int pageSize,
@@ -497,7 +498,7 @@ namespace cloudscribe.Core.Repositories.SQLite
         {
             //sortMode: 0 = DisplayName asc, 1 = JoinDate desc, 2 = Last, First
 
-            List<ISiteUser> userList = new List<ISiteUser>();
+            List<IUserInfo> userList = new List<IUserInfo>();
 
             //if (UseRelatedSiteMode) { siteId = RelatedSiteID; }
 
@@ -512,8 +513,8 @@ namespace cloudscribe.Core.Repositories.SQLite
 
                 while (reader.Read())
                 {
-                    SiteUser user = new SiteUser();
-                    LoadFromReader(reader, user);
+                    UserInfo user = new UserInfo();
+                    user.LoadFromReader(reader);
                     userList.Add(user);
 
                 }
@@ -524,7 +525,7 @@ namespace cloudscribe.Core.Repositories.SQLite
 
         }
 
-        public List<ISiteUser> GetUserAdminSearchPage(
+        public List<IUserInfo> GetUserAdminSearchPage(
             int siteId,
             int pageNumber,
             int pageSize,
@@ -532,7 +533,7 @@ namespace cloudscribe.Core.Repositories.SQLite
             int sortMode,
             out int totalPages)
         {
-            List<ISiteUser> userList = new List<ISiteUser>();
+            List<IUserInfo> userList = new List<IUserInfo>();
 
             //if (UseRelatedSiteMode) { siteId = RelatedSiteID; }
 
@@ -547,8 +548,8 @@ namespace cloudscribe.Core.Repositories.SQLite
 
                 while (reader.Read())
                 {
-                    SiteUser user = new SiteUser();
-                    LoadFromReader(reader, user);
+                    UserInfo user = new UserInfo();
+                    user.LoadFromReader(reader);
                     userList.Add(user);
 
                 }
@@ -559,13 +560,13 @@ namespace cloudscribe.Core.Repositories.SQLite
 
         }
 
-        public List<ISiteUser> GetPageLockedUsers(
+        public List<IUserInfo> GetPageLockedUsers(
             int siteId,
             int pageNumber,
             int pageSize,
             out int totalPages)
         {
-            List<ISiteUser> userList = new List<ISiteUser>();
+            List<IUserInfo> userList = new List<IUserInfo>();
 
             //if (UseRelatedSiteMode) { siteId = RelatedSiteID; }
 
@@ -578,8 +579,8 @@ namespace cloudscribe.Core.Repositories.SQLite
 
                 while (reader.Read())
                 {
-                    SiteUser user = new SiteUser();
-                    LoadFromReader(reader, user);
+                    UserInfo user = new UserInfo();
+                    user.LoadFromReader(reader);
                     userList.Add(user);
 
                 }
@@ -588,13 +589,13 @@ namespace cloudscribe.Core.Repositories.SQLite
             return userList;
         }
 
-        public List<ISiteUser> GetNotApprovedUsers(
+        public List<IUserInfo> GetNotApprovedUsers(
             int siteId,
             int pageNumber,
             int pageSize,
             out int totalPages)
         {
-            List<ISiteUser> userList = new List<ISiteUser>();
+            List<IUserInfo> userList = new List<IUserInfo>();
 
             //if (UseRelatedSiteMode) { siteId = RelatedSiteID; }
 
@@ -607,8 +608,8 @@ namespace cloudscribe.Core.Repositories.SQLite
 
                 while (reader.Read())
                 {
-                    SiteUser user = new SiteUser();
-                    LoadFromReader(reader, user);
+                    UserInfo user = new UserInfo();
+                    user.LoadFromReader(reader);
                     userList.Add(user);
 
                 }
@@ -704,171 +705,6 @@ namespace cloudscribe.Core.Repositories.SQLite
 
             return DBSiteUser.GetNewestUserId(siteId);
 
-        }
-
-       
-
-
-        private void LoadFromReader(IDataReader reader, SiteUser user)
-        {
-            user.UserId = Convert.ToInt32(reader["UserID"], CultureInfo.InvariantCulture);
-            user.SiteId = Convert.ToInt32(reader["SiteID"], CultureInfo.InvariantCulture);
-            user.DisplayName = reader["Name"].ToString();
-            if (AppSettings.UseEmailForLogin)
-            {
-                user.UserName = reader["Email"].ToString();
-            }
-            else
-            {
-                user.UserName = reader["LoginName"].ToString();
-            }
-            user.Email = reader["Email"].ToString();
-            user.LoweredEmail = reader["LoweredEmail"].ToString();
-            user.PasswordQuestion = reader["PasswordQuestion"].ToString();
-            user.PasswordAnswer = reader["PasswordAnswer"].ToString();
-            user.Gender = reader["Gender"].ToString();
-
-            if (reader["ProfileApproved"] != DBNull.Value)
-            {
-                user.ProfileApproved = Convert.ToBoolean(reader["ProfileApproved"]);
-            }
-
-            if (reader["RegisterConfirmGuid"] != DBNull.Value)
-            {
-                user.RegisterConfirmGuid = new Guid(reader["RegisterConfirmGuid"].ToString());
-            }
-            if (reader["ApprovedForForums"] != DBNull.Value)
-            {
-                user.ApprovedForLogin = Convert.ToBoolean(reader["ApprovedForForums"]);
-            }
-            if (reader["Trusted"] != DBNull.Value)
-            {
-                user.Trusted = Convert.ToBoolean(reader["Trusted"]);
-            }
-            if (reader["DisplayInMemberList"] != DBNull.Value)
-            {
-                user.DisplayInMemberList = Convert.ToBoolean(reader["DisplayInMemberList"]);
-            }
-            user.WebSiteUrl = reader["WebSiteURL"].ToString();
-            user.Country = reader["Country"].ToString();
-            user.State = reader["State"].ToString();
-
-            //legacy fields
-            //user.Occupation = reader["Occupation"].ToString();
-            //user.Interests = reader["Interests"].ToString();
-            //user.MSN = reader["MSN"].ToString();
-            //user.Yahoo = reader["Yahoo"].ToString();
-            //user.AIM = reader["AIM"].ToString();
-            //user.ICQ = reader["ICQ"].ToString();
-            //user.TimeOffsetHours = Convert.ToInt32(reader["TimeOffsetHours"]);
-
-            user.TotalPosts = Convert.ToInt32(reader["TotalPosts"], CultureInfo.InvariantCulture);
-            user.AvatarUrl = reader["AvatarUrl"].ToString();
-            
-            user.Signature = reader["Signature"].ToString();
-            if (reader["DateCreated"] != DBNull.Value)
-            {
-                user.CreatedUtc = Convert.ToDateTime(reader["DateCreated"]);
-            }
-            if (reader["UserGuid"] != DBNull.Value)
-            {
-                user.UserGuid = new Guid(reader["UserGuid"].ToString());
-            }
-            user.Skin = reader["Skin"].ToString();
-            if (reader["IsDeleted"] != DBNull.Value)
-            {
-                user.IsDeleted = Convert.ToBoolean(reader["IsDeleted"]);
-            }
-            if (reader["LastActivityDate"] != DBNull.Value)
-            {
-                user.LastActivityDate = Convert.ToDateTime(reader["LastActivityDate"]);
-            }
-            if (reader["LastLoginDate"] != DBNull.Value)
-            {
-                user.LastLoginDate = Convert.ToDateTime(reader["LastLoginDate"]);
-            }
-            if (reader["LastPasswordChangedDate"] != DBNull.Value)
-            {
-                user.LastPasswordChangedDate = Convert.ToDateTime(reader["LastPasswordChangedDate"]);
-            }
-            if (reader["LastLockoutDate"] != DBNull.Value)
-            {
-                user.LastLockoutDate = Convert.ToDateTime(reader["LastLockoutDate"]);
-            }
-            if (reader["FailedPasswordAttemptCount"] != DBNull.Value)
-            {
-                user.FailedPasswordAttemptCount = Convert.ToInt32(reader["FailedPasswordAttemptCount"]);
-            }
-            if (reader["FailedPwdAttemptWindowStart"] != DBNull.Value)
-            {
-                user.FailedPasswordAttemptWindowStart = Convert.ToDateTime(reader["FailedPwdAttemptWindowStart"]);
-            }
-            if (reader["FailedPwdAnswerAttemptCount"] != DBNull.Value)
-            {
-                user.FailedPasswordAnswerAttemptCount = Convert.ToInt32(reader["FailedPwdAnswerAttemptCount"]);
-            }
-            if (reader["FailedPwdAnswerWindowStart"] != DBNull.Value)
-            {
-                user.FailedPasswordAnswerAttemptWindowStart = Convert.ToDateTime(reader["FailedPwdAnswerWindowStart"]);
-            }
-            if (reader["IsLockedOut"] != DBNull.Value)
-            {
-                user.IsLockedOut = Convert.ToBoolean(reader["IsLockedOut"]);
-            }
-            user.MobilePin = reader["MobilePIN"].ToString();
-            
-            user.Comment = reader["Comment"].ToString();
-            user.OpenIdUri = reader["OpenIDURI"].ToString();
-            user.WindowsLiveId = reader["WindowsLiveID"].ToString();
-            user.SiteGuid = new Guid(reader["SiteGuid"].ToString());
-
-            if (reader["TotalRevenue"] != DBNull.Value)
-            {
-                user.TotalRevenue = Convert.ToDecimal(reader["TotalRevenue"]);
-            }
-            
-            user.FirstName = reader["FirstName"].ToString();
-            user.LastName = reader["LastName"].ToString();
-            
-            user.MustChangePwd = Convert.ToBoolean(reader["MustChangePwd"]);
-            user.NewEmail = reader["NewEmail"].ToString();
-            user.EditorPreference = reader["EditorPreference"].ToString();
-            user.EmailChangeGuid = new Guid(reader["EmailChangeGuid"].ToString());
-            user.TimeZoneId = reader["TimeZoneId"].ToString();
-            user.PasswordResetGuid = new Guid(reader["PasswordResetGuid"].ToString());
-            user.RolesChanged = Convert.ToBoolean(reader["RolesChanged"]);
-            user.AuthorBio = reader["AuthorBio"].ToString();
-            if (reader["DateOfBirth"] != DBNull.Value)
-            {
-                user.DateOfBirth = Convert.ToDateTime(reader["DateOfBirth"]);
-            }
-            
-            user.EmailConfirmed = Convert.ToBoolean(reader["EmailConfirmed"]);
-            
-            user.SecurityStamp = reader["SecurityStamp"].ToString();
-            user.PhoneNumber = reader["PhoneNumber"].ToString();
-            user.PhoneNumberConfirmed = Convert.ToBoolean(reader["PhoneNumberConfirmed"]);
-            user.TwoFactorEnabled = Convert.ToBoolean(reader["TwoFactorEnabled"]);
-            if (reader["LockoutEndDateUtc"] != DBNull.Value)
-            {
-                user.LockoutEndDateUtc = Convert.ToDateTime(reader["LockoutEndDateUtc"]);
-            }
-
-            user.Password = reader["Pwd"].ToString();
-            user.PasswordFormat = Convert.ToInt32(reader["PwdFormat"]);
-            user.PasswordHash = reader["PasswordHash"].ToString();
-            user.PasswordSalt = reader["PasswordSalt"].ToString();
-
-            if(user.PasswordHash.Length == 0)
-            {
-                
-               user.PasswordHash = 
-                   user.Password + "|" 
-                   + user.PasswordSalt + "|" 
-                   + user.PasswordFormat.ToString(CultureInfo.InvariantCulture)
-                   ;
-                
-            }
         }
 
         #endregion
@@ -1029,7 +865,7 @@ namespace cloudscribe.Core.Repositories.SQLite
                 if (reader.Read())
                 {
                     SiteRole role = new SiteRole();
-                    LoadFromReader(reader, role);
+                    role.LoadFromReader(reader);
                     return role;
                 }
             }
@@ -1050,7 +886,7 @@ namespace cloudscribe.Core.Repositories.SQLite
                     if (foundName == roleName)
                     {
                         role = new SiteRole();
-                        LoadFromReader(reader, role);
+                        role.LoadFromReader(reader);
                         break;
                     }
                 }
@@ -1085,7 +921,7 @@ namespace cloudscribe.Core.Repositories.SQLite
                 while (reader.Read())
                 {
                     SiteRole role = new SiteRole();
-                    LoadFromReader(reader, role);
+                    role.LoadFromReader(reader);
                     role.MemberCount = Convert.ToInt32(reader["MemberCount"]);
 
                     roles.Add(role);
@@ -1105,7 +941,7 @@ namespace cloudscribe.Core.Repositories.SQLite
             using (IDataReader reader = DBRoles.GetRolesUserIsNotIn(siteId, userId))
             {
                 SiteRole role = new SiteRole();
-                LoadFromReader(reader, role);
+                role.LoadFromReader(reader);
 
                 roles.Add(role);
             }
@@ -1163,7 +999,7 @@ namespace cloudscribe.Core.Repositories.SQLite
                 while (reader.Read())
                 {
                     UserInfo user = new UserInfo();
-                    LoadFromReader(reader, user);
+                    user.LoadFromReader(reader);
                     users.Add(user);
 
                 }
@@ -1184,7 +1020,7 @@ namespace cloudscribe.Core.Repositories.SQLite
                 while (reader.Read())
                 {
                     UserInfo user = new UserInfo();
-                    LoadFromReader(reader, user);
+                    user.LoadFromReader(reader);
                     users.Add(user);
 
                 }
@@ -1194,34 +1030,6 @@ namespace cloudscribe.Core.Repositories.SQLite
             return users;
         }
 
-
-        private void LoadFromReader(IDataReader reader, IUserInfo user)
-        {
-            user.UserId = Convert.ToInt32(reader["UserID"], CultureInfo.InvariantCulture);
-            if (reader["UserGuid"] != DBNull.Value)
-            {
-                user.UserGuid = new Guid(reader["UserGuid"].ToString());
-            }
-            user.SiteId = Convert.ToInt32(reader["SiteID"], CultureInfo.InvariantCulture);
-            user.SiteGuid = new Guid(reader["SiteGuid"].ToString());
-            user.DisplayName = reader["Name"].ToString();
-            user.UserName = reader["LoginName"].ToString();
-            user.Email = reader["Email"].ToString();
-            user.FirstName = reader["FirstName"].ToString();
-            user.LastName = reader["LastName"].ToString();
-
-        }
-
-        private void LoadFromReader(IDataReader reader, ISiteRole role)
-        {
-            role.RoleId = Convert.ToInt32(reader["RoleID"]);
-            role.SiteId = Convert.ToInt32(reader["SiteID"]);
-            role.RoleName = reader["RoleName"].ToString();
-            role.DisplayName = reader["DisplayName"].ToString();
-            role.SiteGuid = new Guid(reader["SiteGuid"].ToString());
-            role.RoleGuid = new Guid(reader["RoleGuid"].ToString());
-
-        }
 
         #endregion
 
@@ -1293,12 +1101,12 @@ namespace cloudscribe.Core.Repositories.SQLite
         public IList<IUserClaim> GetClaimsByUser(string userId)
         {
             IDataReader reader = DBUserClaims.GetByUser(userId);
-            return LoadListFromReader(reader);
+            return LoadClaimListFromReader(reader);
 
         }
 
 
-        private List<IUserClaim> LoadListFromReader(IDataReader reader)
+        private List<IUserClaim> LoadClaimListFromReader(IDataReader reader)
         {
             List<IUserClaim> userClaimList = new List<IUserClaim>();
 
@@ -1307,10 +1115,7 @@ namespace cloudscribe.Core.Repositories.SQLite
                 while (reader.Read())
                 {
                     UserClaim userClaim = new UserClaim();
-                    userClaim.Id = Convert.ToInt32(reader["Id"]);
-                    userClaim.UserId = reader["UserId"].ToString();
-                    userClaim.ClaimType = reader["ClaimType"].ToString();
-                    userClaim.ClaimValue = reader["ClaimValue"].ToString();
+                    userClaim.LoadFromReader(reader);
                     userClaimList.Add(userClaim);
 
                 }
@@ -1361,7 +1166,7 @@ namespace cloudscribe.Core.Repositories.SQLite
                 if (reader.Read())
                 {
                     UserLogin userLogin = new UserLogin();
-                    LoadFromReader(reader, userLogin);
+                    userLogin.LoadFromReader(reader);
                     return userLogin;
 
                 }
@@ -1413,7 +1218,7 @@ namespace cloudscribe.Core.Repositories.SQLite
                 while (reader.Read())
                 {
                     UserLogin userLogin = new UserLogin();
-                    LoadFromReader(reader, userLogin);
+                    userLogin.LoadFromReader(reader);
                     userLoginList.Add(userLogin);
 
                 }
@@ -1424,13 +1229,7 @@ namespace cloudscribe.Core.Repositories.SQLite
         }
 
         
-        private void LoadFromReader(IDataReader reader, IUserLogin userLogin)
-        {
-            userLogin.LoginProvider = reader["LoginProvider"].ToString();
-            userLogin.ProviderKey = reader["ProviderKey"].ToString();
-            userLogin.UserId = reader["UserId"].ToString();
-            
-        }
+        
 
         #endregion
 

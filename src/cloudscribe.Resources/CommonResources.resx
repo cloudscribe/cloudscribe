@@ -351,4 +351,7 @@
   <data name="RoleNameRequired" xml:space="preserve">
     <value>Role Name is required</value>
   </data>
+  <data name="UserManagement" xml:space="preserve">
+    <value>User Management</value>
+  </data>
 </root>

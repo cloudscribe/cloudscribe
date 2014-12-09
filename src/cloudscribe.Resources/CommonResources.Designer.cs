@@ -761,5 +761,14 @@ namespace cloudscribe.Resources {
                 return ResourceManager.GetString("TwoFactorAuthentication", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User Management.
+        /// </summary>
+        public static string UserManagement {
+            get {
+                return ResourceManager.GetString("UserManagement", resourceCulture);
+            }
+        }
     }
 }

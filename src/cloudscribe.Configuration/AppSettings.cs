@@ -168,6 +168,11 @@ namespace cloudscribe.Configuration
             get { return GetInt("DefaultPageSize_SiteList", 10); }
         }
 
+        public static int DefaultPageSize_UserList
+        {
+            get { return GetInt("DefaultPageSize_UserList", 10); }
+        }
+
         public static int DefaultPageSize_CountryList
         {
             get { return GetInt("DefaultPageSize_CountryList", 10); }

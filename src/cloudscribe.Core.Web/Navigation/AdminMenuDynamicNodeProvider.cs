@@ -93,6 +93,15 @@ namespace cloudscribe.Core.Web.Navigation
             nodeList.Add(node);
 
             node = new DynamicNode();
+            node.Title = CommonResources.UserManagement;
+            node.Key = "UserAdmin";
+            node.ParentKey = "SiteAdmin";
+            node.Controller = "UserAdmin";
+            node.Action = "Index";
+            node.Roles.Add("Admins");
+            nodeList.Add(node);
+
+            node = new DynamicNode();
             node.Title = CommonResources.Roles;
             node.Key = "Roles";
             node.ParentKey = "SiteAdmin";

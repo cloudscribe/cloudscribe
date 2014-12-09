@@ -140,6 +140,7 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\RoleAdminController.cs" />
     <Compile Include="Controllers\SiteAdminController.cs" />
+    <Compile Include="Controllers\UserAdminController.cs" />
     <Compile Include="CoreViewEngine.cs" />
     <Compile Include="DeviceDetection\RequestExtensions.cs" />
     <Compile Include="Filters\SiteContextFilter.cs" />
@@ -189,6 +190,7 @@
     <Compile Include="ViewModels\SiteUser\VerifyCodeViewModel.cs" />
     <Compile Include="ViewModels\SiteUser\VerifyPhoneNumberViewModel.cs" />
     <Compile Include="Utils.cs" />
+    <Compile Include="ViewModels\UserAdmin\UserListViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

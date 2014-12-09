@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-30
-// Last Modified:			2014-09-08
+// Last Modified:			2014-12-08
 // 
 
 using cloudscribe.Caching;
@@ -189,18 +189,18 @@ namespace cloudscribe.Core.Repositories.Caching
         }
 
 
-        public List<ISiteUser> GetByIPAddress(Guid siteGuid, string ipv4Address)
+        public List<IUserInfo> GetByIPAddress(Guid siteGuid, string ipv4Address)
         {
             return repo.GetByIPAddress(siteGuid, ipv4Address);
 
         }
 
-        public List<ISiteUser> GetCrossSiteUserListByEmail(string email)
+        public List<IUserInfo> GetCrossSiteUserListByEmail(string email)
         {
             return repo.GetCrossSiteUserListByEmail(email);
         }
 
-        public List<ISiteUser> GetPage(
+        public List<IUserInfo> GetPage(
             int siteId,
             int pageNumber,
             int pageSize,
@@ -218,7 +218,7 @@ namespace cloudscribe.Core.Repositories.Caching
 
         }
 
-        public List<ISiteUser> GetUserSearchPage(
+        public List<IUserInfo> GetUserSearchPage(
             int siteId,
             int pageNumber,
             int pageSize,
@@ -237,7 +237,7 @@ namespace cloudscribe.Core.Repositories.Caching
 
         }
 
-        public List<ISiteUser> GetUserAdminSearchPage(
+        public List<IUserInfo> GetUserAdminSearchPage(
             int siteId,
             int pageNumber,
             int pageSize,
@@ -255,7 +255,7 @@ namespace cloudscribe.Core.Repositories.Caching
 
         }
 
-        public List<ISiteUser> GetPageLockedUsers(
+        public List<IUserInfo> GetPageLockedUsers(
             int siteId,
             int pageNumber,
             int pageSize,
@@ -268,7 +268,7 @@ namespace cloudscribe.Core.Repositories.Caching
                 out totalPages);
         }
 
-        public List<ISiteUser> GetNotApprovedUsers(
+        public List<IUserInfo> GetNotApprovedUsers(
             int siteId,
             int pageNumber,
             int pageSize,

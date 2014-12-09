@@ -1,0 +1,15 @@
+﻿@model cloudscribe.Core.Web.ViewModels.UserAdmin.UserListViewModel
+
+@{
+    
+}
+
+<h2>@Model.Heading</h2>
+
+<div>
+    @Html.Partial("UserListPartial", Model)
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

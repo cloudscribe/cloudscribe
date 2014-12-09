@@ -1,4 +1,10 @@
-﻿using System;
+﻿// Author:					Joe Audette
+// Created:					2014-08-18
+// Last Modified:			2014-12-08
+// 
+
+
+using System;
 using System.Collections.Generic;
 using System.Data;
 
@@ -21,17 +27,17 @@ namespace cloudscribe.Core.Models
         bool LockoutAccount(Guid userGuid);
         bool UnLockAccount(Guid userGuid);
         bool UpdateFailedPasswordAttemptCount(Guid userGuid, int failedPasswordAttemptCount);
-        List<ISiteUser> GetByIPAddress(Guid siteGuid, string ipv4Address);
-        List<ISiteUser> GetCrossSiteUserListByEmail(string email);
+        List<IUserInfo> GetByIPAddress(Guid siteGuid, string ipv4Address);
+        List<IUserInfo> GetCrossSiteUserListByEmail(string email);
         int GetCount(int siteId);
         int GetNewestUserId(int siteId);
-        List<ISiteUser> GetNotApprovedUsers(int siteId, int pageNumber, int pageSize, out int totalPages);
-        List<ISiteUser> GetPage(int siteId, int pageNumber, int pageSize, string userNameBeginsWith, int sortMode, out int totalPages);
-        List<ISiteUser> GetPageLockedUsers(int siteId, int pageNumber, int pageSize, out int totalPages);
-        List<cloudscribe.Core.Models.ISiteUser> GetUserAdminSearchPage(int siteId, int pageNumber, int pageSize, string searchInput, int sortMode, out int totalPages);
+        List<IUserInfo> GetNotApprovedUsers(int siteId, int pageNumber, int pageSize, out int totalPages);
+        List<IUserInfo> GetPage(int siteId, int pageNumber, int pageSize, string userNameBeginsWith, int sortMode, out int totalPages);
+        List<IUserInfo> GetPageLockedUsers(int siteId, int pageNumber, int pageSize, out int totalPages);
+        List<IUserInfo> GetUserAdminSearchPage(int siteId, int pageNumber, int pageSize, string searchInput, int sortMode, out int totalPages);
         DataTable GetUserListForPasswordFormatChange(int siteId);
         string GetUserNameFromEmail(int siteId, string email);
-        List<ISiteUser> GetUserSearchPage(int siteId, int pageNumber, int pageSize, string searchInput, int sortMode, out int totalPages);
+        List<IUserInfo> GetUserSearchPage(int siteId, int pageNumber, int pageSize, string searchInput, int sortMode, out int totalPages);
         bool LoginExistsInDB(int siteId, string loginName);
         bool Save(ISiteUser user);
         bool UpdatePasswordAndSalt(int userId, int passwordFormat, string password, string passwordSalt);

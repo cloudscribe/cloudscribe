@@ -8,8 +8,9 @@ using System.Collections.Generic;
 
 namespace cloudscribe.Core.Models
 {
-    // lighter weight version of user for dropdown lists etc
+    // lighter weight version of user for lists, search etc
     // where full model is not needed
+    // we can add more to IUserInfo, but only fields that exist in mp_Users
     public interface IUserInfo
     {
         Guid UserGuid { get; set; }
@@ -21,20 +22,38 @@ namespace cloudscribe.Core.Models
         string FirstName { get; set; }
         string LastName { get; set; }
         string Email { get; set; }
-
+        DateTime CreatedUtc { get; set; }
+        DateTime DateOfBirth { get; set; }
+        int TotalPosts { get; set; }
+        decimal TotalRevenue { get; set; }
+        bool DisplayInMemberList { get; set; }
+        bool Trusted { get; set; }
+        string WebSiteUrl { get; set; }
+        bool IsDeleted { get; set; }
+        bool IsLockedOut { get; set; }
+        DateTime LastActivityDate { get; set; }
+        DateTime LastLoginDate { get; set; }
+        string TimeZoneId { get; set; }
+        bool ApprovedForLogin { get; set; }
+        string PhoneNumber { get; set; }
+        bool PhoneNumberConfirmed { get; set; }
+        bool ProfileApproved { get; set; }
+        string AvatarUrl { get; set; }
+        string Gender { get; set; }
+        string Country { get; set; }
+        string State { get; set; }
 
     }
 
     public interface ISiteUser : IUserInfo
     {
-        bool ApprovedForLogin { get; set; }
+        
         string AuthorBio { get; set; }
-        string AvatarUrl { get; set; }
+        
         string Comment { get; set; }
-        string Country { get; set; }
-        DateTime CreatedUtc { get; set; }
-        DateTime DateOfBirth { get; set; }
-        bool DisplayInMemberList { get; set; }
+        
+        
+        
         string EditorPreference { get; set; }
         
         Guid EmailChangeGuid { get; set; }
@@ -45,13 +64,12 @@ namespace cloudscribe.Core.Models
         int FailedPasswordAttemptCount { get; set; }
         DateTime FailedPasswordAttemptWindowStart { get; set; }
         
-        string Gender { get; set; }
+        
         //string Interests { get; set; }
-        bool IsDeleted { get; set; }
-        bool IsLockedOut { get; set; }
-        DateTime LastActivityDate { get; set; }
+        
+        
         DateTime LastLockoutDate { get; set; }
-        DateTime LastLoginDate { get; set; }
+        
         
         DateTime LastPasswordChangedDate { get; set; }
         //string LiveMessengerDelegationToken { get; set; }
@@ -70,23 +88,19 @@ namespace cloudscribe.Core.Models
         string PasswordQuestion { get; set; }
         Guid PasswordResetGuid { get; set; }
         string PasswordSalt { get; set; }
-        string PhoneNumber { get; set; }
-        bool PhoneNumberConfirmed { get; set; }
-        bool ProfileApproved { get; set; }
+        
         Guid RegisterConfirmGuid { get; }
         bool RolesChanged { get; set; }
         string SecurityStamp { get; set; }
         string Signature { get; set; }
         
         string Skin { get; set; }
-        string State { get; set; }
-        string TimeZoneId { get; set; }
-        int TotalPosts { get; set; }
-        decimal TotalRevenue { get; set; }
-        bool Trusted { get; set; }
+        
+        
+        
         bool TwoFactorEnabled { get; set; }
         string Id { get; }
         
-        string WebSiteUrl { get; set; }
+        
     }
 }

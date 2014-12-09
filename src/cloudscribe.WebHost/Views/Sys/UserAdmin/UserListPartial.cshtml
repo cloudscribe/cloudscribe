@@ -1,62 +1,36 @@
-﻿@model IEnumerable<cloudscribe.Core.Models.UserInfo>
+﻿@model cloudscribe.Core.Web.ViewModels.UserAdmin.UserListViewModel
 
 @{
     
 }
 
-<h2>RoleMembers</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.UserId)
+            Email
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.UserGuid)
+            UserName
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.SiteGuid)
+            DisplayName
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.SiteId)
+            FirstName
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Email)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.UserName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DisplayName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FirstName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.LastName)
+            LastName
         </th>
         <th></th>
     </tr>
 
-    @foreach (var item in Model)
+    @foreach (var item in Model.UserList)
     {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.UserId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserGuid)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SiteGuid)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SiteId)
-            </td>
-            <td>
+                
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
             <td>
@@ -80,3 +54,14 @@
     }
 
 </table>
+<div>
+    @Html.Pager(Model.Paging.ItemsPerPage, Model.Paging.CurrentPage, Model.Paging.TotalPages).Options(o => o
+            //.Action("StateListPage")
+            //.AddRouteValue("countryGuid", Model.Country.Guid)
+            //.AddRouteValue("pageSize", Model.Paging.ItemsPerPage)
+            .DisplayTemplate("Bootstrap3Pagination")
+            .PageRouteValueKey("pageNumber")
+            .MaxNrOfPages(Model.Paging.MaxPagerItems)
+            .UseItemCountAsPageCount()
+    )
+</div>
