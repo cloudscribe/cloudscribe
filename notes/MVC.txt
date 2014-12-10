@@ -1,3 +1,9 @@
 
 
 http://www.veryofficial.com/logic/programming/nested-mvc-controllers-and-custom-routes/
+
+http://stackoverflow.com/questions/8167853/performing-search-in-asp-net-mvc
+
+http://www.mikesdotnetting.com/article/256/entity-framework-6-recipe-alphabetical-paging-in-asp-net-mvc
+
+http://forums.asp.net/t/1649100.aspx?alphabetical+pager+helper

@@ -144,6 +144,7 @@
     <Compile Include="CoreViewEngine.cs" />
     <Compile Include="DeviceDetection\RequestExtensions.cs" />
     <Compile Include="Filters\SiteContextFilter.cs" />
+    <Compile Include="Helpers\AlphabeticPagination.cs" />
     <Compile Include="Helpers\CKeditorHelpers.cs" />
     <Compile Include="Helpers\DateTimeHelper.cs" />
     <Compile Include="HtmlHelpers.cs" />

@@ -38,6 +38,8 @@ https://github.com/jamietre/CsQuery
 
 https://www.owasp.org/index.php/Category:OWASP_AntiSamy_Project_.NET
 
+https://www.owasp.org/index.php/XSS_%28Cross_Site_Scripting%29_Prevention_Cheat_Sheet
+
 http://security.stackexchange.com/questions/49315/escaping-rich-text-editor-output/49342#49342
 
 

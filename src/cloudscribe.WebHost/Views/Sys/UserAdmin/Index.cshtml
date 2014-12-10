@@ -1,15 +1,37 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.UserAdmin.UserListViewModel
 
 @{
-    
+
 }
-
 <h2>@Model.Heading</h2>
+<div class="row">
+    <div class="col-lg-6">
+        @using (Html.BeginForm("Search", "UserAdmin", FormMethod.Get, new { @class = "form-inline", @role = "form" }))
+        {
+            <div class="input-group">
+                @Html.TextBox("query", Model.SearchQuery, new { @class = "form-control" })
+                <span class="input-group-btn">
+                    <button type="submit" value="@CommonResources.Search" class="btn btn-default">@CommonResources.Search</button>
+                </span>
+            </div>
 
+        }
+    </div>
+    <div class="col-lg-6">
+        @using (Html.BeginForm("IpSearch", "UserAdmin", FormMethod.Get, new { @class = "form-inline", @role = "form" }))
+        {
+
+            <div class="input-group">
+                @Html.TextBox("ipquery", Model.IpQuery, new { @class = "form-control" })
+                <span class="input-group-btn">
+                    <button type="submit" value="@CommonResources.SearchByIpAddress" class="btn btn-default">@CommonResources.SearchByIpAddress</button>
+                </span>
+            </div>
+
+        }
+    </div>
+</div>
 <div>
     @Html.Partial("UserListPartial", Model)
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+

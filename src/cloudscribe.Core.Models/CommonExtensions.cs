@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-11-15
-// Last Modified:			2014-12-09
+// Last Modified:			2014-12-14
 // 
 
 using cloudscribe.Configuration;
@@ -36,6 +36,17 @@ namespace cloudscribe.Core.Models
                 if (!string.IsNullOrEmpty(item)) { list.Add(item); }
             }
 
+
+            return list;
+        }
+
+        public static List<string> ToStringList(this char[] chars)
+        {
+            List<string> list = new List<string>();
+            foreach(char c in chars)
+            {
+                list.Add(c.ToString());
+            }
 
             return list;
         }

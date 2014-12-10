@@ -4,9 +4,25 @@
     
 }
 
+@if (Model.ShowAlphaPager)
+{
+    <div>
+        @Html.AlphabeticPager(Model.AlphaQuery,
+            CommonResources.AlphaPagerChars,
+            null,
+            CommonResources.All,
+            "",
+            false,
+            x => Url.Action("Index", new { query = x })
+    )
+    </div>
+}
 
 <table class="table">
     <tr>
+        <th>
+            @Html.ActionLink(@CommonResources.NewUser, "UserEdit", null, new { @class = "btn btn-default" })
+        </th>
         <th>
             Email
         </th>
@@ -22,12 +38,22 @@
         <th>
             LastName
         </th>
-        <th></th>
+        
     </tr>
 
     @foreach (var item in Model.UserList)
     {
         <tr>
+            <td>
+                @Html.ActionLink(@CommonResources.Manage, "Edit", 
+                new { /* id=item.PrimaryKey */ },
+             new { @class = "btn btn-default" }
+                ) 
+                @Html.ActionLink(@CommonResources.ViewProfile, "Details",
+             new { /* id=item.PrimaryKey */ }, new { @class = "btn btn-default" }
+                ) 
+                
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.UserId)
                 
@@ -45,11 +71,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.LastName)
             </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
+            
         </tr>
     }
 
@@ -57,7 +79,7 @@
 <div>
     @Html.Pager(Model.Paging.ItemsPerPage, Model.Paging.CurrentPage, Model.Paging.TotalPages).Options(o => o
             //.Action("StateListPage")
-            //.AddRouteValue("countryGuid", Model.Country.Guid)
+            .AddRouteValue("query", Model.AlphaQuery)
             //.AddRouteValue("pageSize", Model.Paging.ItemsPerPage)
             .DisplayTemplate("Bootstrap3Pagination")
             .PageRouteValueKey("pageNumber")
