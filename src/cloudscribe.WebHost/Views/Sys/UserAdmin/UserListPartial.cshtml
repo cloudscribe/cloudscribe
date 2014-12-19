@@ -45,8 +45,8 @@
     {
         <tr>
             <td>
-                @Html.ActionLink(@CommonResources.Manage, "Edit", 
-                new { /* id=item.PrimaryKey */ },
+                @Html.ActionLink(@CommonResources.Manage, "UserEdit",
+             new { userId = item.UserId },
              new { @class = "btn btn-default" }
                 ) 
                 @Html.ActionLink(@CommonResources.ViewProfile, "Details",

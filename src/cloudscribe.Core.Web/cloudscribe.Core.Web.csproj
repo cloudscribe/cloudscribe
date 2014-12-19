@@ -191,6 +191,7 @@
     <Compile Include="ViewModels\SiteUser\VerifyCodeViewModel.cs" />
     <Compile Include="ViewModels\SiteUser\VerifyPhoneNumberViewModel.cs" />
     <Compile Include="Utils.cs" />
+    <Compile Include="ViewModels\UserAdmin\EditUserViewModel.cs" />
     <Compile Include="ViewModels\UserAdmin\UserListViewModel.cs" />
   </ItemGroup>
   <ItemGroup>

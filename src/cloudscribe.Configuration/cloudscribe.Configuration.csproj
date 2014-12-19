@@ -74,6 +74,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppSettings.cs" />
+    <Compile Include="DataAnnotations\ConditionalAttribute.cs" />
+    <Compile Include="DataAnnotations\ConditionalAttributeModelValidatorProvider.cs" />
     <Compile Include="DataAnnotations\RequiredIfAttribute.cs" />
     <Compile Include="DataAnnotations\RequiredWithConfigAttribute.cs" />
     <Compile Include="DataAnnotations\StringLengthWithConfigAttribute.cs" />

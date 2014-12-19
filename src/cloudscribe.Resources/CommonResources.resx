@@ -372,4 +372,19 @@
   <data name="ViewProfile" xml:space="preserve">
     <value>View Profile</value>
   </data>
+  <data name="DisplayName" xml:space="preserve">
+    <value>Display Name</value>
+  </data>
+  <data name="DisplayNameRequired" xml:space="preserve">
+    <value>Display Name is required, it doesn't have to be your real name</value>
+  </data>
+  <data name="FirstName" xml:space="preserve">
+    <value>First Name</value>
+  </data>
+  <data name="LastName" xml:space="preserve">
+    <value>Last Name</value>
+  </data>
+  <data name="LoginName" xml:space="preserve">
+    <value>Login Name</value>
+  </data>
 </root>

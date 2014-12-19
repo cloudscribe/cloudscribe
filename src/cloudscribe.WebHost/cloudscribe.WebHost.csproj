@@ -796,6 +796,7 @@
     <Content Include="Views\Sys\RoleAdmin\RoleMembers.cshtml" />
     <Content Include="Views\Sys\UserAdmin\UserListPartial.cshtml" />
     <Content Include="Views\Sys\UserAdmin\Index.cshtml" />
+    <Content Include="Views\Sys\UserAdmin\UserEdit.cshtml" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />

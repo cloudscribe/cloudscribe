@@ -1,15 +1,24 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-12-08
-// Last Modified:			2014-12-10
+// Last Modified:			2014-12-12
 // 
 
 using cloudscribe.Configuration;
+
+using cloudscribe.AspNet.Identity;
 using cloudscribe.Core.Models;
+using cloudscribe.Core.Web.ViewModels.SiteUser;
 using cloudscribe.Core.Web.ViewModels.UserAdmin;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin;
+using Microsoft.Owin.Security;
 using MvcSiteMapProvider;
 using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Web;
 using System.Web.Mvc;
 
 namespace cloudscribe.Core.Web.Controllers
@@ -208,6 +217,90 @@ namespace cloudscribe.Core.Web.Controllers
             return View("Index", model);
 
 
+        }
+
+
+        //[Authorize(Roles = "Admins")]
+        [MvcSiteMapNode(Title = "New User", ParentKey = "UserAdmin", Key = "UserEdit")]
+        public async Task<ActionResult> UserEdit(int? userId)
+        {
+            ViewBag.SiteName = Site.SiteSettings.SiteName;
+            ViewBag.Title = "New User";
+
+            EditUserViewModel model = new EditUserViewModel();
+            model.SiteGuid = Site.SiteSettings.SiteGuid;
+
+            if(userId.HasValue)
+            {
+                ISiteUser user = Site.UserRepository.Fetch(Site.SiteSettings.SiteId, userId.Value);
+                if(user != null)
+                {
+                    model.UserId = user.UserId;
+                    model.Email = user.Email;
+                    model.FirstName = user.FirstName;
+                    model.LastName = user.LastName;
+                    model.LoginName = user.UserName;
+                    model.DisplayName = user.DisplayName;
+                    
+                }
+                
+
+            }
+            
+            return View(model);
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> UserEdit(EditUserViewModel model)
+        {
+            ViewBag.SiteName = Site.SiteSettings.SiteName;
+            ViewBag.Title = "New User";
+
+            if (ModelState.IsValid)
+            {
+                if(model.UserId > -1)
+                {
+                    //editing an existing user
+                    ISiteUser user = Site.UserRepository.Fetch(Site.SiteSettings.SiteId, model.UserId);
+                    if (user != null)
+                    {
+                        user.Email = model.Email;
+                        user.FirstName = model.FirstName;
+                        user.LastName = model.LastName;
+                        user.UserName = model.LoginName;
+                        user.DisplayName = model.DisplayName;
+                        Site.UserRepository.Save(user);
+                        return RedirectToAction("Index", "UserAdmin");
+                    }
+                }
+                else
+                {
+                    var user = new SiteUser { UserName = model.Email, Email = model.Email };
+                    var result = await Site.SiteUserManager.CreateAsync(user, model.Password);
+                    if (result.Succeeded)
+                    {
+
+                        return RedirectToAction("Index", "UserAdmin");
+                    }
+                    AddErrors(result);
+                }
+
+                
+            }
+
+            // If we got this far, something failed, redisplay form
+            return View(model);
+
+        }
+
+        private void AddErrors(IdentityResult result)
+        {
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError("", error);
+            }
         }
 
     }
