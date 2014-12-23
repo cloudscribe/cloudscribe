@@ -1,12 +1,13 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-12-08
-// Last Modified:			2014-12-12
+// Last Modified:			2014-12-23
 // 
 
 using cloudscribe.Configuration;
 
 using cloudscribe.AspNet.Identity;
 using cloudscribe.Core.Models;
+using cloudscribe.Core.Web.ViewModels.Account;
 using cloudscribe.Core.Web.ViewModels.SiteUser;
 using cloudscribe.Core.Web.ViewModels.UserAdmin;
 using Microsoft.AspNet.Identity;
@@ -241,7 +242,8 @@ namespace cloudscribe.Core.Web.Controllers
                     model.LastName = user.LastName;
                     model.LoginName = user.UserName;
                     model.DisplayName = user.DisplayName;
-                    
+
+                    ViewBag.Title = "Edit User";
                 }
                 
 
@@ -272,12 +274,19 @@ namespace cloudscribe.Core.Web.Controllers
                         user.UserName = model.LoginName;
                         user.DisplayName = model.DisplayName;
                         Site.UserRepository.Save(user);
+
                         return RedirectToAction("Index", "UserAdmin");
                     }
                 }
                 else
                 {
-                    var user = new SiteUser { UserName = model.Email, Email = model.Email };
+                    var user = new SiteUser {
+                        UserName = model.LoginName, 
+                        Email = model.Email ,
+                        FirstName = model.FirstName,
+                        LastName = model.LastName,
+                        DisplayName = model.DisplayName
+                    };
                     var result = await Site.SiteUserManager.CreateAsync(user, model.Password);
                     if (result.Succeeded)
                     {

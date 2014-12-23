@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2014-08-31
-// Last Modified:		    2014-10-30
+// Last Modified:		    2014-12-23
 // 
 // TODO: support custom profile properties that are required for registration
 
@@ -10,8 +10,9 @@ using System.ComponentModel.DataAnnotations;
 using cloudscribe.Resources;
 using cloudscribe.Configuration;
 using cloudscribe.Configuration.DataAnnotations;
+using ExpressiveAnnotations;
 
-namespace cloudscribe.Core.Web.ViewModels.UserAdmin
+namespace cloudscribe.Core.Web.ViewModels.Account
 {
     public class EditUserViewModel
     {
@@ -45,8 +46,13 @@ namespace cloudscribe.Core.Web.ViewModels.UserAdmin
 
         //[StringLength(AppSettings.PasswordMaxLength, MinimumLength = AppSettings.PasswordMinLength, ErrorMessageResourceName = "PasswordLengthErrorFormat", ErrorMessageResourceType = typeof(CommonResources))]
         //[Required(ErrorMessageResourceName = "PasswordRequired", ErrorMessageResourceType = typeof(CommonResources))]
-        [RequiredIf("UserId", -1, ErrorMessageResourceName = "PasswordRequired", ErrorMessageResourceType = typeof(CommonResources))]
-        [StringLengthWithConfig(MinimumLength = 7, MaximumLength = 100, MinLengthKey = "PasswordMinLength", MaxLengthKey = "PasswordMaxLength", ErrorMessageResourceName = "PasswordLengthErrorFormat", ErrorMessageResourceType = typeof(CommonResources))]
+        [RequiredWhen("UserId", -1, ErrorMessageResourceName = "PasswordRequired", ErrorMessageResourceType = typeof(CommonResources))]
+        [StringLengthWithConfig(
+            MinimumLength = 7, 
+            MaximumLength = 100, 
+            MinLengthKey = "PasswordMinLength", 
+            MaxLengthKey = "PasswordMaxLength", 
+            ErrorMessageResourceName = "PasswordLengthErrorFormat", ErrorMessageResourceType = typeof(CommonResources))]
         [DataType(DataType.Password)]
         [Display(Name = "Password", ResourceType = typeof(CommonResources))]
         public string Password { get; set; }

@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-10-28
-// Last Modified:			2014-10-30
+// Last Modified:			2014-12-23
 // 
 
 using System;
@@ -35,6 +35,7 @@ namespace cloudscribe.Configuration.DataAnnotations
             MaximumLength = maximumLength;
             MinLengthKey = minLengthKey;
             MaxLengthKey = maxLengthKey;
+          
         }
 
         public int MaximumLength { get; set; }
@@ -44,8 +45,13 @@ namespace cloudscribe.Configuration.DataAnnotations
 
         public override bool IsValid(object value)
         {
+            if (value == null) { return true; } // null is the same as zero length, it is allowed
             if (!(value is string)) { return false; }
             int length = value.ToString().Length;
+
+            //a zero length string is allowed no matter what the minimum length is
+            //You must use a separate Required attribute if you don't want to allow empty values.
+            if (length == 0) { return true; }
 
             MinimumLength = AppSettings.GetInt(MinLengthKey, MinimumLength);
             MaximumLength = AppSettings.GetInt(MaxLengthKey, MaximumLength);
@@ -93,6 +99,7 @@ namespace cloudscribe.Configuration.DataAnnotations
             }
 
             var rules = new ModelClientValidationStringLengthRule(errorMessageFormat, MinimumLength, MaximumLength);
+            
             yield return rules;
         }
 

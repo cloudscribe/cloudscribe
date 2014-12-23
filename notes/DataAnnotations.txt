@@ -1,4 +1,23 @@
 
+Remote Validation - example to check if a username is available
+client side code calls a server action method that returns json
+[Remote("ValidateUserName", "UserAdmin")] action method, controller name
+
+see page 736 in PRO ASP.NET MVC 5
+
+
+http://www.prideparrot.com/blog/archive/2012/9/creating_custom_modelvalidatorprovider
+
+
+conditional data annotations
+
+https://github.com/JaroslawWaliszko/ExpressiveAnnotations
+
+http://www.codeproject.com/Articles/541244/Conditional-ASP-NET-MVC-Validation-using-Data-Anno
+
+http://xhalent.wordpress.com/2011/05/12/custom-unobstrusive-jquery-validation-in-asp-net-mvc-3-using-dataannotationsmodelvalidatorprovider/
+
+
 
 example js for RequiredIfAttribute.cs
 http://mvcdiary.com/2013/02/28/conditional-required-validation-or-field-mandatory-depends-on-another-field-mvc-4/

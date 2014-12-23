@@ -322,6 +322,15 @@ namespace cloudscribe.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Create a new account.
+        /// </summary>
+        public static string CreateANewAccount {
+            get {
+                return ResourceManager.GetString("CreateANewAccount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Create New.
         /// </summary>
         public static string CreateNew {
@@ -376,7 +385,7 @@ namespace cloudscribe.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Display Name is required, it doesn&apos;t have to be your real name.
+        ///   Looks up a localized string similar to Display Name is required, it can be an alias or nickname.
         /// </summary>
         public static string DisplayNameRequired {
             get {

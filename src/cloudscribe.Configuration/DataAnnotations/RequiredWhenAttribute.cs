@@ -14,7 +14,7 @@ namespace cloudscribe.Configuration.DataAnnotations
     /// see
     /// http://mvcdiary.com/2013/02/28/conditional-required-validation-or-field-mandatory-depends-on-another-field-mvc-4/
     /// </summary>
-    public class RequiredIfAttribute : ValidationAttribute, IClientValidatable
+    public class RequiredWhenAttribute : ValidationAttribute, IClientValidatable
     {
         protected RequiredAttribute _innerAttribute;
 
@@ -33,7 +33,7 @@ namespace cloudscribe.Configuration.DataAnnotations
             }
         }
 
-        public RequiredIfAttribute(string dependentProperty, object targetValue)
+        public RequiredWhenAttribute(string dependentProperty, object targetValue)
         {
             _innerAttribute = new RequiredAttribute();
             DependentProperty = dependentProperty;

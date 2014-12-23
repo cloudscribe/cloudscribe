@@ -1,5 +1,6 @@
 ﻿using cloudscribe.AspNet.Identity;
 using cloudscribe.Core.Models;
+using cloudscribe.Core.Web.ViewModels.Account;
 using cloudscribe.Core.Web.ViewModels.SiteUser;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
@@ -135,8 +136,9 @@ namespace cloudscribe.Core.Web.Controllers
             ViewBag.Title = "Register";
 
             ViewBag.SiteName = Site.SiteSettings.SiteName;
+            EditUserViewModel model = new EditUserViewModel();
 
-            return View();
+            return View(model);
         }
 
         //
@@ -144,13 +146,19 @@ namespace cloudscribe.Core.Web.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel model)
+        public async Task<ActionResult> Register(EditUserViewModel model)
         {
             ViewBag.SiteName = Site.SiteSettings.SiteName;
 
             if (ModelState.IsValid)
             {
-                var user = new SiteUser { UserName = model.Email, Email = model.Email };
+                var user = new SiteUser {
+                    UserName = model.LoginName,
+                    Email = model.Email,
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    DisplayName = model.DisplayName 
+                };
                 var result = await Site.SiteUserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {

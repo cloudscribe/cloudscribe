@@ -376,7 +376,7 @@
     <value>Display Name</value>
   </data>
   <data name="DisplayNameRequired" xml:space="preserve">
-    <value>Display Name is required, it doesn't have to be your real name</value>
+    <value>Display Name is required, it can be an alias or nickname</value>
   </data>
   <data name="FirstName" xml:space="preserve">
     <value>First Name</value>
@@ -386,5 +386,8 @@
   </data>
   <data name="LoginName" xml:space="preserve">
     <value>Login Name</value>
+  </data>
+  <data name="CreateANewAccount" xml:space="preserve">
+    <value>Create a new account</value>
   </data>
 </root>
