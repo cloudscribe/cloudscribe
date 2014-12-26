@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-30
-// Last Modified:			2014-12-08
+// Last Modified:			2014-12-26
 // 
 
 using cloudscribe.Caching;
@@ -295,6 +295,11 @@ namespace cloudscribe.Core.Repositories.Caching
         public bool LoginExistsInDB(int siteId, string loginName)
         {
             return repo.LoginExistsInDB(siteId, loginName);
+        }
+
+        public bool LoginIsAvailable(int siteId, int userId, string loginName)
+        {
+            return repo.LoginIsAvailable(siteId, userId, loginName);
         }
 
         public string GetUserNameFromEmail(int siteId, string email)

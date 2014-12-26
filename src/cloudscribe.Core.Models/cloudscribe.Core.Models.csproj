@@ -75,6 +75,7 @@
     <Compile Include="Geography\IGeoZone.cs" />
     <Compile Include="Geography\ILanguage.cs" />
     <Compile Include="Geography\Language.cs" />
+    <Compile Include="Identity\Extensions.cs" />
     <Compile Include="ModelDataExtensions.cs" />
     <Compile Include="ModelExtensions.cs" />
     <Compile Include="Setup\CloudscribeCoreVersionProvider.cs" />

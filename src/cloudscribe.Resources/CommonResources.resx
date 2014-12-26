@@ -390,4 +390,7 @@
   <data name="CreateANewAccount" xml:space="preserve">
     <value>Create a new account</value>
   </data>
+  <data name="LoginNameNotAvailable" xml:space="preserve">
+    <value>The entered login name is not available</value>
+  </data>
 </root>

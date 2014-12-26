@@ -304,6 +304,8 @@ namespace cloudscribe.Core.Web.Controllers
 
         }
 
+        
+
         private void AddErrors(IdentityResult result)
         {
             foreach (var error in result.Errors)

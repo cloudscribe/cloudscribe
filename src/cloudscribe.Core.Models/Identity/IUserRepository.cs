@@ -39,6 +39,7 @@ namespace cloudscribe.Core.Models
         string GetUserNameFromEmail(int siteId, string email);
         List<IUserInfo> GetUserSearchPage(int siteId, int pageNumber, int pageSize, string searchInput, int sortMode, out int totalPages);
         bool LoginExistsInDB(int siteId, string loginName);
+        bool LoginIsAvailable(int siteId, int userId, string loginName);
         bool Save(ISiteUser user);
         bool UpdatePasswordAndSalt(int userId, int passwordFormat, string password, string passwordSalt);
         void UpdateTotalRevenue();

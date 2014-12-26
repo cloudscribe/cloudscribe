@@ -520,6 +520,15 @@ namespace cloudscribe.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The entered login name is not available.
+        /// </summary>
+        public static string LoginNameNotAvailable {
+            get {
+                return ResourceManager.GetString("LoginNameNotAvailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Log off.
         /// </summary>
         public static string LogOff {

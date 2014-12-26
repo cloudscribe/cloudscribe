@@ -1,16 +1,17 @@
 ﻿// Author:					Joe Audette
 // Created:				    2014-08-31
-// Last Modified:		    2014-12-23
+// Last Modified:		    2014-12-26
 // 
 // TODO: support custom profile properties that are required for registration
 
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
 using cloudscribe.Resources;
 using cloudscribe.Configuration;
 using cloudscribe.Configuration.DataAnnotations;
-using ExpressiveAnnotations;
+using ExpressiveAnnotations.Attributes;
 
 namespace cloudscribe.Core.Web.ViewModels.Account
 {
@@ -59,7 +60,7 @@ namespace cloudscribe.Core.Web.ViewModels.Account
 
         [DataType(DataType.Password)]
         [Display(Name = "ConfirmPassword", ResourceType = typeof(CommonResources))]
-        [Compare("Password", ErrorMessageResourceName = "ConfirmPasswordMatchErrorMessage", ErrorMessageResourceType = typeof(CommonResources))]
+        [System.ComponentModel.DataAnnotations.Compare("Password", ErrorMessageResourceName = "ConfirmPasswordMatchErrorMessage", ErrorMessageResourceType = typeof(CommonResources))]
         public string ConfirmPassword { get; set; }
 
 
@@ -68,6 +69,9 @@ namespace cloudscribe.Core.Web.ViewModels.Account
         private string loginName = string.Empty;
 
         //[StringLengthWithConfig(MinimumLength = 3, MaximumLength = 255, MinLengthKey = "SiteNameMinLength", MaxLengthKey = "SiteNameMaxLength", ErrorMessageResourceName = "SiteNameLengthErrorFormat", ErrorMessageResourceType = typeof(CommonResources))]
+        [Remote("LoginNameAvailable", "Account", AdditionalFields = "UserId",
+            ErrorMessageResourceName = "LoginNameNotAvailable", ErrorMessageResourceType = typeof(CommonResources),
+            HttpMethod="Post")]
         [Display(Name = "LoginName", ResourceType = typeof(CommonResources))]
         public string LoginName
         {

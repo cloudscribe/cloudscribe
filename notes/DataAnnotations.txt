@@ -5,6 +5,10 @@ client side code calls a server action method that returns json
 
 see page 736 in PRO ASP.NET MVC 5
 
+http://www.codeproject.com/Articles/674288/Remote-Validation-in-MVC-Simple-Way-to-Pass-the-F
+
+http://www.tugberkugurlu.com/archive/asp-net-mvc-remote-validation-for-multiple-fields-with-additionalfields-property
+
 
 http://www.prideparrot.com/blog/archive/2012/9/creating_custom_modelvalidatorprovider
 

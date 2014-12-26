@@ -179,6 +179,20 @@ namespace cloudscribe.Core.Web.Controllers
             return View(model);
         }
 
+        public JsonResult LoginNameAvailable(int? userId, string loginName)
+        {
+            // same validation is used when editing or creating a user
+            // if editing then the loginname is valid if found attached to the selected user
+            // otherwise if found it is not already in use and not available
+            int selectedUserId = -1;
+            if (userId.HasValue) { selectedUserId = userId.Value; }
+            bool available = Site.UserRepository.LoginIsAvailable(
+                Site.SiteSettings.SiteId, selectedUserId, loginName);
+
+
+            return Json(available);
+        }
+
         //
         // GET: /Account/ConfirmEmail
         [AllowAnonymous]

@@ -249,11 +249,17 @@ namespace cloudscribe.Configuration
             get { return GetInt("RelatedSiteId", 1); }
         }
 
-        // true maps the user email to the UserName on SiteUser and Context.User.Identity.Name property
-        // 
-        public static bool UseEmailForLogin
+        /// <summary>
+        /// TODO: if true then users must use loginname to login instead of email
+        /// </summary>
+        public static bool DontUseEmailForLogin
         {
-            get { return GetBool("UseEmailForLogin", false); }
+            get { return GetBool("DontUseEmailForLogin", false); }
+        }
+
+        public static bool AutoGenerateAndHideUserNamesWhenUsingEmailForLogin
+        {
+            get { return GetBool("AutoGenerateAndHideUserNamesWhenUsingEmailForLogin", false); }
         }
 
         public static bool UseSameContentFolderForRelatedSiteMode

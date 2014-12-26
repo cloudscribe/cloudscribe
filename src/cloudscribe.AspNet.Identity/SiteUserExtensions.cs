@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2014-07-22
-// Last Modified:		    2014-10-23
+// Last Modified:		    2014-12-26
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -26,6 +26,11 @@ namespace cloudscribe.AspNet.Identity
             
             
             // Add custom user claims here
+            Claim displayNameClaim = new Claim("DisplayName", user.DisplayName);
+            if (!userIdentity.HasClaim(displayNameClaim.Type, displayNameClaim.Value))
+            {
+                userIdentity.AddClaim(displayNameClaim);
+            }
 
             // the per site claims are not needed since we now have separate cookies per folder tenant
             //if(AppSettings.UseFoldersInsteadOfHostnamesForMultipleSites)

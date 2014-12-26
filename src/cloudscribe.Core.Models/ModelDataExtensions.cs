@@ -124,15 +124,8 @@ namespace cloudscribe.Core.Models.DataExtensions
             user.UserId = Convert.ToInt32(reader["UserID"], CultureInfo.InvariantCulture);
             user.SiteId = Convert.ToInt32(reader["SiteID"], CultureInfo.InvariantCulture);
             user.DisplayName = reader["Name"].ToString();
-            if (AppSettings.UseEmailForLogin)
-            {
-                user.UserName = reader["Email"].ToString();
-            }
-            else
-            {
-                user.UserName = reader["LoginName"].ToString();
-            }
-
+            user.UserName = reader["LoginName"].ToString();
+            
             user.Email = reader["Email"].ToString();
             user.LoweredEmail = reader["LoweredEmail"].ToString();
             user.PasswordQuestion = reader["PasswordQuestion"].ToString();

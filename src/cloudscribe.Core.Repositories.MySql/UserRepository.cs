@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-18
-// Last Modified:			2014-12-09
+// Last Modified:			2014-12-26
 // 
 
 
@@ -671,6 +671,33 @@ namespace cloudscribe.Core.Repositories.MySql
             }
 
             return found;
+        }
+
+        /// <summary>
+        /// available only if the found user matches the passed in one
+        /// or if not found
+        /// </summary>
+        /// <param name="siteId"></param>
+        /// <param name="userId"></param>
+        /// <param name="loginName"></param>
+        /// <returns></returns>
+        public bool LoginIsAvailable(int siteId, int userId, string loginName)
+        {
+            if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
+            bool available = true;
+
+            using (IDataReader r = DBSiteUser.GetSingleUserByLoginName(siteId, loginName, false))
+            {
+                while (r.Read())
+                {
+                    int foundId = Convert.ToInt32(r["UserID"]);
+
+                    available = (foundId == userId);
+                    if (!available) { return available; }
+                }
+            }
+
+            return available;
         }
 
         public String GetUserNameFromEmail(int siteId, String email)
