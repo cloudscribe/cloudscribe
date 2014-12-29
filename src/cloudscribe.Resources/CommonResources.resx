@@ -393,4 +393,13 @@
   <data name="LoginNameNotAvailable" xml:space="preserve">
     <value>The entered login name is not available</value>
   </data>
+  <data name="AddUser" xml:space="preserve">
+    <value>Add User</value>
+  </data>
+  <data name="ConfirmAddFormat" xml:space="preserve">
+    <value>Are you sure you want to add {0}?</value>
+  </data>
+  <data name="ConfirmRemoveFormat" xml:space="preserve">
+    <value>Are you sure you want to remove {0}?</value>
+  </data>
 </root>

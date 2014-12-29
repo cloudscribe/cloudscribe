@@ -70,6 +70,15 @@ namespace cloudscribe.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add User.
+        /// </summary>
+        public static string AddUser {
+            get {
+                return ResourceManager.GetString("AddUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Administration.
         /// </summary>
         public static string Administration {
@@ -268,6 +277,15 @@ namespace cloudscribe.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to add {0}?.
+        /// </summary>
+        public static string ConfirmAddFormat {
+            get {
+                return ResourceManager.GetString("ConfirmAddFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Are you sure you want to delete {0}?.
         /// </summary>
         public static string ConfirmDeleteFormat {
@@ -291,6 +309,15 @@ namespace cloudscribe.Resources {
         public static string ConfirmPasswordMatchErrorMessage {
             get {
                 return ResourceManager.GetString("ConfirmPasswordMatchErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to remove {0}?.
+        /// </summary>
+        public static string ConfirmRemoveFormat {
+            get {
+                return ResourceManager.GetString("ConfirmRemoveFormat", resourceCulture);
             }
         }
         

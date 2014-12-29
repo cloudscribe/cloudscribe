@@ -30,6 +30,21 @@ https://github.com/maartenba/MvcSiteMapProvider
 
 https://github.com/maartenba/MvcSiteMapProvider/wiki/Defining-sitemap-nodes-using-IDynamicNodeProvider
 
+modal dialogs
+
+seems like it is hard to do modal dialog in a generic way, we have to be strongly tied to a js framework bootstrap or jqueryui
+
+other gotchas
+seems normally a partial view is used for a modal
+but this poses problems for paging content within the modal
+
+http://www.codeproject.com/Tips/826002/Bootstrap-Modal-Dialog-Loading-Content-from-MVC-Pa
+http://www.devzest.com/blog/post/ASPNet-MVC-Modal-Dialog.aspx
+
+http://www.codeproject.com/Articles/146396/A-Comparison-of-Three-jQuery-Modal-Dialogs-for-ASP
+
+http://code.daypilot.org/81367/daypilot-modal
+
 
 
 

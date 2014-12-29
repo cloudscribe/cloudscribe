@@ -161,5 +161,65 @@ namespace cloudscribe.Core.Web.Controllers
 
         }
 
+        [Authorize(Roles = "Admins,Role Admins")]
+        public async Task<ActionResult> RoleNonMembers(
+            int roleId,
+            int pageNumber = 1,
+            int pageSize = -1)
+        {
+            ViewBag.SiteName = Site.SiteSettings.SiteName;
+            ViewBag.Title = "Non Role Members";
+
+            ISiteRole role = Site.UserRepository.FetchRole(roleId);
+            if ((role == null) || (role.SiteId != Site.SiteSettings.SiteId && !Site.SiteSettings.IsServerAdminSite))
+            {
+                return RedirectToAction("Index");
+            }
+
+            int itemsPerPage = AppSettings.DefaultPageSize_RoleMemberList;
+            if (pageSize > 0)
+            {
+                itemsPerPage = pageSize;
+            }
+
+            RoleMemberListViewModel model = new RoleMemberListViewModel();
+
+            model.Role = RoleViewModel.FromISiteRole(role);
+            model.Heading = "Non Role Members";
+
+            int totalPages = 0;
+            IList<IUserInfo> members = Site.UserRepository.GetUsersNotInRole(
+                role.SiteId,
+                role.RoleId,
+                pageNumber,
+                itemsPerPage,
+                out totalPages);
+
+            model.Members = members;
+            model.Paging.CurrentPage = pageNumber;
+            model.Paging.ItemsPerPage = itemsPerPage;
+            model.Paging.TotalPages = totalPages;
+
+            return View("NonMembersPartial",model);
+
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admins,Role Admins")]
+        public ActionResult AddUser(int roleId, Guid roleGuid, int userId, Guid userGuid)
+        {
+            Site.UserRepository.AddUserToRole(roleId, roleGuid, userId, userGuid);
+            //return RedirectToAction("Index");
+            return RedirectToAction("RoleMembers", new { roleId = roleId });
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admins,Role Admins")]
+        public ActionResult RemoveUser(int roleId, int userId)
+        {
+            Site.UserRepository.RemoveUserFromRole(roleId, userId);
+            return RedirectToAction("RoleMembers", new { roleId = roleId });
+        }
+
     }
 }
