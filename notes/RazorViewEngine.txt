@@ -37,6 +37,12 @@ seems like it is hard to do modal dialog in a generic way, we have to be strongl
 other gotchas
 seems normally a partial view is used for a modal
 but this poses problems for paging content within the modal
+paging inside the dialog should work naturally if the dialog uses an iframe
+http://stackoverflow.com/questions/5660263/how-to-display-an-iframe-inside-a-jquery-ui-dialog
+
+https://github.com/miyabis/jquery.iframeDialog
+
+http://stackoverflow.com/questions/512257/jquery-modal-boxes-and-iframe?rq=1
 
 http://www.codeproject.com/Tips/826002/Bootstrap-Modal-Dialog-Loading-Content-from-MVC-Pa
 http://www.devzest.com/blog/post/ASPNet-MVC-Modal-Dialog.aspx

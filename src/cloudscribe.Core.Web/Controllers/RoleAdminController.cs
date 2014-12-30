@@ -200,7 +200,7 @@ namespace cloudscribe.Core.Web.Controllers
             model.Paging.ItemsPerPage = itemsPerPage;
             model.Paging.TotalPages = totalPages;
 
-            return View("NonMembersPartial",model);
+            return PartialView("NonMembersPartial",model);
 
         }
 

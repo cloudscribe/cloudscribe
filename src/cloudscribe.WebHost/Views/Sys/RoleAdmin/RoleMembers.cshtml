@@ -3,6 +3,12 @@
 @{
 
 }
+
+@section Styles {
+    @Styles.Render("~/Content/themes/base/all.css")
+    @Styles.Render("~/Content/themes/base/dialog.css")
+}
+
 <h2>@Model.Role.DisplayName</h2>
 <h3>@Model.Heading</h3>
 <table class="table table-striped">
@@ -11,6 +17,10 @@
             @Html.ActionLink(@CommonResources.AddUser, "RoleNonMembers", "RoleAdmin",
 new { roleId = Model.Role.RoleId }
 , new { @class = "modal-link btn btn-success" })
+
+@Ajax.ModalDialogActionLink(@CommonResources.AddUser, "Add Role Member", "RoleNonMembers", "RoleAdmin",
+    new { roleId = Model.Role.RoleId }
+    , new { @class = "btn btn-success" },"modal-container")
         </th>
         <th>
             @CommonResources.Email
@@ -79,3 +89,9 @@ new { roleId = Model.Role.RoleId }
             .UseItemCountAsPageCount()
     )
 </div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryajax")
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/Scripts/modaldialog.js")
+}

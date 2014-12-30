@@ -153,6 +153,7 @@
     <Compile Include="Helpers\AlphabeticPagination.cs" />
     <Compile Include="Helpers\CKeditorHelpers.cs" />
     <Compile Include="Helpers\DateTimeHelper.cs" />
+    <Compile Include="Helpers\ModalDialogHelpers.cs" />
     <Compile Include="HtmlHelpers.cs" />
     <Compile Include="Identity\MultiTenantClaimsIdentity.cs" />
     <Compile Include="Identity\MultiTenantClaimsIdentityFactory.cs" />
