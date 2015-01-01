@@ -165,7 +165,8 @@ namespace cloudscribe.Core.Web.Controllers
         public async Task<ActionResult> RoleNonMembers(
             int roleId,
             int pageNumber = 1,
-            int pageSize = -1)
+            int pageSize = -1,
+            bool ajaxGrid = false)
         {
             ViewBag.SiteName = Site.SiteSettings.SiteName;
             ViewBag.Title = "Non Role Members";
@@ -199,6 +200,11 @@ namespace cloudscribe.Core.Web.Controllers
             model.Paging.CurrentPage = pageNumber;
             model.Paging.ItemsPerPage = itemsPerPage;
             model.Paging.TotalPages = totalPages;
+
+            if (ajaxGrid)
+            {
+                return PartialView("NonMembersGridPartial", model);
+            }
 
             return PartialView("NonMembersPartial",model);
 

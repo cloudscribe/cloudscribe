@@ -4,116 +4,26 @@
     //Layout = "/Views/Shared/_DialogLayout.cshtml";
 }
 
-<div class="modal-body">
-    <div class="alert alert-warning">
-        <span class="glyphicon glyphicon-warning-sign"></span>
-        Be Careful, with great power comes great responsibility
-    </div>
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
 
-    <h2>@Model.Role.DisplayName</h2>
-    <h3>@Model.Heading</h3>
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="@CommonResources.Close"><span aria-hidden="true">&times;</span></button>
+            <h2 class="modal-title">@Model.Role.DisplayName</h2>
+        </div>
 
-    <table class="table table-striped">
-        <tr>
-            <th>
-
-            </th>
-            <th>
-                @CommonResources.Email
-            </th>
-            @if (AppSettings.DontUseEmailForLogin)
-            {
-                <th>
-                    @CommonResources.LoginName
-                </th>
-            }
-            <th>
-                @CommonResources.DisplayName
-            </th>
-            <th>
-                @CommonResources.FirstName
-            </th>
-            <th>
-                @CommonResources.LastName
-            </th>
-
-        </tr>
-
-        @foreach (var item in Model.Members)
-        {
-            <tr>
-                <td>
-
-                    @using (Html.BeginForm("AddUser", "RoleAdmin", FormMethod.Post))
-                    {
-                        @Html.Hidden("RoleGuid", Model.Role.RoleGuid)
-                        @Html.Hidden("RoleId", Model.Role.RoleId)
-                        @Html.Hidden("UserGuid", item.UserGuid)
-                        @Html.Hidden("UserId", item.UserId)
-    <button type="submit" id="approve-btn"
-            class="btn btn-success"
-            onclick="javascript: return confirm('@Html.FormatValue(item.DisplayName, CommonResources.ConfirmAddFormat)');">
-        @CommonResources.Add
-    </button>
-                    }
-
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Email)
-                </td>
-                @if (AppSettings.DontUseEmailForLogin)
-                {
-                    <td>
-                        @Html.DisplayFor(modelItem => item.UserName)
-                    </td>
-                }
-                <td>
-                    @Html.DisplayFor(modelItem => item.DisplayName)
-                </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.FirstName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.LastName)
-                    </td>
-
-                </tr>
-        }
-
-            </table>
-    <div>
-        @Html.Pager(Model.Paging.ItemsPerPage, Model.Paging.CurrentPage, Model.Paging.TotalPages 
-        ).Options(o => o
-            .Action("RoleNonMembers")
-            .AddRouteValue("roleId", Model.Role.RoleId)
-            .AddRouteValue("pageSize", Model.Paging.ItemsPerPage)
-            .DisplayTemplate("Bootstrap3Pagination")
-            .PageRouteValueKey("pageNumber")
-            .MaxNrOfPages(Model.Paging.MaxPagerItems)
-            .UseItemCountAsPageCount()
-    )
-    </div>
-
-
-            <div class="row">
-                &nbsp;
-            </div>
-            <div class="row">
-                <div class="col-md-4 col-md-offset-4">
-                    <button type="button" class="btn btn-default"
-                            data-dismiss="modal">
-                        Cancel
-                    </button>
-
-                </div>
+        <div class="modal-body">
+            <h3>@Model.Heading</h3>
+            <div id="gridcontainer">
+                @Html.Partial("NonMembersGridPartial", Model)
             </div>
 
         </div>
-        <script type="text/javascript">
-            $(function () {
-                $('#approve-btn').click(function () {
-                    $('#modal-container').modal('hide');
-                });
-            });
-        </script>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">@CommonResources.Close</button>
+        </div>
+    </div>
+</div>
+
 

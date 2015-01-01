@@ -616,7 +616,8 @@
     <Content Include="Scripts\jquery-ui-1.11.2.min.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
-    <Content Include="Scripts\modaldialog.js" />
+    <Content Include="Scripts\modaldialog-bootstrap.js" />
+    <Content Include="Scripts\modaldialog-jqui.js" />
     <Content Include="Scripts\tinymce\license.txt" />
     <Content Include="Scripts\tinymce\plugins\advlist\plugin.js" />
     <Content Include="Scripts\tinymce\plugins\advlist\plugin.min.js" />
@@ -845,6 +846,7 @@
     <Content Include="Views\Sys\Shared\EditUserPartial.cshtml" />
     <Content Include="Views\Sys\RoleAdmin\NonMembersPartial.cshtml" />
     <Content Include="Views\Shared\_DialogLayout.cshtml" />
+    <Content Include="Views\Sys\RoleAdmin\NonMembersGridPartial.cshtml" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />

@@ -402,4 +402,7 @@
   <data name="ConfirmRemoveFormat" xml:space="preserve">
     <value>Are you sure you want to remove {0}?</value>
   </data>
+  <data name="Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
 </root>

@@ -12,7 +12,9 @@ Right click the WebHost project and choose View > View In Browser
 
 if needed go into the project properties for WebHost and configure the Web settings, optionally use IIS if you have it, otherwise IIS Express.
 
-Once the site is open in the Web Browser, visit /Setup 
+Once the site is open in the Web Browser, it will likely have errors since the db is not yet populated, visit /Setup to create/update the db schema and to create the admin user account.
+
+It is always safe to visit /Setup, any time you pull updates from the repository and rebuild the solution its a good idea to visit /Setup again to run any upgrade scripts. It will never re-run scripts that it has already run.
 
 After that you should be able to login as admin@admin.com with the password admin
 
@@ -21,3 +23,5 @@ When you do login as admin a new Menu Item for Administration should appear at t
 optionally, visit /glimpse.axd to turn on Glimpse, which allows you to see a lot of information about the request and hits to the database.
 
 This is a work in progress, many things are not ready for prime time yet. See also ProjectGoals.txt but understand that we have not yet achieved all those goals, we are in early stages of development.
+
+Note that the plan for cloudscribe core is to be distributed via NuGet, one would start with an empty asp.net project and pull it in. The WebHost project is not going to be included in NuGet, it represents what we want the user's web app project to have after pulling in the NuGet. The views and integration code will be added by NuGet, or that is the goal but not completed yet.

@@ -1,23 +1,11 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.RoleAdmin.RoleMemberListViewModel
-
 @{
-
+    
 }
-
-@section Styles {
-    @Styles.Render("~/Content/themes/base/all.css")
-    @Styles.Render("~/Content/themes/base/dialog.css")
-}
-
-<h2>@Model.Role.DisplayName</h2>
-<h3>@Model.Heading</h3>
 <table class="table table-striped">
     <tr>
         <th>
-      
-@Ajax.ModalDialogActionLinkBootstrap(@CommonResources.AddUser, "RoleNonMembers", "RoleAdmin",
-    new { roleId = Model.Role.RoleId }
-    , new { @class = "btn btn-success" })
+
         </th>
         <th>
             @CommonResources.Email
@@ -39,19 +27,22 @@
         </th>
 
     </tr>
+
     @foreach (var item in Model.Members)
     {
         <tr>
             <td>
-                @using (Html.BeginForm("RemoveUser", "RoleAdmin", FormMethod.Post))
+                @using (Html.BeginForm("AddUser", "RoleAdmin", FormMethod.Post))
                 {
+                    @Html.Hidden("RoleGuid", Model.Role.RoleGuid)
                     @Html.Hidden("RoleId", Model.Role.RoleId)
+                    @Html.Hidden("UserGuid", item.UserGuid)
                     @Html.Hidden("UserId", item.UserId)
-    <button type="submit" id="approve-btn"
-            class="btn btn-danger"
-            onclick="javascript: return confirm('@Html.FormatValue(item.DisplayName, CommonResources.ConfirmRemoveFormat)');">
-        @CommonResources.Remove
-    </button>
+                    <button type="submit" id="approve-btn"
+                            class="btn btn-success"
+                            onclick="javascript: return confirm('@Html.FormatValue(item.DisplayName, CommonResources.ConfirmAddFormat)');">
+                        @CommonResources.Add
+                    </button>
                 }
             </td>
             <td>
@@ -76,10 +67,15 @@
     }
 </table>
 <div>
-    @Html.Pager(Model.Paging.ItemsPerPage, Model.Paging.CurrentPage, Model.Paging.TotalPages).Options(o => o
-            .Action("RoleMembers")
+    @Html.Pager(Model.Paging.ItemsPerPage, 
+    Model.Paging.CurrentPage, 
+    Model.Paging.TotalPages,
+            new AjaxOptions { UpdateTargetId = "gridcontainer" }
+        ).Options(o => o
+            .Action("RoleNonMembers")
             .AddRouteValue("roleId", Model.Role.RoleId)
             .AddRouteValue("pageSize", Model.Paging.ItemsPerPage)
+            .AddRouteValue("ajaxGrid", true)
             .DisplayTemplate("Bootstrap3Pagination")
             .PageRouteValueKey("pageNumber")
             .MaxNrOfPages(Model.Paging.MaxPagerItems)
@@ -87,8 +83,3 @@
     )
 </div>
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryajax")
-    @Scripts.Render("~/bundles/jqueryui")
-    @Scripts.Render("~/Scripts/modaldialog-bootstrap.js")
-}
