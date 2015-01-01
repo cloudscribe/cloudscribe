@@ -1,4 +1,9 @@
-﻿using System;
+﻿// Author:					Joe Audette
+// Created:					2014-12-30
+// Last Modified:			2015-01-01
+// 
+
+using System;
 using System.Globalization;
 using System.Web.Mvc;
 using System.Web.Mvc.Ajax;
@@ -8,21 +13,7 @@ namespace cloudscribe.Core.Web.Helpers
 {
     public static class ModalDialogHelpers
     {
-        sealed class DialogActionResult : ActionResult
-        {
-            public DialogActionResult(string message)
-            {
-                Message = message ?? string.Empty;
-            }
-
-            string Message { get; set; }
-
-            public override void ExecuteResult(ControllerContext context)
-            {
-                context.HttpContext.Response.Write(string.Format("<div data-dialog-close='true' data-dialog-result='{0}' />", Message));
-            }
-        }
-
+        
         /// <summary>
         /// you must include /Scripts/modaldialog-bootstrap.js
         /// </summary>
@@ -107,47 +98,6 @@ namespace cloudscribe.Core.Web.Helpers
                 );
         }
 
-        //public static MvcHtmlString ModalDialogActionLink(
-        //    this AjaxHelper ajaxHelper,
-        //    string linkText,
-        //    string dialogTitle,
-        //    string actionName)
-        //{
-        //    var dialogDivId = Guid.NewGuid().ToString();
-        //    return ajaxHelper.ActionLink(linkText, actionName, routeValues: null,
-        //            ajaxOptions: new AjaxOptions
-        //            {
-        //                UpdateTargetId = dialogDivId,
-        //                InsertionMode = InsertionMode.Replace,
-        //                HttpMethod = "GET",
-        //                OnBegin = string.Format(CultureInfo.InvariantCulture, "prepareModalDialog('{0}')", dialogDivId),
-        //                OnFailure = string.Format(CultureInfo.InvariantCulture, "clearModalDialog('{0}');alert('Ajax call failed')", dialogDivId),
-        //                OnSuccess = string.Format(CultureInfo.InvariantCulture, "openModalDialog('{0}', '{1}')", dialogDivId, dialogTitle)
-        //            });
-        //}
-
-        public static MvcForm BeginModalDialogForm(
-            this AjaxHelper ajaxHelper,
-            string actionName,
-            string controllerName,
-            object routeValues)
-        {
-            AjaxOptions options = new AjaxOptions
-            {
-                HttpMethod = "POST"
-            };
-
-            return ajaxHelper.BeginForm(actionName, controllerName, routeValues, options);
-        }
-
-        public static ActionResult DialogResult(this Controller controller)
-        {
-            return DialogResult(controller, string.Empty);
-        }
-
-        public static ActionResult DialogResult(this Controller controller, string message)
-        {
-            return new DialogActionResult(message);
-        }
+       
     }
 }

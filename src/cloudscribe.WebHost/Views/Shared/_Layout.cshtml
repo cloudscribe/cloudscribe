@@ -28,7 +28,7 @@
     </div>
     <div class="container body-content">
         @Html.MvcSiteMap().SiteMapPath("MvcSiteMapPathHelperModel")
-       
+        @{ Html.RenderPartial("AlertsPartial"); }
         @RenderBody()
         <hr />
         <footer>

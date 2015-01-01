@@ -847,6 +847,7 @@
     <Content Include="Views\Sys\RoleAdmin\NonMembersPartial.cshtml" />
     <Content Include="Views\Shared\_DialogLayout.cshtml" />
     <Content Include="Views\Sys\RoleAdmin\NonMembersGridPartial.cshtml" />
+    <Content Include="Views\Sys\Shared\AlertsPartial.cshtml" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />

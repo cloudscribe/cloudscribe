@@ -5,7 +5,6 @@
 <table class="table table-striped">
     <tr>
         <th>
-
         </th>
         <th>
             @CommonResources.Email
@@ -25,9 +24,7 @@
         <th>
             @CommonResources.LastName
         </th>
-
     </tr>
-
     @foreach (var item in Model.Members)
     {
         <tr>
@@ -70,7 +67,7 @@
     @Html.Pager(Model.Paging.ItemsPerPage, 
     Model.Paging.CurrentPage, 
     Model.Paging.TotalPages,
-            new AjaxOptions { UpdateTargetId = "gridcontainer" }
+                    new AjaxOptions { UpdateTargetId = "nonmembersgridcontainer" }
         ).Options(o => o
             .Action("RoleNonMembers")
             .AddRouteValue("roleId", Model.Role.RoleId)

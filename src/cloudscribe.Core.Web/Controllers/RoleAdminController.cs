@@ -1,11 +1,12 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-12-06
-// Last Modified:			2014-12-06
+// Last Modified:			2015-01-01
 // 
 
 using cloudscribe.Configuration;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Web.ViewModels.RoleAdmin;
+using cloudscribe.Core.Web.ViewModels.Common;
 using MvcSiteMapProvider;
 using System;
 using System.Collections.Generic;
@@ -214,8 +215,25 @@ namespace cloudscribe.Core.Web.Controllers
         [Authorize(Roles = "Admins,Role Admins")]
         public ActionResult AddUser(int roleId, Guid roleGuid, int userId, Guid userGuid)
         {
-            Site.UserRepository.AddUserToRole(roleId, roleGuid, userId, userGuid);
-            //return RedirectToAction("Index");
+            
+            ISiteUser user = Site.UserRepository.Fetch(Site.SiteSettings.SiteId, userId);
+            
+            if(user != null)
+            {
+                ISiteRole role = Site.UserRepository.FetchRole(roleId);
+                if (role != null)
+                {
+                    Site.UserRepository.AddUserToRole(roleId, roleGuid, userId, userGuid);
+                    user.RolesChanged = true;
+                    Site.UserRepository.Save(user);
+
+                    Success(string.Format("<b>{0}</b> was successfully added to the role {1}.", 
+                        user.DisplayName, role.DisplayName), true);
+                }
+
+                
+            }
+
             return RedirectToAction("RoleMembers", new { roleId = roleId });
         }
 
@@ -223,7 +241,25 @@ namespace cloudscribe.Core.Web.Controllers
         [Authorize(Roles = "Admins,Role Admins")]
         public ActionResult RemoveUser(int roleId, int userId)
         {
-            Site.UserRepository.RemoveUserFromRole(roleId, userId);
+           
+            ISiteUser user = Site.UserRepository.Fetch(Site.SiteSettings.SiteId, userId);
+            if (user != null)
+            {
+                ISiteRole role = Site.UserRepository.FetchRole(roleId);
+                if(role != null)
+                {
+                    Site.UserRepository.RemoveUserFromRole(roleId, userId);
+                    user.RolesChanged = true;
+                    Site.UserRepository.Save(user);
+
+                    Warning(string.Format(
+                        "<b>{0}</b> was successfully removed from the role {1}.", 
+                        user.DisplayName, role.DisplayName)
+                        , true);
+                }
+                
+            }
+
             return RedirectToAction("RoleMembers", new { roleId = roleId });
         }
 

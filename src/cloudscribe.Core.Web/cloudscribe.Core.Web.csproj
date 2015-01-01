@@ -167,6 +167,7 @@
     <Compile Include="Routing\UrlRewriter.cs" />
     <Compile Include="Routing\WebApiConfig.cs" />
     <Compile Include="SiteContext.cs" />
+    <Compile Include="ViewModels\Common\Alert.cs" />
     <Compile Include="ViewModels\CoreData\CountryListPageViewModel.cs" />
     <Compile Include="ViewModels\CoreData\CurrencyViewModel.cs" />
     <Compile Include="ViewModels\CoreData\GeoCountryViewModel.cs" />
