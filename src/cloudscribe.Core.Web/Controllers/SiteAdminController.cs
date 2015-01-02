@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2014-12-06
+// Last Modified:			2015-01-02
 // 
 
 using cloudscribe.Configuration;
@@ -175,7 +175,9 @@ namespace cloudscribe.Core.Web.Controllers
 
             if(selectedSite == null)
             {
-                return RedirectToAction("Index", new { Message = SiteAdminMessageId.Error });
+                this.AlertDanger("oops something went wrong.", true);
+
+                return RedirectToAction("Index");
             }
 
             selectedSite.SiteName = model.SiteName;
@@ -195,7 +197,10 @@ namespace cloudscribe.Core.Web.Controllers
 
             Site.SiteRepository.Save(selectedSite);
 
-            SiteAdminMessageId? message = SiteAdminMessageId.UpdateSettingsSuccess;
+            //SiteAdminMessageId? message = SiteAdminMessageId.UpdateSettingsSuccess;
+
+            this.AlertSuccess(string.Format("Basic site settings for <b>{0}</b> were successfully updated.",
+                            selectedSite.SiteName), true);
 
             if((Site.SiteSettings.IsServerAdminSite)
                 &&(Site.SiteSettings.SiteGuid != selectedSite.SiteGuid))
@@ -204,7 +209,7 @@ namespace cloudscribe.Core.Web.Controllers
                 return RedirectToAction("SiteList");
             }
 
-            return RedirectToAction("Index", new { Message = message });
+            return RedirectToAction("Index");
 
         }
 
@@ -313,11 +318,12 @@ namespace cloudscribe.Core.Web.Controllers
                 Site.SiteRepository.Save(folder);
             }
 
+            this.AlertSuccess(string.Format("Basic site settings for <b>{0}</b> were successfully created.",
+                            newSite.SiteName), true);
 
+            //SiteAdminMessageId? message = SiteAdminMessageId.CreateSiteSuccess;
 
-            SiteAdminMessageId? message = SiteAdminMessageId.CreateSiteSuccess;
-
-            return RedirectToAction("Index", new { Message = message });
+            return RedirectToAction("Index");
 
         }
 

@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-01-01
+// Last Modified:			2015-01-02
 // 
 
 using cloudscribe.AspNet.Identity;
@@ -18,6 +18,11 @@ using System.Web.Mvc;
 
 namespace cloudscribe.Core.Web.Controllers
 {
+    /// <summary>
+    /// do we need or want a base controller?
+    /// several arguments against it here:
+    /// http://stackoverflow.com/questions/6119206/what-are-good-candidates-for-base-controller-class-in-asp-net-mvc
+    /// </summary>
     public class CloudscribeBaseController : Controller
     {
         public CloudscribeBaseController()
@@ -25,45 +30,19 @@ namespace cloudscribe.Core.Web.Controllers
             
         }
 
-        public void Success(string message, bool dismissable = false)
-        {
-            AddAlert(AlertStyles.Success, message, dismissable);
-        }
 
-        public void Information(string message, bool dismissable = false)
-        {
-            AddAlert(AlertStyles.Information, message, dismissable);
-        }
-
-        public void Warning(string message, bool dismissable = false)
-        {
-            AddAlert(AlertStyles.Warning, message, dismissable);
-        }
-
-        public void Danger(string message, bool dismissable = false)
-        {
-            AddAlert(AlertStyles.Danger, message, dismissable);
-        }
-
-        private void AddAlert(string alertStyle, string message, bool dismissable)
-        {
-            var alerts = TempData.ContainsKey(Alert.TempDataKey)
-                ? (List<Alert>)TempData[Alert.TempDataKey]
-                : new List<Alert>();
-
-            alerts.Add(new Alert
-            {
-                AlertStyle = alertStyle,
-                Message = message,
-                Dismissable = dismissable
-            });
-
-            TempData[Alert.TempDataKey] = alerts;
-        }
-
+        /// <summary>
+        /// been thinking lately that instead of using a base controller class
+        /// it might be cleaner to just use extension methods
+        /// this now just uses the extension method inside the property getter
+        /// not much need for this base class
+        /// </summary>
         protected ISiteContext Site
         {
-            get { return HttpContext.GetOwinContext().Get<ISiteContext>(); }
+            get {
+                return this.GetSiteContext();
+                //return HttpContext.GetOwinContext().Get<ISiteContext>(); 
+            }
 
         }
     }

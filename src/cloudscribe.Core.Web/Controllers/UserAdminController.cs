@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-12-08
-// Last Modified:			2014-12-23
+// Last Modified:			2015-01-02
 // 
 
 using cloudscribe.Configuration;
@@ -273,7 +273,13 @@ namespace cloudscribe.Core.Web.Controllers
                         user.LastName = model.LastName;
                         user.UserName = model.LoginName;
                         user.DisplayName = model.DisplayName;
-                        Site.UserRepository.Save(user);
+                        bool result = Site.UserRepository.Save(user);
+                        if(result)
+                        {
+                            this.AlertSuccess(string.Format("user account for <b>{0}</b> was successfully updated.",
+                            user.DisplayName), true);
+                        }
+                        
 
                         return RedirectToAction("Index", "UserAdmin");
                     }
@@ -290,6 +296,8 @@ namespace cloudscribe.Core.Web.Controllers
                     var result = await Site.SiteUserManager.CreateAsync(user, model.Password);
                     if (result.Succeeded)
                     {
+                        this.AlertSuccess(string.Format("user account for <b>{0}</b> was successfully created.",
+                            user.DisplayName), true);
 
                         return RedirectToAction("Index", "UserAdmin");
                     }

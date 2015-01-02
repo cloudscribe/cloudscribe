@@ -9,4 +9,15 @@ http://www.mikesdotnetting.com/article/256/entity-framework-6-recipe-alphabetica
 http://forums.asp.net/t/1649100.aspx?alphabetical+pager+helper
 
 
+some arguments against using a base controller
+http://stackoverflow.com/questions/6119206/what-are-good-candidates-for-base-controller-class-in-asp-net-mvc
+
+seems like a lot of what could be done in a base controller could also be done in extension methods
+
+when you do use an extension method from inside a controller you have to use the this keyword to call the method, no problem but noteworthy becuase it is a little unexpected when the extension method is not found without the this keyword and compilation fails
+http://stackoverflow.com/questions/12105869/controller-extension-method-without-this
+
+I started doing alerts inside a base controller as in this article:
 http://jameschambers.com/2014/06/day-14-bootstrap-alerts-and-mvc-framework-tempdata/
+
+but then realized I could refactor that functionality as extension methods so they could be used from any controller without inheriting a base class

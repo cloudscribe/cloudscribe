@@ -1,10 +1,11 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-12-06
-// Last Modified:			2015-01-01
+// Last Modified:			2015-01-02
 // 
 
 using cloudscribe.Configuration;
 using cloudscribe.Core.Models;
+using cloudscribe.Core.Web.Controllers;
 using cloudscribe.Core.Web.ViewModels.RoleAdmin;
 using cloudscribe.Core.Web.ViewModels.Common;
 using MvcSiteMapProvider;
@@ -34,15 +35,13 @@ namespace cloudscribe.Core.Web.Controllers
 
         }
 
-        // GET: /SiteAdmin/SiteInfo
+        
         [Authorize(Roles = "Admins,Role Admins")]
         [MvcSiteMapNode(Title = "New Role", ParentKey = "Roles", Key = "RoleEdit")]
         public async Task<ActionResult> RoleEdit(int? roleId)
         {
             ViewBag.SiteName = Site.SiteSettings.SiteName;
             ViewBag.Title = "Role Edit";
-
-            //Site.UserRepository.FetchRole()
 
             RoleViewModel model = new RoleViewModel();
 
@@ -100,7 +99,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             Site.UserRepository.SaveRole(model);
 
-            return RedirectToAction("Roles", new { pageNumber = returnPageNumber });
+            return RedirectToAction("Index", new { pageNumber = returnPageNumber });
 
         }
 
@@ -112,6 +111,7 @@ namespace cloudscribe.Core.Web.Controllers
             ISiteRole role = Site.UserRepository.FetchRole(roleId);
             if (role != null && role.IsDeletable(AppSettings.RolesThatCannotBeDeleted))
             {
+                // TODO: remove any users from the role
                 Site.UserRepository.DeleteRole(roleId);
             }
 
@@ -214,8 +214,7 @@ namespace cloudscribe.Core.Web.Controllers
         [HttpPost]
         [Authorize(Roles = "Admins,Role Admins")]
         public ActionResult AddUser(int roleId, Guid roleGuid, int userId, Guid userGuid)
-        {
-            
+        {    
             ISiteUser user = Site.UserRepository.Fetch(Site.SiteSettings.SiteId, userId);
             
             if(user != null)
@@ -223,15 +222,17 @@ namespace cloudscribe.Core.Web.Controllers
                 ISiteRole role = Site.UserRepository.FetchRole(roleId);
                 if (role != null)
                 {
-                    Site.UserRepository.AddUserToRole(roleId, roleGuid, userId, userGuid);
-                    user.RolesChanged = true;
-                    Site.UserRepository.Save(user);
+                    bool result = Site.UserRepository.AddUserToRole(roleId, roleGuid, userId, userGuid);
+                    if(result)
+                    {
+                        user.RolesChanged = true;
+                        Site.UserRepository.Save(user);
 
-                    Success(string.Format("<b>{0}</b> was successfully added to the role {1}.", 
-                        user.DisplayName, role.DisplayName), true);
+                        this.AlertSuccess(string.Format("<b>{0}</b> was successfully added to the role {1}.",
+                            user.DisplayName, role.DisplayName), true);
+                    }            
                 }
-
-                
+   
             }
 
             return RedirectToAction("RoleMembers", new { roleId = roleId });
@@ -248,14 +249,18 @@ namespace cloudscribe.Core.Web.Controllers
                 ISiteRole role = Site.UserRepository.FetchRole(roleId);
                 if(role != null)
                 {
-                    Site.UserRepository.RemoveUserFromRole(roleId, userId);
-                    user.RolesChanged = true;
-                    Site.UserRepository.Save(user);
+                    bool result = Site.UserRepository.RemoveUserFromRole(roleId, userId);
+                    if(result)
+                    {
+                        user.RolesChanged = true;
+                        Site.UserRepository.Save(user);
 
-                    Warning(string.Format(
-                        "<b>{0}</b> was successfully removed from the role {1}.", 
-                        user.DisplayName, role.DisplayName)
-                        , true);
+                        this.AlertWarning(string.Format(
+                            "<b>{0}</b> was successfully removed from the role {1}.",
+                            user.DisplayName, role.DisplayName)
+                            , true);
+                    }
+                    
                 }
                 
             }

@@ -143,6 +143,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CloudscribeBaseController.cs" />
     <Compile Include="Controllers\CoreDataController.cs" />
+    <Compile Include="Controllers\Extensions.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\RoleAdminController.cs" />
     <Compile Include="Controllers\SiteAdminController.cs" />
