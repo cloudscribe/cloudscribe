@@ -222,7 +222,7 @@ namespace cloudscribe.Core.Web.Controllers
 
 
         //[Authorize(Roles = "Admins")]
-        [MvcSiteMapNode(Title = "New User", ParentKey = "UserAdmin", Key = "UserEdit")]
+        //[MvcSiteMapNode(Title = "New User", ParentKey = "UserAdmin", Key = "UserEdit")]
         public async Task<ActionResult> UserEdit(int? userId)
         {
             ViewBag.SiteName = Site.SiteSettings.SiteName;
@@ -243,7 +243,13 @@ namespace cloudscribe.Core.Web.Controllers
                     model.LoginName = user.UserName;
                     model.DisplayName = user.DisplayName;
 
-                    ViewBag.Title = "Edit User";
+                    ViewBag.Title = "Manage User";
+
+                    var node = SiteMaps.Current.FindSiteMapNodeFromKey("UserEdit");
+                    if (node != null)
+                    {
+                        node.Title = "Manage User";
+                    }
                 }
                 
 

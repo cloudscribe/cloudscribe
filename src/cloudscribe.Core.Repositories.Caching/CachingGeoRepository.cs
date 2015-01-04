@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-11-03
-// Last Modified:			2014-11-03
+// Last Modified:			2015-01-04
 // 
 
 using cloudscribe.Caching;
@@ -77,6 +77,11 @@ namespace cloudscribe.Core.Repositories.Caching
         public bool DeleteGeoZone(Guid guid)
         {
             return repo.DeleteGeoZone(guid);
+        }
+
+        public bool DeleteGeoZonesByCountry(Guid countryGuid)
+        {
+            return repo.DeleteGeoZonesByCountry(countryGuid);
         }
 
         public int GetGeoZoneCount(Guid countryGuid)

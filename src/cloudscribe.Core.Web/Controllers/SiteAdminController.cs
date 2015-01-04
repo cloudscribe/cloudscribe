@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-01-02
+// Last Modified:			2015-01-04
 // 
 
 using cloudscribe.Configuration;
@@ -39,7 +39,7 @@ namespace cloudscribe.Core.Web.Controllers
             
         }
 
-        // GET: /SiteAdmin
+        [Authorize(Roles = "ServerAdmins")]
         public async Task<ActionResult> SiteList(int pageNumber = 1, int pageSize = -1)
         {
             ViewBag.SiteName = Site.SiteSettings.SiteName;
@@ -214,7 +214,7 @@ namespace cloudscribe.Core.Web.Controllers
         }
 
         // GET: /SiteAdmin/NewSite
-        [Authorize(Roles = "Admins")]
+        [Authorize(Roles = "ServerAdmins")]
         public async Task<ActionResult> NewSite(SiteAdminMessageId? message)
         {
             ViewBag.SiteName = Site.SiteSettings.SiteName;

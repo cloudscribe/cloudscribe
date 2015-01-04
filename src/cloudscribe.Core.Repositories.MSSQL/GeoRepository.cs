@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-11-02
-// Last Modified:			2014-11-02
+// Last Modified:			2015-01-04
 // 
 
 
@@ -169,6 +169,10 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return DBGeoZone.Delete(guid);
         }
 
+        public bool DeleteGeoZonesByCountry(Guid countryGuid)
+        {
+            return DBGeoZone.DeleteByCountry(countryGuid);
+        }
 
         /// <summary>
         /// Gets a count of GeoZone. 

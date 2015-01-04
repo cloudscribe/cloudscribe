@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-30
-// Last Modified:			2014-12-26
+// Last Modified:			2015-01-04
 // 
 
 using cloudscribe.Caching;
@@ -356,6 +356,11 @@ namespace cloudscribe.Core.Repositories.Caching
         public bool DeleteUserRoles(int userId)
         {
             return repo.DeleteUserRoles(userId);
+        }
+
+        public bool DeleteUserRolesByRole(int roleId)
+        {
+            return repo.DeleteUserRolesByRole(roleId);
         }
 
 

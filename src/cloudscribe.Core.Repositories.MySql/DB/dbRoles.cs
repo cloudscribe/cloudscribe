@@ -1,6 +1,6 @@
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2014-08-27
+// Last Modified:			2015-01-04
 // 
 //
 // You must not remove this notice, or any other, from this software.
@@ -151,6 +151,26 @@ namespace cloudscribe.Core.Repositories.MySql
             arParams[0] = new MySqlParameter("?UserID", MySqlDbType.Int32);
             arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
+
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
+                ConnectionString.GetWriteConnectionString(),
+                sqlCommand.ToString(),
+                arParams);
+
+            return (rowsAffected > 0);
+        }
+
+        public static bool DeleteUserRolesByRole(int roleId)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("DELETE FROM mp_UserRoles ");
+            sqlCommand.Append("WHERE RoleID = ?RoleID  ;");
+
+            MySqlParameter[] arParams = new MySqlParameter[1];
+
+            arParams[0] = new MySqlParameter("?RoleID", MySqlDbType.Int32);
+            arParams[0].Direction = ParameterDirection.Input;
+            arParams[0].Value = roleId;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 ConnectionString.GetWriteConnectionString(),

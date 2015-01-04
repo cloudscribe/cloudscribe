@@ -48,6 +48,8 @@ namespace cloudscribe.Core.Web.Navigation
             List<DynamicNode> nodeList = new List<DynamicNode>();
 
             DynamicNode node = new DynamicNode();
+            // this is not really localized because it gets chached in the site map
+            // not generated per request
             node.Title = CommonResources.Administration;
             node.Key = "SiteAdmin";
             node.Controller = "SiteAdmin";
@@ -91,6 +93,8 @@ namespace cloudscribe.Core.Web.Navigation
             node.Action = "NewSite";
             node.Roles.Add("Admins");
             nodeList.Add(node);
+
+            //node.VisibilityProvider.
 
             node = new DynamicNode();
             node.Title = CommonResources.UserManagement;

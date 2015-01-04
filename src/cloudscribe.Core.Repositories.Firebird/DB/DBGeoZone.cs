@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2008-06-22
-// Last Modified:			2014-08-29
+// Last Modified:			2015-01-04
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -151,6 +151,29 @@ namespace cloudscribe.Core.Repositories.Firebird
             arParams[0] = new FbParameter("@Guid", FbDbType.Char, 36);
             arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid.ToString();
+
+
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
+                ConnectionString.GetWriteConnectionString(),
+                sqlCommand.ToString(),
+                arParams);
+
+            return (rowsAffected > -1);
+        }
+
+        public static bool DeleteByCountry(Guid countryGuid)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("DELETE FROM mp_GeoZone ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("CountryGuid = @Guid ");
+            sqlCommand.Append("OR CountryGuid = UPPER(@Guid) ");
+            sqlCommand.Append(";");
+            FbParameter[] arParams = new FbParameter[1];
+
+            arParams[0] = new FbParameter("@CountryGuid", FbDbType.Char, 36);
+            arParams[0].Direction = ParameterDirection.Input;
+            arParams[0].Value = countryGuid.ToString();
 
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(

@@ -32,6 +32,21 @@ namespace cloudscribe.AspNet.Identity
                 userIdentity.AddClaim(displayNameClaim);
             }
 
+            if (userIdentity.HasClaim(ClaimTypes.Role, "Admins"))
+            {
+                // if the user is an admin in the server admin site
+                // add this additional role that allows site creation and
+                // management of other sites
+                ISiteContext site = HttpContext.Current.GetOwinContext().Get<ISiteContext>();
+                if(site.SiteSettings.IsServerAdminSite)
+                {
+                    Claim serverAdminRoleClaim = new Claim(ClaimTypes.Role,"ServerAdmins");
+                    userIdentity.AddClaim(serverAdminRoleClaim);
+
+                }
+
+            }
+
             // the per site claims are not needed since we now have separate cookies per folder tenant
             //if(AppSettings.UseFoldersInsteadOfHostnamesForMultipleSites)
             //{

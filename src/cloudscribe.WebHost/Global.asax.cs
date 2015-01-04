@@ -50,12 +50,12 @@ namespace cloudscribe.WebHost
             {
                 ContextCondition = Context =>
                                 Context.IsTablet()
-            }); 
-
-            
+            });
 
 
+            //MvcSiteMapProvider.SiteMaps.Loader = new MvcSiteMapProvider.Loader.SiteMapLoader()
 
+            //MvcSiteMapProvider.DI.Composer.Compose();
 
         }
 

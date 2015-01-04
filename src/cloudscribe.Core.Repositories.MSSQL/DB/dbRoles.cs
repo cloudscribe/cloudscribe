@@ -55,6 +55,14 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return (rowsAffected > -1);
         }
 
+        public static bool DeleteUserRolesByRole(int roleId)
+        {
+            SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetWriteConnectionString(), "mp_UserRoles_DeleteUserRolesByRole", 1);
+            sph.DefineSqlParameter("@RoleID", SqlDbType.Int, ParameterDirection.Input, roleId);
+            int rowsAffected = sph.ExecuteNonQuery();
+            return (rowsAffected > -1);
+        }
+
         public static bool Exists(int siteId, string roleName)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_Roles_RoleExists", 2);

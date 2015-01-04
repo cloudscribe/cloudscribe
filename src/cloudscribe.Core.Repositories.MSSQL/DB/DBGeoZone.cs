@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2008-06-22
-// Last Modified:			2014-08-29
+// Last Modified:			2015-01-04
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -70,6 +70,15 @@ namespace cloudscribe.Core.Repositories.MSSQL
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetWriteConnectionString(), "mp_GeoZone_Delete", 1);
             sph.DefineSqlParameter("@Guid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, guid);
+            int rowsAffected = sph.ExecuteNonQuery();
+            return (rowsAffected > 0);
+
+        }
+
+        public static bool DeleteByCountry(Guid countryGuid)
+        {
+            SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetWriteConnectionString(), "mp_GeoZone_DeleteByCountry", 1);
+            sph.DefineSqlParameter("@CountryGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, countryGuid);
             int rowsAffected = sph.ExecuteNonQuery();
             return (rowsAffected > 0);
 

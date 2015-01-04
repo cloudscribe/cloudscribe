@@ -1,4 +1,9 @@
-﻿using System;
+﻿// Author:					Joe Audette
+// Created:					2014-11-03
+// Last Modified:			2015-01-04
+// 
+
+using System;
 using System.Collections.Generic;
 
 namespace cloudscribe.Core.Models.Geography
@@ -7,6 +12,7 @@ namespace cloudscribe.Core.Models.Geography
     {
         bool DeleteCountry(Guid guid);
         bool DeleteGeoZone(Guid guid);
+        bool DeleteGeoZonesByCountry(Guid countryGuid);
         IGeoCountry FetchCountry(Guid guid);
         IGeoZone FetchGeoZone(Guid guid);
         List<IGeoCountry> GetAllCountries();

@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2010-04-04
-// Last Modified:			2014-08-29
+// Last Modified:			2015-01-04
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -163,6 +163,29 @@ namespace cloudscribe.Core.Repositories.SqlCe
             return (rowsAffected > -1);
 
 
+        }
+
+        public static bool DeleteByCountry(Guid countryGuid)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("DELETE FROM mp_GeoZone ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("CountryGuid = @CountryGuid ");
+            sqlCommand.Append(";");
+
+            SqlCeParameter[] arParams = new SqlCeParameter[1];
+
+            arParams[0] = new SqlCeParameter("@CountryGuid", SqlDbType.UniqueIdentifier);
+            arParams[0].Direction = ParameterDirection.Input;
+            arParams[0].Value = countryGuid;
+
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
+                GetConnectionString(),
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams);
+
+            return (rowsAffected > -1);
         }
 
         /// <summary>

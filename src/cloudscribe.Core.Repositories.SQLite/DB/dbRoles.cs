@@ -1,6 +1,6 @@
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2014-08-28
+// Last Modified:			2015-01-04
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -128,6 +128,28 @@ namespace cloudscribe.Core.Repositories.SQLite
             arParams[0] = new SQLiteParameter(":UserID", DbType.Int32);
             arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
+
+            int rowsAffected = 0;
+
+            rowsAffected = AdoHelper.ExecuteNonQuery(
+                ConnectionString.GetConnectionString(),
+                sqlCommand.ToString(),
+                arParams);
+
+            return (rowsAffected > 0);
+        }
+
+        public static bool DeleteUserRolesByRole(int roleId)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("DELETE FROM mp_UserRoles ");
+            sqlCommand.Append("WHERE RoleID = :RoleID  ;");
+
+            SQLiteParameter[] arParams = new SQLiteParameter[1];
+
+            arParams[0] = new SQLiteParameter(":RoleID", DbType.Int32);
+            arParams[0].Direction = ParameterDirection.Input;
+            arParams[0].Value = roleId;
 
             int rowsAffected = 0;
 

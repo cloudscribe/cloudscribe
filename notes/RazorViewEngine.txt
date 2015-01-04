@@ -17,18 +17,7 @@ http://stackoverflow.com/questions/4682107/delete-actionlink-with-confirm-dialog
 
 sitemap menus bread crumbs
 
-http://stackoverflow.com/questions/21494075/breadcrumbs-in-c-sharp-mvc-website-using-bootstrap
-
-http://stackoverflow.com/questions/18402684/create-breadcrumbs-path-in-asp-net-mvc
-
-
-http://joeylicc.wordpress.com/2014/10/03/asp-net-mvc-5-menu-using-site-map-provider-bootstrap-3-navbar/
-
-https://joeylicc.wordpress.com/2013/07/08/asp-net-mvc-sitemappath-using-site-map-provider-bootstrap-breadcrumbs/
-
-https://github.com/maartenba/MvcSiteMapProvider
-
-https://github.com/maartenba/MvcSiteMapProvider/wiki/Defining-sitemap-nodes-using-IDynamicNodeProvider
+See SiteMaps.txt
 
 modal dialogs
 

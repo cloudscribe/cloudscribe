@@ -877,6 +877,11 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return DBRoles.DeleteUserRoles(userId);
         }
 
+        public bool DeleteUserRolesByRole(int roleId)
+        {
+            return DBRoles.DeleteUserRolesByRole(roleId);
+        }
+
 
         public bool RoleExists(int siteId, String roleName)
         {

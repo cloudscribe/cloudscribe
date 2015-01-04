@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2008-06-22
-// Last Modified:			2014-08-29
+// Last Modified:			2015-01-04
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -151,6 +151,29 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             return (rowsAffected > -1);
 
+        }
+
+        public static bool DeleteByCountry(Guid countryGuid)
+        {
+            NpgsqlParameter[] arParams = new NpgsqlParameter[1];
+
+            arParams[0] = new NpgsqlParameter("countryguid", NpgsqlTypes.NpgsqlDbType.Char, 36);
+            arParams[0].Direction = ParameterDirection.Input;
+            arParams[0].Value = countryGuid.ToString();
+
+
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("DELETE FROM mp_geozone ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("countryguid = :countryguid ");
+            sqlCommand.Append(";");
+
+            int rowsAffected = AdoHelper.ExecuteNonQuery(ConnectionString.GetWriteConnectionString(),
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams);
+
+            return (rowsAffected > -1);
         }
 
         /// <summary>

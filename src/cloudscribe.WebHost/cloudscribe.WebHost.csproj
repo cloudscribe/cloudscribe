@@ -168,6 +168,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.2\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -247,6 +248,8 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="DI\CommonConventions.cs" />
+    <Compile Include="DI\Ninject\Modules\MvcSiteMapProviderModule.cs" />
     <Compile Include="GlimpseSecurityPolicy.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -292,6 +295,7 @@
     <Content Include="Content\themes\base\tabs.css" />
     <Content Include="Content\themes\base\theme.css" />
     <Content Include="Content\themes\base\tooltip.css" />
+    <Content Include="DI\Ninject\ReadMe.txt" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -828,7 +832,6 @@
     <Content Include="Views\Sys\Shared\DisplayTemplates\Bootstrap3Pagination.cshtml" />
     <Content Include="Views\Sys\Shared\DisplayTemplates\BootstrapPagination.cshtml" />
     <Content Include="Views\Sys\Shared\DisplayTemplates\MvcSiteMapHelperModel.cshtml" />
-    <Content Include="site.sitemap" />
     <Content Include="Views\Sys\Shared\DisplayTemplates\MvcSiteMapPathHelperModel.cshtml">
       <SubType>Code</SubType>
     </Content>
@@ -848,6 +851,7 @@
     <Content Include="Views\Shared\_DialogLayout.cshtml" />
     <Content Include="Views\Sys\RoleAdmin\NonMembersGridPartial.cshtml" />
     <Content Include="Views\Sys\Shared\AlertsPartial.cshtml" />
+    <Content Include="site.sitemap" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />

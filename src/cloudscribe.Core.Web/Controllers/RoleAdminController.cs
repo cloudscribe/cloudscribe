@@ -37,13 +37,14 @@ namespace cloudscribe.Core.Web.Controllers
 
         
         [Authorize(Roles = "Admins,Role Admins")]
-        [MvcSiteMapNode(Title = "New Role", ParentKey = "Roles", Key = "RoleEdit")]
+        //[MvcSiteMapNode(Title = "New Role", ParentKey = "Roles", Key = "RoleEdit")]
         public async Task<ActionResult> RoleEdit(int? roleId)
         {
             ViewBag.SiteName = Site.SiteSettings.SiteName;
-            ViewBag.Title = "Role Edit";
+            ViewBag.Title = "New Role";
 
             RoleViewModel model = new RoleViewModel();
+            model.Heading = "New Role";
 
             if (roleId.HasValue)
             {
@@ -52,13 +53,15 @@ namespace cloudscribe.Core.Web.Controllers
                 {
                     model = RoleViewModel.FromISiteRole(role);
 
-                    // below we are just manipiulating the bread crumbs
-                    ISiteMap map = SiteMaps.GetSiteMap();
-                    if (map.CurrentNode != null)
-                    {
-                        map.CurrentNode.Title = "Edit Role";
-                        
+                    ViewBag.Title = "Edit Role";
+                    model.Heading = "Edit Role";
 
+                    // below we are just manipiulating the bread crumbs
+                    //var node = SiteMaps.Current.FindSiteMapNodeFromKey("RoleEdit");
+                    var node = SiteMaps.Current.FindSiteMapNodeFromKey("RoleEdit");
+                    if (node != null)
+                    {
+                        node.Title = "Edit Role";
                     }
                 }
             }
@@ -68,10 +71,7 @@ namespace cloudscribe.Core.Web.Controllers
                 model.SiteId = Site.SiteSettings.SiteId;
             }
 
-            model.Heading = "Role Edit";
-
-
-
+            
             return View(model);
 
 
@@ -91,13 +91,26 @@ namespace cloudscribe.Core.Web.Controllers
                 return View(model);
             }
 
+            string successFormat;
+            
             if ((model.SiteId == -1) || (model.SiteGuid == Guid.Empty))
             {
                 model.SiteId = Site.SiteSettings.SiteId;
                 model.SiteGuid = Site.SiteSettings.SiteGuid;
+                successFormat = "The role <b>{0}</b> was successfully created.";
+            }
+            else
+            {
+                successFormat = "The role <b>{0}</b> was successfully updated.";
             }
 
-            Site.UserRepository.SaveRole(model);
+            bool result = Site.UserRepository.SaveRole(model);
+
+            if(result)
+            {
+                this.AlertSuccess(string.Format(successFormat,
+                            model.DisplayName), true);
+            }
 
             return RedirectToAction("Index", new { pageNumber = returnPageNumber });
 
@@ -111,8 +124,20 @@ namespace cloudscribe.Core.Web.Controllers
             ISiteRole role = Site.UserRepository.FetchRole(roleId);
             if (role != null && role.IsDeletable(AppSettings.RolesThatCannotBeDeleted))
             {
-                // TODO: remove any users from the role
-                Site.UserRepository.DeleteRole(roleId);
+                Site.UserRepository.DeleteUserRolesByRole(roleId);
+
+                bool result = Site.UserRepository.DeleteRole(roleId);
+
+                if(result)
+                {
+                    string successFormat = "The role <b>{0}</b> was successfully deleted.";
+
+                    this.AlertWarning(string.Format(
+                                successFormat,
+                                role.DisplayName)
+                                , true);
+                }
+                
             }
 
 
@@ -157,6 +182,12 @@ namespace cloudscribe.Core.Web.Controllers
             model.Paging.CurrentPage = pageNumber;
             model.Paging.ItemsPerPage = itemsPerPage;
             model.Paging.TotalPages = totalPages;
+
+            var node = SiteMaps.Current.FindSiteMapNodeFromKey("RoleMembers");
+            if (node != null)
+            {
+                node.Title = model.Role.DisplayName + " Role Members";
+            }
 
             return View(model);
 

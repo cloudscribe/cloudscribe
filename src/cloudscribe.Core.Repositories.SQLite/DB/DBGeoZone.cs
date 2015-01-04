@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2008-06-22
-// Last Modified:			2014-08-29
+// Last Modified:			2015-01-04
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -147,10 +147,35 @@ namespace cloudscribe.Core.Repositories.SQLite
             arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid.ToString();
 
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
+                GetConnectionString(), 
+                sqlCommand.ToString(), 
+                arParams);
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(GetConnectionString(), sqlCommand.ToString(), arParams);
             return (rowsAffected > 0);
 
+        }
+
+        public static bool DeleteByCountry(Guid countryGuid)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("DELETE FROM mp_GeoZone ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("CountryGuid = :CountryGuid ");
+            sqlCommand.Append(";");
+
+            SQLiteParameter[] arParams = new SQLiteParameter[1];
+
+            arParams[0] = new SQLiteParameter(":CountryGuid", DbType.String, 36);
+            arParams[0].Direction = ParameterDirection.Input;
+            arParams[0].Value = countryGuid.ToString();
+
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
+                GetConnectionString(),
+                sqlCommand.ToString(),
+                arParams);
+
+            return (rowsAffected > 0);
         }
 
         /// <summary>

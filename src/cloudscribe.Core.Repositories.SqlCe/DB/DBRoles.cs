@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2010-04-06
-// Last Modified:			2014-08-27
+// Last Modified:			2015-01-04
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -156,6 +156,31 @@ namespace cloudscribe.Core.Repositories.SqlCe
             arParams[0] = new SqlCeParameter("@UserID", SqlDbType.Int);
             arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
+
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
+                GetConnectionString(),
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams);
+
+            return (rowsAffected > -1);
+
+        }
+
+        public static bool DeleteUserRolesByRole(int roleId)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("DELETE FROM mp_UserRoles ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("RoleID = @RoleID ");
+
+            sqlCommand.Append(";");
+
+            SqlCeParameter[] arParams = new SqlCeParameter[1];
+
+            arParams[0] = new SqlCeParameter("@RoleID", SqlDbType.Int);
+            arParams[0].Direction = ParameterDirection.Input;
+            arParams[0].Value = roleId;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 GetConnectionString(),

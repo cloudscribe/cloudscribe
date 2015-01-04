@@ -3,10 +3,140 @@
             xmlns="http://mvcsitemap.codeplex.com/schemas/MvcSiteMap-File-4.0"
             xsi:schemaLocation="http://mvcsitemap.codeplex.com/schemas/MvcSiteMap-File-4.0 MvcSiteMapSchema.xsd">
 
-  <mvcSiteMapNode title="Home" controller="Home" action="Index">
-    <mvcSiteMapNode title="About" controller="Home" action="About"/>
-    <mvcSiteMapNode title="Contact" controller="Home" action="Contact"/>
-    <mvcSiteMapNode title="Admin" action="SiteAdmin" roles="Admins,Content Administrators" 
+  <mvcSiteMapNode title="Home" controller="Home" action="Index" includeAmbientValuesInUrl="true">
+    <mvcSiteMapNode title="About" controller="Home" action="About" includeAmbientValuesInUrl="true" />
+    <mvcSiteMapNode title="Contact" controller="Home" action="Contact" includeAmbientValuesInUrl="true"/>
+
+    <mvcSiteMapNode key="SiteAdmin" title="Administration" controller="SiteAdmin" action="Index" includeAmbientValuesInUrl="true" roles="Admins,Content Administrators"
+                    >
+      <mvcSiteMapNode key="BasicSettings" title="Basic Settings"
+                      controller="SiteAdmin" action="SiteInfo"
+                      includeAmbientValuesInUrl="true"
+                      roles="Admins,Content Administrators"
+                      visibility="SiteMapPathHelper,ChildMenu,!*"
+                      />
+      <mvcSiteMapNode key="SiteList" title="Site List"
+                      controller="SiteAdmin" action="SiteList"
+                      roles="ServerAdmins"
+                      visibility="SiteMapPathHelper,ChildMenu,!*"
+                      >
+        <mvcSiteMapNode key="NewSite" title="New Site" resourceKey="NewSite"
+                controller="SiteAdmin" action="NewSite"
+                roles="ServerAdmins"
+                        visibility="SiteMapPathHelper,ChildMenu,!*"
+                      />
+
+      </mvcSiteMapNode>
+
+      <mvcSiteMapNode key="UserAdmin"  title="User Management"
+                      controller="UserAdmin" action="Index"
+                      includeAmbientValuesInUrl="true"
+                      roles="Admins"
+                      visibility="SiteMapPathHelper,ChildMenu,!*"
+                      >
+        <mvcSiteMapNode key="UserEdit"  title="New User"
+                      controller="UserAdmin" action="UserEdit"
+                        includeAmbientValuesInUrl="true"
+                      roles="Admins"
+                      visibility="SiteMapPathHelper,ChildMenu,!*"
+                      preservedRouteParameters="userId"
+                      ></mvcSiteMapNode>
+        <mvcSiteMapNode key="UserSearch"  title="Search"
+                      controller="UserAdmin" action="Search"
+                        includeAmbientValuesInUrl="true"
+                      roles="Admins"
+                      visibility="SiteMapPathHelper,!*"
+                      ></mvcSiteMapNode>
+        <mvcSiteMapNode key="IpSearch"  title="IP Address Search"
+                      controller="UserAdmin" action="IpSearch"
+                        includeAmbientValuesInUrl="true"
+                      roles="Admins"
+                      visibility="SiteMapPathHelper,!*"
+                      ></mvcSiteMapNode>
+
+      </mvcSiteMapNode>
+
+      <mvcSiteMapNode key="RoleAdmin"  title="Role Management"
+                      controller="RoleAdmin" action="Index"
+                      includeAmbientValuesInUrl="true"
+                      roles="Admins,Role Admins"
+                      visibility="SiteMapPathHelper,ChildMenu,!*"
+                      >
+
+        <mvcSiteMapNode key="RoleMembers"  title="Role Members"
+                      controller="RoleAdmin" action="RoleMembers"
+                        includeAmbientValuesInUrl="true"
+                      roles="Admins,Role Admins"
+                      visibility="SiteMapPathHelper,!*"
+                      preservedRouteParameters="roleId,pageNumber,pageSize"
+                      ></mvcSiteMapNode>
+        <mvcSiteMapNode key="RoleEdit"  title="New Role"
+                      controller="RoleAdmin" action="RoleEdit"
+                        includeAmbientValuesInUrl="true"
+                      roles="Admins,Role Admins"
+                      visibility="SiteMapPathHelper,ChildMenu,!*"
+                      preservedRouteParameters="roleId"
+                      ></mvcSiteMapNode>
+      </mvcSiteMapNode>
+
+      <mvcSiteMapNode key="CoreData"  title="Core Data"
+                      controller="CoreData" action="Index"
+                      roles="Admins,Content Admins"
+                      visibility="SiteMapPathHelper,ChildMenu,!*"
+                      >
+        <mvcSiteMapNode key="CurrencyList" title="Currency Administration"
+            controller="CoreData" action="CurrencyList"
+            roles="Admins"
+            visibility="SiteMapPathHelper,ChildMenu,!*"
+            >
+          <mvcSiteMapNode key="CurrencyEdit"  title="New Currency"
+                      controller="CoreData" action="CurrencyEdit"
+                      roles="Admins"
+                      visibility="SiteMapPathHelper,ChildMenu,!*"
+                          preservedRouteParameters="currencyGuid"
+                      ></mvcSiteMapNode>
+        </mvcSiteMapNode>
+
+        <mvcSiteMapNode key="CountryListPage" title="Country/State Administration"
+            controller="CoreData" action="CountryListPage"
+            roles="Admins"
+            visibility="SiteMapPathHelper,ChildMenu,!*"
+            >
+          <mvcSiteMapNode key="CountryEdit"  title="New Country"
+                      controller="CoreData" action="CountryEdit"
+                      roles="Admins"
+                      visibility="SiteMapPathHelper,ChildMenu,!*"
+                      preservedRouteParameters="guid"
+                      ></mvcSiteMapNode>
+          <mvcSiteMapNode key="StateListPage" title="States"
+            controller="CoreData" action="StateListPage"
+            roles="Admins"
+            visibility="SiteMapPathHelper,ChildMenu,!*"
+            preservedRouteParameters="countryGuid"
+            >
+            <mvcSiteMapNode key="StateEdit"  title="New State"
+                      controller="CoreData" action="StateEdit"
+                      roles="Admins"
+                      visibility="SiteMapPathHelper,ChildMenu,!*"
+                      preservedRouteParameters="countryGuid"
+                      ></mvcSiteMapNode>
+          </mvcSiteMapNode>
+
+        </mvcSiteMapNode>
+
+      </mvcSiteMapNode>
+
+
+    </mvcSiteMapNode>
+
+
+  </mvcSiteMapNode>
+
+  <!--
+  this example shows how to wire up a dynamicnodeprovider, for the admin menu this did not turn out to be the best way
+  but this approach will be needed for the cms to dynamically populate the site map
+  
+  <mvcSiteMapNode title="Admin" action="SiteAdmin" roles="Admins,Content Administrators" 
                     dynamicNodeProvider="cloudscribe.Core.Web.Navigation.AdminMenuDynamicNodeProvider, cloudscribe.Core.Web">
       <mvcSiteMapNode title="AdminItems" action="SiteAdmin" roles="Admins,Content Administrators" 
                       visibility="SiteMapPathHelper,ChildMenu,!*"
@@ -14,7 +144,6 @@
                     dynamicNodeProvider="cloudscribe.Core.Web.Navigation.AdminMenuDynamicNodeProvider, cloudscribe.Core.Web">
 
       </mvcSiteMapNode>
-    </mvcSiteMapNode>
-  </mvcSiteMapNode>
+  -->
 
 </mvcSiteMap>

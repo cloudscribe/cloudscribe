@@ -1,6 +1,6 @@
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2012-08-28
+// Last Modified:			2015-01-04
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -113,6 +113,26 @@ namespace cloudscribe.Core.Repositories.Firebird
             arParams[0] = new FbParameter("@UserID", FbDbType.Integer);
             arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
+
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
+                ConnectionString.GetWriteConnectionString(),
+                sqlCommand.ToString(),
+                arParams);
+
+            return (rowsAffected > 0);
+        }
+
+        public static bool DeleteUserRolesByRole(int roleId)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("DELETE FROM mp_UserRoles ");
+            sqlCommand.Append("WHERE RoleID = @RoleID  ;");
+
+            FbParameter[] arParams = new FbParameter[1];
+
+            arParams[0] = new FbParameter("@RoleID", FbDbType.Integer);
+            arParams[0].Direction = ParameterDirection.Input;
+            arParams[0].Value = roleId;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 ConnectionString.GetWriteConnectionString(),

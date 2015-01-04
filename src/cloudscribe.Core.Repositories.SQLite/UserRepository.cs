@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-18
-// Last Modified:			2014-12-26
+// Last Modified:			2015-01-04
 // 
 
 
@@ -861,6 +861,10 @@ namespace cloudscribe.Core.Repositories.SQLite
             return DBRoles.DeleteUserRoles(userId);
         }
 
+        public bool DeleteUserRolesByRole(int roleId)
+        {
+            return DBRoles.DeleteUserRolesByRole(roleId);
+        }
 
         public bool RoleExists(int siteId, String roleName)
         {

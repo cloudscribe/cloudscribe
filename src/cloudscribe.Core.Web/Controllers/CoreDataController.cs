@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-11-15
-// Last Modified:			2014-11-21
+// Last Modified:			2015-01-04
 // 
 
 using cloudscribe.Configuration;
@@ -26,7 +26,7 @@ namespace cloudscribe.Core.Web.Controllers
             geoRepo = geoRepository;
         }
 
-        // GET: /SiteAdmin
+        // GET: /CoreData/
         public async Task<ActionResult> Index()
         {
             ViewBag.SiteName = Site.SiteSettings.SiteName;
@@ -35,30 +35,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             return View();
 
-            //AdminMenuViewModel model = new AdminMenuViewModel
-            //{
-            //    MenuTitle = "Core Data Administration"
-            //};
-
-            //AdminMenuItemViewModel item = new AdminMenuItemViewModel();
-            //item.ItemText = "Currency Administration";
-            //item.ItemUrl = "/CoreData/CurrencyList";
-            //item.CssClass = "mnu-coredata mnu-currencyadmin";
-            //model.Items.Add(item);
-
-            //item = new AdminMenuItemViewModel();
-            //item.ItemText = "Country List Administration";
-            //item.ItemUrl = "/CoreData/CountryListPage";
-            //item.CssClass = "mnu-coredata mnu-country";
-            //model.Items.Add(item);
-
-            //item = new AdminMenuItemViewModel();
-            //item.ItemText = "State List Administration";
-            //item.ItemUrl = "/CoreData/States";
-            //item.CssClass = "mnu-coredata mnu-states";
-            //model.Items.Add(item);
-
-            //return View(model);
+            
         }
 
         public async Task<ActionResult> CountryListPage(int pageNumber = 1, int pageSize = -1)
@@ -84,8 +61,8 @@ namespace cloudscribe.Core.Web.Controllers
             return View(model);
         }
 
-        // GET: /SiteAdmin/SiteInfo
-        [MvcSiteMapNode(Title = "Edit Country", ParentKey = "CountryListPage", Key = "CountryEdit")] 
+        
+        
         public async Task<ActionResult> CountryEdit(Guid? guid, int returnPageNumber = 1)
         {
             ViewBag.SiteName = Site.SiteSettings.SiteName;
@@ -97,12 +74,20 @@ namespace cloudscribe.Core.Web.Controllers
             {
                 IGeoCountry country = geoRepo.FetchCountry(guid.Value);
                 model = GeoCountryViewModel.FromIGeoCountry(country);
+
+                var node = SiteMaps.Current.FindSiteMapNodeFromKey("CountryEdit");
+                if (node != null)
+                {
+                    node.Title = "Edit Country";
+                }
             }
             else
             {
                 ViewBag.Title = "New Country";
                 model = new GeoCountryViewModel();
             }
+
+            
 
             return View(model);
         }
@@ -119,13 +104,48 @@ namespace cloudscribe.Core.Web.Controllers
                 return View(model);
             }
 
+            string successFormat;
+            if(model.Guid == Guid.Empty)
+            {
+                successFormat = "The country <b>{0}</b> was successfully created.";
+            }
+            else
+            {
+                successFormat = "The country <b>{0}</b> was successfully updated.";
+            }
+
             geoRepo.Save(model);
+
+            this.AlertSuccess(string.Format(successFormat,
+                            model.Name), true);
 
             return RedirectToAction("CountryListPage", new { pageNumber = returnPageNumber} );
 
         }
 
-        //[MvcSiteMapNode(Title = "States", ParentKey = "CountryListPage", Key = "StateListPage")] 
+        //TODO: there is currently nothing in the UI that posts here
+        // probably should implement it but hide by config by default
+        // seems like an unusual event to delete a country and its states
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> CountryDelete(Guid countryGuid)
+        {
+            IGeoCountry country = geoRepo.FetchCountry(countryGuid);
+            geoRepo.DeleteGeoZonesByCountry(countryGuid);
+            bool result = geoRepo.DeleteCountry(countryGuid);
+
+            if (result && (country != null))
+            {
+                this.AlertWarning(string.Format(
+                            "The country <b>{0}</b> was successfully deleted.",
+                            country.Name)
+                            , true);
+            }
+
+            return RedirectToAction("CountryListPage");
+        }
+
+        
         public async Task<ActionResult> StateListPage(
             Guid? countryGuid, 
             int pageNumber = 1, 
@@ -162,24 +182,19 @@ namespace cloudscribe.Core.Web.Controllers
             model.CountryListReturnPageNumber = countryReturnPageNumber;
 
             // below we are just manipiulating the bread crumbs
-            ISiteMap map = SiteMaps.GetSiteMap();
-            if (map.CurrentNode != null)
+            var node = SiteMaps.Current.FindSiteMapNodeFromKey("StateListPage");
+            if (node != null)
             {
-                map.CurrentNode.Title = model.Country.Name + " States";
-                // parent node is country  list page
-                // unfortunately this does nothing
-                //map.CurrentNode.ParentNode.RouteValues.Add("pageNumber", countryReturnPageNumber);
-                
-                
+                node.Title = model.Country.Name + " States";
             }
             
             
-
+            
             return View(model);
 
         }
 
-        [MvcSiteMapNode(Title = "Edit State", ParentKey = "StateListPage", Key = "StateEdit")] 
+       
         public async Task<ActionResult> StateEdit(Guid countryGuid, Guid? guid, int? returnPageNumber)
         {
             if (countryGuid == Guid.Empty)
@@ -222,12 +237,19 @@ namespace cloudscribe.Core.Web.Controllers
             IGeoCountry country = geoRepo.FetchCountry(countryGuid);
             model.Country = GeoCountryViewModel.FromIGeoCountry(country);
 
-            ISiteMap map = SiteMaps.GetSiteMap();
-            if (map.CurrentNode != null)
+            var node = SiteMaps.Current.FindSiteMapNodeFromKey("StateEdit");
+            if (node != null)
             {
-                map.CurrentNode.Title = model.Heading;
-                //map.CurrentNode.ParentNode.RouteValues.Add("pageNumber")
+                node.Title = model.Heading;
+                var parent = node.ParentNode;
+                if(parent != null)
+                {
+                    parent.Title = model.Country.Name + " States";
+                    
+                }
             }
+
+           
 
             return View(model);
 
@@ -245,7 +267,20 @@ namespace cloudscribe.Core.Web.Controllers
                 return View(model);
             }
 
+            string successFormat;
+            if (model.Guid == Guid.Empty)
+            {
+                successFormat = "The state <b>{0}</b> was successfully created.";
+            }
+            else
+            {
+                successFormat = "The state <b>{0}</b> was successfully updated.";
+            }
+
             geoRepo.Save(model);
+
+            this.AlertSuccess(string.Format(successFormat,
+                            model.Name), true);
 
             return RedirectToAction("StateListPage", new { countryGuid = model.CountryGuid, pageNumber = model.ReturnPageNumber });
             
@@ -256,7 +291,16 @@ namespace cloudscribe.Core.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> StateDelete(Guid countryGuid, Guid guid, int returnPageNumber =1)
         {
-            geoRepo.DeleteGeoZone(guid);
+            IGeoZone state = geoRepo.FetchGeoZone(guid);
+            bool result = geoRepo.DeleteGeoZone(guid);
+
+            if (result && (state != null))
+            {
+                this.AlertWarning(string.Format(
+                            "The state <b>{0}</b> was successfully deleted.",
+                            state.Name)
+                            , true);
+            }
 
             return RedirectToAction("StateListPage", new { countryGuid = countryGuid, pageNumber = returnPageNumber });
         }
@@ -272,7 +316,7 @@ namespace cloudscribe.Core.Web.Controllers
             return View(model);
         }
 
-        [MvcSiteMapNode(Title = "Edit Currency", ParentKey = "CurrencyList", Key = "CurrencyEdit")]
+        
         public async Task<ActionResult> CurrencyEdit(Guid? currencyGuid)
         {
             ViewBag.SiteName = Site.SiteSettings.SiteName;
@@ -287,6 +331,12 @@ namespace cloudscribe.Core.Web.Controllers
                 model.Guid = currency.Guid;
                 model.Title = currency.Title;
                 model.Code = currency.Code;
+
+                var node = SiteMaps.Current.FindSiteMapNodeFromKey("CurrencyEdit");
+                if (node != null)
+                {
+                    node.Title = "Edit Currency";
+                }
             }
 
 
@@ -307,20 +357,26 @@ namespace cloudscribe.Core.Web.Controllers
                 return View(model);
             }
 
+            string successFormat;
             ICurrency currency = null;
             if(model.Guid != Guid.Empty)
             {
                 currency = geoRepo.FetchCurrency(model.Guid);
+                successFormat = "The currency <b>{0}</b> was successfully updated.";
             }
             else
             {
                 currency = new Currency();
+                successFormat = "The currency <b>{0}</b> was successfully created.";
             }
 
             currency.Code = model.Code;
             currency.Title = model.Title;
 
             geoRepo.Save(currency);
+
+            this.AlertSuccess(string.Format(successFormat,
+                            currency.Title), true);
 
             return RedirectToAction("CurrencyList");
 
@@ -330,7 +386,15 @@ namespace cloudscribe.Core.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> CurrencyDelete(Guid currencyGuid)
         {
-            geoRepo.DeleteCurrency(currencyGuid);
+            ICurrency currency = geoRepo.FetchCurrency(currencyGuid);
+            bool result = geoRepo.DeleteCurrency(currencyGuid);
+            if(result && (currency != null))
+            {
+                this.AlertWarning(string.Format(
+                            "The currency <b>{0}</b> was successfully deleted.",
+                            currency.Title)
+                            , true);
+            }
 
             return RedirectToAction("CurrencyList");
         }

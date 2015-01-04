@@ -10,10 +10,17 @@ using Ninject.Web.Common;
 using Ninject.Web.Common.OwinHost;
 using Ninject.Web;
 using Owin;
+using System;
 using System.Reflection;
 using System.Web;
 using System.Web.Http;
 using log4net;
+using MvcSiteMapProvider;
+using MvcSiteMapProvider.Xml;
+using MvcSiteMapProvider.Loader;
+using cloudscribe.WebHost.DI;
+using cloudscribe.WebHost.DI.Ninject.Modules;
+using cloudscribe.Configuration;
 
 //http://www.codemag.com/Article/1405071
 
@@ -92,13 +99,24 @@ namespace cloudscribe.WebHost
             if (_kernel == null)
             {
                 _kernel = new StandardKernel();
+                _kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
 
                 _kernel.Load(Assembly.GetExecutingAssembly());
                 //_kernel.Load(Assembly.GetExecutingAssembly(), Assembly.Load("Super.CompositionRoot"));
 
+                
+
                 _kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
+
+
                 
                 RegisterServices(_kernel);
+
+                if (AppSettings.MvcSiteMapProvider_UseExternalDIContainer)
+                {
+                    BindSiteMapProvider(_kernel);
+                }
+                
             }
             return _kernel;
         }
@@ -110,6 +128,7 @@ namespace cloudscribe.WebHost
         private static void RegisterServices(IKernel kernel)
         {
             
+
             // here we could use conditional compilation to map alternate data layers
             //
             //kernel.Bind<ISiteContext>().To<cloudscribe.Core.Web.SiteContext>(); 
@@ -118,8 +137,26 @@ namespace cloudscribe.WebHost
             kernel.Bind<IUserRepository>().To<cloudscribe.Core.Repositories.MSSQL.UserRepository>();
             kernel.Bind<IGeoRepository>().To<cloudscribe.Core.Repositories.MSSQL.GeoRepository>();
             kernel.Bind<IDb>().To<cloudscribe.DbHelpers.MSSQL.Db>();
+
             
 
         } 
+
+        // this is broken
+        // https://github.com/maartenba/MvcSiteMapProvider/issues/288
+        private static void BindSiteMapProvider(IKernel container)
+        {
+            // Setup configuration of DI (required)
+            container.Load(new MvcSiteMapProviderModule());
+            // Setup global sitemap loader (required)
+            
+            MvcSiteMapProvider.SiteMaps.Loader = container.Get<ISiteMapLoader>();
+            // Check all configured .sitemap files to ensure they follow the XSD for MvcSiteMapProvider (optional)
+            //var validator = container.Get<ISiteMapXmlValidator>();
+            //validator.ValidateXml(System.Web.Hosting.HostingEnvironment.MapPath("~/site-static.sitemap"));
+            // Register the Sitemaps routes for search engines (optional)
+            //XmlSiteMapController.RegisterRoutes(RouteTable.Routes);
+            
+        }
     }
 }

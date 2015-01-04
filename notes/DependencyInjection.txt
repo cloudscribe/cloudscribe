@@ -26,3 +26,10 @@ in vnext/aspnet 5 owin there is startup code like this:
             loggerfactory.AddConsole();
 
 maybe we will be able to plugin log4net or other logger there?
+
+http://stackoverflow.com/questions/7905110/logging-aspect-oriented-programming-and-dependency-injection-trying-to-make/7906547#7906547
+
+http://blog.ploeh.dk/2010/09/20/InstrumentationwithDecoratorsandInterceptors/
+
+very interesting discussion here
+http://blog.ploeh.dk/2010/02/03/ServiceLocatorisanAnti-Pattern/

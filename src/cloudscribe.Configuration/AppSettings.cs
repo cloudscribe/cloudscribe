@@ -372,6 +372,16 @@ namespace cloudscribe.Configuration
             get { return GetBool("Glimpse_AllowMemoryCacheEnumeration", false); }
         }
 
+        public static bool MvcSiteMapProvider_UseExternalDIContainer
+        {
+            get { return GetBool("MvcSiteMapProvider_UseExternalDIContainer", false); }
+        }
+
+        public static string MvcSiteMapProvider_SiteMapFileName
+        {
+            get { return GetString("MvcSiteMapProvider_SiteMapFileName", "~/site.sitemap"); }
+        }
+
         public static string SetupHeaderConfigPath
         {
             get { return GetString("SetupHeaderConfigPath", "~/Setup/SetupHeader.config"); }

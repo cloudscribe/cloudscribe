@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-18
-// Last Modified:			2014-12-08
+// Last Modified:			2015-01-04
 // 
 
 
@@ -54,6 +54,7 @@ namespace cloudscribe.Core.Models
         int GetRoleMemberCount(int roleId);
         bool DeleteRole(int roleID);
         bool DeleteUserRoles(int userId);
+        bool DeleteUserRolesByRole(int roleId);
         bool RoleExists(int siteId, string roleName);
         ISiteRole FetchRole(int roleID);
         ISiteRole FetchRole(int siteId, string roleName);
