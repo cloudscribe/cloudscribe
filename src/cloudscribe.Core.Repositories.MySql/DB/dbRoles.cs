@@ -1,6 +1,6 @@
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-01-04
+// Last Modified:			2015-01-05
 // 
 //
 // You must not remove this notice, or any other, from this software.
@@ -321,7 +321,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
         }
 
-        public static int GetCountOfUsersNotInRole(int siteId, int roleId)
+        public static int GetCountOfUsersNotInRole(int siteId, int roleId, string searchInput)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT ");
@@ -335,10 +335,26 @@ namespace cloudscribe.Core.Repositories.MySql
             sqlCommand.Append("SELECT UserID FROM mp_UserRoles ");
             sqlCommand.Append("WHERE RoleID = ?RoleID ");
             sqlCommand.Append(")");
+
+            if (searchInput.Length > 0)
+            {
+                sqlCommand.Append(" AND ");
+                sqlCommand.Append("(");
+                sqlCommand.Append(" (u.Name LIKE ?SearchInput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (u.LoginName LIKE ?SearchInput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (u.Email LIKE ?SearchInput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (u.LastName LIKE ?SearchInput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (u.FirstName LIKE ?SearchInput) ");
+                sqlCommand.Append(")");
+            }
   
             sqlCommand.Append(";");
 
-            MySqlParameter[] arParams = new MySqlParameter[2];
+            MySqlParameter[] arParams = new MySqlParameter[3];
 
             arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
             arParams[0].Direction = ParameterDirection.Input;
@@ -347,6 +363,10 @@ namespace cloudscribe.Core.Repositories.MySql
             arParams[1] = new MySqlParameter("?RoleID", MySqlDbType.Int32);
             arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = roleId;
+
+            arParams[2] = new MySqlParameter("?SearchInput", MySqlDbType.VarChar, 50);
+            arParams[2].Direction = ParameterDirection.Input;
+            arParams[2].Value = "%" + searchInput + "%";
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(
                 ConnectionString.GetReadConnectionString(),
@@ -358,13 +378,14 @@ namespace cloudscribe.Core.Repositories.MySql
         public static IDataReader GetUsersNotInRole(
             int siteId,
             int roleId,
+            string searchInput,
             int pageNumber,
             int pageSize,
             out int totalPages)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
             totalPages = 1;
-            int totalRows = GetCountOfUsersNotInRole(siteId, roleId);
+            int totalRows = GetCountOfUsersNotInRole(siteId, roleId, searchInput);
 
             if (pageSize > 0) totalPages = totalRows / pageSize;
 
@@ -384,10 +405,8 @@ namespace cloudscribe.Core.Repositories.MySql
 
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT ");
-            sqlCommand.Append("u.UserID, ");
-            sqlCommand.Append("u.Name, ");
-            sqlCommand.Append("u.Email, ");
-            sqlCommand.Append("u.LoginName ");
+            sqlCommand.Append("u.* ");
+            
 
             sqlCommand.Append("FROM	mp_Users u ");
             
@@ -397,6 +416,23 @@ namespace cloudscribe.Core.Repositories.MySql
             sqlCommand.Append("SELECT UserID FROM mp_UserRoles ");
             sqlCommand.Append("WHERE RoleID = ?RoleID ");
             sqlCommand.Append(")");
+
+            if (searchInput.Length > 0)
+            {
+                sqlCommand.Append(" AND ");
+                sqlCommand.Append("(");
+                sqlCommand.Append(" (u.Name LIKE ?SearchInput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (u.LoginName LIKE ?SearchInput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (u.Email LIKE ?SearchInput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (u.LastName LIKE ?SearchInput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (u.FirstName LIKE ?SearchInput) ");
+                sqlCommand.Append(")");
+            }
+
   
             sqlCommand.Append("ORDER BY u.Name  ");
 
@@ -409,7 +445,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
             sqlCommand.Append(";");
 
-            MySqlParameter[] arParams = new MySqlParameter[4];
+            MySqlParameter[] arParams = new MySqlParameter[5];
 
             arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
             arParams[0].Direction = ParameterDirection.Input;
@@ -419,13 +455,17 @@ namespace cloudscribe.Core.Repositories.MySql
             arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = roleId;
 
-            arParams[2] = new MySqlParameter("?PageSize", MySqlDbType.Int32);
+            arParams[2] = new MySqlParameter("?SearchInput", MySqlDbType.VarChar, 50);
             arParams[2].Direction = ParameterDirection.Input;
-            arParams[2].Value = pageSize;
+            arParams[2].Value = "%" + searchInput + "%";
 
-            arParams[3] = new MySqlParameter("?OffsetRows", MySqlDbType.Int32);
+            arParams[3] = new MySqlParameter("?PageSize", MySqlDbType.Int32);
             arParams[3].Direction = ParameterDirection.Input;
-            arParams[3].Value = pageLowerBound;
+            arParams[3].Value = pageSize;
+
+            arParams[4] = new MySqlParameter("?OffsetRows", MySqlDbType.Int32);
+            arParams[4].Direction = ParameterDirection.Input;
+            arParams[4].Value = pageLowerBound;
 
             return AdoHelper.ExecuteReader(
                 ConnectionString.GetReadConnectionString(),
@@ -434,7 +474,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
         }
 
-        public static int GetCountOfUsersInRole(int siteId, int roleId)
+        public static int GetCountOfUsersInRole(int siteId, int roleId, string searchInput)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT ");
@@ -449,9 +489,25 @@ namespace cloudscribe.Core.Repositories.MySql
             sqlCommand.Append("WHERE RoleID = ?RoleID ");
             sqlCommand.Append(")");
 
+            if (searchInput.Length > 0)
+            {
+                sqlCommand.Append(" AND ");
+                sqlCommand.Append("(");
+                sqlCommand.Append(" (u.Name LIKE ?SearchInput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (u.LoginName LIKE ?SearchInput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (u.Email LIKE ?SearchInput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (u.LastName LIKE ?SearchInput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (u.FirstName LIKE ?SearchInput) ");
+                sqlCommand.Append(")");
+            }
+
             sqlCommand.Append(";");
 
-            MySqlParameter[] arParams = new MySqlParameter[2];
+            MySqlParameter[] arParams = new MySqlParameter[3];
 
             arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
             arParams[0].Direction = ParameterDirection.Input;
@@ -460,6 +516,10 @@ namespace cloudscribe.Core.Repositories.MySql
             arParams[1] = new MySqlParameter("?RoleID", MySqlDbType.Int32);
             arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = roleId;
+
+            arParams[2] = new MySqlParameter("?SearchInput", MySqlDbType.VarChar, 50);
+            arParams[2].Direction = ParameterDirection.Input;
+            arParams[2].Value = "%" + searchInput + "%";
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(
                 ConnectionString.GetReadConnectionString(),
@@ -471,13 +531,14 @@ namespace cloudscribe.Core.Repositories.MySql
         public static IDataReader GetUsersInRole(
             int siteId,
             int roleId,
+            string searchInput,
             int pageNumber,
             int pageSize,
             out int totalPages)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
             totalPages = 1;
-            int totalRows = GetCountOfUsersInRole(siteId, roleId);
+            int totalRows = GetCountOfUsersInRole(siteId, roleId, searchInput);
 
             if (pageSize > 0) totalPages = totalRows / pageSize;
 
@@ -497,10 +558,10 @@ namespace cloudscribe.Core.Repositories.MySql
 
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT ");
-            sqlCommand.Append("u.UserID, ");
-            sqlCommand.Append("u.Name, ");
-            sqlCommand.Append("u.Email, ");
-            sqlCommand.Append("u.LoginName ");
+            sqlCommand.Append("u.* ");
+            //sqlCommand.Append("u.Name, ");
+            //sqlCommand.Append("u.Email, ");
+            //sqlCommand.Append("u.LoginName ");
 
             sqlCommand.Append("FROM	mp_Users u ");
 
@@ -510,6 +571,22 @@ namespace cloudscribe.Core.Repositories.MySql
             sqlCommand.Append("SELECT UserID FROM mp_UserRoles ");
             sqlCommand.Append("WHERE RoleID = ?RoleID ");
             sqlCommand.Append(")");
+
+            if (searchInput.Length > 0)
+            {
+                sqlCommand.Append(" AND ");
+                sqlCommand.Append("(");
+                sqlCommand.Append(" (u.Name LIKE ?SearchInput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (u.LoginName LIKE ?SearchInput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (u.Email LIKE ?SearchInput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (u.LastName LIKE ?SearchInput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (u.FirstName LIKE ?SearchInput) ");
+                sqlCommand.Append(")");
+            }
 
             sqlCommand.Append("ORDER BY u.Name  ");
 
@@ -522,7 +599,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
             sqlCommand.Append(";");
 
-            MySqlParameter[] arParams = new MySqlParameter[4];
+            MySqlParameter[] arParams = new MySqlParameter[5];
 
             arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
             arParams[0].Direction = ParameterDirection.Input;
@@ -532,13 +609,17 @@ namespace cloudscribe.Core.Repositories.MySql
             arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = roleId;
 
-            arParams[2] = new MySqlParameter("?PageSize", MySqlDbType.Int32);
+            arParams[2] = new MySqlParameter("?SearchInput", MySqlDbType.VarChar, 50);
             arParams[2].Direction = ParameterDirection.Input;
-            arParams[2].Value = pageSize;
+            arParams[2].Value = "%" + searchInput + "%";
 
-            arParams[3] = new MySqlParameter("?OffsetRows", MySqlDbType.Int32);
+            arParams[3] = new MySqlParameter("?PageSize", MySqlDbType.Int32);
             arParams[3].Direction = ParameterDirection.Input;
-            arParams[3].Value = pageLowerBound;
+            arParams[3].Value = pageSize;
+
+            arParams[4] = new MySqlParameter("?OffsetRows", MySqlDbType.Int32);
+            arParams[4].Direction = ParameterDirection.Input;
+            arParams[4].Value = pageLowerBound;
 
             return AdoHelper.ExecuteReader(
                 ConnectionString.GetReadConnectionString(),
@@ -665,6 +746,147 @@ namespace cloudscribe.Core.Repositories.MySql
                 sqlCommand.ToString(),
                 arParams));
 
+        }
+
+        private static int GetCountOfSiteRoles(int siteId, string searchInput)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT ");
+            sqlCommand.Append("Count(*) ");
+            sqlCommand.Append("FROM	mp_Roles ");
+            sqlCommand.Append("WHERE SiteID = ?SiteID  ");
+
+            if (searchInput.Length > 0)
+            {
+                sqlCommand.Append(" AND ");
+                sqlCommand.Append("(");
+
+                sqlCommand.Append(" (DisplayName LIKE ?SearchInput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (RoleName LIKE ?SearchInput) ");
+                
+
+                sqlCommand.Append(")");
+            }
+
+            sqlCommand.Append(";");
+
+            MySqlParameter[] arParams = new MySqlParameter[2];
+
+            arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
+            arParams[0].Direction = ParameterDirection.Input;
+            arParams[0].Value = siteId;
+
+            arParams[1] = new MySqlParameter("?SearchInput", MySqlDbType.VarChar, 50);
+            arParams[1].Direction = ParameterDirection.Input;
+            arParams[1].Value = "%" + searchInput + "%";
+
+            return Convert.ToInt32(AdoHelper.ExecuteScalar(
+                ConnectionString.GetReadConnectionString(),
+                sqlCommand.ToString(),
+                arParams));
+
+        }
+
+        public static IDataReader GetPage(
+            int siteId,
+            string searchInput,
+            int pageNumber,
+            int pageSize,
+            out int totalPages)
+        {
+            int pageLowerBound = (pageSize * pageNumber) - pageSize;
+            totalPages = 1;
+            int totalRows = GetCountOfSiteRoles(siteId, searchInput);
+
+            if (pageSize > 0) totalPages = totalRows / pageSize;
+
+            if (totalRows <= pageSize)
+            {
+                totalPages = 1;
+            }
+            else
+            {
+                int remainder;
+                Math.DivRem(totalRows, pageSize, out remainder);
+                if (remainder > 0)
+                {
+                    totalPages += 1;
+                }
+            }
+
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT ");
+            sqlCommand.Append("r.RoleID, ");
+            sqlCommand.Append("r.SiteID, ");
+            sqlCommand.Append("r.RoleName, ");
+            sqlCommand.Append("r.DisplayName, ");
+            sqlCommand.Append("r.SiteGuid, ");
+            sqlCommand.Append("r.RoleGuid, ");
+            sqlCommand.Append("COUNT(ur.UserID) As MemberCount ");
+
+            sqlCommand.Append("FROM	mp_Roles r ");
+
+            sqlCommand.Append("LEFT OUTER JOIN mp_UserRoles ur ");
+            sqlCommand.Append("ON ur.RoleID = r.RoleID ");
+
+            sqlCommand.Append("WHERE r.SiteID = ?SiteID  ");
+
+            if (searchInput.Length > 0)
+            {
+                sqlCommand.Append(" AND ");
+                sqlCommand.Append("(");
+
+                sqlCommand.Append(" (DisplayName LIKE ?SearchInput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (RoleName LIKE ?SearchInput) ");
+
+
+                sqlCommand.Append(")");
+            }
+
+            sqlCommand.Append("GROUP BY ");
+            sqlCommand.Append("r.RoleID, ");
+            sqlCommand.Append("r.SiteID, ");
+            sqlCommand.Append("r.RoleName, ");
+            sqlCommand.Append("r.DisplayName, ");
+            sqlCommand.Append("r.SiteGuid, ");
+            sqlCommand.Append("r.RoleGuid ");
+
+            sqlCommand.Append("ORDER BY r.DisplayName ");
+            
+
+            sqlCommand.Append("LIMIT ?PageSize ");
+
+            if (pageNumber > 1)
+            {
+                sqlCommand.Append("OFFSET ?OffsetRows ");
+            }
+
+            sqlCommand.Append(";");
+
+            MySqlParameter[] arParams = new MySqlParameter[4];
+
+            arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
+            arParams[0].Direction = ParameterDirection.Input;
+            arParams[0].Value = siteId;
+
+            arParams[1] = new MySqlParameter("?SearchInput", MySqlDbType.VarChar, 50);
+            arParams[1].Direction = ParameterDirection.Input;
+            arParams[1].Value = "%" + searchInput + "%";
+
+            arParams[2] = new MySqlParameter("?PageSize", MySqlDbType.Int32);
+            arParams[2].Direction = ParameterDirection.Input;
+            arParams[2].Value = pageSize;
+
+            arParams[3] = new MySqlParameter("?OffsetRows", MySqlDbType.Int32);
+            arParams[3].Direction = ParameterDirection.Input;
+            arParams[3].Value = pageLowerBound;
+
+            return AdoHelper.ExecuteReader(
+                ConnectionString.GetReadConnectionString(),
+                sqlCommand.ToString(),
+                arParams);
         }
 
     }

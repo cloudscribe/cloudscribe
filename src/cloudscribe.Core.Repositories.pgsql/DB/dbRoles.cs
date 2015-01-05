@@ -1,6 +1,6 @@
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-01-04
+// Last Modified:			2015-01-05
 // 
 //
 // You must not remove this notice, or any other, from this software.
@@ -262,7 +262,7 @@ namespace cloudscribe.Core.Repositories.pgsql
 
         }
 
-        public static int GetCountOfUsersNotInRole(int siteId, int roleId)
+        public static int GetCountOfUsersNotInRole(int siteId, int roleId, string searchInput)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT ");
@@ -275,9 +275,25 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             sqlCommand.Append("WHERE u.siteid = :siteid  ");
             sqlCommand.Append("AND ur.roleid IS NULL  ");
+
+            if (searchInput.Length > 0)
+            {
+                sqlCommand.Append(" AND ");
+                sqlCommand.Append("(");
+                sqlCommand.Append(" (u.name LIKE :searchinput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (u.loginname LIKE :searchinput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (u.email LIKE :searchinput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (u.lastname LIKE :searchinput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (u.firstname LIKE :searchinput) ");
+                sqlCommand.Append(")");
+            }
             sqlCommand.Append(";");
 
-            NpgsqlParameter[] arParams = new NpgsqlParameter[2];
+            NpgsqlParameter[] arParams = new NpgsqlParameter[3];
 
             arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
             arParams[0].Direction = ParameterDirection.Input;
@@ -286,6 +302,10 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[1] = new NpgsqlParameter("roleid", NpgsqlTypes.NpgsqlDbType.Integer);
             arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = roleId;
+
+            arParams[2] = new NpgsqlParameter("searchinput", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
+            arParams[2].Direction = ParameterDirection.Input;
+            arParams[2].Value = "%" + searchInput + "%";
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(
                ConnectionString.GetReadConnectionString(),
@@ -297,13 +317,14 @@ namespace cloudscribe.Core.Repositories.pgsql
         public static IDataReader GetUsersNotInRole(
             int siteId,
             int roleId,
+            string searchInput,
             int pageNumber,
             int pageSize,
             out int totalPages)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
             totalPages = 1;
-            int totalRows = GetCountOfUsersNotInRole(siteId, roleId);
+            int totalRows = GetCountOfUsersNotInRole(siteId, roleId, searchInput);
 
             if (pageSize > 0) totalPages = totalRows / pageSize;
 
@@ -323,10 +344,8 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT ");
-            sqlCommand.Append("u.userid, ");
-            sqlCommand.Append("u.name, ");
-            sqlCommand.Append("u.email, ");
-            sqlCommand.Append("u.loginname ");
+            sqlCommand.Append("u.* ");
+            
 
             sqlCommand.Append("FROM	mp_users u ");
             sqlCommand.Append("LEFT OUTER JOIN mp_userroles ur ");
@@ -335,6 +354,22 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             sqlCommand.Append("WHERE u.siteid = :siteid  ");
             sqlCommand.Append("AND ur.roleid IS NULL  ");
+            if (searchInput.Length > 0)
+            {
+                sqlCommand.Append(" AND ");
+                sqlCommand.Append("(");
+                sqlCommand.Append(" (u.name LIKE :searchinput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (u.loginname LIKE :searchinput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (u.email LIKE :searchinput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (u.lastname LIKE :searchinput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (u.firstname LIKE :searchinput) ");
+                sqlCommand.Append(")");
+            }
+
             sqlCommand.Append("ORDER BY u.name  ");
             sqlCommand.Append("LIMIT  :pagesize");
 
@@ -343,7 +378,7 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             sqlCommand.Append(";");
 
-            NpgsqlParameter[] arParams = new NpgsqlParameter[4];
+            NpgsqlParameter[] arParams = new NpgsqlParameter[5];
 
             arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
             arParams[0].Direction = ParameterDirection.Input;
@@ -353,13 +388,17 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = roleId;
 
-            arParams[2] = new NpgsqlParameter("pagesize", NpgsqlTypes.NpgsqlDbType.Integer);
+            arParams[2] = new NpgsqlParameter("searchinput", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
             arParams[2].Direction = ParameterDirection.Input;
-            arParams[2].Value = pageSize;
+            arParams[2].Value = "%" + searchInput + "%";
 
-            arParams[3] = new NpgsqlParameter("pageoffset", NpgsqlTypes.NpgsqlDbType.Integer);
+            arParams[3] = new NpgsqlParameter("pagesize", NpgsqlTypes.NpgsqlDbType.Integer);
             arParams[3].Direction = ParameterDirection.Input;
-            arParams[3].Value = pageLowerBound;
+            arParams[3].Value = pageSize;
+
+            arParams[4] = new NpgsqlParameter("pageoffset", NpgsqlTypes.NpgsqlDbType.Integer);
+            arParams[4].Direction = ParameterDirection.Input;
+            arParams[4].Value = pageLowerBound;
 
             return AdoHelper.ExecuteReader(
                ConnectionString.GetReadConnectionString(),
@@ -370,7 +409,7 @@ namespace cloudscribe.Core.Repositories.pgsql
             
         }
 
-        public static int GetCountOfUsersInRole(int siteId, int roleId)
+        public static int GetCountOfUsersInRole(int siteId, int roleId, string searchInput)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT ");
@@ -383,10 +422,25 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append("AND ur.roleid = :roleid ");
 
             sqlCommand.Append("WHERE u.siteid = :siteid  ");
+            if (searchInput.Length > 0)
+            {
+                sqlCommand.Append(" AND ");
+                sqlCommand.Append("(");
+                sqlCommand.Append(" (u.name LIKE :searchinput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (u.loginname LIKE :searchinput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (u.email LIKE :searchinput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (u.lastname LIKE :searchinput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (u.firstname LIKE :searchinput) ");
+                sqlCommand.Append(")");
+            }
 
             sqlCommand.Append(";");
 
-            NpgsqlParameter[] arParams = new NpgsqlParameter[2];
+            NpgsqlParameter[] arParams = new NpgsqlParameter[3];
 
             arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
             arParams[0].Direction = ParameterDirection.Input;
@@ -395,6 +449,10 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[1] = new NpgsqlParameter("roleid", NpgsqlTypes.NpgsqlDbType.Integer);
             arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = roleId;
+
+            arParams[2] = new NpgsqlParameter("searchinput", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
+            arParams[2].Direction = ParameterDirection.Input;
+            arParams[2].Value = "%" + searchInput + "%";
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(
                ConnectionString.GetReadConnectionString(),
@@ -406,13 +464,14 @@ namespace cloudscribe.Core.Repositories.pgsql
         public static IDataReader GetUsersInRole(
             int siteId,
             int roleId,
+            string searchInput,
             int pageNumber,
             int pageSize,
             out int totalPages)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
             totalPages = 1;
-            int totalRows = GetCountOfUsersInRole(siteId, roleId);
+            int totalRows = GetCountOfUsersInRole(siteId, roleId, searchInput);
 
             if (pageSize > 0) totalPages = totalRows / pageSize;
 
@@ -432,10 +491,8 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT ");
-            sqlCommand.Append("u.userid, ");
-            sqlCommand.Append("u.name, ");
-            sqlCommand.Append("u.email, ");
-            sqlCommand.Append("u.loginname ");
+            sqlCommand.Append("u.* ");
+            
 
             sqlCommand.Append("FROM	mp_users u ");
 
@@ -446,6 +503,22 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             sqlCommand.Append("WHERE u.siteid = :siteid  ");
 
+            if (searchInput.Length > 0)
+            {
+                sqlCommand.Append(" AND ");
+                sqlCommand.Append("(");
+                sqlCommand.Append(" (u.name LIKE :searchinput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (u.loginname LIKE :searchinput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (u.email LIKE :searchinput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (u.lastname LIKE :searchinput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (u.firstname LIKE :searchinput) ");
+                sqlCommand.Append(")");
+            }
+
             sqlCommand.Append("ORDER BY u.name  ");
             sqlCommand.Append("LIMIT  :pagesize");
 
@@ -454,7 +527,7 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             sqlCommand.Append(";");
 
-            NpgsqlParameter[] arParams = new NpgsqlParameter[4];
+            NpgsqlParameter[] arParams = new NpgsqlParameter[5];
 
             arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
             arParams[0].Direction = ParameterDirection.Input;
@@ -464,13 +537,17 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = roleId;
 
-            arParams[2] = new NpgsqlParameter("pagesize", NpgsqlTypes.NpgsqlDbType.Integer);
+            arParams[2] = new NpgsqlParameter("searchinput", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
             arParams[2].Direction = ParameterDirection.Input;
-            arParams[2].Value = pageSize;
+            arParams[2].Value = "%" + searchInput + "%";
 
-            arParams[3] = new NpgsqlParameter("pageoffset", NpgsqlTypes.NpgsqlDbType.Integer);
+            arParams[3] = new NpgsqlParameter("pagesize", NpgsqlTypes.NpgsqlDbType.Integer);
             arParams[3].Direction = ParameterDirection.Input;
-            arParams[3].Value = pageLowerBound;
+            arParams[3].Value = pageSize;
+
+            arParams[4] = new NpgsqlParameter("pageoffset", NpgsqlTypes.NpgsqlDbType.Integer);
+            arParams[4].Direction = ParameterDirection.Input;
+            arParams[4].Value = pageLowerBound;
 
             return AdoHelper.ExecuteReader(
                ConnectionString.GetReadConnectionString(),
@@ -579,6 +656,140 @@ namespace cloudscribe.Core.Repositories.pgsql
                CommandType.Text,
                sqlCommand.ToString(),
                arParams));
+        }
+
+        private static int GetCountOfSiteRoles(int siteId, string searchInput)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT ");
+            sqlCommand.Append("COUNT(*) ");
+            sqlCommand.Append("FROM	mp_roles ");
+            sqlCommand.Append("WHERE siteid = :siteid  ");
+            if (searchInput.Length > 0)
+            {
+                sqlCommand.Append(" AND ");
+                sqlCommand.Append("(");
+                sqlCommand.Append(" (displayname LIKE :searchinput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (rolename LIKE :searchinput) ");
+                sqlCommand.Append(")");
+            }
+
+            sqlCommand.Append(";");
+
+            NpgsqlParameter[] arParams = new NpgsqlParameter[2];
+
+            arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
+            arParams[0].Direction = ParameterDirection.Input;
+            arParams[0].Value = siteId;
+
+            arParams[1] = new NpgsqlParameter("searchinput", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
+            arParams[1].Direction = ParameterDirection.Input;
+            arParams[1].Value = "%" + searchInput + "%";
+
+            return Convert.ToInt32(AdoHelper.ExecuteScalar(
+               ConnectionString.GetReadConnectionString(),
+               CommandType.Text,
+               sqlCommand.ToString(),
+               arParams));
+        }
+
+        public static IDataReader GetPage(
+            int siteId,
+            string searchInput,
+            int pageNumber,
+            int pageSize,
+            out int totalPages)
+        {
+            int pageLowerBound = (pageSize * pageNumber) - pageSize;
+            totalPages = 1;
+            int totalRows = GetCountOfSiteRoles(siteId,searchInput);
+
+            if (pageSize > 0) totalPages = totalRows / pageSize;
+
+            if (totalRows <= pageSize)
+            {
+                totalPages = 1;
+            }
+            else
+            {
+                int remainder;
+                Math.DivRem(totalRows, pageSize, out remainder);
+                if (remainder > 0)
+                {
+                    totalPages += 1;
+                }
+            }
+
+            NpgsqlParameter[] arParams = new NpgsqlParameter[4];
+
+            arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
+            arParams[0].Direction = ParameterDirection.Input;
+            arParams[0].Value = siteId;
+
+            arParams[1] = new NpgsqlParameter("searchinput", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
+            arParams[1].Direction = ParameterDirection.Input;
+            arParams[1].Value = "%" + searchInput + "%";
+
+            arParams[2] = new NpgsqlParameter("pagesize", NpgsqlTypes.NpgsqlDbType.Integer);
+            arParams[2].Direction = ParameterDirection.Input;
+            arParams[2].Value = pageSize;
+
+            arParams[3] = new NpgsqlParameter("pageoffset", NpgsqlTypes.NpgsqlDbType.Integer);
+            arParams[3].Direction = ParameterDirection.Input;
+            arParams[3].Value = pageLowerBound;
+
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  ");
+            sqlCommand.Append("r.roleid, ");
+            sqlCommand.Append("r.siteid, ");
+            sqlCommand.Append("r.rolename, ");
+            sqlCommand.Append("r.displayname, ");
+            sqlCommand.Append("r.siteguid, ");
+            sqlCommand.Append("r.roleguid, ");
+            sqlCommand.Append("COUNT(ur.userid) As membercount ");
+
+            sqlCommand.Append("FROM	mp_roles r ");
+
+            sqlCommand.Append("LEFT OUTER JOIN mp_userroles ur ");
+            sqlCommand.Append("ON ur.roleid = r.roleid ");
+
+            sqlCommand.Append("WHERE ");
+
+            sqlCommand.Append("r.siteid = :siteid ");
+
+            if (searchInput.Length > 0)
+            {
+                sqlCommand.Append(" AND ");
+                sqlCommand.Append("(");
+                sqlCommand.Append(" (displayname LIKE :searchinput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (rolename LIKE :searchinput) ");
+            }
+
+            sqlCommand.Append("GROUP BY ");
+            sqlCommand.Append("r.roleid, ");
+            sqlCommand.Append("r.siteid, ");
+            sqlCommand.Append("r.rolename, ");
+            sqlCommand.Append("r.displayname, ");
+            sqlCommand.Append("r.siteguid, ");
+            sqlCommand.Append("r.roleguid ");
+
+            sqlCommand.Append("ORDER BY r.displayname ");
+            sqlCommand.Append("LIMIT  :pagesize");
+
+            if (pageNumber > 1)
+                sqlCommand.Append(" OFFSET :pageoffset ");
+
+            sqlCommand.Append(";");
+
+            return AdoHelper.ExecuteReader(
+                ConnectionString.GetReadConnectionString(),
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams);
+
+
         }
 
     }

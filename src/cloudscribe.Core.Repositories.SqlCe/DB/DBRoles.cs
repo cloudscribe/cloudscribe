@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2010-04-06
-// Last Modified:			2015-01-04
+// Last Modified:			2015-01-05
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -352,7 +352,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
         }
 
-        public static int GetCountOfUsersNotInRole(int siteId, int roleId)
+        public static int GetCountOfUsersNotInRole(int siteId, int roleId, string searchInput)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  Count(*) ");
@@ -364,6 +364,17 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
             sqlCommand.Append("WHERE u.SiteID = @SiteID ");
             sqlCommand.Append("AND ur.RoleID IS NULL ");
+            if (!string.IsNullOrEmpty(searchInput))
+            {
+                sqlCommand.Append("AND (");
+                sqlCommand.Append("(u.[Name]  LIKE '%' + @SearchInput + '%') ");
+                sqlCommand.Append("OR (u.[LoginName]  LIKE '%' + @SearchInput + '%') ");
+                sqlCommand.Append("OR (u.Email LIKE '%' + @SearchInput + '%') ");
+                sqlCommand.Append("OR (u.LastName LIKE '%' + @SearchInput + '%') ");
+                sqlCommand.Append("OR (u.FirstName LIKE '%' + @SearchInput + '%') ");
+                sqlCommand.Append(")");
+            }
+
             sqlCommand.Append(";");
 
             SqlCeParameter[] arParams = new SqlCeParameter[2];
@@ -387,13 +398,14 @@ namespace cloudscribe.Core.Repositories.SqlCe
         public static IDataReader GetUsersNotInRole(
             int siteId,
             int roleId,
+            string searchInput,
             int pageNumber,
             int pageSize,
             out int totalPages)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
             totalPages = 1;
-            int totalRows = GetCountOfUsersNotInRole(siteId, roleId);
+            int totalRows = GetCountOfUsersNotInRole(siteId, roleId, searchInput);
 
             if (pageSize > 0) totalPages = totalRows / pageSize;
 
@@ -417,10 +429,11 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("SELECT TOP (" + pageSize.ToString(CultureInfo.InvariantCulture) + ") * FROM ");
             sqlCommand.Append("(");
             sqlCommand.Append("SELECT TOP (" + pageNumber.ToString(CultureInfo.InvariantCulture) + " * " + pageSize.ToString(CultureInfo.InvariantCulture) + ")  ");
-            sqlCommand.Append("u.UserID, ");
-            sqlCommand.Append("u.[Name], ");
-            sqlCommand.Append("u.Email, ");
-            sqlCommand.Append("u.LoginName ");
+            sqlCommand.Append("u.* ");
+            //sqlCommand.Append("u.UserID, ");
+            //sqlCommand.Append("u.[Name], ");
+            //sqlCommand.Append("u.Email, ");
+            //sqlCommand.Append("u.LoginName ");
 
 
             sqlCommand.Append("FROM	mp_Users u ");
@@ -431,6 +444,17 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
             sqlCommand.Append("WHERE u.SiteID = @SiteID ");
             sqlCommand.Append("AND ur.RoleID IS NULL ");
+
+            if (!string.IsNullOrEmpty(searchInput))
+            {
+                sqlCommand.Append("AND (");
+                sqlCommand.Append("(u.[Name]  LIKE '%' + @SearchInput + '%') ");
+                sqlCommand.Append("OR (u.[LoginName]  LIKE '%' + @SearchInput + '%') ");
+                sqlCommand.Append("OR (u.Email LIKE '%' + @SearchInput + '%') ");
+                sqlCommand.Append("OR (u.LastName LIKE '%' + @SearchInput + '%') ");
+                sqlCommand.Append("OR (u.FirstName LIKE '%' + @SearchInput + '%') ");
+                sqlCommand.Append(")");
+            }
 
             sqlCommand.Append("ORDER BY  ");
             sqlCommand.Append("u.[Name]  ");
@@ -445,7 +469,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append(";");
 
 
-            SqlCeParameter[] arParams = new SqlCeParameter[2];
+            SqlCeParameter[] arParams = new SqlCeParameter[3];
 
             arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
             arParams[0].Direction = ParameterDirection.Input;
@@ -454,6 +478,10 @@ namespace cloudscribe.Core.Repositories.SqlCe
             arParams[1] = new SqlCeParameter("@RoleID", SqlDbType.Int);
             arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = roleId;
+
+            arParams[2] = new SqlCeParameter("@SearchInput", SqlDbType.NVarChar, 50);
+            arParams[2].Direction = ParameterDirection.Input;
+            arParams[2].Value = searchInput;
 
 
             return AdoHelper.ExecuteReader(
@@ -464,7 +492,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
         }
 
-        public static int GetCountOfUsersInRole(int siteId, int roleId)
+        public static int GetCountOfUsersInRole(int siteId, int roleId, string searchInput)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  Count(*) ");
@@ -475,10 +503,20 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("AND ur.RoleID = @RoleID ");
 
             sqlCommand.Append("WHERE u.SiteID = @SiteID ");
+            if (!string.IsNullOrEmpty(searchInput))
+            {
+                sqlCommand.Append("AND (");
+                sqlCommand.Append("(u.[Name]  LIKE '%' + @SearchInput + '%') ");
+                sqlCommand.Append("OR (u.[LoginName]  LIKE '%' + @SearchInput + '%') ");
+                sqlCommand.Append("OR (u.Email LIKE '%' + @SearchInput + '%') ");
+                sqlCommand.Append("OR (u.LastName LIKE '%' + @SearchInput + '%') ");
+                sqlCommand.Append("OR (u.FirstName LIKE '%' + @SearchInput + '%') ");
+                sqlCommand.Append(")");
+            }
 
             sqlCommand.Append(";");
 
-            SqlCeParameter[] arParams = new SqlCeParameter[2];
+            SqlCeParameter[] arParams = new SqlCeParameter[3];
 
             arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
             arParams[0].Direction = ParameterDirection.Input;
@@ -487,6 +525,10 @@ namespace cloudscribe.Core.Repositories.SqlCe
             arParams[1] = new SqlCeParameter("@RoleID", SqlDbType.Int);
             arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = roleId;
+
+            arParams[2] = new SqlCeParameter("@SearchInput", SqlDbType.NVarChar, 50);
+            arParams[2].Direction = ParameterDirection.Input;
+            arParams[2].Value = searchInput;
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(
                 GetConnectionString(),
@@ -499,13 +541,14 @@ namespace cloudscribe.Core.Repositories.SqlCe
         public static IDataReader GetUsersInRole(
             int siteId,
             int roleId,
+            string searchInput,
             int pageNumber,
             int pageSize,
             out int totalPages)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
             totalPages = 1;
-            int totalRows = GetCountOfUsersInRole(siteId, roleId);
+            int totalRows = GetCountOfUsersInRole(siteId, roleId, searchInput);
 
             if (pageSize > 0) totalPages = totalRows / pageSize;
 
@@ -529,10 +572,11 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("SELECT TOP (" + pageSize.ToString(CultureInfo.InvariantCulture) + ") * FROM ");
             sqlCommand.Append("(");
             sqlCommand.Append("SELECT TOP (" + pageNumber.ToString(CultureInfo.InvariantCulture) + " * " + pageSize.ToString(CultureInfo.InvariantCulture) + ")  ");
-            sqlCommand.Append("u.UserID, ");
-            sqlCommand.Append("u.[Name], ");
-            sqlCommand.Append("u.Email, ");
-            sqlCommand.Append("u.LoginName ");
+            sqlCommand.Append("u.* ");
+            //sqlCommand.Append("u.UserID, ");
+            //sqlCommand.Append("u.[Name], ");
+            //sqlCommand.Append("u.Email, ");
+            //sqlCommand.Append("u.LoginName ");
 
 
             sqlCommand.Append("FROM	mp_Users u ");
@@ -542,6 +586,16 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("AND ur.RoleID = @RoleID ");
 
             sqlCommand.Append("WHERE u.SiteID = @SiteID ");
+            if (!string.IsNullOrEmpty(searchInput))
+            {
+                sqlCommand.Append("AND (");
+                sqlCommand.Append("(u.[Name]  LIKE '%' + @SearchInput + '%') ");
+                sqlCommand.Append("OR (u.[LoginName]  LIKE '%' + @SearchInput + '%') ");
+                sqlCommand.Append("OR (u.Email LIKE '%' + @SearchInput + '%') ");
+                sqlCommand.Append("OR (u.LastName LIKE '%' + @SearchInput + '%') ");
+                sqlCommand.Append("OR (u.FirstName LIKE '%' + @SearchInput + '%') ");
+                sqlCommand.Append(")");
+            }
            
 
             sqlCommand.Append("ORDER BY  ");
@@ -557,7 +611,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append(";");
 
 
-            SqlCeParameter[] arParams = new SqlCeParameter[2];
+            SqlCeParameter[] arParams = new SqlCeParameter[3];
 
             arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
             arParams[0].Direction = ParameterDirection.Input;
@@ -566,6 +620,10 @@ namespace cloudscribe.Core.Repositories.SqlCe
             arParams[1] = new SqlCeParameter("@RoleID", SqlDbType.Int);
             arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = roleId;
+
+            arParams[2] = new SqlCeParameter("@SearchInput", SqlDbType.NVarChar, 50);
+            arParams[2].Direction = ParameterDirection.Input;
+            arParams[2].Value = searchInput;
 
 
             return AdoHelper.ExecuteReader(
@@ -716,6 +774,136 @@ namespace cloudscribe.Core.Repositories.SqlCe
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams));
+
+        }
+
+        private static int GetCountOfSiteRoles(int siteId, string searchInput)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  Count(*) ");
+            sqlCommand.Append("FROM	mp_Roles ");
+            sqlCommand.Append("WHERE SiteID = @SiteID ");
+
+            if (!string.IsNullOrEmpty(searchInput))
+            {
+                sqlCommand.Append("AND (");
+
+                sqlCommand.Append("([DisplayName]  LIKE '%' + @SearchInput + '%') ");
+                sqlCommand.Append("OR ([RoleName]  LIKE '%' + @SearchInput + '%') ");
+                
+                sqlCommand.Append(")");
+            }
+
+            sqlCommand.Append(";");
+
+            SqlCeParameter[] arParams = new SqlCeParameter[2];
+
+            arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
+            arParams[0].Direction = ParameterDirection.Input;
+            arParams[0].Value = siteId;
+
+            arParams[1] = new SqlCeParameter("@SearchInput", SqlDbType.NVarChar, 50);
+            arParams[1].Direction = ParameterDirection.Input;
+            arParams[1].Value = searchInput;
+
+            return Convert.ToInt32(AdoHelper.ExecuteScalar(
+                GetConnectionString(),
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams));
+
+        }
+
+        public static IDataReader GetPage(
+            int siteId,
+            string searchInput,
+            int pageNumber,
+            int pageSize,
+            out int totalPages)
+        {
+            int pageLowerBound = (pageSize * pageNumber) - pageSize;
+            totalPages = 1;
+            int totalRows = GetCountOfSiteRoles(siteId, searchInput);
+
+            if (pageSize > 0) totalPages = totalRows / pageSize;
+
+            if (totalRows <= pageSize)
+            {
+                totalPages = 1;
+            }
+            else
+            {
+                int remainder;
+                Math.DivRem(totalRows, pageSize, out remainder);
+                if (remainder > 0)
+                {
+                    totalPages += 1;
+                }
+            }
+
+            int offset = 0;
+            if (pageNumber > 1) { offset = (pageSize * pageNumber) - pageSize; }
+
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT ");
+            sqlCommand.Append("r.RoleID, ");
+            sqlCommand.Append("r.SiteID, ");
+            sqlCommand.Append("r.RoleName, ");
+            sqlCommand.Append("r.DisplayName, ");
+            sqlCommand.Append("r.SiteGuid, ");
+            sqlCommand.Append("r.RoleGuid, ");
+            sqlCommand.Append("COUNT(ur.UserID) As MemberCount ");
+
+            sqlCommand.Append("FROM	mp_Roles r ");
+
+            sqlCommand.Append("LEFT OUTER JOIN mp_UserRoles ur ");
+            sqlCommand.Append("ON ur.RoleID = r.RoleID ");
+
+            sqlCommand.Append("WHERE ");
+
+            sqlCommand.Append("r.SiteID = @SiteID ");
+
+            if (!string.IsNullOrEmpty(searchInput))
+            {
+                sqlCommand.Append("AND (");
+
+                sqlCommand.Append("([DisplayName]  LIKE '%' + @SearchInput + '%') ");
+                sqlCommand.Append("OR ([RoleName]  LIKE '%' + @SearchInput + '%') ");
+
+                sqlCommand.Append(")");
+            }
+
+            sqlCommand.Append("GROUP BY ");
+            sqlCommand.Append("r.RoleID, ");
+            sqlCommand.Append("r.SiteID, ");
+            sqlCommand.Append("r.RoleName, ");
+            sqlCommand.Append("r.DisplayName, ");
+            sqlCommand.Append("r.SiteGuid, ");
+            sqlCommand.Append("r.RoleGuid ");
+
+            sqlCommand.Append("ORDER BY r.DisplayName ");
+
+            sqlCommand.Append("OFFSET " + offset.ToString(CultureInfo.InvariantCulture) + " ROWS ");
+            sqlCommand.Append("FETCH NEXT " + pageSize.ToString(CultureInfo.InvariantCulture) + "ROWS ONLY ");
+
+            sqlCommand.Append(";");
+
+
+            SqlCeParameter[] arParams = new SqlCeParameter[1];
+
+            arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
+            arParams[0].Direction = ParameterDirection.Input;
+            arParams[0].Value = siteId;
+
+            arParams[1] = new SqlCeParameter("@SearchInput", SqlDbType.NVarChar, 50);
+            arParams[1].Direction = ParameterDirection.Input;
+            arParams[1].Value = searchInput;
+
+            return AdoHelper.ExecuteReader(
+                ConnectionString.GetConnectionString(),
+                CommandType.Text,
+                sqlCommand.ToString(),
+                null);
 
         }
 

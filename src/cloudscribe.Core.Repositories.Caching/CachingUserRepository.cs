@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-30
-// Last Modified:			2015-01-04
+// Last Modified:			2015-01-05
 // 
 
 using cloudscribe.Caching;
@@ -391,9 +391,14 @@ namespace cloudscribe.Core.Repositories.Caching
             return repo.GetUserRoles(siteId, userId);
         }
 
-        public IList<ISiteRole> GetRolesBySite(int siteId)
+        public IList<ISiteRole> GetRolesBySite(
+            int siteId,
+            string searchInput,
+            int pageNumber,
+            int pageSize,
+            out int totalPages)
         {
-            return repo.GetRolesBySite(siteId);
+            return repo.GetRolesBySite(siteId, searchInput, pageNumber,pageSize, out totalPages);
 
         }
 
@@ -420,21 +425,35 @@ namespace cloudscribe.Core.Repositories.Caching
             return repo.CountOfRoles(siteId);
         }
 
-        public IList<IUserInfo> GetUsersInRole(int siteId, int roleId, int pageNumber, int pageSize, out int totalPages)
+        public IList<IUserInfo> GetUsersInRole(
+            int siteId, 
+            int roleId, 
+            string searchInput, 
+            int pageNumber, 
+            int pageSize, 
+            out int totalPages)
         {
             return repo.GetUsersInRole(
                 siteId,
                 roleId,
+                searchInput,
                 pageNumber,
                 pageSize,
                 out totalPages);
         }
 
-        public IList<IUserInfo> GetUsersNotInRole(int siteId, int roleId, int pageNumber, int pageSize, out int totalPages)
+        public IList<IUserInfo> GetUsersNotInRole(
+            int siteId, 
+            int roleId, 
+            string searchInput,
+            int pageNumber, 
+            int pageSize, 
+            out int totalPages)
         {
             return repo.GetUsersNotInRole(
                 siteId,
                 roleId,
+                searchInput,
                 pageNumber,
                 pageSize,
                 out totalPages);

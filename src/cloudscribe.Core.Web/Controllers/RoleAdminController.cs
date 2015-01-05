@@ -20,7 +20,7 @@ namespace cloudscribe.Core.Web.Controllers
     public class RoleAdminController : CloudscribeBaseController
     {
         [Authorize(Roles = "Admins,Role Admins")]
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(string searchInput = "", int pageNumber = 1, int pageSize = -1)
         {
             ViewBag.SiteName = Site.SiteSettings.SiteName;
             ViewBag.Title = "Role Management";
@@ -28,7 +28,25 @@ namespace cloudscribe.Core.Web.Controllers
 
             RoleListViewModel model = new RoleListViewModel();
             model.Heading = "Role Management";
-            model.SiteRoles = Site.UserRepository.GetRolesBySite(Site.SiteSettings.SiteId);
+
+            int itemsPerPage = AppSettings.DefaultPageSize_CountryList;
+            if (pageSize > 0)
+            {
+                itemsPerPage = pageSize;
+            }
+
+            int totalPages = 0;
+
+            model.SiteRoles = Site.UserRepository.GetRolesBySite(
+                Site.SiteSettings.SiteId, 
+                searchInput, 
+                pageNumber, 
+                itemsPerPage, 
+                out totalPages);
+
+            model.Paging.CurrentPage = pageNumber;
+            model.Paging.ItemsPerPage = itemsPerPage;
+            model.Paging.TotalPages = totalPages;
 
             return View(model);
 
@@ -147,6 +165,7 @@ namespace cloudscribe.Core.Web.Controllers
         [Authorize(Roles = "Admins,Role Admins")]
         public async Task<ActionResult> RoleMembers(
             int roleId,
+            string searchInput = "",
             int pageNumber = 1,
             int pageSize = -1)
         {
@@ -174,6 +193,7 @@ namespace cloudscribe.Core.Web.Controllers
             IList<IUserInfo> members = Site.UserRepository.GetUsersInRole(
                 role.SiteId,
                 role.RoleId, 
+                searchInput,
                 pageNumber, 
                 itemsPerPage, 
                 out totalPages);
@@ -196,6 +216,7 @@ namespace cloudscribe.Core.Web.Controllers
         [Authorize(Roles = "Admins,Role Admins")]
         public async Task<ActionResult> RoleNonMembers(
             int roleId,
+            string searchInput = "",
             int pageNumber = 1,
             int pageSize = -1,
             bool ajaxGrid = false)
@@ -224,6 +245,7 @@ namespace cloudscribe.Core.Web.Controllers
             IList<IUserInfo> members = Site.UserRepository.GetUsersNotInRole(
                 role.SiteId,
                 role.RoleId,
+                searchInput,
                 pageNumber,
                 itemsPerPage,
                 out totalPages);

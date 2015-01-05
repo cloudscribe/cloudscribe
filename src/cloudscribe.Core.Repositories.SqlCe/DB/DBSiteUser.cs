@@ -793,11 +793,11 @@ namespace cloudscribe.Core.Repositories.SqlCe
             if (!string.IsNullOrEmpty(searchInput))
             {
                 sqlCommand.Append("AND (");
-
                 sqlCommand.Append("([Name]  LIKE '%' + @SearchInput + '%') ");
                 sqlCommand.Append("OR ([LoginName]  LIKE '%' + @SearchInput + '%') ");
                 sqlCommand.Append("OR (Email LIKE '%' + @SearchInput + '%') ");
-
+                sqlCommand.Append("OR (LastName LIKE '%' + @SearchInput + '%') ");
+                sqlCommand.Append("OR (FirstName LIKE '%' + @SearchInput + '%') ");
                 sqlCommand.Append(")");
             }
 

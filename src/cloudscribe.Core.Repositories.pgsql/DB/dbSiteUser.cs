@@ -685,13 +685,15 @@ namespace cloudscribe.Core.Repositories.pgsql
             {
                 sqlCommand.Append(" AND ");
                 sqlCommand.Append("(");
-
                 sqlCommand.Append(" (name LIKE :searchinput) ");
                 sqlCommand.Append(" OR ");
                 sqlCommand.Append(" (loginname LIKE :searchinput) ");
                 sqlCommand.Append(" OR ");
                 sqlCommand.Append(" (email LIKE :searchinput) ");
-
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (lastname LIKE :searchinput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (firstname LIKE :searchinput) ");
                 sqlCommand.Append(")");
 
             }

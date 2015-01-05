@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-18
-// Last Modified:			2015-01-04
+// Last Modified:			2015-01-05
 // 
 
 
@@ -58,12 +58,17 @@ namespace cloudscribe.Core.Models
         bool RoleExists(int siteId, string roleName);
         ISiteRole FetchRole(int roleID);
         ISiteRole FetchRole(int siteId, string roleName);
-        IList<ISiteRole> GetRolesBySite(int siteId);
+        IList<ISiteRole> GetRolesBySite(
+            int siteId, 
+            string searchInput,
+            int pageNumber,
+            int pageSize,
+            out int totalPages);
         List<string> GetUserRoles(int siteId, int userId);
         List<int> GetRoleIds(int siteId, string roleNamesSeparatedBySemiColons);
         IList<ISiteRole> GetRolesUserIsNotIn(int siteId, int userId);
-        IList<IUserInfo> GetUsersInRole(int siteId, int roleId, int pageNumber, int pageSize, out int totalPages);
-        IList<IUserInfo> GetUsersNotInRole(int siteId, int roleId, int pageNumber, int pageSize, out int totalPages);
+        IList<IUserInfo> GetUsersInRole(int siteId, int roleId, string searchInput, int pageNumber, int pageSize, out int totalPages);
+        IList<IUserInfo> GetUsersNotInRole(int siteId, int roleId, string searchInput, int pageNumber, int pageSize, out int totalPages);
         bool RemoveUserFromRole(int roleId, int userId);
         bool SaveRole(cloudscribe.Core.Models.ISiteRole role);
 

@@ -52,4 +52,15 @@
     }
 
 </ul>
+<div>
+    @Html.Pager(Model.Paging.ItemsPerPage, Model.Paging.CurrentPage, Model.Paging.TotalPages).Options(o => o
+            .Action("Index")
+            //.AddRouteValue("countryGuid", Model.Country.Guid)
+            .AddRouteValue("pageSize", Model.Paging.ItemsPerPage)
+            .DisplayTemplate("Bootstrap3Pagination")
+            .PageRouteValueKey("pageNumber")
+            .MaxNrOfPages(Model.Paging.MaxPagerItems)
+            .UseItemCountAsPageCount()
+    )
+</div>
 

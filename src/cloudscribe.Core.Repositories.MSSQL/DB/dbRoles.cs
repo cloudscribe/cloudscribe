@@ -102,11 +102,12 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return sph.ExecuteReader();
         }
 
-        public static int GetCountOfUsersNotInRole(int siteId, int roleId)
+        public static int GetCountOfUsersNotInRole(int siteId, int roleId, string searchInput)
         {
-            SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_UserRoles_CountNotInRole", 2);
+            SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_UserRoles_CountNotInRole", 3);
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
             sph.DefineSqlParameter("@RoleID", SqlDbType.Int, ParameterDirection.Input, roleId);
+            sph.DefineSqlParameter("@SearchInput", SqlDbType.NVarChar, 50, ParameterDirection.Input, searchInput);
 
             return Convert.ToInt32(sph.ExecuteScalar()); 
         }
@@ -114,12 +115,13 @@ namespace cloudscribe.Core.Repositories.MSSQL
         public static IDataReader GetUsersNotInRole(
             int siteId, 
             int roleId, 
+            string searchInput,
             int pageNumber, 
             int pageSize, 
 			out int totalPages)
         {
             totalPages = 1;
-            int totalRows = GetCountOfUsersNotInRole(siteId, roleId);
+            int totalRows = GetCountOfUsersNotInRole(siteId, roleId, searchInput);
 
             if (pageSize > 0) totalPages = totalRows / pageSize;
 
@@ -137,19 +139,21 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 }
             }
 
-            SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_UserRoles_SelectNotInRole", 4);
+            SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_UserRoles_SelectNotInRole", 5);
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
             sph.DefineSqlParameter("@RoleID", SqlDbType.Int, ParameterDirection.Input, roleId);
+            sph.DefineSqlParameter("@SearchInput", SqlDbType.NVarChar, 50, ParameterDirection.Input, searchInput);
             sph.DefineSqlParameter("@PageNumber", SqlDbType.Int, ParameterDirection.Input, pageNumber);
             sph.DefineSqlParameter("@PageSize", SqlDbType.Int, ParameterDirection.Input, pageSize);
             return sph.ExecuteReader();
         }
 
-        public static int GetCountOfUsersInRole(int siteId, int roleId)
+        public static int GetCountOfUsersInRole(int siteId, int roleId, string searchInput)
         {
-            SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_UserRoles_CountInRole", 2);
+            SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_UserRoles_CountInRole", 3);
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
             sph.DefineSqlParameter("@RoleID", SqlDbType.Int, ParameterDirection.Input, roleId);
+            sph.DefineSqlParameter("@SearchInput", SqlDbType.NVarChar, 50, ParameterDirection.Input, searchInput);
 
             return Convert.ToInt32(sph.ExecuteScalar());
         }
@@ -157,12 +161,13 @@ namespace cloudscribe.Core.Repositories.MSSQL
         public static IDataReader GetUsersInRole(
             int siteId,
             int roleId,
+            string searchInput,
             int pageNumber,
             int pageSize,
             out int totalPages)
         {
             totalPages = 1;
-            int totalRows = GetCountOfUsersInRole(siteId, roleId);
+            int totalRows = GetCountOfUsersInRole(siteId, roleId, searchInput);
 
             if (pageSize > 0) totalPages = totalRows / pageSize;
 
@@ -180,11 +185,13 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 }
             }
 
-            SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_UserRoles_SelectInRole", 4);
+            SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_UserRoles_SelectInRole", 5);
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
             sph.DefineSqlParameter("@RoleID", SqlDbType.Int, ParameterDirection.Input, roleId);
+            sph.DefineSqlParameter("@SearchInput", SqlDbType.NVarChar, 50, ParameterDirection.Input, searchInput);
             sph.DefineSqlParameter("@PageNumber", SqlDbType.Int, ParameterDirection.Input, pageNumber);
             sph.DefineSqlParameter("@PageSize", SqlDbType.Int, ParameterDirection.Input, pageSize);
+
             return sph.ExecuteReader();
         }
 
@@ -230,8 +237,52 @@ namespace cloudscribe.Core.Repositories.MSSQL
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_Roles_CountBySite", 1);
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
             
+            return Convert.ToInt32(sph.ExecuteScalar());
+        }
+
+        private static int GetCountOfSiteRoles(int siteId, string searchInput)
+        {
+            SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_Roles_CountBySearch", 2);
+            sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
+            sph.DefineSqlParameter("@SearchInput", SqlDbType.NVarChar, 50, ParameterDirection.Input, searchInput);
 
             return Convert.ToInt32(sph.ExecuteScalar());
+        }
+
+        public static IDataReader GetPage(
+            int siteId, 
+            string searchInput,
+            int pageNumber,
+            int pageSize,
+            out int totalPages)
+        {
+            totalPages = 1;
+            int totalRows
+                = GetCountOfSiteRoles(siteId, searchInput);
+
+            if (pageSize > 0) totalPages = totalRows / pageSize;
+
+            if (totalRows <= pageSize)
+            {
+                totalPages = 1;
+            }
+            else
+            {
+                int remainder;
+                Math.DivRem(totalRows, pageSize, out remainder);
+                if (remainder > 0)
+                {
+                    totalPages += 1;
+                }
+            }
+
+            SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_Roles_SelectPage", 4);
+            sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
+            sph.DefineSqlParameter("@SearchInput", SqlDbType.NVarChar, 50, ParameterDirection.Input, searchInput);
+            sph.DefineSqlParameter("@PageNumber", SqlDbType.Int, ParameterDirection.Input, pageNumber);
+            sph.DefineSqlParameter("@PageSize", SqlDbType.Int, ParameterDirection.Input, pageSize);
+            return sph.ExecuteReader();
+
         }
        
 

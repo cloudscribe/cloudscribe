@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-01-04
+// Last Modified:			2015-01-05
 // 
 
 using cloudscribe.Configuration;
@@ -29,7 +29,7 @@ namespace cloudscribe.Core.Web.Controllers
         }
 
         // GET: /SiteAdmin
-        public async Task<ActionResult> Index(SiteAdminMessageId? message)
+        public async Task<ActionResult> Index()
         {
             ViewBag.SiteName = Site.SiteSettings.SiteName;
             ViewBag.Title = "Site Administration";
@@ -74,7 +74,7 @@ namespace cloudscribe.Core.Web.Controllers
 
         // GET: /SiteAdmin/SiteInfo
         [Authorize(Roles = "Admins")]
-        public async Task<ActionResult> SiteInfo(int? siteId, SiteAdminMessageId? message)
+        public async Task<ActionResult> SiteInfo(int? siteId)
         {
             ViewBag.SiteName = Site.SiteSettings.SiteName;
             ViewBag.Title = "Site Basic Settings";
@@ -215,7 +215,7 @@ namespace cloudscribe.Core.Web.Controllers
 
         // GET: /SiteAdmin/NewSite
         [Authorize(Roles = "ServerAdmins")]
-        public async Task<ActionResult> NewSite(SiteAdminMessageId? message)
+        public async Task<ActionResult> NewSite()
         {
             ViewBag.SiteName = Site.SiteSettings.SiteName;
             ViewBag.Title = "Create New Site";
@@ -276,7 +276,7 @@ namespace cloudscribe.Core.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admins")]
+        [Authorize(Roles = "ServerAdmins")]
         public async Task<ActionResult> NewSite(SiteBasicSettingsViewModel model)
         {
             ViewBag.SiteName = Site.SiteSettings.SiteName;
@@ -290,6 +290,8 @@ namespace cloudscribe.Core.Web.Controllers
             //model.SiteGuid = Site.SiteSettings.SiteGuid;
             SiteSettings newSite = new SiteSettings();
 
+            // only the first site created by setup page should be a server admin site
+            newSite.IsServerAdminSite = false;
 
             newSite.SiteName = model.SiteName;
             newSite.Slogan = model.Slogan;
@@ -429,12 +431,12 @@ namespace cloudscribe.Core.Web.Controllers
 
 
 
-        public enum SiteAdminMessageId
-        {
-            CreateSiteSuccess,
-            UpdateSettingsSuccess,
-            ClosedSiteSuccess,
-            Error
-        }
+        //public enum SiteAdminMessageId
+        //{
+        //    CreateSiteSuccess,
+        //    UpdateSettingsSuccess,
+        //    ClosedSiteSuccess,
+        //    Error
+        //}
     }
 }

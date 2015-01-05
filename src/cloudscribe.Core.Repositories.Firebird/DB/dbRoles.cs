@@ -1,6 +1,6 @@
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-01-04
+// Last Modified:			2015-01-05
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -284,7 +284,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         }
 
-        public static int GetCountOfUsersNotInRole(int siteId, int roleId)
+        public static int GetCountOfUsersNotInRole(int siteId, int roleId, string searchInput)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT COUNT(*) ");
@@ -295,10 +295,26 @@ namespace cloudscribe.Core.Repositories.Firebird
             sqlCommand.Append("AND ur.RoleID = @RoleID ");
 
             sqlCommand.Append("WHERE u.SiteID = @SiteID  ");
+            if (searchInput.Length > 0)
+            {
+                sqlCommand.Append(" AND ");
+                sqlCommand.Append("(");
+                sqlCommand.Append(" (UPPER(u.Name) LIKE UPPER(@SearchInput)) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (UPPER(u.LoginName) LIKE UPPER(@SearchInput)) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (UPPER(u.Email) LIKE UPPER(@SearchInput)) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (UPPER(u.LastName) LIKE UPPER(@SearchInput)) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (UPPER(u.FirstName) LIKE UPPER(@SearchInput)) ");
+                sqlCommand.Append(")");
+            }
+
             sqlCommand.Append("AND ur.RoleID IS NULL  ");
             sqlCommand.Append(";");
 
-            FbParameter[] arParams = new FbParameter[2];
+            FbParameter[] arParams = new FbParameter[3];
 
             arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
             arParams[0].Direction = ParameterDirection.Input;
@@ -307,6 +323,10 @@ namespace cloudscribe.Core.Repositories.Firebird
             arParams[1] = new FbParameter("@RoleID", FbDbType.Integer);
             arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = roleId;
+
+            arParams[2] = new FbParameter("@SearchInput", FbDbType.VarChar, 50);
+            arParams[2].Direction = ParameterDirection.Input;
+            arParams[2].Value = "%" + searchInput + "%";
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(
                 ConnectionString.GetReadConnectionString(),
@@ -318,13 +338,14 @@ namespace cloudscribe.Core.Repositories.Firebird
         public static IDataReader GetUsersNotInRole(
             int siteId,
             int roleId,
+            string searchInput,
             int pageNumber,
             int pageSize,
             out int totalPages)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
             totalPages = 1;
-            int totalRows = GetCountOfUsersNotInRole(siteId, roleId);
+            int totalRows = GetCountOfUsersNotInRole(siteId, roleId, searchInput);
 
             if (pageSize > 0) totalPages = totalRows / pageSize;
 
@@ -350,10 +371,10 @@ namespace cloudscribe.Core.Repositories.Firebird
             }
 
             
-            sqlCommand.Append("u.UserID, ");
-            sqlCommand.Append("u.Name, ");
-            sqlCommand.Append("u.Email, ");
-            sqlCommand.Append("u.LoginName ");
+            sqlCommand.Append("u.* ");
+            //sqlCommand.Append("u.Name, ");
+            //sqlCommand.Append("u.Email, ");
+            //sqlCommand.Append("u.LoginName ");
 
             sqlCommand.Append("FROM	mp_Users u ");
             sqlCommand.Append("LEFT OUTER JOIN mp_UserRoles ur ");
@@ -362,9 +383,26 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             sqlCommand.Append("WHERE u.SiteID = @SiteID  ");
             sqlCommand.Append("AND ur.RoleID IS NULL  ");
+
+            if (searchInput.Length > 0)
+            {
+                sqlCommand.Append(" AND ");
+                sqlCommand.Append("(");
+                sqlCommand.Append(" (UPPER(u.Name) LIKE UPPER(@SearchInput)) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (UPPER(u.LoginName) LIKE UPPER(@SearchInput)) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (UPPER(u.Email) LIKE UPPER(@SearchInput)) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (UPPER(u.LastName) LIKE UPPER(@SearchInput)) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (UPPER(u.FirstName) LIKE UPPER(@SearchInput)) ");
+                sqlCommand.Append(")");
+            }
+
             sqlCommand.Append("ORDER BY u.Name  ;");
 
-            FbParameter[] arParams = new FbParameter[2];
+            FbParameter[] arParams = new FbParameter[3];
 
             arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
             arParams[0].Direction = ParameterDirection.Input;
@@ -374,6 +412,10 @@ namespace cloudscribe.Core.Repositories.Firebird
             arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = roleId;
 
+            arParams[2] = new FbParameter("@SearchInput", FbDbType.VarChar, 50);
+            arParams[2].Direction = ParameterDirection.Input;
+            arParams[2].Value = "%" + searchInput + "%";
+
             return AdoHelper.ExecuteReader(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
@@ -381,7 +423,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         }
 
-        public static int GetCountOfUsersInRole(int siteId, int roleId)
+        public static int GetCountOfUsersInRole(int siteId, int roleId, string searchInput)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT COUNT(*) ");
@@ -394,10 +436,26 @@ namespace cloudscribe.Core.Repositories.Firebird
             sqlCommand.Append("AND ur.RoleID = @RoleID ");
 
             sqlCommand.Append("WHERE u.SiteID = @SiteID  ");
+
+            if (searchInput.Length > 0)
+            {
+                sqlCommand.Append(" AND ");
+                sqlCommand.Append("(");
+                sqlCommand.Append(" (UPPER(u.Name) LIKE UPPER(@SearchInput)) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (UPPER(u.LoginName) LIKE UPPER(@SearchInput)) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (UPPER(u.Email) LIKE UPPER(@SearchInput)) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (UPPER(u.LastName) LIKE UPPER(@SearchInput)) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (UPPER(u.FirstName) LIKE UPPER(@SearchInput)) ");
+                sqlCommand.Append(")");
+            }
             
             sqlCommand.Append(";");
 
-            FbParameter[] arParams = new FbParameter[2];
+            FbParameter[] arParams = new FbParameter[3];
 
             arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
             arParams[0].Direction = ParameterDirection.Input;
@@ -406,6 +464,10 @@ namespace cloudscribe.Core.Repositories.Firebird
             arParams[1] = new FbParameter("@RoleID", FbDbType.Integer);
             arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = roleId;
+
+            arParams[2] = new FbParameter("@SearchInput", FbDbType.VarChar, 50);
+            arParams[2].Direction = ParameterDirection.Input;
+            arParams[2].Value = "%" + searchInput + "%";
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(
                 ConnectionString.GetReadConnectionString(),
@@ -417,13 +479,14 @@ namespace cloudscribe.Core.Repositories.Firebird
         public static IDataReader GetUsersInRole(
             int siteId,
             int roleId,
+            string searchInput,
             int pageNumber,
             int pageSize,
             out int totalPages)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
             totalPages = 1;
-            int totalRows = GetCountOfUsersInRole(siteId, roleId);
+            int totalRows = GetCountOfUsersInRole(siteId, roleId, searchInput);
 
             if (pageSize > 0) totalPages = totalRows / pageSize;
 
@@ -449,10 +512,10 @@ namespace cloudscribe.Core.Repositories.Firebird
             }
 
 
-            sqlCommand.Append("u.UserID, ");
-            sqlCommand.Append("u.Name, ");
-            sqlCommand.Append("u.Email, ");
-            sqlCommand.Append("u.LoginName ");
+            sqlCommand.Append("u.* ");
+            //sqlCommand.Append("u.Name, ");
+            //sqlCommand.Append("u.Email, ");
+            //sqlCommand.Append("u.LoginName ");
 
             sqlCommand.Append("FROM	mp_Users u ");
 
@@ -462,10 +525,26 @@ namespace cloudscribe.Core.Repositories.Firebird
             sqlCommand.Append("AND ur.RoleID = @RoleID ");
 
             sqlCommand.Append("WHERE u.SiteID = @SiteID  ");
+
+            if (searchInput.Length > 0)
+            {
+                sqlCommand.Append(" AND ");
+                sqlCommand.Append("(");
+                sqlCommand.Append(" (UPPER(u.Name) LIKE UPPER(@SearchInput)) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (UPPER(u.LoginName) LIKE UPPER(@SearchInput)) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (UPPER(u.Email) LIKE UPPER(@SearchInput)) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (UPPER(u.LastName) LIKE UPPER(@SearchInput)) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (UPPER(u.FirstName) LIKE UPPER(@SearchInput)) ");
+                sqlCommand.Append(")");
+            }
  
             sqlCommand.Append("ORDER BY u.Name  ;");
 
-            FbParameter[] arParams = new FbParameter[2];
+            FbParameter[] arParams = new FbParameter[3];
 
             arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
             arParams[0].Direction = ParameterDirection.Input;
@@ -474,6 +553,10 @@ namespace cloudscribe.Core.Repositories.Firebird
             arParams[1] = new FbParameter("@RoleID", FbDbType.Integer);
             arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = roleId;
+
+            arParams[2] = new FbParameter("@SearchInput", FbDbType.VarChar, 50);
+            arParams[2].Direction = ParameterDirection.Input;
+            arParams[2].Value = "%" + searchInput + "%";
 
             return AdoHelper.ExecuteReader(
                 ConnectionString.GetReadConnectionString(),
@@ -597,6 +680,138 @@ namespace cloudscribe.Core.Repositories.Firebird
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 arParams));
+
+        }
+
+        private static int GetCountOfSiteRoles(int siteId, string searchInput)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT COUNT(*) ");
+            sqlCommand.Append("FROM	mp_Roles ");
+            sqlCommand.Append("WHERE SiteID = @SiteID  ");
+
+            if (searchInput.Length > 0)
+            {
+                sqlCommand.Append(" AND ");
+                sqlCommand.Append("(");
+
+                sqlCommand.Append(" (UPPER(DisplayName) LIKE UPPER(@SearchInput)) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (UPPER(RoleName) LIKE UPPER(@SearchInput)) ");
+                
+                sqlCommand.Append(")");
+            }
+
+            sqlCommand.Append(";");
+
+            FbParameter[] arParams = new FbParameter[2];
+
+            arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
+            arParams[0].Direction = ParameterDirection.Input;
+            arParams[0].Value = siteId;
+
+            arParams[1] = new FbParameter("@SearchInput", FbDbType.VarChar, 50);
+            arParams[1].Direction = ParameterDirection.Input;
+            arParams[1].Value = "%" + searchInput + "%";
+
+            return Convert.ToInt32(AdoHelper.ExecuteScalar(
+                ConnectionString.GetReadConnectionString(),
+                sqlCommand.ToString(),
+                arParams));
+
+        }
+
+        public static IDataReader GetPage(
+            int siteId,
+            string searchInput,
+            int pageNumber,
+            int pageSize,
+            out int totalPages)
+        {
+            int pageLowerBound = (pageSize * pageNumber) - pageSize;
+            totalPages = 1;
+            int totalRows = GetCountOfSiteRoles(siteId, searchInput);
+
+            if (pageSize > 0) totalPages = totalRows / pageSize;
+
+            if (totalRows <= pageSize)
+            {
+                totalPages = 1;
+            }
+            else
+            {
+                int remainder;
+                Math.DivRem(totalRows, pageSize, out remainder);
+                if (remainder > 0)
+                {
+                    totalPages += 1;
+                }
+            }
+
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT FIRST " + pageSize.ToString(CultureInfo.InvariantCulture) + " ");
+            if (pageNumber > 1)
+            {
+                sqlCommand.Append("	SKIP " + pageLowerBound.ToString(CultureInfo.InvariantCulture) + " ");
+            }
+
+            sqlCommand.Append("	r.RoleID, ");
+            sqlCommand.Append("r.SiteID, ");
+            sqlCommand.Append("r.RoleName, ");
+            sqlCommand.Append("r.DisplayName, ");
+            sqlCommand.Append("r.SiteGuid, ");
+            sqlCommand.Append("r.RoleGuid, ");
+            sqlCommand.Append("COUNT(ur.UserID) As MemberCount ");
+
+            sqlCommand.Append("FROM	mp_Roles r  ");
+
+            sqlCommand.Append("LEFT OUTER JOIN mp_UserRoles ur ");
+            sqlCommand.Append("ON ur.RoleID = r.RoleID ");
+
+            sqlCommand.Append("WHERE r.SiteID = @SiteID  ");
+
+            if (searchInput.Length > 0)
+            {
+                sqlCommand.Append(" AND ");
+                sqlCommand.Append("(");
+
+                sqlCommand.Append(" (UPPER(r.DisplayName) LIKE UPPER(@SearchInput)) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (UPPER(r.RoleName) LIKE UPPER(@SearchInput)) ");
+
+                sqlCommand.Append(")");
+            }
+
+            sqlCommand.Append("GROUP BY ");
+            sqlCommand.Append("r.RoleID, ");
+            sqlCommand.Append("r.SiteID, ");
+            sqlCommand.Append("r.RoleName, ");
+            sqlCommand.Append("r.DisplayName, ");
+            sqlCommand.Append("r.SiteGuid, ");
+            sqlCommand.Append("r.RoleGuid ");
+
+            sqlCommand.Append("ORDER BY r.DisplayName  ");
+
+            sqlCommand.Append("	; ");
+
+            FbParameter[] arParams = new FbParameter[2];
+
+            arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
+            arParams[0].Direction = ParameterDirection.Input;
+            arParams[0].Value = siteId;
+
+            arParams[1] = new FbParameter("@SearchInput", FbDbType.VarChar, 50);
+            arParams[1].Direction = ParameterDirection.Input;
+            arParams[1].Value = "%" + searchInput + "%";
+
+            //arParams[0] = new FbParameter("@CountryGuid", FbDbType.Char, 36);
+            //arParams[0].Direction = ParameterDirection.Input;
+            //arParams[0].Value = countryGuid.ToString();
+
+            return AdoHelper.ExecuteReader(
+                ConnectionString.GetReadConnectionString(),
+                sqlCommand.ToString(),
+                arParams);
 
         }
 

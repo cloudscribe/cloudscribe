@@ -1,6 +1,6 @@
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-01-04
+// Last Modified:			2015-01-05
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -302,7 +302,7 @@ namespace cloudscribe.Core.Repositories.SQLite
 
         }
 
-        public static int GetCountOfUsersNotInRole(int siteId, int roleId)
+        public static int GetCountOfUsersNotInRole(int siteId, int roleId, string searchInput)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT ");
@@ -315,9 +315,25 @@ namespace cloudscribe.Core.Repositories.SQLite
 
             sqlCommand.Append("WHERE u.SiteID = :SiteID  ");
             sqlCommand.Append("AND ur.RoleID IS NULL  ");
+            if (searchInput.Length > 0)
+            {
+                sqlCommand.Append(" AND ");
+                sqlCommand.Append("(");
+                sqlCommand.Append(" (u.Name LIKE :SearchInput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (u.LoginName LIKE :SearchInput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (u.Email LIKE :SearchInput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (u.LastName LIKE :SearchInput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (u.FirstName LIKE :SearchInput) ");
+                sqlCommand.Append(")");
+            }
+
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[2];
+            SQLiteParameter[] arParams = new SQLiteParameter[3];
 
             arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
             arParams[0].Direction = ParameterDirection.Input;
@@ -326,6 +342,10 @@ namespace cloudscribe.Core.Repositories.SQLite
             arParams[1] = new SQLiteParameter(":RoleID", DbType.Int32);
             arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = roleId;
+
+            arParams[2] = new SQLiteParameter(":SearchInput", DbType.String);
+            arParams[2].Direction = ParameterDirection.Input;
+            arParams[2].Value = "%" + searchInput + "%";
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(
                 ConnectionString.GetConnectionString(),
@@ -337,13 +357,14 @@ namespace cloudscribe.Core.Repositories.SQLite
         public static IDataReader GetUsersNotInRole(
             int siteId,
             int roleId,
+            string searchInput,
             int pageNumber,
             int pageSize,
             out int totalPages)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
             totalPages = 1;
-            int totalRows = GetCountOfUsersNotInRole(siteId, roleId);
+            int totalRows = GetCountOfUsersNotInRole(siteId, roleId, searchInput);
 
             if (pageSize > 0) totalPages = totalRows / pageSize;
 
@@ -363,10 +384,11 @@ namespace cloudscribe.Core.Repositories.SQLite
 
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT ");
-            sqlCommand.Append("u.UserID as UserID, ");
-            sqlCommand.Append("u.Name As Name, ");
-            sqlCommand.Append("u.Email As Email, ");
-            sqlCommand.Append("u.LoginName ");
+            sqlCommand.Append("u.* ");
+            //sqlCommand.Append("u.UserID as UserID, ");
+            //sqlCommand.Append("u.Name As Name, ");
+            //sqlCommand.Append("u.Email As Email, ");
+            //sqlCommand.Append("u.LoginName ");
 
             sqlCommand.Append("FROM	mp_Users u ");
             sqlCommand.Append("LEFT OUTER JOIN mp_UserRoles ur ");
@@ -375,6 +397,22 @@ namespace cloudscribe.Core.Repositories.SQLite
 
             sqlCommand.Append("WHERE u.SiteID = :SiteID  ");
             sqlCommand.Append("AND ur.RoleID IS NULL  ");
+            if (searchInput.Length > 0)
+            {
+                sqlCommand.Append(" AND ");
+                sqlCommand.Append("(");
+                sqlCommand.Append(" (u.Name LIKE :SearchInput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (u.LoginName LIKE :SearchInput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (u.Email LIKE :SearchInput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (u.LastName LIKE :SearchInput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (u.FirstName LIKE :SearchInput) ");
+                sqlCommand.Append(")");
+            }
+
             sqlCommand.Append("ORDER BY u.Name  ");
 
             sqlCommand.Append("LIMIT :PageSize ");
@@ -384,7 +422,7 @@ namespace cloudscribe.Core.Repositories.SQLite
             }
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[4];
+            SQLiteParameter[] arParams = new SQLiteParameter[5];
 
             arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
             arParams[0].Direction = ParameterDirection.Input;
@@ -394,13 +432,17 @@ namespace cloudscribe.Core.Repositories.SQLite
             arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = roleId;
 
-            arParams[2] = new SQLiteParameter(":PageSize", DbType.Int32);
+            arParams[2] = new SQLiteParameter(":SearchInput", DbType.String);
             arParams[2].Direction = ParameterDirection.Input;
-            arParams[2].Value = pageSize;
+            arParams[2].Value = "%" + searchInput + "%";
 
-            arParams[3] = new SQLiteParameter(":OffsetRows", DbType.Int32);
+            arParams[3] = new SQLiteParameter(":PageSize", DbType.Int32);
             arParams[3].Direction = ParameterDirection.Input;
-            arParams[3].Value = pageLowerBound;
+            arParams[3].Value = pageSize;
+
+            arParams[4] = new SQLiteParameter(":OffsetRows", DbType.Int32);
+            arParams[4].Direction = ParameterDirection.Input;
+            arParams[4].Value = pageLowerBound;
 
             return AdoHelper.ExecuteReader(
                 ConnectionString.GetConnectionString(),
@@ -409,7 +451,7 @@ namespace cloudscribe.Core.Repositories.SQLite
 
         }
 
-        public static int GetCountOfUsersInRole(int siteId, int roleId)
+        public static int GetCountOfUsersInRole(int siteId, int roleId, string searchInput)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT ");
@@ -422,11 +464,27 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("ON u.UserID = ur.UserID ");
             sqlCommand.Append("AND ur.RoleID = :RoleID ");
 
+            if (searchInput.Length > 0)
+            {
+                sqlCommand.Append(" AND ");
+                sqlCommand.Append("(");
+                sqlCommand.Append(" (u.Name LIKE :SearchInput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (u.LoginName LIKE :SearchInput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (u.Email LIKE :SearchInput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (u.LastName LIKE :SearchInput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (u.FirstName LIKE :SearchInput) ");
+                sqlCommand.Append(")");
+            }
+
             sqlCommand.Append("WHERE u.SiteID = :SiteID  ");
 
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[2];
+            SQLiteParameter[] arParams = new SQLiteParameter[3];
 
             arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
             arParams[0].Direction = ParameterDirection.Input;
@@ -435,6 +493,10 @@ namespace cloudscribe.Core.Repositories.SQLite
             arParams[1] = new SQLiteParameter(":RoleID", DbType.Int32);
             arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = roleId;
+
+            arParams[2] = new SQLiteParameter(":SearchInput", DbType.String);
+            arParams[2].Direction = ParameterDirection.Input;
+            arParams[2].Value = "%" + searchInput + "%";
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(
                 ConnectionString.GetConnectionString(),
@@ -446,13 +508,14 @@ namespace cloudscribe.Core.Repositories.SQLite
         public static IDataReader GetUsersInRole(
             int siteId,
             int roleId,
+            string searchInput,
             int pageNumber,
             int pageSize,
             out int totalPages)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
             totalPages = 1;
-            int totalRows = GetCountOfUsersInRole(siteId, roleId);
+            int totalRows = GetCountOfUsersInRole(siteId, roleId, searchInput);
 
             if (pageSize > 0) totalPages = totalRows / pageSize;
 
@@ -472,10 +535,11 @@ namespace cloudscribe.Core.Repositories.SQLite
 
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT ");
-            sqlCommand.Append("u.UserID as UserID, ");
-            sqlCommand.Append("u.Name As Name, ");
-            sqlCommand.Append("u.Email As Email, ");
-            sqlCommand.Append("u.LoginName ");
+            sqlCommand.Append("u.* ");
+            //sqlCommand.Append("u.UserID as UserID, ");
+            //sqlCommand.Append("u.Name As Name, ");
+            //sqlCommand.Append("u.Email As Email, ");
+            //sqlCommand.Append("u.LoginName ");
 
             sqlCommand.Append("FROM	mp_Users u ");
 
@@ -486,6 +550,22 @@ namespace cloudscribe.Core.Repositories.SQLite
 
             sqlCommand.Append("WHERE u.SiteID = :SiteID  ");
 
+            if (searchInput.Length > 0)
+            {
+                sqlCommand.Append(" AND ");
+                sqlCommand.Append("(");
+                sqlCommand.Append(" (u.Name LIKE :SearchInput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (u.LoginName LIKE :SearchInput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (u.Email LIKE :SearchInput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (u.LastName LIKE :SearchInput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (u.FirstName LIKE :SearchInput) ");
+                sqlCommand.Append(")");
+            }
+
             sqlCommand.Append("ORDER BY u.Name  ");
 
             sqlCommand.Append("LIMIT :PageSize ");
@@ -495,7 +575,7 @@ namespace cloudscribe.Core.Repositories.SQLite
             }
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[4];
+            SQLiteParameter[] arParams = new SQLiteParameter[5];
 
             arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
             arParams[0].Direction = ParameterDirection.Input;
@@ -505,13 +585,17 @@ namespace cloudscribe.Core.Repositories.SQLite
             arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = roleId;
 
-            arParams[2] = new SQLiteParameter(":PageSize", DbType.Int32);
+            arParams[2] = new SQLiteParameter(":SearchInput", DbType.String);
             arParams[2].Direction = ParameterDirection.Input;
-            arParams[2].Value = pageSize;
+            arParams[2].Value = "%" + searchInput + "%";
 
-            arParams[3] = new SQLiteParameter(":OffsetRows", DbType.Int32);
+            arParams[3] = new SQLiteParameter(":PageSize", DbType.Int32);
             arParams[3].Direction = ParameterDirection.Input;
-            arParams[3].Value = pageLowerBound;
+            arParams[3].Value = pageSize;
+
+            arParams[4] = new SQLiteParameter(":OffsetRows", DbType.Int32);
+            arParams[4].Direction = ParameterDirection.Input;
+            arParams[4].Value = pageLowerBound;
 
             return AdoHelper.ExecuteReader(
                 ConnectionString.GetConnectionString(),
@@ -641,7 +725,135 @@ namespace cloudscribe.Core.Repositories.SQLite
 
         }
 
+        private static int GetCountOfSiteRoles(int siteId, string searchInput)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT ");
+            sqlCommand.Append("COUNT(*) ");
+            sqlCommand.Append("FROM	mp_Roles ");
+            sqlCommand.Append("WHERE SiteID = :SiteID  ");
+            if (searchInput.Length > 0)
+            {
+                sqlCommand.Append(" AND ");
+                sqlCommand.Append("(");
+                sqlCommand.Append(" (DisplayName LIKE :SearchInput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (RoleName LIKE :SearchInput) ");
+                sqlCommand.Append(")");
+            }
+            sqlCommand.Append(";");
 
+            SQLiteParameter[] arParams = new SQLiteParameter[2];
+
+            arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
+            arParams[0].Direction = ParameterDirection.Input;
+            arParams[0].Value = siteId;
+
+            arParams[1] = new SQLiteParameter(":SearchInput", DbType.String);
+            arParams[1].Direction = ParameterDirection.Input;
+            arParams[1].Value = "%" + searchInput + "%";
+
+            return Convert.ToInt32(AdoHelper.ExecuteScalar(
+                ConnectionString.GetConnectionString(),
+                sqlCommand.ToString(),
+                arParams));
+
+        }
+
+        public static IDataReader GetPage(
+            int siteId,
+            string searchInput,
+            int pageNumber,
+            int pageSize,
+            out int totalPages)
+        {
+            int pageLowerBound = (pageSize * pageNumber) - pageSize;
+            totalPages = 1;
+            int totalRows = GetCountOfSiteRoles(siteId, searchInput);
+
+            if (pageSize > 0) totalPages = totalRows / pageSize;
+
+            if (totalRows <= pageSize)
+            {
+                totalPages = 1;
+            }
+            else
+            {
+                int remainder;
+                Math.DivRem(totalRows, pageSize, out remainder);
+                if (remainder > 0)
+                {
+                    totalPages += 1;
+                }
+            }
+
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT ");
+            sqlCommand.Append("r.RoleID AS RoleID, ");
+            sqlCommand.Append("r.SiteID AS SiteID, ");
+            sqlCommand.Append("r.RoleName AS RoleName, ");
+            sqlCommand.Append("r.DisplayName AS DisplayName, ");
+            sqlCommand.Append("r.SiteGuid AS SiteGuid, ");
+            sqlCommand.Append("r.RoleGuid AS RoleGuid, ");
+            sqlCommand.Append("COUNT(ur.UserID) As MemberCount ");
+
+            sqlCommand.Append("FROM	mp_Roles r ");
+
+            sqlCommand.Append("LEFT OUTER JOIN mp_UserRoles ur ");
+            sqlCommand.Append("ON ur.RoleID = r.RoleID ");
+
+            sqlCommand.Append("WHERE r.SiteID = :SiteID  ");
+
+            if (searchInput.Length > 0)
+            {
+                sqlCommand.Append(" AND ");
+                sqlCommand.Append("(");
+                sqlCommand.Append(" (DisplayName LIKE :SearchInput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (RoleName LIKE :SearchInput) ");
+                sqlCommand.Append(")");
+            }
+
+            sqlCommand.Append("GROUP BY ");
+            sqlCommand.Append("r.RoleID, ");
+            sqlCommand.Append("r.SiteID, ");
+            sqlCommand.Append("r.RoleName, ");
+            sqlCommand.Append("r.DisplayName, ");
+            sqlCommand.Append("r.SiteGuid, ");
+            sqlCommand.Append("r.RoleGuid ");
+
+            sqlCommand.Append("ORDER BY r.DisplayName ");
+
+            sqlCommand.Append("LIMIT :PageSize ");
+            if (pageNumber > 1)
+            {
+                sqlCommand.Append("OFFSET :OffsetRows ");
+            }
+            sqlCommand.Append(";");
+
+            SQLiteParameter[] arParams = new SQLiteParameter[4];
+
+            arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
+            arParams[0].Direction = ParameterDirection.Input;
+            arParams[0].Value = siteId;
+
+            arParams[1] = new SQLiteParameter(":SearchInput", DbType.String);
+            arParams[1].Direction = ParameterDirection.Input;
+            arParams[1].Value = "%" + searchInput + "%";
+
+            arParams[2] = new SQLiteParameter(":PageSize", DbType.Int32);
+            arParams[2].Direction = ParameterDirection.Input;
+            arParams[2].Value = pageSize;
+
+            arParams[3] = new SQLiteParameter(":OffsetRows", DbType.Int32);
+            arParams[3].Direction = ParameterDirection.Input;
+            arParams[3].Value = pageLowerBound;
+
+            return AdoHelper.ExecuteReader(
+                ConnectionString.GetConnectionString(),
+                sqlCommand.ToString(),
+                arParams);
+        }
 
        
 

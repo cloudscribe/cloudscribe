@@ -663,15 +663,16 @@ namespace cloudscribe.Core.Repositories.SQLite
             {
                 sqlCommand.Append(" AND ");
                 sqlCommand.Append("(");
-
                 sqlCommand.Append(" (Name LIKE :SearchInput) ");
                 sqlCommand.Append(" OR ");
                 sqlCommand.Append(" (LoginName LIKE :SearchInput) ");
                 sqlCommand.Append(" OR ");
                 sqlCommand.Append(" (Email LIKE :SearchInput) ");
-
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (LastName LIKE :SearchInput) ");
+                sqlCommand.Append(" OR ");
+                sqlCommand.Append(" (FirstName LIKE :SearchInput) ");
                 sqlCommand.Append(")");
-
             }
 
             switch (sortMode)

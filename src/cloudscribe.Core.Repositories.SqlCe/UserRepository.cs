@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-18
-// Last Modified:			2015-01-04
+// Last Modified:			2015-01-05
 // 
 
 
@@ -942,12 +942,17 @@ namespace cloudscribe.Core.Repositories.SqlCe
             return userRoles;
         }
 
-        public IList<ISiteRole> GetRolesBySite(int siteId)
+        public IList<ISiteRole> GetRolesBySite(
+            int siteId,
+            string searchInput,
+            int pageNumber,
+            int pageSize,
+            out int totalPages)
         {
             //if (UseRelatedSiteMode) { siteId = RelatedSiteID; }
 
             IList<ISiteRole> roles = new List<ISiteRole>();
-            using (IDataReader reader = DBRoles.GetSiteRoles(siteId))
+            using (IDataReader reader = DBRoles.GetPage(siteId, searchInput, pageNumber, pageSize, out totalPages))
             {
                 while (reader.Read())
                 {
@@ -1020,12 +1025,18 @@ namespace cloudscribe.Core.Repositories.SqlCe
             return DBRoles.GetCountOfSiteRoles(siteId);
         }
 
-        public IList<IUserInfo> GetUsersInRole(int siteId, int roleId, int pageNumber, int pageSize, out int totalPages)
+        public IList<IUserInfo> GetUsersInRole(
+            int siteId, 
+            int roleId, 
+            string searchInput,
+            int pageNumber, 
+            int pageSize, 
+            out int totalPages)
         {
             IList<IUserInfo> users = new List<IUserInfo>();
 
             //if (UseRelatedSiteMode) { siteId = RelatedSiteID; }
-            using (IDataReader reader = DBRoles.GetUsersInRole(siteId, roleId, pageNumber, pageSize, out totalPages))
+            using (IDataReader reader = DBRoles.GetUsersInRole(siteId, roleId, searchInput, pageNumber, pageSize, out totalPages))
             {
                 while (reader.Read())
                 {
@@ -1040,13 +1051,19 @@ namespace cloudscribe.Core.Repositories.SqlCe
             return users;
         }
 
-        public IList<IUserInfo> GetUsersNotInRole(int siteId, int roleId, int pageNumber, int pageSize, out int totalPages)
+        public IList<IUserInfo> GetUsersNotInRole(
+            int siteId, 
+            int roleId, 
+            string searchInput,
+            int pageNumber, 
+            int pageSize, 
+            out int totalPages)
         {
             IList<IUserInfo> users = new List<IUserInfo>();
 
             //if (UseRelatedSiteMode) { siteId = RelatedSiteID; }
 
-            using (IDataReader reader = DBRoles.GetUsersNotInRole(siteId, roleId, pageNumber, pageSize, out totalPages))
+            using (IDataReader reader = DBRoles.GetUsersNotInRole(siteId, roleId, searchInput, pageNumber, pageSize, out totalPages))
             {
                 while (reader.Read())
                 {
