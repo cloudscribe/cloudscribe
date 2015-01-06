@@ -7,7 +7,7 @@
 // for profiling http://blog.simontimms.com/2014/04/21/glimpse-for-raw-ado/
 // 2014-08-26 Joe Audette created this version of SqlHelper renamed as AdoHelper and using the more generic
 // Db classes via DbProviderFactory, this allows us to do profileing with Glimpse ADO
-
+// 2015-01-07 Joe Audette added async methods
 
 using FirebirdSql.Data.FirebirdClient;
 using FirebirdSql.Data.Isql;
@@ -15,6 +15,7 @@ using log4net;
 using System;
 using System.Data;
 using System.Data.Common;
+using System.Threading.Tasks;
 
 
 namespace cloudscribe.DbHelpers.Firebird
@@ -177,6 +178,47 @@ namespace cloudscribe.DbHelpers.Firebird
             return retval;
         }
 
+        public static async Task<int> ExecuteNonQueryAsync(
+            string connectionString,
+            CommandType commandType,
+            string commandText,
+            params DbParameter[] commandParameters)
+        {
+            if (connectionString == null || connectionString.Length == 0) { throw new ArgumentNullException("connectionString"); }
+
+            DbProviderFactory factory = GetFactory();
+
+            using (DbConnection connection = GetConnection(connectionString))
+            {
+                connection.Open();
+                using (DbTransaction transaction = connection.BeginTransaction())
+                {
+                    using (DbCommand cmd = factory.CreateCommand())
+                    {
+                        PrepareCommand(cmd, connection, transaction, commandType, commandText, commandParameters);
+                        int rowsAffected = await cmd.ExecuteNonQueryAsync();
+                        transaction.Commit();
+                        return rowsAffected;
+                    }
+                }
+            }
+        }
+
+        public static async Task<int> ExecuteNonQueryAsync(
+            DbTransaction transaction,
+            CommandType commandType,
+            string commandText,
+            params DbParameter[] commandParameters)
+        {
+            if (transaction == null) throw new ArgumentNullException("transaction");
+
+            DbProviderFactory factory = GetFactory();
+            DbCommand cmd = factory.CreateCommand();
+            PrepareCommand(cmd, transaction.Connection, transaction, commandType, commandText, commandParameters);
+            int retval = await cmd.ExecuteNonQueryAsync();
+            return retval;
+        }
+
         public static DbDataReader ExecuteReader(
             string connectionString, 
             string commandText, 
@@ -219,6 +261,40 @@ namespace cloudscribe.DbHelpers.Firebird
             }
         }
 
+        public static async Task<DbDataReader> ExecuteReaderAsync(
+            string connectionString,
+            CommandType commandType,
+            string commandText,
+            params DbParameter[] commandParameters)
+        {
+            if (connectionString == null || connectionString.Length == 0) throw new ArgumentNullException("connectionString");
+            DbConnection connection = null;
+            DbProviderFactory factory = GetFactory();
+            try
+            {
+                connection = GetConnection(connectionString);
+                connection.Open();
+
+                DbCommand command = factory.CreateCommand();
+
+                PrepareCommand(
+                    command,
+                    connection,
+                    null,
+                    commandType,
+                    commandText,
+                    commandParameters);
+
+                return await command.ExecuteReaderAsync(CommandBehavior.CloseConnection);
+
+            }
+            catch
+            {
+                if ((connection != null) && (connection.State == ConnectionState.Open)) { connection.Close(); }
+                throw;
+            }
+        }
+
         public static object ExecuteScalar(
             string connectionString, 
             string commandText, 
@@ -248,6 +324,42 @@ namespace cloudscribe.DbHelpers.Firebird
                 {
                     PrepareCommand(command, connection, transaction, commandType, commandText, commandParameters);
                     object result = command.ExecuteScalar();
+
+                    if (transaction != null)
+                    {
+                        transaction.Commit();
+                        transaction.Dispose();
+                        transaction = null;
+
+                    }
+
+                    return result;
+
+                }
+            }
+        }
+
+        public static async Task<object> ExecuteScalarAsync(
+            string connectionString,
+            CommandType commandType,
+            string commandText,
+            params DbParameter[] commandParameters)
+        {
+            if (connectionString == null || connectionString.Length == 0) throw new ArgumentNullException("connectionString");
+
+            DbProviderFactory factory = GetFactory();
+
+            using (DbConnection connection = GetConnection(connectionString))
+            {
+                connection.Open();
+                DbTransaction transaction = null;
+                bool useTransaction = (commandText.Contains("EXECUTE") || commandText.Contains("INSERT"));
+                if (useTransaction) { transaction = connection.BeginTransaction(); }
+
+                using (DbCommand command = factory.CreateCommand())
+                {
+                    PrepareCommand(command, connection, transaction, commandType, commandText, commandParameters);
+                    object result = await command.ExecuteScalarAsync();
 
                     if (transaction != null)
                     {

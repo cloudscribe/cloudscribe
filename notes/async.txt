@@ -1,0 +1,112 @@
+
+currently we have controller methods marked as async but not really implemented as async
+to do that, we would need async all the way down including async data access
+net 4.5 has async executereader and executenonquery
+so we could implement this, but in general it would not result in any perf gain unless using sqlazure or a db farm/cluster
+still we should probably move in this direction and keep our controller methods marked that way even if it takes a while before they are truly implemented as async.
+
+I think it is not possible to make async data access for sqlite or sqlce
+
+good example here of async data access
+http://codereview.stackexchange.com/questions/63480/simple-sqlhelper-which-wraps-ado-net-methods
+
+http://blogs.msdn.com/b/adonet/archive/2012/04/20/using-sqldatareader-s-new-async-methods-in-net-4-5-beta.aspx
+the above indicates that actually the async command methods like executereader have been there since 4.0 .net
+with .NET 4.5 it can but does not have to be used even more async 
+With .NET 4.5 developers using sequential access can further fine tune performance by selectively using NextResultAsync, ReadAsync, IsDBNullAsync, and GetFieldValueAsync<T>
+
+
+    Use NextResultAsync whenever possible to handle packet processing asynchronously.
+    Prefer ReadAsync in either mode. Again, much of the packet processing can be done asynchronously.
+    Do NOT use IsDBNullAsync and GetFieldValueAsync in non-sequential mode. In this mode the columns are already buffered and you create Task objects for nothing.
+
+For sequential mode, the decision to use GetFieldValueAsync is a bit more complicated. Daniel Paoliello explains,
+
+    However, if you called Read in non-sequential access mode, or if you are using sequential access mode, then the decision is much harder as you need to consider how much data you need to read to get to your desired column and how much data that column may contain. If you’ve read the previous column, and the target column is small (like a Boolean, a DateTime or a numeric type) then you may want to consider using a synchronous method. Alternatively, if the target column is large (like a varbinary(8000)) or you need to read past large columns, then using an asynchronous method is much better. Finally, if the target column is massive (like a varbinary(MAX), varchar(MAX), nvarchar(MAX) or XML) then you should consider the new GetStream, GetTextReader or GetXmlReader methods instead.
+
+There are advantages to using the stream-based methods when working large files stored in the database. For example, you can hand-off the stream to a WCF or ASP.NET response instead of bringing in the whole file into memory at one time. This is especially important for .NET developers because the large object heap is very susceptible to fragmentation.
+
+
+
+http://www.infoq.com/news/2012/05/ADO-Async
+
+http://msdn.microsoft.com/en-us/library/hh191443.aspx
+
+http://www.software-architects.com/devblog/2012/11/22/ADONET-45-Async-Data-Reader-and-IAsyncHttpHandler
+
+http://stackoverflow.com/questions/21267580/asynchronous-programming-in-ado-net
+
+http://blogs.msdn.com/b/rickandy/archive/2009/11/14/should-my-database-calls-be-asynchronous.aspx
+
+public static class SqlHelper
+{
+    public static async Task<int> ExecuteNonQueryAsync(string connectionString, CommandType cmdType, string cmdText,
+        params SqlParameter[] commandParameters)
+    {
+        using (var connection = new SqlConnection(connectionString))
+        {
+            using (var command = new SqlCommand(cmdText, connection))
+            {
+                try
+                {
+                    command.CommandType = cmdType;
+                    command.Parameters.AddRange(commandParameters);
+                    connection.Open();
+                    return await command.ExecuteNonQueryAsync();
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
+        }
+
+    }
+
+
+    public static async Task<SqlDataReader> ExecuteReaderAsync(string connectionString, CommandType cmdType,
+        string cmdText, params SqlParameter[] commandParameters)
+    {
+        using (var connection = new SqlConnection(connectionString))
+        {
+            using (var command = new SqlCommand(cmdText, connection))
+            {
+                try
+                {
+                    command.CommandType = cmdType;
+                    command.Parameters.AddRange(commandParameters);
+                    connection.Open();
+                    return await command.ExecuteReaderAsync();
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
+        }
+    }
+
+    public static async Task<object> ExecuteScalarAsync(string connectionString, CommandType cmdType, string cmdText,
+        params SqlParameter[] commandParameters)
+    {
+        using (var connection = new SqlConnection(connectionString))
+        {
+            using (var command = new SqlCommand(cmdText, connection))
+            {
+                try
+                {
+                    command.CommandType = cmdType;
+                    command.Parameters.AddRange(commandParameters);
+                    connection.Open();
+                    return await command.ExecuteScalarAsync();
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
+        }
+    }
+
+}
+
