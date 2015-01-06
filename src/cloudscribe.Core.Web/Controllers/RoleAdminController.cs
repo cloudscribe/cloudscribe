@@ -188,6 +188,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             model.Role = RoleViewModel.FromISiteRole(role);
             model.Heading = "Role Members";
+            model.SearchQuery = searchInput;
 
             int totalPages = 0;
             IList<IUserInfo> members = Site.UserRepository.GetUsersInRole(
@@ -240,6 +241,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             model.Role = RoleViewModel.FromISiteRole(role);
             model.Heading = "Non Role Members";
+            model.SearchQuery = searchInput;
 
             int totalPages = 0;
             IList<IUserInfo> members = Site.UserRepository.GetUsersNotInRole(

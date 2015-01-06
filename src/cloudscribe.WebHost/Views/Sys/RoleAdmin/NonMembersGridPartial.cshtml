@@ -2,6 +2,23 @@
 @{
     
 }
+<p>
+    @using (Ajax.BeginForm("RoleNonMembers", "RoleAdmin", null,
+                new AjaxOptions { UpdateTargetId = "nonmembersgridcontainer", HttpMethod="POST", InsertionMode = InsertionMode.Replace },
+            new { @class = "form-inline", @role = "form" }))
+    {
+        @Html.Hidden("roleId", Model.Role.RoleId)
+        @Html.Hidden("ajaxGrid", true)
+        <div class="input-group">
+            @Html.TextBox("searchInput", Model.SearchQuery, new { @class = "form-control" })
+            <span class="input-group-btn">
+               
+                <button type="submit" value="@CommonResources.Search" class="btn btn-default">@CommonResources.Search</button>
+            </span>
+        </div>
+    }
+</p>
+
 <table class="table table-striped">
     <tr>
         <th>
@@ -71,6 +88,7 @@
         ).Options(o => o
             .Action("RoleNonMembers")
             .AddRouteValue("roleId", Model.Role.RoleId)
+            .AddRouteValue("searchInput", Model.SearchQuery)
             .AddRouteValue("pageSize", Model.Paging.ItemsPerPage)
             .AddRouteValue("ajaxGrid", true)
             .DisplayTemplate("Bootstrap3Pagination")

@@ -11,84 +11,100 @@
 
 <h2>@Model.Role.DisplayName</h2>
 <h3>@Model.Heading</h3>
-<table class="table table-striped">
-    <tr>
-        <th>
-      
-@Ajax.ModalDialogActionLinkBootstrap(@CommonResources.AddUser, "RoleNonMembers", "RoleAdmin",
+<p>
+        @using (Html.BeginForm("RoleMembers", "RoleAdmin",   FormMethod.Get, 
+            new { @class = "form-inline", @role = "form" }))
+        {
+            @Html.Hidden("roleId", Model.Role.RoleId)
+            <div class="input-group">
+                @Html.TextBox("searchInput", Model.SearchQuery, new { @class = "form-control" })
+                <span class="input-group-btn">
+                    <button type="submit" value="@CommonResources.Search" class="btn btn-default">@CommonResources.Search</button>
+                </span>
+            </div>
+        }
+</p>
+<div>
+    <table class="table table-striped">
+        <tr>
+            <th>
+
+                @Ajax.ModalDialogActionLinkBootstrap(@CommonResources.AddUser, "RoleNonMembers", "RoleAdmin",
     new { roleId = Model.Role.RoleId }
         , new { @class = "btn btn-success btn-xs" })
-        </th>
-        <th>
-            @CommonResources.Email
-        </th>
-        @if (AppSettings.DontUseEmailForLogin)
-        {
-            <th>
-                @CommonResources.LoginName
             </th>
-        }
-        <th>
-            @CommonResources.DisplayName
-        </th>
-        <th>
-            @CommonResources.FirstName
-        </th>
-        <th>
-            @CommonResources.LastName
-        </th>
-
-    </tr>
-    @foreach (var item in Model.Members)
-    {
-        <tr>
-            <td>
-                @using (Html.BeginForm("RemoveUser", "RoleAdmin", FormMethod.Post))
-                {
-                    @Html.Hidden("RoleId", Model.Role.RoleId)
-                    @Html.Hidden("UserId", item.UserId)
-    <button type="submit" id="approve-btn"
-            class="btn btn-danger btn-xs"
-            onclick="javascript: return confirm('@Html.FormatValue(item.DisplayName, CommonResources.ConfirmRemoveFormat)');">
-        @CommonResources.Remove
-    </button>
-                }
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
+            <th>
+                @CommonResources.Email
+            </th>
             @if (AppSettings.DontUseEmailForLogin)
             {
-                <td>
-                    @Html.DisplayFor(modelItem => item.UserName)
-                </td>
+                <th>
+                    @CommonResources.LoginName
+                </th>
             }
-            <td>
-                @Html.DisplayFor(modelItem => item.DisplayName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastName)
-            </td>
+            <th>
+                @CommonResources.DisplayName
+            </th>
+            <th>
+                @CommonResources.FirstName
+            </th>
+            <th>
+                @CommonResources.LastName
+            </th>
+
         </tr>
-    }
-</table>
-<div>
-    @Html.Pager(Model.Paging.ItemsPerPage, Model.Paging.CurrentPage, Model.Paging.TotalPages).Options(o => o
+        @foreach (var item in Model.Members)
+        {
+            <tr>
+                <td>
+                    @using (Html.BeginForm("RemoveUser", "RoleAdmin", FormMethod.Post))
+                    {
+                        @Html.Hidden("RoleId", Model.Role.RoleId)
+                        @Html.Hidden("UserId", item.UserId)
+                        <button type="submit" id="approve-btn"
+                                class="btn btn-danger btn-xs"
+                                onclick="javascript: return confirm('@Html.FormatValue(item.DisplayName, CommonResources.ConfirmRemoveFormat)');">
+                            @CommonResources.Remove
+                        </button>
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                @if (AppSettings.DontUseEmailForLogin)
+                {
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserName)
+                    </td>
+                }
+                <td>
+                    @Html.DisplayFor(modelItem => item.DisplayName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+            </tr>
+        }
+    </table>
+    <div>
+        @Html.Pager(Model.Paging.ItemsPerPage, Model.Paging.CurrentPage, Model.Paging.TotalPages).Options(o => o
             .Action("RoleMembers")
             .AddRouteValue("roleId", Model.Role.RoleId)
+            .AddRouteValue("searchInput", Model.SearchQuery)
             .AddRouteValue("pageSize", Model.Paging.ItemsPerPage)
             .DisplayTemplate("Bootstrap3Pagination")
             .PageRouteValueKey("pageNumber")
             .MaxNrOfPages(Model.Paging.MaxPagerItems)
             .UseItemCountAsPageCount()
     )
+    </div>
 </div>
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryajax")
-    @Scripts.Render("~/bundles/jqueryui")
-    @Scripts.Render("~/Scripts/modaldialog-bootstrap.js")
-}
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryajax")
+        @Scripts.Render("~/bundles/jqueryui")
+        @Scripts.Render("~/Scripts/modaldialog-bootstrap.js")
+    }

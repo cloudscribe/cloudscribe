@@ -8,9 +8,9 @@ function clearModalDialog(dialogDivId) {
 }
 
 function setFormDataAjaxAttributes(dialogDivId) {
-    var div = $("#" + dialogDivId);
-    div.find("form").attr("data-ajax-update", "#" + dialogDivId);
-    div.find("form").attr("data-ajax-complete", "onModalDialogSubmitted('" + dialogDivId + "')");
+    //var div = $("#" + dialogDivId);
+    //div.find("form").attr("data-ajax-update", "#" + dialogDivId);
+    //div.find("form").attr("data-ajax-complete", "onModalDialogSubmitted('" + dialogDivId + "')");
 }
 
 function onModalDialogSubmitted(dialogDivId) {
