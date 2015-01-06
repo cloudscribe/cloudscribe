@@ -8,7 +8,7 @@
     <tr>
         <th>
             @Html.ActionLink(CommonResources.NewCurrency, "CurrencyEdit",
-                     null, new { @class = "btn btn-default" })
+                              null, new { @class = "btn btn-xs btn-default" })
         </th>
         <th>
             @CommonResources.Title
@@ -25,11 +25,11 @@
                 @Html.AntiForgeryToken()
                 @Html.ActionLink(CommonResources.Edit, "CurrencyEdit", "CoreData",
                     new { currencyGuid = item.Guid }
-                 , new { @class = "btn btn-default" })
+                      , new { @class = "btn btn-xs btn-default" })
                 @Html.Hidden("currencyGuid", item.Guid)
-                <input type="submit" value="@CommonResources.Delete"
-                       onclick="javascript: return confirm('@Html.FormatValue(item.Title, CommonResources.ConfirmDeleteFormat)');"
-                       class="btn btn-default" />
+    <input type="submit" value="@CommonResources.Delete"
+           onclick="javascript: return confirm('@Html.FormatValue(item.Title, CommonResources.ConfirmDeleteFormat)');"
+           class="btn btn-xs btn-default" />
             }
         </td>
         <td>

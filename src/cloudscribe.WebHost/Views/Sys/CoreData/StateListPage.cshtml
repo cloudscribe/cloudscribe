@@ -12,7 +12,7 @@
         <th>
             @Html.ActionLink(@CommonResources.NewState, "StateEdit", "CoreData", 
             new { countryGuid = Model.Country.Guid, returnPageNumber = Model.Paging.CurrentPage },
-                     new { @class = "btn btn-default" })
+                              new { @class = "btn btn-xs btn-default" })
         </th>
         <th>
             @CommonResources.Name
@@ -33,7 +33,7 @@
     
     @Html.ActionLink(CommonResources.Edit, "StateEdit", "CoreData",
             new { countryGuid = Model.Country.Guid, guid = item.Guid, returnPageNumber = Model.Paging.CurrentPage }
-         , new { @class = "btn btn-default" })
+         , new { @class = "btn btn-xs btn-default" })
 
     
     @Html.Hidden("countryGuid",item.CountryGuid)
@@ -43,7 +43,7 @@
 
     <input type="submit" value="@CommonResources.Delete" 
            onclick="javascript: return confirm('@Html.FormatValue(item.Name, CommonResources.ConfirmDeleteFormat)');" 
-           class="btn btn-default" />
+           class="btn btn-xs btn-default" />
 }
 
         </td>

@@ -17,7 +17,7 @@
       
 @Ajax.ModalDialogActionLinkBootstrap(@CommonResources.AddUser, "RoleNonMembers", "RoleAdmin",
     new { roleId = Model.Role.RoleId }
-    , new { @class = "btn btn-success" })
+        , new { @class = "btn btn-success btn-xs" })
         </th>
         <th>
             @CommonResources.Email
@@ -48,7 +48,7 @@
                     @Html.Hidden("RoleId", Model.Role.RoleId)
                     @Html.Hidden("UserId", item.UserId)
     <button type="submit" id="approve-btn"
-            class="btn btn-danger"
+            class="btn btn-danger btn-xs"
             onclick="javascript: return confirm('@Html.FormatValue(item.DisplayName, CommonResources.ConfirmRemoveFormat)');">
         @CommonResources.Remove
     </button>

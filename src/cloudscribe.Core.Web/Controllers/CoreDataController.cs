@@ -15,7 +15,7 @@ using System.Web.Mvc;
 
 namespace cloudscribe.Core.Web.Controllers
 {
-    [Authorize(Roles = "Admins,Content Administrators")]
+    [Authorize(Roles = "ServerAdmins")]
     public class CoreDataController : CloudscribeBaseController
     {
 

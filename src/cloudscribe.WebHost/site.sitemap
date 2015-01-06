@@ -81,17 +81,17 @@
 
       <mvcSiteMapNode key="CoreData"  title="Core Data"
                       controller="CoreData" action="Index"
-                      roles="Admins,Content Admins"
+                      roles="ServerAdmins"
                       visibility="SiteMapPathHelper,ChildMenu,!*"
                       >
         <mvcSiteMapNode key="CurrencyList" title="Currency Administration"
             controller="CoreData" action="CurrencyList"
-            roles="Admins"
+            roles="ServerAdmins"
             visibility="SiteMapPathHelper,ChildMenu,!*"
             >
           <mvcSiteMapNode key="CurrencyEdit"  title="New Currency"
                       controller="CoreData" action="CurrencyEdit"
-                      roles="Admins"
+                      roles="ServerAdmins"
                       visibility="SiteMapPathHelper,ChildMenu,!*"
                           preservedRouteParameters="currencyGuid"
                       ></mvcSiteMapNode>
@@ -99,24 +99,24 @@
 
         <mvcSiteMapNode key="CountryListPage" title="Country/State Administration"
             controller="CoreData" action="CountryListPage"
-            roles="Admins"
+            roles="ServerAdmins"
             visibility="SiteMapPathHelper,ChildMenu,!*"
             >
           <mvcSiteMapNode key="CountryEdit"  title="New Country"
                       controller="CoreData" action="CountryEdit"
-                      roles="Admins"
+                      roles="ServerAdmins"
                       visibility="SiteMapPathHelper,ChildMenu,!*"
                       preservedRouteParameters="guid"
                       ></mvcSiteMapNode>
           <mvcSiteMapNode key="StateListPage" title="States"
             controller="CoreData" action="StateListPage"
-            roles="Admins"
+            roles="ServerAdmins"
             visibility="SiteMapPathHelper,ChildMenu,!*"
             preservedRouteParameters="countryGuid"
             >
             <mvcSiteMapNode key="StateEdit"  title="New State"
                       controller="CoreData" action="StateEdit"
-                      roles="Admins"
+                      roles="ServerAdmins"
                       visibility="SiteMapPathHelper,ChildMenu,!*"
                       preservedRouteParameters="countryGuid"
                       ></mvcSiteMapNode>

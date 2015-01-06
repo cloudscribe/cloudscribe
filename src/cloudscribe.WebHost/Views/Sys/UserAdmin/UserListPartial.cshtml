@@ -18,25 +18,25 @@
     </div>
 }
 
-<table class="table">
+<table class="table table-striped">
     <tr>
         <th>
-            @Html.ActionLink(@CommonResources.NewUser, "UserEdit", null, new { @class = "btn btn-default" })
+            @Html.ActionLink(@CommonResources.NewUser, "UserEdit", null, new { @class = "btn btn-xs btn-default" })
         </th>
         <th>
-            Email
+            @CommonResources.Email
         </th>
         <th>
-            UserName
+            @CommonResources.LoginName
         </th>
         <th>
-            DisplayName
+            @CommonResources.DisplayName
         </th>
         <th>
-            FirstName
+            @CommonResources.FirstName
         </th>
         <th>
-            LastName
+            @CommonResources.LastName
         </th>
         
     </tr>
@@ -47,10 +47,10 @@
             <td>
                 @Html.ActionLink(@CommonResources.Manage, "UserEdit",
              new { userId = item.UserId },
-             new { @class = "btn btn-default" }
+             new { @class = "btn btn-xs btn-default" }
                 ) 
                 @Html.ActionLink(@CommonResources.ViewProfile, "Details",
-             new { /* id=item.PrimaryKey */ }, new { @class = "btn btn-default" }
+             new { /* id=item.PrimaryKey */ }, new { @class = "btn btn-xs btn-default" }
                 ) 
                 
             </td>

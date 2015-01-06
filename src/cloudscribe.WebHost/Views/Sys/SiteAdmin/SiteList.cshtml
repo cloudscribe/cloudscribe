@@ -4,10 +4,10 @@
     
 }
 <h2>@Model.Heading</h2>
-<table class="table">
+<table class="table table-striped">
     <tr>
         <th>
-            @Html.ActionLink(CommonResources.NewSite, "NewSite", null, new { @class = "btn btn-default" })
+            @Html.ActionLink(CommonResources.NewSite, "NewSite", null, new { @class = "btn btn-xs btn-default" })
         </th>
         <th>
             @CommonResources.SiteName
@@ -19,7 +19,7 @@
 @foreach (var item in Model.Sites) {
     <tr> 
         <td>
-            @Html.ActionLink(CommonResources.BasicSettings, "SiteInfo", new { siteId = item.SiteId }, new { @class = "btn btn-default" }) 
+            @Html.ActionLink(CommonResources.BasicSettings, "SiteInfo", new { siteId = item.SiteId }, new { @class = "btn btn-xs btn-default" }) 
             
         </td>
         <td>

@@ -7,8 +7,8 @@
 <h2>@Model.Heading</h2>
 <table class="table table-striped">
     <tr>
-        <th colspan="2">
-            @Html.ActionLink(@CommonResources.NewCountry, "CountryEdit", null, new { @class = "btn btn-default" })
+        <th>
+            @Html.ActionLink(@CommonResources.NewCountry, "CountryEdit", null, new { @class = "btn btn-default btn-xs" })
         </th>
         <th>
             @CommonResources.Name
@@ -25,13 +25,12 @@
     <tr>
         <td>
             @Html.ActionLink(CommonResources.Edit, "CountryEdit", "CoreData",
-         new { guid = c.Guid, returnPageNumber = Model.Paging.CurrentPage }, 
-            new { @class = "btn btn-default" })
-        </td>
-        <td>
+         new { guid = c.Guid, returnPageNumber = Model.Paging.CurrentPage },
+         new { @class = "btn btn-xs btn-default" })
+       
             @Html.ActionLink(CommonResources.States, "StateListPage", "CoreData",
-      new { countryGuid = c.Guid, pageNumber=1, pageSize=-1, countryReturnPageNumber = Model.Paging.CurrentPage }, 
-            new { @class = "btn btn-default" })
+      new { countryGuid = c.Guid, pageNumber=1, pageSize=-1, countryReturnPageNumber = Model.Paging.CurrentPage },
+         new { @class = "btn btn-xs btn-default" })
         </td>
         <td>
             @c.Name
