@@ -263,6 +263,14 @@ namespace cloudscribe.DbHelpers.Firebird
 
         public static async Task<DbDataReader> ExecuteReaderAsync(
             string connectionString,
+            string commandText,
+            params DbParameter[] commandParameters)
+        {
+            return await ExecuteReaderAsync(connectionString, CommandType.Text, commandText, commandParameters);
+        }
+
+        public static async Task<DbDataReader> ExecuteReaderAsync(
+            string connectionString,
             CommandType commandType,
             string commandText,
             params DbParameter[] commandParameters)
@@ -337,6 +345,14 @@ namespace cloudscribe.DbHelpers.Firebird
 
                 }
             }
+        }
+
+        public static async Task<object> ExecuteScalarAsync(
+            string connectionString,
+            string commandText,
+            params DbParameter[] commandParameters)
+        {
+            return await ExecuteScalarAsync(connectionString, CommandType.Text, commandText, commandParameters);
         }
 
         public static async Task<object> ExecuteScalarAsync(

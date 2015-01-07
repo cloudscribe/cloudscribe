@@ -1,6 +1,6 @@
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-01-05
+// Last Modified:			2015-01-07
 // 
 //
 // You must not remove this notice, or any other, from this software.
@@ -11,6 +11,7 @@ using MySql.Data.MySqlClient;
 using System;
 using System.Data;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.MySql
 {
@@ -18,7 +19,7 @@ namespace cloudscribe.Core.Repositories.MySql
     internal static class DBRoles
     {
        
-        public static int RoleCreate(
+        public static async Task<int> RoleCreate(
             Guid roleGuid,
             Guid siteGuid,
             int siteId,
@@ -64,10 +65,12 @@ namespace cloudscribe.Core.Repositories.MySql
             arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = roleGuid.ToString();
 
-            int newID = Convert.ToInt32(AdoHelper.ExecuteScalar(
+            object result = await AdoHelper.ExecuteScalarAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
-                arParams).ToString());
+                arParams);
+
+            int newID = Convert.ToInt32(result);
 
             return newID;
             
@@ -95,7 +98,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
         }
 
-        public static bool Update(int roleId, string roleName)
+        public static async Task<bool> Update(int roleId, string roleName)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("UPDATE mp_Roles ");
@@ -112,15 +115,16 @@ namespace cloudscribe.Core.Repositories.MySql
             arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = roleName;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
 
             return (rowsAffected > 0);
         }
 
-        public static bool Delete(int roleId)
+        public static async Task<bool> Delete(int roleId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_Roles ");
@@ -132,8 +136,9 @@ namespace cloudscribe.Core.Repositories.MySql
             arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = roleId;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
 
@@ -180,7 +185,7 @@ namespace cloudscribe.Core.Repositories.MySql
             return (rowsAffected > 0);
         }
 
-        public static IDataReader GetById(int roleId)
+        public static async Task<IDataReader> GetById(int roleId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT * ");
@@ -193,7 +198,7 @@ namespace cloudscribe.Core.Repositories.MySql
             arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = roleId;
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -224,7 +229,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
         }
 
-        public static bool Exists(int siteId, string roleName)
+        public static async Task<bool> Exists(int siteId, string roleName)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT Count(*) ");
@@ -241,10 +246,12 @@ namespace cloudscribe.Core.Repositories.MySql
             arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = roleName;
 
-            int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
+            object result = await AdoHelper.ExecuteScalarAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
-                arParams));
+                arParams);
+
+            int count = Convert.ToInt32(result);
 
             return (count > 0);
 
@@ -474,7 +481,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
         }
 
-        public static int GetCountOfUsersInRole(int siteId, int roleId, string searchInput)
+        public static async Task<int> GetCountOfUsersInRole(int siteId, int roleId, string searchInput)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT ");
@@ -521,40 +528,41 @@ namespace cloudscribe.Core.Repositories.MySql
             arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = "%" + searchInput + "%";
 
-            return Convert.ToInt32(AdoHelper.ExecuteScalar(
+            object result = await AdoHelper.ExecuteScalarAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
-                arParams));
+                arParams);
+
+            return Convert.ToInt32(result);
 
         }
 
-        public static IDataReader GetUsersInRole(
+        public static async Task<IDataReader> GetUsersInRole(
             int siteId,
             int roleId,
             string searchInput,
             int pageNumber,
-            int pageSize,
-            out int totalPages)
+            int pageSize)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
-            totalPages = 1;
-            int totalRows = GetCountOfUsersInRole(siteId, roleId, searchInput);
+            //totalPages = 1;
+            //int totalRows = GetCountOfUsersInRole(siteId, roleId, searchInput);
 
-            if (pageSize > 0) totalPages = totalRows / pageSize;
+            //if (pageSize > 0) totalPages = totalRows / pageSize;
 
-            if (totalRows <= pageSize)
-            {
-                totalPages = 1;
-            }
-            else
-            {
-                int remainder;
-                Math.DivRem(totalRows, pageSize, out remainder);
-                if (remainder > 0)
-                {
-                    totalPages += 1;
-                }
-            }
+            //if (totalRows <= pageSize)
+            //{
+            //    totalPages = 1;
+            //}
+            //else
+            //{
+            //    int remainder;
+            //    Math.DivRem(totalRows, pageSize, out remainder);
+            //    if (remainder > 0)
+            //    {
+            //        totalPages += 1;
+            //    }
+            //}
 
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT ");
@@ -621,7 +629,7 @@ namespace cloudscribe.Core.Repositories.MySql
             arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = pageLowerBound;
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -748,7 +756,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
         }
 
-        private static int GetCountOfSiteRoles(int siteId, string searchInput)
+        public static async Task<int> GetCountOfSiteRoles(int siteId, string searchInput)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT ");
@@ -781,39 +789,41 @@ namespace cloudscribe.Core.Repositories.MySql
             arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = "%" + searchInput + "%";
 
-            return Convert.ToInt32(AdoHelper.ExecuteScalar(
+            object result = await AdoHelper.ExecuteScalarAsync(
                 ConnectionString.GetReadConnectionString(),
+                CommandType.Text,
                 sqlCommand.ToString(),
-                arParams));
+                arParams);
+
+            return Convert.ToInt32(result);
 
         }
 
-        public static IDataReader GetPage(
+        public static async Task<IDataReader> GetPage(
             int siteId,
             string searchInput,
             int pageNumber,
-            int pageSize,
-            out int totalPages)
+            int pageSize)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
-            totalPages = 1;
-            int totalRows = GetCountOfSiteRoles(siteId, searchInput);
+            //totalPages = 1;
+            //int totalRows = GetCountOfSiteRoles(siteId, searchInput);
 
-            if (pageSize > 0) totalPages = totalRows / pageSize;
+            //if (pageSize > 0) totalPages = totalRows / pageSize;
 
-            if (totalRows <= pageSize)
-            {
-                totalPages = 1;
-            }
-            else
-            {
-                int remainder;
-                Math.DivRem(totalRows, pageSize, out remainder);
-                if (remainder > 0)
-                {
-                    totalPages += 1;
-                }
-            }
+            //if (totalRows <= pageSize)
+            //{
+            //    totalPages = 1;
+            //}
+            //else
+            //{
+            //    int remainder;
+            //    Math.DivRem(totalRows, pageSize, out remainder);
+            //    if (remainder > 0)
+            //    {
+            //        totalPages += 1;
+            //    }
+            //}
 
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT ");
@@ -883,7 +893,7 @@ namespace cloudscribe.Core.Repositories.MySql
             arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = pageLowerBound;
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 arParams);

@@ -1,12 +1,13 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-18
-// Last Modified:			2015-01-05
+// Last Modified:			2015-01-07
 // 
 
 
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Models
 {
@@ -50,27 +51,27 @@ namespace cloudscribe.Core.Models
         //roles
         bool AddUserToRole(int roleId, Guid roleGuid, int userId, Guid userGuid);
         void AddUserToDefaultRoles(ISiteUser siteUser);
-        int CountOfRoles(int siteId);
+        Task<int> CountOfRoles(int siteId, string searchInput);
         int GetRoleMemberCount(int roleId);
-        bool DeleteRole(int roleID);
+        Task<bool> DeleteRole(int roleID);
         bool DeleteUserRoles(int userId);
         bool DeleteUserRolesByRole(int roleId);
-        bool RoleExists(int siteId, string roleName);
-        ISiteRole FetchRole(int roleID);
+        Task<bool> RoleExists(int siteId, string roleName);
+        Task<ISiteRole> FetchRole(int roleID);
         ISiteRole FetchRole(int siteId, string roleName);
-        IList<ISiteRole> GetRolesBySite(
+        Task<IList<ISiteRole>> GetRolesBySite(
             int siteId, 
             string searchInput,
             int pageNumber,
-            int pageSize,
-            out int totalPages);
+            int pageSize);
         List<string> GetUserRoles(int siteId, int userId);
         List<int> GetRoleIds(int siteId, string roleNamesSeparatedBySemiColons);
         IList<ISiteRole> GetRolesUserIsNotIn(int siteId, int userId);
-        IList<IUserInfo> GetUsersInRole(int siteId, int roleId, string searchInput, int pageNumber, int pageSize, out int totalPages);
+        Task<IList<IUserInfo>> GetUsersInRole(int siteId, int roleId, string searchInput, int pageNumber, int pageSize);
         IList<IUserInfo> GetUsersNotInRole(int siteId, int roleId, string searchInput, int pageNumber, int pageSize, out int totalPages);
+        Task<int> CountUsersInRole(int siteId, int roleId, string searchInput);
         bool RemoveUserFromRole(int roleId, int userId);
-        bool SaveRole(cloudscribe.Core.Models.ISiteRole role);
+        Task<bool> SaveRole(ISiteRole role);
 
         //claims
         bool DeleteClaim(int id);

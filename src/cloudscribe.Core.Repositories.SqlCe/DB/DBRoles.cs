@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2010-04-06
-// Last Modified:			2015-01-05
+// Last Modified:			2015-01-07
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -543,28 +543,27 @@ namespace cloudscribe.Core.Repositories.SqlCe
             int roleId,
             string searchInput,
             int pageNumber,
-            int pageSize,
-            out int totalPages)
+            int pageSize)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
-            totalPages = 1;
-            int totalRows = GetCountOfUsersInRole(siteId, roleId, searchInput);
+            //totalPages = 1;
+            //int totalRows = GetCountOfUsersInRole(siteId, roleId, searchInput);
 
-            if (pageSize > 0) totalPages = totalRows / pageSize;
+            //if (pageSize > 0) totalPages = totalRows / pageSize;
 
-            if (totalRows <= pageSize)
-            {
-                totalPages = 1;
-            }
-            else
-            {
-                int remainder;
-                Math.DivRem(totalRows, pageSize, out remainder);
-                if (remainder > 0)
-                {
-                    totalPages += 1;
-                }
-            }
+            //if (totalRows <= pageSize)
+            //{
+            //    totalPages = 1;
+            //}
+            //else
+            //{
+            //    int remainder;
+            //    Math.DivRem(totalRows, pageSize, out remainder);
+            //    if (remainder > 0)
+            //    {
+            //        totalPages += 1;
+            //    }
+            //}
 
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT * FROM ");
@@ -777,7 +776,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
         }
 
-        private static int GetCountOfSiteRoles(int siteId, string searchInput)
+        public static int GetCountOfSiteRoles(int siteId, string searchInput)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  Count(*) ");
@@ -818,28 +817,27 @@ namespace cloudscribe.Core.Repositories.SqlCe
             int siteId,
             string searchInput,
             int pageNumber,
-            int pageSize,
-            out int totalPages)
+            int pageSize)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
-            totalPages = 1;
-            int totalRows = GetCountOfSiteRoles(siteId, searchInput);
+            //totalPages = 1;
+            //int totalRows = GetCountOfSiteRoles(siteId, searchInput);
 
-            if (pageSize > 0) totalPages = totalRows / pageSize;
+            //if (pageSize > 0) totalPages = totalRows / pageSize;
 
-            if (totalRows <= pageSize)
-            {
-                totalPages = 1;
-            }
-            else
-            {
-                int remainder;
-                Math.DivRem(totalRows, pageSize, out remainder);
-                if (remainder > 0)
-                {
-                    totalPages += 1;
-                }
-            }
+            //if (totalRows <= pageSize)
+            //{
+            //    totalPages = 1;
+            //}
+            //else
+            //{
+            //    int remainder;
+            //    Math.DivRem(totalRows, pageSize, out remainder);
+            //    if (remainder > 0)
+            //    {
+            //        totalPages += 1;
+            //    }
+            //}
 
             int offset = 0;
             if (pageNumber > 1) { offset = (pageSize * pageNumber) - pageSize; }

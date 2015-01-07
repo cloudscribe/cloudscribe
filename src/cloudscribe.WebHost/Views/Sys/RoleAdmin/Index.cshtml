@@ -44,12 +44,12 @@
     }
 </ul>
 <div>
-    @Html.Pager(Model.Paging.ItemsPerPage, Model.Paging.CurrentPage, Model.Paging.TotalPages).Options(o => o
+    @Html.Pager(Model.Paging.ItemsPerPage, Model.Paging.CurrentPage, Model.Paging.TotalItems).Options(o => o
             .Action("Index")
             .AddRouteValue("pageSize", Model.Paging.ItemsPerPage)
             .DisplayTemplate("Bootstrap3Pagination")
             .PageRouteValueKey("pageNumber")
             .MaxNrOfPages(Model.Paging.MaxPagerItems)
-            .UseItemCountAsPageCount()
+            
     )
 </div>

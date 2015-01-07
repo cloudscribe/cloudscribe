@@ -174,6 +174,27 @@ namespace cloudscribe.DbHelpers.MySql
 
         public static async Task<int> ExecuteNonQueryAsync(
             string connectionString,
+            string commandText,
+            params DbParameter[] commandParameters)
+        {
+            return await ExecuteNonQueryAsync(connectionString, CommandType.Text, commandText, commandParameters);
+        }
+
+        public static async Task<int> ExecuteNonQueryAsync(
+            string connectionString,
+            CommandType commandType,
+            string commandText,
+            params DbParameter[] commandParameters)
+        {
+            int commandTimeout = 30; //30 seconds default http://msdn.microsoft.com/en-us/library/system.data.sqlclient.sqlcommand.commandtimeout.aspx
+
+            return await ExecuteNonQueryAsync(connectionString, commandType, commandText, commandTimeout, commandParameters);
+
+
+        }
+
+        public static async Task<int> ExecuteNonQueryAsync(
+            string connectionString,
             CommandType commandType,
             string commandText,
             int commandTimeout,
@@ -261,6 +282,17 @@ namespace cloudscribe.DbHelpers.MySql
                 if ((connection != null) && (connection.State == ConnectionState.Open)) { connection.Close(); }
                 throw;
             }
+        }
+
+        public static async Task<DbDataReader> ExecuteReaderAsync(
+            string connectionString,
+            string commandText,
+            params DbParameter[] commandParameters)
+        {
+
+            return await ExecuteReaderAsync(connectionString, CommandType.Text, commandText, commandParameters);
+
+
         }
 
         public static async Task<DbDataReader> ExecuteReaderAsync(
@@ -363,6 +395,15 @@ namespace cloudscribe.DbHelpers.MySql
                     return command.ExecuteScalar();
                 }
             }
+        }
+
+        public static async Task<object> ExecuteScalarAsync(
+            string connectionString,
+            string commandText,
+            params DbParameter[] commandParameters)
+        {
+            return await ExecuteScalarAsync(connectionString, CommandType.Text, commandText, commandParameters);
+
         }
 
         public static async Task<object> ExecuteScalarAsync(

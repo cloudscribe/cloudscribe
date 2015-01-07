@@ -8,6 +8,7 @@
 using System;
 using System.Data;
 using cloudscribe.DbHelpers.MSSQL;
+using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.MSSQL
 {
@@ -15,7 +16,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
     internal static class DBRoles
     {
         
-        public static int RoleCreate(
+        public static async Task<int> RoleCreate(
             Guid roleGuid,
             Guid siteGuid,
             int siteId,
@@ -26,24 +27,25 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@SiteGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, siteGuid);
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
             sph.DefineSqlParameter("@RoleName", SqlDbType.NVarChar, 50, ParameterDirection.Input, roleName);
-            int newID = Convert.ToInt32(sph.ExecuteScalar());
+            object result = await sph.ExecuteScalarAsync();
+            int newID = Convert.ToInt32(result);
             return newID;
         }
 
-        public static bool Update(int roleId, string roleName)
+        public static async Task<bool> Update(int roleId, string roleName)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetWriteConnectionString(), "mp_Roles_Update", 2);
             sph.DefineSqlParameter("@RoleID", SqlDbType.Int, ParameterDirection.Input, roleId);
             sph.DefineSqlParameter("@RoleName", SqlDbType.NVarChar, 50, ParameterDirection.Input, roleName);
-            int rowsAffected = sph.ExecuteNonQuery();
+            int rowsAffected = await sph.ExecuteNonQueryAsync();
             return (rowsAffected > -1);
         }
 
-        public static bool Delete(int roleId)
+        public static async Task<bool> Delete(int roleId)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetWriteConnectionString(), "mp_Roles_Delete", 1);
             sph.DefineSqlParameter("@RoleID", SqlDbType.Int, ParameterDirection.Input, roleId);
-            int rowsAffected = sph.ExecuteNonQuery();
+            int rowsAffected = await sph.ExecuteNonQueryAsync();
             return (rowsAffected > -1);
         }
 
@@ -63,21 +65,22 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return (rowsAffected > -1);
         }
 
-        public static bool Exists(int siteId, string roleName)
+        public static async Task<bool> Exists(int siteId, string roleName)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_Roles_RoleExists", 2);
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
             sph.DefineSqlParameter("@RoleName", SqlDbType.NVarChar, 50, ParameterDirection.Input, roleName);
-            int count = Convert.ToInt32(sph.ExecuteScalar());
+            object result = await sph.ExecuteScalarAsync();
+            int count = Convert.ToInt32(result);
             return (count > 0);
 
         }
 
-        public static IDataReader GetById(int roleId)
+        public static async Task<IDataReader> GetById(int roleId)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_Roles_SelectOne", 1);
             sph.DefineSqlParameter("@RoleID", SqlDbType.Int, ParameterDirection.Input, roleId);
-            return sph.ExecuteReader();
+            return await sph.ExecuteReaderAsync();
         }
 
         public static IDataReader GetByName(int siteId, string roleName)
@@ -148,42 +151,41 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return sph.ExecuteReader();
         }
 
-        public static int GetCountOfUsersInRole(int siteId, int roleId, string searchInput)
+        public static async Task<int> GetCountOfUsersInRole(int siteId, int roleId, string searchInput)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_UserRoles_CountInRole", 3);
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
             sph.DefineSqlParameter("@RoleID", SqlDbType.Int, ParameterDirection.Input, roleId);
             sph.DefineSqlParameter("@SearchInput", SqlDbType.NVarChar, 50, ParameterDirection.Input, searchInput);
-
-            return Convert.ToInt32(sph.ExecuteScalar());
+            object result = await sph.ExecuteScalarAsync();
+            return Convert.ToInt32(result);
         }
 
-        public static IDataReader GetUsersInRole(
+        public static async Task<IDataReader> GetUsersInRole(
             int siteId,
             int roleId,
             string searchInput,
             int pageNumber,
-            int pageSize,
-            out int totalPages)
+            int pageSize)
         {
-            totalPages = 1;
-            int totalRows = GetCountOfUsersInRole(siteId, roleId, searchInput);
+            //totalPages = 1;
+            //int totalRows = GetCountOfUsersInRole(siteId, roleId, searchInput);
 
-            if (pageSize > 0) totalPages = totalRows / pageSize;
+            //if (pageSize > 0) totalPages = totalRows / pageSize;
 
-            if (totalRows <= pageSize)
-            {
-                totalPages = 1;
-            }
-            else
-            {
-                int remainder;
-                Math.DivRem(totalRows, pageSize, out remainder);
-                if (remainder > 0)
-                {
-                    totalPages += 1;
-                }
-            }
+            //if (totalRows <= pageSize)
+            //{
+            //    totalPages = 1;
+            //}
+            //else
+            //{
+            //    int remainder;
+            //    Math.DivRem(totalRows, pageSize, out remainder);
+            //    if (remainder > 0)
+            //    {
+            //        totalPages += 1;
+            //    }
+            //}
 
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_UserRoles_SelectInRole", 5);
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
@@ -192,7 +194,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@PageNumber", SqlDbType.Int, ParameterDirection.Input, pageNumber);
             sph.DefineSqlParameter("@PageSize", SqlDbType.Int, ParameterDirection.Input, pageSize);
 
-            return sph.ExecuteReader();
+            return await sph.ExecuteReaderAsync();
         }
 
         public static IDataReader GetRolesUserIsNotIn(
@@ -240,48 +242,47 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return Convert.ToInt32(sph.ExecuteScalar());
         }
 
-        private static int GetCountOfSiteRoles(int siteId, string searchInput)
+        public static async Task<int> GetCountOfSiteRoles(int siteId, string searchInput)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_Roles_CountBySearch", 2);
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
             sph.DefineSqlParameter("@SearchInput", SqlDbType.NVarChar, 50, ParameterDirection.Input, searchInput);
-
-            return Convert.ToInt32(sph.ExecuteScalar());
+            object result = await sph.ExecuteScalarAsync();
+            return Convert.ToInt32(result);
         }
 
-        public static IDataReader GetPage(
+        public static async Task<IDataReader> GetPage(
             int siteId, 
             string searchInput,
             int pageNumber,
-            int pageSize,
-            out int totalPages)
+            int pageSize)
         {
-            totalPages = 1;
-            int totalRows
-                = GetCountOfSiteRoles(siteId, searchInput);
+            //totalPages = 1;
+            //int totalRows
+            //    = GetCountOfSiteRoles(siteId, searchInput);
 
-            if (pageSize > 0) totalPages = totalRows / pageSize;
+            //if (pageSize > 0) totalPages = totalRows / pageSize;
 
-            if (totalRows <= pageSize)
-            {
-                totalPages = 1;
-            }
-            else
-            {
-                int remainder;
-                Math.DivRem(totalRows, pageSize, out remainder);
-                if (remainder > 0)
-                {
-                    totalPages += 1;
-                }
-            }
+            //if (totalRows <= pageSize)
+            //{
+            //    totalPages = 1;
+            //}
+            //else
+            //{
+            //    int remainder;
+            //    Math.DivRem(totalRows, pageSize, out remainder);
+            //    if (remainder > 0)
+            //    {
+            //        totalPages += 1;
+            //    }
+            //}
 
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_Roles_SelectPage", 4);
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
             sph.DefineSqlParameter("@SearchInput", SqlDbType.NVarChar, 50, ParameterDirection.Input, searchInput);
             sph.DefineSqlParameter("@PageNumber", SqlDbType.Int, ParameterDirection.Input, pageNumber);
             sph.DefineSqlParameter("@PageSize", SqlDbType.Int, ParameterDirection.Input, pageSize);
-            return sph.ExecuteReader();
+            return await sph.ExecuteReaderAsync();
 
         }
        

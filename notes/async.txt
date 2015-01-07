@@ -1,4 +1,8 @@
 
+best practices in async
+http://msdn.microsoft.com/en-us/magazine/jj991977.aspx
+
+
 currently we have controller methods marked as async but not really implemented as async
 to do that, we would need async all the way down including async data access
 net 4.5 has async executereader and executenonquery
@@ -6,6 +10,10 @@ so we could implement this, but in general it would not result in any perf gain 
 still we should probably move in this direction and keep our controller methods marked that way even if it takes a while before they are truly implemented as async.
 
 I think it is not possible to make async data access for sqlite or sqlce
+
+one problem encountered:
+async methods cannot have output parameters or ref parameters
+we have output paramteres in a lot of places where we get a page of data from the db and get the totalPages as an output, passing in the pagenumber and page size
 
 good example here of async data access
 http://codereview.stackexchange.com/questions/63480/simple-sqlhelper-which-wraps-ado-net-methods
@@ -27,6 +35,7 @@ For sequential mode, the decision to use GetFieldValueAsync is a bit more compli
 There are advantages to using the stream-based methods when working large files stored in the database. For example, you can hand-off the stream to a WCF or ASP.NET response instead of bringing in the whole file into memory at one time. This is especially important for .NET developers because the large object heap is very susceptible to fragmentation.
 
 
+http://stackoverflow.com/questions/23022573/calling-async-methods-from-a-synchronous-context
 
 http://www.infoq.com/news/2012/05/ADO-Async
 
@@ -35,6 +44,7 @@ http://msdn.microsoft.com/en-us/library/hh191443.aspx
 http://www.software-architects.com/devblog/2012/11/22/ADONET-45-Async-Data-Reader-and-IAsyncHttpHandler
 
 http://stackoverflow.com/questions/21267580/asynchronous-programming-in-ado-net
+
 
 http://blogs.msdn.com/b/rickandy/archive/2009/11/14/should-my-database-calls-be-asynchronous.aspx
 

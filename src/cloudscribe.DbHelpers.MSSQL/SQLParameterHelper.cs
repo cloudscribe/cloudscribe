@@ -12,6 +12,7 @@
 // 2007-11-23 modified by Joe Audette
 // 2010-01-27 Joe Audette added parameter cache logic from Enterpise Data Block licensed under Ms-Pl http://www.codeplex.com/entlib
 // Last Modified 2014-08-26 changed to use AdoHelper which allows us to profile with Glimpse ADO
+// 2015-01-07 Joe Audette added async methods
 
 
 using System;
@@ -20,6 +21,7 @@ using System.Data.Common;
 using System.Data.SqlClient;
 using System.Configuration;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using log4net;
 using cloudscribe.Configuration;
 
@@ -169,6 +171,22 @@ namespace cloudscribe.DbHelpers.MSSQL
             return AdoHelper.ExecuteReader(connectionString, cmdType, commandText, commandTimeout, arParams);
         }
 
+        public async Task<IDataReader> ExecuteReaderAsync()
+        {
+            Debug.Assert((arParams.Length == index) && (paramCnt == index), "not all parameters were defined");
+            if (debugLog) { log.Debug("ExecuteReader " + commandText); }
+            //return SqlHelper.ExecuteReader(connectionString, cmdType, commandText, arParams);
+            return await AdoHelper.ExecuteReaderAsync(connectionString, cmdType, commandText, arParams);
+        }
+
+        public async Task<IDataReader> ExecuteReaderAsync(int commandTimeout)
+        {
+            Debug.Assert((arParams.Length == index) && (paramCnt == index), "not all parameters were defined");
+            if (debugLog) { log.Debug("ExecuteReader " + commandText); }
+            //return SqlHelper.ExecuteReader(connectionString, cmdType, commandText, commandTimeout, arParams);
+            return await AdoHelper.ExecuteReaderAsync(connectionString, cmdType, commandText, commandTimeout, arParams);
+        }
+
         public int ExecuteNonQuery()
         {
             Debug.Assert((arParams.Length == index) && (paramCnt == index), "not all parameters were defined");
@@ -183,6 +201,22 @@ namespace cloudscribe.DbHelpers.MSSQL
             if (debugLog) { log.Debug("ExecuteNonQuery " + commandText); }
             //return SqlHelper.ExecuteNonQuery(connectionString, cmdType, commandText, commandTimeout, arParams);
             return AdoHelper.ExecuteNonQuery(connectionString, cmdType, commandText, commandTimeout, arParams);
+        }
+
+        public async Task<int> ExecuteNonQueryAsync()
+        {
+            Debug.Assert((arParams.Length == index) && (paramCnt == index), "not all parameters were defined");
+            if (debugLog) { log.Debug("ExecuteNonQuery " + commandText); }
+            //return SqlHelper.ExecuteNonQuery(connectionString, cmdType, commandText, arParams);
+            return await AdoHelper.ExecuteNonQueryAsync(connectionString, cmdType, commandText, arParams);
+        }
+
+        public async Task<int> ExecuteNonQueryAsync(int commandTimeout)
+        {
+            Debug.Assert((arParams.Length == index) && (paramCnt == index), "not all parameters were defined");
+            if (debugLog) { log.Debug("ExecuteNonQuery " + commandText); }
+            //return SqlHelper.ExecuteNonQuery(connectionString, cmdType, commandText, commandTimeout, arParams);
+            return await AdoHelper.ExecuteNonQueryAsync(connectionString, cmdType, commandText, commandTimeout, arParams);
         }
 
         
@@ -201,6 +235,22 @@ namespace cloudscribe.DbHelpers.MSSQL
             if (debugLog) { log.Debug("ExecuteScalar " + commandText); }
             //return SqlHelper.ExecuteScalar(connectionString, cmdType, commandText, commandTimeout, arParams);
             return AdoHelper.ExecuteScalar(connectionString, cmdType, commandText, commandTimeout, arParams);
+        }
+
+        public async Task<object> ExecuteScalarAsync()
+        {
+            Debug.Assert((arParams.Length == index) && (paramCnt == index), "not all parameters were defined");
+            if (debugLog) { log.Debug("ExecuteScalar " + commandText); }
+            //return SqlHelper.ExecuteScalar(connectionString, cmdType, commandText, arParams);
+            return await AdoHelper.ExecuteScalarAsync(connectionString, cmdType, commandText, arParams);
+        }
+
+        public async Task<object> ExecuteScalarAsync(int commandTimeout)
+        {
+            Debug.Assert((arParams.Length == index) && (paramCnt == index), "not all parameters were defined");
+            if (debugLog) { log.Debug("ExecuteScalar " + commandText); }
+            //return SqlHelper.ExecuteScalar(connectionString, cmdType, commandText, commandTimeout, arParams);
+            return await AdoHelper.ExecuteScalarAsync(connectionString, cmdType, commandText, commandTimeout, arParams);
         }
 
         //public object ExecuteScalar(SqlConnection conn)

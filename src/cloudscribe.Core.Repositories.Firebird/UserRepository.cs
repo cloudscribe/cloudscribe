@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-18
-// Last Modified:			2015-01-05
+// Last Modified:			2015-01-07
 // 
 
 
@@ -12,6 +12,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.Firebird
 {
@@ -762,11 +763,12 @@ namespace cloudscribe.Core.Repositories.Firebird
         /// are also not allowed to be deleted
         /// </summary>
         /// <returns></returns>
-        public bool SaveRole(ISiteRole role)
+        public async Task<bool> SaveRole(ISiteRole role)
         {
             if (role.RoleId == -1) // new role
             {
-                if (RoleExists(role.SiteId, role.DisplayName))
+                bool exists = await RoleExists(role.SiteId, role.DisplayName);
+                if (exists)
                 {
                     log.Error("attempt to create a duplicate role "
                         + role.DisplayName + " for site "
@@ -777,7 +779,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
                 role.RoleGuid = Guid.NewGuid();
 
-                role.RoleId = DBRoles.RoleCreate(
+                role.RoleId = await DBRoles.RoleCreate(
                     role.RoleGuid,
                     role.SiteGuid,
                     role.SiteId,
@@ -790,7 +792,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             }
             else
             {
-                return DBRoles.Update(
+                return await DBRoles.Update(
                     role.RoleId,
                     role.DisplayName);
 
@@ -799,9 +801,9 @@ namespace cloudscribe.Core.Repositories.Firebird
         }
 
 
-        public bool DeleteRole(int roleID)
+        public async Task<bool> DeleteRole(int roleID)
         {
-            return DBRoles.Delete(roleID);
+            return await DBRoles.Delete(roleID);
         }
 
         public bool AddUserToRole(
@@ -875,10 +877,10 @@ namespace cloudscribe.Core.Repositories.Firebird
         }
 
 
-        public bool RoleExists(int siteId, String roleName)
+        public async Task<bool> RoleExists(int siteId, String roleName)
         {
             //if (UseRelatedSiteMode) { siteId = RelatedSiteID; }
-            return DBRoles.Exists(siteId, roleName);
+            return await DBRoles.Exists(siteId, roleName);
         }
 
         public int GetRoleMemberCount(int roleId)
@@ -898,9 +900,9 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         }
 
-        public ISiteRole FetchRole(int roleID)
+        public async Task<ISiteRole> FetchRole(int roleID)
         {
-            using (IDataReader reader = DBRoles.GetById(roleID))
+            using (IDataReader reader = await DBRoles.GetById(roleID))
             {
                 if (reader.Read())
                 {
@@ -951,17 +953,16 @@ namespace cloudscribe.Core.Repositories.Firebird
             return userRoles;
         }
 
-        public IList<ISiteRole> GetRolesBySite(
+        public async Task<IList<ISiteRole>> GetRolesBySite(
             int siteId,
             string searchInput,
             int pageNumber,
-            int pageSize,
-            out int totalPages)
+            int pageSize)
         {
             if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
 
             IList<ISiteRole> roles = new List<ISiteRole>();
-            using (IDataReader reader = DBRoles.GetPage(siteId, searchInput, pageNumber, pageSize, out totalPages))
+            using (IDataReader reader = await DBRoles.GetPage(siteId, searchInput, pageNumber, pageSize))
             {
                 while (reader.Read())
                 {
@@ -1028,25 +1029,29 @@ namespace cloudscribe.Core.Repositories.Firebird
         }
 
 
-        public int CountOfRoles(int siteId)
+        public async Task<int> CountOfRoles(int siteId, string searchInput)
         {
             if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
-            return DBRoles.GetCountOfSiteRoles(siteId);
+            return await DBRoles.GetCountOfSiteRoles(siteId, searchInput);
         }
 
-        public IList<IUserInfo> GetUsersInRole(
+        public async Task<int> CountUsersInRole(int siteId, int roleId, string searchInput)
+        {
+            return await DBRoles.GetCountOfUsersInRole(siteId, roleId, searchInput);
+        }
+
+        public async Task<IList<IUserInfo>> GetUsersInRole(
             int siteId, 
             int roleId, 
             string searchInput,
             int pageNumber, 
-            int pageSize, 
-            out int totalPages)
+            int pageSize)
         {
             IList<IUserInfo> users = new List<IUserInfo>();
 
             if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
 
-            using (IDataReader reader = DBRoles.GetUsersInRole(siteId, roleId, searchInput, pageNumber, pageSize, out totalPages))
+            using (IDataReader reader = await DBRoles.GetUsersInRole(siteId, roleId, searchInput, pageNumber, pageSize))
             {
                 while (reader.Read())
                 {

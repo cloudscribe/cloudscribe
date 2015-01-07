@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-18
-// Last Modified:			2015-01-05
+// Last Modified:			2015-01-07
 // 
 
 
@@ -13,6 +13,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
+using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.SQLite
 {
@@ -750,11 +751,12 @@ namespace cloudscribe.Core.Repositories.SQLite
         /// are also not allowed to be deleted
         /// </summary>
         /// <returns></returns>
-        public bool SaveRole(ISiteRole role)
+        public async Task<bool> SaveRole(ISiteRole role)
         {
             if (role.RoleId == -1) // new role
             {
-                if (RoleExists(role.SiteId, role.DisplayName))
+                bool exists = await RoleExists(role.SiteId, role.DisplayName);
+                if (exists)
                 {
                     log.Error("attempt to create a duplicate role "
                         + role.DisplayName + " for site "
@@ -786,12 +788,7 @@ namespace cloudscribe.Core.Repositories.SQLite
 
         }
 
-
-
-
-
-
-        public bool DeleteRole(int roleID)
+        public async Task<bool> DeleteRole(int roleID)
         {
             return DBRoles.Delete(roleID);
         }
@@ -852,8 +849,6 @@ namespace cloudscribe.Core.Repositories.SQLite
                 }
 
             }
-
-
         }
 
         public bool DeleteUserRoles(int userId)
@@ -866,7 +861,7 @@ namespace cloudscribe.Core.Repositories.SQLite
             return DBRoles.DeleteUserRolesByRole(roleId);
         }
 
-        public bool RoleExists(int siteId, String roleName)
+        public async Task<bool> RoleExists(int siteId, String roleName)
         {
             //if (UseRelatedSiteMode) { siteId = RelatedSiteID; }
             return DBRoles.Exists(siteId, roleName);
@@ -889,7 +884,7 @@ namespace cloudscribe.Core.Repositories.SQLite
 
         }
 
-        public ISiteRole FetchRole(int roleID)
+        public async Task<ISiteRole> FetchRole(int roleID)
         {
             using (IDataReader reader = DBRoles.GetById(roleID))
             {
@@ -942,17 +937,16 @@ namespace cloudscribe.Core.Repositories.SQLite
             return userRoles;
         }
 
-        public IList<ISiteRole> GetRolesBySite(
+        public async Task<IList<ISiteRole>> GetRolesBySite(
             int siteId,
             string searchInput,
             int pageNumber,
-            int pageSize,
-            out int totalPages)
+            int pageSize)
         {
             //if (UseRelatedSiteMode) { siteId = RelatedSiteID; }
 
             IList<ISiteRole> roles = new List<ISiteRole>();
-            using (IDataReader reader = DBRoles.GetPage(siteId, searchInput, pageNumber, pageSize, out totalPages))
+            using (IDataReader reader = DBRoles.GetPage(siteId, searchInput, pageNumber, pageSize))
             {
                 while (reader.Read())
                 {
@@ -1019,24 +1013,28 @@ namespace cloudscribe.Core.Repositories.SQLite
         }
 
 
-        public int CountOfRoles(int siteId)
+        public async Task<int> CountOfRoles(int siteId, string searchInput)
         {
             //if (UseRelatedSiteMode) { siteId = RelatedSiteID; } 
-            return DBRoles.GetCountOfSiteRoles(siteId);
+            return DBRoles.GetCountOfSiteRoles(siteId, searchInput);
         }
 
-        public IList<IUserInfo> GetUsersInRole(
+        public async Task<int> CountUsersInRole(int siteId, int roleId, string searchInput)
+        {
+            return DBRoles.GetCountOfUsersInRole(siteId, roleId, searchInput);
+        }
+
+        public async Task<IList<IUserInfo>> GetUsersInRole(
             int siteId, 
             int roleId, 
             string searchInput,
             int pageNumber, 
-            int pageSize, 
-            out int totalPages)
+            int pageSize)
         {
             IList<IUserInfo> users = new List<IUserInfo>();
 
             //if (UseRelatedSiteMode) { siteId = RelatedSiteID; }
-            using (IDataReader reader = DBRoles.GetUsersInRole(siteId, roleId, searchInput, pageNumber, pageSize, out totalPages))
+            using (IDataReader reader = DBRoles.GetUsersInRole(siteId, roleId, searchInput, pageNumber, pageSize))
             {
                 while (reader.Read())
                 {

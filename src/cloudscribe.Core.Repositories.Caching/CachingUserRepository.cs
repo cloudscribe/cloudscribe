@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-30
-// Last Modified:			2015-01-05
+// Last Modified:			2015-01-07
 // 
 
 using cloudscribe.Caching;
@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
+using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.Caching
 {
@@ -321,15 +322,15 @@ namespace cloudscribe.Core.Repositories.Caching
 
         #region Roles
 
-        public bool SaveRole(ISiteRole role)
+        public async Task<bool> SaveRole(ISiteRole role)
         {
-            return repo.SaveRole(role);
+            return await repo.SaveRole(role);
         }
 
 
-        public bool DeleteRole(int roleID)
+        public async Task<bool> DeleteRole(int roleID)
         {
-            return repo.DeleteRole(roleID);
+            return await repo.DeleteRole(roleID);
         }
 
         public bool AddUserToRole(
@@ -364,10 +365,10 @@ namespace cloudscribe.Core.Repositories.Caching
         }
 
 
-        public bool RoleExists(int siteId, string roleName)
+        public async Task<bool> RoleExists(int siteId, string roleName)
         {
             //if (UseRelatedSiteMode) { siteId = RelatedSiteID; }
-            return repo.RoleExists(siteId, roleName);
+            return await repo.RoleExists(siteId, roleName);
         }
 
         public int GetRoleMemberCount(int roleId)
@@ -375,9 +376,9 @@ namespace cloudscribe.Core.Repositories.Caching
             return repo.GetRoleMemberCount(roleId);
         }
 
-        public ISiteRole FetchRole(int roleID)
+        public async Task<ISiteRole> FetchRole(int roleID)
         {
-            return repo.FetchRole(roleID);
+            return await repo.FetchRole(roleID);
         }
 
         public ISiteRole FetchRole(int siteId, string roleName)
@@ -391,14 +392,13 @@ namespace cloudscribe.Core.Repositories.Caching
             return repo.GetUserRoles(siteId, userId);
         }
 
-        public IList<ISiteRole> GetRolesBySite(
+        public async Task<IList<ISiteRole>> GetRolesBySite(
             int siteId,
             string searchInput,
             int pageNumber,
-            int pageSize,
-            out int totalPages)
+            int pageSize)
         {
-            return repo.GetRolesBySite(siteId, searchInput, pageNumber,pageSize, out totalPages);
+            return await repo.GetRolesBySite(siteId, searchInput, pageNumber,pageSize);
 
         }
 
@@ -420,26 +420,29 @@ namespace cloudscribe.Core.Repositories.Caching
         //}
 
 
-        public int CountOfRoles(int siteId)
+        public async Task<int> CountOfRoles(int siteId, string searchInput)
         {
-            return repo.CountOfRoles(siteId);
+            return await repo.CountOfRoles(siteId, searchInput);
         }
 
-        public IList<IUserInfo> GetUsersInRole(
+        public async Task<int> CountUsersInRole(int siteId, int roleId, string searchInput)
+        {
+            return await repo.CountUsersInRole(siteId, roleId, searchInput);
+        }
+
+        public async Task<IList<IUserInfo>> GetUsersInRole(
             int siteId, 
             int roleId, 
             string searchInput, 
             int pageNumber, 
-            int pageSize, 
-            out int totalPages)
+            int pageSize)
         {
-            return repo.GetUsersInRole(
+            return await repo.GetUsersInRole(
                 siteId,
                 roleId,
                 searchInput,
                 pageNumber,
-                pageSize,
-                out totalPages);
+                pageSize);
         }
 
         public IList<IUserInfo> GetUsersNotInRole(

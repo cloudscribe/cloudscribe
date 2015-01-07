@@ -90,7 +90,7 @@
         }
     </table>
     <div>
-        @Html.Pager(Model.Paging.ItemsPerPage, Model.Paging.CurrentPage, Model.Paging.TotalPages).Options(o => o
+        @Html.Pager(Model.Paging.ItemsPerPage, Model.Paging.CurrentPage, Model.Paging.TotalItems).Options(o => o
             .Action("RoleMembers")
             .AddRouteValue("roleId", Model.Role.RoleId)
             .AddRouteValue("searchInput", Model.SearchQuery)
@@ -98,7 +98,7 @@
             .DisplayTemplate("Bootstrap3Pagination")
             .PageRouteValueKey("pageNumber")
             .MaxNrOfPages(Model.Paging.MaxPagerItems)
-            .UseItemCountAsPageCount()
+            
     )
     </div>
 </div>

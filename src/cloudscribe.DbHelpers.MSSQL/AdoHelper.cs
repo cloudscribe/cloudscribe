@@ -286,8 +286,18 @@ namespace cloudscribe.DbHelpers.MSSQL
         }
 
 
-        
-        
+
+        public static async Task<DbDataReader> ExecuteReaderAsync(
+            string connectionString,
+            CommandType commandType,
+            string commandText,
+            params DbParameter[] commandParameters)
+        {
+            int commandTimeout = 30; //30 seconds default
+            return await ExecuteReaderAsync(connectionString, commandType, commandText, commandTimeout, commandParameters);
+
+
+        }
 
         public static async Task<DbDataReader> ExecuteReaderAsync(
             string connectionString,

@@ -1,6 +1,6 @@
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-01-05
+// Last Modified:			2015-01-07
 // 
 //
 // You must not remove this notice, or any other, from this software.
@@ -11,6 +11,7 @@ using Npgsql;
 using System;
 using System.Data;
 using System.Text;
+using System.Threading.Tasks;
 
 
 namespace cloudscribe.Core.Repositories.pgsql
@@ -19,7 +20,7 @@ namespace cloudscribe.Core.Repositories.pgsql
     internal static class DBRoles
     {
        
-        public static int RoleCreate(
+        public static async Task<int> RoleCreate(
             Guid roleGuid,
             Guid siteGuid,
             int siteId,
@@ -43,16 +44,18 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = roleGuid.ToString();
 
-            int newID = Convert.ToInt32(AdoHelper.ExecuteScalar(ConnectionString.GetWriteConnectionString(),
+            object result = await AdoHelper.ExecuteScalarAsync(ConnectionString.GetWriteConnectionString(),
                     CommandType.StoredProcedure,
                     "mp_roles_insert(:siteid,:rolename,:siteguid,:roleguid)",
-                    arParams));
+                    arParams);
+
+            int newID = Convert.ToInt32(result);
 
             return newID;
 
         }
 
-        public static bool Update(int roleId, string roleName)
+        public static async Task<bool> Update(int roleId, string roleName)
         {
             NpgsqlParameter[] arParams = new NpgsqlParameter[2];
             
@@ -63,29 +66,33 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[1] = new NpgsqlParameter("rolename", NpgsqlTypes.NpgsqlDbType.Text, 50);
             arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = roleName;
-            
-            int rowsAffected = Convert.ToInt32(AdoHelper.ExecuteScalar(
+
+            object result = await AdoHelper.ExecuteScalarAsync(
                 ConnectionString.GetWriteConnectionString(),
                 CommandType.StoredProcedure,
                 "mp_roles_update(:roleid,:rolename)",
-                arParams));
+                arParams);
+            
+            int rowsAffected = Convert.ToInt32(result);
 
             return (rowsAffected > -1);
         }
 
-        public static bool Delete(int roleId)
+        public static async Task<bool> Delete(int roleId)
         {
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
             
             arParams[0] = new NpgsqlParameter("roleid", NpgsqlTypes.NpgsqlDbType.Integer);
             arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = roleId;
-            
-            int rowsAffected = Convert.ToInt32(AdoHelper.ExecuteScalar(
+
+            object result = await AdoHelper.ExecuteScalarAsync(
                 ConnectionString.GetWriteConnectionString(),
                 CommandType.StoredProcedure,
                 "mp_roles_delete(:roleid)",
-                arParams));
+                arParams);
+            
+            int rowsAffected = Convert.ToInt32(result);
 
             return (rowsAffected > -1);
 
@@ -131,7 +138,7 @@ namespace cloudscribe.Core.Repositories.pgsql
             return (rowsAffected > -1);
         }
 
-        public static IDataReader GetById(int roleId)
+        public static async Task<IDataReader> GetById(int roleId)
         {
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
@@ -139,7 +146,7 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = roleId;
             
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 CommandType.StoredProcedure,
                 "mp_roles_selectone(:roleid)",
@@ -165,7 +172,7 @@ namespace cloudscribe.Core.Repositories.pgsql
                 arParams);
         }
 
-        public static bool Exists(int siteId, string roleName)
+        public static async Task<bool> Exists(int siteId, string roleName)
         {
             NpgsqlParameter[] arParams = new NpgsqlParameter[2];
             
@@ -177,11 +184,13 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = roleName;
 
-            int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
+            object result = await AdoHelper.ExecuteScalarAsync(
                 ConnectionString.GetReadConnectionString(),
                 CommandType.StoredProcedure,
                 "mp_roles_roleexists(:siteid,:rolename)",
-                arParams));
+                arParams);
+
+            int count = Convert.ToInt32(result);
 
             return (count > 0);
 
@@ -409,7 +418,7 @@ namespace cloudscribe.Core.Repositories.pgsql
             
         }
 
-        public static int GetCountOfUsersInRole(int siteId, int roleId, string searchInput)
+        public static async Task<int> GetCountOfUsersInRole(int siteId, int roleId, string searchInput)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT ");
@@ -454,40 +463,41 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = "%" + searchInput + "%";
 
-            return Convert.ToInt32(AdoHelper.ExecuteScalar(
+            object result = await AdoHelper.ExecuteScalarAsync(
                ConnectionString.GetReadConnectionString(),
                CommandType.Text,
                sqlCommand.ToString(),
-               arParams));
+               arParams);
+
+            return Convert.ToInt32(result);
         }
 
-        public static IDataReader GetUsersInRole(
+        public static async Task<IDataReader> GetUsersInRole(
             int siteId,
             int roleId,
             string searchInput,
             int pageNumber,
-            int pageSize,
-            out int totalPages)
+            int pageSize)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
-            totalPages = 1;
-            int totalRows = GetCountOfUsersInRole(siteId, roleId, searchInput);
+            //totalPages = 1;
+            //int totalRows = GetCountOfUsersInRole(siteId, roleId, searchInput);
 
-            if (pageSize > 0) totalPages = totalRows / pageSize;
+            //if (pageSize > 0) totalPages = totalRows / pageSize;
 
-            if (totalRows <= pageSize)
-            {
-                totalPages = 1;
-            }
-            else
-            {
-                int remainder;
-                Math.DivRem(totalRows, pageSize, out remainder);
-                if (remainder > 0)
-                {
-                    totalPages += 1;
-                }
-            }
+            //if (totalRows <= pageSize)
+            //{
+            //    totalPages = 1;
+            //}
+            //else
+            //{
+            //    int remainder;
+            //    Math.DivRem(totalRows, pageSize, out remainder);
+            //    if (remainder > 0)
+            //    {
+            //        totalPages += 1;
+            //    }
+            //}
 
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT ");
@@ -549,7 +559,7 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = pageLowerBound;
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                ConnectionString.GetReadConnectionString(),
                CommandType.Text,
                sqlCommand.ToString(),
@@ -658,7 +668,7 @@ namespace cloudscribe.Core.Repositories.pgsql
                arParams));
         }
 
-        private static int GetCountOfSiteRoles(int siteId, string searchInput)
+        public static async Task<int> GetCountOfSiteRoles(int siteId, string searchInput)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT ");
@@ -687,39 +697,40 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = "%" + searchInput + "%";
 
-            return Convert.ToInt32(AdoHelper.ExecuteScalar(
+            object result = await AdoHelper.ExecuteScalarAsync(
                ConnectionString.GetReadConnectionString(),
                CommandType.Text,
                sqlCommand.ToString(),
-               arParams));
+               arParams);
+
+            return Convert.ToInt32(result);
         }
 
-        public static IDataReader GetPage(
+        public static async Task<IDataReader> GetPage(
             int siteId,
             string searchInput,
             int pageNumber,
-            int pageSize,
-            out int totalPages)
+            int pageSize)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
-            totalPages = 1;
-            int totalRows = GetCountOfSiteRoles(siteId,searchInput);
+            //totalPages = 1;
+            //int totalRows = GetCountOfSiteRoles(siteId,searchInput);
 
-            if (pageSize > 0) totalPages = totalRows / pageSize;
+            //if (pageSize > 0) totalPages = totalRows / pageSize;
 
-            if (totalRows <= pageSize)
-            {
-                totalPages = 1;
-            }
-            else
-            {
-                int remainder;
-                Math.DivRem(totalRows, pageSize, out remainder);
-                if (remainder > 0)
-                {
-                    totalPages += 1;
-                }
-            }
+            //if (totalRows <= pageSize)
+            //{
+            //    totalPages = 1;
+            //}
+            //else
+            //{
+            //    int remainder;
+            //    Math.DivRem(totalRows, pageSize, out remainder);
+            //    if (remainder > 0)
+            //    {
+            //        totalPages += 1;
+            //    }
+            //}
 
             NpgsqlParameter[] arParams = new NpgsqlParameter[4];
 
@@ -783,7 +794,7 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             sqlCommand.Append(";");
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
