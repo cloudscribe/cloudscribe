@@ -1,13 +1,15 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-11-02
-// Last Modified:			2015-01-04
+// Last Modified:			2015-01-08
 // 
 
 
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Globalization;
+using System.Threading.Tasks;
 using cloudscribe.Core.Models.Geography;
 
 namespace cloudscribe.Core.Repositories.MSSQL
@@ -18,15 +20,15 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// Persists a new instance of GeoCountry.
         /// </summary>
         /// <returns></returns>
-        public void Save(IGeoCountry geoCountry)
+        public async Task<bool> Save(IGeoCountry geoCountry)
         {
-            if (geoCountry == null) { return; }
-
+            if (geoCountry == null) { return false; }
+            bool result;
             if (geoCountry.Guid == Guid.Empty)
             {
                 geoCountry.Guid = Guid.NewGuid();
 
-                DBGeoCountry.Create(
+                result = await DBGeoCountry.Create(
                     geoCountry.Guid,
                     geoCountry.Name,
                     geoCountry.ISOCode2,
@@ -34,20 +36,22 @@ namespace cloudscribe.Core.Repositories.MSSQL
             }
             else
             {
-                DBGeoCountry.Update(
+                result = await DBGeoCountry.Update(
                     geoCountry.Guid,
                     geoCountry.Name,
                     geoCountry.ISOCode2,
                     geoCountry.ISOCode3);
 
             }
+
+            return result;
         }
 
 
         /// <param name="guid"> guid </param>
-        public IGeoCountry FetchCountry(Guid guid)
+        public async Task<IGeoCountry> FetchCountry(Guid guid)
         {
-            using (IDataReader reader = DBGeoCountry.GetOne(guid))
+            using (DbDataReader reader = await DBGeoCountry.GetOne(guid))
             {
                 if (reader.Read())
                 {
@@ -67,27 +71,27 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// </summary>
         /// <param name="guid"> guid </param>
         /// <returns>bool</returns>
-        public bool DeleteCountry(Guid guid)
+        public async Task<bool> DeleteCountry(Guid guid)
         {
-            return DBGeoCountry.Delete(guid);
+            return await DBGeoCountry.Delete(guid);
         }
 
 
         /// <summary>
         /// Gets a count of GeoCountry. 
         /// </summary>
-        public int GetCountryCount()
+        public async Task<int> GetCountryCount()
         {
-            return DBGeoCountry.GetCount();
+            return await DBGeoCountry.GetCount();
         }
 
 
         /// <summary>
         /// Gets an IList with all instances of GeoCountry.
         /// </summary>
-        public List<IGeoCountry> GetAllCountries()
+        public async Task<List<IGeoCountry>> GetAllCountries()
         {
-            IDataReader reader = DBGeoCountry.GetAll();
+            DbDataReader reader = await DBGeoCountry.GetAll();
             return LoadCountryListFromReader(reader);
 
         }
@@ -98,10 +102,9 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// <param name="pageNumber">The page number.</param>
         /// <param name="pageSize">Size of the page.</param>
         /// <param name="totalPages">total pages</param>
-        public List<IGeoCountry> GetCountriesPage(int pageNumber, int pageSize, out int totalPages)
+        public async Task<List<IGeoCountry>> GetCountriesPage(int pageNumber, int pageSize)
         {
-            totalPages = 1;
-            IDataReader reader = DBGeoCountry.GetPage(pageNumber, pageSize, out totalPages);
+            DbDataReader reader = await DBGeoCountry.GetPage(pageNumber, pageSize);
             return LoadCountryListFromReader(reader);
         }
 
@@ -111,15 +114,15 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// Persists a new instance of GeoZone.
         /// </summary>
         /// <returns></returns>
-        public void Save(IGeoZone geoZone)
+        public async Task<bool> Save(IGeoZone geoZone)
         {
-            if (geoZone == null) { return; }
-
+            if (geoZone == null) { return false; }
+            bool result;
             if (geoZone.Guid == Guid.Empty)
             {
                 geoZone.Guid = Guid.NewGuid();
 
-                DBGeoZone.Create(
+                result = await DBGeoZone.Create(
                     geoZone.Guid,
                     geoZone.CountryGuid,
                     geoZone.Name,
@@ -127,20 +130,21 @@ namespace cloudscribe.Core.Repositories.MSSQL
             }
             else
             {
-                DBGeoZone.Update(
+                result = await DBGeoZone.Update(
                     geoZone.Guid,
                     geoZone.CountryGuid,
                     geoZone.Name,
                     geoZone.Code);
 
             }
+            return result;
         }
 
 
         /// <param name="guid"> guid </param>
-        public IGeoZone FetchGeoZone(Guid guid)
+        public async Task<IGeoZone> FetchGeoZone(Guid guid)
         {
-            using (IDataReader reader = DBGeoZone.GetOne(guid))
+            using (DbDataReader reader = await DBGeoZone.GetOne(guid))
             {
                 if (reader.Read())
                 {
@@ -164,31 +168,31 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// </summary>
         /// <param name="guid"> guid </param>
         /// <returns>bool</returns>
-        public bool DeleteGeoZone(Guid guid)
+        public async Task<bool> DeleteGeoZone(Guid guid)
         {
-            return DBGeoZone.Delete(guid);
+            return await DBGeoZone.Delete(guid);
         }
 
-        public bool DeleteGeoZonesByCountry(Guid countryGuid)
+        public async Task<bool> DeleteGeoZonesByCountry(Guid countryGuid)
         {
-            return DBGeoZone.DeleteByCountry(countryGuid);
+            return await DBGeoZone.DeleteByCountry(countryGuid);
         }
 
         /// <summary>
         /// Gets a count of GeoZone. 
         /// </summary>
-        public int GetGeoZoneCount(Guid countryGuid)
+        public async Task<int> GetGeoZoneCount(Guid countryGuid)
         {
-            return DBGeoZone.GetCount(countryGuid);
+            return await DBGeoZone.GetCount(countryGuid);
         }
 
 
         /// <summary>
         /// Gets an IList with all instances of GeoZone.
         /// </summary>
-        public List<IGeoZone> GetGeoZonesByCountry(Guid countryGuid)
+        public async Task<List<IGeoZone>> GetGeoZonesByCountry(Guid countryGuid)
         {
-            IDataReader reader = DBGeoZone.GetByCountry(countryGuid);
+            DbDataReader reader = await DBGeoZone.GetByCountry(countryGuid);
             return LoadGeoZoneListFromReader(reader);
 
         }
@@ -199,15 +203,14 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// <param name="pageNumber">The page number.</param>
         /// <param name="pageSize">Size of the page.</param>
         /// <param name="totalPages">total pages</param>
-        public List<IGeoZone> GetGeoZonePage(Guid countryGuid, int pageNumber, int pageSize, out int totalPages)
+        public async Task<List<IGeoZone>> GetGeoZonePage(Guid countryGuid, int pageNumber, int pageSize)
         {
-            totalPages = 1;
-            IDataReader reader = DBGeoZone.GetPage(countryGuid, pageNumber, pageSize, out totalPages);
+            DbDataReader reader = await DBGeoZone.GetPage(countryGuid, pageNumber, pageSize);
             return LoadGeoZoneListFromReader(reader);
         }
 
 
-        private List<IGeoZone> LoadGeoZoneListFromReader(IDataReader reader)
+        private List<IGeoZone> LoadGeoZoneListFromReader(DbDataReader reader)
         {
             List<IGeoZone> geoZoneList = new List<IGeoZone>();
 
@@ -230,7 +233,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         }
 
-        private void LoadFromReader(IDataReader reader, IGeoZone geoZone)
+        private void LoadFromReader(DbDataReader reader, IGeoZone geoZone)
         {
             geoZone.Guid = new Guid(reader["Guid"].ToString());
             geoZone.CountryGuid = new Guid(reader["CountryGuid"].ToString());
@@ -239,7 +242,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
         }
 
 
-        private void LoadFromReader(IDataReader reader, IGeoCountry geoCountry)
+        private void LoadFromReader(DbDataReader reader, IGeoCountry geoCountry)
         {
             geoCountry.Guid = new Guid(reader["Guid"].ToString());
             geoCountry.Name = reader["Name"].ToString();
@@ -247,7 +250,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             geoCountry.ISOCode3 = reader["ISOCode3"].ToString();
         }
 
-        private List<IGeoCountry> LoadCountryListFromReader(IDataReader reader)
+        private List<IGeoCountry> LoadCountryListFromReader(DbDataReader reader)
         {
             List<IGeoCountry> geoCountryList = new List<IGeoCountry>();
 
@@ -270,15 +273,15 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         }
 
-        public void Save(ILanguage language)
+        public async Task<bool> Save(ILanguage language)
         {
-            if (language == null) { return; }
-
+            if (language == null) { return false; }
+            bool result;
             if (language.Guid == Guid.Empty)
             {
                 language.Guid = Guid.NewGuid();
 
-                DBLanguage.Create(
+                result = await DBLanguage.Create(
                     language.Guid,
                     language.Name,
                     language.Code,
@@ -286,18 +289,20 @@ namespace cloudscribe.Core.Repositories.MSSQL
             }
             else
             {
-                DBLanguage.Update(
+                result = await DBLanguage.Update(
                     language.Guid,
                     language.Name,
                     language.Code,
                     language.Sort);
 
             }
+
+            return result;
         }
 
-        public ILanguage FetchLanguage(Guid guid)
+        public async Task<ILanguage> FetchLanguage(Guid guid)
         {
-            using (IDataReader reader = DBLanguage.GetOne(guid))
+            using (DbDataReader reader = await DBLanguage.GetOne(guid))
             {
                 if (reader.Read())
                 {
@@ -316,31 +321,30 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// </summary>
         /// <param name="guid"> guid </param>
         /// <returns>bool</returns>
-        public bool DeleteLanguage(Guid guid)
+        public async Task<bool> DeleteLanguage(Guid guid)
         {
-            return DBLanguage.Delete(guid);
+            return await DBLanguage.Delete(guid);
         }
 
-        public int GetLanguageCount()
+        public async Task<int> GetLanguageCount()
         {
-            return DBLanguage.GetCount();
+            return await DBLanguage.GetCount();
         }
 
-        public List<ILanguage> GetAllLanguages()
+        public async Task<List<ILanguage>> GetAllLanguages()
         {
-            IDataReader reader = DBLanguage.GetAll();
+            DbDataReader reader = await DBLanguage.GetAll();
             return LoadLanguageListFromReader(reader);
 
         }
 
-        public List<ILanguage> GetLanguagePage(int pageNumber, int pageSize, out int totalPages)
+        public async Task<List<ILanguage>> GetLanguagePage(int pageNumber, int pageSize)
         {
-            totalPages = 1;
-            IDataReader reader = DBLanguage.GetPage(pageNumber, pageSize, out totalPages);
+            DbDataReader reader = await DBLanguage.GetPage(pageNumber, pageSize);
             return LoadLanguageListFromReader(reader);
         }
 
-        private void LoadFromReader(IDataReader reader, ILanguage language)
+        private void LoadFromReader(DbDataReader reader, ILanguage language)
         {
             language.Guid = new Guid(reader["Guid"].ToString());
             language.Name = reader["Name"].ToString();
@@ -348,7 +352,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             language.Sort = Convert.ToInt32(reader["Sort"]);
         }
 
-        private List<ILanguage> LoadLanguageListFromReader(IDataReader reader)
+        private List<ILanguage> LoadLanguageListFromReader(DbDataReader reader)
         {
             List<ILanguage> languageList = new List<ILanguage>();
 
@@ -371,15 +375,15 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         }
 
-        public void Save(ICurrency currency)
+        public async Task<bool> Save(ICurrency currency)
         {
-            if (currency == null) { return; }
-
+            if (currency == null) { return false; }
+            bool result;
             if (currency.Guid == Guid.Empty)
             {
                 currency.Guid = Guid.NewGuid();
 
-                DBCurrency.Create(
+                result = await DBCurrency.Create(
                     currency.Guid,
                     currency.Title,
                     currency.Code,
@@ -394,7 +398,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             }
             else
             {
-                DBCurrency.Update(
+                result = await DBCurrency.Update(
                     currency.Guid,
                     currency.Title,
                     currency.Code,
@@ -407,11 +411,13 @@ namespace cloudscribe.Core.Repositories.MSSQL
                     currency.LastModified);
 
             }
+
+            return result;
         }
 
-        public ICurrency FetchCurrency(Guid guid)
+        public async Task<ICurrency> FetchCurrency(Guid guid)
         {
-            using (IDataReader reader = DBCurrency.GetOne(guid))
+            using (DbDataReader reader = await DBCurrency.GetOne(guid))
             {
                 if (reader.Read())
                 {
@@ -425,19 +431,19 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return null;
         }
 
-        public bool DeleteCurrency(Guid guid)
+        public async Task<bool> DeleteCurrency(Guid guid)
         {
-            return DBCurrency.Delete(guid);
+            return await DBCurrency.Delete(guid);
         }
 
-        public List<ICurrency> GetAllCurrencies()
+        public async Task<List<ICurrency>> GetAllCurrencies()
         {
-            IDataReader reader = DBCurrency.GetAll();
+            DbDataReader reader = await DBCurrency.GetAll();
             return LoadCurrencyListFromReader(reader);
 
         }
 
-        private void LoadFromReader(IDataReader reader, ICurrency currency)
+        private void LoadFromReader(DbDataReader reader, ICurrency currency)
         {
             currency.Guid = new Guid(reader["Guid"].ToString());
             currency.Title = reader["Title"].ToString();
@@ -452,7 +458,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             currency.Created = Convert.ToDateTime(reader["Created"]);
         }
 
-        private List<ICurrency> LoadCurrencyListFromReader(IDataReader reader)
+        private List<ICurrency> LoadCurrencyListFromReader(DbDataReader reader)
         {
             List<ICurrency> currencyList = new List<ICurrency>();
 

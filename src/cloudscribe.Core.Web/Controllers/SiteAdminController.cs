@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-01-05
+// Last Modified:			2015-01-08
 // 
 
 using cloudscribe.Configuration;
@@ -111,7 +111,7 @@ namespace cloudscribe.Core.Web.Controllers
             model.SiteFolderName = selectedSite.SiteFolderName;
 
             model.AvailableCountries.Add(new SelectListItem { Text = "-Please select-", Value = "Selects items" });
-            var countries = geoRepo.GetAllCountries();
+            var countries = await geoRepo.GetAllCountries();
             Guid selectedCountryGuid = Guid.Empty;
             foreach (var country in countries)
             {
@@ -129,7 +129,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             if (selectedCountryGuid != Guid.Empty)
             {
-                var states = geoRepo.GetGeoZonesByCountry(selectedCountryGuid);
+                var states = await geoRepo.GetGeoZonesByCountry(selectedCountryGuid);
                 foreach (var state in states)
                 {
                     model.AvailableStates.Add(new SelectListItem()
@@ -240,7 +240,7 @@ namespace cloudscribe.Core.Web.Controllers
             //.SiteFolderName = Site.SiteSettings.SiteFolderName;
 
             model.AvailableCountries.Add(new SelectListItem { Text = "-Please select-", Value = "Selects items" });
-            var countries = geoRepo.GetAllCountries();
+            var countries = await geoRepo.GetAllCountries();
             Guid selectedCountryGuid = Guid.Empty;
             foreach (var country in countries)
             {
@@ -258,7 +258,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             if (selectedCountryGuid != Guid.Empty)
             {
-                var states = geoRepo.GetGeoZonesByCountry(selectedCountryGuid);
+                var states = await geoRepo.GetGeoZonesByCountry(selectedCountryGuid);
                 foreach (var state in states)
                 {
                     model.AvailableStates.Add(new SelectListItem()

@@ -2085,7 +2085,7 @@ namespace cloudscribe.Core.Repositories.SQLite
             return (rowsAffected > 0);
         }
 
-        public static IDataReader GetRolesByUser(int siteId, int userId)
+        public static DbDataReader GetRolesByUser(int siteId, int userId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT ");

@@ -1,12 +1,13 @@
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2014-08-22
+// Last Modified:			2015-01-08
 // 
 // You must not remove this notice, or any other, from this software.
 
 
 using System;
 using System.Data;
+using System.Data.Common;
 using cloudscribe.DbHelpers.MSSQL;
 using System.Threading.Tasks;
 
@@ -76,14 +77,14 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         }
 
-        public static async Task<IDataReader> GetById(int roleId)
+        public static async Task<DbDataReader> GetById(int roleId)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_Roles_SelectOne", 1);
             sph.DefineSqlParameter("@RoleID", SqlDbType.Int, ParameterDirection.Input, roleId);
             return await sph.ExecuteReaderAsync();
         }
 
-        public static IDataReader GetByName(int siteId, string roleName)
+        public static DbDataReader GetByName(int siteId, string roleName)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_Roles_SelectOneByName", 2);
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
@@ -91,14 +92,14 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return sph.ExecuteReader();
         }
 
-        public static IDataReader GetSiteRoles(int siteId)
+        public static DbDataReader GetSiteRoles(int siteId)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_Roles_Select", 1);
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
             return sph.ExecuteReader();
         }
 
-        public static IDataReader GetRoleMembers(int roleId)
+        public static DbDataReader GetRoleMembers(int roleId)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_UserRoles_SelectByRoleID", 1);
             sph.DefineSqlParameter("@RoleID", SqlDbType.Int, ParameterDirection.Input, roleId);
@@ -115,7 +116,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return Convert.ToInt32(result); 
         }
 
-        public static async Task<IDataReader> GetUsersNotInRole(
+        public static async Task<DbDataReader> GetUsersNotInRole(
             int siteId, 
             int roleId, 
             string searchInput,
@@ -160,7 +161,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return Convert.ToInt32(result);
         }
 
-        public static async Task<IDataReader> GetUsersInRole(
+        public static async Task<DbDataReader> GetUsersInRole(
             int siteId,
             int roleId,
             string searchInput,
@@ -196,7 +197,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return await sph.ExecuteReaderAsync();
         }
 
-        public static IDataReader GetRolesUserIsNotIn(
+        public static DbDataReader GetRolesUserIsNotIn(
             int siteId,
             int userId)
         {
@@ -250,7 +251,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return Convert.ToInt32(result);
         }
 
-        public static async Task<IDataReader> GetPage(
+        public static async Task<DbDataReader> GetPage(
             int siteId, 
             string searchInput,
             int pageNumber,

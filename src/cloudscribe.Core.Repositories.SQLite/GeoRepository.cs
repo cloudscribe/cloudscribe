@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-11-03
-// Last Modified:			2015-01-04
+// Last Modified:			2015-01-08
 // 
 
 
@@ -8,6 +8,8 @@ using cloudscribe.Core.Models.Geography;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
+using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.SQLite
 {
@@ -17,15 +19,15 @@ namespace cloudscribe.Core.Repositories.SQLite
         /// Persists a new instance of GeoCountry.
         /// </summary>
         /// <returns></returns>
-        public void Save(IGeoCountry geoCountry)
+        public async Task<bool> Save(IGeoCountry geoCountry)
         {
-            if (geoCountry == null) { return; }
-
+            if (geoCountry == null) { return false; }
+            bool result;
             if (geoCountry.Guid == Guid.Empty)
             {
                 geoCountry.Guid = Guid.NewGuid();
 
-                DBGeoCountry.Create(
+                result = DBGeoCountry.Create(
                     geoCountry.Guid,
                     geoCountry.Name,
                     geoCountry.ISOCode2,
@@ -33,18 +35,20 @@ namespace cloudscribe.Core.Repositories.SQLite
             }
             else
             {
-                DBGeoCountry.Update(
+                result = DBGeoCountry.Update(
                     geoCountry.Guid,
                     geoCountry.Name,
                     geoCountry.ISOCode2,
                     geoCountry.ISOCode3);
 
             }
+
+            return result;
         }
 
 
         /// <param name="guid"> guid </param>
-        public IGeoCountry FetchCountry(Guid guid)
+        public async Task<IGeoCountry> FetchCountry(Guid guid)
         {
             using (IDataReader reader = DBGeoCountry.GetOne(guid))
             {
@@ -66,7 +70,7 @@ namespace cloudscribe.Core.Repositories.SQLite
         /// </summary>
         /// <param name="guid"> guid </param>
         /// <returns>bool</returns>
-        public bool DeleteCountry(Guid guid)
+        public async Task<bool> DeleteCountry(Guid guid)
         {
             return DBGeoCountry.Delete(guid);
         }
@@ -75,7 +79,7 @@ namespace cloudscribe.Core.Repositories.SQLite
         /// <summary>
         /// Gets a count of GeoCountry. 
         /// </summary>
-        public int GetCountryCount()
+        public async Task<int> GetCountryCount()
         {
             return DBGeoCountry.GetCount();
         }
@@ -84,7 +88,7 @@ namespace cloudscribe.Core.Repositories.SQLite
         /// <summary>
         /// Gets an IList with all instances of GeoCountry.
         /// </summary>
-        public List<IGeoCountry> GetAllCountries()
+        public async Task<List<IGeoCountry>> GetAllCountries()
         {
             IDataReader reader = DBGeoCountry.GetAll();
             return LoadCountryListFromReader(reader);
@@ -96,11 +100,9 @@ namespace cloudscribe.Core.Repositories.SQLite
         /// </summary>
         /// <param name="pageNumber">The page number.</param>
         /// <param name="pageSize">Size of the page.</param>
-        /// <param name="totalPages">total pages</param>
-        public List<IGeoCountry> GetCountriesPage(int pageNumber, int pageSize, out int totalPages)
+        public async Task<List<IGeoCountry>> GetCountriesPage(int pageNumber, int pageSize)
         {
-            totalPages = 1;
-            IDataReader reader = DBGeoCountry.GetPage(pageNumber, pageSize, out totalPages);
+            IDataReader reader = DBGeoCountry.GetPage(pageNumber, pageSize);
             return LoadCountryListFromReader(reader);
         }
 
@@ -110,15 +112,15 @@ namespace cloudscribe.Core.Repositories.SQLite
         /// Persists a new instance of GeoZone.
         /// </summary>
         /// <returns></returns>
-        public void Save(IGeoZone geoZone)
+        public async Task<bool> Save(IGeoZone geoZone)
         {
-            if (geoZone == null) { return; }
-
+            if (geoZone == null) { return false; }
+            bool result;
             if (geoZone.Guid == Guid.Empty)
             {
                 geoZone.Guid = Guid.NewGuid();
 
-                DBGeoZone.Create(
+                result = DBGeoZone.Create(
                     geoZone.Guid,
                     geoZone.CountryGuid,
                     geoZone.Name,
@@ -126,18 +128,19 @@ namespace cloudscribe.Core.Repositories.SQLite
             }
             else
             {
-                DBGeoZone.Update(
+                result = DBGeoZone.Update(
                     geoZone.Guid,
                     geoZone.CountryGuid,
                     geoZone.Name,
                     geoZone.Code);
 
             }
+            return result;
         }
 
 
         /// <param name="guid"> guid </param>
-        public IGeoZone FetchGeoZone(Guid guid)
+        public async Task<IGeoZone> FetchGeoZone(Guid guid)
         {
             using (IDataReader reader = DBGeoZone.GetOne(guid))
             {
@@ -163,12 +166,12 @@ namespace cloudscribe.Core.Repositories.SQLite
         /// </summary>
         /// <param name="guid"> guid </param>
         /// <returns>bool</returns>
-        public bool DeleteGeoZone(Guid guid)
+        public async Task<bool> DeleteGeoZone(Guid guid)
         {
             return DBGeoZone.Delete(guid);
         }
 
-        public bool DeleteGeoZonesByCountry(Guid countryGuid)
+        public async Task<bool> DeleteGeoZonesByCountry(Guid countryGuid)
         {
             return DBGeoZone.DeleteByCountry(countryGuid);
         }
@@ -176,7 +179,7 @@ namespace cloudscribe.Core.Repositories.SQLite
         /// <summary>
         /// Gets a count of GeoZone. 
         /// </summary>
-        public int GetGeoZoneCount(Guid countryGuid)
+        public async Task<int> GetGeoZoneCount(Guid countryGuid)
         {
             return DBGeoZone.GetCount(countryGuid);
         }
@@ -185,7 +188,7 @@ namespace cloudscribe.Core.Repositories.SQLite
         /// <summary>
         /// Gets an IList with all instances of GeoZone.
         /// </summary>
-        public List<IGeoZone> GetGeoZonesByCountry(Guid countryGuid)
+        public async Task<List<IGeoZone>> GetGeoZonesByCountry(Guid countryGuid)
         {
             IDataReader reader = DBGeoZone.GetByCountry(countryGuid);
             return LoadGeoZoneListFromReader(reader);
@@ -197,11 +200,9 @@ namespace cloudscribe.Core.Repositories.SQLite
         /// </summary>
         /// <param name="pageNumber">The page number.</param>
         /// <param name="pageSize">Size of the page.</param>
-        /// <param name="totalPages">total pages</param>
-        public List<IGeoZone> GetGeoZonePage(Guid countryGuid, int pageNumber, int pageSize, out int totalPages)
+        public async Task<List<IGeoZone>> GetGeoZonePage(Guid countryGuid, int pageNumber, int pageSize)
         {
-            totalPages = 1;
-            IDataReader reader = DBGeoZone.GetPage(countryGuid, pageNumber, pageSize, out totalPages);
+            IDataReader reader = DBGeoZone.GetPage(countryGuid, pageNumber, pageSize);
             return LoadGeoZoneListFromReader(reader);
         }
 
@@ -270,15 +271,15 @@ namespace cloudscribe.Core.Repositories.SQLite
         }
 
 
-        public void Save(ILanguage language)
+        public async Task<bool> Save(ILanguage language)
         {
-            if (language == null) { return; }
-
+            if (language == null) { return false; }
+            bool result;
             if (language.Guid == Guid.Empty)
             {
                 language.Guid = Guid.NewGuid();
 
-                DBLanguage.Create(
+                result = DBLanguage.Create(
                     language.Guid,
                     language.Name,
                     language.Code,
@@ -286,16 +287,18 @@ namespace cloudscribe.Core.Repositories.SQLite
             }
             else
             {
-                DBLanguage.Update(
+                result = DBLanguage.Update(
                     language.Guid,
                     language.Name,
                     language.Code,
                     language.Sort);
 
             }
+
+            return result;
         }
 
-        public ILanguage FetchLanguage(Guid guid)
+        public async Task<ILanguage> FetchLanguage(Guid guid)
         {
             using (IDataReader reader = DBLanguage.GetOne(guid))
             {
@@ -316,27 +319,26 @@ namespace cloudscribe.Core.Repositories.SQLite
         /// </summary>
         /// <param name="guid"> guid </param>
         /// <returns>bool</returns>
-        public bool DeleteLanguage(Guid guid)
+        public async Task<bool> DeleteLanguage(Guid guid)
         {
             return DBLanguage.Delete(guid);
         }
 
-        public int GetLanguageCount()
+        public async Task<int> GetLanguageCount()
         {
             return DBLanguage.GetCount();
         }
 
-        public List<ILanguage> GetAllLanguages()
+        public async Task<List<ILanguage>> GetAllLanguages()
         {
             IDataReader reader = DBLanguage.GetAll();
             return LoadLanguageListFromReader(reader);
 
         }
 
-        public List<ILanguage> GetLanguagePage(int pageNumber, int pageSize, out int totalPages)
+        public async Task<List<ILanguage>> GetLanguagePage(int pageNumber, int pageSize)
         {
-            totalPages = 1;
-            IDataReader reader = DBLanguage.GetPage(pageNumber, pageSize, out totalPages);
+            IDataReader reader = DBLanguage.GetPage(pageNumber, pageSize);
             return LoadLanguageListFromReader(reader);
         }
 
@@ -371,15 +373,15 @@ namespace cloudscribe.Core.Repositories.SQLite
 
         }
 
-        public void Save(ICurrency currency)
+        public async Task<bool> Save(ICurrency currency)
         {
-            if (currency == null) { return; }
-
+            if (currency == null) { return false; }
+            bool result;
             if (currency.Guid == Guid.Empty)
             {
                 currency.Guid = Guid.NewGuid();
 
-                DBCurrency.Create(
+                result = DBCurrency.Create(
                     currency.Guid,
                     currency.Title,
                     currency.Code,
@@ -394,7 +396,7 @@ namespace cloudscribe.Core.Repositories.SQLite
             }
             else
             {
-                DBCurrency.Update(
+                result = DBCurrency.Update(
                     currency.Guid,
                     currency.Title,
                     currency.Code,
@@ -407,9 +409,10 @@ namespace cloudscribe.Core.Repositories.SQLite
                     currency.LastModified);
 
             }
+            return result;
         }
 
-        public ICurrency FetchCurrency(Guid guid)
+        public async Task<ICurrency> FetchCurrency(Guid guid)
         {
             using (IDataReader reader = DBCurrency.GetOne(guid))
             {
@@ -425,12 +428,12 @@ namespace cloudscribe.Core.Repositories.SQLite
             return null;
         }
 
-        public bool DeleteCurrency(Guid guid)
+        public async Task<bool> DeleteCurrency(Guid guid)
         {
             return DBCurrency.Delete(guid);
         }
 
-        public List<ICurrency> GetAllCurrencies()
+        public async Task<List<ICurrency>> GetAllCurrencies()
         {
             IDataReader reader = DBCurrency.GetAll();
             return LoadCurrencyListFromReader(reader);

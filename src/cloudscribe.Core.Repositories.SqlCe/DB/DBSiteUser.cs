@@ -1,14 +1,16 @@
 ﻿// Author:					Joe Audette
 // Created:					2010-04-06
-// Last Modified:			2014-09-08
+// Last Modified:			2015-01-08
 // 
 // You must not remove this notice, or any other, from this software.
 
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Configuration;
 using System.Globalization;
 using System.Text;
+using System.Threading.Tasks;
 using System.Data.SqlServerCe;
 using cloudscribe.DbHelpers.SqlCe;
 
@@ -2271,7 +2273,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
         }
 
-        public static IDataReader GetRolesByUser(int siteId, int userId)
+        public static DbDataReader GetRolesByUser(int siteId, int userId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  ");

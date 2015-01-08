@@ -1,12 +1,14 @@
 ﻿// Author:				Joe Audette
 // Created:			    2007-06-22
-// Last Modified:		2014-08-29
+// Last Modified:		2015-01-08
 // 
 // You must not remove this notice, or any other, from this software.
 
 using cloudscribe.DbHelpers.MSSQL;
 using System;
 using System.Data;
+using System.Data.Common;
+using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.MSSQL
 {
@@ -28,8 +30,8 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// <param name="value"> value </param>
         /// <param name="lastModified"> lastModified </param>
         /// <param name="created"> created </param>
-        /// <returns>int</returns>
-        public static int Create(
+        /// <returns>bool</returns>
+        public static async Task<bool> Create(
             Guid guid,
             string title,
             string code,
@@ -54,8 +56,8 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@Value", SqlDbType.Decimal, ParameterDirection.Input, value);
             sph.DefineSqlParameter("@LastModified", SqlDbType.DateTime, ParameterDirection.Input, lastModified);
             sph.DefineSqlParameter("@Created", SqlDbType.DateTime, ParameterDirection.Input, created);
-            int rowsAffected = sph.ExecuteNonQuery();
-            return rowsAffected;
+            int rowsAffected = await sph.ExecuteNonQueryAsync();
+            return rowsAffected > 0;
 
         }
 
@@ -75,7 +77,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// <param name="lastModified"> lastModified </param>
         /// <param name="created"> created </param>
         /// <returns>bool</returns>
-        public static bool Update(
+        public static async Task<bool> Update(
             Guid guid,
             string title,
             string code,
@@ -98,7 +100,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@DecimalPlaces", SqlDbType.NChar, 1, ParameterDirection.Input, decimalPlaces);
             sph.DefineSqlParameter("@Value", SqlDbType.Decimal, ParameterDirection.Input, value);
             sph.DefineSqlParameter("@LastModified", SqlDbType.DateTime, ParameterDirection.Input, lastModified);
-            int rowsAffected = sph.ExecuteNonQuery();
+            int rowsAffected = await sph.ExecuteNonQueryAsync();
             return (rowsAffected > 0);
 
         }
@@ -108,11 +110,11 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// </summary>
         /// <param name="guid"> guid </param>
         /// <returns>bool</returns>
-        public static bool Delete(Guid guid)
+        public static async Task<bool> Delete(Guid guid)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetWriteConnectionString(), "mp_Currency_Delete", 1);
             sph.DefineSqlParameter("@Guid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, guid);
-            int rowsAffected = sph.ExecuteNonQuery();
+            int rowsAffected = await sph.ExecuteNonQueryAsync();
             return (rowsAffected > 0);
 
         }
@@ -121,11 +123,11 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// Gets an IDataReader with one row from the mp_Currency table.
         /// </summary>
         /// <param name="guid"> guid </param>
-        public static IDataReader GetOne(Guid guid)
+        public static async Task<DbDataReader> GetOne(Guid guid)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_Currency_SelectOne", 1);
             sph.DefineSqlParameter("@Guid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, guid);
-            return sph.ExecuteReader();
+            return await sph.ExecuteReaderAsync();
 
         }
 
@@ -133,10 +135,10 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// <summary>
         /// Gets an IDataReader with all rows in the mp_Currency table.
         /// </summary>
-        public static IDataReader GetAll()
+        public static async Task<DbDataReader> GetAll()
         {
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 CommandType.StoredProcedure,
                 "mp_Currency_SelectAll",

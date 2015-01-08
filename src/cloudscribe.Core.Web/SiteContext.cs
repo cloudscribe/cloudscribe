@@ -331,7 +331,7 @@ namespace cloudscribe.Core.Web
             
         }
 
-        protected void Dispose(bool disposeManaged)
+        public void Dispose(bool disposeManaged)
         {
             siteRepo.Dispose();
             userRepo.Dispose();

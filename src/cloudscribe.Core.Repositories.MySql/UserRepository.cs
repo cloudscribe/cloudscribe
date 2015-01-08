@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-18
-// Last Modified:			2015-01-07
+// Last Modified:			2015-01-08
 // 
 
 
@@ -12,6 +12,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.MySql
@@ -810,17 +811,11 @@ namespace cloudscribe.Core.Repositories.MySql
             return await DBRoles.RemoveUser(roleId, userId);
         }
 
-        public void AddUserToDefaultRoles(ISiteUser siteUser)
+        public async Task<bool> AddUserToDefaultRoles(ISiteUser siteUser)
         {
-            // moved this to the config setting below instead of hard coded
-            //IRole role = Fetch(siteUser.SiteId, "Authenticated Users");
-            //if (role.RoleID > -1)
-            //{
-            //    AddUser(role.RoleID, role.RoleGuid, siteUser.UserId, siteUser.UserGuid);
-            //}
-
+            
             ISiteRole role;
-
+            bool result = true;
             string defaultRoles = AppSettings.DefaultRolesForNewUsers;
 
             if (defaultRoles.Length > 0)
@@ -830,7 +825,7 @@ namespace cloudscribe.Core.Repositories.MySql
                     role = FetchRole(siteUser.SiteId, defaultRoles);
                     if ((role != null) && (role.RoleId > -1))
                     {
-                        AddUserToRole(role.RoleId, role.RoleGuid, siteUser.UserId, siteUser.UserGuid);
+                        result = await AddUserToRole(role.RoleId, role.RoleGuid, siteUser.UserId, siteUser.UserGuid);
                     }
                 }
                 else
@@ -843,7 +838,7 @@ namespace cloudscribe.Core.Repositories.MySql
                             role = FetchRole(siteUser.SiteId, roleName);
                             if ((role != null) && (role.RoleId > -1))
                             {
-                                AddUserToRole(role.RoleId, role.RoleGuid, siteUser.UserId, siteUser.UserGuid);
+                                result = result && await AddUserToRole(role.RoleId, role.RoleGuid, siteUser.UserId, siteUser.UserGuid);
                             }
                         }
                     }
@@ -852,7 +847,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
             }
 
-
+            return result;
         }
 
         public bool DeleteUserRoles(int userId)
@@ -876,7 +871,7 @@ namespace cloudscribe.Core.Repositories.MySql
             // TODO: implement actual select count from db
             // this is works but is not ideal
             int count = 0;
-            using (IDataReader reader = DBRoles.GetRoleMembers(roleId))
+            using (DbDataReader reader = DBRoles.GetRoleMembers(roleId))
             {
                 while (reader.Read())
                 {
@@ -890,7 +885,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
         public async Task<ISiteRole> FetchRole(int roleID)
         {
-            using (IDataReader reader = await DBRoles.GetById(roleID))
+            using (DbDataReader reader = await DBRoles.GetById(roleID))
             {
                 if (reader.Read())
                 {
@@ -908,7 +903,7 @@ namespace cloudscribe.Core.Repositories.MySql
             //if (UseRelatedSiteMode) { siteId = RelatedSiteID; }
             SiteRole role = null;
 
-            using (IDataReader reader = DBRoles.GetSiteRoles(siteId))
+            using (DbDataReader reader = DBRoles.GetSiteRoles(siteId))
             {
                 while (reader.Read())
                 {
@@ -950,7 +945,7 @@ namespace cloudscribe.Core.Repositories.MySql
             //if (UseRelatedSiteMode) { siteId = RelatedSiteID; }
 
             IList<ISiteRole> roles = new List<ISiteRole>();
-            using (IDataReader reader = await DBRoles.GetPage(siteId, searchInput, pageNumber, pageSize))
+            using (DbDataReader reader = await DBRoles.GetPage(siteId, searchInput, pageNumber, pageSize))
             {
                 while (reader.Read())
                 {
@@ -972,7 +967,7 @@ namespace cloudscribe.Core.Repositories.MySql
         {
             //if (UseRelatedSiteMode) { siteId = RelatedSiteID; }
             IList<ISiteRole> roles = new List<ISiteRole>();
-            using (IDataReader reader = DBRoles.GetRolesUserIsNotIn(siteId, userId))
+            using (DbDataReader reader = DBRoles.GetRolesUserIsNotIn(siteId, userId))
             {
                 SiteRole role = new SiteRole();
                 role.LoadFromReader(reader);
@@ -1038,7 +1033,7 @@ namespace cloudscribe.Core.Repositories.MySql
             IList<IUserInfo> users = new List<IUserInfo>();
 
             //if (UseRelatedSiteMode) { siteId = RelatedSiteID; }
-            using (IDataReader reader = await DBRoles.GetUsersInRole(siteId, roleId, searchInput, pageNumber, pageSize))
+            using (DbDataReader reader = await DBRoles.GetUsersInRole(siteId, roleId, searchInput, pageNumber, pageSize))
             {
                 while (reader.Read())
                 {
@@ -1069,7 +1064,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
             //if (UseRelatedSiteMode) { siteId = RelatedSiteID; }
 
-            using (IDataReader reader = await DBRoles.GetUsersNotInRole(siteId, roleId, searchInput, pageNumber, pageSize))
+            using (DbDataReader reader = await DBRoles.GetUsersNotInRole(siteId, roleId, searchInput, pageNumber, pageSize))
             {
                 while (reader.Read())
                 {

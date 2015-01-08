@@ -85,7 +85,7 @@ namespace cloudscribe.AspNet.Identity
             bool result = repo.Save(user);
             if(result)
             {
-                repo.AddUserToDefaultRoles(user);
+                result = result && await repo.AddUserToDefaultRoles(user);
             }
             
 
@@ -536,12 +536,13 @@ namespace cloudscribe.AspNet.Identity
             if (debugLog) { log.Info("AddToRoleAsync"); }
 
             ISiteRole siteRole = repo.FetchRole(siteSettings.SiteId, role);
+            bool result = false;
             if (siteRole != null)
             {
-                repo.AddUserToRole(siteRole.RoleId, siteRole.RoleGuid, user.UserId, user.UserGuid);
+                result = await repo.AddUserToRole(siteRole.RoleId, siteRole.RoleGuid, user.UserId, user.UserGuid);
             }
 
-            await Task.FromResult(1);
+            await Task.FromResult(result);
         }
 
         public Task<IList<string>> GetRolesAsync(TUser user)

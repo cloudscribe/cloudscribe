@@ -3,6 +3,9 @@ best practices in async
 http://msdn.microsoft.com/en-us/magazine/jj991977.aspx
 
 
+http://www.asp.net/web-forms/overview/performance-and-caching/using-asynchronous-methods-in-aspnet-45
+
+
 currently we have controller methods marked as async but not really implemented as async
 to do that, we would need async all the way down including async data access
 net 4.5 has async executereader and executenonquery
@@ -10,6 +13,9 @@ so we could implement this, but in general it would not result in any perf gain 
 still we should probably move in this direction and keep our controller methods marked that way even if it takes a while before they are truly implemented as async.
 
 I think it is not possible to make async data access for sqlite or sqlce
+update it seems async can be used even if the db only supports a single coonection thread at a time but more complex becase you ned to use locking
+http://stackoverflow.com/questions/24186577/what-is-the-correct-usage-for-sqlite-on-locking-or-async
+http://stackoverflow.com/questions/25945223/xamarin-forms-using-sqlite-net-async
 
 one problem encountered:
 async methods cannot have output parameters or ref parameters

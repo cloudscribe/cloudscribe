@@ -1,12 +1,13 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-12-09
-// Last Modified:			2014-12-09
+// Last Modified:			2015-01-08
 // 
 
 using cloudscribe.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Globalization;
 
 namespace cloudscribe.Core.Models.DataExtensions

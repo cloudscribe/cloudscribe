@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2008-06-22
-// Last Modified:			2014-08-29
+// Last Modified:			2015-01-08
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -8,6 +8,8 @@ using cloudscribe.DbHelpers.MySql;
 using MySql.Data.MySqlClient;
 using System;
 using System.Data;
+using System.Data.Common;
+using System.Threading.Tasks;
 using System.Text;
 
 namespace cloudscribe.Core.Repositories.MySql
@@ -23,7 +25,7 @@ namespace cloudscribe.Core.Repositories.MySql
         /// <param name="iSOCode2"> iSOCode2 </param>
         /// <param name="iSOCode3"> iSOCode3 </param>
         /// <returns>int</returns>
-        public static int Create(
+        public static async Task<bool> Create(
             Guid guid,
             string name,
             string iSOCode2,
@@ -62,11 +64,12 @@ namespace cloudscribe.Core.Repositories.MySql
             arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = iSOCode3;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
-            return rowsAffected;
+
+            return rowsAffected > 0;
 
         }
 
@@ -79,7 +82,7 @@ namespace cloudscribe.Core.Repositories.MySql
         /// <param name="iSOCode2"> iSOCode2 </param>
         /// <param name="iSOCode3"> iSOCode3 </param>
         /// <returns>bool</returns>
-        public static bool Update(
+        public static async Task<bool> Update(
             Guid guid,
             string name,
             string iSOCode2,
@@ -115,7 +118,7 @@ namespace cloudscribe.Core.Repositories.MySql
             arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = iSOCode3;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -129,7 +132,7 @@ namespace cloudscribe.Core.Repositories.MySql
         /// </summary>
         /// <param name="guid"> guid </param>
         /// <returns>bool</returns>
-        public static bool Delete(Guid guid)
+        public static async Task<bool> Delete(Guid guid)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_GeoCountry ");
@@ -143,10 +146,11 @@ namespace cloudscribe.Core.Repositories.MySql
             arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid.ToString();
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
+
             return (rowsAffected > 0);
 
         }
@@ -155,7 +159,7 @@ namespace cloudscribe.Core.Repositories.MySql
         /// Gets an IDataReader with one row from the mp_GeoCountry table.
         /// </summary>
         /// <param name="guid"> guid </param>
-        public static IDataReader GetOne(Guid guid)
+        public static async Task<DbDataReader> GetOne(Guid guid)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  * ");
@@ -170,7 +174,7 @@ namespace cloudscribe.Core.Repositories.MySql
             arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid.ToString();
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -181,7 +185,7 @@ namespace cloudscribe.Core.Repositories.MySql
         /// Gets an IDataReader with one row from the mp_GeoCountry table.
         /// </summary>
         /// <param name="countryISOCode2"> countryISOCode2 </param>
-        public static IDataReader GetByISOCode2(string countryISOCode2)
+        public static async Task<DbDataReader> GetByISOCode2(string countryISOCode2)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  * ");
@@ -196,7 +200,7 @@ namespace cloudscribe.Core.Repositories.MySql
             arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = countryISOCode2;
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -206,7 +210,7 @@ namespace cloudscribe.Core.Repositories.MySql
         /// <summary>
         /// Gets an IDataReader with all rows in the mp_GeoCountry table.
         /// </summary>
-        public static IDataReader GetAll()
+        public static async Task<DbDataReader> GetAll()
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  * ");
@@ -214,7 +218,7 @@ namespace cloudscribe.Core.Repositories.MySql
             sqlCommand.Append("ORDER BY Name ");
             sqlCommand.Append(";");
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 null);
@@ -223,17 +227,19 @@ namespace cloudscribe.Core.Repositories.MySql
         /// <summary>
         /// Gets a count of rows in the mp_GeoCountry table.
         /// </summary>
-        public static int GetCount()
+        public static async Task<int> GetCount()
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  Count(*) ");
             sqlCommand.Append("FROM	mp_GeoCountry ");
             sqlCommand.Append(";");
 
-            return Convert.ToInt32(AdoHelper.ExecuteScalar(
+            object result = await AdoHelper.ExecuteScalarAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
-                null));
+                null);
+
+            return Convert.ToInt32(result);
         }
 
         /// <summary>
@@ -241,31 +247,29 @@ namespace cloudscribe.Core.Repositories.MySql
         /// </summary>
         /// <param name="pageNumber">The page number.</param>
         /// <param name="pageSize">Size of the page.</param>
-        /// <param name="totalPages">total pages</param>
-        public static IDataReader GetPage(
+        public static async Task<DbDataReader> GetPage(
             int pageNumber,
-            int pageSize,
-            out int totalPages)
+            int pageSize)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
-            totalPages = 1;
-            int totalRows = GetCount();
+            //totalPages = 1;
+            //int totalRows = GetCount();
 
-            if (pageSize > 0) totalPages = totalRows / pageSize;
+            //if (pageSize > 0) totalPages = totalRows / pageSize;
 
-            if (totalRows <= pageSize)
-            {
-                totalPages = 1;
-            }
-            else
-            {
-                int remainder;
-                Math.DivRem(totalRows, pageSize, out remainder);
-                if (remainder > 0)
-                {
-                    totalPages += 1;
-                }
-            }
+            //if (totalRows <= pageSize)
+            //{
+            //    totalPages = 1;
+            //}
+            //else
+            //{
+            //    int remainder;
+            //    Math.DivRem(totalRows, pageSize, out remainder);
+            //    if (remainder > 0)
+            //    {
+            //        totalPages += 1;
+            //    }
+            //}
 
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT	* ");
@@ -285,7 +289,7 @@ namespace cloudscribe.Core.Repositories.MySql
             arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = pageSize;
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 arParams);

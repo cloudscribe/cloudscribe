@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-11-03
-// Last Modified:			2015-01-04
+// Last Modified:			2015-01-08
 // 
 
 using cloudscribe.Caching;
@@ -10,6 +10,7 @@ using log4net;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Threading.Tasks;
 using System.Globalization;
 
 namespace cloudscribe.Core.Repositories.Caching
@@ -34,120 +35,120 @@ namespace cloudscribe.Core.Repositories.Caching
 
         }
 
-        public void Save(IGeoCountry geoCountry)
+        public async Task<bool> Save(IGeoCountry geoCountry)
         {
-            repo.Save(geoCountry);
+            return await repo.Save(geoCountry);
         }
 
-        public IGeoCountry FetchCountry(Guid guid)
+        public async Task<IGeoCountry> FetchCountry(Guid guid)
         {
-            return repo.FetchCountry(guid);
+            return await repo.FetchCountry(guid);
         }
 
-        public bool DeleteCountry(Guid guid)
+        public async Task<bool> DeleteCountry(Guid guid)
         {
-            return repo.DeleteCountry(guid);
+            return await repo.DeleteCountry(guid);
         }
 
-        public int GetCountryCount()
+        public async Task<int> GetCountryCount()
         {
-            return repo.GetCountryCount();
+            return await repo.GetCountryCount();
         }
 
-        public List<IGeoCountry> GetAllCountries()
+        public async Task<List<IGeoCountry>> GetAllCountries()
         {
-            return repo.GetAllCountries();
+            return await repo.GetAllCountries();
         }
 
-        public List<IGeoCountry> GetCountriesPage(int pageNumber, int pageSize, out int totalPages)
+        public async Task<List<IGeoCountry>> GetCountriesPage(int pageNumber, int pageSize)
         {
-            return repo.GetCountriesPage(pageNumber, pageSize, out totalPages);
+            return await repo.GetCountriesPage(pageNumber, pageSize);
         }
 
-        public void Save(IGeoZone geoZone)
+        public async Task<bool> Save(IGeoZone geoZone)
         {
-            repo.Save(geoZone);
+            return await repo.Save(geoZone);
         }
 
-        public IGeoZone FetchGeoZone(Guid guid)
+        public async Task<IGeoZone> FetchGeoZone(Guid guid)
         {
-            return repo.FetchGeoZone(guid);
+            return await repo.FetchGeoZone(guid);
         }
 
-        public bool DeleteGeoZone(Guid guid)
+        public async Task<bool> DeleteGeoZone(Guid guid)
         {
-            return repo.DeleteGeoZone(guid);
+            return await repo.DeleteGeoZone(guid);
         }
 
-        public bool DeleteGeoZonesByCountry(Guid countryGuid)
+        public async Task<bool> DeleteGeoZonesByCountry(Guid countryGuid)
         {
-            return repo.DeleteGeoZonesByCountry(countryGuid);
+            return await repo.DeleteGeoZonesByCountry(countryGuid);
         }
 
-        public int GetGeoZoneCount(Guid countryGuid)
+        public async Task<int> GetGeoZoneCount(Guid countryGuid)
         {
-            return repo.GetGeoZoneCount(countryGuid);
+            return await repo.GetGeoZoneCount(countryGuid);
         }
 
-        public List<IGeoZone> GetGeoZonesByCountry(Guid countryGuid)
+        public async Task<List<IGeoZone>> GetGeoZonesByCountry(Guid countryGuid)
         {
-            return repo.GetGeoZonesByCountry(countryGuid);
+            return await repo.GetGeoZonesByCountry(countryGuid);
         }
 
-        public List<IGeoZone> GetGeoZonePage(Guid countryGuid, int pageNumber, int pageSize, out int totalPages)
+        public async Task<List<IGeoZone>> GetGeoZonePage(Guid countryGuid, int pageNumber, int pageSize)
         {
-            return repo.GetGeoZonePage(countryGuid, pageNumber, pageSize, out totalPages);
+            return await repo.GetGeoZonePage(countryGuid, pageNumber, pageSize);
         }
 
 
-        public void Save(ILanguage language)
+        public async Task<bool> Save(ILanguage language)
         {
-            repo.Save(language);
+            return await repo.Save(language);
         }
 
-        public ILanguage FetchLanguage(Guid guid)
+        public async Task<ILanguage> FetchLanguage(Guid guid)
         {
-            return repo.FetchLanguage(guid);
+            return await repo.FetchLanguage(guid);
         }
 
-        public bool DeleteLanguage(Guid guid)
+        public async Task<bool> DeleteLanguage(Guid guid)
         {
-            return repo.DeleteLanguage(guid);
+            return await repo.DeleteLanguage(guid);
         }
 
-        public int GetLanguageCount()
+        public async Task<int> GetLanguageCount()
         {
-            return repo.GetLanguageCount();
+            return await repo.GetLanguageCount();
         }
 
-        public List<ILanguage> GetAllLanguages()
+        public async Task<List<ILanguage>> GetAllLanguages()
         {
-            return repo.GetAllLanguages();
+            return await repo.GetAllLanguages();
         }
 
-        public List<ILanguage> GetLanguagePage(int pageNumber, int pageSize, out int totalPages)
+        public async Task<List<ILanguage>> GetLanguagePage(int pageNumber, int pageSize)
         {
-            return repo.GetLanguagePage(pageNumber, pageSize, out totalPages);
+            return await repo.GetLanguagePage(pageNumber, pageSize);
         }
 
-        public void Save(ICurrency currency)
+        public async Task<bool> Save(ICurrency currency)
         {
-            repo.Save(currency);
+            return await repo.Save(currency);
         }
 
-        public ICurrency FetchCurrency(Guid guid)
+        public async Task<ICurrency> FetchCurrency(Guid guid)
         {
-            return repo.FetchCurrency(guid);
+            return await repo.FetchCurrency(guid);
         }
 
-        public bool DeleteCurrency(Guid guid)
+        public async Task<bool> DeleteCurrency(Guid guid)
         {
-            return repo.DeleteCurrency(guid);
+            return await repo.DeleteCurrency(guid);
         }
 
-        public List<ICurrency> GetAllCurrencies()
+        public async Task<List<ICurrency>> GetAllCurrencies()
         {
-            return repo.GetAllCurrencies();
+            return await repo.GetAllCurrencies();
         }
 
     }

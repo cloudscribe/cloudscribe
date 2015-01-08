@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2008-06-22
-// Last Modified:			2014-08-29
+// Last Modified:			2015-01-08
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -8,7 +8,9 @@ using cloudscribe.DbHelpers.pgsql;
 using Npgsql;
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.pgsql
 {
@@ -22,8 +24,8 @@ namespace cloudscribe.Core.Repositories.pgsql
         /// <param name="name"> name </param>
         /// <param name="iSOCode2"> iSOCode2 </param>
         /// <param name="iSOCode3"> iSOCode3 </param>
-        /// <returns>int</returns>
-        public static int Create(
+        /// <returns>bool</returns>
+        public static async Task<bool> Create(
             Guid guid,
             string name,
             string iSOCode2,
@@ -62,13 +64,12 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append(")");
             sqlCommand.Append(";");
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(ConnectionString.GetWriteConnectionString(),
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(ConnectionString.GetWriteConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
 
-
-            return rowsAffected;
+            return rowsAffected > 0;
 
         }
 
@@ -81,7 +82,7 @@ namespace cloudscribe.Core.Repositories.pgsql
         /// <param name="iSOCode2"> iSOCode2 </param>
         /// <param name="iSOCode3"> iSOCode3 </param>
         /// <returns>bool</returns>
-        public static bool Update(
+        public static async Task<bool> Update(
             Guid guid,
             string name,
             string iSOCode2,
@@ -116,7 +117,7 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append("guid = :guid ");
             sqlCommand.Append(";");
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(ConnectionString.GetWriteConnectionString(),
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(ConnectionString.GetWriteConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -130,7 +131,7 @@ namespace cloudscribe.Core.Repositories.pgsql
         /// </summary>
         /// <param name="guid"> guid </param>
         /// <returns>bool</returns>
-        public static bool Delete(Guid guid)
+        public static async Task<bool> Delete(Guid guid)
         {
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
@@ -143,7 +144,9 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append("WHERE ");
             sqlCommand.Append("guid = :guid ");
             sqlCommand.Append(";");
-            int rowsAffected = AdoHelper.ExecuteNonQuery(ConnectionString.GetWriteConnectionString(),
+
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
+                ConnectionString.GetWriteConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -156,7 +159,7 @@ namespace cloudscribe.Core.Repositories.pgsql
         /// Gets an IDataReader with one row from the mp_GeoCountry table.
         /// </summary>
         /// <param name="guid"> guid </param>
-        public static IDataReader GetOne(Guid guid)
+        public static async Task<DbDataReader> GetOne(Guid guid)
         {
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
@@ -171,7 +174,7 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append("guid = :guid ");
             sqlCommand.Append(";");
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
@@ -184,7 +187,7 @@ namespace cloudscribe.Core.Repositories.pgsql
         /// Gets an IDataReader with one row from the mp_GeoCountry table.
         /// </summary>
         /// <param name="countryISOCode2"> countryISOCode2 </param>
-        public static IDataReader GetByISOCode2(string countryISOCode2)
+        public static async Task<DbDataReader> GetByISOCode2(string countryISOCode2)
         {
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
@@ -199,7 +202,7 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append("isocode2 = :isocode2 ");
             sqlCommand.Append(";");
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
@@ -209,7 +212,7 @@ namespace cloudscribe.Core.Repositories.pgsql
         /// <summary>
         /// Gets an IDataReader with all rows in the mp_GeoCountry table.
         /// </summary>
-        public static IDataReader GetAll()
+        public static async Task<DbDataReader> GetAll()
         {
 
             StringBuilder sqlCommand = new StringBuilder();
@@ -217,7 +220,7 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append("FROM	mp_geocountry ");
             sqlCommand.Append(";");
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
@@ -227,7 +230,7 @@ namespace cloudscribe.Core.Repositories.pgsql
         /// <summary>
         /// Gets a count of rows in the mp_GeoCountry table.
         /// </summary>
-        public static int GetCount()
+        public static async Task<int> GetCount()
         {
 
             StringBuilder sqlCommand = new StringBuilder();
@@ -235,11 +238,13 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append("FROM	mp_geocountry ");
             sqlCommand.Append(";");
 
-            return Convert.ToInt32(AdoHelper.ExecuteScalar(
+            object result = await AdoHelper.ExecuteScalarAsync(
                 ConnectionString.GetReadConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
-                null));
+                null);
+
+            return Convert.ToInt32(result);
         }
 
         /// <summary>
@@ -248,30 +253,29 @@ namespace cloudscribe.Core.Repositories.pgsql
         /// <param name="pageNumber">The page number.</param>
         /// <param name="pageSize">Size of the page.</param>
         /// <param name="totalPages">total pages</param>
-        public static IDataReader GetPage(
+        public static async Task<DbDataReader> GetPage(
             int pageNumber,
-            int pageSize,
-            out int totalPages)
+            int pageSize)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
-            totalPages = 1;
-            int totalRows = GetCount();
+            //totalPages = 1;
+            //int totalRows = GetCount();
 
-            if (pageSize > 0) totalPages = totalRows / pageSize;
+            //if (pageSize > 0) totalPages = totalRows / pageSize;
 
-            if (totalRows <= pageSize)
-            {
-                totalPages = 1;
-            }
-            else
-            {
-                int remainder;
-                Math.DivRem(totalRows, pageSize, out remainder);
-                if (remainder > 0)
-                {
-                    totalPages += 1;
-                }
-            }
+            //if (totalRows <= pageSize)
+            //{
+            //    totalPages = 1;
+            //}
+            //else
+            //{
+            //    int remainder;
+            //    Math.DivRem(totalRows, pageSize, out remainder);
+            //    if (remainder > 0)
+            //    {
+            //        totalPages += 1;
+            //    }
+            //}
 
             NpgsqlParameter[] arParams = new NpgsqlParameter[2];
 
@@ -295,7 +299,7 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             sqlCommand.Append(";");
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),

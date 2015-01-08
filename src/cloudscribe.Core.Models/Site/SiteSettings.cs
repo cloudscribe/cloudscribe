@@ -22,16 +22,17 @@ namespace cloudscribe.Core.Models
         // maps To PreferredHostName as of 2008-05-22
         private string apiKeyExtra5 = string.Empty;
 
-        /// <summary>
-        /// In case multiple host names map to your site and you want to force a particular one.
-        /// For example I want to force urls with hostname mojoportal.com to www.mojoportal.com,
-        /// because my SSL certificate matches www.mojoportal.com but not mojoportal.com
-        /// </summary>
-        public string PreferredHostName
-        {
-            get { return apiKeyExtra5; }
-            set { apiKeyExtra5 = value; }
-        }
+        // moved to SiteInfo base class
+        ///// <summary>
+        ///// In case multiple host names map to your site and you want to force a particular one.
+        ///// For example I want to force urls with hostname mojoportal.com to www.mojoportal.com,
+        ///// because my SSL certificate matches www.mojoportal.com but not mojoportal.com
+        ///// </summary>
+        //public string PreferredHostName
+        //{
+        //    get { return apiKeyExtra5; }
+        //    set { apiKeyExtra5 = value; }
+        //}
 
         private string defaultEmailFromAddress = string.Empty;
 
@@ -143,13 +144,14 @@ namespace cloudscribe.Core.Models
             set { useSSLOnAllPages = value; }
         }
 
-        private bool isServerAdminSite = false;
+        // moved to siteinfo base class
+        //private bool isServerAdminSite = false;
 
-        public bool IsServerAdminSite
-        {
-            get { return isServerAdminSite; }
-            set { isServerAdminSite = value; }
-        }
+        //public bool IsServerAdminSite
+        //{
+        //    get { return isServerAdminSite; }
+        //    set { isServerAdminSite = value; }
+        //}
 
         private bool useLdapAuth = false;
 
@@ -350,13 +352,14 @@ namespace cloudscribe.Core.Models
             set { requireEnterEmailTwiceOnRegistration = value; }
         }
 
-        private string siteFolderName = string.Empty;
+        // moved to siteinfo base class
+        //private string siteFolderName = string.Empty;
 
-        public string SiteFolderName
-        {
-            get { return siteFolderName; }
-            set { siteFolderName = value; }
-        }
+        //public string SiteFolderName
+        //{
+        //    get { return siteFolderName; }
+        //    set { siteFolderName = value; }
+        //}
 
         //public string DatePickerProvider
         //{

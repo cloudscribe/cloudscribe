@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2008-06-22
-// Last Modified:			2014-08-29
+// Last Modified:			2015-01-08
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -8,7 +8,9 @@ using cloudscribe.DbHelpers.MySql;
 using MySql.Data.MySqlClient;
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.MySql
 {
@@ -29,8 +31,8 @@ namespace cloudscribe.Core.Repositories.MySql
         /// <param name="value"> value </param>
         /// <param name="lastModified"> lastModified </param>
         /// <param name="created"> created </param>
-        /// <returns>int</returns>
-        public static int Create(
+        /// <returns>bool</returns>
+        public static async Task<bool> Create(
             Guid guid,
             string title,
             string code,
@@ -118,11 +120,12 @@ namespace cloudscribe.Core.Repositories.MySql
             arParams[10].Direction = ParameterDirection.Input;
             arParams[10].Value = created;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await  AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
-            return rowsAffected;
+
+            return rowsAffected > 0;
 
         }
 
@@ -141,7 +144,7 @@ namespace cloudscribe.Core.Repositories.MySql
         /// <param name="value"> value </param>
         /// <param name="lastModified"> lastModified </param>
         /// <returns>bool</returns>
-        public static bool Update(
+        public static async Task<bool> Update(
             Guid guid,
             string title,
             string code,
@@ -213,7 +216,7 @@ namespace cloudscribe.Core.Repositories.MySql
             arParams[9].Direction = ParameterDirection.Input;
             arParams[9].Value = lastModified;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -227,7 +230,7 @@ namespace cloudscribe.Core.Repositories.MySql
         /// </summary>
         /// <param name="guid"> guid </param>
         /// <returns>bool</returns>
-        public static bool Delete(Guid guid)
+        public static async Task<bool> Delete(Guid guid)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_Currency ");
@@ -241,10 +244,11 @@ namespace cloudscribe.Core.Repositories.MySql
             arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid.ToString();
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
+
             return (rowsAffected > 0);
 
         }
@@ -253,7 +257,7 @@ namespace cloudscribe.Core.Repositories.MySql
         /// Gets an IDataReader with one row from the mp_Currency table.
         /// </summary>
         /// <param name="guid"> guid </param>
-        public static IDataReader GetOne(Guid guid)
+        public static async Task<DbDataReader> GetOne(Guid guid)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  * ");
@@ -268,7 +272,7 @@ namespace cloudscribe.Core.Repositories.MySql
             arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid.ToString();
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -278,14 +282,14 @@ namespace cloudscribe.Core.Repositories.MySql
         /// <summary>
         /// Gets an IDataReader with all rows in the mp_Currency table.
         /// </summary>
-        public static IDataReader GetAll()
+        public static async Task<DbDataReader> GetAll()
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  * ");
             sqlCommand.Append("FROM	mp_Currency ");
             sqlCommand.Append(";");
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 null);

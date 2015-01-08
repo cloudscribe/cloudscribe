@@ -155,7 +155,7 @@ namespace cloudscribe.DbHelpers.MSSQL
             index++;
         }
 
-        public IDataReader ExecuteReader()
+        public DbDataReader ExecuteReader()
         {
             Debug.Assert((arParams.Length == index) && (paramCnt == index), "not all parameters were defined");
             if (debugLog) { log.Debug("ExecuteReader " + commandText); }
@@ -163,7 +163,7 @@ namespace cloudscribe.DbHelpers.MSSQL
             return AdoHelper.ExecuteReader(connectionString, cmdType, commandText, arParams);
         }
 
-        public IDataReader ExecuteReader(int commandTimeout)
+        public DbDataReader ExecuteReader(int commandTimeout)
         {
             Debug.Assert((arParams.Length == index) && (paramCnt == index), "not all parameters were defined");
             if (debugLog) { log.Debug("ExecuteReader " + commandText); }
@@ -171,7 +171,7 @@ namespace cloudscribe.DbHelpers.MSSQL
             return AdoHelper.ExecuteReader(connectionString, cmdType, commandText, commandTimeout, arParams);
         }
 
-        public async Task<IDataReader> ExecuteReaderAsync()
+        public async Task<DbDataReader> ExecuteReaderAsync()
         {
             Debug.Assert((arParams.Length == index) && (paramCnt == index), "not all parameters were defined");
             if (debugLog) { log.Debug("ExecuteReader " + commandText); }
@@ -179,7 +179,7 @@ namespace cloudscribe.DbHelpers.MSSQL
             return await AdoHelper.ExecuteReaderAsync(connectionString, cmdType, commandText, arParams);
         }
 
-        public async Task<IDataReader> ExecuteReaderAsync(int commandTimeout)
+        public async Task<DbDataReader> ExecuteReaderAsync(int commandTimeout)
         {
             Debug.Assert((arParams.Length == index) && (paramCnt == index), "not all parameters were defined");
             if (debugLog) { log.Debug("ExecuteReader " + commandText); }

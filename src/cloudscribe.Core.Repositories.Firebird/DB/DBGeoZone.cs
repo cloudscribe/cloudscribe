@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2008-06-22
-// Last Modified:			2015-01-04
+// Last Modified:			2015-01-08
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -9,8 +9,10 @@ using cloudscribe.DbHelpers.Firebird;
 using FirebirdSql.Data.FirebirdClient;
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Globalization;
 using System.Text;
+using System.Threading.Tasks;
 
 
 namespace cloudscribe.Core.Repositories.Firebird
@@ -26,8 +28,8 @@ namespace cloudscribe.Core.Repositories.Firebird
         /// <param name="countryGuid"> countryGuid </param>
         /// <param name="name"> name </param>
         /// <param name="code"> code </param>
-        /// <returns>int</returns>
-        public static int Create(
+        /// <returns>bool</returns>
+        public static async Task<bool> Create(
             Guid guid,
             Guid countryGuid,
             string name,
@@ -68,14 +70,14 @@ namespace cloudscribe.Core.Repositories.Firebird
             sqlCommand.Append("@Code )");
             sqlCommand.Append(";");
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
 
 
 
-            return rowsAffected;
+            return (rowsAffected > 0);
 
         }
 
@@ -88,7 +90,7 @@ namespace cloudscribe.Core.Repositories.Firebird
         /// <param name="name"> name </param>
         /// <param name="code"> code </param>
         /// <returns>bool</returns>
-        public static bool Update(
+        public static async Task<bool> Update(
             Guid guid,
             Guid countryGuid,
             string name,
@@ -125,12 +127,12 @@ namespace cloudscribe.Core.Repositories.Firebird
             arParams[3].Value = code;
 
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
 
-            return (rowsAffected > -1);
+            return (rowsAffected > 0);
         }
 
         /// <summary>
@@ -138,7 +140,7 @@ namespace cloudscribe.Core.Repositories.Firebird
         /// </summary>
         /// <param name="guid"> guid </param>
         /// <returns>bool</returns>
-        public static bool Delete(Guid guid)
+        public static async Task<bool> Delete(Guid guid)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_GeoZone ");
@@ -153,15 +155,15 @@ namespace cloudscribe.Core.Repositories.Firebird
             arParams[0].Value = guid.ToString();
 
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
 
-            return (rowsAffected > -1);
+            return (rowsAffected > 0);
         }
 
-        public static bool DeleteByCountry(Guid countryGuid)
+        public static async Task<bool> DeleteByCountry(Guid countryGuid)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_GeoZone ");
@@ -175,20 +177,19 @@ namespace cloudscribe.Core.Repositories.Firebird
             arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = countryGuid.ToString();
 
-
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
 
-            return (rowsAffected > -1);
+            return (rowsAffected > 0);
         }
 
         /// <summary>
         /// Gets an IDataReader with one row from the mp_GeoZone table.
         /// </summary>
         /// <param name="guid"> guid </param>
-        public static IDataReader GetOne(Guid guid)
+        public static async Task<DbDataReader> GetOne(Guid guid)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  * ");
@@ -204,7 +205,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid.ToString();
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -246,7 +247,7 @@ namespace cloudscribe.Core.Repositories.Firebird
         /// <summary>
         /// Gets a count of rows in the mp_GeoZone table.
         /// </summary>
-        public static int GetCount(Guid countryGuid)
+        public static async Task<int> GetCount(Guid countryGuid)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  Count(*) ");
@@ -261,17 +262,19 @@ namespace cloudscribe.Core.Repositories.Firebird
             arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = countryGuid.ToString();
 
-            return Convert.ToInt32(AdoHelper.ExecuteScalar(
+            object result = await AdoHelper.ExecuteScalarAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
-                arParams));
+                arParams);
+
+            return Convert.ToInt32(result);
 
         }
 
         /// <summary>
         /// Gets an IDataReader with all rows in the mp_GeoZone table.
         /// </summary>
-        public static IDataReader GetByCountry(Guid countryGuid)
+        public static async Task<DbDataReader> GetByCountry(Guid countryGuid)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  * ");
@@ -287,7 +290,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = countryGuid.ToString();
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -301,31 +304,30 @@ namespace cloudscribe.Core.Repositories.Firebird
         /// <param name="pageNumber">The page number.</param>
         /// <param name="pageSize">Size of the page.</param>
         /// <param name="totalPages">total pages</param>
-        public static IDataReader GetPage(
+        public static async Task<DbDataReader> GetPage(
             Guid countryGuid,
             int pageNumber,
-            int pageSize,
-            out int totalPages)
+            int pageSize)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
-            totalPages = 1;
-            int totalRows = GetCount(countryGuid);
+            //totalPages = 1;
+            //int totalRows = GetCount(countryGuid);
 
-            if (pageSize > 0) totalPages = totalRows / pageSize;
+            //if (pageSize > 0) totalPages = totalRows / pageSize;
 
-            if (totalRows <= pageSize)
-            {
-                totalPages = 1;
-            }
-            else
-            {
-                int remainder;
-                Math.DivRem(totalRows, pageSize, out remainder);
-                if (remainder > 0)
-                {
-                    totalPages += 1;
-                }
-            }
+            //if (totalRows <= pageSize)
+            //{
+            //    totalPages = 1;
+            //}
+            //else
+            //{
+            //    int remainder;
+            //    Math.DivRem(totalRows, pageSize, out remainder);
+            //    if (remainder > 0)
+            //    {
+            //        totalPages += 1;
+            //    }
+            //}
 
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT FIRST " + pageSize.ToString(CultureInfo.InvariantCulture) + " ");
@@ -353,7 +355,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             arParams[0].Value = countryGuid.ToString();
 
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 arParams);

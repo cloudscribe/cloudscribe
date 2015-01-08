@@ -50,7 +50,7 @@ namespace cloudscribe.Core.Models
 
         //roles
         Task<bool> AddUserToRole(int roleId, Guid roleGuid, int userId, Guid userGuid);
-        void AddUserToDefaultRoles(ISiteUser siteUser);
+        Task<bool> AddUserToDefaultRoles(ISiteUser siteUser);
         Task<int> CountOfRoles(int siteId, string searchInput);
         int GetRoleMemberCount(int roleId);
         Task<bool> DeleteRole(int roleID);

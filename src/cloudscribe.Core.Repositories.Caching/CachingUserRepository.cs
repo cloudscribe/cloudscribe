@@ -348,9 +348,9 @@ namespace cloudscribe.Core.Repositories.Caching
             return await repo.RemoveUserFromRole(roleId, userId);
         }
 
-        public void AddUserToDefaultRoles(ISiteUser siteUser)
+        public async Task<bool> AddUserToDefaultRoles(ISiteUser siteUser)
         {
-            repo.AddUserToDefaultRoles(siteUser);
+            return await repo.AddUserToDefaultRoles(siteUser);
 
         }
 

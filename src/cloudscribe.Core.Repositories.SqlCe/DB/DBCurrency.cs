@@ -1,14 +1,16 @@
 ﻿// Author:					Joe Audette
 // Created:					2010-04-04
-// Last Modified:			2014-08-29
+// Last Modified:			2015-01-08
 // 
 // You must not remove this notice, or any other, from this software.
 
 using cloudscribe.DbHelpers.SqlCe;
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Data.SqlServerCe;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.SqlCe
 {
@@ -33,8 +35,8 @@ namespace cloudscribe.Core.Repositories.SqlCe
         /// <param name="value"> value </param>
         /// <param name="lastModified"> lastModified </param>
         /// <param name="created"> created </param>
-        /// <returns>int</returns>
-        public static int Create(
+        /// <returns>bool</returns>
+        public static bool Create(
             Guid guid,
             string title,
             string code,
@@ -131,7 +133,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
                 sqlCommand.ToString(),
                 arParams);
 
-            return rowsAffected;
+            return rowsAffected > 0;
 
 
         }

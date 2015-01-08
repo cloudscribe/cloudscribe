@@ -1,14 +1,16 @@
 ﻿// Author:					Joe Audette
 // Created:				    2008-06-22
-// Last Modified:			2014-08-29
+// Last Modified:			2015-01-08
 // 
 // You must not remove this notice, or any other, from this software.
 
 using cloudscribe.DbHelpers.SQLite;
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Data.SQLite;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.SQLite
 {
@@ -36,8 +38,8 @@ namespace cloudscribe.Core.Repositories.SQLite
         /// <param name="value"> value </param>
         /// <param name="lastModified"> lastModified </param>
         /// <param name="created"> created </param>
-        /// <returns>int</returns>
-        public static int Create(
+        /// <returns>bool</returns>
+        public static bool Create(
             Guid guid,
             string title,
             string code,
@@ -129,10 +131,12 @@ namespace cloudscribe.Core.Repositories.SQLite
             arParams[10].Direction = ParameterDirection.Input;
             arParams[10].Value = created;
 
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
+                GetConnectionString(), 
+                sqlCommand.ToString(), 
+                arParams);
 
-            int rowsAffected = 0;
-            rowsAffected = AdoHelper.ExecuteNonQuery(GetConnectionString(), sqlCommand.ToString(), arParams);
-            return rowsAffected;
+            return rowsAffected > 0;
 
         }
 

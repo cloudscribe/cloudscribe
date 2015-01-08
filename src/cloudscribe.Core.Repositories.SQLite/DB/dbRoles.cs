@@ -1,14 +1,16 @@
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-01-07
+// Last Modified:			2015-01-08
 // 
 // You must not remove this notice, or any other, from this software.
 
 using cloudscribe.DbHelpers.SQLite;
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Data.SQLite;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.SQLite
 {
@@ -161,7 +163,7 @@ namespace cloudscribe.Core.Repositories.SQLite
             return (rowsAffected > 0);
         }
 
-        public static IDataReader GetById(int roleId)
+        public static DbDataReader GetById(int roleId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT * ");
@@ -181,7 +183,7 @@ namespace cloudscribe.Core.Repositories.SQLite
 
         }
 
-        public static IDataReader GetByName(int siteId, string roleName)
+        public static DbDataReader GetByName(int siteId, string roleName)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT * ");
@@ -231,7 +233,7 @@ namespace cloudscribe.Core.Repositories.SQLite
 
         }
 
-        public static IDataReader GetSiteRoles(int siteId)
+        public static DbDataReader GetSiteRoles(int siteId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT ");
@@ -274,7 +276,7 @@ namespace cloudscribe.Core.Repositories.SQLite
 
         }
 
-        public static IDataReader GetRoleMembers(int roleId)
+        public static DbDataReader GetRoleMembers(int roleId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT ");
@@ -354,7 +356,7 @@ namespace cloudscribe.Core.Repositories.SQLite
 
         }
 
-        public static IDataReader GetUsersNotInRole(
+        public static DbDataReader GetUsersNotInRole(
             int siteId,
             int roleId,
             string searchInput,
@@ -504,7 +506,7 @@ namespace cloudscribe.Core.Repositories.SQLite
 
         }
 
-        public static IDataReader GetUsersInRole(
+        public static DbDataReader GetUsersInRole(
             int siteId,
             int roleId,
             string searchInput,
@@ -602,7 +604,7 @@ namespace cloudscribe.Core.Repositories.SQLite
 
         }
 
-        public static IDataReader GetRolesUserIsNotIn(
+        public static DbDataReader GetRolesUserIsNotIn(
             int siteId,
             int userId)
         {
@@ -758,7 +760,7 @@ namespace cloudscribe.Core.Repositories.SQLite
 
         }
 
-        public static IDataReader GetPage(
+        public static DbDataReader GetPage(
             int siteId,
             string searchInput,
             int pageNumber,
