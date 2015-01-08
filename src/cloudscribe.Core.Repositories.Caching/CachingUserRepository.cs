@@ -333,19 +333,19 @@ namespace cloudscribe.Core.Repositories.Caching
             return await repo.DeleteRole(roleID);
         }
 
-        public bool AddUserToRole(
+        public async Task<bool> AddUserToRole(
             int roleId,
             Guid roleGuid,
             int userId,
             Guid userGuid
             )
         {
-            return repo.AddUserToRole(roleId, roleGuid, userId, userGuid);
+            return await repo.AddUserToRole(roleId, roleGuid, userId, userGuid);
         }
 
-        public bool RemoveUserFromRole(int roleId, int userId)
+        public async Task<bool> RemoveUserFromRole(int roleId, int userId)
         {
-            return repo.RemoveUserFromRole(roleId, userId);
+            return await repo.RemoveUserFromRole(roleId, userId);
         }
 
         public void AddUserToDefaultRoles(ISiteUser siteUser)
@@ -359,9 +359,9 @@ namespace cloudscribe.Core.Repositories.Caching
             return repo.DeleteUserRoles(userId);
         }
 
-        public bool DeleteUserRolesByRole(int roleId)
+        public async Task<bool> DeleteUserRolesByRole(int roleId)
         {
-            return repo.DeleteUserRolesByRole(roleId);
+            return await repo.DeleteUserRolesByRole(roleId);
         }
 
 
@@ -445,21 +445,24 @@ namespace cloudscribe.Core.Repositories.Caching
                 pageSize);
         }
 
-        public IList<IUserInfo> GetUsersNotInRole(
+        public async Task<int> CountUsersNotInRole(int siteId, int roleId, string searchInput)
+        {
+            return await repo.CountUsersNotInRole(siteId, roleId, searchInput);
+        }
+
+        public async Task<IList<IUserInfo>> GetUsersNotInRole(
             int siteId, 
             int roleId, 
             string searchInput,
             int pageNumber, 
-            int pageSize, 
-            out int totalPages)
+            int pageSize)
         {
-            return repo.GetUsersNotInRole(
+            return await repo.GetUsersNotInRole(
                 siteId,
                 roleId,
                 searchInput,
                 pageNumber,
-                pageSize,
-                out totalPages);
+                pageSize);
         }
 
 

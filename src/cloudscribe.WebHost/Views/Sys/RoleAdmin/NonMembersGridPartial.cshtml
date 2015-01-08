@@ -82,7 +82,7 @@
 <div>
     @Html.Pager(Model.Paging.ItemsPerPage, 
     Model.Paging.CurrentPage, 
-    Model.Paging.TotalPages,
+    Model.Paging.TotalItems,
                     new AjaxOptions { UpdateTargetId = "nonmembersgridcontainer" }
         ).Options(o => o
             .Action("RoleNonMembers")
@@ -93,7 +93,7 @@
             .DisplayTemplate("Bootstrap3Pagination")
             .PageRouteValueKey("pageNumber")
             .MaxNrOfPages(Model.Paging.MaxPagerItems)
-            .UseItemCountAsPageCount()
+            
     )
 </div>
 

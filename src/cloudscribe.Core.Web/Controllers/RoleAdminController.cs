@@ -143,9 +143,9 @@ namespace cloudscribe.Core.Web.Controllers
             ISiteRole role = await Site.UserRepository.FetchRole(roleId);
             if (role != null && role.IsDeletable(AppSettings.RolesThatCannotBeDeleted))
             {
-                Site.UserRepository.DeleteUserRolesByRole(roleId);
+                bool result = await Site.UserRepository.DeleteUserRolesByRole(roleId);
 
-                bool result = await Site.UserRepository.DeleteRole(roleId);
+                result = result && await Site.UserRepository.DeleteRole(roleId);
 
                 if(result)
                 {
@@ -191,14 +191,13 @@ namespace cloudscribe.Core.Web.Controllers
             model.Heading = "Role Members";
             model.SearchQuery = searchInput;
 
-            IList<IUserInfo> members = await Site.UserRepository.GetUsersInRole(
+            model.Members = await Site.UserRepository.GetUsersInRole(
                 role.SiteId,
                 role.RoleId, 
                 searchInput,
                 pageNumber, 
                 itemsPerPage);
 
-            model.Members = members;
             model.Paging.CurrentPage = pageNumber;
             model.Paging.ItemsPerPage = itemsPerPage;
             model.Paging.TotalItems = await Site.UserRepository.CountUsersInRole(role.SiteId, role.RoleId, searchInput);
@@ -240,21 +239,21 @@ namespace cloudscribe.Core.Web.Controllers
 
             model.Role = RoleViewModel.FromISiteRole(role);
             model.Heading = "Non Role Members";
-            model.SearchQuery = searchInput;
+            model.SearchQuery = searchInput; // unsafe input
 
-            int totalPages = 0;
-            IList<IUserInfo> members = Site.UserRepository.GetUsersNotInRole(
+            model.Members = await Site.UserRepository.GetUsersNotInRole(
                 role.SiteId,
                 role.RoleId,
                 searchInput,
                 pageNumber,
-                itemsPerPage,
-                out totalPages);
+                itemsPerPage);
 
-            model.Members = members;
             model.Paging.CurrentPage = pageNumber;
             model.Paging.ItemsPerPage = itemsPerPage;
-            model.Paging.TotalPages = totalPages;
+            model.Paging.TotalItems = await Site.UserRepository.CountUsersNotInRole(
+                role.SiteId,
+                role.RoleId,
+                searchInput);
 
             if (ajaxGrid)
             {
@@ -269,6 +268,7 @@ namespace cloudscribe.Core.Web.Controllers
         [Authorize(Roles = "Admins,Role Admins")]
         public async Task<ActionResult> AddUser(int roleId, Guid roleGuid, int userId, Guid userGuid)
         {    
+            //TODO: make async
             ISiteUser user = Site.UserRepository.Fetch(Site.SiteSettings.SiteId, userId);
             
             if(user != null)
@@ -276,10 +276,11 @@ namespace cloudscribe.Core.Web.Controllers
                 ISiteRole role = await Site.UserRepository.FetchRole(roleId);
                 if (role != null)
                 {
-                    bool result = Site.UserRepository.AddUserToRole(roleId, roleGuid, userId, userGuid);
+                    bool result = await Site.UserRepository.AddUserToRole(roleId, roleGuid, userId, userGuid);
                     if(result)
                     {
                         user.RolesChanged = true;
+                        // TODO: make async
                         Site.UserRepository.Save(user);
 
                         this.AlertSuccess(string.Format("<b>{0}</b> was successfully added to the role {1}.",
@@ -296,17 +297,18 @@ namespace cloudscribe.Core.Web.Controllers
         [Authorize(Roles = "Admins,Role Admins")]
         public async Task<ActionResult> RemoveUser(int roleId, int userId)
         {
-           
+           //TODO: make async
             ISiteUser user = Site.UserRepository.Fetch(Site.SiteSettings.SiteId, userId);
             if (user != null)
             {
                 ISiteRole role = await Site.UserRepository.FetchRole(roleId);
                 if(role != null)
                 {
-                    bool result = Site.UserRepository.RemoveUserFromRole(roleId, userId);
+                    bool result = await Site.UserRepository.RemoveUserFromRole(roleId, userId);
                     if(result)
                     {
                         user.RolesChanged = true;
+                        //TODO: make async
                         Site.UserRepository.Save(user);
 
                         this.AlertWarning(string.Format(

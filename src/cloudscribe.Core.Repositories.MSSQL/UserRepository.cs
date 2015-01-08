@@ -811,19 +811,19 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return await DBRoles.Delete(roleID);
         }
 
-        public bool AddUserToRole(
+        public async Task<bool> AddUserToRole(
             int roleId,
             Guid roleGuid,
             int userId,
             Guid userGuid
             )
         {
-            return DBRoles.AddUser(roleId, userId, roleGuid, userGuid);
+            return await DBRoles.AddUser(roleId, userId, roleGuid, userGuid);
         }
 
-        public bool RemoveUserFromRole(int roleId, int userId)
+        public async Task<bool> RemoveUserFromRole(int roleId, int userId)
         {
-            return DBRoles.RemoveUser(roleId, userId);
+            return await DBRoles.RemoveUser(roleId, userId);
         }
 
         public void AddUserToDefaultRoles(ISiteUser siteUser)
@@ -876,9 +876,9 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return DBRoles.DeleteUserRoles(userId);
         }
 
-        public bool DeleteUserRolesByRole(int roleId)
+        public async Task<bool> DeleteUserRolesByRole(int roleId)
         {
-            return DBRoles.DeleteUserRolesByRole(roleId);
+            return await DBRoles.DeleteUserRolesByRole(roleId);
         }
 
 
@@ -1077,19 +1077,23 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return users;
         }
 
-        public IList<IUserInfo> GetUsersNotInRole(
+        public async Task<int> CountUsersNotInRole(int siteId, int roleId, string searchInput)
+        {
+            return await DBRoles.GetCountOfUsersNotInRole(siteId, roleId, searchInput);
+        }
+
+        public async Task<IList<IUserInfo>> GetUsersNotInRole(
             int siteId, 
             int roleId, 
             string searchInput,
             int pageNumber, 
-            int pageSize, 
-            out int totalPages)
+            int pageSize)
         {
             IList<IUserInfo> users = new List<IUserInfo>();
 
             if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
 
-            using (IDataReader reader = DBRoles.GetUsersNotInRole(siteId, roleId, searchInput, pageNumber, pageSize, out totalPages))
+            using (IDataReader reader = await DBRoles.GetUsersNotInRole(siteId, roleId, searchInput, pageNumber, pageSize))
             {
                 while (reader.Read())
                 {

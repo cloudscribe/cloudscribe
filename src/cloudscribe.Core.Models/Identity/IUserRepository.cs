@@ -49,13 +49,13 @@ namespace cloudscribe.Core.Models
         int UsersOnlineSinceCount(int siteId, DateTime sinceTime);
 
         //roles
-        bool AddUserToRole(int roleId, Guid roleGuid, int userId, Guid userGuid);
+        Task<bool> AddUserToRole(int roleId, Guid roleGuid, int userId, Guid userGuid);
         void AddUserToDefaultRoles(ISiteUser siteUser);
         Task<int> CountOfRoles(int siteId, string searchInput);
         int GetRoleMemberCount(int roleId);
         Task<bool> DeleteRole(int roleID);
         bool DeleteUserRoles(int userId);
-        bool DeleteUserRolesByRole(int roleId);
+        Task<bool> DeleteUserRolesByRole(int roleId);
         Task<bool> RoleExists(int siteId, string roleName);
         Task<ISiteRole> FetchRole(int roleID);
         ISiteRole FetchRole(int siteId, string roleName);
@@ -68,9 +68,10 @@ namespace cloudscribe.Core.Models
         List<int> GetRoleIds(int siteId, string roleNamesSeparatedBySemiColons);
         IList<ISiteRole> GetRolesUserIsNotIn(int siteId, int userId);
         Task<IList<IUserInfo>> GetUsersInRole(int siteId, int roleId, string searchInput, int pageNumber, int pageSize);
-        IList<IUserInfo> GetUsersNotInRole(int siteId, int roleId, string searchInput, int pageNumber, int pageSize, out int totalPages);
+        Task<IList<IUserInfo>> GetUsersNotInRole(int siteId, int roleId, string searchInput, int pageNumber, int pageSize);
         Task<int> CountUsersInRole(int siteId, int roleId, string searchInput);
-        bool RemoveUserFromRole(int roleId, int userId);
+        Task<int> CountUsersNotInRole(int siteId, int roleId, string searchInput);
+        Task<bool> RemoveUserFromRole(int roleId, int userId);
         Task<bool> SaveRole(ISiteRole role);
 
         //claims

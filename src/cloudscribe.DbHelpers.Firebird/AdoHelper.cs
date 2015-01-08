@@ -180,6 +180,14 @@ namespace cloudscribe.DbHelpers.Firebird
 
         public static async Task<int> ExecuteNonQueryAsync(
             string connectionString,
+            string commandText,
+            params DbParameter[] commandParameters)
+        {
+            return await ExecuteNonQueryAsync(connectionString, CommandType.Text, commandText, commandParameters);
+        }
+
+        public static async Task<int> ExecuteNonQueryAsync(
+            string connectionString,
             CommandType commandType,
             string commandText,
             params DbParameter[] commandParameters)

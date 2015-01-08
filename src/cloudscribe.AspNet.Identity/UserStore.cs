@@ -592,7 +592,7 @@ namespace cloudscribe.AspNet.Identity
             bool result = false;
             if (siteRole != null)
             {
-                result = repo.RemoveUserFromRole(siteRole.RoleId, user.UserId);
+                result = await repo.RemoveUserFromRole(siteRole.RoleId, user.UserId);
             }
 
             await Task.FromResult(result);
