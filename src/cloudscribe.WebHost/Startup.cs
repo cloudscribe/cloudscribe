@@ -133,12 +133,66 @@ namespace cloudscribe.WebHost
             //
             //kernel.Bind<ISiteContext>().To<cloudscribe.Core.Web.SiteContext>(); 
 
-            kernel.Bind<ISiteRepository>().To<cloudscribe.Core.Repositories.MSSQL.SiteRepository>();
-            kernel.Bind<IUserRepository>().To<cloudscribe.Core.Repositories.MSSQL.UserRepository>();
-            kernel.Bind<IGeoRepository>().To<cloudscribe.Core.Repositories.MSSQL.GeoRepository>();
-            kernel.Bind<IDb>().To<cloudscribe.DbHelpers.MSSQL.Db>();
-
             
+
+            switch(AppSettings.DbPlatform.ToLower())
+            {
+                //case "sqlite":
+
+                //    kernel.Bind<ISiteRepository>().To<cloudscribe.Core.Repositories.SQLite.SiteRepository>();
+                //    kernel.Bind<IUserRepository>().To<cloudscribe.Core.Repositories.SQLite.UserRepository>();
+                //    kernel.Bind<IGeoRepository>().To<cloudscribe.Core.Repositories.SQLite.GeoRepository>();
+                //    kernel.Bind<IDb>().To<cloudscribe.DbHelpers.SQLite.Db>();
+
+                //    break;
+
+                case "sqlce":
+
+                    kernel.Bind<ISiteRepository>().To<cloudscribe.Core.Repositories.SqlCe.SiteRepository>();
+                    kernel.Bind<IUserRepository>().To<cloudscribe.Core.Repositories.SqlCe.UserRepository>();
+                    kernel.Bind<IGeoRepository>().To<cloudscribe.Core.Repositories.SqlCe.GeoRepository>();
+                    kernel.Bind<IDb>().To<cloudscribe.DbHelpers.SqlCe.Db>();
+
+                    break;
+
+                case "pgsql":
+
+                    kernel.Bind<ISiteRepository>().To<cloudscribe.Core.Repositories.pgsql.SiteRepository>();
+                    kernel.Bind<IUserRepository>().To<cloudscribe.Core.Repositories.pgsql.UserRepository>();
+                    kernel.Bind<IGeoRepository>().To<cloudscribe.Core.Repositories.pgsql.GeoRepository>();
+                    kernel.Bind<IDb>().To<cloudscribe.DbHelpers.pgsql.Db>();
+
+                    break;
+
+                case "firbird":
+
+                    kernel.Bind<ISiteRepository>().To<cloudscribe.Core.Repositories.Firebird.SiteRepository>();
+                    kernel.Bind<IUserRepository>().To<cloudscribe.Core.Repositories.Firebird.UserRepository>();
+                    kernel.Bind<IGeoRepository>().To<cloudscribe.Core.Repositories.Firebird.GeoRepository>();
+                    kernel.Bind<IDb>().To<cloudscribe.DbHelpers.Firebird.Db>();
+
+                    break;
+
+                case "mysql":
+
+                    kernel.Bind<ISiteRepository>().To<cloudscribe.Core.Repositories.MySql.SiteRepository>();
+                    kernel.Bind<IUserRepository>().To<cloudscribe.Core.Repositories.MySql.UserRepository>();
+                    kernel.Bind<IGeoRepository>().To<cloudscribe.Core.Repositories.MySql.GeoRepository>();
+                    kernel.Bind<IDb>().To<cloudscribe.DbHelpers.MySql.Db>();
+
+                    break;
+
+                case "mssql":
+                default:
+
+                    kernel.Bind<ISiteRepository>().To<cloudscribe.Core.Repositories.MSSQL.SiteRepository>();
+                    kernel.Bind<IUserRepository>().To<cloudscribe.Core.Repositories.MSSQL.UserRepository>();
+                    kernel.Bind<IGeoRepository>().To<cloudscribe.Core.Repositories.MSSQL.GeoRepository>();
+                    kernel.Bind<IDb>().To<cloudscribe.DbHelpers.MSSQL.Db>();
+
+                    break;
+
+            }
 
         } 
 

@@ -386,11 +386,13 @@ namespace cloudscribe.Core.Models.DataExtensions
             site.CompanyName = GetExpandoProperty(expandoProperties, "CompanyName");
 
             string g = GetExpandoProperty(expandoProperties, "CurrencyGuid");
-            if (g.Length == 36) { site.CurrencyGuid = new Guid(g); }
+            if ((g != null) && (g.Length == 36)) { site.CurrencyGuid = new Guid(g); }
+
             g = GetExpandoProperty(expandoProperties, "DefaultStateGuid");
-            if (g.Length == 36) { site.DefaultStateGuid = new Guid(g); }
-            g = GetExpandoProperty(expandoProperties, "DefaultCountryGuid");
-            if (g.Length == 36) { site.DefaultCountryGuid = new Guid(g); }
+            if ((g != null) && (g.Length == 36)) { site.DefaultStateGuid = new Guid(g); }
+            
+                g = GetExpandoProperty(expandoProperties, "DefaultCountryGuid");
+            if ((g != null) && (g.Length == 36)) { site.DefaultCountryGuid = new Guid(g); }
 
             site.DefaultRootPageCreateChildPageRoles = GetExpandoProperty(expandoProperties, "DefaultRootPageCreateChildPageRoles");
 

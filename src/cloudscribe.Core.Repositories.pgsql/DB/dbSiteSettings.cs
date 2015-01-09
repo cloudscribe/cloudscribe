@@ -970,66 +970,67 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             StringBuilder sqlCommand = new StringBuilder();
 
-            sqlCommand.Append("DELETE FROM mp_webparts WHERE siteid = :siteid; ");
-            sqlCommand.Append("DELETE FROM mp_pagemodules ");
-            sqlCommand.Append("WHERE pageid IN (SELECT pageid FROM mp_pages WHERE siteid = :siteid); ");
-            sqlCommand.Append("DELETE FROM mp_modulesettings WHERE moduleid IN (SELECT moduleid FROM mp_modules WHERE siteid = :siteid);");
-            sqlCommand.Append("DELETE FROM mp_modules WHERE siteid = :siteid; ");
-            sqlCommand.Append("DELETE FROM mp_sitemoduledefinitions WHERE siteid = :siteid; ");
+           // sqlCommand.Append("DELETE FROM mp_webparts WHERE siteid = :siteid; ");
+            //sqlCommand.Append("DELETE FROM mp_pagemodules ");
+            //sqlCommand.Append("WHERE pageid IN (SELECT pageid FROM mp_pages WHERE siteid = :siteid); ");
+            //sqlCommand.Append("DELETE FROM mp_modulesettings WHERE moduleid IN (SELECT moduleid FROM mp_modules WHERE siteid = :siteid);");
+            //sqlCommand.Append("DELETE FROM mp_modules WHERE siteid = :siteid; ");
+            //sqlCommand.Append("DELETE FROM mp_sitemoduledefinitions WHERE siteid = :siteid; ");
             sqlCommand.Append("DELETE FROM mp_userproperties WHERE userguid IN (SELECT userguid FROM mp_users WHERE siteid = :siteid);");
             sqlCommand.Append("DELETE FROM mp_userroles WHERE userid IN (SELECT userid FROM mp_users WHERE siteid = :siteid);");
             sqlCommand.Append("DELETE FROM mp_userlocation WHERE userguid IN (SELECT userguid FROM mp_users WHERE siteid = :siteid);");
-            sqlCommand.Append("DELETE FROM mp_friendlyurls WHERE siteid = :siteid; ");
-            sqlCommand.Append("DELETE FROM mp_userpages WHERE siteid = :siteid; ");
+            //sqlCommand.Append("DELETE FROM mp_friendlyurls WHERE siteid = :siteid; ");
+            //sqlCommand.Append("DELETE FROM mp_userpages WHERE siteid = :siteid; ");
             sqlCommand.Append("DELETE FROM mp_users WHERE siteid = :siteid; ");
-            sqlCommand.Append("DELETE FROM mp_pages WHERE siteid = :siteid; ");
+           // sqlCommand.Append("DELETE FROM mp_pages WHERE siteid = :siteid; ");
             sqlCommand.Append("DELETE FROM mp_roles WHERE siteid = :siteid; ");
             sqlCommand.Append("DELETE FROM mp_sitehosts WHERE siteid = :siteid; ");
-            sqlCommand.Append("DELETE FROM mp_sitepersonalizationallusers WHERE pathid IN (SELECT pathid FROM mp_sitepaths WHERE siteid = :siteid);");
-            sqlCommand.Append("DELETE FROM mp_sitepersonalizationperuser WHERE pathid IN (SELECT pathid FROM mp_sitepaths WHERE siteid = :siteid);");
-            sqlCommand.Append("DELETE FROM mp_sitepaths WHERE siteid = :siteid; ");
+            //sqlCommand.Append("DELETE FROM mp_sitepersonalizationallusers WHERE pathid IN (SELECT pathid FROM mp_sitepaths WHERE siteid = :siteid);");
+            //sqlCommand.Append("DELETE FROM mp_sitepersonalizationperuser WHERE pathid IN (SELECT pathid FROM mp_sitepaths WHERE siteid = :siteid);");
+            //sqlCommand.Append("DELETE FROM mp_sitepaths WHERE siteid = :siteid; ");
             sqlCommand.Append("DELETE FROM mp_sitefolders WHERE siteguid IN (SELECT siteguid FROM mp_sites WHERE siteid = :siteid);");
 
             sqlCommand.Append("DELETE FROM mp_sitesettingsex WHERE siteid = :siteid; ");
 
-            sqlCommand.Append("DELETE FROM mp_lettersendlog   ");
-            sqlCommand.Append("WHERE letterguid IN (SELECT letterguid FROM mp_letter   ");
-            sqlCommand.Append("WHERE letterinfoguid IN (SELECT letterinfoguid   ");
-            sqlCommand.Append("FROM mp_letterinfo   ");
-            sqlCommand.Append("WHERE siteguid IN (SELECT siteguid FROM mp_sites WHERE siteid = :siteid) ");
-            sqlCommand.Append("));");
+            //sqlCommand.Append("DELETE FROM mp_lettersendlog   ");
+            //sqlCommand.Append("WHERE letterguid IN (SELECT letterguid FROM mp_letter   ");
+            //sqlCommand.Append("WHERE letterinfoguid IN (SELECT letterinfoguid   ");
+            //sqlCommand.Append("FROM mp_letterinfo   ");
+            //sqlCommand.Append("WHERE siteguid IN (SELECT siteguid FROM mp_sites WHERE siteid = :siteid) ");
+            //sqlCommand.Append("));");
 
-            sqlCommand.Append("DELETE FROM mp_LetterSubscribehx   ");
-            sqlCommand.Append("WHERE letterinfoguid IN (SELECT letterinfoguid   ");
-            sqlCommand.Append("FROM mp_letterinfo   ");
-            sqlCommand.Append("WHERE siteguid IN (SELECT siteguid FROM mp_sites WHERE siteid = :siteid)   ");
-            sqlCommand.Append(");");
+            //sqlCommand.Append("DELETE FROM mp_LetterSubscribehx   ");
+            //sqlCommand.Append("WHERE letterinfoguid IN (SELECT letterinfoguid   ");
+            //sqlCommand.Append("FROM mp_letterinfo   ");
+            //sqlCommand.Append("WHERE siteguid IN (SELECT siteguid FROM mp_sites WHERE siteid = :siteid)   ");
+            //sqlCommand.Append(");");
 
-            sqlCommand.Append("DELETE FROM mp_lettersubscribe   ");
-            sqlCommand.Append("WHERE letterinfoguid IN (SELECT letterinfoguid   ");
-            sqlCommand.Append("FROM mp_letterInfo   ");
-            sqlCommand.Append("WHERE siteguid IN (SELECT siteguid FROM mp_sites WHERE siteid = :siteid)   ");
-            sqlCommand.Append(");");
+            //sqlCommand.Append("DELETE FROM mp_lettersubscribe   ");
+            //sqlCommand.Append("WHERE letterinfoguid IN (SELECT letterinfoguid   ");
+            //sqlCommand.Append("FROM mp_letterInfo   ");
+            //sqlCommand.Append("WHERE siteguid IN (SELECT siteguid FROM mp_sites WHERE siteid = :siteid)   ");
+            //sqlCommand.Append(");");
 
-            sqlCommand.Append("DELETE FROM mp_Letter   ");
-            sqlCommand.Append("WHERE letterinfoguid IN (SELECT letterinfoguid   ");
-            sqlCommand.Append("FROM mp_letterinfo   ");
-            sqlCommand.Append("WHERE siteguid IN (SELECT siteguid FROM mp_sites WHERE siteid = :siteid)   ");
-            sqlCommand.Append(");");
+            //sqlCommand.Append("DELETE FROM mp_Letter   ");
+            //sqlCommand.Append("WHERE letterinfoguid IN (SELECT letterinfoguid   ");
+            //sqlCommand.Append("FROM mp_letterinfo   ");
+            //sqlCommand.Append("WHERE siteguid IN (SELECT siteguid FROM mp_sites WHERE siteid = :siteid)   ");
+            //sqlCommand.Append(");");
 
-            sqlCommand.Append("DELETE FROM mp_letterhtmltemplate WHERE siteguid IN (SELECT siteguid FROM mp_sites WHERE siteid = :siteid);");
-            sqlCommand.Append("DELETE FROM mp_letterinfo WHERE siteguid IN (SELECT siteguid FROM mp_sites WHERE siteid = :siteid);");
+            //sqlCommand.Append("DELETE FROM mp_letterhtmltemplate WHERE siteguid IN (SELECT siteguid FROM mp_sites WHERE siteid = :siteid);");
+            //sqlCommand.Append("DELETE FROM mp_letterinfo WHERE siteguid IN (SELECT siteguid FROM mp_sites WHERE siteid = :siteid);");
 
-            sqlCommand.Append("DELETE FROM mp_paymentlog WHERE siteguid IN (SELECT siteguid FROM mp_sites WHERE siteid = :siteid);");
-            //sqlCommand.Append("DELETE FROM mp_plugnpaylog WHERE siteguid IN (SELECT siteguid FROM mp_sites WHERE siteid = :siteid);");
-            sqlCommand.Append("DELETE FROM mp_googlecheckoutlog WHERE siteguid IN (SELECT siteguid FROM mp_sites WHERE siteid = :siteid);");
-            sqlCommand.Append("DELETE FROM mp_paypallog WHERE siteguid IN (SELECT siteguid FROM mp_sites WHERE siteid = :siteid);");
+            //sqlCommand.Append("DELETE FROM mp_paymentlog WHERE siteguid IN (SELECT siteguid FROM mp_sites WHERE siteid = :siteid);");
+            ////sqlCommand.Append("DELETE FROM mp_plugnpaylog WHERE siteguid IN (SELECT siteguid FROM mp_sites WHERE siteid = :siteid);");
+            //sqlCommand.Append("DELETE FROM mp_googlecheckoutlog WHERE siteguid IN (SELECT siteguid FROM mp_sites WHERE siteid = :siteid);");
+            //sqlCommand.Append("DELETE FROM mp_paypallog WHERE siteguid IN (SELECT siteguid FROM mp_sites WHERE siteid = :siteid);");
 
             sqlCommand.Append("DELETE FROM mp_redirectlist WHERE siteguid IN (SELECT siteguid FROM mp_sites WHERE siteid = :siteid);");
             sqlCommand.Append("DELETE FROM mp_taskqueue WHERE siteguid IN (SELECT siteguid FROM mp_sites WHERE siteid = :siteid);");
-            sqlCommand.Append("DELETE FROM mp_taxclass WHERE siteguid IN (SELECT siteguid FROM mp_sites WHERE siteid = :siteid);");
-            sqlCommand.Append("DELETE FROM mp_taxratehistory WHERE siteguid IN (SELECT siteguid FROM mp_sites WHERE siteid = :siteid);");
-            sqlCommand.Append("DELETE FROM mp_taxrate WHERE siteguid IN (SELECT siteguid FROM mp_sites WHERE siteid = :siteid);");
+            
+            //sqlCommand.Append("DELETE FROM mp_taxclass WHERE siteguid IN (SELECT siteguid FROM mp_sites WHERE siteid = :siteid);");
+            //sqlCommand.Append("DELETE FROM mp_taxratehistory WHERE siteguid IN (SELECT siteguid FROM mp_sites WHERE siteid = :siteid);");
+            //sqlCommand.Append("DELETE FROM mp_taxrate WHERE siteguid IN (SELECT siteguid FROM mp_sites WHERE siteid = :siteid);");
 
 
             

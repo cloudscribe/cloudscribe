@@ -946,7 +946,7 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append("timezoneid, ");
             sqlCommand.Append("emailchangeguid, ");
             sqlCommand.Append("passwordresetguid, ");
-
+            sqlCommand.Append("password, ");
 			sqlCommand.Append("pwd, ");
             sqlCommand.Append("passwordsalt, ");
             sqlCommand.Append("mustchangepwd, ");
@@ -981,6 +981,7 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append(":emailchangeguid, ");
             sqlCommand.Append("'00000000-0000-0000-0000-000000000000', ");
 
+            sqlCommand.Append("'not used', "); // legacy password field cannot be null
 			sqlCommand.Append(":password, ");
             sqlCommand.Append(":passwordsalt, ");
             sqlCommand.Append(":mustchangepwd, ");
@@ -1023,7 +1024,7 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             arParams[4] = new NpgsqlParameter("password", NpgsqlTypes.NpgsqlDbType.Text);
             arParams[4].Direction = ParameterDirection.Input;
-            arParams[4].Value = password;
+            arParams[4].Value = password.ToString();
 
             arParams[5] = new NpgsqlParameter("userguid", NpgsqlTypes.NpgsqlDbType.Text, 36);
             arParams[5].Direction = ParameterDirection.Input;

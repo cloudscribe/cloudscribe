@@ -50,6 +50,11 @@ namespace cloudscribe.Configuration
             return long.TryParse(ConfigurationManager.AppSettings[key], out setting) ? setting : defaultValue;
         }
 
+        public static string DbPlatform
+        {
+            get { return GetString("DbPlatform", "MSSQL"); }
+        }
+
         public static string MSSQLOwnerPrefix
         {
             get { return GetString("MSSQLOwnerPrefix", "[dbo]."); }

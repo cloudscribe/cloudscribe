@@ -954,9 +954,29 @@
       <Project>{f637fab6-4da1-4cb7-ab7b-1bbae9485a7a}</Project>
       <Name>cloudscribe.Core.Web</Name>
     </ProjectReference>
+    <ProjectReference Include="..\cloudscribe.DbHelpers.Firebird\cloudscribe.DbHelpers.Firebird.csproj">
+      <Project>{9a8762db-6718-4818-b48a-6b766a10c4b9}</Project>
+      <Name>cloudscribe.DbHelpers.Firebird</Name>
+    </ProjectReference>
     <ProjectReference Include="..\cloudscribe.DbHelpers.MSSQL\cloudscribe.DbHelpers.MSSQL.csproj">
       <Project>{bc615f11-b133-42d4-8c05-2d950d4a6d64}</Project>
       <Name>cloudscribe.DbHelpers.MSSQL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\cloudscribe.DbHelpers.MySql\cloudscribe.DbHelpers.MySql.csproj">
+      <Project>{efcb633b-2838-4630-8aa1-b57210f46417}</Project>
+      <Name>cloudscribe.DbHelpers.MySql</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\cloudscribe.DbHelpers.pgsql\cloudscribe.DbHelpers.pgsql.csproj">
+      <Project>{fed310c1-c0f6-49eb-ab2a-41d08dc78918}</Project>
+      <Name>cloudscribe.DbHelpers.pgsql</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\cloudscribe.DbHelpers.SqlCe\cloudscribe.DbHelpers.SqlCe.csproj">
+      <Project>{3b4f44a4-699a-47de-b082-2ab3e65c1168}</Project>
+      <Name>cloudscribe.DbHelpers.SqlCe</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\cloudscribe.DbHelpers.SQLite\cloudscribe.DbHelpers.SQLite.csproj">
+      <Project>{0d3a9adf-1022-4df8-9234-318438c8ed16}</Project>
+      <Name>cloudscribe.DbHelpers.SQLite</Name>
     </ProjectReference>
     <ProjectReference Include="..\cloudscribe.Resources\cloudscribe.Resources.csproj">
       <Project>{b6f754e1-7bda-4f6b-97e2-e98afa10cd11}</Project>
