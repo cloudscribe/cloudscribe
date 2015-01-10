@@ -5,30 +5,20 @@
 
 using cloudscribe.Configuration;
 using cloudscribe.Core.Models;
-using cloudscribe.Core.Web.Controllers;
-using cloudscribe.Core.Web.ViewModels.RoleAdmin;
-using cloudscribe.Core.Web.ViewModels.Common;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Web.Mvc;
-using log4net;
-
-
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Resources;
-
+using log4net;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin;
+using Ninject;
+using System;
 using System.Data.Common;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web;
-
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin;
-using Microsoft.Owin.Security;
-using Ninject;
+using System.Web.Mvc;
 
 namespace cloudscribe.Setup.Controllers
 {
@@ -53,6 +43,97 @@ namespace cloudscribe.Setup.Controllers
         private IDb db;
         private ISiteRepository siteRepository;
         private IUserRepository userRepository;
+
+
+        public async Task<ActionResult> Test()
+        {
+            scriptTimeout = Server.ScriptTimeout;
+            Response.Cache.SetCacheability(HttpCacheability.ServerAndNoCache);
+
+            IOwinContext owinContext = HttpContext.GetOwinContext();
+            StandardKernel ninjectKernel = owinContext.Get<StandardKernel>();
+            siteRepository = ninjectKernel.Get<ISiteRepository>();
+            userRepository = ninjectKernel.Get<IUserRepository>();
+            db = ninjectKernel.Get<IDb>();
+
+            Response.BufferOutput = true;
+
+            setupIsDisabled = AppSettings.DisableSetup;
+
+            Server.ScriptTimeout = int.MaxValue;
+            startTime = DateTime.UtcNow;
+            bool isAdmin = false;
+            bool result;
+            //try
+            //{
+            //    //isAdmin = WebUser.IsAdmin;
+            //}
+            //catch { }
+
+            WritePageHeader(Response);
+
+            if (setupIsDisabled && !isAdmin)
+            {
+                WritePageContent(Response, SetupResources.SetupDisabledMessage);
+            }
+            else
+            {
+                if (setupIsDisabled && isAdmin)
+                {
+                    WritePageContent(Response, SetupResources.RunningSetupForAdminUser);
+
+                }
+
+                if (LockForSetup())
+                {
+                    try
+                    {
+                        //ProbeSystem(Response);
+                        //result = await RunSetup(Response);
+                        Response.Write("<ul>");
+
+                        for (int x = 1; x < 11; x++ )
+                        {
+                            Response.Write("<li>" + x.ToInvariantString() + "</li>");
+                            Response.Flush();
+                            bool fun = await DoSomethingSlow();
+                        }
+
+                            Response.Write("/<ul>");
+                    }
+                    finally
+                    {
+                        ClearSetupLock();
+                    }
+
+                }
+                else
+                {
+                    WritePageContent(Response, SetupResources.SetupAlreadyInProgress);
+                }
+
+                WritePageContent(Response, SetupResources.SetupEnabledMessage);
+
+
+            }
+
+
+
+
+
+            WritePageFooter(Response);
+
+            HttpContext.ApplicationInstance.CompleteRequest();
+
+            return new EmptyResult();
+        }
+
+        private async Task<bool> DoSomethingSlow()
+        {
+            await Task.Delay(5000);
+
+            return true;
+        }
 
         public async Task<ActionResult> Index()
         {

@@ -30,8 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Glimpse.AspNet">
-      <HintPath>..\packages\Glimpse.AspNet.1.9.1\lib\net45\Glimpse.AspNet.dll</HintPath>
+    <Reference Include="Glimpse.AspNet, Version=1.9.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Glimpse.AspNet.1.9.2\lib\net45\Glimpse.AspNet.dll</HintPath>
     </Reference>
     <Reference Include="Glimpse.Core">
       <HintPath>..\packages\Glimpse.1.8.6\lib\net45\Glimpse.Core.dll</HintPath>
@@ -60,6 +61,7 @@
   <ItemGroup>
     <Compile Include="AppFabricCacheAdapter.cs" />
     <Compile Include="AppFabricCacheFactory.cs" />
+    <Compile Include="GlimpseSecurityPolicy.cs" />
     <Compile Include="MemoryCacheGlimpseTab.cs" />
     <Compile Include="CacheManager.cs" />
     <Compile Include="CacheProvider.cs" />
@@ -67,7 +69,6 @@
     <Compile Include="CacheTypes.cs" />
     <Compile Include="DistributedCacheFactoryBase.cs" />
     <Compile Include="FileDependencyHelper.cs" />
-    <Compile Include="GlimpseSecurityPolicy.cs" />
     <Compile Include="ICache.cs" />
     <Compile Include="ICacheProvider.cs" />
     <Compile Include="MemoryCache.cs" />
