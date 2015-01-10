@@ -34,6 +34,7 @@ another problem encountered. when re-implementing the setupcontroller to be asyn
 the page would hang after the first await and never complete
 this turned out to be caused by Glimpse somehow hosing up the sync context
 https://github.com/Glimpse/Glimpse/issues/502
+the above was fixed in a newer version of Glimpse
 
 with glimpse disabled it worked as expected, so be aware if weird async problems come up try disable glimpse for a while
 
