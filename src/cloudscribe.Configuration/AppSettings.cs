@@ -389,12 +389,12 @@ namespace cloudscribe.Configuration
 
         public static string SetupHeaderConfigPath
         {
-            get { return GetString("SetupHeaderConfigPath", "~/Setup/SetupHeader.config"); }
+            get { return GetString("SetupHeaderConfigPath", "~/Config/Setup/SetupHeader.config"); }
         }
 
         public static string SetupHeaderConfigPathRtl
         {
-            get { return GetString("SetupHeaderConfigPathRtl", "~/Setup/SetupHeader-rtl.config"); }
+            get { return GetString("SetupHeaderConfigPathRtl", "~/Config/Setup/SetupHeader-rtl.config"); }
         }
 
         public static string DefaultInitialSkin

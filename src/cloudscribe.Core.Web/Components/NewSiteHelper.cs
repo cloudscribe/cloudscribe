@@ -92,7 +92,7 @@ namespace cloudscribe.Core.Web.Components
 
         }
 
-        public static void CreateRequiredRolesAndAdminUser(
+        public static async Task<bool> CreateRequiredRolesAndAdminUser(
             SiteSettings site,
             ISiteRepository siteRepository,
             IUserRepository userRepository)
@@ -103,30 +103,30 @@ namespace cloudscribe.Core.Web.Components
             //adminRole.DisplayName = "Administrators";
             adminRole.SiteId = site.SiteId;
             adminRole.SiteGuid = site.SiteGuid;
-            userRepository.SaveRole(adminRole);
+            bool result = await userRepository.SaveRole(adminRole);
             adminRole.DisplayName = "Administrators";
-            userRepository.SaveRole(adminRole);
+            result = await userRepository.SaveRole(adminRole);
 
             SiteRole roleAdminRole = new SiteRole();
-            roleAdminRole.RoleName = "Role Admins";
+            roleAdminRole.DisplayName = "Role Admins";
             roleAdminRole.SiteId = site.SiteId;
             roleAdminRole.SiteGuid = site.SiteGuid;
-            userRepository.SaveRole(roleAdminRole);
+            result = await userRepository.SaveRole(roleAdminRole);
 
             roleAdminRole.DisplayName = "Role Administrators";
-            userRepository.SaveRole(roleAdminRole);
+            result = await userRepository.SaveRole(roleAdminRole);
 
             SiteRole contentAdminRole = new SiteRole();
             contentAdminRole.DisplayName = "Content Administrators";
             contentAdminRole.SiteId = site.SiteId;
             contentAdminRole.SiteGuid = site.SiteGuid;
-            userRepository.SaveRole(contentAdminRole);
+            result = await userRepository.SaveRole(contentAdminRole);
 
             SiteRole authenticatedUserRole = new SiteRole();
             authenticatedUserRole.DisplayName = "Authenticated Users";
             authenticatedUserRole.SiteId = site.SiteId;
             authenticatedUserRole.SiteGuid = site.SiteGuid;
-            userRepository.SaveRole(authenticatedUserRole);
+            result = await userRepository.SaveRole(authenticatedUserRole);
 
             //SiteRole newsletterAdminRole = new SiteRole();
             //newsletterAdminRole.DisplayName = "Newsletter Administrators";
@@ -183,9 +183,13 @@ namespace cloudscribe.Core.Web.Components
             //if (result.Succeeded)
             //{
             //}
-            userRepository.AddUserToRole(adminRole.RoleId, adminRole.RoleGuid, adminUser.UserId, adminUser.UserGuid);
+            result = await userRepository.AddUserToRole(
+                adminRole.RoleId, 
+                adminRole.RoleGuid, 
+                adminUser.UserId,
+                adminUser.UserGuid);
 
-
+            return result;
 
         }
 

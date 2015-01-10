@@ -37,6 +37,8 @@ namespace cloudscribe.DbHelpers.MSSQL
             return connection;
         }
 
+        
+
 
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
@@ -429,7 +431,7 @@ namespace cloudscribe.DbHelpers.MSSQL
 
             using (DbConnection connection = GetConnection(connectionString))
             {
-                connection.Open();
+                await connection.OpenAsync();
                 using (DbCommand command = factory.CreateCommand())
                 {
                     PrepareCommand(command, connection, (DbTransaction)null, commandType, commandText, commandParameters);

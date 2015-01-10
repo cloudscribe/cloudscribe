@@ -828,8 +828,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
         }
 
 
-        //TODO: this needs to be changed to async and add awaits
-        // but to do that the setup system needs to be refactored as async
+        
         public async Task<bool> AddUserToDefaultRoles(ISiteUser siteUser)
         {
             // moved this to the config setting below instead of hard coded

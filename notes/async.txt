@@ -2,8 +2,17 @@
 best practices in async
 http://msdn.microsoft.com/en-us/magazine/jj991977.aspx
 
+http://blog.stephencleary.com/2012/02/async-and-await.html
+A good rule of thumb is to use ConfigureAwait(false) unless you know you do need the context.
+
+Good document Task Based Async Pattern
+https://www.microsoft.com/en-us/download/details.aspx?id=19957 (docx)
+
 
 http://www.asp.net/web-forms/overview/performance-and-caching/using-asynchronous-methods-in-aspnet-45
+
+http://stackoverflow.com/questions/22628087/calling-async-method-synchronously
+http://blog.stephencleary.com/2012/07/dont-block-on-async-code.html
 
 
 currently we have controller methods marked as async but not really implemented as async
