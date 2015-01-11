@@ -11,16 +11,26 @@ namespace cloudscribe.DbHelpers.SQLite
         {
             if (AppSettings.UseConnectionStringSection) { return GetConnectionStringFromConnectionStringSection(); }
 
-            string connectionString = AppSettings.SqliteConnectionString;
-            if (connectionString == "defaultdblocation")
-            {
+            
+                string path = System.Web.Hosting.HostingEnvironment.MapPath("~/App_Data/" + AppSettings.SqliteApp_Data_FileName);
 
-                connectionString = "data source="
-                    + System.Web.Hosting.HostingEnvironment.MapPath("~/App_Data/cloudscribe.db.config")
+                string connectionString = "data source="
+                    + System.Web.Hosting.HostingEnvironment.MapPath("~/App_Data/" + AppSettings.SqliteApp_Data_FileName)
                     + ";version=3;";
 
-            }
-            return connectionString;
+                return connectionString;
+            
+
+            //string connectionString = AppSettings.SqliteConnectionString;
+            //if (connectionString == "defaultdblocation")
+            //{
+
+            //    connectionString = "data source="
+            //        + System.Web.Hosting.HostingEnvironment.MapPath("~/App_Data/" + AppSettings.SqliteApp_Data_FileName)
+            //        + ";version=3;";
+
+            //}
+            //return connectionString;
         }
 
         private static string GetConnectionStringFromConnectionStringSection()

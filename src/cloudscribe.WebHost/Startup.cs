@@ -137,14 +137,14 @@ namespace cloudscribe.WebHost
 
             switch(AppSettings.DbPlatform.ToLower())
             {
-                //case "sqlite":
+                case "sqlite":
 
-                //    kernel.Bind<ISiteRepository>().To<cloudscribe.Core.Repositories.SQLite.SiteRepository>();
-                //    kernel.Bind<IUserRepository>().To<cloudscribe.Core.Repositories.SQLite.UserRepository>();
-                //    kernel.Bind<IGeoRepository>().To<cloudscribe.Core.Repositories.SQLite.GeoRepository>();
-                //    kernel.Bind<IDb>().To<cloudscribe.DbHelpers.SQLite.Db>();
+                    kernel.Bind<ISiteRepository>().To<cloudscribe.Core.Repositories.SQLite.SiteRepository>();
+                    kernel.Bind<IUserRepository>().To<cloudscribe.Core.Repositories.SQLite.UserRepository>();
+                    kernel.Bind<IGeoRepository>().To<cloudscribe.Core.Repositories.SQLite.GeoRepository>();
+                    kernel.Bind<IDb>().To<cloudscribe.DbHelpers.SQLite.Db>();
 
-                //    break;
+                    break;
 
                 case "sqlce":
 

@@ -795,7 +795,7 @@ namespace cloudscribe.Setup.Controllers
             dbPlatform = db.DBPlatform;
             //dataFolderIsWritable = mojoSetup.DataFolderIsWritable();
 
-            if (dbPlatform == "SqlCe")
+            if ((dbPlatform == "SqlCe") | (dbPlatform == "SQLite"))
             {
                 db.EnsureDatabase();
             }

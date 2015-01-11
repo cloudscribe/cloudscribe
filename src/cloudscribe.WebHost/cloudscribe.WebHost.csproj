@@ -962,6 +962,10 @@
       <Project>{14865547-530d-423b-9006-48a9d86fedfb}</Project>
       <Name>cloudscribe.Core.Repositories.SqlCe</Name>
     </ProjectReference>
+    <ProjectReference Include="..\cloudscribe.Core.Repositories.SQLite\cloudscribe.Core.Repositories.SQLite.csproj">
+      <Project>{7ed8d4f6-7ec7-4eb5-800f-c7f542363b74}</Project>
+      <Name>cloudscribe.Core.Repositories.SQLite</Name>
+    </ProjectReference>
     <ProjectReference Include="..\cloudscribe.Core.Web\cloudscribe.Core.Web.csproj">
       <Project>{f637fab6-4da1-4cb7-ab7b-1bbae9485a7a}</Project>
       <Name>cloudscribe.Core.Web</Name>

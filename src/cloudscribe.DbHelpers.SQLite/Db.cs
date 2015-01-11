@@ -64,7 +64,39 @@ namespace cloudscribe.DbHelpers.SQLite
 
         public void EnsureDatabase()
         {
-            //not applicable for this platform
+            try
+            {
+                if (AppSettings.SqliteApp_Data_FileName.Length > 0)
+                {
+                    string path
+                        = System.Web.Hosting.HostingEnvironment.MapPath("~/App_Data/" + AppSettings.SqliteApp_Data_FileName);
+
+                    string connectionString = "Data Source=" + path + ";Persist Security Info=False;";
+
+                    if (!File.Exists(path))
+                    {
+                        lock (typeof(Db))
+                        {
+                            if (!File.Exists(path))
+                            {
+                                SQLiteConnection.CreateFile(path);
+                                //using (SqlCeEngine engine = new SqlCeEngine(connectionString))
+                                //{
+                                //    engine.CreateDatabase();
+                                //}
+                            }
+
+                        }
+
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error("SqlCe database file is not present, tried to create it but this error occurred.", ex);
+
+            }
 
         }
 
