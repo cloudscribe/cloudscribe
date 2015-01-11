@@ -34,10 +34,10 @@ namespace cloudscribe.DbHelpers.SqlCe
         {
             try
             {
-                if (ConfigurationManager.AppSettings["SqlCeApp_Data_FileName"] != null)
+                if (AppSettings.SqlCeApp_Data_FileName.Length > 0)
                 {
                     string path 
-                        = System.Web.Hosting.HostingEnvironment.MapPath("~/App_Data/" + ConfigurationManager.AppSettings["SqlCeApp_Data_FileName"]);
+                        = System.Web.Hosting.HostingEnvironment.MapPath("~/App_Data/" + AppSettings.SqlCeApp_Data_FileName);
                     
                     string connectionString = "Data Source=" + path + ";Persist Security Info=False;";
 

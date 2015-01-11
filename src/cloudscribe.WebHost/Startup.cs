@@ -164,7 +164,7 @@ namespace cloudscribe.WebHost
 
                     break;
 
-                case "firbird":
+                case "firebird":
 
                     kernel.Bind<ISiteRepository>().To<cloudscribe.Core.Repositories.Firebird.SiteRepository>();
                     kernel.Bind<IUserRepository>().To<cloudscribe.Core.Repositories.Firebird.UserRepository>();

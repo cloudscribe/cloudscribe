@@ -358,7 +358,7 @@ namespace cloudscribe.DbHelpers.SqlCe
                 using (DbCommand command = factory.CreateCommand())
                 {
                     PrepareCommand(command, connection, (DbTransaction)null, commandType, commandText, commandParameters);
-                    command.CommandTimeout = commandTimeout;
+                    //command.CommandTimeout = commandTimeout;
 
                     return command.ExecuteScalar();
                 }

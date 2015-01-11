@@ -320,7 +320,11 @@ namespace cloudscribe.Core.Models.DataExtensions
             //site.EditorSkin = reader["EditorSkin"].ToString();
             //site.DefaultFriendlyUrlPatternEnum = reader["DefaultFriendlyUrlPatternEnum"].ToString();
             site.AllowPasswordRetrieval = Convert.ToBoolean(reader["AllowPasswordRetrieval"]);
-            site.AllowPasswordReset = Convert.ToBoolean(reader["AllowPasswordReset"]);
+            if (reader["AllowPasswordReset"] != DBNull.Value)
+            {
+                site.AllowPasswordReset = Convert.ToBoolean(reader["AllowPasswordReset"]);
+            }
+            
             site.RequiresQuestionAndAnswer = Convert.ToBoolean(reader["RequiresQuestionAndAnswer"]);
             site.MaxInvalidPasswordAttempts = Convert.ToInt32(reader["MaxInvalidPasswordAttempts"]);
             site.PasswordAttemptWindowMinutes = Convert.ToInt32(reader["PasswordAttemptWindowMinutes"]);

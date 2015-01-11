@@ -29,7 +29,7 @@ namespace cloudscribe.DbHelpers.Firebird
 
         public string DBPlatform
         {
-            get { return "FirebirdSql"; }
+            get { return "Firebird"; }
         }
 
         private string GetConnectionString()

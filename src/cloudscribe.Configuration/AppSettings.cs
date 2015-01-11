@@ -119,7 +119,7 @@ namespace cloudscribe.Configuration
 
         public static string SqlCeApp_Data_FileName
         {
-            get { return GetString("SqlCeApp_Data_FileName", string.Empty); }
+            get { return GetString("SqlCeApp_Data_FileName", "cloudscribe.sdf"); }
         }
 
         public static string SqlCeConnectionString

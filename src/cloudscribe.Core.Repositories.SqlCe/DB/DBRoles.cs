@@ -861,7 +861,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("WHERE ");
 
             sqlCommand.Append("r.SiteID = @SiteID ");
-
+            
             if (!string.IsNullOrEmpty(searchInput))
             {
                 sqlCommand.Append("AND (");
@@ -871,6 +871,10 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
                 sqlCommand.Append(")");
             }
+            //else
+            //{
+            //    sqlCommand.Append(" AND @SearchInput = '' ");
+            //}
 
             sqlCommand.Append("GROUP BY ");
             sqlCommand.Append("r.RoleID, ");
@@ -888,7 +892,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append(";");
 
 
-            SqlCeParameter[] arParams = new SqlCeParameter[1];
+            SqlCeParameter[] arParams = new SqlCeParameter[2];
 
             arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
             arParams[0].Direction = ParameterDirection.Input;
@@ -902,7 +906,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
                 ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
-                null);
+                arParams);
 
         }
 

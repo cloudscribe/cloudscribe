@@ -16,6 +16,7 @@ using System;
 using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
+using System.IO;
 
 
 namespace cloudscribe.DbHelpers.Firebird
@@ -101,7 +102,16 @@ namespace cloudscribe.DbHelpers.Firebird
             string connectionString,
             string pathToScriptFile)
         {
-            FbScript script = new FbScript(pathToScriptFile);
+            // http://stackoverflow.com/questions/9259034/the-type-of-the-sql-statement-could-not-be-determinated
+
+            //FbScript script = new FbScript(pathToScriptFile);
+            FbScript script;
+            using(StreamReader sr = File.OpenText(pathToScriptFile))
+            {
+                script = new FbScript(sr.ReadToEnd());
+            }
+
+
             if (script.Parse() > 0)
             {
                 using (FbConnection connection = new FbConnection(connectionString))
