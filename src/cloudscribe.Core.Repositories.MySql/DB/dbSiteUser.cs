@@ -1,6 +1,6 @@
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2014-09-08
+// Last Modified:			2015-01-13
 // 
 //
 // You must not remove this notice, or any other, from this software.
@@ -13,6 +13,7 @@ using System.Data;
 using System.Data.Common;
 using System.Configuration;
 using System.Globalization;
+using System.Threading.Tasks;
 using System.IO;
 using MySql.Data.MySqlClient;
 using cloudscribe.DbHelpers.MySql;
@@ -2068,7 +2069,7 @@ namespace cloudscribe.Core.Repositories.MySql
             return (rowsAffected > 0);
         }
 
-        public static IDataReader GetRolesByUser(int siteId, int userId)
+        public static async Task<DbDataReader> GetRolesByUser(int siteId, int userId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT ");
@@ -2089,14 +2090,12 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[2];
 
             arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new MySqlParameter("?UserID", MySqlDbType.Int32);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = userId;
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 arParams);

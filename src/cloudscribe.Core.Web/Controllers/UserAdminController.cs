@@ -279,7 +279,7 @@ namespace cloudscribe.Core.Web.Controllers
                         user.LastName = model.LastName;
                         user.UserName = model.LoginName;
                         user.DisplayName = model.DisplayName;
-                        bool result = Site.UserRepository.Save(user);
+                        bool result = await Site.UserRepository.Save(user);
                         if(result)
                         {
                             this.AlertSuccess(string.Format("user account for <b>{0}</b> was successfully updated.",

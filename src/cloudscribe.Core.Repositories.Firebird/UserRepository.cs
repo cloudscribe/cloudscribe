@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-18
-// Last Modified:			2015-01-08
+// Last Modified:			2015-01-13
 // 
 
 
@@ -26,7 +26,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         #region User 
 
-        public bool Save(ISiteUser user)
+        public async Task<bool> Save(ISiteUser user)
         {
             if (user.SiteId == -1) { throw new ArgumentException("user must have a siteid"); }
             if (user.SiteGuid == Guid.Empty) { throw new ArgumentException("user must have a siteguid"); }
@@ -36,7 +36,7 @@ namespace cloudscribe.Core.Repositories.Firebird
                 user.UserGuid = Guid.NewGuid();
                 user.CreatedUtc = DateTime.UtcNow;
 
-                user.UserId = DBSiteUser.AddUser(
+                user.UserId = await DBSiteUser.AddUser(
                     user.SiteGuid,
                     user.SiteId,
                     user.DisplayName,
@@ -60,6 +60,7 @@ namespace cloudscribe.Core.Repositories.Firebird
                     user.TwoFactorEnabled,
                     user.LockoutEndDateUtc);
 
+                return user.UserId > -1;
                 //Role.AddUserToDefaultRoles(this);
 
 
@@ -115,15 +116,15 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             // not all properties are added on insert so update even if we just inserted
 
-            return Update(user);
+            return await Update(user);
 
         }
 
-        private bool Update(ISiteUser user)
+        private async Task<bool> Update(ISiteUser user)
         {
             if (string.IsNullOrEmpty(user.LoweredEmail)) { user.LoweredEmail = user.Email.ToLowerInvariant(); }
             
-            return DBSiteUser.UpdateUser(
+            return await DBSiteUser.UpdateUser(
                     user.UserId,
                     user.DisplayName,
                     user.UserName,
@@ -833,7 +834,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             {
                 if (defaultRoles.IndexOf(";") == -1)
                 {
-                    role = FetchRole(siteUser.SiteId, defaultRoles);
+                    role = await FetchRole(siteUser.SiteId, defaultRoles);
                     if ((role != null) && (role.RoleId > -1))
                     {
                         result = await AddUserToRole(role.RoleId, role.RoleGuid, siteUser.UserId, siteUser.UserGuid);
@@ -846,7 +847,7 @@ namespace cloudscribe.Core.Repositories.Firebird
                     {
                         if (!string.IsNullOrEmpty(roleName))
                         {
-                            role = FetchRole(siteUser.SiteId, roleName);
+                            role = await FetchRole(siteUser.SiteId, roleName);
                             if ((role != null) && (role.RoleId > -1))
                             {
                                 result = result && await AddUserToRole(role.RoleId, role.RoleGuid, siteUser.UserId, siteUser.UserGuid);
@@ -910,22 +911,16 @@ namespace cloudscribe.Core.Repositories.Firebird
             return null;
         }
 
-        public ISiteRole FetchRole(int siteId, string roleName)
+        public async Task<ISiteRole> FetchRole(int siteId, string roleName)
         {
             if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
             SiteRole role = null;
-
-            using (DbDataReader reader = DBRoles.GetSiteRoles(siteId))
+            using (DbDataReader reader = await DBRoles.GetByName(siteId, roleName))
             {
-                while (reader.Read())
-                {
-                    string foundName = reader["RoleName"].ToString();
-                    if (foundName == roleName)
-                    {
-                        role = new SiteRole();
-                        role.LoadFromReader(reader);
-                        break;
-                    }
+                if (reader.Read())
+                { 
+                    role = new SiteRole();
+                    role.LoadFromReader(reader);   
                 }
             }
 
@@ -933,10 +928,10 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         }
 
-        public List<string> GetUserRoles(int siteId, int userId)
+        public async Task<List<string>> GetUserRoles(int siteId, int userId)
         {
             List<string> userRoles = new List<string>();
-            using (IDataReader reader = DBSiteUser.GetRolesByUser(siteId, userId))
+            using (IDataReader reader = await DBSiteUser.GetRolesByUser(siteId, userId))
             {
                 while (reader.Read())
                 {
@@ -989,7 +984,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             return roles;
         }
 
-        public List<int> GetRoleIds(int siteId, string roleNamesSeparatedBySemiColons)
+        public async Task<List<int>> GetRoleIds(int siteId, string roleNamesSeparatedBySemiColons)
         {
             List<int> roleIds = new List<int>();
 
@@ -998,7 +993,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             foreach (string roleName in roleNames)
             {
                 if (string.IsNullOrEmpty(roleName)) { continue; }
-                ISiteRole r = FetchRole(siteId, roleName);
+                ISiteRole r = await FetchRole(siteId, roleName);
                 if (r == null)
                 {
                     log.Debug("could not get roleid for role named " + roleName);

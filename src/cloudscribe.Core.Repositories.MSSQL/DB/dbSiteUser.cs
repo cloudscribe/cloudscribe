@@ -1,6 +1,6 @@
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2014-09-08
+// Last Modified:			2015-01-13
 // 
 //
 // You must not remove this notice, or any other, from this software.
@@ -8,7 +8,9 @@
 
 using System;
 using System.Data;
+using System.Data.Common;
 using cloudscribe.DbHelpers.MSSQL;
+using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.MSSQL
 {
@@ -804,12 +806,12 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return (rowsAffected > -1);
         }
 
-        public static IDataReader GetRolesByUser(int siteId, int userId)
+        public static async Task<DbDataReader> GetRolesByUser(int siteId, int userId)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_Users_GetUserRoles", 2);
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
             sph.DefineSqlParameter("@UserID", SqlDbType.Int, ParameterDirection.Input, userId);
-            return sph.ExecuteReader();
+            return await sph.ExecuteReaderAsync();
         }
 
 

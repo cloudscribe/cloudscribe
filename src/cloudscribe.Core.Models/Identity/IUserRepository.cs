@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-18
-// Last Modified:			2015-01-07
+// Last Modified:			2015-01-13
 // 
 
 
@@ -41,7 +41,7 @@ namespace cloudscribe.Core.Models
         List<IUserInfo> GetUserSearchPage(int siteId, int pageNumber, int pageSize, string searchInput, int sortMode, out int totalPages);
         bool LoginExistsInDB(int siteId, string loginName);
         bool LoginIsAvailable(int siteId, int userId, string loginName);
-        bool Save(ISiteUser user);
+        Task<bool> Save(ISiteUser user);
         bool UpdatePasswordAndSalt(int userId, int passwordFormat, string password, string passwordSalt);
         void UpdateTotalRevenue();
         void UpdateTotalRevenue(Guid userGuid);
@@ -58,14 +58,14 @@ namespace cloudscribe.Core.Models
         Task<bool> DeleteUserRolesByRole(int roleId);
         Task<bool> RoleExists(int siteId, string roleName);
         Task<ISiteRole> FetchRole(int roleID);
-        ISiteRole FetchRole(int siteId, string roleName);
+        Task<ISiteRole> FetchRole(int siteId, string roleName);
         Task<IList<ISiteRole>> GetRolesBySite(
             int siteId, 
             string searchInput,
             int pageNumber,
             int pageSize);
-        List<string> GetUserRoles(int siteId, int userId);
-        List<int> GetRoleIds(int siteId, string roleNamesSeparatedBySemiColons);
+        Task<List<string>> GetUserRoles(int siteId, int userId);
+        Task<List<int>> GetRoleIds(int siteId, string roleNamesSeparatedBySemiColons);
         IList<ISiteRole> GetRolesUserIsNotIn(int siteId, int userId);
         Task<IList<IUserInfo>> GetUsersInRole(int siteId, int roleId, string searchInput, int pageNumber, int pageSize);
         Task<IList<IUserInfo>> GetUsersNotInRole(int siteId, int roleId, string searchInput, int pageNumber, int pageSize);

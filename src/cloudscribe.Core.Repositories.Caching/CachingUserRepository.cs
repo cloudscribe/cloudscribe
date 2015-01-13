@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-30
-// Last Modified:			2015-01-07
+// Last Modified:			2015-01-13
 // 
 
 using cloudscribe.Caching;
@@ -33,9 +33,9 @@ namespace cloudscribe.Core.Repositories.Caching
 
         #region User
 
-        public bool Save(ISiteUser user)
+        public async Task<bool> Save(ISiteUser user)
         {
-            bool result = repo.Save(user);
+            bool result = await repo.Save(user);
             CacheManager.Cache.InvalidateCacheItem("user-" + user.Id);
             return result;
 
@@ -381,15 +381,15 @@ namespace cloudscribe.Core.Repositories.Caching
             return await repo.FetchRole(roleID);
         }
 
-        public ISiteRole FetchRole(int siteId, string roleName)
+        public async Task<ISiteRole> FetchRole(int siteId, string roleName)
         {
-            return repo.FetchRole(siteId, roleName);
+            return await repo.FetchRole(siteId, roleName);
 
         }
 
-        public List<string> GetUserRoles(int siteId, int userId)
+        public async Task<List<string>> GetUserRoles(int siteId, int userId)
         {
-            return repo.GetUserRoles(siteId, userId);
+            return await repo.GetUserRoles(siteId, userId);
         }
 
         public async Task<IList<ISiteRole>> GetRolesBySite(
@@ -409,9 +409,9 @@ namespace cloudscribe.Core.Repositories.Caching
             return repo.GetRolesUserIsNotIn(siteId, userId);
         }
 
-        public List<int> GetRoleIds(int siteId, string roleNamesSeparatedBySemiColons)
+        public async Task<List<int>> GetRoleIds(int siteId, string roleNamesSeparatedBySemiColons)
         {
-            return repo.GetRoleIds(siteId, roleNamesSeparatedBySemiColons);
+            return await repo.GetRoleIds(siteId, roleNamesSeparatedBySemiColons);
         }
 
         //public static List<string> GetRolesNames(string roleNamesSeparatedBySemiColons)

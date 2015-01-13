@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2014-07-22
-// Last Modified:		    2014-08-25
+// Last Modified:		    2015-01-13
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -82,7 +82,7 @@ namespace cloudscribe.AspNet.Identity
                 user.DisplayName = SuggestLoginNameFromEmail(siteSettings.SiteId, user.Email);
             }
 
-            bool result = repo.Save(user);
+            bool result = await repo.Save(user);
             if(result)
             {
                 result = result && await repo.AddUserToDefaultRoles(user);
@@ -98,7 +98,7 @@ namespace cloudscribe.AspNet.Identity
         {
             if (debugLog) { log.Info("UpdateAsync"); }
 
-            bool result = repo.Save(user);
+            bool result = await repo.Save(user);
 
 
             await Task.FromResult(result);
@@ -165,7 +165,7 @@ namespace cloudscribe.AspNet.Identity
             return Task.FromResult(user.EmailConfirmed);
         }
 
-        public Task SetEmailAsync(TUser user, string email)
+        public async Task SetEmailAsync(TUser user, string email)
         {
             if (debugLog) { log.Info("SetEmailAsync"); }
 
@@ -183,11 +183,11 @@ namespace cloudscribe.AspNet.Identity
 
             
 
-            bool result = repo.Save(user);
-            return Task.FromResult(result);
+            bool result = await repo.Save(user);
+            //return Task.FromResult(result);
         }
 
-        public Task SetEmailConfirmedAsync(TUser user, bool confirmed)
+        public async Task SetEmailConfirmedAsync(TUser user, bool confirmed)
         {
             if (debugLog) { log.Info("SetEmailConfirmedAsync"); }
 
@@ -205,8 +205,8 @@ namespace cloudscribe.AspNet.Identity
 
             // I don't not sure this method is expected to
             // persist this change to the db
-            bool result = repo.Save(user);
-            return Task.FromResult(result);
+            bool result = await repo.Save(user);
+            //return Task.FromResult(result);
         }
 
         public Task<TUser> FindByEmailAsync(string email)
@@ -344,14 +344,14 @@ namespace cloudscribe.AspNet.Identity
             
         }
 
-        public Task SetLockoutEndDateAsync(TUser user, DateTimeOffset lockoutEnd)
+        public async Task SetLockoutEndDateAsync(TUser user, DateTimeOffset lockoutEnd)
         {
             if (debugLog) { log.Info("SetLockoutEndDateAsync"); }
 
             user.LockoutEndDateUtc = lockoutEnd.DateTime;
-            bool result = repo.Save(user);
+            bool result = await repo.Save(user);
 
-            return Task.FromResult(result);
+            //return Task.FromResult(result);
         }
 
 
@@ -478,14 +478,14 @@ namespace cloudscribe.AspNet.Identity
             return Task.FromResult(user.TwoFactorEnabled);
         }
 
-        public Task SetTwoFactorEnabledAsync(TUser user,bool enabled)
+        public async Task SetTwoFactorEnabledAsync(TUser user,bool enabled)
         {
             if (debugLog) { log.Info("SetTwoFactorEnabledAsync"); }
 
             user.TwoFactorEnabled = enabled;
-            bool result = repo.Save(user);
+            bool result = await repo.Save(user);
 
-            return Task.FromResult(result);
+            //return Task.FromResult(result);
         }
 
 
@@ -507,24 +507,24 @@ namespace cloudscribe.AspNet.Identity
             return Task.FromResult(user.PhoneNumberConfirmed);
         }
 
-        public Task SetPhoneNumberAsync(TUser user, string phoneNumber)
+        public async Task SetPhoneNumberAsync(TUser user, string phoneNumber)
         {
             if (debugLog) { log.Info("SetPhoneNumberAsync"); }
 
             user.PhoneNumber = phoneNumber;
-            bool result = repo.Save(user);
+            bool result = await repo.Save(user);
 
-            return Task.FromResult(result);
+            //return Task.FromResult(result);
         }
 
-        public Task SetPhoneNumberConfirmedAsync(TUser user, bool confirmed)
+        public async Task SetPhoneNumberConfirmedAsync(TUser user, bool confirmed)
         {
             if (debugLog) { log.Info("SetPhoneNumberConfirmedAsync"); }
 
             user.PhoneNumberConfirmed = confirmed;
-            bool result = repo.Save(user);
+            bool result = await repo.Save(user);
 
-            return Task.FromResult(result);
+            //return Task.FromResult(result);
         }
 
         #endregion
@@ -535,17 +535,16 @@ namespace cloudscribe.AspNet.Identity
         {
             if (debugLog) { log.Info("AddToRoleAsync"); }
 
-            ISiteRole siteRole = repo.FetchRole(siteSettings.SiteId, role);
+            ISiteRole siteRole = await repo.FetchRole(siteSettings.SiteId, role);
             bool result = false;
             if (siteRole != null)
             {
                 result = await repo.AddUserToRole(siteRole.RoleId, siteRole.RoleGuid, user.UserId, user.UserGuid);
             }
 
-            await Task.FromResult(result);
         }
 
-        public Task<IList<string>> GetRolesAsync(TUser user)
+        public async Task<IList<string>> GetRolesAsync(TUser user)
         {
             if (debugLog) { log.Info("GetRolesAsync"); }
 
@@ -553,25 +552,22 @@ namespace cloudscribe.AspNet.Identity
 
             if (user == null)
             {
-                return Task.FromResult(roles);
+                return roles;
             }
 
-            roles = repo.GetUserRoles(siteSettings.SiteId, user.UserId);
+            roles = await repo.GetUserRoles(siteSettings.SiteId, user.UserId);
 
-
-            //roles = SiteUser.GetRoles((SiteUser)user.mojoSiteUser);
-
-            return Task.FromResult(roles);
+            return roles;
         }
 
-        public Task<bool> IsInRoleAsync(TUser user, string role)
+        public async Task<bool> IsInRoleAsync(TUser user, string role)
         {
             if (debugLog) { log.Info("IsInRoleAsync"); }
 
             bool result = false;
-            if (user == null) { return Task.FromResult(result); }
+            if (user == null) { return result; }
 
-            IList<string> roles = repo.GetUserRoles(siteSettings.SiteId, user.UserId);
+            IList<string> roles = await repo.GetUserRoles(siteSettings.SiteId, user.UserId);
 
             foreach (string r in roles)
             {
@@ -582,22 +578,19 @@ namespace cloudscribe.AspNet.Identity
                 }
             }
 
-            return Task.FromResult(result);
+            return result;
         }
 
         public async Task RemoveFromRoleAsync(TUser user, string role)
         {
             if (debugLog) { log.Info("RemoveFromRoleAsync"); }
 
-            ISiteRole siteRole = repo.FetchRole(siteSettings.SiteId, role);
+            ISiteRole siteRole = await repo.FetchRole(siteSettings.SiteId, role);
             bool result = false;
             if (siteRole != null)
             {
                 result = await repo.RemoveUserFromRole(siteRole.RoleId, user.UserId);
             }
-
-            await Task.FromResult(result);
-
 
         }
 

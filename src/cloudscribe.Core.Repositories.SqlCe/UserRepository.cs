@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-18
-// Last Modified:			2015-01-08
+// Last Modified:			2015-01-13
 // 
 
 
@@ -26,7 +26,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
         #region User 
 
-        public bool Save(ISiteUser user)
+        public async Task<bool> Save(ISiteUser user)
         {
             if (user.SiteId == -1) { throw new ArgumentException("user must have a siteid"); }
             if (user.SiteGuid == Guid.Empty) { throw new ArgumentException("user must have a siteguid"); }
@@ -60,6 +60,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
                     user.TwoFactorEnabled,
                     user.LockoutEndDateUtc);
 
+                return user.UserId > -1;
                 //Role.AddUserToDefaultRoles(this);
 
 
@@ -831,7 +832,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             {
                 if (defaultRoles.IndexOf(";") == -1)
                 {
-                    role = FetchRole(siteUser.SiteId, defaultRoles);
+                    role = await FetchRole(siteUser.SiteId, defaultRoles);
                     if ((role != null) && (role.RoleId > -1))
                     {
                         result = await AddUserToRole(role.RoleId, role.RoleGuid, siteUser.UserId, siteUser.UserGuid);
@@ -844,7 +845,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
                     {
                         if (!string.IsNullOrEmpty(roleName))
                         {
-                            role = FetchRole(siteUser.SiteId, roleName);
+                            role = await FetchRole(siteUser.SiteId, roleName);
                             if ((role != null) && (role.RoleId > -1))
                             {
                                 result = result && await AddUserToRole(role.RoleId, role.RoleGuid, siteUser.UserId, siteUser.UserGuid);
@@ -908,22 +909,17 @@ namespace cloudscribe.Core.Repositories.SqlCe
             return null;
         }
 
-        public ISiteRole FetchRole(int siteId, string roleName)
+        public async Task<ISiteRole> FetchRole(int siteId, string roleName)
         {
-            //if (UseRelatedSiteMode) { siteId = RelatedSiteID; }
+            if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
             SiteRole role = null;
 
-            using (DbDataReader reader = DBRoles.GetSiteRoles(siteId))
+            using (DbDataReader reader = DBRoles.GetByName(siteId, roleName))
             {
-                while (reader.Read())
+                if (reader.Read())
                 {
-                    string foundName = reader["RoleName"].ToString();
-                    if (foundName == roleName)
-                    {
-                        role = new SiteRole();
-                        role.LoadFromReader(reader);
-                        break;
-                    }
+                    role = new SiteRole();
+                    role.LoadFromReader(reader);     
                 }
             }
 
@@ -931,7 +927,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
         }
 
-        public List<string> GetUserRoles(int siteId, int userId)
+        public async Task<List<string>> GetUserRoles(int siteId, int userId)
         {
             List<string> userRoles = new List<string>();
             using (DbDataReader reader = DBSiteUser.GetRolesByUser(siteId, userId))
@@ -987,7 +983,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             return roles;
         }
 
-        public List<int> GetRoleIds(int siteId, string roleNamesSeparatedBySemiColons)
+        public async Task<List<int>> GetRoleIds(int siteId, string roleNamesSeparatedBySemiColons)
         {
             List<int> roleIds = new List<int>();
 
@@ -996,7 +992,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             foreach (string roleName in roleNames)
             {
                 if (string.IsNullOrEmpty(roleName)) { continue; }
-                ISiteRole r = FetchRole(siteId, roleName);
+                ISiteRole r = await FetchRole(siteId, roleName);
                 if (r == null)
                 {
                     log.Debug("could not get roleid for role named " + roleName);

@@ -1,6 +1,6 @@
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2014-09-08
+// Last Modified:			2015-01-13
 // 
 // You must not remove this notice, or any other, from this software.
 // 
@@ -10,7 +10,9 @@ using cloudscribe.DbHelpers.Firebird;
 using FirebirdSql.Data.FirebirdClient;
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.Firebird
 {
@@ -900,7 +902,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
        
 
-        public static int AddUser(
+        public static async Task<int> AddUser(
             Guid siteGuid,
             int siteId,
             string fullName,
@@ -939,179 +941,135 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[52];
 
             arParams[0] = new FbParameter(":SiteID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new FbParameter(":Name", FbDbType.VarChar, 100);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = loginName;
 
             arParams[2] = new FbParameter(":LoginName", FbDbType.VarChar, 50);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = loginName;
 
             arParams[3] = new FbParameter(":Email", FbDbType.VarChar, 100);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = email;
 
             arParams[4] = new FbParameter(":LoweredEmail", FbDbType.VarChar, 100);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = email.ToLower();
 
             arParams[5] = new FbParameter(":Password", FbDbType.VarChar, 1000);
-            arParams[5].Direction = ParameterDirection.Input;
             arParams[5].Value = password;
 
             arParams[6] = new FbParameter(":PasswordQuestion", FbDbType.VarChar, 255);
-            arParams[6].Direction = ParameterDirection.Input;
             arParams[6].Value = "What color is blue?";
 
             arParams[7] = new FbParameter(":PasswordAnswer", FbDbType.VarChar, 255);
-            arParams[7].Direction = ParameterDirection.Input;
             arParams[7].Value = "blue";
 
             arParams[8] = new FbParameter(":Gender", FbDbType.Char, 10);
-            arParams[8].Direction = ParameterDirection.Input;
             arParams[8].Value = string.Empty;
 
             arParams[9] = new FbParameter(":ProfileApproved", FbDbType.SmallInt);
-            arParams[9].Direction = ParameterDirection.Input;
             arParams[9].Value = 1;
 
             arParams[10] = new FbParameter(":RegisterConfirmGuid", FbDbType.Char, 36);
-            arParams[10].Direction = ParameterDirection.Input;
             arParams[10].Value = Guid.Empty.ToString();
 
             arParams[11] = new FbParameter(":ApprovedForForums", FbDbType.SmallInt);
-            arParams[11].Direction = ParameterDirection.Input;
             arParams[11].Value = 1;
 
             arParams[12] = new FbParameter(":Trusted", FbDbType.SmallInt);
-            arParams[12].Direction = ParameterDirection.Input;
             arParams[12].Value = 0;
 
             arParams[13] = new FbParameter(":DisplayInMemberList", FbDbType.SmallInt);
-            arParams[13].Direction = ParameterDirection.Input;
             arParams[13].Value = 1;
 
             arParams[14] = new FbParameter(":WebSiteURL", FbDbType.VarChar, 100);
-            arParams[14].Direction = ParameterDirection.Input;
             arParams[14].Value = string.Empty;
 
             arParams[15] = new FbParameter(":Country", FbDbType.VarChar, 100);
-            arParams[15].Direction = ParameterDirection.Input;
             arParams[15].Value = string.Empty;
 
             arParams[16] = new FbParameter(":State", FbDbType.VarChar, 100);
-            arParams[16].Direction = ParameterDirection.Input;
             arParams[16].Value = string.Empty;
 
             arParams[17] = new FbParameter(":Occupation", FbDbType.VarChar, 100);
-            arParams[17].Direction = ParameterDirection.Input;
             arParams[17].Value = string.Empty;
 
             arParams[18] = new FbParameter(":Interests", FbDbType.VarChar, 100);
-            arParams[18].Direction = ParameterDirection.Input;
             arParams[18].Value = string.Empty;
 
             arParams[19] = new FbParameter(":MSN", FbDbType.VarChar, 50);
-            arParams[19].Direction = ParameterDirection.Input;
             arParams[19].Value = string.Empty;
 
             arParams[20] = new FbParameter(":Yahoo", FbDbType.VarChar, 50);
-            arParams[20].Direction = ParameterDirection.Input;
             arParams[20].Value = string.Empty;
 
             arParams[21] = new FbParameter(":AIM", FbDbType.VarChar, 50);
-            arParams[21].Direction = ParameterDirection.Input;
             arParams[21].Value = string.Empty;
 
             arParams[22] = new FbParameter(":ICQ", FbDbType.VarChar, 50);
-            arParams[22].Direction = ParameterDirection.Input;
             arParams[22].Value = string.Empty;
 
             arParams[23] = new FbParameter(":TotalPosts", FbDbType.Integer);
-            arParams[23].Direction = ParameterDirection.Input;
             arParams[23].Value = 0;
 
             arParams[24] = new FbParameter(":AvatarUrl", FbDbType.VarChar, 255);
-            arParams[24].Direction = ParameterDirection.Input;
             arParams[24].Value = string.Empty;
 
             arParams[25] = new FbParameter(":TimeOffsetHours", FbDbType.Integer);
-            arParams[25].Direction = ParameterDirection.Input;
             arParams[25].Value = 0;
 
             arParams[26] = new FbParameter(":Signature", FbDbType.VarChar, 4000);
-            arParams[26].Direction = ParameterDirection.Input;
             arParams[26].Value = string.Empty;
 
             arParams[27] = new FbParameter(":DateCreated", FbDbType.TimeStamp);
-            arParams[27].Direction = ParameterDirection.Input;
             arParams[27].Value = dateCreated;
 
             arParams[28] = new FbParameter(":UserGuid", FbDbType.Char, 36);
-            arParams[28].Direction = ParameterDirection.Input;
             arParams[28].Value = userGuid.ToString();
 
             arParams[29] = new FbParameter(":Skin", FbDbType.VarChar, 100);
-            arParams[29].Direction = ParameterDirection.Input;
             arParams[29].Value = string.Empty;
 
             arParams[30] = new FbParameter(":IsDeleted", FbDbType.SmallInt);
-            arParams[30].Direction = ParameterDirection.Input;
             arParams[30].Value = 0;
 
             arParams[31] = new FbParameter(":FailedPasswordAttemptCount", FbDbType.Integer);
-            arParams[31].Direction = ParameterDirection.Input;
             arParams[31].Value = 0;
 
             arParams[32] = new FbParameter(":FailedPwdAnswerAttemptCount", FbDbType.Integer);
-            arParams[32].Direction = ParameterDirection.Input;
             arParams[32].Value = 0;
 
             arParams[33] = new FbParameter(":IsLockedOut", FbDbType.SmallInt);
-            arParams[33].Direction = ParameterDirection.Input;
             arParams[33].Value = 0;
 
             arParams[34] = new FbParameter(":MobilePIN", FbDbType.VarChar, 16);
-            arParams[34].Direction = ParameterDirection.Input;
             arParams[34].Value = string.Empty;
 
             arParams[35] = new FbParameter(":PasswordSalt", FbDbType.VarChar, 128);
-            arParams[35].Direction = ParameterDirection.Input;
             arParams[35].Value = passwordSalt;
 
             arParams[36] = new FbParameter(":Comment", FbDbType.VarChar);
-            arParams[36].Direction = ParameterDirection.Input;
             arParams[36].Value = string.Empty;
 
             arParams[37] = new FbParameter(":SiteGuid", FbDbType.Char, 36);
-            arParams[37].Direction = ParameterDirection.Input;
             arParams[37].Value = siteGuid.ToString();
 
             arParams[38] = new FbParameter(":MustChangePwd", FbDbType.Integer);
-            arParams[38].Direction = ParameterDirection.Input;
             arParams[38].Value = intmustChangePwd;
 
             arParams[39] = new FbParameter(":FirstName", FbDbType.VarChar, 100);
-            arParams[39].Direction = ParameterDirection.Input;
             arParams[39].Value = firstName;
 
             arParams[40] = new FbParameter(":LastName", FbDbType.VarChar, 100);
-            arParams[40].Direction = ParameterDirection.Input;
             arParams[40].Value = lastName;
 
             arParams[41] = new FbParameter(":EmailChangeGuid", FbDbType.Char, 36);
-            arParams[41].Direction = ParameterDirection.Input;
             arParams[41].Value = Guid.Empty.ToString();
 
             arParams[42] = new FbParameter(":TimeZoneId", FbDbType.VarChar, 32);
-            arParams[42].Direction = ParameterDirection.Input;
             arParams[42].Value = timeZoneId;
 
             arParams[43] = new FbParameter(":DateOfBirth", FbDbType.TimeStamp);
-            arParams[43].Direction = ParameterDirection.Input;
             if (dateOfBirth == DateTime.MinValue)
             {
                 arParams[43].Value = DBNull.Value;
@@ -1123,35 +1081,27 @@ namespace cloudscribe.Core.Repositories.Firebird
 
 
             arParams[44] = new FbParameter(":PwdFormat", FbDbType.Integer);
-            arParams[44].Direction = ParameterDirection.Input;
             arParams[44].Value = pwdFormat;
 
             arParams[45] = new FbParameter(":EmailConfirmed", FbDbType.Integer);
-            arParams[45].Direction = ParameterDirection.Input;
             arParams[45].Value = intEmailConfirmed;
 
             arParams[46] = new FbParameter(":PasswordHash", FbDbType.VarChar);
-            arParams[46].Direction = ParameterDirection.Input;
             arParams[46].Value = passwordHash;
 
             arParams[47] = new FbParameter(":SecurityStamp", FbDbType.VarChar);
-            arParams[47].Direction = ParameterDirection.Input;
             arParams[47].Value = securityStamp;
 
             arParams[48] = new FbParameter(":PhoneNumber", FbDbType.VarChar, 50);
-            arParams[48].Direction = ParameterDirection.Input;
             arParams[48].Value = phoneNumber;
 
             arParams[49] = new FbParameter(":PhoneNumberConfirmed", FbDbType.Integer);
-            arParams[49].Direction = ParameterDirection.Input;
             arParams[49].Value = intPhoneNumberConfirmed;
 
             arParams[50] = new FbParameter(":TwoFactorEnabled", FbDbType.Integer);
-            arParams[50].Direction = ParameterDirection.Input;
             arParams[50].Value = intTwoFactorEnabled;
 
             arParams[51] = new FbParameter(":LockoutEndDateUtc", FbDbType.TimeStamp);
-            arParams[51].Direction = ParameterDirection.Input;
             if (lockoutEndDateUtc == null)
             {
                 arParams[51].Value = DBNull.Value;
@@ -1165,17 +1115,19 @@ namespace cloudscribe.Core.Repositories.Firebird
             string statement = "EXECUTE PROCEDURE MP_USERS_INSERT ("
                 + AdoHelper.GetParamString(arParams.Length) + ")";
 
-            int newID = Convert.ToInt32(AdoHelper.ExecuteScalar(
+            object result = await AdoHelper.ExecuteScalarAsync(
                 ConnectionString.GetWriteConnectionString(),
                 CommandType.StoredProcedure,
                 statement,
-                arParams));
+                arParams);
+
+            int newID = Convert.ToInt32(result);
 
             return newID;
 
         }
 
-        public static bool UpdateUser(
+        public static async Task<bool> UpdateUser(
             int userId,
             String fullName,
             String loginName,
@@ -1329,167 +1281,126 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[49];
 
             arParams[0] = new FbParameter("@UserID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
 
             arParams[1] = new FbParameter("@Email", FbDbType.VarChar, 100);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = email;
 
             arParams[2] = new FbParameter("@UserPassword", FbDbType.VarChar, 1000);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = password;
 
             arParams[3] = new FbParameter("@Gender", FbDbType.VarChar, 1);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = gender;
 
             arParams[4] = new FbParameter("@ProfileApproved", FbDbType.Integer);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = profileOK;
 
             arParams[5] = new FbParameter("@ApprovedForForums", FbDbType.Integer);
-            arParams[5].Direction = ParameterDirection.Input;
             arParams[5].Value = approvedForForum;
 
             arParams[6] = new FbParameter("@Trusted", FbDbType.Integer);
-            arParams[6].Direction = ParameterDirection.Input;
             arParams[6].Value = trust;
 
             arParams[7] = new FbParameter("@DisplayInMemberList", FbDbType.Integer);
-            arParams[7].Direction = ParameterDirection.Input;
             arParams[7].Value = displayInList;
 
             arParams[8] = new FbParameter("@WebSiteURL", FbDbType.VarChar, 100);
-            arParams[8].Direction = ParameterDirection.Input;
             arParams[8].Value = webSiteUrl;
 
             arParams[9] = new FbParameter("@Country", FbDbType.VarChar, 100);
-            arParams[9].Direction = ParameterDirection.Input;
             arParams[9].Value = country;
 
             arParams[10] = new FbParameter("@State", FbDbType.VarChar, 100);
-            arParams[10].Direction = ParameterDirection.Input;
             arParams[10].Value = state;
 
             arParams[11] = new FbParameter("@Occupation", FbDbType.VarChar, 100);
-            arParams[11].Direction = ParameterDirection.Input;
             arParams[11].Value = occupation;
 
             arParams[12] = new FbParameter("@Interests", FbDbType.VarChar, 100);
-            arParams[12].Direction = ParameterDirection.Input;
             arParams[12].Value = interests;
 
             arParams[13] = new FbParameter("@MSN", FbDbType.VarChar, 100);
-            arParams[13].Direction = ParameterDirection.Input;
             arParams[13].Value = msn;
 
             arParams[14] = new FbParameter("@Yahoo", FbDbType.VarChar, 100);
-            arParams[14].Direction = ParameterDirection.Input;
             arParams[14].Value = yahoo;
 
             arParams[15] = new FbParameter("@AIM", FbDbType.VarChar, 100);
-            arParams[15].Direction = ParameterDirection.Input;
             arParams[15].Value = aim;
 
             arParams[16] = new FbParameter("@ICQ", FbDbType.VarChar, 100);
-            arParams[16].Direction = ParameterDirection.Input;
             arParams[16].Value = icq;
 
             arParams[17] = new FbParameter("@AvatarUrl", FbDbType.VarChar, 100);
-            arParams[17].Direction = ParameterDirection.Input;
             arParams[17].Value = avatarUrl;
 
             arParams[18] = new FbParameter("@Signature", FbDbType.VarChar, 4000);
-            arParams[18].Direction = ParameterDirection.Input;
             arParams[18].Value = signature;
 
             arParams[19] = new FbParameter("@Skin", FbDbType.VarChar, 100);
-            arParams[19].Direction = ParameterDirection.Input;
             arParams[19].Value = skin;
 
             arParams[20] = new FbParameter("@FullName", FbDbType.VarChar, 50);
-            arParams[20].Direction = ParameterDirection.Input;
             arParams[20].Value = fullName;
 
             arParams[21] = new FbParameter("@LoginName", FbDbType.VarChar, 50);
-            arParams[21].Direction = ParameterDirection.Input;
             arParams[21].Value = loginName;
 
             arParams[22] = new FbParameter("@LoweredEmail", FbDbType.VarChar, 100);
-            arParams[22].Direction = ParameterDirection.Input;
             arParams[22].Value = loweredEmail;
 
             arParams[23] = new FbParameter("@PasswordQuestion", FbDbType.VarChar, 255);
-            arParams[23].Direction = ParameterDirection.Input;
             arParams[23].Value = passwordQuestion;
 
             arParams[24] = new FbParameter("@PasswordAnswer", FbDbType.VarChar, 255);
-            arParams[24].Direction = ParameterDirection.Input;
             arParams[24].Value = passwordAnswer;
 
             arParams[25] = new FbParameter("@Comment", FbDbType.VarChar);
-            arParams[25].Direction = ParameterDirection.Input;
             arParams[25].Value = comment;
 
             arParams[26] = new FbParameter("@TimeOffsetHours", FbDbType.Integer);
-            arParams[26].Direction = ParameterDirection.Input;
             arParams[26].Value = timeOffsetHours;
 
             arParams[27] = new FbParameter("@OpenIDURI", FbDbType.VarChar, 255);
-            arParams[27].Direction = ParameterDirection.Input;
             arParams[27].Value = openIdUri;
 
             arParams[28] = new FbParameter("@WindowsLiveID", FbDbType.VarChar, 36);
-            arParams[28].Direction = ParameterDirection.Input;
             arParams[28].Value = windowsLiveId;
 
             arParams[29] = new FbParameter("@MustChangePwd", FbDbType.Integer);
-            arParams[29].Direction = ParameterDirection.Input;
             arParams[29].Value = intmustChangePwd;
 
             arParams[30] = new FbParameter("@FirstName", FbDbType.VarChar, 100);
-            arParams[30].Direction = ParameterDirection.Input;
             arParams[30].Value = firstName;
 
             arParams[31] = new FbParameter("@LastName", FbDbType.VarChar, 100);
-            arParams[31].Direction = ParameterDirection.Input;
             arParams[31].Value = lastName;
 
             arParams[32] = new FbParameter("@TimeZoneId", FbDbType.VarChar, 32);
-            arParams[32].Direction = ParameterDirection.Input;
             arParams[32].Value = timeZoneId;
 
             arParams[33] = new FbParameter("@EditorPreference", FbDbType.VarChar, 100);
-            arParams[33].Direction = ParameterDirection.Input;
             arParams[33].Value = editorPreference;
 
             arParams[34] = new FbParameter("@NewEmail", FbDbType.VarChar, 100);
-            arParams[34].Direction = ParameterDirection.Input;
             arParams[34].Value = newEmail;
 
             arParams[35] = new FbParameter("@EmailChangeGuid", FbDbType.Char, 36);
-            arParams[35].Direction = ParameterDirection.Input;
             arParams[35].Value = emailChangeGuid.ToString();
 
             arParams[36] = new FbParameter("@PasswordResetGuid", FbDbType.Char, 36);
-            arParams[36].Direction = ParameterDirection.Input;
             arParams[36].Value = passwordResetGuid.ToString();
 
             arParams[37] = new FbParameter("@PasswordSalt", FbDbType.VarChar, 128);
-            arParams[37].Direction = ParameterDirection.Input;
             arParams[37].Value = passwordSalt;
 
             arParams[38] = new FbParameter("@RolesChanged", FbDbType.Integer);
-            arParams[38].Direction = ParameterDirection.Input;
             arParams[38].Value = intRolesChanged;
 
             arParams[39] = new FbParameter("@AuthorBio", FbDbType.VarChar);
-            arParams[39].Direction = ParameterDirection.Input;
             arParams[39].Value = authorBio;
 
             arParams[40] = new FbParameter("@DateOfBirth", FbDbType.TimeStamp);
-            arParams[40].Direction = ParameterDirection.Input;
             if (dateOfBirth == DateTime.MinValue)
             {
                 arParams[40].Value = DBNull.Value;
@@ -1500,35 +1411,27 @@ namespace cloudscribe.Core.Repositories.Firebird
             }
 
             arParams[41] = new FbParameter("@PwdFormat", FbDbType.Integer);
-            arParams[41].Direction = ParameterDirection.Input;
             arParams[41].Value = pwdFormat;
 
             arParams[42] = new FbParameter("@EmailConfirmed", FbDbType.Integer);
-            arParams[42].Direction = ParameterDirection.Input;
             arParams[42].Value = intEmailConfirmed;
 
             arParams[43] = new FbParameter("@PasswordHash", FbDbType.VarChar);
-            arParams[43].Direction = ParameterDirection.Input;
             arParams[43].Value = passwordHash;
 
             arParams[44] = new FbParameter("@SecurityStamp", FbDbType.VarChar);
-            arParams[44].Direction = ParameterDirection.Input;
             arParams[44].Value = securityStamp;
 
             arParams[45] = new FbParameter("@PhoneNumber", FbDbType.VarChar, 50);
-            arParams[45].Direction = ParameterDirection.Input;
             arParams[45].Value = phoneNumber;
 
             arParams[46] = new FbParameter("@PhoneNumberConfirmed", FbDbType.Integer);
-            arParams[46].Direction = ParameterDirection.Input;
             arParams[46].Value = intPhoneNumberConfirmed;
 
             arParams[47] = new FbParameter("@TwoFactorEnabled", FbDbType.Integer);
-            arParams[47].Direction = ParameterDirection.Input;
             arParams[47].Value = intTwoFactorEnabled;
 
             arParams[48] = new FbParameter("@LockoutEndDateUtc", FbDbType.TimeStamp);
-            arParams[48].Direction = ParameterDirection.Input;
             if (lockoutEndDateUtc == null)
             {
                 arParams[48].Value = DBNull.Value;
@@ -1538,7 +1441,7 @@ namespace cloudscribe.Core.Repositories.Firebird
                 arParams[48].Value = lockoutEndDateUtc;
             }
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -2104,7 +2007,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             return (rowsAffected > 0);
         }
 
-        public static IDataReader GetRolesByUser(int siteId, int userId)
+        public static async Task<DbDataReader> GetRolesByUser(int siteId, int userId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT ");
@@ -2125,14 +2028,12 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[2];
 
             arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new FbParameter("@UserID", FbDbType.Integer);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = userId;
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 arParams);

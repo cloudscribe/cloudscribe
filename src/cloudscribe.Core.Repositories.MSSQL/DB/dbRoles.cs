@@ -84,12 +84,12 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return await sph.ExecuteReaderAsync();
         }
 
-        public static DbDataReader GetByName(int siteId, string roleName)
+        public static async Task<DbDataReader> GetByName(int siteId, string roleName)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_Roles_SelectOneByName", 2);
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
             sph.DefineSqlParameter("@RoleName", SqlDbType.NVarChar, 50, ParameterDirection.Input, roleName);
-            return sph.ExecuteReader();
+            return await sph.ExecuteReaderAsync();
         }
 
         public static DbDataReader GetSiteRoles(int siteId)

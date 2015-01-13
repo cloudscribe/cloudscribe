@@ -1,6 +1,6 @@
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2014-09-08
+// Last Modified:			2015-01-13
 // 
 // You must not remove this notice, or any other, from this software.
 // 
@@ -8,9 +8,12 @@
 
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Text;
+using System.Threading.Tasks;
 using Npgsql;
 using cloudscribe.DbHelpers.pgsql;
+
 
 namespace cloudscribe.Core.Repositories.pgsql
 {
@@ -1929,7 +1932,7 @@ namespace cloudscribe.Core.Repositories.pgsql
 
         }
 
-        public static IDataReader GetRolesByUser(int siteId, int userId)
+        public static async Task<DbDataReader> GetRolesByUser(int siteId, int userId)
         {
 
             StringBuilder sqlCommand = new StringBuilder();
@@ -1958,7 +1961,7 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = userId;
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),

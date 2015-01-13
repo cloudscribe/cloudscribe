@@ -145,7 +145,7 @@ namespace cloudscribe.Core.Web.Controllers
             {
                 bool result = await Site.UserRepository.DeleteUserRolesByRole(roleId);
 
-                result = result && await Site.UserRepository.DeleteRole(roleId);
+                result = await Site.UserRepository.DeleteRole(roleId);
 
                 if(result)
                 {
