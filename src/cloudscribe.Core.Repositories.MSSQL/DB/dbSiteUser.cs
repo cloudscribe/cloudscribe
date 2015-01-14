@@ -106,11 +106,12 @@ namespace cloudscribe.Core.Repositories.MSSQL
         }
 
 
-        public static int GetNewestUserId(int siteId)
+        public static async Task<int> GetNewestUserId(int siteId)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_Users_GetNewestUserID", 1);
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
-            int count = Convert.ToInt32(sph.ExecuteScalar());
+            object result = await sph.ExecuteScalarAsync();
+            int count = Convert.ToInt32(result);
             return count;
         }
 
@@ -490,7 +491,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return newID;
         }
 
-        public static bool UpdateUser(
+        public static async Task<bool> UpdateUser(
             int userId,
             string name,
             string loginName,
@@ -609,16 +610,16 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 sph.DefineSqlParameter("@LockoutEndDateUtc", SqlDbType.DateTime, ParameterDirection.Input, lockoutEndDateUtc);
             }
 
-            int rowsAffected = sph.ExecuteNonQuery();
+            int rowsAffected = await sph.ExecuteNonQueryAsync();
             return (rowsAffected > -1);
         }
 
 
-        public static bool DeleteUser(int userId)
+        public static async Task<bool> DeleteUser(int userId)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetWriteConnectionString(), "mp_Users_Delete", 1);
             sph.DefineSqlParameter("@UserID", SqlDbType.Int, ParameterDirection.Input, userId);
-            int rowsAffected = sph.ExecuteNonQuery();
+            int rowsAffected = await sph.ExecuteNonQueryAsync();
             return (rowsAffected > -1);
         }
 
@@ -660,14 +661,14 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return (rowsAffected > -1);
         }
 
-        public static bool UpdateFailedPasswordAttemptCount(
+        public static async Task<bool> UpdateFailedPasswordAttemptCount(
             Guid userGuid,
             int attemptCount)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetWriteConnectionString(), "mp_Users_SetFailedPasswordAttemptCount", 2);
             sph.DefineSqlParameter("@UserGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, userGuid);
             sph.DefineSqlParameter("@AttemptCount", SqlDbType.Int, ParameterDirection.Input, attemptCount);
-            int rowsAffected = sph.ExecuteNonQuery();
+            int rowsAffected = await sph.ExecuteNonQueryAsync();
             return (rowsAffected > -1);
         }
 
@@ -693,20 +694,20 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return (rowsAffected > -1);
         }
 
-        public static bool AccountLockout(Guid userGuid, DateTime lockoutTime)
+        public static async Task<bool> AccountLockout(Guid userGuid, DateTime lockoutTime)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetWriteConnectionString(), "mp_Users_AccountLockout", 2);
             sph.DefineSqlParameter("@UserGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, userGuid);
             sph.DefineSqlParameter("@LockoutTime", SqlDbType.DateTime, ParameterDirection.Input, lockoutTime);
-            int rowsAffected = sph.ExecuteNonQuery();
+            int rowsAffected = await sph.ExecuteNonQueryAsync();
             return (rowsAffected > -1);
         }
 
-        public static bool AccountClearLockout(Guid userGuid)
+        public static async Task<bool> AccountClearLockout(Guid userGuid)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetWriteConnectionString(), "mp_Users_AccountClearLockout", 1);
             sph.DefineSqlParameter("@UserGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, userGuid);
-            int rowsAffected = sph.ExecuteNonQuery();
+            int rowsAffected = await sph.ExecuteNonQueryAsync();
             return (rowsAffected > -1);
         }
 
@@ -719,12 +720,12 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return (rowsAffected > -1);
         }
 
-        public static bool ConfirmRegistration(Guid emptyGuid, Guid registrationConfirmationGuid)
+        public static async Task<bool> ConfirmRegistration(Guid emptyGuid, Guid registrationConfirmationGuid)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetWriteConnectionString(), "mp_Users_ConfirmRegistration", 2);
             sph.DefineSqlParameter("@EmptyGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, emptyGuid);
             sph.DefineSqlParameter("@RegisterConfirmGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, registrationConfirmationGuid);
-            int rowsAffected = sph.ExecuteNonQuery();
+            int rowsAffected = await sph.ExecuteNonQueryAsync();
             return (rowsAffected > -1);
         }
 
@@ -756,37 +757,40 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return (rowsAffected > -1);
         }
 
-        public static void UpdateTotalRevenue(Guid userGuid)
+        public static async Task<bool> UpdateTotalRevenue(Guid userGuid)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetWriteConnectionString(), "mp_Users_UpdateTotalRevenueByUser", 1);
             sph.DefineSqlParameter("@UserGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, userGuid);
-            sph.ExecuteNonQuery();
+            int rowsAffected = await sph.ExecuteNonQueryAsync();
+            return rowsAffected > 0;
 
         }
 
-        public static void UpdateTotalRevenue()
+        public static async Task<bool> UpdateTotalRevenue()
         {
-            AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
 				CommandType.StoredProcedure,
 				"mp_Users_UpdateTotalRevenue",
 				null);
+
+            return rowsAffected > 0;
         }
 
 
-        public static bool FlagAsDeleted(int userId)
+        public static async Task<bool> FlagAsDeleted(int userId)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetWriteConnectionString(), "mp_Users_FlagAsDeleted", 1);
             sph.DefineSqlParameter("@UserID", SqlDbType.Int, ParameterDirection.Input, userId);
-            int rowsAffected = sph.ExecuteNonQuery();
+            int rowsAffected = await sph.ExecuteNonQueryAsync();
             return (rowsAffected > -1);
         }
 
-        public static bool FlagAsNotDeleted(int userId)
+        public static async Task<bool> FlagAsNotDeleted(int userId)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetWriteConnectionString(), "mp_Users_FlagAsNotDeleted", 1);
             sph.DefineSqlParameter("@UserID", SqlDbType.Int, ParameterDirection.Input, userId);
-            int rowsAffected = sph.ExecuteNonQuery();
+            int rowsAffected = await sph.ExecuteNonQueryAsync();
             return (rowsAffected > -1);
         }
 
@@ -815,21 +819,21 @@ namespace cloudscribe.Core.Repositories.MSSQL
         }
 
 
-        public static IDataReader GetUserByRegistrationGuid(int siteId, Guid registerConfirmGuid)
+        public static async Task<DbDataReader> GetUserByRegistrationGuid(int siteId, Guid registerConfirmGuid)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_Users_SelectByRegisterGuid", 2);
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
             sph.DefineSqlParameter("@RegisterConfirmGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, registerConfirmGuid);
-            return sph.ExecuteReader();
+            return await sph.ExecuteReaderAsync();
         }
 
 
-        public static IDataReader GetSingleUser(int siteId, string email)
+        public static async Task<DbDataReader> GetSingleUser(int siteId, string email)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_Users_SelectByEmail", 2);
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
             sph.DefineSqlParameter("@Email", SqlDbType.NVarChar, 100, ParameterDirection.Input, email);
-            return sph.ExecuteReader();
+            return await sph.ExecuteReaderAsync();
         }
 
         public static IDataReader GetCrossSiteUserListByEmail(string email)
@@ -839,7 +843,16 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return sph.ExecuteReader();
         }
 
-        public static IDataReader GetSingleUserByLoginName(int siteId, string loginName, bool allowEmailFallback)
+        public static async Task<DbDataReader> GetSingleUserByLoginName(int siteId, string loginName, bool allowEmailFallback)
+        {
+            SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_Users_SelectByLoginName", 3);
+            sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
+            sph.DefineSqlParameter("@LoginName", SqlDbType.NVarChar, 50, ParameterDirection.Input, loginName);
+            sph.DefineSqlParameter("@AllowEmailFallback", SqlDbType.Bit, ParameterDirection.Input, allowEmailFallback);
+            return await sph.ExecuteReaderAsync();
+        }
+
+        public static DbDataReader GetSingleUserByLoginNameNonAsync(int siteId, string loginName, bool allowEmailFallback)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_Users_SelectByLoginName", 3);
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
@@ -848,18 +861,18 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return sph.ExecuteReader();
         }
 
-        public static IDataReader GetSingleUser(int userId)
+        public static async Task<DbDataReader> GetSingleUser(int userId)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_Users_SelectOne", 1);
             sph.DefineSqlParameter("@UserID", SqlDbType.Int, ParameterDirection.Input, userId);
-            return sph.ExecuteReader();
+            return await sph.ExecuteReaderAsync();
         }
 
-        public static IDataReader GetSingleUser(Guid userGuid)
+        public static async Task<DbDataReader> GetSingleUser(Guid userGuid)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_Users_SelectByGuid", 1);
             sph.DefineSqlParameter("@UserGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, userGuid);
-            return sph.ExecuteReader();
+            return await sph.ExecuteReaderAsync();
         }
 
         public static Guid GetUserGuidFromOpenId(

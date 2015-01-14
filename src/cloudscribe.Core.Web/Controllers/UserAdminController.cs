@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-12-08
-// Last Modified:			2015-01-02
+// Last Modified:			2015-01-14
 // 
 
 using cloudscribe.Configuration;
@@ -233,7 +233,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             if(userId.HasValue)
             {
-                ISiteUser user = Site.UserRepository.Fetch(Site.SiteSettings.SiteId, userId.Value);
+                ISiteUser user = await Site.UserRepository.Fetch(Site.SiteSettings.SiteId, userId.Value);
                 if(user != null)
                 {
                     model.UserId = user.UserId;
@@ -271,7 +271,7 @@ namespace cloudscribe.Core.Web.Controllers
                 if(model.UserId > -1)
                 {
                     //editing an existing user
-                    ISiteUser user = Site.UserRepository.Fetch(Site.SiteSettings.SiteId, model.UserId);
+                    ISiteUser user = await Site.UserRepository.Fetch(Site.SiteSettings.SiteId, model.UserId);
                     if (user != null)
                     {
                         user.Email = model.Email;

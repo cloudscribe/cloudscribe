@@ -60,11 +60,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
                     user.TwoFactorEnabled,
                     user.LockoutEndDateUtc);
 
-                return user.UserId > -1;
-                //Role.AddUserToDefaultRoles(this);
-
-
-
+               
                     //user.LoweredEmail,
                     //user.PasswordQuestion,
                     //user.PasswordAnswer,
@@ -116,15 +112,15 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
             // not all properties are added on insert so update even if we just inserted
 
-            return Update(user);
+            return await Update(user);
 
         }
 
-        private bool Update(ISiteUser user)
+        private async Task<bool> Update(ISiteUser user)
         {
             if (string.IsNullOrEmpty(user.LoweredEmail)) { user.LoweredEmail = user.Email.ToLowerInvariant(); }
 
-            return DBSiteUser.UpdateUser(
+            return await DBSiteUser.UpdateUser(
                     user.UserId,
                     user.DisplayName,
                     user.UserName,
@@ -205,19 +201,19 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// </summary>
         /// <param name="userID"> userID </param>
         /// <returns>bool</returns>
-        public bool Delete(int userId)
+        public async Task<bool> Delete(int userId)
         {
-            return DBSiteUser.DeleteUser(userId);
+            return await DBSiteUser.DeleteUser(userId);
         }
 
-        public bool FlagAsDeleted(int userId)
+        public async Task<bool> FlagAsDeleted(int userId)
         {
-            return DBSiteUser.FlagAsDeleted(userId);
+            return await DBSiteUser.FlagAsDeleted(userId);
         }
 
-        public bool FlagAsNotDeleted(int userId)
+        public async Task<bool> FlagAsNotDeleted(int userId)
         {
-            return DBSiteUser.FlagAsNotDeleted(userId);
+            return await DBSiteUser.FlagAsNotDeleted(userId);
         }
 
         public bool UpdatePasswordAndSalt(
@@ -229,44 +225,44 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return DBSiteUser.UpdatePasswordAndSalt(userId, passwordFormat, password, passwordSalt);
         }
 
-        public bool ConfirmRegistration(Guid registrationGuid)
+        public async Task<bool> ConfirmRegistration(Guid registrationGuid)
         {
             if (registrationGuid == Guid.Empty)
             {
                 return false;
             }
 
-            return DBSiteUser.ConfirmRegistration(Guid.Empty, registrationGuid);
+            return await DBSiteUser.ConfirmRegistration(Guid.Empty, registrationGuid);
         }
 
 
-        public bool LockoutAccount(Guid userGuid)
+        public async Task<bool> LockoutAccount(Guid userGuid)
         {
-            return DBSiteUser.AccountLockout(userGuid, DateTime.UtcNow);
+            return await DBSiteUser.AccountLockout(userGuid, DateTime.UtcNow);
         }
 
-        public bool UnLockAccount(Guid userGuid)
+        public async Task<bool> UnLockAccount(Guid userGuid)
         {
-            return DBSiteUser.AccountClearLockout(userGuid);
+            return await DBSiteUser.AccountClearLockout(userGuid);
         }
 
-        public bool UpdateFailedPasswordAttemptCount(Guid userGuid, int failedPasswordAttemptCount)
+        public async Task<bool> UpdateFailedPasswordAttemptCount(Guid userGuid, int failedPasswordAttemptCount)
         {
-            return DBSiteUser.UpdateFailedPasswordAttemptCount(userGuid, failedPasswordAttemptCount);
+            return await DBSiteUser.UpdateFailedPasswordAttemptCount(userGuid, failedPasswordAttemptCount);
         }
 
-        public void UpdateTotalRevenue(Guid userGuid)
+        public async Task<bool> UpdateTotalRevenue(Guid userGuid)
         {
-            DBSiteUser.UpdateTotalRevenue(userGuid);
+            return await DBSiteUser.UpdateTotalRevenue(userGuid);
 
         }
 
         /// <summary>
         /// updates the total revenue for all users
         /// </summary>
-        public void UpdateTotalRevenue()
+        public async Task<bool> UpdateTotalRevenue()
         {
-            DBSiteUser.UpdateTotalRevenue();
+            return await DBSiteUser.UpdateTotalRevenue();
         }
 
 
@@ -314,19 +310,19 @@ namespace cloudscribe.Core.Repositories.MSSQL
         }
 
 
-        public ISiteUser FetchNewest(int siteId)
+        public async Task<ISiteUser> FetchNewest(int siteId)
         {
             if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
 
-            int newestUserId = GetNewestUserId(siteId);
-            return Fetch(siteId, newestUserId);
+            int newestUserId = await GetNewestUserId(siteId);
+            return await Fetch(siteId, newestUserId);
         }
 
-        public ISiteUser Fetch(int siteId, int userId)
+        public async Task<ISiteUser> Fetch(int siteId, int userId)
         {
             if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
 
-            using (IDataReader reader = DBSiteUser.GetSingleUser(userId))
+            using (DbDataReader reader = await DBSiteUser.GetSingleUser(userId))
             {
                 if (reader.Read())
                 {
@@ -343,11 +339,11 @@ namespace cloudscribe.Core.Repositories.MSSQL
         }
 
 
-        public ISiteUser Fetch(int siteId, Guid userGuid)
+        public async Task<ISiteUser> Fetch(int siteId, Guid userGuid)
         {
             if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
 
-            using (IDataReader reader = DBSiteUser.GetSingleUser(userGuid))
+            using (DbDataReader reader = await DBSiteUser.GetSingleUser(userGuid))
             {
                 if (reader.Read())
                 {
@@ -363,11 +359,11 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return null;
         }
 
-        public ISiteUser FetchByConfirmationGuid(int siteId, Guid confirmGuid)
+        public async Task<ISiteUser> FetchByConfirmationGuid(int siteId, Guid confirmGuid)
         {
             if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
 
-            using (IDataReader reader = DBSiteUser.GetUserByRegistrationGuid(siteId, confirmGuid))
+            using (DbDataReader reader = await DBSiteUser.GetUserByRegistrationGuid(siteId, confirmGuid))
             {
                 if (reader.Read())
                 {
@@ -384,11 +380,11 @@ namespace cloudscribe.Core.Repositories.MSSQL
         }
 
 
-        public ISiteUser Fetch(int siteId, string email)
+        public async Task<ISiteUser> Fetch(int siteId, string email)
         {
             if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
 
-            using (IDataReader reader = DBSiteUser.GetSingleUser(siteId, email))
+            using (DbDataReader reader = await DBSiteUser.GetSingleUser(siteId, email))
             {
                 if (reader.Read())
                 {
@@ -404,11 +400,11 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return null;
         }
 
-        public ISiteUser FetchByLoginName(int siteId, string userName, bool allowEmailFallback)
+        public async Task<ISiteUser> FetchByLoginName(int siteId, string userName, bool allowEmailFallback)
         {
             if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
 
-            using (IDataReader reader = DBSiteUser.GetSingleUserByLoginName(siteId, userName, allowEmailFallback))
+            using (DbDataReader reader = await DBSiteUser.GetSingleUserByLoginName(siteId, userName, allowEmailFallback))
             {
                 if (reader.Read())
                 {
@@ -646,24 +642,24 @@ namespace cloudscribe.Core.Repositories.MSSQL
         //    return DBSiteUser.EmailLookup(siteId, query, rowsToGet);
         //}
 
-        public bool EmailExistsInDB(int siteId, string email)
+        public async Task<bool> EmailExistsInDB(int siteId, string email)
         {
             if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
             bool found = false;
 
-            using (IDataReader r = DBSiteUser.GetSingleUser(siteId, email))
+            using (DbDataReader r = await DBSiteUser.GetSingleUser(siteId, email))
             {
                 while (r.Read()) { found = true; }
             }
             return found;
         }
 
-        public bool EmailExistsInDB(int siteId, int userId, string email)
+        public async Task<bool> EmailExistsInDB(int siteId, int userId, string email)
         {
             if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
             bool found = false;
 
-            using (IDataReader r = DBSiteUser.GetSingleUser(siteId, email))
+            using (DbDataReader r = await DBSiteUser.GetSingleUser(siteId, email))
             {
                 while (r.Read())
                 {
@@ -680,7 +676,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
             bool found = false;
 
-            using (IDataReader r = DBSiteUser.GetSingleUserByLoginName(siteId, loginName, false))
+            using (DbDataReader r = DBSiteUser.GetSingleUserByLoginNameNonAsync(siteId, loginName, false))
             {
                 while (r.Read()) { found = true; }
             }
@@ -701,7 +697,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
             bool available = true;
 
-            using (IDataReader r = DBSiteUser.GetSingleUserByLoginName(siteId, loginName, false))
+            using (DbDataReader r = DBSiteUser.GetSingleUserByLoginNameNonAsync(siteId, loginName, false))
             {
                 while (r.Read())
                 {
@@ -715,15 +711,15 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return available;
         }
 
-        public String GetUserNameFromEmail(int siteId, String email)
+        public async Task<string> GetUserNameFromEmail(int siteId, String email)
         {
             if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
 
-            String result = String.Empty;
+            string result = String.Empty;
             if ((email != null) && (email.Length > 0) && (siteId > 0))
             {
-                String comma = String.Empty;
-                using (IDataReader reader = DBSiteUser.GetSingleUser(siteId, email))
+                string comma = String.Empty;
+                using (DbDataReader reader = await DBSiteUser.GetSingleUser(siteId, email))
                 {
                     while (reader.Read())
                     {
@@ -740,11 +736,11 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
 
 
-        public int GetNewestUserId(int siteId)
+        public async Task<int> GetNewestUserId(int siteId)
         {
             if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
 
-            return DBSiteUser.GetNewestUserId(siteId);
+            return await DBSiteUser.GetNewestUserId(siteId);
 
         }
 
@@ -875,9 +871,9 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return result;
         }
 
-        public bool DeleteUserRoles(int userId)
+        public async Task<bool> DeleteUserRoles(int userId)
         {
-            return DBRoles.DeleteUserRoles(userId);
+            return await DBRoles.DeleteUserRoles(userId);
         }
 
         public async Task<bool> DeleteUserRolesByRole(int roleId)
@@ -1117,10 +1113,9 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// Persists a new instance of UserClaim. Returns true on success.
         /// </summary>
         /// <returns></returns>
-        public bool SaveClaim(IUserClaim userClaim)
+        public async Task<bool> SaveClaim(IUserClaim userClaim)
         {
-
-            int newId = DBUserClaims.Create(
+            int newId = await DBUserClaims.Create(
                 userClaim.UserId,
                 userClaim.ClaimType,
                 userClaim.ClaimValue);
@@ -1128,63 +1123,37 @@ namespace cloudscribe.Core.Repositories.MSSQL
             userClaim.Id = newId;
 
             return (newId > -1);
-
-
         }
 
-
-
-        //public UserClaim Fetch(int id)
-        //{
-        //    using (IDataReader reader = DBUserClaims.GetOne(id))
-        //    {
-        //        if (reader.Read())
-        //        {
-        //            UserClaim userClaim = new UserClaim();
-        //            userClaim.Id = Convert.ToInt32(reader["Id"]);
-        //            userClaim.UserId = reader["UserId"].ToString();
-        //            userClaim.ClaimType = reader["ClaimType"].ToString();
-        //            userClaim.ClaimValue = reader["ClaimValue"].ToString();
-
-        //            return userClaim;
-
-        //        }
-        //    }
-
-        //    return null;
-        //}
-
-
-
-        public bool DeleteClaim(int id)
+        public async Task<bool> DeleteClaim(int id)
         {
-            return DBUserClaims.Delete(id);
+            return await DBUserClaims.Delete(id);
         }
 
-        public bool DeleteClaimsByUser(string userId)
+        public async Task<bool> DeleteClaimsByUser(string userId)
         {
-            return DBUserClaims.DeleteByUser(userId);
+            return await DBUserClaims.DeleteByUser(userId);
         }
 
-        public bool DeleteClaimByUser(string userId, string claimType)
+        public async Task<bool> DeleteClaimByUser(string userId, string claimType)
         {
-            return DBUserClaims.DeleteByUser(userId, claimType);
+            return await DBUserClaims.DeleteByUser(userId, claimType);
         }
 
-        public bool DeleteClaimsBySite(Guid siteGuid)
+        public async Task<bool> DeleteClaimsBySite(Guid siteGuid)
         {
-            return DBUserClaims.DeleteBySite(siteGuid);
+            return await DBUserClaims.DeleteBySite(siteGuid);
         }
 
-        public IList<IUserClaim> GetClaimsByUser(string userId)
+        public async Task<IList<IUserClaim>> GetClaimsByUser(string userId)
         {
-            IDataReader reader = DBUserClaims.GetByUser(userId);
+            DbDataReader reader = await DBUserClaims.GetByUser(userId);
             return LoadClaimListFromReader(reader);
 
         }
 
 
-        private List<IUserClaim> LoadClaimListFromReader(IDataReader reader)
+        private List<IUserClaim> LoadClaimListFromReader(DbDataReader reader)
         {
             List<IUserClaim> userClaimList = new List<IUserClaim>();
 
@@ -1216,13 +1185,13 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// Persists a new instance of UserLogin. Returns true on success.
         /// </summary>
         /// <returns></returns>
-        public bool CreateLogin(IUserLogin userLogin)
+        public async Task<bool> CreateLogin(IUserLogin userLogin)
         {
             if (userLogin.LoginProvider.Length == -1) { return false; }
             if (userLogin.ProviderKey.Length == -1) { return false; }
             if (userLogin.UserId.Length == -1) { return false; }
 
-            return DBUserLogins.Create(
+            return await DBUserLogins.Create(
                 userLogin.LoginProvider,
                 userLogin.ProviderKey,
                 userLogin.UserId);
@@ -1233,11 +1202,11 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         /// <param name="loginProvider"> loginProvider </param>
         /// <param name="providerKey"> providerKey </param>
-        public IUserLogin FindLogin(
+        public async Task<IUserLogin> FindLogin(
             string loginProvider,
             string providerKey)
         {
-            using (IDataReader reader = DBUserLogins.Find(
+            using (DbDataReader reader = await DBUserLogins.Find(
                 loginProvider,
                 providerKey))
             {
@@ -1261,25 +1230,25 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// <param name="providerKey"> providerKey </param>
         /// <param name="userId"> userId </param>
         /// <returns>bool</returns>
-        public bool DeleteLogin(
+        public async Task<bool> DeleteLogin(
             string loginProvider,
             string providerKey,
             string userId)
         {
-            return DBUserLogins.Delete(
+            return await DBUserLogins.Delete(
                 loginProvider,
                 providerKey,
                 userId);
         }
 
-        public bool DeleteLoginsByUser(string userId)
+        public async Task<bool> DeleteLoginsByUser(string userId)
         {
-            return DBUserLogins.DeleteByUser(userId);
+            return await DBUserLogins.DeleteByUser(userId);
         }
 
-        public bool DeleteLoginsBySite(Guid siteGuid)
+        public async Task<bool> DeleteLoginsBySite(Guid siteGuid)
         {
-            return DBUserLogins.DeleteBySite(siteGuid);
+            return await DBUserLogins.DeleteBySite(siteGuid);
         }
 
 
@@ -1288,10 +1257,10 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// <summary>
         /// Gets an IList with all instances of UserLogin.
         /// </summary>
-        public IList<IUserLogin> GetLoginsByUser(string userId)
+        public async Task<IList<IUserLogin>> GetLoginsByUser(string userId)
         {
             List<IUserLogin> userLoginList = new List<IUserLogin>();
-            using(IDataReader reader = DBUserLogins.GetByUser(userId))
+            using(DbDataReader reader = await DBUserLogins.GetByUser(userId))
             {
                 while (reader.Read())
                 {

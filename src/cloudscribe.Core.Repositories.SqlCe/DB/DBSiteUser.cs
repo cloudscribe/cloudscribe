@@ -1113,103 +1113,78 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[33];
 
             arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new SqlCeParameter("@Name", SqlDbType.NVarChar, 100);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = fullName;
 
             arParams[2] = new SqlCeParameter("@LoginName", SqlDbType.NVarChar, 50);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = loginName;
 
             arParams[3] = new SqlCeParameter("@Email", SqlDbType.NVarChar, 100);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = email.ToLower();
 
             arParams[4] = new SqlCeParameter("@LoweredEmail", SqlDbType.NVarChar, 100);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = email.ToLower();
 
             arParams[5] = new SqlCeParameter("@ProfileApproved", SqlDbType.Bit);
-            arParams[5].Direction = ParameterDirection.Input;
             arParams[5].Value = true;
 
             arParams[6] = new SqlCeParameter("@ApprovedForForums", SqlDbType.Bit);
-            arParams[6].Direction = ParameterDirection.Input;
             arParams[6].Value = true;
 
             arParams[7] = new SqlCeParameter("@Trusted", SqlDbType.Bit);
-            arParams[7].Direction = ParameterDirection.Input;
             arParams[7].Value = false;
 
             arParams[8] = new SqlCeParameter("@DisplayInMemberList", SqlDbType.Bit);
-            arParams[8].Direction = ParameterDirection.Input;
             arParams[8].Value = true;
 
             arParams[9] = new SqlCeParameter("@TotalPosts", SqlDbType.Int);
-            arParams[9].Direction = ParameterDirection.Input;
             arParams[9].Value = 0;
 
             arParams[10] = new SqlCeParameter("@DateCreated", SqlDbType.DateTime);
-            arParams[10].Direction = ParameterDirection.Input;
             arParams[10].Value = dateCreated;
 
             arParams[11] = new SqlCeParameter("@UserGuid", SqlDbType.UniqueIdentifier);
-            arParams[11].Direction = ParameterDirection.Input;
             arParams[11].Value = userGuid;
 
             arParams[12] = new SqlCeParameter("@IsDeleted", SqlDbType.Bit);
-            arParams[12].Direction = ParameterDirection.Input;
             arParams[12].Value = false;
 
             arParams[13] = new SqlCeParameter("@FailedPasswordAttemptCount", SqlDbType.Int);
-            arParams[13].Direction = ParameterDirection.Input;
             arParams[13].Value = 0;
 
             arParams[14] = new SqlCeParameter("@FailedPwdAnswerAttemptCount", SqlDbType.Int);
-            arParams[14].Direction = ParameterDirection.Input;
             arParams[14].Value = 0;
 
             arParams[15] = new SqlCeParameter("@IsLockedOut", SqlDbType.Bit);
-            arParams[15].Direction = ParameterDirection.Input;
             arParams[15].Value = false;
 
             arParams[16] = new SqlCeParameter("@SiteGuid", SqlDbType.UniqueIdentifier);
-            arParams[16].Direction = ParameterDirection.Input;
             arParams[16].Value = siteGuid;
 
             arParams[17] = new SqlCeParameter("@TotalRevenue", SqlDbType.Decimal);
-            arParams[17].Direction = ParameterDirection.Input;
             arParams[17].Value = 0;
 
             arParams[18] = new SqlCeParameter("@FirstName", SqlDbType.NVarChar, 100);
-            arParams[18].Direction = ParameterDirection.Input;
             arParams[18].Value = firstName;
 
             arParams[19] = new SqlCeParameter("@LastName", SqlDbType.NVarChar, 100);
-            arParams[19].Direction = ParameterDirection.Input;
             arParams[19].Value = lastName;
 
             arParams[20] = new SqlCeParameter("@Pwd", SqlDbType.NVarChar, 1000);
-            arParams[20].Direction = ParameterDirection.Input;
             arParams[20].Value = password;
 
             arParams[21] = new SqlCeParameter("@MustChangePwd", SqlDbType.Bit);
-            arParams[21].Direction = ParameterDirection.Input;
             arParams[21].Value = mustChangePwd;
 
             arParams[22] = new SqlCeParameter("@TimeZoneId", SqlDbType.NVarChar, 32);
-            arParams[22].Direction = ParameterDirection.Input;
             arParams[22].Value = timeZoneId;
 
             arParams[23] = new SqlCeParameter("@PasswordSalt", SqlDbType.NVarChar, 128);
-            arParams[23].Direction = ParameterDirection.Input;
             arParams[23].Value = passwordSalt;
 
             arParams[24] = new SqlCeParameter("@DateOfBirth", SqlDbType.DateTime);
-            arParams[24].Direction = ParameterDirection.Input;
             if (dateOfBirth == DateTime.MinValue)
             {
                 arParams[24].Value = DBNull.Value;
@@ -1220,35 +1195,27 @@ namespace cloudscribe.Core.Repositories.SqlCe
             }
 
             arParams[25] = new SqlCeParameter("@EmailConfirmed", SqlDbType.Bit);
-            arParams[25].Direction = ParameterDirection.Input;
             arParams[25].Value = emailConfirmed;
 
             arParams[26] = new SqlCeParameter("@PwdFormat", SqlDbType.Int);
-            arParams[26].Direction = ParameterDirection.Input;
             arParams[26].Value = pwdFormat;
 
             arParams[27] = new SqlCeParameter("@PasswordHash", SqlDbType.NText);
-            arParams[27].Direction = ParameterDirection.Input;
             arParams[27].Value = passwordHash;
 
             arParams[28] = new SqlCeParameter("@SecurityStamp", SqlDbType.NText);
-            arParams[28].Direction = ParameterDirection.Input;
             arParams[28].Value = securityStamp;
 
             arParams[29] = new SqlCeParameter("@PhoneNumber", SqlDbType.NVarChar, 50);
-            arParams[29].Direction = ParameterDirection.Input;
             arParams[29].Value = phoneNumber;
 
             arParams[30] = new SqlCeParameter("@PhoneNumberConfirmed", SqlDbType.Bit);
-            arParams[30].Direction = ParameterDirection.Input;
             arParams[30].Value = phoneNumberConfirmed;
 
             arParams[31] = new SqlCeParameter("@TwoFactorEnabled", SqlDbType.Bit);
-            arParams[31].Direction = ParameterDirection.Input;
             arParams[31].Value = twoFactorEnabled;
 
             arParams[32] = new SqlCeParameter("@LockoutEndDateUtc", SqlDbType.DateTime);
-            arParams[32].Direction = ParameterDirection.Input;
             if (lockoutEndDateUtc == null)
             {
                 arParams[32].Value = DBNull.Value;
@@ -1384,167 +1351,126 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[49];
 
             arParams[0] = new SqlCeParameter("@UserID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
 
             arParams[1] = new SqlCeParameter("@Name", SqlDbType.NVarChar, 100);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = name;
 
             arParams[2] = new SqlCeParameter("@LoginName", SqlDbType.NVarChar, 50);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = loginName;
 
             arParams[3] = new SqlCeParameter("@Email", SqlDbType.NVarChar, 100);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = email.ToLower();
 
             arParams[4] = new SqlCeParameter("@LoweredEmail", SqlDbType.NVarChar, 100);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = loweredEmail.ToLower();
 
             arParams[5] = new SqlCeParameter("@PasswordQuestion", SqlDbType.NVarChar, 255);
-            arParams[5].Direction = ParameterDirection.Input;
             arParams[5].Value = passwordQuestion;
 
             arParams[6] = new SqlCeParameter("@PasswordAnswer", SqlDbType.NVarChar, 255);
-            arParams[6].Direction = ParameterDirection.Input;
             arParams[6].Value = passwordAnswer;
 
             arParams[7] = new SqlCeParameter("@Gender", SqlDbType.NChar, 10);
-            arParams[7].Direction = ParameterDirection.Input;
             arParams[7].Value = gender;
 
             arParams[8] = new SqlCeParameter("@ProfileApproved", SqlDbType.Bit);
-            arParams[8].Direction = ParameterDirection.Input;
             arParams[8].Value = profileApproved;
 
             arParams[9] = new SqlCeParameter("@ApprovedForForums", SqlDbType.Bit);
-            arParams[9].Direction = ParameterDirection.Input;
             arParams[9].Value = approvedForForums;
 
             arParams[10] = new SqlCeParameter("@Trusted", SqlDbType.Bit);
-            arParams[10].Direction = ParameterDirection.Input;
             arParams[10].Value = trusted;
 
             arParams[11] = new SqlCeParameter("@DisplayInMemberList", SqlDbType.Bit);
-            arParams[11].Direction = ParameterDirection.Input;
             arParams[11].Value = displayInMemberList;
 
             arParams[12] = new SqlCeParameter("@WebSiteURL", SqlDbType.NVarChar, 100);
-            arParams[12].Direction = ParameterDirection.Input;
             arParams[12].Value = webSiteUrl;
 
             arParams[13] = new SqlCeParameter("@Country", SqlDbType.NVarChar, 100);
-            arParams[13].Direction = ParameterDirection.Input;
             arParams[13].Value = country;
 
             arParams[14] = new SqlCeParameter("@State", SqlDbType.NVarChar, 100);
-            arParams[14].Direction = ParameterDirection.Input;
             arParams[14].Value = state;
 
             arParams[15] = new SqlCeParameter("@Occupation", SqlDbType.NVarChar, 100);
-            arParams[15].Direction = ParameterDirection.Input;
             arParams[15].Value = occupation;
 
             arParams[16] = new SqlCeParameter("@Interests", SqlDbType.NVarChar, 100);
-            arParams[16].Direction = ParameterDirection.Input;
             arParams[16].Value = interests;
 
             arParams[17] = new SqlCeParameter("@MSN", SqlDbType.NVarChar, 50);
-            arParams[17].Direction = ParameterDirection.Input;
             arParams[17].Value = msn;
 
             arParams[18] = new SqlCeParameter("@Yahoo", SqlDbType.NVarChar, 50);
-            arParams[18].Direction = ParameterDirection.Input;
             arParams[18].Value = yahoo;
 
             arParams[19] = new SqlCeParameter("@AIM", SqlDbType.NVarChar, 50);
-            arParams[19].Direction = ParameterDirection.Input;
             arParams[19].Value = aim;
 
             arParams[20] = new SqlCeParameter("@ICQ", SqlDbType.NVarChar, 50);
-            arParams[20].Direction = ParameterDirection.Input;
             arParams[20].Value = icq;
 
             arParams[21] = new SqlCeParameter("@AvatarUrl", SqlDbType.NVarChar, 255);
-            arParams[21].Direction = ParameterDirection.Input;
             arParams[21].Value = avatarUrl;
 
             arParams[22] = new SqlCeParameter("@TimeOffsetHours", SqlDbType.Int);
-            arParams[22].Direction = ParameterDirection.Input;
             arParams[22].Value = timeOffsetHours;
 
             arParams[23] = new SqlCeParameter("@Signature", SqlDbType.NText);
-            arParams[23].Direction = ParameterDirection.Input;
             arParams[23].Value = signature;
 
             arParams[24] = new SqlCeParameter("@Skin", SqlDbType.NVarChar, 100);
-            arParams[24].Direction = ParameterDirection.Input;
             arParams[24].Value = skin;
            
             arParams[25] = new SqlCeParameter("@Comment", SqlDbType.NText);
-            arParams[25].Direction = ParameterDirection.Input;
             arParams[25].Value = comment;
 
             arParams[26] = new SqlCeParameter("@OpenIDURI", SqlDbType.NVarChar, 255);
-            arParams[26].Direction = ParameterDirection.Input;
             arParams[26].Value = openIdUri;
 
             arParams[27] = new SqlCeParameter("@WindowsLiveID", SqlDbType.NVarChar, 36);
-            arParams[27].Direction = ParameterDirection.Input;
             arParams[27].Value = windowsLiveId;
 
             arParams[28] = new SqlCeParameter("@FirstName", SqlDbType.NVarChar, 100);
-            arParams[28].Direction = ParameterDirection.Input;
             arParams[28].Value = firstName;
 
             arParams[29] = new SqlCeParameter("@LastName", SqlDbType.NVarChar, 100);
-            arParams[29].Direction = ParameterDirection.Input;
             arParams[29].Value = lastName;
 
             arParams[30] = new SqlCeParameter("@Pwd", SqlDbType.NVarChar, 1000);
-            arParams[30].Direction = ParameterDirection.Input;
             arParams[30].Value = password;
 
             arParams[31] = new SqlCeParameter("@MustChangePwd", SqlDbType.Bit);
-            arParams[31].Direction = ParameterDirection.Input;
             arParams[31].Value = mustChangePwd;
 
             arParams[32] = new SqlCeParameter("@NewEmail", SqlDbType.NVarChar, 100);
-            arParams[32].Direction = ParameterDirection.Input;
             arParams[32].Value = newEmail;
 
             arParams[33] = new SqlCeParameter("@EditorPreference", SqlDbType.NVarChar, 100);
-            arParams[33].Direction = ParameterDirection.Input;
             arParams[33].Value = editorPreference;
 
             arParams[34] = new SqlCeParameter("@EmailChangeGuid", SqlDbType.UniqueIdentifier);
-            arParams[34].Direction = ParameterDirection.Input;
             arParams[34].Value = emailChangeGuid;
 
             arParams[35] = new SqlCeParameter("@TimeZoneId", SqlDbType.NVarChar, 32);
-            arParams[35].Direction = ParameterDirection.Input;
             arParams[35].Value = timeZoneId;
 
             arParams[36] = new SqlCeParameter("@PasswordResetGuid", SqlDbType.UniqueIdentifier);
-            arParams[36].Direction = ParameterDirection.Input;
             arParams[36].Value = passwordResetGuid;
 
             arParams[37] = new SqlCeParameter("@PasswordSalt", SqlDbType.NVarChar, 128);
-            arParams[37].Direction = ParameterDirection.Input;
             arParams[37].Value = passwordSalt;
 
             arParams[38] = new SqlCeParameter("@RolesChanged", SqlDbType.Bit);
-            arParams[38].Direction = ParameterDirection.Input;
             arParams[38].Value = rolesChanged;
 
             arParams[39] = new SqlCeParameter("@AuthorBio", SqlDbType.NText);
-            arParams[39].Direction = ParameterDirection.Input;
             arParams[39].Value = authorBio;
 
             arParams[40] = new SqlCeParameter("@DateOfBirth", SqlDbType.DateTime);
-            arParams[40].Direction = ParameterDirection.Input;
             if (dateOfBirth == DateTime.MinValue)
             {
                 arParams[40].Value = DBNull.Value;
@@ -1555,35 +1481,27 @@ namespace cloudscribe.Core.Repositories.SqlCe
             }
 
             arParams[41] = new SqlCeParameter("@EmailConfirmed", SqlDbType.Bit);
-            arParams[41].Direction = ParameterDirection.Input;
             arParams[41].Value = emailConfirmed;
 
             arParams[42] = new SqlCeParameter("@PwdFormat", SqlDbType.Int);
-            arParams[42].Direction = ParameterDirection.Input;
             arParams[42].Value = pwdFormat;
 
             arParams[43] = new SqlCeParameter("@PasswordHash", SqlDbType.NText);
-            arParams[43].Direction = ParameterDirection.Input;
             arParams[43].Value = passwordHash;
 
             arParams[44] = new SqlCeParameter("@SecurityStamp", SqlDbType.NText);
-            arParams[44].Direction = ParameterDirection.Input;
             arParams[44].Value = securityStamp;
 
             arParams[45] = new SqlCeParameter("@PhoneNumber", SqlDbType.NVarChar, 50);
-            arParams[45].Direction = ParameterDirection.Input;
             arParams[45].Value = phoneNumber;
 
             arParams[46] = new SqlCeParameter("@PhoneNumberConfirmed", SqlDbType.Bit);
-            arParams[46].Direction = ParameterDirection.Input;
             arParams[46].Value = phoneNumberConfirmed;
 
             arParams[47] = new SqlCeParameter("@TwoFactorEnabled", SqlDbType.Bit);
-            arParams[47].Direction = ParameterDirection.Input;
             arParams[47].Value = twoFactorEnabled;
 
             arParams[48] = new SqlCeParameter("@LockoutEndDateUtc", SqlDbType.DateTime);
-            arParams[48].Direction = ParameterDirection.Input;
             if (lockoutEndDateUtc == null)
             {
                 arParams[48].Value = DBNull.Value;

@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-10
-// Last Modified:			2014-08-27
+// Last Modified:			2015-01-14
 // 
 //
 // You must not remove this notice, or any other, from this software.
@@ -8,7 +8,9 @@
 using MySql.Data.MySqlClient;
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Text;
+using System.Threading.Tasks;
 using cloudscribe.DbHelpers.MySql;
 
 namespace cloudscribe.Core.Repositories.MySql
@@ -18,7 +20,7 @@ namespace cloudscribe.Core.Repositories.MySql
     {
 	
 		
-        public static bool Create(string loginProvider, string providerKey, string userId) 
+        public static async Task<bool> Create(string loginProvider, string providerKey, string userId) 
 		{
 		
 			StringBuilder sqlCommand = new StringBuilder();
@@ -39,18 +41,15 @@ namespace cloudscribe.Core.Repositories.MySql
 			MySqlParameter[] arParams = new MySqlParameter[3];
 			
 			arParams[0] = new MySqlParameter("?LoginProvider", MySqlDbType.VarChar, 128);
-			arParams[0].Direction = ParameterDirection.Input;
 			arParams[0].Value = loginProvider;
 			
 			arParams[1] = new MySqlParameter("?ProviderKey", MySqlDbType.VarChar, 128);
-			arParams[1].Direction = ParameterDirection.Input;
 			arParams[1].Value = providerKey;
 			
 			arParams[2] = new MySqlParameter("?UserId", MySqlDbType.VarChar, 128);
-			arParams[2].Direction = ParameterDirection.Input;
 			arParams[2].Value = userId;
 			
-			int rowsAffected = AdoHelper.ExecuteNonQuery(
+			int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
 				ConnectionString.GetWriteConnectionString(), 
 				sqlCommand.ToString(), 
 				arParams);
@@ -61,7 +60,7 @@ namespace cloudscribe.Core.Repositories.MySql
 	
 	
 		
-		public static bool Delete(
+		public static async Task<bool> Delete(
 			string loginProvider, 
 			string providerKey, 
 			string userId) 
@@ -77,26 +76,24 @@ namespace cloudscribe.Core.Repositories.MySql
 			MySqlParameter[] arParams = new MySqlParameter[3];
 			
 			arParams[0] = new MySqlParameter("?LoginProvider", MySqlDbType.VarChar, 128);
-			arParams[0].Direction = ParameterDirection.Input;
 			arParams[0].Value = loginProvider;
 			
 			arParams[1] = new MySqlParameter("?ProviderKey", MySqlDbType.VarChar, 128);
-			arParams[1].Direction = ParameterDirection.Input;
 			arParams[1].Value = providerKey;
 			
 			arParams[2] = new MySqlParameter("?UserId", MySqlDbType.VarChar, 128);
-			arParams[2].Direction = ParameterDirection.Input;
 			arParams[2].Value = userId;
 			
-			int rowsAffected = AdoHelper.ExecuteNonQuery(
+			int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
 				ConnectionString.GetWriteConnectionString(), 
 				sqlCommand.ToString(), 
 				arParams);	
+
 			return (rowsAffected > 0);
 			
 		}
 
-        public static bool DeleteByUser(string userId)
+        public static async Task<bool> DeleteByUser(string userId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_UserLogins ");
@@ -108,10 +105,9 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[1];
 
             arParams[0] = new MySqlParameter("?UserId", MySqlDbType.VarChar, 128);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -119,7 +115,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
         }
 
-        public static bool DeleteBySite(Guid siteGuid)
+        public static async Task<bool> DeleteBySite(Guid siteGuid)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_UserLogins ");
@@ -131,19 +127,19 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[1];
 
             arParams[0] = new MySqlParameter("?SiteGuid", MySqlDbType.VarChar, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteGuid.ToString();
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
+
             return (rowsAffected > 0);
 
 
         }
 		
-		public static IDataReader Find(string loginProvider, string providerKey)
+		public static async Task<DbDataReader> Find(string loginProvider, string providerKey)
 		{
 			StringBuilder sqlCommand = new StringBuilder();
 			sqlCommand.Append("SELECT  * ");
@@ -157,21 +153,19 @@ namespace cloudscribe.Core.Repositories.MySql
 			MySqlParameter[] arParams = new MySqlParameter[2];
 			
 			arParams[0] = new MySqlParameter("?LoginProvider", MySqlDbType.VarChar, 128);
-			arParams[0].Direction = ParameterDirection.Input;
 			arParams[0].Value = loginProvider;
 				
 			arParams[1] = new MySqlParameter("?ProviderKey", MySqlDbType.VarChar, 128);
-			arParams[1].Direction = ParameterDirection.Input;
 			arParams[1].Value = providerKey;
 				
-			return AdoHelper.ExecuteReader(
+			return await AdoHelper.ExecuteReaderAsync(
 				ConnectionString.GetReadConnectionString(), 
 				sqlCommand.ToString(), 
 				arParams);
 				
 		}
 
-        public static IDataReader GetByUser(string userId)
+        public static async Task<DbDataReader> GetByUser(string userId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  * ");
@@ -184,10 +178,9 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[1];
 
             arParams[0] = new MySqlParameter("?UserId", MySqlDbType.VarChar, 128);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 arParams);

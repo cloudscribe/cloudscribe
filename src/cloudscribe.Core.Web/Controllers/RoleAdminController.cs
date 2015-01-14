@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-12-06
-// Last Modified:			2015-01-02
+// Last Modified:			2015-01-14
 // 
 
 using cloudscribe.Configuration;
@@ -268,8 +268,7 @@ namespace cloudscribe.Core.Web.Controllers
         [Authorize(Roles = "Admins,Role Admins")]
         public async Task<ActionResult> AddUser(int roleId, Guid roleGuid, int userId, Guid userGuid)
         {    
-            //TODO: make async
-            ISiteUser user = Site.UserRepository.Fetch(Site.SiteSettings.SiteId, userId);
+            ISiteUser user = await Site.UserRepository.Fetch(Site.SiteSettings.SiteId, userId);
             
             if(user != null)
             {
@@ -280,11 +279,13 @@ namespace cloudscribe.Core.Web.Controllers
                     if(result)
                     {
                         user.RolesChanged = true;
-                        // TODO: make async
-                        Site.UserRepository.Save(user);
-
-                        this.AlertSuccess(string.Format("<b>{0}</b> was successfully added to the role {1}.",
+                        result = await Site.UserRepository.Save(user);
+                        if (result)
+                        {
+                            this.AlertSuccess(string.Format("<b>{0}</b> was successfully added to the role {1}.",
                             user.DisplayName, role.DisplayName), true);
+                        }
+                        
                     }            
                 }
    
@@ -297,8 +298,8 @@ namespace cloudscribe.Core.Web.Controllers
         [Authorize(Roles = "Admins,Role Admins")]
         public async Task<ActionResult> RemoveUser(int roleId, int userId)
         {
-           //TODO: make async
-            ISiteUser user = Site.UserRepository.Fetch(Site.SiteSettings.SiteId, userId);
+
+            ISiteUser user = await Site.UserRepository.Fetch(Site.SiteSettings.SiteId, userId);
             if (user != null)
             {
                 ISiteRole role = await Site.UserRepository.FetchRole(roleId);
@@ -308,13 +309,17 @@ namespace cloudscribe.Core.Web.Controllers
                     if(result)
                     {
                         user.RolesChanged = true;
-                        //TODO: make async
-                        Site.UserRepository.Save(user);
+                   
+                        result = await Site.UserRepository.Save(user);
 
-                        this.AlertWarning(string.Format(
+                        if (result)
+                        {
+                            this.AlertWarning(string.Format(
                             "<b>{0}</b> was successfully removed from the role {1}.",
                             user.DisplayName, role.DisplayName)
                             , true);
+                        }
+                        
                     }
                     
                 }

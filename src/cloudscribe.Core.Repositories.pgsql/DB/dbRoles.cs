@@ -99,19 +99,20 @@ namespace cloudscribe.Core.Repositories.pgsql
 
         }
 
-        public static bool DeleteUserRoles(int userId)
+        public static async Task<bool> DeleteUserRoles(int userId)
         {
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
             
             arParams[0] = new NpgsqlParameter("userid", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
-           
-            int rowsAffected = Convert.ToInt32(AdoHelper.ExecuteScalar(
+
+            object result = await AdoHelper.ExecuteScalarAsync(
                 ConnectionString.GetWriteConnectionString(),
                 CommandType.StoredProcedure,
                 "mp_userroles_deleteuserroles(:userid)",
-                arParams));
+                arParams);
+           
+            int rowsAffected = Convert.ToInt32(result);
 
             return (rowsAffected > -1);
         }

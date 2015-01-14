@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-30
-// Last Modified:			2015-01-13
+// Last Modified:			2015-01-14
 // 
 
 using cloudscribe.Caching;
@@ -42,67 +42,67 @@ namespace cloudscribe.Core.Repositories.Caching
         }
 
 
-        public bool Delete(int userId)
+        public async Task<bool> Delete(int userId)
         {
-            return repo.Delete(userId);
+            return await repo.Delete(userId);
         }
 
-        public bool FlagAsDeleted(int userId)
+        public async Task<bool> FlagAsDeleted(int userId)
         {
-            return repo.FlagAsDeleted(userId);
+            return await repo.FlagAsDeleted(userId);
         }
 
-        public bool FlagAsNotDeleted(int userId)
+        public async Task<bool> FlagAsNotDeleted(int userId)
         {
-            return repo.FlagAsNotDeleted(userId);
+            return await repo.FlagAsNotDeleted(userId);
         }
 
-        public bool UpdatePasswordAndSalt(
-            int userId,
-            int passwordFormat,
-            string password,
-            string passwordSalt)
+        //public bool UpdatePasswordAndSalt(
+        //    int userId,
+        //    int passwordFormat,
+        //    string password,
+        //    string passwordSalt)
+        //{
+        //    return repo.UpdatePasswordAndSalt(userId, passwordFormat, password, passwordSalt);
+        //}
+
+        public async Task<bool> ConfirmRegistration(Guid registrationGuid)
         {
-            return repo.UpdatePasswordAndSalt(userId, passwordFormat, password, passwordSalt);
+            return await repo.ConfirmRegistration(registrationGuid);
         }
 
-        public bool ConfirmRegistration(Guid registrationGuid)
-        {
-            return repo.ConfirmRegistration(registrationGuid);
-        }
 
-
-        public bool LockoutAccount(Guid userGuid)
+        public async Task<bool> LockoutAccount(Guid userGuid)
         {
-            bool result = repo.LockoutAccount(userGuid);
+            bool result = await repo.LockoutAccount(userGuid);
             CacheManager.Cache.InvalidateCacheItem("user-" + userGuid.ToString());
             return result;
         }
 
-        public bool UnLockAccount(Guid userGuid)
+        public async Task<bool> UnLockAccount(Guid userGuid)
         {
-            bool result =  repo.UnLockAccount(userGuid);
+            bool result = await  repo.UnLockAccount(userGuid);
             CacheManager.Cache.InvalidateCacheItem("user-" + userGuid.ToString());
             return result;
         }
 
-        public bool UpdateFailedPasswordAttemptCount(Guid userGuid, int failedPasswordAttemptCount)
+        public async Task<bool> UpdateFailedPasswordAttemptCount(Guid userGuid, int failedPasswordAttemptCount)
         {
-            bool result = repo.UpdateFailedPasswordAttemptCount(userGuid, failedPasswordAttemptCount);
+            bool result = await repo.UpdateFailedPasswordAttemptCount(userGuid, failedPasswordAttemptCount);
             CacheManager.Cache.InvalidateCacheItem("user-" + userGuid.ToString());
             return result;
         }
 
-        public void UpdateTotalRevenue(Guid userGuid)
+        public async Task<bool> UpdateTotalRevenue(Guid userGuid)
         {
-            repo.UpdateTotalRevenue(userGuid);
+            return await repo.UpdateTotalRevenue(userGuid);
 
         }
 
-        
-        public void UpdateTotalRevenue()
+
+        public async Task<bool> UpdateTotalRevenue()
         {
-            repo.UpdateTotalRevenue();
+            return await repo.UpdateTotalRevenue();
         }
 
 
@@ -127,66 +127,66 @@ namespace cloudscribe.Core.Repositories.Caching
         }
 
 
-        public ISiteUser FetchNewest(int siteId)
+        public async Task<ISiteUser> FetchNewest(int siteId)
         {
-            return repo.FetchNewest(siteId);
+            return await repo.FetchNewest(siteId);
         }
 
-        public ISiteUser Fetch(int siteId, int userId)
+        public async Task<ISiteUser> Fetch(int siteId, int userId)
         {
-            return repo.Fetch(siteId, userId);
+            return await repo.Fetch(siteId, userId);
         }
 
 
-        public ISiteUser Fetch(int siteId, Guid userGuid)
+        public async Task<ISiteUser> Fetch(int siteId, Guid userGuid)
         {
             if (
                 (AppSettings.Cache_Disabled)
                 || (AppSettings.CacheDurationInSeconds_SiteUser == 0)
                 )
             {
-                return repo.Fetch(siteId, userGuid);
+                return await repo.Fetch(siteId, userGuid);
             }
 
-            string cachekey = "user-" + userGuid.ToString();
+            //string cachekey = "user-" + userGuid.ToString();
 
-            DateTime expiration = DateTime.Now.AddSeconds(AppSettings.CacheDurationInSeconds_SiteUser);
+            //DateTime expiration = DateTime.Now.AddSeconds(AppSettings.CacheDurationInSeconds_SiteUser);
 
-            try
-            {
-                ISiteUser user = CacheManager.Cache.Get<ISiteUser>(cachekey, expiration, () =>
-                {
-                    // This is the anonymous function which gets called if the data is not in the cache.
-                    // This method is executed and whatever is returned, is added to the cache with the passed in expiry time.
-                    ISiteUser siteUser = repo.Fetch(siteId, userGuid);
-                    return siteUser;
-                });
+            //try
+            //{
+            //    ISiteUser user = CacheManager.Cache.Get<ISiteUser>(cachekey, expiration, () =>
+            //    {
+            //        // This is the anonymous function which gets called if the data is not in the cache.
+            //        // This method is executed and whatever is returned, is added to the cache with the passed in expiry time.
+            //        ISiteUser siteUser = repo.Fetch(siteId, userGuid);
+            //        return siteUser;
+            //    });
 
-                return user;
-            }
-            catch (Exception ex)
-            {
-                log.Error("failed to get ISiteUser from cache so loading it directly", ex);
+            //    return user;
+            //}
+            //catch (Exception ex)
+            //{
+            //    log.Error("failed to get ISiteUser from cache so loading it directly", ex);
 
-            }
+            //}
 
-            return repo.Fetch(siteId, userGuid);
+            return await repo.Fetch(siteId, userGuid);
         }
 
-        public ISiteUser FetchByConfirmationGuid(int siteId, Guid confirmGuid)
+        public async Task<ISiteUser> FetchByConfirmationGuid(int siteId, Guid confirmGuid)
         {
-            return repo.FetchByConfirmationGuid(siteId, confirmGuid);
+            return await repo.FetchByConfirmationGuid(siteId, confirmGuid);
         }
 
 
-        public ISiteUser Fetch(int siteId, string email)
+        public async Task<ISiteUser> Fetch(int siteId, string email)
         {
-            return repo.Fetch(siteId, email);
+            return await repo.Fetch(siteId, email);
         }
 
-        public ISiteUser FetchByLoginName(int siteId, string userName, bool allowEmailFallback)
+        public async Task<ISiteUser> FetchByLoginName(int siteId, string userName, bool allowEmailFallback)
         {
-            return repo.FetchByLoginName(siteId, userName, allowEmailFallback);
+            return await repo.FetchByLoginName(siteId, userName, allowEmailFallback);
         }
 
 
@@ -283,14 +283,14 @@ namespace cloudscribe.Core.Repositories.Caching
         }
 
         
-        public bool EmailExistsInDB(int siteId, string email)
+        public async Task<bool> EmailExistsInDB(int siteId, string email)
         {
-            return repo.EmailExistsInDB(siteId, email);
+            return await repo.EmailExistsInDB(siteId, email);
         }
 
-        public bool EmailExistsInDB(int siteId, int userId, string email)
+        public async Task<bool> EmailExistsInDB(int siteId, int userId, string email)
         {
-            return repo.EmailExistsInDB(siteId, userId, email);
+            return await repo.EmailExistsInDB(siteId, userId, email);
         }
 
         public bool LoginExistsInDB(int siteId, string loginName)
@@ -303,17 +303,17 @@ namespace cloudscribe.Core.Repositories.Caching
             return repo.LoginIsAvailable(siteId, userId, loginName);
         }
 
-        public string GetUserNameFromEmail(int siteId, string email)
+        public async Task<string> GetUserNameFromEmail(int siteId, string email)
         {
-            return repo.GetUserNameFromEmail(siteId, email);
+            return await repo.GetUserNameFromEmail(siteId, email);
 
         }
 
 
 
-        public int GetNewestUserId(int siteId)
+        public async Task<int> GetNewestUserId(int siteId)
         {
-            return repo.GetNewestUserId(siteId);
+            return await repo.GetNewestUserId(siteId);
         }
 
 
@@ -354,9 +354,9 @@ namespace cloudscribe.Core.Repositories.Caching
 
         }
 
-        public bool DeleteUserRoles(int userId)
+        public async Task<bool> DeleteUserRoles(int userId)
         {
-            return repo.DeleteUserRoles(userId);
+            return await repo.DeleteUserRoles(userId);
         }
 
         public async Task<bool> DeleteUserRolesByRole(int roleId)
@@ -474,34 +474,34 @@ namespace cloudscribe.Core.Repositories.Caching
         /// Persists a new instance of UserClaim. Returns true on success.
         /// </summary>
         /// <returns></returns>
-        public bool SaveClaim(IUserClaim userClaim)
+        public async Task<bool> SaveClaim(IUserClaim userClaim)
         {
-            return repo.SaveClaim(userClaim);
+            return await repo.SaveClaim(userClaim);
         }
 
-        public bool DeleteClaim(int id)
+        public async Task<bool> DeleteClaim(int id)
         {
-            return repo.DeleteClaim(id);
+            return await repo.DeleteClaim(id);
         }
 
-        public bool DeleteClaimsByUser(string userId)
+        public async Task<bool> DeleteClaimsByUser(string userId)
         {
-            return repo.DeleteClaimsByUser(userId);
+            return await repo.DeleteClaimsByUser(userId);
         }
 
-        public bool DeleteClaimByUser(string userId, string claimType)
+        public async Task<bool> DeleteClaimByUser(string userId, string claimType)
         {
-            return repo.DeleteClaimByUser(userId, claimType);
+            return await repo.DeleteClaimByUser(userId, claimType);
         }
 
-        public bool DeleteClaimsBySite(Guid siteGuid)
+        public async Task<bool> DeleteClaimsBySite(Guid siteGuid)
         {
-            return repo.DeleteClaimsBySite(siteGuid);
+            return await repo.DeleteClaimsBySite(siteGuid);
         }
 
-        public IList<IUserClaim> GetClaimsByUser(string userId)
+        public async Task<IList<IUserClaim>> GetClaimsByUser(string userId)
         {
-            return repo.GetClaimsByUser(userId);
+            return await repo.GetClaimsByUser(userId);
 
         }
 
@@ -514,9 +514,9 @@ namespace cloudscribe.Core.Repositories.Caching
         /// Persists a new instance of UserLogin. Returns true on success.
         /// </summary>
         /// <returns></returns>
-        public bool CreateLogin(IUserLogin userLogin)
+        public async Task<bool> CreateLogin(IUserLogin userLogin)
         {
-            return repo.CreateLogin(userLogin);
+            return await repo.CreateLogin(userLogin);
 
 
         }
@@ -524,11 +524,11 @@ namespace cloudscribe.Core.Repositories.Caching
 
         /// <param name="loginProvider"> loginProvider </param>
         /// <param name="providerKey"> providerKey </param>
-        public IUserLogin FindLogin(
+        public async Task<IUserLogin> FindLogin(
             string loginProvider,
             string providerKey)
         {
-            return repo.FindLogin(loginProvider, providerKey);
+            return await repo.FindLogin(loginProvider, providerKey);
         }
 
 
@@ -539,64 +539,65 @@ namespace cloudscribe.Core.Repositories.Caching
         /// <param name="providerKey"> providerKey </param>
         /// <param name="userId"> userId </param>
         /// <returns>bool</returns>
-        public bool DeleteLogin(
+        public async Task<bool> DeleteLogin(
             string loginProvider,
             string providerKey,
             string userId)
         {
-            return repo.DeleteLogin(
+            return await repo.DeleteLogin(
                 loginProvider,
                 providerKey,
                 userId);
         }
 
-        public bool DeleteLoginsByUser(string userId)
+        public async Task<bool> DeleteLoginsByUser(string userId)
         {
-            return repo.DeleteLoginsByUser(userId);
+            return await repo.DeleteLoginsByUser(userId);
         }
 
-        public bool DeleteLoginsBySite(Guid siteGuid)
+        public async Task<bool> DeleteLoginsBySite(Guid siteGuid)
         {
-            return repo.DeleteLoginsBySite(siteGuid);
+            return await repo.DeleteLoginsBySite(siteGuid);
         }
 
 
 
 
         
-        public IList<IUserLogin> GetLoginsByUser(string userId)
+        public async Task<IList<IUserLogin>> GetLoginsByUser(string userId)
         {
             if (
                 (AppSettings.Cache_Disabled)
                 || (AppSettings.CacheDurationInSeconds_SiteUserLogins == 0)
                 )
             {
-                return repo.GetLoginsByUser(userId);
+                return await repo.GetLoginsByUser(userId);
             }
 
-            string cachekey = "ulogins-" + userId;
+            // TODO: I don't quite understand how to make this anonymous function async
+            //string cachekey = "ulogins-" + userId;
 
-            DateTime expiration = DateTime.Now.AddSeconds(AppSettings.CacheDurationInSeconds_SiteUserLogins);
+            //DateTime expiration = DateTime.Now.AddSeconds(AppSettings.CacheDurationInSeconds_SiteUserLogins);
 
-            try
-            {
-                IList<IUserLogin> userLogins = CacheManager.Cache.Get<IList<IUserLogin>>(cachekey, expiration, () =>
-                {
-                    // This is the anonymous function which gets called if the data is not in the cache.
-                    // This method is executed and whatever is returned, is added to the cache with the passed in expiry time.
-                    IList<IUserLogin> logins = repo.GetLoginsByUser(userId);
-                    return logins;
-                });
+            //try
+            //{
+            //    IList<IUserLogin> userLogins = CacheManager.Cache.Get<IList<IUserLogin>>(cachekey, expiration, () =>
+            //    {
+            //        // This is the anonymous function which gets called if the data is not in the cache.
+            //        // This method is executed and whatever is returned, is added to the cache with the passed in expiry time.
+            //        IList<IUserLogin> logins = repo.GetLoginsByUser(userId);
+            //        return logins;
+            //    });
 
-                return userLogins;
-            }
-            catch (Exception ex)
-            {
-                log.Error("failed to get IList<IUserLogin> from cache so loading them directly", ex);
+            //    return userLogins;
+            //}
+            //catch (Exception ex)
+            //{
+            //    log.Error("failed to get IList<IUserLogin> from cache so loading them directly", ex);
 
-            }
+            //}
 
-            return repo.GetLoginsByUser(userId);
+            return await repo.GetLoginsByUser(userId);
 
         }
 

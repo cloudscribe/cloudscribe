@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-18
-// Last Modified:			2015-01-13
+// Last Modified:			2015-01-14
 // 
 
 
@@ -13,38 +13,38 @@ namespace cloudscribe.Core.Models
 {
     public interface IUserRepository : IDisposable
     {
-        bool ConfirmRegistration(Guid registrationGuid);
-        bool Delete(int userId);
-        bool EmailExistsInDB(int siteId, int userId, string email);
-        bool EmailExistsInDB(int siteId, string email);
-        ISiteUser Fetch(int siteId, Guid userGuid);
-        ISiteUser Fetch(int siteId, int userId);
-        ISiteUser Fetch(int siteId, string email);
-        ISiteUser FetchByConfirmationGuid(int siteId, Guid confirmGuid);
-        ISiteUser FetchByLoginName(int siteId, string userName, bool allowEmailFallback);
-        ISiteUser FetchNewest(int siteId);
-        bool FlagAsDeleted(int userId);
-        bool FlagAsNotDeleted(int userId);
-        bool LockoutAccount(Guid userGuid);
-        bool UnLockAccount(Guid userGuid);
-        bool UpdateFailedPasswordAttemptCount(Guid userGuid, int failedPasswordAttemptCount);
+        Task<bool> ConfirmRegistration(Guid registrationGuid);
+        Task<bool> EmailExistsInDB(int siteId, int userId, string email);
+        Task<bool> EmailExistsInDB(int siteId, string email);
+        Task<ISiteUser> Fetch(int siteId, Guid userGuid);
+        Task<ISiteUser> Fetch(int siteId, int userId);
+        Task<ISiteUser> Fetch(int siteId, string email);
+        Task<ISiteUser> FetchByConfirmationGuid(int siteId, Guid confirmGuid);
+        Task<ISiteUser> FetchByLoginName(int siteId, string userName, bool allowEmailFallback);
+        Task<ISiteUser> FetchNewest(int siteId);
+        Task<bool> Delete(int userId);
+        Task<bool> FlagAsDeleted(int userId);
+        Task<bool> FlagAsNotDeleted(int userId);
+        Task<bool> LockoutAccount(Guid userGuid);
+        Task<bool> UnLockAccount(Guid userGuid);
+        Task<bool> UpdateFailedPasswordAttemptCount(Guid userGuid, int failedPasswordAttemptCount);
         List<IUserInfo> GetByIPAddress(Guid siteGuid, string ipv4Address);
         List<IUserInfo> GetCrossSiteUserListByEmail(string email);
         int GetCount(int siteId);
-        int GetNewestUserId(int siteId);
+        Task<int> GetNewestUserId(int siteId);
         List<IUserInfo> GetNotApprovedUsers(int siteId, int pageNumber, int pageSize, out int totalPages);
         List<IUserInfo> GetPage(int siteId, int pageNumber, int pageSize, string userNameBeginsWith, int sortMode, out int totalPages);
         List<IUserInfo> GetPageLockedUsers(int siteId, int pageNumber, int pageSize, out int totalPages);
         List<IUserInfo> GetUserAdminSearchPage(int siteId, int pageNumber, int pageSize, string searchInput, int sortMode, out int totalPages);
         DataTable GetUserListForPasswordFormatChange(int siteId);
-        string GetUserNameFromEmail(int siteId, string email);
+        Task<string> GetUserNameFromEmail(int siteId, string email);
         List<IUserInfo> GetUserSearchPage(int siteId, int pageNumber, int pageSize, string searchInput, int sortMode, out int totalPages);
         bool LoginExistsInDB(int siteId, string loginName);
         bool LoginIsAvailable(int siteId, int userId, string loginName);
         Task<bool> Save(ISiteUser user);
-        bool UpdatePasswordAndSalt(int userId, int passwordFormat, string password, string passwordSalt);
-        void UpdateTotalRevenue();
-        void UpdateTotalRevenue(Guid userGuid);
+        //bool UpdatePasswordAndSalt(int userId, int passwordFormat, string password, string passwordSalt);
+        Task<bool> UpdateTotalRevenue();
+        Task<bool> UpdateTotalRevenue(Guid userGuid);
         int UserCount(int siteId, string userNameBeginsWith);
         int UsersOnlineSinceCount(int siteId, DateTime sinceTime);
 
@@ -54,7 +54,7 @@ namespace cloudscribe.Core.Models
         Task<int> CountOfRoles(int siteId, string searchInput);
         int GetRoleMemberCount(int roleId);
         Task<bool> DeleteRole(int roleID);
-        bool DeleteUserRoles(int userId);
+        Task<bool> DeleteUserRoles(int userId);
         Task<bool> DeleteUserRolesByRole(int roleId);
         Task<bool> RoleExists(int siteId, string roleName);
         Task<ISiteRole> FetchRole(int roleID);
@@ -75,19 +75,19 @@ namespace cloudscribe.Core.Models
         Task<bool> SaveRole(ISiteRole role);
 
         //claims
-        bool DeleteClaim(int id);
-        bool DeleteClaimsBySite(Guid siteGuid);
-        bool DeleteClaimsByUser(string userId);
-        bool DeleteClaimByUser(string userId, string claimType);
-        IList<IUserClaim> GetClaimsByUser(string userId);
-        bool SaveClaim(IUserClaim userClaim);
+        Task<bool> DeleteClaim(int id);
+        Task<bool> DeleteClaimsBySite(Guid siteGuid);
+        Task<bool> DeleteClaimsByUser(string userId);
+        Task<bool> DeleteClaimByUser(string userId, string claimType);
+        Task<IList<IUserClaim>> GetClaimsByUser(string userId);
+        Task<bool> SaveClaim(IUserClaim userClaim);
 
         //logins
-        bool CreateLogin(cloudscribe.Core.Models.IUserLogin userLogin);
-        bool DeleteLogin(string loginProvider, string providerKey, string userId);
-        bool DeleteLoginsBySite(Guid siteGuid);
-        bool DeleteLoginsByUser(string userId);
-        IUserLogin FindLogin(string loginProvider, string providerKey);
-        IList<IUserLogin> GetLoginsByUser(string userId);
+        Task<bool> CreateLogin(cloudscribe.Core.Models.IUserLogin userLogin);
+        Task<bool> DeleteLogin(string loginProvider, string providerKey, string userId);
+        Task<bool> DeleteLoginsBySite(Guid siteGuid);
+        Task<bool> DeleteLoginsByUser(string userId);
+        Task<IUserLogin> FindLogin(string loginProvider, string providerKey);
+        Task<IList<IUserLogin>> GetLoginsByUser(string userId);
     }
 }

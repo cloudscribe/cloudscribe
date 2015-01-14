@@ -58,6 +58,10 @@ For sequential mode, the decision to use GetFieldValueAsync is a bit more compli
 There are advantages to using the stream-based methods when working large files stored in the database. For example, you can hand-off the stream to a WCF or ASP.NET response instead of bringing in the whole file into memory at one time. This is especially important for .NET developers because the large object heap is very susceptible to fragmentation.
 
 
+
+http://www.tugberkugurlu.com/archive/asynchronous-database-calls-with-task-based-asynchronous-programming-model-tap-in-asp-net-mvc-4
+
+
 http://stackoverflow.com/questions/23022573/calling-async-methods-from-a-synchronous-context
 
 http://www.infoq.com/news/2012/05/ADO-Async

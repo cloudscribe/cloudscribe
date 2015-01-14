@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-10
-// Last Modified:			2014-08-28
+// Last Modified:			2015-01-14
 // 
 //
 // You must not remove this notice, or any other, from this software.
@@ -8,7 +8,9 @@
 using FirebirdSql.Data.FirebirdClient;
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Text;
+using System.Threading.Tasks;
 using cloudscribe.DbHelpers.Firebird;
 
 namespace cloudscribe.Core.Repositories.Firebird
@@ -16,7 +18,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 	internal static class DBUserLogins
     {
 	
-        public static bool Create(string loginProvider, string providerKey, string userId) 
+        public static async Task<bool> Create(string loginProvider, string providerKey, string userId) 
 		{
 			StringBuilder sqlCommand = new StringBuilder();
 			sqlCommand.Append("INSERT INTO mp_UserLogins (");
@@ -36,18 +38,15 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[3];
 			
 			arParams[0] = new FbParameter("@LoginProvider", FbDbType.VarChar, 128);
-			arParams[0].Direction = ParameterDirection.Input;
 			arParams[0].Value = loginProvider;
 			
 			arParams[1] = new FbParameter("@ProviderKey", FbDbType.VarChar, 128);
-			arParams[1].Direction = ParameterDirection.Input;
 			arParams[1].Value = providerKey;
 			
 			arParams[2] = new FbParameter("@UserId", FbDbType.VarChar, 128);
-			arParams[2].Direction = ParameterDirection.Input;
 			arParams[2].Value = userId;
 			
-			int rowsAffected = AdoHelper.ExecuteNonQuery(
+			int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
 				ConnectionString.GetWriteConnectionString(), 
 				sqlCommand.ToString(), 
 				arParams);
@@ -56,7 +55,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 		}
 	
 	
-		public static bool Delete(
+		public static async Task<bool> Delete(
 			string loginProvider, 
 			string providerKey, 
 			string userId) 
@@ -71,18 +70,15 @@ namespace cloudscribe.Core.Repositories.Firebird
 			FbParameter[] arParams = new FbParameter[3];
 			
 			arParams[0] = new FbParameter("@LoginProvider", FbDbType.VarChar, 128);
-			arParams[0].Direction = ParameterDirection.Input;
 			arParams[0].Value = loginProvider;
 			
 			arParams[1] = new FbParameter("@ProviderKey", FbDbType.VarChar, 128);
-			arParams[1].Direction = ParameterDirection.Input;
 			arParams[1].Value = providerKey;
 			
 			arParams[2] = new FbParameter("@UserId", FbDbType.VarChar, 128);
-			arParams[2].Direction = ParameterDirection.Input;
 			arParams[2].Value = userId;
 			
-			int rowsAffected = AdoHelper.ExecuteNonQuery(
+			int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
 				ConnectionString.GetWriteConnectionString(), 
 				sqlCommand.ToString(), 
 				arParams);
@@ -90,7 +86,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 			return (rowsAffected > -1);
 		}
 
-        public static bool DeleteByUser(string userId)
+        public static async Task<bool> DeleteByUser(string userId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_UserLogins ");
@@ -101,10 +97,9 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@UserId", FbDbType.VarChar, 128);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -112,7 +107,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             return (rowsAffected > -1);
         }
 
-        public static bool DeleteBySite(Guid siteGuid)
+        public static async Task<bool> DeleteBySite(Guid siteGuid)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_UserLogins ");
@@ -124,10 +119,9 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@SiteGuid", FbDbType.VarChar, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteGuid.ToString();
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -135,7 +129,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             return (rowsAffected > -1);
         }
 
-        public static IDataReader Find(string loginProvider, string providerKey)
+        public static async Task<DbDataReader> Find(string loginProvider, string providerKey)
         {
 			StringBuilder sqlCommand = new StringBuilder();
 			sqlCommand.Append("SELECT  * ");
@@ -149,21 +143,19 @@ namespace cloudscribe.Core.Repositories.Firebird
 			FbParameter[] arParams = new FbParameter[2];
 			
 			arParams[0] = new FbParameter("@LoginProvider", FbDbType.VarChar, 128);
-			arParams[0].Direction = ParameterDirection.Input;
 			arParams[0].Value = loginProvider;
 			
 			arParams[1] = new FbParameter("@ProviderKey", FbDbType.VarChar, 128);
-			arParams[1].Direction = ParameterDirection.Input;
 			arParams[1].Value = providerKey;
 			
-			return AdoHelper.ExecuteReader(
+			return await AdoHelper.ExecuteReaderAsync(
 				ConnectionString.GetReadConnectionString(), 
 				sqlCommand.ToString(), 
 				arParams);
 				
 		}
 
-        public static IDataReader GetByUser(string userId)
+        public static async Task<DbDataReader> GetByUser(string userId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  * ");
@@ -176,10 +168,9 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@UserId", FbDbType.VarChar, 128);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 arParams);

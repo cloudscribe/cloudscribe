@@ -88,10 +88,7 @@ namespace cloudscribe.AspNet.Identity
                 result = result && await repo.AddUserToDefaultRoles(user);
             }
             
-
-
-            await Task.FromResult(result);
-
+            
         }
 
         public async Task UpdateAsync(TUser user)
@@ -99,9 +96,6 @@ namespace cloudscribe.AspNet.Identity
             if (debugLog) { log.Info("UpdateAsync"); }
 
             bool result = await repo.Save(user);
-
-
-            await Task.FromResult(result);
 
         }
 
@@ -111,39 +105,39 @@ namespace cloudscribe.AspNet.Identity
 
             if(siteSettings.ReallyDeleteUsers)
             {
-                repo.DeleteLoginsByUser(user.Id);
-                repo.DeleteClaimsByUser(user.Id);
-                repo.DeleteUserRoles(user.UserId);
-                repo.Delete(user.UserId);
+                Task[] tasks = new Task[4];
+                tasks[0] = repo.DeleteLoginsByUser(user.Id);
+                tasks[1] = repo.DeleteClaimsByUser(user.Id);
+                tasks[2] = repo.DeleteUserRoles(user.UserId);
+                tasks[3] = repo.Delete(user.UserId);
+
+                Task.WaitAll(tasks);
             }
             else
             {
-                repo.FlagAsDeleted(user.UserId);
+                bool result = await repo.FlagAsDeleted(user.UserId);
             }
-
-
-            await Task.FromResult(0);
 
         }
 
-        public Task<TUser> FindByIdAsync(string userId)
+        public async Task<TUser> FindByIdAsync(string userId)
         {
             if (debugLog) { log.Info("FindByIdAsync"); }
 
             Guid userGuid = new Guid(userId);
 
-            ISiteUser siteUser = repo.Fetch(siteSettings.SiteId, userGuid);
+            ISiteUser siteUser = await repo.Fetch(siteSettings.SiteId, userGuid);
 
-            return Task.FromResult((TUser)siteUser);
+            return (TUser)siteUser;
         }
 
 
-        public Task<TUser> FindByNameAsync(string userName)
+        public async Task<TUser> FindByNameAsync(string userName)
         {
             if (debugLog) { log.Info("FindByNameAsync"); }
 
-            ISiteUser siteUser = repo.FetchByLoginName(siteSettings.SiteId, userName, true);
-            return Task.FromResult((TUser)siteUser);
+            ISiteUser siteUser = await repo.FetchByLoginName(siteSettings.SiteId, userName, true);
+            return (TUser)siteUser;
 
         }
 
@@ -151,18 +145,18 @@ namespace cloudscribe.AspNet.Identity
 
         #region IUserEmailStore
 
-        public Task<string> GetEmailAsync(TUser user)
+        public async Task<string> GetEmailAsync(TUser user)
         {
             if (debugLog) { log.Info("GetEmailAsync"); }
 
-            return Task.FromResult(user.Email);
+            return user.Email;
         }
 
-        public Task<bool> GetEmailConfirmedAsync(TUser user)
+        public async Task<bool> GetEmailConfirmedAsync(TUser user)
         {
             if (debugLog) { log.Info("GetEmailConfirmedAsync"); }
 
-            return Task.FromResult(user.EmailConfirmed);
+            return user.EmailConfirmed;
         }
 
         public async Task SetEmailAsync(TUser user, string email)
@@ -181,10 +175,8 @@ namespace cloudscribe.AspNet.Identity
             user.Email = email;
             user.LoweredEmail = email.ToLower();
 
-            
-
             bool result = await repo.Save(user);
-            //return Task.FromResult(result);
+            
         }
 
         public async Task SetEmailConfirmedAsync(TUser user, bool confirmed)
@@ -201,58 +193,57 @@ namespace cloudscribe.AspNet.Identity
             }   
 
             user.EmailConfirmed = confirmed;
-            //return Task.FromResult(true);
-
+            
             // I don't not sure this method is expected to
             // persist this change to the db
             bool result = await repo.Save(user);
-            //return Task.FromResult(result);
+            
         }
 
-        public Task<TUser> FindByEmailAsync(string email)
+        public async Task<TUser> FindByEmailAsync(string email)
         {
             if (debugLog) { log.Info("FindByEmailAsync"); }
 
-            ISiteUser siteUser = repo.Fetch(siteSettings.SiteId, email);
+            ISiteUser siteUser = await repo.Fetch(siteSettings.SiteId, email);
 
-            return Task.FromResult((TUser)siteUser);
+            return (TUser)siteUser;
         }
 
         #endregion
 
         #region IUserPasswordStore
 
-        public Task<string> GetPasswordHashAsync(TUser user)
+        public async Task<string> GetPasswordHashAsync(TUser user)
         {
             if (debugLog) { log.Info("GetPasswordHashAsync"); }
 
             if (user == null)
             {
-                return Task.FromResult(string.Empty);
+                return string.Empty;
             }
 
-            return Task.FromResult(user.PasswordHash);
+            return user.PasswordHash;
         }
 
-        public Task<bool> HasPasswordAsync(TUser user)
+        public async Task<bool> HasPasswordAsync(TUser user)
         {
             if (debugLog) { log.Info("HasPasswordAsync"); }
 
             if (user == null)
             {
-                return Task.FromResult(false);
+                return false;
             }
 
-            return Task.FromResult(string.IsNullOrEmpty(user.PasswordHash));
+            return string.IsNullOrEmpty(user.PasswordHash);
         }
 
-        public Task SetPasswordHashAsync(TUser user, string passwordHash)
+        public async Task SetPasswordHashAsync(TUser user, string passwordHash)
         {
             if (debugLog) { log.Info("SetPasswordHashAsync"); }
 
             if (user == null)
             {
-                return Task.FromResult(0);
+                return;
             }
 
             user.PasswordHash = passwordHash;
@@ -276,28 +267,28 @@ namespace cloudscribe.AspNet.Identity
             //userRepo.Save(user);
 
 
-            return Task.FromResult(0);
+            
         }
 
         #endregion
 
         #region IUserLockoutStore
 
-        public Task<int> GetAccessFailedCountAsync(TUser user)
+        public async Task<int> GetAccessFailedCountAsync(TUser user)
         {
             if (debugLog) { log.Info("GetAccessFailedCountAsync"); }
 
-            return Task.FromResult(user.FailedPasswordAttemptCount);
+            return user.FailedPasswordAttemptCount;
         }
 
-        public Task<bool> GetLockoutEnabledAsync(TUser user)
+        public async Task<bool> GetLockoutEnabledAsync(TUser user)
         {
             if (debugLog) { log.Info("GetLockoutEnabledAsync"); }
 
-            return Task.FromResult(user.IsLockedOut);
+            return user.IsLockedOut;
         }
 
-        public Task<DateTimeOffset> GetLockoutEndDateAsync(TUser user)
+        public async Task<DateTimeOffset> GetLockoutEndDateAsync(TUser user)
         {
             if (debugLog) { log.Info("GetLockoutEndDateAsync"); }
 
@@ -307,38 +298,38 @@ namespace cloudscribe.AspNet.Identity
                 d = new DateTimeOffset(user.LockoutEndDateUtc.Value);
                 
             }
-            return Task.FromResult(d);
+            return d;
         }
 
-        public Task<int> IncrementAccessFailedCountAsync(TUser user)
+        public async Task<int> IncrementAccessFailedCountAsync(TUser user)
         {
             if (debugLog) { log.Info("IncrementAccessFailedCountAsync"); }
 
             user.FailedPasswordAttemptCount += 1;
-            repo.UpdateFailedPasswordAttemptCount(user.UserGuid, user.FailedPasswordAttemptCount);
-            return Task.FromResult(user.FailedPasswordAttemptCount);
+            await repo.UpdateFailedPasswordAttemptCount(user.UserGuid, user.FailedPasswordAttemptCount);
+            return user.FailedPasswordAttemptCount;
         }
 
-        public Task ResetAccessFailedCountAsync(TUser user)
+        public async Task ResetAccessFailedCountAsync(TUser user)
         {
             if (debugLog) { log.Info("ResetAccessFailedCountAsync"); }
 
             user.FailedPasswordAttemptCount = 0;
-            bool result = repo.UpdateFailedPasswordAttemptCount(user.UserGuid, user.FailedPasswordAttemptCount);
-            return Task.FromResult(result);
+            bool result = await repo.UpdateFailedPasswordAttemptCount(user.UserGuid, user.FailedPasswordAttemptCount);
+            
         }
 
-        public Task SetLockoutEnabledAsync(TUser user, bool enabled)
+        public async Task SetLockoutEnabledAsync(TUser user, bool enabled)
         {
             if (debugLog) { log.Info("SetLockoutEnabledAsync"); }
-
+            bool result;
             if (enabled)
             {
-                return Task.FromResult(repo.LockoutAccount(user.UserGuid));
+                result = await repo.LockoutAccount(user.UserGuid);
             }
             else
             {
-                return Task.FromResult(repo.UnLockAccount(user.UserGuid));
+                result = await repo.UnLockAccount(user.UserGuid);
             }
 
             
@@ -350,8 +341,6 @@ namespace cloudscribe.AspNet.Identity
 
             user.LockoutEndDateUtc = lockoutEnd.DateTime;
             bool result = await repo.Save(user);
-
-            //return Task.FromResult(result);
         }
 
 
@@ -368,34 +357,31 @@ namespace cloudscribe.AspNet.Identity
             userClaim.UserId = user.UserGuid.ToString();
             userClaim.ClaimType = claim.Type;
             userClaim.ClaimValue = claim.Value;
-            bool result = repo.SaveClaim(userClaim);
+            bool result = await repo.SaveClaim(userClaim);
 
-            await Task.FromResult(result);
         }
 
         public async Task RemoveClaimAsync(TUser user, Claim claim)
         {
             if (debugLog) { log.Info("RemoveClaimAsync"); }
 
-            await Task.FromResult(repo.DeleteClaimByUser(user.Id, claim.Type));
+            await repo.DeleteClaimByUser(user.Id, claim.Type);
         }
 
-        public Task<IList<Claim>> GetClaimsAsync(TUser user)
+        public async Task<IList<Claim>> GetClaimsAsync(TUser user)
         {
             if (debugLog) { log.Info("GetClaimsAsync"); }
 
             IList<Claim> claims = new List<Claim>();
 
-
-            IList<IUserClaim> userClaims = repo.GetClaimsByUser(user.Id);
+            IList<IUserClaim> userClaims = await repo.GetClaimsByUser(user.Id);
             foreach (UserClaim uc in userClaims)
             {
                 Claim c = new Claim(uc.ClaimType, uc.ClaimValue);
                 claims.Add(c);
             }
 
-
-            return Task.FromResult(claims);
+            return claims;
 
         }
 
@@ -411,39 +397,35 @@ namespace cloudscribe.AspNet.Identity
             userlogin.UserId = user.UserGuid.ToString();
             userlogin.LoginProvider = login.LoginProvider;
             userlogin.ProviderKey = login.ProviderKey;
-            var result = repo.CreateLogin(userlogin);
+            bool result = await repo.CreateLogin(userlogin);
 
-            await Task.FromResult(login);
         }
 
-        public Task<TUser> FindAsync(UserLoginInfo login)
+        public async Task<TUser> FindAsync(UserLoginInfo login)
         {
             if (debugLog) { log.Info("FindAsync"); }
 
-            //TODO make this async, probably need to make the data layer async
-            //http://www.tugberkugurlu.com/archive/asynchronous-database-calls-with-task-based-asynchronous-programming-model-tap-in-asp-net-mvc-4
-
-            IUserLogin userlogin = repo.FindLogin(login.LoginProvider, login.ProviderKey);
+            IUserLogin userlogin = await repo.FindLogin(login.LoginProvider, login.ProviderKey);
             if (userlogin != null && userlogin.UserId.Length == 36)
             {
                 Guid userGuid = new Guid(userlogin.UserId);
-                ISiteUser siteUser = repo.Fetch(siteSettings.SiteId, userGuid);
+                ISiteUser siteUser = await repo.Fetch(siteSettings.SiteId, userGuid);
                 if (siteUser != null)
                 {
-                    return Task.FromResult((TUser)siteUser);
+                    return (TUser)siteUser;
                 }
             }
 
-            return Task.FromResult(default(TUser));
+            return default(TUser);
         }
 
-        public Task<IList<UserLoginInfo>> GetLoginsAsync(TUser user)
+        public async Task<IList<UserLoginInfo>> GetLoginsAsync(TUser user)
         {
             if (debugLog) { log.Info("GetLoginsAsync"); }
 
             IList<UserLoginInfo> logins = new List<UserLoginInfo>();
 
-            IList<IUserLogin> userLogins = repo.GetLoginsByUser(user.UserGuid.ToString());
+            IList<IUserLogin> userLogins = await repo.GetLoginsByUser(user.UserGuid.ToString());
             foreach (UserLogin ul in userLogins)
             {
                 UserLoginInfo l = new UserLoginInfo(ul.LoginProvider, ul.ProviderKey);
@@ -451,31 +433,31 @@ namespace cloudscribe.AspNet.Identity
             }
 
 
-            return Task.FromResult(logins);
+            return logins;
         }
 
         public async Task RemoveLoginAsync(TUser user, UserLoginInfo login)
         {
             if (debugLog) { log.Info("RemoveLoginAsync"); }
 
-            bool result = repo.DeleteLogin(
+            bool result = await repo.DeleteLogin(
                 login.LoginProvider,
                 login.ProviderKey,
                 user.UserGuid.ToString()
                 );
 
-            await Task.FromResult(result);
+            
         }
 
         #endregion
 
         #region IUserTwoFactorStore
 
-        public Task<bool> GetTwoFactorEnabledAsync(TUser user)
+        public async Task<bool> GetTwoFactorEnabledAsync(TUser user)
         {
             if (debugLog) { log.Info("GetTwoFactorEnabledAsync"); }
 
-            return Task.FromResult(user.TwoFactorEnabled);
+            return user.TwoFactorEnabled;
         }
 
         public async Task SetTwoFactorEnabledAsync(TUser user,bool enabled)
@@ -485,7 +467,7 @@ namespace cloudscribe.AspNet.Identity
             user.TwoFactorEnabled = enabled;
             bool result = await repo.Save(user);
 
-            //return Task.FromResult(result);
+            
         }
 
 
@@ -493,18 +475,18 @@ namespace cloudscribe.AspNet.Identity
 
         #region IUserPhoneNumberStore
 
-        public Task<string> GetPhoneNumberAsync(TUser user)
+        public async Task<string> GetPhoneNumberAsync(TUser user)
         {
             if (debugLog) { log.Info("GetPhoneNumberAsync"); }
 
-            return Task.FromResult(user.PhoneNumber);
+            return user.PhoneNumber;
         }
 
-        public Task<bool> GetPhoneNumberConfirmedAsync(TUser user)
+        public async Task<bool> GetPhoneNumberConfirmedAsync(TUser user)
         {
             if (debugLog) { log.Info("GetPhoneNumberConfirmedAsync"); }
 
-            return Task.FromResult(user.PhoneNumberConfirmed);
+            return user.PhoneNumberConfirmed;
         }
 
         public async Task SetPhoneNumberAsync(TUser user, string phoneNumber)
@@ -513,8 +495,6 @@ namespace cloudscribe.AspNet.Identity
 
             user.PhoneNumber = phoneNumber;
             bool result = await repo.Save(user);
-
-            //return Task.FromResult(result);
         }
 
         public async Task SetPhoneNumberConfirmedAsync(TUser user, bool confirmed)
@@ -524,7 +504,6 @@ namespace cloudscribe.AspNet.Identity
             user.PhoneNumberConfirmed = confirmed;
             bool result = await repo.Save(user);
 
-            //return Task.FromResult(result);
         }
 
         #endregion
@@ -596,10 +575,13 @@ namespace cloudscribe.AspNet.Identity
 
         #endregion
 
+        #region Helpers
+
         public string SuggestLoginNameFromEmail(int siteId, string email)
         {
             string login = email.Substring(0, email.IndexOf("@"));
             int offset = 1;
+            // don't think we should make this async inside a loop
             while (repo.LoginExistsInDB(siteId, login))
             {
                 offset += 1;
@@ -609,6 +591,9 @@ namespace cloudscribe.AspNet.Identity
 
             return login;
         }
+
+        #endregion
+
 
         public void Dispose()
         {

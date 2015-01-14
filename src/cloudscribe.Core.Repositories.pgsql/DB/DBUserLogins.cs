@@ -1,13 +1,15 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-10
-// Last Modified:			2014-08-27
+// Last Modified:			2015-01-14
 // 
 // You must not remove this notice, or any other, from this software.
 
 using Npgsql;
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Text;
+using System.Threading.Tasks;
 using cloudscribe.DbHelpers.pgsql;
 
 
@@ -16,7 +18,7 @@ namespace cloudscribe.Core.Repositories.pgsql
     internal static class DBUserLogins
     {
 
-        public static bool Create(string loginProvider, string providerKey, string userId)
+        public static async Task<bool> Create(string loginProvider, string providerKey, string userId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("INSERT INTO mp_userlogins (");
@@ -36,19 +38,15 @@ namespace cloudscribe.Core.Repositories.pgsql
             NpgsqlParameter[] arParams = new NpgsqlParameter[3];
 
             arParams[0] = new NpgsqlParameter("loginprovider", NpgsqlTypes.NpgsqlDbType.Varchar, 128);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = loginProvider;
 
             arParams[1] = new NpgsqlParameter("providerkey", NpgsqlTypes.NpgsqlDbType.Varchar, 128);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = providerKey;
 
             arParams[2] = new NpgsqlParameter("userid", NpgsqlTypes.NpgsqlDbType.Varchar, 128);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = userId;
 
-
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
@@ -59,7 +57,7 @@ namespace cloudscribe.Core.Repositories.pgsql
         }
 
 
-        public static bool Delete(
+        public static async Task<bool> Delete(
             string loginProvider,
             string providerKey,
             string userId)
@@ -76,18 +74,15 @@ namespace cloudscribe.Core.Repositories.pgsql
             NpgsqlParameter[] arParams = new NpgsqlParameter[3];
 
             arParams[0] = new NpgsqlParameter("loginprovider", NpgsqlTypes.NpgsqlDbType.Varchar, 128);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = loginProvider;
 
             arParams[1] = new NpgsqlParameter("providerkey", NpgsqlTypes.NpgsqlDbType.Varchar, 128);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = providerKey;
 
             arParams[2] = new NpgsqlParameter("userid", NpgsqlTypes.NpgsqlDbType.Varchar, 128);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = userId;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
@@ -97,7 +92,7 @@ namespace cloudscribe.Core.Repositories.pgsql
 
         }
 
-        public static bool DeleteByUser(string userId)
+        public static async Task<bool> DeleteByUser(string userId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_userlogins ");
@@ -109,10 +104,9 @@ namespace cloudscribe.Core.Repositories.pgsql
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
             arParams[0] = new NpgsqlParameter("userid", NpgsqlTypes.NpgsqlDbType.Varchar, 128);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
@@ -123,7 +117,7 @@ namespace cloudscribe.Core.Repositories.pgsql
         }
 
 
-        public static bool DeleteBySite(Guid siteGuid)
+        public static async Task<bool> DeleteBySite(Guid siteGuid)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_userlogins ");
@@ -135,10 +129,9 @@ namespace cloudscribe.Core.Repositories.pgsql
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
             arParams[0] = new NpgsqlParameter("siteguid", NpgsqlTypes.NpgsqlDbType.Varchar, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteGuid.ToString();
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
@@ -149,7 +142,7 @@ namespace cloudscribe.Core.Repositories.pgsql
 
         }
 
-        public static IDataReader Find(string loginProvider, string providerKey)
+        public static async Task<DbDataReader> Find(string loginProvider, string providerKey)
         {
 
             StringBuilder sqlCommand = new StringBuilder();
@@ -164,14 +157,12 @@ namespace cloudscribe.Core.Repositories.pgsql
             NpgsqlParameter[] arParams = new NpgsqlParameter[2];
 
             arParams[0] = new NpgsqlParameter("loginprovider", NpgsqlTypes.NpgsqlDbType.Varchar, 128);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = loginProvider;
 
             arParams[1] = new NpgsqlParameter("providerkey", NpgsqlTypes.NpgsqlDbType.Varchar, 128);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = providerKey;
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
@@ -180,7 +171,7 @@ namespace cloudscribe.Core.Repositories.pgsql
 
         }
 
-        public static IDataReader GetByUser(string userId)
+        public static async Task<DbDataReader> GetByUser(string userId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  * ");
@@ -193,10 +184,9 @@ namespace cloudscribe.Core.Repositories.pgsql
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
             arParams[0] = new NpgsqlParameter("userid", NpgsqlTypes.NpgsqlDbType.Varchar, 128);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),

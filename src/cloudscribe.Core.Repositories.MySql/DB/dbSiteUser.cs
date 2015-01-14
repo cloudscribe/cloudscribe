@@ -387,7 +387,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
         }
 
-        public static int GetNewestUserId(int siteId)
+        public static async Task<int> GetNewestUserId(int siteId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT MAX(UserID) FROM mp_Users WHERE SiteID = ?SiteID;");
@@ -395,13 +395,14 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[1];
 
             arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
-            int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
-                ConnectionString.GetReadConnectionString(), 
-                sqlCommand.ToString(), 
-                arParams).ToString());
+            object result = await AdoHelper.ExecuteScalarAsync(
+                ConnectionString.GetReadConnectionString(),
+                sqlCommand.ToString(),
+                arParams);
+
+            int count = Convert.ToInt32(result);
 
             return count;
         }
@@ -1140,7 +1141,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
         }
 
-        public static bool UpdateUser(
+        public static async Task<bool> UpdateUser(
             int userId,
             String fullName,
             String loginName,
@@ -1294,91 +1295,69 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[49];
 
             arParams[0] = new MySqlParameter("?UserID", MySqlDbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
 
             arParams[1] = new MySqlParameter("?Email", MySqlDbType.VarChar, 100);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = email;
 
             arParams[2] = new MySqlParameter("?Password", MySqlDbType.Text);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = password;
 
             arParams[3] = new MySqlParameter("?Gender", MySqlDbType.VarChar, 1);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = gender;
 
             arParams[4] = new MySqlParameter("?ProfileApproved", MySqlDbType.Int32);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = approved;
 
             arParams[5] = new MySqlParameter("?ApprovedForForums", MySqlDbType.Int32);
-            arParams[5].Direction = ParameterDirection.Input;
             arParams[5].Value = canPost;
 
             arParams[6] = new MySqlParameter("?Trusted", MySqlDbType.Int32);
-            arParams[6].Direction = ParameterDirection.Input;
             arParams[6].Value = trust;
 
             arParams[7] = new MySqlParameter("?DisplayInMemberList", MySqlDbType.Int32);
-            arParams[7].Direction = ParameterDirection.Input;
             arParams[7].Value = displayInList;
 
             arParams[8] = new MySqlParameter("?WebSiteURL", MySqlDbType.VarChar, 100);
-            arParams[8].Direction = ParameterDirection.Input;
             arParams[8].Value = webSiteUrl;
 
             arParams[9] = new MySqlParameter("?Country", MySqlDbType.VarChar, 100);
-            arParams[9].Direction = ParameterDirection.Input;
             arParams[9].Value = country;
 
             arParams[10] = new MySqlParameter("?State", MySqlDbType.VarChar, 100);
-            arParams[10].Direction = ParameterDirection.Input;
             arParams[10].Value = state;
 
             arParams[11] = new MySqlParameter("?Occupation", MySqlDbType.VarChar, 100);
-            arParams[11].Direction = ParameterDirection.Input;
             arParams[11].Value = occupation;
 
             arParams[12] = new MySqlParameter("?Interests", MySqlDbType.VarChar, 100);
-            arParams[12].Direction = ParameterDirection.Input;
             arParams[12].Value = interests;
 
             arParams[13] = new MySqlParameter("?MSN", MySqlDbType.VarChar, 100);
-            arParams[13].Direction = ParameterDirection.Input;
             arParams[13].Value = msn;
 
             arParams[14] = new MySqlParameter("?Yahoo", MySqlDbType.VarChar, 100);
-            arParams[14].Direction = ParameterDirection.Input;
             arParams[14].Value = yahoo;
 
             arParams[15] = new MySqlParameter("?AIM", MySqlDbType.VarChar, 100);
-            arParams[15].Direction = ParameterDirection.Input;
             arParams[15].Value = aim;
 
             arParams[16] = new MySqlParameter("?ICQ", MySqlDbType.VarChar, 100);
-            arParams[16].Direction = ParameterDirection.Input;
             arParams[16].Value = icq;
 
             arParams[17] = new MySqlParameter("?AvatarUrl", MySqlDbType.VarChar, 100);
-            arParams[17].Direction = ParameterDirection.Input;
             arParams[17].Value = avatarUrl;
 
             arParams[18] = new MySqlParameter("?Signature", MySqlDbType.Text);
-            arParams[18].Direction = ParameterDirection.Input;
             arParams[18].Value = signature;
 
             arParams[19] = new MySqlParameter("?Skin", MySqlDbType.VarChar, 100);
-            arParams[19].Direction = ParameterDirection.Input;
             arParams[19].Value = skin;
 
             arParams[20] = new MySqlParameter("?FullName", MySqlDbType.VarChar, 100);
-            arParams[20].Direction = ParameterDirection.Input;
             arParams[20].Value = fullName;
 
             arParams[21] = new MySqlParameter("?LoginName", MySqlDbType.VarChar, 50);
-            arParams[21].Direction = ParameterDirection.Input;
             arParams[21].Value = loginName;
 
             arParams[22] = new MySqlParameter("?LoweredEmail", MySqlDbType.VarChar, 100);
@@ -1386,31 +1365,24 @@ namespace cloudscribe.Core.Repositories.MySql
             arParams[22].Value = loweredEmail;
 
             arParams[23] = new MySqlParameter("?PasswordQuestion", MySqlDbType.VarChar, 255);
-            arParams[23].Direction = ParameterDirection.Input;
             arParams[23].Value = passwordQuestion;
 
             arParams[24] = new MySqlParameter("?PasswordAnswer", MySqlDbType.VarChar, 255);
-            arParams[24].Direction = ParameterDirection.Input;
             arParams[24].Value = passwordAnswer;
 
             arParams[25] = new MySqlParameter("?Comment", MySqlDbType.Text);
-            arParams[25].Direction = ParameterDirection.Input;
             arParams[25].Value = comment;
 
             arParams[26] = new MySqlParameter("?TimeOffsetHours", MySqlDbType.Int32);
-            arParams[26].Direction = ParameterDirection.Input;
             arParams[26].Value = timeOffsetHours;
 
             arParams[27] = new MySqlParameter("?OpenIDURI", MySqlDbType.VarChar, 255);
-            arParams[27].Direction = ParameterDirection.Input;
             arParams[27].Value = openIdUri;
 
             arParams[28] = new MySqlParameter("?WindowsLiveID", MySqlDbType.VarChar, 36);
-            arParams[28].Direction = ParameterDirection.Input;
             arParams[28].Value = windowsLiveId;
 
             arParams[29] = new MySqlParameter("?MustChangePwd", MySqlDbType.Int32);
-            arParams[29].Direction = ParameterDirection.Input;
             arParams[29].Value = intmustChangePwd;
 
             arParams[30] = new MySqlParameter("?FirstName", MySqlDbType.VarChar, 100);
@@ -1418,43 +1390,33 @@ namespace cloudscribe.Core.Repositories.MySql
             arParams[30].Value = firstName;
 
             arParams[31] = new MySqlParameter("?LastName", MySqlDbType.VarChar, 100);
-            arParams[31].Direction = ParameterDirection.Input;
             arParams[31].Value = lastName;
 
             arParams[32] = new MySqlParameter("?TimeZoneId", MySqlDbType.VarChar, 100);
-            arParams[32].Direction = ParameterDirection.Input;
             arParams[32].Value = timeZoneId;
 
             arParams[33] = new MySqlParameter("?EditorPreference", MySqlDbType.VarChar, 100);
-            arParams[33].Direction = ParameterDirection.Input;
             arParams[33].Value = editorPreference;
 
             arParams[34] = new MySqlParameter("?NewEmail", MySqlDbType.VarChar, 100);
-            arParams[34].Direction = ParameterDirection.Input;
             arParams[34].Value = newEmail;
 
             arParams[35] = new MySqlParameter("?EmailChangeGuid", MySqlDbType.VarChar, 36);
-            arParams[35].Direction = ParameterDirection.Input;
             arParams[35].Value = emailChangeGuid.ToString();
 
             arParams[36] = new MySqlParameter("?PasswordResetGuid", MySqlDbType.VarChar, 36);
-            arParams[36].Direction = ParameterDirection.Input;
             arParams[36].Value = passwordResetGuid.ToString();
 
             arParams[37] = new MySqlParameter("?PasswordSalt", MySqlDbType.VarChar, 128);
-            arParams[37].Direction = ParameterDirection.Input;
             arParams[37].Value = passwordSalt;
 
             arParams[38] = new MySqlParameter("?RolesChanged", MySqlDbType.Int32);
-            arParams[38].Direction = ParameterDirection.Input;
             arParams[38].Value = introlesChanged;
 
             arParams[39] = new MySqlParameter("?AuthorBio", MySqlDbType.Text);
-            arParams[39].Direction = ParameterDirection.Input;
             arParams[39].Value = authorBio;
 
             arParams[40] = new MySqlParameter("?DateOfBirth", MySqlDbType.DateTime);
-            arParams[40].Direction = ParameterDirection.Input;
             if (dateOfBirth == DateTime.MinValue)
             {
                 arParams[40].Value = DBNull.Value;
@@ -1465,35 +1427,27 @@ namespace cloudscribe.Core.Repositories.MySql
             }
 
             arParams[41] = new MySqlParameter("?EmailConfirmed", MySqlDbType.Int32);
-            arParams[41].Direction = ParameterDirection.Input;
             arParams[41].Value = intEmailConfirmed;
 
             arParams[42] = new MySqlParameter("?PwdFormat", MySqlDbType.Int32);
-            arParams[42].Direction = ParameterDirection.Input;
             arParams[42].Value = pwdFormat;
 
             arParams[43] = new MySqlParameter("?PasswordHash", MySqlDbType.Text);
-            arParams[43].Direction = ParameterDirection.Input;
             arParams[43].Value = passwordHash;
 
             arParams[44] = new MySqlParameter("?SecurityStamp", MySqlDbType.Text);
-            arParams[44].Direction = ParameterDirection.Input;
             arParams[44].Value = securityStamp;
 
             arParams[45] = new MySqlParameter("?PhoneNumber", MySqlDbType.VarChar, 50);
-            arParams[45].Direction = ParameterDirection.Input;
             arParams[45].Value = phoneNumber;
 
             arParams[46] = new MySqlParameter("?PhoneNumberConfirmed", MySqlDbType.Int32);
-            arParams[46].Direction = ParameterDirection.Input;
             arParams[46].Value = intPhoneNumberConfirmed;
 
             arParams[47] = new MySqlParameter("?TwoFactorEnabled", MySqlDbType.Int32);
-            arParams[47].Direction = ParameterDirection.Input;
             arParams[47].Value = intTwoFactorEnabled;
 
             arParams[48] = new MySqlParameter("?LockoutEndDateUtc", MySqlDbType.DateTime);
-            arParams[48].Direction = ParameterDirection.Input;
             if (lockoutEndDateUtc == null)
             {
                 arParams[48].Value = DBNull.Value;
@@ -1503,7 +1457,7 @@ namespace cloudscribe.Core.Repositories.MySql
                 arParams[48].Value = lockoutEndDateUtc;
             }
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -1513,7 +1467,7 @@ namespace cloudscribe.Core.Repositories.MySql
         }
 
 
-        public static bool DeleteUser(int userId)
+        public static async Task<bool> DeleteUser(int userId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_Users ");
@@ -1522,14 +1476,12 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[1];
 
             arParams[0] = new MySqlParameter("?UserID", MySqlDbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
-
 
             return (rowsAffected > 0);
         }
@@ -1589,7 +1541,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
         }
 
-        public static bool AccountLockout(Guid userGuid, DateTime lockoutTime)
+        public static async Task<bool> AccountLockout(Guid userGuid, DateTime lockoutTime)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("UPDATE mp_Users ");
@@ -1600,14 +1552,12 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[2];
 
             arParams[0] = new MySqlParameter("?UserGuid", MySqlDbType.VarChar, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userGuid.ToString();
 
             arParams[1] = new MySqlParameter("?LockoutTime", MySqlDbType.DateTime);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = lockoutTime;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -1676,7 +1626,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
         }
 
-        public static bool UpdateFailedPasswordAttemptCount(
+        public static async Task<bool> UpdateFailedPasswordAttemptCount(
             Guid userGuid,
             int attemptCount)
         {
@@ -1689,16 +1639,14 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[2];
 
             arParams[0] = new MySqlParameter("?UserGuid", MySqlDbType.VarChar, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userGuid.ToString();
 
             arParams[1] = new MySqlParameter("?AttemptCount", MySqlDbType.Int32);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = attemptCount;
 
             int rowsAffected = 0;
 
-            rowsAffected = AdoHelper.ExecuteNonQuery(
+            rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(), 
                 sqlCommand.ToString(), 
                 arParams);
@@ -1799,7 +1747,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
         }
 
-        public static bool ConfirmRegistration(Guid emptyGuid, Guid registrationConfirmationGuid)
+        public static async Task<bool> ConfirmRegistration(Guid emptyGuid, Guid registrationConfirmationGuid)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("UPDATE mp_Users ");
@@ -1811,16 +1759,12 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[2];
 
             arParams[0] = new MySqlParameter("?EmptyGuid", MySqlDbType.VarChar, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = emptyGuid.ToString();
 
             arParams[1] = new MySqlParameter("?RegisterConfirmGuid", MySqlDbType.VarChar, 36);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = registrationConfirmationGuid.ToString();
 
-            int rowsAffected = 0;
-
-            rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(), 
                 sqlCommand.ToString(), 
                 arParams);
@@ -1828,7 +1772,7 @@ namespace cloudscribe.Core.Repositories.MySql
             return (rowsAffected > 0);
         }
 
-        public static bool AccountClearLockout(Guid userGuid)
+        public static async Task<bool> AccountClearLockout(Guid userGuid)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("UPDATE mp_Users ");
@@ -1841,12 +1785,11 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[1];
 
             arParams[0] = new MySqlParameter("?UserGuid", MySqlDbType.VarChar, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userGuid.ToString();
 
             int rowsAffected = 0;
 
-            rowsAffected = AdoHelper.ExecuteNonQuery(
+            rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(), 
                 sqlCommand.ToString(), 
                 arParams);
@@ -1933,7 +1876,7 @@ namespace cloudscribe.Core.Repositories.MySql
             return (rowsAffected > 0);
         }
 
-        public static void UpdateTotalRevenue(Guid userGuid)
+        public static async Task<bool> UpdateTotalRevenue(Guid userGuid)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("UPDATE mp_Users ");
@@ -1946,17 +1889,18 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[1];
 
             arParams[0] = new MySqlParameter("?UserGuid", MySqlDbType.VarChar, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userGuid.ToString();
 
-            AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(), 
                 sqlCommand.ToString(), 
                 arParams);
 
+            return rowsAffected > 0;
+
         }
 
-        public static void UpdateTotalRevenue()
+        public static async Task<bool> UpdateTotalRevenue()
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("UPDATE mp_Users ");
@@ -1966,15 +1910,17 @@ namespace cloudscribe.Core.Repositories.MySql
 
             sqlCommand.Append("  ;");
 
-            AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 null);
+
+            return rowsAffected > 0;
         }
 
 
 
-        public static bool FlagAsDeleted(int userId)
+        public static async Task<bool> FlagAsDeleted(int userId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("UPDATE mp_Users ");
@@ -1984,12 +1930,9 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[1];
 
             arParams[0] = new MySqlParameter("?UserID", MySqlDbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
 
-            int rowsAffected = 0;
-
-            rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(), 
                 sqlCommand.ToString(), 
                 arParams);
@@ -1997,7 +1940,7 @@ namespace cloudscribe.Core.Repositories.MySql
             return (rowsAffected > 0);
         }
 
-        public static bool FlagAsNotDeleted(int userId)
+        public static async Task<bool> FlagAsNotDeleted(int userId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("UPDATE mp_Users ");
@@ -2007,12 +1950,9 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[1];
 
             arParams[0] = new MySqlParameter("?UserID", MySqlDbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
 
-            int rowsAffected = 0;
-
-            rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -2102,7 +2042,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
         }
 
-        public static IDataReader GetUserByRegistrationGuid(int siteId, Guid registerConfirmGuid)
+        public static async Task<DbDataReader> GetUserByRegistrationGuid(int siteId, Guid registerConfirmGuid)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT * ");
@@ -2114,14 +2054,12 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[2];
 
             arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new MySqlParameter("?RegisterConfirmGuid", MySqlDbType.VarChar, 36);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = registerConfirmGuid;
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -2129,7 +2067,7 @@ namespace cloudscribe.Core.Repositories.MySql
         }
 
 
-        public static IDataReader GetSingleUser(int siteId, string email)
+        public static async Task<DbDataReader> GetSingleUser(int siteId, string email)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT * ");
@@ -2141,14 +2079,12 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[2];
 
             arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new MySqlParameter("?Email", MySqlDbType.VarChar, 100);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = email.ToLower();
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -2177,7 +2113,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
         }
 
-        public static IDataReader GetSingleUserByLoginName(int siteId, string loginName, bool allowEmailFallback)
+        public static async Task<DbDataReader> GetSingleUserByLoginName(int siteId, string loginName, bool allowEmailFallback)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT * ");
@@ -2204,11 +2140,48 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[2];
 
             arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new MySqlParameter("?LoginName", MySqlDbType.VarChar, 50);
-            arParams[1].Direction = ParameterDirection.Input;
+            arParams[1].Value = loginName;
+
+            return await AdoHelper.ExecuteReaderAsync(
+                ConnectionString.GetReadConnectionString(),
+                sqlCommand.ToString(),
+                arParams);
+
+        }
+
+        public static DbDataReader GetSingleUserByLoginNameNonAsync(int siteId, string loginName, bool allowEmailFallback)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT * ");
+
+            sqlCommand.Append("FROM	mp_Users ");
+
+            sqlCommand.Append("WHERE SiteID = ?SiteID  ");
+
+            if (allowEmailFallback)
+            {
+                sqlCommand.Append("AND ");
+                sqlCommand.Append("(");
+                sqlCommand.Append("LoginName = ?LoginName ");
+                sqlCommand.Append("OR Email = ?LoginName ");
+                sqlCommand.Append(")");
+            }
+            else
+            {
+                sqlCommand.Append("AND LoginName = ?LoginName ");
+            }
+
+            sqlCommand.Append(";");
+
+            MySqlParameter[] arParams = new MySqlParameter[2];
+
+            arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
+            arParams[0].Value = siteId;
+
+            arParams[1] = new MySqlParameter("?LoginName", MySqlDbType.VarChar, 50);
             arParams[1].Value = loginName;
 
             return AdoHelper.ExecuteReader(
@@ -2218,7 +2191,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
         }
 
-        public static IDataReader GetSingleUser(int userId)
+        public static async Task<DbDataReader> GetSingleUser(int userId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT * ");
@@ -2230,17 +2203,16 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[1];
 
             arParams[0] = new MySqlParameter("?UserID", MySqlDbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
 
         }
 
-        public static IDataReader GetSingleUser(Guid userGuid)
+        public static async Task<DbDataReader> GetSingleUser(Guid userGuid)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT * ");
@@ -2250,10 +2222,9 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[1];
 
             arParams[0] = new MySqlParameter("?UserGuid", MySqlDbType.VarChar, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userGuid.ToString();
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 arParams);

@@ -1,13 +1,15 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-11
-// Last Modified:			2014-08-27
+// Last Modified:			2015-01-14
 // 
 // You must not remove this notice, or any other, from this software.
 
 using MySql.Data.MySqlClient;
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Text;
+using System.Threading.Tasks;
 using cloudscribe.DbHelpers.MySql;
 
 namespace cloudscribe.Core.Repositories.MySql
@@ -16,7 +18,7 @@ namespace cloudscribe.Core.Repositories.MySql
     internal static class DBUserClaims
     {
 
-        public static int Create(
+        public static async Task<int> Create(
             string userId,
             string claimType,
             string claimValue)
@@ -39,28 +41,27 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[3];
 
             arParams[0] = new MySqlParameter("?UserId", MySqlDbType.VarChar, 128);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
 
             arParams[1] = new MySqlParameter("?ClaimType", MySqlDbType.Text);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = claimType;
 
             arParams[2] = new MySqlParameter("?ClaimValue", MySqlDbType.Text);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = claimValue;
 
-            int newID = Convert.ToInt32(AdoHelper.ExecuteScalar(
+            object result = await AdoHelper.ExecuteScalarAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
-                arParams).ToString());
+                arParams);
+
+            int newID = Convert.ToInt32(result);
 
             return newID;
 
         }
 
 
-        public static bool Delete(int id)
+        public static async Task<bool> Delete(int id)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_UserClaims ");
@@ -71,10 +72,9 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[1];
 
             arParams[0] = new MySqlParameter("?Id", MySqlDbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = id;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -83,7 +83,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
         }
 
-        public static bool DeleteByUser(string userId)
+        public static async Task<bool> DeleteByUser(string userId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_UserClaims ");
@@ -94,10 +94,9 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[1];
 
             arParams[0] = new MySqlParameter("?UserId", MySqlDbType.VarChar, 128);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -106,7 +105,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
         }
 
-        public static bool DeleteByUser(string userId, string claimType)
+        public static async Task<bool> DeleteByUser(string userId, string claimType)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_UserClaims ");
@@ -119,14 +118,12 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[2];
 
             arParams[0] = new MySqlParameter("?UserId", MySqlDbType.VarChar, 128);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
 
             arParams[1] = new MySqlParameter("?ClaimType", MySqlDbType.Text);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = claimType;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -136,7 +133,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
         }
 
-        public static bool DeleteByUser(string userId, string claimType, string claimValue)
+        public static async Task<bool> DeleteByUser(string userId, string claimType, string claimValue)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_UserClaims ");
@@ -151,18 +148,15 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[3];
 
             arParams[0] = new MySqlParameter("?UserId", MySqlDbType.VarChar, 128);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
 
             arParams[1] = new MySqlParameter("?ClaimType", MySqlDbType.Text);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = claimType;
 
             arParams[2] = new MySqlParameter("?ClaimValue", MySqlDbType.Text);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = claimValue;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -171,7 +165,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
         }
 
-        public static bool DeleteBySite(Guid siteGuid)
+        public static async Task<bool> DeleteBySite(Guid siteGuid)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_UserClaims ");
@@ -182,10 +176,9 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[1];
 
             arParams[0] = new MySqlParameter("?SiteGuid", MySqlDbType.VarChar, 128);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteGuid.ToString();
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -194,7 +187,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
         }
 
-        public static IDataReader GetByUser(string userId)
+        public static async Task<DbDataReader> GetByUser(string userId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  * ");
@@ -206,10 +199,9 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[1];
 
             arParams[0] = new MySqlParameter("?UserId", MySqlDbType.VarChar, 128);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 arParams);

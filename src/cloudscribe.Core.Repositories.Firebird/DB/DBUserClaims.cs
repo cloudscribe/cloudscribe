@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-11
-// Last Modified:			2014-08-28
+// Last Modified:			2015-01-14
 // 
 //
 // You must not remove this notice, or any other, from this software.
@@ -9,14 +9,16 @@ using cloudscribe.DbHelpers.Firebird;
 using FirebirdSql.Data.FirebirdClient;
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.Firebird
 {
     internal static class DBUserClaims
     {
 
-        public static int Create(
+        public static async Task<int> Create(
             string userId,
             string claimType,
             string claimValue)
@@ -25,31 +27,30 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[3];
 
             arParams[0] = new FbParameter(":UserId", FbDbType.VarChar, 128);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
 
             arParams[1] = new FbParameter(":ClaimType", FbDbType.VarChar, -1);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = claimType;
 
             arParams[2] = new FbParameter(":ClaimValue", FbDbType.VarChar, -1);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = claimValue;
 
             string statement = "EXECUTE PROCEDURE mp_USERCLAIMS_INSERT ("
                 + AdoHelper.GetParamString(arParams.Length) + ")";
 
-            int newID = Convert.ToInt32(AdoHelper.ExecuteScalar(
+            object result = await AdoHelper.ExecuteScalarAsync(
                 ConnectionString.GetWriteConnectionString(),
                 CommandType.StoredProcedure,
                 statement,
-                arParams));
+                arParams);
+
+            int newID = Convert.ToInt32(result);
 
             return newID;
         }
 
 
-        public static bool Delete(int id)
+        public static async Task<bool> Delete(int id)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_UserClaims ");
@@ -60,10 +61,9 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@Id", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = id;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -71,7 +71,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             return (rowsAffected > -1);
         }
 
-        public static bool DeleteByUser(string userId)
+        public static async Task<bool> DeleteByUser(string userId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_UserClaims ");
@@ -82,10 +82,9 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@UserId", FbDbType.VarChar, 128);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                ConnectionString.GetWriteConnectionString(),
                sqlCommand.ToString(),
                arParams);
@@ -93,7 +92,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             return (rowsAffected > -1);
         }
 
-        public static bool DeleteByUser(string userId, string claimType)
+        public static async Task<bool> DeleteByUser(string userId, string claimType)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_UserClaims ");
@@ -106,14 +105,12 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[2];
 
             arParams[0] = new FbParameter("@UserId", FbDbType.VarChar, 128);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
 
             arParams[1] = new FbParameter("@ClaimType", FbDbType.VarChar);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = claimType;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                ConnectionString.GetWriteConnectionString(),
                sqlCommand.ToString(),
                arParams);
@@ -122,7 +119,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         }
 
-        public static bool DeleteByUser(string userId, string claimType, string claimValue)
+        public static async Task<bool> DeleteByUser(string userId, string claimType, string claimValue)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_UserClaims ");
@@ -137,18 +134,15 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[3];
 
             arParams[0] = new FbParameter("@UserId", FbDbType.VarChar, 128);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
 
             arParams[1] = new FbParameter("@ClaimType", FbDbType.VarChar);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = claimType;
 
             arParams[2] = new FbParameter("@ClaimValue", FbDbType.VarChar, -1);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = claimValue;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                ConnectionString.GetWriteConnectionString(),
                sqlCommand.ToString(),
                arParams);
@@ -157,7 +151,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         }
 
-        public static bool DeleteBySite(Guid siteGuid)
+        public static async Task<bool> DeleteBySite(Guid siteGuid)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_UserClaims ");
@@ -168,10 +162,9 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@SiteGuid", FbDbType.VarChar, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteGuid.ToString();
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                ConnectionString.GetWriteConnectionString(),
                sqlCommand.ToString(),
                arParams);
@@ -181,7 +174,7 @@ namespace cloudscribe.Core.Repositories.Firebird
         }
 
 
-        public static IDataReader GetByUser(string userId)
+        public static async Task<DbDataReader> GetByUser(string userId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  * ");
@@ -193,10 +186,9 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@UserId", FbDbType.VarChar, 128);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 arParams);

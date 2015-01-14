@@ -50,11 +50,11 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return (rowsAffected > -1);
         }
 
-        public static bool DeleteUserRoles(int userId)
+        public static async Task<bool> DeleteUserRoles(int userId)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetWriteConnectionString(), "mp_UserRoles_DeleteUserRoles", 1);
             sph.DefineSqlParameter("@UserID", SqlDbType.Int, ParameterDirection.Input, userId);
-            int rowsAffected = sph.ExecuteNonQuery();
+            int rowsAffected = await sph.ExecuteNonQueryAsync();
             return (rowsAffected > -1);
         }
 
