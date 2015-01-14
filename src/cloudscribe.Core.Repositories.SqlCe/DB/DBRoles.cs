@@ -1,18 +1,16 @@
 ﻿// Author:					Joe Audette
 // Created:					2010-04-06
-// Last Modified:			2015-01-13
+// Last Modified:			2015-01-14
 // 
 // You must not remove this notice, or any other, from this software.
 
+using cloudscribe.DbHelpers.SqlCe;
 using System;
 using System.Data;
 using System.Data.Common;
-using System.Configuration;
+using System.Data.SqlServerCe;
 using System.Globalization;
 using System.Text;
-using System.Threading.Tasks;
-using System.Data.SqlServerCe;
-using cloudscribe.DbHelpers.SqlCe;
 
 namespace cloudscribe.Core.Repositories.SqlCe
 {
@@ -54,25 +52,19 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[5];
 
             arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new SqlCeParameter("@RoleName", SqlDbType.NVarChar, 50);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = roleName;
 
             arParams[2] = new SqlCeParameter("@DisplayName", SqlDbType.NVarChar, 50);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = roleName;
 
             arParams[3] = new SqlCeParameter("@SiteGuid", SqlDbType.UniqueIdentifier);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = siteGuid;
 
             arParams[4] = new SqlCeParameter("@RoleGuid", SqlDbType.UniqueIdentifier);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = roleGuid;
-
 
             int newId = Convert.ToInt32(AdoHelper.DoInsertGetIdentitiy(
                 GetConnectionString(),
@@ -98,11 +90,9 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[2];
 
             arParams[0] = new SqlCeParameter("@RoleID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = roleId;
 
             arParams[1] = new SqlCeParameter("@DisplayName", SqlDbType.NVarChar, 50);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = roleName;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -131,7 +121,6 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[1];
 
             arParams[0] = new SqlCeParameter("@RoleID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = roleId;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -156,7 +145,6 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[1];
 
             arParams[0] = new SqlCeParameter("@UserID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -181,7 +169,6 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[1];
 
             arParams[0] = new SqlCeParameter("@RoleID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = roleId;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -206,11 +193,9 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[2];
 
             arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new SqlCeParameter("@RoleName", SqlDbType.NVarChar, 50);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = roleName;
 
             int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -234,7 +219,6 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[1];
 
             arParams[0] = new SqlCeParameter("@RoleID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = roleId;
 
             return AdoHelper.ExecuteReader(
@@ -306,7 +290,6 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[1];
 
             arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             return AdoHelper.ExecuteReader(
@@ -341,7 +324,6 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[1];
 
             arParams[0] = new SqlCeParameter("@RoleID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = roleId;
 
             return AdoHelper.ExecuteReader(
@@ -380,11 +362,9 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[2];
 
             arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new SqlCeParameter("@RoleID", SqlDbType.Int);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = roleId;
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -403,25 +383,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             int pageSize)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
-            //totalPages = 1;
-            //int totalRows = GetCountOfUsersNotInRole(siteId, roleId, searchInput);
-
-            //if (pageSize > 0) totalPages = totalRows / pageSize;
-
-            //if (totalRows <= pageSize)
-            //{
-            //    totalPages = 1;
-            //}
-            //else
-            //{
-            //    int remainder;
-            //    Math.DivRem(totalRows, pageSize, out remainder);
-            //    if (remainder > 0)
-            //    {
-            //        totalPages += 1;
-            //    }
-            //}
-
+            
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT * FROM ");
             sqlCommand.Append("(");
@@ -471,15 +433,12 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[3];
 
             arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new SqlCeParameter("@RoleID", SqlDbType.Int);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = roleId;
 
             arParams[2] = new SqlCeParameter("@SearchInput", SqlDbType.NVarChar, 50);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = searchInput;
 
 
@@ -518,15 +477,12 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[3];
 
             arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new SqlCeParameter("@RoleID", SqlDbType.Int);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = roleId;
 
             arParams[2] = new SqlCeParameter("@SearchInput", SqlDbType.NVarChar, 50);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = searchInput;
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -545,25 +501,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             int pageSize)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
-            //totalPages = 1;
-            //int totalRows = GetCountOfUsersInRole(siteId, roleId, searchInput);
-
-            //if (pageSize > 0) totalPages = totalRows / pageSize;
-
-            //if (totalRows <= pageSize)
-            //{
-            //    totalPages = 1;
-            //}
-            //else
-            //{
-            //    int remainder;
-            //    Math.DivRem(totalRows, pageSize, out remainder);
-            //    if (remainder > 0)
-            //    {
-            //        totalPages += 1;
-            //    }
-            //}
-
+            
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT * FROM ");
             sqlCommand.Append("(");
@@ -575,7 +513,6 @@ namespace cloudscribe.Core.Repositories.SqlCe
             //sqlCommand.Append("u.[Name], ");
             //sqlCommand.Append("u.Email, ");
             //sqlCommand.Append("u.LoginName ");
-
 
             sqlCommand.Append("FROM	mp_Users u ");
 
@@ -595,7 +532,6 @@ namespace cloudscribe.Core.Repositories.SqlCe
                 sqlCommand.Append(")");
             }
            
-
             sqlCommand.Append("ORDER BY  ");
             sqlCommand.Append("u.[Name]  ");
 
@@ -608,28 +544,22 @@ namespace cloudscribe.Core.Repositories.SqlCe
             //sqlCommand.Append("ORDER BY  ");
             sqlCommand.Append(";");
 
-
             SqlCeParameter[] arParams = new SqlCeParameter[3];
 
             arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new SqlCeParameter("@RoleID", SqlDbType.Int);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = roleId;
 
             arParams[2] = new SqlCeParameter("@SearchInput", SqlDbType.NVarChar, 50);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = searchInput;
-
 
             return AdoHelper.ExecuteReader(
                 GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
-
         }
 
         public static DbDataReader GetRolesUserIsNotIn(
@@ -653,11 +583,9 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[2];
 
             arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new SqlCeParameter("@UserID", SqlDbType.Int);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = userId;
 
             return AdoHelper.ExecuteReader(
@@ -697,21 +625,16 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[4];
 
             arParams[0] = new SqlCeParameter("@UserID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
 
             arParams[1] = new SqlCeParameter("@RoleID", SqlDbType.Int);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = roleId;
 
             arParams[2] = new SqlCeParameter("@UserGuid", SqlDbType.UniqueIdentifier);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = userGuid;
 
             arParams[3] = new SqlCeParameter("@RoleGuid", SqlDbType.UniqueIdentifier);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = roleGuid;
-
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 GetConnectionString(),
@@ -736,11 +659,9 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[2];
 
             arParams[0] = new SqlCeParameter("@UserID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
 
             arParams[1] = new SqlCeParameter("@RoleID", SqlDbType.Int);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = roleId;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -764,7 +685,6 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[1];
 
             arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -797,11 +717,9 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[2];
 
             arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new SqlCeParameter("@SearchInput", SqlDbType.NVarChar, 50);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = searchInput;
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -819,25 +737,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             int pageSize)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
-            //totalPages = 1;
-            //int totalRows = GetCountOfSiteRoles(siteId, searchInput);
-
-            //if (pageSize > 0) totalPages = totalRows / pageSize;
-
-            //if (totalRows <= pageSize)
-            //{
-            //    totalPages = 1;
-            //}
-            //else
-            //{
-            //    int remainder;
-            //    Math.DivRem(totalRows, pageSize, out remainder);
-            //    if (remainder > 0)
-            //    {
-            //        totalPages += 1;
-            //    }
-            //}
-
+            
             int offset = 0;
             if (pageNumber > 1) { offset = (pageSize * pageNumber) - pageSize; }
 
@@ -889,15 +789,12 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
             sqlCommand.Append(";");
 
-
             SqlCeParameter[] arParams = new SqlCeParameter[2];
 
             arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new SqlCeParameter("@SearchInput", SqlDbType.NVarChar, 50);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = searchInput;
 
             return AdoHelper.ExecuteReader(

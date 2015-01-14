@@ -1,6 +1,6 @@
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-01-13
+// Last Modified:			2015-01-14
 // 
 //
 // You must not remove this notice, or any other, from this software.
@@ -47,23 +47,18 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[5];
 
             arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new MySqlParameter("?RoleName", MySqlDbType.VarChar, 50);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = roleName;
 
             arParams[2] = new MySqlParameter("?DisplayName", MySqlDbType.VarChar, 50);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = roleName;
 
             arParams[3] = new MySqlParameter("?SiteGuid", MySqlDbType.VarChar, 36);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = siteGuid.ToString();
 
             arParams[4] = new MySqlParameter("?RoleGuid", MySqlDbType.VarChar, 36);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = roleGuid.ToString();
 
             object result = await AdoHelper.ExecuteScalarAsync(
@@ -75,28 +70,6 @@ namespace cloudscribe.Core.Repositories.MySql
 
             return newID;
             
-            //sqlCommand.Append("INSERT INTO mp_Roles (SiteID, RoleName, DisplayName) ");
-            //sqlCommand.Append("VALUES (");
-
-            //sqlCommand.Append(" ?SiteID , ?RoleName, ?RoleName");
-
-            //sqlCommand.Append(");");
-            //sqlCommand.Append("SELECT LAST_INSERT_ID();");
-
-            //MySqlParameter[] arParams = new MySqlParameter[2];
-
-            //arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
-            //arParams[0].Direction = ParameterDirection.Input;
-            //arParams[0].Value = siteId;
-
-            //arParams[1] = new MySqlParameter("?RoleName", MySqlDbType.VarChar, 50);
-            //arParams[1].Direction = ParameterDirection.Input;
-            //arParams[1].Value = roleName;
-
-            //int newID = Convert.ToInt32(AdoHelper.ExecuteScalar(ConnectionString.GetWriteConnectionString(), sqlCommand.ToString(), arParams).ToString());
-
-            //return newID;
-
         }
 
         public static async Task<bool> Update(int roleId, string roleName)
@@ -109,11 +82,9 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[2];
 
             arParams[0] = new MySqlParameter("?RoleID", MySqlDbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = roleId;
 
             arParams[1] = new MySqlParameter("?RoleName", MySqlDbType.VarChar, 50);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = roleName;
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
@@ -134,7 +105,6 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[1];
 
             arParams[0] = new MySqlParameter("?RoleID", MySqlDbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = roleId;
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
@@ -174,7 +144,6 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[1];
 
             arParams[0] = new MySqlParameter("?RoleID", MySqlDbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = roleId;
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
@@ -195,7 +164,6 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[1];
 
             arParams[0] = new MySqlParameter("?RoleID", MySqlDbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = roleId;
 
             return await AdoHelper.ExecuteReaderAsync(
@@ -237,11 +205,9 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[2];
 
             arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new MySqlParameter("?RoleName", MySqlDbType.VarChar, 50);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = roleName;
 
             object result = await AdoHelper.ExecuteScalarAsync(
@@ -288,7 +254,6 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[1];
 
             arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             return AdoHelper.ExecuteReader(
@@ -316,7 +281,6 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[1];
 
             arParams[0] = new MySqlParameter("?RoleID", MySqlDbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = roleId;
 
             return AdoHelper.ExecuteReader(
@@ -362,15 +326,12 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[3];
 
             arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new MySqlParameter("?RoleID", MySqlDbType.Int32);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = roleId;
 
             arParams[2] = new MySqlParameter("?SearchInput", MySqlDbType.VarChar, 50);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = "%" + searchInput + "%";
 
             object result = await AdoHelper.ExecuteScalarAsync(
@@ -390,30 +351,11 @@ namespace cloudscribe.Core.Repositories.MySql
             int pageSize)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
-            //totalPages = 1;
-            //int totalRows = GetCountOfUsersNotInRole(siteId, roleId, searchInput);
-
-            //if (pageSize > 0) totalPages = totalRows / pageSize;
-
-            //if (totalRows <= pageSize)
-            //{
-            //    totalPages = 1;
-            //}
-            //else
-            //{
-            //    int remainder;
-            //    Math.DivRem(totalRows, pageSize, out remainder);
-            //    if (remainder > 0)
-            //    {
-            //        totalPages += 1;
-            //    }
-            //}
-
+            
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT ");
             sqlCommand.Append("u.* ");
             
-
             sqlCommand.Append("FROM	mp_Users u ");
             
             sqlCommand.Append("WHERE u.SiteID = ?SiteID  ");
@@ -439,7 +381,6 @@ namespace cloudscribe.Core.Repositories.MySql
                 sqlCommand.Append(")");
             }
 
-  
             sqlCommand.Append("ORDER BY u.Name  ");
 
             sqlCommand.Append("LIMIT ?PageSize ");
@@ -454,23 +395,18 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[5];
 
             arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new MySqlParameter("?RoleID", MySqlDbType.Int32);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = roleId;
 
             arParams[2] = new MySqlParameter("?SearchInput", MySqlDbType.VarChar, 50);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = "%" + searchInput + "%";
 
             arParams[3] = new MySqlParameter("?PageSize", MySqlDbType.Int32);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = pageSize;
 
             arParams[4] = new MySqlParameter("?OffsetRows", MySqlDbType.Int32);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = pageLowerBound;
 
             return await AdoHelper.ExecuteReaderAsync(
@@ -516,15 +452,12 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[3];
 
             arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new MySqlParameter("?RoleID", MySqlDbType.Int32);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = roleId;
 
             arParams[2] = new MySqlParameter("?SearchInput", MySqlDbType.VarChar, 50);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = "%" + searchInput + "%";
 
             object result = await AdoHelper.ExecuteScalarAsync(
@@ -544,25 +477,7 @@ namespace cloudscribe.Core.Repositories.MySql
             int pageSize)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
-            //totalPages = 1;
-            //int totalRows = GetCountOfUsersInRole(siteId, roleId, searchInput);
-
-            //if (pageSize > 0) totalPages = totalRows / pageSize;
-
-            //if (totalRows <= pageSize)
-            //{
-            //    totalPages = 1;
-            //}
-            //else
-            //{
-            //    int remainder;
-            //    Math.DivRem(totalRows, pageSize, out remainder);
-            //    if (remainder > 0)
-            //    {
-            //        totalPages += 1;
-            //    }
-            //}
-
+            
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT ");
             sqlCommand.Append("u.* ");
@@ -609,23 +524,18 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[5];
 
             arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new MySqlParameter("?RoleID", MySqlDbType.Int32);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = roleId;
 
             arParams[2] = new MySqlParameter("?SearchInput", MySqlDbType.VarChar, 50);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = "%" + searchInput + "%";
 
             arParams[3] = new MySqlParameter("?PageSize", MySqlDbType.Int32);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = pageSize;
 
             arParams[4] = new MySqlParameter("?OffsetRows", MySqlDbType.Int32);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = pageLowerBound;
 
             return await AdoHelper.ExecuteReaderAsync(
@@ -653,11 +563,9 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[2];
 
             arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new MySqlParameter("?UserID", MySqlDbType.Int32);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = userId;
 
             return AdoHelper.ExecuteReader(
@@ -683,19 +591,15 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[4];
 
             arParams[0] = new MySqlParameter("?RoleID", MySqlDbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = roleId;
 
             arParams[1] = new MySqlParameter("?UserID", MySqlDbType.Int32);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = userId;
 
             arParams[2] = new MySqlParameter("?RoleGuid", MySqlDbType.VarChar, 36);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = roleGuid.ToString();
 
             arParams[3] = new MySqlParameter("?UserGuid", MySqlDbType.VarChar, 36);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = userGuid.ToString();
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
@@ -717,11 +621,9 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[2];
 
             arParams[0] = new MySqlParameter("?RoleID", MySqlDbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = roleId;
 
             arParams[1] = new MySqlParameter("?UserID", MySqlDbType.Int32);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = userId;
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
@@ -745,7 +647,6 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[1];
 
             arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -781,11 +682,9 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[2];
 
             arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new MySqlParameter("?SearchInput", MySqlDbType.VarChar, 50);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = "%" + searchInput + "%";
 
             object result = await AdoHelper.ExecuteScalarAsync(
@@ -805,25 +704,7 @@ namespace cloudscribe.Core.Repositories.MySql
             int pageSize)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
-            //totalPages = 1;
-            //int totalRows = GetCountOfSiteRoles(siteId, searchInput);
-
-            //if (pageSize > 0) totalPages = totalRows / pageSize;
-
-            //if (totalRows <= pageSize)
-            //{
-            //    totalPages = 1;
-            //}
-            //else
-            //{
-            //    int remainder;
-            //    Math.DivRem(totalRows, pageSize, out remainder);
-            //    if (remainder > 0)
-            //    {
-            //        totalPages += 1;
-            //    }
-            //}
-
+            
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT ");
             sqlCommand.Append("r.RoleID, ");
@@ -877,19 +758,15 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[4];
 
             arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new MySqlParameter("?SearchInput", MySqlDbType.VarChar, 50);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = "%" + searchInput + "%";
 
             arParams[2] = new MySqlParameter("?PageSize", MySqlDbType.Int32);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = pageSize;
 
             arParams[3] = new MySqlParameter("?OffsetRows", MySqlDbType.Int32);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = pageLowerBound;
 
             return await AdoHelper.ExecuteReaderAsync(
