@@ -1,6 +1,6 @@
 ﻿//	Author:                 Joe Audette
 //  Created:			    2011-07-23
-//	Last Modified:		    2014-08-29
+//	Last Modified:		    2015-01-15
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -65,48 +65,37 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             NpgsqlParameter[] arParams = new NpgsqlParameter[9];
             arParams[0] = new NpgsqlParameter("logdate", NpgsqlTypes.NpgsqlDbType.Timestamp);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = logDate;
 
             arParams[1] = new NpgsqlParameter("ipaddress", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = ipAddress;
 
             arParams[2] = new NpgsqlParameter("culture", NpgsqlTypes.NpgsqlDbType.Varchar, 10);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = culture;
 
             arParams[3] = new NpgsqlParameter("url", NpgsqlTypes.NpgsqlDbType.Text);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = url;
 
             arParams[4] = new NpgsqlParameter("shorturl", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = shortUrl;
 
             arParams[5] = new NpgsqlParameter("thread", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[5].Direction = ParameterDirection.Input;
             arParams[5].Value = thread;
 
             arParams[6] = new NpgsqlParameter("loglevel", NpgsqlTypes.NpgsqlDbType.Varchar, 20);
-            arParams[6].Direction = ParameterDirection.Input;
             arParams[6].Value = logLevel;
 
             arParams[7] = new NpgsqlParameter("logger", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[7].Direction = ParameterDirection.Input;
             arParams[7].Value = logger;
 
             arParams[8] = new NpgsqlParameter("message", NpgsqlTypes.NpgsqlDbType.Text);
-            arParams[8].Direction = ParameterDirection.Input;
             arParams[8].Value = message;
-
 
             int newID = Convert.ToInt32(AdoHelper.ExecuteScalar(
                 ConnectionString.GetWriteConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams));
-
 
             return newID;
 
@@ -120,14 +109,8 @@ namespace cloudscribe.Core.Repositories.pgsql
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_systemlog ");
-            //sqlCommand.Append("WHERE ");
-            //sqlCommand.Append("id = :id ");
+            
             sqlCommand.Append(";");
-
-            //NpgsqlParameter[] arParams = new NpgsqlParameter[1];
-            //arParams[0] = new NpgsqlParameter("id", NpgsqlTypes.NpgsqlDbType.Integer);
-            //arParams[0].Direction = ParameterDirection.Input;
-            //arParams[0].Value = id;
 
             AdoHelper.ExecuteNonQuery(
                 ConnectionString.GetWriteConnectionString(),
@@ -135,7 +118,6 @@ namespace cloudscribe.Core.Repositories.pgsql
                 sqlCommand.ToString(),
                 null);
 
-          
         }
 
         /// <summary>
@@ -154,7 +136,6 @@ namespace cloudscribe.Core.Repositories.pgsql
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
             arParams[0] = new NpgsqlParameter("id", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = id;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -183,7 +164,6 @@ namespace cloudscribe.Core.Repositories.pgsql
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
             arParams[0] = new NpgsqlParameter("cutoffdate", NpgsqlTypes.NpgsqlDbType.Timestamp);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = cutoffDate;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -212,7 +192,6 @@ namespace cloudscribe.Core.Repositories.pgsql
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
             arParams[0] = new NpgsqlParameter("loglevel", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = logLevel;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -276,11 +255,9 @@ namespace cloudscribe.Core.Repositories.pgsql
             NpgsqlParameter[] arParams = new NpgsqlParameter[2];
 
             arParams[0] = new NpgsqlParameter("pagesize", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = pageSize;
 
             arParams[1] = new NpgsqlParameter("pageoffset", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = pageLowerBound;
 
             StringBuilder sqlCommand = new StringBuilder();
@@ -338,11 +315,9 @@ namespace cloudscribe.Core.Repositories.pgsql
             NpgsqlParameter[] arParams = new NpgsqlParameter[2];
 
             arParams[0] = new NpgsqlParameter("pagesize", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = pageSize;
 
             arParams[1] = new NpgsqlParameter("pageoffset", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = pageLowerBound;
 
             StringBuilder sqlCommand = new StringBuilder();

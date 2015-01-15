@@ -1,6 +1,6 @@
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2014-08-29
+// Last Modified:			2015-01-15
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -10,13 +10,11 @@ using System;
 using System.Data;
 using System.Text;
 
-
 namespace cloudscribe.Core.Repositories.pgsql
 {
-   
     internal static class DBBannedIP
     {
-        
+     
         /// <summary>
         /// Inserts a row in the mp_BannedIPAddresses table. Returns new integer id.
         /// </summary>
@@ -33,15 +31,12 @@ namespace cloudscribe.Core.Repositories.pgsql
             NpgsqlParameter[] arParams = new NpgsqlParameter[3];
             
             arParams[0] = new NpgsqlParameter("bannedip", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = bannedIP;
 
             arParams[1] = new NpgsqlParameter("bannedutc", NpgsqlTypes.NpgsqlDbType.Date);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = bannedUtc;
 
             arParams[2] = new NpgsqlParameter("bannedreason", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = bannedReason;
 
             int newID = Convert.ToInt32(AdoHelper.ExecuteScalar(ConnectionString.GetWriteConnectionString(),
@@ -71,19 +66,15 @@ namespace cloudscribe.Core.Repositories.pgsql
             NpgsqlParameter[] arParams = new NpgsqlParameter[4];
             
             arParams[0] = new NpgsqlParameter("rowid", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = rowId;
 
             arParams[1] = new NpgsqlParameter("bannedip", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = bannedIP;
 
             arParams[2] = new NpgsqlParameter("bannedutc", NpgsqlTypes.NpgsqlDbType.Date);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = bannedUtc;
 
             arParams[3] = new NpgsqlParameter("bannedreason", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = bannedReason;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(ConnectionString.GetWriteConnectionString(),
@@ -105,7 +96,6 @@ namespace cloudscribe.Core.Repositories.pgsql
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
             
             arParams[0] = new NpgsqlParameter("rowid", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = rowId;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(ConnectionString.GetWriteConnectionString(),
@@ -127,7 +117,6 @@ namespace cloudscribe.Core.Repositories.pgsql
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
             
             arParams[0] = new NpgsqlParameter("rowid", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = rowId;
 
             return AdoHelper.ExecuteReader(
@@ -154,7 +143,6 @@ namespace cloudscribe.Core.Repositories.pgsql
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
             arParams[0] = new NpgsqlParameter("bannedip", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = ipAddress;
 
             return AdoHelper.ExecuteReader(
@@ -201,7 +189,6 @@ namespace cloudscribe.Core.Repositories.pgsql
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
             arParams[0] = new NpgsqlParameter("bannedip", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = ipAddress;
 
             StringBuilder sqlCommand = new StringBuilder();
@@ -255,11 +242,9 @@ namespace cloudscribe.Core.Repositories.pgsql
             NpgsqlParameter[] arParams = new NpgsqlParameter[2];
             
             arParams[0] = new NpgsqlParameter("pagenumber", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = pageNumber;
 
             arParams[1] = new NpgsqlParameter("pagesize", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = pageSize;
 
             return AdoHelper.ExecuteReader(

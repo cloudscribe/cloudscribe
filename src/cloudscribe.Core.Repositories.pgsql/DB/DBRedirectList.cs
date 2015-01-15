@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2008-11-19
-// Last Modified:			2014-08-29
+// Last Modified:			2015-01-15
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -61,31 +61,24 @@ namespace cloudscribe.Core.Repositories.pgsql
             NpgsqlParameter[] arParams = new NpgsqlParameter[7];
 
             arParams[0] = new NpgsqlParameter("rowguid", NpgsqlTypes.NpgsqlDbType.Char, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = rowGuid.ToString();
 
             arParams[1] = new NpgsqlParameter("siteguid", NpgsqlTypes.NpgsqlDbType.Char, 36);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = siteGuid.ToString();
 
             arParams[2] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = siteID;
 
             arParams[3] = new NpgsqlParameter("oldurl", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = oldUrl;
 
             arParams[4] = new NpgsqlParameter("newurl", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = newUrl;
 
             arParams[5] = new NpgsqlParameter("createdutc", NpgsqlTypes.NpgsqlDbType.Timestamp);
-            arParams[5].Direction = ParameterDirection.Input;
             arParams[5].Value = createdUtc;
 
             arParams[6] = new NpgsqlParameter("expireutc", NpgsqlTypes.NpgsqlDbType.Timestamp);
-            arParams[6].Direction = ParameterDirection.Input;
             arParams[6].Value = expireUtc;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(ConnectionString.GetWriteConnectionString(),
@@ -128,21 +121,16 @@ namespace cloudscribe.Core.Repositories.pgsql
             NpgsqlParameter[] arParams = new NpgsqlParameter[4];
 
             arParams[0] = new NpgsqlParameter("rowguid", NpgsqlTypes.NpgsqlDbType.Char, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = rowGuid.ToString();
 
             arParams[1] = new NpgsqlParameter("oldurl", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = oldUrl;
 
             arParams[2] = new NpgsqlParameter("newurl", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = newUrl;
 
             arParams[3] = new NpgsqlParameter("expireutc", NpgsqlTypes.NpgsqlDbType.Timestamp);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = expireUtc;
-
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(ConnectionString.GetWriteConnectionString(),
                 CommandType.Text,
@@ -170,7 +158,6 @@ namespace cloudscribe.Core.Repositories.pgsql
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
             arParams[0] = new NpgsqlParameter("rowguid", NpgsqlTypes.NpgsqlDbType.Char, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = rowGuid.ToString();
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(ConnectionString.GetWriteConnectionString(),
@@ -199,7 +186,6 @@ namespace cloudscribe.Core.Repositories.pgsql
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
             arParams[0] = new NpgsqlParameter("rowguid", NpgsqlTypes.NpgsqlDbType.Char, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = rowGuid.ToString();
 
             return AdoHelper.ExecuteReader(
@@ -230,15 +216,12 @@ namespace cloudscribe.Core.Repositories.pgsql
             NpgsqlParameter[] arParams = new NpgsqlParameter[3];
 
             arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new NpgsqlParameter("oldurl", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = oldUrl;
 
             arParams[2] = new NpgsqlParameter("currenttime", NpgsqlTypes.NpgsqlDbType.Timestamp);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = DateTime.UtcNow;
 
             return AdoHelper.ExecuteReader(
@@ -267,11 +250,9 @@ namespace cloudscribe.Core.Repositories.pgsql
             NpgsqlParameter[] arParams = new NpgsqlParameter[2];
 
             arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new NpgsqlParameter("oldurl", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = oldUrl;
 
             int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -300,7 +281,6 @@ namespace cloudscribe.Core.Repositories.pgsql
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
             arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -349,15 +329,12 @@ namespace cloudscribe.Core.Repositories.pgsql
             NpgsqlParameter[] arParams = new NpgsqlParameter[3];
 
             arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new NpgsqlParameter("pagesize", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = pageSize;
 
             arParams[2] = new NpgsqlParameter("pageoffset", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = pageLowerBound;
 
             StringBuilder sqlCommand = new StringBuilder();

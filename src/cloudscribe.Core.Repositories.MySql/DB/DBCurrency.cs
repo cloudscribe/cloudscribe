@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2008-06-22
-// Last Modified:			2015-01-08
+// Last Modified:			2015-01-15
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -77,47 +77,36 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[11];
 
             arParams[0] = new MySqlParameter("?Guid", MySqlDbType.VarChar, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid.ToString();
 
             arParams[1] = new MySqlParameter("?Title", MySqlDbType.VarChar, 50);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = title;
 
             arParams[2] = new MySqlParameter("?Code", MySqlDbType.VarChar, 3);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = code;
 
             arParams[3] = new MySqlParameter("?SymbolLeft", MySqlDbType.VarChar, 15);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = symbolLeft;
 
             arParams[4] = new MySqlParameter("?SymbolRight", MySqlDbType.VarChar, 15);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = symbolRight;
 
             arParams[5] = new MySqlParameter("?DecimalPointChar", MySqlDbType.VarChar, 1);
-            arParams[5].Direction = ParameterDirection.Input;
             arParams[5].Value = decimalPointChar;
 
             arParams[6] = new MySqlParameter("?ThousandsPointChar", MySqlDbType.VarChar, 1);
-            arParams[6].Direction = ParameterDirection.Input;
             arParams[6].Value = thousandsPointChar;
 
             arParams[7] = new MySqlParameter("?DecimalPlaces", MySqlDbType.VarChar, 1);
-            arParams[7].Direction = ParameterDirection.Input;
             arParams[7].Value = decimalPlaces;
 
             arParams[8] = new MySqlParameter("?Value", MySqlDbType.Decimal);
-            arParams[8].Direction = ParameterDirection.Input;
             arParams[8].Value = value;
 
             arParams[9] = new MySqlParameter("?LastModified", MySqlDbType.DateTime);
-            arParams[9].Direction = ParameterDirection.Input;
             arParams[9].Value = lastModified;
 
             arParams[10] = new MySqlParameter("?Created", MySqlDbType.DateTime);
-            arParams[10].Direction = ParameterDirection.Input;
             arParams[10].Value = created;
 
             int rowsAffected = await  AdoHelper.ExecuteNonQueryAsync(
@@ -177,43 +166,33 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[10];
 
             arParams[0] = new MySqlParameter("?Guid", MySqlDbType.VarChar, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid.ToString();
 
             arParams[1] = new MySqlParameter("?Title", MySqlDbType.VarChar, 50);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = title;
 
             arParams[2] = new MySqlParameter("?Code", MySqlDbType.VarChar, 3);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = code;
 
             arParams[3] = new MySqlParameter("?SymbolLeft", MySqlDbType.VarChar, 15);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = symbolLeft;
 
             arParams[4] = new MySqlParameter("?SymbolRight", MySqlDbType.VarChar, 15);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = symbolRight;
 
             arParams[5] = new MySqlParameter("?DecimalPointChar", MySqlDbType.VarChar, 1);
-            arParams[5].Direction = ParameterDirection.Input;
             arParams[5].Value = decimalPointChar;
 
             arParams[6] = new MySqlParameter("?ThousandsPointChar", MySqlDbType.VarChar, 1);
-            arParams[6].Direction = ParameterDirection.Input;
             arParams[6].Value = thousandsPointChar;
 
             arParams[7] = new MySqlParameter("?DecimalPlaces", MySqlDbType.VarChar, 1);
-            arParams[7].Direction = ParameterDirection.Input;
             arParams[7].Value = decimalPlaces;
 
             arParams[8] = new MySqlParameter("?Value", MySqlDbType.Decimal);
-            arParams[8].Direction = ParameterDirection.Input;
             arParams[8].Value = value;
 
             arParams[9] = new MySqlParameter("?LastModified", MySqlDbType.DateTime);
-            arParams[9].Direction = ParameterDirection.Input;
             arParams[9].Value = lastModified;
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
@@ -241,7 +220,6 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[1];
 
             arParams[0] = new MySqlParameter("?Guid", MySqlDbType.VarChar, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid.ToString();
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
@@ -269,7 +247,6 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[1];
 
             arParams[0] = new MySqlParameter("?Guid", MySqlDbType.VarChar, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid.ToString();
 
             return await AdoHelper.ExecuteReaderAsync(

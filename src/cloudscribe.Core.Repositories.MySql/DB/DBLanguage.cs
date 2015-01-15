@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2008-06-22
-// Last Modified:			2015-01-08
+// Last Modified:			2015-01-15
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -49,19 +49,15 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[4];
 
             arParams[0] = new MySqlParameter("?Guid", MySqlDbType.VarChar, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid.ToString();
 
             arParams[1] = new MySqlParameter("?Name", MySqlDbType.VarChar, 255);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = name;
 
             arParams[2] = new MySqlParameter("?Code", MySqlDbType.VarChar, 2);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = code;
 
             arParams[3] = new MySqlParameter("?Sort", MySqlDbType.Int32);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = sort;
 
             int rowsAffected = await  AdoHelper.ExecuteNonQueryAsync(
@@ -88,8 +84,6 @@ namespace cloudscribe.Core.Repositories.MySql
             string code,
             int sort)
         {
-            
-
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("UPDATE mp_Language ");
             sqlCommand.Append("SET  ");
@@ -104,19 +98,15 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[4];
 
             arParams[0] = new MySqlParameter("?Guid", MySqlDbType.VarChar, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid.ToString();
 
             arParams[1] = new MySqlParameter("?Name", MySqlDbType.VarChar, 255);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = name;
 
             arParams[2] = new MySqlParameter("?Code", MySqlDbType.VarChar, 2);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = code;
 
             arParams[3] = new MySqlParameter("?Sort", MySqlDbType.Int32);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = sort;
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
@@ -144,7 +134,6 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[1];
 
             arParams[0] = new MySqlParameter("?Guid", MySqlDbType.VarChar, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid.ToString();
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
@@ -172,7 +161,6 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[1];
 
             arParams[0] = new MySqlParameter("?Guid", MySqlDbType.VarChar, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid.ToString();
 
             return await AdoHelper.ExecuteReaderAsync(
@@ -264,11 +252,9 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[2];
 
             arParams[0] = new MySqlParameter("?PageSize", MySqlDbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = pageSize;
 
             arParams[1] = new MySqlParameter("?OffsetRows", MySqlDbType.Int32);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = pageLowerBound;
 
             return await AdoHelper.ExecuteReaderAsync(

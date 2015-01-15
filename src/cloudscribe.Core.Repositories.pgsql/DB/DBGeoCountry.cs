@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2008-06-22
-// Last Modified:			2015-01-08
+// Last Modified:			2015-01-15
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -34,19 +34,15 @@ namespace cloudscribe.Core.Repositories.pgsql
             NpgsqlParameter[] arParams = new NpgsqlParameter[4];
 
             arParams[0] = new NpgsqlParameter("guid", NpgsqlTypes.NpgsqlDbType.Char, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid.ToString();
 
             arParams[1] = new NpgsqlParameter("name", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = name;
 
             arParams[2] = new NpgsqlParameter("isocode2", NpgsqlTypes.NpgsqlDbType.Text, 2);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = iSOCode2;
 
             arParams[3] = new NpgsqlParameter("isocode3", NpgsqlTypes.NpgsqlDbType.Text, 3);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = iSOCode3;
 
             StringBuilder sqlCommand = new StringBuilder();
@@ -91,19 +87,15 @@ namespace cloudscribe.Core.Repositories.pgsql
             NpgsqlParameter[] arParams = new NpgsqlParameter[4];
 
             arParams[0] = new NpgsqlParameter("guid", NpgsqlTypes.NpgsqlDbType.Char, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid.ToString();
 
             arParams[1] = new NpgsqlParameter("name", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = name;
 
             arParams[2] = new NpgsqlParameter("isocode2", NpgsqlTypes.NpgsqlDbType.Text, 2);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = iSOCode2;
 
             arParams[3] = new NpgsqlParameter("isocode3", NpgsqlTypes.NpgsqlDbType.Text, 3);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = iSOCode3;
 
             StringBuilder sqlCommand = new StringBuilder();
@@ -136,7 +128,6 @@ namespace cloudscribe.Core.Repositories.pgsql
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
             arParams[0] = new NpgsqlParameter("guid", NpgsqlTypes.NpgsqlDbType.Char, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid.ToString();
 
             StringBuilder sqlCommand = new StringBuilder();
@@ -164,7 +155,6 @@ namespace cloudscribe.Core.Repositories.pgsql
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
             arParams[0] = new NpgsqlParameter("guid", NpgsqlTypes.NpgsqlDbType.Char, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid.ToString();
 
             StringBuilder sqlCommand = new StringBuilder();
@@ -192,7 +182,6 @@ namespace cloudscribe.Core.Repositories.pgsql
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
             arParams[0] = new NpgsqlParameter("isocode2", NpgsqlTypes.NpgsqlDbType.Char, 2);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = countryISOCode2;
 
             StringBuilder sqlCommand = new StringBuilder();
@@ -280,11 +269,9 @@ namespace cloudscribe.Core.Repositories.pgsql
             NpgsqlParameter[] arParams = new NpgsqlParameter[2];
 
             arParams[0] = new NpgsqlParameter("pagesize", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = pageSize;
 
             arParams[1] = new NpgsqlParameter("pageoffset", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = pageLowerBound;
 
             StringBuilder sqlCommand = new StringBuilder();

@@ -110,71 +110,54 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[17];
 
             arParams[0] = new MySqlParameter("?RowID", MySqlDbType.VarChar, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = rowID.ToString();
 
             arParams[1] = new MySqlParameter("?UserGuid", MySqlDbType.VarChar, 36);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = userGuid.ToString();
 
             arParams[2] = new MySqlParameter("?SiteGuid", MySqlDbType.VarChar, 36);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = siteGuid.ToString();
 
             arParams[3] = new MySqlParameter("?IPAddress", MySqlDbType.VarChar, 50);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = iPAddress;
 
             arParams[4] = new MySqlParameter("?IPAddressLong", MySqlDbType.Int64);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = iPAddressLong;
 
             arParams[5] = new MySqlParameter("?Hostname", MySqlDbType.VarChar, 255);
-            arParams[5].Direction = ParameterDirection.Input;
             arParams[5].Value = hostname;
 
             arParams[6] = new MySqlParameter("?Longitude", MySqlDbType.Float);
-            arParams[6].Direction = ParameterDirection.Input;
             arParams[6].Value = longitude;
 
             arParams[7] = new MySqlParameter("?Latitude", MySqlDbType.Float);
-            arParams[7].Direction = ParameterDirection.Input;
             arParams[7].Value = latitude;
 
             arParams[8] = new MySqlParameter("?ISP", MySqlDbType.VarChar, 255);
-            arParams[8].Direction = ParameterDirection.Input;
             arParams[8].Value = iSP;
 
             arParams[9] = new MySqlParameter("?Continent", MySqlDbType.VarChar, 255);
-            arParams[9].Direction = ParameterDirection.Input;
             arParams[9].Value = continent;
 
             arParams[10] = new MySqlParameter("?Country", MySqlDbType.VarChar, 255);
-            arParams[10].Direction = ParameterDirection.Input;
             arParams[10].Value = country;
 
             arParams[11] = new MySqlParameter("?Region", MySqlDbType.VarChar, 255);
-            arParams[11].Direction = ParameterDirection.Input;
             arParams[11].Value = region;
 
             arParams[12] = new MySqlParameter("?City", MySqlDbType.VarChar, 255);
-            arParams[12].Direction = ParameterDirection.Input;
             arParams[12].Value = city;
 
             arParams[13] = new MySqlParameter("?TimeZone", MySqlDbType.VarChar, 255);
-            arParams[13].Direction = ParameterDirection.Input;
             arParams[13].Value = timeZone;
 
             arParams[14] = new MySqlParameter("?CaptureCount", MySqlDbType.Int32);
-            arParams[14].Direction = ParameterDirection.Input;
             arParams[14].Value = captureCount;
 
             arParams[15] = new MySqlParameter("?FirstCaptureUTC", MySqlDbType.DateTime);
-            arParams[15].Direction = ParameterDirection.Input;
             arParams[15].Value = firstCaptureUTC;
 
             arParams[16] = new MySqlParameter("?LastCaptureUTC", MySqlDbType.DateTime);
-            arParams[16].Direction = ParameterDirection.Input;
             arParams[16].Value = lastCaptureUTC;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -255,67 +238,51 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[16];
 
             arParams[0] = new MySqlParameter("?RowID", MySqlDbType.VarChar, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = rowID.ToString();
 
             arParams[1] = new MySqlParameter("?UserGuid", MySqlDbType.VarChar, 36);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = userGuid.ToString();
 
             arParams[2] = new MySqlParameter("?SiteGuid", MySqlDbType.VarChar, 36);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = siteGuid.ToString();
 
             arParams[3] = new MySqlParameter("?IPAddress", MySqlDbType.VarChar, 50);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = iPAddress;
 
             arParams[4] = new MySqlParameter("?IPAddressLong", MySqlDbType.Int64);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = iPAddressLong;
 
             arParams[5] = new MySqlParameter("?Hostname", MySqlDbType.VarChar, 255);
-            arParams[5].Direction = ParameterDirection.Input;
             arParams[5].Value = hostname;
 
             arParams[6] = new MySqlParameter("?Longitude", MySqlDbType.Float);
-            arParams[6].Direction = ParameterDirection.Input;
             arParams[6].Value = longitude;
 
             arParams[7] = new MySqlParameter("?Latitude", MySqlDbType.Float);
-            arParams[7].Direction = ParameterDirection.Input;
             arParams[7].Value = latitude;
 
             arParams[8] = new MySqlParameter("?ISP", MySqlDbType.VarChar, 255);
-            arParams[8].Direction = ParameterDirection.Input;
             arParams[8].Value = iSP;
 
             arParams[9] = new MySqlParameter("?Continent", MySqlDbType.VarChar, 255);
-            arParams[9].Direction = ParameterDirection.Input;
             arParams[9].Value = continent;
 
             arParams[10] = new MySqlParameter("?Country", MySqlDbType.VarChar, 255);
-            arParams[10].Direction = ParameterDirection.Input;
             arParams[10].Value = country;
 
             arParams[11] = new MySqlParameter("?Region", MySqlDbType.VarChar, 255);
-            arParams[11].Direction = ParameterDirection.Input;
             arParams[11].Value = region;
 
             arParams[12] = new MySqlParameter("?City", MySqlDbType.VarChar, 255);
-            arParams[12].Direction = ParameterDirection.Input;
             arParams[12].Value = city;
 
             arParams[13] = new MySqlParameter("?TimeZone", MySqlDbType.VarChar, 255);
-            arParams[13].Direction = ParameterDirection.Input;
             arParams[13].Value = timeZone;
 
             arParams[14] = new MySqlParameter("?CaptureCount", MySqlDbType.Int32);
-            arParams[14].Direction = ParameterDirection.Input;
             arParams[14].Value = captureCount;
 
             arParams[15] = new MySqlParameter("?LastCaptureUTC", MySqlDbType.DateTime);
-            arParams[15].Direction = ParameterDirection.Input;
             arParams[15].Value = lastCaptureUTC;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -343,7 +310,6 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[1];
 
             arParams[0] = new MySqlParameter("?RowID", MySqlDbType.VarChar, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = rowID.ToString();
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -365,7 +331,6 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[1];
 
             arParams[0] = new MySqlParameter("?UserGuid", MySqlDbType.VarChar, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userGuid.ToString();
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -391,7 +356,6 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[1];
 
             arParams[0] = new MySqlParameter("?RowID", MySqlDbType.VarChar, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = rowID.ToString();
 
             return AdoHelper.ExecuteReader(
@@ -419,11 +383,9 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[2];
 
             arParams[0] = new MySqlParameter("?Userguid", MySqlDbType.VarChar, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userGuid.ToString();
 
             arParams[1] = new MySqlParameter("?IPAddressLong", MySqlDbType.Int64);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = iPAddressLong;
 
             return AdoHelper.ExecuteReader(
@@ -450,7 +412,6 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[1];
 
             arParams[0] = new MySqlParameter("?UserGuid", MySqlDbType.VarChar, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userGuid.ToString();
 
             return AdoHelper.ExecuteReader(
@@ -477,7 +438,6 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[1];
 
             arParams[0] = new MySqlParameter("?SiteGuid", MySqlDbType.VarChar, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteGuid.ToString();
 
             return AdoHelper.ExecuteReader(
@@ -538,7 +498,6 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[1];
 
             arParams[0] = new MySqlParameter("?UserGuid", MySqlDbType.VarChar, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userGuid.ToString();
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -563,7 +522,6 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[1];
 
             arParams[0] = new MySqlParameter("?SiteGuid", MySqlDbType.VarChar, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteGuid.ToString();
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -618,11 +576,9 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[2];
 
             arParams[0] = new MySqlParameter("?UserGuid", MySqlDbType.VarChar, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userGuid.ToString();
 
             arParams[1] = new MySqlParameter("?PageSize", MySqlDbType.Int32);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = pageSize;
 
             return AdoHelper.ExecuteReader(
@@ -677,11 +633,9 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[2];
 
             arParams[0] = new MySqlParameter("?SiteGuid", MySqlDbType.VarChar, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteGuid.ToString();
 
             arParams[1] = new MySqlParameter("?PageSize", MySqlDbType.Int32);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = pageSize;
 
             return AdoHelper.ExecuteReader(

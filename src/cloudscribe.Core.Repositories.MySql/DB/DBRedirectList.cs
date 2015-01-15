@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2008-11-19
-// Last Modified:			2014-08-29
+// Last Modified:			2015-01-15
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -58,31 +58,24 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[7];
 
             arParams[0] = new MySqlParameter("?RowGuid", MySqlDbType.VarChar, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = rowGuid.ToString();
 
             arParams[1] = new MySqlParameter("?SiteGuid", MySqlDbType.VarChar, 36);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = siteGuid.ToString();
 
             arParams[2] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = siteID;
 
             arParams[3] = new MySqlParameter("?OldUrl", MySqlDbType.VarChar, 255);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = oldUrl;
 
             arParams[4] = new MySqlParameter("?NewUrl", MySqlDbType.VarChar, 255);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = newUrl;
 
             arParams[5] = new MySqlParameter("?CreatedUtc", MySqlDbType.DateTime);
-            arParams[5].Direction = ParameterDirection.Input;
             arParams[5].Value = createdUtc;
 
             arParams[6] = new MySqlParameter("?ExpireUtc", MySqlDbType.DateTime);
-            arParams[6].Direction = ParameterDirection.Input;
             arParams[6].Value = expireUtc;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -123,19 +116,15 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[4];
 
             arParams[0] = new MySqlParameter("?RowGuid", MySqlDbType.VarChar, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = rowGuid.ToString();
 
             arParams[1] = new MySqlParameter("?OldUrl", MySqlDbType.VarChar, 255);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = oldUrl;
 
             arParams[2] = new MySqlParameter("?NewUrl", MySqlDbType.VarChar, 255);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = newUrl;
 
             arParams[3] = new MySqlParameter("?ExpireUtc", MySqlDbType.DateTime);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = expireUtc;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -163,7 +152,6 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[1];
 
             arParams[0] = new MySqlParameter("?RowGuid", MySqlDbType.VarChar, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = rowGuid.ToString();
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -190,7 +178,6 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[1];
 
             arParams[0] = new MySqlParameter("?RowGuid", MySqlDbType.VarChar, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = rowGuid.ToString();
 
             return AdoHelper.ExecuteReader(
@@ -218,15 +205,12 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[3];
 
             arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new MySqlParameter("?OldUrl", MySqlDbType.VarChar, 255);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = oldUrl;
 
             arParams[2] = new MySqlParameter("?CurrentTime", MySqlDbType.DateTime);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = DateTime.UtcNow;
 
             return AdoHelper.ExecuteReader(
@@ -254,11 +238,9 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[2];
 
             arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new MySqlParameter("?OldUrl", MySqlDbType.VarChar, 255);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = oldUrl;
 
             int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -286,7 +268,6 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[1];
 
             arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -346,15 +327,12 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[3];
 
             arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new MySqlParameter("?PageSize", MySqlDbType.Int32);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = pageSize;
 
             arParams[2] = new MySqlParameter("?OffsetRows", MySqlDbType.Int32);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = pageLowerBound;
 
             return AdoHelper.ExecuteReader(

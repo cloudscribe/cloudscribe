@@ -1,6 +1,6 @@
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2014-09-06
+// Last Modified:			2015-01-15
 //
 // You must not remove this notice, or any other, from this software.
 
@@ -168,190 +168,144 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append(" SELECT CURRVAL('mp_sites_siteid_seq');");
 
             NpgsqlParameter[] arParams = new NpgsqlParameter[46];
+
             arParams[0] = new NpgsqlParameter("siteguid", NpgsqlTypes.NpgsqlDbType.Char, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteGuid.ToString();
 
             arParams[1] = new NpgsqlParameter("sitename", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = siteName;
 
             arParams[2] = new NpgsqlParameter("skin", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = skin;
 
             arParams[3] = new NpgsqlParameter("logo", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = logo;
 
             arParams[4] = new NpgsqlParameter("icon", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = icon;
 
             arParams[5] = new NpgsqlParameter("allowuserskins", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[5].Direction = ParameterDirection.Input;
             arParams[5].Value = allowUserSkins;
 
             arParams[6] = new NpgsqlParameter("allowpageskins", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[6].Direction = ParameterDirection.Input;
             arParams[6].Value = allowPageSkins;
 
             arParams[7] = new NpgsqlParameter("allowhidemenuonpages", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[7].Direction = ParameterDirection.Input;
             arParams[7].Value = allowHideMenuOnPages;
 
             arParams[8] = new NpgsqlParameter("allownewregistration", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[8].Direction = ParameterDirection.Input;
             arParams[8].Value = allowNewRegistration;
 
             arParams[9] = new NpgsqlParameter("usesecureregistration", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[9].Direction = ParameterDirection.Input;
             arParams[9].Value = useSecureRegistration;
 
             arParams[10] = new NpgsqlParameter("usesslonallpages", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[10].Direction = ParameterDirection.Input;
             arParams[10].Value = useSslOnAllPages;
 
             arParams[11] = new NpgsqlParameter("defaultpagekeywords", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[11].Direction = ParameterDirection.Input;
             arParams[11].Value = defaultPageKeywords;
 
             arParams[12] = new NpgsqlParameter("defaultpagedescription", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[12].Direction = ParameterDirection.Input;
             arParams[12].Value = defaultPageDescription;
 
             arParams[13] = new NpgsqlParameter("defaultpageencoding", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[13].Direction = ParameterDirection.Input;
             arParams[13].Value = defaultPageEncoding;
 
             arParams[14] = new NpgsqlParameter("defaultadditionalmetatags", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[14].Direction = ParameterDirection.Input;
             arParams[14].Value = defaultAdditionalMetaTags;
 
             arParams[15] = new NpgsqlParameter("isserveradminsite", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[15].Direction = ParameterDirection.Input;
             arParams[15].Value = isServerAdminSite;
 
             arParams[16] = new NpgsqlParameter("useldapauth", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[16].Direction = ParameterDirection.Input;
             arParams[16].Value = useLdapAuth;
 
             arParams[17] = new NpgsqlParameter("autocreateldapuseronfirstlogin", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[17].Direction = ParameterDirection.Input;
             arParams[17].Value = autoCreateLdapUserOnFirstLogin;
 
             arParams[18] = new NpgsqlParameter("ldapserver", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[18].Direction = ParameterDirection.Input;
             arParams[18].Value = ldapServer;
 
             arParams[19] = new NpgsqlParameter("ldapport", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[19].Direction = ParameterDirection.Input;
             arParams[19].Value = ldapPort;
 
             arParams[20] = new NpgsqlParameter("ldapdomain", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[20].Direction = ParameterDirection.Input;
             arParams[20].Value = ldapDomain;
 
             arParams[21] = new NpgsqlParameter("ldaprootdn", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[21].Direction = ParameterDirection.Input;
             arParams[21].Value = ldapRootDN;
 
             arParams[22] = new NpgsqlParameter("ldapuserdnkey", NpgsqlTypes.NpgsqlDbType.Varchar, 10);
-            arParams[22].Direction = ParameterDirection.Input;
             arParams[22].Value = ldapUserDNKey;
 
             arParams[23] = new NpgsqlParameter("reallydeleteusers", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[23].Direction = ParameterDirection.Input;
             arParams[23].Value = reallyDeleteUsers;
 
             arParams[24] = new NpgsqlParameter("useemailforlogin", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[24].Direction = ParameterDirection.Input;
             arParams[24].Value = useEmailForLogin;
 
             arParams[25] = new NpgsqlParameter("allowuserfullnamechange", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[25].Direction = ParameterDirection.Input;
             arParams[25].Value = allowUserFullNameChange;
 
             arParams[26] = new NpgsqlParameter("editorskin", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
-            arParams[26].Direction = ParameterDirection.Input;
             arParams[26].Value = editorSkin;
 
             arParams[27] = new NpgsqlParameter("defaultfriendlyurlpatternenum", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
-            arParams[27].Direction = ParameterDirection.Input;
             arParams[27].Value = defaultFriendlyUrlPattern;
 
             arParams[28] = new NpgsqlParameter("enablemypagefeature", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[28].Direction = ParameterDirection.Input;
             arParams[28].Value = enableMyPageFeature;
 
             arParams[29] = new NpgsqlParameter("editorprovider", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[29].Direction = ParameterDirection.Input;
             arParams[29].Value = editorProvider;
 
             arParams[30] = new NpgsqlParameter("captchaprovider", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[30].Direction = ParameterDirection.Input;
             arParams[30].Value = captchaProvider;
 
             arParams[31] = new NpgsqlParameter("datepickerprovider", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[31].Direction = ParameterDirection.Input;
             arParams[31].Value = datePickerProvider;
 
             arParams[32] = new NpgsqlParameter("recaptchaprivatekey", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[32].Direction = ParameterDirection.Input;
             arParams[32].Value = recaptchaPrivateKey;
 
             arParams[33] = new NpgsqlParameter("recaptchapublickey", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[33].Direction = ParameterDirection.Input;
             arParams[33].Value = recaptchaPublicKey;
 
             arParams[34] = new NpgsqlParameter("wordpressapikey", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[34].Direction = ParameterDirection.Input;
             arParams[34].Value = wordpressApiKey;
 
             arParams[35] = new NpgsqlParameter("windowsliveappid", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[35].Direction = ParameterDirection.Input;
             arParams[35].Value = windowsLiveAppId;
 
             arParams[36] = new NpgsqlParameter("windowslivekey", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[36].Direction = ParameterDirection.Input;
             arParams[36].Value = windowsLiveKey;
 
             arParams[37] = new NpgsqlParameter("allowopenidauth", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[37].Direction = ParameterDirection.Input;
             arParams[37].Value = allowOpenIdAuth;
 
             arParams[38] = new NpgsqlParameter("allowwindowsliveauth", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[38].Direction = ParameterDirection.Input;
             arParams[38].Value = allowWindowsLiveAuth;
 
             arParams[39] = new NpgsqlParameter("gmapapikey", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[39].Direction = ParameterDirection.Input;
             arParams[39].Value = gmapApiKey;
 
             arParams[40] = new NpgsqlParameter("apikeyextra1", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[40].Direction = ParameterDirection.Input;
             arParams[40].Value = apiKeyExtra1;
 
             arParams[41] = new NpgsqlParameter("apikeyextra2", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[41].Direction = ParameterDirection.Input;
             arParams[41].Value = apiKeyExtra2;
 
             arParams[42] = new NpgsqlParameter("apikeyextra3", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[42].Direction = ParameterDirection.Input;
             arParams[42].Value = apiKeyExtra3;
 
             arParams[43] = new NpgsqlParameter("apikeyextra4", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[43].Direction = ParameterDirection.Input;
             arParams[43].Value = apiKeyExtra4;
 
             arParams[44] = new NpgsqlParameter("apikeyextra5", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[44].Direction = ParameterDirection.Input;
             arParams[44].Value = apiKeyExtra5;
 
             arParams[45] = new NpgsqlParameter("disabledbauth", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[45].Direction = ParameterDirection.Input;
             arParams[45].Value = disableDbAuth;
-
 
             int newID = Convert.ToInt32(AdoHelper.ExecuteScalar(
                 ConnectionString.GetWriteConnectionString(),
@@ -359,10 +313,7 @@ namespace cloudscribe.Core.Repositories.pgsql
                 sqlCommand.ToString(),
                 arParams));
 
-
             return newID;
-
-           
 
         }
 
@@ -472,189 +423,142 @@ namespace cloudscribe.Core.Repositories.pgsql
             NpgsqlParameter[] arParams = new NpgsqlParameter[46];
 
             arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new NpgsqlParameter("sitename", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = siteName;
 
             arParams[2] = new NpgsqlParameter("skin", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = skin;
 
             arParams[3] = new NpgsqlParameter("logo", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = logo;
 
             arParams[4] = new NpgsqlParameter("icon", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = icon;
 
             arParams[5] = new NpgsqlParameter("allowuserskins", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[5].Direction = ParameterDirection.Input;
             arParams[5].Value = allowUserSkins;
 
             arParams[6] = new NpgsqlParameter("allowpageskins", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[6].Direction = ParameterDirection.Input;
             arParams[6].Value = allowPageSkins;
 
             arParams[7] = new NpgsqlParameter("allowhidemenuonpages", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[7].Direction = ParameterDirection.Input;
             arParams[7].Value = allowHideMenuOnPages;
 
             arParams[8] = new NpgsqlParameter("allownewregistration", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[8].Direction = ParameterDirection.Input;
             arParams[8].Value = allowNewRegistration;
 
             arParams[9] = new NpgsqlParameter("usesecureregistration", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[9].Direction = ParameterDirection.Input;
             arParams[9].Value = useSecureRegistration;
 
             arParams[10] = new NpgsqlParameter("usesslonallpages", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[10].Direction = ParameterDirection.Input;
             arParams[10].Value = useSslOnAllPages;
 
             arParams[11] = new NpgsqlParameter("defaultpagekeywords", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[11].Direction = ParameterDirection.Input;
             arParams[11].Value = defaultPageKeywords;
 
             arParams[12] = new NpgsqlParameter("defaultpagedescription", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[12].Direction = ParameterDirection.Input;
             arParams[12].Value = defaultPageDescription;
 
             arParams[13] = new NpgsqlParameter("defaultpageencoding", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[13].Direction = ParameterDirection.Input;
             arParams[13].Value = defaultPageEncoding;
 
             arParams[14] = new NpgsqlParameter("defaultadditionalmetatags", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[14].Direction = ParameterDirection.Input;
             arParams[14].Value = defaultAdditionalMetaTags;
 
             arParams[15] = new NpgsqlParameter("isserveradminsite", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[15].Direction = ParameterDirection.Input;
             arParams[15].Value = isServerAdminSite;
 
             arParams[16] = new NpgsqlParameter("useldapauth", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[16].Direction = ParameterDirection.Input;
             arParams[16].Value = useLdapAuth;
 
             arParams[17] = new NpgsqlParameter("autocreateldapuseronfirstlogin", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[17].Direction = ParameterDirection.Input;
             arParams[17].Value = autoCreateLdapUserOnFirstLogin;
 
             arParams[18] = new NpgsqlParameter("ldapserver", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[18].Direction = ParameterDirection.Input;
             arParams[18].Value = ldapServer;
 
             arParams[19] = new NpgsqlParameter("ldapport", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[19].Direction = ParameterDirection.Input;
             arParams[19].Value = ldapPort;
 
             arParams[20] = new NpgsqlParameter("ldapdomain", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[20].Direction = ParameterDirection.Input;
             arParams[20].Value = ldapDomain;
 
             arParams[21] = new NpgsqlParameter("ldaprootdn", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[21].Direction = ParameterDirection.Input;
             arParams[21].Value = ldapRootDN;
 
             arParams[22] = new NpgsqlParameter("ldapuserdnkey", NpgsqlTypes.NpgsqlDbType.Varchar, 10);
-            arParams[22].Direction = ParameterDirection.Input;
             arParams[22].Value = ldapUserDNKey;
 
             arParams[23] = new NpgsqlParameter("reallydeleteusers", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[23].Direction = ParameterDirection.Input;
             arParams[23].Value = reallyDeleteUsers;
 
             arParams[24] = new NpgsqlParameter("useemailforlogin", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[24].Direction = ParameterDirection.Input;
             arParams[24].Value = useEmailForLogin;
 
             arParams[25] = new NpgsqlParameter("allowuserfullnamechange", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[25].Direction = ParameterDirection.Input;
             arParams[25].Value = allowUserFullNameChange;
 
             arParams[26] = new NpgsqlParameter("editorskin", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
-            arParams[26].Direction = ParameterDirection.Input;
             arParams[26].Value = editorSkin;
 
             arParams[27] = new NpgsqlParameter("defaultfriendlyurlpatternenum", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
-            arParams[27].Direction = ParameterDirection.Input;
             arParams[27].Value = defaultFriendlyUrlPattern;
 
             arParams[28] = new NpgsqlParameter("enablemypagefeature", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[28].Direction = ParameterDirection.Input;
             arParams[28].Value = enableMyPageFeature;
 
             arParams[29] = new NpgsqlParameter("editorprovider", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[29].Direction = ParameterDirection.Input;
             arParams[29].Value = editorProvider;
 
             arParams[30] = new NpgsqlParameter("captchaprovider", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[30].Direction = ParameterDirection.Input;
             arParams[30].Value = captchaProvider;
 
             arParams[31] = new NpgsqlParameter("datepickerprovider", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[31].Direction = ParameterDirection.Input;
             arParams[31].Value = datePickerProvider;
 
             arParams[32] = new NpgsqlParameter("recaptchaprivatekey", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[32].Direction = ParameterDirection.Input;
             arParams[32].Value = recaptchaPrivateKey;
 
             arParams[33] = new NpgsqlParameter("recaptchapublickey", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[33].Direction = ParameterDirection.Input;
             arParams[33].Value = recaptchaPublicKey;
 
             arParams[34] = new NpgsqlParameter("wordpressapikey", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[34].Direction = ParameterDirection.Input;
             arParams[34].Value = wordpressApiKey;
 
             arParams[35] = new NpgsqlParameter("windowsliveappid", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[35].Direction = ParameterDirection.Input;
             arParams[35].Value = windowsLiveAppId;
 
             arParams[36] = new NpgsqlParameter("windowslivekey", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[36].Direction = ParameterDirection.Input;
             arParams[36].Value = windowsLiveKey;
 
             arParams[37] = new NpgsqlParameter("allowopenidauth", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[37].Direction = ParameterDirection.Input;
             arParams[37].Value = allowOpenIdAuth;
 
             arParams[38] = new NpgsqlParameter("allowwindowsliveauth", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[38].Direction = ParameterDirection.Input;
             arParams[38].Value = allowWindowsLiveAuth;
 
             arParams[39] = new NpgsqlParameter("gmapapikey", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[39].Direction = ParameterDirection.Input;
             arParams[39].Value = gmapApiKey;
 
             arParams[40] = new NpgsqlParameter("apikeyextra1", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[40].Direction = ParameterDirection.Input;
             arParams[40].Value = apiKeyExtra1;
 
             arParams[41] = new NpgsqlParameter("apikeyextra2", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[41].Direction = ParameterDirection.Input;
             arParams[41].Value = apiKeyExtra2;
 
             arParams[42] = new NpgsqlParameter("apikeyextra3", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[42].Direction = ParameterDirection.Input;
             arParams[42].Value = apiKeyExtra3;
 
             arParams[43] = new NpgsqlParameter("apikeyextra4", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[43].Direction = ParameterDirection.Input;
             arParams[43].Value = apiKeyExtra4;
 
             arParams[44] = new NpgsqlParameter("apikeyextra5", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[44].Direction = ParameterDirection.Input;
             arParams[44].Value = apiKeyExtra5;
 
             arParams[45] = new NpgsqlParameter("disabledbauth", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[45].Direction = ParameterDirection.Input;
             arParams[45].Value = disableDbAuth;
-
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 ConnectionString.GetWriteConnectionString(),
@@ -663,8 +567,6 @@ namespace cloudscribe.Core.Repositories.pgsql
                 arParams);
 
             return (rowsAffected > -1);
-
-            
 
         }
 
@@ -734,103 +636,77 @@ namespace cloudscribe.Core.Repositories.pgsql
             NpgsqlParameter[] arParams = new NpgsqlParameter[24];
 
             arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new NpgsqlParameter("allownewregistration", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = allowNewRegistration;
 
             arParams[2] = new NpgsqlParameter("usesecureregistration", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = useSecureRegistration;
 
             arParams[3] = new NpgsqlParameter("useldapauth", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = useLdapAuth;
 
             arParams[4] = new NpgsqlParameter("autocreateldapuseronfirstlogin", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = autoCreateLdapUserOnFirstLogin;
 
             arParams[5] = new NpgsqlParameter("ldapserver", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[5].Direction = ParameterDirection.Input;
             arParams[5].Value = ldapServer;
 
             arParams[6] = new NpgsqlParameter("ldapport", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[6].Direction = ParameterDirection.Input;
             arParams[6].Value = ldapPort;
 
             arParams[7] = new NpgsqlParameter("ldapdomain", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[7].Direction = ParameterDirection.Input;
             arParams[7].Value = ldapDomain;
 
             arParams[8] = new NpgsqlParameter("ldaprootdn", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[8].Direction = ParameterDirection.Input;
             arParams[8].Value = ldapRootDN;
 
             arParams[9] = new NpgsqlParameter("ldapuserdnkey", NpgsqlTypes.NpgsqlDbType.Varchar, 10);
-            arParams[9].Direction = ParameterDirection.Input;
             arParams[9].Value = ldapUserDNKey;
 
             arParams[10] = new NpgsqlParameter("useemailforlogin", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[10].Direction = ParameterDirection.Input;
             arParams[10].Value = useEmailForLogin;
 
             arParams[11] = new NpgsqlParameter("allowuserfullnamechange", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[11].Direction = ParameterDirection.Input;
             arParams[11].Value = allowUserFullNameChange;
 
             arParams[12] = new NpgsqlParameter("allowopenidauth", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[12].Direction = ParameterDirection.Input;
             arParams[12].Value = allowOpenIdAuth;
 
             arParams[13] = new NpgsqlParameter("allowwindowsliveauth", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[13].Direction = ParameterDirection.Input;
             arParams[13].Value = allowWindowsLiveAuth;
 
             arParams[14] = new NpgsqlParameter("allowpasswordretrieval", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[14].Direction = ParameterDirection.Input;
             arParams[14].Value = allowPasswordRetrieval;
 
             arParams[15] = new NpgsqlParameter("allowpasswordreset", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[15].Direction = ParameterDirection.Input;
             arParams[15].Value = allowPasswordReset;
 
             arParams[16] = new NpgsqlParameter("requiresquestionandanswer", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[16].Direction = ParameterDirection.Input;
             arParams[16].Value = requiresQuestionAndAnswer;
 
             arParams[17] = new NpgsqlParameter("maxinvalidpasswordattempts", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[17].Direction = ParameterDirection.Input;
             arParams[17].Value = maxInvalidPasswordAttempts;
 
             arParams[18] = new NpgsqlParameter("passwordattemptwindowminutes", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[18].Direction = ParameterDirection.Input;
             arParams[18].Value = passwordAttemptWindowMinutes;
 
             arParams[19] = new NpgsqlParameter("requiresuniqueemail", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[19].Direction = ParameterDirection.Input;
             arParams[19].Value = requiresUniqueEmail;
 
             arParams[20] = new NpgsqlParameter("passwordformat", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[20].Direction = ParameterDirection.Input;
             arParams[20].Value = passwordFormat;
 
             arParams[21] = new NpgsqlParameter("minrequiredpasswordlength", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[21].Direction = ParameterDirection.Input;
             arParams[21].Value = minRequiredPasswordLength;
 
             arParams[22] = new NpgsqlParameter("minreqnonalphachars", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[22].Direction = ParameterDirection.Input;
             arParams[22].Value = minReqNonAlphaChars;
 
             arParams[23] = new NpgsqlParameter("pwdstrengthregex", NpgsqlTypes.NpgsqlDbType.Text);
-            arParams[23].Direction = ParameterDirection.Input;
             arParams[23].Value = pwdStrengthRegex;
            
-
-
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 ConnectionString.GetWriteConnectionString(),
                 CommandType.Text,
@@ -860,15 +736,12 @@ namespace cloudscribe.Core.Repositories.pgsql
             NpgsqlParameter[] arParams = new NpgsqlParameter[3];
 
             arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new NpgsqlParameter("windowsliveappid", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = windowsLiveAppId;
 
             arParams[2] = new NpgsqlParameter("windowslivekey", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = windowsLiveKey;
 
            
@@ -901,51 +774,39 @@ namespace cloudscribe.Core.Repositories.pgsql
             NpgsqlParameter[] arParams = new NpgsqlParameter[12];
             
             arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new NpgsqlParameter("allowpasswordretrieval", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = allowPasswordRetrieval;
 
             arParams[2] = new NpgsqlParameter("allowpasswordreset", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = allowPasswordReset;
 
             arParams[3] = new NpgsqlParameter("requiresquestionandanswer", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = requiresQuestionAndAnswer;
 
             arParams[4] = new NpgsqlParameter("maxinvalidpasswordattempts", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = maxInvalidPasswordAttempts;
 
             arParams[5] = new NpgsqlParameter("passwordattemptwindowminutes", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[5].Direction = ParameterDirection.Input;
             arParams[5].Value = passwordAttemptWindowMinutes;
 
             arParams[6] = new NpgsqlParameter("requiresuniqueemail", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[6].Direction = ParameterDirection.Input;
             arParams[6].Value = requiresUniqueEmail;
 
             arParams[7] = new NpgsqlParameter("passwordformat", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[7].Direction = ParameterDirection.Input;
             arParams[7].Value = passwordFormat;
 
             arParams[8] = new NpgsqlParameter("minrequiredpasswordlength", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[8].Direction = ParameterDirection.Input;
             arParams[8].Value = minRequiredPasswordLength;
 
             arParams[9] = new NpgsqlParameter("minrequirednonalphanumericcharacters", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[9].Direction = ParameterDirection.Input;
             arParams[9].Value = minRequiredNonAlphanumericCharacters;
 
             arParams[10] = new NpgsqlParameter("passwordstrengthregularexpression", NpgsqlTypes.NpgsqlDbType.Text);
-            arParams[10].Direction = ParameterDirection.Input;
             arParams[10].Value = passwordStrengthRegularExpression;
 
             arParams[11] = new NpgsqlParameter("defaultemailfromaddress", NpgsqlTypes.NpgsqlDbType.Text, 100);
-            arParams[11].Direction = ParameterDirection.Input;
             arParams[11].Value = defaultEmailFromAddress;
 
             int rowsAffected = Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -965,74 +826,27 @@ namespace cloudscribe.Core.Repositories.pgsql
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
             arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             StringBuilder sqlCommand = new StringBuilder();
 
-           // sqlCommand.Append("DELETE FROM mp_webparts WHERE siteid = :siteid; ");
-            //sqlCommand.Append("DELETE FROM mp_pagemodules ");
-            //sqlCommand.Append("WHERE pageid IN (SELECT pageid FROM mp_pages WHERE siteid = :siteid); ");
-            //sqlCommand.Append("DELETE FROM mp_modulesettings WHERE moduleid IN (SELECT moduleid FROM mp_modules WHERE siteid = :siteid);");
-            //sqlCommand.Append("DELETE FROM mp_modules WHERE siteid = :siteid; ");
-            //sqlCommand.Append("DELETE FROM mp_sitemoduledefinitions WHERE siteid = :siteid; ");
+          
             sqlCommand.Append("DELETE FROM mp_userproperties WHERE userguid IN (SELECT userguid FROM mp_users WHERE siteid = :siteid);");
             sqlCommand.Append("DELETE FROM mp_userroles WHERE userid IN (SELECT userid FROM mp_users WHERE siteid = :siteid);");
             sqlCommand.Append("DELETE FROM mp_userlocation WHERE userguid IN (SELECT userguid FROM mp_users WHERE siteid = :siteid);");
-            //sqlCommand.Append("DELETE FROM mp_friendlyurls WHERE siteid = :siteid; ");
-            //sqlCommand.Append("DELETE FROM mp_userpages WHERE siteid = :siteid; ");
+            
+            
             sqlCommand.Append("DELETE FROM mp_users WHERE siteid = :siteid; ");
-           // sqlCommand.Append("DELETE FROM mp_pages WHERE siteid = :siteid; ");
+           
             sqlCommand.Append("DELETE FROM mp_roles WHERE siteid = :siteid; ");
             sqlCommand.Append("DELETE FROM mp_sitehosts WHERE siteid = :siteid; ");
-            //sqlCommand.Append("DELETE FROM mp_sitepersonalizationallusers WHERE pathid IN (SELECT pathid FROM mp_sitepaths WHERE siteid = :siteid);");
-            //sqlCommand.Append("DELETE FROM mp_sitepersonalizationperuser WHERE pathid IN (SELECT pathid FROM mp_sitepaths WHERE siteid = :siteid);");
-            //sqlCommand.Append("DELETE FROM mp_sitepaths WHERE siteid = :siteid; ");
+            
             sqlCommand.Append("DELETE FROM mp_sitefolders WHERE siteguid IN (SELECT siteguid FROM mp_sites WHERE siteid = :siteid);");
 
             sqlCommand.Append("DELETE FROM mp_sitesettingsex WHERE siteid = :siteid; ");
 
-            //sqlCommand.Append("DELETE FROM mp_lettersendlog   ");
-            //sqlCommand.Append("WHERE letterguid IN (SELECT letterguid FROM mp_letter   ");
-            //sqlCommand.Append("WHERE letterinfoguid IN (SELECT letterinfoguid   ");
-            //sqlCommand.Append("FROM mp_letterinfo   ");
-            //sqlCommand.Append("WHERE siteguid IN (SELECT siteguid FROM mp_sites WHERE siteid = :siteid) ");
-            //sqlCommand.Append("));");
-
-            //sqlCommand.Append("DELETE FROM mp_LetterSubscribehx   ");
-            //sqlCommand.Append("WHERE letterinfoguid IN (SELECT letterinfoguid   ");
-            //sqlCommand.Append("FROM mp_letterinfo   ");
-            //sqlCommand.Append("WHERE siteguid IN (SELECT siteguid FROM mp_sites WHERE siteid = :siteid)   ");
-            //sqlCommand.Append(");");
-
-            //sqlCommand.Append("DELETE FROM mp_lettersubscribe   ");
-            //sqlCommand.Append("WHERE letterinfoguid IN (SELECT letterinfoguid   ");
-            //sqlCommand.Append("FROM mp_letterInfo   ");
-            //sqlCommand.Append("WHERE siteguid IN (SELECT siteguid FROM mp_sites WHERE siteid = :siteid)   ");
-            //sqlCommand.Append(");");
-
-            //sqlCommand.Append("DELETE FROM mp_Letter   ");
-            //sqlCommand.Append("WHERE letterinfoguid IN (SELECT letterinfoguid   ");
-            //sqlCommand.Append("FROM mp_letterinfo   ");
-            //sqlCommand.Append("WHERE siteguid IN (SELECT siteguid FROM mp_sites WHERE siteid = :siteid)   ");
-            //sqlCommand.Append(");");
-
-            //sqlCommand.Append("DELETE FROM mp_letterhtmltemplate WHERE siteguid IN (SELECT siteguid FROM mp_sites WHERE siteid = :siteid);");
-            //sqlCommand.Append("DELETE FROM mp_letterinfo WHERE siteguid IN (SELECT siteguid FROM mp_sites WHERE siteid = :siteid);");
-
-            //sqlCommand.Append("DELETE FROM mp_paymentlog WHERE siteguid IN (SELECT siteguid FROM mp_sites WHERE siteid = :siteid);");
-            ////sqlCommand.Append("DELETE FROM mp_plugnpaylog WHERE siteguid IN (SELECT siteguid FROM mp_sites WHERE siteid = :siteid);");
-            //sqlCommand.Append("DELETE FROM mp_googlecheckoutlog WHERE siteguid IN (SELECT siteguid FROM mp_sites WHERE siteid = :siteid);");
-            //sqlCommand.Append("DELETE FROM mp_paypallog WHERE siteguid IN (SELECT siteguid FROM mp_sites WHERE siteid = :siteid);");
-
             sqlCommand.Append("DELETE FROM mp_redirectlist WHERE siteguid IN (SELECT siteguid FROM mp_sites WHERE siteid = :siteid);");
             sqlCommand.Append("DELETE FROM mp_taskqueue WHERE siteguid IN (SELECT siteguid FROM mp_sites WHERE siteid = :siteid);");
-            
-            //sqlCommand.Append("DELETE FROM mp_taxclass WHERE siteguid IN (SELECT siteguid FROM mp_sites WHERE siteid = :siteid);");
-            //sqlCommand.Append("DELETE FROM mp_taxratehistory WHERE siteguid IN (SELECT siteguid FROM mp_sites WHERE siteid = :siteid);");
-            //sqlCommand.Append("DELETE FROM mp_taxrate WHERE siteguid IN (SELECT siteguid FROM mp_sites WHERE siteid = :siteid);");
-
-
             
             sqlCommand.Append("DELETE FROM mp_sites ");
             sqlCommand.Append("WHERE ");
@@ -1046,7 +860,6 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             return (rowsAffected > 0);
 
-           
         }
 
         public static IDataReader GetSiteList()
@@ -1064,19 +877,15 @@ namespace cloudscribe.Core.Repositories.pgsql
                 sqlCommand.ToString(),
                 null);
 
-           
         }
 
-        
         public static IDataReader GetSite(string hostName)
         {
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
             arParams[0] = new NpgsqlParameter("hostname", NpgsqlTypes.NpgsqlDbType.Text, 50);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = hostName;
            
-
             return AdoHelper.ExecuteReader(
                 ConnectionString.GetReadConnectionString(),
                 CommandType.StoredProcedure,
@@ -1084,92 +893,12 @@ namespace cloudscribe.Core.Repositories.pgsql
                 arParams);
         }
 
-        
-        public static void AddFeature(Guid siteGuid, Guid featureGuid)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("INSERT INTO mp_sitemoduledefinitions (");
-            sqlCommand.Append("siteid, ");
-            sqlCommand.Append("moduledefid, ");
-            sqlCommand.Append("siteguid, ");
-            sqlCommand.Append("featureguid, ");
-            sqlCommand.Append("authorizedroles ");
-            sqlCommand.Append(")");
-
-            sqlCommand.Append(" VALUES (");
-            sqlCommand.Append("(SELECT siteid FROM mp_sites WHERE siteguid = :siteguid LIMIT 1), ");
-            sqlCommand.Append("(SELECT moduledefid FROM mp_moduledefinitions WHERE guid = :featureguid LIMIT 1), ");
-            sqlCommand.Append(":siteguid, ");
-            sqlCommand.Append(":featureguid, ");
-            sqlCommand.Append("'All Users' ");
-            sqlCommand.Append(")");
-            sqlCommand.Append(";");
-
-
-            NpgsqlParameter[] arParams = new NpgsqlParameter[2];
-
-            arParams[0] = new NpgsqlParameter("siteguid", NpgsqlTypes.NpgsqlDbType.Char, 36);
-            arParams[0].Direction = ParameterDirection.Input;
-            arParams[0].Value = siteGuid.ToString();
-
-            arParams[1] = new NpgsqlParameter("featureguid", NpgsqlTypes.NpgsqlDbType.Char, 36);
-            arParams[1].Direction = ParameterDirection.Input;
-            arParams[1].Value = featureGuid.ToString();
-
-            AdoHelper.ExecuteNonQuery(ConnectionString.GetWriteConnectionString(),
-                CommandType.Text,
-                sqlCommand.ToString(),
-                arParams);
-            
-           
-        }
-
-        public static void RemoveFeature(Guid siteGuid, Guid featureGuid)
-        {
-            NpgsqlParameter[] arParams = new NpgsqlParameter[2];
-
-            arParams[0] = new NpgsqlParameter("siteguid", NpgsqlTypes.NpgsqlDbType.Char, 36);
-            arParams[0].Direction = ParameterDirection.Input;
-            arParams[0].Value = siteGuid.ToString();
-
-            arParams[1] = new NpgsqlParameter("featureguid", NpgsqlTypes.NpgsqlDbType.Char, 36);
-            arParams[1].Direction = ParameterDirection.Input;
-            arParams[1].Value = featureGuid.ToString();
-            
-            AdoHelper.ExecuteNonQuery(
-                ConnectionString.GetWriteConnectionString(),
-                CommandType.StoredProcedure,
-                "mp_sitemoduledefinitions_deletev2(:siteguid,:featureguid)",
-                arParams);
-        }
-
-        public static void RemoveFeature(int siteId, int moduleDefId)
-        {
-            NpgsqlParameter[] arParams = new NpgsqlParameter[2];
-
-            arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
-            arParams[0].Value = siteId;
-
-            arParams[1] = new NpgsqlParameter("moduledefid", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[1].Direction = ParameterDirection.Input;
-            arParams[1].Value = moduleDefId;
-            
-            AdoHelper.ExecuteNonQuery(
-                ConnectionString.GetWriteConnectionString(),
-                CommandType.StoredProcedure,
-                "mp_sitemoduledefinitions_delete(:siteid,:moduledefid)",
-                arParams);
-        }
-
-        
 
         public static IDataReader GetSite(int siteId)
         {
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
             arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
             
             return AdoHelper.ExecuteReader(
@@ -1184,7 +913,6 @@ namespace cloudscribe.Core.Repositories.pgsql
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
             arParams[0] = new NpgsqlParameter("siteguid", NpgsqlTypes.NpgsqlDbType.Varchar, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteGuid.ToString();
             
             return AdoHelper.ExecuteReader(
@@ -1259,11 +987,9 @@ namespace cloudscribe.Core.Repositories.pgsql
             NpgsqlParameter[] arParams = new NpgsqlParameter[2];
 
             arParams[0] = new NpgsqlParameter("pagesize", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = pageSize;
 
             arParams[1] = new NpgsqlParameter("pageoffset", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = pageLowerBound;
 
             StringBuilder sqlCommand = new StringBuilder();
@@ -1294,7 +1020,6 @@ namespace cloudscribe.Core.Repositories.pgsql
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
             arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
             
             return AdoHelper.ExecuteReader(
@@ -1309,15 +1034,12 @@ namespace cloudscribe.Core.Repositories.pgsql
             NpgsqlParameter[] arParams = new NpgsqlParameter[3];
 
             arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new NpgsqlParameter("hostname", NpgsqlTypes.NpgsqlDbType.Text, 255);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = hostName;
 
             arParams[2] = new NpgsqlParameter("siteguid", NpgsqlTypes.NpgsqlDbType.Char, 36);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = siteGuid.ToString();
             
             AdoHelper.ExecuteNonQuery(
@@ -1332,7 +1054,6 @@ namespace cloudscribe.Core.Repositories.pgsql
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
             arParams[0] = new NpgsqlParameter("hostid", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = hostId;
            
             AdoHelper.ExecuteNonQuery(
@@ -1355,7 +1076,6 @@ namespace cloudscribe.Core.Repositories.pgsql
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
             arParams[0] = new NpgsqlParameter("currentsiteid", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = currentSiteId;
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -1394,15 +1114,12 @@ namespace cloudscribe.Core.Repositories.pgsql
             NpgsqlParameter[] arParams = new NpgsqlParameter[3];
 
             arParams[0] = new NpgsqlParameter("currentsiteid", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = currentSiteId;
 
             arParams[1] = new NpgsqlParameter("pagesize", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = pageSize;
 
             arParams[2] = new NpgsqlParameter("pageoffset", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = pageLowerBound;
 
             StringBuilder sqlCommand = new StringBuilder();
@@ -1441,7 +1158,6 @@ namespace cloudscribe.Core.Repositories.pgsql
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
             arParams[0] = new NpgsqlParameter("hostname", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = hostName;
 
             using (IDataReader reader = AdoHelper.ExecuteReader(
@@ -1504,7 +1220,6 @@ namespace cloudscribe.Core.Repositories.pgsql
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
             arParams[0] = new NpgsqlParameter("foldername", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = folderName;
 
             using (IDataReader reader = AdoHelper.ExecuteReader(

@@ -386,10 +386,10 @@ namespace cloudscribe.Core.Repositories.Caching
             return await repo.RoleExists(siteId, roleName);
         }
 
-        public int GetRoleMemberCount(int roleId)
-        {
-            return repo.GetRoleMemberCount(roleId);
-        }
+        //public int GetRoleMemberCount(int roleId)
+        //{
+        //    return repo.GetRoleMemberCount(roleId);
+        //}
 
         public async Task<ISiteRole> FetchRole(int roleID)
         {

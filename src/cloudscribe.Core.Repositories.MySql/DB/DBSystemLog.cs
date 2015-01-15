@@ -1,6 +1,6 @@
 ﻿//	Author:                 Joe Audette
 //  Created:			    2011-07-23
-//	Last Modified:		    2014-08-29
+//	Last Modified:		    2015-01-15
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -68,39 +68,30 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[9];
 
             arParams[0] = new MySqlParameter("?LogDate", MySqlDbType.DateTime);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = logDate;
 
             arParams[1] = new MySqlParameter("?IpAddress", MySqlDbType.VarChar, 50);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = ipAddress;
 
             arParams[2] = new MySqlParameter("?Culture", MySqlDbType.VarChar, 10);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = culture;
 
             arParams[3] = new MySqlParameter("?Url", MySqlDbType.Text);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = url;
 
             arParams[4] = new MySqlParameter("?ShortUrl", MySqlDbType.VarChar, 255);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = shortUrl;
 
             arParams[5] = new MySqlParameter("?Thread", MySqlDbType.VarChar, 255);
-            arParams[5].Direction = ParameterDirection.Input;
             arParams[5].Value = thread;
 
             arParams[6] = new MySqlParameter("?LogLevel", MySqlDbType.VarChar, 20);
-            arParams[6].Direction = ParameterDirection.Input;
             arParams[6].Value = logLevel;
 
             arParams[7] = new MySqlParameter("?Logger", MySqlDbType.VarChar, 255);
-            arParams[7].Direction = ParameterDirection.Input;
             arParams[7].Value = logger;
 
             arParams[8] = new MySqlParameter("?Message", MySqlDbType.Text);
-            arParams[8].Direction = ParameterDirection.Input;
             arParams[8].Value = message;
 
             int newID = Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -155,7 +146,6 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[1];
 
             arParams[0] = new MySqlParameter("?ID", MySqlDbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = id;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -182,7 +172,6 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[1];
 
             arParams[0] = new MySqlParameter("?CutoffDate", MySqlDbType.DateTime);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = cutoffDate;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -210,7 +199,6 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[1];
 
             arParams[0] = new MySqlParameter("?LogLevel", MySqlDbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = logLevel;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -288,11 +276,9 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[2];
 
             arParams[0] = new MySqlParameter("?PageSize", MySqlDbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = pageSize;
 
             arParams[1] = new MySqlParameter("?OffsetRows", MySqlDbType.Int32);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = pageLowerBound;
 
             return AdoHelper.ExecuteReader(
@@ -352,11 +338,9 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[2];
 
             arParams[0] = new MySqlParameter("?PageSize", MySqlDbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = pageSize;
 
             arParams[1] = new MySqlParameter("?OffsetRows", MySqlDbType.Int32);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = pageLowerBound;
 
             return AdoHelper.ExecuteReader(

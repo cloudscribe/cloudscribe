@@ -1,6 +1,6 @@
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2014-08-29
+// Last Modified:			2015-01-15
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -48,15 +48,12 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[3];
 
             arParams[0] = new MySqlParameter("?BannedIP", MySqlDbType.VarChar, 50);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = bannedIP;
 
             arParams[1] = new MySqlParameter("?BannedUTC", MySqlDbType.DateTime);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = bannedUtc;
 
             arParams[2] = new MySqlParameter("?BannedReason", MySqlDbType.VarChar, 255);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = bannedReason;
 
             int newID = Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -100,19 +97,15 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[4];
 
             arParams[0] = new MySqlParameter("?RowID", MySqlDbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = rowId;
 
             arParams[1] = new MySqlParameter("?BannedIP", MySqlDbType.VarChar, 50);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = bannedIP;
 
             arParams[2] = new MySqlParameter("?BannedUTC", MySqlDbType.DateTime);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = bannedUtc;
 
             arParams[3] = new MySqlParameter("?BannedReason", MySqlDbType.VarChar, 255);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = bannedReason;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -140,13 +133,13 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[1];
 
             arParams[0] = new MySqlParameter("?RowID", MySqlDbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = rowId;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
+
             return (rowsAffected > 0);
 
         }
@@ -167,7 +160,6 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[1];
 
             arParams[0] = new MySqlParameter("?BannedIP", MySqlDbType.VarChar, 50);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = ipAddress;
 
             int foundRows =  Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -193,7 +185,6 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[1];
 
             arParams[0] = new MySqlParameter("?RowID", MySqlDbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = rowId;
 
             return AdoHelper.ExecuteReader(
@@ -218,7 +209,6 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[1];
 
             arParams[0] = new MySqlParameter("?BannedIP", MySqlDbType.VarChar, 50);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = ipAddress;
 
             return AdoHelper.ExecuteReader(
@@ -298,11 +288,9 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[2];
 
             arParams[0] = new MySqlParameter("?PageNumber", MySqlDbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = pageNumber;
 
             arParams[1] = new MySqlParameter("?PageSize", MySqlDbType.Int32);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = pageSize;
 
             return AdoHelper.ExecuteReader(

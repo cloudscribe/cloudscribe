@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2008-06-22
-// Last Modified:			2015-01-08
+// Last Modified:			2015-01-15
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -49,47 +49,36 @@ namespace cloudscribe.Core.Repositories.pgsql
 			NpgsqlParameter[] arParams = new NpgsqlParameter[11];
 		
 			arParams[0] = new NpgsqlParameter("guid", NpgsqlTypes.NpgsqlDbType.Char, 36);
-			arParams[0].Direction = ParameterDirection.Input;
 			arParams[0].Value = guid.ToString();
 			
 			arParams[1] = new NpgsqlParameter("title", NpgsqlTypes.NpgsqlDbType.Varchar,50);
-			arParams[1].Direction = ParameterDirection.Input;
 			arParams[1].Value = title;
 			
 			arParams[2] = new NpgsqlParameter("code", NpgsqlTypes.NpgsqlDbType.Text,3);
-			arParams[2].Direction = ParameterDirection.Input;
 			arParams[2].Value = code;
 			
 			arParams[3] = new NpgsqlParameter("symbolleft", NpgsqlTypes.NpgsqlDbType.Varchar,15);
-			arParams[3].Direction = ParameterDirection.Input;
 			arParams[3].Value = symbolLeft;
 			
 			arParams[4] = new NpgsqlParameter("symbolright", NpgsqlTypes.NpgsqlDbType.Varchar,15);
-			arParams[4].Direction = ParameterDirection.Input;
 			arParams[4].Value = symbolRight;
 			
 			arParams[5] = new NpgsqlParameter("decimalpointchar", NpgsqlTypes.NpgsqlDbType.Text,1);
-			arParams[5].Direction = ParameterDirection.Input;
 			arParams[5].Value = decimalPointChar;
 			
 			arParams[6] = new NpgsqlParameter("thousandspointchar", NpgsqlTypes.NpgsqlDbType.Text,1);
-			arParams[6].Direction = ParameterDirection.Input;
 			arParams[6].Value = thousandsPointChar;
 			
 			arParams[7] = new NpgsqlParameter("decimalplaces", NpgsqlTypes.NpgsqlDbType.Text,1);
-			arParams[7].Direction = ParameterDirection.Input;
 			arParams[7].Value = decimalPlaces;
 			
 			arParams[8] = new NpgsqlParameter("value", NpgsqlTypes.NpgsqlDbType.Numeric);
-			arParams[8].Direction = ParameterDirection.Input;
 			arParams[8].Value = value;
 			
 			arParams[9] = new NpgsqlParameter("lastmodified", NpgsqlTypes.NpgsqlDbType.Timestamp);
-			arParams[9].Direction = ParameterDirection.Input;
 			arParams[9].Value = lastModified;
 			
 			arParams[10] = new NpgsqlParameter("created", NpgsqlTypes.NpgsqlDbType.Timestamp);
-			arParams[10].Direction = ParameterDirection.Input;
 			arParams[10].Value = created;
 			
 			StringBuilder sqlCommand = new StringBuilder();
@@ -162,43 +151,33 @@ namespace cloudscribe.Core.Repositories.pgsql
 			NpgsqlParameter[] arParams = new NpgsqlParameter[10];
 			
 			arParams[0] = new NpgsqlParameter("guid", NpgsqlTypes.NpgsqlDbType.Char, 36); 
-			arParams[0].Direction = ParameterDirection.Input;
 			arParams[0].Value = guid.ToString();
 			
 			arParams[1] = new NpgsqlParameter("title", NpgsqlTypes.NpgsqlDbType.Varchar,50); 
-			arParams[1].Direction = ParameterDirection.Input;
 			arParams[1].Value = title;
 			
 			arParams[2] = new NpgsqlParameter("code", NpgsqlTypes.NpgsqlDbType.Text,3); 
-			arParams[2].Direction = ParameterDirection.Input;
 			arParams[2].Value = code;
 			
 			arParams[3] = new NpgsqlParameter("symbolleft", NpgsqlTypes.NpgsqlDbType.Varchar,15); 
-			arParams[3].Direction = ParameterDirection.Input;
 			arParams[3].Value = symbolLeft;
 			
 			arParams[4] = new NpgsqlParameter("symbolright", NpgsqlTypes.NpgsqlDbType.Varchar,15); 
-			arParams[4].Direction = ParameterDirection.Input;
 			arParams[4].Value = symbolRight;
 			
 			arParams[5] = new NpgsqlParameter("decimalpointchar", NpgsqlTypes.NpgsqlDbType.Text,1); 
-			arParams[5].Direction = ParameterDirection.Input;
 			arParams[5].Value = decimalPointChar;
 			
 			arParams[6] = new NpgsqlParameter("thousandspointchar", NpgsqlTypes.NpgsqlDbType.Text,1); 
-			arParams[6].Direction = ParameterDirection.Input;
 			arParams[6].Value = thousandsPointChar;
 			
 			arParams[7] = new NpgsqlParameter("decimalplaces", NpgsqlTypes.NpgsqlDbType.Text,1); 
-			arParams[7].Direction = ParameterDirection.Input;
 			arParams[7].Value = decimalPlaces;
 			
 			arParams[8] = new NpgsqlParameter("value", NpgsqlTypes.NpgsqlDbType.Numeric); 
-			arParams[8].Direction = ParameterDirection.Input;
 			arParams[8].Value = value;
 			
 			arParams[9] = new NpgsqlParameter("lastmodified", NpgsqlTypes.NpgsqlDbType.Timestamp); 
-			arParams[9].Direction = ParameterDirection.Input;
 			arParams[9].Value = lastModified;
 			
 			StringBuilder sqlCommand = new StringBuilder();
@@ -238,7 +217,6 @@ namespace cloudscribe.Core.Repositories.pgsql
 			NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 			
 			arParams[0] = new NpgsqlParameter("guid", NpgsqlTypes.NpgsqlDbType.Char, 36);
-			arParams[0].Direction = ParameterDirection.Input;
 			arParams[0].Value = guid.ToString();
 				
 			
@@ -267,7 +245,6 @@ namespace cloudscribe.Core.Repositories.pgsql
 			NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 			
 			arParams[0] = new NpgsqlParameter("guid", NpgsqlTypes.NpgsqlDbType.Char, 36);
-			arParams[0].Direction = ParameterDirection.Input;
 			arParams[0].Value = guid.ToString();
 			
 			StringBuilder sqlCommand = new StringBuilder();
