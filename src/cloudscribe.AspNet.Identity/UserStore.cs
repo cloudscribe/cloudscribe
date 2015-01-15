@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2014-07-22
-// Last Modified:		    2015-01-13
+// Last Modified:		    2015-01-15
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -145,6 +145,10 @@ namespace cloudscribe.AspNet.Identity
 
         #region IUserEmailStore
 
+        //disable warning about not really being async
+        // we know it is not, it is not needed to hit the db in these
+#pragma warning disable 1998
+
         public async Task<string> GetEmailAsync(TUser user)
         {
             if (debugLog) { log.Info("GetEmailAsync"); }
@@ -158,6 +162,8 @@ namespace cloudscribe.AspNet.Identity
 
             return user.EmailConfirmed;
         }
+
+#pragma warning restore 1998
 
         public async Task SetEmailAsync(TUser user, string email)
         {
@@ -212,6 +218,10 @@ namespace cloudscribe.AspNet.Identity
         #endregion
 
         #region IUserPasswordStore
+
+        //disable warning about not really being async
+        // we know it is not, it is not needed to hit the db in these
+#pragma warning disable 1998
 
         public async Task<string> GetPasswordHashAsync(TUser user)
         {
@@ -270,9 +280,15 @@ namespace cloudscribe.AspNet.Identity
             
         }
 
+#pragma warning restore 1998
+
         #endregion
 
         #region IUserLockoutStore
+
+        //disable warning about not really being async
+        // we know it is not, it is not needed to hit the db in these
+#pragma warning disable 1998
 
         public async Task<int> GetAccessFailedCountAsync(TUser user)
         {
@@ -300,6 +316,9 @@ namespace cloudscribe.AspNet.Identity
             }
             return d;
         }
+
+
+#pragma warning restore 1998
 
         public async Task<int> IncrementAccessFailedCountAsync(TUser user)
         {
@@ -453,12 +472,18 @@ namespace cloudscribe.AspNet.Identity
 
         #region IUserTwoFactorStore
 
+        //disable warning about not really being async
+        // we know it is not, it is not needed to hit the db in these
+#pragma warning disable 1998
+
         public async Task<bool> GetTwoFactorEnabledAsync(TUser user)
         {
             if (debugLog) { log.Info("GetTwoFactorEnabledAsync"); }
 
             return user.TwoFactorEnabled;
         }
+
+#pragma warning restore 1998
 
         public async Task SetTwoFactorEnabledAsync(TUser user,bool enabled)
         {
@@ -475,6 +500,10 @@ namespace cloudscribe.AspNet.Identity
 
         #region IUserPhoneNumberStore
 
+        //disable warning about not really being async
+        // we know it is not, it is not needed to hit the db in these
+#pragma warning disable 1998
+
         public async Task<string> GetPhoneNumberAsync(TUser user)
         {
             if (debugLog) { log.Info("GetPhoneNumberAsync"); }
@@ -488,6 +517,8 @@ namespace cloudscribe.AspNet.Identity
 
             return user.PhoneNumberConfirmed;
         }
+
+#pragma warning restore 1998
 
         public async Task SetPhoneNumberAsync(TUser user, string phoneNumber)
         {

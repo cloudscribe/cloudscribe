@@ -13,8 +13,6 @@ namespace cloudscribe.Core.Models
         ISiteSettings Fetch(int siteId);
         ISiteSettings Fetch(Guid siteGuid);
         ISiteSettings Fetch(string hostName);
-        void Save(ISiteSettings site);
-        bool Delete(int siteId);
         int GetCount();
         List<ISiteInfo> GetList();
         List<ISiteInfo> GetPageOtherSites(
@@ -22,6 +20,9 @@ namespace cloudscribe.Core.Models
             int pageNumber,
             int pageSize,
             out int totalPages);
+
+        void Save(ISiteSettings site);
+        bool Delete(int siteId);
 
         List<ISiteHost> GetSiteHosts(int siteId);
         List<ISiteHost> GetAllHosts();

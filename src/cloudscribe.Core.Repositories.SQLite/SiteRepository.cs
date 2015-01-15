@@ -14,6 +14,10 @@ using System.Globalization;
 namespace cloudscribe.Core.Repositories.SQLite
 {
 
+    //disable warning about not really being async
+    // we know it is not, and for Sqlite there is probably no benefit to making it really async
+#pragma warning disable 1998
+
     public sealed class SiteRepository : ISiteRepository
     {
         public SiteRepository()
@@ -568,5 +572,7 @@ namespace cloudscribe.Core.Repositories.SQLite
 
         #endregion
     }
+
+#pragma warning restore 1998
 
 }

@@ -174,7 +174,7 @@ namespace cloudscribe.Core.Web.Components
             adminUser.PasswordQuestion = "What is your user name?";
             adminUser.PasswordAnswer = "admin";
 
-            userRepository.Save(adminUser);
+            result = await userRepository.Save(adminUser);
 
             //siteUserManager.AddPassword(adminUser.UserGuid.ToString(), "admin");
 

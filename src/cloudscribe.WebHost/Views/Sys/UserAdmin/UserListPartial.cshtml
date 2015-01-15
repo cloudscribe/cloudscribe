@@ -77,13 +77,13 @@
 
 </table>
 <div>
-    @Html.Pager(Model.Paging.ItemsPerPage, Model.Paging.CurrentPage, Model.Paging.TotalPages).Options(o => o
+    @Html.Pager(Model.Paging.ItemsPerPage, Model.Paging.CurrentPage, Model.Paging.TotalItems).Options(o => o
             //.Action("StateListPage")
             .AddRouteValue("query", Model.AlphaQuery)
             //.AddRouteValue("pageSize", Model.Paging.ItemsPerPage)
             .DisplayTemplate("Bootstrap3Pagination")
             .PageRouteValueKey("pageNumber")
             .MaxNrOfPages(Model.Paging.MaxPagerItems)
-            .UseItemCountAsPageCount()
+            
     )
 </div>

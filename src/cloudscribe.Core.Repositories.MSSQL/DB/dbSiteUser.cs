@@ -57,13 +57,13 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return count;
         }
 
-        public static int UserCount(int siteId, String userNameBeginsWith)
+        public static async Task<int> CountUsers(int siteId, String userNameBeginsWith)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_Users_CountByFirstLetter", 2);
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
             sph.DefineSqlParameter("@UserNameBeginsWith", SqlDbType.NVarChar, 1, ParameterDirection.Input, userNameBeginsWith);
-
-            int count = Convert.ToInt32(sph.ExecuteScalar());
+            object result = await sph.ExecuteScalarAsync();
+            int count = Convert.ToInt32(result);
             return count;
         }
 
@@ -115,33 +115,32 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return count;
         }
 
-        public static IDataReader GetUserListPage(
+        public static async Task<DbDataReader> GetUserListPage(
             int siteId,
             int pageNumber,
             int pageSize,
             string userNameBeginsWith,
-            int sortMode,
-            out int totalPages
+            int sortMode
             )
         {
-            totalPages = 1;
-            int totalRows = UserCount(siteId, userNameBeginsWith);
+            //totalPages = 1;
+            //int totalRows = UserCount(siteId, userNameBeginsWith);
 
-            if (pageSize > 0) totalPages = totalRows / pageSize;
+            //if (pageSize > 0) totalPages = totalRows / pageSize;
 
-            if (totalRows <= pageSize)
-            {
-                totalPages = 1;
-            }
-            else
-            {
-                int remainder;
-                Math.DivRem(totalRows, pageSize, out remainder);
-                if (remainder > 0)
-                {
-                    totalPages += 1;
-                }
-            }
+            //if (totalRows <= pageSize)
+            //{
+            //    totalPages = 1;
+            //}
+            //else
+            //{
+            //    int remainder;
+            //    Math.DivRem(totalRows, pageSize, out remainder);
+            //    if (remainder > 0)
+            //    {
+            //        totalPages += 1;
+            //    }
+            //}
 
             SqlParameterHelper sph;
 
@@ -168,44 +167,44 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@PageSize", SqlDbType.Int, ParameterDirection.Input, pageSize);
             sph.DefineSqlParameter("@UserNameBeginsWith", SqlDbType.NVarChar, 50, ParameterDirection.Input, userNameBeginsWith);
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
-            return sph.ExecuteReader();
+            return await sph.ExecuteReaderAsync();
         }
 
-        private static int CountForSearch(int siteId, string searchInput)
+        public static async Task<int> CountUsersForSearch(int siteId, string searchInput)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_Users_CountForSearch", 2);
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
             sph.DefineSqlParameter("@SearchInput", SqlDbType.NVarChar, 50, ParameterDirection.Input, searchInput);
-            int count = Convert.ToInt32(sph.ExecuteScalar());
+            object result = await sph.ExecuteScalarAsync();
+            int count = Convert.ToInt32(result);
             return count;
         }
 
-        public static IDataReader GetUserSearchPage(
+        public static async Task<DbDataReader> GetUserSearchPage(
             int siteId,
             int pageNumber,
             int pageSize,
             string searchInput,
-            int sortMode,
-            out int totalPages)
+            int sortMode)
         {
-            totalPages = 1;
-            int totalRows = CountForSearch(siteId, searchInput);
+            //totalPages = 1;
+            //int totalRows = CountForSearch(siteId, searchInput);
 
-            if (pageSize > 0) totalPages = totalRows / pageSize;
+            //if (pageSize > 0) totalPages = totalRows / pageSize;
 
-            if (totalRows <= pageSize)
-            {
-                totalPages = 1;
-            }
-            else
-            {
-                int remainder;
-                Math.DivRem(totalRows, pageSize, out remainder);
-                if (remainder > 0)
-                {
-                    totalPages += 1;
-                }
-            }
+            //if (totalRows <= pageSize)
+            //{
+            //    totalPages = 1;
+            //}
+            //else
+            //{
+            //    int remainder;
+            //    Math.DivRem(totalRows, pageSize, out remainder);
+            //    if (remainder > 0)
+            //    {
+            //        totalPages += 1;
+            //    }
+            //}
 
             SqlParameterHelper sph;
 
@@ -231,45 +230,45 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@SearchInput", SqlDbType.NVarChar, 50, ParameterDirection.Input, searchInput);
             sph.DefineSqlParameter("@PageNumber", SqlDbType.Int, ParameterDirection.Input, pageNumber);
             sph.DefineSqlParameter("@PageSize", SqlDbType.Int, ParameterDirection.Input, pageSize);
-            return sph.ExecuteReader();
+            return await sph.ExecuteReaderAsync();
 
         }
 
-        private static int CountForAdminSearch(int siteId, string searchInput)
+        public static async Task<int> CountUsersForAdminSearch(int siteId, string searchInput)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_Users_CountForAdminSearch", 2);
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
             sph.DefineSqlParameter("@SearchInput", SqlDbType.NVarChar, 50, ParameterDirection.Input, searchInput);
-            int count = Convert.ToInt32(sph.ExecuteScalar());
+            object result = await sph.ExecuteScalarAsync();
+            int count = Convert.ToInt32(result);
             return count;
         }
 
-        public static IDataReader GetUserAdminSearchPage(
+        public static async Task<DbDataReader> GetUserAdminSearchPage(
             int siteId,
             int pageNumber,
             int pageSize,
             string searchInput,
-            int sortMode,
-            out int totalPages)
+            int sortMode)
         {
-            totalPages = 1;
-            int totalRows = CountForAdminSearch(siteId, searchInput);
+            //totalPages = 1;
+            //int totalRows = CountForAdminSearch(siteId, searchInput);
 
-            if (pageSize > 0) totalPages = totalRows / pageSize;
+            //if (pageSize > 0) totalPages = totalRows / pageSize;
 
-            if (totalRows <= pageSize)
-            {
-                totalPages = 1;
-            }
-            else
-            {
-                int remainder;
-                Math.DivRem(totalRows, pageSize, out remainder);
-                if (remainder > 0)
-                {
-                    totalPages += 1;
-                }
-            }
+            //if (totalRows <= pageSize)
+            //{
+            //    totalPages = 1;
+            //}
+            //else
+            //{
+            //    int remainder;
+            //    Math.DivRem(totalRows, pageSize, out remainder);
+            //    if (remainder > 0)
+            //    {
+            //        totalPages += 1;
+            //    }
+            //}
 
             SqlParameterHelper sph;
 
@@ -295,91 +294,89 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@SearchInput", SqlDbType.NVarChar, 50, ParameterDirection.Input, searchInput);
             sph.DefineSqlParameter("@PageNumber", SqlDbType.Int, ParameterDirection.Input, pageNumber);
             sph.DefineSqlParameter("@PageSize", SqlDbType.Int, ParameterDirection.Input, pageSize);
-            return sph.ExecuteReader();
+            return await sph.ExecuteReaderAsync();
 
         }
 
-        public static int CountLockedOutUsers(int siteId)
+        public static async Task<int> CountLockedOutUsers(int siteId)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_Users_CountLocked", 1);
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
-
-            int count = Convert.ToInt32(sph.ExecuteScalar());
+            object result = await sph.ExecuteScalarAsync();
+            int count = Convert.ToInt32(result);
             return count;
         }
 
-        public static IDataReader GetPageLockedUsers(
+        public static async Task<DbDataReader> GetPageLockedUsers(
             int siteId,
             int pageNumber,
-            int pageSize,
-            out int totalPages)
+            int pageSize)
         {
-            totalPages = 1;
-            int totalRows = CountLockedOutUsers(siteId);
+            //totalPages = 1;
+            //int totalRows = CountLockedOutUsers(siteId);
 
-            if (pageSize > 0) totalPages = totalRows / pageSize;
+            //if (pageSize > 0) totalPages = totalRows / pageSize;
 
-            if (totalRows <= pageSize)
-            {
-                totalPages = 1;
-            }
-            else
-            {
-                int remainder;
-                Math.DivRem(totalRows, pageSize, out remainder);
-                if (remainder > 0)
-                {
-                    totalPages += 1;
-                }
-            }
+            //if (totalRows <= pageSize)
+            //{
+            //    totalPages = 1;
+            //}
+            //else
+            //{
+            //    int remainder;
+            //    Math.DivRem(totalRows, pageSize, out remainder);
+            //    if (remainder > 0)
+            //    {
+            //        totalPages += 1;
+            //    }
+            //}
 
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_Users_SelectLockedPage", 3);
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
             sph.DefineSqlParameter("@PageNumber", SqlDbType.Int, ParameterDirection.Input, pageNumber);
             sph.DefineSqlParameter("@PageSize", SqlDbType.Int, ParameterDirection.Input, pageSize);
-            return sph.ExecuteReader();
+            return await sph.ExecuteReaderAsync();
 
         }
 
-        public static int CountNotApprovedUsers(int siteId)
+        public static async Task<int> CountNotApprovedUsers(int siteId)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_Users_CountNotApproved", 1);
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
-
-            int count = Convert.ToInt32(sph.ExecuteScalar());
+            object result = await sph.ExecuteScalarAsync();
+            int count = Convert.ToInt32(result);
             return count;
         }
 
-        public static IDataReader GetPageNotApprovedUsers(
+        public static async Task<DbDataReader> GetPageNotApprovedUsers(
             int siteId,
             int pageNumber,
-            int pageSize,
-            out int totalPages)
+            int pageSize)
         {
-            totalPages = 1;
-            int totalRows = CountNotApprovedUsers(siteId);
+            //totalPages = 1;
+            //int totalRows = CountNotApprovedUsers(siteId);
 
-            if (pageSize > 0) totalPages = totalRows / pageSize;
+            //if (pageSize > 0) totalPages = totalRows / pageSize;
 
-            if (totalRows <= pageSize)
-            {
-                totalPages = 1;
-            }
-            else
-            {
-                int remainder;
-                Math.DivRem(totalRows, pageSize, out remainder);
-                if (remainder > 0)
-                {
-                    totalPages += 1;
-                }
-            }
+            //if (totalRows <= pageSize)
+            //{
+            //    totalPages = 1;
+            //}
+            //else
+            //{
+            //    int remainder;
+            //    Math.DivRem(totalRows, pageSize, out remainder);
+            //    if (remainder > 0)
+            //    {
+            //        totalPages += 1;
+            //    }
+            //}
 
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_Users_SelectNotApprovedPage", 3);
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
             sph.DefineSqlParameter("@PageNumber", SqlDbType.Int, ParameterDirection.Input, pageNumber);
             sph.DefineSqlParameter("@PageSize", SqlDbType.Int, ParameterDirection.Input, pageSize);
-            return sph.ExecuteReader();
+            return await sph.ExecuteReaderAsync();
 
         }
 
@@ -836,11 +833,11 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return await sph.ExecuteReaderAsync();
         }
 
-        public static IDataReader GetCrossSiteUserListByEmail(string email)
+        public static async Task<DbDataReader> GetCrossSiteUserListByEmail(string email)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_Users_SelectAllByEmail", 1);
             sph.DefineSqlParameter("@Email", SqlDbType.NVarChar, 100, ParameterDirection.Input, email);
-            return sph.ExecuteReader();
+            return await sph.ExecuteReaderAsync();
         }
 
         public static async Task<DbDataReader> GetSingleUserByLoginName(int siteId, string loginName, bool allowEmailFallback)

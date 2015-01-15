@@ -13,7 +13,11 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.SqlCe
 {
-    public class GeoRepository : IGeoRepository
+    //disable warning about not really being async
+    // we know it is not, and for SqlCe there is probably no benefit to making it really async
+#pragma warning disable 1998
+
+    public sealed class GeoRepository : IGeoRepository
     {
         /// <summary>
         /// Persists a new instance of GeoCountry.
@@ -481,4 +485,6 @@ namespace cloudscribe.Core.Repositories.SqlCe
         }
 
     }
+
+#pragma warning restore 1998
 }

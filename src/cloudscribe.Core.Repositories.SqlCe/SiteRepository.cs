@@ -13,6 +13,9 @@ using System.Globalization;
 
 namespace cloudscribe.Core.Repositories.SqlCe
 {
+    //disable warning about not really being async
+    // we know it is not, and for SqlCe there is probably no benefit to making it really async
+#pragma warning disable 1998
 
     public sealed class SiteRepository : ISiteRepository
     {
@@ -568,5 +571,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
         #endregion
     }
+
+#pragma warning restore 1998
 
 }

@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2008-01-04
-// Last Modified:			2014-08-27
+// Last Modified:			2015-01-15
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -11,6 +11,7 @@ using System.Data.Common;
 using System.Configuration;
 using System.Globalization;
 using System.IO;
+using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using cloudscribe.DbHelpers.MySql;
 
@@ -490,7 +491,7 @@ namespace cloudscribe.Core.Repositories.MySql
         /// Gets an IDataReader with rows from the mp_Users table which have the passed in IP Address
         /// </summary>
         /// <param name="siteGuid"> siteGuid </param>
-        public static IDataReader GetUsersByIPAddress(Guid siteGuid, string ipv4Address)
+        public static async Task<DbDataReader> GetUsersByIPAddress(Guid siteGuid, string ipv4Address)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  u.* ");
@@ -509,14 +510,12 @@ namespace cloudscribe.Core.Repositories.MySql
             MySqlParameter[] arParams = new MySqlParameter[2];
 
             arParams[0] = new MySqlParameter("?SiteGuid", MySqlDbType.VarChar, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteGuid.ToString();
 
             arParams[1] = new MySqlParameter("?IPAddress", MySqlDbType.VarChar, 50);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = ipv4Address;
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 arParams);

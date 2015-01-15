@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-12-08
-// Last Modified:			2015-01-14
+// Last Modified:			2015-01-15
 // 
 
 using cloudscribe.Configuration;
@@ -44,8 +44,6 @@ namespace cloudscribe.Core.Web.Controllers
                 itemsPerPage = pageSize;
             }
 
-            int totalPages = 0;
-
             if(siteId != -1)
             {
                 if(!Site.SiteSettings.IsServerAdminSite)
@@ -58,36 +56,21 @@ namespace cloudscribe.Core.Web.Controllers
                 siteId = Site.SiteSettings.SiteId;
             }
 
-            List<IUserInfo> siteMembers;
-            //if(searchExp.Length > 0)
-            //{
-            //    siteMembers = Site.UserRepository.GetUserAdminSearchPage(
-            //    siteId,
-            //    pageNumber,
-            //    pageSize,
-            //    searchExp,
-            //    sortMode, out totalPages);
-            //}
-            //else
-            //{
-
-            //}
-
-            siteMembers = Site.UserRepository.GetPage(
+            var siteMembers = await Site.UserRepository.GetPage(
                 siteId,
                 pageNumber,
                 itemsPerPage,
                 query,
-                sortMode, 
-                out totalPages);
-             
+                sortMode);
+
+            var count = await Site.UserRepository.CountUsers(siteId, query);
 
             UserListViewModel model = new UserListViewModel();
             model.Heading = "User Management";
             model.UserList = siteMembers;
             model.Paging.CurrentPage = pageNumber;
             model.Paging.ItemsPerPage = itemsPerPage;
-            model.Paging.TotalPages = totalPages;
+            model.Paging.TotalItems = count;
             model.AlphaQuery = query; //TODO: sanitize
 
             return View(model);
@@ -112,8 +95,6 @@ namespace cloudscribe.Core.Web.Controllers
                 itemsPerPage = pageSize;
             }
 
-            int totalPages = 0;
-
             if (siteId != -1)
             {
                 if (!Site.SiteSettings.IsServerAdminSite)
@@ -126,28 +107,17 @@ namespace cloudscribe.Core.Web.Controllers
                 siteId = Site.SiteSettings.SiteId;
             }
 
-            List<IUserInfo> siteMembers;
-            //if(searchExp.Length > 0)
-            //{
-            //    siteMembers = Site.UserRepository.GetUserAdminSearchPage(
-            //    siteId,
-            //    pageNumber,
-            //    pageSize,
-            //    searchExp,
-            //    sortMode, out totalPages);
-            //}
-            //else
-            //{
+            
+            
 
-            //}
-
-            siteMembers = Site.UserRepository.GetUserAdminSearchPage(
+            var siteMembers = await Site.UserRepository.GetUserAdminSearchPage(
                 siteId,
                 pageNumber,
                 itemsPerPage,
                 query,
-                sortMode,
-                out totalPages);
+                sortMode);
+
+            var count = await Site.UserRepository.CountUsersForAdminSearch(siteId, query);
 
 
             UserListViewModel model = new UserListViewModel();
@@ -155,7 +125,7 @@ namespace cloudscribe.Core.Web.Controllers
             model.UserList = siteMembers;
             model.Paging.CurrentPage = pageNumber;
             model.Paging.ItemsPerPage = itemsPerPage;
-            model.Paging.TotalPages = totalPages;
+            model.Paging.TotalItems = count;
             model.SearchQuery = query; //TODO: sanitize
             
 
@@ -201,7 +171,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             //}
 
-            siteMembers = Site.UserRepository.GetByIPAddress(
+            siteMembers = await Site.UserRepository.GetByIPAddress(
                 siteGuid,
                 ipQuery);
 

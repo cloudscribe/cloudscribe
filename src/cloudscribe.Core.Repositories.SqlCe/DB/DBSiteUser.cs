@@ -239,7 +239,6 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[1];
 
             arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -263,7 +262,6 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[1];
 
             arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -415,7 +413,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
                 arParams));
         }
 
-        public static int UserCount(int siteId, String userNameBeginsWith)
+        public static int CountUsers(int siteId, String userNameBeginsWith)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  Count(*) ");
@@ -449,33 +447,32 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
         }
 
-        public static IDataReader GetUserListPage(
+        public static DbDataReader GetUserListPage(
             int siteId,
             int pageNumber,
             int pageSize,
             string userNameBeginsWith,
-            int sortMode,
-            out int totalPages)
+            int sortMode)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
-            totalPages = 1;
-            int totalRows = UserCount(siteId, userNameBeginsWith);
+            //totalPages = 1;
+           // int totalRows = UserCount(siteId, userNameBeginsWith);
 
-            if (pageSize > 0) totalPages = totalRows / pageSize;
+            //if (pageSize > 0) totalPages = totalRows / pageSize;
 
-            if (totalRows <= pageSize)
-            {
-                totalPages = 1;
-            }
-            else
-            {
-                int remainder;
-                Math.DivRem(totalRows, pageSize, out remainder);
-                if (remainder > 0)
-                {
-                    totalPages += 1;
-                }
-            }
+            //if (totalRows <= pageSize)
+            //{
+            //    totalPages = 1;
+            //}
+            //else
+            //{
+            //    int remainder;
+            //    Math.DivRem(totalRows, pageSize, out remainder);
+            //    if (remainder > 0)
+            //    {
+            //        totalPages += 1;
+            //    }
+            //}
 
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT * FROM ");
@@ -545,11 +542,9 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[2];
 
             arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new SqlCeParameter("@UserNameBeginsWith", SqlDbType.NVarChar, 50);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = userNameBeginsWith;
 
             return AdoHelper.ExecuteReader(
@@ -560,7 +555,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
         }
 
-        private static int CountForSearch(int siteId, string searchInput)
+        public static int CountUsersForSearch(int siteId, string searchInput)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  Count(*) ");
@@ -599,41 +594,40 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
         }
 
-        public static IDataReader GetUserSearchPage(
+        public static DbDataReader GetUserSearchPage(
             int siteId,
             int pageNumber,
             int pageSize,
             string searchInput,
-            int sortMode,
-            out int totalPages)
+            int sortMode)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
-            totalPages = 1;
-            int totalRows = CountForSearch(siteId, searchInput);
+            //totalPages = 1;
+            //int totalRows = CountForSearch(siteId, searchInput);
 
-            if (pageSize > 0) totalPages = totalRows / pageSize;
+            //if (pageSize > 0) totalPages = totalRows / pageSize;
 
-            if (totalRows <= pageSize)
-            {
-                totalPages = 1;
-            }
-            else
-            {
-                int remainder;
-                Math.DivRem(totalRows, pageSize, out remainder);
-                if (remainder > 0)
-                {
-                    totalPages += 1;
-                }
-            }
+            //if (totalRows <= pageSize)
+            //{
+            //    totalPages = 1;
+            //}
+            //else
+            //{
+            //    int remainder;
+            //    Math.DivRem(totalRows, pageSize, out remainder);
+            //    if (remainder > 0)
+            //    {
+            //        totalPages += 1;
+            //    }
+            //}
 
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT * FROM ");
             sqlCommand.Append("(");
             sqlCommand.Append("SELECT TOP (" + pageSize.ToString(CultureInfo.InvariantCulture) + ") * FROM ");
             sqlCommand.Append("(");
-            sqlCommand.Append("SELECT TOP (" + pageNumber.ToString(CultureInfo.InvariantCulture) + " * " + pageSize.ToString(CultureInfo.InvariantCulture) + ") u.*, ");
-            sqlCommand.Append(totalPages.ToString(CultureInfo.InvariantCulture) + " AS TotalPages ");
+            sqlCommand.Append("SELECT TOP (" + pageNumber.ToString(CultureInfo.InvariantCulture) + " * " + pageSize.ToString(CultureInfo.InvariantCulture) + ") u.* ");
+            //sqlCommand.Append(totalPages.ToString(CultureInfo.InvariantCulture) + " AS TotalPages ");
 
             sqlCommand.Append("FROM	mp_Users u  ");
             sqlCommand.Append("WHERE ");
@@ -699,11 +693,9 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[2];
 
             arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new SqlCeParameter("@SearchInput", SqlDbType.NVarChar, 50);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = searchInput;
 
             return AdoHelper.ExecuteReader(
@@ -714,7 +706,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
         }
 
-        private static int CountForAdminSearch(int siteId, string searchInput)
+        public static int CountUsersForAdminSearch(int siteId, string searchInput)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  Count(*) ");
@@ -752,41 +744,40 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
         }
 
-        public static IDataReader GetUserAdminSearchPage(
+        public static DbDataReader GetUserAdminSearchPage(
             int siteId,
             int pageNumber,
             int pageSize,
             string searchInput,
-            int sortMode,
-            out int totalPages)
+            int sortMode)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
-            totalPages = 1;
-            int totalRows = CountForAdminSearch(siteId, searchInput);
+            //totalPages = 1;
+            //int totalRows = CountForAdminSearch(siteId, searchInput);
 
-            if (pageSize > 0) totalPages = totalRows / pageSize;
+            //if (pageSize > 0) totalPages = totalRows / pageSize;
 
-            if (totalRows <= pageSize)
-            {
-                totalPages = 1;
-            }
-            else
-            {
-                int remainder;
-                Math.DivRem(totalRows, pageSize, out remainder);
-                if (remainder > 0)
-                {
-                    totalPages += 1;
-                }
-            }
+            //if (totalRows <= pageSize)
+            //{
+            //    totalPages = 1;
+            //}
+            //else
+            //{
+            //    int remainder;
+            //    Math.DivRem(totalRows, pageSize, out remainder);
+            //    if (remainder > 0)
+            //    {
+            //        totalPages += 1;
+            //    }
+            //}
 
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT * FROM ");
             sqlCommand.Append("(");
             sqlCommand.Append("SELECT TOP (" + pageSize.ToString(CultureInfo.InvariantCulture) + ") * FROM ");
             sqlCommand.Append("(");
-            sqlCommand.Append("SELECT TOP (" + pageNumber.ToString(CultureInfo.InvariantCulture) + " * " + pageSize.ToString(CultureInfo.InvariantCulture) + ") u.*, ");
-            sqlCommand.Append(totalPages.ToString(CultureInfo.InvariantCulture) + " AS TotalPages ");
+            sqlCommand.Append("SELECT TOP (" + pageNumber.ToString(CultureInfo.InvariantCulture) + " * " + pageSize.ToString(CultureInfo.InvariantCulture) + ") u.* ");
+            //sqlCommand.Append(totalPages.ToString(CultureInfo.InvariantCulture) + " AS TotalPages ");
 
             sqlCommand.Append("FROM	mp_Users u  ");
             sqlCommand.Append("WHERE ");
@@ -851,11 +842,9 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[2];
 
             arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new SqlCeParameter("@SearchInput", SqlDbType.NVarChar, 50);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = searchInput;
 
             return AdoHelper.ExecuteReader(
@@ -866,30 +855,29 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
         }
 
-        public static IDataReader GetPageLockedUsers(
+        public static DbDataReader GetPageLockedUsers(
             int siteId,
             int pageNumber,
-            int pageSize,
-            out int totalPages)
+            int pageSize)
         {
-            totalPages = 1;
-            int totalRows = CountLockedOutUsers(siteId);
+            //totalPages = 1;
+            //int totalRows = CountLockedOutUsers(siteId);
 
-            if (pageSize > 0) totalPages = totalRows / pageSize;
+            //if (pageSize > 0) totalPages = totalRows / pageSize;
 
-            if (totalRows <= pageSize)
-            {
-                totalPages = 1;
-            }
-            else
-            {
-                int remainder;
-                Math.DivRem(totalRows, pageSize, out remainder);
-                if (remainder > 0)
-                {
-                    totalPages += 1;
-                }
-            }
+            //if (totalRows <= pageSize)
+            //{
+            //    totalPages = 1;
+            //}
+            //else
+            //{
+            //    int remainder;
+            //    Math.DivRem(totalRows, pageSize, out remainder);
+            //    if (remainder > 0)
+            //    {
+            //        totalPages += 1;
+            //    }
+            //}
 
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT * FROM ");
@@ -922,7 +910,6 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[1];
 
             arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             return AdoHelper.ExecuteReader(
@@ -933,30 +920,29 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
         }
 
-        public static IDataReader GetPageNotApprovedUsers(
+        public static DbDataReader GetPageNotApprovedUsers(
             int siteId,
             int pageNumber,
-            int pageSize,
-            out int totalPages)
+            int pageSize)
         {
-            totalPages = 1;
-            int totalRows = CountNotApprovedUsers(siteId);
+            //totalPages = 1;
+            //int totalRows = CountNotApprovedUsers(siteId);
 
-            if (pageSize > 0) totalPages = totalRows / pageSize;
+            //if (pageSize > 0) totalPages = totalRows / pageSize;
 
-            if (totalRows <= pageSize)
-            {
-                totalPages = 1;
-            }
-            else
-            {
-                int remainder;
-                Math.DivRem(totalRows, pageSize, out remainder);
-                if (remainder > 0)
-                {
-                    totalPages += 1;
-                }
-            }
+            //if (totalRows <= pageSize)
+            //{
+            //    totalPages = 1;
+            //}
+            //else
+            //{
+            //    int remainder;
+            //    Math.DivRem(totalRows, pageSize, out remainder);
+            //    if (remainder > 0)
+            //    {
+            //        totalPages += 1;
+            //    }
+            //}
 
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT * FROM ");
@@ -989,7 +975,6 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[1];
 
             arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             return AdoHelper.ExecuteReader(

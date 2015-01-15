@@ -204,7 +204,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         }
 
-        public static int CountLockedOutUsers(int siteId)
+        public static async Task<int> CountLockedOutUsers(int siteId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT COUNT(*) FROM mp_Users WHERE SiteID = @SiteID AND IsLockedOut = 1;");
@@ -212,15 +212,19 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
-            int count = Convert.ToInt32(AdoHelper.ExecuteScalar(ConnectionString.GetReadConnectionString(), sqlCommand.ToString(), arParams).ToString());
+            object result = await AdoHelper.ExecuteScalarAsync(
+                ConnectionString.GetReadConnectionString(),
+                sqlCommand.ToString(),
+                arParams);
+
+            int count = Convert.ToInt32(result);
 
             return count;
         }
 
-        public static int CountNotApprovedUsers(int siteId)
+        public static async Task<int> CountNotApprovedUsers(int siteId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT COUNT(*) FROM mp_Users WHERE SiteID = @SiteID AND ApprovedForForums = 0;");
@@ -228,10 +232,14 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
-            int count = Convert.ToInt32(AdoHelper.ExecuteScalar(ConnectionString.GetReadConnectionString(), sqlCommand.ToString(), arParams).ToString());
+            object result = await AdoHelper.ExecuteScalarAsync(
+                ConnectionString.GetReadConnectionString(),
+                sqlCommand.ToString(),
+                arParams);
+
+            int count = Convert.ToInt32(result);
 
             return count;
         }
@@ -394,7 +402,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
 
 
-        public static int Count(int siteId, string userNameBeginsWith)
+        public static async Task<int> CountUsers(int siteId, string userNameBeginsWith)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT Count(*) FROM mp_Users WHERE SiteID = @SiteID ");
@@ -410,48 +418,46 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[2];
 
             arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new FbParameter("@UserNameBeginsWith", FbDbType.VarChar, 50);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = userNameBeginsWith + "%";
 
-            int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
+            object result = await AdoHelper.ExecuteScalarAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
-                arParams));
+                arParams);
+
+            int count = Convert.ToInt32(result);
 
             return count;
 
         }
 
-        public static IDataReader GetUserListPage(
+        public static async Task<DbDataReader> GetUserListPage(
             int siteId,
             int pageNumber,
             int pageSize,
             string userNameBeginsWith,
-            int sortMode,
-            out int totalPages)
+            int sortMode)
         {
             StringBuilder sqlCommand = new StringBuilder();
-            int totalRows
-                = Count(siteId, userNameBeginsWith);
+            //int totalRows = Count(siteId, userNameBeginsWith);
 
-            totalPages = totalRows / pageSize;
-            if (totalRows <= pageSize)
-            {
-                totalPages = 1;
-            }
-            else
-            {
-                int remainder = 0;
-                Math.DivRem(totalRows, pageSize, out remainder);
-                if (remainder > 0)
-                {
-                    totalPages += 1;
-                }
-            }
+            //totalPages = totalRows / pageSize;
+            //if (totalRows <= pageSize)
+            //{
+            //    totalPages = 1;
+            //}
+            //else
+            //{
+            //    int remainder = 0;
+            //    Math.DivRem(totalRows, pageSize, out remainder);
+            //    if (remainder > 0)
+            //    {
+            //        totalPages += 1;
+            //    }
+            //}
 
             int skip = pageSize * (pageNumber - 1);
 
@@ -497,22 +503,19 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[2];
 
             arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new FbParameter("@UserNameBeginsWith", FbDbType.VarChar, 50);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = userNameBeginsWith + "%";
 
-
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
 
         }
 
-        private static int CountForSearch(int siteId, string searchInput)
+        public static async Task<int> CountUsersForSearch(int siteId, string searchInput)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT Count(*) FROM mp_Users WHERE SiteID = @SiteID ");
@@ -540,47 +543,46 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[2];
 
             arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
-            arParams[1] = new FbParameter("@SearchInput", FbDbType.VarChar, 50);
-            arParams[1].Direction = ParameterDirection.Input;
+            arParams[1] = new FbParameter("@SearchInput", FbDbType.VarChar, 50);;
             arParams[1].Value = "%" + searchInput + "%";
 
-            int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
+            object result = await AdoHelper.ExecuteScalarAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
-                arParams));
+                arParams);
+
+            int count = Convert.ToInt32(result);
 
             return count;
 
         }
 
-        public static IDataReader GetUserSearchPage(
+        public static async Task<DbDataReader> GetUserSearchPage(
             int siteId,
             int pageNumber,
             int pageSize,
             string searchInput,
-            int sortMode,
-            out int totalPages)
+            int sortMode)
         {
             StringBuilder sqlCommand = new StringBuilder();
-            int totalRows = CountForSearch(siteId, searchInput);
+            //int totalRows = CountForSearch(siteId, searchInput);
 
-            totalPages = totalRows / pageSize;
-            if (totalRows <= pageSize)
-            {
-                totalPages = 1;
-            }
-            else
-            {
-                int remainder = 0;
-                Math.DivRem(totalRows, pageSize, out remainder);
-                if (remainder > 0)
-                {
-                    totalPages += 1;
-                }
-            }
+            //totalPages = totalRows / pageSize;
+            //if (totalRows <= pageSize)
+            //{
+            //    totalPages = 1;
+            //}
+            //else
+            //{
+            //    int remainder = 0;
+            //    Math.DivRem(totalRows, pageSize, out remainder);
+            //    if (remainder > 0)
+            //    {
+            //        totalPages += 1;
+            //    }
+            //}
 
             int skip = pageSize * (pageNumber - 1);
 
@@ -636,22 +638,19 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[2];
 
             arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new FbParameter("@SearchInput", FbDbType.VarChar, 50);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = "%" + searchInput + "%";
 
-
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
 
         }
 
-        private static int CountForAdminSearch(int siteId, string searchInput)
+        public static async Task<int> CountUsersForAdminSearch(int siteId, string searchInput)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT Count(*) FROM mp_Users WHERE SiteID = @SiteID ");
@@ -675,47 +674,46 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[2];
 
             arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new FbParameter("@SearchInput", FbDbType.VarChar, 50);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = "%" + searchInput + "%";
 
-            int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
+            object result = await AdoHelper.ExecuteScalarAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
-                arParams));
+                arParams);
+
+            int count = Convert.ToInt32(result);
 
             return count;
 
         }
 
-        public static IDataReader GetUserAdminSearchPage(
+        public static async Task<DbDataReader> GetUserAdminSearchPage(
             int siteId,
             int pageNumber,
             int pageSize,
             string searchInput,
-            int sortMode,
-            out int totalPages)
+            int sortMode)
         {
             StringBuilder sqlCommand = new StringBuilder();
-            int totalRows = CountForAdminSearch(siteId, searchInput);
+            //int totalRows = CountForAdminSearch(siteId, searchInput);
 
-            totalPages = totalRows / pageSize;
-            if (totalRows <= pageSize)
-            {
-                totalPages = 1;
-            }
-            else
-            {
-                int remainder = 0;
-                Math.DivRem(totalRows, pageSize, out remainder);
-                if (remainder > 0)
-                {
-                    totalPages += 1;
-                }
-            }
+            //totalPages = totalRows / pageSize;
+            //if (totalRows <= pageSize)
+            //{
+            //    totalPages = 1;
+            //}
+            //else
+            //{
+            //    int remainder = 0;
+            //    Math.DivRem(totalRows, pageSize, out remainder);
+            //    if (remainder > 0)
+            //    {
+            //        totalPages += 1;
+            //    }
+            //}
 
             int skip = pageSize * (pageNumber - 1);
 
@@ -768,45 +766,41 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[2];
 
             arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new FbParameter("@SearchInput", FbDbType.VarChar, 50);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = "%" + searchInput + "%";
 
-
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
 
         }
 
-        public static IDataReader GetPageLockedUsers(
+        public static async Task<DbDataReader> GetPageLockedUsers(
             int siteId,
             int pageNumber,
-            int pageSize,
-            out int totalPages)
+            int pageSize)
         {
-            totalPages = 1;
-            int totalRows = CountLockedOutUsers(siteId);
+            //totalPages = 1;
+            //int totalRows = CountLockedOutUsers(siteId);
 
-            if (pageSize > 0) totalPages = totalRows / pageSize;
+            //if (pageSize > 0) totalPages = totalRows / pageSize;
 
-            if (totalRows <= pageSize)
-            {
-                totalPages = 1;
-            }
-            else
-            {
-                int remainder;
-                Math.DivRem(totalRows, pageSize, out remainder);
-                if (remainder > 0)
-                {
-                    totalPages += 1;
-                }
-            }
+            //if (totalRows <= pageSize)
+            //{
+            //    totalPages = 1;
+            //}
+            //else
+            //{
+            //    int remainder;
+            //    Math.DivRem(totalRows, pageSize, out remainder);
+            //    if (remainder > 0)
+            //    {
+            //        totalPages += 1;
+            //    }
+            //}
 
             int skip = pageSize * (pageNumber - 1);
 
@@ -818,7 +812,6 @@ namespace cloudscribe.Core.Repositories.Firebird
                 sqlCommand.Append(" SKIP " + skip.ToString() + "  ");
             }
             sqlCommand.Append(" u.*  ");
-
 
             sqlCommand.Append("FROM	mp_Users u  ");
 
@@ -833,40 +826,38 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
 
         }
 
-        public static IDataReader GetPageNotApprovedUsers(
+        public static async Task<DbDataReader> GetPageNotApprovedUsers(
             int siteId,
             int pageNumber,
-            int pageSize,
-            out int totalPages)
+            int pageSize)
         {
-            totalPages = 1;
-            int totalRows = CountNotApprovedUsers(siteId);
+            //totalPages = 1;
+            //int totalRows = CountNotApprovedUsers(siteId);
 
-            if (pageSize > 0) totalPages = totalRows / pageSize;
+            //if (pageSize > 0) totalPages = totalRows / pageSize;
 
-            if (totalRows <= pageSize)
-            {
-                totalPages = 1;
-            }
-            else
-            {
-                int remainder;
-                Math.DivRem(totalRows, pageSize, out remainder);
-                if (remainder > 0)
-                {
-                    totalPages += 1;
-                }
-            }
+            //if (totalRows <= pageSize)
+            //{
+            //    totalPages = 1;
+            //}
+            //else
+            //{
+            //    int remainder;
+            //    Math.DivRem(totalRows, pageSize, out remainder);
+            //    if (remainder > 0)
+            //    {
+            //        totalPages += 1;
+            //    }
+            //}
 
             int skip = pageSize * (pageNumber - 1);
 
@@ -878,7 +869,6 @@ namespace cloudscribe.Core.Repositories.Firebird
                 sqlCommand.Append(" SKIP " + skip.ToString() + "  ");
             }
             sqlCommand.Append(" u.*  ");
-
 
             sqlCommand.Append("FROM	mp_Users u  ");
 
@@ -893,10 +883,9 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -2080,7 +2069,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         }
 
-        public static IDataReader GetCrossSiteUserListByEmail(string email)
+        public static async Task<DbDataReader> GetCrossSiteUserListByEmail(string email)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT * ");
@@ -2092,10 +2081,9 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@Email", FbDbType.VarChar, 100);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = email.ToLower();
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 arParams);

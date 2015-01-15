@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-18
-// Last Modified:			2015-01-13
+// Last Modified:			2015-01-15
 // 
 
 
@@ -297,11 +297,11 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return DBSiteUser.UserCount(siteId);
         }
 
-        public int UserCount(int siteId, String userNameBeginsWith)
-        {
-            if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
-            return DBSiteUser.UserCount(siteId, userNameBeginsWith);
-        }
+        //public int UserCount(int siteId, String userNameBeginsWith)
+        //{
+        //    if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
+        //    return DBSiteUser.UserCount(siteId, userNameBeginsWith);
+        //}
 
         public int UsersOnlineSinceCount(int siteId, DateTime sinceTime)
         {
@@ -424,13 +424,13 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
 
 
-        public List<IUserInfo> GetByIPAddress(Guid siteGuid, string ipv4Address)
+        public async Task<List<IUserInfo>> GetByIPAddress(Guid siteGuid, string ipv4Address)
         {
             List<IUserInfo> userList = new List<IUserInfo>();
 
-            //if (UseRelatedSiteMode) { siteGuid = Guid.Empty; }
+            if (AppSettings.UseRelatedSiteMode) { siteGuid = Guid.Empty; }
 
-            using (IDataReader reader = DBUserLocation.GetUsersByIPAddress(siteGuid, ipv4Address))
+            using (DbDataReader reader = await DBUserLocation.GetUsersByIPAddress(siteGuid, ipv4Address))
             {
                 while (reader.Read())
                 {
@@ -445,11 +445,11 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         }
 
-        public List<IUserInfo> GetCrossSiteUserListByEmail(string email)
+        public async Task<List<IUserInfo>> GetCrossSiteUserListByEmail(string email)
         {
             List<IUserInfo> userList = new List<IUserInfo>();
 
-            using (IDataReader reader = DBSiteUser.GetCrossSiteUserListByEmail(email))
+            using (DbDataReader reader = await DBSiteUser.GetCrossSiteUserListByEmail(email))
             {
                 while (reader.Read())
                 {
@@ -464,25 +464,28 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         }
 
-        public List<IUserInfo> GetPage(
+        public async Task<int> CountUsers(int siteId, String userNameBeginsWith)
+        {
+            if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
+
+            return await DBSiteUser.CountUsers(siteId, userNameBeginsWith);
+        }
+
+        public async Task<List<IUserInfo>> GetPage(
             int siteId,
             int pageNumber,
             int pageSize,
             string userNameBeginsWith,
-            int sortMode,
-            out int totalPages)
+            int sortMode)
         {
-            //sortMode: 0 = DisplayName asc, 1 = JoinDate desc, 2 = Last, First
+            if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
 
-            totalPages = 1;
+            //sortMode: 0 = DisplayName asc, 1 = JoinDate desc, 2 = Last, First
 
             List<IUserInfo> userList = new List<IUserInfo>();
 
-            if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
-
-            using (IDataReader reader
-                = DBSiteUser.GetUserListPage(
-                    siteId, pageNumber, pageSize, userNameBeginsWith, sortMode, out totalPages))
+            using (DbDataReader reader = await DBSiteUser.GetUserListPage(
+                    siteId, pageNumber, pageSize, userNameBeginsWith, sortMode))
             {
 
                 while (reader.Read())
@@ -498,27 +501,32 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         }
 
-        public List<IUserInfo> GetUserSearchPage(
+        public async Task<int> CountUsersForSearch(int siteId, string searchInput)
+        {
+            if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
+
+            return await DBSiteUser.CountUsersForSearch(siteId, searchInput);
+        }
+
+        public async Task<List<IUserInfo>> GetUserSearchPage(
             int siteId,
             int pageNumber,
             int pageSize,
             string searchInput,
-            int sortMode,
-            out int totalPages)
+            int sortMode)
         {
+            if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
+
             //sortMode: 0 = DisplayName asc, 1 = JoinDate desc, 2 = Last, First
 
             List<IUserInfo> userList = new List<IUserInfo>();
 
-            if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
-
-            using (IDataReader reader = DBSiteUser.GetUserSearchPage(
+            using (DbDataReader reader = await DBSiteUser.GetUserSearchPage(
                 siteId,
                 pageNumber,
                 pageSize,
                 searchInput,
-                sortMode,
-                out totalPages))
+                sortMode))
             {
 
                 while (reader.Read())
@@ -532,28 +540,64 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
             return userList;
 
-
         }
 
-        public List<IUserInfo> GetUserAdminSearchPage(
+        public async Task<int> CountUsersForAdminSearch(int siteId, string searchInput)
+        {
+            if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
+
+            return await DBSiteUser.CountUsersForAdminSearch(siteId, searchInput);
+        }
+
+        public async Task<List<IUserInfo>> GetUserAdminSearchPage(
             int siteId,
             int pageNumber,
             int pageSize,
             string searchInput,
-            int sortMode,
-            out int totalPages)
+            int sortMode)
         {
-            List<IUserInfo> userList = new List<IUserInfo>();
-
             if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
 
-            using (IDataReader reader = DBSiteUser.GetUserAdminSearchPage(
+            List<IUserInfo> userList = new List<IUserInfo>();
+
+            using (DbDataReader reader = await DBSiteUser.GetUserAdminSearchPage(
                 siteId,
                 pageNumber,
                 pageSize,
                 searchInput,
-                sortMode,
-                out totalPages))
+                sortMode))
+            {
+                while (reader.Read())
+                {
+                    UserInfo user = new UserInfo();
+                    user.LoadFromReader(reader);
+                    userList.Add(user);
+                }
+            }
+
+            return userList;
+        }
+
+        public async Task<int> CountLockedOutUsers(int siteId)
+        {
+            if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
+
+            return await DBSiteUser.CountLockedOutUsers(siteId);
+        }
+
+        public async Task<List<IUserInfo>> GetPageLockedUsers(
+            int siteId,
+            int pageNumber,
+            int pageSize)
+        {
+            if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
+
+            List<IUserInfo> userList = new List<IUserInfo>();
+
+            using (DbDataReader reader = await DBSiteUser.GetPageLockedUsers(
+                siteId,
+                pageNumber,
+                pageSize))
             {
 
                 while (reader.Read())
@@ -566,54 +610,28 @@ namespace cloudscribe.Core.Repositories.MSSQL
             }
 
             return userList;
-
-
         }
 
-        public List<IUserInfo> GetPageLockedUsers(
+        public async Task<int> CountNotApprovedUsers(int siteId)
+        {
+            if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
+
+            return await DBSiteUser.CountNotApprovedUsers(siteId);
+        }
+
+        public async Task<List<IUserInfo>> GetNotApprovedUsers(
             int siteId,
             int pageNumber,
-            int pageSize,
-            out int totalPages)
+            int pageSize)
         {
             List<IUserInfo> userList = new List<IUserInfo>();
 
             if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
 
-            using (IDataReader reader = DBSiteUser.GetPageLockedUsers(
+            using (DbDataReader reader = await DBSiteUser.GetPageNotApprovedUsers(
                 siteId,
                 pageNumber,
-                pageSize,
-                out totalPages))
-            {
-
-                while (reader.Read())
-                {
-                    UserInfo user = new UserInfo();
-                    user.LoadFromReader(reader);
-                    userList.Add(user);
-
-                }
-            }
-
-            return userList;
-        }
-
-        public List<IUserInfo> GetNotApprovedUsers(
-            int siteId,
-            int pageNumber,
-            int pageSize,
-            out int totalPages)
-        {
-            List<IUserInfo> userList = new List<IUserInfo>();
-
-            if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
-
-            using (IDataReader reader = DBSiteUser.GetPageNotApprovedUsers(
-                siteId,
-                pageNumber,
-                pageSize,
-                out totalPages))
+                pageSize))
             {
 
                 while (reader.Read())

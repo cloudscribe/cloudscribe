@@ -1,11 +1,13 @@
 ﻿// Author:					Joe Audette
 // Created:				    2008-01-04
-// Last Modified:			2014-08-22
+// Last Modified:			2015-01-15
 // 
 // You must not remove this notice, or any other, from this software.
 
 using System;
 using System.Data;
+using System.Data.Common;
+using System.Threading.Tasks;
 using cloudscribe.DbHelpers.MSSQL;
 
 namespace cloudscribe.Core.Repositories.MSSQL
@@ -211,12 +213,12 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// Gets an IDataReader with rows from the mp_Users table which have the passed in IP Address
         /// </summary>
         /// <param name="siteGuid"> siteGuid </param>
-        public static IDataReader GetUsersByIPAddress(Guid siteGuid, string ipv4Address)
+        public static async Task<DbDataReader> GetUsersByIPAddress(Guid siteGuid, string ipv4Address)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_UserLocation_SelectUsersByIP", 2);
             sph.DefineSqlParameter("@SiteGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, siteGuid);
             sph.DefineSqlParameter("@IPAddress", SqlDbType.NVarChar, 50, ParameterDirection.Input, ipv4Address);
-            return sph.ExecuteReader();
+            return await sph.ExecuteReaderAsync();
         }
 
         /// <summary>

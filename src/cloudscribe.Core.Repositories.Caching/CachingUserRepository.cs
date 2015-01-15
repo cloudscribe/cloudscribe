@@ -106,20 +106,20 @@ namespace cloudscribe.Core.Repositories.Caching
         }
 
 
-        public DataTable GetUserListForPasswordFormatChange(int siteId)
-        {
-            return repo.GetUserListForPasswordFormatChange(siteId);
-        }
+        //public DataTable GetUserListForPasswordFormatChange(int siteId)
+        //{
+        //    return repo.GetUserListForPasswordFormatChange(siteId);
+        //}
 
         public int GetCount(int siteId)
         {
             return repo.GetCount(siteId);
         }
 
-        public int UserCount(int siteId, String userNameBeginsWith)
-        {
-            return repo.UserCount(siteId, userNameBeginsWith);
-        }
+        //public int UserCount(int siteId, String userNameBeginsWith)
+        //{
+        //    return repo.UserCount(siteId, userNameBeginsWith);
+        //}
 
         public int UsersOnlineSinceCount(int siteId, DateTime sinceTime)
         {
@@ -190,96 +190,111 @@ namespace cloudscribe.Core.Repositories.Caching
         }
 
 
-        public List<IUserInfo> GetByIPAddress(Guid siteGuid, string ipv4Address)
+        public async Task<List<IUserInfo>> GetByIPAddress(Guid siteGuid, string ipv4Address)
         {
-            return repo.GetByIPAddress(siteGuid, ipv4Address);
+            return await repo.GetByIPAddress(siteGuid, ipv4Address);
 
         }
 
-        public List<IUserInfo> GetCrossSiteUserListByEmail(string email)
+        public async Task<List<IUserInfo>> GetCrossSiteUserListByEmail(string email)
         {
-            return repo.GetCrossSiteUserListByEmail(email);
+            return await repo.GetCrossSiteUserListByEmail(email);
         }
 
-        public List<IUserInfo> GetPage(
+        public async Task<int> CountUsers(int siteId, string userNameBeginsWith)
+        {
+            return await repo.CountUsers(siteId, userNameBeginsWith);
+        }
+
+        public async Task<List<IUserInfo>> GetPage(
             int siteId,
             int pageNumber,
             int pageSize,
             string userNameBeginsWith,
-            int sortMode,
-            out int totalPages)
+            int sortMode)
         {
-            return repo.GetPage(
+            return await repo.GetPage(
                 siteId,
                 pageNumber,
                 pageSize,
                 userNameBeginsWith,
-                sortMode,
-                out totalPages);
+                sortMode);
 
         }
 
-        public List<IUserInfo> GetUserSearchPage(
+        public async Task<int> CountUsersForSearch(int siteId, string searchInput)
+        {
+            return await repo.CountUsersForSearch(siteId, searchInput);
+        }
+
+        public async Task<List<IUserInfo>> GetUserSearchPage(
             int siteId,
             int pageNumber,
             int pageSize,
             string searchInput,
-            int sortMode,
-            out int totalPages)
+            int sortMode)
         {
-            return repo.GetUserSearchPage(
+            return await repo.GetUserSearchPage(
                 siteId,
                 pageNumber,
                 pageSize,
                 searchInput,
-                sortMode,
-                out totalPages);
+                sortMode);
 
 
         }
 
-        public List<IUserInfo> GetUserAdminSearchPage(
+        public async Task<int> CountUsersForAdminSearch(int siteId, string searchInput)
+        {
+            return await repo.CountUsersForAdminSearch(siteId, searchInput);
+        }
+
+        public async Task<List<IUserInfo>> GetUserAdminSearchPage(
             int siteId,
             int pageNumber,
             int pageSize,
             string searchInput,
-            int sortMode,
-            out int totalPages)
+            int sortMode)
         {
-            return repo.GetUserAdminSearchPage(
+            return await repo.GetUserAdminSearchPage(
                 siteId,
                 pageNumber,
                 pageSize,
                 searchInput,
-                sortMode,
-                out totalPages);
+                sortMode);
 
         }
 
-        public List<IUserInfo> GetPageLockedUsers(
-            int siteId,
-            int pageNumber,
-            int pageSize,
-            out int totalPages)
+        public async Task<int> CountLockedOutUsers(int siteId)
         {
-            return repo.GetPageLockedUsers(
-                siteId,
-                pageNumber,
-                pageSize,
-                out totalPages);
+            return await repo.CountLockedOutUsers(siteId);
         }
 
-        public List<IUserInfo> GetNotApprovedUsers(
+        public async Task<List<IUserInfo>> GetPageLockedUsers(
             int siteId,
             int pageNumber,
-            int pageSize,
-            out int totalPages)
+            int pageSize)
         {
-            return repo.GetNotApprovedUsers(
+            return await repo.GetPageLockedUsers(
                 siteId,
                 pageNumber,
-                pageSize,
-                out totalPages);
+                pageSize);
+        }
+
+        public async Task<int> CountNotApprovedUsers(int siteId)
+        {
+            return await repo.CountNotApprovedUsers(siteId);
+        }
+
+        public async Task<List<IUserInfo>> GetNotApprovedUsers(
+            int siteId,
+            int pageNumber,
+            int pageSize)
+        {
+            return await repo.GetNotApprovedUsers(
+                siteId,
+                pageNumber,
+                pageSize);
         }
 
         

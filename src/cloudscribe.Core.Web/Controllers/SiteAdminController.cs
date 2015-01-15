@@ -28,6 +28,10 @@ namespace cloudscribe.Core.Web.Controllers
             geoRepo = geoRepository;
         }
 
+        //disable warning about not really being async
+        // we know it is not, it is not needed to hit the db in these
+#pragma warning disable 1998
+
         // GET: /SiteAdmin
         public async Task<ActionResult> Index()
         {
@@ -38,6 +42,8 @@ namespace cloudscribe.Core.Web.Controllers
 
             
         }
+
+#pragma warning restore 1998
 
         [Authorize(Roles = "ServerAdmins")]
         public async Task<ActionResult> SiteList(int pageNumber = 1, int pageSize = -1)
@@ -310,7 +316,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             //Site.SiteRepository.Save(newSite);
             NewSiteHelper.CreateNewSite(Site.SiteRepository, newSite);
-            NewSiteHelper.CreateRequiredRolesAndAdminUser(newSite, Site.SiteRepository, Site.UserRepository);
+            bool result = await NewSiteHelper.CreateRequiredRolesAndAdminUser(newSite, Site.SiteRepository, Site.UserRepository);
 
             if(AppSettings.UseFoldersInsteadOfHostnamesForMultipleSites)
             {

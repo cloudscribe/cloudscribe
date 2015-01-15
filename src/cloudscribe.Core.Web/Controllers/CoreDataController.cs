@@ -26,6 +26,10 @@ namespace cloudscribe.Core.Web.Controllers
             geoRepo = geoRepository;
         }
 
+        //disable warning about not really being async
+        // we know it is not, it is not needed to hit the db in these
+#pragma warning disable 1998
+
         // GET: /CoreData/
         public async Task<ActionResult> Index()
         {
@@ -37,6 +41,8 @@ namespace cloudscribe.Core.Web.Controllers
 
             
         }
+
+#pragma warning restore 1998
 
         public async Task<ActionResult> CountryListPage(int pageNumber = 1, int pageSize = -1)
         {

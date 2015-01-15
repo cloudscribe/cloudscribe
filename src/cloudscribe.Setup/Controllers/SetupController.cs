@@ -63,7 +63,7 @@ namespace cloudscribe.Setup.Controllers
             Server.ScriptTimeout = int.MaxValue;
             startTime = DateTime.UtcNow;
             bool isAdmin = false;
-            bool result;
+            //bool result;
             //try
             //{
             //    //isAdmin = WebUser.IsAdmin;

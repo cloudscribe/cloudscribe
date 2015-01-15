@@ -200,7 +200,6 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[1];
 
             arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             int count = Convert.ToInt32(
@@ -233,7 +232,7 @@ namespace cloudscribe.Core.Repositories.SQLite
             return count;
         }
 
-        public static int UserCount(int siteId, String userNameBeginsWith)
+        public static int CountUsers(int siteId, String userNameBeginsWith)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT COUNT(*) FROM mp_Users ");
@@ -252,13 +251,10 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[2];
 
             arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new SQLiteParameter(":UserNameBeginsWith", DbType.String);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = userNameBeginsWith;
-
 
             int count = Convert.ToInt32(
                 AdoHelper.ExecuteScalar(
@@ -354,38 +350,36 @@ namespace cloudscribe.Core.Repositories.SQLite
 
         }
 
-        public static IDataReader GetUserListPage(
+        public static DbDataReader GetUserListPage(
             int siteId,
             int pageNumber,
             int pageSize,
             string userNameBeginsWith,
-            int sortMode,
-            out int totalPages)
+            int sortMode)
         {
             StringBuilder sqlCommand = new StringBuilder();
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
 
-            int totalRows
-                = UserCount(siteId, userNameBeginsWith);
-            totalPages = 1;
-            if (pageSize > 0) totalPages = totalRows / pageSize;
+            //int totalRows = UserCount(siteId, userNameBeginsWith);
+            //totalPages = 1;
+            //if (pageSize > 0) totalPages = totalRows / pageSize;
 
-            if (totalRows <= pageSize)
-            {
-                totalPages = 1;
-            }
-            else
-            {
-                int remainder;
-                Math.DivRem(totalRows, pageSize, out remainder);
-                if (remainder > 0)
-                {
-                    totalPages += 1;
-                }
-            }
+            //if (totalRows <= pageSize)
+            //{
+            //    totalPages = 1;
+            //}
+            //else
+            //{
+            //    int remainder;
+            //    Math.DivRem(totalRows, pageSize, out remainder);
+            //    if (remainder > 0)
+            //    {
+            //        totalPages += 1;
+            //    }
+            //}
 
-            sqlCommand.Append("SELECT		u.*,  ");
-            sqlCommand.Append(" " + totalPages.ToString() + " As TotalPages  ");
+            sqlCommand.Append("SELECT		u.*  ");
+            //sqlCommand.Append(" " + totalPages.ToString() + " As TotalPages  ");
             sqlCommand.Append("FROM	mp_Users u  ");
 
             sqlCommand.Append("WHERE u.ProfileApproved = 1   ");
@@ -418,19 +412,15 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[4];
 
             arParams[0] = new SQLiteParameter(":PageNumber", DbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = pageNumber;
 
             arParams[1] = new SQLiteParameter(":PageSize", DbType.Int32);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = pageSize;
 
             arParams[2] = new SQLiteParameter(":UserNameBeginsWith", DbType.String);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = userNameBeginsWith + "%";
 
             arParams[3] = new SQLiteParameter(":SiteID", DbType.Int32);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = siteId;
 
             return AdoHelper.ExecuteReader(
@@ -440,7 +430,7 @@ namespace cloudscribe.Core.Repositories.SQLite
 
         }
 
-        private static int CountForSearch(int siteId, string searchInput)
+        public static int CountUsersForSearch(int siteId, string searchInput)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT Count(*) FROM mp_Users WHERE SiteID = :SiteID ");
@@ -484,34 +474,33 @@ namespace cloudscribe.Core.Repositories.SQLite
 
         }
 
-        public static IDataReader GetUserSearchPage(
+        public static DbDataReader GetUserSearchPage(
             int siteId,
             int pageNumber,
             int pageSize,
             string searchInput,
-            int sortMode,
-            out int totalPages)
+            int sortMode)
         {
             StringBuilder sqlCommand = new StringBuilder();
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
 
-            int totalRows = CountForSearch(siteId, searchInput);
-            totalPages = 1;
-            if (pageSize > 0) totalPages = totalRows / pageSize;
+            //int totalRows = CountForSearch(siteId, searchInput);
+            //totalPages = 1;
+            //if (pageSize > 0) totalPages = totalRows / pageSize;
 
-            if (totalRows <= pageSize)
-            {
-                totalPages = 1;
-            }
-            else
-            {
-                int remainder;
-                Math.DivRem(totalRows, pageSize, out remainder);
-                if (remainder > 0)
-                {
-                    totalPages += 1;
-                }
-            }
+            //if (totalRows <= pageSize)
+            //{
+            //    totalPages = 1;
+            //}
+            //else
+            //{
+            //    int remainder;
+            //    Math.DivRem(totalRows, pageSize, out remainder);
+            //    if (remainder > 0)
+            //    {
+            //        totalPages += 1;
+            //    }
+            //}
 
             sqlCommand.Append("SELECT *  ");
            
@@ -560,19 +549,15 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[4];
 
             arParams[0] = new SQLiteParameter(":PageNumber", DbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = pageNumber;
 
             arParams[1] = new SQLiteParameter(":PageSize", DbType.Int32);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = pageSize;
 
             arParams[2] = new SQLiteParameter(":SearchInput", DbType.String);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = "%" + searchInput + "%";
 
             arParams[3] = new SQLiteParameter(":SiteID", DbType.Int32);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = siteId;
 
             return AdoHelper.ExecuteReader(
@@ -582,7 +567,7 @@ namespace cloudscribe.Core.Repositories.SQLite
 
         }
 
-        private static int CountForAdminSearch(int siteId, string searchInput)
+        public static int CountUsersForAdminSearch(int siteId, string searchInput)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT Count(*) FROM mp_Users WHERE SiteID = :SiteID ");
@@ -622,34 +607,33 @@ namespace cloudscribe.Core.Repositories.SQLite
 
         }
 
-        public static IDataReader GetUserAdminSearchPage(
+        public static DbDataReader GetUserAdminSearchPage(
             int siteId,
             int pageNumber,
             int pageSize,
             string searchInput,
-            int sortMode,
-            out int totalPages)
+            int sortMode)
         {
             
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
 
-            int totalRows = CountForAdminSearch(siteId, searchInput);
-            totalPages = 1;
-            if (pageSize > 0) totalPages = totalRows / pageSize;
+            //int totalRows = CountForAdminSearch(siteId, searchInput);
+            //totalPages = 1;
+            //if (pageSize > 0) totalPages = totalRows / pageSize;
 
-            if (totalRows <= pageSize)
-            {
-                totalPages = 1;
-            }
-            else
-            {
-                int remainder;
-                Math.DivRem(totalRows, pageSize, out remainder);
-                if (remainder > 0)
-                {
-                    totalPages += 1;
-                }
-            }
+            //if (totalRows <= pageSize)
+            //{
+            //    totalPages = 1;
+            //}
+            //else
+            //{
+            //    int remainder;
+            //    Math.DivRem(totalRows, pageSize, out remainder);
+            //    if (remainder > 0)
+            //    {
+            //        totalPages += 1;
+            //    }
+            //}
 
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT *  ");
@@ -696,19 +680,15 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[4];
 
             arParams[0] = new SQLiteParameter(":PageNumber", DbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = pageNumber;
 
             arParams[1] = new SQLiteParameter(":PageSize", DbType.Int32);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = pageSize;
 
             arParams[2] = new SQLiteParameter(":SearchInput", DbType.String);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = "%" + searchInput + "%";
 
             arParams[3] = new SQLiteParameter(":SiteID", DbType.Int32);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = siteId;
 
             return AdoHelper.ExecuteReader(
@@ -718,31 +698,30 @@ namespace cloudscribe.Core.Repositories.SQLite
 
         }
 
-        public static IDataReader GetPageLockedUsers(
+        public static DbDataReader GetPageLockedUsers(
             int siteId,
             int pageNumber,
-            int pageSize,
-            out int totalPages)
+            int pageSize)
         {
-            totalPages = 1;
-            int totalRows = CountLockedOutUsers(siteId);
+            //totalPages = 1;
+            //int totalRows = CountLockedOutUsers(siteId);
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
 
-            if (pageSize > 0) totalPages = totalRows / pageSize;
+            //if (pageSize > 0) totalPages = totalRows / pageSize;
 
-            if (totalRows <= pageSize)
-            {
-                totalPages = 1;
-            }
-            else
-            {
-                int remainder;
-                Math.DivRem(totalRows, pageSize, out remainder);
-                if (remainder > 0)
-                {
-                    totalPages += 1;
-                }
-            }
+            //if (totalRows <= pageSize)
+            //{
+            //    totalPages = 1;
+            //}
+            //else
+            //{
+            //    int remainder;
+            //    Math.DivRem(totalRows, pageSize, out remainder);
+            //    if (remainder > 0)
+            //    {
+            //        totalPages += 1;
+            //    }
+            //}
 
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT *  ");
@@ -760,15 +739,12 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[3];
 
             arParams[0] = new SQLiteParameter(":PageNumber", DbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = pageNumber;
 
             arParams[1] = new SQLiteParameter(":PageSize", DbType.Int32);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = pageSize;
 
             arParams[2] = new SQLiteParameter(":SiteID", DbType.Int32);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = siteId;
 
             return AdoHelper.ExecuteReader(
@@ -779,31 +755,30 @@ namespace cloudscribe.Core.Repositories.SQLite
         }
 
 
-        public static IDataReader GetPageNotApprovedUsers(
+        public static DbDataReader GetPageNotApprovedUsers(
             int siteId,
             int pageNumber,
-            int pageSize,
-            out int totalPages)
+            int pageSize)
         {
-            totalPages = 1;
-            int totalRows = CountNotApprovedUsers(siteId);
+            //totalPages = 1;
+            //int totalRows = CountNotApprovedUsers(siteId);
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
 
-            if (pageSize > 0) totalPages = totalRows / pageSize;
+            //if (pageSize > 0) totalPages = totalRows / pageSize;
 
-            if (totalRows <= pageSize)
-            {
-                totalPages = 1;
-            }
-            else
-            {
-                int remainder;
-                Math.DivRem(totalRows, pageSize, out remainder);
-                if (remainder > 0)
-                {
-                    totalPages += 1;
-                }
-            }
+            //if (totalRows <= pageSize)
+            //{
+            //    totalPages = 1;
+            //}
+            //else
+            //{
+            //    int remainder;
+            //    Math.DivRem(totalRows, pageSize, out remainder);
+            //    if (remainder > 0)
+            //    {
+            //        totalPages += 1;
+            //    }
+            //}
 
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT *  ");
@@ -821,15 +796,12 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[3];
 
             arParams[0] = new SQLiteParameter(":PageNumber", DbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = pageNumber;
 
             arParams[1] = new SQLiteParameter(":PageSize", DbType.Int32);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = pageSize;
 
             arParams[2] = new SQLiteParameter(":SiteID", DbType.Int32);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = siteId;
 
             return AdoHelper.ExecuteReader(
