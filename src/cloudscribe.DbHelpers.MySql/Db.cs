@@ -496,7 +496,7 @@ namespace cloudscribe.DbHelpers.MySql
                 {
                     if (reader.Read())
                     {
-                        reader.Close();
+                        //
                     }
                 }
                 // no error yet it must exist
@@ -528,7 +528,7 @@ namespace cloudscribe.DbHelpers.MySql
                 restrictions[2] = tableName;
                 connection.Open();
                 DataTable table = connection.GetSchema("Tables", restrictions);
-                connection.Close();
+                
                 if (table != null)
                 {
                     return (table.Rows.Count > 0);

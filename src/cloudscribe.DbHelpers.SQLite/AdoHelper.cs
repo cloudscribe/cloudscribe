@@ -174,6 +174,7 @@ namespace cloudscribe.DbHelpers.SQLite
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
         public static int ExecuteNonQuery(IDbConnection connection, string commandText, params IDataParameter[] parameters)
         {
             using (SQLiteCommand cmd = new SQLiteCommand())

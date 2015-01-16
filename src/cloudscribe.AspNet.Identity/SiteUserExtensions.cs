@@ -7,18 +7,22 @@
 
 using cloudscribe.Configuration;
 using cloudscribe.Core.Models;
+using Microsoft.Owin;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using System.Security.Claims;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web;
+using log4net;
 
 
 namespace cloudscribe.AspNet.Identity
 {
     public static class SiteUserExtensions
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(SiteUserExtensions));
+
         public static async Task<ClaimsIdentity> GenerateUserIdentityAsync(this SiteUser user, UserManager<SiteUser> manager)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
@@ -37,13 +41,49 @@ namespace cloudscribe.AspNet.Identity
                 // if the user is an admin in the server admin site
                 // add this additional role that allows site creation and
                 // management of other sites
-                ISiteContext site = HttpContext.Current.GetOwinContext().Get<ISiteContext>();
-                if(site.SiteSettings.IsServerAdminSite)
+                //if(manager is SiteUserManager)
+                //{
+                //    SiteUserManager siteManager = manager as SiteUserManager;
+                //    if(siteManager.Store is cloudscribe.AspNet.Identity.UserStore<SiteUser>)
+                //    {
+
+                //    }
+
+                //}
+                // 2015-01-16 this was suddenly broken this morning
+                // it now is null. only things that changed were making some async methods really become async
+                // apparently we lost the context somehow from that
+                // TODO: maybe we can implement this another way with an actionfilter
+                // for now I'm just adding it to all admins in the esle
+                if(HttpContext.Current != null)
                 {
-                    Claim serverAdminRoleClaim = new Claim(ClaimTypes.Role,"ServerAdmins");
-                    userIdentity.AddClaim(serverAdminRoleClaim);
+                    IOwinContext owin = HttpContext.Current.GetOwinContext();
+                    if (owin != null)
+                    {
+                        ISiteContext site = owin.Get<ISiteContext>();
+                        if (site.SiteSettings.IsServerAdminSite)
+                        {
+                            Claim serverAdminRoleClaim = new Claim(ClaimTypes.Role, "ServerAdmins");
+                            userIdentity.AddClaim(serverAdminRoleClaim);
+
+                        }
+
+                    }
+                    else
+                    {
+                        log.Error("owincontext was null, failed to check if ServerAdmin claim should be granted");
+                    }
 
                 }
+                else
+                {
+                    log.Error("httpcontext was null, failed to check if ServerAdmin claim should be granted");
+                    //TODO: this should not be here, its a temporary hack 2015-01-16
+                    Claim serverAdminRoleClaim = new Claim(ClaimTypes.Role, "ServerAdmins");
+                    userIdentity.AddClaim(serverAdminRoleClaim);
+                }
+                
+                
 
             }
 

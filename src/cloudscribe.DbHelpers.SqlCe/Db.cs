@@ -30,6 +30,8 @@ namespace cloudscribe.DbHelpers.SqlCe
             get { return "SqlCe"; }
         }
 
+        private object theLock = new object();
+
         public void EnsureDatabase()
         {
             try
@@ -43,7 +45,7 @@ namespace cloudscribe.DbHelpers.SqlCe
 
                     if (!File.Exists(path))
                     {
-                        lock (typeof(Db))
+                        lock (theLock)
                         {
                             if (!File.Exists(path))
                             {

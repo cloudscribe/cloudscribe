@@ -21,9 +21,17 @@ namespace cloudscribe.AspNet.Identity
     {
         //private static readonly ILog log = LogManager.GetLogger(typeof(SiteUserManager));
 
+        //private IUserStore<SiteUser> _store = null;
+
+        //public IUserStore<SiteUser> Store
+        //{
+        //    get { return _store; }
+        //}
+
         public SiteUserManager(IUserStore<SiteUser> store)
             : base(store)
         {
+           // _store = store;
         }
 
         public override Task<ClaimsIdentity> CreateIdentityAsync(SiteUser user, string authenticationType)

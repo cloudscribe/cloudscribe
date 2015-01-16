@@ -358,7 +358,10 @@ namespace cloudscribe.Core.Web.Controllers
         private async Task SignInAsync(SiteUser user, bool isPersistent)
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie, DefaultAuthenticationTypes.TwoFactorCookie);
-            AuthenticationManager.SignIn(new AuthenticationProperties { IsPersistent = isPersistent }, await user.GenerateUserIdentityAsync(Site.SiteUserManager));
+            AuthenticationManager.SignIn(
+                new AuthenticationProperties { IsPersistent = isPersistent }, 
+                await user.GenerateUserIdentityAsync(Site.SiteUserManager)
+                );
         }
 
         private void AddErrors(IdentityResult result)

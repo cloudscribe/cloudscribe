@@ -33,6 +33,11 @@ namespace cloudscribe.AspNet.Identity
         private bool debugLog = AppSettings.UserStoreDebugEnabled;
 
         private ISiteSettings siteSettings;
+
+        public ISiteSettings SiteSettings
+        {
+            get { return siteSettings; }
+        }
         private IUserRepository repo;
         
 

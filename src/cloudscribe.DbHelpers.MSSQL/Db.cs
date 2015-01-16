@@ -19,6 +19,7 @@ namespace cloudscribe.DbHelpers.MSSQL
 
         public string DBPlatform { get { return "MSSQL"; } }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
         public void EnsureDatabase()
         {
             //logic added by Luis Silva 2012-06-13

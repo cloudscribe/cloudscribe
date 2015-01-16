@@ -62,6 +62,8 @@ namespace cloudscribe.DbHelpers.SQLite
 
         }
 
+        private object theLock = new object();
+
         public void EnsureDatabase()
         {
             try
@@ -75,7 +77,7 @@ namespace cloudscribe.DbHelpers.SQLite
 
                     if (!File.Exists(path))
                     {
-                        lock (typeof(Db))
+                        lock (theLock)
                         {
                             if (!File.Exists(path))
                             {
