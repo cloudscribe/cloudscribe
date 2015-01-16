@@ -147,7 +147,7 @@ namespace cloudscribe.Core.Web.Controllers
             {
                 if (Site.SiteSettings.IsServerAdminSite)
                 {
-                    ISiteSettings otherSite = Site.SiteRepository.Fetch(siteId);
+                    ISiteSettings otherSite = await Site.SiteRepository.Fetch(siteId);
                     if(otherSite != null)
                     {
                         siteGuid = otherSite.SiteGuid;

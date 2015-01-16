@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2008-09-12
-// Last Modified:			2015-01-15
+// Last Modified:			2015-01-16
 // 
 //
 // You must not remove this notice, or any other, from this software.
@@ -12,6 +12,7 @@ using System.Data.Common;
 using System.Configuration;
 using System.Globalization;
 using System.IO;
+using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using cloudscribe.DbHelpers.MySql;
 
@@ -50,7 +51,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
         }
 
-        public static void EnsureSettings()
+        public static async Task<bool> EnsureSettings()
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("INSERT INTO mp_SiteSettingsEx");
@@ -92,10 +93,12 @@ namespace cloudscribe.Core.Repositories.MySql
             sqlCommand.Append("e.SiteID IS NULL ");
             sqlCommand.Append("; ");
             
-            AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 null);
+
+            return rowsAffected > 0;
 
         }
 

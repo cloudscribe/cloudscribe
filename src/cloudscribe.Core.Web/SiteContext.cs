@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2014-08-31
-// Last Modified:		    2014-10-23
+// Last Modified:		    2015-01-16
 // 
 //
 // You must not remove this notice, or any other, from this software.
@@ -187,7 +187,7 @@ namespace cloudscribe.Core.Web
             {
                 string siteFolderName = GetFirstFolderSegment(url);
                 if (siteFolderName.Length == 0) siteFolderName = "root";
-                siteId = siteRepo.GetSiteIdByFolder(siteFolderName);
+                siteId = siteRepo.GetSiteIdByFolderNonAsync(siteFolderName);
                 //siteSettings = repo.(siteFolderName);
 
                 if (siteId == -1)
@@ -199,7 +199,7 @@ namespace cloudscribe.Core.Web
                 }
                 else
                 {
-                    siteSettings = siteRepo.Fetch(siteId);
+                    siteSettings = siteRepo.FetchNonAsync(siteId);
                 }
 
                 
@@ -207,7 +207,7 @@ namespace cloudscribe.Core.Web
             else
             {
                 //siteId = repo.GetSiteIdByHostName(context.Request.Host.Value);
-                siteSettings = siteRepo.Fetch(host);
+                siteSettings = siteRepo.FetchNonAsync(host);
             }
             
         }

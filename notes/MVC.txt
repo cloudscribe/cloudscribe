@@ -21,3 +21,6 @@ I started doing alerts inside a base controller as in this article:
 http://jameschambers.com/2014/06/day-14-bootstrap-alerts-and-mvc-framework-tempdata/
 
 but then realized I could refactor that functionality as extension methods so they could be used from any controller without inheriting a base class
+
+ASP.NET MVC 5 Authentication Filters
+http://www.dotnetcurry.com/showarticle.aspx?ID=957

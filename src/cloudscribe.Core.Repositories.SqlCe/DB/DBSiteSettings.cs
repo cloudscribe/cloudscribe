@@ -1,12 +1,13 @@
 ﻿// Author:					Joe Audette
 // Created:					2010-03-10
-// Last Modified:			2014-09-06
+// Last Modified:			2015-01-16
 // 
 // You must not remove this notice, or any other, from this software.
 
 using System;
 using System.Configuration;
 using System.Data;
+using System.Data.Common;
 using System.Globalization;
 using System.Text;
 using System.Data.SqlServerCe;
@@ -1419,30 +1420,29 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
         }
 
-        public static IDataReader GetPageHosts(
+        public static DbDataReader GetPageHosts(
             int pageNumber,
-            int pageSize,
-            out int totalPages)
+            int pageSize)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
-            totalPages = 1;
-            int totalRows = GetHostCount();
+            //totalPages = 1;
+            //int totalRows = GetHostCount();
 
-            if (pageSize > 0) totalPages = totalRows / pageSize;
+            //if (pageSize > 0) totalPages = totalRows / pageSize;
 
-            if (totalRows <= pageSize)
-            {
-                totalPages = 1;
-            }
-            else
-            {
-                int remainder;
-                Math.DivRem(totalRows, pageSize, out remainder);
-                if (remainder > 0)
-                {
-                    totalPages += 1;
-                }
-            }
+            //if (totalRows <= pageSize)
+            //{
+            //    totalPages = 1;
+            //}
+            //else
+            //{
+            //    int remainder;
+            //    Math.DivRem(totalRows, pageSize, out remainder);
+            //    if (remainder > 0)
+            //    {
+            //        totalPages += 1;
+            //    }
+            //}
 
             int offset = 0;
             if (pageNumber > 1) { offset = (pageSize * pageNumber) - pageSize; }
@@ -1496,7 +1496,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
         }
 
-        public static void AddHost(Guid siteGuid, int siteId, string hostName)
+        public static bool AddHost(Guid siteGuid, int siteId, string hostName)
         {
             StringBuilder sqlCommand = new StringBuilder();
 
@@ -1528,34 +1528,35 @@ namespace cloudscribe.Core.Repositories.SqlCe
             arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = siteGuid;
 
-            AdoHelper.ExecuteNonQuery(
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
                 GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
 
+            return rowsAffected > 0;
 
         }
 
-        public static void DeleteHost(int hostId)
+        public static bool DeleteHost(int hostId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_SiteHosts ");
             sqlCommand.Append("WHERE HostID = @HostID  ; ");
 
-           
             SqlCeParameter[] arParams = new SqlCeParameter[1];
 
             arParams[0] = new SqlCeParameter("@HostID", SqlDbType.Int);
             arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = hostId;
 
-            AdoHelper.ExecuteNonQuery(
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
                 GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
 
+            return rowsAffected > 0;
         }
 
         public static int CountOtherSites(int currentSiteId)
@@ -1580,31 +1581,30 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
         }
 
-        public static IDataReader GetPageOfOtherSites(
+        public static DbDataReader GetPageOfOtherSites(
             int currentSiteId,
             int pageNumber,
-            int pageSize,
-            out int totalPages)
+            int pageSize)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
-            totalPages = 1;
-            int totalRows = CountOtherSites(currentSiteId);
+            //totalPages = 1;
+            //int totalRows = CountOtherSites(currentSiteId);
 
-            if (pageSize > 0) totalPages = totalRows / pageSize;
+            //if (pageSize > 0) totalPages = totalRows / pageSize;
 
-            if (totalRows <= pageSize)
-            {
-                totalPages = 1;
-            }
-            else
-            {
-                int remainder;
-                Math.DivRem(totalRows, pageSize, out remainder);
-                if (remainder > 0)
-                {
-                    totalPages += 1;
-                }
-            }
+            //if (totalRows <= pageSize)
+            //{
+            //    totalPages = 1;
+            //}
+            //else
+            //{
+            //    int remainder;
+            //    Math.DivRem(totalRows, pageSize, out remainder);
+            //    if (remainder > 0)
+            //    {
+            //        totalPages += 1;
+            //    }
+            //}
 
             int offset = 0;
             if (pageNumber > 1) { offset = (pageSize * pageNumber) - pageSize; }

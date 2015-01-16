@@ -41,7 +41,7 @@ namespace cloudscribe.WebHost
             {
                 try
                 {
-                    List<SiteFolder> allFolders = siteRepo.GetAllSiteFolders();
+                    List<SiteFolder> allFolders = siteRepo.GetAllSiteFoldersNonAsync();
                     ConfigureFolderTenantAuth(app, allFolders);
                 }
                 catch(Exception ex)
@@ -54,7 +54,7 @@ namespace cloudscribe.WebHost
             {
                 try
                 {
-                    List<ISiteHost> allHosts = siteRepo.GetAllHosts();
+                    List<ISiteHost> allHosts = siteRepo.GetAllHostsNonAsync();
                     ConfigureHostTenantAuth(app, allHosts);
                 }
                 catch (Exception ex)

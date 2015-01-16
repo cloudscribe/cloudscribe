@@ -1,6 +1,6 @@
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2014-09-06
+// Last Modified:			2015-01-16
 // 
 // You must not remove this notice, or any other, from this software.
 // 
@@ -10,8 +10,10 @@ using cloudscribe.DbHelpers.Firebird;
 using FirebirdSql.Data.FirebirdClient;
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Globalization;
 using System.Text;
+using System.Threading.Tasks;
 
 
 namespace cloudscribe.Core.Repositories.Firebird
@@ -20,7 +22,7 @@ namespace cloudscribe.Core.Repositories.Firebird
     internal static class DBSiteFolder
     {
         
-        public static int Add(
+        public static async Task<bool> Add(
             Guid guid,
             Guid siteGuid,
             string folderName)
@@ -37,38 +39,32 @@ namespace cloudscribe.Core.Repositories.Firebird
             sqlCommand.Append("@SiteGuid, ");
             sqlCommand.Append("@FolderName );");
 
-
             FbParameter[] arParams = new FbParameter[3];
 
             arParams[0] = new FbParameter("@Guid", FbDbType.VarChar, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid.ToString();
 
             arParams[1] = new FbParameter("@SiteGuid", FbDbType.VarChar, 36);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = siteGuid.ToString();
 
             arParams[2] = new FbParameter("@FolderName", FbDbType.VarChar, 255);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = folderName;
 
-
-            int rowsAffected = 0;
-            rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
-                sqlCommand.ToString(), arParams);
+                sqlCommand.ToString(), 
+                arParams);
 
-            return rowsAffected;
+            return rowsAffected > 0;
 
         }
 
 
-        public static bool Update(
+        public static async Task<bool> Update(
             Guid guid,
             Guid siteGuid,
             string folderName)
         {
-
             StringBuilder sqlCommand = new StringBuilder();
 
             sqlCommand.Append("UPDATE mp_SiteFolders ");
@@ -82,19 +78,15 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[3];
 
             arParams[0] = new FbParameter("@Guid", FbDbType.VarChar, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid.ToString();
 
             arParams[1] = new FbParameter("@SiteGuid", FbDbType.VarChar, 36);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = siteGuid.ToString();
 
             arParams[2] = new FbParameter("@FolderName", FbDbType.VarChar, 255);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = folderName;
 
-
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -104,7 +96,7 @@ namespace cloudscribe.Core.Repositories.Firebird
         }
 
 
-        public static bool Delete(Guid guid)
+        public static async Task<bool> Delete(Guid guid)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_SiteFolders ");
@@ -114,11 +106,9 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@Guid", FbDbType.VarChar, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid.ToString();
 
-
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -149,7 +139,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         }
 
-        public static IDataReader GetBySite(Guid siteGuid)
+        public static async Task<DbDataReader> GetBySite(Guid siteGuid)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  * ");
@@ -160,24 +150,22 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@SiteGuid", FbDbType.VarChar, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteGuid.ToString();
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
 
         }
 
-        public static Guid GetSiteGuid(string folderName)
+        public static async Task<Guid> GetSiteGuid(string folderName)
         {
             StringBuilder sqlCommand = new StringBuilder();
 
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@FolderName", FbDbType.VarChar, 255);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = folderName;
 
             Guid siteGuid = Guid.Empty;
@@ -186,7 +174,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             sqlCommand.Append("FROM mp_SiteFolders ");
             sqlCommand.Append("WHERE FolderName = @FolderName ;");
 
-            using (IDataReader reader = AdoHelper.ExecuteReader(
+            using (DbDataReader reader = await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 arParams))
@@ -199,15 +187,13 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             if (siteGuid == Guid.Empty)
             {
-
                 sqlCommand = new StringBuilder();
                 sqlCommand.Append("SELECT FIRST 1 SiteGuid ");
                 sqlCommand.Append("FROM	mp_Sites ");
                 sqlCommand.Append("ORDER BY	SiteID ");
                 sqlCommand.Append(" ;");
 
-
-                using (IDataReader reader = AdoHelper.ExecuteReader(
+                using (DbDataReader reader = await AdoHelper.ExecuteReaderAsync(
                     ConnectionString.GetReadConnectionString(),
                     sqlCommand.ToString(),
                     null))
@@ -224,7 +210,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         }
 
-        public static bool Exists(string folderName)
+        public static async Task<bool> Exists(string folderName)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT Count(*) ");
@@ -234,19 +220,46 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@FolderName", FbDbType.VarChar, 255);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = folderName;
 
-            int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
+            object result = await AdoHelper.ExecuteScalarAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
-                arParams));
+                arParams);
+
+            int count = Convert.ToInt32(result);
 
             return (count > 0);
 
         }
 
-        public static IDataReader GetAll()
+        public static async Task<DbDataReader> GetAll()
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  ");
+            sqlCommand.Append("s.SiteID, ");
+            sqlCommand.Append("s.SiteGuid, ");
+            sqlCommand.Append("sf.Guid, ");
+            sqlCommand.Append("sf.FolderName ");
+
+            sqlCommand.Append("FROM	mp_SiteFolders sf ");
+
+            sqlCommand.Append("JOIN	mp_Sites s ");
+
+            sqlCommand.Append("ON sf.SiteGuid = s.SiteGuid ");
+
+            sqlCommand.Append("ORDER BY sf.FolderName ");
+
+            sqlCommand.Append(";");
+
+            return await AdoHelper.ExecuteReaderAsync(
+                ConnectionString.GetReadConnectionString(),
+                sqlCommand.ToString(),
+                null);
+
+        }
+
+        public static DbDataReader GetAllNonAsync()
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  ");
@@ -272,44 +285,45 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         }
 
-        public static int GetCount()
+        public static async Task<int> GetFolderCount()
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  Count(*) ");
             sqlCommand.Append("FROM	mp_SiteFolders ");
             sqlCommand.Append(";");
 
-            return Convert.ToInt32(AdoHelper.ExecuteScalar(
+            object result = await AdoHelper.ExecuteScalarAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
-                null));
+                null);
+
+            return Convert.ToInt32(result);
 
         }
 
-        public static IDataReader GetPage(
+        public static async Task<DbDataReader> GetPage(
             int pageNumber,
-            int pageSize,
-            out int totalPages)
+            int pageSize)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
-            totalPages = 1;
-            int totalRows = GetCount();
+            //totalPages = 1;
+            //int totalRows = GetCount();
 
-            if (pageSize > 0) totalPages = totalRows / pageSize;
+            //if (pageSize > 0) totalPages = totalRows / pageSize;
 
-            if (totalRows <= pageSize)
-            {
-                totalPages = 1;
-            }
-            else
-            {
-                int remainder;
-                Math.DivRem(totalRows, pageSize, out remainder);
-                if (remainder > 0)
-                {
-                    totalPages += 1;
-                }
-            }
+            //if (totalRows <= pageSize)
+            //{
+            //    totalPages = 1;
+            //}
+            //else
+            //{
+            //    int remainder;
+            //    Math.DivRem(totalRows, pageSize, out remainder);
+            //    if (remainder > 0)
+            //    {
+            //        totalPages += 1;
+            //    }
+            //}
 
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT FIRST " + pageSize.ToString(CultureInfo.InvariantCulture) + " ");
@@ -335,9 +349,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             sqlCommand.Append("	; ");
 
-           
-
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 null);

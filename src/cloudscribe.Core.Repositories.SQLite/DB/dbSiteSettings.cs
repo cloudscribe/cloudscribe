@@ -1,12 +1,13 @@
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2014-09-06
+// Last Modified:			2015-01-16
 // 
 // You must not remove this notice, or any other, from this software.
 
 using cloudscribe.DbHelpers.SQLite;
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Data.SQLite;
 using System.Text;
 
@@ -1702,30 +1703,29 @@ namespace cloudscribe.Core.Repositories.SQLite
                 null);
         }
 
-        public static IDataReader GetPageHosts(
+        public static DbDataReader GetPageHosts(
             int pageNumber,
-            int pageSize,
-            out int totalPages)
+            int pageSize)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
-            totalPages = 1;
-            int totalRows = GetHostCount();
+            //totalPages = 1;
+            //int totalRows = GetHostCount();
 
-            if (pageSize > 0) totalPages = totalRows / pageSize;
+            //if (pageSize > 0) totalPages = totalRows / pageSize;
 
-            if (totalRows <= pageSize)
-            {
-                totalPages = 1;
-            }
-            else
-            {
-                int remainder;
-                Math.DivRem(totalRows, pageSize, out remainder);
-                if (remainder > 0)
-                {
-                    totalPages += 1;
-                }
-            }
+            //if (totalRows <= pageSize)
+            //{
+            //    totalPages = 1;
+            //}
+            //else
+            //{
+            //    int remainder;
+            //    Math.DivRem(totalRows, pageSize, out remainder);
+            //    if (remainder > 0)
+            //    {
+            //        totalPages += 1;
+            //    }
+            //}
 
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT	* ");
@@ -1779,7 +1779,7 @@ namespace cloudscribe.Core.Repositories.SQLite
 
         }
 
-        public static void AddHost(Guid siteGuid, int siteId, string hostName)
+        public static bool AddHost(Guid siteGuid, int siteId, string hostName)
         {
             StringBuilder sqlCommand = new StringBuilder();
 
@@ -1811,14 +1811,15 @@ namespace cloudscribe.Core.Repositories.SQLite
             arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = siteGuid.ToString();
 
-            AdoHelper.ExecuteNonQuery(
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
                 ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
 
+            return rowsAffected > 0;
         }
 
-        public static void DeleteHost(int hostId)
+        public static bool DeleteHost(int hostId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_SiteHosts ");
@@ -1830,10 +1831,12 @@ namespace cloudscribe.Core.Repositories.SQLite
             arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = hostId;
 
-            AdoHelper.ExecuteNonQuery(
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
                 ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
+
+            return rowsAffected > 0;
         }
 
         public static IDataReader GetSiteList()
@@ -1992,31 +1995,30 @@ namespace cloudscribe.Core.Repositories.SQLite
 
         }
 
-        public static IDataReader GetPageOfOtherSites(
+        public static DbDataReader GetPageOfOtherSites(
             int currentSiteId,
             int pageNumber,
-            int pageSize,
-            out int totalPages)
+            int pageSize)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
-            totalPages = 1;
-            int totalRows = CountOtherSites(currentSiteId);
+            //totalPages = 1;
+            //int totalRows = CountOtherSites(currentSiteId);
 
-            if (pageSize > 0) totalPages = totalRows / pageSize;
+            //if (pageSize > 0) totalPages = totalRows / pageSize;
 
-            if (totalRows <= pageSize)
-            {
-                totalPages = 1;
-            }
-            else
-            {
-                int remainder;
-                Math.DivRem(totalRows, pageSize, out remainder);
-                if (remainder > 0)
-                {
-                    totalPages += 1;
-                }
-            }
+            //if (totalRows <= pageSize)
+            //{
+            //    totalPages = 1;
+            //}
+            //else
+            //{
+            //    int remainder;
+            //    Math.DivRem(totalRows, pageSize, out remainder);
+            //    if (remainder > 0)
+            //    {
+            //        totalPages += 1;
+            //    }
+            //}
 
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT	* ");

@@ -1,6 +1,6 @@
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2014-08-28
+// Last Modified:			2015-01-16
 //
 // You must not remove this notice, or any other, from this software.
 
@@ -8,8 +8,10 @@ using cloudscribe.DbHelpers.Firebird;
 using FirebirdSql.Data.FirebirdClient;
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Globalization;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.Firebird
 {
@@ -18,7 +20,7 @@ namespace cloudscribe.Core.Repositories.Firebird
     {
         
 
-        public static int Create(
+        public static async Task<int> Create(
             Guid siteGuid,
             String siteName,
             String skin,
@@ -228,247 +230,191 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[57];
 
             arParams[0] = new FbParameter(":SiteGuid", FbDbType.VarChar, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteGuid.ToString();
 
             arParams[1] = new FbParameter(":SiteName", FbDbType.VarChar, 255);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = siteName;
 
             arParams[2] = new FbParameter(":Skin", FbDbType.VarChar, 100);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = skin;
 
             arParams[3] = new FbParameter(":Logo", FbDbType.VarChar, 50);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = logo;
 
             arParams[4] = new FbParameter(":Icon", FbDbType.VarChar, 50);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = icon;
 
             arParams[5] = new FbParameter(":AllowUserSkins", FbDbType.Integer);
-            arParams[5].Direction = ParameterDirection.Input;
             arParams[5].Value = allowSkins;
 
             arParams[6] = new FbParameter(":AllowPageSkins", FbDbType.Integer);
-            arParams[6].Direction = ParameterDirection.Input;
             arParams[6].Value = pageSkins;
 
             arParams[7] = new FbParameter(":AllowHideMenuOnPages", FbDbType.Integer);
-            arParams[7].Direction = ParameterDirection.Input;
             arParams[7].Value = allowHide;
 
             arParams[8] = new FbParameter(":AllowNewRegistration", FbDbType.Integer);
-            arParams[8].Direction = ParameterDirection.Input;
             arParams[8].Value = allowNew;
 
             arParams[9] = new FbParameter(":UseSecureRegistration", FbDbType.Integer);
-            arParams[9].Direction = ParameterDirection.Input;
             arParams[9].Value = secure;
 
             arParams[10] = new FbParameter(":UseSSLOnAllPages", FbDbType.Integer);
-            arParams[10].Direction = ParameterDirection.Input;
             arParams[10].Value = ssl;
 
             arParams[11] = new FbParameter(":DefaultPageKeywords", FbDbType.VarChar, 255);
-            arParams[11].Direction = ParameterDirection.Input;
             arParams[11].Value = defaultPageKeywords;
 
             arParams[12] = new FbParameter(":DefaultPageDescription", FbDbType.VarChar, 255);
-            arParams[12].Direction = ParameterDirection.Input;
             arParams[12].Value = defaultPageDescription;
 
             arParams[13] = new FbParameter(":DefaultPageEncoding", FbDbType.VarChar, 255);
-            arParams[13].Direction = ParameterDirection.Input;
             arParams[13].Value = defaultPageEncoding;
 
             arParams[14] = new FbParameter(":DefaultAdditionalMetaTags", FbDbType.VarChar, 255);
-            arParams[14].Direction = ParameterDirection.Input;
             arParams[14].Value = defaultAdditionalMetaTags;
 
             arParams[15] = new FbParameter(":IsServerAdminSite", FbDbType.Integer);
-            arParams[15].Direction = ParameterDirection.Input;
             arParams[15].Value = adminSite;
 
             arParams[16] = new FbParameter(":UseLdapAuth", FbDbType.Integer);
-            arParams[16].Direction = ParameterDirection.Input;
             arParams[16].Value = uldapp;
 
             arParams[17] = new FbParameter(":AutoCreateLDAPUserOnFirstLogin", FbDbType.Integer);
-            arParams[17].Direction = ParameterDirection.Input;
             arParams[17].Value = autoldapp;
 
             arParams[18] = new FbParameter(":LdapServer", FbDbType.VarChar, 255);
-            arParams[18].Direction = ParameterDirection.Input;
             arParams[18].Value = ldapServer;
 
             arParams[19] = new FbParameter(":LdapPort", FbDbType.Integer);
-            arParams[19].Direction = ParameterDirection.Input;
             arParams[19].Value = ldapPort;
 
             arParams[20] = new FbParameter(":LdapDomain", FbDbType.VarChar, 255);
-            arParams[20].Direction = ParameterDirection.Input;
             arParams[20].Value = ldapDomain;
 
             arParams[21] = new FbParameter(":LdapRootDN", FbDbType.VarChar, 255);
-            arParams[21].Direction = ParameterDirection.Input;
             arParams[21].Value = ldapRootDN;
 
             arParams[22] = new FbParameter(":LdapUserDNKey", FbDbType.VarChar, 255);
-            arParams[22].Direction = ParameterDirection.Input;
             arParams[22].Value = ldapUserDNKey;
 
             arParams[23] = new FbParameter(":ReallyDeleteUsers", FbDbType.Integer);
-            arParams[23].Direction = ParameterDirection.Input;
             arParams[23].Value = deleteUsers;
 
             arParams[24] = new FbParameter(":UseEmailForLogin", FbDbType.Integer);
-            arParams[24].Direction = ParameterDirection.Input;
             arParams[24].Value = emailForLogin;
 
             arParams[25] = new FbParameter(":AllowUserFullNameChange", FbDbType.Integer);
-            arParams[25].Direction = ParameterDirection.Input;
             arParams[25].Value = allowNameChange;
 
             arParams[26] = new FbParameter(":EditorSkin", FbDbType.VarChar, 50);
-            arParams[26].Direction = ParameterDirection.Input;
             arParams[26].Value = editorSkin;
 
             arParams[27] = new FbParameter(":DefaultFriendlyUrlPattern", FbDbType.VarChar, 50);
-            arParams[27].Direction = ParameterDirection.Input;
             arParams[27].Value = defaultFriendlyUrlPattern;
 
             arParams[28] = new FbParameter(":AllowPasswordRetieval", FbDbType.Integer);
-            arParams[28].Direction = ParameterDirection.Input;
             arParams[28].Value = 1;
 
             arParams[29] = new FbParameter(":AllowPasswordReset", FbDbType.Integer);
-            arParams[29].Direction = ParameterDirection.Input;
             arParams[29].Value = 1;
 
             arParams[30] = new FbParameter(":RequiresQuestionAndAnswer", FbDbType.Integer);
-            arParams[30].Direction = ParameterDirection.Input;
             arParams[30].Value = 1;
 
             arParams[31] = new FbParameter(":MaxInvalidPasswordAttempts", FbDbType.Integer);
-            arParams[31].Direction = ParameterDirection.Input;
             arParams[31].Value = 5;
 
             arParams[32] = new FbParameter(":PASSWORDATTEMPTWINDOWMINUTES", FbDbType.Integer);
-            arParams[32].Direction = ParameterDirection.Input;
             arParams[32].Value = 5;
 
             arParams[33] = new FbParameter(":REQUIRESUNIQUEEMAIL", FbDbType.Integer);
-            arParams[33].Direction = ParameterDirection.Input;
             arParams[33].Value = 1;
 
             arParams[34] = new FbParameter(":PASSWORDFORMAT", FbDbType.Integer);
-            arParams[34].Direction = ParameterDirection.Input;
             arParams[34].Value = 0;
 
             arParams[35] = new FbParameter(":MINREQUIREDPASSWORDLENGTH", FbDbType.Integer);
-            arParams[35].Direction = ParameterDirection.Input;
             arParams[35].Value = 4;
 
             arParams[36] = new FbParameter(":MINREQNONALPHACHARS", FbDbType.Integer);
-            arParams[36].Direction = ParameterDirection.Input;
             arParams[36].Value = 0;
 
             arParams[37] = new FbParameter(":PWDSTRENGTHREGEX", FbDbType.VarChar);
-            arParams[37].Direction = ParameterDirection.Input;
             arParams[37].Value = "";
 
             arParams[38] = new FbParameter(":DEFAULTEMAILFROMADDRESS", FbDbType.VarChar, 100);
-            arParams[38].Direction = ParameterDirection.Input;
             arParams[38].Value = "noreply@yoursite.com";
 
             arParams[39] = new FbParameter(":EnableMyPageFeature", FbDbType.Integer);
-            arParams[39].Direction = ParameterDirection.Input;
             arParams[39].Value = enableMy;
 
             arParams[40] = new FbParameter(":EditorProvider", FbDbType.VarChar, 255);
-            arParams[40].Direction = ParameterDirection.Input;
             arParams[40].Value = editorProvider;
 
             arParams[41] = new FbParameter(":DatePickerProvider", FbDbType.VarChar, 255);
-            arParams[41].Direction = ParameterDirection.Input;
             arParams[41].Value = datePickerProvider;
 
             arParams[42] = new FbParameter(":CaptchaProvider", FbDbType.VarChar, 255);
-            arParams[42].Direction = ParameterDirection.Input;
             arParams[42].Value = captchaProvider;
 
             arParams[43] = new FbParameter(":RecaptchaPrivateKey", FbDbType.VarChar, 255);
-            arParams[43].Direction = ParameterDirection.Input;
             arParams[43].Value = recaptchaPrivateKey;
 
             arParams[44] = new FbParameter(":RecaptchaPublicKey", FbDbType.VarChar, 255);
-            arParams[44].Direction = ParameterDirection.Input;
             arParams[44].Value = recaptchaPublicKey;
 
             arParams[45] = new FbParameter(":WordpressAPIKey", FbDbType.VarChar, 255);
-            arParams[45].Direction = ParameterDirection.Input;
             arParams[45].Value = wordpressApiKey;
 
             arParams[46] = new FbParameter(":WindowsLiveAppID", FbDbType.VarChar, 255);
-            arParams[46].Direction = ParameterDirection.Input;
             arParams[46].Value = windowsLiveAppId;
 
             arParams[47] = new FbParameter(":WindowsLiveKey", FbDbType.VarChar, 255);
-            arParams[47].Direction = ParameterDirection.Input;
             arParams[47].Value = windowsLiveKey;
 
             arParams[48] = new FbParameter(":AllowOpenIDAuth", FbDbType.SmallInt);
-            arParams[48].Direction = ParameterDirection.Input;
             arParams[48].Value = oidauth;
 
             arParams[49] = new FbParameter(":AllowWindowsLiveAuth", FbDbType.SmallInt);
-            arParams[49].Direction = ParameterDirection.Input;
             arParams[49].Value = winliveauth;
 
             arParams[50] = new FbParameter(":GmapApiKey", FbDbType.VarChar, 255);
-            arParams[50].Direction = ParameterDirection.Input;
             arParams[50].Value = gmapApiKey;
 
             arParams[51] = new FbParameter(":ApiKeyExtra1", FbDbType.VarChar, 255);
-            arParams[51].Direction = ParameterDirection.Input;
             arParams[51].Value = apiKeyExtra1;
 
             arParams[52] = new FbParameter(":ApiKeyExtra2", FbDbType.VarChar, 255);
-            arParams[52].Direction = ParameterDirection.Input;
             arParams[52].Value = apiKeyExtra2;
 
             arParams[53] = new FbParameter(":ApiKeyExtra3", FbDbType.VarChar, 255);
-            arParams[53].Direction = ParameterDirection.Input;
             arParams[53].Value = apiKeyExtra3;
 
             arParams[54] = new FbParameter(":ApiKeyExtra4", FbDbType.VarChar, 255);
-            arParams[54].Direction = ParameterDirection.Input;
             arParams[54].Value = apiKeyExtra4;
 
             arParams[55] = new FbParameter(":ApiKeyExtra5", FbDbType.VarChar, 255);
-            arParams[55].Direction = ParameterDirection.Input;
             arParams[55].Value = apiKeyExtra5;
 
             arParams[56] = new FbParameter(":DisableDbAuth", FbDbType.SmallInt);
-            arParams[56].Direction = ParameterDirection.Input;
             arParams[56].Value = intDisableDbAuth;
 
-
-            int newID = Convert.ToInt32(AdoHelper.ExecuteScalar(
+            object result = await AdoHelper.ExecuteScalarAsync(
                 ConnectionString.GetWriteConnectionString(),
                 CommandType.StoredProcedure,
                 "EXECUTE PROCEDURE MP_SITES_INSERT ("
                 + AdoHelper.GetParamString(arParams.Length) + ")",
-                arParams));
+                arParams);
+
+            int newID = Convert.ToInt32(result);
 
             return newID;
 
 
         }
 
-        public static bool Update(
+        public static async Task<bool> Update(
             int siteId,
             string siteName,
             string skin,
@@ -722,195 +668,147 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[46];
 
             arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new FbParameter("@SiteName", FbDbType.VarChar, 128);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = siteName;
 
             arParams[2] = new FbParameter("@IsServerAdminSite", FbDbType.Integer);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = adminSite;
 
             arParams[3] = new FbParameter("@Skin", FbDbType.VarChar, 100);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = skin;
 
             arParams[4] = new FbParameter("@Logo", FbDbType.VarChar, 50);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = logo;
 
             arParams[5] = new FbParameter("@Icon", FbDbType.VarChar, 50);
-            arParams[5].Direction = ParameterDirection.Input;
             arParams[5].Value = icon;
 
             arParams[6] = new FbParameter("@AllowNewRegistration", FbDbType.Integer);
-            arParams[6].Direction = ParameterDirection.Input;
             arParams[6].Value = allowNew;
 
             arParams[7] = new FbParameter("@AllowUserSkins", FbDbType.Integer);
-            arParams[7].Direction = ParameterDirection.Input;
             arParams[7].Value = allowSkins;
 
             arParams[8] = new FbParameter("@UseSecureRegistration", FbDbType.Integer);
-            arParams[8].Direction = ParameterDirection.Input;
             arParams[8].Value = secure;
 
             arParams[9] = new FbParameter("@EnableMyPageFeature", FbDbType.Integer);
-            arParams[9].Direction = ParameterDirection.Input;
             arParams[9].Value = enableMy;
 
             arParams[10] = new FbParameter("@UseSSLOnAllPages", FbDbType.Integer);
-            arParams[10].Direction = ParameterDirection.Input;
             arParams[10].Value = ssl;
 
             arParams[11] = new FbParameter("@DefaultPageKeywords", FbDbType.VarChar, 255);
-            arParams[11].Direction = ParameterDirection.Input;
             arParams[11].Value = defaultPageKeywords;
 
             arParams[12] = new FbParameter("@DefaultPageDescription", FbDbType.VarChar, 255);
-            arParams[12].Direction = ParameterDirection.Input;
             arParams[12].Value = defaultPageDescription;
 
             arParams[13] = new FbParameter("@DefaultPageEncoding", FbDbType.VarChar, 255);
-            arParams[13].Direction = ParameterDirection.Input;
             arParams[13].Value = defaultPageEncoding;
 
             arParams[14] = new FbParameter("@DefaultAdditionalMetaTags", FbDbType.VarChar, 255);
-            arParams[14].Direction = ParameterDirection.Input;
             arParams[14].Value = defaultAdditionalMetaTags;
 
             arParams[15] = new FbParameter("@AllowPageSkins", FbDbType.Integer);
-            arParams[15].Direction = ParameterDirection.Input;
             arParams[15].Value = pageSkins;
 
             arParams[16] = new FbParameter("@AllowHideMenuOnPages", FbDbType.Integer);
-            arParams[16].Direction = ParameterDirection.Input;
             arParams[16].Value = allowHide;
 
             arParams[17] = new FbParameter("@UseLdapAuth", FbDbType.Integer);
-            arParams[17].Direction = ParameterDirection.Input;
             arParams[17].Value = uldapp;
 
             arParams[18] = new FbParameter("@AutoCreateLDAPUserOnFirstLogin", FbDbType.Integer);
-            arParams[18].Direction = ParameterDirection.Input;
             arParams[18].Value = autoldapp;
 
             arParams[19] = new FbParameter("@LdapServer", FbDbType.VarChar, 255);
-            arParams[19].Direction = ParameterDirection.Input;
             arParams[19].Value = ldapServer;
 
             arParams[20] = new FbParameter("@LdapPort", FbDbType.Integer);
-            arParams[20].Direction = ParameterDirection.Input;
             arParams[20].Value = ldapPort;
 
             arParams[21] = new FbParameter("@LdapRootDN", FbDbType.VarChar, 255);
-            arParams[21].Direction = ParameterDirection.Input;
             arParams[21].Value = ldapRootDN;
 
             arParams[22] = new FbParameter("@LdapUserDNKey", FbDbType.VarChar, 10);
-            arParams[22].Direction = ParameterDirection.Input;
             arParams[22].Value = ldapUserDNKey;
 
             arParams[23] = new FbParameter("@AllowUserFullNameChange", FbDbType.Integer);
-            arParams[23].Direction = ParameterDirection.Input;
             arParams[23].Value = allowNameChange;
 
             arParams[24] = new FbParameter("@UseEmailForLogin", FbDbType.Integer);
-            arParams[24].Direction = ParameterDirection.Input;
             arParams[24].Value = emailForLogin;
 
             arParams[25] = new FbParameter("@ReallyDeleteUsers", FbDbType.Integer);
-            arParams[25].Direction = ParameterDirection.Input;
             arParams[25].Value = deleteUsers;
 
             arParams[26] = new FbParameter("@EditorSkin", FbDbType.VarChar, 50);
-            arParams[26].Direction = ParameterDirection.Input;
             arParams[26].Value = editorSkin;
 
             arParams[27] = new FbParameter("@DefaultFriendlyUrlPattern", FbDbType.VarChar, 50);
-            arParams[27].Direction = ParameterDirection.Input;
             arParams[27].Value = defaultFriendlyUrlPattern;
 
             arParams[28] = new FbParameter("@LdapDomain", FbDbType.VarChar, 255);
-            arParams[28].Direction = ParameterDirection.Input;
             arParams[28].Value = ldapDomain;
 
             arParams[29] = new FbParameter("@EditorProvider", FbDbType.VarChar, 255);
-            arParams[29].Direction = ParameterDirection.Input;
             arParams[29].Value = editorProvider;
 
             arParams[30] = new FbParameter("@DatePickerProvider", FbDbType.VarChar, 255);
-            arParams[30].Direction = ParameterDirection.Input;
             arParams[30].Value = datePickerProvider;
 
             arParams[31] = new FbParameter("@CaptchaProvider", FbDbType.VarChar, 255);
-            arParams[31].Direction = ParameterDirection.Input;
             arParams[31].Value = captchaProvider;
 
             arParams[32] = new FbParameter("@RecaptchaPrivateKey", FbDbType.VarChar, 255);
-            arParams[32].Direction = ParameterDirection.Input;
             arParams[32].Value = recaptchaPrivateKey;
 
             arParams[33] = new FbParameter("@RecaptchaPublicKey", FbDbType.VarChar, 255);
-            arParams[33].Direction = ParameterDirection.Input;
             arParams[33].Value = recaptchaPublicKey;
 
             arParams[34] = new FbParameter("@WordpressAPIKey", FbDbType.VarChar, 255);
-            arParams[34].Direction = ParameterDirection.Input;
             arParams[34].Value = wordpressApiKey;
 
             arParams[35] = new FbParameter("@WindowsLiveAppID", FbDbType.VarChar, 255);
-            arParams[35].Direction = ParameterDirection.Input;
             arParams[35].Value = windowsLiveAppId;
 
             arParams[36] = new FbParameter("@WindowsLiveKey", FbDbType.VarChar, 255);
-            arParams[36].Direction = ParameterDirection.Input;
             arParams[36].Value = windowsLiveKey;
 
             arParams[37] = new FbParameter("@AllowOpenIDAuth", FbDbType.SmallInt);
-            arParams[37].Direction = ParameterDirection.Input;
             arParams[37].Value = oidauth;
 
             arParams[38] = new FbParameter("@AllowWindowsLiveAuth", FbDbType.SmallInt);
-            arParams[38].Direction = ParameterDirection.Input;
             arParams[38].Value = winliveauth;
 
             arParams[39] = new FbParameter("@GmapApiKey", FbDbType.VarChar, 255);
-            arParams[39].Direction = ParameterDirection.Input;
             arParams[39].Value = gmapApiKey;
 
             arParams[40] = new FbParameter("@ApiKeyExtra1", FbDbType.VarChar, 255);
-            arParams[40].Direction = ParameterDirection.Input;
             arParams[40].Value = apiKeyExtra1;
 
             arParams[41] = new FbParameter("@ApiKeyExtra2", FbDbType.VarChar, 255);
-            arParams[41].Direction = ParameterDirection.Input;
             arParams[41].Value = apiKeyExtra2;
 
             arParams[42] = new FbParameter("@ApiKeyExtra3", FbDbType.VarChar, 255);
-            arParams[42].Direction = ParameterDirection.Input;
             arParams[42].Value = apiKeyExtra3;
 
             arParams[43] = new FbParameter("@ApiKeyExtra4", FbDbType.VarChar, 255);
-            arParams[43].Direction = ParameterDirection.Input;
             arParams[43].Value = apiKeyExtra4;
 
             arParams[44] = new FbParameter("@ApiKeyExtra5", FbDbType.VarChar, 255);
-            arParams[44].Direction = ParameterDirection.Input;
             arParams[44].Value = apiKeyExtra5;
 
             arParams[45] = new FbParameter("@DisableDbAuth", FbDbType.SmallInt);
-            arParams[45].Direction = ParameterDirection.Input;
             arParams[45].Value = intDisableDbAuth;
 
-
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
-
 
             return (rowsAffected > 0);
         }
@@ -1349,129 +1247,44 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         }
 
-        public static bool Delete(int siteId)
+        public static async Task<bool> Delete(int siteId)
         {
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
-            
-
             StringBuilder sqlCommand = new StringBuilder();
-
-            sqlCommand.Append("DELETE FROM mp_WebParts WHERE SiteID = @SiteID; ");
-
-            AdoHelper.ExecuteNonQuery(
-                ConnectionString.GetWriteConnectionString(),
-                sqlCommand.ToString(),
-                arParams);
-
-            sqlCommand = new StringBuilder();
-            sqlCommand.Append("DELETE FROM mp_PageModules ");
-            sqlCommand.Append("WHERE PageID IN (SELECT PageID FROM mp_Pages WHERE SiteID = @SiteID); ");
-
-            AdoHelper.ExecuteNonQuery(
-                ConnectionString.GetWriteConnectionString(),
-                sqlCommand.ToString(),
-                arParams);
-
-
-            sqlCommand = new StringBuilder();
-            sqlCommand.Append("DELETE FROM mp_ModuleSettings WHERE ModuleID IN (SELECT ModuleID FROM mp_Modules WHERE SiteID = @SiteID);");
-
-            AdoHelper.ExecuteNonQuery(
-                ConnectionString.GetWriteConnectionString(),
-                sqlCommand.ToString(),
-                arParams);
-
-
-            sqlCommand = new StringBuilder();
-            sqlCommand.Append("DELETE FROM mp_HtmlContent WHERE ModuleID IN (SELECT ModuleID FROM mp_Modules WHERE SiteID = @SiteID);");
-
-            AdoHelper.ExecuteNonQuery(
-                ConnectionString.GetWriteConnectionString(),
-                sqlCommand.ToString(),
-                arParams);
-
-
-            sqlCommand = new StringBuilder();
-            sqlCommand.Append("DELETE FROM mp_Modules WHERE SiteID = @SiteID; ");
-
-            AdoHelper.ExecuteNonQuery(
-                ConnectionString.GetWriteConnectionString(),
-                sqlCommand.ToString(),
-                arParams);
-
-            sqlCommand = new StringBuilder();
-            sqlCommand.Append("DELETE FROM mp_SiteModuleDefinitions WHERE SiteID = @SiteID; ");
-
-            AdoHelper.ExecuteNonQuery(
-                ConnectionString.GetWriteConnectionString(),
-                sqlCommand.ToString(),
-                arParams);
-
-            sqlCommand = new StringBuilder();
-            sqlCommand.Append("DELETE FROM mp_UserProperties WHERE UserGuid IN (SELECT UserGuid FROM mp_Users WHERE SiteID = @SiteID);");
-
-            AdoHelper.ExecuteNonQuery(
-                ConnectionString.GetWriteConnectionString(),
-                sqlCommand.ToString(),
-                arParams);
-
-            sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_UserRoles WHERE UserID IN (SELECT UserID FROM mp_Users WHERE SiteID = @SiteID);");
 
-            AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
+
 
             sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_UserLocation WHERE UserGuid IN (SELECT UserGuid FROM mp_Users WHERE SiteID = @SiteID);");
 
-            AdoHelper.ExecuteNonQuery(
+            rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
 
-            sqlCommand = new StringBuilder();
-            sqlCommand.Append("DELETE FROM mp_FriendlyUrls WHERE SiteID = @SiteID; ");
-
-            AdoHelper.ExecuteNonQuery(
-                ConnectionString.GetWriteConnectionString(),
-                sqlCommand.ToString(),
-                arParams);
-
-            sqlCommand = new StringBuilder();
-            sqlCommand.Append("DELETE FROM mp_UserPages WHERE SiteID = @SiteID; ");
-
-            AdoHelper.ExecuteNonQuery(
-                ConnectionString.GetWriteConnectionString(),
-                sqlCommand.ToString(),
-                arParams);
-
+           
             sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_Users WHERE SiteID = @SiteID; ");
 
-            AdoHelper.ExecuteNonQuery(
+            rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
 
-            sqlCommand = new StringBuilder();
-            sqlCommand.Append("DELETE FROM mp_Pages WHERE SiteID = @SiteID; ");
-
-            AdoHelper.ExecuteNonQuery(
-                ConnectionString.GetWriteConnectionString(),
-                sqlCommand.ToString(),
-                arParams);
-
+            
             sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_Roles WHERE SiteID = @SiteID; ");
 
-            AdoHelper.ExecuteNonQuery(
+            rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -1479,7 +1292,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_SiteHosts WHERE SiteID = @SiteID; ");
 
-            AdoHelper.ExecuteNonQuery(
+            rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -1487,143 +1300,25 @@ namespace cloudscribe.Core.Repositories.Firebird
             sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_SiteSettingsEx WHERE SiteID = @SiteID; ");
 
-            AdoHelper.ExecuteNonQuery(
+            rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
 
-            sqlCommand = new StringBuilder();
-            sqlCommand.Append("DELETE FROM mp_SitePersonalizationAllUsers WHERE PathID IN (SELECT PathID FROM mp_SitePaths WHERE SiteID = @SiteID);");
-
-            AdoHelper.ExecuteNonQuery(
-                ConnectionString.GetWriteConnectionString(),
-                sqlCommand.ToString(),
-                arParams);
-
-            sqlCommand = new StringBuilder();
-            sqlCommand.Append("DELETE FROM mp_SitePersonalizationPerUser WHERE PathID IN (SELECT PathID FROM mp_SitePaths WHERE SiteID = @SiteID);");
-
-            AdoHelper.ExecuteNonQuery(
-                ConnectionString.GetWriteConnectionString(),
-                sqlCommand.ToString(),
-                arParams);
-
-            sqlCommand = new StringBuilder();
-            sqlCommand.Append("DELETE FROM mp_SitePaths WHERE SiteID = @SiteID; ");
-
-            AdoHelper.ExecuteNonQuery(
-                ConnectionString.GetWriteConnectionString(),
-                sqlCommand.ToString(),
-                arParams);
-
+            
             sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_SiteFolders WHERE SiteGuid IN (SELECT SiteGuid FROM mp_Sites WHERE SiteID = @SiteID);");
 
-            AdoHelper.ExecuteNonQuery(
+            rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
 
-
-            sqlCommand = new StringBuilder();
-            sqlCommand.Append("DELETE FROM mp_PaymentLog WHERE SiteGuid IN (SELECT SiteGuid FROM mp_Sites WHERE SiteID = @SiteID);");
-
-            AdoHelper.ExecuteNonQuery(
-                ConnectionString.GetWriteConnectionString(),
-                sqlCommand.ToString(),
-                arParams);
-
-           
-
-
-            sqlCommand = new StringBuilder();
-            sqlCommand.Append("DELETE FROM mp_GoogleCheckoutLog WHERE SiteGuid IN (SELECT SiteGuid FROM mp_Sites WHERE SiteID = @SiteID);");
-
-            AdoHelper.ExecuteNonQuery(
-                ConnectionString.GetWriteConnectionString(),
-                sqlCommand.ToString(),
-                arParams);
-
-
-            sqlCommand = new StringBuilder();
-            sqlCommand.Append("DELETE FROM mp_LetterSendLog   ");
-            sqlCommand.Append("WHERE LetterGuid IN (SELECT LetterGuid FROM mp_Letter   ");
-            sqlCommand.Append("WHERE LetterInfoGuid IN (SELECT LetterInfoGuid   ");
-            sqlCommand.Append("FROM mp_LetterInfo   ");
-            sqlCommand.Append("WHERE SiteGuid IN (SELECT SiteGuid FROM mp_Sites WHERE SiteID = @SiteID) ");
-            sqlCommand.Append("));");
-            
-            AdoHelper.ExecuteNonQuery(
-                ConnectionString.GetWriteConnectionString(),
-                sqlCommand.ToString(),
-                arParams);
-
-            sqlCommand = new StringBuilder();
-            sqlCommand.Append("DELETE FROM mp_LetterSubscribeHx   ");
-            sqlCommand.Append("WHERE LetterInfoGuid IN (SELECT LetterInfoGuid   ");
-            sqlCommand.Append("FROM mp_LetterInfo   ");
-            sqlCommand.Append("WHERE SiteGuid IN (SELECT SiteGuid FROM mp_Sites WHERE SiteID = @SiteID)   ");
-            sqlCommand.Append(");");
-
-            AdoHelper.ExecuteNonQuery(
-                ConnectionString.GetWriteConnectionString(),
-                sqlCommand.ToString(),
-                arParams);
-
-
-            sqlCommand = new StringBuilder();
-            sqlCommand.Append("DELETE FROM mp_LetterSubscribe   ");
-            sqlCommand.Append("WHERE LetterInfoGuid IN (SELECT LetterInfoGuid   ");
-            sqlCommand.Append("FROM mp_LetterInfo   ");
-            sqlCommand.Append("WHERE SiteGuid IN (SELECT SiteGuid FROM mp_Sites WHERE SiteID = @SiteID)   ");
-            sqlCommand.Append(");");
-
-            AdoHelper.ExecuteNonQuery(
-                ConnectionString.GetWriteConnectionString(),
-                sqlCommand.ToString(),
-                arParams);
-
-            sqlCommand = new StringBuilder();
-            sqlCommand.Append("DELETE FROM mp_Letter   ");
-            sqlCommand.Append("WHERE LetterInfoGuid IN (SELECT LetterInfoGuid   ");
-            sqlCommand.Append("FROM mp_LetterInfo   ");
-            sqlCommand.Append("WHERE SiteGuid IN (SELECT SiteGuid FROM mp_Sites WHERE SiteID = @SiteID)   ");
-            sqlCommand.Append(");");
-
-            AdoHelper.ExecuteNonQuery(
-                ConnectionString.GetWriteConnectionString(),
-                sqlCommand.ToString(),
-                arParams);
-
-            sqlCommand = new StringBuilder();
-            sqlCommand.Append("DELETE FROM mp_LetterHtmlTemplate WHERE SiteGuid IN (SELECT SiteGuid FROM mp_Sites WHERE SiteID = @SiteID);");
-
-            AdoHelper.ExecuteNonQuery(
-                ConnectionString.GetWriteConnectionString(),
-                sqlCommand.ToString(),
-                arParams);
-
-            sqlCommand = new StringBuilder();
-            sqlCommand.Append("DELETE FROM mp_LetterInfo WHERE SiteGuid IN (SELECT SiteGuid FROM mp_Sites WHERE SiteID = @SiteID);");
-
-            AdoHelper.ExecuteNonQuery(
-                ConnectionString.GetWriteConnectionString(),
-                sqlCommand.ToString(),
-                arParams);
-
-
-            sqlCommand = new StringBuilder();
-            sqlCommand.Append("DELETE FROM mp_PayPalLog WHERE SiteGuid IN (SELECT SiteGuid FROM mp_Sites WHERE SiteID = @SiteID);");
-
-            AdoHelper.ExecuteNonQuery(
-                ConnectionString.GetWriteConnectionString(),
-                sqlCommand.ToString(),
-                arParams);
 
             sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_RedirectList WHERE SiteGuid IN (SELECT SiteGuid FROM mp_Sites WHERE SiteID = @SiteID);");
 
-            AdoHelper.ExecuteNonQuery(
+            rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -1631,43 +1326,17 @@ namespace cloudscribe.Core.Repositories.Firebird
             sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_TaskQueue WHERE SiteGuid IN (SELECT SiteGuid FROM mp_Sites WHERE SiteID = @SiteID);");
 
-            AdoHelper.ExecuteNonQuery(
+            rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
 
-            sqlCommand = new StringBuilder();
-            sqlCommand.Append("DELETE FROM mp_TaxClass WHERE SiteGuid IN (SELECT SiteGuid FROM mp_Sites WHERE SiteID = @SiteID);");
-
-            AdoHelper.ExecuteNonQuery(
-                ConnectionString.GetWriteConnectionString(),
-                sqlCommand.ToString(),
-                arParams);
-
-            sqlCommand = new StringBuilder();
-            sqlCommand.Append("DELETE FROM mp_TaxRateHistory WHERE SiteGuid IN (SELECT SiteGuid FROM mp_Sites WHERE SiteID = @SiteID);");
-
-            AdoHelper.ExecuteNonQuery(
-                ConnectionString.GetWriteConnectionString(),
-                sqlCommand.ToString(),
-                arParams);
-
-            sqlCommand = new StringBuilder();
-            sqlCommand.Append("DELETE FROM mp_TaxRate WHERE SiteGuid IN (SELECT SiteGuid FROM mp_Sites WHERE SiteID = @SiteID);");
-
-            AdoHelper.ExecuteNonQuery(
-                ConnectionString.GetWriteConnectionString(),
-                sqlCommand.ToString(),
-                arParams);
-
-
-
-
+           
             sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_Sites ");
             sqlCommand.Append("WHERE SiteID = @SiteID  ; ");
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -1858,21 +1527,38 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         }
 
-        public static int GetHostCount()
+        public static async Task<int> GetHostCount()
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  Count(*) ");
             sqlCommand.Append("FROM	mp_SiteHosts ");
             sqlCommand.Append(";");
 
-            return Convert.ToInt32(AdoHelper.ExecuteScalar(
+            object result = await AdoHelper.ExecuteScalarAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
-                null));
+                null);
+
+            return Convert.ToInt32(result);
 
         }
 
-        public static IDataReader GetAllHosts()
+        public static async Task<DbDataReader> GetAllHosts()
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  * ");
+            sqlCommand.Append("FROM	mp_SiteHosts ");
+            sqlCommand.Append("ORDER BY HostName  ");
+            sqlCommand.Append(";");
+
+            return await AdoHelper.ExecuteReaderAsync(
+                ConnectionString.GetReadConnectionString(),
+                sqlCommand.ToString(),
+                null);
+
+        }
+
+        public static DbDataReader GetAllHostsNonAsync()
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  * ");
@@ -1887,30 +1573,29 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         }
 
-        public static IDataReader GetPageHosts(
+        public static async Task<DbDataReader> GetPageHosts(
             int pageNumber,
-            int pageSize,
-            out int totalPages)
+            int pageSize)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
-            totalPages = 1;
-            int totalRows = GetHostCount();
+            //totalPages = 1;
+            //int totalRows = GetHostCount();
 
-            if (pageSize > 0) totalPages = totalRows / pageSize;
+            //if (pageSize > 0) totalPages = totalRows / pageSize;
 
-            if (totalRows <= pageSize)
-            {
-                totalPages = 1;
-            }
-            else
-            {
-                int remainder;
-                Math.DivRem(totalRows, pageSize, out remainder);
-                if (remainder > 0)
-                {
-                    totalPages += 1;
-                }
-            }
+            //if (totalRows <= pageSize)
+            //{
+            //    totalPages = 1;
+            //}
+            //else
+            //{
+            //    int remainder;
+            //    Math.DivRem(totalRows, pageSize, out remainder);
+            //    if (remainder > 0)
+            //    {
+            //        totalPages += 1;
+            //    }
+            //}
 
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT FIRST " + pageSize.ToString(CultureInfo.InvariantCulture) + " ");
@@ -1930,7 +1615,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             //arParams[0].Direction = ParameterDirection.Input;
             //arParams[0].Value = countryGuid.ToString();
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 null);
@@ -1938,7 +1623,7 @@ namespace cloudscribe.Core.Repositories.Firebird
         }
 
 
-        public static IDataReader GetHostList(int siteId)
+        public static async Task<DbDataReader> GetHostList(int siteId)
         {
             StringBuilder sqlCommand = new StringBuilder();
 
@@ -1949,18 +1634,16 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
 
-
         }
 
-        public static void AddHost(Guid siteGuid, int siteId, string hostName)
+        public static async Task<bool> AddHost(Guid siteGuid, int siteId, string hostName)
         {
             StringBuilder sqlCommand = new StringBuilder();
 
@@ -1983,26 +1666,25 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[3];
 
             arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new FbParameter("@HostName", FbDbType.VarChar, 255);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = hostName;
 
             arParams[2] = new FbParameter("@SiteGuid", FbDbType.Char, 36);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = siteGuid.ToString();
 
-            AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
 
+            return rowsAffected > 0;
+
 
         }
 
-        public static void DeleteHost(int hostId)
+        public static async Task<bool> DeleteHost(int hostId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_SiteHosts ");
@@ -2011,30 +1693,30 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@HostID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = hostId;
 
-            AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
 
+            return rowsAffected > 0;
+
         }
 
-        public static IDataReader GetSiteList()
+        public static async Task<DbDataReader> GetSiteList()
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT * ");
-
             sqlCommand.Append("FROM	mp_Sites ");
-
             sqlCommand.Append("ORDER BY	SiteName ;");
-            return AdoHelper.ExecuteReader(
+
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString());
         }
 
-        public static IDataReader GetSite(int siteId)
+        public static async Task<DbDataReader> GetSite(int siteId)
         {
             StringBuilder sqlCommand = new StringBuilder();
 
@@ -2046,7 +1728,26 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
+            arParams[0].Value = siteId;
+
+            return await AdoHelper.ExecuteReaderAsync(
+                ConnectionString.GetReadConnectionString(),
+                sqlCommand.ToString(),
+                arParams);
+        }
+
+        public static DbDataReader GetSiteNonAsync(int siteId)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+
+            sqlCommand.Append("SELECT * ");
+            sqlCommand.Append("FROM	mp_Sites ");
+            sqlCommand.Append("WHERE SiteID = @SiteID ");
+            sqlCommand.Append("ORDER BY	SiteName ;");
+
+            FbParameter[] arParams = new FbParameter[1];
+
+            arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
             arParams[0].Value = siteId;
 
             return AdoHelper.ExecuteReader(
@@ -2055,7 +1756,7 @@ namespace cloudscribe.Core.Repositories.Firebird
                 arParams);
         }
 
-        public static IDataReader GetSite(Guid siteGuid)
+        public static async Task<DbDataReader> GetSite(Guid siteGuid)
         {
             StringBuilder sqlCommand = new StringBuilder();
 
@@ -2067,24 +1768,22 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@SiteGuid", FbDbType.VarChar, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteGuid.ToString();
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
         }
 
 
-        public static IDataReader GetSite(string hostName)
+        public static async Task<DbDataReader> GetSite(string hostName)
         {
             StringBuilder sqlCommand = new StringBuilder();
 
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@HostName", FbDbType.VarChar, 255);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = hostName;
 
             int siteId = -1;
@@ -2093,7 +1792,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             sqlCommand.Append("FROM mp_SiteHosts ");
             sqlCommand.Append("WHERE mp_SiteHosts.HostName = @HostName ;");
 
-            using (IDataReader reader = AdoHelper.ExecuteReader(
+            using (DbDataReader reader = await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 arParams))
@@ -2114,7 +1813,51 @@ namespace cloudscribe.Core.Repositories.Firebird
             arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
+            arParams[0].Value = siteId;
+
+            return await AdoHelper.ExecuteReaderAsync(
+                ConnectionString.GetReadConnectionString(),
+                sqlCommand.ToString(),
+                arParams);
+
+        }
+
+        public static DbDataReader GetSiteNonAsync(string hostName)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+
+            FbParameter[] arParams = new FbParameter[1];
+
+            arParams[0] = new FbParameter("@HostName", FbDbType.VarChar, 255);
+            arParams[0].Value = hostName;
+
+            int siteId = -1;
+
+            sqlCommand.Append("SELECT mp_SiteHosts.SiteID ");
+            sqlCommand.Append("FROM mp_SiteHosts ");
+            sqlCommand.Append("WHERE mp_SiteHosts.HostName = @HostName ;");
+
+            using (DbDataReader reader = AdoHelper.ExecuteReader(
+                ConnectionString.GetReadConnectionString(),
+                sqlCommand.ToString(),
+                arParams))
+            {
+                if (reader.Read())
+                {
+                    siteId = Convert.ToInt32(reader["SiteID"]);
+                }
+            }
+
+            sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT FIRST 1 * ");
+            sqlCommand.Append("FROM	mp_Sites ");
+            sqlCommand.Append("WHERE SiteID = @SiteID OR @SiteID = -1 ");
+            sqlCommand.Append("ORDER BY	SiteID ");
+            sqlCommand.Append(" ;");
+
+            arParams = new FbParameter[1];
+
+            arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
             arParams[0].Value = siteId;
 
             return AdoHelper.ExecuteReader(
@@ -2123,8 +1866,6 @@ namespace cloudscribe.Core.Repositories.Firebird
                 arParams);
 
         }
-
-
 
         
 
@@ -2155,7 +1896,7 @@ namespace cloudscribe.Core.Repositories.Firebird
         }
 
 
-        public static int CountOtherSites(int currentSiteId)
+        public static async Task<int> CountOtherSites(int currentSiteId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  Count(*) ");
@@ -2166,41 +1907,41 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@CurrentSiteID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = currentSiteId;
 
-            return Convert.ToInt32(AdoHelper.ExecuteScalar(
+            object result = await AdoHelper.ExecuteScalarAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
-                arParams));
+                arParams);
+
+            return Convert.ToInt32(result);
 
         }
 
-        public static IDataReader GetPageOfOtherSites(
+        public static async Task<DbDataReader> GetPageOfOtherSites(
             int currentSiteId,
             int pageNumber,
-            int pageSize,
-            out int totalPages)
+            int pageSize)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
-            totalPages = 1;
-            int totalRows = CountOtherSites(currentSiteId);
+            //totalPages = 1;
+            //int totalRows = CountOtherSites(currentSiteId);
 
-            if (pageSize > 0) totalPages = totalRows / pageSize;
+            //if (pageSize > 0) totalPages = totalRows / pageSize;
 
-            if (totalRows <= pageSize)
-            {
-                totalPages = 1;
-            }
-            else
-            {
-                int remainder;
-                Math.DivRem(totalRows, pageSize, out remainder);
-                if (remainder > 0)
-                {
-                    totalPages += 1;
-                }
-            }
+            //if (totalRows <= pageSize)
+            //{
+            //    totalPages = 1;
+            //}
+            //else
+            //{
+            //    int remainder;
+            //    Math.DivRem(totalRows, pageSize, out remainder);
+            //    if (remainder > 0)
+            //    {
+            //        totalPages += 1;
+            //    }
+            //}
 
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT FIRST " + pageSize.ToString(CultureInfo.InvariantCulture) + " ");
@@ -2217,17 +1958,16 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@CurrentSiteID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = currentSiteId;
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
 
         }
 
-        public static int GetSiteIdByHostName(string hostName)
+        public static async Task<int> GetSiteIdByHostName(string hostName)
         {
             int siteId = -1;
 
@@ -2236,16 +1976,13 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@HostName", FbDbType.VarChar, 255);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = hostName;
-
-            
 
             sqlCommand.Append("SELECT FIRST 1 SiteID ");
             sqlCommand.Append("FROM mp_SiteHosts ");
             sqlCommand.Append("WHERE HostName = @HostName ORDER BY SiteID ;");
 
-            using (IDataReader reader = AdoHelper.ExecuteReader(
+            using (DbDataReader reader = await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 arParams))
@@ -2264,7 +2001,7 @@ namespace cloudscribe.Core.Repositories.Firebird
                 sqlCommand.Append("ORDER BY	SiteID ");
                 sqlCommand.Append(" ;");
 
-                using (IDataReader reader = AdoHelper.ExecuteReader(
+                using (DbDataReader reader = await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 null))
@@ -2279,7 +2016,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             return siteId;
         }
 
-        public static int GetSiteIdByFolder(string folderName)
+        public static async Task<int> GetSiteIdByFolder(string folderName)
         {
             int siteId = -1;
 
@@ -2288,10 +2025,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@FolderName", FbDbType.VarChar, 255);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = folderName;
-
-
 
             sqlCommand.Append("SELECT FIRST 1 COALESCE(s.SiteID, -1) As SiteID ");
             sqlCommand.Append("FROM mp_SiteFolders sf ");
@@ -2300,7 +2034,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             sqlCommand.Append("sf.SiteGuid = s.SiteGuid ");
             sqlCommand.Append("WHERE sf.FolderName = @FolderName ORDER BY s.SiteID ;");
 
-            using (IDataReader reader = AdoHelper.ExecuteReader(
+            using (DbDataReader reader = await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 arParams))
@@ -2319,7 +2053,59 @@ namespace cloudscribe.Core.Repositories.Firebird
                 sqlCommand.Append("ORDER BY	SiteID ");
                 sqlCommand.Append(" ;");
 
-                using (IDataReader reader = AdoHelper.ExecuteReader(
+                using (DbDataReader reader = await AdoHelper.ExecuteReaderAsync(
+                ConnectionString.GetReadConnectionString(),
+                sqlCommand.ToString(),
+                null))
+                {
+                    if (reader.Read())
+                    {
+                        siteId = Convert.ToInt32(reader["SiteID"]);
+                    }
+                }
+            }
+
+            return siteId;
+        }
+
+        public static int GetSiteIdByFolderNonAsync(string folderName)
+        {
+            int siteId = -1;
+
+            StringBuilder sqlCommand = new StringBuilder();
+
+            FbParameter[] arParams = new FbParameter[1];
+
+            arParams[0] = new FbParameter("@FolderName", FbDbType.VarChar, 255);
+            arParams[0].Value = folderName;
+
+            sqlCommand.Append("SELECT FIRST 1 COALESCE(s.SiteID, -1) As SiteID ");
+            sqlCommand.Append("FROM mp_SiteFolders sf ");
+            sqlCommand.Append("JOIN mp_Sites s ");
+            sqlCommand.Append("ON ");
+            sqlCommand.Append("sf.SiteGuid = s.SiteGuid ");
+            sqlCommand.Append("WHERE sf.FolderName = @FolderName ORDER BY s.SiteID ;");
+
+            using (DbDataReader reader = AdoHelper.ExecuteReader(
+                ConnectionString.GetReadConnectionString(),
+                sqlCommand.ToString(),
+                arParams))
+            {
+                if (reader.Read())
+                {
+                    siteId = Convert.ToInt32(reader["SiteID"]);
+                }
+            }
+
+            if (siteId == -1)
+            {
+                sqlCommand = new StringBuilder();
+                sqlCommand.Append("SELECT FIRST 1 SiteID ");
+                sqlCommand.Append("FROM	mp_Sites ");
+                sqlCommand.Append("ORDER BY	SiteID ");
+                sqlCommand.Append(" ;");
+
+                using (DbDataReader reader = AdoHelper.ExecuteReader(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 null))

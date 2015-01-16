@@ -1,13 +1,15 @@
 ﻿// Author:					Joe Audette
 // Created:				    2008-09-12
-// Last Modified:			2014-08-28
+// Last Modified:			2015-01-16
 // 
 
 using cloudscribe.DbHelpers.Firebird;
 using FirebirdSql.Data.FirebirdClient;
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.Firebird
 {
@@ -47,7 +49,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         }
 
-        public static void EnsureSettings()
+        public static async Task<bool> EnsureSettings()
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("INSERT INTO mp_SiteSettingsEx");
@@ -89,10 +91,12 @@ namespace cloudscribe.Core.Repositories.Firebird
             sqlCommand.Append("e.SiteID IS NULL ");
             sqlCommand.Append("; ");
 
-            AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 null);
+
+            return rowsAffected > 0;
 
         }
 

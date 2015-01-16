@@ -1,11 +1,13 @@
 /// Author:					Joe Audette
 /// Created:				2007-11-03
-/// Last Modified:			2014-08-22
+/// Last Modified:			2015-01-16
 /// 
 /// You must not remove this notice, or any other, from this software.
 
 using System;
 using System.Data;
+using System.Data.Common;
+using System.Threading.Tasks;
 using cloudscribe.DbHelpers.MSSQL;
 
 namespace cloudscribe.Core.Repositories.MSSQL
@@ -15,7 +17,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
     {
         
 
-        public static int Add(
+        public static async Task<bool> Add(
             Guid guid,
             Guid siteGuid,
             string folderName)
@@ -24,11 +26,11 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@Guid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, guid);
             sph.DefineSqlParameter("@SiteGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, siteGuid);
             sph.DefineSqlParameter("@FolderName", SqlDbType.NVarChar, 255, ParameterDirection.Input, folderName);
-            int rowsAffected = Convert.ToInt32(sph.ExecuteNonQuery());
-            return rowsAffected;
+            int rowsAffected = await sph.ExecuteNonQueryAsync();
+            return rowsAffected > 0;
         }
 
-        public static bool Update(
+        public static async Task<bool> Update(
             Guid guid,
             Guid siteGuid,
             string folderName)
@@ -37,23 +39,24 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@Guid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, guid);
             sph.DefineSqlParameter("@SiteGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, siteGuid);
             sph.DefineSqlParameter("@FolderName", SqlDbType.NVarChar, 255, ParameterDirection.Input, folderName);
-            int rowsAffected = sph.ExecuteNonQuery();
+            int rowsAffected = await sph.ExecuteNonQueryAsync();
             return (rowsAffected > -1);
         }
 
-        public static bool Delete(Guid guid)
+        public static async Task<bool> Delete(Guid guid)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetWriteConnectionString(), "mp_SiteFolders_Delete", 1);
             sph.DefineSqlParameter("@Guid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, guid);
-            int rowsAffected = sph.ExecuteNonQuery();
+            int rowsAffected = await sph.ExecuteNonQueryAsync();
             return (rowsAffected > -1);
         }
 
-        public static bool Exists(string folderName)
+        public static async Task<bool> Exists(string folderName)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_SiteFolder_Exists", 1);
             sph.DefineSqlParameter("@FolderName", SqlDbType.NVarChar, 255, ParameterDirection.Input, folderName);
-            int count = Convert.ToInt32(sph.ExecuteScalar());
+            object result = await sph.ExecuteScalarAsync();
+            int count = Convert.ToInt32(result);
             return (count > 0);
         }
 
@@ -64,18 +67,19 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return sph.ExecuteReader();
         }
 
-        public static IDataReader GetBySite(Guid siteGuid)
+        public static async Task<DbDataReader> GetBySite(Guid siteGuid)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_SiteFolders_SelectBySite", 1);
             sph.DefineSqlParameter("@SiteGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, siteGuid);
-            return sph.ExecuteReader();
+            return await sph.ExecuteReaderAsync();
         }
 
-        public static Guid GetSiteGuid(string folderName)
+        public static async Task<Guid> GetSiteGuid(string folderName)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_SiteFolders_SelectSiteGuidByFolder", 1);
             sph.DefineSqlParameter("@FolderName", SqlDbType.NVarChar, 255, ParameterDirection.Input, folderName);
-            string strGuid = sph.ExecuteScalar().ToString();
+            object result = await sph.ExecuteScalarAsync();
+            string strGuid = result.ToString();
             if (strGuid.Length == 36)
             {
                 return new Guid(strGuid);
@@ -83,18 +87,30 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return Guid.Empty;
         }
 
-        public static int GetCount()
+        public static async Task<int> GetFolderCount()
         {
-
-            return Convert.ToInt32(AdoHelper.ExecuteScalar(
+            object result = await AdoHelper.ExecuteScalarAsync(
                 ConnectionString.GetReadConnectionString(),
                 CommandType.StoredProcedure,
                 "mp_SiteFolders_GetCount",
-                null));
+                null);
+
+            return Convert.ToInt32(result);
 
         }
 
-        public static IDataReader GetAll()
+        public static async Task<DbDataReader> GetAll()
+        {
+
+            return await AdoHelper.ExecuteReaderAsync(
+                ConnectionString.GetReadConnectionString(),
+                CommandType.StoredProcedure,
+                "mp_SiteFolders_SelectAll",
+                null);
+
+        }
+
+        public static DbDataReader GetAllNonAsync()
         {
 
             return AdoHelper.ExecuteReader(
@@ -105,35 +121,34 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         }
 
-        public static IDataReader GetPage(
+        public static async Task<DbDataReader> GetPage(
             int pageNumber,
-            int pageSize,
-            out int totalPages)
+            int pageSize)
         {
-            totalPages = 1;
-            int totalRows
-                = GetCount();
+            //totalPages = 1;
+            //int totalRows
+            //    = GetCount();
 
-            if (pageSize > 0) totalPages = totalRows / pageSize;
+            //if (pageSize > 0) totalPages = totalRows / pageSize;
 
-            if (totalRows <= pageSize)
-            {
-                totalPages = 1;
-            }
-            else
-            {
-                int remainder;
-                Math.DivRem(totalRows, pageSize, out remainder);
-                if (remainder > 0)
-                {
-                    totalPages += 1;
-                }
-            }
+            //if (totalRows <= pageSize)
+            //{
+            //    totalPages = 1;
+            //}
+            //else
+            //{
+            //    int remainder;
+            //    Math.DivRem(totalRows, pageSize, out remainder);
+            //    if (remainder > 0)
+            //    {
+            //        totalPages += 1;
+            //    }
+            //}
 
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_SiteFolders_SelectPage", 2);
             sph.DefineSqlParameter("@PageNumber", SqlDbType.Int, ParameterDirection.Input, pageNumber);
             sph.DefineSqlParameter("@PageSize", SqlDbType.Int, ParameterDirection.Input, pageSize);
-            return sph.ExecuteReader();
+            return await sph.ExecuteReaderAsync();
 
         }
 

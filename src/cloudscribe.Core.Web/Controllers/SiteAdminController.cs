@@ -58,20 +58,21 @@ namespace cloudscribe.Core.Web.Controllers
                 itemsPerPage = pageSize;
             }
 
-            int totalPages = 0;
+            
             int filteredSiteId = -1; //nothing filtered
-            List<ISiteInfo> sites = Site.SiteRepository.GetPageOtherSites(
+            var sites = await Site.SiteRepository.GetPageOtherSites(
                 filteredSiteId,
                 pageNumber,
-                itemsPerPage,
-                out totalPages);
+                itemsPerPage);
+
+            var count = await Site.SiteRepository.CountOtherSites(filteredSiteId);
 
             SiteListViewModel model = new SiteListViewModel();
             model.Heading = "Site List";
             model.Sites = sites;
             model.Paging.CurrentPage = pageNumber;
             model.Paging.ItemsPerPage = itemsPerPage;
-            model.Paging.TotalPages = totalPages;
+            model.Paging.TotalItems = count;
 
             return View(model);
 
@@ -89,7 +90,7 @@ namespace cloudscribe.Core.Web.Controllers
             // only server admin site can edit other sites settings
             if((siteId.HasValue)&&(Site.SiteSettings.IsServerAdminSite))
             {
-                selectedSite = Site.SiteRepository.Fetch(siteId.Value);
+                selectedSite = await Site.SiteRepository.Fetch(siteId.Value);
             }
             else
             {
@@ -176,7 +177,7 @@ namespace cloudscribe.Core.Web.Controllers
             }
             else if(Site.SiteSettings.IsServerAdminSite)
             {
-                selectedSite = Site.SiteRepository.Fetch(model.SiteGuid);
+                selectedSite = await Site.SiteRepository.Fetch(model.SiteGuid);
             }
 
             if(selectedSite == null)
@@ -201,12 +202,15 @@ namespace cloudscribe.Core.Web.Controllers
             selectedSite.CompanyPublicEmail = model.CompanyPublicEmail;
             selectedSite.SiteFolderName = model.SiteFolderName;
 
-            Site.SiteRepository.Save(selectedSite);
+            bool result = await Site.SiteRepository.Save(selectedSite);
 
             //SiteAdminMessageId? message = SiteAdminMessageId.UpdateSettingsSuccess;
-
-            this.AlertSuccess(string.Format("Basic site settings for <b>{0}</b> were successfully updated.",
+            if(result)
+            {
+                this.AlertSuccess(string.Format("Basic site settings for <b>{0}</b> were successfully updated.",
                             selectedSite.SiteName), true);
+            }
+            
 
             if((Site.SiteSettings.IsServerAdminSite)
                 &&(Site.SiteSettings.SiteGuid != selectedSite.SiteGuid))
@@ -323,7 +327,7 @@ namespace cloudscribe.Core.Web.Controllers
                 SiteFolder folder = new SiteFolder();
                 folder.FolderName = newSite.SiteFolderName;
                 folder.SiteGuid = newSite.SiteGuid;
-                Site.SiteRepository.Save(folder);
+                bool folderResult = await Site.SiteRepository.Save(folder);
             }
 
             this.AlertSuccess(string.Format("Basic site settings for <b>{0}</b> were successfully created.",

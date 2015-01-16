@@ -1,12 +1,14 @@
 ﻿// Author:					Joe Audette
 // Created:				    2008-09-12
-// Last Modified:			2015-01-15
+// Last Modified:			2015-01-16
 // 
 // You must not remove this notice, or any other, from this software.
 
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Text;
+using System.Threading.Tasks;
 using Npgsql;
 using cloudscribe.DbHelpers.pgsql;
 
@@ -48,7 +50,7 @@ namespace cloudscribe.Core.Repositories.pgsql
 
         }
 
-        public static void EnsureSettings()
+        public static async Task<bool> EnsureSettings()
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("INSERT INTO mp_sitesettingsex ");
@@ -91,11 +93,13 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append("e.siteid IS NULL ");
             sqlCommand.Append("; ");
 
-            AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 null);
+
+            return rowsAffected > 0;
 
         }
 

@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-30
-// Last Modified:			2014-09-06
+// Last Modified:			2015-01-16
 // 
 
 using cloudscribe.Caching;
@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
+using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.Caching
 {
@@ -43,56 +44,95 @@ namespace cloudscribe.Core.Repositories.Caching
 
         #region ISiteRepository
 
-        public void Save(ISiteSettings site)
+        public async Task<bool> Save(ISiteSettings site)
         {
-            repo.Save(site);
-
-
+            return await repo.Save(site);
         }
 
 
-        public ISiteSettings Fetch(int siteId)
+        public async Task<ISiteSettings> Fetch(int siteId)
         {
-            string cachekey = "SiteSettings_" + siteId.ToInvariantString();
+            //string cachekey = "SiteSettings_" + siteId.ToInvariantString();
 
-            DateTime expiration = DateTime.Now.AddSeconds(AppSettings.CacheDurationInSeconds_SiteSettings);
+            //DateTime expiration = DateTime.Now.AddSeconds(AppSettings.CacheDurationInSeconds_SiteSettings);
 
-            try
-            {
-                ISiteSettings siteSettings = CacheManager.Cache.Get<ISiteSettings>(cachekey, expiration, () =>
-                {
-                    // This is the anonymous function which gets called if the data is not in the cache.
-                    // This method is executed and whatever is returned, is added to the cache with the passed in expiry time.
-                    ISiteSettings site = repo.Fetch(siteId);
-                    return site;
-                });
+            //try
+            //{
+            //    ISiteSettings siteSettings = CacheManager.Cache.Get<ISiteSettings>(cachekey, expiration, () =>
+            //    {
+            //        // This is the anonymous function which gets called if the data is not in the cache.
+            //        // This method is executed and whatever is returned, is added to the cache with the passed in expiry time.
+            //        ISiteSettings site = repo.Fetch(siteId);
+            //        return site;
+            //    });
 
-                return siteSettings;
-            }
-            catch (Exception ex)
-            {
-                log.Error("failed to get siteSettings from cache so loading it directly", ex);
+            //    return siteSettings;
+            //}
+            //catch (Exception ex)
+            //{
+            //    log.Error("failed to get siteSettings from cache so loading it directly", ex);
                 
-            }
+            //}
 
-            return repo.Fetch(siteId);
+            return await repo.Fetch(siteId);
         }
 
-        public ISiteSettings Fetch(Guid siteGuid)
+        public ISiteSettings FetchNonAsync(int siteId)
         {
-
-
-            return repo.Fetch(siteGuid);
+            return repo.FetchNonAsync(siteId);
         }
 
-        public ISiteSettings Fetch(string hostName)
+        public async Task<ISiteSettings> Fetch(Guid siteGuid)
+        {
+            return await repo.Fetch(siteGuid);
+        }
+
+        public async Task<ISiteSettings> Fetch(string hostName)
         {
             if(
                 (AppSettings.Cache_Disabled)
                 || (AppSettings.CacheDurationInSeconds_SiteSettings == 0)
                 )
             {
-                return repo.Fetch(hostName);
+                return await repo.Fetch(hostName);
+            }
+
+            //string cachekey = "SiteSettings_" + hostName;
+
+            //DateTime expiration = DateTime.Now.AddSeconds(AppSettings.CacheDurationInSeconds_SiteSettings);
+
+            //try
+            //{
+            //    ISiteSettings siteSettings = CacheManager.Cache.Get<ISiteSettings>(cachekey, expiration, () =>
+            //    {
+            //        // This is the anonymous function which gets called if the data is not in the cache.
+            //        // This method is executed and whatever is returned, is added to the cache with the passed in expiry time.
+            //        ISiteSettings site = repo.Fetch(hostName);
+            //        return site;
+            //    });
+
+            //    return siteSettings;
+            //}
+            //catch (Exception ex)
+            //{
+            //    log.Error("failed to get siteSettings from cache so loading it directly", ex);
+
+            //}
+
+            
+
+            return await repo.Fetch(hostName);
+
+        }
+
+        public ISiteSettings FetchNonAsync(string hostName)
+        {
+            if (
+                (AppSettings.Cache_Disabled)
+                || (AppSettings.CacheDurationInSeconds_SiteSettings == 0)
+                )
+            {
+                return repo.FetchNonAsync(hostName);
             }
 
             string cachekey = "SiteSettings_" + hostName;
@@ -105,7 +145,7 @@ namespace cloudscribe.Core.Repositories.Caching
                 {
                     // This is the anonymous function which gets called if the data is not in the cache.
                     // This method is executed and whatever is returned, is added to the cache with the passed in expiry time.
-                    ISiteSettings site = repo.Fetch(hostName);
+                    ISiteSettings site = repo.FetchNonAsync(hostName);
                     return site;
                 });
 
@@ -117,28 +157,33 @@ namespace cloudscribe.Core.Repositories.Caching
 
             }
 
-            
 
-            return repo.Fetch(hostName);
+
+            return repo.FetchNonAsync(hostName);
 
         }
 
 
-        public bool Delete(int siteId)
+        public async Task<bool> Delete(int siteId)
         {
-            return repo.Delete(siteId);
+            return await repo.Delete(siteId);
         }
 
 
 
-        public int GetCount()
+        public async Task<int> GetCount()
         {
-            return repo.GetCount();
+            return await repo.GetCount();
         }
 
-        public List<ISiteInfo> GetList()
+        public async Task<List<ISiteInfo>> GetList()
         {
-            return repo.GetList();
+            return await repo.GetList();
+        }
+
+        public async Task<int> CountOtherSites(int currentSiteId)
+        {
+            return await repo.CountOtherSites(currentSiteId);
         }
 
         /// <summary>
@@ -147,96 +192,117 @@ namespace cloudscribe.Core.Repositories.Caching
         /// <param name="currentSiteId"></param>
         /// <param name="pageNumber"></param>
         /// <param name="pageSize"></param>
-        /// <param name="totalPages"></param>
         /// <returns></returns>
-        public List<ISiteInfo> GetPageOtherSites(
+        public async Task<List<ISiteInfo>> GetPageOtherSites(
             int currentSiteId,
             int pageNumber,
-            int pageSize,
-            out int totalPages)
+            int pageSize)
         {
-            return repo.GetPageOtherSites(currentSiteId, pageNumber, pageSize, out totalPages);
+            return await repo.GetPageOtherSites(currentSiteId, pageNumber, pageSize);
         }
 
-        public List<ISiteHost> GetAllHosts()
+        public async Task<List<ISiteHost>> GetAllHosts()
         {
-            return repo.GetAllHosts();
+            return await repo.GetAllHosts();
         }
 
-        public List<ISiteHost> GetPageHosts(
+        public List<ISiteHost> GetAllHostsNonAsync()
+        {
+            return repo.GetAllHostsNonAsync();
+        }
+
+        public async Task<int> GetHostCount()
+        {
+            return await repo.GetHostCount();
+        }
+
+        public async Task<List<ISiteHost>> GetPageHosts(
             int pageNumber,
-            int pageSize,
-            out int totalPages)
+            int pageSize)
         {
-            return repo.GetPageHosts(pageNumber, pageSize, out totalPages);
+            return await repo.GetPageHosts(pageNumber, pageSize);
         }
 
-        public List<ISiteHost> GetSiteHosts(int siteId)
+        public async Task<List<ISiteHost>> GetSiteHosts(int siteId)
         {
-            return repo.GetSiteHosts(siteId);
+            return await repo.GetSiteHosts(siteId);
         }
 
-        // TODO make it return either a bool or an instance of ISiteHost
-        public void AddHost(Guid siteGuid, int siteId, string hostName)
+
+        public async Task<bool> AddHost(Guid siteGuid, int siteId, string hostName)
         {
-            repo.AddHost(siteGuid, siteId, hostName);
+            return await repo.AddHost(siteGuid, siteId, hostName);
         }
 
-        public void DeleteHost(int hostId)
+        public async Task<bool> DeleteHost(int hostId)
         {
-            repo.DeleteHost(hostId);
+            return await repo.DeleteHost(hostId);
         }
 
-        public int GetSiteIdByHostName(string hostName)
+        public async Task<int> GetSiteIdByHostName(string hostName)
         {
-            return repo.GetSiteIdByHostName(hostName);
+            return await repo.GetSiteIdByHostName(hostName);
         }
 
-        public List<SiteFolder> GetBySite(Guid siteGuid)
+        public async Task<List<SiteFolder>> GetBySite(Guid siteGuid)
         {
-            return repo.GetBySite(siteGuid);
+            return await repo.GetBySite(siteGuid);
 
         }
 
-        public List<SiteFolder> GetAllSiteFolders()
+        public async Task<List<SiteFolder>> GetAllSiteFolders()
         {
-            return repo.GetAllSiteFolders();
+            return await repo.GetAllSiteFolders();
         }
 
-        public List<SiteFolder> GetPageSiteFolders(
+        public List<SiteFolder> GetAllSiteFoldersNonAsync()
+        {
+            return repo.GetAllSiteFoldersNonAsync();
+        }
+
+        public async Task<int> GetFolderCount()
+        {
+            return await repo.GetFolderCount();
+        }
+
+        public async Task<List<SiteFolder>> GetPageSiteFolders(
             int pageNumber,
-            int pageSize,
-            out int totalPages)
+            int pageSize)
         {
-            return repo.GetPageSiteFolders(
+            return await repo.GetPageSiteFolders(
                 pageNumber,
-                pageSize,
-                out totalPages);
+                pageSize);
         }
 
-        public void Save(SiteFolder siteFolder)
+        public async Task<bool> Save(SiteFolder siteFolder)
         {
-            repo.Save(siteFolder);
+            return await repo.Save(siteFolder);
         }
 
-        public bool DeleteFolder(Guid guid)
+        public async Task<bool> DeleteFolder(Guid guid)
         {
-            return repo.DeleteFolder(guid);
+            return await repo.DeleteFolder(guid);
         }
 
-        public int GetSiteIdByFolder(string folderName)
+        public async Task<int> GetSiteIdByFolder(string folderName)
         {
-            return repo.GetSiteIdByFolder(folderName);
+            return await repo.GetSiteIdByFolder(folderName);
         }
 
-        public Guid GetSiteGuidByFolder(string folderName)
+        public int GetSiteIdByFolderNonAsync(string folderName)
         {
-            return repo.GetSiteGuidByFolder(folderName);
+            return repo.GetSiteIdByFolderNonAsync(folderName);
         }
 
-        public bool FolderExists(string folderName)
+        public async Task<Guid> GetSiteGuidByFolder(string folderName)
         {
-            return repo.FolderExists(folderName);
+            return await repo.GetSiteGuidByFolder(folderName);
+            
+        }
+
+        public async Task<bool> FolderExists(string folderName)
+        {
+            return await repo.FolderExists(folderName);
         }
 
         //public bool IsAllowedFolder(string folderName)

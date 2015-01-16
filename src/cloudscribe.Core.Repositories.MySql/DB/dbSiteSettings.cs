@@ -1,6 +1,6 @@
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-01-15
+// Last Modified:			2015-01-16
 // 
 // You must not remove this notice, or any other, from this software.
 // 
@@ -13,6 +13,7 @@ using System.Data.Common;
 using System.Configuration;
 using System.Globalization;
 using System.IO;
+using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using cloudscribe.DbHelpers.MySql;
 
@@ -21,7 +22,7 @@ namespace cloudscribe.Core.Repositories.MySql
     internal static class DBSiteSettings
     {
         
-        public static int Create(
+        public static async Task<int> Create(
             Guid siteGuid,
             String siteName,
             String skin,
@@ -474,18 +475,19 @@ namespace cloudscribe.Core.Repositories.MySql
             arParams[45] = new MySqlParameter("?DisableDbAuth", MySqlDbType.Int32);
             arParams[45].Value = intDisableDbAuth;
 
-
-            int newID = Convert.ToInt32(AdoHelper.ExecuteScalar(
+            object result = await AdoHelper.ExecuteScalarAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
-                arParams).ToString());
+                arParams);
+
+            int newID = Convert.ToInt32(result);
 
             return newID;
 
 
         }
 
-        public static bool Update(
+        public static async Task<bool> Update(
             int siteId,
             string siteName,
             string skin,
@@ -840,7 +842,7 @@ namespace cloudscribe.Core.Repositories.MySql
             arParams[45] = new MySqlParameter("?DisableDbAuth", MySqlDbType.Int32);
             arParams[45].Value = intDisableDbAuth;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(), 
                 sqlCommand.ToString(), 
                 arParams);
@@ -1236,7 +1238,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
         }
 
-        public static bool Delete(int siteId)
+        public static async Task<bool> Delete(int siteId)
         {
             StringBuilder sqlCommand = new StringBuilder();
 
@@ -1261,7 +1263,7 @@ namespace cloudscribe.Core.Repositories.MySql
             arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
             arParams[0].Value = siteId;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -1298,20 +1300,36 @@ namespace cloudscribe.Core.Repositories.MySql
 
         }
 
-        public static int GetHostCount()
+        public static async Task<int> GetHostCount()
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  Count(*) ");
             sqlCommand.Append("FROM	mp_SiteHosts ");
             sqlCommand.Append(";");
 
-            return Convert.ToInt32(AdoHelper.ExecuteScalar(
+            object result = await AdoHelper.ExecuteScalarAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
-                null));
+                null);
+
+            return Convert.ToInt32(result);
         }
 
-        public static IDataReader GetAllHosts()
+        public static async Task<DbDataReader> GetAllHosts()
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  * ");
+            sqlCommand.Append("FROM	mp_SiteHosts ");
+            sqlCommand.Append("ORDER BY HostName  ");
+            sqlCommand.Append(";");
+
+            return await AdoHelper.ExecuteReaderAsync(
+                ConnectionString.GetReadConnectionString(),
+                sqlCommand.ToString(),
+                null);
+        }
+
+        public static DbDataReader GetAllHostsNonAsync()
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  * ");
@@ -1325,30 +1343,29 @@ namespace cloudscribe.Core.Repositories.MySql
                 null);
         }
 
-        public static IDataReader GetPageHosts(
+        public static async Task<DbDataReader> GetPageHosts(
             int pageNumber,
-            int pageSize,
-            out int totalPages)
+            int pageSize)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
-            totalPages = 1;
-            int totalRows = GetHostCount();
+            //totalPages = 1;
+            //int totalRows = GetHostCount();
 
-            if (pageSize > 0) totalPages = totalRows / pageSize;
+            //if (pageSize > 0) totalPages = totalRows / pageSize;
 
-            if (totalRows <= pageSize)
-            {
-                totalPages = 1;
-            }
-            else
-            {
-                int remainder;
-                Math.DivRem(totalRows, pageSize, out remainder);
-                if (remainder > 0)
-                {
-                    totalPages += 1;
-                }
-            }
+            //if (totalRows <= pageSize)
+            //{
+            //    totalPages = 1;
+            //}
+            //else
+            //{
+            //    int remainder;
+            //    Math.DivRem(totalRows, pageSize, out remainder);
+            //    if (remainder > 0)
+            //    {
+            //        totalPages += 1;
+            //    }
+            //}
 
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT	* ");
@@ -1373,14 +1390,14 @@ namespace cloudscribe.Core.Repositories.MySql
             arParams[1] = new MySqlParameter("?OffsetRows", MySqlDbType.Int32);
             arParams[1].Value = pageLowerBound;
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
         }
 
 
-        public static IDataReader GetHostList(int siteId)
+        public static async Task<DbDataReader> GetHostList(int siteId)
         {
             StringBuilder sqlCommand = new StringBuilder();
 
@@ -1393,7 +1410,7 @@ namespace cloudscribe.Core.Repositories.MySql
             arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
             arParams[0].Value = siteId;
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -1401,7 +1418,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
         }
 
-        public static void AddHost(Guid siteGuid, int siteId, string hostName)
+        public static async Task<bool> AddHost(Guid siteGuid, int siteId, string hostName)
         {
             StringBuilder sqlCommand = new StringBuilder();
 
@@ -1430,15 +1447,16 @@ namespace cloudscribe.Core.Repositories.MySql
             arParams[2] = new MySqlParameter("?SiteGuid", MySqlDbType.VarChar, 36);
             arParams[2].Value = siteGuid.ToString();
 
-            AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
 
+            return rowsAffected > 0;
 
         }
 
-        public static void DeleteHost(int hostId)
+        public static async Task<bool> DeleteHost(int hostId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_SiteHosts ");
@@ -1449,14 +1467,16 @@ namespace cloudscribe.Core.Repositories.MySql
             arParams[0] = new MySqlParameter("?HostID", MySqlDbType.Int32);
             arParams[0].Value = hostId;
 
-            AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
 
+            return rowsAffected > 0;
+
         }
 
-        public static IDataReader GetSiteList()
+        public static async Task<DbDataReader> GetSiteList()
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT * ");
@@ -1464,7 +1484,7 @@ namespace cloudscribe.Core.Repositories.MySql
             sqlCommand.Append("FROM	mp_Sites ");
 
             sqlCommand.Append("ORDER BY	SiteName ;");
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString());
         }
@@ -1546,7 +1566,28 @@ namespace cloudscribe.Core.Repositories.MySql
             return siteID;
         }
 
-        public static IDataReader GetSite(int siteId)
+        public static async Task<DbDataReader> GetSite(int siteId)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+
+            sqlCommand.Append("SELECT * ");
+            sqlCommand.Append("FROM	mp_Sites ");
+            sqlCommand.Append("WHERE SiteID = ?SiteID ");
+            sqlCommand.Append("ORDER BY	SiteName ;");
+
+            MySqlParameter[] arParams = new MySqlParameter[1];
+
+            arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
+            arParams[0].Value = siteId;
+
+            return await AdoHelper.ExecuteReaderAsync(
+                ConnectionString.GetReadConnectionString(),
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams);
+        }
+
+        public static DbDataReader GetSiteNonAsync(int siteId)
         {
             StringBuilder sqlCommand = new StringBuilder();
 
@@ -1567,7 +1608,7 @@ namespace cloudscribe.Core.Repositories.MySql
                 arParams);
         }
 
-        public static IDataReader GetSite(Guid siteGuid)
+        public static async Task<DbDataReader> GetSite(Guid siteGuid)
         {
             StringBuilder sqlCommand = new StringBuilder();
 
@@ -1581,7 +1622,7 @@ namespace cloudscribe.Core.Repositories.MySql
             arParams[0] = new MySqlParameter("?SiteGuid", MySqlDbType.VarChar, 36);
             arParams[0].Value = siteGuid.ToString();
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -1589,7 +1630,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
 
 
-        public static IDataReader GetSite(string hostName)
+        public static async Task<DbDataReader> GetSite(string hostName)
         {
             StringBuilder sqlCommand = new StringBuilder();
 
@@ -1604,7 +1645,52 @@ namespace cloudscribe.Core.Repositories.MySql
             sqlCommand.Append("FROM mp_SiteHosts ");
             sqlCommand.Append("WHERE mp_SiteHosts.HostName = ?HostName ;");
 
-            using (IDataReader reader = AdoHelper.ExecuteReader(
+            using (DbDataReader reader = await AdoHelper.ExecuteReaderAsync(
+                ConnectionString.GetReadConnectionString(),
+                sqlCommand.ToString(),
+                arParams))
+            {
+                if (reader.Read())
+                {
+                    siteId = Convert.ToInt32(reader["SiteID"]);
+                }
+            }
+
+            sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT * ");
+            sqlCommand.Append("FROM	mp_Sites ");
+            sqlCommand.Append("WHERE SiteID = ?SiteID OR ?SiteID = -1 ");
+            sqlCommand.Append("ORDER BY	SiteID ");
+            sqlCommand.Append("LIMIT 1 ;");
+
+            arParams = new MySqlParameter[1];
+
+            arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
+            arParams[0].Value = siteId;
+
+            return await AdoHelper.ExecuteReaderAsync(
+                ConnectionString.GetReadConnectionString(),
+                sqlCommand.ToString(),
+                arParams);
+
+        }
+
+        public static DbDataReader GetSiteNonAsync(string hostName)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+
+            MySqlParameter[] arParams = new MySqlParameter[1];
+
+            arParams[0] = new MySqlParameter("?HostName", MySqlDbType.VarChar, 255);
+            arParams[0].Value = hostName;
+
+            int siteId = -1;
+
+            sqlCommand.Append("SELECT mp_SiteHosts.SiteID ");
+            sqlCommand.Append("FROM mp_SiteHosts ");
+            sqlCommand.Append("WHERE mp_SiteHosts.HostName = ?HostName ;");
+
+            using (DbDataReader reader = AdoHelper.ExecuteReader(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 arParams))
@@ -1634,8 +1720,6 @@ namespace cloudscribe.Core.Repositories.MySql
 
         }
 
-
-
         
 
         public static IDataReader GetPageListForAdmin(int siteId)
@@ -1663,7 +1747,7 @@ namespace cloudscribe.Core.Repositories.MySql
                 arParams);
         }
 
-        public static int CountOtherSites(int currentSiteId)
+        public static async Task<int> CountOtherSites(int currentSiteId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  Count(*) ");
@@ -1676,38 +1760,39 @@ namespace cloudscribe.Core.Repositories.MySql
             arParams[0] = new MySqlParameter("?CurrentSiteID", MySqlDbType.Int32);
             arParams[0].Value = currentSiteId;
 
-            return Convert.ToInt32(AdoHelper.ExecuteScalar(
+            object result = await AdoHelper.ExecuteScalarAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
-                arParams));
+                arParams);
+
+            return Convert.ToInt32(result);
 
         }
 
-        public static IDataReader GetPageOfOtherSites(
+        public static async Task<DbDataReader> GetPageOfOtherSites(
             int currentSiteId,
             int pageNumber,
-            int pageSize,
-            out int totalPages)
+            int pageSize)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
-            totalPages = 1;
-            int totalRows = CountOtherSites(currentSiteId);
+            //totalPages = 1;
+            //int totalRows = CountOtherSites(currentSiteId);
 
-            if (pageSize > 0) totalPages = totalRows / pageSize;
+            //if (pageSize > 0) totalPages = totalRows / pageSize;
 
-            if (totalRows <= pageSize)
-            {
-                totalPages = 1;
-            }
-            else
-            {
-                int remainder;
-                Math.DivRem(totalRows, pageSize, out remainder);
-                if (remainder > 0)
-                {
-                    totalPages += 1;
-                }
-            }
+            //if (totalRows <= pageSize)
+            //{
+            //    totalPages = 1;
+            //}
+            //else
+            //{
+            //    int remainder;
+            //    Math.DivRem(totalRows, pageSize, out remainder);
+            //    if (remainder > 0)
+            //    {
+            //        totalPages += 1;
+            //    }
+            //}
 
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT	* ");
@@ -1735,7 +1820,7 @@ namespace cloudscribe.Core.Repositories.MySql
             arParams[2] = new MySqlParameter("?OffsetRows", MySqlDbType.Int32);
             arParams[2].Value = pageLowerBound;
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -1743,7 +1828,7 @@ namespace cloudscribe.Core.Repositories.MySql
         }
 
 
-        public static int GetSiteIdByHostName(string hostName)
+        public static async Task<int> GetSiteIdByHostName(string hostName)
         {
             int siteId = -1;
 
@@ -1758,7 +1843,7 @@ namespace cloudscribe.Core.Repositories.MySql
             sqlCommand.Append("FROM mp_SiteHosts ");
             sqlCommand.Append("WHERE HostName = ?HostName ;");
 
-            using (IDataReader reader = AdoHelper.ExecuteReader(
+            using (DbDataReader reader = await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 arParams))
@@ -1778,7 +1863,7 @@ namespace cloudscribe.Core.Repositories.MySql
                 sqlCommand.Append("ORDER BY	SiteID ");
                 sqlCommand.Append("LIMIT 1 ;");
 
-                using (IDataReader reader = AdoHelper.ExecuteReader(
+                using (DbDataReader reader = await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 null))
@@ -1795,7 +1880,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
         }
 
-        public static int GetSiteIdByFolder(string folderName)
+        public static async Task<int> GetSiteIdByFolder(string folderName)
         {
             int siteId = -1;
 
@@ -1815,7 +1900,7 @@ namespace cloudscribe.Core.Repositories.MySql
             sqlCommand.Append("ORDER BY s.SiteID ");
             sqlCommand.Append(";");
 
-            using (IDataReader reader = AdoHelper.ExecuteReader(
+            using (DbDataReader reader = await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 arParams))
@@ -1835,7 +1920,7 @@ namespace cloudscribe.Core.Repositories.MySql
                 sqlCommand.Append("ORDER BY	SiteID ");
                 sqlCommand.Append("LIMIT 1 ;");
 
-                using (IDataReader reader = AdoHelper.ExecuteReader(
+                using (DbDataReader reader = await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 null))
@@ -1852,7 +1937,62 @@ namespace cloudscribe.Core.Repositories.MySql
 
         }
 
-        
+        public static int GetSiteIdByFolderNonAsync(string folderName)
+        {
+            int siteId = -1;
+
+            StringBuilder sqlCommand = new StringBuilder();
+
+            MySqlParameter[] arParams = new MySqlParameter[1];
+
+            arParams[0] = new MySqlParameter("?FolderName", MySqlDbType.VarChar, 255);
+            arParams[0].Value = folderName;
+
+            sqlCommand.Append("SELECT COALESCE(s.SiteID, -1) AS SiteID ");
+            sqlCommand.Append("FROM mp_SiteFolders sf ");
+            sqlCommand.Append("JOIN mp_Sites s ");
+            sqlCommand.Append("ON ");
+            sqlCommand.Append("sf.SiteGuid = s.SiteGuid ");
+            sqlCommand.Append("WHERE sf.FolderName = ?FolderName ");
+            sqlCommand.Append("ORDER BY s.SiteID ");
+            sqlCommand.Append(";");
+
+            using (DbDataReader reader = AdoHelper.ExecuteReader(
+                ConnectionString.GetReadConnectionString(),
+                sqlCommand.ToString(),
+                arParams))
+            {
+                if (reader.Read())
+                {
+                    siteId = Convert.ToInt32(reader["SiteID"]);
+                }
+            }
+
+            if (siteId == -1)
+            {
+                sqlCommand = new StringBuilder();
+                sqlCommand.Append("SELECT SiteID ");
+                sqlCommand.Append("FROM	mp_Sites ");
+
+                sqlCommand.Append("ORDER BY	SiteID ");
+                sqlCommand.Append("LIMIT 1 ;");
+
+                using (DbDataReader reader = AdoHelper.ExecuteReader(
+                ConnectionString.GetReadConnectionString(),
+                sqlCommand.ToString(),
+                null))
+                {
+                    if (reader.Read())
+                    {
+                        siteId = Convert.ToInt32(reader["SiteID"]);
+                    }
+                }
+
+            }
+
+            return siteId;
+
+        }
 
     }
 }

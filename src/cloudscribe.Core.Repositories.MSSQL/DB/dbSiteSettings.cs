@@ -1,12 +1,14 @@
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2014-09-06
+// Last Modified:			2015-01-16
 // 
 // You must not remove this notice, or any other, from this software.
 
 
 using System;
 using System.Data;
+using System.Data.Common;
+using System.Threading.Tasks;
 using cloudscribe.DbHelpers.MSSQL;
 
 
@@ -16,7 +18,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
     internal static class DBSiteSettings
     {
 
-        public static int Create(
+        public static async Task<int> Create(
             Guid siteGuid,
             String siteName,
             String skin,
@@ -113,12 +115,12 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@ApiKeyExtra4", SqlDbType.NVarChar, 255, ParameterDirection.Input, apiKeyExtra4);
             sph.DefineSqlParameter("@ApiKeyExtra5", SqlDbType.NVarChar, 255, ParameterDirection.Input, apiKeyExtra5);
             sph.DefineSqlParameter("@DisableDbAuth", SqlDbType.Bit, ParameterDirection.Input, disableDbAuth);
-
-            int newID = Convert.ToInt32(sph.ExecuteScalar());
+            object result = await sph.ExecuteScalarAsync();
+            int newID = Convert.ToInt32(result);
             return newID;
         }
 
-        public static bool Update(
+        public static async Task<bool> Update(
             int siteId,
             string siteName,
             string skin,
@@ -214,7 +216,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@ApiKeyExtra4", SqlDbType.NVarChar, 255, ParameterDirection.Input, apiKeyExtra4);
             sph.DefineSqlParameter("@ApiKeyExtra5", SqlDbType.NVarChar, 255, ParameterDirection.Input, apiKeyExtra5);
             sph.DefineSqlParameter("@DisableDbAuth", SqlDbType.Bit, ParameterDirection.Input, disableDbAuth);
-            int rowsAffected = sph.ExecuteNonQuery();
+            int rowsAffected = await sph.ExecuteNonQueryAsync();
             return (rowsAffected > -1);
         }
 
@@ -326,23 +328,31 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
 
 
-        public static bool Delete(int siteId)
+        public static async Task<bool> Delete(int siteId)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetWriteConnectionString(), "mp_Sites_Delete", 1);
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
            // sph.ExecuteNonQuery();
 
-            int rowsAffected = sph.ExecuteNonQuery();
+            int rowsAffected = await sph.ExecuteNonQueryAsync();
             return (rowsAffected > -1);
         }
 
-        public static IDataReader GetSiteList()
+        public static async Task<DbDataReader> GetSiteList()
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_Sites_SelectAll", 0);
-            return sph.ExecuteReader();
+            return await sph.ExecuteReaderAsync();
         }
 
-        public static IDataReader GetSite(string hostName)
+        public static async Task<DbDataReader> GetSite(string hostName)
+        {
+            SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_Sites_SelectOneByHost", 1);
+            sph.DefineSqlParameter("@HostName", SqlDbType.NVarChar, 50, ParameterDirection.Input, hostName);
+            return await sph.ExecuteReaderAsync();
+
+        }
+
+        public static DbDataReader GetSiteNonAsync(string hostName)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_Sites_SelectOneByHost", 1);
             sph.DefineSqlParameter("@HostName", SqlDbType.NVarChar, 50, ParameterDirection.Input, hostName);
@@ -370,18 +380,25 @@ namespace cloudscribe.Core.Repositories.MSSQL
         }
 
 
-        public static IDataReader GetSite(int siteId)
+        public static async Task<DbDataReader> GetSite(int siteId)
+        {
+            SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_Sites_SelectOne", 1);
+            sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
+            return await sph.ExecuteReaderAsync();
+        }
+
+        public static DbDataReader GetSiteNonAsync(int siteId)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_Sites_SelectOne", 1);
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
             return sph.ExecuteReader();
         }
 
-        public static IDataReader GetSite(Guid siteGuid)
+        public static async Task<DbDataReader> GetSite(Guid siteGuid)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_Sites_SelectOneByGuid", 1);
             sph.DefineSqlParameter("@SiteGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, siteGuid);
-            return sph.ExecuteReader();
+            return await sph.ExecuteReaderAsync();
         }
 
         
@@ -393,20 +410,30 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return sph.ExecuteReader();
         }
 
-        public static int GetHostCount()
+        public static async Task<int> GetHostCount()
         {
-
-            return Convert.ToInt32(AdoHelper.ExecuteScalar(
+            object result = await AdoHelper.ExecuteScalarAsync(
                 ConnectionString.GetReadConnectionString(),
                 CommandType.StoredProcedure,
                 "mp_SiteHosts_GetCount",
-                null));
+                null);
+
+            return Convert.ToInt32(result);
 
         }
 
-        public static IDataReader GetAllHosts()
+        public static async Task<DbDataReader> GetAllHosts()
         {
+            return await AdoHelper.ExecuteReaderAsync(
+                ConnectionString.GetReadConnectionString(),
+                CommandType.StoredProcedure,
+                "mp_SiteHosts_SelectAll",
+                null);
 
+        }
+
+        public static DbDataReader GetAllHostsNonAsync()
+        {
             return AdoHelper.ExecuteReader(
                 ConnectionString.GetReadConnectionString(),
                 CommandType.StoredProcedure,
@@ -415,120 +442,129 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         }
 
-        public static IDataReader GetPageHosts(
+        public static async Task<DbDataReader> GetPageHosts(
             int pageNumber,
-            int pageSize,
-            out int totalPages)
+            int pageSize)
         {
-            totalPages = 1;
-            int totalRows
-                = GetHostCount();
+            //totalPages = 1;
+            //int totalRows = GetHostCount();
 
-            if (pageSize > 0) totalPages = totalRows / pageSize;
+            //if (pageSize > 0) totalPages = totalRows / pageSize;
 
-            if (totalRows <= pageSize)
-            {
-                totalPages = 1;
-            }
-            else
-            {
-                int remainder;
-                Math.DivRem(totalRows, pageSize, out remainder);
-                if (remainder > 0)
-                {
-                    totalPages += 1;
-                }
-            }
+            //if (totalRows <= pageSize)
+            //{
+            //    totalPages = 1;
+            //}
+            //else
+            //{
+            //    int remainder;
+            //    Math.DivRem(totalRows, pageSize, out remainder);
+            //    if (remainder > 0)
+            //    {
+            //        totalPages += 1;
+            //    }
+            //}
 
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_SiteHosts_SelectPage", 2);
             sph.DefineSqlParameter("@PageNumber", SqlDbType.Int, ParameterDirection.Input, pageNumber);
             sph.DefineSqlParameter("@PageSize", SqlDbType.Int, ParameterDirection.Input, pageSize);
-            return sph.ExecuteReader();
+            return await sph.ExecuteReaderAsync();
 
         }
 
-        public static IDataReader GetHostList(int siteId)
+        public static async Task<DbDataReader> GetHostList(int siteId)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_SiteHosts_Select", 1);
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
-            return sph.ExecuteReader();
+            return await sph.ExecuteReaderAsync();
         }
 
-        public static void AddHost(Guid siteGuid, int siteId, string hostName)
+        public static async Task<bool> AddHost(Guid siteGuid, int siteId, string hostName)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetWriteConnectionString(), "mp_SiteHosts_Insert", 3);
             sph.DefineSqlParameter("@SiteGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, siteGuid);
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
             sph.DefineSqlParameter("@HostName", SqlDbType.NVarChar, 255, ParameterDirection.Input, hostName);
-            sph.ExecuteNonQuery();
+            int rowsAffected = await sph.ExecuteNonQueryAsync();
+
+            return rowsAffected > 0;
         }
 
-        public static void DeleteHost(int hostId)
+        public static async Task<bool> DeleteHost(int hostId)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetWriteConnectionString(), "mp_SiteHosts_Delete", 1);
             sph.DefineSqlParameter("@HostID", SqlDbType.Int, ParameterDirection.Input, hostId);
-            sph.ExecuteNonQuery();
+            int rowsAffected = await sph.ExecuteNonQueryAsync();
+            return rowsAffected > 0;
         }
 
 
-        public static int CountOtherSites(int currentSiteId)
+        public static async Task<int> CountOtherSites(int currentSiteId)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_Sites_CountOtherSites", 1);
             sph.DefineSqlParameter("@CurrentSiteID", SqlDbType.Int, ParameterDirection.Input, currentSiteId);
-
-            return Convert.ToInt32(sph.ExecuteScalar());
+            object result = await sph.ExecuteScalarAsync();
+            return Convert.ToInt32(result);
 
         }
 
-        public static IDataReader GetPageOfOtherSites(
+        public static async Task<DbDataReader> GetPageOfOtherSites(
             int currentSiteId,
             int pageNumber,
-            int pageSize,
-            out int totalPages)
+            int pageSize)
         {
-            totalPages = 1;
-            int totalRows = CountOtherSites(currentSiteId);
+            //totalPages = 1;
+            //int totalRows = CountOtherSites(currentSiteId);
 
-            if (pageSize > 0) totalPages = totalRows / pageSize;
+            //if (pageSize > 0) totalPages = totalRows / pageSize;
 
-            if (totalRows <= pageSize)
-            {
-                totalPages = 1;
-            }
-            else
-            {
-                int remainder;
-                Math.DivRem(totalRows, pageSize, out remainder);
-                if (remainder > 0)
-                {
-                    totalPages += 1;
-                }
-            }
+            //if (totalRows <= pageSize)
+            //{
+            //    totalPages = 1;
+            //}
+            //else
+            //{
+            //    int remainder;
+            //    Math.DivRem(totalRows, pageSize, out remainder);
+            //    if (remainder > 0)
+            //    {
+            //        totalPages += 1;
+            //    }
+            //}
 
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_Sites_SelectPageOtherSites", 3);
             sph.DefineSqlParameter("@CurrentSiteID", SqlDbType.Int, ParameterDirection.Input, currentSiteId);
             sph.DefineSqlParameter("@PageNumber", SqlDbType.Int, ParameterDirection.Input, pageNumber);
             sph.DefineSqlParameter("@PageSize", SqlDbType.Int, ParameterDirection.Input, pageSize);
-            return sph.ExecuteReader();
+            return await sph.ExecuteReaderAsync();
 
         }
 
 
-        public static int GetSiteIdByHostName(string hostName)
+        public static async Task<int> GetSiteIdByHostName(string hostName)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_SiteHosts_SelectSiteIdByHost", 1);
             sph.DefineSqlParameter("@HostName", SqlDbType.NVarChar, 255, ParameterDirection.Input, hostName);
-
-            return Convert.ToInt32(sph.ExecuteScalar());
+            object result = await sph.ExecuteScalarAsync();
+            return Convert.ToInt32(result);
 
         }
 
-        public static int GetSiteIdByFolder(string folderName)
+        public static async Task<int> GetSiteIdByFolder(string folderName)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_SiteFolders_SelectSiteIdByFolder", 1);
             sph.DefineSqlParameter("@FolderName", SqlDbType.NVarChar, 255, ParameterDirection.Input, folderName);
+            object result = await sph.ExecuteScalarAsync();
+            return Convert.ToInt32(result);
 
-            return Convert.ToInt32(sph.ExecuteScalar());
+        }
+
+        public static int GetSiteIdByFolderNonAsync(string folderName)
+        {
+            SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_SiteFolders_SelectSiteIdByFolder", 1);
+            sph.DefineSqlParameter("@FolderName", SqlDbType.NVarChar, 255, ParameterDirection.Input, folderName);
+            object result = sph.ExecuteScalar();
+            return Convert.ToInt32(result);
 
         }
 

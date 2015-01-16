@@ -139,7 +139,7 @@ namespace cloudscribe.Core.Web.Components
             // we could just skip creating this user since in related sites mode all users come from the first site
             // but then if the config were changed to not related sites mode there would be no admin user
             // so in related sites mode we create one only as a backup in case settings are changed later
-            int countOfSites = siteRepository.GetCount();
+            int countOfSites = await siteRepository.GetCount();
             string siteDifferentiator = string.Empty;
             if (
                 (countOfSites >= 1)

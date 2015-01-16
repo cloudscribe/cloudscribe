@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2014-12-09
+// Last Modified:			2015-01-16
 // 
 
 
@@ -9,7 +9,9 @@ using cloudscribe.Core.Models.DataExtensions;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Globalization;
+using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.MSSQL
 {
@@ -21,16 +23,16 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         #region ISiteRepository
 
-        public void Save(ISiteSettings site)
+        public async Task<bool> Save(ISiteSettings site)
         {
             int passedInSiteId = site.SiteId;
-            
+            bool result = false;
 
             if (site.SiteId == -1) // new site
             {
                 site.SiteGuid = Guid.NewGuid(); 
 
-                site.SiteId = DBSiteSettings.Create(
+                site.SiteId = await DBSiteSettings.Create(
                     site.SiteGuid,
                     site.SiteName,
                     site.Skin,
@@ -76,12 +78,14 @@ namespace cloudscribe.Core.Repositories.MSSQL
                     string.Empty, //legacy apiKeyExtra3
                     site.SiteFolderName, // legacy apiKeyExtra4
                     site.PreferredHostName, // legacy apiKeyExtra5
-                    site.DisableDbAuth); 
-    
+                    site.DisableDbAuth);
+
+                result = site.SiteId > -1;
+
             }
             else
             {
-                DBSiteSettings.Update(
+                result = await DBSiteSettings.Update(
                     site.SiteId,
                     site.SiteName,
                     site.Skin,
@@ -131,10 +135,12 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
             }
 
+            if (!result) { return result; }
+
             // settings below stored as key value pairs in mp_SiteSettingsEx
 
 
-            DBSiteSettingsEx.EnsureSettings();
+            bool nextResult = await DBSiteSettingsEx.EnsureSettings();
 
             DataTable expandoProperties = GetExpandoProperties(passedInSiteId); //-1 on new sites to get the default values
             
@@ -142,16 +148,58 @@ namespace cloudscribe.Core.Repositories.MSSQL
             site.SetExpandoSettings(expandoProperties);
             // finally update the database only with properties in the table marked as dirty
             SaveExpandoProperties(site.SiteId, site.SiteGuid, expandoProperties);
-            
 
+            return result;
         }
 
         
-        public ISiteSettings Fetch(int siteId)
+        public async Task<ISiteSettings> Fetch(int siteId)
         {
             SiteSettings site = new SiteSettings();
 
-            using (IDataReader reader = DBSiteSettings.GetSite(siteId))
+            using (DbDataReader reader = await DBSiteSettings.GetSite(siteId))
+            {
+                if (reader.Read())
+                {
+                    site.LoadFromReader(reader);
+                }
+            }
+
+            if (site.SiteGuid == Guid.Empty) { return null; }//not found 
+
+            DataTable expandoProperties = GetExpandoProperties(site.SiteId);
+            site.LoadExpandoSettings(expandoProperties);
+
+            return site;
+
+        }
+
+        public ISiteSettings FetchNonAsync(int siteId)
+        {
+            SiteSettings site = new SiteSettings();
+
+            using (DbDataReader reader = DBSiteSettings.GetSiteNonAsync(siteId))
+            {
+                if (reader.Read())
+                {
+                    site.LoadFromReader(reader);
+                }
+            }
+
+            if (site.SiteGuid == Guid.Empty) { return null; }//not found 
+
+            DataTable expandoProperties = GetExpandoProperties(site.SiteId);
+            site.LoadExpandoSettings(expandoProperties);
+
+            return site;
+
+        }
+
+        public async Task<ISiteSettings> Fetch(Guid siteGuid)
+        {
+            SiteSettings site = new SiteSettings();
+
+            using (DbDataReader reader = await DBSiteSettings.GetSite(siteGuid))
             {
                 if (reader.Read())
                 {
@@ -167,14 +215,14 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
             return site;
 
-            
+
         }
 
-        public ISiteSettings Fetch(Guid siteGuid)
+        public async Task<ISiteSettings> Fetch(string hostName)
         {
             SiteSettings site = new SiteSettings();
 
-            using (IDataReader reader = DBSiteSettings.GetSite(siteGuid))
+            using (DbDataReader reader = await DBSiteSettings.GetSite(hostName))
             {
                 if (reader.Read())
                 {
@@ -190,14 +238,13 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
             return site;
 
-
         }
 
-        public ISiteSettings Fetch(string hostName)
+        public ISiteSettings FetchNonAsync(string hostName)
         {
             SiteSettings site = new SiteSettings();
 
-            using (IDataReader reader = DBSiteSettings.GetSite(hostName))
+            using (DbDataReader reader = DBSiteSettings.GetSiteNonAsync(hostName))
             {
                 if (reader.Read())
                 {
@@ -213,26 +260,25 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
             return site;
 
-
         }
 
         
-        public bool Delete(int siteId)
+        public async Task<bool> Delete(int siteId)
         {
-            return DBSiteSettings.Delete(siteId);
+            return await DBSiteSettings.Delete(siteId);
         }
 
 
         
-        public int GetCount()
+        public async Task<int> GetCount()
         {
-            return DBSiteSettings.CountOtherSites(-1);
+            return await DBSiteSettings.CountOtherSites(-1);
         }
 
-        public List<ISiteInfo> GetList()
+        public async Task<List<ISiteInfo>> GetList()
         {
             List<ISiteInfo> sites = new List<ISiteInfo>();
-            using (IDataReader reader = DBSiteSettings.GetSiteList())
+            using (DbDataReader reader = await DBSiteSettings.GetSiteList())
             {
                 while (reader.Read())
                 {
@@ -244,6 +290,11 @@ namespace cloudscribe.Core.Repositories.MSSQL
             }
 
             return sites;
+        }
+
+        public async Task<int> CountOtherSites(int currentSiteId)
+        {
+            return await DBSiteSettings.CountOtherSites(currentSiteId);
         }
 
         /// <summary>
@@ -252,17 +303,15 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// <param name="currentSiteId"></param>
         /// <param name="pageNumber"></param>
         /// <param name="pageSize"></param>
-        /// <param name="totalPages"></param>
         /// <returns></returns>
-        public List<ISiteInfo> GetPageOtherSites(
+        public async Task<List<ISiteInfo>> GetPageOtherSites(
             int currentSiteId,
             int pageNumber,
-            int pageSize,
-            out int totalPages)
+            int pageSize)
         {
             List<ISiteInfo> sites = new List<ISiteInfo>();
-            totalPages = 1;
-            using (IDataReader reader = DBSiteSettings.GetPageOfOtherSites(currentSiteId, pageNumber, pageSize, out totalPages))
+           
+            using (DbDataReader reader = await DBSiteSettings.GetPageOfOtherSites(currentSiteId, pageNumber, pageSize))
             {
                 while (reader.Read())
                 {
@@ -275,10 +324,10 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return sites;
         }
 
-        public List<ISiteHost> GetAllHosts()
+        public async Task<List<ISiteHost>> GetAllHosts()
         {
             List<ISiteHost> hosts = new List<ISiteHost>();
-            using (IDataReader reader = DBSiteSettings.GetAllHosts())
+            using (DbDataReader reader = await DBSiteSettings.GetAllHosts())
             {
                 while (reader.Read())
                 {
@@ -292,13 +341,34 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return hosts;
         }
 
-        public List<ISiteHost> GetPageHosts(
+        public List<ISiteHost> GetAllHostsNonAsync()
+        {
+            List<ISiteHost> hosts = new List<ISiteHost>();
+            using (DbDataReader reader = DBSiteSettings.GetAllHostsNonAsync())
+            {
+                while (reader.Read())
+                {
+                    SiteHost host = new SiteHost();
+                    host.LoadFromReader(reader);
+                    hosts.Add(host);
+                }
+
+            }
+
+            return hosts;
+        }
+
+        public async Task<int> GetHostCount()
+        {
+            return await DBSiteSettings.GetHostCount();
+        }
+
+        public async Task<List<ISiteHost>> GetPageHosts(
             int pageNumber,
-            int pageSize,
-            out int totalPages)
+            int pageSize)
         {
             List<ISiteHost> hosts = new List<ISiteHost>();
-            using (IDataReader reader = DBSiteSettings.GetPageHosts(pageNumber, pageSize, out totalPages))
+            using (DbDataReader reader = await DBSiteSettings.GetPageHosts(pageNumber, pageSize))
             {
                 while (reader.Read())
                 {
@@ -312,10 +382,10 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return hosts;
         }
 
-        public List<ISiteHost> GetSiteHosts(int siteId)
+        public async Task<List<ISiteHost>> GetSiteHosts(int siteId)
         {
             List<ISiteHost> hosts = new List<ISiteHost>();
-            using (IDataReader reader = DBSiteSettings.GetHostList(siteId))
+            using (DbDataReader reader = await DBSiteSettings.GetHostList(siteId))
             {
                 while (reader.Read())
                 {
@@ -329,28 +399,27 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return hosts;
         }
 
-        // TODO make it return either a bool or an instance of ISiteHost
-        public void AddHost(Guid siteGuid, int siteId, string hostName)
+        public async Task<bool> AddHost(Guid siteGuid, int siteId, string hostName)
         {
-            DBSiteSettings.AddHost(siteGuid, siteId, hostName);
+            return await DBSiteSettings.AddHost(siteGuid, siteId, hostName);
         }
 
-        public void DeleteHost(int hostId)
+        public async Task<bool> DeleteHost(int hostId)
         {
-            DBSiteSettings.DeleteHost(hostId);
+            return await DBSiteSettings.DeleteHost(hostId);
         }
 
-        public int GetSiteIdByHostName(string hostName)
+        public async Task<int> GetSiteIdByHostName(string hostName)
         {
-            return DBSiteSettings.GetSiteIdByHostName(hostName);
+            return await DBSiteSettings.GetSiteIdByHostName(hostName);
         }
 
-        public List<SiteFolder> GetBySite(Guid siteGuid)
+        public async Task<List<SiteFolder>> GetBySite(Guid siteGuid)
         {
             List<SiteFolder> siteFolderList
                 = new List<SiteFolder>();
 
-            using (IDataReader reader = DBSiteFolder.GetBySite(siteGuid))
+            using (DbDataReader reader = await DBSiteFolder.GetBySite(siteGuid))
             {
                 while (reader.Read())
                 {
@@ -364,12 +433,12 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         }
 
-        public List<SiteFolder> GetAllSiteFolders()
+        public async Task<List<SiteFolder>> GetAllSiteFolders()
         {
             List<SiteFolder> siteFolderList
                 = new List<SiteFolder>();
 
-            using (IDataReader reader = DBSiteFolder.GetAll())
+            using (DbDataReader reader = await DBSiteFolder.GetAll())
             {
                 while (reader.Read())
                 {
@@ -383,15 +452,38 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         }
 
-        public List<SiteFolder> GetPageSiteFolders(
-            int pageNumber,
-            int pageSize,
-            out int totalPages)
+        public List<SiteFolder> GetAllSiteFoldersNonAsync()
         {
             List<SiteFolder> siteFolderList
                 = new List<SiteFolder>();
 
-            using (IDataReader reader = DBSiteFolder.GetPage(pageNumber, pageSize, out totalPages))
+            using (DbDataReader reader = DBSiteFolder.GetAllNonAsync())
+            {
+                while (reader.Read())
+                {
+                    SiteFolder siteFolder = new SiteFolder();
+                    siteFolder.LoadFromReader(reader);
+                    siteFolderList.Add(siteFolder);
+                }
+            }
+
+            return siteFolderList;
+
+        }
+
+        public async Task<int> GetFolderCount()
+        {
+            return await DBSiteFolder.GetFolderCount();
+        }
+
+        public async Task<List<SiteFolder>> GetPageSiteFolders(
+            int pageNumber,
+            int pageSize)
+        {
+            List<SiteFolder> siteFolderList
+                = new List<SiteFolder>();
+
+            using (DbDataReader reader = await DBSiteFolder.GetPage(pageNumber, pageSize))
             {
                 while (reader.Read())
                 {
@@ -407,22 +499,22 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
        
 
-        public void Save(SiteFolder siteFolder)
+        public async Task<bool> Save(SiteFolder siteFolder)
         {
-            if (siteFolder == null) { return; }
+            if (siteFolder == null) { return false; }
 
             if (siteFolder.Guid == Guid.Empty)
             {
                 siteFolder.Guid = Guid.NewGuid();
 
-                DBSiteFolder.Add(
+                return await DBSiteFolder.Add(
                     siteFolder.Guid,
                     siteFolder.SiteGuid,
                     siteFolder.FolderName);
             }
             else
             {
-                DBSiteFolder.Update(
+                return await DBSiteFolder.Update(
                     siteFolder.Guid,
                     siteFolder.SiteGuid,
                     siteFolder.FolderName);
@@ -430,50 +522,55 @@ namespace cloudscribe.Core.Repositories.MSSQL
             }
         }
 
-        public bool DeleteFolder(Guid guid)
+        public async Task<bool> DeleteFolder(Guid guid)
         {
-            return DBSiteFolder.Delete(guid);
+            return await DBSiteFolder.Delete(guid);
         }
 
-        public int GetSiteIdByFolder(string folderName)
+        public async Task<int> GetSiteIdByFolder(string folderName)
         {
-            return DBSiteSettings.GetSiteIdByFolder(folderName);
+            return await DBSiteSettings.GetSiteIdByFolder(folderName);
         }
 
-        public Guid GetSiteGuidByFolder(string folderName)
+        public int GetSiteIdByFolderNonAsync(string folderName)
         {
-            return DBSiteFolder.GetSiteGuid(folderName);
+            return DBSiteSettings.GetSiteIdByFolderNonAsync(folderName);
         }
 
-        public bool FolderExists(string folderName)
+        public async Task<Guid> GetSiteGuidByFolder(string folderName)
         {
-            return DBSiteFolder.Exists(folderName);
+            return await DBSiteFolder.GetSiteGuid(folderName);
+        }
+
+        public async Task<bool> FolderExists(string folderName)
+        {
+            return await DBSiteFolder.Exists(folderName);
         }
 
         //TODO: this is not part of ISiteSettings
         // this method should be moved to AppSettings class
-        public bool IsAllowedFolder(string folderName)
-        {
-            bool result = true;
+        //public bool IsAllowedFolder(string folderName)
+        //{
+        //    bool result = true;
 
-            //TODO: wrap in AppSettings class to avoid dependency on System.Configuration here
+        //    //TODO: wrap in AppSettings class to avoid dependency on System.Configuration here
 
-            //if (ConfigurationManager.AppSettings["DisallowedVirtualFolderNames"] != null)
-            //{
-            //    string[] disallowedNames
-            //        = ConfigurationManager.AppSettings["DisallowedVirtualFolderNames"].Split(new char[] { ';' });
+        //    //if (ConfigurationManager.AppSettings["DisallowedVirtualFolderNames"] != null)
+        //    //{
+        //    //    string[] disallowedNames
+        //    //        = ConfigurationManager.AppSettings["DisallowedVirtualFolderNames"].Split(new char[] { ';' });
 
-            //    foreach (string disallowedName in disallowedNames)
-            //    {
-            //        if (string.Equals(folderName, disallowedName, StringComparison.InvariantCultureIgnoreCase)) result = false;
-            //    }
+        //    //    foreach (string disallowedName in disallowedNames)
+        //    //    {
+        //    //        if (string.Equals(folderName, disallowedName, StringComparison.InvariantCultureIgnoreCase)) result = false;
+        //    //    }
 
-            //}
+        //    //}
 
 
-            return result;
+        //    return result;
 
-        }
+        //}
 
 
         #endregion

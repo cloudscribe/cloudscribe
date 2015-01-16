@@ -1,11 +1,13 @@
 /// Author:					Joe Audette
 /// Created:				2009-09-10
-/// Last Modified:			2014-08-22 
+/// Last Modified:			2015-01-16
 ///                         
 /// You must not remove this notice, or any other, from this software.
 
 using System;
 using System.Data;
+using System.Data.Common;
+using System.Threading.Tasks;
 using cloudscribe.DbHelpers.MSSQL;
 
 namespace cloudscribe.Core.Repositories.MSSQL
@@ -23,9 +25,13 @@ namespace cloudscribe.Core.Repositories.MSSQL
         }
 
       
-        public static void EnsureSettings()
+        public static async Task<bool> EnsureSettings()
         {
-            new SqlParameterHelper(ConnectionString.GetWriteConnectionString(), "mp_SiteSettingsEx_EnsureDefinitions", 0).ExecuteNonQuery();
+            int rowsAffected = await new SqlParameterHelper(
+                ConnectionString.GetWriteConnectionString(), 
+                "mp_SiteSettingsEx_EnsureDefinitions", 0).ExecuteNonQueryAsync();
+
+            return rowsAffected > 0;
         }
 
         public static bool SaveExpandoProperty(

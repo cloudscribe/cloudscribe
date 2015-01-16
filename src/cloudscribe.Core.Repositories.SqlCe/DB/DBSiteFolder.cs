@@ -1,12 +1,13 @@
 ﻿// Author:					Joe Audette
 // Created:					2010-04-06
-// Last Modified:			2014-09-06
+// Last Modified:			2015-01-16
 // 
 // You must not remove this notice, or any other, from this software.
 
 using cloudscribe.DbHelpers.SqlCe;
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Data.SqlServerCe;
 using System.Globalization;
 using System.Text;
@@ -20,7 +21,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             return ConnectionString.GetConnectionString();
         }
 
-        public static int Add(
+        public static bool Add(
             Guid guid,
             Guid siteGuid,
             string folderName)
@@ -61,7 +62,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
                 sqlCommand.ToString(),
                 arParams);
 
-            return rowsAffected;
+            return rowsAffected > 0;
 
         }
 
@@ -284,7 +285,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
         }
 
-        public static int GetCount()
+        public static int GetFolderCount()
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  Count(*) ");
@@ -299,30 +300,29 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
         }
 
-        public static IDataReader GetPage(
+        public static DbDataReader GetPage(
             int pageNumber,
-            int pageSize,
-            out int totalPages)
+            int pageSize)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
-            totalPages = 1;
-            int totalRows = GetCount();
+            //totalPages = 1;
+            //int totalRows = GetCount();
 
-            if (pageSize > 0) totalPages = totalRows / pageSize;
+            //if (pageSize > 0) totalPages = totalRows / pageSize;
 
-            if (totalRows <= pageSize)
-            {
-                totalPages = 1;
-            }
-            else
-            {
-                int remainder;
-                Math.DivRem(totalRows, pageSize, out remainder);
-                if (remainder > 0)
-                {
-                    totalPages += 1;
-                }
-            }
+            //if (totalRows <= pageSize)
+            //{
+            //    totalPages = 1;
+            //}
+            //else
+            //{
+            //    int remainder;
+            //    Math.DivRem(totalRows, pageSize, out remainder);
+            //    if (remainder > 0)
+            //    {
+            //        totalPages += 1;
+            //    }
+            //}
 
             int offset = 0;
             if (pageNumber > 1) { offset = (pageSize * pageNumber) - pageSize; }

@@ -1,6 +1,6 @@
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-01-15
+// Last Modified:			2015-01-16
 // 
 //
 // You must not remove this notice, or any other, from this software.
@@ -8,7 +8,9 @@
 
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Text;
+using System.Threading.Tasks;
 using Npgsql;
 using cloudscribe.DbHelpers.pgsql;
 
@@ -17,8 +19,8 @@ namespace cloudscribe.Core.Repositories.pgsql
     
     internal static class DBSiteFolder
     {
-        
-        public static int Add(
+
+        public static async Task<bool> Add(
             Guid guid,
             Guid siteGuid,
             string folderName)
@@ -34,16 +36,16 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[2] = new NpgsqlParameter("foldername", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
             arParams[2].Value = folderName;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(ConnectionString.GetWriteConnectionString(),
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(ConnectionString.GetWriteConnectionString(),
                 CommandType.StoredProcedure,
                 "mp_sitefolders_insert(:guid,:siteguid,:foldername)",
                 arParams);
 
-            return rowsAffected;
+            return rowsAffected > 0;
 
         }
 
-        public static bool Update(
+        public static async Task<bool> Update(
             Guid guid,
             Guid siteGuid,
             string folderName)
@@ -59,7 +61,7 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[2] = new NpgsqlParameter("foldername", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
             arParams[2].Value = folderName;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(ConnectionString.GetWriteConnectionString(),
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(ConnectionString.GetWriteConnectionString(),
                 CommandType.StoredProcedure,
                 "mp_sitefolders_update(:guid,:siteguid,:foldername)",
                 arParams);
@@ -68,7 +70,7 @@ namespace cloudscribe.Core.Repositories.pgsql
 
         }
 
-        public static bool Delete(
+        public static async Task<bool> Delete(
             Guid guid)
         {
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
@@ -76,7 +78,7 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[0] = new NpgsqlParameter("guid", NpgsqlTypes.NpgsqlDbType.Varchar, 36);
             arParams[0].Value = guid.ToString();
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(ConnectionString.GetWriteConnectionString(),
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(ConnectionString.GetWriteConnectionString(),
                 CommandType.StoredProcedure,
                 "mp_sitefolders_delete(:guid)",
                 arParams);
@@ -100,14 +102,14 @@ namespace cloudscribe.Core.Repositories.pgsql
 
         }
 
-        public static IDataReader GetBySite(Guid siteGuid)
+        public static async Task<DbDataReader> GetBySite(Guid siteGuid)
         {
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
             
             arParams[0] = new NpgsqlParameter("siteguid", NpgsqlTypes.NpgsqlDbType.Varchar, 36);
             arParams[0].Value = siteGuid.ToString();
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 CommandType.StoredProcedure,
                 "mp_sitefolders_select_bysite(:siteguid)",
@@ -115,42 +117,80 @@ namespace cloudscribe.Core.Repositories.pgsql
 
         }
 
-        public static bool Exists(string folderName)
+        public static async Task<bool> Exists(string folderName)
         {
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
             
             arParams[0] = new NpgsqlParameter("foldername", NpgsqlTypes.NpgsqlDbType.Text, 50);
             arParams[0].Value = folderName;
 
-            int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
+            object result = await AdoHelper.ExecuteScalarAsync(
                 ConnectionString.GetReadConnectionString(),
                 CommandType.StoredProcedure,
                 "mp_sitefolders_exists(:foldername)",
-                arParams));
+                arParams);
+
+            int count = Convert.ToInt32(result);
 
             return (count > 0);
 
         }
 
 
-        public static Guid GetSiteGuid(string folderName)
+        public static async Task<Guid> GetSiteGuid(string folderName)
         {
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
             
             arParams[0] = new NpgsqlParameter("foldername", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
             arParams[0].Value = folderName;
 
-            string strGuid = AdoHelper.ExecuteScalar(
+            object result = await AdoHelper.ExecuteScalarAsync(
                 ConnectionString.GetReadConnectionString(),
                 CommandType.StoredProcedure,
                 "mp_sitefolders_selectsiteguid(:foldername)",
-                arParams).ToString();
+                arParams);
 
-            return new Guid(strGuid);
+            string strGuid = result.ToString();
+            if (strGuid.Length == 36)
+            {
+                return new Guid(strGuid);
+            }
+            else
+            {
+                return Guid.Empty;
+            }
+            
 
         }
 
-        public static IDataReader GetAll()
+        public static async Task<DbDataReader> GetAll()
+        {
+
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT ");
+
+            sqlCommand.Append("s.siteid, ");
+            sqlCommand.Append("s.siteguid, ");
+            sqlCommand.Append("sf.guid, ");
+            sqlCommand.Append("sf.foldername ");
+
+            sqlCommand.Append("FROM	mp_sitefolders sf ");
+
+            sqlCommand.Append("JOIN	mp_sites s ");
+
+            sqlCommand.Append("ON sf.siteguid = s.siteguid ");
+
+            sqlCommand.Append("ORDER BY sf.foldername ");
+            sqlCommand.Append(";");
+
+            return await AdoHelper.ExecuteReaderAsync(
+                ConnectionString.GetReadConnectionString(),
+                CommandType.Text,
+                sqlCommand.ToString(),
+                null);
+        }
+
+        public static DbDataReader GetAllNonAsync()
         {
 
             StringBuilder sqlCommand = new StringBuilder();
@@ -177,47 +217,45 @@ namespace cloudscribe.Core.Repositories.pgsql
                 null);
         }
 
-        public static int GetCount()
+        public static async Task<int> GetFolderCount()
         {
-
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  Count(*) ");
             sqlCommand.Append("FROM	mp_sitefolders ");
             sqlCommand.Append(";");
 
-            return Convert.ToInt32(AdoHelper.ExecuteScalar(
+            object result = await AdoHelper.ExecuteScalarAsync(
                 ConnectionString.GetReadConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
-                null));
+                null);
+
+            return Convert.ToInt32(result);
         }
 
-        public static IDataReader GetPage(
+        public static async Task<DbDataReader> GetPage(
             int pageNumber,
-            int pageSize,
-            out int totalPages)
+            int pageSize)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
-            totalPages = 1;
-            int totalRows = GetCount();
+            //totalPages = 1;
+            //int totalRows = GetCount();
 
-            if (pageSize > 0) totalPages = totalRows / pageSize;
+            //if (pageSize > 0) totalPages = totalRows / pageSize;
 
-            if (totalRows <= pageSize)
-            {
-                totalPages = 1;
-            }
-            else
-            {
-                int remainder;
-                Math.DivRem(totalRows, pageSize, out remainder);
-                if (remainder > 0)
-                {
-                    totalPages += 1;
-                }
-            }
-
-
+            //if (totalRows <= pageSize)
+            //{
+            //    totalPages = 1;
+            //}
+            //else
+            //{
+            //    int remainder;
+            //    Math.DivRem(totalRows, pageSize, out remainder);
+            //    if (remainder > 0)
+            //    {
+            //        totalPages += 1;
+            //    }
+            //}
 
             NpgsqlParameter[] arParams = new NpgsqlParameter[2];
 
@@ -249,7 +287,7 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             sqlCommand.Append(";");
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),

@@ -1,6 +1,6 @@
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2014-09-06
+// Last Modified:			2015-01-16
 //
 // You must not remove this notice, or any other, from this software.
 
@@ -8,6 +8,7 @@
 using cloudscribe.DbHelpers.SQLite;
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Data.SQLite;
 using System.Text;
 
@@ -16,7 +17,7 @@ namespace cloudscribe.Core.Repositories.SQLite
     
     internal static class DBSiteFolder
     {
-        public static int Add(
+        public static bool Add(
             Guid guid,
             Guid siteGuid,
             string folderName)
@@ -46,10 +47,12 @@ namespace cloudscribe.Core.Repositories.SQLite
             arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = folderName;
 
-
-            int rowsAffected = 0;
-            rowsAffected = AdoHelper.ExecuteNonQuery(ConnectionString.GetConnectionString(), sqlCommand.ToString(), arParams);
-            return rowsAffected;
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
+                ConnectionString.GetConnectionString(), 
+                sqlCommand.ToString(), 
+                arParams);
+            
+            return rowsAffected > 0;
 
         }
 
@@ -253,7 +256,7 @@ namespace cloudscribe.Core.Repositories.SQLite
                 null);
         }
 
-        public static int GetCount()
+        public static int GetFolderCount()
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  Count(*) ");
@@ -266,30 +269,29 @@ namespace cloudscribe.Core.Repositories.SQLite
                 null));
         }
 
-        public static IDataReader GetPage(
+        public static DbDataReader GetPage(
             int pageNumber,
-            int pageSize,
-            out int totalPages)
+            int pageSize)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
-            totalPages = 1;
-            int totalRows = GetCount();
+            //totalPages = 1;
+            //int totalRows = GetCount();
 
-            if (pageSize > 0) totalPages = totalRows / pageSize;
+            //if (pageSize > 0) totalPages = totalRows / pageSize;
 
-            if (totalRows <= pageSize)
-            {
-                totalPages = 1;
-            }
-            else
-            {
-                int remainder;
-                Math.DivRem(totalRows, pageSize, out remainder);
-                if (remainder > 0)
-                {
-                    totalPages += 1;
-                }
-            }
+            //if (totalRows <= pageSize)
+            //{
+            //    totalPages = 1;
+            //}
+            //else
+            //{
+            //    int remainder;
+            //    Math.DivRem(totalRows, pageSize, out remainder);
+            //    if (remainder > 0)
+            //    {
+            //        totalPages += 1;
+            //    }
+            //}
 
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT ");

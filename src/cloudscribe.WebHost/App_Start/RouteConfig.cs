@@ -65,7 +65,7 @@ namespace cloudscribe.WebHost
             StandardKernel kernel = Startup.GetKernel();
             ISiteRepository siteRepo = kernel.Get<ISiteRepository>();
 
-            List<SiteFolder> allFolders = siteRepo.GetAllSiteFolders();
+            List<SiteFolder> allFolders = siteRepo.GetAllSiteFoldersNonAsync();
             foreach (SiteFolder f in allFolders)
             {
                 routes.MapRoute(
