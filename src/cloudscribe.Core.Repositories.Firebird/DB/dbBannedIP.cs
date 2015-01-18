@@ -1,6 +1,6 @@
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2014-09-29
+// Last Modified:			2015-01-18
 //
 // You must not remove this notice, or any other, from this software.
 
@@ -8,7 +8,9 @@ using cloudscribe.DbHelpers.Firebird;
 using FirebirdSql.Data.FirebirdClient;
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.Firebird
 {
@@ -36,15 +38,12 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[3];
 
             arParams[0] = new FbParameter(":BannedIP", FbDbType.VarChar, 50);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = bannedIP;
 
             arParams[1] = new FbParameter(":BannedUTC", FbDbType.TimeStamp);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = bannedUtc;
 
             arParams[2] = new FbParameter(":BannedReason", FbDbType.VarChar, 255);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = bannedReason;
 
             int newID = Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -80,21 +79,16 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[4];
 
             arParams[0] = new FbParameter("@RowID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = rowId;
 
             arParams[1] = new FbParameter("@BannedIP", FbDbType.VarChar, 50);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = bannedIP;
 
             arParams[2] = new FbParameter("@BannedUTC", FbDbType.TimeStamp);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = bannedUtc;
 
             arParams[3] = new FbParameter("@BannedReason", FbDbType.VarChar, 255);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = bannedReason;
-
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 ConnectionString.GetWriteConnectionString(),
@@ -117,9 +111,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@RowID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = rowId;
-
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 ConnectionString.GetWriteConnectionString(),
@@ -129,7 +121,6 @@ namespace cloudscribe.Core.Repositories.Firebird
                 arParams);
 
             return (rowsAffected > -1);
-
         }
 
         /// <summary>
@@ -147,7 +138,6 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@RowID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = rowId;
 
             return AdoHelper.ExecuteReader(
@@ -172,7 +162,6 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@BannedIP", FbDbType.VarChar, 50);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = ipAddress;
 
             return AdoHelper.ExecuteReader(
@@ -199,7 +188,6 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@BannedIP", FbDbType.VarChar, 50);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = ipAddress;
 
             int foundRows = Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -286,11 +274,9 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[2];
 
             arParams[0] = new FbParameter("@PageNumber", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = pageNumber;
 
             arParams[1] = new FbParameter("@PageSize", FbDbType.Integer);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = pageSize;
 
             return AdoHelper.ExecuteReader(
@@ -299,9 +285,6 @@ namespace cloudscribe.Core.Repositories.Firebird
                 arParams);
 
         }
-
-       
-
 
     }
 }

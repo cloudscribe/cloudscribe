@@ -1,12 +1,13 @@
 ﻿// Author:					Joe Audette
 // Created:					2010-04-01
-// Last Modified:			2014-08-29
+// Last Modified:			2015-01-18
 // 
 // You must not remove this notice, or any other, from this software.
 
 using cloudscribe.DbHelpers.SqlCe;
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Data.SqlServerCe;
 using System.Globalization;
 using System.Text;
@@ -15,13 +16,6 @@ namespace cloudscribe.Core.Repositories.SqlCe
 {
     internal static class DBBannedIP
     {
-        private static String GetConnectionString()
-        {
-            return ConnectionString.GetConnectionString();
-        }
-
-
-
         /// <summary>
         /// Inserts a row in the mp_BannedIPAddresses table. Returns new integer id.
         /// </summary>
@@ -54,26 +48,21 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[3];
 
             arParams[0] = new SqlCeParameter("@BannedIP", SqlDbType.NVarChar, 50);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = bannedIP;
 
             arParams[1] = new SqlCeParameter("@BannedUTC", SqlDbType.DateTime);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = bannedUtc;
 
             arParams[2] = new SqlCeParameter("@BannedReason", SqlDbType.NVarChar, 255);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = bannedReason;
 
-
             int newId = Convert.ToInt32(AdoHelper.DoInsertGetIdentitiy(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams));
 
             return newId;
-
 
         }
 
@@ -105,23 +94,19 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[4];
 
             arParams[0] = new SqlCeParameter("@RowID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = rowId;
 
             arParams[1] = new SqlCeParameter("@BannedIP", SqlDbType.NVarChar, 50);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = bannedIP;
 
             arParams[2] = new SqlCeParameter("@BannedUTC", SqlDbType.DateTime);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = bannedUtc;
 
             arParams[3] = new SqlCeParameter("@BannedReason", SqlDbType.NVarChar, 255);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = bannedReason;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -146,11 +131,10 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[1];
 
             arParams[0] = new SqlCeParameter("@RowID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = rowId;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -175,11 +159,10 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[1];
 
             arParams[0] = new SqlCeParameter("@RowID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = rowId;
 
             return AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -202,11 +185,10 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[1];
 
             arParams[0] = new SqlCeParameter("@BannedIP", SqlDbType.NVarChar, 50);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = ipAddress;
 
             return AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -230,11 +212,10 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[1];
 
             arParams[0] = new SqlCeParameter("@BannedIP", SqlDbType.NVarChar, 50);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = ipAddress;
 
             int foundRows = Convert.ToInt32(AdoHelper.ExecuteScalar(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams));
@@ -256,11 +237,10 @@ namespace cloudscribe.Core.Repositories.SqlCe
             //SqlCeParameter[] arParams = new SqlCeParameter[1];
 
             //arParams[0] = new SqlCeParameter("@ApplicationID", SqlDbType.UniqueIdentifier);
-            //arParams[0].Direction = ParameterDirection.Input;
             //arParams[0].Value = applicationId;
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 null));
@@ -280,11 +260,10 @@ namespace cloudscribe.Core.Repositories.SqlCe
             //SqlCeParameter[] arParams = new SqlCeParameter[1];
 
             //arParams[0] = new SqlCeParameter("@ApplicationID", SqlDbType.UniqueIdentifier);
-            //arParams[0].Direction = ParameterDirection.Input;
             //arParams[0].Value = applicationId;
 
             return AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 null);
@@ -346,22 +325,18 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("t2.BannedIP ");
 			sqlCommand.Append(";");
 			
-			
 			//SqlCeParameter[] arParams = new SqlCeParameter[1];
 
             //arParams[0] = new SqlCeParameter("@ApplicationID", SqlDbType.UniqueIdentifier);
-            //arParams[0].Direction = ParameterDirection.Input;
 			//arParams[0].Value = applicationId;
             
 			return AdoHelper.ExecuteReader(
-				GetConnectionString(),
+				ConnectionString.GetConnectionString(),
 				CommandType.Text,
 				sqlCommand.ToString(),
 				null);
 
         }
-
-
 
     }
 }

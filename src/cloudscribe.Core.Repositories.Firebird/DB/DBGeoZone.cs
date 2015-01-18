@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2008-06-22
-// Last Modified:			2015-01-08
+// Last Modified:			2015-01-18
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -14,13 +14,10 @@ using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
 
-
 namespace cloudscribe.Core.Repositories.Firebird
-{
-    
+{ 
     internal static class DBGeoZone
-    {
-        
+    {       
         /// <summary>
         /// Inserts a row in the mp_GeoZone table. Returns rows affected count.
         /// </summary>
@@ -39,21 +36,16 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[4];
 
             arParams[0] = new FbParameter("@Guid", FbDbType.Char, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid.ToString();
 
             arParams[1] = new FbParameter("@CountryGuid", FbDbType.Char, 36);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = countryGuid.ToString();
 
             arParams[2] = new FbParameter("@Name", FbDbType.VarChar, 255);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = name;
 
             arParams[3] = new FbParameter("@Code", FbDbType.VarChar, 255);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = code;
-
 
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("INSERT INTO mp_GeoZone (");
@@ -61,7 +53,6 @@ namespace cloudscribe.Core.Repositories.Firebird
             sqlCommand.Append("CountryGuid, ");
             sqlCommand.Append("Name, ");
             sqlCommand.Append("Code )");
-
 
             sqlCommand.Append(" VALUES (");
             sqlCommand.Append("@Guid, ");
@@ -74,8 +65,6 @@ namespace cloudscribe.Core.Repositories.Firebird
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
-
-
 
             return (rowsAffected > 0);
 
@@ -108,24 +97,20 @@ namespace cloudscribe.Core.Repositories.Firebird
             sqlCommand.Append("Guid = @Guid ");
             sqlCommand.Append("OR Guid = UPPER(@Guid) ");
             sqlCommand.Append(";");
+
             FbParameter[] arParams = new FbParameter[4];
 
             arParams[0] = new FbParameter("@Guid", FbDbType.Char, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid.ToString();
 
             arParams[1] = new FbParameter("@CountryGuid", FbDbType.Char, 36);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = countryGuid.ToString();
 
             arParams[2] = new FbParameter("@Name", FbDbType.VarChar, 255);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = name;
 
             arParams[3] = new FbParameter("@Code", FbDbType.VarChar, 255);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = code;
-
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
@@ -151,9 +136,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@Guid", FbDbType.Char, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid.ToString();
-
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
@@ -174,7 +157,6 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@CountryGuid", FbDbType.Char, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = countryGuid.ToString();
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
@@ -202,7 +184,6 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@Guid", FbDbType.Char, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid.ToString();
 
             return await AdoHelper.ExecuteReaderAsync(
@@ -230,11 +211,9 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[2];
 
             arParams[0] = new FbParameter("@CountryGuid", FbDbType.Char, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = countryGuid.ToString();
 
             arParams[1] = new FbParameter("@Code", FbDbType.VarChar, 255);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = code;
 
             return AdoHelper.ExecuteReader(
@@ -259,7 +238,6 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@CountryGuid", FbDbType.Char, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = countryGuid.ToString();
 
             object result = await AdoHelper.ExecuteScalarAsync(
@@ -287,7 +265,6 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@CountryGuid", FbDbType.Char, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = countryGuid.ToString();
 
             return await AdoHelper.ExecuteReaderAsync(
@@ -351,7 +328,6 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@CountryGuid", FbDbType.Char, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = countryGuid.ToString();
 
 

@@ -1,6 +1,6 @@
 ﻿//	Author:                 Joe Audette
 //  Created:			    2011-07-23
-//	Last Modified:		    2014-08-29
+//	Last Modified:		    2015-01-18
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -8,14 +8,15 @@ using cloudscribe.DbHelpers.Firebird;
 using FirebirdSql.Data.FirebirdClient;
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Globalization;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.Firebird
 {
     internal static class DBSystemLog
     {
-        
         /// <summary>
         /// Inserts a row in the mp_SystemLog table. Returns new integer id.
         /// </summary>
@@ -43,39 +44,30 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[9];
 
             arParams[0] = new FbParameter(":LogDate", FbDbType.TimeStamp);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = logDate;
 
             arParams[1] = new FbParameter(":IpAddress", FbDbType.VarChar, 50);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = ipAddress;
 
             arParams[2] = new FbParameter(":Culture", FbDbType.VarChar, 10);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = culture;
 
             arParams[3] = new FbParameter(":Url", FbDbType.VarChar);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = url;
 
             arParams[4] = new FbParameter(":ShortUrl", FbDbType.VarChar, 255);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = shortUrl;
 
             arParams[5] = new FbParameter(":Thread", FbDbType.VarChar, 255);
-            arParams[5].Direction = ParameterDirection.Input;
             arParams[5].Value = thread;
 
             arParams[6] = new FbParameter(":LogLevel", FbDbType.VarChar, 20);
-            arParams[6].Direction = ParameterDirection.Input;
             arParams[6].Value = logLevel;
 
             arParams[7] = new FbParameter(":Logger", FbDbType.VarChar, 255);
-            arParams[7].Direction = ParameterDirection.Input;
             arParams[7].Value = logger;
 
             arParams[8] = new FbParameter(":Message", FbDbType.VarChar);
-            arParams[8].Direction = ParameterDirection.Input;
             arParams[8].Value = message;
 
             int newID = Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -105,9 +97,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             //FbParameter[] arParams = new FbParameter[1];
 
             //arParams[0] = new FbParameter("@ID", FbDbType.Integer);
-            //arParams[0].Direction = ParameterDirection.Input;
             //arParams[0].Value = id;
-
 
             AdoHelper.ExecuteNonQuery(
                 ConnectionString.GetWriteConnectionString(),
@@ -131,9 +121,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@ID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = id;
-
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 ConnectionString.GetWriteConnectionString(),
@@ -159,9 +147,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@CutoffDate", FbDbType.TimeStamp);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = cutoffDate;
-
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 ConnectionString.GetWriteConnectionString(),
@@ -187,9 +173,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@LogLevel", FbDbType.VarChar, 20);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = logLevel;
-
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 ConnectionString.GetWriteConnectionString(),
@@ -263,7 +247,6 @@ namespace cloudscribe.Core.Repositories.Firebird
             //FbParameter[] arParams = new FbParameter[1];
 
             //arParams[0] = new FbParameter("@CountryGuid", FbDbType.Char, 36);
-            //arParams[0].Direction = ParameterDirection.Input;
             //arParams[0].Value = countryGuid.ToString();
 
             return AdoHelper.ExecuteReader(
@@ -319,7 +302,6 @@ namespace cloudscribe.Core.Repositories.Firebird
             //FbParameter[] arParams = new FbParameter[1];
 
             //arParams[0] = new FbParameter("@CountryGuid", FbDbType.Char, 36);
-            //arParams[0].Direction = ParameterDirection.Input;
             //arParams[0].Value = countryGuid.ToString();
 
             return AdoHelper.ExecuteReader(

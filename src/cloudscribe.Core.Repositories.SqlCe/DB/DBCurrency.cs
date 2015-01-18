@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2010-04-04
-// Last Modified:			2015-01-08
+// Last Modified:			2015-01-18
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -16,11 +16,6 @@ namespace cloudscribe.Core.Repositories.SqlCe
 {
     internal static class DBCurrency
     {
-        private static String GetConnectionString()
-        {
-            return ConnectionString.GetConnectionString();
-        }
-
         /// <summary>
         /// Inserts a row in the mp_Currency table. Returns rows affected count.
         /// </summary>
@@ -84,58 +79,45 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[11];
 
             arParams[0] = new SqlCeParameter("@Guid", SqlDbType.UniqueIdentifier);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid;
 
             arParams[1] = new SqlCeParameter("@Title", SqlDbType.NVarChar, 50);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = title;
 
             arParams[2] = new SqlCeParameter("@Code", SqlDbType.NChar, 3);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = code;
 
             arParams[3] = new SqlCeParameter("@SymbolLeft", SqlDbType.NVarChar, 15);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = symbolLeft;
 
             arParams[4] = new SqlCeParameter("@SymbolRight", SqlDbType.NVarChar, 15);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = symbolRight;
 
             arParams[5] = new SqlCeParameter("@DecimalPointChar", SqlDbType.NChar, 1);
-            arParams[5].Direction = ParameterDirection.Input;
             arParams[5].Value = decimalPointChar;
 
             arParams[6] = new SqlCeParameter("@ThousandsPointChar", SqlDbType.NChar, 1);
-            arParams[6].Direction = ParameterDirection.Input;
             arParams[6].Value = thousandsPointChar;
 
             arParams[7] = new SqlCeParameter("@DecimalPlaces", SqlDbType.NChar, 1);
-            arParams[7].Direction = ParameterDirection.Input;
             arParams[7].Value = decimalPlaces;
 
             arParams[8] = new SqlCeParameter("@Value", SqlDbType.Decimal);
-            arParams[8].Direction = ParameterDirection.Input;
             arParams[8].Value = value;
 
             arParams[9] = new SqlCeParameter("@LastModified", SqlDbType.DateTime);
-            arParams[9].Direction = ParameterDirection.Input;
             arParams[9].Value = lastModified;
 
             arParams[10] = new SqlCeParameter("@Created", SqlDbType.DateTime);
-            arParams[10].Direction = ParameterDirection.Input;
             arParams[10].Value = created;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
 
             return rowsAffected > 0;
-
-
         }
 
         /// <summary>
@@ -178,7 +160,6 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("Value = @Value, ");
             sqlCommand.Append("LastModified = @LastModified ");
 
-
             sqlCommand.Append("WHERE  ");
             sqlCommand.Append("Guid = @Guid ");
             sqlCommand.Append(";");
@@ -186,47 +167,37 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[10];
 
             arParams[0] = new SqlCeParameter("@Guid", SqlDbType.UniqueIdentifier);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid;
 
             arParams[1] = new SqlCeParameter("@Title", SqlDbType.NVarChar, 50);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = title;
 
             arParams[2] = new SqlCeParameter("@Code", SqlDbType.NChar, 3);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = code;
 
             arParams[3] = new SqlCeParameter("@SymbolLeft", SqlDbType.NVarChar, 15);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = symbolLeft;
 
             arParams[4] = new SqlCeParameter("@SymbolRight", SqlDbType.NVarChar, 15);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = symbolRight;
 
             arParams[5] = new SqlCeParameter("@DecimalPointChar", SqlDbType.NChar, 1);
-            arParams[5].Direction = ParameterDirection.Input;
             arParams[5].Value = decimalPointChar;
 
             arParams[6] = new SqlCeParameter("@ThousandsPointChar", SqlDbType.NChar, 1);
-            arParams[6].Direction = ParameterDirection.Input;
             arParams[6].Value = thousandsPointChar;
 
             arParams[7] = new SqlCeParameter("@DecimalPlaces", SqlDbType.NChar, 1);
-            arParams[7].Direction = ParameterDirection.Input;
             arParams[7].Value = decimalPlaces;
 
             arParams[8] = new SqlCeParameter("@Value", SqlDbType.Decimal);
-            arParams[8].Direction = ParameterDirection.Input;
             arParams[8].Value = value;
 
             arParams[9] = new SqlCeParameter("@LastModified", SqlDbType.DateTime);
-            arParams[9].Direction = ParameterDirection.Input;
             arParams[9].Value = lastModified;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -251,11 +222,10 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[1];
 
             arParams[0] = new SqlCeParameter("@Guid", SqlDbType.UniqueIdentifier);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -280,11 +250,10 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[1];
 
             arParams[0] = new SqlCeParameter("@Guid", SqlDbType.UniqueIdentifier);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid;
 
             return AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -306,11 +275,10 @@ namespace cloudscribe.Core.Repositories.SqlCe
             //SqlCeParameter[] arParams = new SqlCeParameter[1];
 
             //arParams[0] = new SqlCeParameter("@ApplicationID", SqlDbType.UniqueIdentifier);
-            //arParams[0].Direction = ParameterDirection.Input;
             //arParams[0].Value = applicationId;
 
             return AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 null);

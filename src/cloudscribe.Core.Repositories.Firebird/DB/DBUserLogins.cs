@@ -17,7 +17,6 @@ namespace cloudscribe.Core.Repositories.Firebird
 {
 	internal static class DBUserLogins
     {
-	
         public static async Task<bool> Create(string loginProvider, string providerKey, string userId) 
 		{
 			StringBuilder sqlCommand = new StringBuilder();
@@ -175,11 +174,6 @@ namespace cloudscribe.Core.Repositories.Firebird
                 sqlCommand.ToString(),
                 arParams);
         }
-		
-		
-		
-	
-		
 		
 	}
 }

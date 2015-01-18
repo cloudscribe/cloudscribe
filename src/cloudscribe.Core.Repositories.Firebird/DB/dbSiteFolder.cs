@@ -1,10 +1,9 @@
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-01-16
+// Last Modified:			2015-01-18
 // 
 // You must not remove this notice, or any other, from this software.
 // 
-
 
 using cloudscribe.DbHelpers.Firebird;
 using FirebirdSql.Data.FirebirdClient;
@@ -15,19 +14,15 @@ using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
 
-
 namespace cloudscribe.Core.Repositories.Firebird
 {
-    
     internal static class DBSiteFolder
     {
-        
         public static async Task<bool> Add(
             Guid guid,
             Guid siteGuid,
             string folderName)
         {
-
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("INSERT INTO mp_SiteFolders (");
             sqlCommand.Append("Guid, ");
@@ -129,7 +124,6 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@Guid", FbDbType.VarChar, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid.ToString();
 
             return AdoHelper.ExecuteReader(

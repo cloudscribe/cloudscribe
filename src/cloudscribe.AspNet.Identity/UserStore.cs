@@ -60,10 +60,7 @@ namespace cloudscribe.AspNet.Identity
 
         #region IUserStore
 
-        //TODO: fix async tasks here are not really async
-        // might have to implement async data access to really fix it
-        // it still works synchronously but the method names imply async
-
+        
         public async Task CreateAsync(TUser user)
         {
             if (debugLog) { log.Info("CreateAsync"); }

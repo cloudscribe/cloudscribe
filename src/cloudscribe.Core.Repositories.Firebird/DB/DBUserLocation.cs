@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2008-01-04
-// Last Modified:			2015-01-15
+// Last Modified:			2015-01-18
 //
 // You must not remove this notice, or any other, from this software.
 
@@ -12,14 +12,10 @@ using System.Data.Common;
 using System.Text;
 using System.Threading.Tasks;
 
-
 namespace cloudscribe.Core.Repositories.Firebird
 {
     internal static class DBUserLocation
     {
-       
-      
-
         /// <summary>
         /// Inserts a row in the mp_UserLocation table. Returns rows affected count.
         /// </summary>
@@ -60,7 +56,6 @@ namespace cloudscribe.Core.Repositories.Firebird
             DateTime firstCaptureUTC,
             DateTime lastCaptureUTC)
         {
-
             #region Bit Conversion
 
 
@@ -68,75 +63,56 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             FbParameter[] arParams = new FbParameter[17];
 
-
             arParams[0] = new FbParameter("@RowID", FbDbType.Char, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = rowID.ToString();
 
             arParams[1] = new FbParameter("@UserGuid", FbDbType.Char, 36);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = userGuid.ToString();
 
             arParams[2] = new FbParameter("@SiteGuid", FbDbType.Char, 36);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = siteGuid.ToString();
 
             arParams[3] = new FbParameter("@IPAddress", FbDbType.VarChar, 50);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = iPAddress;
 
             arParams[4] = new FbParameter("@IPAddressLong", FbDbType.BigInt);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = iPAddressLong;
 
             arParams[5] = new FbParameter("@Hostname", FbDbType.VarChar, 255);
-            arParams[5].Direction = ParameterDirection.Input;
             arParams[5].Value = hostname;
 
             arParams[6] = new FbParameter("@Longitude", FbDbType.Float);
-            arParams[6].Direction = ParameterDirection.Input;
             arParams[6].Value = longitude;
 
             arParams[7] = new FbParameter("@Latitude", FbDbType.Float);
-            arParams[7].Direction = ParameterDirection.Input;
             arParams[7].Value = latitude;
 
             arParams[8] = new FbParameter("@ISP", FbDbType.VarChar, 255);
-            arParams[8].Direction = ParameterDirection.Input;
             arParams[8].Value = iSP;
 
             arParams[9] = new FbParameter("@Continent", FbDbType.VarChar, 255);
-            arParams[9].Direction = ParameterDirection.Input;
             arParams[9].Value = continent;
 
             arParams[10] = new FbParameter("@Country", FbDbType.VarChar, 255);
-            arParams[10].Direction = ParameterDirection.Input;
             arParams[10].Value = country;
 
             arParams[11] = new FbParameter("@Region", FbDbType.VarChar, 255);
-            arParams[11].Direction = ParameterDirection.Input;
             arParams[11].Value = region;
 
             arParams[12] = new FbParameter("@City", FbDbType.VarChar, 255);
-            arParams[12].Direction = ParameterDirection.Input;
             arParams[12].Value = city;
 
             arParams[13] = new FbParameter("@TimeZone", FbDbType.VarChar, 255);
-            arParams[13].Direction = ParameterDirection.Input;
             arParams[13].Value = timeZone;
 
             arParams[14] = new FbParameter("@CaptureCount", FbDbType.Integer);
-            arParams[14].Direction = ParameterDirection.Input;
             arParams[14].Value = captureCount;
 
             arParams[15] = new FbParameter("@FirstCaptureUTC", FbDbType.TimeStamp);
-            arParams[15].Direction = ParameterDirection.Input;
             arParams[15].Value = firstCaptureUTC;
 
             arParams[16] = new FbParameter("@LastCaptureUTC", FbDbType.TimeStamp);
-            arParams[16].Direction = ParameterDirection.Input;
             arParams[16].Value = lastCaptureUTC;
-
 
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("INSERT INTO mp_UserLocation (");
@@ -157,7 +133,6 @@ namespace cloudscribe.Core.Repositories.Firebird
             sqlCommand.Append("CaptureCount, ");
             sqlCommand.Append("FirstCaptureUTC, ");
             sqlCommand.Append("LastCaptureUTC )");
-
 
             sqlCommand.Append(" VALUES (");
             sqlCommand.Append("@RowID, ");
@@ -184,12 +159,9 @@ namespace cloudscribe.Core.Repositories.Firebird
                 sqlCommand.ToString(),
                 arParams);
 
-
-
             return rowsAffected;
 
         }
-
 
         /// <summary>
         /// Updates a row in the mp_UserLocation table. Returns true if row updated.
@@ -256,72 +228,56 @@ namespace cloudscribe.Core.Repositories.Firebird
             sqlCommand.Append("WHERE  ");
             sqlCommand.Append("RowID = @RowID ");
             sqlCommand.Append(";");
+
             FbParameter[] arParams = new FbParameter[16];
 
             arParams[0] = new FbParameter("@RowID", FbDbType.Char, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = rowID.ToString();
 
             arParams[1] = new FbParameter("@UserGuid", FbDbType.Char, 36);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = userGuid.ToString();
 
             arParams[2] = new FbParameter("@SiteGuid", FbDbType.Char, 36);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = siteGuid.ToString();
 
             arParams[3] = new FbParameter("@IPAddress", FbDbType.VarChar, 50);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = iPAddress;
 
             arParams[4] = new FbParameter("@IPAddressLong", FbDbType.BigInt);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = iPAddressLong;
 
             arParams[5] = new FbParameter("@Hostname", FbDbType.VarChar, 255);
-            arParams[5].Direction = ParameterDirection.Input;
             arParams[5].Value = hostname;
 
             arParams[6] = new FbParameter("@Longitude", FbDbType.Float);
-            arParams[6].Direction = ParameterDirection.Input;
             arParams[6].Value = longitude;
 
             arParams[7] = new FbParameter("@Latitude", FbDbType.Float);
-            arParams[7].Direction = ParameterDirection.Input;
             arParams[7].Value = latitude;
 
             arParams[8] = new FbParameter("@ISP", FbDbType.VarChar, 255);
-            arParams[8].Direction = ParameterDirection.Input;
             arParams[8].Value = iSP;
 
             arParams[9] = new FbParameter("@Continent", FbDbType.VarChar, 255);
-            arParams[9].Direction = ParameterDirection.Input;
             arParams[9].Value = continent;
 
             arParams[10] = new FbParameter("@Country", FbDbType.VarChar, 255);
-            arParams[10].Direction = ParameterDirection.Input;
             arParams[10].Value = country;
 
             arParams[11] = new FbParameter("@Region", FbDbType.VarChar, 255);
-            arParams[11].Direction = ParameterDirection.Input;
             arParams[11].Value = region;
 
             arParams[12] = new FbParameter("@City", FbDbType.VarChar, 255);
-            arParams[12].Direction = ParameterDirection.Input;
             arParams[12].Value = city;
 
             arParams[13] = new FbParameter("@TimeZone", FbDbType.VarChar, 255);
-            arParams[13].Direction = ParameterDirection.Input;
             arParams[13].Value = timeZone;
 
             arParams[14] = new FbParameter("@CaptureCount", FbDbType.Integer);
-            arParams[14].Direction = ParameterDirection.Input;
             arParams[14].Value = captureCount;
 
             arParams[15] = new FbParameter("@LastCaptureUTC", FbDbType.TimeStamp);
-            arParams[15].Direction = ParameterDirection.Input;
             arParams[15].Value = lastCaptureUTC;
-
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 ConnectionString.GetWriteConnectionString(),
@@ -347,9 +303,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@RowID", FbDbType.Char, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = rowID.ToString();
-
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 ConnectionString.GetWriteConnectionString(),
@@ -367,12 +321,11 @@ namespace cloudscribe.Core.Repositories.Firebird
             sqlCommand.Append("WHERE ");
             sqlCommand.Append("UserGuid = @UserGuid ");
             sqlCommand.Append(";");
+
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@UserGuid", FbDbType.Char, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userGuid.ToString();
-
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 ConnectionString.GetWriteConnectionString(),
@@ -399,7 +352,6 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@RowID", FbDbType.Char, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = rowID.ToString();
 
             return AdoHelper.ExecuteReader(
@@ -427,11 +379,9 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[2];
 
             arParams[0] = new FbParameter("@Userguid", FbDbType.Char, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userguid.ToString();
 
             arParams[1] = new FbParameter("@IPAddressLong", FbDbType.BigInt);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = iPAddressLong;
 
             return AdoHelper.ExecuteReader(
@@ -458,7 +408,6 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@UserGuid", FbDbType.Char, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userGuid.ToString();
 
             return AdoHelper.ExecuteReader(
@@ -485,7 +434,6 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@SiteGuid", FbDbType.Char, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteGuid.ToString();
 
             return AdoHelper.ExecuteReader(
@@ -546,7 +494,6 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@UserGuid", FbDbType.Char, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userGuid.ToString();
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -572,7 +519,6 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@SiteGuid", FbDbType.Char, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteGuid.ToString();
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -581,9 +527,6 @@ namespace cloudscribe.Core.Repositories.Firebird
                 arParams));
 
         }
-
-
-
 
         /// <summary>
         /// Gets a page of data from the mp_UserLocation table.
@@ -632,9 +575,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@UserGuid", FbDbType.Char, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userGuid.ToString();
-
 
             return AdoHelper.ExecuteReader(
                 ConnectionString.GetReadConnectionString(),
@@ -691,9 +632,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@SiteGuid", FbDbType.Char, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteGuid.ToString();
-
 
             return AdoHelper.ExecuteReader(
                 ConnectionString.GetReadConnectionString(),
@@ -701,8 +640,6 @@ namespace cloudscribe.Core.Repositories.Firebird
                 arParams);
 
         }
-
-
 
     }
 }

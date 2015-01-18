@@ -61,6 +61,7 @@
     <Compile Include="DB\DBSiteSettingsEx.cs" />
     <Compile Include="DB\dbSiteUser.cs" />
     <Compile Include="DB\DBSystemLog.cs" />
+    <Compile Include="DB\DBTaskQueue.cs" />
     <Compile Include="DB\DBUserClaims.cs" />
     <Compile Include="DB\DBUserLocation.cs" />
     <Compile Include="DB\DBUserLogins.cs" />

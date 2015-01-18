@@ -1,6 +1,6 @@
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-01-16
+// Last Modified:			2015-01-18
 //
 // You must not remove this notice, or any other, from this software.
 
@@ -15,11 +15,8 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.Firebird
 {
-   
     internal static class DBSiteSettings
     {
-        
-
         public static async Task<int> Create(
             Guid siteGuid,
             String siteName,
@@ -970,23 +967,18 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[24];
 
             arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new FbParameter("@AllowNewRegistration", FbDbType.Integer);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = allowNew;
 
             arParams[2] = new FbParameter("@UseSecureRegistration", FbDbType.Integer);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = secure;
 
             arParams[3] = new FbParameter("@UseLdapAuth", FbDbType.Integer);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = uldapp;
 
             arParams[4] = new FbParameter("@AutoCreateLDAPUserOnFirstLogin", FbDbType.Integer);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = autoldapp;
 
             arParams[5] = new FbParameter("@LdapServer", FbDbType.VarChar, 255);
@@ -994,86 +986,65 @@ namespace cloudscribe.Core.Repositories.Firebird
             arParams[5].Value = ldapServer;
 
             arParams[6] = new FbParameter("@LdapPort", FbDbType.Integer);
-            arParams[6].Direction = ParameterDirection.Input;
             arParams[6].Value = ldapPort;
 
             arParams[7] = new FbParameter("@LdapRootDN", FbDbType.VarChar, 255);
-            arParams[7].Direction = ParameterDirection.Input;
             arParams[7].Value = ldapRootDN;
 
             arParams[8] = new FbParameter("@LdapUserDNKey", FbDbType.VarChar, 10);
-            arParams[8].Direction = ParameterDirection.Input;
             arParams[8].Value = ldapUserDNKey;
 
             arParams[9] = new FbParameter("@AllowUserFullNameChange", FbDbType.Integer);
-            arParams[9].Direction = ParameterDirection.Input;
             arParams[9].Value = allowNameChange;
 
             arParams[10] = new FbParameter("@UseEmailForLogin", FbDbType.Integer);
-            arParams[10].Direction = ParameterDirection.Input;
             arParams[10].Value = emailForLogin;
 
             arParams[11] = new FbParameter("@LdapDomain", FbDbType.VarChar, 255);
-            arParams[11].Direction = ParameterDirection.Input;
             arParams[11].Value = ldapDomain;
 
             arParams[12] = new FbParameter("@AllowOpenIDAuth", FbDbType.SmallInt);
-            arParams[12].Direction = ParameterDirection.Input;
             arParams[12].Value = oidauth;
             
             arParams[13] = new FbParameter("@AllowWindowsLiveAuth", FbDbType.SmallInt);
-            arParams[13].Direction = ParameterDirection.Input;
             arParams[13].Value = winliveauth;
 
             arParams[14] = new FbParameter("@AllowPasswordRetrieval", FbDbType.SmallInt);
-            arParams[14].Direction = ParameterDirection.Input;
             arParams[14].Value = intAllowPasswordRetrieval;
     
             arParams[15] = new FbParameter("@AllowPasswordReset", FbDbType.SmallInt);
-            arParams[15].Direction = ParameterDirection.Input;
             arParams[15].Value = intAllowPasswordReset;
 
             arParams[16] = new FbParameter("@RequiresQuestionAndAnswer", FbDbType.SmallInt);
-            arParams[16].Direction = ParameterDirection.Input;
             arParams[16].Value = intRequiresQuestionAndAnswer;
 
             arParams[17] = new FbParameter("@MaxInvalidPasswordAttempts", FbDbType.Integer);
-            arParams[17].Direction = ParameterDirection.Input;
             arParams[17].Value = maxInvalidPasswordAttempts;
 
             arParams[18] = new FbParameter("@PasswordAttemptWindowMinutes", FbDbType.Integer);
-            arParams[18].Direction = ParameterDirection.Input;
             arParams[18].Value = passwordAttemptWindowMinutes;
 
             arParams[19] = new FbParameter("@RequiresUniqueEmail", FbDbType.SmallInt);
-            arParams[19].Direction = ParameterDirection.Input;
             arParams[19].Value = intRequiresUniqueEmail;
 
             arParams[20] = new FbParameter("@PasswordFormat", FbDbType.Integer);
-            arParams[20].Direction = ParameterDirection.Input;
             arParams[20].Value = passwordFormat;
 
             arParams[21] = new FbParameter("@MinRequiredPasswordLength", FbDbType.Integer);
-            arParams[21].Direction = ParameterDirection.Input;
             arParams[21].Value = minRequiredPasswordLength;
 
             arParams[22] = new FbParameter("@MinReqNonAlphaChars", FbDbType.Integer);
-            arParams[22].Direction = ParameterDirection.Input;
             arParams[22].Value = minReqNonAlphaChars;
 
             arParams[23] = new FbParameter("@PwdStrengthRegex", FbDbType.VarChar);
-            arParams[23].Direction = ParameterDirection.Input;
             arParams[23].Value = pwdStrengthRegex;
-
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
 
-
             return (rowsAffected > 0);
-
 
         }
 
@@ -1093,15 +1064,12 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[3];
 
             arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new FbParameter("@WindowsLiveAppID", FbDbType.VarChar, 255);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = windowsLiveAppId;
 
             arParams[2] = new FbParameter("@WindowsLiveKey", FbDbType.VarChar, 255);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = windowsLiveKey;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -1191,51 +1159,39 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[12];
 
             arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new FbParameter("@AllowPasswordRetrieval", FbDbType.Integer);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = allowRetrieval;
 
             arParams[2] = new FbParameter("@AllowPasswordReset", FbDbType.Integer);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = allowReset;
 
             arParams[3] = new FbParameter("@RequiresQuestionAndAnswer", FbDbType.Integer);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = requiresQA;
 
             arParams[4] = new FbParameter("@MaxInvalidPasswordAttempts", FbDbType.Integer);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = maxInvalidPasswordAttempts;
 
             arParams[5] = new FbParameter("@PasswordAttemptWindowMinutes", FbDbType.Integer);
-            arParams[5].Direction = ParameterDirection.Input;
             arParams[5].Value = passwordAttemptWindowMinutes;
 
             arParams[6] = new FbParameter("@RequiresUniqueEmail", FbDbType.Integer);
-            arParams[6].Direction = ParameterDirection.Input;
             arParams[6].Value = requiresEmail;
 
             arParams[7] = new FbParameter("@PasswordFormat", FbDbType.Integer);
-            arParams[7].Direction = ParameterDirection.Input;
             arParams[7].Value = passwordFormat;
 
             arParams[8] = new FbParameter("@MinRequiredPasswordLength", FbDbType.Integer);
-            arParams[8].Direction = ParameterDirection.Input;
             arParams[8].Value = minRequiredPasswordLength;
 
             arParams[9] = new FbParameter("@PasswordStrengthRegularExpression", FbDbType.VarChar);
-            arParams[9].Direction = ParameterDirection.Input;
             arParams[9].Value = passwordStrengthRegularExpression;
 
             arParams[10] = new FbParameter("@DefaultEmailFromAddress", FbDbType.VarChar, 100);
-            arParams[10].Direction = ParameterDirection.Input;
             arParams[10].Value = defaultEmailFromAddress;
 
             arParams[11] = new FbParameter("@MinRequiredNonAlphanumericCharacters", FbDbType.Integer);
-            arParams[11].Direction = ParameterDirection.Input;
             arParams[11].Value = minRequiredNonAlphanumericCharacters;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -1331,7 +1287,6 @@ namespace cloudscribe.Core.Repositories.Firebird
                 sqlCommand.ToString(),
                 arParams);
 
-           
             sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_Sites ");
             sqlCommand.Append("WHERE SiteID = @SiteID  ; ");
@@ -1342,8 +1297,6 @@ namespace cloudscribe.Core.Repositories.Firebird
                 arParams);
 
             return (rowsAffected > 0);
-
-            
 
         }
 
@@ -1360,11 +1313,9 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[2];
 
             arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new FbParameter("@ModuleDefID", FbDbType.Integer);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = moduleDefId;
 
             int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -1398,11 +1349,9 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[2];
 
             arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new FbParameter("@ModuleDefID", FbDbType.Integer);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = moduleDefId;
 
             AdoHelper.ExecuteNonQuery(
@@ -1425,11 +1374,9 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[2];
 
             arParams[0] = new FbParameter("@SiteGuid", FbDbType.Char, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteGuid.ToString();
 
             arParams[1] = new FbParameter("@FeatureGuid", FbDbType.Char, 36);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = featureGuid.ToString();
 
             int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -1467,11 +1414,9 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[2];
 
             arParams[0] = new FbParameter("@SiteGuid", FbDbType.Char, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteGuid.ToString();
 
             arParams[1] = new FbParameter("@FeatureGuid", FbDbType.Char, 36);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = featureGuid.ToString();
 
             AdoHelper.ExecuteNonQuery(
@@ -1490,11 +1435,9 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[2];
 
             arParams[0] = new FbParameter("@SiteGuid", FbDbType.Char, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteGuid.ToString();
 
             arParams[1] = new FbParameter("@FeatureGuid", FbDbType.Char, 36);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = featureGuid.ToString();
 
             AdoHelper.ExecuteNonQuery(
@@ -1513,11 +1456,9 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[2];
 
             arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new FbParameter("@ModuleDefID", FbDbType.Integer);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = moduleDefId;
 
             AdoHelper.ExecuteNonQuery(
@@ -1578,25 +1519,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             int pageSize)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
-            //totalPages = 1;
-            //int totalRows = GetHostCount();
-
-            //if (pageSize > 0) totalPages = totalRows / pageSize;
-
-            //if (totalRows <= pageSize)
-            //{
-            //    totalPages = 1;
-            //}
-            //else
-            //{
-            //    int remainder;
-            //    Math.DivRem(totalRows, pageSize, out remainder);
-            //    if (remainder > 0)
-            //    {
-            //        totalPages += 1;
-            //    }
-            //}
-
+            
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT FIRST " + pageSize.ToString(CultureInfo.InvariantCulture) + " ");
             if (pageNumber > 1)
@@ -1924,25 +1847,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             int pageSize)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
-            //totalPages = 1;
-            //int totalRows = CountOtherSites(currentSiteId);
-
-            //if (pageSize > 0) totalPages = totalRows / pageSize;
-
-            //if (totalRows <= pageSize)
-            //{
-            //    totalPages = 1;
-            //}
-            //else
-            //{
-            //    int remainder;
-            //    Math.DivRem(totalRows, pageSize, out remainder);
-            //    if (remainder > 0)
-            //    {
-            //        totalPages += 1;
-            //    }
-            //}
-
+           
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT FIRST " + pageSize.ToString(CultureInfo.InvariantCulture) + " ");
             if (pageNumber > 1)
@@ -1969,8 +1874,6 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         public static async Task<int> GetSiteIdByHostName(string hostName)
         {
-            int siteId = -1;
-
             StringBuilder sqlCommand = new StringBuilder();
 
             FbParameter[] arParams = new FbParameter[1];
@@ -1981,6 +1884,8 @@ namespace cloudscribe.Core.Repositories.Firebird
             sqlCommand.Append("SELECT FIRST 1 SiteID ");
             sqlCommand.Append("FROM mp_SiteHosts ");
             sqlCommand.Append("WHERE HostName = @HostName ORDER BY SiteID ;");
+
+            int siteId = -1;
 
             using (DbDataReader reader = await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
@@ -2018,8 +1923,6 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         public static async Task<int> GetSiteIdByFolder(string folderName)
         {
-            int siteId = -1;
-
             StringBuilder sqlCommand = new StringBuilder();
 
             FbParameter[] arParams = new FbParameter[1];
@@ -2033,6 +1936,8 @@ namespace cloudscribe.Core.Repositories.Firebird
             sqlCommand.Append("ON ");
             sqlCommand.Append("sf.SiteGuid = s.SiteGuid ");
             sqlCommand.Append("WHERE sf.FolderName = @FolderName ORDER BY s.SiteID ;");
+
+            int siteId = -1;
 
             using (DbDataReader reader = await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
@@ -2070,8 +1975,6 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         public static int GetSiteIdByFolderNonAsync(string folderName)
         {
-            int siteId = -1;
-
             StringBuilder sqlCommand = new StringBuilder();
 
             FbParameter[] arParams = new FbParameter[1];
@@ -2085,6 +1988,8 @@ namespace cloudscribe.Core.Repositories.Firebird
             sqlCommand.Append("ON ");
             sqlCommand.Append("sf.SiteGuid = s.SiteGuid ");
             sqlCommand.Append("WHERE sf.FolderName = @FolderName ORDER BY s.SiteID ;");
+
+            int siteId = -1;
 
             using (DbDataReader reader = AdoHelper.ExecuteReader(
                 ConnectionString.GetReadConnectionString(),
@@ -2119,7 +2024,6 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             return siteId;
         }
-
 
     }
 }

@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2008-06-22
-// Last Modified:			2015-01-08
+// Last Modified:			2015-01-18
 //
 // You must not remove this notice, or any other, from this software.
 
@@ -51,49 +51,37 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[11];
 
             arParams[0] = new FbParameter("@Guid", FbDbType.Char, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid.ToString();
 
             arParams[1] = new FbParameter("@Title", FbDbType.VarChar, 50);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = title;
 
             arParams[2] = new FbParameter("@Code", FbDbType.Char, 3);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = code;
 
             arParams[3] = new FbParameter("@SymbolLeft", FbDbType.VarChar, 15);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = symbolLeft;
 
             arParams[4] = new FbParameter("@SymbolRight", FbDbType.VarChar, 15);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = symbolRight;
 
             arParams[5] = new FbParameter("@DecimalPointChar", FbDbType.Char, 1);
-            arParams[5].Direction = ParameterDirection.Input;
             arParams[5].Value = decimalPointChar;
 
             arParams[6] = new FbParameter("@ThousandsPointChar", FbDbType.Char, 1);
-            arParams[6].Direction = ParameterDirection.Input;
             arParams[6].Value = thousandsPointChar;
 
             arParams[7] = new FbParameter("@DecimalPlaces", FbDbType.Char, 1);
-            arParams[7].Direction = ParameterDirection.Input;
             arParams[7].Value = decimalPlaces;
 
             arParams[8] = new FbParameter("@Value", FbDbType.Decimal);
-            arParams[8].Direction = ParameterDirection.Input;
             arParams[8].Value = value;
 
             arParams[9] = new FbParameter("@LastModified", FbDbType.TimeStamp);
-            arParams[9].Direction = ParameterDirection.Input;
             arParams[9].Value = lastModified;
 
             arParams[10] = new FbParameter("@Created", FbDbType.TimeStamp);
-            arParams[10].Direction = ParameterDirection.Input;
             arParams[10].Value = created;
-
 
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("INSERT INTO mp_Currency (");
@@ -108,7 +96,6 @@ namespace cloudscribe.Core.Repositories.Firebird
             sqlCommand.Append("\"Value\", ");
             sqlCommand.Append("LastModified, ");
             sqlCommand.Append("Created )");
-
 
             sqlCommand.Append(" VALUES (");
             sqlCommand.Append("@Guid, ");
@@ -181,43 +168,33 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[10];
 
             arParams[0] = new FbParameter("@Guid", FbDbType.Char, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid.ToString();
 
             arParams[1] = new FbParameter("@Title", FbDbType.VarChar, 50);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = title;
 
             arParams[2] = new FbParameter("@Code", FbDbType.Char, 3);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = code;
 
             arParams[3] = new FbParameter("@SymbolLeft", FbDbType.VarChar, 15);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = symbolLeft;
 
             arParams[4] = new FbParameter("@SymbolRight", FbDbType.VarChar, 15);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = symbolRight;
 
             arParams[5] = new FbParameter("@DecimalPointChar", FbDbType.Char, 1);
-            arParams[5].Direction = ParameterDirection.Input;
             arParams[5].Value = decimalPointChar;
 
             arParams[6] = new FbParameter("@ThousandsPointChar", FbDbType.Char, 1);
-            arParams[6].Direction = ParameterDirection.Input;
             arParams[6].Value = thousandsPointChar;
 
             arParams[7] = new FbParameter("@DecimalPlaces", FbDbType.Char, 1);
-            arParams[7].Direction = ParameterDirection.Input;
             arParams[7].Value = decimalPlaces;
 
             arParams[8] = new FbParameter("@Value", FbDbType.Decimal);
-            arParams[8].Direction = ParameterDirection.Input;
             arParams[8].Value = value;
 
             arParams[9] = new FbParameter("@LastModified", FbDbType.TimeStamp);
-            arParams[9].Direction = ParameterDirection.Input;
             arParams[9].Value = lastModified;
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
@@ -244,9 +221,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@Guid", FbDbType.Char, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid.ToString();
-
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
@@ -273,7 +248,6 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@Guid", FbDbType.Char, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid.ToString();
 
             return await AdoHelper.ExecuteReaderAsync(

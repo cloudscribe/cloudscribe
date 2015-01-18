@@ -1,24 +1,22 @@
 ﻿// Author:					Joe Audette
 // Created:				    2008-11-19
-// Last Modified:			2014-08-29
+// Last Modified:			2015-01-18
 //
 // You must not remove this notice, or any other, from this software.
-
-
 
 using cloudscribe.DbHelpers.Firebird;
 using FirebirdSql.Data.FirebirdClient;
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Globalization;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.Firebird
 {
-   
     internal static class DBRedirectList
     {
-
         /// <summary>
         /// Inserts a row in the mp_RedirectList table. Returns rows affected count.
         /// </summary>
@@ -39,38 +37,28 @@ namespace cloudscribe.Core.Repositories.Firebird
             DateTime createdUtc,
             DateTime expireUtc)
         {
-
             FbParameter[] arParams = new FbParameter[7];
 
-
             arParams[0] = new FbParameter("@RowGuid", FbDbType.Char, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = rowGuid.ToString();
 
             arParams[1] = new FbParameter("@SiteGuid", FbDbType.Char, 36);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = siteGuid.ToString();
 
             arParams[2] = new FbParameter("@SiteID", FbDbType.Integer);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = siteID;
 
             arParams[3] = new FbParameter("@OldUrl", FbDbType.VarChar, 255);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = oldUrl;
 
             arParams[4] = new FbParameter("@NewUrl", FbDbType.VarChar, 255);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = newUrl;
 
             arParams[5] = new FbParameter("@CreatedUtc", FbDbType.TimeStamp);
-            arParams[5].Direction = ParameterDirection.Input;
             arParams[5].Value = createdUtc;
 
             arParams[6] = new FbParameter("@ExpireUtc", FbDbType.TimeStamp);
-            arParams[6].Direction = ParameterDirection.Input;
             arParams[6].Value = expireUtc;
-
 
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("INSERT INTO mp_RedirectList (");
@@ -130,19 +118,15 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[4];
 
             arParams[0] = new FbParameter("@RowGuid", FbDbType.Char, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = rowGuid.ToString();
 
             arParams[1] = new FbParameter("@OldUrl", FbDbType.VarChar, 255);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = oldUrl;
 
             arParams[2] = new FbParameter("@NewUrl", FbDbType.VarChar, 255);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = newUrl;
 
             arParams[3] = new FbParameter("@ExpireUtc", FbDbType.TimeStamp);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = expireUtc;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -169,9 +153,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@RowGuid", FbDbType.Char, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = rowGuid.ToString();
-
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 ConnectionString.GetWriteConnectionString(),
@@ -197,7 +179,6 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@RowGuid", FbDbType.Char, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = rowGuid.ToString();
 
             return AdoHelper.ExecuteReader(
@@ -225,15 +206,12 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[3];
 
             arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new FbParameter("@OldUrl", FbDbType.VarChar, 255);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = oldUrl;
 
             arParams[2] = new FbParameter("@CurrentTime", FbDbType.TimeStamp);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = DateTime.UtcNow;
 
             return AdoHelper.ExecuteReader(
@@ -261,11 +239,9 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[2];
 
             arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new FbParameter("@OldUrl", FbDbType.VarChar, 255);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = oldUrl;
 
             int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -292,7 +268,6 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -351,7 +326,6 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             return AdoHelper.ExecuteReader(

@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-11
-// Last Modified:			2015-01-14
+// Last Modified:			2015-01-18
 // 
 //
 // You must not remove this notice, or any other, from this software.
@@ -17,7 +17,6 @@ namespace cloudscribe.Core.Repositories.Firebird
 {
     internal static class DBUserClaims
     {
-
         public static async Task<int> Create(
             string userId,
             string claimType,
@@ -195,7 +194,5 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         }
 
-        
-        
     }
 }

@@ -1,6 +1,6 @@
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-01-08
+// Last Modified:			2015-01-18
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -13,13 +13,10 @@ using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
 
-
 namespace cloudscribe.Core.Repositories.Firebird
 {
-    
     internal static class DBRoles
     {
-
         public static async Task<int> RoleCreate(
             Guid roleGuid,
             Guid siteGuid,
@@ -29,23 +26,18 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[5];
 
             arParams[0] = new FbParameter(":SiteID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new FbParameter(":RoleName", FbDbType.VarChar, 50);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = roleName;
 
             arParams[2] = new FbParameter(":DisplayName", FbDbType.VarChar, 50);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = roleName;
 
             arParams[3] = new FbParameter(":SiteGuid", FbDbType.Char, 36);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = siteGuid.ToString();
 
             arParams[4] = new FbParameter(":RoleGuid", FbDbType.Char, 36);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = roleGuid.ToString();
 
             object result = await AdoHelper.ExecuteScalarAsync(
@@ -71,11 +63,9 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[2];
 
             arParams[0] = new FbParameter("@RoleID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = roleId;
 
             arParams[1] = new FbParameter("@RoleName", FbDbType.VarChar, 50);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = roleName;
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
@@ -96,7 +86,6 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@RoleID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = roleId;
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
@@ -136,7 +125,6 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@RoleID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = roleId;
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
@@ -158,7 +146,6 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@RoleID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = roleId;
 
             return await AdoHelper.ExecuteReaderAsync(
@@ -179,11 +166,9 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[2];
 
             arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
-            //arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new FbParameter("@RoleName", FbDbType.VarChar, 50);
-            //arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = roleName;
 
             return await AdoHelper.ExecuteReaderAsync(
@@ -200,15 +185,12 @@ namespace cloudscribe.Core.Repositories.Firebird
             sqlCommand.Append("FROM	mp_Roles ");
             sqlCommand.Append("WHERE SiteID = @SiteID AND RoleName = @RoleName ; ");
 
-
             FbParameter[] arParams = new FbParameter[2];
 
             arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new FbParameter("@RoleName", FbDbType.VarChar, 50);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = roleName;
 
             object result = await AdoHelper.ExecuteScalarAsync(
@@ -256,7 +238,6 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             return AdoHelper.ExecuteReader(
@@ -284,7 +265,6 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@RoleID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = roleId;
 
             return AdoHelper.ExecuteReader(
@@ -327,15 +307,12 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[3];
 
             arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new FbParameter("@RoleID", FbDbType.Integer);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = roleId;
 
             arParams[2] = new FbParameter("@SearchInput", FbDbType.VarChar, 50);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = "%" + searchInput + "%";
 
             object result = await AdoHelper.ExecuteScalarAsync(
@@ -416,15 +393,12 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[3];
 
             arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new FbParameter("@RoleID", FbDbType.Integer);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = roleId;
 
             arParams[2] = new FbParameter("@SearchInput", FbDbType.VarChar, 50);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = "%" + searchInput + "%";
 
             return await AdoHelper.ExecuteReaderAsync(
@@ -469,15 +443,12 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[3];
 
             arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new FbParameter("@RoleID", FbDbType.Integer);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = roleId;
 
             arParams[2] = new FbParameter("@SearchInput", FbDbType.VarChar, 50);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = "%" + searchInput + "%";
 
             object result = await AdoHelper.ExecuteScalarAsync(
@@ -560,15 +531,12 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[3];
 
             arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new FbParameter("@RoleID", FbDbType.Integer);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = roleId;
 
             arParams[2] = new FbParameter("@SearchInput", FbDbType.VarChar, 50);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = "%" + searchInput + "%";
 
             return await AdoHelper.ExecuteReaderAsync(
@@ -597,11 +565,9 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[2];
 
             arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new FbParameter("@UserID", FbDbType.Integer);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = userId;
 
             return AdoHelper.ExecuteReader(
@@ -623,19 +589,15 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[4];
 
             arParams[0] = new FbParameter(":UserID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
 
             arParams[1] = new FbParameter(":RoleID", FbDbType.Integer);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = roleId;
 
             arParams[2] = new FbParameter(":UserGuid", FbDbType.Char, 36);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = roleGuid.ToString();
 
             arParams[3] = new FbParameter(":RoleGuid", FbDbType.Char, 36);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = roleGuid.ToString();
 
             object result = await AdoHelper.ExecuteScalarAsync(
@@ -661,11 +623,9 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[2];
 
             arParams[0] = new FbParameter("@RoleID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = roleId;
 
             arParams[1] = new FbParameter("@UserID", FbDbType.Integer);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = userId;
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
@@ -689,7 +649,6 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -723,11 +682,9 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[2];
 
             arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new FbParameter("@SearchInput", FbDbType.VarChar, 50);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = "%" + searchInput + "%";
 
             object result = await AdoHelper.ExecuteScalarAsync(
@@ -815,11 +772,9 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[2];
 
             arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new FbParameter("@SearchInput", FbDbType.VarChar, 50);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = "%" + searchInput + "%";
 
             //arParams[0] = new FbParameter("@CountryGuid", FbDbType.Char, 36);
@@ -833,12 +788,6 @@ namespace cloudscribe.Core.Repositories.Firebird
                 arParams);
 
         }
-
-
-
-        
-
-
 
     }
 }

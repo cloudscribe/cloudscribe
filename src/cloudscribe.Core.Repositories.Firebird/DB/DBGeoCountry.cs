@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2008-06-22
-// Last Modified:			2014-08-29
+// Last Modified:			2015-08118
 //
 // You must not remove this notice, or any other, from this software.
 
@@ -13,13 +13,10 @@ using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
 
-
 namespace cloudscribe.Core.Repositories.Firebird
 {
-   
     internal static class DBGeoCountry
     {
-
         /// <summary>
         /// Inserts a row in the mp_GeoCountry table. Returns rows affected count.
         /// </summary>
@@ -42,23 +39,17 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             FbParameter[] arParams = new FbParameter[4];
 
-
             arParams[0] = new FbParameter("@Guid", FbDbType.Char, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid.ToString();
 
             arParams[1] = new FbParameter("@Name", FbDbType.VarChar, 255);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = name;
 
             arParams[2] = new FbParameter("@ISOCode2", FbDbType.Char, 2);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = iSOCode2;
 
             arParams[3] = new FbParameter("@ISOCode3", FbDbType.Char, 3);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = iSOCode3;
-
 
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("INSERT INTO mp_GeoCountry (");
@@ -66,7 +57,6 @@ namespace cloudscribe.Core.Repositories.Firebird
             sqlCommand.Append("Name, ");
             sqlCommand.Append("ISOCode2, ");
             sqlCommand.Append("ISOCode3 )");
-
 
             sqlCommand.Append(" VALUES (");
             sqlCommand.Append("@Guid, ");
@@ -115,24 +105,20 @@ namespace cloudscribe.Core.Repositories.Firebird
             sqlCommand.Append("Guid = @Guid ");
             sqlCommand.Append("OR Guid = UPPER(@Guid) ");
             sqlCommand.Append(";");
+
             FbParameter[] arParams = new FbParameter[4];
 
             arParams[0] = new FbParameter("@Guid", FbDbType.Char, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid.ToString();
 
             arParams[1] = new FbParameter("@Name", FbDbType.VarChar, 255);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = name;
 
             arParams[2] = new FbParameter("@ISOCode2", FbDbType.Char, 2);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = iSOCode2;
 
             arParams[3] = new FbParameter("@ISOCode3", FbDbType.Char, 3);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = iSOCode3;
-
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
@@ -158,9 +144,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@Guid", FbDbType.Char, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid.ToString();
-
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 ConnectionString.GetWriteConnectionString(),
@@ -187,7 +171,6 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@Guid", FbDbType.Char, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid.ToString();
 
             return await AdoHelper.ExecuteReaderAsync(
@@ -213,7 +196,6 @@ namespace cloudscribe.Core.Repositories.Firebird
             FbParameter[] arParams = new FbParameter[1];
 
             arParams[0] = new FbParameter("@ISOCode2", FbDbType.Char, 2);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = countryISOCode2;
 
             return AdoHelper.ExecuteReader(
