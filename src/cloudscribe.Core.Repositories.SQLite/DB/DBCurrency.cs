@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2008-06-22
-// Last Modified:			2015-01-08
+// Last Modified:			2015-01-19
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -17,13 +17,6 @@ namespace cloudscribe.Core.Repositories.SQLite
    
     internal static class DBCurrency
     {
-       
-        private static string GetConnectionString()
-        {
-            return ConnectionString.GetConnectionString();
-        }
-
-
         /// <summary>
         /// Inserts a row in the mp_Currency table. Returns rows affected count.
         /// </summary>
@@ -88,51 +81,40 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[11];
 
             arParams[0] = new SQLiteParameter(":Guid", DbType.String, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid.ToString();
 
             arParams[1] = new SQLiteParameter(":Title", DbType.String, 50);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = title;
 
             arParams[2] = new SQLiteParameter(":Code", DbType.String, 3);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = code;
 
             arParams[3] = new SQLiteParameter(":SymbolLeft", DbType.String, 15);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = symbolLeft;
 
             arParams[4] = new SQLiteParameter(":SymbolRight", DbType.String, 15);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = symbolRight;
 
             arParams[5] = new SQLiteParameter(":DecimalPointChar", DbType.String, 1);
-            arParams[5].Direction = ParameterDirection.Input;
             arParams[5].Value = decimalPointChar;
 
             arParams[6] = new SQLiteParameter(":ThousandsPointChar", DbType.String, 1);
-            arParams[6].Direction = ParameterDirection.Input;
             arParams[6].Value = thousandsPointChar;
 
             arParams[7] = new SQLiteParameter(":DecimalPlaces", DbType.String, 1);
-            arParams[7].Direction = ParameterDirection.Input;
             arParams[7].Value = decimalPlaces;
 
             arParams[8] = new SQLiteParameter(":Value", DbType.Decimal);
-            arParams[8].Direction = ParameterDirection.Input;
             arParams[8].Value = value;
 
             arParams[9] = new SQLiteParameter(":LastModified", DbType.DateTime);
-            arParams[9].Direction = ParameterDirection.Input;
             arParams[9].Value = lastModified;
 
             arParams[10] = new SQLiteParameter(":Created", DbType.DateTime);
-            arParams[10].Direction = ParameterDirection.Input;
             arParams[10].Value = created;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
-                GetConnectionString(), 
+                ConnectionString.GetConnectionString(), 
                 sqlCommand.ToString(), 
                 arParams);
 
@@ -193,47 +175,40 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[10];
 
             arParams[0] = new SQLiteParameter(":Guid", DbType.String, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid.ToString();
 
             arParams[1] = new SQLiteParameter(":Title", DbType.String, 50);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = title;
 
             arParams[2] = new SQLiteParameter(":Code", DbType.String, 3);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = code;
 
             arParams[3] = new SQLiteParameter(":SymbolLeft", DbType.String, 15);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = symbolLeft;
 
             arParams[4] = new SQLiteParameter(":SymbolRight", DbType.String, 15);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = symbolRight;
 
             arParams[5] = new SQLiteParameter(":DecimalPointChar", DbType.String, 1);
-            arParams[5].Direction = ParameterDirection.Input;
             arParams[5].Value = decimalPointChar;
 
             arParams[6] = new SQLiteParameter(":ThousandsPointChar", DbType.String, 1);
-            arParams[6].Direction = ParameterDirection.Input;
             arParams[6].Value = thousandsPointChar;
 
             arParams[7] = new SQLiteParameter(":DecimalPlaces", DbType.String, 1);
-            arParams[7].Direction = ParameterDirection.Input;
             arParams[7].Value = decimalPlaces;
 
             arParams[8] = new SQLiteParameter(":Value", DbType.Decimal);
-            arParams[8].Direction = ParameterDirection.Input;
             arParams[8].Value = value;
 
             arParams[9] = new SQLiteParameter(":LastModified", DbType.DateTime);
-            arParams[9].Direction = ParameterDirection.Input;
             arParams[9].Value = lastModified;
 
-          
-            int rowsAffected = AdoHelper.ExecuteNonQuery(GetConnectionString(), sqlCommand.ToString(), arParams);
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
+                ConnectionString.GetConnectionString(), 
+                sqlCommand.ToString(), 
+                arParams);
+
             return (rowsAffected > -1);
 
         }
@@ -254,11 +229,13 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[1];
 
             arParams[0] = new SQLiteParameter(":Guid", DbType.String, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid.ToString();
 
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
+                ConnectionString.GetConnectionString(), 
+                sqlCommand.ToString(), 
+                arParams);
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(GetConnectionString(), sqlCommand.ToString(), arParams);
             return (rowsAffected > 0);
 
         }
@@ -279,11 +256,10 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[1];
 
             arParams[0] = new SQLiteParameter(":Guid", DbType.String, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid.ToString();
 
             return AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
 
@@ -300,7 +276,7 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append(";");
 
             return AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 null);
         }

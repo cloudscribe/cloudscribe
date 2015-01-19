@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2010-03-10
-// Last Modified:			2015-01-16
+// Last Modified:			2015-01-19
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -17,11 +17,6 @@ namespace cloudscribe.Core.Repositories.SqlCe
 {
     internal static class DBSiteSettings
     {
-        private static String GetConnectionString()
-        {
-            return ConnectionString.GetConnectionString();
-        }
-        
         public static int Create(
             Guid siteGuid,
             String siteName,
@@ -197,39 +192,30 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[58];
 
             arParams[0] = new SqlCeParameter("@SiteGuid", SqlDbType.UniqueIdentifier);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteGuid;
 
             arParams[1] = new SqlCeParameter("@SiteAlias", SqlDbType.NVarChar);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = string.Empty;
 
             arParams[2] = new SqlCeParameter("@SiteName", SqlDbType.NVarChar);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = siteName;
 
             arParams[3] = new SqlCeParameter("@Skin", SqlDbType.NVarChar);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = skin;
 
             arParams[4] = new SqlCeParameter("@Logo", SqlDbType.NVarChar);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = logo;
 
             arParams[5] = new SqlCeParameter("@Icon", SqlDbType.NVarChar);
-            arParams[5].Direction = ParameterDirection.Input;
             arParams[5].Value = icon;
 
             arParams[6] = new SqlCeParameter("@AllowUserSkins", SqlDbType.Bit);
-            arParams[6].Direction = ParameterDirection.Input;
             arParams[6].Value = allowUserSkins;
 
             arParams[7] = new SqlCeParameter("@AllowPageSkins", SqlDbType.Bit);
-            arParams[7].Direction = ParameterDirection.Input;
             arParams[7].Value = allowPageSkins;
 
             arParams[8] = new SqlCeParameter("@AllowHideMenuOnPages", SqlDbType.Bit);
-            arParams[8].Direction = ParameterDirection.Input;
             arParams[8].Value = allowHideMenuOnPages;
 
             arParams[9] = new SqlCeParameter("@AllowNewRegistration", SqlDbType.Bit);
@@ -237,127 +223,96 @@ namespace cloudscribe.Core.Repositories.SqlCe
             arParams[9].Value = allowNewRegistration;
 
             arParams[10] = new SqlCeParameter("@UseSecureRegistration", SqlDbType.Bit);
-            arParams[10].Direction = ParameterDirection.Input;
             arParams[10].Value = useSecureRegistration;
 
             arParams[11] = new SqlCeParameter("@UseSSLOnAllPages", SqlDbType.Bit);
-            arParams[11].Direction = ParameterDirection.Input;
             arParams[11].Value = useSslOnAllPages;
 
             arParams[12] = new SqlCeParameter("@DefaultPageKeyWords", SqlDbType.NVarChar);
-            arParams[12].Direction = ParameterDirection.Input;
             arParams[12].Value = defaultPageKeywords;
 
             arParams[13] = new SqlCeParameter("@DefaultPageDescription", SqlDbType.NVarChar);
-            arParams[13].Direction = ParameterDirection.Input;
             arParams[13].Value = defaultPageDescription;
 
             arParams[14] = new SqlCeParameter("@DefaultPageEncoding", SqlDbType.NVarChar);
-            arParams[14].Direction = ParameterDirection.Input;
             arParams[14].Value = defaultPageEncoding;
 
             arParams[15] = new SqlCeParameter("@DefaultAdditionalMetaTags", SqlDbType.NVarChar);
-            arParams[15].Direction = ParameterDirection.Input;
             arParams[15].Value = defaultAdditionalMetaTags;
 
             arParams[16] = new SqlCeParameter("@IsServerAdminSite", SqlDbType.Bit);
-            arParams[16].Direction = ParameterDirection.Input;
             arParams[16].Value = isServerAdminSite;
 
             arParams[17] = new SqlCeParameter("@UseLdapAuth", SqlDbType.Bit);
-            arParams[17].Direction = ParameterDirection.Input;
             arParams[17].Value = useLdapAuth;
 
             arParams[18] = new SqlCeParameter("@AutoCreateLdapUserOnFirstLogin", SqlDbType.Bit);
-            arParams[18].Direction = ParameterDirection.Input;
             arParams[18].Value = autoCreateLdapUserOnFirstLogin;
 
             arParams[19] = new SqlCeParameter("@LdapServer", SqlDbType.NVarChar);
-            arParams[19].Direction = ParameterDirection.Input;
             arParams[19].Value = ldapServer;
 
             arParams[20] = new SqlCeParameter("@LdapPort", SqlDbType.Int);
-            arParams[20].Direction = ParameterDirection.Input;
             arParams[20].Value = ldapPort;
 
             arParams[21] = new SqlCeParameter("@LdapDomain", SqlDbType.NVarChar);
-            arParams[21].Direction = ParameterDirection.Input;
             arParams[21].Value = ldapDomain;
 
             arParams[22] = new SqlCeParameter("@LdapRootDN", SqlDbType.NVarChar);
-            arParams[22].Direction = ParameterDirection.Input;
             arParams[22].Value = ldapRootDN;
 
             arParams[23] = new SqlCeParameter("@LdapUserDNKey", SqlDbType.NVarChar);
-            arParams[23].Direction = ParameterDirection.Input;
             arParams[23].Value = ldapUserDNKey;
 
             arParams[24] = new SqlCeParameter("@ReallyDeleteUsers", SqlDbType.Bit);
-            arParams[24].Direction = ParameterDirection.Input;
             arParams[24].Value = reallyDeleteUsers;
 
             arParams[25] = new SqlCeParameter("@UseEmailForLogin", SqlDbType.Bit);
-            arParams[25].Direction = ParameterDirection.Input;
             arParams[25].Value = useEmailForLogin;
 
             arParams[26] = new SqlCeParameter("@AllowUserFullNameChange", SqlDbType.Bit);
-            arParams[26].Direction = ParameterDirection.Input;
             arParams[26].Value = allowUserFullNameChange;
 
             arParams[27] = new SqlCeParameter("@EditorSkin", SqlDbType.NVarChar);
-            arParams[27].Direction = ParameterDirection.Input;
             arParams[27].Value = editorSkin;
 
             arParams[28] = new SqlCeParameter("@DefaultFriendlyUrlPatternEnum", SqlDbType.NVarChar);
-            arParams[28].Direction = ParameterDirection.Input;
             arParams[28].Value = defaultFriendlyUrlPattern;
 
             arParams[29] = new SqlCeParameter("@AllowPasswordRetrieval", SqlDbType.Bit);
-            arParams[29].Direction = ParameterDirection.Input;
             arParams[29].Value = true;
 
             arParams[30] = new SqlCeParameter("@AllowPasswordReset", SqlDbType.Bit);
-            arParams[30].Direction = ParameterDirection.Input;
             arParams[30].Value = true;
 
             arParams[31] = new SqlCeParameter("@RequiresQuestionAndAnswer", SqlDbType.Bit);
-            arParams[31].Direction = ParameterDirection.Input;
             arParams[31].Value = true;
 
             arParams[32] = new SqlCeParameter("@MaxInvalidPasswordAttempts", SqlDbType.Int);
-            arParams[32].Direction = ParameterDirection.Input;
             arParams[32].Value = 5;
 
             arParams[33] = new SqlCeParameter("@PasswordAttemptWindowMinutes", SqlDbType.Int);
-            arParams[33].Direction = ParameterDirection.Input;
             arParams[33].Value = 5;
 
             arParams[34] = new SqlCeParameter("@RequiresUniqueEmail", SqlDbType.Bit);
-            arParams[34].Direction = ParameterDirection.Input;
             arParams[34].Value = true;
 
             arParams[35] = new SqlCeParameter("@PasswordFormat", SqlDbType.Int);
-            arParams[35].Direction = ParameterDirection.Input;
             arParams[35].Value = 0;
 
             arParams[36] = new SqlCeParameter("@MinRequiredPasswordLength", SqlDbType.Int);
-            arParams[36].Direction = ParameterDirection.Input;
             arParams[36].Value = 7;
 
             arParams[37] = new SqlCeParameter("@MinReqNonAlphaChars", SqlDbType.Int);
-            arParams[37].Direction = ParameterDirection.Input;
             arParams[37].Value = 0;
 
             arParams[38] = new SqlCeParameter("@PwdStrengthRegex", SqlDbType.NText);
-            arParams[38].Direction = ParameterDirection.Input;
             arParams[38].Value = string.Empty;
 
             arParams[39] = new SqlCeParameter("@DefaultEmailFromAddress", SqlDbType.NVarChar);
-            arParams[39].Direction = ParameterDirection.Input;
             arParams[39].Value = string.Empty;
 
             arParams[40] = new SqlCeParameter("@EnableMyPageFeature", SqlDbType.Bit);
-            arParams[40].Direction = ParameterDirection.Input;
             arParams[40].Value = enableMyPageFeature;
 
             arParams[41] = new SqlCeParameter("@EditorProvider", SqlDbType.NVarChar);
@@ -365,77 +320,60 @@ namespace cloudscribe.Core.Repositories.SqlCe
             arParams[41].Value = editorProvider;
 
             arParams[42] = new SqlCeParameter("@CaptchaProvider", SqlDbType.NVarChar);
-            arParams[42].Direction = ParameterDirection.Input;
             arParams[42].Value = captchaProvider;
 
             arParams[43] = new SqlCeParameter("@DatePickerProvider", SqlDbType.NVarChar);
-            arParams[43].Direction = ParameterDirection.Input;
             arParams[43].Value = datePickerProvider;
 
             arParams[44] = new SqlCeParameter("@RecaptchaPrivateKey", SqlDbType.NVarChar);
-            arParams[44].Direction = ParameterDirection.Input;
             arParams[44].Value = recaptchaPrivateKey;
 
             arParams[45] = new SqlCeParameter("@RecaptchaPublicKey", SqlDbType.NVarChar);
-            arParams[45].Direction = ParameterDirection.Input;
             arParams[45].Value = recaptchaPublicKey;
 
             arParams[46] = new SqlCeParameter("@WordpressAPIKey", SqlDbType.NVarChar);
-            arParams[46].Direction = ParameterDirection.Input;
             arParams[46].Value = wordpressApiKey;
 
             arParams[47] = new SqlCeParameter("@WindowsLiveAppID", SqlDbType.NVarChar);
-            arParams[47].Direction = ParameterDirection.Input;
             arParams[47].Value = windowsLiveAppId;
 
             arParams[48] = new SqlCeParameter("@WindowsLiveKey", SqlDbType.NVarChar);
-            arParams[48].Direction = ParameterDirection.Input;
             arParams[48].Value = windowsLiveKey;
 
             arParams[49] = new SqlCeParameter("@AllowOpenIDAuth", SqlDbType.Bit);
-            arParams[49].Direction = ParameterDirection.Input;
             arParams[49].Value = allowOpenIdAuth;
 
             arParams[50] = new SqlCeParameter("@AllowWindowsLiveAuth", SqlDbType.Bit);
-            arParams[50].Direction = ParameterDirection.Input;
             arParams[50].Value = allowWindowsLiveAuth;
 
             arParams[51] = new SqlCeParameter("@GmapApiKey", SqlDbType.NVarChar);
-            arParams[51].Direction = ParameterDirection.Input;
             arParams[51].Value = gmapApiKey;
 
             arParams[52] = new SqlCeParameter("@ApiKeyExtra1", SqlDbType.NVarChar);
-            arParams[52].Direction = ParameterDirection.Input;
             arParams[52].Value = apiKeyExtra1;
 
             arParams[53] = new SqlCeParameter("@ApiKeyExtra2", SqlDbType.NVarChar);
-            arParams[53].Direction = ParameterDirection.Input;
             arParams[53].Value = apiKeyExtra2;
 
             arParams[54] = new SqlCeParameter("@ApiKeyExtra3", SqlDbType.NVarChar);
-            arParams[54].Direction = ParameterDirection.Input;
             arParams[54].Value = apiKeyExtra3;
 
             arParams[55] = new SqlCeParameter("@ApiKeyExtra4", SqlDbType.NVarChar);
-            arParams[55].Direction = ParameterDirection.Input;
             arParams[55].Value = apiKeyExtra4;
 
             arParams[56] = new SqlCeParameter("@ApiKeyExtra5", SqlDbType.NVarChar);
-            arParams[56].Direction = ParameterDirection.Input;
             arParams[56].Value = apiKeyExtra5;
 
             arParams[57] = new SqlCeParameter("@DisableDbAuth", SqlDbType.Bit);
-            arParams[57].Direction = ParameterDirection.Input;
             arParams[57].Value = disableDbAuth;
 
             int newId = Convert.ToInt32(AdoHelper.DoInsertGetIdentitiy(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams));
 
             return newId;
-
 
         }
 
@@ -544,191 +482,145 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[47];
 
             arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new SqlCeParameter("@SiteName", SqlDbType.NVarChar);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = siteName;
 
             arParams[2] = new SqlCeParameter("@Skin", SqlDbType.NVarChar);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = skin;
 
             arParams[3] = new SqlCeParameter("@Logo", SqlDbType.NVarChar);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = logo;
 
             arParams[4] = new SqlCeParameter("@Icon", SqlDbType.NVarChar);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = icon;
 
             arParams[5] = new SqlCeParameter("@AllowUserSkins", SqlDbType.Bit);
-            arParams[5].Direction = ParameterDirection.Input;
             arParams[5].Value = allowUserSkins;
 
             arParams[6] = new SqlCeParameter("@AllowPageSkins", SqlDbType.Bit);
-            arParams[6].Direction = ParameterDirection.Input;
             arParams[6].Value = allowPageSkins;
 
             arParams[7] = new SqlCeParameter("@AllowHideMenuOnPages", SqlDbType.Bit);
-            arParams[7].Direction = ParameterDirection.Input;
             arParams[7].Value = allowHideMenuOnPages;
 
             arParams[8] = new SqlCeParameter("@AllowNewRegistration", SqlDbType.Bit);
-            arParams[8].Direction = ParameterDirection.Input;
             arParams[8].Value = allowNewRegistration;
 
             arParams[9] = new SqlCeParameter("@UseSecureRegistration", SqlDbType.Bit);
-            arParams[9].Direction = ParameterDirection.Input;
             arParams[9].Value = useSecureRegistration;
 
             arParams[10] = new SqlCeParameter("@UseSSLOnAllPages", SqlDbType.Bit);
-            arParams[10].Direction = ParameterDirection.Input;
             arParams[10].Value = useSslOnAllPages;
 
             arParams[11] = new SqlCeParameter("@DefaultPageKeyWords", SqlDbType.NVarChar);
-            arParams[11].Direction = ParameterDirection.Input;
             arParams[11].Value = defaultPageKeywords;
 
             arParams[12] = new SqlCeParameter("@DefaultPageDescription", SqlDbType.NVarChar);
-            arParams[12].Direction = ParameterDirection.Input;
             arParams[12].Value = defaultPageDescription;
 
             arParams[13] = new SqlCeParameter("@DefaultPageEncoding", SqlDbType.NVarChar);
-            arParams[13].Direction = ParameterDirection.Input;
             arParams[13].Value = defaultPageEncoding;
 
             arParams[14] = new SqlCeParameter("@DefaultAdditionalMetaTags", SqlDbType.NVarChar);
-            arParams[14].Direction = ParameterDirection.Input;
             arParams[14].Value = defaultAdditionalMetaTags;
 
             arParams[15] = new SqlCeParameter("@IsServerAdminSite", SqlDbType.Bit);
-            arParams[15].Direction = ParameterDirection.Input;
             arParams[15].Value = isServerAdminSite;
 
             arParams[16] = new SqlCeParameter("@UseLdapAuth", SqlDbType.Bit);
-            arParams[16].Direction = ParameterDirection.Input;
             arParams[16].Value = useLdapAuth;
 
             arParams[17] = new SqlCeParameter("@AutoCreateLdapUserOnFirstLogin", SqlDbType.Bit);
-            arParams[17].Direction = ParameterDirection.Input;
             arParams[17].Value = autoCreateLdapUserOnFirstLogin;
 
             arParams[18] = new SqlCeParameter("@LdapServer", SqlDbType.NVarChar);
-            arParams[18].Direction = ParameterDirection.Input;
             arParams[18].Value = ldapServer;
 
             arParams[19] = new SqlCeParameter("@LdapPort", SqlDbType.Int);
-            arParams[19].Direction = ParameterDirection.Input;
             arParams[19].Value = ldapPort;
 
             arParams[20] = new SqlCeParameter("@LdapDomain", SqlDbType.NVarChar);
-            arParams[20].Direction = ParameterDirection.Input;
             arParams[20].Value = ldapDomain;
 
             arParams[22] = new SqlCeParameter("@LdapRootDN", SqlDbType.NVarChar);
-            arParams[22].Direction = ParameterDirection.Input;
             arParams[22].Value = ldapRootDN;
 
             arParams[23] = new SqlCeParameter("@LdapUserDNKey", SqlDbType.NVarChar);
-            arParams[23].Direction = ParameterDirection.Input;
             arParams[23].Value = ldapUserDNKey;
 
             arParams[24] = new SqlCeParameter("@ReallyDeleteUsers", SqlDbType.Bit);
-            arParams[24].Direction = ParameterDirection.Input;
             arParams[24].Value = reallyDeleteUsers;
 
             arParams[25] = new SqlCeParameter("@UseEmailForLogin", SqlDbType.Bit);
-            arParams[25].Direction = ParameterDirection.Input;
             arParams[25].Value = useEmailForLogin;
 
             arParams[26] = new SqlCeParameter("@AllowUserFullNameChange", SqlDbType.Bit);
-            arParams[26].Direction = ParameterDirection.Input;
             arParams[26].Value = allowUserFullNameChange;
 
             arParams[27] = new SqlCeParameter("@EditorSkin", SqlDbType.NVarChar);
-            arParams[27].Direction = ParameterDirection.Input;
             arParams[27].Value = editorSkin;
 
             arParams[28] = new SqlCeParameter("@DefaultFriendlyUrlPatternEnum", SqlDbType.NVarChar);
-            arParams[28].Direction = ParameterDirection.Input;
             arParams[28].Value = defaultFriendlyUrlPattern;
 
             arParams[29] = new SqlCeParameter("@EnableMyPageFeature", SqlDbType.Bit);
-            arParams[29].Direction = ParameterDirection.Input;
             arParams[29].Value = enableMyPageFeature;
 
             arParams[30] = new SqlCeParameter("@EditorProvider", SqlDbType.NVarChar);
-            arParams[30].Direction = ParameterDirection.Input;
             arParams[30].Value = editorProvider;
 
             arParams[31] = new SqlCeParameter("@CaptchaProvider", SqlDbType.NVarChar);
-            arParams[31].Direction = ParameterDirection.Input;
             arParams[31].Value = captchaProvider;
 
             arParams[32] = new SqlCeParameter("@DatePickerProvider", SqlDbType.NVarChar);
-            arParams[32].Direction = ParameterDirection.Input;
             arParams[32].Value = datePickerProvider;
 
             arParams[33] = new SqlCeParameter("@RecaptchaPrivateKey", SqlDbType.NVarChar);
-            arParams[33].Direction = ParameterDirection.Input;
             arParams[33].Value = recaptchaPrivateKey;
 
             arParams[34] = new SqlCeParameter("@RecaptchaPublicKey", SqlDbType.NVarChar);
-            arParams[34].Direction = ParameterDirection.Input;
             arParams[34].Value = recaptchaPublicKey;
 
             arParams[35] = new SqlCeParameter("@WordpressAPIKey", SqlDbType.NVarChar);
-            arParams[35].Direction = ParameterDirection.Input;
             arParams[35].Value = wordpressApiKey;
 
             arParams[36] = new SqlCeParameter("@WindowsLiveAppID", SqlDbType.NVarChar);
-            arParams[36].Direction = ParameterDirection.Input;
             arParams[36].Value = windowsLiveAppId;
 
             arParams[37] = new SqlCeParameter("@WindowsLiveKey", SqlDbType.NVarChar);
-            arParams[37].Direction = ParameterDirection.Input;
             arParams[37].Value = windowsLiveKey;
 
             arParams[38] = new SqlCeParameter("@AllowOpenIDAuth", SqlDbType.Bit);
-            arParams[38].Direction = ParameterDirection.Input;
             arParams[38].Value = allowOpenIdAuth;
 
             arParams[39] = new SqlCeParameter("@AllowWindowsLiveAuth", SqlDbType.Bit);
-            arParams[39].Direction = ParameterDirection.Input;
             arParams[39].Value = allowWindowsLiveAuth;
 
             arParams[40] = new SqlCeParameter("@GmapApiKey", SqlDbType.NVarChar);
-            arParams[40].Direction = ParameterDirection.Input;
             arParams[40].Value = gmapApiKey;
 
             arParams[41] = new SqlCeParameter("@ApiKeyExtra1", SqlDbType.NVarChar);
-            arParams[41].Direction = ParameterDirection.Input;
             arParams[41].Value = apiKeyExtra1;
 
             arParams[42] = new SqlCeParameter("@ApiKeyExtra2", SqlDbType.NVarChar);
-            arParams[42].Direction = ParameterDirection.Input;
             arParams[42].Value = apiKeyExtra2;
 
             arParams[43] = new SqlCeParameter("@ApiKeyExtra3", SqlDbType.NVarChar);
-            arParams[43].Direction = ParameterDirection.Input;
             arParams[43].Value = apiKeyExtra3;
 
             arParams[44] = new SqlCeParameter("@ApiKeyExtra4", SqlDbType.NVarChar);
-            arParams[44].Direction = ParameterDirection.Input;
             arParams[44].Value = apiKeyExtra4;
 
             arParams[45] = new SqlCeParameter("@ApiKeyExtra5", SqlDbType.NVarChar);
-            arParams[45].Direction = ParameterDirection.Input;
             arParams[45].Value = apiKeyExtra5;
 
             arParams[46] = new SqlCeParameter("@DisableDbAuth", SqlDbType.Bit);
-            arParams[46].Direction = ParameterDirection.Input;
             arParams[46].Value = disableDbAuth;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -775,55 +667,43 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[12];
 
             arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new SqlCeParameter("@AllowPasswordRetrieval", SqlDbType.Bit);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = allowPasswordRetrieval;
 
             arParams[2] = new SqlCeParameter("@AllowPasswordReset", SqlDbType.Bit);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = allowPasswordReset;
 
             arParams[3] = new SqlCeParameter("@RequiresQuestionAndAnswer", SqlDbType.Bit);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = requiresQuestionAndAnswer;
 
             arParams[4] = new SqlCeParameter("@MaxInvalidPasswordAttempts", SqlDbType.Int);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = maxInvalidPasswordAttempts;
 
             arParams[5] = new SqlCeParameter("@PasswordAttemptWindowMinutes", SqlDbType.Int);
-            arParams[5].Direction = ParameterDirection.Input;
             arParams[5].Value = passwordAttemptWindowMinutes;
 
             arParams[6] = new SqlCeParameter("@RequiresUniqueEmail", SqlDbType.Bit);
-            arParams[6].Direction = ParameterDirection.Input;
             arParams[6].Value = requiresUniqueEmail;
 
             arParams[7] = new SqlCeParameter("@PasswordFormat", SqlDbType.Int);
-            arParams[7].Direction = ParameterDirection.Input;
             arParams[7].Value = passwordFormat;
 
             arParams[8] = new SqlCeParameter("@MinRequiredPasswordLength", SqlDbType.Int);
-            arParams[8].Direction = ParameterDirection.Input;
             arParams[8].Value = minRequiredPasswordLength;
 
             arParams[9] = new SqlCeParameter("@MinReqNonAlphaChars", SqlDbType.Int);
-            arParams[9].Direction = ParameterDirection.Input;
             arParams[9].Value = minRequiredNonAlphanumericCharacters;
 
             arParams[10] = new SqlCeParameter("@PwdStrengthRegex", SqlDbType.NText);
-            arParams[10].Direction = ParameterDirection.Input;
             arParams[10].Value = passwordStrengthRegularExpression;
 
             arParams[11] = new SqlCeParameter("@DefaultEmailFromAddress", SqlDbType.NVarChar);
-            arParams[11].Direction = ParameterDirection.Input;
             arParams[11].Value = defaultEmailFromAddress;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -894,103 +774,79 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[24];
 
             arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new SqlCeParameter("@AllowNewRegistration", SqlDbType.Bit);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = allowNewRegistration;
 
             arParams[2] = new SqlCeParameter("@UseSecureRegistration", SqlDbType.Bit);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = useSecureRegistration;
 
             arParams[3] = new SqlCeParameter("@UseLdapAuth", SqlDbType.Bit);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = useLdapAuth;
 
             arParams[4] = new SqlCeParameter("@AutoCreateLdapUserOnFirstLogin", SqlDbType.Bit);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = autoCreateLdapUserOnFirstLogin;
 
             arParams[5] = new SqlCeParameter("@LdapServer", SqlDbType.NVarChar);
-            arParams[5].Direction = ParameterDirection.Input;
             arParams[5].Value = ldapServer;
 
             arParams[6] = new SqlCeParameter("@LdapPort", SqlDbType.Int);
-            arParams[6].Direction = ParameterDirection.Input;
             arParams[6].Value = ldapPort;
 
             arParams[7] = new SqlCeParameter("@LdapDomain", SqlDbType.NVarChar);
-            arParams[7].Direction = ParameterDirection.Input;
             arParams[7].Value = ldapDomain;
 
             arParams[8] = new SqlCeParameter("@LdapRootDN", SqlDbType.NVarChar);
-            arParams[8].Direction = ParameterDirection.Input;
             arParams[8].Value = ldapRootDN;
 
             arParams[9] = new SqlCeParameter("@LdapUserDNKey", SqlDbType.NVarChar);
-            arParams[9].Direction = ParameterDirection.Input;
             arParams[9].Value = ldapUserDNKey;
 
             arParams[10] = new SqlCeParameter("@UseEmailForLogin", SqlDbType.Bit);
-            arParams[10].Direction = ParameterDirection.Input;
             arParams[10].Value = useEmailForLogin;
 
             arParams[11] = new SqlCeParameter("@AllowUserFullNameChange", SqlDbType.Bit);
-            arParams[11].Direction = ParameterDirection.Input;
             arParams[11].Value = allowUserFullNameChange;
 
             arParams[12] = new SqlCeParameter("@AllowPasswordRetrieval", SqlDbType.Bit);
-            arParams[12].Direction = ParameterDirection.Input;
             arParams[12].Value = allowPasswordRetrieval;
 
             arParams[13] = new SqlCeParameter("@AllowPasswordReset", SqlDbType.Bit);
-            arParams[13].Direction = ParameterDirection.Input;
             arParams[13].Value = allowPasswordReset;
 
             arParams[14] = new SqlCeParameter("@RequiresQuestionAndAnswer", SqlDbType.Bit);
-            arParams[14].Direction = ParameterDirection.Input;
             arParams[14].Value = requiresQuestionAndAnswer;
 
             arParams[15] = new SqlCeParameter("@MaxInvalidPasswordAttempts", SqlDbType.Int);
-            arParams[15].Direction = ParameterDirection.Input;
             arParams[15].Value = maxInvalidPasswordAttempts;
 
             arParams[16] = new SqlCeParameter("@PasswordAttemptWindowMinutes", SqlDbType.Int);
-            arParams[16].Direction = ParameterDirection.Input;
             arParams[16].Value = passwordAttemptWindowMinutes;
 
             arParams[17] = new SqlCeParameter("@RequiresUniqueEmail", SqlDbType.Bit);
-            arParams[17].Direction = ParameterDirection.Input;
             arParams[17].Value = requiresUniqueEmail;
 
             arParams[18] = new SqlCeParameter("@PasswordFormat", SqlDbType.Int);
-            arParams[18].Direction = ParameterDirection.Input;
             arParams[18].Value = passwordFormat;
 
             arParams[19] = new SqlCeParameter("@MinRequiredPasswordLength", SqlDbType.Int);
-            arParams[19].Direction = ParameterDirection.Input;
             arParams[19].Value = minRequiredPasswordLength;
 
             arParams[20] = new SqlCeParameter("@MinReqNonAlphaChars", SqlDbType.Int);
-            arParams[20].Direction = ParameterDirection.Input;
             arParams[20].Value = minReqNonAlphaChars;
 
             arParams[21] = new SqlCeParameter("@PwdStrengthRegex", SqlDbType.NText);
-            arParams[21].Direction = ParameterDirection.Input;
             arParams[21].Value = pwdStrengthRegex;
 
             arParams[22] = new SqlCeParameter("@AllowOpenIDAuth", SqlDbType.Bit);
-            arParams[22].Direction = ParameterDirection.Input;
             arParams[22].Value = allowOpenIdAuth;
 
             arParams[23] = new SqlCeParameter("@AllowWindowsLiveAuth", SqlDbType.Bit);
-            arParams[23].Direction = ParameterDirection.Input;
             arParams[23].Value = allowWindowsLiveAuth;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -1017,19 +873,16 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[3];
 
             arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new SqlCeParameter("@WindowsLiveAppID", SqlDbType.NVarChar);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = windowsLiveAppId;
 
             arParams[2] = new SqlCeParameter("@WindowsLiveKey", SqlDbType.NVarChar);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = windowsLiveKey;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -1050,11 +903,10 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[1];
 
             arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -1072,7 +924,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append(";");
 
             return AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 null);
@@ -1086,10 +938,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[1];
 
             arParams[0] = new SqlCeParameter("@HostName", SqlDbType.NVarChar, 255);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = hostName;
-
-            
 
             int siteId = -1;
 
@@ -1098,7 +947,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("WHERE HostName = @HostName ;");
 
             using (IDataReader reader = AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams))
@@ -1119,11 +968,10 @@ namespace cloudscribe.Core.Repositories.SqlCe
             arParams = new SqlCeParameter[1];
 
             arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             return AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -1142,13 +990,12 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[1];
 
             arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             Guid siteGuid = Guid.Empty;
 
             using (IDataReader reader = AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams))
@@ -1176,15 +1023,13 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[2];
 
             arParams[0] = new SqlCeParameter("@SiteGuid", SqlDbType.UniqueIdentifier);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteGuid;
 
             arParams[1] = new SqlCeParameter("@FeatureGuid", SqlDbType.UniqueIdentifier);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = featureGuid;
 
             int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams));
@@ -1222,23 +1067,19 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[4];
 
             arParams[0] = new SqlCeParameter("@SiteGuid", SqlDbType.UniqueIdentifier);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteGuid;
 
             arParams[1] = new SqlCeParameter("@FeatureGuid", SqlDbType.UniqueIdentifier);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = featureGuid;
 
             arParams[2] = new SqlCeParameter("@SiteID", SqlDbType.Int);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = siteId;
 
             arParams[3] = new SqlCeParameter("@ModuleDefID", SqlDbType.Int);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = moduleDefId;
 
             AdoHelper.ExecuteNonQuery(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -1254,11 +1095,10 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[1];
 
             arParams[0] = new SqlCeParameter("@SiteGuid", SqlDbType.UniqueIdentifier);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteGuid;
 
             int id = Convert.ToInt32(AdoHelper.ExecuteScalar(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams));
@@ -1276,11 +1116,10 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[1];
 
             arParams[0] = new SqlCeParameter("@FeatureGuid", SqlDbType.UniqueIdentifier);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = featureGuid;
 
             int id = Convert.ToInt32(AdoHelper.ExecuteScalar(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams));
@@ -1298,15 +1137,13 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[2];
 
             arParams[0] = new SqlCeParameter("@SiteGuid", SqlDbType.UniqueIdentifier);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteGuid;
 
             arParams[1] = new SqlCeParameter("@FeatureGuid", SqlDbType.UniqueIdentifier);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = featureGuid;
 
             AdoHelper.ExecuteNonQuery(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -1325,11 +1162,10 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[1];
 
             arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             return AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -1348,11 +1184,10 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[1];
 
             arParams[0] = new SqlCeParameter("@SiteGuid", SqlDbType.UniqueIdentifier);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteGuid;
 
             return AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -1377,11 +1212,10 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[1];
 
             arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             return AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -1459,11 +1293,9 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
             sqlCommand.Append(";");
 
-
             //SqlCeParameter[] arParams = new SqlCeParameter[1];
 
             //arParams[0] = new SqlCeParameter("@ApplicationID", SqlDbType.UniqueIdentifier);
-            //arParams[0].Direction = ParameterDirection.Input;
             //arParams[0].Value = applicationId;
 
             return AdoHelper.ExecuteReader(
@@ -1485,11 +1317,10 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[1];
 
             arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             return AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -1517,19 +1348,16 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[3];
 
             arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new SqlCeParameter("@HostName", SqlDbType.NVarChar, 255);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = hostName;
 
             arParams[2] = new SqlCeParameter("@SiteGuid", SqlDbType.UniqueIdentifier);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = siteGuid;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -1547,11 +1375,10 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[1];
 
             arParams[0] = new SqlCeParameter("@HostID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = hostId;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -1570,11 +1397,10 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[1];
 
             arParams[0] = new SqlCeParameter("@CurrentSiteID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = currentSiteId;
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams));
@@ -1626,11 +1452,10 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[1];
 
             arParams[0] = new SqlCeParameter("@CurrentSiteID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = currentSiteId;
 
             return AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -1646,7 +1471,6 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[1];
 
             arParams[0] = new SqlCeParameter("@HostName", SqlDbType.NVarChar, 255);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = hostName;
 
             sqlCommand.Append("SELECT SiteID ");
@@ -1654,7 +1478,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("WHERE HostName = @HostName ;");
 
             using (IDataReader reader = AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams))
@@ -1674,7 +1498,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
                 sqlCommand.Append(" ;");
 
                 using (IDataReader reader = AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 null))
@@ -1700,7 +1524,6 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[1];
 
             arParams[0] = new SqlCeParameter("@FolderName", SqlDbType.NVarChar, 255);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = folderName;
 
             sqlCommand.Append("SELECT COALESCE(s.SiteID, -1) AS SiteID ");
@@ -1713,7 +1536,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append(";");
 
             using (IDataReader reader = AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams))
@@ -1733,7 +1556,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
                 sqlCommand.Append(" ;");
 
                 using (IDataReader reader = AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 null))

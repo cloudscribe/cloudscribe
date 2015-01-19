@@ -1,12 +1,13 @@
 ﻿//	Author:                 Joe Audette
 //  Created:			    2011-07-23
-//	Last Modified:		    2014-08-29
+//	Last Modified:		    2015-01-19
 // 
 // You must not remove this notice, or any other, from this software.
 
 using cloudscribe.DbHelpers.SQLite;
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Data.SQLite;
 using System.Text;
 

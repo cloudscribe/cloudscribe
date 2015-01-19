@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2008-06-22
-// Last Modified:			2014-08-29
+// Last Modified:			2015-01-19
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -15,16 +15,8 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.SQLite
 {
-    
     internal static class DBGeoCountry
     {
-        
-        private static string GetConnectionString()
-        {
-            return ConnectionString.GetConnectionString();
-        }
-
-
         /// <summary>
         /// Inserts a row in the mp_GeoCountry table. Returns rows affected count.
         /// </summary>
@@ -57,23 +49,19 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[4];
 
             arParams[0] = new SQLiteParameter(":Guid", DbType.String, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid.ToString();
 
             arParams[1] = new SQLiteParameter(":Name", DbType.String, 255);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = name;
 
             arParams[2] = new SQLiteParameter(":ISOCode2", DbType.String, 2);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = iSOCode2;
 
             arParams[3] = new SQLiteParameter(":ISOCode3", DbType.String, 3);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = iSOCode3;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
-                GetConnectionString(), 
+                ConnectionString.GetConnectionString(), 
                 sqlCommand.ToString(), 
                 arParams);
 
@@ -112,23 +100,22 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[4];
 
             arParams[0] = new SQLiteParameter(":Guid", DbType.String, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid.ToString();
 
             arParams[1] = new SQLiteParameter(":Name", DbType.String, 255);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = name;
 
             arParams[2] = new SQLiteParameter(":ISOCode2", DbType.String, 2);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = iSOCode2;
 
             arParams[3] = new SQLiteParameter(":ISOCode3", DbType.String, 3);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = iSOCode3;
 
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
+                ConnectionString.GetConnectionString(), 
+                sqlCommand.ToString(), 
+                arParams);
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(GetConnectionString(), sqlCommand.ToString(), arParams);
             return (rowsAffected > -1);
 
         }
@@ -149,11 +136,13 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[1];
 
             arParams[0] = new SQLiteParameter(":Guid", DbType.String, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid.ToString();
 
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
+                ConnectionString.GetConnectionString(), 
+                sqlCommand.ToString(), 
+                arParams);
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(GetConnectionString(), sqlCommand.ToString(), arParams);
             return (rowsAffected > 0);
 
         }
@@ -174,11 +163,10 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[1];
 
             arParams[0] = new SQLiteParameter(":Guid", DbType.String, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid.ToString();
 
             return AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
 
@@ -200,11 +188,10 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[1];
 
             arParams[0] = new SQLiteParameter(":ISOCode2", DbType.String, 2);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = countryISOCode2;
 
             return AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
 
@@ -221,7 +208,7 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append(";");
 
             return AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 null);
         }
@@ -237,7 +224,7 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append(";");
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 null));
         }
@@ -252,25 +239,7 @@ namespace cloudscribe.Core.Repositories.SQLite
             int pageSize)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
-            //totalPages = 1;
-            //int totalRows = GetCount();
-
-            //if (pageSize > 0) totalPages = totalRows / pageSize;
-
-            //if (totalRows <= pageSize)
-            //{
-            //    totalPages = 1;
-            //}
-            //else
-            //{
-            //    int remainder;
-            //    Math.DivRem(totalRows, pageSize, out remainder);
-            //    if (remainder > 0)
-            //    {
-            //        totalPages += 1;
-            //    }
-            //}
-
+            
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT	* ");
             sqlCommand.Append("FROM	mp_GeoCountry  ");
@@ -286,15 +255,13 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[2];
 
             arParams[0] = new SQLiteParameter(":PageSize", DbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = pageSize;
 
             arParams[1] = new SQLiteParameter(":OffsetRows", DbType.Int32);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = pageLowerBound;
 
             return AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
         }

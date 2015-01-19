@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2010-04-06
-// Last Modified:			2015-01-16
+// Last Modified:			2015-01-19
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -16,11 +16,6 @@ namespace cloudscribe.Core.Repositories.SqlCe
 {
     internal static class DBSiteFolder
     {
-        private static String GetConnectionString()
-        {
-            return ConnectionString.GetConnectionString();
-        }
-
         public static bool Add(
             Guid guid,
             Guid siteGuid,
@@ -45,11 +40,9 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[3];
 
             arParams[0] = new SqlCeParameter("@Guid", SqlDbType.UniqueIdentifier);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid;
 
             arParams[1] = new SqlCeParameter("@SiteGuid", SqlDbType.UniqueIdentifier);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = siteGuid;
 
             arParams[2] = new SqlCeParameter("@FolderName", SqlDbType.NVarChar, 255);
@@ -57,7 +50,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             arParams[2].Value = folderName;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -84,19 +77,16 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[3];
 
             arParams[0] = new SqlCeParameter("@Guid", SqlDbType.UniqueIdentifier);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid;
 
             arParams[1] = new SqlCeParameter("@SiteGuid", SqlDbType.UniqueIdentifier);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = siteGuid;
 
             arParams[2] = new SqlCeParameter("@FolderName", SqlDbType.NVarChar, 255);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = folderName;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -116,11 +106,10 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[1];
 
             arParams[0] = new SqlCeParameter("@Guid", SqlDbType.UniqueIdentifier);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -140,11 +129,10 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[1];
 
             arParams[0] = new SqlCeParameter("@FolderName", SqlDbType.NVarChar, 255);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = folderName;
 
             int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams));
@@ -165,11 +153,10 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[1];
 
             arParams[0] = new SqlCeParameter("@Guid", SqlDbType.UniqueIdentifier);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid;
 
             return AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -190,11 +177,10 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[1];
 
             arParams[0] = new SqlCeParameter("@SiteGuid", SqlDbType.UniqueIdentifier);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteGuid;
 
             return AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -215,11 +201,10 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[1];
 
             arParams[0] = new SqlCeParameter("@FolderName", SqlDbType.NVarChar, 255);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = folderName;
 
             object o = AdoHelper.ExecuteScalar(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -244,7 +229,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append(";");
 
             string strGuid = AdoHelper.ExecuteScalar(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 null).ToString();

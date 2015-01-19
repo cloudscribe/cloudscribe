@@ -1,6 +1,6 @@
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-01-14
+// Last Modified:			2015-01-19
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -14,10 +14,8 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.SQLite
 {
-    
     internal static class DBRoles
     {
-        
         public static int RoleCreate(
             Guid roleGuid,
             Guid siteGuid,
@@ -42,7 +40,6 @@ namespace cloudscribe.Core.Repositories.SQLite
 
             sqlCommand.Append("SELECT LAST_INSERT_ROWID();");
 
-            
             SQLiteParameter[] arParams = new SQLiteParameter[4];
 
             arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
@@ -81,9 +78,7 @@ namespace cloudscribe.Core.Repositories.SQLite
             arParams[1] = new SQLiteParameter(":RoleName", DbType.String, 50);
             arParams[1].Value = roleName;
 
-            int rowsAffected = 0;
-
-            rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
                 ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -102,9 +97,7 @@ namespace cloudscribe.Core.Repositories.SQLite
             arParams[0] = new SQLiteParameter(":RoleID", DbType.Int32);
             arParams[0].Value = roleId;
 
-            int rowsAffected = 0;
-
-            rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
                 ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -123,9 +116,7 @@ namespace cloudscribe.Core.Repositories.SQLite
             arParams[0] = new SQLiteParameter(":UserID", DbType.Int32);
             arParams[0].Value = userId;
 
-            int rowsAffected = 0;
-
-            rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
                 ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -144,9 +135,7 @@ namespace cloudscribe.Core.Repositories.SQLite
             arParams[0] = new SQLiteParameter(":RoleID", DbType.Int32);
             arParams[0].Value = roleId;
 
-            int rowsAffected = 0;
-
-            rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
                 ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -752,9 +741,6 @@ namespace cloudscribe.Core.Repositories.SQLite
                 sqlCommand.ToString(),
                 arParams);
         }
-
-       
-
 
     }
 }

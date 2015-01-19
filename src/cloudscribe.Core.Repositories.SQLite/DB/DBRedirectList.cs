@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2008-11-19
-// Last Modified:			2014-08-29
+// Last Modified:			2015-01-19
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -8,20 +8,14 @@
 using cloudscribe.DbHelpers.SQLite;
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Data.SQLite;
 using System.Text;
 
 namespace cloudscribe.Core.Repositories.SQLite
 {
-    
     internal static class DBRedirectList
     {
-        private static string GetConnectionString()
-        {
-            return ConnectionString.GetConnectionString();
-        }
-
-
         /// <summary>
         /// Inserts a row in the mp_RedirectList table. Returns rows affected count.
         /// </summary>
@@ -70,36 +64,31 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[7];
 
             arParams[0] = new SQLiteParameter(":RowGuid", DbType.String, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = rowGuid.ToString();
 
             arParams[1] = new SQLiteParameter(":SiteGuid", DbType.String, 36);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = siteGuid.ToString();
 
             arParams[2] = new SQLiteParameter(":SiteID", DbType.Int32);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = siteID;
 
             arParams[3] = new SQLiteParameter(":OldUrl", DbType.String, 255);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = oldUrl;
 
             arParams[4] = new SQLiteParameter(":NewUrl", DbType.String, 255);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = newUrl;
 
             arParams[5] = new SQLiteParameter(":CreatedUtc", DbType.DateTime);
-            arParams[5].Direction = ParameterDirection.Input;
             arParams[5].Value = createdUtc;
 
             arParams[6] = new SQLiteParameter(":ExpireUtc", DbType.DateTime);
-            arParams[6].Direction = ParameterDirection.Input;
             arParams[6].Value = expireUtc;
 
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
+                ConnectionString.GetConnectionString(), 
+                sqlCommand.ToString(), 
+                arParams);
 
-            int rowsAffected = 0;
-            rowsAffected = AdoHelper.ExecuteNonQuery(GetConnectionString(), sqlCommand.ToString(), arParams);
             return rowsAffected;
 
         }
@@ -119,7 +108,6 @@ namespace cloudscribe.Core.Repositories.SQLite
             string newUrl,
             DateTime expireUtc)
         {
-            
             StringBuilder sqlCommand = new StringBuilder();
 
             sqlCommand.Append("UPDATE mp_RedirectList ");
@@ -136,24 +124,19 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[4];
 
             arParams[0] = new SQLiteParameter(":RowGuid", DbType.String, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = rowGuid.ToString();
 
             arParams[1] = new SQLiteParameter(":OldUrl", DbType.String, 255);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = oldUrl;
 
             arParams[2] = new SQLiteParameter(":NewUrl", DbType.String, 255);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = newUrl;
 
             arParams[3] = new SQLiteParameter(":ExpireUtc", DbType.DateTime);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = expireUtc;
 
-
             int rowsAffected = AdoHelper.ExecuteNonQuery(
-                GetConnectionString(), 
+                ConnectionString.GetConnectionString(), 
                 sqlCommand.ToString(), 
                 arParams);
 
@@ -177,11 +160,13 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[1];
 
             arParams[0] = new SQLiteParameter(":RowGuid", DbType.String, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = rowGuid.ToString();
 
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
+                ConnectionString.GetConnectionString(), 
+                sqlCommand.ToString(), 
+                arParams);
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(GetConnectionString(), sqlCommand.ToString(), arParams);
             return (rowsAffected > 0);
 
         }
@@ -202,11 +187,10 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[1];
 
             arParams[0] = new SQLiteParameter(":RowGuid", DbType.String, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = rowGuid.ToString();
 
             return AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
 
@@ -230,19 +214,16 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[3];
 
             arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new SQLiteParameter(":OldUrl", DbType.String, 255);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = oldUrl;
 
             arParams[2] = new SQLiteParameter(":CurrentTime", DbType.DateTime);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = DateTime.UtcNow;
 
             return AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
 
@@ -266,15 +247,13 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[2];
 
             arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new SQLiteParameter(":OldUrl", DbType.String, 255);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = oldUrl;
 
             int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 arParams));
 
@@ -298,11 +277,10 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[1];
 
             arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 arParams));
 
@@ -358,26 +336,20 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[3];
 
             arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new SQLiteParameter(":PageSize", DbType.Int32);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = pageSize;
 
             arParams[2] = new SQLiteParameter(":OffsetRows", DbType.Int32);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = pageLowerBound;
 
             return AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
 
-
         }
-
-
 
     }
 }

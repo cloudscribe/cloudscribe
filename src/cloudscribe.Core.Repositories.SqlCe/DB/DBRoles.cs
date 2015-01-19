@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2010-04-06
-// Last Modified:			2015-01-14
+// Last Modified:			2015-01-19
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -16,12 +16,6 @@ namespace cloudscribe.Core.Repositories.SqlCe
 {
     internal static class DBRoles
     {
-        private static String GetConnectionString()
-        {
-            return ConnectionString.GetConnectionString();
-        }
-
-
         public static int RoleCreate(
             Guid roleGuid,
             Guid siteGuid,
@@ -67,7 +61,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             arParams[4].Value = roleGuid;
 
             int newId = Convert.ToInt32(AdoHelper.DoInsertGetIdentitiy(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams));
@@ -96,7 +90,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             arParams[1].Value = roleName;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -124,7 +118,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             arParams[0].Value = roleId;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -148,7 +142,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             arParams[0].Value = userId;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -172,7 +166,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             arParams[0].Value = roleId;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -199,7 +193,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             arParams[1].Value = roleName;
 
             int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams));
@@ -222,7 +216,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             arParams[0].Value = roleId;
 
             return AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -248,7 +242,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             arParams[1].Value = roleName;
 
             return AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -293,7 +287,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             arParams[0].Value = siteId;
 
             return AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -327,7 +321,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             arParams[0].Value = roleId;
 
             return AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -368,7 +362,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             arParams[1].Value = roleId;
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams));
@@ -443,7 +437,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
 
             return AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -486,7 +480,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             arParams[2].Value = searchInput;
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams));
@@ -556,7 +550,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             arParams[2].Value = searchInput;
 
             return AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -589,7 +583,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             arParams[1].Value = userId;
 
             return AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -637,7 +631,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             arParams[3].Value = roleGuid;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -665,7 +659,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             arParams[1].Value = roleId;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -688,7 +682,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             arParams[0].Value = siteId;
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams));
@@ -723,7 +717,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             arParams[1].Value = searchInput;
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams));

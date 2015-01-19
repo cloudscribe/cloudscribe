@@ -1,11 +1,12 @@
 ﻿// Author:					Joe Audette
 // Created:					2010-04-06
-// Last Modified:			2014-08-27
+// Last Modified:			2015-01-19
 // 
 // You must not remove this notice, or any other, from this software.
 
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Configuration;
 using System.Globalization;
 using System.Text;
@@ -16,11 +17,6 @@ namespace cloudscribe.Core.Repositories.SqlCe
 {
     internal static class DBSiteSettingsEx
     {
-        private static String GetConnectionString()
-        {
-            return ConnectionString.GetConnectionString();
-        }
-
         public static IDataReader GetSiteSettingsExList(int siteId)
         {
             StringBuilder sqlCommand = new StringBuilder();
@@ -28,23 +24,18 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("FROM	mp_SiteSettingsEx ");
             sqlCommand.Append("WHERE ");
             sqlCommand.Append("SiteID = @SiteID  ");
-            
             sqlCommand.Append(";");
 
             SqlCeParameter[] arParams = new SqlCeParameter[1];
 
             arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
-           
-
             return AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
-
         }
 
         public static void EnsureSettings()
@@ -89,17 +80,13 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("WHERE ");
             sqlCommand.Append("e.SiteID IS NULL ");
 
-
-
             sqlCommand.Append(";");
 
-
             AdoHelper.ExecuteNonQuery(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 null);
-
         }
 
         public static bool SaveExpandoProperty(
@@ -140,20 +127,17 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[3];
 
             arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new SqlCeParameter("@KeyName", SqlDbType.NVarChar, 128);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = keyName;
 
             arParams[2] = new SqlCeParameter("@KeyValue", SqlDbType.NText);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = keyValue;
 
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -179,15 +163,13 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[2];
 
             arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new SqlCeParameter("@KeyName", SqlDbType.NVarChar, 128);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = keyName;
 
             int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams));
@@ -226,28 +208,23 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[5];
 
             arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new SqlCeParameter("@SiteGuid", SqlDbType.UniqueIdentifier);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = siteGuid;
 
             arParams[2] = new SqlCeParameter("@KeyName", SqlDbType.NVarChar, 128);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = keyName;
 
             arParams[3] = new SqlCeParameter("@KeyValue", SqlDbType.NText);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = keyValue;
 
             arParams[4] = new SqlCeParameter("@GroupName", SqlDbType.NVarChar, 128);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = groupName;
 
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -275,20 +252,16 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[3];
 
             arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteID;
 
             arParams[1] = new SqlCeParameter("@KeyName", SqlDbType.NVarChar, 128);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = keyName;
 
             arParams[2] = new SqlCeParameter("@KeyValue", SqlDbType.NText);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = keyValue;
 
-            
             int rowsAffected = AdoHelper.ExecuteNonQuery(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -305,7 +278,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append(";");
 
             return AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 CommandType.Text,
                 sqlCommand.ToString(),
                 null);

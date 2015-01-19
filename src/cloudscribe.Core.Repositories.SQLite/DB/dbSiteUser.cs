@@ -1,6 +1,6 @@
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2014-09-08
+// Last Modified:			2015-01-19
 // 
 // You must not remove this notice, or any other, from this software.
 // 
@@ -15,11 +15,8 @@ using System.Text;
 
 namespace cloudscribe.Core.Repositories.SQLite
 {
-   
     internal static class DBSiteUser
     {
-        
-
         public static IDataReader GetUserCountByYearMonth(int siteId)
         {
             StringBuilder sqlCommand = new StringBuilder();
@@ -40,7 +37,6 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[1];
 
             arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             return AdoHelper.ExecuteReader(
@@ -58,7 +54,6 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[1];
 
             arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             return AdoHelper.ExecuteReader(
@@ -111,19 +106,15 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[2];
 
             arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new SQLiteParameter(":Query", DbType.String, 50);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = query + "%";
-
 
             return AdoHelper.ExecuteReader(
                 ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
-
 
         }
 
@@ -153,13 +144,10 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[2];
 
             arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new SQLiteParameter(":Query", DbType.String, 50);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = query + "%";
-
 
             return AdoHelper.ExecuteReader(
                 ConnectionString.GetConnectionString(),
@@ -179,7 +167,6 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[1];
 
             arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             int count = Convert.ToInt32(
@@ -220,7 +207,6 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[1];
 
             arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             int count = Convert.ToInt32(
@@ -279,15 +265,12 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[3];
 
             arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new SQLiteParameter(":BeginDate", DbType.DateTime);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = beginDate;
 
             arParams[2] = new SQLiteParameter(":EndDate", DbType.DateTime);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = endDate;
 
             int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -307,7 +290,6 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[1];
 
             arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -334,11 +316,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[2];
 
             arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new SQLiteParameter(":UserNameBeginsWith", DbType.String);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = userNameBeginsWith + "%";
 
             int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -359,24 +339,6 @@ namespace cloudscribe.Core.Repositories.SQLite
         {
             StringBuilder sqlCommand = new StringBuilder();
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
-
-            //int totalRows = UserCount(siteId, userNameBeginsWith);
-            //totalPages = 1;
-            //if (pageSize > 0) totalPages = totalRows / pageSize;
-
-            //if (totalRows <= pageSize)
-            //{
-            //    totalPages = 1;
-            //}
-            //else
-            //{
-            //    int remainder;
-            //    Math.DivRem(totalRows, pageSize, out remainder);
-            //    if (remainder > 0)
-            //    {
-            //        totalPages += 1;
-            //    }
-            //}
 
             sqlCommand.Append("SELECT		u.*  ");
             //sqlCommand.Append(" " + totalPages.ToString() + " As TotalPages  ");
@@ -458,11 +420,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[2];
 
             arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new SQLiteParameter(":SearchInput", DbType.String);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = "%" + searchInput + "%";
 
             int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -484,27 +444,8 @@ namespace cloudscribe.Core.Repositories.SQLite
             StringBuilder sqlCommand = new StringBuilder();
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
 
-            //int totalRows = CountForSearch(siteId, searchInput);
-            //totalPages = 1;
-            //if (pageSize > 0) totalPages = totalRows / pageSize;
-
-            //if (totalRows <= pageSize)
-            //{
-            //    totalPages = 1;
-            //}
-            //else
-            //{
-            //    int remainder;
-            //    Math.DivRem(totalRows, pageSize, out remainder);
-            //    if (remainder > 0)
-            //    {
-            //        totalPages += 1;
-            //    }
-            //}
-
             sqlCommand.Append("SELECT *  ");
            
-            
             sqlCommand.Append("FROM	mp_Users  ");
 
             sqlCommand.Append("WHERE  ");
@@ -591,11 +532,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[2];
 
             arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new SQLiteParameter(":SearchInput", DbType.String);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = "%" +searchInput + "%";
 
             int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -613,27 +552,8 @@ namespace cloudscribe.Core.Repositories.SQLite
             int pageSize,
             string searchInput,
             int sortMode)
-        {
-            
+        { 
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
-
-            //int totalRows = CountForAdminSearch(siteId, searchInput);
-            //totalPages = 1;
-            //if (pageSize > 0) totalPages = totalRows / pageSize;
-
-            //if (totalRows <= pageSize)
-            //{
-            //    totalPages = 1;
-            //}
-            //else
-            //{
-            //    int remainder;
-            //    Math.DivRem(totalRows, pageSize, out remainder);
-            //    if (remainder > 0)
-            //    {
-            //        totalPages += 1;
-            //    }
-            //}
 
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT *  ");
@@ -703,25 +623,7 @@ namespace cloudscribe.Core.Repositories.SQLite
             int pageNumber,
             int pageSize)
         {
-            //totalPages = 1;
-            //int totalRows = CountLockedOutUsers(siteId);
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
-
-            //if (pageSize > 0) totalPages = totalRows / pageSize;
-
-            //if (totalRows <= pageSize)
-            //{
-            //    totalPages = 1;
-            //}
-            //else
-            //{
-            //    int remainder;
-            //    Math.DivRem(totalRows, pageSize, out remainder);
-            //    if (remainder > 0)
-            //    {
-            //        totalPages += 1;
-            //    }
-            //}
 
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT *  ");
@@ -751,34 +653,14 @@ namespace cloudscribe.Core.Repositories.SQLite
                 ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
-
         }
-
 
         public static DbDataReader GetPageNotApprovedUsers(
             int siteId,
             int pageNumber,
             int pageSize)
         {
-            //totalPages = 1;
-            //int totalRows = CountNotApprovedUsers(siteId);
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
-
-            //if (pageSize > 0) totalPages = totalRows / pageSize;
-
-            //if (totalRows <= pageSize)
-            //{
-            //    totalPages = 1;
-            //}
-            //else
-            //{
-            //    int remainder;
-            //    Math.DivRem(totalRows, pageSize, out remainder);
-            //    if (remainder > 0)
-            //    {
-            //        totalPages += 1;
-            //    }
-            //}
 
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT *  ");
@@ -810,9 +692,6 @@ namespace cloudscribe.Core.Repositories.SQLite
                 arParams);
 
         }
-
-
-        
 
         public static int AddUser(
             Guid siteGuid,
@@ -927,63 +806,49 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[23];
 
             arParams[0] = new SQLiteParameter(":FullName", DbType.String, 100);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = fullName;
 
             arParams[1] = new SQLiteParameter(":LoginName", DbType.String, 50);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = loginName;
 
             arParams[2] = new SQLiteParameter(":Email", DbType.String, 100);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = email;
 
             arParams[3] = new SQLiteParameter(":Password", DbType.String, 1000);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = password;
 
             arParams[4] = new SQLiteParameter(":SiteID", DbType.Int32);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = siteId;
 
             arParams[5] = new SQLiteParameter(":UserGuid", DbType.String, 36);
-            arParams[5].Direction = ParameterDirection.Input;
             arParams[5].Value = userGuid.ToString();
 
-            arParams[6] = new SQLiteParameter(":DateCreated", DbType.DateTime);
-            arParams[6].Direction = ParameterDirection.Input;
+            arParams[6] = new SQLiteParameter(":DateCreated", DbType.DateTime);;
             arParams[6].Value = dateCreated;
 
             arParams[7] = new SQLiteParameter(":SiteGuid", DbType.String, 36);
-            arParams[7].Direction = ParameterDirection.Input;
             arParams[7].Value = siteGuid.ToString();
 
             arParams[8] = new SQLiteParameter(":MustChangePwd", DbType.Int32);
-            arParams[8].Direction = ParameterDirection.Input;
             arParams[8].Value = intmustChangePwd;
 
             arParams[9] = new SQLiteParameter(":FirstName", DbType.String, 100);
-            arParams[9].Direction = ParameterDirection.Input;
             arParams[9].Value = firstName;
 
             arParams[10] = new SQLiteParameter(":LastName", DbType.String, 100);
-            arParams[10].Direction = ParameterDirection.Input;
             arParams[10].Value = lastName;
 
             arParams[11] = new SQLiteParameter(":TimeZoneId", DbType.String, 32);
-            arParams[11].Direction = ParameterDirection.Input;
             arParams[11].Value = timeZoneId;
 
             arParams[12] = new SQLiteParameter(":EmailChangeGuid", DbType.String, 36);
-            arParams[12].Direction = ParameterDirection.Input;
             arParams[12].Value = Guid.Empty.ToString();
 
             arParams[13] = new SQLiteParameter(":PasswordSalt", DbType.String, 128);
-            arParams[13].Direction = ParameterDirection.Input;
             arParams[13].Value = passwordSalt;
 
             arParams[14] = new SQLiteParameter(":DateOfBirth", DbType.DateTime);
-            arParams[14].Direction = ParameterDirection.Input;
+
             if (dateOfBirth == DateTime.MinValue)
             {
                 arParams[14].Value = DBNull.Value;
@@ -994,35 +859,28 @@ namespace cloudscribe.Core.Repositories.SQLite
             }
 
             arParams[15] = new SQLiteParameter(":EmailConfirmed", DbType.Int32);
-            arParams[15].Direction = ParameterDirection.Input;
             arParams[15].Value = intEmailConfirmed;
 
             arParams[16] = new SQLiteParameter(":PwdFormat", DbType.Int32);
-            arParams[16].Direction = ParameterDirection.Input;
             arParams[16].Value = pwdFormat;
 
             arParams[17] = new SQLiteParameter(":PasswordHash", DbType.Object);
-            arParams[17].Direction = ParameterDirection.Input;
             arParams[17].Value = passwordHash;
 
             arParams[18] = new SQLiteParameter(":SecurityStamp", DbType.Object);
-            arParams[18].Direction = ParameterDirection.Input;
             arParams[18].Value = securityStamp;
 
             arParams[19] = new SQLiteParameter(":PhoneNumber", DbType.String, 128);
-            arParams[19].Direction = ParameterDirection.Input;
             arParams[19].Value = phoneNumber;
 
             arParams[20] = new SQLiteParameter(":PhoneNumberConfirmed", DbType.Int32);
-            arParams[20].Direction = ParameterDirection.Input;
             arParams[20].Value = intPhoneNumberConfirmed;
 
             arParams[21] = new SQLiteParameter(":TwoFactorEnabled", DbType.Int32);
-            arParams[21].Direction = ParameterDirection.Input;
             arParams[21].Value = intTwoFactorEnabled;
 
             arParams[22] = new SQLiteParameter(":LockoutEndDateUtc", DbType.DateTime);
-            arParams[22].Direction = ParameterDirection.Input;
+
             if (lockoutEndDateUtc == null)
             {
                 arParams[22].Value = DBNull.Value;
@@ -1190,7 +1048,6 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("TwoFactorEnabled = :TwoFactorEnabled, ");
             sqlCommand.Append("LockoutEndDateUtc = :LockoutEndDateUtc, ");
 
-
             sqlCommand.Append("TimeOffsetHours = :TimeOffsetHours    ");
 
             sqlCommand.Append("WHERE UserID = :UserID ;");
@@ -1198,167 +1055,127 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[49];
 
             arParams[0] = new SQLiteParameter(":UserID", DbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
 
             arParams[1] = new SQLiteParameter(":Email", DbType.String, 100);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = email;
 
             arParams[2] = new SQLiteParameter(":Password", DbType.String, 1000);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = password;
 
             arParams[3] = new SQLiteParameter(":Gender", DbType.String, 1);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = gender;
 
             arParams[4] = new SQLiteParameter(":ProfileApproved", DbType.Int32);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = approved;
 
             arParams[5] = new SQLiteParameter(":ApprovedForForums", DbType.Int32);
-            arParams[5].Direction = ParameterDirection.Input;
             arParams[5].Value = canPost;
 
             arParams[6] = new SQLiteParameter(":Trusted", DbType.Int32);
-            arParams[6].Direction = ParameterDirection.Input;
             arParams[6].Value = trust;
 
             arParams[7] = new SQLiteParameter(":DisplayInMemberList", DbType.Int32);
-            arParams[7].Direction = ParameterDirection.Input;
             arParams[7].Value = displayInList;
 
             arParams[8] = new SQLiteParameter(":WebSiteURL", DbType.String, 100);
-            arParams[8].Direction = ParameterDirection.Input;
             arParams[8].Value = webSiteUrl;
 
             arParams[9] = new SQLiteParameter(":Country", DbType.String, 100);
-            arParams[9].Direction = ParameterDirection.Input;
             arParams[9].Value = country;
 
             arParams[10] = new SQLiteParameter(":State", DbType.String, 100);
-            arParams[10].Direction = ParameterDirection.Input;
             arParams[10].Value = state;
 
             arParams[11] = new SQLiteParameter(":Occupation", DbType.String, 100);
-            arParams[11].Direction = ParameterDirection.Input;
             arParams[11].Value = occupation;
 
             arParams[12] = new SQLiteParameter(":Interests", DbType.String, 100);
-            arParams[12].Direction = ParameterDirection.Input;
             arParams[12].Value = interests;
 
             arParams[13] = new SQLiteParameter(":MSN", DbType.String, 100);
-            arParams[13].Direction = ParameterDirection.Input;
             arParams[13].Value = msn;
 
             arParams[14] = new SQLiteParameter(":Yahoo", DbType.String, 100);
-            arParams[14].Direction = ParameterDirection.Input;
             arParams[14].Value = yahoo;
 
             arParams[15] = new SQLiteParameter(":AIM", DbType.String, 100);
-            arParams[15].Direction = ParameterDirection.Input;
             arParams[15].Value = aim;
 
             arParams[16] = new SQLiteParameter(":ICQ", DbType.String, 100);
-            arParams[16].Direction = ParameterDirection.Input;
             arParams[16].Value = icq;
 
             arParams[17] = new SQLiteParameter(":AvatarUrl", DbType.String, 100);
-            arParams[17].Direction = ParameterDirection.Input;
             arParams[17].Value = avatarUrl;
 
             arParams[18] = new SQLiteParameter(":Signature", DbType.Object);
-            arParams[18].Direction = ParameterDirection.Input;
             arParams[18].Value = signature;
 
             arParams[19] = new SQLiteParameter(":Skin", DbType.String, 100);
-            arParams[19].Direction = ParameterDirection.Input;
             arParams[19].Value = skin;
 
             arParams[20] = new SQLiteParameter(":FullName", DbType.String, 50);
-            arParams[20].Direction = ParameterDirection.Input;
             arParams[20].Value = fullName;
 
             arParams[21] = new SQLiteParameter(":LoginName", DbType.String, 50);
-            arParams[21].Direction = ParameterDirection.Input;
             arParams[21].Value = loginName;
 
             arParams[22] = new SQLiteParameter(":LoweredEmail", DbType.String, 100);
-            arParams[22].Direction = ParameterDirection.Input;
             arParams[22].Value = loweredEmail;
 
             arParams[23] = new SQLiteParameter(":PasswordQuestion", DbType.String, 255);
-            arParams[23].Direction = ParameterDirection.Input;
             arParams[23].Value = passwordQuestion;
 
             arParams[24] = new SQLiteParameter(":PasswordAnswer", DbType.String, 255);
-            arParams[24].Direction = ParameterDirection.Input;
             arParams[24].Value = passwordAnswer;
 
             arParams[25] = new SQLiteParameter(":Comment", DbType.Object);
-            arParams[25].Direction = ParameterDirection.Input;
             arParams[25].Value = comment;
 
             arParams[26] = new SQLiteParameter(":TimeOffsetHours", DbType.Int32);
-            arParams[26].Direction = ParameterDirection.Input;
             arParams[26].Value = timeOffsetHours;
 
             arParams[27] = new SQLiteParameter(":OpenIDURI", DbType.String, 255);
-            arParams[27].Direction = ParameterDirection.Input;
             arParams[27].Value = openIdUri;
 
             arParams[28] = new SQLiteParameter(":WindowsLiveID", DbType.String, 36);
-            arParams[28].Direction = ParameterDirection.Input;
             arParams[28].Value = windowsLiveId;
 
             arParams[29] = new SQLiteParameter(":MustChangePwd", DbType.Int32);
-            arParams[29].Direction = ParameterDirection.Input;
             arParams[29].Value = intmustChangePwd;
 
             arParams[30] = new SQLiteParameter(":FirstName", DbType.String, 100);
-            arParams[30].Direction = ParameterDirection.Input;
             arParams[30].Value = firstName;
 
             arParams[31] = new SQLiteParameter(":LastName", DbType.String, 100);
-            arParams[31].Direction = ParameterDirection.Input;
             arParams[31].Value = lastName;
 
             arParams[32] = new SQLiteParameter(":TimeZoneId", DbType.String, 32);
-            arParams[32].Direction = ParameterDirection.Input;
             arParams[32].Value = timeZoneId;
 
             arParams[33] = new SQLiteParameter(":EditorPreference", DbType.String, 100);
-            arParams[33].Direction = ParameterDirection.Input;
             arParams[33].Value = editorPreference;
 
             arParams[34] = new SQLiteParameter(":NewEmail", DbType.String, 100);
-            arParams[34].Direction = ParameterDirection.Input;
             arParams[34].Value = newEmail;
 
             arParams[35] = new SQLiteParameter(":EmailChangeGuid", DbType.String, 36);
-            arParams[35].Direction = ParameterDirection.Input;
             arParams[35].Value = emailChangeGuid.ToString();
 
             arParams[36] = new SQLiteParameter(":PasswordResetGuid", DbType.String, 36);
-            arParams[36].Direction = ParameterDirection.Input;
             arParams[36].Value = passwordResetGuid.ToString();
 
             arParams[37] = new SQLiteParameter(":PasswordSalt", DbType.String, 128);
-            arParams[37].Direction = ParameterDirection.Input;
             arParams[37].Value = passwordSalt;
 
             arParams[38] = new SQLiteParameter(":RolesChanged", DbType.Int32);
-            arParams[38].Direction = ParameterDirection.Input;
             arParams[38].Value = introlesChanged;
 
             arParams[39] = new SQLiteParameter(":AuthorBio", DbType.Object);
-            arParams[39].Direction = ParameterDirection.Input;
             arParams[39].Value = authorBio;
 
             arParams[40] = new SQLiteParameter(":DateOfBirth", DbType.DateTime);
-            arParams[40].Direction = ParameterDirection.Input;
+
             if (dateOfBirth == DateTime.MinValue)
             {
                 arParams[40].Value = DBNull.Value;
@@ -1369,35 +1186,28 @@ namespace cloudscribe.Core.Repositories.SQLite
             }
 
             arParams[41] = new SQLiteParameter(":EmailConfirmed", DbType.Int32);
-            arParams[41].Direction = ParameterDirection.Input;
             arParams[41].Value = intEmailConfirmed;
 
             arParams[42] = new SQLiteParameter(":PwdFormat", DbType.Int32);
-            arParams[42].Direction = ParameterDirection.Input;
             arParams[42].Value = pwdFormat;
 
             arParams[43] = new SQLiteParameter(":PasswordHash", DbType.Object);
-            arParams[43].Direction = ParameterDirection.Input;
             arParams[43].Value = passwordHash;
 
             arParams[44] = new SQLiteParameter(":SecurityStamp", DbType.Object);
-            arParams[44].Direction = ParameterDirection.Input;
             arParams[44].Value = securityStamp;
 
             arParams[45] = new SQLiteParameter(":PhoneNumber", DbType.String, 128);
-            arParams[45].Direction = ParameterDirection.Input;
             arParams[45].Value = phoneNumber;
 
             arParams[46] = new SQLiteParameter(":PhoneNumberConfirmed", DbType.Int32);
-            arParams[46].Direction = ParameterDirection.Input;
             arParams[46].Value = intPhoneNumberConfirmed;
 
             arParams[47] = new SQLiteParameter(":TwoFactorEnabled", DbType.Int32);
-            arParams[47].Direction = ParameterDirection.Input;
             arParams[47].Value = intTwoFactorEnabled;
 
             arParams[48] = new SQLiteParameter(":LockoutEndDateUtc", DbType.DateTime);
-            arParams[48].Direction = ParameterDirection.Input;
+
             if (lockoutEndDateUtc == null)
             {
                 arParams[48].Value = DBNull.Value;
@@ -1435,19 +1245,15 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[4];
 
             arParams[0] = new SQLiteParameter(":UserID", DbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
 
             arParams[1] = new SQLiteParameter(":Password", DbType.String, 1000);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = password;
 
             arParams[2] = new SQLiteParameter(":PasswordSalt", DbType.String, 128);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = passwordSalt;
 
             arParams[3] = new SQLiteParameter(":PwdFormat", DbType.Int32);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = pwdFormat;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -1469,12 +1275,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[1];
 
             arParams[0] = new SQLiteParameter(":UserID", DbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
 
-            int rowsAffected = 0;
-
-            rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
                 ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -1493,26 +1296,15 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[2];
 
             arParams[0] = new SQLiteParameter(":UserGuid", DbType.String, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userGuid.ToString();
 
             arParams[1] = new SQLiteParameter(":LastUpdate", DbType.DateTime);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = lastUpdate;
 
-            int rowsAffected = 0;
-
-            try
-            {
-                rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
                     ConnectionString.GetConnectionString(),
                     sqlCommand.ToString(),
                     arParams);
-
-            }
-            catch (DbException)
-            { }
-
 
             return (rowsAffected > 0);
 
@@ -1531,16 +1323,12 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[2];
 
             arParams[0] = new SQLiteParameter(":UserGuid", DbType.String, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userGuid.ToString();
 
             arParams[1] = new SQLiteParameter(":LastLoginTime", DbType.DateTime);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = lastLoginTime;
 
-            int rowsAffected = 0;
-
-            rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
                 ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -1560,16 +1348,12 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[2];
 
             arParams[0] = new SQLiteParameter(":UserGuid", DbType.String, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userGuid.ToString();
 
             arParams[1] = new SQLiteParameter(":LockoutTime", DbType.DateTime);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = lockoutTime;
 
-            int rowsAffected = 0;
-
-            rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
                 ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -1589,16 +1373,12 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[2];
 
             arParams[0] = new SQLiteParameter(":UserGuid", DbType.String, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userGuid.ToString();
 
             arParams[1] = new SQLiteParameter(":LastPasswordChangedDate", DbType.DateTime);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = lastPasswordChangeTime;
 
-            int rowsAffected = 0;
-
-            rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
                 ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -1620,17 +1400,15 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[2];
 
             arParams[0] = new SQLiteParameter(":UserGuid", DbType.String, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userGuid.ToString();
 
             arParams[1] = new SQLiteParameter(":FailedPasswordAttemptWindowStart", DbType.DateTime);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = windowStartTime;
 
-            int rowsAffected = 0;
-
-            rowsAffected = AdoHelper.ExecuteNonQuery(
-                ConnectionString.GetConnectionString(), sqlCommand.ToString(), arParams);
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
+                ConnectionString.GetConnectionString(), 
+                sqlCommand.ToString(), 
+                arParams);
 
             return (rowsAffected > 0);
 
@@ -1649,17 +1427,15 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[2];
 
             arParams[0] = new SQLiteParameter(":UserGuid", DbType.String, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userGuid.ToString();
 
             arParams[1] = new SQLiteParameter(":AttemptCount", DbType.Int32);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = attemptCount;
 
-            int rowsAffected = 0;
-
-            rowsAffected = AdoHelper.ExecuteNonQuery(
-                ConnectionString.GetConnectionString(), sqlCommand.ToString(), arParams);
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
+                ConnectionString.GetConnectionString(), 
+                sqlCommand.ToString(), 
+                arParams);
 
             return (rowsAffected > 0);
 
@@ -1678,17 +1454,15 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[2];
 
             arParams[0] = new SQLiteParameter(":UserGuid", DbType.String, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userGuid.ToString();
 
             arParams[1] = new SQLiteParameter(":FailedPasswordAnswerAttemptWindowStart", DbType.DateTime);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = windowStartTime;
 
-            int rowsAffected = 0;
-
-            rowsAffected = AdoHelper.ExecuteNonQuery(
-                ConnectionString.GetConnectionString(), sqlCommand.ToString(), arParams);
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
+                ConnectionString.GetConnectionString(), 
+                sqlCommand.ToString(), 
+                arParams);
 
             return (rowsAffected > 0);
 
@@ -1707,17 +1481,15 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[2];
 
             arParams[0] = new SQLiteParameter(":UserGuid", DbType.String, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userGuid.ToString();
 
             arParams[1] = new SQLiteParameter(":AttemptCount", DbType.Int32);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = attemptCount;
 
-            int rowsAffected = 0;
-
-            rowsAffected = AdoHelper.ExecuteNonQuery(
-                ConnectionString.GetConnectionString(), sqlCommand.ToString(), arParams);
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
+                ConnectionString.GetConnectionString(),
+                sqlCommand.ToString(), 
+                arParams);
 
             return (rowsAffected > 0);
 
@@ -1735,16 +1507,12 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[2];
 
             arParams[0] = new SQLiteParameter(":UserGuid", DbType.String, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userGuid.ToString();
 
             arParams[1] = new SQLiteParameter(":RegisterConfirmGuid", DbType.String, 36);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = registrationConfirmationGuid.ToString();
 
-            int rowsAffected = 0;
-
-            rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
                 ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -1765,16 +1533,12 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[2];
 
             arParams[0] = new SQLiteParameter(":EmptyGuid", DbType.String, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = emptyGuid.ToString();
 
             arParams[1] = new SQLiteParameter(":RegisterConfirmGuid", DbType.String, 36);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = registrationConfirmationGuid.ToString();
 
-            int rowsAffected = 0;
-
-            rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
                 ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -1791,11 +1555,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[2];
 
             arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new SQLiteParameter(":SinceTime", DbType.DateTime);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = sinceTime;
 
             int count = Convert.ToInt32(
@@ -1805,7 +1567,6 @@ namespace cloudscribe.Core.Repositories.SQLite
                 arParams).ToString());
 
             return count;
-
         }
 
         public static IDataReader GetUsersOnlineSince(int siteId, DateTime sinceTime)
@@ -1817,18 +1578,15 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[2];
 
             arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new SQLiteParameter(":SinceTime", DbType.DateTime);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = sinceTime;
 
             return AdoHelper.ExecuteReader(
                 ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
-
 
         }
 
@@ -1843,18 +1601,15 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[2];
 
             arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new SQLiteParameter(":SinceTime", DbType.DateTime);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = sinceTime;
 
             return AdoHelper.ExecuteReader(
                 ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
-
 
         }
 
@@ -1871,12 +1626,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[1];
 
             arParams[0] = new SQLiteParameter(":UserGuid", DbType.String, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userGuid.ToString();
 
-            int rowsAffected = 0;
-
-            rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
                 ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -1899,20 +1651,15 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[3];
 
             arParams[0] = new SQLiteParameter(":UserGuid", DbType.String, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userGuid.ToString();
 
             arParams[1] = new SQLiteParameter(":PasswordQuestion", DbType.String, 255);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = passwordQuestion;
 
             arParams[2] = new SQLiteParameter(":PasswordAnswer", DbType.String, 255);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = passwordAnswer;
 
-            int rowsAffected = 0;
-
-            rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
                 ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -1934,7 +1681,6 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[1];
 
             arParams[0] = new SQLiteParameter(":UserGuid", DbType.String, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userGuid.ToString();
 
             AdoHelper.ExecuteNonQuery(
@@ -1973,12 +1719,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[1];
 
             arParams[0] = new SQLiteParameter(":UserID", DbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
 
-            int rowsAffected = 0;
-
-            rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
                 ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -1996,12 +1739,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[1];
 
             arParams[0] = new SQLiteParameter(":UserID", DbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
 
-            int rowsAffected = 0;
-
-            rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
                 ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -2020,12 +1760,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[1];
 
             arParams[0] = new SQLiteParameter(":UserID", DbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
 
-            int rowsAffected = 0;
-
-            rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
                 ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -2044,12 +1781,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[1];
 
             arParams[0] = new SQLiteParameter(":UserID", DbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
 
-            int rowsAffected = 0;
-
-            rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
                 ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
@@ -2078,11 +1812,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[2];
 
             arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new SQLiteParameter(":UserID", DbType.Int32);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = userId;
 
             return AdoHelper.ExecuteReader(
@@ -2104,11 +1836,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[2];
 
             arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new SQLiteParameter(":RegisterConfirmGuid", DbType.String, 36);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = registerConfirmGuid;
 
             return AdoHelper.ExecuteReader(
@@ -2131,11 +1861,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[2];
 
             arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new SQLiteParameter(":Email", DbType.String, 100);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = email.ToLower();
 
             return AdoHelper.ExecuteReader(
@@ -2157,7 +1885,6 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[2];
 
             arParams[0] = new SQLiteParameter(":Email", DbType.String, 100);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = email.ToLower();
 
             return AdoHelper.ExecuteReader(
@@ -2194,11 +1921,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[2];
 
             arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new SQLiteParameter(":LoginName", DbType.String, 50);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = loginName;
 
             return AdoHelper.ExecuteReader(
@@ -2220,7 +1945,6 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[1];
 
             arParams[0] = new SQLiteParameter(":UserID", DbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
 
             return AdoHelper.ExecuteReader(
@@ -2242,7 +1966,6 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[1];
 
             arParams[0] = new SQLiteParameter(":UserGuid", DbType.String, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userGuid.ToString();
 
             return AdoHelper.ExecuteReader(
@@ -2267,11 +1990,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[2];
 
             arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new SQLiteParameter(":OpenIDURI", DbType.String, 255);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = openIduri;
 
             Guid userGuid = Guid.Empty;
@@ -2306,11 +2027,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[2];
 
             arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new SQLiteParameter(":WindowsLiveID", DbType.String, 36);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = windowsLiveId;
 
             Guid userGuid = Guid.Empty;
@@ -2346,15 +2065,12 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[3];
 
             arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new SQLiteParameter(":Email", DbType.String, 100);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = email;
 
             arParams[2] = new SQLiteParameter(":Password", DbType.String, 1000);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = password;
 
             string userName = string.Empty;
@@ -2389,15 +2105,12 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[3];
 
             arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteId;
 
             arParams[1] = new SQLiteParameter(":LoginName", DbType.String, 50);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = loginName;
 
             arParams[2] = new SQLiteParameter(":Password", DbType.String, 1000);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = password;
 
             string userName = string.Empty;
@@ -2430,7 +2143,6 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[1];
 
             arParams[0] = new SQLiteParameter(":UserGuid", DbType.String, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userGuid.ToString();
 
             DataTable dataTable = new DataTable();
@@ -2473,11 +2185,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[2];
 
             arParams[0] = new SQLiteParameter(":UserGuid", DbType.String, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userGuid.ToString();
 
             arParams[1] = new SQLiteParameter(":PropertyName", DbType.String, 255);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = propertyName;
 
             return AdoHelper.ExecuteReader(
@@ -2497,11 +2207,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[2];
 
             arParams[0] = new SQLiteParameter(":UserGuid", DbType.String, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userGuid.ToString();
 
             arParams[1] = new SQLiteParameter(":PropertyName", DbType.String, 255);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = propertyName;
 
             int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -2557,34 +2265,30 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[7];
 
             arParams[0] = new SQLiteParameter(":PropertyID", DbType.String, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = propertyId.ToString();
 
             arParams[1] = new SQLiteParameter(":UserGuid", DbType.String, 36);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = userGuid.ToString();
 
             arParams[2] = new SQLiteParameter(":PropertyName", DbType.String, 255);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = propertyName;
 
             arParams[3] = new SQLiteParameter(":PropertyValueString", DbType.Object);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = propertyValues;
 
             arParams[4] = new SQLiteParameter(":PropertyValueBinary", DbType.Object);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = propertyValueb;
 
             arParams[5] = new SQLiteParameter(":LastUpdatedDate", DbType.DateTime);
-            arParams[5].Direction = ParameterDirection.Input;
             arParams[5].Value = lastUpdatedDate;
 
             arParams[6] = new SQLiteParameter(":IsLazyLoaded", DbType.Int32);
-            arParams[6].Direction = ParameterDirection.Input;
             arParams[6].Value = lazy;
 
-            AdoHelper.ExecuteNonQuery(ConnectionString.GetConnectionString(), sqlCommand.ToString(), arParams);
+            AdoHelper.ExecuteNonQuery(
+                ConnectionString.GetConnectionString(), 
+                sqlCommand.ToString(), 
+                arParams);
 
         }
 
@@ -2622,30 +2326,27 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[6];
 
             arParams[0] = new SQLiteParameter(":UserGuid", DbType.String, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userGuid.ToString();
 
             arParams[1] = new SQLiteParameter(":PropertyName", DbType.String, 255);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = propertyName;
 
             arParams[2] = new SQLiteParameter(":PropertyValueString", DbType.Object);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = propertyValues;
 
             arParams[3] = new SQLiteParameter(":PropertyValueBinary", DbType.Object);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = propertyValueb;
 
             arParams[4] = new SQLiteParameter(":LastUpdatedDate", DbType.DateTime);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = lastUpdatedDate;
 
             arParams[5] = new SQLiteParameter(":IsLazyLoaded", DbType.Int32);
-            arParams[5].Direction = ParameterDirection.Input;
             arParams[5].Value = lazy;
 
-            AdoHelper.ExecuteNonQuery(ConnectionString.GetConnectionString(), sqlCommand.ToString(), arParams);
+            AdoHelper.ExecuteNonQuery(
+                ConnectionString.GetConnectionString(), 
+                sqlCommand.ToString(), 
+                arParams);
 
 
         }
@@ -2661,9 +2362,7 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[1];
 
             arParams[0] = new SQLiteParameter(":UserGuid", DbType.String, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userGuid.ToString();
-
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 ConnectionString.GetConnectionString(),
@@ -2673,6 +2372,5 @@ namespace cloudscribe.Core.Repositories.SQLite
             return (rowsAffected > 0);
         }
         
-
     }
 }

@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-10
-// Last Modified:			2014-08-27
+// Last Modified:			2015-01-19
 //
 // You must not remove this notice, or any other, from this software.
 	
@@ -40,15 +40,12 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[3];
 
             arParams[0] = new SqlCeParameter("@LoginProvider", SqlDbType.NVarChar, 128);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = loginProvider;
 
             arParams[1] = new SqlCeParameter("@ProviderKey", SqlDbType.NVarChar, 128);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = providerKey;
 
             arParams[2] = new SqlCeParameter("@UserId", SqlDbType.NVarChar, 128);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = userId;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -78,15 +75,12 @@ namespace cloudscribe.Core.Repositories.SqlCe
 			SqlCeParameter[] arParams = new SqlCeParameter[3];
 			
 			arParams[0] = new SqlCeParameter("@LoginProvider", SqlDbType.NVarChar, 128);
-			arParams[0].Direction = ParameterDirection.Input;	
 			arParams[0].Value = loginProvider;
 				
-			arParams[1] = new SqlCeParameter("@ProviderKey", SqlDbType.NVarChar, 128);
-			arParams[1].Direction = ParameterDirection.Input;	
+			arParams[1] = new SqlCeParameter("@ProviderKey", SqlDbType.NVarChar, 128);	
 			arParams[1].Value = providerKey;
 				
 			arParams[2] = new SqlCeParameter("@UserId", SqlDbType.NVarChar, 128);
-			arParams[2].Direction = ParameterDirection.Input;	
 			arParams[2].Value = userId;
 				
 			int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -111,7 +105,6 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[1];
 
             arParams[0] = new SqlCeParameter("@UserId", SqlDbType.NVarChar, 128);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -135,7 +128,6 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[1];
 
             arParams[0] = new SqlCeParameter("@SiteGuid", SqlDbType.UniqueIdentifier);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteGuid;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -162,11 +154,9 @@ namespace cloudscribe.Core.Repositories.SqlCe
 			SqlCeParameter[] arParams = new SqlCeParameter[2];
 			
 			arParams[0] = new SqlCeParameter("@LoginProvider", SqlDbType.NVarChar, 128);
-			arParams[0].Direction = ParameterDirection.Input;
 			arParams[0].Value = loginProvider;
 				
 			arParams[1] = new SqlCeParameter("@ProviderKey", SqlDbType.NVarChar, 128);
-			arParams[1].Direction = ParameterDirection.Input;
 			arParams[1].Value = providerKey;
 				
 			return AdoHelper.ExecuteReader(
@@ -190,7 +180,6 @@ namespace cloudscribe.Core.Repositories.SqlCe
             SqlCeParameter[] arParams = new SqlCeParameter[1];
 
             arParams[0] = new SqlCeParameter("@UserId", SqlDbType.NVarChar, 128);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
 
             return AdoHelper.ExecuteReader(
@@ -200,12 +189,6 @@ namespace cloudscribe.Core.Repositories.SqlCe
                 arParams);
 
         }
-		
-		
-		
-		
-	
-		
 		
 	}
 }
