@@ -1,12 +1,13 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-11
-// Last Modified:			2014-08-28
+// Last Modified:			2015-01-20
 // 
 // You must not remove this notice, or any other, from this software.
 
 using cloudscribe.DbHelpers.SQLite;
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Data.SQLite;
 using System.Text;
 
@@ -14,7 +15,6 @@ namespace cloudscribe.Core.Repositories.SQLite
 {
     internal static class DBUserClaims
     {
-
         public static int Create(
             string userId,
             string claimType,
@@ -37,17 +37,13 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[3];
 
             arParams[0] = new SQLiteParameter(":UserId", DbType.String, 128);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
 
             arParams[1] = new SQLiteParameter(":ClaimType", DbType.Object);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = claimType;
 
             arParams[2] = new SQLiteParameter(":ClaimValue", DbType.Object);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = claimValue;
-
 
             int newID = Convert.ToInt32(AdoHelper.ExecuteScalar(
                 ConnectionString.GetConnectionString(),
@@ -70,7 +66,6 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[1];
 
             arParams[0] = new SQLiteParameter(":Id", DbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = id;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -93,7 +88,6 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[1];
 
             arParams[0] = new SQLiteParameter(":UserId", DbType.String, 128);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -118,11 +112,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[2];
 
             arParams[0] = new SQLiteParameter(":UserId", DbType.String, 128);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
 
             arParams[1] = new SQLiteParameter(":ClaimType", DbType.Object);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = claimType;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -149,15 +141,12 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[3];
 
             arParams[0] = new SQLiteParameter(":UserId", DbType.String, 128);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
 
             arParams[1] = new SQLiteParameter(":ClaimType", DbType.Object);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = claimType;
 
             arParams[2] = new SQLiteParameter(":ClaimValue", DbType.Object);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = claimValue;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -180,7 +169,6 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[1];
 
             arParams[0] = new SQLiteParameter(":SiteGuid", DbType.String, 128);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteGuid.ToString();
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -189,8 +177,6 @@ namespace cloudscribe.Core.Repositories.SQLite
                 arParams);
 
             return (rowsAffected > 0);
-
-
         }
 
         public static IDataReader GetByUser(string userId)
@@ -205,7 +191,6 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[1];
 
             arParams[0] = new SQLiteParameter(":UserId", DbType.String, 128);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
 
             return AdoHelper.ExecuteReader(
@@ -214,11 +199,5 @@ namespace cloudscribe.Core.Repositories.SQLite
                 arParams);
 
         }
-
-        
-
-        
-
-        
     }
 }

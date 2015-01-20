@@ -1,22 +1,20 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-10
-// Last Modified:			2014-08-28
+// Last Modified:			2015-01-20
 // 
 // You must not remove this notice, or any other, from this software.
 
 using cloudscribe.DbHelpers.SQLite;
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Data.SQLite;
 using System.Text;
-
 
 namespace cloudscribe.Core.Repositories.SQLite
 {
 	internal static class DBUserLogins
     {
-
-
         public static bool Create(string loginProvider, string providerKey, string userId)
         {
             StringBuilder sqlCommand = new StringBuilder();
@@ -37,17 +35,13 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[3];
 
             arParams[0] = new SQLiteParameter(":LoginProvider", DbType.String, 128);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = loginProvider;
 
             arParams[1] = new SQLiteParameter(":ProviderKey", DbType.String, 128);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = providerKey;
 
             arParams[2] = new SQLiteParameter(":UserId", DbType.String, 128);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = userId;
-
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 ConnectionString.GetConnectionString(),
@@ -75,17 +69,13 @@ namespace cloudscribe.Core.Repositories.SQLite
 			SQLiteParameter[] arParams = new SQLiteParameter[3];
 			
 			arParams[0] = new SQLiteParameter(":LoginProvider", DbType.String, 128);
-			arParams[0].Direction = ParameterDirection.Input;
 			arParams[0].Value = loginProvider;
 			
 			arParams[1] = new SQLiteParameter(":ProviderKey", DbType.String, 128);
-			arParams[1].Direction = ParameterDirection.Input;
 			arParams[1].Value = providerKey;
 			
 			arParams[2] = new SQLiteParameter(":UserId", DbType.String, 128);
-			arParams[2].Direction = ParameterDirection.Input;
 			arParams[2].Value = userId;
-			
 			
 			int rowsAffected = AdoHelper.ExecuteNonQuery(
 				ConnectionString.GetConnectionString(), 
@@ -107,9 +97,7 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[1];
 
             arParams[0] = new SQLiteParameter(":UserId", DbType.String, 128);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
-
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 ConnectionString.GetConnectionString(),
@@ -132,7 +120,6 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[3];
 
             arParams[0] = new SQLiteParameter(":SiteGuid", DbType.String, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteGuid.ToString();
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -141,7 +128,6 @@ namespace cloudscribe.Core.Repositories.SQLite
                 arParams);
 
             return (rowsAffected > 0);
-
 
         }
 
@@ -158,11 +144,9 @@ namespace cloudscribe.Core.Repositories.SQLite
 			SQLiteParameter[] arParams = new SQLiteParameter[2];
 			
 			arParams[0] = new SQLiteParameter(":LoginProvider", DbType.String, 128);
-			arParams[0].Direction = ParameterDirection.Input;
 			arParams[0].Value = loginProvider;
 			
 			arParams[1] = new SQLiteParameter(":ProviderKey", DbType.String, 128);
-			arParams[1].Direction = ParameterDirection.Input;
 			arParams[1].Value = providerKey;
 			
 			return AdoHelper.ExecuteReader(
@@ -185,7 +169,6 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[1];
 
             arParams[0] = new SQLiteParameter(":UserId", DbType.String, 128);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = userId;
 
             return AdoHelper.ExecuteReader(
@@ -194,9 +177,5 @@ namespace cloudscribe.Core.Repositories.SQLite
                 arParams);
 
         }
-		
-		
-		
-		
 	}
 }

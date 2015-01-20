@@ -1,28 +1,20 @@
 ﻿// Author:					Joe Audette
 // Created:				    2007-12-30
-// Last Modified:			2014-08-29
+// Last Modified:			2015-01-20
 // 
 // You must not remove this notice, or any other, from this software.
-
 
 using cloudscribe.DbHelpers.SQLite;
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Data.SQLite;
 using System.Text;
 
 namespace cloudscribe.Core.Repositories.SQLite
 {
-
     internal static class DBTaskQueue
-    {
-        
-        private static string GetConnectionString()
-        {
-            return ConnectionString.GetConnectionString();
-        }
-
-
+    {  
         /// <summary>
         /// Inserts a row in the mp_TaskQueue table. Returns rows affected count.
         /// </summary>
@@ -141,76 +133,61 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[17];
 
             arParams[0] = new SQLiteParameter(":Guid", DbType.String, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid.ToString();
 
             arParams[1] = new SQLiteParameter(":SiteGuid", DbType.String, 36);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = siteGuid.ToString();
 
             arParams[2] = new SQLiteParameter(":QueuedBy", DbType.String, 36);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = queuedBy.ToString();
 
             arParams[3] = new SQLiteParameter(":TaskName", DbType.String, 255);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = taskName;
 
             arParams[4] = new SQLiteParameter(":NotifyOnCompletion", DbType.Int32);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = intNotifyOnCompletion;
 
             arParams[5] = new SQLiteParameter(":NotificationToEmail", DbType.String, 255);
-            arParams[5].Direction = ParameterDirection.Input;
             arParams[5].Value = notificationToEmail;
 
             arParams[6] = new SQLiteParameter(":NotificationFromEmail", DbType.String, 255);
-            arParams[6].Direction = ParameterDirection.Input;
             arParams[6].Value = notificationFromEmail;
 
             arParams[7] = new SQLiteParameter(":NotificationSubject", DbType.String, 255);
-            arParams[7].Direction = ParameterDirection.Input;
             arParams[7].Value = notificationSubject;
 
             arParams[8] = new SQLiteParameter(":TaskCompleteMessage", DbType.Object);
-            arParams[8].Direction = ParameterDirection.Input;
             arParams[8].Value = taskCompleteMessage;
 
             arParams[9] = new SQLiteParameter(":CanStop", DbType.Int32);
-            arParams[9].Direction = ParameterDirection.Input;
             arParams[9].Value = intCanStop;
 
             arParams[10] = new SQLiteParameter(":CanResume", DbType.Int32);
-            arParams[10].Direction = ParameterDirection.Input;
             arParams[10].Value = intCanResume;
 
             arParams[11] = new SQLiteParameter(":UpdateFrequency", DbType.Int32);
-            arParams[11].Direction = ParameterDirection.Input;
             arParams[11].Value = updateFrequency;
 
             arParams[12] = new SQLiteParameter(":QueuedUTC", DbType.DateTime);
-            arParams[12].Direction = ParameterDirection.Input;
             arParams[12].Value = queuedUTC;
 
             arParams[13] = new SQLiteParameter(":CompleteRatio", DbType.Double);
-            arParams[13].Direction = ParameterDirection.Input;
             arParams[13].Value = completeRatio;
 
             arParams[14] = new SQLiteParameter(":Status", DbType.String, 255);
-            arParams[14].Direction = ParameterDirection.Input;
             arParams[14].Value = status;
 
             arParams[15] = new SQLiteParameter(":SerializedTaskObject", DbType.Object);
-            arParams[15].Direction = ParameterDirection.Input;
             arParams[15].Value = serializedTaskObject;
 
             arParams[16] = new SQLiteParameter(":SerializedTaskType", DbType.String, 255);
-            arParams[16].Direction = ParameterDirection.Input;
             arParams[16].Value = serializedTaskType;
 
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
+                ConnectionString.GetConnectionString(), 
+                sqlCommand.ToString(), 
+                arParams);
 
-            int rowsAffected = 0;
-            rowsAffected = AdoHelper.ExecuteNonQuery(GetConnectionString(), sqlCommand.ToString(), arParams);
             return rowsAffected;
 
         }
@@ -234,8 +211,6 @@ namespace cloudscribe.Core.Repositories.SQLite
             double completeRatio,
             string status)
         {
-            
-
             StringBuilder sqlCommand = new StringBuilder();
 
             sqlCommand.Append("UPDATE mp_TaskQueue ");
@@ -251,7 +226,6 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("CompleteRatio = :CompleteRatio, ");
             sqlCommand.Append("Status = :Status ");
             
-
             sqlCommand.Append("WHERE  ");
             sqlCommand.Append("Guid = :Guid ");
             sqlCommand.Append(";");
@@ -259,30 +233,28 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[6];
 
             arParams[0] = new SQLiteParameter(":Guid", DbType.String, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid.ToString();
 
             arParams[1] = new SQLiteParameter(":StartUTC", DbType.DateTime);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = startUTC;
 
             arParams[2] = new SQLiteParameter(":CompleteUTC", DbType.DateTime);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = completeUTC;
 
             arParams[3] = new SQLiteParameter(":LastStatusUpdateUTC", DbType.DateTime);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = lastStatusUpdateUTC;
 
             arParams[4] = new SQLiteParameter(":CompleteRatio", DbType.Double);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = completeRatio;
 
             arParams[5] = new SQLiteParameter(":Status", DbType.String, 255);
-            arParams[5].Direction = ParameterDirection.Input;
             arParams[5].Value = status;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(GetConnectionString(), sqlCommand.ToString(), arParams);
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
+                ConnectionString.GetConnectionString(), 
+                sqlCommand.ToString(), 
+                arParams);
+
             return (rowsAffected > -1);
 
         }
@@ -297,7 +269,6 @@ namespace cloudscribe.Core.Repositories.SQLite
             Guid guid,
             DateTime notificationSentUTC)
         {
-
             StringBuilder sqlCommand = new StringBuilder();
 
             sqlCommand.Append("UPDATE mp_TaskQueue ");
@@ -312,15 +283,16 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[2];
 
             arParams[0] = new SQLiteParameter(":Guid", DbType.String, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid.ToString();
 
             arParams[1] = new SQLiteParameter(":NotificationSentUTC", DbType.DateTime);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = notificationSentUTC;
 
-            
-            int rowsAffected = AdoHelper.ExecuteNonQuery(GetConnectionString(), sqlCommand.ToString(), arParams);
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
+                ConnectionString.GetConnectionString(), 
+                sqlCommand.ToString(), 
+                arParams);
+
             return (rowsAffected > -1);
 
         }
@@ -341,12 +313,10 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[1];
 
             arParams[0] = new SQLiteParameter(":Guid", DbType.String, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid.ToString();
 
-
             int rowsAffected = AdoHelper.ExecuteNonQuery(
-                GetConnectionString(), 
+                ConnectionString.GetConnectionString(), 
                 sqlCommand.ToString(), 
                 arParams);
 
@@ -365,7 +335,7 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("WHERE CompleteUTC IS NOT NULL; ");
 
             AdoHelper.ExecuteNonQuery(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 null);
         }
@@ -386,11 +356,10 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[1];
 
             arParams[0] = new SQLiteParameter(":Guid", DbType.String, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = guid.ToString();
 
             return AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
 
@@ -407,7 +376,7 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append(";");
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 null));
         }
@@ -427,11 +396,10 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[1];
 
             arParams[0] = new SQLiteParameter(":SiteGuid", DbType.String, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteGuid.ToString();
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 arParams));
         }
@@ -448,11 +416,10 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[1];
 
             arParams[0] = new SQLiteParameter(":TaskType", DbType.String, 255);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = taskType + "%";
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 arParams));
 
@@ -469,11 +436,10 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[1];
 
             arParams[0] = new SQLiteParameter(":TaskType", DbType.String, 255);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = taskType + "%";
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
 
@@ -494,7 +460,7 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append(";");
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 null));
         }
@@ -515,11 +481,10 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[1];
 
             arParams[0] = new SQLiteParameter(":SiteGuid", DbType.String, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteGuid.ToString();
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 arParams));
         }
@@ -537,7 +502,7 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append(";");
 
             return AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 null);
         }
@@ -557,7 +522,7 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append(";");
 
             return AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 null);
         }
@@ -576,7 +541,7 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append(";");
 
             return AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 null);
         }
@@ -598,11 +563,10 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[1];
 
             arParams[0] = new SQLiteParameter(":SiteGuid", DbType.String, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteGuid.ToString();
 
             return AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
         }
@@ -651,11 +615,10 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[1];
 
             arParams[0] = new SQLiteParameter(":PageSize", DbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = pageSize;
 
             return AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
         }
@@ -707,15 +670,13 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[2];
 
             arParams[0] = new SQLiteParameter(":SiteGuid", DbType.String, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteGuid.ToString();
 
             arParams[1] = new SQLiteParameter(":PageSize", DbType.Int32);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = pageSize;
 
             return AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
         }
@@ -765,11 +726,10 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[1];
 
             arParams[0] = new SQLiteParameter(":PageSize", DbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = pageSize;
 
             return AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
         }
@@ -822,20 +782,16 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[2];
 
             arParams[0] = new SQLiteParameter(":SiteGuid", DbType.String, 36);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = siteGuid.ToString();
 
             arParams[1] = new SQLiteParameter(":PageSize", DbType.Int32);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = pageSize;
 
             return AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
         }
-
-
 
     }
 }

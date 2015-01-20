@@ -1,6 +1,6 @@
 ﻿//	Author:                 Joe Audette
 //  Created:			    2011-07-23
-//	Last Modified:		    2015-01-19
+//	Last Modified:		    2015-01-20
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -15,12 +15,6 @@ namespace cloudscribe.Core.Repositories.SQLite
 {
     internal static class DBSystemLog
     {
-        private static string GetConnectionString()
-        {
-            return ConnectionString.GetConnectionString();
-        }
-
-
         /// <summary>
         /// Inserts a row in the mp_SystemLog table. Returns new integer id.
         /// </summary>
@@ -74,44 +68,34 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[9];
 
             arParams[0] = new SQLiteParameter(":LogDate", DbType.DateTime);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = logDate;
 
             arParams[1] = new SQLiteParameter(":IpAddress", DbType.String, 50);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = ipAddress;
 
             arParams[2] = new SQLiteParameter(":Culture", DbType.String, 10);
-            arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = culture;
 
             arParams[3] = new SQLiteParameter(":Url", DbType.Object);
-            arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = url;
 
             arParams[4] = new SQLiteParameter(":ShortUrl", DbType.String, 255);
-            arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = shortUrl;
 
             arParams[5] = new SQLiteParameter(":Thread", DbType.String, 255);
-            arParams[5].Direction = ParameterDirection.Input;
             arParams[5].Value = thread;
 
             arParams[6] = new SQLiteParameter(":LogLevel", DbType.String, 20);
-            arParams[6].Direction = ParameterDirection.Input;
             arParams[6].Value = logLevel;
 
             arParams[7] = new SQLiteParameter(":Logger", DbType.String, 255);
-            arParams[7].Direction = ParameterDirection.Input;
             arParams[7].Value = logger;
 
             arParams[8] = new SQLiteParameter(":Message", DbType.Object);
-            arParams[8].Direction = ParameterDirection.Input;
             arParams[8].Value = message;
 
-
             int newID = Convert.ToInt32(AdoHelper.ExecuteScalar(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 arParams).ToString());
 
@@ -133,11 +117,10 @@ namespace cloudscribe.Core.Repositories.SQLite
             //SQLiteParameter[] arParams = new SQLiteParameter[1];
 
             //arParams[0] = new SQLiteParameter(":ID", DbType.Int32);
-            //arParams[0].Direction = ParameterDirection.Input;
             //arParams[0].Value = id;
 
             AdoHelper.ExecuteNonQuery(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 null);
 
@@ -159,11 +142,10 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[1];
 
             arParams[0] = new SQLiteParameter(":ID", DbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = id;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
 
@@ -187,12 +169,10 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[1];
 
             arParams[0] = new SQLiteParameter(":CutoffDate", DbType.DateTime);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = cutoffDate;
 
-
             int rowsAffected = AdoHelper.ExecuteNonQuery(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
 
@@ -217,12 +197,10 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[1];
 
             arParams[0] = new SQLiteParameter(":LogLevel", DbType.String, 20);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = logLevel;
 
-
             int rowsAffected = AdoHelper.ExecuteNonQuery(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
 
@@ -241,7 +219,7 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append(";");
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 null));
         }
@@ -293,15 +271,13 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[2];
 
             arParams[0] = new SQLiteParameter(":PageSize", DbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = pageSize;
 
             arParams[1] = new SQLiteParameter(":OffsetRows", DbType.Int32);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = pageLowerBound;
 
             return AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
 
@@ -354,15 +330,13 @@ namespace cloudscribe.Core.Repositories.SQLite
             SQLiteParameter[] arParams = new SQLiteParameter[2];
 
             arParams[0] = new SQLiteParameter(":PageSize", DbType.Int32);
-            arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = pageSize;
 
             arParams[1] = new SQLiteParameter(":OffsetRows", DbType.Int32);
-            arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = pageLowerBound;
 
             return AdoHelper.ExecuteReader(
-                GetConnectionString(),
+                ConnectionString.GetConnectionString(),
                 sqlCommand.ToString(),
                 arParams);
 
