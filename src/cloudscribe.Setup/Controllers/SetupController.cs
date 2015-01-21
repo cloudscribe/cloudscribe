@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2015-01-10
-// Last Modified:			2015-01-10
+// Last Modified:			2015-01-21
 // 
 
 using cloudscribe.Configuration;
@@ -1047,94 +1047,6 @@ namespace cloudscribe.Setup.Controllers
         }
 
 
-        public async Task<ActionResult> Test()
-        {
-            scriptTimeout = Server.ScriptTimeout;
-            Response.Cache.SetCacheability(HttpCacheability.ServerAndNoCache);
-
-            IOwinContext owinContext = HttpContext.GetOwinContext();
-            StandardKernel ninjectKernel = owinContext.Get<StandardKernel>();
-            siteRepository = ninjectKernel.Get<ISiteRepository>();
-            userRepository = ninjectKernel.Get<IUserRepository>();
-            db = ninjectKernel.Get<IDb>();
-
-            setupIsDisabled = AppSettings.DisableSetup;
-
-            bool isAdmin = false;
-            //bool result;
-            //try
-            //{
-            //    //isAdmin = WebUser.IsAdmin;
-            //}
-            //catch { }
-
-
-
-            if (setupIsDisabled && !isAdmin)
-            {
-                //WritePageContent(Response, SetupResources.SetupDisabledMessage);
-                Response.StatusCode = 404;
-                //Response.
-
-                HttpContext.ApplicationInstance.CompleteRequest();
-                return new EmptyResult();
-            }
-
-            Response.BufferOutput = true;
-
-            Server.ScriptTimeout = int.MaxValue;
-            startTime = DateTime.UtcNow;
-
-            WritePageHeader(Response);
-
-            if (setupIsDisabled && isAdmin)
-            {
-                WritePageContent(Response, SetupResources.RunningSetupForAdminUser);
-
-            }
-
-            if (LockForSetup())
-            {
-                try
-                {
-                    //ProbeSystem(Response);
-                    //result = await RunSetup(Response);
-                    Response.Write("<ul>");
-
-                    for (int x = 1; x < 11; x++)
-                    {
-                        Response.Write("<li>" + x.ToInvariantString() + "</li>");
-                        Response.Flush();
-                        bool fun = await DoSomethingSlow();
-                    }
-
-                    Response.Write("/<ul>");
-                }
-                finally
-                {
-                    ClearSetupLock();
-                }
-
-            }
-            else
-            {
-                WritePageContent(Response, SetupResources.SetupAlreadyInProgress);
-            }
-
-            WritePageContent(Response, SetupResources.SetupEnabledMessage);
-
-            WritePageFooter(Response);
-
-            HttpContext.ApplicationInstance.CompleteRequest();
-
-            return new EmptyResult();
-        }
-
-        private async Task<bool> DoSomethingSlow()
-        {
-            await Task.Delay(5000);
-
-            return true;
-        }
+        
     }
 }

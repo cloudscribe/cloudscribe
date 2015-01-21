@@ -1,4 +1,9 @@
-﻿using cloudscribe.AspNet.Identity;
+﻿// Author:					Joe Audette
+// Created:					2014-10-26
+// Last Modified:			2015-01-21
+// 
+
+using cloudscribe.AspNet.Identity;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Web.ViewModels.SiteUser;
 using Microsoft.AspNet.Identity;
@@ -25,18 +30,9 @@ namespace cloudscribe.Core.Web.Controllers
 
 
         // GET: /Manage/Index
-        public async Task<ActionResult> Index(ManageMessageId? message)
+        public async Task<ActionResult> Index()
         {
             ViewBag.SiteName = Site.SiteSettings.SiteName;
-
-            ViewBag.StatusMessage =
-                message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
-                : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
-                : message == ManageMessageId.SetTwoFactorSuccess ? "Your two-factor authentication provider has been set."
-                : message == ManageMessageId.Error ? "An error has occurred."
-                : message == ManageMessageId.AddPhoneSuccess ? "Your phone number was added."
-                : message == ManageMessageId.RemovePhoneSuccess ? "Your phone number was removed."
-                : "";
 
             ISiteUser user = Site.SiteUserManager.FindById(User.Identity.GetUserId());
             var model = new AccountIndexViewModel
@@ -80,7 +76,7 @@ namespace cloudscribe.Core.Web.Controllers
             return View(linkedAccounts);
         }
 
-        //
+        
         // POST: /Manage/RemoveLogin
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -88,8 +84,10 @@ namespace cloudscribe.Core.Web.Controllers
         {
             ViewBag.SiteName = Site.SiteSettings.SiteName;
 
-            ManageMessageId? message;
-            var result = await Site.SiteUserManager.RemoveLoginAsync(User.Identity.GetUserId(), new UserLoginInfo(loginProvider, providerKey));
+            var result = await Site.SiteUserManager.RemoveLoginAsync(
+                User.Identity.GetUserId(), 
+                new UserLoginInfo(loginProvider, providerKey));
+
             if (result.Succeeded)
             {
                 var user = await Site.SiteUserManager.FindByIdAsync(User.Identity.GetUserId());
@@ -97,16 +95,18 @@ namespace cloudscribe.Core.Web.Controllers
                 {
                     await SignInAsync(user, isPersistent: false);
                 }
-                message = ManageMessageId.RemoveLoginSuccess;
+      
+                this.AlertSuccess("The external login was removed.");
             }
             else
             {
-                message = ManageMessageId.Error;
+                this.AlertDanger("oops something went wrong, the external login was not removed, please try again.");
+          
             }
-            return RedirectToAction("ManageLogins", new { Message = message });
+            return RedirectToAction("ManageLogins");
         }
 
-        //
+  
         // GET: /Manage/AddPhoneNumber
         public ActionResult AddPhoneNumber()
         {
@@ -115,7 +115,7 @@ namespace cloudscribe.Core.Web.Controllers
             return View();
         }
 
-        //
+
         // POST: /Manage/AddPhoneNumber
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -141,7 +141,7 @@ namespace cloudscribe.Core.Web.Controllers
             return RedirectToAction("VerifyPhoneNumber", new { PhoneNumber = model.Number });
         }
 
-        //
+
         // POST: /Manage/EnableTwoFactorAuthentication
         [HttpPost]
         public async Task<ActionResult> EnableTwoFactorAuthentication()
@@ -155,7 +155,7 @@ namespace cloudscribe.Core.Web.Controllers
             return RedirectToAction("Index", "Manage");
         }
 
-        //
+
         // POST: /Manage/DisableTwoFactorAuthentication
         [HttpPost]
         public async Task<ActionResult> DisableTwoFactorAuthentication()
@@ -169,7 +169,7 @@ namespace cloudscribe.Core.Web.Controllers
             return RedirectToAction("Index", "Manage");
         }
 
-        //
+        
         // GET: /Manage/VerifyPhoneNumber
         public async Task<ActionResult> VerifyPhoneNumber(string phoneNumber)
         {
@@ -180,7 +180,7 @@ namespace cloudscribe.Core.Web.Controllers
             return phoneNumber == null ? View("Error") : View(new VerifyPhoneNumberViewModel { PhoneNumber = phoneNumber });
         }
 
-        //
+        
         // POST: /Manage/VerifyPhoneNumber
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -200,7 +200,10 @@ namespace cloudscribe.Core.Web.Controllers
                 {
                     await SignInAsync(user, isPersistent: false);
                 }
-                return RedirectToAction("Index", new { Message = ManageMessageId.AddPhoneSuccess });
+
+                this.AlertSuccess("Your phone number was added.");
+
+                return RedirectToAction("Index");
             }
             // If we got this far, something failed, redisplay form
             ModelState.AddModelError("", "Failed to verify phone");
@@ -214,17 +217,22 @@ namespace cloudscribe.Core.Web.Controllers
             var result = await Site.SiteUserManager.SetPhoneNumberAsync(User.Identity.GetUserId(), null);
             if (!result.Succeeded)
             {
-                return RedirectToAction("Index", new { Message = ManageMessageId.Error });
+                this.AlertDanger("oops something went wrong please try again");
+
+                return RedirectToAction("Index");
             }
             var user = await Site.SiteUserManager.FindByIdAsync(User.Identity.GetUserId());
             if (user != null)
             {
                 await SignInAsync(user, isPersistent: false);
             }
-            return RedirectToAction("Index", new { Message = ManageMessageId.RemovePhoneSuccess });
+
+            this.AlertSuccess("Your phone number was removed.");
+
+            return RedirectToAction("Index");
         }
 
-        //
+        
         // GET: /Manage/ChangePassword
         public ActionResult ChangePassword()
         {
@@ -233,7 +241,7 @@ namespace cloudscribe.Core.Web.Controllers
             return View();
         }
 
-        //
+        
         // POST: /Manage/ChangePassword
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -253,13 +261,16 @@ namespace cloudscribe.Core.Web.Controllers
                 {
                     await SignInAsync(user, isPersistent: false);
                 }
-                return RedirectToAction("Index", new { Message = ManageMessageId.ChangePasswordSuccess });
+
+                this.AlertSuccess("Your password has been changed.");
+
+                return RedirectToAction("Index");
             }
             AddErrors(result);
             return View(model);
         }
 
-        //
+        
         // GET: /Manage/SetPassword
         public ActionResult SetPassword()
         {
@@ -268,7 +279,7 @@ namespace cloudscribe.Core.Web.Controllers
             return View();
         }
 
-        //
+        
         // POST: /Manage/SetPassword
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -286,7 +297,10 @@ namespace cloudscribe.Core.Web.Controllers
                     {
                         await SignInAsync(user, isPersistent: false);
                     }
-                    return RedirectToAction("Index", new { Message = ManageMessageId.SetPasswordSuccess });
+
+                    this.AlertSuccess("your password has been set");
+
+                    return RedirectToAction("Index");
                 }
                 AddErrors(result);
             }
@@ -295,16 +309,12 @@ namespace cloudscribe.Core.Web.Controllers
             return View(model);
         }
 
-        //
+        
         // GET: /Manage/ManageLogins
-        public async Task<ActionResult> ManageLogins(ManageMessageId? message)
+        public async Task<ActionResult> ManageLogins()
         {
             ViewBag.SiteName = Site.SiteSettings.SiteName;
 
-            ViewBag.StatusMessage =
-                message == ManageMessageId.RemoveLoginSuccess ? "The external login was removed."
-                : message == ManageMessageId.Error ? "An error has occurred."
-                : "";
             var user = await Site.SiteUserManager.FindByIdAsync(User.Identity.GetUserId());
             if (user == null)
             {
@@ -320,7 +330,7 @@ namespace cloudscribe.Core.Web.Controllers
             });
         }
 
-        //
+        
         // POST: /Manage/LinkLogin
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -330,17 +340,24 @@ namespace cloudscribe.Core.Web.Controllers
             return new AccountController.ChallengeResult(provider, Url.Action("LinkLoginCallback", "Manage"), User.Identity.GetUserId());
         }
 
-        //
+        
         // GET: /Manage/LinkLoginCallback
         public async Task<ActionResult> LinkLoginCallback()
         {
             var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync(XsrfKey, User.Identity.GetUserId());
             if (loginInfo == null)
             {
-                return RedirectToAction("ManageLogins", new { Message = ManageMessageId.Error });
+                this.AlertDanger("oops something went wrong please try again");
+
+                return RedirectToAction("ManageLogins");
             }
             var result = await Site.SiteUserManager.AddLoginAsync(User.Identity.GetUserId(), loginInfo.Login);
-            return result.Succeeded ? RedirectToAction("ManageLogins") : RedirectToAction("ManageLogins", new { Message = ManageMessageId.Error });
+            if(!result.Succeeded)
+            {
+                this.AlertDanger("oops something went wrong, please try again");
+            }
+
+            return RedirectToAction("ManageLogins");
         }
 
         #region Helpers
@@ -392,16 +409,7 @@ namespace cloudscribe.Core.Web.Controllers
             return false;
         }
 
-        public enum ManageMessageId
-        {
-            AddPhoneSuccess,
-            ChangePasswordSuccess,
-            SetTwoFactorSuccess,
-            SetPasswordSuccess,
-            RemoveLoginSuccess,
-            RemovePhoneSuccess,
-            Error
-        }
+        
 
         #endregion
     }
