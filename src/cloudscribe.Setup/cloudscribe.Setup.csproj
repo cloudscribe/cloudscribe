@@ -114,9 +114,6 @@
   <ItemGroup>
     <Compile Include="Controllers\SetupController.cs" />
     <Compile Include="SetupHelper.cs" />
-    <Compile Include="SetupPage.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -18,7 +18,7 @@ namespace cloudscribe.Core.Web.Components
 {
     public class NewSiteHelper
     {
-        public static SiteSettings CreateNewSite(ISiteRepository siteRepo)
+        public static async Task<SiteSettings> CreateNewSite(ISiteRepository siteRepo)
         {
             //string templateFolderPath = GetMessageTemplateFolder();
             //string templateFolder = templateFolderPath;
@@ -26,14 +26,14 @@ namespace cloudscribe.Core.Web.Components
             SiteSettings newSite = new SiteSettings();
             newSite.SiteName = "Sample Site";
 
-            CreateNewSite(siteRepo, newSite);
+            bool result = await CreateNewSite(siteRepo, newSite);
 
             return newSite;
 
 
         }
 
-        public static void CreateNewSite(ISiteRepository siteRepo, ISiteSettings newSite)
+        public static async Task<bool> CreateNewSite(ISiteRepository siteRepo, ISiteSettings newSite)
         {
             if (siteRepo == null) { throw new ArgumentNullException("you must pass in an instance of ISiteRepository"); }
             if (newSite == null) { throw new ArgumentNullException("you must pass in an instance of ISiteSettings"); }
@@ -84,10 +84,10 @@ namespace cloudscribe.Core.Web.Components
             newSite.PasswordStrengthRegularExpression = String.Empty;
             //newSite.DefaultEmailFromAddress = GetMessageTemplate(templateFolder, "InitialEmailFromContent.config");
 
-            siteRepo.Save(newSite);
+            bool result = await siteRepo.Save(newSite);
 
 
-
+            return result;
 
 
         }
