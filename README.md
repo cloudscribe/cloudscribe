@@ -1,6 +1,6 @@
 # Cloudscribe Core 
 
-## Why Start From Scratch?
+#### Why Start From Scratch?
 
 Every web application or website project tends to need a certain amount of basic functionality, why build this over and over. When I start a new web project I want to use this functionality that is already built so I can jump right in on the specific feature I want to implement. 
 
