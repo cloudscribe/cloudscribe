@@ -1,6 +1,6 @@
-Cloudscribe Core Project - Web Application Framework - Why Start From Scratch?
+Cloudscribe Core - Web Application Framework - Why Start From Scratch?
 
-Every web application or website project tends to need a certain amount of basic functionality, why build this over and over. When I start a new project I want to use this functionality that is already built so I can jump right in on the specific feature I want to implement. 
+Every web application or website project tends to need a certain amount of basic functionality, why build this over and over. When I start a new web project I want to use this functionality that is already built so I can jump right in on the specific feature I want to implement. 
 
 Ideally I would either have a VS project template that would pull in all this functionality or at minimum there could be NuGet packages and documentation to setup their use. None of the reusable code should live directly in the web app project, it should all be in libraries and the developer should have complete ownership of the web app project. So the idea is that you could start with a standard MVC project and then pull in all the needed Nuget packages and minimal code will be needed within the web app project to integrate and wire it up. 
 

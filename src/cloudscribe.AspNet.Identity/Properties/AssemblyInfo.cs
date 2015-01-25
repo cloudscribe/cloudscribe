@@ -6,12 +6,12 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("cloudscribe.AspNet.Identity")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Asp.Net Identity Implementation for cloudscribe core")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Source Tree Solutions, LLC")]
 [assembly: AssemblyProduct("cloudscribe.AspNet.Identity")]
 [assembly: AssemblyCopyright("Copyright ©  2014")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyTrademark("cloudscribe is a registered trademark of Source Tree Solutions, LLC")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 

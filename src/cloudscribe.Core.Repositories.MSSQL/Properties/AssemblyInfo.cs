@@ -5,13 +5,13 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("mojoPortal.Cloudscribe.Repositories")]
+[assembly: AssemblyTitle("cloudscribe.Core.Repositories.MSSQL")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("mojoPortal.Cloudscribe.Repositories")]
+[assembly: AssemblyCompany("Source Tree Solutions, LLC")]
+[assembly: AssemblyProduct("cloudscribe.Core.Repositories.MSSQL")]
 [assembly: AssemblyCopyright("Copyright ©  2014")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyTrademark("cloudscribe is a registered trademark of Source Tree Solutions, LLC")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 

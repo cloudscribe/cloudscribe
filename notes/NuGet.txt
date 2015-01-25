@@ -1,0 +1,16 @@
+
+
+http://geekswithblogs.net/TimothyK/archive/2014/03/27/what-is-nuget.aspx
+
+https://www.nuget.org/
+https://www.myget.org/
+
+http://docs.nuget.org/docs/creating-packages/creating-and-publishing-a-package
+
+http://docs.nuget.org/docs/creating-packages/Using-a-GUI-to-build-packages
+
+http://geekswithblogs.net/TimothyK/archive/2014/03/27/creating-nuget-packages.aspx
+
+http://haacked.com/archive/2011/10/24/semver-nuget-nightly-builds.aspx/
+
+http://haacked.com/archive/2014/04/15/nuget-build-dependencies/

@@ -5,13 +5,13 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("cs.Web.Framework")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Cloudscribe Web Foundation")]
+[assembly: AssemblyDescription("mvc/webapi web application foundation multi-tenant site user and role management")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("cs.Web.Framework")]
+[assembly: AssemblyCompany("Source Tree Solutions, LLC")]
+[assembly: AssemblyProduct("Cloudscribe.Core")]
 [assembly: AssemblyCopyright("Copyright ©  2014")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyTrademark("cloudscribe is a registered trademark of Source Tree Solutions, LLC")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 

@@ -1,3 +1,7 @@
+a good introduction to async await, at about 25 minutes it is also about using the codeitright product for code quality analysis
+but shows the correct way to use async await and common wrong way mistakes to avoid
+https://www.youtube.com/watch?v=k81OaT_P6K0#t=60
+
 
 best practices in async
 http://msdn.microsoft.com/en-us/magazine/jj991977.aspx
