@@ -15,7 +15,6 @@ Target Features:
 * Application Permissions Table (SiteId, key, allowedRoles)
 * Settings Table a place to store key values with a collection guid and site guid
 * Plugable Routing System - only needed if attribute based routing doesn’t work
-* Redirect System
 * System Logging - file or database error logging options built in
 * System Profiling (via Glimpse) - only works in full trust hosting
 * File Upload and storage file manager for user uploaded files
