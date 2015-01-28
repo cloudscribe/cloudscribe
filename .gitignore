@@ -23,6 +23,8 @@ src/cloudscribe.WebHost/Scripts/ckeditor/
 src/cloudscribe.WebHost/Scripts/tinymce/
 _bin*
 *SQLite.Interop.dll
+/nuget/*/lib/net45/*.dll
+/nuget/*.nupkg
 
 
 # MSTest test Results

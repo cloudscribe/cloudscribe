@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>cloudscribe.Core.Repositories.SQLite</id>
+    <version>1.0.alpha1</version>
+    <title></title>
+    <authors>Joe Audette</authors>
+    <owners>Joe Audette</owners>
+    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+    <projectUrl>https://github.com/joeaudette/cloudscribe</projectUrl>
+    <iconUrl>http://download.mojoportal.com/images/cloudscribe-rocket-32.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>multi-tenant MVC/WebApi application framework with management for sites, users, and roles</description>
+    <releaseNotes>work in progess</releaseNotes>
+    <copyright>Copyright 2015 Source Tree Solutions, LLC</copyright>
+    <tags>multi-tenant MVC/WebApi application-framework  management sites users roles</tags>
+  </metadata>
+</package>
