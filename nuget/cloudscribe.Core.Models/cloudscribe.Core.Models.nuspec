@@ -15,7 +15,7 @@
     <copyright>Copyright 2015 Source Tree Solutions, LLC</copyright>
     <tags>cloudscribe models</tags>
 	<dependencies>
-	 <dependency id="cloudscribe.Configuration" version="1.0.2-alpha1" />
+	 <dependency id="cloudscribe.Configuration" version="1.0.0-alpha1" />
 	 <dependency id="Microsoft.AspNet.Identity.Core" version="" />
 	 <dependency id="Microsoft.AspNet.Identity.Owin" version="" />
 	 <dependency id="Microsoft.Owin" version="" />

@@ -45,8 +45,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cloudscribe.Core.Repositori
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cloudscribe.Core.Repositories.Caching", "cloudscribe.Core.Repositories.Caching\cloudscribe.Core.Repositories.Caching.csproj", "{DF8EAEDC-7955-46D8-AB03-E86D5B522D66}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cloudscribe.Setup", "cloudscribe.Setup\cloudscribe.Setup.csproj", "{8934D759-EAB7-4372-8FED-05ABD3A213AB}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -137,10 +135,6 @@ Global
 		{DF8EAEDC-7955-46D8-AB03-E86D5B522D66}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DF8EAEDC-7955-46D8-AB03-E86D5B522D66}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DF8EAEDC-7955-46D8-AB03-E86D5B522D66}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8934D759-EAB7-4372-8FED-05ABD3A213AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8934D759-EAB7-4372-8FED-05ABD3A213AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8934D759-EAB7-4372-8FED-05ABD3A213AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8934D759-EAB7-4372-8FED-05ABD3A213AB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

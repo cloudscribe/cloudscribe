@@ -1,5 +1,7 @@
 
 
+http://docs.nuget.org/consume/command-line-reference
+
 http://geekswithblogs.net/TimothyK/archive/2014/03/27/what-is-nuget.aspx
 
 https://www.nuget.org/

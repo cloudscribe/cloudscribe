@@ -2,17 +2,27 @@
 <package >
   <metadata>
     <id>cloudscribe.Core.Repositories.MSSQL</id>
-    <version>1.0.alpha1</version>
-    <title></title>
+    <version>1.0.0-alpha1</version>
+    <title>cloudscribe Core Repositories for SqlAzure and MSSQL >= 2005</title>
     <authors>Joe Audette</authors>
     <owners>Joe Audette</owners>
     <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
     <projectUrl>https://github.com/joeaudette/cloudscribe</projectUrl>
     <iconUrl>http://download.mojoportal.com/images/cloudscribe-rocket-32.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>multi-tenant MVC/WebApi application framework with management for sites, users, and roles</description>
+    <description>
+	cloudscribe Core Repositories for SqlAzure and MSSQL >= 2005
+	</description>
     <releaseNotes>work in progess</releaseNotes>
     <copyright>Copyright 2015 Source Tree Solutions, LLC</copyright>
-    <tags>multi-tenant MVC/WebApi application-framework  management sites users roles</tags>
+    <tags>cloudscribe repositories mssql</tags>
+	
+	<dependencies>
+	 <dependency id="cloudscribe.Configuration" version="1.0.0-alpha1" />
+	 <dependency id="cloudscribe.Core.Models" version="1.0.0-alpha1" />
+	 <dependency id="cloudscribe.DbHelpers.MSSQL" version="1.0.0-alpha1" />
+	 <dependency id="log4net" version="1.1.13.0" />
+	 
+	  </dependencies>
   </metadata>
 </package>

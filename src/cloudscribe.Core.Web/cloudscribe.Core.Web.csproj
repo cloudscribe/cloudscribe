@@ -104,6 +104,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.SQLite">
       <HintPath>..\packages\System.Data.SQLite.Core.1.0.94.0\lib\net45\System.Data.SQLite.dll</HintPath>
@@ -158,12 +159,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\NewSiteHelper.cs" />
+    <Compile Include="Components\SetupHelper.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CloudscribeBaseController.cs" />
     <Compile Include="Controllers\CoreDataController.cs" />
     <Compile Include="Controllers\Extensions.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\RoleAdminController.cs" />
+    <Compile Include="Controllers\SetupController.cs" />
     <Compile Include="Controllers\SiteAdminController.cs" />
     <Compile Include="Controllers\UserAdminController.cs" />
     <Compile Include="CoreViewEngine.cs" />

@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>cloudscribe.DbHelpers.MSSQL</id>
-    <version>1.0.alpha1</version>
+    <version>1.0.0-alpha1</version>
     <title>cloudscribe database helpers for MS SQL</title>
     <authors>Joe Audette</authors>
     <owners>Joe Audette</owners>
@@ -10,9 +10,19 @@
     <projectUrl>https://github.com/joeaudette/cloudscribe</projectUrl>
     <iconUrl>http://download.mojoportal.com/images/cloudscribe-rocket-32.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>cloudscribe database helpers for MS SQL</description>
+    <description>
+	cloudscribe database helpers for MS SQL
+	</description>
     <releaseNotes>work in progess</releaseNotes>
     <copyright>Copyright 2015 Source Tree Solutions, LLC</copyright>
-    <tags></tags>
+    <tags>cloudscribe mssql</tags>
+	
+	<dependencies>
+	 <dependency id="cloudscribe.Configuration" version="1.0.0-alpha1" />
+	 <dependency id="cloudscribe.Core.Models" version="1.0.0-alpha1" />
+	 <dependency id="log4net" version="1.1.13.0" />
+	 
+	 
+	  </dependencies>
   </metadata>
 </package>
