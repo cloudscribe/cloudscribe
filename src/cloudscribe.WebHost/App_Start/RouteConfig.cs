@@ -8,7 +8,7 @@ using cloudscribe.Configuration;
 using cloudscribe.Web.Routing;
 using cloudscribe.Core.Models;
 using log4net;
-using Ninject;
+//using Ninject;
 
 
 //http://www.c-sharpcorner.com/UploadFile/ff2f08/custom-route-constraints-in-Asp-Net-mvc-5/
@@ -62,20 +62,20 @@ namespace cloudscribe.WebHost
         private static void RegisterFolderSiteDefaultRoutes(RouteCollection routes)
         {
             
-            StandardKernel kernel = Startup.GetKernel();
-            ISiteRepository siteRepo = kernel.Get<ISiteRepository>();
+            //StandardKernel kernel = Startup.GetKernel();
+            //ISiteRepository siteRepo = kernel.Get<ISiteRepository>();
 
-            List<SiteFolder> allFolders = siteRepo.GetAllSiteFoldersNonAsync();
-            foreach (SiteFolder f in allFolders)
-            {
-                routes.MapRoute(
-                name: f.FolderName + "Default",
-                url: f.FolderName + "/{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional },
-                constraints: new { name = new SiteFolderRouteConstraint(f.FolderName) }
-                );
+            //List<SiteFolder> allFolders = siteRepo.GetAllSiteFoldersNonAsync();
+            //foreach (SiteFolder f in allFolders)
+            //{
+            //    routes.MapRoute(
+            //    name: f.FolderName + "Default",
+            //    url: f.FolderName + "/{controller}/{action}/{id}",
+            //    defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional },
+            //    constraints: new { name = new SiteFolderRouteConstraint(f.FolderName) }
+            //    );
 
-            }
+            //}
 
         }
     }

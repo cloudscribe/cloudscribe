@@ -14,7 +14,7 @@ using Microsoft.Owin.Security.Cookies;
 using Owin;
 using System;
 using System.Collections.Generic;
-using Ninject;
+//using Ninject;
 
 
 namespace cloudscribe.WebHost
@@ -31,38 +31,38 @@ namespace cloudscribe.WebHost
             //app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
             //app.CreatePerOwinContext<ApplicationSignInManager>(ApplicationSignInManager.Create);
 
-            StandardKernel ninjectKernal = GetKernel();
-            ISiteRepository siteRepo = ninjectKernal.Get<ISiteRepository>();
+            //StandardKernel ninjectKernal = GetKernel();
+            //ISiteRepository siteRepo = ninjectKernal.Get<ISiteRepository>();
 
-            //http://stackoverflow.com/questions/25393234/change-owin-auth-middleware-per-request-multi-tenant-oauth-api-keys-per-tenant/26534460#26534460
+            ////http://stackoverflow.com/questions/25393234/change-owin-auth-middleware-per-request-multi-tenant-oauth-api-keys-per-tenant/26534460#26534460
            
 
-            if(AppSettings.UseFoldersInsteadOfHostnamesForMultipleSites)
-            {
-                try
-                {
-                    List<SiteFolder> allFolders = siteRepo.GetAllSiteFoldersNonAsync();
-                    ConfigureFolderTenantAuth(app, allFolders);
-                }
-                catch(Exception ex)
-                {
-                    log.Error(ex);
-                }
+            //if(AppSettings.UseFoldersInsteadOfHostnamesForMultipleSites)
+            //{
+            //    try
+            //    {
+            //        List<SiteFolder> allFolders = siteRepo.GetAllSiteFoldersNonAsync();
+            //        ConfigureFolderTenantAuth(app, allFolders);
+            //    }
+            //    catch(Exception ex)
+            //    {
+            //        log.Error(ex);
+            //    }
                 
-            }
-            else
-            {
-                try
-                {
-                    List<ISiteHost> allHosts = siteRepo.GetAllHostsNonAsync();
-                    ConfigureHostTenantAuth(app, allHosts);
-                }
-                catch (Exception ex)
-                {
-                    log.Error(ex);
-                }
+            //}
+            //else
+            //{
+            //    try
+            //    {
+            //        List<ISiteHost> allHosts = siteRepo.GetAllHostsNonAsync();
+            //        ConfigureHostTenantAuth(app, allHosts);
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        log.Error(ex);
+            //    }
                 
-            }
+            //}
             
             // below is the default configuration
             // in the case no host name or folder is mapped

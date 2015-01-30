@@ -10,7 +10,7 @@ using cloudscribe.Resources;
 using log4net;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
-using Ninject;
+using Autofac;
 using System;
 using System.Data.Common;
 using System.Globalization;
@@ -46,6 +46,16 @@ namespace cloudscribe.Setup.Controllers
         private ISiteRepository siteRepository;
         private IUserRepository userRepository;
 
+        public SetupController(
+            IDb dbImplementation,
+            ISiteRepository siteRepositoryImplementation,
+            IUserRepository userRepositoryImplementation
+            )
+        {
+            db = dbImplementation;
+            siteRepository = siteRepositoryImplementation;
+            userRepository = userRepositoryImplementation;
+        }
 
         
 
@@ -54,11 +64,11 @@ namespace cloudscribe.Setup.Controllers
             scriptTimeout = Server.ScriptTimeout;
             Response.Cache.SetCacheability(HttpCacheability.ServerAndNoCache);
 
-            IOwinContext owinContext = HttpContext.GetOwinContext();
-            StandardKernel ninjectKernel = owinContext.Get<StandardKernel>();
-            siteRepository = ninjectKernel.Get<ISiteRepository>();
-            userRepository = ninjectKernel.Get<IUserRepository>();
-            db = ninjectKernel.Get<IDb>();
+            //IOwinContext owinContext = HttpContext.GetOwinContext();
+            //StandardKernel ninjectKernel = owinContext.Get<StandardKernel>();
+            //siteRepository = ninjectKernel.Get<ISiteRepository>();
+            //userRepository = ninjectKernel.Get<IUserRepository>();
+            //db = ninjectKernel.Get<IDb>();
             setupIsDisabled = AppSettings.DisableSetup;
 
 

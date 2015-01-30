@@ -21,13 +21,13 @@
                 @Html.ActionLink((string)ViewBag.SiteName, "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
-                @Html.MvcSiteMap().Menu("MvcSiteMapHelperModel")
+             @*  @Html.MvcSiteMap().Menu("MvcSiteMapHelperModel") *@ 
                 @Html.Partial("_LoginPartial")
             </div> 
          </div>
     </div>
     <div class="container body-content">
-        @Html.MvcSiteMap().SiteMapPath("MvcSiteMapPathHelperModel")
+@*  @Html.MvcSiteMap().SiteMapPath("MvcSiteMapPathHelperModel") *@
         @{ Html.RenderPartial("AlertsPartial"); }
         @RenderBody()
         <hr />

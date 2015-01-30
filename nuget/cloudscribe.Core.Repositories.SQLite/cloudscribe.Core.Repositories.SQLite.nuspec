@@ -21,8 +21,9 @@
 	 <dependency id="cloudscribe.Configuration" version="1.0.0-alpha1" />
 	 <dependency id="cloudscribe.Core.Models" version="1.0.0-alpha1" />
 	 <dependency id="cloudscribe.DbHelpers.SQLite" version="1.0.0-alpha1" />
-	 <dependency id="log4net" version="1.1.13.0" />
-	 <dependency id="System.Data.SQLite" version="" />
+	 
+	 <dependency id="log4net" version="[2.0.3]" />
+	 <dependency id="System.Data.SQLite" version="[1.0.94.1]" />
 	 
 	  </dependencies>
   </metadata>

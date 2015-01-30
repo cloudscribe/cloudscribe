@@ -21,8 +21,10 @@
 	 <dependency id="cloudscribe.Configuration" version="1.0.0-alpha1" />
 	 <dependency id="cloudscribe.Core.Models" version="1.0.0-alpha1" />
 	 <dependency id="cloudscribe.DbHelpers.pgsql" version="1.0.0-alpha1" />
-	 <dependency id="log4net" version="1.1.13.0" />
-	 <dependency id="Npgsql.Data" version="" />
+	 
+	 <dependency id="log4net" version="[2.0.3]" />
+	 <dependency id="Npgsql" version="[2.2.3]" />
+	 <dependency id="Microsoft.AspNet.Identity.Core" version="[2.1.0]" />
 	 
 	  </dependencies>
   </metadata>

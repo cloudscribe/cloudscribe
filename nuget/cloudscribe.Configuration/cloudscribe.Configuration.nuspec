@@ -17,7 +17,7 @@
     <copyright>Copyright 2015 Source Tree Solutions, LLC</copyright>
     <tags>cloudscribe configuration</tags>
 	<dependencies>
-  <dependency id="log4net" version="1.1.13.0" />
+  <dependency id="log4net" version="2.0.3" />
 
 </dependencies>
   </metadata>

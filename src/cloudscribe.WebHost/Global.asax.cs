@@ -53,7 +53,7 @@ namespace cloudscribe.WebHost
             });
 
 
-            //MvcSiteMapProvider.SiteMaps.Loader = new MvcSiteMapProvider.Loader.SiteMapLoader()
+            //MvcSiteMapProvider.SiteMaps.Loader = new MvcSiteMapProvider.Loader.SiteMapLoader();
 
             //MvcSiteMapProvider.DI.Composer.Compose();
 

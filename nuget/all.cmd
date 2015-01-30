@@ -4,4 +4,17 @@ call cloudscribe.Resources.cmd
 call cloudscribe.AspNet.Identity.cmd
 call cloudscribe.Caching.cmd
 call cloudscribe.Core.Repositories.Caching.cmd
+call cloudscribe.DbHelpers.Firebird.cmd
+call cloudscribe.DbHelpers.MSSQL.cmd
+call cloudscribe.DbHelpers.MySql.cmd
+call cloudscribe.DbHelpers.pgsql.cmd
+call cloudscribe.DbHelpers.SqlCe.cmd
+call cloudscribe.DbHelpers.SQLite.cmd
+call cloudscribe.Core.Repositories.Firebird.cmd
+call cloudscribe.Core.Repositories.MSSQL.cmd
+call cloudscribe.Core.Repositories.MySql.cmd
+call cloudscribe.Core.Repositories.pgsql.cmd
+call cloudscribe.Core.Repositories.SqlCe.cmd
+call cloudscribe.Core.Repositories.SQLite.cmd
+call cloudscribe.Core.Web.cmd
 

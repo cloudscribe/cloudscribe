@@ -25,6 +25,7 @@ _bin*
 *SQLite.Interop.dll
 /nuget/*/lib/net45/*.dll
 /nuget/nupkgs/
+/nuget/*/content/
 
 
 # MSTest test Results
