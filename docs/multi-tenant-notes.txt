@@ -10,13 +10,13 @@ Host Name Sites
 The SiteId is resolved by the host name, ie somedomain.com is one host name and www.somedomain.com is another host name, you can map one or more host names to any given site. Any host names that are not mapped to a specific site are, mapped to the default site, ie the server admin site.
 Typically for SEO you don't want duplicate content at different host names, so the notion of a preferred host name is also supported so that if a site is handling multiple host names you can redirect all of them to the preferred one. ie you may prefer somedomain.com vs www.somedomain.com and you can redirect requests for www.somedomain.com to somedomain.com if that is your preferred host name.
 
-For a given domain name you can create as many host name DNS "a" records as you like host1.somedoamin.com, host2.somedomain.com, cheeseburger.somedomain.com orwhatever.somedoamin.com. 
+For a given domain name you can create as many host name DNS "a" records as you like host1.somedomain.com, host2.somedomain.com, cheeseburger.somedomain.com orwhatever.somedomain.com. 
 
 You can create separate new sites using those host names all in a single installation of cloudscribe, you create the site and assign the host name mapping. 
 
-Of course the ip address for the host name a record must be the ip address where the iste is runnning, and if it is a shared ip address then you must also have a host name header added to the site in IIS so that IIS will hand the request to the correct site.
+Of course the ip address for the host name a record must be the ip address where the site is runnning, and if it is a shared ip address then you must also have a host name header added to the site in IIS so that IIS will hand the request to the correct site.
 
-This need for creating DNS host names and host header mappings in IIS means that a technical person has to be involved when setting up a new site, non technical people cannot easily provision a new site in this model.
+This need for creating DNS host names and host header mappings in IIS means that a technical person has to be involved when setting up a new site; non technical people cannot easily provision a new site in this model.
 
 Folder Name Sites
 
