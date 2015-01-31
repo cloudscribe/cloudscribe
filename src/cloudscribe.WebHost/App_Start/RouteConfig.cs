@@ -64,18 +64,19 @@ namespace cloudscribe.WebHost
             
             //StandardKernel kernel = Startup.GetKernel();
             //ISiteRepository siteRepo = kernel.Get<ISiteRepository>();
+            ISiteRepository siteRepo = DependencyResolver.Current.GetService<ISiteRepository>();
 
-            //List<SiteFolder> allFolders = siteRepo.GetAllSiteFoldersNonAsync();
-            //foreach (SiteFolder f in allFolders)
-            //{
-            //    routes.MapRoute(
-            //    name: f.FolderName + "Default",
-            //    url: f.FolderName + "/{controller}/{action}/{id}",
-            //    defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional },
-            //    constraints: new { name = new SiteFolderRouteConstraint(f.FolderName) }
-            //    );
+            List<SiteFolder> allFolders = siteRepo.GetAllSiteFoldersNonAsync();
+            foreach (SiteFolder f in allFolders)
+            {
+                routes.MapRoute(
+                name: f.FolderName + "Default",
+                url: f.FolderName + "/{controller}/{action}/{id}",
+                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional },
+                constraints: new { name = new SiteFolderRouteConstraint(f.FolderName) }
+                );
 
-            //}
+            }
 
         }
     }

@@ -60,10 +60,16 @@ namespace cloudscribe.Core.Web.Controllers
 
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
-            var result = await Site.SiteSignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+            var result = await Site.SiteSignInManager.PasswordSignInAsync(
+                model.Email, 
+                model.Password, 
+                model.RememberMe, 
+                shouldLockout: false);
+            
             switch (result)
             {
                 case SignInStatus.Success:
+                    //AuthenticationManager.SignIn()
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");

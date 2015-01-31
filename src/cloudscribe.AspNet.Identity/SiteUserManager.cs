@@ -34,11 +34,11 @@ namespace cloudscribe.AspNet.Identity
            // _store = store;
         }
 
-        public override Task<ClaimsIdentity> CreateIdentityAsync(SiteUser user, string authenticationType)
-        {
+        //public override Task<ClaimsIdentity> CreateIdentityAsync(SiteUser user, string authenticationType)
+        //{
 
-            return base.CreateIdentityAsync(user, authenticationType);
-        }
+        //    return base.CreateIdentityAsync(user, authenticationType);
+        //}
     }
 
     

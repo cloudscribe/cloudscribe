@@ -19,6 +19,7 @@ using Owin;
 using System;
 using System.Reflection;
 using System.Web;
+using System.Web.Mvc;
 using System.Web.Http;
 using log4net;
 using MvcSiteMapProvider;
@@ -40,6 +41,7 @@ namespace cloudscribe.WebHost
 
         private IDataProtectionProvider dataProtectionProvider = null;
         private IContainer container = null;
+        private ISiteContext _siteContext = null;
 
         public void Configuration(IAppBuilder app)
         {
@@ -50,16 +52,43 @@ namespace cloudscribe.WebHost
 
             var builder = new ContainerBuilder();
             RegisterServices(builder);
-            //builder.RegisterControllers(Assembly.GetExecutingAssembly());
+            builder.RegisterControllers(Assembly.GetExecutingAssembly()).InstancePerRequest();
+            builder.RegisterControllers(typeof(cloudscribe.Core.Web.SiteContext).Assembly).InstancePerRequest();
+
+            //builder.RegisterModule(new cloudscribe.WebHost.DI.Autofac.Modules.MvcSiteMapProviderModule()); // Required
+            builder.RegisterModule(new cloudscribe.WebHost.DI.Autofac.Modules.MvcModule());
 
             container = builder.Build();
             //container.
+            
+            
 
-            app.UseAutofacMiddleware(container);
+            // this needed by SiteUserManager so must be set on the sitecontext first
+            dataProtectionProvider = app.GetDataProtectionProvider();
+
+            ISiteContext siteContext = GetSiteContext();
+
+            var newBuilder = new ContainerBuilder();
+            newBuilder.RegisterInstance(siteContext).As<ISiteContext>();
+            newBuilder.Update(container);
+
+            DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
+            
+            
+            app.CreatePerOwinContext(GetSiteContext);
+
+            //app.UseAutofacMiddleware(container);
 
 
             //HttpConfiguration config = new HttpConfiguration();
-            app.UseAutofacWebApi(GlobalConfiguration.Configuration);
+            //app.UseAutofacWebApi(GlobalConfiguration.Configuration);
+
+            // Setup global sitemap loader (required)
+            //MvcSiteMapProvider.SiteMaps.Loader = container.Resolve<ISiteMapLoader>();
+
+            // Check all configured .sitemap files to ensure they follow the XSD for MvcSiteMapProvider (optional)
+            //var validator = container.Resolve<ISiteMapXmlValidator>();
+            //validator.ValidateXml(HostingEnvironment.MapPath("~/Mvc.sitemap"));
 
             //config.DependencyResolver = new NinjectDependencyResolver(CreateKernel());
 
@@ -71,15 +100,14 @@ namespace cloudscribe.WebHost
             //app.Use(typeof(UrlRewriterMiddleware), GetSiteRepository());
             //app.UseStageMarker(PipelineStage.Authenticate);
 
-            // this needed by SiteUserManager so must be set on the sitecontext first
-            dataProtectionProvider = app.GetDataProtectionProvider();
-            app.CreatePerOwinContext(GetSiteContext);
+            
             
             ConfigureAuth(app);
         }
 
         private ISiteContext GetSiteContext()
         {
+            if (_siteContext != null) { return _siteContext; }
             //StandardKernel ninjectKernal = GetKernel();
             //ISiteRepository siteRepo = ninjectKernal.Get<ISiteRepository>();   
             ISiteRepository siteRepo = container.Resolve<ISiteRepository>();
@@ -89,10 +117,10 @@ namespace cloudscribe.WebHost
             IUserRepository userRepo = container.Resolve<IUserRepository>(); 
             CachingUserRepository userCache = new CachingUserRepository(userRepo);
 
-            SiteContext siteContext
+            _siteContext
                 = new SiteContext(siteCache, userCache, dataProtectionProvider);
             
-            return siteContext;
+            return _siteContext;
         }
 
         //private static ISiteRepository GetSiteRepository()
