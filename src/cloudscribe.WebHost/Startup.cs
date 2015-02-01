@@ -19,6 +19,8 @@ using Owin;
 using System;
 using System.Reflection;
 using System.Web;
+using System.Web.Optimization;
+using System.Web.Routing;
 using System.Web.Mvc;
 using System.Web.Http;
 using log4net;
@@ -42,6 +44,11 @@ namespace cloudscribe.WebHost
         private IDataProtectionProvider dataProtectionProvider = null;
         private IContainer container = null;
         //private ISiteContext _siteContext = null;
+
+        //public static IContainer GetContainer()
+        //{
+        //    return container;
+        //}
 
         public void Configuration(IAppBuilder app)
         {
@@ -87,23 +94,13 @@ namespace cloudscribe.WebHost
 
             // Setup global sitemap loader (required)
             MvcSiteMapProvider.SiteMaps.Loader = container.Resolve<ISiteMapLoader>();
-            
 
-            // Check all configured .sitemap files to ensure they follow the XSD for MvcSiteMapProvider (optional)
-            //var validator = container.Resolve<ISiteMapXmlValidator>();
-            //validator.ValidateXml(HostingEnvironment.MapPath("~/Mvc.sitemap"));
+            AreaRegistration.RegisterAllAreas();
+            GlobalConfiguration.Configure(WebApiConfig.Register);
+            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+            RouteConfig.RegisterRoutes(RouteTable.Routes);
+            BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            //config.DependencyResolver = new NinjectDependencyResolver(CreateKernel());
-
-            //app.UseWebApi(config);
-
-            // unfortunately this does not seem to work
-            // it changes the Request Path to one that matches a rout but still
-            // ends in 404
-            //app.Use(typeof(UrlRewriterMiddleware), GetSiteRepository());
-            //app.UseStageMarker(PipelineStage.Authenticate);
-
-            
             
             ConfigureAuth(app);
         }
@@ -183,23 +180,18 @@ namespace cloudscribe.WebHost
             
             switch(AppSettings.DbPlatform.ToLower())
             {
+
                 case "sqlite":
 
                     //kernel.Bind<ISiteRepository>().To<cloudscribe.Core.Repositories.SQLite.SiteRepository>();
                     //kernel.Bind<IUserRepository>().To<cloudscribe.Core.Repositories.SQLite.UserRepository>();
                     //kernel.Bind<IGeoRepository>().To<cloudscribe.Core.Repositories.SQLite.GeoRepository>();
                     //kernel.Bind<IDb>().To<cloudscribe.DbHelpers.SQLite.Db>();
-                    var siteRepo1 = new cloudscribe.Core.Repositories.SQLite.SiteRepository();
-                    builder.RegisterInstance(siteRepo1).As<ISiteRepository>();
-
-                    var userRepo1 = new cloudscribe.Core.Repositories.SQLite.UserRepository();
-                    builder.RegisterInstance(userRepo1).As<IUserRepository>();
-
-                    var geoRepo1 = new cloudscribe.Core.Repositories.SQLite.GeoRepository();
-                    builder.RegisterInstance(geoRepo1).As<IGeoRepository>();
-
-                    var db1 = new cloudscribe.DbHelpers.SQLite.Db();
-                    builder.RegisterInstance(db1).As<IDb>();
+                    
+                    builder.RegisterType<cloudscribe.Core.Repositories.SQLite.SiteRepository>().As<ISiteRepository>();
+                    builder.RegisterType<cloudscribe.Core.Repositories.SQLite.UserRepository>().As<IUserRepository>();
+                    builder.RegisterType<cloudscribe.Core.Repositories.SQLite.GeoRepository>().As<IGeoRepository>();
+                    builder.RegisterType<cloudscribe.DbHelpers.SQLite.Db>().As<IDb>();
                     
                     break;
 
@@ -210,17 +202,10 @@ namespace cloudscribe.WebHost
                     //kernel.Bind<IGeoRepository>().To<cloudscribe.Core.Repositories.SqlCe.GeoRepository>();
                     //kernel.Bind<IDb>().To<cloudscribe.DbHelpers.SqlCe.Db>();
 
-                    var siteRepo2 = new cloudscribe.Core.Repositories.SqlCe.SiteRepository();
-                    builder.RegisterInstance(siteRepo2).As<ISiteRepository>();
-
-                    var userRepo2 = new cloudscribe.Core.Repositories.SqlCe.UserRepository();
-                    builder.RegisterInstance(userRepo2).As<IUserRepository>();
-
-                    var geoRepo2 = new cloudscribe.Core.Repositories.SqlCe.GeoRepository();
-                    builder.RegisterInstance(geoRepo2).As<IGeoRepository>();
-
-                    var db2 = new cloudscribe.DbHelpers.SqlCe.Db();
-                    builder.RegisterInstance(db2).As<IDb>();
+                    builder.RegisterType<cloudscribe.Core.Repositories.SqlCe.SiteRepository>().As<ISiteRepository>();
+                    builder.RegisterType<cloudscribe.Core.Repositories.SqlCe.UserRepository>().As<IUserRepository>();
+                    builder.RegisterType<cloudscribe.Core.Repositories.SqlCe.GeoRepository>().As<IGeoRepository>();
+                    builder.RegisterType<cloudscribe.DbHelpers.SqlCe.Db>().As<IDb>();
 
                     break;
 
@@ -231,17 +216,10 @@ namespace cloudscribe.WebHost
                     //kernel.Bind<IGeoRepository>().To<cloudscribe.Core.Repositories.pgsql.GeoRepository>();
                     //kernel.Bind<IDb>().To<cloudscribe.DbHelpers.pgsql.Db>();
 
-                    var siteRepo3 = new cloudscribe.Core.Repositories.pgsql.SiteRepository();
-                    builder.RegisterInstance(siteRepo3).As<ISiteRepository>();
-
-                    var userRepo3 = new cloudscribe.Core.Repositories.pgsql.UserRepository();
-                    builder.RegisterInstance(userRepo3).As<IUserRepository>();
-
-                    var geoRepo3 = new cloudscribe.Core.Repositories.pgsql.GeoRepository();
-                    builder.RegisterInstance(geoRepo3).As<IGeoRepository>();
-
-                    var db3 = new cloudscribe.DbHelpers.pgsql.Db();
-                    builder.RegisterInstance(db3).As<IDb>();
+                    builder.RegisterType<cloudscribe.Core.Repositories.pgsql.SiteRepository>().As<ISiteRepository>();
+                    builder.RegisterType<cloudscribe.Core.Repositories.pgsql.UserRepository>().As<IUserRepository>();
+                    builder.RegisterType<cloudscribe.Core.Repositories.pgsql.GeoRepository>().As<IGeoRepository>();
+                    builder.RegisterType<cloudscribe.DbHelpers.pgsql.Db>().As<IDb>();
 
                     break;
 
@@ -251,17 +229,11 @@ namespace cloudscribe.WebHost
                     //kernel.Bind<IUserRepository>().To<cloudscribe.Core.Repositories.Firebird.UserRepository>();
                     //kernel.Bind<IGeoRepository>().To<cloudscribe.Core.Repositories.Firebird.GeoRepository>();
                     //kernel.Bind<IDb>().To<cloudscribe.DbHelpers.Firebird.Db>();
-                    var siteRepo4 = new cloudscribe.Core.Repositories.Firebird.SiteRepository();
-                    builder.RegisterInstance(siteRepo4).As<ISiteRepository>();
-
-                    var userRepo4 = new cloudscribe.Core.Repositories.Firebird.UserRepository();
-                    builder.RegisterInstance(userRepo4).As<IUserRepository>();
-
-                    var geoRepo4 = new cloudscribe.Core.Repositories.Firebird.GeoRepository();
-                    builder.RegisterInstance(geoRepo4).As<IGeoRepository>();
-
-                    var db4 = new cloudscribe.DbHelpers.Firebird.Db();
-                    builder.RegisterInstance(db4).As<IDb>();
+                   
+                    builder.RegisterType<cloudscribe.Core.Repositories.Firebird.SiteRepository>().As<ISiteRepository>();
+                    builder.RegisterType<cloudscribe.Core.Repositories.Firebird.UserRepository>().As<IUserRepository>();
+                    builder.RegisterType<cloudscribe.Core.Repositories.Firebird.GeoRepository>().As<IGeoRepository>();
+                    builder.RegisterType<cloudscribe.DbHelpers.Firebird.Db>().As<IDb>();
 
                     break;
 
@@ -272,17 +244,10 @@ namespace cloudscribe.WebHost
                     //kernel.Bind<IGeoRepository>().To<cloudscribe.Core.Repositories.MySql.GeoRepository>();
                     //kernel.Bind<IDb>().To<cloudscribe.DbHelpers.MySql.Db>();
 
-                    var siteRepo5 = new cloudscribe.Core.Repositories.MySql.SiteRepository();
-                    builder.RegisterInstance(siteRepo5).As<ISiteRepository>();
-
-                    var userRepo5 = new cloudscribe.Core.Repositories.MySql.UserRepository();
-                    builder.RegisterInstance(userRepo5).As<IUserRepository>();
-
-                    var geoRepo5 = new cloudscribe.Core.Repositories.MySql.GeoRepository();
-                    builder.RegisterInstance(geoRepo5).As<IGeoRepository>();
-
-                    var db5 = new cloudscribe.DbHelpers.MySql.Db();
-                    builder.RegisterInstance(db5).As<IDb>();
+                    builder.RegisterType<cloudscribe.Core.Repositories.MySql.SiteRepository>().As<ISiteRepository>();
+                    builder.RegisterType<cloudscribe.Core.Repositories.MySql.UserRepository>().As<IUserRepository>();
+                    builder.RegisterType<cloudscribe.Core.Repositories.MySql.GeoRepository>().As<IGeoRepository>();
+                    builder.RegisterType<cloudscribe.DbHelpers.MySql.Db>().As<IDb>();
 
                     break;
 
@@ -294,17 +259,10 @@ namespace cloudscribe.WebHost
                     //kernel.Bind<IGeoRepository>().To<cloudscribe.Core.Repositories.MSSQL.GeoRepository>();
                     //kernel.Bind<IDb>().To<cloudscribe.DbHelpers.MSSQL.Db>();
 
-                    var siteRepo6 = new cloudscribe.Core.Repositories.MSSQL.SiteRepository();
-                    builder.RegisterInstance(siteRepo6).As<ISiteRepository>();
-
-                    var userRepo6 = new cloudscribe.Core.Repositories.MSSQL.UserRepository();
-                    builder.RegisterInstance(userRepo6).As<IUserRepository>();
-
-                    var geoRepo6 = new cloudscribe.Core.Repositories.MSSQL.GeoRepository();
-                    builder.RegisterInstance(geoRepo6).As<IGeoRepository>();
-
-                    var db6 = new cloudscribe.DbHelpers.MSSQL.Db();
-                    builder.RegisterInstance(db6).As<IDb>();
+                    builder.RegisterType<cloudscribe.Core.Repositories.MSSQL.SiteRepository>().As<ISiteRepository>();
+                    builder.RegisterType<cloudscribe.Core.Repositories.MSSQL.UserRepository>().As<IUserRepository>();
+                    builder.RegisterType<cloudscribe.Core.Repositories.MSSQL.GeoRepository>().As<IGeoRepository>();
+                    builder.RegisterType<cloudscribe.DbHelpers.MSSQL.Db>().As<IDb>();
 
                     break;
 
