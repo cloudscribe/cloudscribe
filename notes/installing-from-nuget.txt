@@ -1,0 +1,18 @@
+
+these instructions are work in progress there are still some unfinished things, this isn'y working at the moment
+
+create a new asp.net web application project in VS
+in the dialog for the project template choose Empty, don't check any of the checkboxes, and click ok.
+
+in VS go to Tools > NuGet Package Manager > Package Manager Settings
+in the left pane click on Package Sources
+in the top right click the plus
+at the bottom set the name as cloudscribe-test and set the source as
+http://download.mojoportal.com/nug/nuget
+click ok to save and close the dialog
+
+right click the empty web application project node in Solution Explorer, and choose Manage NuGet Packages...
+in the left pane click Online, then click the feed for cloudscribe-test
+in the dropdown at the top choose Include Prerelease
+you should see a lot of packages, the one you want is named cloudscribe.Core.Web, it is probably on the second page
+click the cloudscribe.Core.Web package to highlight it, then click Install

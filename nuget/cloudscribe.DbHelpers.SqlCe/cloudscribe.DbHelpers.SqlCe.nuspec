@@ -3,7 +3,7 @@
   <metadata>
     <id>cloudscribe.DbHelpers.SqlCe</id>
     <version>1.0.0-alpha1</version>
-    <title>cloudscribe database helpers for SqlCe</title>
+    <title>cloudscribe.DbHelpers.SqlCe</title>
     <authors>Joe Audette</authors>
     <owners>Joe Audette</owners>
     <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
@@ -11,9 +11,12 @@
     <iconUrl>http://download.mojoportal.com/images/cloudscribe-rocket-32.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>
-	cloudscribe database helpers for SqlCe
+	cloudscribe database helpers for SqlCe.
+	you should not normally install this separately, it will be installed if you install cloudscribe.Core.Web
 	</description>
-    <releaseNotes>work in progess</releaseNotes>
+    <releaseNotes>
+	work in progess
+	</releaseNotes>
     <copyright>Copyright 2015 Source Tree Solutions, LLC</copyright>
     <tags>cloudscribe sqlce SqlServerCe</tags>
 	

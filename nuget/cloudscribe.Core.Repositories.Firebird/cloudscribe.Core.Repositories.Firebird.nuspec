@@ -3,7 +3,7 @@
   <metadata>
     <id>cloudscribe.Core.Repositories.Firebird</id>
     <version>1.0.0-alpha1</version>
-    <title>cloudscribe Core Repositories for FirebirdSql</title>
+    <title>cloudscribe.Core.Repositories.Firebird</title>
     <authors>Joe Audette</authors>
     <owners>Joe Audette</owners>
     <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
@@ -11,11 +11,11 @@
     <iconUrl>http://download.mojoportal.com/images/cloudscribe-rocket-32.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>
-	cloudscribe Core repositories for FirebirdSql
+	cloudscribe Core repositories for FirebirdSql. if you want to use Firebird as the database with cloudscribe.Core.Web, install this and change the dependency injection configuration for ISiteRepository, IUserRepository, and IGeoRepository
 	</description>
     <releaseNotes>work in progess</releaseNotes>
     <copyright>Copyright 2015 Source Tree Solutions, LLC</copyright>
-    <tags>cloudscribe repositories firebirdsql</tags>
+    <tags>cloudscribe repositories firebirdsql firebird</tags>
 	
 	<dependencies>
 	 <dependency id="cloudscribe.Configuration" version="1.0.0-alpha1" />
@@ -23,7 +23,7 @@
 	 <dependency id="cloudscribe.DbHelpers.Firebird" version="1.0.0-alpha1" />
 	 
 	 <dependency id="log4net" version="[2.0.3]" />
-	 <dependency id="FirebirdSql.Data.FirebirdClient" version="[4.6.0.0]" />
+	 <dependency id="FirebirdSql.Data.FirebirdClient" version="[4.6.1.0]" />
 	 <dependency id="Microsoft.AspNet.Identity.Core" version="[2.1.0]" />
 	 
 	  </dependencies>

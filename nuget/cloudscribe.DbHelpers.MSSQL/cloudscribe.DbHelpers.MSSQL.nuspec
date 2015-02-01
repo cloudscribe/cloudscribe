@@ -3,7 +3,7 @@
   <metadata>
     <id>cloudscribe.DbHelpers.MSSQL</id>
     <version>1.0.0-alpha1</version>
-    <title>cloudscribe database helpers for MS SQL</title>
+    <title>cloudscribe.DbHelpers.MSSQL</title>
     <authors>Joe Audette</authors>
     <owners>Joe Audette</owners>
     <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
@@ -11,9 +11,16 @@
     <iconUrl>http://download.mojoportal.com/images/cloudscribe-rocket-32.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>
-	cloudscribe database helpers for MS SQL
+	
+	cloudscribe database helpers for MS SQL.
+	you should not normally install this separately, it will be installed if you install cloudscribe.Core.Web
+	
 	</description>
-    <releaseNotes>work in progess</releaseNotes>
+    <releaseNotes>
+	
+	work in progess
+	
+	</releaseNotes>
     <copyright>Copyright 2015 Source Tree Solutions, LLC</copyright>
     <tags>cloudscribe mssql</tags>
 	

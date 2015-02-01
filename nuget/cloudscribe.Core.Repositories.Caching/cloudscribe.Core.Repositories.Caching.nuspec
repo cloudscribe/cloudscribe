@@ -3,17 +3,20 @@
   <metadata>
     <id>cloudscribe.Core.Repositories.Caching</id>
     <version>1.0.0-alpha1</version>
-    <title>cloudscribe Core Caching Repository</title>
+    <title>cloudscribe.Core.Repositories.Caching</title>
     <authors>Joe Audette</authors>
     <owners>Joe Audette</owners>
     <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
     <projectUrl>https://github.com/joeaudette/cloudscribe</projectUrl>
     <iconUrl>http://download.mojoportal.com/images/cloudscribe-rocket-32.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>caching repository for cloudscribe core, a wrapper that takes another repository in its constructor to provide persistence to the database.</description>
+    <description>
+	caching repository for cloudscribe core, a wrapper that takes another repository in its constructor to provide persistence to the database.
+	you should not normally install this separately, it will be installed if you install cloudscribe.Core.Web
+	</description>
     <releaseNotes>work in progess</releaseNotes>
     <copyright>Copyright 2015 Source Tree Solutions, LLC</copyright>
-    <tags>multi-tenant MVC/WebApi application-framework  management sites users roles</tags>
+    <tags>cloudscribe caching</tags>
 	
 	<dependencies>
 	 <dependency id="cloudscribe.Caching" version="1.0.0-alpha1" />

@@ -3,7 +3,7 @@
   <metadata>
     <id>cloudscribe.DbHelpers.Firebird</id>
     <version>1.0.0-alpha1</version>
-    <title>cloudscribe database helpers for Firebird</title>
+    <title>cloudscribe.DbHelpers.Firebird</title>
     <authors>Joe Audette</authors>
     <owners>Joe Audette</owners>
     <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
@@ -11,7 +11,7 @@
     <iconUrl>http://download.mojoportal.com/images/cloudscribe-rocket-32.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>
-	firebird database helpers for cloudscribe
+	firebird database helpers for cloudscribe. normally you would not need to install this separately, if you install cloudscribe.Core.Repositories.Firebird this will be installed as a dependency.
 	</description>
     <releaseNotes>work in progess</releaseNotes>
     <copyright>Copyright 2015 Source Tree Solutions, LLC</copyright>
@@ -22,7 +22,7 @@
 	 <dependency id="cloudscribe.Core.Models" version="1.0.0-alpha1" />
 	 
 	 <dependency id="log4net" version="[2.0.3]" />
-	 <dependency id="FirebirdSql.Data.FirebirdClient" version="[4.6.0.0]" />
+	 <dependency id="FirebirdSql.Data.FirebirdClient" version="[4.6.1.0]" />
 	 
 	  </dependencies>
 	  

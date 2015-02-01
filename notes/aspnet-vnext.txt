@@ -11,8 +11,10 @@ the vs project files and solution structure
 new project.json files for projects instead of .csproj
 new wwwroot folder for web projects and only static files like js and css go below there, no code lives under there, files there are handled by static file handler only which is good security policy
 
-no more global.asax
+no more global.asax - still supported in the full framework but not in the core cloud optimized framework
 no more App_Start folder with partial startup classes, Startup.cs in the project root has everything for app configuration, depency injection via ConfigureServices
+http://stackoverflow.com/questions/24998796/shouldnt-owinstartupattribute-run-before-global-asax-and-application-start
+http://stackoverflow.com/questions/20168978/do-i-need-a-global-asax-cs-file-at-all-if-im-using-an-owin-startup-cs-class-and
 
 new VS integration client side utilities Bower and npm (to add client side libraries)
 http://bower.io/

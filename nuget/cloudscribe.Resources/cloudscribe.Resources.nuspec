@@ -3,15 +3,20 @@
   <metadata>
     <id>cloudscribe.Resources</id>
     <version>1.0.0-alpha1</version>
-    <title>cloudscribe Core localization resources</title>
+    <title>cloudscribe.Resources</title>
     <authors>Joe Audette</authors>
     <owners>Joe Audette</owners>
     <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
     <projectUrl>https://github.com/joeaudette/cloudscribe</projectUrl>
     <iconUrl>http://download.mojoportal.com/images/cloudscribe-rocket-32.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>cloudscribe Core localization resources</description>
-    <releaseNotes>work in progess</releaseNotes>
+    <description>
+	cloudscribe Core localization resources
+	you should not normally install this separately, it will be installed if you install cloudscribe.Core.Web
+	</description>
+    <releaseNotes>
+	work in progess
+	</releaseNotes>
     <copyright>Copyright 2015 Source Tree Solutions, LLC</copyright>
     <tags>cloudscribe localization resources</tags>
   </metadata>

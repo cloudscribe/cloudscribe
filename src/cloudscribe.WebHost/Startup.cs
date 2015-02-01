@@ -181,19 +181,19 @@ namespace cloudscribe.WebHost
             switch(AppSettings.DbPlatform.ToLower())
             {
 
-                case "sqlite":
+                //case "sqlite":
 
-                    //kernel.Bind<ISiteRepository>().To<cloudscribe.Core.Repositories.SQLite.SiteRepository>();
-                    //kernel.Bind<IUserRepository>().To<cloudscribe.Core.Repositories.SQLite.UserRepository>();
-                    //kernel.Bind<IGeoRepository>().To<cloudscribe.Core.Repositories.SQLite.GeoRepository>();
-                    //kernel.Bind<IDb>().To<cloudscribe.DbHelpers.SQLite.Db>();
+                //    //kernel.Bind<ISiteRepository>().To<cloudscribe.Core.Repositories.SQLite.SiteRepository>();
+                //    //kernel.Bind<IUserRepository>().To<cloudscribe.Core.Repositories.SQLite.UserRepository>();
+                //    //kernel.Bind<IGeoRepository>().To<cloudscribe.Core.Repositories.SQLite.GeoRepository>();
+                //    //kernel.Bind<IDb>().To<cloudscribe.DbHelpers.SQLite.Db>();
                     
-                    builder.RegisterType<cloudscribe.Core.Repositories.SQLite.SiteRepository>().As<ISiteRepository>();
-                    builder.RegisterType<cloudscribe.Core.Repositories.SQLite.UserRepository>().As<IUserRepository>();
-                    builder.RegisterType<cloudscribe.Core.Repositories.SQLite.GeoRepository>().As<IGeoRepository>();
-                    builder.RegisterType<cloudscribe.DbHelpers.SQLite.Db>().As<IDb>();
+                //    builder.RegisterType<cloudscribe.Core.Repositories.SQLite.SiteRepository>().As<ISiteRepository>();
+                //    builder.RegisterType<cloudscribe.Core.Repositories.SQLite.UserRepository>().As<IUserRepository>();
+                //    builder.RegisterType<cloudscribe.Core.Repositories.SQLite.GeoRepository>().As<IGeoRepository>();
+                //    builder.RegisterType<cloudscribe.DbHelpers.SQLite.Db>().As<IDb>();
                     
-                    break;
+                //    break;
 
                 case "sqlce":
 
@@ -209,47 +209,47 @@ namespace cloudscribe.WebHost
 
                     break;
 
-                case "pgsql":
+                //case "pgsql":
 
-                    //kernel.Bind<ISiteRepository>().To<cloudscribe.Core.Repositories.pgsql.SiteRepository>();
-                    //kernel.Bind<IUserRepository>().To<cloudscribe.Core.Repositories.pgsql.UserRepository>();
-                    //kernel.Bind<IGeoRepository>().To<cloudscribe.Core.Repositories.pgsql.GeoRepository>();
-                    //kernel.Bind<IDb>().To<cloudscribe.DbHelpers.pgsql.Db>();
+                //    //kernel.Bind<ISiteRepository>().To<cloudscribe.Core.Repositories.pgsql.SiteRepository>();
+                //    //kernel.Bind<IUserRepository>().To<cloudscribe.Core.Repositories.pgsql.UserRepository>();
+                //    //kernel.Bind<IGeoRepository>().To<cloudscribe.Core.Repositories.pgsql.GeoRepository>();
+                //    //kernel.Bind<IDb>().To<cloudscribe.DbHelpers.pgsql.Db>();
 
-                    builder.RegisterType<cloudscribe.Core.Repositories.pgsql.SiteRepository>().As<ISiteRepository>();
-                    builder.RegisterType<cloudscribe.Core.Repositories.pgsql.UserRepository>().As<IUserRepository>();
-                    builder.RegisterType<cloudscribe.Core.Repositories.pgsql.GeoRepository>().As<IGeoRepository>();
-                    builder.RegisterType<cloudscribe.DbHelpers.pgsql.Db>().As<IDb>();
+                //    builder.RegisterType<cloudscribe.Core.Repositories.pgsql.SiteRepository>().As<ISiteRepository>();
+                //    builder.RegisterType<cloudscribe.Core.Repositories.pgsql.UserRepository>().As<IUserRepository>();
+                //    builder.RegisterType<cloudscribe.Core.Repositories.pgsql.GeoRepository>().As<IGeoRepository>();
+                //    builder.RegisterType<cloudscribe.DbHelpers.pgsql.Db>().As<IDb>();
 
-                    break;
+                //    break;
 
-                case "firebird":
+                //case "firebird":
 
-                    //kernel.Bind<ISiteRepository>().To<cloudscribe.Core.Repositories.Firebird.SiteRepository>();
-                    //kernel.Bind<IUserRepository>().To<cloudscribe.Core.Repositories.Firebird.UserRepository>();
-                    //kernel.Bind<IGeoRepository>().To<cloudscribe.Core.Repositories.Firebird.GeoRepository>();
-                    //kernel.Bind<IDb>().To<cloudscribe.DbHelpers.Firebird.Db>();
+                //    //kernel.Bind<ISiteRepository>().To<cloudscribe.Core.Repositories.Firebird.SiteRepository>();
+                //    //kernel.Bind<IUserRepository>().To<cloudscribe.Core.Repositories.Firebird.UserRepository>();
+                //    //kernel.Bind<IGeoRepository>().To<cloudscribe.Core.Repositories.Firebird.GeoRepository>();
+                //    //kernel.Bind<IDb>().To<cloudscribe.DbHelpers.Firebird.Db>();
                    
-                    builder.RegisterType<cloudscribe.Core.Repositories.Firebird.SiteRepository>().As<ISiteRepository>();
-                    builder.RegisterType<cloudscribe.Core.Repositories.Firebird.UserRepository>().As<IUserRepository>();
-                    builder.RegisterType<cloudscribe.Core.Repositories.Firebird.GeoRepository>().As<IGeoRepository>();
-                    builder.RegisterType<cloudscribe.DbHelpers.Firebird.Db>().As<IDb>();
+                //    builder.RegisterType<cloudscribe.Core.Repositories.Firebird.SiteRepository>().As<ISiteRepository>();
+                //    builder.RegisterType<cloudscribe.Core.Repositories.Firebird.UserRepository>().As<IUserRepository>();
+                //    builder.RegisterType<cloudscribe.Core.Repositories.Firebird.GeoRepository>().As<IGeoRepository>();
+                //    builder.RegisterType<cloudscribe.DbHelpers.Firebird.Db>().As<IDb>();
 
-                    break;
+                //    break;
 
-                case "mysql":
+                //case "mysql":
 
-                    //kernel.Bind<ISiteRepository>().To<cloudscribe.Core.Repositories.MySql.SiteRepository>();
-                    //kernel.Bind<IUserRepository>().To<cloudscribe.Core.Repositories.MySql.UserRepository>();
-                    //kernel.Bind<IGeoRepository>().To<cloudscribe.Core.Repositories.MySql.GeoRepository>();
-                    //kernel.Bind<IDb>().To<cloudscribe.DbHelpers.MySql.Db>();
+                //    //kernel.Bind<ISiteRepository>().To<cloudscribe.Core.Repositories.MySql.SiteRepository>();
+                //    //kernel.Bind<IUserRepository>().To<cloudscribe.Core.Repositories.MySql.UserRepository>();
+                //    //kernel.Bind<IGeoRepository>().To<cloudscribe.Core.Repositories.MySql.GeoRepository>();
+                //    //kernel.Bind<IDb>().To<cloudscribe.DbHelpers.MySql.Db>();
 
-                    builder.RegisterType<cloudscribe.Core.Repositories.MySql.SiteRepository>().As<ISiteRepository>();
-                    builder.RegisterType<cloudscribe.Core.Repositories.MySql.UserRepository>().As<IUserRepository>();
-                    builder.RegisterType<cloudscribe.Core.Repositories.MySql.GeoRepository>().As<IGeoRepository>();
-                    builder.RegisterType<cloudscribe.DbHelpers.MySql.Db>().As<IDb>();
+                //    builder.RegisterType<cloudscribe.Core.Repositories.MySql.SiteRepository>().As<ISiteRepository>();
+                //    builder.RegisterType<cloudscribe.Core.Repositories.MySql.UserRepository>().As<IUserRepository>();
+                //    builder.RegisterType<cloudscribe.Core.Repositories.MySql.GeoRepository>().As<IGeoRepository>();
+                //    builder.RegisterType<cloudscribe.DbHelpers.MySql.Db>().As<IDb>();
 
-                    break;
+                //    break;
 
                 case "mssql":
                 default:
