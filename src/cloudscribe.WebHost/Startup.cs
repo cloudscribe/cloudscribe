@@ -41,7 +41,7 @@ namespace cloudscribe.WebHost
 
         private IDataProtectionProvider dataProtectionProvider = null;
         private IContainer container = null;
-        private ISiteContext _siteContext = null;
+        //private ISiteContext _siteContext = null;
 
         public void Configuration(IAppBuilder app)
         {
@@ -55,7 +55,7 @@ namespace cloudscribe.WebHost
             builder.RegisterControllers(Assembly.GetExecutingAssembly()).InstancePerRequest();
             builder.RegisterControllers(typeof(cloudscribe.Core.Web.SiteContext).Assembly).InstancePerRequest();
 
-            //builder.RegisterModule(new cloudscribe.WebHost.DI.Autofac.Modules.MvcSiteMapProviderModule()); // Required
+            builder.RegisterModule(new cloudscribe.WebHost.DI.Autofac.Modules.MvcSiteMapProviderModule()); // Required
             builder.RegisterModule(new cloudscribe.WebHost.DI.Autofac.Modules.MvcModule());
 
             container = builder.Build();
@@ -72,19 +72,21 @@ namespace cloudscribe.WebHost
             newBuilder.RegisterInstance(siteContext).As<ISiteContext>();
             newBuilder.Update(container);
 
-            DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
+            
             
             
             app.CreatePerOwinContext(GetSiteContext);
 
-            //app.UseAutofacMiddleware(container);
+            app.UseAutofacMiddleware(container);
+
+            DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
 
 
             //HttpConfiguration config = new HttpConfiguration();
             //app.UseAutofacWebApi(GlobalConfiguration.Configuration);
 
             // Setup global sitemap loader (required)
-            //MvcSiteMapProvider.SiteMaps.Loader = container.Resolve<ISiteMapLoader>();
+            MvcSiteMapProvider.SiteMaps.Loader = container.Resolve<ISiteMapLoader>();
 
             // Check all configured .sitemap files to ensure they follow the XSD for MvcSiteMapProvider (optional)
             //var validator = container.Resolve<ISiteMapXmlValidator>();
@@ -107,7 +109,7 @@ namespace cloudscribe.WebHost
 
         private ISiteContext GetSiteContext()
         {
-            if (_siteContext != null) { return _siteContext; }
+            //if (_siteContext != null) { return _siteContext; }
             //StandardKernel ninjectKernal = GetKernel();
             //ISiteRepository siteRepo = ninjectKernal.Get<ISiteRepository>();   
             ISiteRepository siteRepo = container.Resolve<ISiteRepository>();
@@ -117,10 +119,10 @@ namespace cloudscribe.WebHost
             IUserRepository userRepo = container.Resolve<IUserRepository>(); 
             CachingUserRepository userCache = new CachingUserRepository(userRepo);
 
-            _siteContext
+            SiteContext siteContext
                 = new SiteContext(siteCache, userCache, dataProtectionProvider);
             
-            return _siteContext;
+            return siteContext;
         }
 
         //private static ISiteRepository GetSiteRepository()

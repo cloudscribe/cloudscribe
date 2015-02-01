@@ -7,7 +7,8 @@
     <mvcSiteMapNode title="About" controller="Home" action="About" includeAmbientValuesInUrl="true" />
     <mvcSiteMapNode title="Contact" controller="Home" action="Contact" includeAmbientValuesInUrl="true"/>
 
-    <mvcSiteMapNode key="SiteAdmin" title="Administration" controller="SiteAdmin" action="Index" includeAmbientValuesInUrl="true" roles="Admins,Content Administrators"
+    <mvcSiteMapNode key="SiteAdmin" title="Administration" controller="SiteAdmin" action="Index" 
+                    includeAmbientValuesInUrl="true" roles="Admins,Content Administrators"
                     >
       <mvcSiteMapNode key="BasicSettings" title="Basic Settings"
                       controller="SiteAdmin" action="SiteInfo"

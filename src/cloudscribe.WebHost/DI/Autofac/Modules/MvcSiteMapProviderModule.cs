@@ -23,7 +23,7 @@ namespace cloudscribe.WebHost.DI.Autofac.Modules
             bool enableLocalization = true;
             string absoluteFileName = HostingEnvironment.MapPath("~/site.sitemap");
             TimeSpan absoluteCacheExpiration = TimeSpan.FromMinutes(5);
-            bool visibilityAffectsDescendants = true;
+            bool visibilityAffectsDescendants = false;
             bool useTitleIfDescriptionNotProvided = true;
 
 
@@ -54,7 +54,7 @@ namespace cloudscribe.WebHost.DI.Autofac.Modules
             };
             var multipleImplementationTypes = new Type[] {
                 typeof(ISiteMapNodeUrlResolver),
-                typeof(ISiteMapNodeVisibilityProvider),
+                typeof(FilteredSiteMapNodeVisibilityProvider), //typeof(ISiteMapNodeVisibilityProvider),
                 typeof(IDynamicNodeProvider)
             };
 
