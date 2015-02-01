@@ -87,6 +87,7 @@ namespace cloudscribe.WebHost
 
             // Setup global sitemap loader (required)
             MvcSiteMapProvider.SiteMaps.Loader = container.Resolve<ISiteMapLoader>();
+            
 
             // Check all configured .sitemap files to ensure they follow the XSD for MvcSiteMapProvider (optional)
             //var validator = container.Resolve<ISiteMapXmlValidator>();

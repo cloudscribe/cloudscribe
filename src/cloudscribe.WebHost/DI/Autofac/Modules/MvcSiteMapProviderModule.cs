@@ -23,7 +23,7 @@ namespace cloudscribe.WebHost.DI.Autofac.Modules
             bool enableLocalization = true;
             string absoluteFileName = HostingEnvironment.MapPath("~/site.sitemap");
             TimeSpan absoluteCacheExpiration = TimeSpan.FromMinutes(5);
-            bool visibilityAffectsDescendants = false;
+            bool visibilityAffectsDescendants = true;
             bool useTitleIfDescriptionNotProvided = true;
 
 
@@ -54,7 +54,7 @@ namespace cloudscribe.WebHost.DI.Autofac.Modules
             };
             var multipleImplementationTypes = new Type[] {
                 typeof(ISiteMapNodeUrlResolver),
-                typeof(FilteredSiteMapNodeVisibilityProvider), //typeof(ISiteMapNodeVisibilityProvider),
+                typeof(ISiteMapNodeVisibilityProvider),
                 typeof(IDynamicNodeProvider)
             };
 
@@ -86,7 +86,9 @@ namespace cloudscribe.WebHost.DI.Autofac.Modules
 // Visibility Providers
             builder.RegisterType<SiteMapNodeVisibilityProviderStrategy>()
                 .As<ISiteMapNodeVisibilityProviderStrategy>()
-                .WithParameter("defaultProviderName", string.Empty);
+                .WithParameter("defaultProviderName", "MvcSiteMapProvider.FilteredSiteMapNodeVisibilityProvider, MvcSiteMapProvider");
+
+            
 
 // Pass in the global controllerBuilder reference
             builder.RegisterInstance(ControllerBuilder.Current)
