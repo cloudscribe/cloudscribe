@@ -1,14 +1,11 @@
-﻿using System;
+﻿using cloudscribe.Configuration;
+using cloudscribe.Core.Models;
+using cloudscribe.Web.Routing;
+using log4net;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using cloudscribe.Configuration;
-using cloudscribe.Web.Routing;
-using cloudscribe.Core.Models;
-using log4net;
-using Autofac;
 
 
 //http://www.c-sharpcorner.com/UploadFile/ff2f08/custom-route-constraints-in-Asp-Net-mvc-5/
@@ -61,13 +58,8 @@ namespace cloudscribe.WebHost
 
         private static void RegisterFolderSiteDefaultRoutes(RouteCollection routes)
         {
-            
-            //StandardKernel kernel = Startup.GetKernel();
-            //ISiteRepository siteRepo = kernel.Get<ISiteRepository>();
             ISiteRepository siteRepo = DependencyResolver.Current.GetService<ISiteRepository>();
-            //IContainer container = Startup.GetContainer();
-            //ISiteRepository siteRepo = container.Resolve<ISiteRepository>();
-
+            
             List<SiteFolder> allFolders = siteRepo.GetAllSiteFoldersNonAsync();
             foreach (SiteFolder f in allFolders)
             {

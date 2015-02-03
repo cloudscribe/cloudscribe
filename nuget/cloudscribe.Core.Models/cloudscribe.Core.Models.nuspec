@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>cloudscribe.Core.Models</id>
-    <version>1.0.0-alpha1</version>
+    <version>1.0.0</version>
     <title>cloudscribe.Core.Models library</title>
     <authors>Joe Audette</authors>
     <owners>Joe Audette</owners>
@@ -19,10 +19,15 @@
     <tags>cloudscribe models</tags>
 	<dependencies>
 	
-	 <dependency id="cloudscribe.Configuration" version="1.0.0-alpha1" />
+	
+	 <dependency id="cloudscribe.Configuration" version="1.0.0" />
 	 
+	 <dependency id="Owin" version="[1.0]" />
+	 <dependency id="Microsoft.Owin" version="[3.0.0]" />
+	 
+	 <dependency id="Microsoft.Owin.Security" version="[3.0.0]" />
 
-	 <dependency id="Microsoft.AspNet.Identity.Owin" version="2.1.0" />
+	 <dependency id="Microsoft.AspNet.Identity.Owin" version="[2.1.0]" />
 	 
 
 	  

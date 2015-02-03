@@ -1,4 +1,6 @@
 
+10 good practices for mvc
+http://www.codemag.com/Article/1405071
 
 http://www.veryofficial.com/logic/programming/nested-mvc-controllers-and-custom-routes/
 

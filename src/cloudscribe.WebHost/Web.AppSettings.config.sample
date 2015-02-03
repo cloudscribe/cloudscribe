@@ -47,8 +47,12 @@ Remove this comment after that to avoid future confusion
   <add key="CacheDurationInSeconds_SiteUserLogins" value="0"/>
   
 -->
-  
 
+  <add key="MvcSiteMapProvider_SecurityTrimmingEnabled" value="true" />
+  <add key="MvcSiteMapProvider_SiteMapFileName" value="~/site.sitemap" />
+  
+  <add key="MvcSiteMapProvider_UseExternalDIContainer" value="true" />
+  <add key="MvcSiteMapProvider_ScanAssembliesForSiteMapNodes" value="false" />
 	
 
 </appSettings>

@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>cloudscribe.DbHelpers.SqlCe</id>
-    <version>1.0.0-alpha1</version>
+    <version>1.0.0</version>
     <title>cloudscribe.DbHelpers.SqlCe</title>
     <authors>Joe Audette</authors>
     <owners>Joe Audette</owners>
@@ -21,8 +21,8 @@
     <tags>cloudscribe sqlce SqlServerCe</tags>
 	
 	<dependencies>
-	 <dependency id="cloudscribe.Configuration" version="1.0.0-alpha1" />
-	 <dependency id="cloudscribe.Core.Models" version="1.0.0-alpha1" />
+	 <dependency id="cloudscribe.Configuration" version="1.0.0" />
+	 <dependency id="cloudscribe.Core.Models" version="1.0.0" />
 	 
 	 <dependency id="log4net" version="[2.0.3]" />
 	  <dependency id="Microsoft.SqlServer.Compact" version="[4.0.8876.1]" />

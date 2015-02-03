@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>cloudscribe.Resources</id>
-    <version>1.0.0-alpha1</version>
+    <version>1.0.0</version>
     <title>cloudscribe.Resources</title>
     <authors>Joe Audette</authors>
     <owners>Joe Audette</owners>
