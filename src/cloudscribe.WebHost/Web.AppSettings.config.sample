@@ -7,20 +7,20 @@ Remove this comment after that to avoid future confusion
 -->
 
  
-  <add key="MSSQLConnectionString" value="server=localhost\SQLExpress;UID=sa;PWD=sql$q1;database=cscribe9" />
-  <!--
-  <add key="MSSQLWriteConnectionString" value="server=localhost\SQLExpress;UID=sa;PWD=sql$q1;database=mojodevtest1" />
-  -->
+  <add key="MSSQLConnectionString" value="server=localhost\SQLExpress;UID=yoursqluser;PWD=yoursqlpassword;database=yoursqldatabase" />
+ 
 
-  <add key="MySqlConnectionString" value="Server=localhost;Database=mojo_dev;Uid=root;Pwd=sql$q1;Charset=utf8;" />
+  <add key="MySqlConnectionString" value="Server=localhost;Database=yourdb;Uid=yourdbuser;Pwd=yourdbpassword;Charset=utf8;" />
   
   <add key="SqliteConnectionString" value="data source=C:\_joe\__projects\__mojoportal\_code\cloudscribe\cloudscribe.WebHost\App_Data\mojodev.config; version=3;" />
   
-  <add key="PostgreSQLConnectionString" value="Server=localhost;Port=5432;User Id=postgres;Password=sql$q1;Database=mojo1;Encoding=UNICODE;" />
+  <add key="PostgreSQLConnectionString" value="Server=localhost;Port=5432;User Id=yourdbuser;Password=yourdbpassword;Database=yourdbname;Encoding=UNICODE;" />
   
-  <add key="FirebirdConnectionString" value="Data Source=localhost;Server Type=0;Port Number=3050;Database=C:\_joe\__projects\__mojoportal\Firebird\mojo9.fdb;Dialect=3;Charset=UTF8;Pooling=True;Min Pool Size=0;Max Pool Size=200;Connection Timeout=10;Connection Lifetime=60;Fetch Size=200;User Id=SYSDBA;Password=masterkey" />
+  <add key="FirebirdConnectionString" value="Data Source=localhost;Server Type=0;Port Number=3050;Database=C:\yourlocalpath.fdb;Dialect=3;Charset=UTF8;Pooling=True;Min Pool Size=0;Max Pool Size=200;Connection Timeout=10;Connection Lifetime=60;Fetch Size=200;User Id=yourdbuser;Password=yourdbpassword" />
 
+  <!--
   <add key="SqlCeApp_Data_FileName" value="mojo-dev-db2.sdf" />
+  -->
   
   <!--
   You should only un-comment settings for which you are overriding the default values. The config object is stored in memory so each uncommented setting increases the size of the object a little. So for settings that you are not overridng the default value, a small memory optimization can be had by not un-commenting the setting. The default vlaues do not need to be stored in appsettings object in memory, if the key is not found they come directly from code instead. Of course you should not let the ideal of such optimization outweigh any real need to override a setting, ie don't be afraid to override something if you have a reason to, and in that case don't worry about this tiny bit of memory to store the setting.

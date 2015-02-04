@@ -20,7 +20,7 @@
 	<dependencies>
 	
 	
-	 <dependency id="cloudscribe.Configuration" version="1.0.0" />
+	 <dependency id="cloudscribe.Configuration" version="" />
 	 
 	 <dependency id="Owin" version="[1.0]" />
 	 <dependency id="Microsoft.Owin" version="[3.0.0]" />

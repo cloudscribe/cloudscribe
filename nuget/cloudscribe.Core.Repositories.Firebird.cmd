@@ -23,4 +23,7 @@ xcopy ..\src\cloudscribe.Core.Repositories.Firebird\bin\Release\cloudscribe.Core
 
 xcopy ..\src\cloudscribe.Core.Repositories.Firebird\bin\Release\cloudscribe.Core.Repositories.Firebird.pdb cloudscribe.Core.Repositories.Firebird\lib\net45 /y
 
-NuGet.exe pack cloudscribe.Core.Repositories.Firebird\cloudscribe.Core.Repositories.Firebird.nuspec -OutputDirectory "nupkgs"
+SET pversion=%1
+IF NOT DEFINED pversion SET pversion="1.0.0-alpha0"
+
+NuGet.exe pack cloudscribe.Core.Repositories.Firebird\cloudscribe.Core.Repositories.Firebird.nuspec -Version %pversion% -OutputDirectory "nupkgs"

@@ -20,4 +20,7 @@ xcopy ..\src\cloudscribe.Core.Repositories.MySql\bin\Release\cloudscribe.Core.Re
 
 xcopy ..\src\cloudscribe.Core.Repositories.MySql\bin\Release\cloudscribe.Core.Repositories.MySql.pdb cloudscribe.Core.Repositories.MySql\lib\net45 /y
 
-NuGet.exe pack cloudscribe.Core.Repositories.MySql\cloudscribe.Core.Repositories.MySql.nuspec -OutputDirectory "nupkgs"
+SET pversion=%1
+IF NOT DEFINED pversion SET pversion="1.0.0-alpha0"
+
+NuGet.exe pack cloudscribe.Core.Repositories.MySql\cloudscribe.Core.Repositories.MySql.nuspec -Version %pversion% -OutputDirectory "nupkgs"

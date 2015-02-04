@@ -12,6 +12,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
 	<summary>
 	Integration files to be added to a web application to wire up cloudscribe.Core.Web
+	To use cloudscribe.Core.Web, you should install this into an empty web application project.
 	</summary>
     <description>
 	When starting a new peoject with cloudscribe.Core.Web, this is usually the package to install unless you plan to setup the integration code manually.
@@ -25,8 +26,8 @@
 	
 	<dependencies>
 	 
-	 <dependency id="cloudscribe.Core.Web" version="1.0.0" />
-	 <dependency id="cloudscribe.Resources" version="1.0.0" />
+	 <dependency id="cloudscribe.Core.Web" version="" />
+	 <dependency id="cloudscribe.Resources" version="" />
 	 
 	  <dependency id="Autofac" version="[3.5.2]" />
 	  <dependency id="Autofac.Owin" version="[3.1.0]" />
@@ -57,5 +58,11 @@
 	 
 	 
 	  </dependencies>
+	  
+	  <frameworkAssemblies>
+		  <frameworkAssembly assemblyName="System.Runtime.Caching" targetFramework="net45" />
+		</frameworkAssemblies>
+
+
   </metadata>
 </package>

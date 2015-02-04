@@ -12,7 +12,7 @@ mkdir cloudscribe.Core.Web.Integration\content\DI\Autofac
 
 
 xcopy ..\src\cloudscribe.WebHost\Startup.cs cloudscribe.Core.Web.Integration\content /y
-xcopy ..\src\cloudscribe.WebHost\Web.AppSettings.config cloudscribe.Core.Web.Integration\content /y
+xcopy ..\src\cloudscribe.WebHost\Web.AppSettings.config.sample cloudscribe.Core.Web.Integration\content /y
 xcopy ..\src\cloudscribe.WebHost\site.sitemap cloudscribe.Core.Web.Integration\content /y
 xcopy ..\src\cloudscribe.WebHost\Global.asax cloudscribe.Core.Web.Integration\content /y
 xcopy ..\src\cloudscribe.WebHost\Global.asax.cs cloudscribe.Core.Web.Integration\content /y
@@ -30,4 +30,8 @@ xcopy ..\src\cloudscribe.WebHost\Views\* cloudscribe.Core.Web.Integration\conten
 xcopy ..\src\cloudscribe.WebHost\DI\* cloudscribe.Core.Web.Integration\content\DI /s /y /d
 ::copy ..\src\cloudscribe.WebHost\DI\Autofac\*.* cloudscribe.Core.Web.Integration\content\DI\Autofac
 
-NuGet.exe pack cloudscribe.Core.Web.Integration\cloudscribe.Core.Web.Integration.nuspec -OutputDirectory "nupkgs"
+
+SET pversion=%1
+IF NOT DEFINED pversion SET pversion="1.0.0-alpha0"
+
+NuGet.exe pack cloudscribe.Core.Web.Integration\cloudscribe.Core.Web.Integration.nuspec -Version %pversion% -OutputDirectory "nupkgs"

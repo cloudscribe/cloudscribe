@@ -19,9 +19,9 @@
     <tags>cloudscribe sqlce sqlserverce</tags>
 	
 	<dependencies>
-	 <dependency id="cloudscribe.Configuration" version="1.0.0" />
-	 <dependency id="cloudscribe.Core.Models" version="1.0.0" />
-	 <dependency id="cloudscribe.DbHelpers.SqlCe" version="1.0.0" />
+	 <dependency id="cloudscribe.Configuration" version="" />
+	 <dependency id="cloudscribe.Core.Models" version="" />
+	 <dependency id="cloudscribe.DbHelpers.SqlCe" version="" />
 	 
 	 <dependency id="log4net" version="[2.0.3]" />
 	 <dependency id="Microsoft.SqlServer.Compact" version="[4.0.8876.1]" />

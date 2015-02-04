@@ -20,4 +20,7 @@ xcopy ..\src\cloudscribe.Core.Repositories.SqlCe\bin\Release\cloudscribe.Core.Re
 
 xcopy ..\src\cloudscribe.Core.Repositories.SqlCe\bin\Release\cloudscribe.Core.Repositories.SqlCe.pdb cloudscribe.Core.Repositories.SqlCe\lib\net45 /y
 
-NuGet.exe pack cloudscribe.Core.Repositories.SqlCe\cloudscribe.Core.Repositories.SqlCe.nuspec -OutputDirectory "nupkgs"
+SET pversion=%1
+IF NOT DEFINED pversion SET pversion="1.0.0-alpha0"
+
+NuGet.exe pack cloudscribe.Core.Repositories.SqlCe\cloudscribe.Core.Repositories.SqlCe.nuspec -Version %pversion% -OutputDirectory "nupkgs"

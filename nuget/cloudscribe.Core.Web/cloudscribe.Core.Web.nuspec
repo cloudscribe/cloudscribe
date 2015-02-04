@@ -23,14 +23,14 @@
     <tags>multi-tenant MVC WebApi application-framework  management sites users roles</tags>
 	
 	<dependencies>
-	 <dependency id="cloudscribe.AspNet.Identity" version="1.0.0" />
-	 <dependency id="cloudscribe.Caching" version="1.0.0" />
-	 <dependency id="cloudscribe.Configuration" version="1.0.0" />
-	 <dependency id="cloudscribe.Core.Models" version="1.0.0" />
-	 <dependency id="cloudscribe.Core.Repositories.Caching" version="1.0.0" />
-	 <dependency id="cloudscribe.Core.Repositories.MSSQL" version="1.0.0" />
-	 <dependency id="cloudscribe.Core.Repositories.SqlCe" version="1.0.0" />
-	 <dependency id="cloudscribe.Resources" version="1.0.0" />
+	 <dependency id="cloudscribe.AspNet.Identity" version="" />
+	 <dependency id="cloudscribe.Caching" version="" />
+	 <dependency id="cloudscribe.Configuration" version="" />
+	 <dependency id="cloudscribe.Core.Models" version="" />
+	 <dependency id="cloudscribe.Core.Repositories.Caching" version="" />
+	 <dependency id="cloudscribe.Core.Repositories.MSSQL" version="" />
+	 <dependency id="cloudscribe.Core.Repositories.SqlCe" version="" />
+	 <dependency id="cloudscribe.Resources" version="" />
 	 
 	 <dependency id="ExpressiveAnnotations" version="[2.4.2]" />
 	 <dependency id="NewtonSoft.Json" version="[6.0.8]" />
@@ -87,12 +87,14 @@
 	 
 	 -->
 	 <!--
+	 
 	 <dependency id="jQuery" version="[2.1.3]" />
 	 <dependency id="jQuery.UI.Combined" version="[1.11.2]" />
 	 <dependency id="jQuery.Validation" version="[1.13.1]" />
 	 <dependency id="Microsoft.jQuery.Unobtrusive.Ajax" version="[3.2.2]" />
 	 
 	 <dependency id="Microsoft.jQuery.UnobtrusiveValidation" version="[3.2.2]" />
+	 
 	 <dependency id="Glimpse" version="[1.8.6]" />
 	 <dependency id="Glimpse.Ado" version="[1.7.3]" />
 	 <dependency id="Glimpse.AspNet" version="[1.9.2]" />

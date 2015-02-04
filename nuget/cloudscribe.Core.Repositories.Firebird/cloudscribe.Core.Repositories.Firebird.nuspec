@@ -18,9 +18,9 @@
     <tags>cloudscribe repositories firebirdsql firebird</tags>
 	
 	<dependencies>
-	 <dependency id="cloudscribe.Configuration" version="1.0.0" />
-	 <dependency id="cloudscribe.Core.Models" version="1.0.0" />
-	 <dependency id="cloudscribe.DbHelpers.Firebird" version="1.0.0" />
+	 <dependency id="cloudscribe.Configuration" version="" />
+	 <dependency id="cloudscribe.Core.Models" version="" />
+	 <dependency id="cloudscribe.DbHelpers.Firebird" version="" />
 	 
 	 <dependency id="log4net" version="[2.0.3]" />
 	 <dependency id="FirebirdSql.Data.FirebirdClient" version="[4.6.1.0]" />

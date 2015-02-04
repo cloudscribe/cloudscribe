@@ -35,14 +35,14 @@ For the moment, the following dependencies have been removed form our list of de
 We keep getting gateway timeout error on some packages, but seems we're not the only ones
 http://stackoverflow.com/questions/28288328/nuget-the-remote-server-returned-an-error-504-gateway-timeout
 
-Things to fix
-need to add a reference in integration for
-System.Runtime.Caching
+Another apparent NuGet problem is with the Microsoft.jQuery.Unobtrusive.Validation version 3.2.2
+it cvauses this error
+Updating 'jQuery 2.1.3' to 'jQuery 1.4.1' failed. Unable to find a version of 'Microsoft.jQuery.Unobtrusive.Validation' that is compatible with 'jQuery 1.4.1'.
 
-MVCSiteMapProvider adds this and we need to change it
-<add key="MvcSiteMapProvider_IncludeAssembliesForScan" value="cs-nugtest2" />
-    <add key="MvcSiteMapProvider_UseExternalDIContainer" value="false" />
-    <add key="MvcSiteMapProvider_ScanAssembliesForSiteMapNodes" value="true" />
+For some reason it wants to "upgrade" jquery from 2.1.3 to 1.4.1 
+
+Things to fix
+cloudscribe.Resources.dll did not get installed in the bin folder
 	
 We need to update appSettings with file="Web.AppSettings.config"
 	
