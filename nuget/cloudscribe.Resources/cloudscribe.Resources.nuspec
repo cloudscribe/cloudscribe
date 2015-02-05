@@ -19,5 +19,11 @@
 	</releaseNotes>
     <copyright>Copyright 2015 Source Tree Solutions, LLC</copyright>
     <tags>cloudscribe localization resources</tags>
+	
+	<dependencies>
+	 <dependency id="cloudscribe.Configuration" version="" />
+	
+	  </dependencies>
+	  
   </metadata>
 </package>
