@@ -14,7 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using MvcSiteMapProvider;
+//using MvcSiteMapProvider;
 
 namespace cloudscribe.Core.Web.Controllers
 {

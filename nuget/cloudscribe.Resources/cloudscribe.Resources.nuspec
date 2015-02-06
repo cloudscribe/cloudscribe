@@ -25,5 +25,9 @@
 	
 	  </dependencies>
 	  
+	  <references>
+		<reference file="cloudscribe.Resources.dll" />
+	   </references>
+	  
   </metadata>
 </package>

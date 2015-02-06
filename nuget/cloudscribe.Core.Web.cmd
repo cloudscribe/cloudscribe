@@ -10,8 +10,9 @@ mkdir cloudscribe.Core.Web\content\Config\Setup
 mkdir cloudscribe.Core.Web\content\Views
 mkdir cloudscribe.Core.Web\content\Views\Sys
 
-copy ..\src\cloudscribe.Core.Web\bin\Release\cloudscribe.Core.Web.dll cloudscribe.Core.Web\lib\net45
-copy ..\src\cloudscribe.Core.Web\bin\Release\cloudscribe.Core.Web.pdb cloudscribe.Core.Web\lib\net45
+xcopy ..\src\cloudscribe.Core.Web\bin\Release\cloudscribe.Core.Web.dll cloudscribe.Core.Web\lib\net45 /y
+xcopy ..\src\cloudscribe.Core.Web\bin\Release\cloudscribe.Core.Web.pdb cloudscribe.Core.Web\lib\net45 /y
+xcopy ..\src\cloudscribe.Resources\bin\Release\cloudscribe.Resources.dll cloudscribe.Core.Web\lib\net45 /y
 
 
 xcopy ..\src\cloudscribe.WebHost\Config\Setup\* cloudscribe.Core.Web\content\Config\Setup /s /y /d

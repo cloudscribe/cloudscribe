@@ -15,10 +15,10 @@
 	To use cloudscribe.Core.Web, you should install this into an empty web application project.
 	</summary>
     <description>
-	When starting a new peoject with cloudscribe.Core.Web, this is usually the package to install unless you plan to setup the integration code manually.
+	When starting a new project with cloudscribe.Core.Web, this is usually the package to install unless you plan to setup the integration code manually.
 	This is the integration code including /App_Start, Startup.cs and Global.asax along with Autofac dependency injection setup that will be added to your web project to wire up cloudscribe.Core.Web.
 	You should start with an empty web application project that does not already have these files and that does not already have any AspNet Identity setup.
-	You can modify the files after they are in your project. Typically you would never update this package after you make customizations to the startup code, you would only update the library mojoPortal.Web.Core. You can update this if you don't mind losing your customizations.
+	You can modify the files after they are in your project. Typically you would never update this package after you make customizations to the startup code, you would only update the library cloudscribe.Core.Web. You can update this if you don't mind losing your customizations.
 	</description>
     <releaseNotes>work in progess</releaseNotes>
     <copyright>Copyright 2015 Source Tree Solutions, LLC</copyright>
@@ -27,7 +27,7 @@
 	<dependencies>
 	 
 	 <dependency id="cloudscribe.Core.Web" version="" />
-	 <dependency id="cloudscribe.Resources" version="" />
+
 	 
 	  <dependency id="Autofac" version="[3.5.2]" />
 	  <dependency id="Autofac.Owin" version="[3.1.0]" />
@@ -36,6 +36,9 @@
 	 <dependency id="Autofac.WebApi2" version="[3.4.0]" />
 	 <dependency id="Autofac.WebApi2.Owin" version="[3.2.0]" />
 	 
+	 <dependency id="jQuery.UI.Combined" version="[1.11.2]" />
+	 <dependency id="jQuery.Validation" version="[1.13.1]" />
+	 <dependency id="Microsoft.jQuery.Unobtrusive.Ajax" version="[3.2.2]" />
 	 
 	 <!-- Nuget is having trouble resolving these dependencies
 	 it may be something to do with our packages being in pre-release, it may be trying to get pre-release versions of the dependencies

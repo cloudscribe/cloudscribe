@@ -6,7 +6,7 @@
 }
 
 <h2>@ViewBag.Heading</h2>
-@Html.MvcSiteMap().Menu(
+@Html.MvcSiteMap().Menu("VerticalMenuHelperModel",
 Html.MvcSiteMap().SiteMap.FindSiteMapNodeFromKey("SiteAdmin"),
     startingNodeInChildLevel,
     showStartingNode,

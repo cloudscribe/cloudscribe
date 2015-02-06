@@ -30,7 +30,7 @@
 	 <dependency id="cloudscribe.Core.Repositories.Caching" version="" />
 	 <dependency id="cloudscribe.Core.Repositories.MSSQL" version="" />
 	 <dependency id="cloudscribe.Core.Repositories.SqlCe" version="" />
-	 <dependency id="cloudscribe.Resources" version="" />
+
 	 
 	 <dependency id="ExpressiveAnnotations" version="[2.4.2]" />
 	 <dependency id="NewtonSoft.Json" version="[6.0.8]" />

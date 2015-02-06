@@ -2,17 +2,33 @@ mkdir nupkgs
 
 mkdir cloudscribe.Core.Web.Integration\content
 mkdir cloudscribe.Core.Web.Integration\content\App_Start
+mkdir cloudscribe.Core.Web.Integration\content\Content
 mkdir cloudscribe.Core.Web.Integration\content\Controllers
 mkdir cloudscribe.Core.Web.Integration\content\Views
-::mkdir cloudscribe.Core.Web.Integration\content\Views\Home
-::mkdir cloudscribe.Core.Web.Integration\content\Views\Shared
+
 
 mkdir cloudscribe.Core.Web.Integration\content\DI
 mkdir cloudscribe.Core.Web.Integration\content\DI\Autofac
+mkdir cloudscribe.Core.Web.Integration\content\DI\Autofac\Modules
 
 xcopy ..\src\cloudscribe.WebHost\Web.AppSettings.config.sample cloudscribe.Core.Web.Integration\content /y
+
+del cloudscribe.Core.Web.Integration\content\Web.AppSettings.config
+ren cloudscribe.Core.Web.Integration\content\Web.AppSettings.config.sample Web.AppSettings.config
+
 xcopy ..\src\cloudscribe.WebHost\site.sitemap cloudscribe.Core.Web.Integration\content /y
 xcopy ..\src\cloudscribe.WebHost\log4net.config cloudscribe.Core.Web.Integration\content /y
+xcopy ..\src\cloudscribe.WebHost\Content\Site.css cloudscribe.Core.Web.Integration\content\Content /y
+
+xcopy content-src\Root.Web.config.install.xdt cloudscribe.Core.Web.Integration\content /y
+
+del cloudscribe.Core.Web.Integration\content\Web.config.install.xdt
+ren cloudscribe.Core.Web.Integration\content\Root.Web.config.install.xdt Web.config.install.xdt
+
+xcopy content-src\Views.Web.config.install.xdt cloudscribe.Core.Web.Integration\content\Views /y
+
+del cloudscribe.Core.Web.Integration\content\Views\Web.config.install.xdt
+ren cloudscribe.Core.Web.Integration\content\Views\Views.Web.config.install.xdt Web.config.install.xdt
 
 ::xcopy ..\src\cloudscribe.WebHost\Startup.cs cloudscribe.Core.Web.Integration\content /y
 call BatchSubstitute.cmd "cloudscribe.WebHost" "$rootnamespace$" ..\src\cloudscribe.WebHost\Startup.cs>cloudscribe.Core.Web.Integration\content\Startup.cs.pp
