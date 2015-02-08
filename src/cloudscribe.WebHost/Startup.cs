@@ -6,7 +6,6 @@ using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Geography;
 using cloudscribe.Core.Repositories.Caching;
 using cloudscribe.Core.Web;
-using cloudscribe.Resources;
 using log4net;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.DataProtection;

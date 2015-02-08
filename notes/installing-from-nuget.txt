@@ -1,5 +1,9 @@
 
-these instructions are work in progress there are still some unfinished things, this isn'y working at the moment
+the use of NuGet as a delivery mechanism will be a huge advantage for cloudscribe that was not the case with mojoPortal or other older projects.
+
+To understand the value proposition for cloudscribe.Core.Web, compare what you get vs just creating a new asp/net project and choosing the mvc template with web api. In that case you get some Entity Framework implementation of asp.net identity, you are able to register on the site and login but there is nothing provided for user or role management and no way to make your new user account an administrator. There is also no concept of mutli tenancy, there is no concept of sites or users attached to sites. You would have to build that yourself.
+
+Starting with an empty project and installing cloudscribe.Core.Web.Integration, you get an implementation of asp.net identity based on ado.net and with working repository implementations for 6 different database platforms. There is built in management for mutli tenant sites, users and roles.
 
 create a new asp.net web application project in VS
 in the dialog for the project template choose Empty, don't check any of the checkboxes, and click ok.
@@ -13,26 +17,16 @@ click ok to save and close the dialog
 
 right click the empty web application project node in Solution Explorer, and choose Manage NuGet Packages...
 
-Currently we're having some problems with NuGet not resolving a few dependencies and this causes the cloudscribe installation to abort and rollback.
-For the moment, the following dependencies have been removed form our list of dependencies and should be installed separately, ideally before installing cloudscribe
-in the left pane of Package Manager click Online, then click the feed for nuget.org
-install the following packages before moving on to install cloudscribe
-
-
-jQuery.UI.Combined version 1.11.2
-jQuery.Validation version 1.13.1
-Microsoft.jQuery.Unobtrusive.Ajax version 3.2.2
-
-
 in the left pane of Package Manager click Online, then click the feed for cloudscribe-test
 in the dropdown list at the top select "Include Prerelease"
-you should see a lot of packages, the one you want is named cloudscribe.Core.Web.Integration, it is probably on the second page
+you should see a lot of packages, the one you want is named cloudscribe.Core.Web.Integration, it is on the second page
 click the cloudscribe.Core.Web.Integration package to highlight it, then click Install
 
+It takes a while to install, you will be prompted to accept the license aggreement for some of the packages, then it will take another while as it installs.
 
-
-Things to fix
-cloudscribe.Resources.dll did not get installed in the bin folder
-Breadcrumbs are missing for some reason
-	
-We also need to add the DbProvider factories in Web.config
+A readme file will be shown after successful installation that provides a few steps to complete the setup.
+Basically you need to compile the solution, create an mssql db and set the conneciton string
+or add this in Web.App.Settings.config
+<add key="DbPlatform" value="sqlce"/>
+then click your web project node in VS Solution Explorer and choose Add > Add ASP.NET Folder > App_Data
+This will add the special App_Data folder to your project. The SqlCe database will be created there by the /Setup page
