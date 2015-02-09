@@ -141,5 +141,42 @@ namespace cloudscribe.Web.Routing
         }
 
 
+        public static void AddDefaultRouteForNewSiteFolder(string siteFolder)
+        {
+            RouteCollection routes = RouteTable.Routes;
+            // first we have to remove the current default route
+            // which should always be the last route in the collection
+            // otherwise it matches before the folder routes during route resolution
+            Route defaultRoute = null;
+            foreach(Route r in routes)
+            {
+                if(r.Url.ToString() == "{controller}/{action}/{id}")
+                {
+                    defaultRoute = r;
+                }
+            }
+            if(defaultRoute != null)
+            {
+                routes.Remove(defaultRoute);
+            }
+                
+            routes.MapRoute(
+            name: siteFolder + "Default",
+            url: siteFolder + "/{controller}/{action}/{id}",
+            defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional },
+            constraints: new { name = new cloudscribe.Web.Routing.SiteFolderRouteConstraint(siteFolder) }
+            );
+
+            // re-create the default route, it has to be the last one
+            routes.MapRoute(
+            name: "Default",
+            url: "{controller}/{action}/{id}",
+            defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+            );
+
+
+        }
+
+
     }
 }

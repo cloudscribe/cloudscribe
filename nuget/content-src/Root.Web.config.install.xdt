@@ -2,10 +2,10 @@
 <configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
     <appSettings file="Web.AppSettings.config" xdt:Transform="SetAttributes(file)">
 	
-	<add key="webpages:Version" value="3.0.0.0" xdt:Transform="Insert" />
-    <add key="webpages:Enabled" value="false" xdt:Transform="Insert" />
-    <add key="ClientValidationEnabled" value="true" xdt:Transform="Insert" />
-    <add key="UnobtrusiveJavaScriptEnabled" value="true" xdt:Transform="Insert" />
+	<add key="webpages:Version" value="3.0.0.0" xdt:Locator="Match(key)" xdt:Transform="InsertIfMissing" />
+    <add key="webpages:Enabled" value="false" xdt:Locator="Match(key)" xdt:Transform="InsertIfMissing" />
+    <add key="ClientValidationEnabled" value="true" xdt:Locator="Match(key)" xdt:Transform="InsertIfMissing" />
+    <add key="UnobtrusiveJavaScriptEnabled" value="true" xdt:Locator="Match(key)" xdt:Transform="InsertIfMissing" />
       
   </appSettings>
 </configuration>

@@ -50,6 +50,8 @@ namespace cloudscribe.WebHost
             newBuilder.RegisterInstance(siteContext).As<ISiteContext>();
             newBuilder.Update(container);
 
+            
+
             app.CreatePerOwinContext(GetSiteContext);
 
             app.UseAutofacMiddleware(container);

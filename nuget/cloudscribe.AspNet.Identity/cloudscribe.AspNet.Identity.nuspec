@@ -21,6 +21,7 @@
 	<dependencies>
 	 <dependency id="cloudscribe.Configuration" version="" />
 	 <dependency id="cloudscribe.Core.Models" version="" />
+	
 	 
 	 
 	 <dependency id="log4net" version="[2.0.3]" />

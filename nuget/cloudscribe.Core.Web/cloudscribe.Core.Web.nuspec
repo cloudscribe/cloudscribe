@@ -30,6 +30,7 @@
 	 <dependency id="cloudscribe.Core.Repositories.Caching" version="" />
 	 <dependency id="cloudscribe.Core.Repositories.MSSQL" version="" />
 	 <dependency id="cloudscribe.Core.Repositories.SqlCe" version="" />
+	 
 
 	 
 	 <dependency id="ExpressiveAnnotations" version="[2.4.2]" />

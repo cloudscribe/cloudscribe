@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-01-08
+// Last Modified:			2015-02-09
 // 
 
 using cloudscribe.Configuration;
@@ -13,7 +13,11 @@ using cloudscribe.Core.Web.ViewModels.SiteSettings;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+
 using System.Web.Mvc;
+using System.Web;
+using Owin;
+using Microsoft.Owin;
 //using MvcSiteMapProvider;
 
 namespace cloudscribe.Core.Web.Controllers
@@ -296,8 +300,6 @@ namespace cloudscribe.Core.Web.Controllers
                 return View(model);
             }
 
-            //model.SiteId = Site.SiteSettings.SiteId;
-            //model.SiteGuid = Site.SiteSettings.SiteGuid;
             SiteSettings newSite = new SiteSettings();
 
             // only the first site created by setup page should be a server admin site
@@ -319,22 +321,34 @@ namespace cloudscribe.Core.Web.Controllers
             newSite.SiteFolderName = model.SiteFolderName;
 
             //Site.SiteRepository.Save(newSite);
-            NewSiteHelper.CreateNewSite(Site.SiteRepository, newSite);
-            bool result = await NewSiteHelper.CreateRequiredRolesAndAdminUser(newSite, Site.SiteRepository, Site.UserRepository);
+            bool result = await NewSiteHelper.CreateNewSite(Site.SiteRepository, newSite);
+            result = await NewSiteHelper.CreateRequiredRolesAndAdminUser(newSite, Site.SiteRepository, Site.UserRepository);
 
-            if(AppSettings.UseFoldersInsteadOfHostnamesForMultipleSites)
+            if((result)&&(AppSettings.UseFoldersInsteadOfHostnamesForMultipleSites))
             {
                 SiteFolder folder = new SiteFolder();
                 folder.FolderName = newSite.SiteFolderName;
                 folder.SiteGuid = newSite.SiteGuid;
                 bool folderResult = await Site.SiteRepository.Save(folder);
+                
+                // for folder sites we need routes that match the folder
+                // which are normally created during app startup
+                // can we add routes here? or do we need to force the app to recycle?
+                // this seems to work, but we really do need to restart
+                // so that the per folder authentication gets setup too
+                //cloudscribe.Web.Routing.RouteRegistrar.AddDefaultRouteForNewSiteFolder(folder.FolderName);
+
+                Utils.TriggerRestart();
+                
             }
 
-            this.AlertSuccess(string.Format("Basic site settings for <b>{0}</b> were successfully created.",
-                            newSite.SiteName), true);
+            if(result)
+            {
+                this.AlertSuccess(string.Format("Basic site settings for <b>{0}</b> were successfully created.",
+                           newSite.SiteName), true);
 
-            //SiteAdminMessageId? message = SiteAdminMessageId.CreateSiteSuccess;
-
+            }
+           
             return RedirectToAction("Index");
 
         }

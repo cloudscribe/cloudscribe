@@ -3,7 +3,7 @@ IF NOT DEFINED pversion SET pversion="1.0.0-alpha0"
 
 call cloudscribe.Configuration.cmd %pversion%
 call cloudscribe.Core.Models.cmd %pversion%
-call cloudscribe.Resources.cmd %pversion%
+::call cloudscribe.Resources.cmd %pversion%
 call cloudscribe.AspNet.Identity.cmd %pversion%
 call cloudscribe.Caching.cmd %pversion%
 call cloudscribe.Core.Repositories.Caching.cmd %pversion%

@@ -43,10 +43,10 @@ namespace cloudscribe.WebHost
                 }
             }
            
-            
-            
             // create the default route which handles most common case
             // and uses home if no other controller matches
+            // the default route needs to be the last route registered
+            // otherwise it prevents more specific routes from matching
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
