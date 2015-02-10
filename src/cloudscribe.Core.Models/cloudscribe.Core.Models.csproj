@@ -95,6 +95,7 @@
     <Compile Include="Site\ISiteContext.cs" />
     <Compile Include="Site\ISiteSettings.cs" />
     <Compile Include="Site\ISiteRepository.cs" />
+    <Compile Include="Site\ITriggerStartup.cs" />
     <Compile Include="Site\LdapSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Site\SiteFolder.cs" />

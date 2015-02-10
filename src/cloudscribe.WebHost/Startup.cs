@@ -153,6 +153,11 @@ namespace cloudscribe.WebHost
 
             }
 
+            builder.RegisterType<cloudscribe.Core.Web.Components.WebConfigStartupTrigger>()
+                .As<cloudscribe.Core.Models.Site.ITriggerStartup>();
+
+            //
+
         } 
 
         

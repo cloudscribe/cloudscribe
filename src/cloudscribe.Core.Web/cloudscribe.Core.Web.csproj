@@ -153,6 +153,7 @@
   <ItemGroup>
     <Compile Include="Components\NewSiteHelper.cs" />
     <Compile Include="Components\SetupHelper.cs" />
+    <Compile Include="Components\WebConfigStartupTrigger.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CloudscribeBaseController.cs" />
     <Compile Include="Controllers\CoreDataController.cs" />

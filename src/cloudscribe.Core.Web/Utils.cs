@@ -1,21 +1,15 @@
 ﻿// Author:					Joe Audette
 // Created:				    2014-08-31
-// Last Modified:		    2015-02-09
+// Last Modified:		    2015-02-10
 // 
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Security.Cryptography;
-using System.Net;
-using System.Web;
-using System.Web.Hosting;
-using System.IO;
-using System.Xml;
 using cloudscribe.Configuration;
 using log4net;
+using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Security.Cryptography;
+using System.Web;
 
 namespace cloudscribe.Core.Web.Helpers
 {
@@ -155,57 +149,57 @@ namespace cloudscribe.Core.Web.Helpers
         }
 
 
-        public static void TriggerRestart()
-        {
-            // the goal here is to force restart of the app
-            // or more specifically re-execution of Startup.cs
-            // which sets up routes and authentication for folder sites
-            // we need this to happen when a new folder site is created from the ui
+        //public static void TriggerRestart()
+        //{
+        //    // the goal here is to force restart of the app
+        //    // or more specifically re-execution of Startup.cs
+        //    // which sets up routes and authentication for folder sites
+        //    // we need this to happen when a new folder site is created from the ui
 
-            // this is ugly touching web.config from code
-            // ideally that file is protected by file permissions
-            // is there another more graceful way to trigger app restart?
+        //    // this is ugly touching web.config from code
+        //    // ideally that file is protected by file permissions
+        //    // is there another more graceful way to trigger app restart?
 
-            try
-            {
-                string webConfigPath = HostingEnvironment.MapPath("~/Web.config");
-                var xmlConfig = new XmlDocument();
-                xmlConfig.Load(webConfigPath);
-                xmlConfig.Save(webConfigPath);
+        //    try
+        //    {
+        //        string webConfigPath = HostingEnvironment.MapPath("~/Web.config");
+        //        var xmlConfig = new XmlDocument();
+        //        xmlConfig.Load(webConfigPath);
+        //        xmlConfig.Save(webConfigPath);
 
-                //var writer = new XmlTextWriter(webConfigPath, null) { Formatting = Formatting.Indented };
-                //xmlConfig.WriteTo(writer);
-                //writer.Flush();
-                //writer.Close();
-            }
-            catch(Exception ex)
-            {
-                log.Error(ex);
-            }
+        //        //var writer = new XmlTextWriter(webConfigPath, null) { Formatting = Formatting.Indented };
+        //        //xmlConfig.WriteTo(writer);
+        //        //writer.Flush();
+        //        //writer.Close();
+        //    }
+        //    catch(Exception ex)
+        //    {
+        //        log.Error(ex);
+        //    }
             
             
-            // the below solution would have been preferrable but did not result in
-            // re-execution of Startup.cs which is needed to setup new folder sites
+        //    // the below solution would have been preferrable but did not result in
+        //    // re-execution of Startup.cs which is needed to setup new folder sites
             
-            // creating a folder below the app root causes a recycle/restart
-            //DirectoryInfo dir = new DirectoryInfo(HostingEnvironment.MapPath("~/restart"));
-            //if (dir.Exists)
-            //{
-            //    Directory.Move(dir.FullName, dir.FullName + "ed");
-            //}
-            //else
-            //{
-            //    DirectoryInfo dired = new DirectoryInfo(HostingEnvironment.MapPath("~/restarted"));
-            //    if (dired.Exists)
-            //    {
-            //        Directory.Move(dired.FullName, dir.FullName);
-            //    }
-            //    else
-            //    {
-            //        Directory.CreateDirectory(dir.FullName);
-            //    }
-            //}
-        }
+        //    // creating a folder below the app root causes a recycle/restart
+        //    //DirectoryInfo dir = new DirectoryInfo(HostingEnvironment.MapPath("~/restart"));
+        //    //if (dir.Exists)
+        //    //{
+        //    //    Directory.Move(dir.FullName, dir.FullName + "ed");
+        //    //}
+        //    //else
+        //    //{
+        //    //    DirectoryInfo dired = new DirectoryInfo(HostingEnvironment.MapPath("~/restarted"));
+        //    //    if (dired.Exists)
+        //    //    {
+        //    //        Directory.Move(dired.FullName, dir.FullName);
+        //    //    }
+        //    //    else
+        //    //    {
+        //    //        Directory.CreateDirectory(dir.FullName);
+        //    //    }
+        //    //}
+        //}
 
     }
 }

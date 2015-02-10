@@ -5,6 +5,7 @@
 
 using cloudscribe.Configuration;
 using cloudscribe.Core.Models;
+using cloudscribe.Core.Models.Site;
 using cloudscribe.Core.Models.Geography;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.Helpers;
@@ -26,10 +27,21 @@ namespace cloudscribe.Core.Web.Controllers
     public class SiteAdminController : CloudscribeBaseController
     {
         private IGeoRepository geoRepo;
+        private ITriggerStartup startup;
 
-        public SiteAdminController(IGeoRepository geoRepository)
+        public SiteAdminController(IGeoRepository geoRepository, ITriggerStartup startupTrigger)
         {
+            if (geoRepository == null) { 
+                throw new ArgumentException("you must provide an impelementation of IGeoRegpository"); 
+            }
+
+            if (startupTrigger == null)
+            {
+                throw new ArgumentException("you must provide an impelementation of ITriggerStartup");
+            }
+
             geoRepo = geoRepository;
+            startup = startupTrigger;
         }
 
         //disable warning about not really being async
@@ -338,7 +350,7 @@ namespace cloudscribe.Core.Web.Controllers
                 // so that the per folder authentication gets setup too
                 //cloudscribe.Web.Routing.RouteRegistrar.AddDefaultRouteForNewSiteFolder(folder.FolderName);
 
-                Utils.TriggerRestart();
+                startup.TriggerStartup();
                 
             }
 
