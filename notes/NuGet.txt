@@ -1,4 +1,25 @@
+The nuget folder has batch files that can build the nuget packages.
+Each batch file can take the package version as a command argument.
 
+Before packaging the solution must be built in Release mode.
+
+Then all packages can be created using the command
+
+all.cmd 1.0.0-alpha1
+
+Note that nuget packages are meant to be immutable, that is once a package has been created it should not change, any update should be done using a newer version for the package. This can be a challenge when you are first working on packaging because you can end up needing to raise the version sooner than you really wanted to. It is possible when using a private feed to replace a package while still keeping the same version.
+In VS you would need to go to Tools > NuGet Package Manager > Package Manager Settings to clear the package cache.
+Then you may also go to Tools > NuGet Package Manager > Package Manager Settings > Package Sources
+click on the custom package feed to highlight it, then click the update button which I "think" will make it reload the feed.
+
+The batch commands copy some files for packaging and then call NuGet pack command pointing to the nuspec file for the project and passing in the version.
+Each project has a sub folder under the nuget folder that contains its nuspec file. The nuspec file has meta data and dependency information for the package.
+
+One strange problem I encountered: I wanted to package cloudscribe.Resources in its own nuget package but when I did that it never would copy the dll from the package into the bin folder of the target project where it was installed, and it also did not add a reference to the project references.
+I then tried including the cloudscribe.Resources.dll inside the cloudscribe.Core.Web package, but it still failed to get copied to the bin or a reference. Finally when I also included cloudscribe.Resources.pdb for some reason that made it deploy the dll to the bin and add the reference. Then I tried to go back to a separate package for cloudscribe.Resources thinking that by adding the .pdb file to its own package it would work as it did when packaged as part of cloudscribe.Core.Web, but that experiment failed and I was back to the same problem, so currently I still have to package it as part of cloudscribe.Core.Web. I suspect this is an obscure bug in nuget. I know there will be changes in nuget coming in .net vnext so I can revisit that later. It would be ideal to be able to update the resources independently to add new translations.
+
+
+below are articles I've bookmarked here while learning about nuget and how to make packages
 
 http://docs.nuget.org/consume/command-line-reference
 
@@ -17,21 +38,9 @@ http://haacked.com/archive/2011/10/24/semver-nuget-nightly-builds.aspx/
 
 http://haacked.com/archive/2014/04/15/nuget-build-dependencies/
 
-
 http://stackoverflow.com/questions/15882770/creating-one-nuget-package-from-multiple-projects-in-one-solution
 
 http://blog.davidebbo.com/2011/04/easy-way-to-publish-nuget-packages-with.html
 
 http://docs.nuget.org/docs/creating-packages/hosting-your-own-nuget-feeds
 
-Currently we're having some problems with NuGet not resolving a few dependencies and this causes the cloudscribe installation to abort and rollback.
-For the moment, the following dependencies have been removed form our list of dependencies and should be installed separately, ideally before installing cloudscribe
-
-We keep getting gateway timeout error on some packages, but seems we're not the only ones
-http://stackoverflow.com/questions/28288328/nuget-the-remote-server-returned-an-error-504-gateway-timeout
-
-Another apparent NuGet problem is with the Microsoft.jQuery.Unobtrusive.Validation version 3.2.2
-it cvauses this error
-Updating 'jQuery 2.1.3' to 'jQuery 1.4.1' failed. Unable to find a version of 'Microsoft.jQuery.Unobtrusive.Validation' that is compatible with 'jQuery 1.4.1'.
-
-For some reason it wants to "upgrade" jquery from 2.1.3 to 1.4.1 

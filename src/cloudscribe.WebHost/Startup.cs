@@ -38,6 +38,7 @@ namespace cloudscribe.WebHost
 
             builder.RegisterModule(new cloudscribe.WebHost.DI.Autofac.Modules.MvcSiteMapProviderModule()); // Required
             builder.RegisterModule(new cloudscribe.WebHost.DI.Autofac.Modules.MvcModule());
+            builder.RegisterModule(new cloudscribe.WebHost.DI.Autofac.Modules.CloudscribeCoreModule());
 
             container = builder.Build();
             
@@ -153,11 +154,7 @@ namespace cloudscribe.WebHost
 
             }
 
-            builder.RegisterType<cloudscribe.Core.Web.Components.WebConfigStartupTrigger>()
-                .As<cloudscribe.Core.Models.Site.ITriggerStartup>();
-
-            //
-
+            
         } 
 
         

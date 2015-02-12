@@ -102,6 +102,11 @@ call BatchSubstitute.cmd "cloudscribe.WebHost" "$rootnamespace$" ..\src\cloudscr
 echo on
 ::ECHO.%ERRORLEVEL%
 
+call BatchSubstitute.cmd "cloudscribe.WebHost" "$rootnamespace$" ..\src\cloudscribe.WebHost\DI\Autofac\Modules\CloudscribeCoreModule.cs>cloudscribe.Core.Web.Integration\content\DI\Autofac\Modules\CloudscribeCoreModule.cs.pp
+
+echo on
+::ECHO.%ERRORLEVEL%
+
 SET pversion=%1
 IF NOT DEFINED pversion SET pversion="1.0.0-alpha0"
 
