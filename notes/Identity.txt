@@ -19,3 +19,17 @@ http://msdn.microsoft.com/en-us/library/microsoft.aspnet.identity%28v=vs.108%29.
 
 http://stackoverflow.com/questions/19487322/what-is-asp-net-identitys-iusersecuritystampstoretuser-interface
 
+http://brockallen.com/2013/10/20/the-good-the-bad-and-the-ugly-of-asp-net-identity/
+
+http://brockallen.com/2014/02/11/introducing-identityreboot/
+https://github.com/brockallen/BrockAllen.IdentityReboot
+
+http://brockallen.com/2014/02/09/how-membershipreboot-stores-passwords-properly/
+
+http://brockallen.com/2014/02/10/how-membershipreboot-mitigates-login-and-two-factor-authentication-brute-force-attacks/
+
+http://brockallen.com/2014/02/11/concerns-with-two-factor-authentication-in-asp-net-identity-v2/
+
+https://github.com/IdentityServer/Thinktecture.IdentityServer3
+
+http://identityserver.github.io/Documentation/docs/

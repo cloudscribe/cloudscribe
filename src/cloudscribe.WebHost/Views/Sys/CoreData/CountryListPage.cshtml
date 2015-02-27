@@ -8,7 +8,9 @@
 <table class="table table-striped">
     <tr>
         <th>
-            @Html.ActionLink(@CommonResources.NewCountry, "CountryEdit", null, new { @class = "btn btn-default btn-xs" })
+            @Ajax.ModalDialogActionLinkBootstrap(@CommonResources.NewCountry, "CountryEdit", "CoreData",
+new { guid = Guid.Empty, returnPageNumber = Model.Paging.CurrentPage }
+     , new { @class = "btn btn-default btn-xs" })
         </th>
         <th>
             @CommonResources.Name
@@ -24,13 +26,16 @@
 @foreach (var c in Model.Countries) {
     <tr>
         <td>
-            @Html.ActionLink(CommonResources.Edit, "CountryEdit", "CoreData",
-         new { guid = c.Guid, returnPageNumber = Model.Paging.CurrentPage },
-         new { @class = "btn btn-xs btn-default" })
+ 
+            @Ajax.ModalDialogActionLinkBootstrap(@CommonResources.Edit, "CountryEdit", "CoreData",
+new { guid = c.Guid, returnPageNumber = Model.Paging.CurrentPage }
+     , new { @class = "btn btn-default btn-xs" })
+
+            @Ajax.ModalDialogActionLinkBootstrap(@CommonResources.States, "StateListPage", "CoreData",
+ new { countryGuid = c.Guid, pageNumber = 1, pageSize = -1 }
+     , new { @class = "btn btn-default btn-xs" })
        
-            @Html.ActionLink(CommonResources.States, "StateListPage", "CoreData",
-      new { countryGuid = c.Guid, pageNumber=1, pageSize=-1, countryReturnPageNumber = Model.Paging.CurrentPage },
-         new { @class = "btn btn-xs btn-default" })
+           
         </td>
         <td>
             @c.Name
@@ -54,3 +59,9 @@
             .MaxNrOfPages(Model.Paging.MaxPagerItems)
     )
 </div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryajax")
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/Scripts/modaldialog-bootstrap.js")
+}

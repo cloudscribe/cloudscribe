@@ -296,16 +296,21 @@ namespace cloudscribe.Setup.Controllers
             //Guid mojoAppGuid = new Guid("077e4857-f583-488e-836e-34a4b04be855");
             //if (appID == mojoAppGuid)
             //{
-            //    //versionToStopAt = DatabaseHelper.DBCodeVersion(); ;
+            //    //versionToStopAt = DatabaseHelper.DBCodeVersion (); ;
             //}
 
+            string pathToScriptFolder = Server.MapPath(
+                string.Format(AppSettings.SetupInstallScriptPathFormat, 
+                applicationName, 
+                db.DBPlatform.ToLowerInvariant())
+                );
 
-            String pathToScriptFolder
-                = Server.MapPath(
-                "~/Config/applications/" + applicationName
-                + "/SchemaInstallScripts/"
-                    + db.DBPlatform.ToLowerInvariant()
-                    + "/");
+            //String pathToScriptFolder
+            //    = Server.MapPath(
+            //    "~/Config/applications/" + applicationName
+            //    + "/SchemaInstallScripts/"
+            //        + db.DBPlatform.ToLowerInvariant()
+            //        + "/");
 
             if (!Directory.Exists(pathToScriptFolder))
             {
@@ -512,12 +517,19 @@ namespace cloudscribe.Setup.Controllers
 
             }
 
-            String pathToScriptFolder
-                = Server.MapPath(
-                "~/Config/applications/" + applicationName
-                    + "/SchemaUpgradeScripts/"
-                    + db.DBPlatform.ToLowerInvariant()
-                    + "/");
+            //String pathToScriptFolder
+            //    = Server.MapPath(
+            //    "~/Config/applications/" + applicationName
+            //        + "/SchemaUpgradeScripts/"
+            //        + db.DBPlatform.ToLowerInvariant()
+            //        + "/");
+
+            string pathToScriptFolder = Server.MapPath(
+                string.Format(AppSettings.SetupUpgradeScriptPathFormat,
+                applicationName,
+                db.DBPlatform.ToLowerInvariant())
+                );
+
 
             if (!Directory.Exists(pathToScriptFolder))
             {

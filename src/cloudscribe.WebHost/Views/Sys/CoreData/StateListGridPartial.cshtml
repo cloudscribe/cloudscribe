@@ -1,0 +1,75 @@
+﻿@model cloudscribe.Core.Web.ViewModels.CoreData.StateListPageViewModel
+
+@{
+
+}
+
+<table class="table table-striped">
+    <tr>
+        <th>
+            @Html.ActionLink(@CommonResources.NewState, "StateEdit", "CoreData",
+            new { countryGuid = Model.Country.Guid, returnPageNumber = Model.Paging.CurrentPage },
+                              new { @class = "btn btn-xs btn-default" })
+        </th>
+        <th>
+            @CommonResources.Name
+        </th>
+        <th>
+            @CommonResources.Code
+        </th>
+    </tr>
+
+    @foreach (var item in Model.States) {
+                        <tr>
+                            <td>
+
+
+                                @using (Html.BeginForm("StateDelete", "CoreData"))
+{
+                                    @Html.AntiForgeryToken()
+
+                                    @Html.ActionLink(CommonResources.Edit, "StateEdit", "CoreData",
+            new { countryGuid = Model.Country.Guid, guid = item.Guid, returnPageNumber = Model.Paging.CurrentPage }
+         , new { @class = "btn btn-xs btn-default" })
+
+
+                                    @Html.Hidden("countryGuid",item.CountryGuid)
+                                    @Html.Hidden("guid",item.Guid)
+                                    @Html.Hidden("returnPageNumber", Model.Paging.CurrentPage)
+
+
+                                    <input type="submit" value="@CommonResources.Delete"
+                                           onclick="javascript: return confirm('@Html.FormatValue(item.Name, CommonResources.ConfirmDeleteFormat)');"
+                                           class="btn btn-xs btn-default" />
+}
+
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Code)
+                            </td>
+
+                        </tr>
+}
+</table>
+<div>
+    @Html.Pager(Model.Paging.ItemsPerPage,
+    Model.Paging.CurrentPage,
+    Model.Paging.TotalItems,
+                            new AjaxOptions { UpdateTargetId = "statelistgridcontainer" }
+        ).Options(o => o
+             .Action("StateListPage")
+             .AddRouteValue("countryGuid", Model.Country.Guid)
+            .AddRouteValue("pageSize", Model.Paging.ItemsPerPage)
+            .AddRouteValue("ajaxGrid", true)
+            .DisplayTemplate("Bootstrap3Pagination")
+            .PageRouteValueKey("pageNumber")
+            .MaxNrOfPages(Model.Paging.MaxPagerItems)
+
+    )
+</div>
+
+
+

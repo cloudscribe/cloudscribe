@@ -156,7 +156,8 @@ namespace cloudscribe.Core.Web.Controllers
             Guid? countryGuid, 
             int pageNumber = 1, 
             int pageSize = -1,
-            int countryReturnPageNumber = 1)
+            int countryReturnPageNumber = 1,
+            bool ajaxGrid = false)
         {
             if(!countryGuid.HasValue)
             {
@@ -165,7 +166,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             ViewBag.SiteName = Site.SiteSettings.SiteName;
             ViewBag.Title = "State List Administration";
-            int itemsPerPage = AppSettings.DefaultPageSize_CountryList;
+            int itemsPerPage = AppSettings.DefaultPageSize_StateList;
             if (pageSize > 0)
             {
                 itemsPerPage = pageSize;
@@ -183,13 +184,22 @@ namespace cloudscribe.Core.Web.Controllers
             model.CountryListReturnPageNumber = countryReturnPageNumber;
 
             // below we are just manipiulating the bread crumbs
-            var node = SiteMaps.Current.FindSiteMapNodeFromKey("StateListPage");
-            if (node != null)
-            {
-                node.Title = model.Country.Name + " States";
-            }
+            //var node = SiteMaps.Current.FindSiteMapNodeFromKey("StateListPage");
+            //if (node != null)
+            //{
+            //    node.Title = model.Country.Name + " States";
+            //}
+
             
-            return View(model);
+
+            if (ajaxGrid)
+            {
+                return PartialView("StateListGridPartial", model);
+            }
+
+            return PartialView("StateListPagePartial", model);
+            
+            //return View(model);
 
         }
 

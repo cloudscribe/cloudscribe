@@ -188,6 +188,11 @@ namespace cloudscribe.Configuration
             get { return GetInt("DefaultPageSize_CountryList", 10); }
         }
 
+        public static int DefaultPageSize_StateList
+        {
+            get { return GetInt("DefaultPageSize_StateList", 10); }
+        }
+
         public static int DefaultPageSize_RoleMemberList
         {
             get { return GetInt("DefaultPageSize_RoleMemberList", 10); }
@@ -420,6 +425,19 @@ namespace cloudscribe.Configuration
         {
             get { return GetString("MobilePhoneUserAgents", "iphone,ipod,iemobile,android;blackberry"); }
         }
+
+        public static string SetupInstallScriptPathFormat
+        {
+            get { return GetString("SetupInstallScriptPathFormat", "~/Config/applications/{0}/install/{1}/"); }
+        }
+
+        public static string SetupUpgradeScriptPathFormat
+        {
+            get { return GetString("SetupInstallScriptPathFormat", "~/Config/applications/{0}/upgrade/{1}/"); }
+        }
+
+
+        //  ~/Config/applications/{0}/upgrade/{1}/
 
     }
 }

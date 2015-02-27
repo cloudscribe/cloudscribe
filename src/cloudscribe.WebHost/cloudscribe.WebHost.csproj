@@ -258,6 +258,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="DI\Autofac\Modules\CloudscribeCoreModule.cs" />
     <Compile Include="DI\Autofac\Modules\MvcModule.cs" />
     <Compile Include="DI\Autofac\Modules\MvcSiteMapProviderModule.cs" />
     <Compile Include="DI\CommonConventions.cs" />
@@ -832,7 +833,6 @@
     <Content Include="Views\Sys\CoreData\Index.cshtml" />
     <Content Include="Views\Sys\CoreData\CountryListPage.cshtml" />
     <Content Include="Views\Sys\CoreData\CountryEdit.cshtml" />
-    <Content Include="Views\Sys\CoreData\StateListPage.cshtml" />
     <Content Include="Views\Sys\CoreData\CountryDetail.cshtml" />
     <Content Include="Views\Sys\CoreData\StateEdit.cshtml" />
     <Content Include="Views\Sys\Shared\DisplayTemplates\Bootstrap3Pagination.cshtml" />
@@ -885,6 +885,8 @@
     <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce.eot" />
     <Content Include="Scripts\tinymce\skins\lightgray\fonts\readme.md" />
     <Content Include="Scripts\tinymce\langs\readme.md" />
+    <Content Include="Views\Sys\CoreData\StateListPagePartial.cshtml" />
+    <Content Include="Views\Sys\CoreData\StateListGridPartial.cshtml" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />
