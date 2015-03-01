@@ -92,7 +92,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             
 
-            return View(model);
+            return PartialView(model);
         }
 
         [HttpPost]
@@ -246,19 +246,19 @@ namespace cloudscribe.Core.Web.Controllers
             IGeoCountry country = await geoRepo.FetchCountry(countryGuid);
             model.Country = GeoCountryViewModel.FromIGeoCountry(country);
 
-            var node = SiteMaps.Current.FindSiteMapNodeFromKey("StateEdit");
-            if (node != null)
-            {
-                node.Title = model.Heading;
-                var parent = node.ParentNode;
-                if(parent != null)
-                {
-                    parent.Title = model.Country.Name + " States";
+            //var node = SiteMaps.Current.FindSiteMapNodeFromKey("StateEdit");
+            //if (node != null)
+            //{
+            //    node.Title = model.Heading;
+            //    var parent = node.ParentNode;
+            //    if(parent != null)
+            //    {
+            //        parent.Title = model.Country.Name + " States";
                     
-                }
-            }
+            //    }
+            //}
 
-            return View(model);
+            return PartialView(model);
 
         }
 
@@ -290,9 +290,11 @@ namespace cloudscribe.Core.Web.Controllers
                 this.AlertSuccess(string.Format(successFormat,
                             model.Name), true);
             }
+
+            return View(model);
             
 
-            return RedirectToAction("StateListPage", new { countryGuid = model.CountryGuid, pageNumber = model.ReturnPageNumber });
+            //return RedirectToAction("StateListPage", new { countryGuid = model.CountryGuid, pageNumber = model.ReturnPageNumber });
             
 
         }

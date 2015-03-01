@@ -1,15 +1,13 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.CoreData.StateListPageViewModel
-
 @{
 
 }
-
 <table class="table table-striped">
     <tr>
         <th>
-            @Html.ActionLink(@CommonResources.NewState, "StateEdit", "CoreData",
-            new { countryGuid = Model.Country.Guid, returnPageNumber = Model.Paging.CurrentPage },
-                              new { @class = "btn btn-xs btn-default" })
+            @Ajax.ModalDialogActionLinkBootstrap(@CommonResources.NewState, "StateEdit", "CoreData",
+                     new { countryGuid = Model.Country.Guid, returnPageNumber = Model.Paging.CurrentPage }
+                 , new { @class = "btn btn-default btn-xs" })
         </th>
         <th>
             @CommonResources.Name
@@ -18,31 +16,25 @@
             @CommonResources.Code
         </th>
     </tr>
-
     @foreach (var item in Model.States) {
                         <tr>
                             <td>
-
-
                                 @using (Html.BeginForm("StateDelete", "CoreData"))
 {
+                                    @Ajax.ModalDialogActionLinkBootstrap(@CommonResources.Edit, "StateEdit", "CoreData",
+                                    new { countryGuid = Model.Country.Guid, 
+                                        guid = item.Guid, 
+                                        returnPageNumber = Model.Paging.CurrentPage }
+                                     , new { @class = "btn btn-default btn-xs" })
+                                    
                                     @Html.AntiForgeryToken()
-
-                                    @Html.ActionLink(CommonResources.Edit, "StateEdit", "CoreData",
-            new { countryGuid = Model.Country.Guid, guid = item.Guid, returnPageNumber = Model.Paging.CurrentPage }
-         , new { @class = "btn btn-xs btn-default" })
-
-
                                     @Html.Hidden("countryGuid",item.CountryGuid)
                                     @Html.Hidden("guid",item.Guid)
                                     @Html.Hidden("returnPageNumber", Model.Paging.CurrentPage)
-
-
                                     <input type="submit" value="@CommonResources.Delete"
                                            onclick="javascript: return confirm('@Html.FormatValue(item.Name, CommonResources.ConfirmDeleteFormat)');"
                                            class="btn btn-xs btn-default" />
 }
-
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.Name)
