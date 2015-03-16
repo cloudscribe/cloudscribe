@@ -267,11 +267,11 @@ namespace cloudscribe.Core.Web.Controllers
         public async Task<ActionResult> StateEdit(GeoZoneViewModel model)
         {
             ViewBag.SiteName = Site.SiteSettings.SiteName;
-            ViewBag.Title = "Edit Country";
+            ViewBag.Title = "Edit State";
 
             if (!ModelState.IsValid)
             {
-                return View(model);
+                return PartialView(model);
             }
 
             string successFormat;
@@ -291,7 +291,16 @@ namespace cloudscribe.Core.Web.Controllers
                             model.Name), true);
             }
 
-            return View(model);
+            IGeoCountry country = await geoRepo.FetchCountry(model.CountryGuid);
+            
+
+            IGeoZone state = model;
+            model = GeoZoneViewModel.FromIGeoZone(state);
+            model.Country = GeoCountryViewModel.FromIGeoCountry(country);
+
+            model.Heading = "Edit State";
+
+            return PartialView(model);
             
 
             //return RedirectToAction("StateListPage", new { countryGuid = model.CountryGuid, pageNumber = model.ReturnPageNumber });

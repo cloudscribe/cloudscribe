@@ -1,0 +1,30 @@
+notes about challenges and research into solutions for modal dialogs
+
+specific problems of nested modal dialogs
+in the country list for example we provide a link to edit the country which is done in a modal, when the modal is dismissed the underlying page is refreshed so that any change in the data will be shown. This works well, since it is only one modal at a time.
+In the same contry list page we show a link for the states of that country, which also opens in a modal, the modal is pageable as well since there can be many states.
+So the state list modal is already open and now we want to edit a state without losing our page in the statelist modal or the underlying page with country list. So we make the link to edit a state also a modal, resulting in a modal on top of a modal.
+-- problem -- 
+after editing a state, when the upper modal is dismissed, how do we refresh the content in the state list modal without losing the page. we don't really have any reference to the statelist modal from inside the state edit modal, and we don't have any easy way to pass a reference in there.
+
+-- possible strategies --
+we could try to use just one modal and replace the contents using ajax, so the same modal could be used for the state list and state edit, with some link to retore the list after the edit. sort of like SPA (single page application) within the modal
+
+or if we can find a way to refresh the parent modal upon dismissing the child
+
+
+Some usefull posts and articles from research
+
+http://getbootstrap.com/javascript/#modals
+
+http://nakupanda.github.io/bootstrap3-dialog/
+
+http://stackoverflow.com/questions/19305821/bootstrap-3-0-multiple-modals-overlay
+
+http://miles-by-motorcycle.com/fv-b-8-670/stacking-bootstrap-dialogs-using-event-callbacks
+
+http://miles-by-motorcycle.com/fv-b-8-670/stacking-bootstrap-dialogs-using-event-callbacks
+
+http://www.whiletrue.it/how-to-update-the-content-of-a-modal-in-twitter-bootstrap/
+
+http://stackoverflow.com/questions/12449890/reload-content-in-modal-twitter-bootstrap

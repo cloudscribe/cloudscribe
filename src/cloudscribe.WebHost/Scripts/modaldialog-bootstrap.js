@@ -11,6 +11,21 @@ function setFormDataAjaxAttributes(dialogDivId) {
     //var div = $("#" + dialogDivId);
     //div.find("form").attr("data-ajax-update", "#" + dialogDivId);
     //div.find("form").attr("data-ajax-complete", "onModalDialogSubmitted('" + dialogDivId + "')");
+    $(".closeModal").click(function () {
+        $(this).closest(".modal").modal("hide")
+    });
+
+    /*
+    $("[data-toggle=modal]").click(function (ev) {
+        ev.preventDefault();
+       
+        $($(this).attr('data-target') + " .modal-body").load($(this).attr("href"), function () {
+            $($(this).attr('data-target')).modal("show");
+        });
+     
+    });
+    */
+
 }
 
 function onModalDialogSubmitted(dialogDivId) {
