@@ -54,6 +54,14 @@ namespace cloudscribe.Core.Web.ViewModels.CoreData
             set { iSOCode3 = value; }
         }
 
+        private int returnPageNumber = 1;
+
+        public int ReturnPageNumber
+        {
+            get { return returnPageNumber; }
+            set { returnPageNumber = value; }
+        }
+
         public static GeoCountryViewModel FromIGeoCountry(IGeoCountry geoCountry)
         {
             GeoCountryViewModel model = new GeoCountryViewModel();

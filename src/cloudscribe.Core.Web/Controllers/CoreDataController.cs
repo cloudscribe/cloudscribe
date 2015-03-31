@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-11-15
-// Last Modified:			2015-01-04
+// Last Modified:			2015-03-31
 // 
 
 using cloudscribe.Configuration;
@@ -44,7 +44,9 @@ namespace cloudscribe.Core.Web.Controllers
 
 #pragma warning restore 1998
 
-        public async Task<ActionResult> CountryListPage(int pageNumber = 1, int pageSize = -1)
+        public async Task<ActionResult> CountryListPage(
+            int pageNumber = 1, 
+            int pageSize = -1)
         {
             ViewBag.SiteName = Site.SiteSettings.SiteName;
             ViewBag.Title = "Country List Administration";
@@ -66,7 +68,10 @@ namespace cloudscribe.Core.Web.Controllers
 
         
         
-        public async Task<ActionResult> CountryEdit(Guid? guid, int returnPageNumber = 1)
+        public async Task<ActionResult> CountryEdit(
+            Guid? guid, 
+            int returnPageNumber = 1, 
+            bool partial=false)
         {
             ViewBag.SiteName = Site.SiteSettings.SiteName;
             ViewBag.Title = "Edit Country";
@@ -90,14 +95,23 @@ namespace cloudscribe.Core.Web.Controllers
                 model = new GeoCountryViewModel();
             }
 
-            
+            model.ReturnPageNumber = returnPageNumber;
 
-            return PartialView(model);
+            
+            if(partial)
+            {
+                return PartialView("CountryEditPartial", model);
+            }
+
+            return View(model);
+            
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CountryEdit(GeoCountryViewModel model, int returnPageNumber = 1)
+        public async Task<ActionResult> CountryEdit(
+            GeoCountryViewModel model, 
+            int returnPageNumber = 1)
         {
             ViewBag.SiteName = Site.SiteSettings.SiteName;
             ViewBag.Title = "Edit Country";
@@ -134,11 +148,11 @@ namespace cloudscribe.Core.Web.Controllers
         // seems like an unusual event to delete a country and its states
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CountryDelete(Guid countryGuid)
+        public async Task<ActionResult> CountryDelete(Guid countryGuid, int returnPageNumber = 1)
         {
             IGeoCountry country = await geoRepo.FetchCountry(countryGuid);
             bool result = await geoRepo.DeleteGeoZonesByCountry(countryGuid);
-            result = result && await geoRepo.DeleteCountry(countryGuid);
+            result = await geoRepo.DeleteCountry(countryGuid);
 
             if (result && (country != null))
             {
@@ -148,7 +162,7 @@ namespace cloudscribe.Core.Web.Controllers
                             , true);
             }
 
-            return RedirectToAction("CountryListPage");
+            return RedirectToAction("CountryListPage", new { pageNumber = returnPageNumber });
         }
 
         
@@ -156,8 +170,9 @@ namespace cloudscribe.Core.Web.Controllers
             Guid? countryGuid, 
             int pageNumber = 1, 
             int pageSize = -1,
-            int countryReturnPageNumber = 1,
-            bool ajaxGrid = false)
+            int crp = 1,
+            bool ajaxGrid = false,
+            bool partial = false)
         {
             if(!countryGuid.HasValue)
             {
@@ -181,13 +196,22 @@ namespace cloudscribe.Core.Web.Controllers
             model.Paging.CurrentPage = pageNumber;
             model.Paging.ItemsPerPage = itemsPerPage;
             model.Paging.TotalItems = await geoRepo.GetGeoZoneCount(countryGuid.Value);
-            model.CountryListReturnPageNumber = countryReturnPageNumber;
+            model.CountryListReturnPageNumber = crp;
 
             // below we are just manipiulating the bread crumbs
-            //var node = SiteMaps.Current.FindSiteMapNodeFromKey("StateListPage");
+            var node = SiteMaps.Current.FindSiteMapNodeFromKey("StateListPage");
+            if (node != null)
+            {
+                node.Title = model.Country.Name + " States";
+                
+            }
+
+            // too bad this does not work
+            //node = SiteMaps.Current.FindSiteMapNodeFromKey("CountryListPage");
             //if (node != null)
             //{
-            //    node.Title = model.Country.Name + " States";
+            //    node.RouteValues.Add("pageNumber", countryReturnPageNumber);
+
             //}
 
             
@@ -197,22 +221,31 @@ namespace cloudscribe.Core.Web.Controllers
                 return PartialView("StateListGridPartial", model);
             }
 
-            return PartialView("StateListPagePartial", model);
+            if(partial)
+            {
+                return PartialView("StateListPagePartial", model);
+            }
             
-            //return View(model);
+            
+            return View(model);
 
         }
 
        
-        public async Task<ActionResult> StateEdit(Guid countryGuid, Guid? guid, int? returnPageNumber)
+        public async Task<ActionResult> StateEdit(
+            Guid countryGuid, 
+            Guid? guid,
+            int crp = 1,
+            int returnPageNumber = 1
+            )
         {
             if (countryGuid == Guid.Empty)
             {
                 return RedirectToAction("CountryListPage");
             }
 
-            int returnPage = 1;
-            if (returnPageNumber.HasValue) { returnPage = returnPageNumber.Value; }
+            //int returnPage = 1;
+            //if (returnPageNumber.HasValue) { returnPage = returnPageNumber.Value; }
 
             ViewBag.SiteName = Site.SiteSettings.SiteName;
             ViewBag.Title = "Edit State";
@@ -230,7 +263,8 @@ namespace cloudscribe.Core.Web.Controllers
                 }
                 else
                 {
-                    return RedirectToAction("CountryListPage", new { pageNumber = returnPage });
+                    // invalid guid provided
+                    return RedirectToAction("CountryListPage", new { pageNumber = crp });
                 }
 
             }
@@ -241,30 +275,32 @@ namespace cloudscribe.Core.Web.Controllers
                 model.CountryGuid = countryGuid;
             }
 
-            model.ReturnPageNumber = returnPage;
+            model.ReturnPageNumber = returnPageNumber;
+            model.CountryListReturnPageNumber = crp;
             
             IGeoCountry country = await geoRepo.FetchCountry(countryGuid);
             model.Country = GeoCountryViewModel.FromIGeoCountry(country);
 
-            //var node = SiteMaps.Current.FindSiteMapNodeFromKey("StateEdit");
-            //if (node != null)
-            //{
-            //    node.Title = model.Heading;
-            //    var parent = node.ParentNode;
-            //    if(parent != null)
-            //    {
-            //        parent.Title = model.Country.Name + " States";
-                    
-            //    }
-            //}
+            var node = SiteMaps.Current.FindSiteMapNodeFromKey("StateEdit");
+            if (node != null)
+            {
+                node.Title = model.Heading;
+                var parent = node.ParentNode;
+                if (parent != null)
+                {
+                    parent.Title = model.Country.Name + " States";
 
-            return PartialView(model);
+                }
+            }
+
+            return View(model);
 
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> StateEdit(GeoZoneViewModel model)
+        public async Task<ActionResult> StateEdit(
+            GeoZoneViewModel model)
         {
             ViewBag.SiteName = Site.SiteSettings.SiteName;
             ViewBag.Title = "Edit State";
@@ -291,26 +327,33 @@ namespace cloudscribe.Core.Web.Controllers
                             model.Name), true);
             }
 
-            IGeoCountry country = await geoRepo.FetchCountry(model.CountryGuid);
+            //IGeoCountry country = await geoRepo.FetchCountry(model.CountryGuid);
             
 
-            IGeoZone state = model;
-            model = GeoZoneViewModel.FromIGeoZone(state);
-            model.Country = GeoCountryViewModel.FromIGeoCountry(country);
+            //IGeoZone state = model;
+            //model = GeoZoneViewModel.FromIGeoZone(state);
+            //model.Country = GeoCountryViewModel.FromIGeoCountry(country);
 
-            model.Heading = "Edit State";
+            //model.Heading = "Edit State";
 
-            return PartialView(model);
+            //return PartialView(model);
             
 
-            //return RedirectToAction("StateListPage", new { countryGuid = model.CountryGuid, pageNumber = model.ReturnPageNumber });
+            return RedirectToAction("StateListPage", 
+                new { countryGuid = model.CountryGuid, 
+                    crp= model.CountryListReturnPageNumber, 
+                    pageNumber = model.ReturnPageNumber });
             
 
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> StateDelete(Guid countryGuid, Guid guid, int returnPageNumber =1)
+        public async Task<ActionResult> StateDelete(
+            Guid countryGuid, 
+            Guid guid,
+            int crp = 1,
+            int returnPageNumber =1)
         {
             IGeoZone state = await geoRepo.FetchGeoZone(guid);
             bool result = await geoRepo.DeleteGeoZone(guid);
@@ -323,7 +366,11 @@ namespace cloudscribe.Core.Web.Controllers
                             , true);
             }
 
-            return RedirectToAction("StateListPage", new { countryGuid = countryGuid, pageNumber = returnPageNumber });
+            return RedirectToAction("StateListPage", 
+                new { countryGuid = countryGuid, 
+                    crp = crp,
+                    pageNumber = returnPageNumber 
+                });
         }
 
         public async Task<ActionResult> CurrencyList()

@@ -2,11 +2,11 @@
 @{
     bool startingNodeInChildLevel = true;
     bool showStartingNode = false;
-    int maxDepth = 1;
+    int maxDepth = 2;
 }
 
 <h2>@ViewBag.Heading</h2>
-@Html.MvcSiteMap().Menu(
+@Html.MvcSiteMap().Menu("VerticalMenuHelperModel",
 Html.MvcSiteMap().SiteMap.FindSiteMapNodeFromKey("CoreData"),
     startingNodeInChildLevel,
     showStartingNode,

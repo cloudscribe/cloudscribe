@@ -8,9 +8,19 @@
 <table class="table table-striped">
     <tr>
         <th>
-            @Ajax.ModalDialogActionLinkBootstrap(@CommonResources.NewCountry, "CountryEdit", "CoreData",
+            @if (Model.UseModals)
+            {
+                @Ajax.ModalDialogActionLinkBootstrap(@CommonResources.NewCountry, "CountryEdit", "CoreData",
 new { guid = Guid.Empty, returnPageNumber = Model.Paging.CurrentPage }
      , new { @class = "btn btn-default btn-xs" })
+            }
+            else
+            {
+                @Html.ActionLink(CommonResources.NewCountry, "CountryEdit", "CoreData",
+                                   new { guid = Guid.Empty, returnPageNumber = Model.Paging.CurrentPage }, 
+                                   new { @class = "btn btn-xs btn-default" })
+            }
+            
         </th>
         <th>
             @CommonResources.Name
@@ -22,18 +32,30 @@ new { guid = Guid.Empty, returnPageNumber = Model.Paging.CurrentPage }
             @CommonResources.ISOCode3
         </th>
     </tr>
-
 @foreach (var c in Model.Countries) {
     <tr>
         <td>
- 
-            @Ajax.ModalDialogActionLinkBootstrap(@CommonResources.Edit, "CountryEdit", "CoreData",
-new { guid = c.Guid, returnPageNumber = Model.Paging.CurrentPage }
+ @if (Model.UseModals)
+ {
+     @Ajax.ModalDialogActionLinkBootstrap(@CommonResources.Edit, "CountryEdit", "CoreData",
+new { guid = c.Guid, returnPageNumber = Model.Paging.CurrentPage, partial=true }
      , new { @class = "btn btn-default btn-xs" })
 
-            @Ajax.ModalDialogActionLinkBootstrap(@CommonResources.States, "StateListPage", "CoreData",
- new { countryGuid = c.Guid, pageNumber = 1, pageSize = -1 }
+    @Ajax.ModalDialogActionLinkBootstrap(@CommonResources.States, "StateListPage", "CoreData",
+      new { countryGuid = c.Guid, pageNumber = 1, pageSize = -1, partial = true }
      , new { @class = "btn btn-default btn-xs" })
+ }
+ else
+ {
+    @Html.ActionLink(CommonResources.Edit, "CountryEdit", "CoreData",
+        new { guid = c.Guid, returnPageNumber = Model.Paging.CurrentPage },
+        new { @class = "btn btn-xs btn-default" })
+     @Html.ActionLink(CommonResources.States, "StateListPage", "CoreData",
+             new { countryGuid = c.Guid, crp = Model.Paging.CurrentPage },
+        new { @class = "btn btn-xs btn-default" })
+
+ }
+            
        
            
         </td>

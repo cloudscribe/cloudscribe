@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-11-17
-// Last Modified:			2014-11-17
+// Last Modified:			2015-03-30
 //
 
 using cloudscribe.Core.Models.Geography;
@@ -71,6 +71,14 @@ namespace cloudscribe.Core.Web.ViewModels.CoreData
         {
             get { return returnPageNumber; }
             set { returnPageNumber = value; }
+        }
+
+        private int countryListReturnPageNumber = 1;
+
+        public int CountryListReturnPageNumber
+        {
+            get { return countryListReturnPageNumber; }
+            set { countryListReturnPageNumber = value; }
         }
 
         public static GeoZoneViewModel FromIGeoZone(IGeoZone geoZone)

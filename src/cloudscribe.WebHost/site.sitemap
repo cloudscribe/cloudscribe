@@ -99,7 +99,7 @@
         </mvcSiteMapNode>
 
         <mvcSiteMapNode key="CountryListPage" title="Country/State Administration"
-            controller="CoreData" action="CountryListPage"
+            controller="CoreData" action="CountryListPage" 
             roles="ServerAdmins"
             visibility="SiteMapPathHelper,ChildMenu,!*"
             >

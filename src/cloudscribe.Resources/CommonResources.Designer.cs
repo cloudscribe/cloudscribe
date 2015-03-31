@@ -133,6 +133,15 @@ namespace cloudscribe.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Back To State List.
+        /// </summary>
+        public static string BackToStateList {
+            get {
+                return ResourceManager.GetString("BackToStateList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Basic Settings.
         /// </summary>
         public static string BasicSettings {
@@ -291,6 +300,15 @@ namespace cloudscribe.Resources {
         public static string ConfirmAddFormat {
             get {
                 return ResourceManager.GetString("ConfirmAddFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to delete the country {0} and all of its states? You cannot undo this action..
+        /// </summary>
+        public static string ConfirmDeleteCountryFormat {
+            get {
+                return ResourceManager.GetString("ConfirmDeleteCountryFormat", resourceCulture);
             }
         }
         

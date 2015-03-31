@@ -818,6 +818,9 @@
     <Content Include="Views\Sys\Account\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Sys\Account\_RemoveAccountPartial.cshtml" />
     <Content Include="Views\Sys\Account\_SetPasswordPartial.cshtml" />
+    <Content Include="Views\Sys\CoreData\StateEdit.cshtml">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="Views\Sys\Manage\AddPhoneNumber.cshtml" />
     <Content Include="Views\Sys\Manage\ChangePassword.cshtml" />
     <Content Include="Views\Sys\Manage\Index.cshtml" />
@@ -832,9 +835,7 @@
     <Content Include="Views\Sys\SiteAdmin\SiteInfo.cshtml" />
     <Content Include="Views\Sys\CoreData\Index.cshtml" />
     <Content Include="Views\Sys\CoreData\CountryListPage.cshtml" />
-    <Content Include="Views\Sys\CoreData\CountryEdit.cshtml" />
     <Content Include="Views\Sys\CoreData\CountryDetail.cshtml" />
-    <Content Include="Views\Sys\CoreData\StateEdit.cshtml" />
     <Content Include="Views\Sys\Shared\DisplayTemplates\Bootstrap3Pagination.cshtml" />
     <Content Include="Views\Sys\Shared\DisplayTemplates\BootstrapPagination.cshtml" />
     <Content Include="Views\Sys\Shared\DisplayTemplates\MvcSiteMapHelperModel.cshtml" />
@@ -857,7 +858,9 @@
     <Content Include="Views\Shared\_DialogLayout.cshtml" />
     <Content Include="Views\Sys\RoleAdmin\NonMembersGridPartial.cshtml" />
     <Content Include="Views\Sys\Shared\AlertsPartial.cshtml" />
-    <Content Include="site.sitemap" />
+    <Content Include="site.sitemap">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Views\Shared\DisplayTemplates\SiteMapTitleHelperModel.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\SiteMapPathHelperModel.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\SiteMapNodeModelList.cshtml" />
@@ -887,6 +890,10 @@
     <Content Include="Scripts\tinymce\langs\readme.md" />
     <Content Include="Views\Sys\CoreData\StateListPagePartial.cshtml" />
     <Content Include="Views\Sys\CoreData\StateListGridPartial.cshtml" />
+    <Content Include="Views\Sys\CoreData\CountryEditPartial.cshtml" />
+    <Content Include="Views\Sys\CoreData\StateListPage.cshtml" />
+    <Content Include="Views\Sys\CoreData\StateEditPartial.cshtml" />
+    <Content Include="Views\Sys\CoreData\CountryEdit.cshtml" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />
@@ -920,7 +927,9 @@
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
-    <Content Include="Views\Web.config" />
+    <Content Include="Views\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />

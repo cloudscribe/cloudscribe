@@ -405,4 +405,10 @@
   <data name="Close" xml:space="preserve">
     <value>Close</value>
   </data>
+  <data name="BackToStateList" xml:space="preserve">
+    <value>Back To State List</value>
+  </data>
+  <data name="ConfirmDeleteCountryFormat" xml:space="preserve">
+    <value>Are you sure you want to delete the country {0} and all of its states? You cannot undo this action.</value>
+  </data>
 </root>
