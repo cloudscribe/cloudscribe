@@ -38,7 +38,7 @@ namespace cloudscribe.Core.Models
         Task<bool> DeleteHost(int hostId);
         Task<int> GetSiteIdByHostName(string hostName);
 
-        Task<List<SiteFolder>> GetBySite(Guid siteGuid);
+        Task<List<SiteFolder>> GetSiteFoldersBySite(Guid siteGuid);
         Task<List<SiteFolder>> GetAllSiteFolders();
         List<SiteFolder> GetAllSiteFoldersNonAsync();
         Task<int> GetFolderCount();

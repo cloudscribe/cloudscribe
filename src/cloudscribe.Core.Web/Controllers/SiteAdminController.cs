@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-02-09
+// Last Modified:			2015-04-06
 // 
 
 using cloudscribe.Configuration;
@@ -97,7 +97,9 @@ namespace cloudscribe.Core.Web.Controllers
 
         // GET: /SiteAdmin/SiteInfo
         [Authorize(Roles = "Admins")]
-        public async Task<ActionResult> SiteInfo(int? siteId)
+        public async Task<ActionResult> SiteInfo(
+            int? siteId,
+            int slp = 1)
         {
             ViewBag.SiteName = Site.SiteSettings.SiteName;
             ViewBag.Title = "Site Basic Settings";
@@ -114,6 +116,7 @@ namespace cloudscribe.Core.Web.Controllers
             }
 
             SiteBasicSettingsViewModel model = new SiteBasicSettingsViewModel();
+            model.ReturnPageNumber = slp; // site list page number to return to
             model.AllTimeZones = DateTimeHelper.GetTimeZoneList();
 
             model.SiteId = selectedSite.SiteId;
@@ -220,7 +223,11 @@ namespace cloudscribe.Core.Web.Controllers
 
             bool result = await Site.SiteRepository.Save(selectedSite);
 
-            //SiteAdminMessageId? message = SiteAdminMessageId.UpdateSettingsSuccess;
+            if ((result) && (AppSettings.UseFoldersInsteadOfHostnamesForMultipleSites))
+            {
+                bool folderEnsured = await selectedSite.EnsureSiteFolder(Site.SiteRepository);
+            }
+
             if(result)
             {
                 this.AlertSuccess(string.Format("Basic site settings for <b>{0}</b> were successfully updated.",
@@ -232,7 +239,7 @@ namespace cloudscribe.Core.Web.Controllers
                 &&(Site.SiteSettings.SiteGuid != selectedSite.SiteGuid))
             {
                 // just edited from site list so redirect there
-                return RedirectToAction("SiteList");
+                return RedirectToAction("SiteList", new { pageNumber = model.ReturnPageNumber });
             }
 
             return RedirectToAction("Index");
@@ -241,12 +248,13 @@ namespace cloudscribe.Core.Web.Controllers
 
         // GET: /SiteAdmin/NewSite
         [Authorize(Roles = "ServerAdmins")]
-        public async Task<ActionResult> NewSite()
+        public async Task<ActionResult> NewSite(int slp = 1)
         {
             ViewBag.SiteName = Site.SiteSettings.SiteName;
             ViewBag.Title = "Create New Site";
 
             SiteBasicSettingsViewModel model = new SiteBasicSettingsViewModel();
+            model.ReturnPageNumber = slp; //site list return page
             model.SiteId = -1;
             model.SiteGuid = Guid.Empty;
            // model.SiteName = Site.SiteSettings.SiteName;
@@ -312,6 +320,11 @@ namespace cloudscribe.Core.Web.Controllers
                 return View(model);
             }
 
+            if(AppSettings.UseFoldersInsteadOfHostnamesForMultipleSites)
+            {
+                int foundFolderSiteId = await Site.SiteRepository.GetSiteIdByFolder(model.SiteFolderName);
+            }
+
             SiteSettings newSite = new SiteSettings();
 
             // only the first site created by setup page should be a server admin site
@@ -338,10 +351,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             if((result)&&(AppSettings.UseFoldersInsteadOfHostnamesForMultipleSites))
             {
-                SiteFolder folder = new SiteFolder();
-                folder.FolderName = newSite.SiteFolderName;
-                folder.SiteGuid = newSite.SiteGuid;
-                bool folderResult = await Site.SiteRepository.Save(folder);
+                bool folderResult = await newSite.EnsureSiteFolder(Site.SiteRepository);
                 
                 // for folder sites we need routes that match the folder
                 // which are normally created during app startup
@@ -351,7 +361,7 @@ namespace cloudscribe.Core.Web.Controllers
                 //cloudscribe.Web.Routing.RouteRegistrar.AddDefaultRouteForNewSiteFolder(folder.FolderName);
 
                 startup.TriggerStartup();
-                
+
             }
 
             if(result)
@@ -360,8 +370,8 @@ namespace cloudscribe.Core.Web.Controllers
                            newSite.SiteName), true);
 
             }
-           
-            return RedirectToAction("Index");
+
+            return RedirectToAction("SiteList", new { pageNumber = model.ReturnPageNumber });
 
         }
 

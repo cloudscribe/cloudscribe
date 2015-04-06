@@ -4,10 +4,12 @@
     
 }
 <h2>@Model.Heading</h2>
-<table class="table table-striped">
+<table class="table table-striped table-bordered">
     <tr>
         <th>
-            @Html.ActionLink(CommonResources.NewSite, "NewSite", null, new { @class = "btn btn-xs btn-default" })
+            @Html.ActionLink(CommonResources.NewSite, "NewSite", 
+            new { slp = Model.Paging.CurrentPage },  
+            new { @class = "btn btn-xs btn-default" })
         </th>
         <th>
             @CommonResources.SiteName
@@ -16,23 +18,40 @@
             Folder/Host
         </th>  
     </tr>
-@foreach (var item in Model.Sites) {
-    <tr> 
+@foreach (var item in Model.Sites)
+{
+    <tr class="@(item.IsServerAdminSite ? "adminsite danger" : "childsite")" >
         <td>
-            @Html.ActionLink(CommonResources.BasicSettings, "SiteInfo", new { siteId = item.SiteId }, new { @class = "btn btn-xs btn-default" }) 
-            
+            @Html.ActionLink(CommonResources.BasicSettings, "SiteInfo",
+            new { siteId = item.SiteId, slp = Model.Paging.CurrentPage },
+            new { @class = "btn btn-xs btn-default" })
+
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.SiteName)
         </td>
         <td>
-            @if (AppSettings.UseFoldersInsteadOfHostnamesForMultipleSites) { 
-            @Html.DisplayFor(modelItem => item.SiteFolderName)
+            @if (AppSettings.UseFoldersInsteadOfHostnamesForMultipleSites)
+            {
+                <a href="/@item.SiteFolderName" target="_blank">/@item.SiteFolderName</a>
             }
-            else { 
-            @Html.DisplayFor(modelItem => item.PreferredHostName)
+            else
+            {
+                @Html.DisplayFor(modelItem => item.PreferredHostName)
             }
         </td>
     </tr>
 }
 </table>
+<div>
+    @Html.Pager(Model.Paging.ItemsPerPage, Model.Paging.CurrentPage, Model.Paging.TotalItems).Options(o => o
+            .Action("SiteList")
+            
+            .AddRouteValue("pageSize", Model.Paging.ItemsPerPage)
+            
+            .DisplayTemplate("Bootstrap3Pagination")
+            .PageRouteValueKey("pageNumber")
+            .MaxNrOfPages(Model.Paging.MaxPagerItems)
+
+    )
+</div>

@@ -93,7 +93,7 @@
           <mvcSiteMapNode key="CurrencyEdit"  title="New Currency"
                       controller="CoreData" action="CurrencyEdit"
                       roles="ServerAdmins"
-                      visibility="SiteMapPathHelper,ChildMenu,!*"
+                      visibility="SiteMapPathHelper,!*"
                           preservedRouteParameters="currencyGuid"
                       ></mvcSiteMapNode>
         </mvcSiteMapNode>
@@ -106,19 +106,19 @@
           <mvcSiteMapNode key="CountryEdit"  title="New Country"
                       controller="CoreData" action="CountryEdit"
                       roles="ServerAdmins"
-                      visibility="SiteMapPathHelper,ChildMenu,!*"
+                      visibility="SiteMapPathHelper,!*"
                       preservedRouteParameters="guid"
                       ></mvcSiteMapNode>
           <mvcSiteMapNode key="StateListPage" title="States"
             controller="CoreData" action="StateListPage"
             roles="ServerAdmins"
-            visibility="SiteMapPathHelper,ChildMenu,!*"
+            visibility="SiteMapPathHelper,!*"
             preservedRouteParameters="countryGuid"
             >
             <mvcSiteMapNode key="StateEdit"  title="New State"
                       controller="CoreData" action="StateEdit"
                       roles="ServerAdmins"
-                      visibility="SiteMapPathHelper,ChildMenu,!*"
+                      visibility="SiteMapPathHelper,!*"
                       preservedRouteParameters="countryGuid"
                       ></mvcSiteMapNode>
           </mvcSiteMapNode>

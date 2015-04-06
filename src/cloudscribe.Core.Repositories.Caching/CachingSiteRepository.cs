@@ -244,9 +244,9 @@ namespace cloudscribe.Core.Repositories.Caching
             return await repo.GetSiteIdByHostName(hostName);
         }
 
-        public async Task<List<SiteFolder>> GetBySite(Guid siteGuid)
+        public async Task<List<SiteFolder>> GetSiteFoldersBySite(Guid siteGuid)
         {
-            return await repo.GetBySite(siteGuid);
+            return await repo.GetSiteFoldersBySite(siteGuid);
 
         }
 

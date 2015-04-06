@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2015-01-10
-// Last Modified:			2015-01-21
+// Last Modified:			2015-04-06
 // 
 
 using cloudscribe.Configuration;
@@ -167,7 +167,7 @@ namespace cloudscribe.Setup.Controllers
             if (existingSiteCount == 0)
             {
                 WritePageContent(response, SetupResources.CreatingSiteMessage, true);
-                SiteSettings newSite = await NewSiteHelper.CreateNewSite(siteRepository);
+                SiteSettings newSite = await NewSiteHelper.CreateNewSite(siteRepository, true);
                 
                 WritePageContent(response, SetupResources.CreatingRolesAndAdminUserMessage, true);
 

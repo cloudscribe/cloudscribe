@@ -10,6 +10,7 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.SiteId)
         @Html.HiddenFor(model => model.SiteGuid)
+        @Html.HiddenFor(model => model.ReturnPageNumber)
         <div class="form-group">
             @Html.LabelFor(model => model.SiteName, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">

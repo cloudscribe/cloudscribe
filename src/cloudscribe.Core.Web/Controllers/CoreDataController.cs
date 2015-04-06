@@ -143,8 +143,8 @@ namespace cloudscribe.Core.Web.Controllers
 
         }
 
-        //TODO: there is currently nothing in the UI that posts here
-        // probably should implement it but hide by config by default
+        
+        // probably should hide by config by default
         // seems like an unusual event to delete a country and its states
         [HttpPost]
         [ValidateAntiForgeryToken]

@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2014-10-23
+// Last Modified:			2015-04-06
 // 
 
 using cloudscribe.AspNet.Identity;
@@ -15,6 +15,7 @@ using Owin;
 using System;
 using System.Collections.Generic;
 using System.Web.Mvc;
+using System.Threading.Tasks;
 //using Ninject;
 
 
@@ -150,6 +151,33 @@ namespace cloudscribe.WebHost
             //});
 
         }
+
+        // something like this could be done to eliminate the need for restart when new sites created
+        //private void ConfigureFolderTenantAuth2(IAppBuilder app, ISiteRepository repo)
+        //{
+        //    app.MapWhen(context =>
+        //    {
+        //        //return context.Request.Environment["owin.RequestPathBase"].ToString().ToLower() == "/" + TENANT_PATH_CLIENTS;
+        //        // here we could check real time if the request is a folder mapping
+
+        //        string siteFolderName = SiteContext.GetFirstFolderSegment(context.Request.Uri.ToString());
+        //        if(siteFolderName.Length > 0)
+        //        {
+        //            if(repo.FolderExists(siteFolderName))
+        //            {
+        //                return true;
+        //            }
+        //        }
+
+        //        //return Task.FromResult(false);
+        //        return false;
+        //    }, map =>
+        //    {
+        //        //map.Map()
+
+        //    });
+
+        //}
 
         private void ConfigureFolderTenantAuth(IAppBuilder app, List<SiteFolder> allFolders)
         {

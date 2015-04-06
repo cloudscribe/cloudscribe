@@ -15,6 +15,9 @@ namespace cloudscribe.WebHost.DI.Autofac.Modules
             // since they are the most likely mappings that someone would want to change
 
 
+            //builder.RegisterType<cloudscribe.Core.Web.Components.DoNothingStartupTrigger>()
+            //    .As<cloudscribe.Core.Models.Site.ITriggerStartup>();
+
             builder.RegisterType<cloudscribe.Core.Web.Components.WebConfigStartupTrigger>()
                 .As<cloudscribe.Core.Models.Site.ITriggerStartup>();
         }

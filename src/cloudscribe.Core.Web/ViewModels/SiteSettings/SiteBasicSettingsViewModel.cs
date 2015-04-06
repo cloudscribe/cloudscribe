@@ -192,5 +192,12 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
             set { companyPublicEmail = value; }
         }
 
+        private int returnPageNumber = 1;
+
+        public int ReturnPageNumber
+        {
+            get { return returnPageNumber; }
+            set { returnPageNumber = value; }
+        }
     }
 }

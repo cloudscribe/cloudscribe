@@ -98,6 +98,7 @@
     <Compile Include="Site\ITriggerStartup.cs" />
     <Compile Include="Site\LdapSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Site\SiteExtensions.cs" />
     <Compile Include="Site\SiteFolder.cs" />
     <Compile Include="Site\SiteHost.cs" />
     <Compile Include="Site\SiteInfo.cs" />

@@ -423,7 +423,7 @@ namespace cloudscribe.Core.Repositories.SQLite
             return DBSiteSettings.GetSiteIdByHostName(hostName);
         }
 
-        public async Task<List<SiteFolder>> GetBySite(Guid siteGuid)
+        public async Task<List<SiteFolder>> GetSiteFoldersBySite(Guid siteGuid)
         {
             List<SiteFolder> siteFolderList
                 = new List<SiteFolder>();

@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2014-11-24
-// Last Modified:		    2014-12-04
+// Last Modified:		    2015-04-06
 
 
 using System;
@@ -18,13 +18,14 @@ namespace cloudscribe.Core.Web.Components
 {
     public class NewSiteHelper
     {
-        public static async Task<SiteSettings> CreateNewSite(ISiteRepository siteRepo)
+        public static async Task<SiteSettings> CreateNewSite(ISiteRepository siteRepo, bool isServerAdminSite)
         {
             //string templateFolderPath = GetMessageTemplateFolder();
             //string templateFolder = templateFolderPath;
 
             SiteSettings newSite = new SiteSettings();
             newSite.SiteName = "Sample Site";
+            newSite.IsServerAdminSite = isServerAdminSite;
 
             bool result = await CreateNewSite(siteRepo, newSite);
 
@@ -59,7 +60,6 @@ namespace cloudscribe.Core.Web.Components
             //newSite.EditorSkin = SiteSettings.ContentEditorSkin.normal;
             //newSite.EncryptPasswords = false;
             newSite.Icon = String.Empty;
-            newSite.IsServerAdminSite = true;
             newSite.ReallyDeleteUsers = true;
             newSite.SiteLdapSettings.Port = 389;
             newSite.SiteLdapSettings.RootDN = String.Empty;
