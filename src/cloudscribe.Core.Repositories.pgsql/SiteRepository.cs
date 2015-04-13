@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2015-01-16
+// Last Modified:			2015-04-13
 // 
 
 
@@ -321,6 +321,22 @@ namespace cloudscribe.Core.Repositories.pgsql
             return sites;
         }
 
+        public async Task<ISiteHost> GetSiteHost(string hostName)
+        {
+            using (DbDataReader reader = await DBSiteSettings.GetHost(hostName))
+            {
+                while (reader.Read())
+                {
+                    SiteHost host = new SiteHost();
+                    host.LoadFromReader(reader);
+                    return host;
+                }
+
+            }
+
+            return null;
+        }
+
         public async Task<List<ISiteHost>> GetAllHosts()
         {
             List<ISiteHost> hosts = new List<ISiteHost>();
@@ -467,6 +483,21 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             return siteFolderList;
 
+        }
+
+        public async Task<SiteFolder> GetSiteFolder(string folderName)
+        {
+            using (DbDataReader reader = await DBSiteFolder.GetOne(folderName))
+            {
+                if (reader.Read())
+                {
+                    SiteFolder siteFolder = new SiteFolder();
+                    siteFolder.LoadFromReader(reader);
+                    return siteFolder;
+                }
+            }
+
+            return null;
         }
 
         public async Task<int> GetFolderCount()

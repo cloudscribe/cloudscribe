@@ -479,6 +479,20 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return await sph.ExecuteReaderAsync();
         }
 
+        public static async Task<DbDataReader> GetHost(string hostName)
+        {
+            SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_SiteHosts_SelectOneByHost", 1);
+            sph.DefineSqlParameter("@HostName", SqlDbType.NVarChar, 255, ParameterDirection.Input, hostName);
+            return await sph.ExecuteReaderAsync();
+        }
+
+        public static async Task<DbDataReader> GetHost(int hostId)
+        {
+            SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_SiteHosts_SelectOne", 1);
+            sph.DefineSqlParameter("@HostID", SqlDbType.Int, ParameterDirection.Input, hostId);
+            return await sph.ExecuteReaderAsync();
+        }
+
         public static async Task<bool> AddHost(Guid siteGuid, int siteId, string hostName)
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetWriteConnectionString(), "mp_SiteHosts_Insert", 3);

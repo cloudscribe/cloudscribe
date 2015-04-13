@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2010-04-06
-// Last Modified:			2015-01-19
+// Last Modified:			2015-04-19\3
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -161,6 +161,27 @@ namespace cloudscribe.Core.Repositories.SqlCe
                 sqlCommand.ToString(),
                 arParams);
 
+        }
+
+        public static DbDataReader GetOne(string folderName)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  * ");
+            sqlCommand.Append("FROM	mp_SiteFolders ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("FolderName = @FolderName ");
+            sqlCommand.Append(";");
+
+            SqlCeParameter[] arParams = new SqlCeParameter[1];
+
+            arParams[0] = new SqlCeParameter("@FolderName", SqlDbType.NVarChar, 255);
+            arParams[0].Value = folderName;
+
+            return AdoHelper.ExecuteReader(
+                ConnectionString.GetConnectionString(),
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams);
         }
 
         public static IDataReader GetBySite(Guid siteGuid)

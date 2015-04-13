@@ -1,6 +1,6 @@
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-01-16
+// Last Modified:			2015-04-13
 // 
 // You must not remove this notice, or any other, from this software.
 // 
@@ -1416,6 +1416,25 @@ namespace cloudscribe.Core.Repositories.MySql
                 arParams);
 
 
+        }
+
+        public static async Task<DbDataReader> GetHost(string hostName)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+
+            sqlCommand.Append("SELECT * ");
+            sqlCommand.Append("FROM	mp_SiteHosts ");
+            sqlCommand.Append("WHERE HostName = ?HostName ;");
+
+            MySqlParameter[] arParams = new MySqlParameter[1];
+
+            arParams[0] = new MySqlParameter("?HostName", MySqlDbType.VarChar, 255);
+            arParams[0].Value = hostName;
+
+            return await AdoHelper.ExecuteReaderAsync(
+                ConnectionString.GetReadConnectionString(),
+                sqlCommand.ToString(),
+                arParams);
         }
 
         public static async Task<bool> AddHost(Guid siteGuid, int siteId, string hostName)

@@ -30,6 +30,7 @@ namespace cloudscribe.Core.Models
         Task<List<ISiteHost>> GetSiteHosts(int siteId);
         Task<List<ISiteHost>> GetAllHosts();
         List<ISiteHost> GetAllHostsNonAsync();
+        Task<ISiteHost> GetSiteHost(string hostName);
         Task<int> GetHostCount();
         Task<List<ISiteHost>> GetPageHosts(
             int pageNumber,
@@ -42,6 +43,7 @@ namespace cloudscribe.Core.Models
         Task<List<SiteFolder>> GetAllSiteFolders();
         List<SiteFolder> GetAllSiteFoldersNonAsync();
         Task<int> GetFolderCount();
+        Task<SiteFolder> GetSiteFolder(string folderName);
         Task<List<SiteFolder>> GetPageSiteFolders(
             int pageNumber,
             int pageSize);

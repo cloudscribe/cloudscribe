@@ -1,0 +1,23 @@
+owin middleware
+
+http://coding.abel.nu/2014/06/asp-net-identity-and-owin-overview/
+
+http://coding.abel.nu/2014/06/understanding-the-owin-external-authentication-pipeline/
+
+http://coding.abel.nu/2014/06/writing-an-owin-authentication-middleware/
+
+http://coding.abel.nu/2014/11/using-owin-external-login-without-asp-net-identity/
+
+http://benfoster.io/blog/how-to-write-owin-middleware-in-5-different-steps
+
+http://www.asp.net/aspnet/overview/owin-and-katana/owin-middleware-in-the-iis-integrated-pipeline
+
+http://chris.59north.com/post/2014/05/06/Understanding-OWIN-%E2%80%93-hosting-and-middleware.aspx
+
+http://www.codeproject.com/Articles/864725/ASP-NET-Understanding-OWIN-Katana-and-the-Middlewa
+
+http://stackoverflow.com/questions/17509768/changing-the-response-object-from-owin-middleware
+
+http://stackoverflow.com/questions/26214113/how-can-i-safely-intercept-the-response-stream-in-a-custom-owin-middleware
+
+http://dotnetcodr.com/2014/04/21/owin-and-katana-part-3-more-complex-middleware/

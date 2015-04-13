@@ -1,6 +1,6 @@
 /// Author:					Joe Audette
 /// Created:				2007-11-03
-/// Last Modified:			2015-01-16
+/// Last Modified:			2015-04-13
 /// 
 /// You must not remove this notice, or any other, from this software.
 
@@ -58,6 +58,13 @@ namespace cloudscribe.Core.Repositories.MSSQL
             object result = await sph.ExecuteScalarAsync();
             int count = Convert.ToInt32(result);
             return (count > 0);
+        }
+
+        public static async Task<DbDataReader> GetOne(string folderName)
+        {
+            SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_SiteFolders_SelectOneByFolder", 1);
+            sph.DefineSqlParameter("@FolderName", SqlDbType.NVarChar, 255, ParameterDirection.Input, folderName);
+            return await sph.ExecuteReaderAsync();
         }
 
         public static IDataReader GetOne(Guid guid)

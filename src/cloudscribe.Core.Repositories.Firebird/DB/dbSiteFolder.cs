@@ -1,6 +1,6 @@
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-01-18
+// Last Modified:			2015-04-13
 // 
 // You must not remove this notice, or any other, from this software.
 // 
@@ -127,6 +127,26 @@ namespace cloudscribe.Core.Repositories.Firebird
             arParams[0].Value = guid.ToString();
 
             return AdoHelper.ExecuteReader(
+                ConnectionString.GetWriteConnectionString(),
+                sqlCommand.ToString(),
+                arParams);
+
+        }
+
+        public static async Task<DbDataReader> GetOne(string folderName)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  * ");
+            sqlCommand.Append("FROM	mp_SiteFolders ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("FolderName = @FolderName ;");
+
+            FbParameter[] arParams = new FbParameter[1];
+
+            arParams[0] = new FbParameter("@FolderName", FbDbType.VarChar, 255);
+            arParams[0].Value = folderName;
+
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetWriteConnectionString(),
                 sqlCommand.ToString(),
                 arParams);

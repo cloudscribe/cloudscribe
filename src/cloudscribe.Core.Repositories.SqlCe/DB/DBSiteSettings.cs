@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2010-03-10
-// Last Modified:			2015-01-19
+// Last Modified:			2015-04-13
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -1325,6 +1325,26 @@ namespace cloudscribe.Core.Repositories.SqlCe
                 sqlCommand.ToString(),
                 arParams);
 
+        }
+
+        public static IDataReader GetHost(string hostName)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+
+            sqlCommand.Append("SELECT * ");
+            sqlCommand.Append("FROM	mp_SiteHosts ");
+            sqlCommand.Append("WHERE HostName = @HostName ;");
+
+            SqlCeParameter[] arParams = new SqlCeParameter[1];
+
+            arParams[0] = new SqlCeParameter("@HostName", SqlDbType.NVarChar, 255);
+            arParams[0].Value = hostName;
+
+            return AdoHelper.ExecuteReader(
+                ConnectionString.GetConnectionString(),
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams);
         }
 
         public static bool AddHost(Guid siteGuid, int siteId, string hostName)

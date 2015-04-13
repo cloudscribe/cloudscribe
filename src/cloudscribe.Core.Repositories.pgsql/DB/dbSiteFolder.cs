@@ -1,6 +1,6 @@
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-01-16
+// Last Modified:			2015-04-13
 // 
 //
 // You must not remove this notice, or any other, from this software.
@@ -98,6 +98,29 @@ namespace cloudscribe.Core.Repositories.pgsql
                 ConnectionString.GetReadConnectionString(),
                 CommandType.StoredProcedure,
                 "mp_sitefolders_select_one(:guid)",
+                arParams);
+
+        }
+
+        public static async Task<DbDataReader> GetOne(string folderName)
+        {
+            NpgsqlParameter[] arParams = new NpgsqlParameter[1];
+
+            arParams[0] = new NpgsqlParameter("foldername", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
+            arParams[0].Value = folderName;
+
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT * ");
+            sqlCommand.Append("FROM	mp_sitefolders ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("foldername = :foldername ");
+            sqlCommand.Append(";");
+
+
+            return await AdoHelper.ExecuteReaderAsync(
+                ConnectionString.GetReadConnectionString(),
+                CommandType.Text,
+                sqlCommand.ToString(),
                 arParams);
 
         }

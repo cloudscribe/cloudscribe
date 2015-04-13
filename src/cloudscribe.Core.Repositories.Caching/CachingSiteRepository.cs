@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-30
-// Last Modified:			2015-01-16
+// Last Modified:			2015-04-13
 // 
 
 using cloudscribe.Caching;
@@ -228,6 +228,11 @@ namespace cloudscribe.Core.Repositories.Caching
             return await repo.GetSiteHosts(siteId);
         }
 
+        public async Task<ISiteHost> GetSiteHost(string hostName)
+        {
+            return await repo.GetSiteHost(hostName);
+        }
+
 
         public async Task<bool> AddHost(Guid siteGuid, int siteId, string hostName)
         {
@@ -248,6 +253,11 @@ namespace cloudscribe.Core.Repositories.Caching
         {
             return await repo.GetSiteFoldersBySite(siteGuid);
 
+        }
+
+        public async Task<SiteFolder> GetSiteFolder(string folderName)
+        {
+            return await repo.GetSiteFolder(folderName);
         }
 
         public async Task<List<SiteFolder>> GetAllSiteFolders()

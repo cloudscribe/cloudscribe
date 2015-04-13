@@ -1,6 +1,6 @@
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-01-19
+// Last Modified:			2015-04-13
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -1546,6 +1546,25 @@ namespace cloudscribe.Core.Repositories.SQLite
 
             arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
             arParams[0].Value = siteId;
+
+            return AdoHelper.ExecuteReader(
+                ConnectionString.GetConnectionString(),
+                sqlCommand.ToString(),
+                arParams);
+        }
+
+        public static IDataReader GetHost(string hostName)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+
+            sqlCommand.Append("SELECT * ");
+            sqlCommand.Append("FROM	mp_SiteHosts ");
+            sqlCommand.Append("WHERE HostName = :HostName ;");
+
+            SQLiteParameter[] arParams = new SQLiteParameter[1];
+
+            arParams[0] = new SQLiteParameter(":HostName", DbType.String, 255);
+            arParams[0].Value = hostName;
 
             return AdoHelper.ExecuteReader(
                 ConnectionString.GetConnectionString(),

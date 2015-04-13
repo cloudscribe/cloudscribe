@@ -1,6 +1,6 @@
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-01-18
+// Last Modified:			2015-04-13
 //
 // You must not remove this notice, or any other, from this software.
 
@@ -1558,6 +1558,46 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
             arParams[0].Value = siteId;
+
+            return await AdoHelper.ExecuteReaderAsync(
+                ConnectionString.GetReadConnectionString(),
+                sqlCommand.ToString(),
+                arParams);
+
+        }
+
+        public static async Task<DbDataReader> GetHost(int hostId)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+
+            sqlCommand.Append("SELECT * ");
+            sqlCommand.Append("FROM	mp_SiteHosts ");
+            sqlCommand.Append("WHERE HostID = @HostID ;");
+
+            FbParameter[] arParams = new FbParameter[1];
+
+            arParams[0] = new FbParameter("@HostID", FbDbType.Integer);
+            arParams[0].Value = hostId;
+
+            return await AdoHelper.ExecuteReaderAsync(
+                ConnectionString.GetReadConnectionString(),
+                sqlCommand.ToString(),
+                arParams);
+
+        }
+
+        public static async Task<DbDataReader> GetHost(string hostName)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+
+            sqlCommand.Append("SELECT * ");
+            sqlCommand.Append("FROM	mp_SiteHosts ");
+            sqlCommand.Append("WHERE HostName = @HostName ;");
+
+            FbParameter[] arParams = new FbParameter[1];
+
+            arParams[0] = new FbParameter("@HostName", FbDbType.VarChar, 255);
+            arParams[0].Value = hostName;
 
             return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),

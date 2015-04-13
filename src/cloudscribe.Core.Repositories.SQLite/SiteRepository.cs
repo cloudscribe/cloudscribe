@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2015-01-16
+// Last Modified:			2015-04-13
 // 
 
 
@@ -408,6 +408,22 @@ namespace cloudscribe.Core.Repositories.SQLite
             return hosts;
         }
 
+        public async Task<ISiteHost> GetSiteHost(string hostName)
+        {
+            using (IDataReader reader = DBSiteSettings.GetHost(hostName))
+            {
+                while (reader.Read())
+                {
+                    SiteHost host = new SiteHost();
+                    host.LoadFromReader(reader);
+                    return host;
+                }
+
+            }
+
+            return null;
+        }
+
         public async Task<bool> AddHost(Guid siteGuid, int siteId, string hostName)
         {
             return DBSiteSettings.AddHost(siteGuid, siteId, hostName);
@@ -440,6 +456,21 @@ namespace cloudscribe.Core.Repositories.SQLite
 
             return siteFolderList;
 
+        }
+
+        public async Task<SiteFolder> GetSiteFolder(string folderName)
+        {
+            using (IDataReader reader = DBSiteFolder.GetOne(folderName))
+            {
+                if (reader.Read())
+                {
+                    SiteFolder siteFolder = new SiteFolder();
+                    siteFolder.LoadFromReader(reader);
+                    return siteFolder;
+                }
+            }
+
+            return null;
         }
 
         public async Task<List<SiteFolder>> GetAllSiteFolders()

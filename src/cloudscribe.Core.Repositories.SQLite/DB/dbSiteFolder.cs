@@ -1,6 +1,6 @@
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-01-19
+// Last Modified:			2015-04-13
 //
 // You must not remove this notice, or any other, from this software.
 
@@ -128,6 +128,25 @@ namespace cloudscribe.Core.Repositories.SQLite
                 sqlCommand.ToString(),
                 arParams);
 
+        }
+
+        public static IDataReader GetOne(string folderName)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  * ");
+            sqlCommand.Append("FROM	mp_SiteFolders ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("FolderName = :FolderName ;");
+
+            SQLiteParameter[] arParams = new SQLiteParameter[1];
+
+            arParams[0] = new SQLiteParameter(":FolderName", DbType.String, 255);
+            arParams[0].Value = folderName;
+
+            return AdoHelper.ExecuteReader(
+                ConnectionString.GetConnectionString(),
+                sqlCommand.ToString(),
+                arParams);
         }
 
         public static IDataReader GetBySite(Guid siteGuid)
