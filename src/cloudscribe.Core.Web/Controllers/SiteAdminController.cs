@@ -166,6 +166,15 @@ namespace cloudscribe.Core.Web.Controllers
                 }
 
             }
+
+            // can only delete from server admin site/cannot delete server admin site
+            if (Site.SiteSettings.IsServerAdminSite)
+            {
+                if (model.SiteGuid != Site.SiteSettings.SiteGuid)
+                {
+                    model.ShowDelete = AppSettings.AllowDeleteChildSites; 
+                }
+            }
            
 
             return View(model);
@@ -182,9 +191,25 @@ namespace cloudscribe.Core.Web.Controllers
         {
             ViewBag.SiteName = Site.SiteSettings.SiteName;
 
+            // can only delete from server admin site/cannot delete server admin site
+            if(Site.SiteSettings.IsServerAdminSite)
+            {
+                if(model.SiteGuid != Site.SiteSettings.SiteGuid)
+                {
+                    model.ShowDelete = AppSettings.AllowDeleteChildSites;
+                }
+            }
+
             if (!ModelState.IsValid)
             {
                 return View(model);
+            }
+
+            if (model.SiteGuid == Guid.Empty)
+            {
+                this.AlertDanger("oops something went wrong, site was not found.", true);
+
+                return RedirectToAction("Index");
             }
 
             //model.SiteId = Site.SiteSettings.SiteId;
@@ -206,6 +231,31 @@ namespace cloudscribe.Core.Web.Controllers
                 return RedirectToAction("Index");
             }
 
+            if(AppSettings.UseFoldersInsteadOfHostnamesForMultipleSites)
+            {
+                if (
+                    ((model.SiteFolderName == null) ||(model.SiteFolderName.Length == 0))
+                    &&(!selectedSite.IsServerAdminSite)
+                    )
+                {
+                    // only the server admin site can be without a folder
+                    ModelState.AddModelError("foldererror", "Folder name is required.");
+
+                    return View(model);
+                }
+
+                SiteFolder folder = await Site.SiteRepository.GetSiteFolder(model.SiteFolderName);
+                if ((folder != null) && (folder.SiteGuid != selectedSite.SiteGuid))
+                {
+                    ModelState.AddModelError("foldererror", "The selected folder name is already in use on another site.");
+                    
+                    return View(model);
+                }
+
+            }
+
+            
+
             selectedSite.SiteName = model.SiteName;
             selectedSite.Slogan = model.Slogan;
             selectedSite.TimeZoneId = model.TimeZoneId;
@@ -225,7 +275,11 @@ namespace cloudscribe.Core.Web.Controllers
 
             if ((result) && (AppSettings.UseFoldersInsteadOfHostnamesForMultipleSites))
             {
-                bool folderEnsured = await selectedSite.EnsureSiteFolder(Site.SiteRepository);
+                if(!string.IsNullOrEmpty(selectedSite.SiteFolderName))
+                {
+                    bool folderEnsured = await selectedSite.EnsureSiteFolder(Site.SiteRepository);
+                }
+                
             }
 
             if(result)
@@ -236,7 +290,8 @@ namespace cloudscribe.Core.Web.Controllers
             
 
             if((Site.SiteSettings.IsServerAdminSite)
-                &&(Site.SiteSettings.SiteGuid != selectedSite.SiteGuid))
+                //&&(Site.SiteSettings.SiteGuid != selectedSite.SiteGuid)
+                )
             {
                 // just edited from site list so redirect there
                 return RedirectToAction("SiteList", new { pageNumber = model.ReturnPageNumber });
@@ -320,9 +375,28 @@ namespace cloudscribe.Core.Web.Controllers
                 return View(model);
             }
 
-            if(AppSettings.UseFoldersInsteadOfHostnamesForMultipleSites)
+            //if(AppSettings.UseFoldersInsteadOfHostnamesForMultipleSites)
+            //{
+            //    int foundFolderSiteId = await Site.SiteRepository.GetSiteIdByFolder(model.SiteFolderName);
+            //}
+
+            if (AppSettings.UseFoldersInsteadOfHostnamesForMultipleSites)
             {
-                int foundFolderSiteId = await Site.SiteRepository.GetSiteIdByFolder(model.SiteFolderName);
+                if(string.IsNullOrEmpty(model.SiteFolderName))
+                {
+                    ModelState.AddModelError("foldererror", "Folder name is required.");
+
+                    return View(model);
+                }
+
+                SiteFolder folder = await Site.SiteRepository.GetSiteFolder(model.SiteFolderName);
+                if (folder != null)
+                {
+                    ModelState.AddModelError("foldererror", "The selected folder name is already in use on another site.");
+
+                    return View(model);
+                }
+
             }
 
             SiteSettings newSite = new SiteSettings();
@@ -373,6 +447,74 @@ namespace cloudscribe.Core.Web.Controllers
 
             return RedirectToAction("SiteList", new { pageNumber = model.ReturnPageNumber });
 
+        }
+
+
+        // probably should hide by config by default
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "ServerAdmins")]
+        public async Task<ActionResult> SiteDelete(Guid siteGuid, int siteId, int returnPageNumber = 1)
+        {
+            bool result = false;
+
+            ISiteSettings selectedSite = await Site.SiteRepository.Fetch(siteGuid);
+
+            if(
+                (selectedSite != null)
+                &&(selectedSite.SiteId == siteId)
+                )
+            {
+
+                if(selectedSite.IsServerAdminSite)
+                {
+                    this.AlertWarning(string.Format(
+                            "The site <b>{0}</b> was not deleted because it is a server admin site.",
+                            selectedSite.SiteName)
+                            , true);
+
+                    return RedirectToAction("SiteList", new { pageNumber = returnPageNumber });
+                    
+                }
+
+                // we will need a provider model or something similar here to
+                // allow other features and 3rd party features to delete
+                // related data when a site is deleted
+                // TODO: implement
+                // will ProviderModel be available in Core Framework or will we have to use something else
+                // a way to use dependency injection?
+
+                // delete users
+                bool resultStep = await Site.UserRepository.DeleteClaimsBySite(selectedSite.SiteGuid);
+                resultStep = await Site.UserRepository.DeleteLoginsBySite(selectedSite.SiteGuid);
+                
+
+                // the below method deletes a lot of things by siteid including the following tables
+                // Exec mp_Sites_Delete
+                // mp_UserRoles
+                // mp_UserProperties
+                // mp_UserLocation
+                // mp_Users
+                // mp_Roles
+                // mp_SiteHosts
+                // mp_SiteFolders
+                // mp_RedirectList
+                // mp_TaskQueue
+                // mp_SiteSettingsEx
+                // mp_Sites
+                result = await Site.SiteRepository.Delete(siteId);
+            }
+
+            if (result && (selectedSite != null))
+            {
+                this.AlertWarning(string.Format(
+                            "The site <b>{0}</b> was successfully deleted.",
+                            selectedSite.SiteName)
+                            , true);
+            }
+
+            return RedirectToAction("SiteList", new { pageNumber = returnPageNumber });
         }
 
         //public async Task<ActionResult> SiteList(SiteAdminMessageId? message)

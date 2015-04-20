@@ -50,11 +50,14 @@
         </div>
     </div>
 }
-@using (Html.BeginForm("CountryDelete", "CoreData", FormMethod.Post, new { @id = "deleteform", @class = "form-inline" }))
-{ @Html.AntiForgeryToken()
-    @Html.Hidden("countryGuid", Model.Guid)
-    @Html.Hidden("returnPageNumber", Model.ReturnPageNumber)
+@if (Model.Guid != Guid.Empty)
+{
+    using (Html.BeginForm("CountryDelete", "CoreData", FormMethod.Post, new { @id = "deleteform", @class = "form-inline" }))
+    { @Html.AntiForgeryToken()
+        @Html.Hidden("countryGuid", Model.Guid)
+        @Html.Hidden("returnPageNumber", Model.ReturnPageNumber)
 
+    }
 }
 <div>
     @Html.ActionLink(@CommonResources.BackToCountryList, "CountryListPage",

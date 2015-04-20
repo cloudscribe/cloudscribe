@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2014-11-25
+// Last Modified:			2015-04-20
 // 
 
 using cloudscribe.Configuration.DataAnnotations;
@@ -198,6 +198,14 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         {
             get { return returnPageNumber; }
             set { returnPageNumber = value; }
+        }
+
+        private bool showDelete = false;
+
+        public bool ShowDelete
+        {
+            get { return showDelete; }
+            set { showDelete = value; }
         }
     }
 }

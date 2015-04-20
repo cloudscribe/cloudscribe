@@ -133,6 +133,15 @@ namespace cloudscribe.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Back To Site List.
+        /// </summary>
+        public static string BackToSiteList {
+            get {
+                return ResourceManager.GetString("BackToSiteList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Back To State List.
         /// </summary>
         public static string BackToStateList {
@@ -345,6 +354,15 @@ namespace cloudscribe.Resources {
         public static string ConfirmRemoveFormat {
             get {
                 return ResourceManager.GetString("ConfirmRemoveFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to delete the site {0} and all related data? You cannot undo this action..
+        /// </summary>
+        public static string ConfirmSiteDeleteFormat {
+            get {
+                return ResourceManager.GetString("ConfirmSiteDeleteFormat", resourceCulture);
             }
         }
         

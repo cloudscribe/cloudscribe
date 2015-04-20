@@ -46,15 +46,17 @@
         </div>
         }   
     </div>
-@using (Html.BeginForm("StateDelete", "CoreData", FormMethod.Post, new { @id = "deleteform", @class = "form-inline" }))
-{ @Html.AntiForgeryToken()
-    @Html.Hidden("countryGuid", Model.CountryGuid)
-    @Html.Hidden("guid", Model.Guid)
-    @Html.Hidden("crp", Model.CountryListReturnPageNumber)
-    @Html.Hidden("returnPageNumber", Model.ReturnPageNumber)
+@if (Model.Guid != Guid.Empty)
+{
+    using (Html.BeginForm("StateDelete", "CoreData", FormMethod.Post, new { @id = "deleteform", @class = "form-inline" }))
+    { @Html.AntiForgeryToken()
+        @Html.Hidden("countryGuid", Model.CountryGuid)
+        @Html.Hidden("guid", Model.Guid)
+        @Html.Hidden("crp", Model.CountryListReturnPageNumber)
+        @Html.Hidden("returnPageNumber", Model.ReturnPageNumber)
 
+    }
 }
-
 <div>
     @Html.ActionLink(
         @CommonResources.BackToStateList, 

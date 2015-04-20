@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-26
-// Last Modified:			2014-10-31
+// Last Modified:			2015-04-20
 // 
 
 
@@ -214,6 +214,11 @@ namespace cloudscribe.Configuration
             get { return GetBool("TryEnsureCustomMachineKeyOnSetup", false); }
         }
 
+
+        public static bool AllowDeleteChildSites
+        {
+            get { return GetBool("AllowDeleteChildSites", true); }
+        }
         
 
         /// <summary>
