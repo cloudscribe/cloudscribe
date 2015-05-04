@@ -253,6 +253,39 @@ namespace cloudscribe.Core.Web.Controllers
                 }
 
             }
+            else
+            {
+                ISiteHost host;
+
+                if(!string.IsNullOrEmpty(model.HostName))
+                {
+                    model.HostName = model.HostName.Replace("https://", string.Empty).Replace("http://", string.Empty);
+
+                    host = await Site.SiteRepository.GetSiteHost(model.HostName);
+
+                    if (host != null)
+                    {
+                        if (host.SiteGuid != selectedSite.SiteGuid)
+                        {
+                            ModelState.AddModelError("hosterror", "The selected host/domain name is already in use on another site.");
+
+                            return View(model);
+                        }
+
+                    }
+                    else
+                    {
+                        bool hostResult = await Site.SiteRepository.AddHost(
+                            selectedSite.SiteGuid,
+                            selectedSite.SiteId,
+                            model.HostName);
+                    }
+                }
+                
+
+                selectedSite.PreferredHostName = model.HostName;
+
+            }
 
             
 
@@ -380,6 +413,8 @@ namespace cloudscribe.Core.Web.Controllers
             //    int foundFolderSiteId = await Site.SiteRepository.GetSiteIdByFolder(model.SiteFolderName);
             //}
 
+            bool addHostName = false;
+
             if (AppSettings.UseFoldersInsteadOfHostnamesForMultipleSites)
             {
                 if(string.IsNullOrEmpty(model.SiteFolderName))
@@ -396,6 +431,32 @@ namespace cloudscribe.Core.Web.Controllers
 
                     return View(model);
                 }
+
+            }
+            else
+            {
+                ISiteHost host;
+
+                if (!string.IsNullOrEmpty(model.HostName))
+                {
+                    model.HostName = model.HostName.Replace("https://", string.Empty).Replace("http://", string.Empty);
+
+                    host = await Site.SiteRepository.GetSiteHost(model.HostName);
+
+                    if (host != null)
+                    {
+                        
+                        ModelState.AddModelError("hosterror", "The selected host/domain name is already in use on another site.");
+
+                        return View(model);
+                        
+                    }
+
+                    addHostName = true;
+                }
+
+
+                
 
             }
 
@@ -417,7 +478,17 @@ namespace cloudscribe.Core.Web.Controllers
             newSite.CompanyPhone = model.CompanyPhone;
             newSite.CompanyFax = model.CompanyFax;
             newSite.CompanyPublicEmail = model.CompanyPublicEmail;
-            newSite.SiteFolderName = model.SiteFolderName;
+            if (AppSettings.UseFoldersInsteadOfHostnamesForMultipleSites)
+            {
+                newSite.SiteFolderName = model.SiteFolderName;
+            }
+            else if(addHostName)
+            {
+                newSite.PreferredHostName = model.HostName;
+            }
+            
+
+            
 
             //Site.SiteRepository.Save(newSite);
             bool result = await NewSiteHelper.CreateNewSite(Site.SiteRepository, newSite);
@@ -436,6 +507,14 @@ namespace cloudscribe.Core.Web.Controllers
 
                 startup.TriggerStartup();
 
+            }
+
+            if(result && addHostName)
+            {
+                bool hostResult = await Site.SiteRepository.AddHost(
+                            newSite.SiteGuid,
+                            newSite.SiteId,
+                            model.HostName);
             }
 
             if(result)

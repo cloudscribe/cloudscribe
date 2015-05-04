@@ -37,7 +37,10 @@
             }
             else
             {
-                @Html.DisplayFor(modelItem => item.PreferredHostName)
+                if (item.PreferredHostName.Length > 0)
+                {
+                    <a href="http://@item.PreferredHostName" target="_blank">@item.PreferredHostName</a>
+                }
             }
         </td>
     </tr>

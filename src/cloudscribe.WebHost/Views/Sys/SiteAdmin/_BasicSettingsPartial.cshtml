@@ -35,6 +35,7 @@ else
         <div class="col-md-10">
             @Html.EditorFor(model => model.HostName, new { htmlAttributes = new { @class = "form-control" } })
             @Html.ValidationMessageFor(model => model.HostName, "", new { @class = "text-danger" })
+            @Html.ValidationMessage("hosterror", new { @class = "text-danger" })
         </div>
     </div>
 }
