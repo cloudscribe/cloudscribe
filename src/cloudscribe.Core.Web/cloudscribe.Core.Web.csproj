@@ -197,6 +197,7 @@
     <Compile Include="ViewModels\SiteSettings\SiteBasicSettingsViewModel.cs" />
     <Compile Include="ViewModels\Common\AdminMenuItemViewModel.cs" />
     <Compile Include="ViewModels\Common\AdminMenuViewModel.cs" />
+    <Compile Include="ViewModels\SiteSettings\SiteHostMappingsViewModel.cs" />
     <Compile Include="ViewModels\SiteSettings\SiteListViewModel.cs" />
     <Compile Include="ViewModels\SiteUser\AccountIndexViewModel.cs" />
     <Compile Include="ViewModels\SiteUser\AddPhoneNumberViewModel.cs" />

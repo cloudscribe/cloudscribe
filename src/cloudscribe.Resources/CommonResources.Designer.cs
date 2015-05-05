@@ -619,6 +619,15 @@ namespace cloudscribe.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Manage Host Mappings.
+        /// </summary>
+        public static string ManageHostMappings {
+            get {
+                return ResourceManager.GetString("ManageHostMappings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Members.
         /// </summary>
         public static string Members {
@@ -732,6 +741,15 @@ namespace cloudscribe.Resources {
         public static string PhoneNumber {
             get {
                 return ResourceManager.GetString("PhoneNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Preferred Host Name.
+        /// </summary>
+        public static string PreferredHostName {
+            get {
+                return ResourceManager.GetString("PreferredHostName", resourceCulture);
             }
         }
         

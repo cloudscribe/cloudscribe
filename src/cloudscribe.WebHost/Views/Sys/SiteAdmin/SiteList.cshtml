@@ -1,7 +1,16 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.SiteListViewModel
 
 @{
+    var FolderHostLabel = "Preferred Host Name";
+    if (AppSettings.UseFoldersInsteadOfHostnamesForMultipleSites)
+    {
+        FolderHostLabel = "Folder";
+    }
     
+}
+@section Styles {
+    @Styles.Render("~/Content/themes/base/all.css")
+    @Styles.Render("~/Content/themes/base/dialog.css")
 }
 <h2>@Model.Heading</h2>
 <table class="table table-striped table-bordered">
@@ -15,7 +24,7 @@
             @CommonResources.SiteName
         </th>
         <th>
-            Folder/Host
+            @FolderHostLabel
         </th>  
     </tr>
 @foreach (var item in Model.Sites)
@@ -40,6 +49,12 @@
                 if (item.PreferredHostName.Length > 0)
                 {
                     <a href="http://@item.PreferredHostName" target="_blank">@item.PreferredHostName</a>
+                
+                @Html.ActionLink(CommonResources.ManageHostMappings, "SiteHostMappings", "SiteAdmin",
+            new { siteGuid = item.SiteGuid, slp = Model.Paging.CurrentPage },
+            new { @class = "hostmap" })
+
+                   
                 }
             }
         </td>

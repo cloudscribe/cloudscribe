@@ -596,6 +596,35 @@ namespace cloudscribe.Core.Web.Controllers
             return RedirectToAction("SiteList", new { pageNumber = returnPageNumber });
         }
 
+        [Authorize(Roles = "Admins")]
+        public async Task<ActionResult> SiteHostMappings(
+            Guid siteGuid,
+            int slp = -1)
+        {
+            if(siteGuid == Guid.Empty)
+            {
+                return RedirectToAction("Index");
+            }
+
+            ISiteSettings selectedSite = await Site.SiteRepository.Fetch(siteGuid);
+
+            if (selectedSite == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            SiteHostMappingsViewModel model = new SiteHostMappingsViewModel();
+
+            ViewBag.SiteName = selectedSite.SiteName;
+            ViewBag.Title = "Domain/Host Name Mappings";
+            model.Heading = ViewBag.Title;
+            model.HostMappings = await Site.SiteRepository.GetSiteHosts(selectedSite.SiteId);
+
+
+            return View("SiteHosts", model);
+
+        }
+
         //public async Task<ActionResult> SiteList(SiteAdminMessageId? message)
         //{
 

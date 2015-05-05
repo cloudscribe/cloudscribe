@@ -1,0 +1,34 @@
+﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.SiteHostMappingsViewModel
+
+@{
+    //Layout = null;
+}
+
+
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    <table class="table">
+        <tr> 
+            <th>
+                HostName
+            </th>    
+            <th></th>
+        </tr>
+    
+    @foreach (var item in Model.HostMappings) {
+        <tr>
+          
+            <td>
+                @Html.DisplayFor(modelItem => item.HostName)
+            </td>
+            
+            <td>
+                @Html.HiddenFor(modelItem => item.HostId)
+                
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+    }
+    
+    </table>

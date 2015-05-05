@@ -417,4 +417,10 @@
   <data name="ConfirmSiteDeleteFormat" xml:space="preserve">
     <value>Are you sure you want to delete the site {0} and all related data? You cannot undo this action.</value>
   </data>
+  <data name="ManageHostMappings" xml:space="preserve">
+    <value>Manage Host Mappings</value>
+  </data>
+  <data name="PreferredHostName" xml:space="preserve">
+    <value>Preferred Host Name</value>
+  </data>
 </root>
