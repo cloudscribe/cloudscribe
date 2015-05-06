@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-04-06
+// Last Modified:			2015-05-06
 // 
 
 using cloudscribe.Configuration;
@@ -13,6 +13,7 @@ using cloudscribe.Core.Web.ViewModels.SiteSettings;
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 
 using System.Web.Mvc;
@@ -616,12 +617,115 @@ namespace cloudscribe.Core.Web.Controllers
             SiteHostMappingsViewModel model = new SiteHostMappingsViewModel();
 
             ViewBag.SiteName = selectedSite.SiteName;
-            ViewBag.Title = "Domain/Host Name Mappings";
-            model.Heading = ViewBag.Title;
+            ViewBag.Title = string.Format(CultureInfo.InvariantCulture, 
+                "Domain/Host Name Mappings for {0}", 
+                selectedSite.SiteName);
+            
+            //model.Heading = ViewBag.Title;
             model.HostMappings = await Site.SiteRepository.GetSiteHosts(selectedSite.SiteId);
 
 
             return View("SiteHosts", model);
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "ServerAdmins")]
+        public async Task<ActionResult> HostAdd(
+            Guid siteGuid, 
+            int siteId,
+            string hostName,
+            int slp = -1)
+        {
+            ISiteSettings selectedSite = await Site.SiteRepository.Fetch(siteGuid);
+
+            if (selectedSite == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            ISiteHost host;
+
+            if (!string.IsNullOrEmpty(hostName))
+            {
+                hostName = hostName.Replace("https://", string.Empty).Replace("http://", string.Empty);
+
+                host = await Site.SiteRepository.GetSiteHost(hostName);
+
+                if (host != null)
+                {
+                    if(host.SiteGuid != selectedSite.SiteGuid)
+                    {
+                        this.AlertWarning(
+                        "failed to add the requested host name mapping becuase it is already mapped to another site.",
+                        true);
+                    }
+                }
+                else
+                {
+                    bool hostResult = await Site.SiteRepository.AddHost(
+                            selectedSite.SiteGuid,
+                            selectedSite.SiteId,
+                            hostName);
+
+                    if (hostResult)
+                    {
+                        this.AlertSuccess(string.Format("Host/domain mapping for <b>{0}</b> was successfully created.",
+                                   selectedSite.SiteName), true);
+
+                    }
+                }
+
+                
+            }
+
+            return RedirectToAction("SiteHostMappings", new { siteGuid = siteGuid, slp = slp });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "ServerAdmins")]
+        public async Task<ActionResult> HostDelete(
+            Guid siteGuid,
+            string hostName,
+            int slp = -1)
+        {
+            ISiteSettings selectedSite = await Site.SiteRepository.Fetch(siteGuid);
+
+            if (selectedSite == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            ISiteHost host = await Site.SiteRepository.GetSiteHost(hostName);
+
+            bool result = false;
+
+            if(host != null)
+            {
+                if(host.SiteGuid == selectedSite.SiteGuid)
+                {
+                    if(selectedSite.PreferredHostName == host.HostName)
+                    {
+                        selectedSite.PreferredHostName = string.Empty;
+                        result = await Site.SiteRepository.Save(selectedSite);
+                    }
+
+                    result = await Site.SiteRepository.DeleteHost(host.HostId);
+
+                    if(result)
+                    {
+                        this.AlertSuccess(string.Format("Host/domain mapping for <b>{0}</b> was successfully removed.",
+                                   selectedSite.SiteName), true);
+                    }
+
+                }
+
+            }
+
+
+            return RedirectToAction("SiteHostMappings", new { siteGuid = siteGuid, slp = slp });
 
         }
 

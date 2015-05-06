@@ -25,7 +25,7 @@
         </th>
         <th>
             @FolderHostLabel
-        </th>  
+        </th> 
     </tr>
 @foreach (var item in Model.Sites)
 {
@@ -34,6 +34,12 @@
             @Html.ActionLink(CommonResources.BasicSettings, "SiteInfo",
             new { siteId = item.SiteId, slp = Model.Paging.CurrentPage },
             new { @class = "btn btn-xs btn-default" })
+@if (!AppSettings.UseFoldersInsteadOfHostnamesForMultipleSites)
+{
+    @Html.ActionLink(CommonResources.DomainMappings, "SiteHostMappings", "SiteAdmin",
+            new { siteGuid = item.SiteGuid, slp = Model.Paging.CurrentPage },
+                new { @class = "btn btn-xs btn-default hostmap" })
+}
 
         </td>
         <td>
@@ -48,13 +54,7 @@
             {
                 if (item.PreferredHostName.Length > 0)
                 {
-                    <a href="http://@item.PreferredHostName" target="_blank">@item.PreferredHostName</a>
-                
-                @Html.ActionLink(CommonResources.ManageHostMappings, "SiteHostMappings", "SiteAdmin",
-            new { siteGuid = item.SiteGuid, slp = Model.Paging.CurrentPage },
-            new { @class = "hostmap" })
-
-                   
+                    <a href="http://@item.PreferredHostName" target="_blank">@item.PreferredHostName</a>  
                 }
             }
         </td>

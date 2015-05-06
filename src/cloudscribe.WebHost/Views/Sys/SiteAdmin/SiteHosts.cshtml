@@ -3,12 +3,8 @@
 @{
     //Layout = null;
 }
-
-
-    <p>
-        @Html.ActionLink("Create New", "Create")
-    </p>
-    <table class="table">
+<h2>@ViewBag.Title</h2>
+    <table class="table table-responsive table-striped">
         <tr> 
             <th>
                 HostName
@@ -24,11 +20,34 @@
             </td>
             
             <td>
-                @Html.HiddenFor(modelItem => item.HostId)
+                @using (Html.BeginForm("HostDelete", "SiteAdmin"))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.Hidden("SiteGuid", Model.SiteGuid)
+                    @Html.Hidden("hostName", item.HostName)
+                    @Html.Hidden("slp", Model.SiteListReturnPageNumber)
+    <input type="submit" value="@CommonResources.Delete"
+           onclick="javascript: return confirm('@Html.FormatValue(item.HostName, CommonResources.ConfirmDeleteHostNameFormat)');"
+           class="btn btn-xs btn-default" />
+
+                }
                 
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+               
             </td>
         </tr>
     }
     
     </table>
+@using (Html.BeginForm("HostAdd", "SiteAdmin", FormMethod.Post, new { @class = "form-inline" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.Hidden("SiteGuid", Model.SiteGuid)
+    @Html.Hidden("SiteId", Model.SiteId)
+    @Html.Hidden("slp", Model.SiteListReturnPageNumber)
+
+    @Html.TextBox("hostName", null, new { @class = "form-control" })
+    
+    <button type="submit" value="@CommonResources.AddHostMapping" class="btn btn-default">@CommonResources.AddHostMapping</button>
+    
+
+}

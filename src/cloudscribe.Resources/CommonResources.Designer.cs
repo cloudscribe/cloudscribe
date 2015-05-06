@@ -70,6 +70,15 @@ namespace cloudscribe.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add Host/Domain Mapping.
+        /// </summary>
+        public static string AddHostMapping {
+            get {
+                return ResourceManager.GetString("AddHostMapping", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add User.
         /// </summary>
         public static string AddUser {
@@ -331,6 +340,15 @@ namespace cloudscribe.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to delete the host/domain name mapping {0}.
+        /// </summary>
+        public static string ConfirmDeleteHostNameFormat {
+            get {
+                return ResourceManager.GetString("ConfirmDeleteHostNameFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Confirm password.
         /// </summary>
         public static string ConfirmPassword {
@@ -462,6 +480,15 @@ namespace cloudscribe.Resources {
         public static string DisplayNameRequired {
             get {
                 return ResourceManager.GetString("DisplayNameRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Domain Mappings.
+        /// </summary>
+        public static string DomainMappings {
+            get {
+                return ResourceManager.GetString("DomainMappings", resourceCulture);
             }
         }
         
@@ -615,15 +642,6 @@ namespace cloudscribe.Resources {
         public static string Manage {
             get {
                 return ResourceManager.GetString("Manage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Manage Host Mappings.
-        /// </summary>
-        public static string ManageHostMappings {
-            get {
-                return ResourceManager.GetString("ManageHostMappings", resourceCulture);
             }
         }
         

@@ -40,6 +40,45 @@ http://www.codeproject.com/Articles/146396/A-Comparison-of-Three-jQuery-Modal-Di
 
 http://code.daypilot.org/81367/daypilot-modal
 
+http://www.asp.net/mvc/overview/older-versions-1/views/creating-custom-html-helpers-cs
+
+
+cascading dropdowns
+
+surprisingly hard to find a reuseable implementation of state/country dropdown.
+something like this would be used in many places so an HtmlHelper method would seem like a good idea.
+however, by MVC prinicples we would not want data access code/logic inside an HtmlHelper. If the helper is wiring up some js we could pass in json service url(s) to the helper.
+Perhaps we could implement a cascading dropdown helper where you pass in an array of config objects for each of the related dropdowns each succcessive one refering to the id of the parent whose value would presumably be passed to the url for the child. ie the state dropdown would take the country code from the parent as a param for its service url.
+
+At first my thoughts for state/country list were focused on cascading dropdown lists, but the more I think of it, it might be better implemented as auto-complete textboxes. ie the country textbox auto suggests from the known countries, the state textbox autocomplete would need to look for the value of the country textbox and pass that to its autocomplete url.
+One benefit of this approach is it takes into account that our country/state database information may not be complete or up to date (actually I'm sure it is not complete or up to date except for US states). If the dropdown list does not have what the user is looking for it would be very frustrating. Allowing the user to provide the data directly but helping them reduce typing for known data would be ideal. The only downside is that we are no longer constricting the data and therefore it is possible to get wrong data input, but that is true of most data that we capture, certainly true for other parts of address data so why should we be so strict with state/country?
+
+perhaps we could have helpers for both approaches in cloudscribe so one can choose based on the specific needs of the moment
+
+http://stackoverflow.com/questions/19145641/how-can-i-reuse-a-dropdownlist-in-several-views-with-net-mvc
+
+http://stackoverflow.com/questions/4231144/asp-net-mvc-populate-commonly-used-dropdownlists
+
+http://www.codeproject.com/Articles/730953/Cascading-Dropdown-List-With-MVC-LINQ-to-SQL-and-A
+
+http://www.devcurry.com/2013/01/aspnet-mvc-cascading-dropdown-list.html
+
+http://www.c-sharpcorner.com/UploadFile/4d9083/creating-simple-cascading-dropdownlist-in-mvc-4-using-razor/
+
+http://www.c-sharpcorner.com/UploadFile/4b0136/working-with-dropdownlist-in-mvc-5/
+
+http://www.c-sharpcorner.com/UploadFile/fba912/cascading-dropdownlist-box-in-Asp-Net-mvc4-using-json-jquer/
+
+http://stackoverflow.com/questions/18173717/angularjs-trigger-country-state-dependency
+
+http://softwareexperiences.blogspot.com/2014/05/angularjs-country-state-select-example.html
+
+* http://aspnetscript.com/asp-net/cascading-dropdownlist-asp-net-mvc-angularjs/
+
+http://dzapart.blogspot.com/2013/04/auto-complete-controll-with-aspnet-mvc.html
+
+http://www.c-sharpcorner.com/UploadFile/4d9083/creating-simple-cascading-dropdownlist-in-mvc-4-using-razor/
+
 
 
 

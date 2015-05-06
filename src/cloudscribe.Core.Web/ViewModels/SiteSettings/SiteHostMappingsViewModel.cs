@@ -30,6 +30,21 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
             set { siteListReturnPageNumber = value; }
         }
 
-        //private string newHostName = string.Empty;
+        private Guid siteGuid = Guid.Empty;
+
+        public Guid SiteGuid
+        {
+            get { return siteGuid; }
+            set { siteGuid = value; }
+        }
+
+        private int siteId = -1;
+
+        public int SiteId
+        {
+            get { return siteId; }
+            set { siteId = value; }
+        }
+
     }
 }
