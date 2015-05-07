@@ -55,6 +55,8 @@ One benefit of this approach is it takes into account that our country/state dat
 
 perhaps we could have helpers for both approaches in cloudscribe so one can choose based on the specific needs of the moment
 
+http://blogs.msdn.com/b/rickandy/archive/2012/01/09/cascasding-dropdownlist-in-asp-net-mvc.aspx
+
 http://stackoverflow.com/questions/19145641/how-can-i-reuse-a-dropdownlist-in-several-views-with-net-mvc
 
 http://stackoverflow.com/questions/4231144/asp-net-mvc-populate-commonly-used-dropdownlists

@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2008-06-22
-// Last Modified:			2015-08118
+// Last Modified:			2015-05-07
 //
 // You must not remove this notice, or any other, from this software.
 
@@ -184,7 +184,7 @@ namespace cloudscribe.Core.Repositories.Firebird
         /// Gets an IDataReader with one row from the mp_GeoCountry table.
         /// </summary>
         /// <param name="countryISOCode2"> countryISOCode2 </param>
-        public static IDataReader GetByISOCode2(string countryISOCode2)
+        public static async Task<DbDataReader> GetByISOCode2(string countryISOCode2)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  * ");
@@ -198,7 +198,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             arParams[0] = new FbParameter("@ISOCode2", FbDbType.Char, 2);
             arParams[0].Value = countryISOCode2;
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 arParams);

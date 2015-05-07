@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-12-30
-// Last Modified:			2015-01-01
+// Last Modified:			2015-05-07
 // 
 
 using System;
@@ -15,7 +15,7 @@ namespace cloudscribe.Core.Web.Helpers
     {
         
         /// <summary>
-        /// you must include /Scripts/modaldialog-bootstrap.js
+        /// you must include /Scripts/cloudscribe-modaldialog-bootstrap.js
         /// </summary>
         /// <param name="ajaxHelper"></param>
         /// <param name="linkText"></param>

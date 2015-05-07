@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-11-03
-// Last Modified:			2015-01-08
+// Last Modified:			2015-05-07
 // 
 
 using cloudscribe.Caching;
@@ -43,6 +43,11 @@ namespace cloudscribe.Core.Repositories.Caching
         public async Task<IGeoCountry> FetchCountry(Guid guid)
         {
             return await repo.FetchCountry(guid);
+        }
+
+        public async Task<IGeoCountry> FetchCountry(string isoCode2)
+        {
+            return await repo.FetchCountry(isoCode2);
         }
 
         public async Task<bool> DeleteCountry(Guid guid)

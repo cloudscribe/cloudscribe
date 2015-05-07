@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-11-03
-// Last Modified:			2015-01-08
+// Last Modified:			2015-05-07
 // 
 
 
@@ -53,6 +53,22 @@ namespace cloudscribe.Core.Repositories.Firebird
         public async Task<IGeoCountry> FetchCountry(Guid guid)
         {
             using (DbDataReader reader = await DBGeoCountry.GetOne(guid))
+            {
+                if (reader.Read())
+                {
+                    GeoCountry geoCountry = new GeoCountry();
+                    LoadFromReader(reader, geoCountry);
+                    return geoCountry;
+
+                }
+            }
+
+            return null;
+        }
+
+        public async Task<IGeoCountry> FetchCountry(string isoCode2)
+        {
+            using (DbDataReader reader = await DBGeoCountry.GetByISOCode2(isoCode2))
             {
                 if (reader.Read())
                 {

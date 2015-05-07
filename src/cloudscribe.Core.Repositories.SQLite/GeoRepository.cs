@@ -68,6 +68,22 @@ namespace cloudscribe.Core.Repositories.SQLite
             return null;
         }
 
+        public async Task<IGeoCountry> FetchCountry(string isoCode2)
+        {
+            using (IDataReader reader = DBGeoCountry.GetByISOCode2(isoCode2))
+            {
+                if (reader.Read())
+                {
+                    GeoCountry geoCountry = new GeoCountry();
+                    LoadFromReader(reader, geoCountry);
+                    return geoCountry;
+
+                }
+            }
+
+            return null;
+        }
+
 
         /// <summary>
         /// Deletes an instance of GeoCountry. Returns true on success.

@@ -15,6 +15,7 @@ namespace cloudscribe.Core.Models.Geography
         Task<bool> DeleteGeoZone(Guid guid);
         Task<bool> DeleteGeoZonesByCountry(Guid countryGuid);
         Task<IGeoCountry> FetchCountry(Guid guid);
+        Task<IGeoCountry> FetchCountry(string isoCode2);
         Task<IGeoZone> FetchGeoZone(Guid guid);
         Task<List<IGeoCountry>> GetAllCountries();
         Task<List<IGeoCountry>> GetCountriesPage(int pageNumber, int pageSize);

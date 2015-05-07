@@ -638,6 +638,7 @@
     <Content Include="Scripts\ckeditor\CHANGES.md" />
     <None Include="Scripts\jquery-2.1.3.intellisense.js" />
     <Content Include="Scripts\ckeditor\styles.js" />
+    <Content Include="Scripts\cloudscribe-cascade-unobtrusive.js" />
     <Content Include="Scripts\expressive.annotations.validate.js" />
     <Content Include="Scripts\jquery-2.1.3.js" />
     <Content Include="Scripts\jquery-2.1.3.min.js" />
@@ -648,8 +649,8 @@
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
-    <Content Include="Scripts\modaldialog-bootstrap.js" />
-    <Content Include="Scripts\modaldialog-jqui.js" />
+    <Content Include="Scripts\cloudscribe-modaldialog-bootstrap.js" />
+    <Content Include="Scripts\cloudscribe-modaldialog-jqui.js" />
     <Content Include="Scripts\npm.js" />
     <Content Include="Scripts\tinymce\license.txt" />
     <Content Include="Scripts\tinymce\plugins\advlist\plugin.js" />
