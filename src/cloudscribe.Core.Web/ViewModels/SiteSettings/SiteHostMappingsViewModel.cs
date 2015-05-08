@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2015-05-05
-// Last Modified:			2015-05-05
+// Last Modified:			2015-05-08
 // 
 
 using System;
@@ -22,7 +22,7 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         public string Heading { get; set; }
         public IList<ISiteHost> HostMappings { get; set; }
 
-        private int siteListReturnPageNumber = -1;
+        private int siteListReturnPageNumber = 1;
 
         public int SiteListReturnPageNumber
         {

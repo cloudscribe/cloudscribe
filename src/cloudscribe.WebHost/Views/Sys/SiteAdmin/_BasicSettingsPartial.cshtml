@@ -36,6 +36,9 @@ else
             @Html.EditorFor(model => model.HostName, new { htmlAttributes = new { @class = "form-control" } })
             @Html.ValidationMessageFor(model => model.HostName, "", new { @class = "text-danger" })
             @Html.ValidationMessage("hosterror", new { @class = "text-danger" })
+            @Html.ActionLink(CommonResources.DomainMappings, "SiteHostMappings", "SiteAdmin",
+            new { siteGuid = Model.SiteGuid, slp = Model.ReturnPageNumber },
+                new { @class = "hostmap" })
         </div>
     </div>
 }
@@ -105,7 +108,7 @@ else
                       @data_cascade_childof = "CompanyCountry",
                     @data_serviceurl="/CoreData/GetStatesJson/?countryCode=",
                     @data_orig_val= Model.CompanyRegion,
-                    @data_select_label="Select a State"
+                      @data_select_label = "-Please select-"
                 })
                 @Html.ValidationMessageFor(model => model.CompanyRegion, "", new { @class = "text-danger" })  
             </div>

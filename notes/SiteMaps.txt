@@ -71,7 +71,7 @@ http://joeylicc.wordpress.com/2014/10/03/asp-net-mvc-5-menu-using-site-map-provi
 
 https://joeylicc.wordpress.com/2013/07/08/asp-net-mvc-sitemappath-using-site-map-provider-bootstrap-breadcrumbs/
 
-
+https://github.com/maartenba/MvcSiteMapProvider/wiki/Advanced-Node-Visibility-with-ISiteMapNodeVisibilityProvider
 
 
 

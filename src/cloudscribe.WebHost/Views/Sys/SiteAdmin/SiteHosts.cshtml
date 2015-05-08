@@ -38,16 +38,22 @@
     }
     
     </table>
-@using (Html.BeginForm("HostAdd", "SiteAdmin", FormMethod.Post, new { @class = "form-inline" }))
-{
-    @Html.AntiForgeryToken()
-    @Html.Hidden("SiteGuid", Model.SiteGuid)
-    @Html.Hidden("SiteId", Model.SiteId)
-    @Html.Hidden("slp", Model.SiteListReturnPageNumber)
-
-    @Html.TextBox("hostName", null, new { @class = "form-control" })
-    
-    <button type="submit" value="@CommonResources.AddHostMapping" class="btn btn-default">@CommonResources.AddHostMapping</button>
-    
-
-}
+<div class="form-group">
+    @using (Html.BeginForm("HostAdd", "SiteAdmin", FormMethod.Post, new { @class = "form-inline" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Hidden("SiteGuid", Model.SiteGuid)
+        @Html.Hidden("SiteId", Model.SiteId)
+        @Html.Hidden("slp", Model.SiteListReturnPageNumber)
+        @Html.TextBox("hostName", null, new { @class = "form-control" })
+        <button type="submit" value="@CommonResources.AddHostMapping" class="btn btn-default">@CommonResources.AddHostMapping</button>
+    }
+</div>
+<div class="form-group">
+    @Html.ActionLink(
+        @CommonResources.BackToSiteList,
+        "SiteList",
+        new { pageNumber = Model.SiteListReturnPageNumber },
+        new { @class = "btn btn-default" }
+        )
+</div>

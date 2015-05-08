@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-04-20
+// Last Modified:			2015-05-07
 // 
 
 using cloudscribe.Configuration.DataAnnotations;
@@ -60,7 +60,7 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         }
 
         private string hostName = string.Empty;
-        [Display(Name = "SiteHostName", ResourceType = typeof(CommonResources))]
+        [Display(Name = "PreferredHostName", ResourceType = typeof(CommonResources))]
         public string HostName
         {
             get { return hostName; }

@@ -12,10 +12,17 @@
                     >
       <mvcSiteMapNode key="BasicSettings" title="Basic Settings"
                       controller="SiteAdmin" action="SiteInfo"
-                      includeAmbientValuesInUrl="true"
+                      includeAmbientValuesInUrl="true" preservedRouteParameters="siteGuid"
                       roles="Admins,Content Administrators"
                       visibility="SiteMapPathHelper,ChildMenu,!*"
+                      >
+        <mvcSiteMapNode key="SiteHostMappings" title="Domain Mappings" resourceKey="SiteHostMappings"
+              controller="SiteAdmin" action="SiteHostMappings"
+                        includeAmbientValuesInUrl="true" preservedRouteParameters="siteGuid"
+              roles="ServerAdmins"
+                      visibility="SiteMapPathHelper,!*"
                       />
+         </mvcSiteMapNode>
       <mvcSiteMapNode key="SiteList" title="Site List"
                       controller="SiteAdmin" action="SiteList"
                       roles="ServerAdmins"

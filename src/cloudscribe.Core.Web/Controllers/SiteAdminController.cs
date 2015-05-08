@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-05-06
+// Last Modified:			2015-05-08
 // 
 
 using cloudscribe.Configuration;
@@ -99,7 +99,7 @@ namespace cloudscribe.Core.Web.Controllers
         // GET: /SiteAdmin/SiteInfo
         [Authorize(Roles = "Admins")]
         public async Task<ActionResult> SiteInfo(
-            int? siteId,
+            Guid? siteGuid,
             int slp = 1)
         {
             ViewBag.SiteName = Site.SiteSettings.SiteName;
@@ -107,9 +107,9 @@ namespace cloudscribe.Core.Web.Controllers
 
             ISiteSettings selectedSite;
             // only server admin site can edit other sites settings
-            if((siteId.HasValue)&&(Site.SiteSettings.IsServerAdminSite))
+            if((siteGuid.HasValue)&&(Site.SiteSettings.IsServerAdminSite))
             {
-                selectedSite = await Site.SiteRepository.Fetch(siteId.Value);
+                selectedSite = await Site.SiteRepository.Fetch(siteGuid.Value);
             }
             else
             {
@@ -362,7 +362,7 @@ namespace cloudscribe.Core.Web.Controllers
             //model.CompanyPublicEmail = Site.SiteSettings.CompanyPublicEmail;
             //.SiteFolderName = Site.SiteSettings.SiteFolderName;
 
-            model.AvailableCountries.Add(new SelectListItem { Text = "-Please select-", Value = "Selects items" });
+            model.AvailableCountries.Add(new SelectListItem { Text = "-Please select-", Value = "" });
             var countries = await geoRepo.GetAllCountries();
             Guid selectedCountryGuid = Guid.Empty;
             foreach (var country in countries)
@@ -599,19 +599,18 @@ namespace cloudscribe.Core.Web.Controllers
 
         [Authorize(Roles = "Admins")]
         public async Task<ActionResult> SiteHostMappings(
-            Guid siteGuid,
+            Guid? siteGuid,
             int slp = -1)
         {
-            if(siteGuid == Guid.Empty)
+            ISiteSettings selectedSite;
+            // only server admin site can edit other sites settings
+            if ((siteGuid.HasValue) && (Site.SiteSettings.IsServerAdminSite))
             {
-                return RedirectToAction("Index");
+                selectedSite = await Site.SiteRepository.Fetch(siteGuid.Value);
             }
-
-            ISiteSettings selectedSite = await Site.SiteRepository.Fetch(siteGuid);
-
-            if (selectedSite == null)
+            else
             {
-                return RedirectToAction("Index");
+                selectedSite = Site.SiteSettings;
             }
 
             SiteHostMappingsViewModel model = new SiteHostMappingsViewModel();
@@ -623,7 +622,10 @@ namespace cloudscribe.Core.Web.Controllers
             
             //model.Heading = ViewBag.Title;
             model.HostMappings = await Site.SiteRepository.GetSiteHosts(selectedSite.SiteId);
-
+            if(slp > -1)
+            {
+                model.SiteListReturnPageNumber = slp;
+            }
 
             return View("SiteHosts", model);
 
