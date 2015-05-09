@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2010-04-04
-// Last Modified:			2015-01-18
+// Last Modified:			2015-05-09
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -229,6 +229,37 @@ namespace cloudscribe.Core.Repositories.SqlCe
                 sqlCommand.ToString(),
                 arParams);
 
+        }
+
+        public static  IDataReader AutoComplete(Guid countryGuid, string query, int maxRows)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT TOP(" + maxRows.ToString(CultureInfo.InvariantCulture) + ") ");
+            sqlCommand.Append(" * ");
+            sqlCommand.Append("FROM	mp_GeoZone ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("CountryGuid = @CountryGuid ");
+
+            sqlCommand.Append("([Name] LIKE @Query + '%') ");
+            sqlCommand.Append("OR ([Code] LIKE @Query + '%') ");
+            sqlCommand.Append(") ");
+
+            sqlCommand.Append("ORDER BY [Code] ");
+            sqlCommand.Append(";");
+
+            SqlCeParameter[] arParams = new SqlCeParameter[2];
+
+            arParams[0] = new SqlCeParameter("@CountryGuid", SqlDbType.UniqueIdentifier);
+            arParams[0].Value = countryGuid;
+
+            arParams[1] = new SqlCeParameter("@Query", SqlDbType.NVarChar, 255);
+            arParams[1].Value = query;
+
+            return AdoHelper.ExecuteReader(
+                ConnectionString.GetConnectionString(),
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams);
         }
 
         /// <summary>

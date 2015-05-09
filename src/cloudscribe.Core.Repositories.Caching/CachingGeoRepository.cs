@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-11-03
-// Last Modified:			2015-05-07
+// Last Modified:			2015-05-09
 // 
 
 using cloudscribe.Caching;
@@ -98,6 +98,16 @@ namespace cloudscribe.Core.Repositories.Caching
         public async Task<List<IGeoZone>> GetGeoZonesByCountry(Guid countryGuid)
         {
             return await repo.GetGeoZonesByCountry(countryGuid);
+        }
+
+        public async Task<List<IGeoCountry>> CountryAutoComplete(string query, int maxRows)
+        {
+            return await repo.CountryAutoComplete(query, maxRows);
+        }
+
+        public async Task<List<IGeoZone>> StateAutoComplete(Guid countryGuid, string query, int maxRows)
+        {
+            return await repo.StateAutoComplete(countryGuid, query, maxRows);
         }
 
         public async Task<List<IGeoZone>> GetGeoZonePage(Guid countryGuid, int pageNumber, int pageSize)

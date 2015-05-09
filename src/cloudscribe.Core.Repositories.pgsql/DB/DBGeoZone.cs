@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2008-06-22
-// Last Modified:			2015-01-15
+// Last Modified:			2015-05-09
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -223,6 +223,39 @@ namespace cloudscribe.Core.Repositories.pgsql
                 sqlCommand.ToString(),
                 arParams);
 
+
+        }
+
+        public static async Task<DbDataReader> AutoComplete(Guid countryGuid, string query, int maxRows)
+        {
+            NpgsqlParameter[] arParams = new NpgsqlParameter[2];
+
+            arParams[0] = new NpgsqlParameter("countryguid", NpgsqlTypes.NpgsqlDbType.Char, 36);
+            arParams[0].Value = countryGuid.ToString();
+
+            arParams[1] = new NpgsqlParameter("query", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
+            arParams[1].Value = query + "%";
+
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  * ");
+            sqlCommand.Append("FROM	mp_geozone ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("countryguid = :countryguid ");
+
+            sqlCommand.Append("AND (  ");
+            sqlCommand.Append(" (name LIKE :query) ");
+            sqlCommand.Append(" OR (code LIKE :query) ");
+            sqlCommand.Append(") ");
+
+            sqlCommand.Append("ORDER BY code ");
+            sqlCommand.Append("LIMIT " + maxRows.ToString());
+            sqlCommand.Append(";");
+
+            return await AdoHelper.ExecuteReaderAsync(
+                ConnectionString.GetReadConnectionString(),
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams);
 
         }
 

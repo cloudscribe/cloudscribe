@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2010-04-04
-// Last Modified:			2015-01-18
+// Last Modified:			2015-05-09
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -200,6 +200,33 @@ namespace cloudscribe.Core.Repositories.SqlCe
                 arParams);
 
 
+        }
+
+        public static IDataReader AutoComplete(string query, int maxRows)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT TOP(" + maxRows.ToString(CultureInfo.InvariantCulture) + ") ");
+            sqlCommand.Append(" * ");
+            sqlCommand.Append("FROM	mp_GeoCountry ");
+            sqlCommand.Append("WHERE ");
+
+            sqlCommand.Append("([Name] LIKE @Query + '%') ");
+            sqlCommand.Append("OR ([ISOCode2] LIKE @Query + '%') ");
+            sqlCommand.Append(") ");
+
+            sqlCommand.Append("ORDER BY [ISOCode2] ");
+            sqlCommand.Append(";");
+
+            SqlCeParameter[] arParams = new SqlCeParameter[1];
+
+            arParams[0] = new SqlCeParameter("@Query", SqlDbType.NVarChar, 255);
+            arParams[0].Value = query;
+
+            return AdoHelper.ExecuteReader(
+                ConnectionString.GetConnectionString(),
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams);
         }
 
         /// <summary>

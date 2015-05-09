@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2008-06-22
-// Last Modified:			2015-01-15
+// Last Modified:			2015-05-09
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -196,6 +196,32 @@ namespace cloudscribe.Core.Repositories.pgsql
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
+        }
+
+        public static async Task<DbDataReader> AutoComplete(string query, int maxRows)
+        {
+            NpgsqlParameter[] arParams = new NpgsqlParameter[1];
+
+            arParams[0] = new NpgsqlParameter("query", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
+            arParams[0].Value = query + "%";
+
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  * ");
+            sqlCommand.Append("FROM	mp_geocountry ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append(" (name LIKE :query) ");
+            sqlCommand.Append(" OR (isocode2 LIKE :query) ");
+            
+            sqlCommand.Append("ORDER BY isocode2 ");
+            sqlCommand.Append("LIMIT " + maxRows.ToString());
+            sqlCommand.Append(";");
+
+            return await AdoHelper.ExecuteReaderAsync(
+                ConnectionString.GetReadConnectionString(),
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams);
+
         }
 
         /// <summary>

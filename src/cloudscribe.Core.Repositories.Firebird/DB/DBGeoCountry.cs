@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2008-06-22
-// Last Modified:			2015-05-07
+// Last Modified:			2015-05-09
 //
 // You must not remove this notice, or any other, from this software.
 
@@ -203,6 +203,29 @@ namespace cloudscribe.Core.Repositories.Firebird
                 sqlCommand.ToString(),
                 arParams);
 
+        }
+
+        public static async Task<DbDataReader> AutoComplete(string query, int maxRows)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT First " + maxRows.ToString());
+            sqlCommand.Append(" * ");
+            sqlCommand.Append("FROM	mp_GeoCountry ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("(Name LIKE @Query) ");
+            sqlCommand.Append("OR (ISOCode2 LIKE @Query) ");
+            sqlCommand.Append("ORDER BY ISOCode2 ");
+            sqlCommand.Append(";");
+
+            FbParameter[] arParams = new FbParameter[1];
+
+            arParams[0] = new FbParameter("@Query", FbDbType.VarChar, 255);
+            arParams[0].Value = query + "%";
+
+            return await AdoHelper.ExecuteReaderAsync(
+                ConnectionString.GetReadConnectionString(),
+                sqlCommand.ToString(),
+                arParams);
         }
 
         /// <summary>

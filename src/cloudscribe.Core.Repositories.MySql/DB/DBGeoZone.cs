@@ -220,6 +220,39 @@ namespace cloudscribe.Core.Repositories.MySql
 
         }
 
+        public static async Task<DbDataReader> AutoComplete(Guid countryGuid, string query, int maxRows)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  * ");
+            sqlCommand.Append("FROM	mp_GeoZone ");
+            sqlCommand.Append("WHERE ");
+
+            sqlCommand.Append("CountryGuid = ?CountryGuid ");
+            sqlCommand.Append("AND (");
+
+            sqlCommand.Append("(Name LIKE ?Query) ");
+            sqlCommand.Append("OR (Code LIKE ?Query) ");
+            sqlCommand.Append(") ");
+
+            sqlCommand.Append("ORDER BY Code ");
+            sqlCommand.Append("LIMIT " + maxRows.ToString());
+            sqlCommand.Append(";");
+
+            MySqlParameter[] arParams = new MySqlParameter[2];
+
+            arParams[0] = new MySqlParameter("?CountryGuid", MySqlDbType.VarChar, 36);
+            arParams[0].Value = countryGuid.ToString();
+
+            arParams[1] = new MySqlParameter("?Query", MySqlDbType.VarChar, 255);
+            arParams[1].Value = query + "%";
+
+            return await AdoHelper.ExecuteReaderAsync(
+                ConnectionString.GetReadConnectionString(),
+                sqlCommand.ToString(),
+                arParams);
+
+        }
+
         /// <summary>
         /// Gets an IDataReader with all rows in the mp_GeoZone table.
         /// </summary>

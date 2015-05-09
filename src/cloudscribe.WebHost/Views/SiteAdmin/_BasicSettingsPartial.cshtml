@@ -3,6 +3,16 @@
 @{
 
 }
+<p class="bg-danger">
+    This view was created temporarily in /Views/SiteAdmin to override the one in /Views/Sys/SiteAdmin.
+    This is temporary while I'm working on some new autocomplete functionality.
+    Whereas the default view has cascading dropdown lists for country/state, in this one I'm changing to textboxes with autocomplete.
+    In some cases this will be preferrable when we need users to provide that data, because the dropdowns are populated from lists in 
+    the database which we know are not complete or up to date for lots of countries.
+    When using dropdown lists there is no way for the user to provide a value that doesn't exist in the database, so we need to use 
+    textboxes in those scenarios so they can put in something if it is not suggested by the auto complete.
+</p>
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()

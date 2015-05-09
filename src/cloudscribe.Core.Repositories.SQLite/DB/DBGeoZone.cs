@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2008-06-22
-// Last Modified:			2015-01-19
+// Last Modified:			2015-05-09
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -218,6 +218,37 @@ namespace cloudscribe.Core.Repositories.SQLite
                 sqlCommand.ToString(),
                 arParams);
 
+        }
+
+        public static IDataReader AutoComplete(Guid countryGuid, string query, int maxRows)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  * ");
+            sqlCommand.Append("FROM	mp_GeoZone ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("CountryGuid = :CountryGuid ");
+
+            sqlCommand.Append("AND ( ");
+            sqlCommand.Append("(Name LIKE :Query) ");
+            sqlCommand.Append("OR (Code LIKE :Query) ");
+            sqlCommand.Append(") ");
+
+            sqlCommand.Append("ORDER BY Code ");
+            sqlCommand.Append("LIMIT " + maxRows.ToString());
+            sqlCommand.Append(";");
+
+            SQLiteParameter[] arParams = new SQLiteParameter[2];
+
+            arParams[0] = new SQLiteParameter(":CountryGuid", DbType.String, 36);
+            arParams[0].Value = countryGuid.ToString();
+
+            arParams[1] = new SQLiteParameter(":Query", DbType.String, 50);
+            arParams[1].Value = query + "%";
+
+            return AdoHelper.ExecuteReader(
+                ConnectionString.GetConnectionString(),
+                sqlCommand.ToString(),
+                arParams);
         }
 
         /// <summary>

@@ -236,17 +236,16 @@ namespace cloudscribe.Core.Web.Controllers
         {
             IGeoCountry country = await geoRepo.FetchCountry(countryCode);
             List<IGeoZone> states;
-            SelectList selecteList;
             if(country != null)
             {
                 states = await geoRepo.GetGeoZonesByCountry(country.Guid);  
             }
             else
             {
-                states = new List<IGeoZone>(); //emmpty list
+                states = new List<IGeoZone>(); //empty list
             }
 
-            selecteList = new SelectList(states, "Code", "Name");
+            SelectList selecteList = new SelectList(states, "Code", "Name");
 
             return Json(selecteList, JsonRequestBehavior.AllowGet);
 

@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2008-06-22
-// Last Modified:			2015-01-08
+// Last Modified:			2015-05-09
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -99,6 +99,15 @@ namespace cloudscribe.Core.Repositories.MSSQL
         {
             SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_GeoCountry_SelectByISOCode2", 1);
             sph.DefineSqlParameter("@ISOCode2", SqlDbType.NChar, 2, ParameterDirection.Input, countryISOCode2);
+            return await sph.ExecuteReaderAsync();
+
+        }
+
+        public static async Task<DbDataReader> AutoComplete(string query, int maxRows)
+        {
+            SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetReadConnectionString(), "mp_GeoCountry_AutoComplete", 2);
+            sph.DefineSqlParameter("@Query", SqlDbType.NVarChar, 255, ParameterDirection.Input, query);
+            sph.DefineSqlParameter("@RowsToGet", SqlDbType.NVarChar, 255, ParameterDirection.Input, maxRows);
             return await sph.ExecuteReaderAsync();
 
         }

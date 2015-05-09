@@ -1,0 +1,12 @@
+﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.SiteBasicSettingsViewModel
+
+@{
+    
+}
+<h2>@ViewBag.Title</h2>
+@Html.Partial("_BasicSettingsPartial", Model)
+
+@section Scripts {
+   
+    @Scripts.Render("~/Scripts/cloudscribe-cascade-unobtrusive.js")
+}

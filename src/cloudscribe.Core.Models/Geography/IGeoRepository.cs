@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-11-03
-// Last Modified:			2015-01-08
+// Last Modified:			2015-05-09
 // 
 
 using System;
@@ -23,6 +23,8 @@ namespace cloudscribe.Core.Models.Geography
         Task<int> GetGeoZoneCount(Guid countryGuid);
         Task<List<IGeoZone>> GetGeoZonePage(Guid countryGuid, int pageNumber, int pageSize);
         Task<List<IGeoZone>> GetGeoZonesByCountry(Guid countryGuid);
+        Task<List<IGeoCountry>> CountryAutoComplete(string query, int maxRows);
+        Task<List<IGeoZone>> StateAutoComplete(Guid countryGuid, string query, int maxRows);
         Task<bool> Save(IGeoCountry geoCountry);
         Task<bool> Save(IGeoZone geoZone);
 

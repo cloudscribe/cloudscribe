@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-11-02
-// Last Modified:			2015-05-07
+// Last Modified:			2015-05-09
 // 
 
 
@@ -211,6 +211,19 @@ namespace cloudscribe.Core.Repositories.MSSQL
             DbDataReader reader = await DBGeoZone.GetByCountry(countryGuid);
             return LoadGeoZoneListFromReader(reader);
 
+        }
+
+
+        public async Task<List<IGeoCountry>> CountryAutoComplete(string query, int maxRows)
+        {
+            DbDataReader reader = await DBGeoCountry.AutoComplete(query, maxRows);
+            return LoadCountryListFromReader(reader);
+        }
+
+        public async Task<List<IGeoZone>> StateAutoComplete(Guid countryGuid, string query, int maxRows)
+        {
+            DbDataReader reader = await DBGeoZone.AutoComplete(countryGuid, query, maxRows);
+            return LoadGeoZoneListFromReader(reader);
         }
 
         /// <summary>

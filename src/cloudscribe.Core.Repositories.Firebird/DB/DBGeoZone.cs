@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2008-06-22
-// Last Modified:			2015-01-18
+// Last Modified:			2015-05-09
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -217,6 +217,37 @@ namespace cloudscribe.Core.Repositories.Firebird
             arParams[1].Value = code;
 
             return AdoHelper.ExecuteReader(
+                ConnectionString.GetReadConnectionString(),
+                sqlCommand.ToString(),
+                arParams);
+
+        }
+
+        public static async Task<DbDataReader> AutoComplete(Guid countryGuid, string query, int maxRows)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT First " + maxRows.ToString());
+            sqlCommand.Append(" * ");
+            sqlCommand.Append("FROM	mp_GeoZone ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("(CountryGuid = @CountryGuid ");
+            sqlCommand.Append("OR CountryGuid = UPPER(@CountryGuid)) ");
+            sqlCommand.Append("AND (");
+            sqlCommand.Append("(Name LIKE @Query) ");
+            sqlCommand.Append("OR (Code LIKE @Query) ");
+            sqlCommand.Append(") ");
+            sqlCommand.Append("ORDER BY Code ");
+            sqlCommand.Append(";");
+
+            FbParameter[] arParams = new FbParameter[2];
+
+            arParams[0] = new FbParameter("@CountryGuid", FbDbType.Char, 36);
+            arParams[0].Value = countryGuid.ToString();
+
+            arParams[1] = new FbParameter("@Query", FbDbType.VarChar, 255);
+            arParams[1].Value = query + "%";
+
+            return await AdoHelper.ExecuteReaderAsync(
                 ConnectionString.GetReadConnectionString(),
                 sqlCommand.ToString(),
                 arParams);

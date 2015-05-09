@@ -4,9 +4,9 @@ $(function () {
     if ($elems) {
         $elems.each(function (index, ele) {
             var $parent = $('#' + $(ele).data('cascade-childof'));
-            var serviceUrl = $(ele).data('serviceurl');
-            var origVal = $(ele).data('orig-val');
-            var selectLabel = $(ele).data('select-label');
+            var serviceUrl = $(ele).data('cascade-serviceurl');
+            var origVal = $(ele).data('cascade-orig-val');
+            var selectLabel = $(ele).data('cascade-select-label');
             $parent.change(function () {
                 $.getJSON(serviceUrl + $parent.val(), function (data) {
                     var items = '<option>' + selectLabel + '</option>';
