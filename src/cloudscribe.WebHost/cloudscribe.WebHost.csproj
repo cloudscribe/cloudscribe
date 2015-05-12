@@ -638,6 +638,7 @@
     <Content Include="Scripts\ckeditor\CHANGES.md" />
     <None Include="Scripts\jquery-2.1.3.intellisense.js" />
     <Content Include="Scripts\ckeditor\styles.js" />
+    <Content Include="Scripts\cloudscribe-autosuggest-unobtrusive.js" />
     <Content Include="Scripts\cloudscribe-cascade-unobtrusive.js" />
     <Content Include="Scripts\expressive.annotations.validate.js" />
     <Content Include="Scripts\jquery-2.1.3.js" />

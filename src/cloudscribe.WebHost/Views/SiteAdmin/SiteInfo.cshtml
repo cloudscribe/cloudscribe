@@ -3,10 +3,16 @@
 @{
     
 }
+@section Styles {
+    @Styles.Render("~/Content/themes/base/all.css")
+    @Styles.Render("~/Content/themes/base/dialog.css")
+}
+
 <h2>@ViewBag.Title</h2>
 @Html.Partial("_BasicSettingsPartial", Model)
 
 @section Scripts {
-   
-    @Scripts.Render("~/Scripts/cloudscribe-cascade-unobtrusive.js")
+    @Scripts.Render("~/bundles/jqueryajax")
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/Scripts/cloudscribe-autosuggest-unobtrusive.js")
 }

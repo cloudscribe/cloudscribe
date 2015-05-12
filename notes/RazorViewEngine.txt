@@ -55,6 +55,14 @@ One benefit of this approach is it takes into account that our country/state dat
 
 perhaps we could have helpers for both approaches in cloudscribe so one can choose based on the specific needs of the moment
 
+so I implemented an autocomplete version of country state textboxes, actually a generic unobtrusive autocomplete in cloudescribe-autosuggest-unobtrusive.js
+however, Chrome browser puts its own auto complete on top making it unusable
+http://stackoverflow.com/questions/29286244/jquery-ui-autocomplete-and-google-chrome-autocomplete
+because google in their infinite wisdom refuse to respect autocomplete="off" attribute
+http://stackoverflow.com/questions/12374442/chrome-browser-ignoring-autocomplete-off
+
+google is working hard to make me hate them!
+
 http://blogs.msdn.com/b/rickandy/archive/2012/01/09/cascasding-dropdownlist-in-asp-net-mvc.aspx
 
 http://stackoverflow.com/questions/19145641/how-can-i-reuse-a-dropdownlist-in-several-views-with-net-mvc

@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-11-15
-// Last Modified:			2015-05-07
+// Last Modified:			2015-05-12
 // 
 
 using cloudscribe.Configuration;
@@ -228,6 +228,41 @@ namespace cloudscribe.Core.Web.Controllers
             
             
             return View(model);
+
+        }
+
+
+        public async Task<ActionResult> CountryAutoSuggestJson(
+           string query)
+        {
+            
+            List<IGeoCountry> matches = await geoRepo.CountryAutoComplete(
+                query,
+                10);
+            
+
+            return Json(matches, JsonRequestBehavior.AllowGet);
+
+        }
+
+        public async Task<ActionResult> StateAutoSuggestJson(
+           string countryCode, 
+           string query)
+        {
+            IGeoCountry country = await geoRepo.FetchCountry(countryCode);
+            List<IGeoZone> states;
+            if (country != null)
+            {
+                states = await geoRepo.StateAutoComplete(country.Guid, query, 10);
+            }
+            else
+            {
+                states = new List<IGeoZone>(); //empty list
+            }
+
+
+
+            return Json(states, JsonRequestBehavior.AllowGet);
 
         }
 

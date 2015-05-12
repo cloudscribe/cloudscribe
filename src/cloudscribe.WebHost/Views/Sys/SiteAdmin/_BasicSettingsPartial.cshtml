@@ -103,10 +103,11 @@ else
         <div class="form-group">
             @Html.LabelFor(model => model.CompanyRegion, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
+                
                 @Html.DropDownListFor(model => model.CompanyRegion, Model.AvailableStates, 
                 new { @id = "CompanyRegion", @class = "form-control",
                       @data_cascade_childof = "CompanyCountry",
-                    @data_cascade_serviceurl="/CoreData/GetStatesJson/?countryCode=",
+                    @data_cascade_serviceurl= Url.Content("~/CoreData/GetStatesJson/?countryCode="),
                     @data_cascade_orig_val= Model.CompanyRegion,
                       @data_cascade_select_label = "-Please select-"
                 })
