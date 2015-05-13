@@ -207,5 +207,16 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
             get { return showDelete; }
             set { showDelete = value; }
         }
+
+
+        // these are just temporary properties not used
+        // I'm implementing client side date picker and needed a date to work with
+        private DateTime tmpDate = DateTime.UtcNow;
+
+        public DateTime TmpDate
+        {
+            get { return tmpDate; }
+            set { tmpDate = value; }
+        }
     }
 }

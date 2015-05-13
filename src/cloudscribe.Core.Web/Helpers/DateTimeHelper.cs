@@ -1,6 +1,6 @@
 ﻿// Author:				Joe Audette
 // Created:			    2005-08-22
-// Last Modified:	    2014-10-31
+// Last Modified:	    2015-05-13
 // 
 
 using cloudscribe.Caching;
@@ -8,11 +8,12 @@ using cloudscribe.Configuration;
 using log4net;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Web;
 
 namespace cloudscribe.Core.Web.Helpers
 {
-    public class DateTimeHelper
+    public static class DateTimeHelper
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(DateTimeHelper));
 
@@ -397,11 +398,49 @@ namespace cloudscribe.Core.Web.Helpers
             return null;
         }
 
-        public static double GetUtcOffsetHours(DateTime localDateTime, TimeZoneInfo timeZone)
-        {
-            TimeSpan ts = timeZone.GetUtcOffset(localDateTime);
-            return ts.TotalHours;
+        //public static double GetUtcOffsetHours(DateTime localDateTime, TimeZoneInfo timeZone)
+        //{
+        //    TimeSpan ts = timeZone.GetUtcOffset(localDateTime);
+        //    return ts.TotalHours;
 
+        //}
+
+        public static DateTime ToLocalTime(this DateTime utcDate, TimeZoneInfo timeZone)
+        {
+            return TimeZoneInfo.ConvertTimeFromUtc(DateTime.SpecifyKind(utcDate, DateTimeKind.Utc), timeZone);
+        }
+
+        public static DateTime ToUtc(this DateTime localDate, TimeZoneInfo timeZone)
+        {
+            return TimeZoneInfo.ConvertTimeToUtc(localDate, timeZone);
+        }
+
+        /// <summary>
+        /// this is needed to configure a datetime picker to match DateTime.ToString("g")
+        /// http://trentrichardson.com/examples/timepicker/#tp-formatting
+        /// the standard ShortTimePattern uses tt where this time picker expects TT
+        /// in .NET tt means use AM or PM but in this js it means am or pm
+        /// we need TT to get AM or PM
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public static string ToDatePickerWithTimeFormat(this DateTimeFormatInfo t)
+        {
+            return t.ShortTimePattern.Replace("tt", "TT");
+        }
+
+        /// <summary>
+        /// in .NET M means month 1 -12 with no leading zero
+        /// in javascript it means month name like Dec
+        /// we need m for month with no leading zero, so we need to lower it
+        /// also in C# yyyy means four digit year but in js yy means 4 digit year so
+        /// we must replace yyyy with yy
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public static string ToDatePickerFormat(this DateTimeFormatInfo t)
+        {
+            return t.ShortDatePattern.Replace("M", "m").Replace("yyyy", "yy");
         }
 
     }

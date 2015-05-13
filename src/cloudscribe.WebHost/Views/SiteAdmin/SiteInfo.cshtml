@@ -6,6 +6,7 @@
 @section Styles {
     @Styles.Render("~/Content/themes/base/all.css")
     @Styles.Render("~/Content/themes/base/dialog.css")
+    @Styles.Render("~/Scripts/timepicker/jquery-ui-timepicker-addon.css")
 }
 
 <h2>@ViewBag.Title</h2>
@@ -14,5 +15,7 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryajax")
     @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/Scripts/timepicker/jquery-ui-timepicker-addon.js")
     @Scripts.Render("~/Scripts/cloudscribe-autosuggest-unobtrusive.js")
+    @Scripts.Render("~/Scripts/cloudscribe-datepicker-unobtrusive.js")
 }

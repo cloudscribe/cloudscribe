@@ -176,7 +176,17 @@ namespace cloudscribe.Core.Web.Controllers
                     model.ShowDelete = AppSettings.AllowDeleteChildSites; 
                 }
             }
-           
+
+
+            //dpBeginDate.Text = blog.StartDate.ToLocalTime(timeZone).ToString("g");
+            TimeZoneInfo timeZone = DateTimeHelper.GetTimeZone(model.AllTimeZones, "Eastern Standard Time");
+            
+            model.TmpDate = DateTime.UtcNow.ToLocalTime(timeZone);
+
+            string timeFormat = CultureInfo.CurrentCulture.DateTimeFormat.ToDatePickerWithTimeFormat();
+            //string timeFormat = "h:mm:ss TT";
+            //ViewData.Add("TimeFormat", timeFormat);
+            ViewBag.TimeFormat = timeFormat;
 
             return View(model);
         }

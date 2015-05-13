@@ -28,6 +28,25 @@
                 @Html.ValidationMessageFor(model => model.SiteName, "", new { @class = "text-danger" })
             </div>
         </div>
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.TmpDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.TmpDate, 
+                new { 
+                @Value = Model.TmpDate.ToString("g"),
+                @class = "form-control",
+                @data_cs_datepicker="true",
+                @data_cs_datepicker_show_time = "true",
+                @data_cs_datepicker_timeformat = ViewBag.TimeFormat
+                } )
+                @Html.ValidationMessageFor(model => model.TmpDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+
 @if (AppSettings.UseFoldersInsteadOfHostnamesForMultipleSites) {
         <div class="form-group">
             @Html.LabelFor(model => model.SiteFolderName, htmlAttributes: new { @class = "control-label col-md-2" })
