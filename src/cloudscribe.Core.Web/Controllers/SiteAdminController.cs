@@ -183,10 +183,15 @@ namespace cloudscribe.Core.Web.Controllers
             
             model.TmpDate = DateTime.UtcNow.ToLocalTime(timeZone);
 
-            string timeFormat = CultureInfo.CurrentCulture.DateTimeFormat.ToDatePickerWithTimeFormat();
+            string timeFormat = CultureInfo.CurrentUICulture.DateTimeFormat.ToDatePickerWithTimeFormat();
             //string timeFormat = "h:mm:ss TT";
             //ViewData.Add("TimeFormat", timeFormat);
+            
             ViewBag.TimeFormat = timeFormat;
+
+            string dateFormat = CultureInfo.CurrentUICulture.DateTimeFormat.ToDatePickerFormat();
+
+            ViewBag.DateFormat = dateFormat;
 
             return View(model);
         }

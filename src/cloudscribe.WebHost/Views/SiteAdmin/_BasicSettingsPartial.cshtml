@@ -39,9 +39,12 @@
                 @class = "form-control",
                 @data_cs_datepicker="true",
                 @data_cs_datepicker_show_time = "true",
+                @data_cs_datepicker_show_time_only = "false",
+                @data_cs_datepicker_dateformat = ViewBag.DateFormat,
                 @data_cs_datepicker_timeformat = ViewBag.TimeFormat
                 } )
                 @Html.ValidationMessageFor(model => model.TmpDate, "", new { @class = "text-danger" })
+                @System.Globalization.CultureInfo.CurrentUICulture.Name
             </div>
         </div>
 

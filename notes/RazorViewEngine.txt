@@ -1,49 +1,26 @@
 
+# New things in ASP.NET 5
+
+http://www.jeffreyfritz.com/2015/05/where-did-my-asp-net-bundles-go-in-asp-net-5/
+
+
+# General Tips
+
 http://haacked.com/archive/2011/01/06/razor-syntax-quick-reference.aspx/
 
 http://www.codeproject.com/Tips/256090/Add-namespaces-for-Razor-pages
 
-confirming deletes and other actions
 
-http://rkandhal.com/07/07/reusable-modal-dialogs/
-
-http://jameschambers.com/2014/07/day-29-confirmation-dialogs-for-delete-actions/
-
-http://www.codeguru.com/csharp/.net/net_asp/mvc/article.php/c20139/Confirming-Delete-Operations-in-ASPNET-MVC.htm
-
-http://rohit-developer.blogspot.in/2014/08/crud-multiple-jquery-dialogs-in-aspnet.html
-
-http://stackoverflow.com/questions/4682107/delete-actionlink-with-confirm-dialog
-
-sitemap menus bread crumbs
+# sitemap menus bread crumbs
 
 See SiteMaps.txt
 
-modal dialogs
+# modal dialogs
 
-seems like it is hard to do modal dialog in a generic way, we have to be strongly tied to a js framework bootstrap or jqueryui
-
-other gotchas
-seems normally a partial view is used for a modal
-but this poses problems for paging content within the modal
-paging inside the dialog should work naturally if the dialog uses an iframe
-http://stackoverflow.com/questions/5660263/how-to-display-an-iframe-inside-a-jquery-ui-dialog
-
-https://github.com/miyabis/jquery.iframeDialog
-
-http://stackoverflow.com/questions/512257/jquery-modal-boxes-and-iframe?rq=1
-
-http://www.codeproject.com/Tips/826002/Bootstrap-Modal-Dialog-Loading-Content-from-MVC-Pa
-http://www.devzest.com/blog/post/ASPNet-MVC-Modal-Dialog.aspx
-
-http://www.codeproject.com/Articles/146396/A-Comparison-of-Three-jQuery-Modal-Dialogs-for-ASP
-
-http://code.daypilot.org/81367/daypilot-modal
-
-http://www.asp.net/mvc/overview/older-versions-1/views/creating-custom-html-helpers-cs
+See modal-dialogs.txt
 
 
-cascading dropdowns
+# cascading dropdowns
 
 surprisingly hard to find a reuseable implementation of state/country dropdown.
 something like this would be used in many places so an HtmlHelper method would seem like a good idea.
@@ -55,13 +32,21 @@ One benefit of this approach is it takes into account that our country/state dat
 
 perhaps we could have helpers for both approaches in cloudscribe so one can choose based on the specific needs of the moment
 
-so I implemented an autocomplete version of country state textboxes, actually a generic unobtrusive autocomplete in cloudescribe-autosuggest-unobtrusive.js
-however, Chrome browser puts its own auto complete on top making it unusable
+**2015-05-15** I recently implemented re-useable generic solutions for cascading dropdown:
+Scripts/cloudescribe-cascade-unobtrusive.js
+
+you simply include the script and then decorate the markup with some data- attributes to wire it up and configure it.
+See working example in Views/Sys/SiteAdmin/_BasicSettingsPartial.cshtml
+
+and also implemented a genric re-useable autocomplete:
+Scripts/cloudescribe-autosuggest-unobtrusive.js
+
+however, Chrome browser puts its own auto complete on top making it unusable in some cases
 http://stackoverflow.com/questions/29286244/jquery-ui-autocomplete-and-google-chrome-autocomplete
 because google in their infinite wisdom refuse to respect autocomplete="off" attribute
 http://stackoverflow.com/questions/12374442/chrome-browser-ignoring-autocomplete-off
 
-google is working hard to make me hate them!
+other references:
 
 http://blogs.msdn.com/b/rickandy/archive/2012/01/09/cascasding-dropdownlist-in-asp-net-mvc.aspx
 
@@ -83,7 +68,7 @@ http://stackoverflow.com/questions/18173717/angularjs-trigger-country-state-depe
 
 http://softwareexperiences.blogspot.com/2014/05/angularjs-country-state-select-example.html
 
-* http://aspnetscript.com/asp-net/cascading-dropdownlist-asp-net-mvc-angularjs/
+http://aspnetscript.com/asp-net/cascading-dropdownlist-asp-net-mvc-angularjs/
 
 http://dzapart.blogspot.com/2013/04/auto-complete-controll-with-aspnet-mvc.html
 
