@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2014-08-31
-// Last Modified:		    2014-12-26
+// Last Modified:		    2015-05-17
 // 
 // TODO: support custom profile properties that are required for registration
 
@@ -109,5 +109,8 @@ namespace cloudscribe.Core.Web.ViewModels.Account
             get { return lastName; }
             set { lastName = value; }
         }
+
+        [Display(Name = "DateOfBirth", ResourceType = typeof(CommonResources))]
+        public DateTime? DateOfBirth { get; set; }
     }
 }

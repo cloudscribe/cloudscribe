@@ -2,9 +2,13 @@
 @{
 
 }
-
+@section Styles {
+    @Styles.Render("~/Content/themes/base/all.css")
+    @Styles.Render("~/Scripts/timepicker/jquery-ui-timepicker-addon.css")
+}
 <h2>@ViewBag.Title</h2>
-@using (Html.BeginForm("UserEdit", "UserAdmin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+@using (Html.BeginForm("UserEdit", "UserAdmin", FormMethod.Post, 
+    new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
     @Html.HiddenFor(m => m.UserId)
@@ -27,4 +31,12 @@
 }
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/Scripts/timepicker/jquery-ui-timepicker-addon.js")
+    @if (System.Globalization.CultureInfo.CurrentUICulture.Name != "en-US")
+    {
+        @Scripts.Render("~/Scripts/jqueryui-i18n/datepicker-" + System.Globalization.CultureInfo.CurrentUICulture.Name + ".js")
+        @Scripts.Render("~/Scripts/timepicker/i18n/jquery-ui-timepicker-" + System.Globalization.CultureInfo.CurrentUICulture.Name + ".js")
+    }
+    @Scripts.Render("~/Scripts/cloudscribe-datepicker-unobtrusive.js")
 }

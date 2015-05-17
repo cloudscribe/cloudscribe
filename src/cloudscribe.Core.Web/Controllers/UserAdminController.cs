@@ -213,6 +213,11 @@ namespace cloudscribe.Core.Web.Controllers
                     model.LoginName = user.UserName;
                     model.DisplayName = user.DisplayName;
 
+                    if(user.DateOfBirth > DateTime.MinValue)
+                    {
+                        model.DateOfBirth = user.DateOfBirth;
+                    }
+
                     ViewBag.Title = "Manage User";
 
                     var node = SiteMaps.Current.FindSiteMapNodeFromKey("UserEdit");
@@ -249,6 +254,15 @@ namespace cloudscribe.Core.Web.Controllers
                         user.LastName = model.LastName;
                         user.UserName = model.LoginName;
                         user.DisplayName = model.DisplayName;
+                        if(model.DateOfBirth.HasValue)
+                        {
+                            user.DateOfBirth = model.DateOfBirth.Value;
+                        }
+                        else
+                        {
+                            user.DateOfBirth = DateTime.MinValue;
+                        }
+
                         bool result = await Site.UserRepository.Save(user);
                         if(result)
                         {
@@ -269,6 +283,12 @@ namespace cloudscribe.Core.Web.Controllers
                         LastName = model.LastName,
                         DisplayName = model.DisplayName
                     };
+
+                    if (model.DateOfBirth.HasValue)
+                    {
+                        user.DateOfBirth = model.DateOfBirth.Value;
+                    }
+
                     var result = await Site.SiteUserManager.CreateAsync(user, model.Password);
                     if (result.Succeeded)
                     {

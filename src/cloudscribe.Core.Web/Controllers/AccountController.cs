@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-01-08
+// Last Modified:			2015-05-17
 // 
 
 using cloudscribe.AspNet.Identity;
@@ -170,6 +170,12 @@ namespace cloudscribe.Core.Web.Controllers
                     LastName = model.LastName,
                     DisplayName = model.DisplayName 
                 };
+                if(model.DateOfBirth.HasValue)
+                {
+                    user.DateOfBirth = model.DateOfBirth.Value;
+                }
+                
+
                 var result = await Site.SiteUserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -184,6 +190,10 @@ namespace cloudscribe.Core.Web.Controllers
                     return RedirectToAction("Index", "Home");
                 }
                 AddErrors(result);
+            }
+            else
+            {
+                this.AlertDanger("model was invalid", true);
             }
 
             // If we got this far, something failed, redisplay form

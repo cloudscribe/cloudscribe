@@ -429,4 +429,7 @@
   <data name="ConfirmDeleteHostNameFormat" xml:space="preserve">
     <value>Are you sure you want to delete the host/domain name mapping {0}</value>
   </data>
+  <data name="DateOfBirth" xml:space="preserve">
+    <value>Date Of Birth</value>
+  </data>
 </root>

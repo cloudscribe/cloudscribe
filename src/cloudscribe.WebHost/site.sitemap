@@ -47,7 +47,7 @@
                         includeAmbientValuesInUrl="true"
                       roles="Admins"
                       visibility="SiteMapPathHelper,ChildMenu,!*"
-                      preservedRouteParameters="userId"
+                      
                       ></mvcSiteMapNode>
         <mvcSiteMapNode key="UserSearch"  title="Search"
                       controller="UserAdmin" action="Search"
