@@ -7,12 +7,15 @@
     @Styles.Render("~/Scripts/timepicker/jquery-ui-timepicker-addon.css")
 }
 <h2>@ViewBag.Title</h2>
+<h4>@CommonResources.CreateANewAccount</h4>
+<hr />
 @using (Html.BeginForm("Register", "Account", FormMethod.Post, 
     new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
-    <h4>@CommonResources.CreateANewAccount</h4>
-    <hr />
+    @Html.HiddenFor(m => m.SiteGuid)
+    @Html.HiddenFor(m => m.UserGuid)
+    @Html.HiddenFor(m => m.UserId)
     @Html.Partial("EditUserPartial", Model)
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
@@ -22,7 +25,7 @@
     @Html.ValidationSummary("", new { @class = "text-danger" })
 }
 @section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
+     @* @Scripts.Render("~/bundles/jqueryval")  *@  
     @Scripts.Render("~/bundles/jqueryui")
     @Scripts.Render("~/Scripts/timepicker/jquery-ui-timepicker-addon.js")
     @if (System.Globalization.CultureInfo.CurrentUICulture.Name != "en-US")

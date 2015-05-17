@@ -29,10 +29,20 @@ namespace cloudscribe.Core.Web.ViewModels.Account
         private Guid userGuid = Guid.Empty;
 
         [Display(Name = "UserGuid")]
-        public Guid SiteGuid
+        public Guid UserGuid
         {
             get { return userGuid; }
             set { userGuid = value; }
+
+        }
+
+        private Guid siteGuid = Guid.Empty;
+
+        [Display(Name = "SiteGuid")]
+        public Guid SiteGuid
+        {
+            get { return siteGuid; }
+            set { siteGuid = value; }
 
         }
 

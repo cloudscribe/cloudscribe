@@ -442,6 +442,11 @@ namespace cloudscribe.Configuration
         }
 
 
+        public static bool EnableBundleOptimizations
+        {
+            get { return GetBool("EnableBundleOptimizations", false); }
+        }
+
         //  ~/Config/applications/{0}/upgrade/{1}/
 
     }

@@ -1,5 +1,6 @@
 ﻿using System.Web;
 using System.Web.Optimization;
+using cloudscribe.Configuration;
 
 namespace cloudscribe.WebHost
 {
@@ -52,7 +53,7 @@ namespace cloudscribe.WebHost
 
             // Set EnableOptimizations to false for debugging. For more information,
             // visit http://go.microsoft.com/fwlink/?LinkId=301862
-            BundleTable.EnableOptimizations = true;
+            BundleTable.EnableOptimizations = AppSettings.EnableBundleOptimizations;
         }
     }
 }

@@ -19,18 +19,18 @@ using System.Web.Mvc;
 namespace cloudscribe.Core.Web.Controllers
 {
     [Authorize]
-    public class AccountController : Controller
+    public class AccountController : CloudscribeBaseController
     {
         
         public AccountController()
         {
         }
 
-        public ISiteContext Site
-        {
-            get {  return HttpContext.GetOwinContext().Get<ISiteContext>(); }
+        //public ISiteContext Site
+        //{
+        //    get {  return HttpContext.GetOwinContext().Get<ISiteContext>(); }
             
-        }
+        //}
 
        
         // GET: /Account/Login
@@ -148,6 +148,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             ViewBag.SiteName = Site.SiteSettings.SiteName;
             EditUserViewModel model = new EditUserViewModel();
+            model.SiteGuid = Site.SiteSettings.SiteGuid;
 
             return View(model);
         }
