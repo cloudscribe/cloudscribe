@@ -28,28 +28,6 @@
                 @Html.ValidationMessageFor(model => model.SiteName, "", new { @class = "text-danger" })
             </div>
         </div>
-
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.TmpDate, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.TextBoxFor(model => model.TmpDate, 
-                new { 
-                @Value = Model.TmpDate.ToString("g"),
-                @class = "form-control",
-                @data_cs_datepicker="true",
-                @data_cs_datepicker_show_time = "true",
-                @data_cs_datepicker_show_time_only = "false",
-                @data_cs_datepicker_dateformat = ViewBag.DateFormat,
-                @data_cs_datepicker_timeformat = ViewBag.TimeFormat
-                } )
-                @Html.ValidationMessageFor(model => model.TmpDate, "", new { @class = "text-danger" })
-                @System.Globalization.CultureInfo.CurrentUICulture.Name
-            </div>
-        </div>
-
-
-
 @if (AppSettings.UseFoldersInsteadOfHostnamesForMultipleSites) {
         <div class="form-group">
             @Html.LabelFor(model => model.SiteFolderName, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -189,6 +167,20 @@ else
                 @Html.ValidationMessageFor(model => model.CompanyPublicEmail, "", new { @class = "text-danger" })
             </div>
         </div>
+        
+        <div class="form-group">
+            @Html.LabelFor(model => model.ClosedMessage, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.ClosedMessage, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ClosedMessage, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.IsClosed, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="checkbox col-md-10"> 
+                @Html.CheckBoxForBootstrap("IsClosed", Model.IsClosed)
+            </div>
+        </div>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="@CommonResources.Save" class="btn btn-default" />
@@ -202,6 +194,8 @@ else
                 }
             </div>
         </div>
+
+        
     </div>
 }
 @if ((Model.ShowDelete)&&(Model.SiteGuid != Guid.Empty))

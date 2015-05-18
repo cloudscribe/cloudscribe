@@ -205,6 +205,15 @@ namespace cloudscribe.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Closed Message.
+        /// </summary>
+        public static string ClosedMessage {
+            get {
+                return ResourceManager.GetString("ClosedMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Code.
         /// </summary>
         public static string Code {
@@ -561,6 +570,15 @@ namespace cloudscribe.Resources {
         public static string FirstName {
             get {
                 return ResourceManager.GetString("FirstName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Is Closed.
+        /// </summary>
+        public static string IsClosed {
+            get {
+                return ResourceManager.GetString("IsClosed", resourceCulture);
             }
         }
         

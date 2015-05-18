@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-05-07
+// Last Modified:			2015-05-18
 // 
 
 using cloudscribe.Configuration.DataAnnotations;
@@ -209,14 +209,23 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         }
 
 
-        // these are just temporary properties not used
-        // I'm implementing client side date picker and needed a date to work with
-        private DateTime tmpDate = DateTime.UtcNow;
+        private string closedMessage = string.Empty;
 
-        public DateTime TmpDate
+        [Display(Name = "ClosedMessage", ResourceType = typeof(CommonResources))]
+        public string ClosedMessage
         {
-            get { return tmpDate; }
-            set { tmpDate = value; }
+            get { return closedMessage; }
+            set { closedMessage = value; }
         }
+
+        private bool isClosed = false;
+
+        [Display(Name = "IsClosed", ResourceType = typeof(CommonResources))]
+        public bool IsClosed
+        {
+            get { return isClosed; }
+            set { isClosed = value; }
+        }
+
     }
 }

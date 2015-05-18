@@ -136,6 +136,8 @@ namespace cloudscribe.Core.Web.Controllers
             model.CompanyFax = selectedSite.CompanyFax;
             model.CompanyPublicEmail = selectedSite.CompanyPublicEmail;
             model.SiteFolderName = selectedSite.SiteFolderName;
+            model.IsClosed = selectedSite.SiteIsClosed;
+            model.ClosedMessage = selectedSite.SiteIsClosedMessage;
 
             model.AvailableCountries.Add(new SelectListItem { Text = "-Please select-", Value = "Selects items" });
             var countries = await geoRepo.GetAllCountries();
@@ -179,19 +181,19 @@ namespace cloudscribe.Core.Web.Controllers
 
 
             //dpBeginDate.Text = blog.StartDate.ToLocalTime(timeZone).ToString("g");
-            TimeZoneInfo timeZone = DateTimeHelper.GetTimeZone(model.AllTimeZones, "Eastern Standard Time");
+            //TimeZoneInfo timeZone = DateTimeHelper.GetTimeZone(model.AllTimeZones, "Eastern Standard Time");
             
-            model.TmpDate = DateTime.UtcNow.ToLocalTime(timeZone);
+            //model.TmpDate = DateTime.UtcNow.ToLocalTime(timeZone);
 
-            string timeFormat = CultureInfo.CurrentUICulture.DateTimeFormat.ToDatePickerWithTimeFormat();
+            //string timeFormat = CultureInfo.CurrentUICulture.DateTimeFormat.ToDatePickerWithTimeFormat();
             //string timeFormat = "h:mm:ss TT";
             //ViewData.Add("TimeFormat", timeFormat);
             
-            ViewBag.TimeFormat = timeFormat;
+            //ViewBag.TimeFormat = timeFormat;
 
-            string dateFormat = CultureInfo.CurrentUICulture.DateTimeFormat.ToDatePickerFormat();
+            //string dateFormat = CultureInfo.CurrentUICulture.DateTimeFormat.ToDatePickerFormat();
 
-            ViewBag.DateFormat = dateFormat;
+            //ViewBag.DateFormat = dateFormat;
 
             return View(model);
         }
@@ -319,6 +321,8 @@ namespace cloudscribe.Core.Web.Controllers
             selectedSite.CompanyFax = model.CompanyFax;
             selectedSite.CompanyPublicEmail = model.CompanyPublicEmail;
             selectedSite.SiteFolderName = model.SiteFolderName;
+            selectedSite.SiteIsClosed = model.IsClosed;
+            selectedSite.SiteIsClosedMessage = model.ClosedMessage;
 
             bool result = await Site.SiteRepository.Save(selectedSite);
 

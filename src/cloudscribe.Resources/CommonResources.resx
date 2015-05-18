@@ -432,4 +432,10 @@
   <data name="DateOfBirth" xml:space="preserve">
     <value>Date Of Birth</value>
   </data>
+  <data name="ClosedMessage" xml:space="preserve">
+    <value>Closed Message</value>
+  </data>
+  <data name="IsClosed" xml:space="preserve">
+    <value>Is Closed</value>
+  </data>
 </root>
