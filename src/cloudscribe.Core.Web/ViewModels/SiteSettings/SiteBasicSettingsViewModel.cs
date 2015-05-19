@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-05-18
+// Last Modified:			2015-05-19
 // 
 
 using cloudscribe.Configuration.DataAnnotations;
@@ -211,6 +211,7 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
 
         private string closedMessage = string.Empty;
 
+        [AllowHtml]
         [Display(Name = "ClosedMessage", ResourceType = typeof(CommonResources))]
         public string ClosedMessage
         {

@@ -646,6 +646,7 @@
     <Content Include="Scripts\ckeditor\styles.js" />
     <Content Include="Scripts\cloudscribe-autosuggest-unobtrusive.js" />
     <Content Include="Scripts\cloudscribe-cascade-unobtrusive.js" />
+    <Content Include="Scripts\cloudscribe-ckeditor-unobtrusive.js" />
     <Content Include="Scripts\cloudscribe-datepicker-unobtrusive.js" />
     <Content Include="Scripts\expressive.annotations.validate.js" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />

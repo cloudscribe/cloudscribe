@@ -171,7 +171,13 @@ else
         <div class="form-group">
             @Html.LabelFor(model => model.ClosedMessage, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.TextAreaFor(model => model.ClosedMessage, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.TextAreaFor(model => model.ClosedMessage,  
+                new { @rows = 5, @class = "form-control",
+                @data_ckeditor_unobtrusive = "",
+                @data_ckeditor_unobtrusive_config_url = Url.Content(AppSettings.CkEditorCustomConfigPath),
+                @data_ckeditor_unobtrusive_config_toolbar = "Full",
+                @data_ckeditor_unobtrusive_config_language = System.Globalization.CultureInfo.CurrentUICulture.Name
+                } )
                 @Html.ValidationMessageFor(model => model.ClosedMessage, "", new { @class = "text-danger" })
             </div>
         </div>
