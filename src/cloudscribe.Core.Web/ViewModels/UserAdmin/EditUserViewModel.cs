@@ -122,5 +122,13 @@ namespace cloudscribe.Core.Web.ViewModels.Account
 
         [Display(Name = "DateOfBirth", ResourceType = typeof(CommonResources))]
         public DateTime? DateOfBirth { get; set; }
+
+        private string recaptchaSiteKey = string.Empty;
+
+        public string RecaptchaSiteKey
+        {
+            get { return recaptchaSiteKey; }
+            set { recaptchaSiteKey = value; }
+        }
     }
 }

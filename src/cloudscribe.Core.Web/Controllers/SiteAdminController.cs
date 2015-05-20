@@ -138,6 +138,10 @@ namespace cloudscribe.Core.Web.Controllers
             model.SiteFolderName = selectedSite.SiteFolderName;
             model.IsClosed = selectedSite.SiteIsClosed;
             model.ClosedMessage = selectedSite.SiteIsClosedMessage;
+            model.RecaptchaPublicKey = selectedSite.RecaptchaPublicKey;
+            model.RecaptchaPrivateKey = selectedSite.RecaptchaPrivateKey;
+            model.RequireCaptchaOnRegistration = selectedSite.RequireCaptchaOnRegistration;
+            model.RequireCaptchaOnLogin = selectedSite.RequireCaptchaOnLogin;
 
             model.AvailableCountries.Add(new SelectListItem { Text = "-Please select-", Value = "Selects items" });
             var countries = await geoRepo.GetAllCountries();
@@ -324,6 +328,11 @@ namespace cloudscribe.Core.Web.Controllers
             selectedSite.SiteIsClosed = model.IsClosed;
             selectedSite.SiteIsClosedMessage = model.ClosedMessage;
 
+            selectedSite.RecaptchaPublicKey = model.RecaptchaPublicKey;
+            selectedSite.RecaptchaPrivateKey = model.RecaptchaPrivateKey;
+            selectedSite.RequireCaptchaOnRegistration = model.RequireCaptchaOnRegistration;
+            selectedSite.RequireCaptchaOnLogin = model.RequireCaptchaOnLogin;
+
             bool result = await Site.SiteRepository.Save(selectedSite);
 
             if ((result) && (AppSettings.UseFoldersInsteadOfHostnamesForMultipleSites))
@@ -506,8 +515,14 @@ namespace cloudscribe.Core.Web.Controllers
             {
                 newSite.PreferredHostName = model.HostName;
             }
-            
 
+            newSite.SiteIsClosed = model.IsClosed;
+            newSite.SiteIsClosedMessage = model.ClosedMessage;
+
+            newSite.RecaptchaPublicKey = model.RecaptchaPublicKey;
+            newSite.RecaptchaPrivateKey = model.RecaptchaPrivateKey;
+            newSite.RequireCaptchaOnRegistration = model.RequireCaptchaOnRegistration;
+            newSite.RequireCaptchaOnLogin = model.RequireCaptchaOnLogin;
             
 
             //Site.SiteRepository.Save(newSite);

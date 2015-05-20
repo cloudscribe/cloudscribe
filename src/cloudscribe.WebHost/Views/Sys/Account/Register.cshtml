@@ -6,6 +6,11 @@
     @Styles.Render("~/Content/themes/base/all.css")
     @Styles.Render("~/Scripts/timepicker/jquery-ui-timepicker-addon.css")
 }
+@if (Model.RecaptchaSiteKey.Length > 0)
+{
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+}
+
 <h2>@ViewBag.Title</h2>
 <h4>@CommonResources.CreateANewAccount</h4>
 <hr />
@@ -17,6 +22,16 @@
     @Html.HiddenFor(m => m.UserGuid)
     @Html.HiddenFor(m => m.UserId)
     @Html.Partial("EditUserPartial", Model)
+    if (Model.RecaptchaSiteKey.Length > 0)
+    {
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <div class="g-recaptcha" data-sitekey="@Model.RecaptchaSiteKey"></div>
+                @Html.ValidationMessage("recaptchaerror", new { @class = "text-danger" })
+            </div>
+        </div>
+        
+    }
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
             <input type="submit" class="btn btn-default" value="@CommonResources.Register" />

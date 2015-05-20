@@ -799,6 +799,24 @@ namespace cloudscribe.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to reCAPTCHA Secret Key.
+        /// </summary>
+        public static string RecaptchaPrivateKey {
+            get {
+                return ResourceManager.GetString("RecaptchaPrivateKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to reCAPTCHA Site Key.
+        /// </summary>
+        public static string RecaptchaPublicKey {
+            get {
+                return ResourceManager.GetString("RecaptchaPublicKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Register.
         /// </summary>
         public static string Register {
@@ -813,6 +831,24 @@ namespace cloudscribe.Resources {
         public static string Remove {
             get {
                 return ResourceManager.GetString("Remove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Require Captcha On Login?.
+        /// </summary>
+        public static string RequireCaptchaOnLogin {
+            get {
+                return ResourceManager.GetString("RequireCaptchaOnLogin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Require Captcha On Registration?.
+        /// </summary>
+        public static string RequireCaptchaOnRegistration {
+            get {
+                return ResourceManager.GetString("RequireCaptchaOnRegistration", resourceCulture);
             }
         }
         

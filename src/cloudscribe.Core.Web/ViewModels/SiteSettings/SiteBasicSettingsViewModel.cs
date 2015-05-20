@@ -228,5 +228,41 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
             set { isClosed = value; }
         }
 
+        private bool requireCaptchaOnLogin = false;
+
+        [Display(Name = "RequireCaptchaOnLogin", ResourceType = typeof(CommonResources))]
+        public bool RequireCaptchaOnLogin 
+        {
+            get { return requireCaptchaOnLogin; }
+            set { requireCaptchaOnLogin = value; } 
+        }
+
+        private bool requireCaptchaOnRegistration = false;
+
+        [Display(Name = "RequireCaptchaOnRegistration", ResourceType = typeof(CommonResources))]
+        public bool RequireCaptchaOnRegistration 
+        {
+            get { return requireCaptchaOnRegistration; }
+            set { requireCaptchaOnRegistration = value; } 
+        }
+
+        private string recaptchaPublicKey = string.Empty;
+
+        [Display(Name = "RecaptchaPublicKey", ResourceType = typeof(CommonResources))]
+        public string RecaptchaPublicKey 
+        {
+            get { return recaptchaPublicKey; }
+            set { recaptchaPublicKey = value; } 
+        }
+
+        private string recaptchaPrivateKey = string.Empty;
+
+        [Display(Name = "RecaptchaPrivateKey", ResourceType = typeof(CommonResources))]
+        public string RecaptchaPrivateKey
+        {
+            get { return recaptchaPrivateKey; }
+            set { recaptchaPrivateKey = value; }
+        }
+
     }
 }

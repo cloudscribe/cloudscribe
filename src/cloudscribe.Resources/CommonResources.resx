@@ -438,4 +438,16 @@
   <data name="IsClosed" xml:space="preserve">
     <value>Is Closed</value>
   </data>
+  <data name="RecaptchaPrivateKey" xml:space="preserve">
+    <value>reCAPTCHA Secret Key</value>
+  </data>
+  <data name="RecaptchaPublicKey" xml:space="preserve">
+    <value>reCAPTCHA Site Key</value>
+  </data>
+  <data name="RequireCaptchaOnLogin" xml:space="preserve">
+    <value>Require Captcha On Login?</value>
+  </data>
+  <data name="RequireCaptchaOnRegistration" xml:space="preserve">
+    <value>Require Captcha On Registration?</value>
+  </data>
 </root>

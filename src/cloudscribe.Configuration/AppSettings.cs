@@ -454,5 +454,16 @@ namespace cloudscribe.Configuration
             get { return GetString("CkEditor:CustomConfigPath", "~/Scripts/cloudscribe-ckeditor-config.js"); }
         }
 
+        public static string RecaptchaSiteKey
+        {
+            get { return GetString("Recaptcha:SiteKey", string.Empty); }
+        }
+
+        public static string RecaptchaSecretKey
+        {
+            get { return GetString("Recaptcha:SecretKey", string.Empty); }
+        }
+
+
     }
 }

@@ -1,17 +1,17 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-05-17
+// Last Modified:			2015-05-20
 // 
 
-using cloudscribe.AspNet.Identity;
+using cloudscribe.Configuration;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Web.ViewModels.Account;
 using cloudscribe.Core.Web.ViewModels.SiteUser;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -41,7 +41,17 @@ namespace cloudscribe.Core.Web.Controllers
             ViewBag.SiteName = Site.SiteSettings.SiteName;
             
             ViewBag.ReturnUrl = returnUrl;
-            return View();
+            LoginViewModel model = new LoginViewModel();
+            if (Site.SiteSettings.RequireCaptchaOnLogin)
+            {
+                model.RecaptchaSiteKey = AppSettings.RecaptchaSiteKey;
+                if (Site.SiteSettings.RecaptchaPublicKey.Length > 0)
+                {
+                    model.RecaptchaSiteKey = Site.SiteSettings.RecaptchaPublicKey;
+                }
+            }
+
+            return View(model);
         }
 
         
@@ -53,10 +63,37 @@ namespace cloudscribe.Core.Web.Controllers
         {
             ViewBag.SiteName = Site.SiteSettings.SiteName;
 
+            if (Site.SiteSettings.RequireCaptchaOnLogin)
+            {
+                model.RecaptchaSiteKey = AppSettings.RecaptchaSiteKey;
+                if (Site.SiteSettings.RecaptchaPublicKey.Length > 0)
+                {
+                    model.RecaptchaSiteKey = Site.SiteSettings.RecaptchaPublicKey;
+                }
+            }
+
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
+
+            if (Site.SiteSettings.RequireCaptchaOnLogin)
+            {
+                string recpatchaSecretKey = AppSettings.RecaptchaSecretKey;
+                if (Site.SiteSettings.RecaptchaPrivateKey.Length > 0)
+                {
+                    recpatchaSecretKey = Site.SiteSettings.RecaptchaPrivateKey;
+                }
+
+                var captchaResponse = await this.ValidateRecaptcha(Request, recpatchaSecretKey);
+
+                if (!captchaResponse.Success)
+                {         
+                    ModelState.AddModelError("recaptchaerror", "reCAPTCHA Error occured. Please try again");
+                    return View(model);
+                }
+            }
+
 
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
@@ -149,6 +186,15 @@ namespace cloudscribe.Core.Web.Controllers
             ViewBag.SiteName = Site.SiteSettings.SiteName;
             EditUserViewModel model = new EditUserViewModel();
             model.SiteGuid = Site.SiteSettings.SiteGuid;
+            if(Site.SiteSettings.RequireCaptchaOnRegistration)
+            {
+                model.RecaptchaSiteKey = AppSettings.RecaptchaSiteKey;
+                if (Site.SiteSettings.RecaptchaPublicKey.Length > 0)
+                {
+                    model.RecaptchaSiteKey = Site.SiteSettings.RecaptchaPublicKey;
+                }
+            }
+            
 
             return View(model);
         }
@@ -162,8 +208,62 @@ namespace cloudscribe.Core.Web.Controllers
         {
             ViewBag.SiteName = Site.SiteSettings.SiteName;
 
+            if (Site.SiteSettings.RequireCaptchaOnRegistration)
+            {
+                model.RecaptchaSiteKey = AppSettings.RecaptchaSiteKey;
+                if (Site.SiteSettings.RecaptchaPublicKey.Length > 0)
+                {
+                    model.RecaptchaSiteKey = Site.SiteSettings.RecaptchaPublicKey;
+                }
+            }
+
             if (ModelState.IsValid)
             {
+                if (Site.SiteSettings.RequireCaptchaOnRegistration)
+                {
+                    string recpatchaSecretKey = AppSettings.RecaptchaSecretKey;
+                    if (Site.SiteSettings.RecaptchaPrivateKey.Length > 0)
+                    {
+                        recpatchaSecretKey = Site.SiteSettings.RecaptchaPrivateKey;
+                    }
+
+
+                    var captchaResponse = await this.ValidateRecaptcha(Request, recpatchaSecretKey);
+
+                    if (!captchaResponse.Success)
+                    {
+                        //if (captchaResponse.ErrorCodes.Count <= 0)
+                        //{
+                        //    return View(model);
+                        //}
+
+                        ////TODO: log these errors rather than show them in the ui
+                        //var error = captchaResponse.ErrorCodes[0].ToLower();
+                        //switch (error)
+                        //{
+                        //    case ("missing-input-secret"):
+                        //        ModelState.AddModelError("recaptchaerror", "The secret parameter is missing.");     
+                        //        break;
+                        //    case ("invalid-input-secret"):
+                        //        ModelState.AddModelError("recaptchaerror", "The secret parameter is invalid or malformed.");
+                        //        break;
+                        //    case ("missing-input-response"):
+                        //        ModelState.AddModelError("recaptchaerror", "The response parameter is missing.");
+                        //        break;
+                        //    case ("invalid-input-response"):
+                        //        ModelState.AddModelError("recaptchaerror", "The response parameter is invalid or malformed.");
+                        //        break;
+                        //    default:
+                        //        ModelState.AddModelError("recaptchaerror", "Error occured. Please try again");
+                        //        break;
+                        //}
+
+                        ModelState.AddModelError("recaptchaerror", "reCAPTCHA Error occured. Please try again");
+                        return View(model);
+                    }
+
+                }
+                
                 var user = new SiteUser {
                     UserName = model.LoginName,
                     Email = model.Email,

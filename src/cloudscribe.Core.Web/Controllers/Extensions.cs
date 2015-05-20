@@ -1,14 +1,19 @@
 ﻿// Author:					Joe Audette
 // Created:					2015-01-02
-// Last Modified:			2015-01-02
+// Last Modified:			2015-05-20
 // 
 
 using cloudscribe.Core.Models;
+using cloudscribe.Core.Web.Models;
 using cloudscribe.Core.Web.ViewModels.Common;
 using Microsoft.AspNet.Identity.Owin;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Web;
 using System.Web.Mvc;
+using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Controllers
 {
@@ -18,6 +23,24 @@ namespace cloudscribe.Core.Web.Controllers
     /// </summary>
     public static class Extensions
     {
+        public static async Task<RecaptchaResponse> ValidateRecaptcha(
+            this Controller controller, 
+            HttpRequestBase request,
+            string secretKey)
+        {
+            var response = request["g-recaptcha-response"];
+            var client = new HttpClient();
+            string result = await client.GetStringAsync(
+                string.Format("https://www.google.com/recaptcha/api/siteverify?secret={0}&response={1}",
+                    secretKey,
+                    response)
+                    );
+
+            var captchaResponse = JsonConvert.DeserializeObject<RecaptchaResponse>(result);
+
+            return captchaResponse;
+        }
+
         public static ISiteContext GetSiteContext(this Controller controller)
         {
             return controller.HttpContext.GetOwinContext().Get<ISiteContext>();
