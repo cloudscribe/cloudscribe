@@ -160,15 +160,6 @@ namespace cloudscribe.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Basic Settings.
-        /// </summary>
-        public static string BasicSettings {
-            get {
-                return ResourceManager.GetString("BasicSettings", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Change.
         /// </summary>
         public static string Change {
@@ -930,6 +921,15 @@ namespace cloudscribe.Resources {
         public static string SecurityCodeMessageFormat {
             get {
                 return ResourceManager.GetString("SecurityCodeMessageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings.
+        /// </summary>
+        public static string Settings {
+            get {
+                return ResourceManager.GetString("Settings", resourceCulture);
             }
         }
         

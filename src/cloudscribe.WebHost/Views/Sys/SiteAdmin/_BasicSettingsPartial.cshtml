@@ -143,6 +143,55 @@ else
             </div>
         </div>
         <div class="form-group">
+            @Html.LabelFor(model => model.RecaptchaPublicKey, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.RecaptchaPublicKey, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.RecaptchaPublicKey, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.RecaptchaPrivateKey, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.RecaptchaPrivateKey, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.RecaptchaPrivateKey, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.RequireCaptchaOnRegistration, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="checkbox col-md-10">
+                @Html.CheckBoxForBootstrap("RequireCaptchaOnRegistration", Model.RequireCaptchaOnRegistration)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.RequireCaptchaOnLogin, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="checkbox col-md-10">
+                @Html.CheckBoxForBootstrap("RequireCaptchaOnLogin", Model.RequireCaptchaOnLogin)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ClosedMessage, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.ClosedMessage,
+                new
+                {
+                    @rows = 5,
+                    @class = "form-control",
+                    @data_ckeditor_unobtrusive = "",
+                    @data_ckeditor_unobtrusive_config_url = Url.Content(AppSettings.CkEditorCustomConfigPath),
+                    @data_ckeditor_unobtrusive_config_toolbar = "Full",
+                    @data_ckeditor_unobtrusive_config_language = System.Globalization.CultureInfo.CurrentUICulture.Name
+                })
+                @Html.ValidationMessageFor(model => model.ClosedMessage, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.IsClosed, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="checkbox col-md-10">
+                @Html.CheckBoxForBootstrap("IsClosed", Model.IsClosed)
+            </div>
+        </div>
+        <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="@CommonResources.Save" class="btn btn-default" />
                 @if ((Model.ShowDelete) && (Model.SiteGuid != Guid.Empty))

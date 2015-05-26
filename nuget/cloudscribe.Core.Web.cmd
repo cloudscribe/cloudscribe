@@ -25,8 +25,14 @@ xcopy ..\src\cloudscribe.WebHost\Config\RouteRegistrars\ExampleRoutes.config clo
 
 xcopy ..\src\cloudscribe.WebHost\Views\Sys\* cloudscribe.Core.Web\content\Views\Sys /s /y /d
 
-xcopy ..\src\cloudscribe.WebHost\Scripts\modaldialog-bootstrap.js cloudscribe.Core.Web\content\Scripts /y
-xcopy ..\src\cloudscribe.WebHost\Scripts\modaldialog-jqui.js cloudscribe.Core.Web\content\Scripts /y
+
+xcopy ..\src\cloudscribe.WebHost\Scripts\cloudscribe-autosuggest-unobtrusive.js cloudscribe.Core.Web\content\Scripts /y
+xcopy ..\src\cloudscribe.WebHost\Scripts\cloudscribe-cascade-unobtrusive.js cloudscribe.Core.Web\content\Scripts /y
+xcopy ..\src\cloudscribe.WebHost\Scripts\cloudscribe-ckeditor-config.js cloudscribe.Core.Web\content\Scripts /y
+xcopy ..\src\cloudscribe.WebHost\Scripts\cloudscribe-ckeditor-unobtrusive.js cloudscribe.Core.Web\content\Scripts /y
+xcopy ..\src\cloudscribe.WebHost\Scripts\cloudscribe-datepicker-unobtrusive.js cloudscribe.Core.Web\content\Scripts /y
+xcopy ..\src\cloudscribe.WebHost\Scripts\cloudscribe-modaldialog-bootstrap.js cloudscribe.Core.Web\content\Scripts /y
+xcopy ..\src\cloudscribe.WebHost\Scripts\cloudscribe-modaldialog-jqui.js cloudscribe.Core.Web\content\Scripts /y
 
 SET pversion=%1
 IF NOT DEFINED pversion SET pversion="1.0.0-alpha0"

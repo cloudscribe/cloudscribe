@@ -38,7 +38,7 @@
 	 
 	 <dependency id="jQuery.UI.Combined" version="[1.11.2]" />
 	 <dependency id="jQuery.Validation" version="[1.13.1]" />
-	 <dependency id="Microsoft.jQuery.Unobtrusive.Ajax" version="[3.2.2]" />
+	 <dependency id="Microsoft.jQuery.Unobtrusive.Ajax" version="[3.2.3]" />
 	 
 	 <!-- Nuget is having trouble resolving these dependencies
 	 it may be something to do with our packages being in pre-release, it may be trying to get pre-release versions of the dependencies

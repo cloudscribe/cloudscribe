@@ -5,18 +5,18 @@ mkdir cloudscribe.Core.Repositories.Firebird\content
 mkdir cloudscribe.Core.Repositories.Firebird\content\Config
 mkdir cloudscribe.Core.Repositories.Firebird\content\Config\applications
 mkdir cloudscribe.Core.Repositories.Firebird\content\Config\applications\cloudscribe-core
-mkdir cloudscribe.Core.Repositories.Firebird\content\Config\applications\cloudscribe-core\SchemaInstallScripts
-mkdir cloudscribe.Core.Repositories.Firebird\content\Config\applications\cloudscribe-core\SchemaInstallScripts\firebird
+mkdir cloudscribe.Core.Repositories.Firebird\content\Config\applications\cloudscribe-core\install
+mkdir cloudscribe.Core.Repositories.Firebird\content\Config\applications\cloudscribe-core\install\firebird
 
 
-mkdir cloudscribe.Core.Repositories.Firebird\content\Config\applications\cloudscribe-core\SchemaUpgradeScripts
-mkdir cloudscribe.Core.Repositories.Firebird\content\Config\applications\cloudscribe-core\SchemaUpgradeScripts\firebird
+mkdir cloudscribe.Core.Repositories.Firebird\content\Config\applications\cloudscribe-core\upgrade
+mkdir cloudscribe.Core.Repositories.Firebird\content\Config\applications\cloudscribe-core\upgrade\firebird
 
 
-xcopy  ..\src\cloudscribe.WebHost\Config\applications\cloudscribe-core\SchemaInstallScripts\firebird\* ..\nuget\cloudscribe.Core.Repositories.Firebird\content\Config\applications\cloudscribe-core\SchemaInstallScripts\firebird\ /s /y /d
+xcopy  ..\src\cloudscribe.WebHost\Config\applications\cloudscribe-core\install\firebird\* ..\nuget\cloudscribe.Core.Repositories.Firebird\content\Config\applications\cloudscribe-core\install\firebird\ /s /y /d
 
 
-xcopy ..\src\cloudscribe.WebHost\Config\applications\cloudscribe-core\SchemaUpgradeScripts\firebird\* cloudscribe.Core.Repositories.Firebird\content\Config\applications\cloudscribe-core\SchemaUpgradeScripts\firebird\ /s /y /d
+xcopy ..\src\cloudscribe.WebHost\Config\applications\cloudscribe-core\upgrade\firebird\* cloudscribe.Core.Repositories.Firebird\content\Config\applications\cloudscribe-core\upgrade\firebird\ /s /y /d
 
 
 xcopy ..\src\cloudscribe.Core.Repositories.Firebird\bin\Release\cloudscribe.Core.Repositories.Firebird.dll cloudscribe.Core.Repositories.Firebird\lib\net45 /y

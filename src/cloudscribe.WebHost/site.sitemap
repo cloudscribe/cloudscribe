@@ -10,7 +10,7 @@
     <mvcSiteMapNode key="SiteAdmin" title="Administration" controller="SiteAdmin" action="Index" 
                     includeAmbientValuesInUrl="true" roles="Admins,Content Administrators" 
                     >
-      <mvcSiteMapNode key="BasicSettings" title="Basic Settings"
+      <mvcSiteMapNode key="BasicSettings" title="Site Settings"
                       controller="SiteAdmin" action="SiteInfo"
                       includeAmbientValuesInUrl="true" preservedRouteParameters="siteGuid"
                       roles="Admins,Content Administrators"

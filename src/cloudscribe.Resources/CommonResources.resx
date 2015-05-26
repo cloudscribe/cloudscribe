@@ -291,8 +291,8 @@
   <data name="Administration" xml:space="preserve">
     <value>Administration</value>
   </data>
-  <data name="BasicSettings" xml:space="preserve">
-    <value>Basic Settings</value>
+  <data name="Settings" xml:space="preserve">
+    <value>Settings</value>
   </data>
   <data name="CoreData" xml:space="preserve">
     <value>Core Data</value>

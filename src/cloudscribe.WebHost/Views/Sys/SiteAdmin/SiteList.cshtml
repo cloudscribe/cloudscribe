@@ -31,7 +31,7 @@
 {
     <tr class="@(item.IsServerAdminSite ? "adminsite danger" : "childsite")" >
         <td>
-            @Html.ActionLink(CommonResources.BasicSettings, "SiteInfo",
+            @Html.ActionLink(CommonResources.Settings, "SiteInfo",
             new { siteGuid = item.SiteGuid, slp = Model.Paging.CurrentPage },
             new { @class = "btn btn-xs btn-default" })
 @if (!AppSettings.UseFoldersInsteadOfHostnamesForMultipleSites)

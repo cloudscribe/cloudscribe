@@ -6,15 +6,15 @@ mkdir cloudscribe.Core.Repositories.SqlCe\content
 mkdir cloudscribe.Core.Repositories.SqlCe\content\Config
 mkdir cloudscribe.Core.Repositories.SqlCe\content\Config\applications
 mkdir cloudscribe.Core.Repositories.SqlCe\content\Config\applications\cloudscribe-core
-mkdir cloudscribe.Core.Repositories.SqlCe\content\Config\applications\cloudscribe-core\SchemaInstallScripts
-mkdir cloudscribe.Core.Repositories.SqlCe\content\Config\applications\cloudscribe-core\SchemaInstallScripts\sqlce
+mkdir cloudscribe.Core.Repositories.SqlCe\content\Config\applications\cloudscribe-core\install
+mkdir cloudscribe.Core.Repositories.SqlCe\content\Config\applications\cloudscribe-core\install\sqlce
 
-mkdir cloudscribe.Core.Repositories.SqlCe\content\Config\applications\cloudscribe-core\SchemaUpgradeScripts
-mkdir cloudscribe.Core.Repositories.SqlCe\content\Config\applications\cloudscribe-core\SchemaUpgradeScripts\sqlce
+mkdir cloudscribe.Core.Repositories.SqlCe\content\Config\applications\cloudscribe-core\upgrade
+mkdir cloudscribe.Core.Repositories.SqlCe\content\Config\applications\cloudscribe-core\upgrade\sqlce
 
-xcopy  ..\src\cloudscribe.WebHost\Config\applications\cloudscribe-core\SchemaInstallScripts\sqlce\* ..\nuget\cloudscribe.Core.Repositories.SqlCe\content\Config\applications\cloudscribe-core\SchemaInstallScripts\sqlce\ /s /y /d
+xcopy  ..\src\cloudscribe.WebHost\Config\applications\cloudscribe-core\install\sqlce\* ..\nuget\cloudscribe.Core.Repositories.SqlCe\content\Config\applications\cloudscribe-core\install\sqlce\ /s /y /d
 
-xcopy ..\src\cloudscribe.WebHost\Config\applications\cloudscribe-core\SchemaUpgradeScripts\sqlce\* cloudscribe.Core.Repositories.SqlCe\content\Config\applications\cloudscribe-core\SchemaUpgradeScripts\sqlce\ /s /y /d
+xcopy ..\src\cloudscribe.WebHost\Config\applications\cloudscribe-core\upgrade\sqlce\* cloudscribe.Core.Repositories.SqlCe\content\Config\applications\cloudscribe-core\upgrade\sqlce\ /s /y /d
 
 xcopy ..\src\cloudscribe.Core.Repositories.SqlCe\bin\Release\cloudscribe.Core.Repositories.SqlCe.dll cloudscribe.Core.Repositories.SqlCe\lib\net45 /y
 

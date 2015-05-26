@@ -3,6 +3,8 @@
 
 http://www.jeffreyfritz.com/2015/05/where-did-my-asp-net-bundles-go-in-asp-net-5/
 
+http://www.jeffreyfritz.com/2015/05/customize-asp-net-mvc-6-view-location-easily/
+
 
 # General Tips
 
@@ -45,6 +47,52 @@ however, Chrome browser puts its own auto complete on top making it unusable in 
 http://stackoverflow.com/questions/29286244/jquery-ui-autocomplete-and-google-chrome-autocomplete
 because google in their infinite wisdom refuse to respect autocomplete="off" attribute
 http://stackoverflow.com/questions/12374442/chrome-browser-ignoring-autocomplete-off
+
+usage example:
+
+<div class="form-group">
+	@Html.LabelFor(model => model.CompanyCountry, htmlAttributes: new { @class = "control-label col-md-2" })
+	<div class="col-md-10">
+		
+		@Html.EditorFor(model => model.CompanyCountry, new { 
+		htmlAttributes = new { 
+		@class = "form-control", 
+		@autocomplete = "off",
+		@maxlength = "2",
+		@data_autosuggest_serviceurl = Url.Content("~/CoreData/CountryAutoSuggestJson"),
+		@data_autosuggest_label_prop = "Name",
+		@data_autosuggest_value_prop = "ISOCode2"
+		} })
+		
+		@Html.ValidationMessageFor(model => model.CompanyCountry, "", new { @class = "text-danger" })
+	</div>
+</div>
+<div class="form-group">
+	@Html.LabelFor(model => model.CompanyRegion, htmlAttributes: new { @class = "control-label col-md-2" })
+	<div class="col-md-10">
+		
+		@Html.EditorFor(model => model.CompanyRegion, 
+		new { htmlAttributes = new { 
+		@class = "form-control" ,
+		@autocomplete = "off",
+		@maxlength = "7",
+		@data_autosuggest_serviceurl = Url.Content("~/CoreData/StateAutoSuggestJson"),
+		@data_autosuggest_label_prop = "Name",
+		@data_autosuggest_value_prop = "Code",
+		@data_autosuggest_parentid = "CompanyCountry",
+		@data_autosuggest_parent_data_name = "countryCode"
+		} })
+
+		@Html.ValidationMessageFor(model => model.CompanyRegion, "", new { @class = "text-danger" })  
+	</div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryui") 
+    @Scripts.Render("~/Scripts/cloudscribe-autosuggest-unobtrusive.js")
+    
+}
+
 
 other references:
 

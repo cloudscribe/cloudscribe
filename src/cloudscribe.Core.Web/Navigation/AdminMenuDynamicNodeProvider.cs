@@ -68,7 +68,7 @@ namespace cloudscribe.Core.Web.Navigation
             List<DynamicNode> nodeList = new List<DynamicNode>();
 
             DynamicNode node = new DynamicNode();
-            node.Title = CommonResources.BasicSettings;
+            node.Title = CommonResources.Settings;
             node.Key = "BasicSettings";
             node.ParentKey = "SiteAdmin";
             node.Controller = "SiteAdmin";
@@ -170,7 +170,7 @@ namespace cloudscribe.Core.Web.Navigation
             List<DynamicNode> nodes = new List<DynamicNode>();
 
             DynamicNode dynamicNode = new DynamicNode();
-            dynamicNode.Title = CommonResources.BasicSettings;
+            dynamicNode.Title = CommonResources.Settings;
             dynamicNode.Key = "BasicSettings";
             dynamicNode.ParentKey = "SiteAdmin";
             dynamicNode.Controller = "SiteAdmin";

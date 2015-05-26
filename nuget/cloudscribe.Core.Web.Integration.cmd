@@ -19,6 +19,7 @@ ren cloudscribe.Core.Web.Integration\content\Web.AppSettings.config.sample Web.A
 xcopy ..\src\cloudscribe.WebHost\site.sitemap cloudscribe.Core.Web.Integration\content /y
 xcopy ..\src\cloudscribe.WebHost\log4net.config cloudscribe.Core.Web.Integration\content /y
 xcopy ..\src\cloudscribe.WebHost\Content\Site.css cloudscribe.Core.Web.Integration\content\Content /y
+xcopy ..\src\cloudscribe.WebHost\Content\jquery-ui-timepicker-addon.css cloudscribe.Core.Web.Integration\content\Content /y
 
 xcopy content-src\Root.Web.config.install.xdt cloudscribe.Core.Web.Integration\content /y
 

@@ -103,7 +103,7 @@ namespace cloudscribe.Core.Web.Controllers
             int slp = 1)
         {
             ViewBag.SiteName = Site.SiteSettings.SiteName;
-            ViewBag.Title = "Site Basic Settings";
+            ViewBag.Title = "Site Settings";
 
             ISiteSettings selectedSite;
             // only server admin site can edit other sites settings
