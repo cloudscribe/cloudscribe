@@ -81,6 +81,21 @@ we should be able to do similar kind of things as we did with appSettings in use
 new config classes can use json or xml
 
 
+http://gunnarpeipman.com/2014/11/asp-net-5-new-configuration-files-and-containers/
+
+http://davidzych.com/explaining-the-asp-net-5-configuration-framework/
+
+
+http://nblumhardt.com/2015/05/diagnostic-logging-in-dnx-asp-net-5/
+https://github.com/serilog/serilog-framework-logging
+
+
+http://www.mikesdotnetting.com/article/269/asp-net-5-middleware-or-where-has-my-httpmodule-gone?PageSpeed=noscript
+
+http://stackoverflow.com/questions/26957536/asp-net-5-error-management
+
+DataTable and DataSet are gone
+http://stackoverflow.com/questions/27900493/asp-vnext-core-5-0-datatable
 
 a lot of good posts here
 http://www.tugberkugurlu.com/
@@ -100,3 +115,19 @@ http://www.asp.net/vnext/overview/aspnet-vnext/getting-started-with-aspnet-vnext
 https://github.com/aspnet/Home/wiki/Assembly-Neutral-Interfaces
 
 http://blogs.msdn.com/b/webdev/archive/2014/11/14/katana-asp-net-5-and-bridging-the-gap.aspx
+
+# Unsupported things currently for dnxcore50
+
+System.Configuration 
+we have to do away with ProviderBase and Provider Model
+
+
+MvcSiteMapProvider
+
+none of the other db drivers works yet on dnxcore, just ms sql (supposedly also sqlite but it has errors for me)
+these should eventually be available
+
+System.Data.SqlServerCe
+
+DbProviderFactory seems to be not expected for use since it was not implemented in
+Microsoft.Data.Sqlite
