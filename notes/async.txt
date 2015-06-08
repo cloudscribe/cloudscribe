@@ -3,6 +3,19 @@ but shows the correct way to use async await and common wrong way mistakes to av
 https://www.youtube.com/watch?v=k81OaT_P6K0#t=60
 
 
+2015-06-08 now using the asp.net 5 bits and identity bits shipped with VS 2015 RC1
+I noticed all the async methods on UserStore<TUser> now have CancellationToken in the method signatures.
+such methods are supposed to check the token periodically to see if cancellation has been requested
+https://johnbadams.wordpress.com/2012/03/10/understanding-cancellationtokensource-with-tasks/
+
+you can see how it is used in EF Identity implementation
+https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity.EntityFramework/UserStore.cs
+
+https://johnbadams.wordpress.com/2012/03/13/understanding-cancellationtokensource-with-tasks-part-2/
+http://stackoverflow.com/questions/10134310/how-to-cancel-a-task-in-await
+https://msdn.microsoft.com/en-us/library/dd997364.aspx
+
+
 best practices in async
 http://msdn.microsoft.com/en-us/magazine/jj991977.aspx
 
