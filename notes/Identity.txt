@@ -1,5 +1,7 @@
 
 
+http://bitoftech.net/2015/03/31/asp-net-web-api-claims-authorization-with-asp-net-identity-2-1/
+
 http://www.asp.net/identity/overview/migrations/migrating-an-existing-website-from-sql-membership-to-aspnet-identity
 
 https://aspnetidentity.codeplex.com/workitem/2333

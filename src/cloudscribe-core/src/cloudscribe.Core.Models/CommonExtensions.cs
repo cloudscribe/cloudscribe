@@ -40,6 +40,21 @@ namespace cloudscribe.Core.Models
             return list;
         }
 
+        public static List<string> SplitOnCharAndTrim(this string s, char c)
+        {
+            List<string> list = new List<string>();
+            if (string.IsNullOrEmpty(s)) { return list; }
+
+            string[] a = s.Split(c);
+            foreach (string item in a)
+            {
+                if (!string.IsNullOrEmpty(item)) { list.Add(item.Trim()); }
+            }
+
+
+            return list;
+        }
+
         public static List<string> ToStringList(this char[] chars)
         {
             List<string> list = new List<string>();

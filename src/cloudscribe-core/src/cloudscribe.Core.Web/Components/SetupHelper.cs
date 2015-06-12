@@ -1,10 +1,13 @@
 ﻿// Author:					Joe Audette
 // Created:				    2006-02-03
-// Last Modified:		    2015-06-10
+// Last Modified:		    2015-06-12
 
 
 using System;
 using System.IO;
+using System.Collections.Generic;
+using cloudscribe.Core.Models;
+using cloudscribe.Configuration;
 
 
 namespace cloudscribe.Setup
@@ -239,20 +242,37 @@ namespace cloudscribe.Setup
 
         //}
 
-        //public static bool NeedsUpgrade(string applicationName, IDb db)
-        //{
-        //    if (VersionProviderManager.Providers[applicationName] == null) { return true; }
+        public static bool NeedsUpgrade(
+            List<IVersionProvider> providers,
+            string applicationName, 
+            IDb db)
+        {
+            IVersionProvider provider = GetVersionProvider(providers, applicationName);
+            //if (VersionProviderManager.Providers[applicationName] == null) { return true; }
+            if(provider == null) { return true; }
 
-        //    Version codeVersion = VersionProviderManager.Providers[applicationName].GetCodeVersion();
+            Version codeVersion = provider.GetCodeVersion();
 
-        //    Guid appId = db.GetOrGenerateSchemaApplicationId(applicationName);
-        //    Version schemaVersion = db.GetSchemaVersion(appId);
+            Guid appId = db.GetOrGenerateSchemaApplicationId(applicationName);
+            Version schemaVersion = db.GetSchemaVersion(appId);
 
-        //    bool result = false;
-        //    if (codeVersion > schemaVersion) { result = true; }
+            bool result = false;
+            if (codeVersion > schemaVersion) { result = true; }
 
-        //    return result;
-        //}
+            return result;
+        }
+
+        public static IVersionProvider GetVersionProvider(
+            List<IVersionProvider> providers,
+            string applicationName)
+        {
+            foreach(IVersionProvider p in providers)
+            {
+                if(p.Name == applicationName) { return p; }
+            }
+
+            return null;
+        }
 
 
         //public static bool RunningInFullTrust()
