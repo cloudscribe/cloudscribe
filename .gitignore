@@ -5,6 +5,7 @@
 *.suo
 *.user
 *.sln.docstates
+.vs/*
 
 # Build results
 [Dd]ebug/
@@ -26,6 +27,10 @@ _bin*
 /nuget/*/lib/net45/*.dll
 /nuget/nupkgs/
 /nuget/*/content/
+node_modules
+bower_components
+artifacts/*
+project.lock.json
 
 
 # MSTest test Results
@@ -184,5 +189,6 @@ UpgradeLog*.htm
 
 # Microsoft Fakes
 FakesAssemblies/
+
 src/cloudscribe.WebHost/files/currentlog.config
 src/cloudscribe.WebHost/files/currentlog.config

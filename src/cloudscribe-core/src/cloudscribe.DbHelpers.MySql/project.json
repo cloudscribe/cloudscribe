@@ -1,0 +1,21 @@
+{
+    "version": "1.0.0-*",
+    "description": "",
+    "authors": [ "" ],
+    "tags": [ "" ],
+    "projectUrl": "",
+    "licenseUrl": "",
+
+    "dependencies": {
+        "cloudscribe.Configuration": "1.0.0-*",
+        "cloudscribe.Core.Models": "1.0.0-*",
+        "Microsoft.Framework.Logging.Interfaces": "1.0.0-beta4",
+        "System.Diagnostics.Tools": "4.0.0-beta-22816",
+        "MySql.Data": "6.9.6",
+        "System.Data.Common": "4.0.0-beta-22816"
+    },
+
+    "frameworks": {
+        "dnx451": { }
+    }
+}
