@@ -192,3 +192,4 @@ FakesAssemblies/
 
 src/cloudscribe.WebHost/files/currentlog.config
 src/cloudscribe.WebHost/files/currentlog.config
+src/cloudscribe-core/.vs/config/applicationhost.config
