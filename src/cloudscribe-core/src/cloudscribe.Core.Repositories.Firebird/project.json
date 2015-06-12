@@ -1,0 +1,21 @@
+{
+  "version": "1.0.0-*",
+  "description": "",
+  "authors": [ "" ],
+  "tags": [ "" ],
+  "projectUrl": "",
+  "licenseUrl": "",
+
+  "dependencies": {
+    "cloudscribe.Configuration": "1.0.0-*",
+    "cloudscribe.Core.Models": "1.0.0-*",
+    "cloudscribe.DbHelpers.Firebird": "1.0.0-*",
+    "FirebirdSql.Data.FirebirdClient": "4.6.2",
+    "Microsoft.Framework.Logging.Interfaces": "1.0.0-beta4"
+  },
+
+  "frameworks": {
+    "dnx451": { }
+
+  }
+}
