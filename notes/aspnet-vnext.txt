@@ -122,7 +122,7 @@ System.Configuration
 we have to do away with ProviderBase and Provider Model
 
 
-MvcSiteMapProvider
+MvcSiteMapProvider - they plan to support but have not yet started any work, no-one on the project has time currently they say
 
 none of the other db drivers works yet on dnxcore, just ms sql (supposedly also sqlite but it has errors for me)
 these should eventually be available
