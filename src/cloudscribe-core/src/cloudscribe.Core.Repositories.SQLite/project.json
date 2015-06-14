@@ -1,0 +1,19 @@
+{
+    "version": "1.0.0-*",
+    "description": "",
+    "authors": [ "" ],
+    "tags": [ "" ],
+    "projectUrl": "",
+    "licenseUrl": "",
+
+    "dependencies": {
+        "cloudscribe.Core.Models": "1.0.0-*",
+        "cloudscribe.DbHelpers.SQLite": "1.0.0-*",
+        "Microsoft.Framework.Logging.Interfaces": "1.0.0-beta4",
+        "Microsoft.Data.SQLite": "1.0.0-beta1"
+    },
+
+    "frameworks": {
+        "dnx451": { }
+    }
+}
