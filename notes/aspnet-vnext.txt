@@ -1,4 +1,8 @@
 
+ViewComponents
+http://www.asp.net/vnext/overview/aspnet-vnext/vc
+
+
 http://typecastexception.com/post/2015/05/17/DNVM-DNX-and-DNU-Understanding-the-ASPNET-5-Runtime-Options.aspx
 
 2014-11-15 it seems premature to try to build cloudscribe on vnext mainly because certain dependencies are not available yet

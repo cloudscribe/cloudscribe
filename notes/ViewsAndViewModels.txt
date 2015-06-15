@@ -1,4 +1,6 @@
 
+
+
 http://stackoverflow.com/questions/14762680/how-should-i-structure-my-view-model-asp-net-mvc
 
 

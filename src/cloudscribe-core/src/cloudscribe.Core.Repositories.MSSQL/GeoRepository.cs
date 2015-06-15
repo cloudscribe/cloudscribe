@@ -21,7 +21,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             ILoggerFactory loggerFactory)
         {
             logFactory = loggerFactory;
-            log = loggerFactory.CreateLogger(typeof(UserRepository).FullName);
+            log = loggerFactory.CreateLogger(typeof(GeoRepository).FullName);
             readConnectionString = dbReadConnectionString;
             writeConnectionString = dbWriteConnectionString;
 
