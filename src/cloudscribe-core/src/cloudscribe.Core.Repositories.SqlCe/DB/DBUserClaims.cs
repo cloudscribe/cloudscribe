@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-11
-// Last Modified:			2015-06-15
+// Last Modified:			2015-06-16
 //
 // You must not remove this notice, or any other, from this software.
 
@@ -257,6 +257,46 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
             arParams[0] = new SqlCeParameter("@UserId", SqlDbType.NVarChar, 128);
             arParams[0].Value = userId;
+
+            return AdoHelper.ExecuteReader(
+                connectionString,
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams);
+
+        }
+
+        public DbDataReader GetUsersByClaim(int siteId, string claimType, string claimValue)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  u.* ");
+
+            sqlCommand.Append("FROM	mp_Users u ");
+
+            sqlCommand.Append("JOIN mp_UserClaims uc ");
+            sqlCommand.Append("ON u.UserID = uc.UserId ");
+
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("u.SiteID = @SiteId ");
+            sqlCommand.Append("AND ");
+            sqlCommand.Append("uc.ClaimType = @ClaimType ");
+            sqlCommand.Append("AND ");
+            sqlCommand.Append("uc.ClaimValue = @ClaimValue ");
+
+            sqlCommand.Append("ORDER BY ");
+            sqlCommand.Append("u.Name ");
+            sqlCommand.Append(";");
+
+            SqlCeParameter[] arParams = new SqlCeParameter[3];
+
+            arParams[0] = new SqlCeParameter("@SiteId", SqlDbType.Int);
+            arParams[0].Value = siteId;
+
+            arParams[1] = new SqlCeParameter("@ClaimType", SqlDbType.NText);
+            arParams[1].Value = claimType;
+
+            arParams[2] = new SqlCeParameter("@ClaimValue", SqlDbType.NText);
+            arParams[2].Value = claimValue;
 
             return AdoHelper.ExecuteReader(
                 connectionString,

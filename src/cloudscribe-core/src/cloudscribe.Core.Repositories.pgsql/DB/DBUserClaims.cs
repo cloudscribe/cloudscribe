@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-11
-// Last Modified:			2015-06-13
+// Last Modified:			2015-06-16
 // 
 //
 // You must not remove this notice, or any other, from this software.
@@ -218,6 +218,46 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             arParams[0] = new NpgsqlParameter("userid", NpgsqlTypes.NpgsqlDbType.Varchar, 128);
             arParams[0].Value = userId;
+
+            return await AdoHelper.ExecuteReaderAsync(
+                readConnectionString,
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams);
+
+        }
+
+        public async Task<DbDataReader> GetUsersByClaim(int siteId, string claimType, string claimValue)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  u.* ");
+
+            sqlCommand.Append("FROM	mp_users u ");
+
+            sqlCommand.Append("JOIN mp_userclaims uc ");
+            sqlCommand.Append("ON u.userid = uc.userid ");
+
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("u.siteid = :siteid ");
+            sqlCommand.Append("AND ");
+            sqlCommand.Append("uc.claimtype = :claimtype ");
+            sqlCommand.Append("AND ");
+            sqlCommand.Append("uc.claimvalue = :claimvalue ");
+
+            sqlCommand.Append("ORDER BY ");
+            sqlCommand.Append("u.name ");
+            sqlCommand.Append(";");
+
+            NpgsqlParameter[] arParams = new NpgsqlParameter[3];
+
+            arParams[0] = new NpgsqlParameter("userid", NpgsqlTypes.NpgsqlDbType.Integer);
+            arParams[0].Value = siteId;
+
+            arParams[1] = new NpgsqlParameter("claimtype", NpgsqlTypes.NpgsqlDbType.Text);
+            arParams[1].Value = claimType;
+
+            arParams[2] = new NpgsqlParameter("claimvalue", NpgsqlTypes.NpgsqlDbType.Text);
+            arParams[2].Value = claimValue;
 
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,

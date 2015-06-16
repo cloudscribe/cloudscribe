@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Threading.Tasks;
 
-namespace cloudscribe.Core.Repositories.MSSQL
+namespace cloudscribe.Core.Repositories.Firebird
 {
 
     public sealed class SiteRepository : ISiteRepository
@@ -40,6 +40,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
         private DBSiteSettings dbSiteSettings;
         private DBSiteSettingsEx dbSiteSettingsEx;
         private DBSiteFolder dbSiteFolder;
+
 
         #region ISiteRepository
 
@@ -155,12 +156,12 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
             }
 
-            if (!result) { return result; }
-
             // settings below stored as key value pairs in mp_SiteSettingsEx
 
+            if (!result) { return result; }
 
             bool nextResult = await dbSiteSettingsEx.EnsureSettings();
+
 
             List<ExpandoSetting> expandoProperties = GetExpandoProperties(passedInSiteId); //-1 on new sites to get the default values
 
@@ -168,8 +169,9 @@ namespace cloudscribe.Core.Repositories.MSSQL
             site.SetExpandoSettings(expandoProperties);
             // finally update the database only with properties in the table marked as dirty
             SaveExpandoProperties(site.SiteId, site.SiteGuid, expandoProperties);
-
+            // TODO unless we also need a synchronous version the above should be made async
             return result;
+
         }
 
 
@@ -187,6 +189,8 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
             if (site.SiteGuid == Guid.Empty) { return null; }//not found 
 
+            //TODO: unless we also need a synchronous version of this method 
+            // the below should be made async
             List<ExpandoSetting> expandoProperties = GetExpandoProperties(site.SiteId);
             site.LoadExpandoSettings(expandoProperties);
 
@@ -207,6 +211,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             }
 
             if (site.SiteGuid == Guid.Empty) { return null; }//not found 
+
 
             List<ExpandoSetting> expandoProperties = GetExpandoProperties(site.SiteId);
             site.LoadExpandoSettings(expandoProperties);
@@ -229,7 +234,8 @@ namespace cloudscribe.Core.Repositories.MSSQL
             }
 
             if (site.SiteGuid == Guid.Empty) { return null; }//not found 
-
+            //TODO: unless we also need a synchronous version of this method 
+            // the below should be made async
             List<ExpandoSetting> expandoProperties = GetExpandoProperties(site.SiteId);
             site.LoadExpandoSettings(expandoProperties);
 
@@ -248,11 +254,12 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 {
                     site.LoadFromReader(reader);
                 }
-
             }
 
             if (site.SiteGuid == Guid.Empty) { return null; }//not found 
 
+            //TODO: unless we also need a synchronous version of this method 
+            // the below should be made async
             List<ExpandoSetting> expandoProperties = GetExpandoProperties(site.SiteId);
             site.LoadExpandoSettings(expandoProperties);
 
@@ -270,11 +277,12 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 {
                     site.LoadFromReader(reader);
                 }
-
             }
 
             if (site.SiteGuid == Guid.Empty) { return null; }//not found 
 
+            //TODO: unless we also need a synchronous version of this method 
+            // the below should be made async
             List<ExpandoSetting> expandoProperties = GetExpandoProperties(site.SiteId);
             site.LoadExpandoSettings(expandoProperties);
 
@@ -378,6 +386,22 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return hosts;
         }
 
+        public async Task<ISiteHost> GetSiteHost(string hostName)
+        {
+            using (DbDataReader reader = await dbSiteSettings.GetHost(hostName))
+            {
+                while (reader.Read())
+                {
+                    SiteHost host = new SiteHost();
+                    host.LoadFromReader(reader);
+                    return host;
+                }
+
+            }
+
+            return null;
+        }
+
         public async Task<int> GetHostCount()
         {
             return await dbSiteSettings.GetHostCount();
@@ -419,21 +443,6 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return hosts;
         }
 
-        public async Task<ISiteHost> GetSiteHost(string hostName)
-        {
-            using (DbDataReader reader = await dbSiteSettings.GetHost(hostName))
-            {
-                while (reader.Read())
-                {
-                    SiteHost host = new SiteHost();
-                    host.LoadFromReader(reader);
-                    return host;
-                }
-
-            }
-
-            return null;
-        }
 
         public async Task<bool> AddHost(Guid siteGuid, int siteId, string hostName)
         {
@@ -467,6 +476,21 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
             return siteFolderList;
 
+        }
+
+        public async Task<SiteFolder> GetSiteFolder(string folderName)
+        {
+            using (DbDataReader reader = await dbSiteFolder.GetOne(folderName))
+            {
+                if (reader.Read())
+                {
+                    SiteFolder siteFolder = new SiteFolder();
+                    siteFolder.LoadFromReader(reader);
+                    return siteFolder;
+                }
+            }
+
+            return null;
         }
 
         public async Task<List<SiteFolder>> GetAllSiteFolders()
@@ -533,22 +557,6 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         }
 
-        public async Task<SiteFolder> GetSiteFolder(string folderName)
-        {
-            using (DbDataReader reader = await dbSiteFolder.GetOne(folderName))
-            {
-                if (reader.Read())
-                {
-                    SiteFolder siteFolder = new SiteFolder();
-                    siteFolder.LoadFromReader(reader);
-                    return siteFolder;
-                }
-            }
-
-            return null;
-        }
-
-
         public async Task<bool> Save(SiteFolder siteFolder)
         {
             if (siteFolder == null) { return false; }
@@ -597,6 +605,8 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return await dbSiteFolder.Exists(folderName);
         }
 
+
+
         //TODO: this is not part of ISiteSettings
         // this method should be moved to AppSettings class
         //public bool IsAllowedFolder(string folderName)
@@ -621,6 +631,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
         //    return result;
 
         //}
+
 
 
         #endregion
@@ -678,7 +689,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
                     s.IsDirty = false;
 
                     settings.Add(s);
-                    
+
                 }
             }
 
@@ -709,7 +720,6 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
             return settings;
         }
-
 
 
         #endregion

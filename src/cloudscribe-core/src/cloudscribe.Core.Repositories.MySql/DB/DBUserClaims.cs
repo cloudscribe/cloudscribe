@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-11
-// Last Modified:			2015-06-13
+// Last Modified:			2015-06-16
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -222,6 +222,47 @@ namespace cloudscribe.Core.Repositories.MySql
 
         }
 
+        public async Task<DbDataReader> GetUsersByClaim(int siteId, string claimType, string claimValue)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  u.* ");
 
-    }
+            sqlCommand.Append("FROM	mp_Users u ");
+
+            sqlCommand.Append("JOIN mp_UserClaims uc ");
+            sqlCommand.Append("ON u.UserID = uc.UserId ");
+
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("u.SiteID = ?SiteId ");
+            sqlCommand.Append("AND ");
+            sqlCommand.Append("uc.ClaimType = ?ClaimType ");
+            sqlCommand.Append("AND ");
+            sqlCommand.Append("uc.ClaimValue = ?ClaimValue ");
+
+            sqlCommand.Append("ORDER BY ");
+            sqlCommand.Append("u.Name ");
+            sqlCommand.Append(";");
+
+            MySqlParameter[] arParams = new MySqlParameter[3];
+
+            arParams[0] = new MySqlParameter("?SiteId", MySqlDbType.Int32);
+            arParams[0].Value = siteId;
+
+            arParams[1] = new MySqlParameter("?ClaimType", MySqlDbType.Text);
+            arParams[1].Value = claimType;
+
+            arParams[2] = new MySqlParameter("?ClaimValue", MySqlDbType.Text);
+            arParams[2].Value = claimValue;
+
+
+            return await AdoHelper.ExecuteReaderAsync(
+                readConnectionString,
+                sqlCommand.ToString(),
+                arParams);
+
+
+        }
+
+
+     }
 }

@@ -10,7 +10,8 @@
         "cloudscribe.Core.Models": "1.0.0-*",
         "cloudscribe.DbHelpers.SQLite": "1.0.0-*",
         "Microsoft.Framework.Logging.Interfaces": "1.0.0-beta4",
-        "Microsoft.Data.SQLite": "1.0.0-beta1"
+        "Microsoft.Data.SQLite": "1.0.0-beta1",
+        "System.Diagnostics.Tools": "4.0.0-beta-22816"
     },
 
     "frameworks": {

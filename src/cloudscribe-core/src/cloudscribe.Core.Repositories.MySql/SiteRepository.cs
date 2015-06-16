@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Threading.Tasks;
 
-namespace cloudscribe.Core.Repositories.MSSQL
+namespace cloudscribe.Core.Repositories.MySql
 {
 
     public sealed class SiteRepository : ISiteRepository
@@ -101,7 +101,6 @@ namespace cloudscribe.Core.Repositories.MSSQL
                     site.DisableDbAuth);
 
                 result = site.SiteId > -1;
-
             }
             else
             {
@@ -191,7 +190,6 @@ namespace cloudscribe.Core.Repositories.MSSQL
             site.LoadExpandoSettings(expandoProperties);
 
             return site;
-
         }
 
         public ISiteSettings FetchNonAsync(int siteId)
@@ -212,7 +210,6 @@ namespace cloudscribe.Core.Repositories.MSSQL
             site.LoadExpandoSettings(expandoProperties);
 
             return site;
-
         }
 
         public async Task<ISiteSettings> Fetch(Guid siteGuid)
@@ -248,7 +245,6 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 {
                     site.LoadFromReader(reader);
                 }
-
             }
 
             if (site.SiteGuid == Guid.Empty) { return null; }//not found 
@@ -270,7 +266,6 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 {
                     site.LoadFromReader(reader);
                 }
-
             }
 
             if (site.SiteGuid == Guid.Empty) { return null; }//not found 
@@ -306,7 +301,6 @@ namespace cloudscribe.Core.Repositories.MSSQL
                     site.LoadFromReader(reader);
                     sites.Add(site);
                 }
-
             }
 
             return sites;
@@ -355,7 +349,6 @@ namespace cloudscribe.Core.Repositories.MSSQL
                     host.LoadFromReader(reader);
                     hosts.Add(host);
                 }
-
             }
 
             return hosts;
@@ -372,7 +365,6 @@ namespace cloudscribe.Core.Repositories.MSSQL
                     host.LoadFromReader(reader);
                     hosts.Add(host);
                 }
-
             }
 
             return hosts;
@@ -469,6 +461,21 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         }
 
+        public async Task<SiteFolder> GetSiteFolder(string folderName)
+        {
+            using (DbDataReader reader = await dbSiteFolder.GetOne(folderName))
+            {
+                if (reader.Read())
+                {
+                    SiteFolder siteFolder = new SiteFolder();
+                    siteFolder.LoadFromReader(reader);
+                    return siteFolder;
+                }
+            }
+
+            return null;
+        }
+
         public async Task<List<SiteFolder>> GetAllSiteFolders()
         {
             List<SiteFolder> siteFolderList
@@ -533,22 +540,6 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         }
 
-        public async Task<SiteFolder> GetSiteFolder(string folderName)
-        {
-            using (DbDataReader reader = await dbSiteFolder.GetOne(folderName))
-            {
-                if (reader.Read())
-                {
-                    SiteFolder siteFolder = new SiteFolder();
-                    siteFolder.LoadFromReader(reader);
-                    return siteFolder;
-                }
-            }
-
-            return null;
-        }
-
-
         public async Task<bool> Save(SiteFolder siteFolder)
         {
             if (siteFolder == null) { return false; }
@@ -597,8 +588,6 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return await dbSiteFolder.Exists(folderName);
         }
 
-        //TODO: this is not part of ISiteSettings
-        // this method should be moved to AppSettings class
         //public bool IsAllowedFolder(string folderName)
         //{
         //    bool result = true;
@@ -678,7 +667,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
                     s.IsDirty = false;
 
                     settings.Add(s);
-                    
+
                 }
             }
 

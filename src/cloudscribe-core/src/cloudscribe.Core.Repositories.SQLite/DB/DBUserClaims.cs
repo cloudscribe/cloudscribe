@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-11
-// Last Modified:			2015-06-14
+// Last Modified:			2015-06-16
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -215,5 +215,45 @@ namespace cloudscribe.Core.Repositories.SQLite
                 arParams);
 
         }
+
+        public DbDataReader GetUsersByClaim(int siteId, string claimType, string claimValue)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  u.* ");
+
+            sqlCommand.Append("FROM	mp_Users u ");
+
+            sqlCommand.Append("JOIN mp_UserClaims uc ");
+            sqlCommand.Append("ON u.UserID = uc.UserId ");
+
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("u.SiteID = :SiteId ");
+            sqlCommand.Append("AND ");
+            sqlCommand.Append("uc.ClaimType = :ClaimType ");
+            sqlCommand.Append("AND ");
+            sqlCommand.Append("uc.ClaimValue = :ClaimValue ");
+
+            sqlCommand.Append("ORDER BY ");
+            sqlCommand.Append("u.Name ");
+            sqlCommand.Append(";");
+
+            SQLiteParameter[] arParams = new SQLiteParameter[3];
+
+            arParams[0] = new SQLiteParameter(":UserId", DbType.Int32);
+            arParams[0].Value = siteId;
+
+            arParams[1] = new SQLiteParameter(":ClaimType", DbType.String);
+            arParams[1].Value = claimType;
+
+            arParams[2] = new SQLiteParameter(":ClaimValue", DbType.String);
+            arParams[2].Value = claimValue;
+
+            return AdoHelper.ExecuteReader(
+                connectionString,
+                sqlCommand.ToString(),
+                arParams);
+
+        }
+
     }
 }

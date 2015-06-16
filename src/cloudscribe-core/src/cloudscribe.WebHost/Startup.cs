@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNet.Authentication.Cookies;
 using Microsoft.AspNet.Authentication.Facebook;
 using Microsoft.AspNet.Authentication.Google;
 using Microsoft.AspNet.Authentication.MicrosoftAccount;
@@ -115,6 +116,81 @@ namespace cloudscribe.WebHost
             // Add cookie-based authentication to the request pipeline.
             //https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity/BuilderExtensions.cs
             app.UseIdentity();
+
+            // some examples from http://stackoverflow.com/questions/24422903/setup-owin-dynamically-by-domain
+
+            //app.MapWhen(ctx => ctx.Request.Headers.Get("Host").Equals("customer1.cloudservice.net"), app2 =>
+            //{
+            //    app2.UseIdentity();
+            //});
+            //app.MapWhen(ctx => ctx.Request.Headers.Get("Host").Equals("customer2.cloudservice.net"), app2 =>
+            //{
+            //    app2.UseGoogleAuthentication(...);
+            //});
+
+            //app.MapWhen()
+
+            string foundHost = string.Empty;
+            app.MapWhen(ctx => {
+
+                if( ctx.Request.Headers.Get("Host").Equals("customer1.cloudservice.net"))
+                {
+                    foundHost = "foo";
+                    return true;
+                }
+
+                return false;
+
+            }, app2 =>
+            {
+                if(!string.IsNullOrEmpty(foundHost))
+                {
+                    //app2.UseIdentity();
+
+                    //CookieAuthenticationOptions cookieOptions = new CookieAuthenticationOptions
+                    //{
+                    //    CookieName = "cloudscribe-app",
+                    //    CookiePath = "/",
+                    //    CookieDomain = foundHost,
+                    //    LoginPath = new PathString("/Account/Login"),
+                    //    LogoutPath = new PathString("/Account/Logout")
+                         
+                         
+                    //};
+
+                    //app.UseCookieAuthentication(cookieOptions);
+
+                    //app.UseCookieAuthentication(new CookieAuthenticationOptions
+                    //{
+                    //    AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
+                    //    LoginPath = new PathString("/Account/Login"),
+                    //    Provider = new CookieAuthenticationProvider
+                    //    {
+                    //        OnValidateIdentity = SecurityStampValidator.OnValidateIdentity<SiteUserManager, SiteUser>(
+                    //        validateInterval: TimeSpan.FromMinutes(30),
+                    //        regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager))
+                    //    },
+                    //    // here for folder sites we would like to be able to set the cookie name per tenant
+                    //    // ie based on the request, but it seems not possible except in startup
+                    //    CookieName = "cloudscribe-app"
+
+                    //    //http://aspnet.codeplex.com/SourceControl/latest#Samples/Katana/BranchingPipelines/Startup.cs
+
+                    //    //http://leastprivilege.com/2012/10/08/custom-claims-principals-in-net-4-5/
+                    //    // maybe we could add a per site claim
+                    //    // or a custom claimprincipal where we can override IsAuthenticated
+                    //    // based on something in addition to the auth cookie
+                    //    //http://msdn.microsoft.com/en-us/library/system.security.claims.claimsprincipal%28v=vs.110%29.aspx
+                    //    //http://msdn.microsoft.com/en-us/library/system.security.principal.iidentity%28v=vs.110%29.aspx
+                    //    // or custom IIdentity
+                    //    //http://msdn.microsoft.com/en-us/library/system.security.claims.claimsidentity%28v=vs.110%29.aspx
+
+                    //    //http://stackoverflow.com/questions/19763807/how-to-set-a-custom-claimsprincipal-in-mvc-5
+                    //});
+
+                }
+                
+            });
 
             // Add authentication middleware to the request pipeline. You can configure options such as Id and Secret in the ConfigureServices method.
             // For more information see http://go.microsoft.com/fwlink/?LinkID=532715
