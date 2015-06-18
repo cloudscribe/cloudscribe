@@ -55,12 +55,16 @@ namespace cloudscribe.WebHost
             services.Configure<AppSettings>(Configuration.GetSubKey("AppSettings"));
 
             // Add EF services to the services container.
+            //https://github.com/aspnet/EntityFramework/blob/dev/src/EntityFramework.Core/Extensions/EntityFrameworkServiceCollectionExtensions.cs
             services.AddEntityFramework()
                 .AddSqlServer()
                 .AddDbContext<ApplicationDbContext>(options =>
                     options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]));
 
             // Add Identity services to the services container.
+            // https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity/IdentityServiceCollectionExtensions.cs
+            //https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity.EntityFramework/IdentityRole.cs
+
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();

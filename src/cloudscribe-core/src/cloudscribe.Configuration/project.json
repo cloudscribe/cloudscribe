@@ -10,7 +10,10 @@
         "Microsoft.Framework.ConfigurationModel": "1.0.0-beta4",
         "Microsoft.Framework.ConfigurationModel.Json": "1.0.0-beta4",
         "Microsoft.DataAnnotations": "1.0.0-beta1",
-        "Microsoft.AspNet.Mvc.ModelBinding": "6.0.0-beta4"
+        "Microsoft.AspNet.Mvc.ModelBinding": "6.0.0-beta4",
+        "Microsoft.AspNet.Hosting.Interfaces": "1.0.0-beta4",
+        "Microsoft.Framework.Logging.Interfaces": "1.0.0-beta4",
+        "System.Xml.XmlDocument": "4.0.0-beta-22816"
     },
 
     "frameworks": {

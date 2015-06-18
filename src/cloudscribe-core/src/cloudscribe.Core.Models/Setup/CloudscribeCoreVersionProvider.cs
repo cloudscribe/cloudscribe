@@ -10,7 +10,7 @@ namespace cloudscribe.Core.Models
 {
     public class CloudscribeCoreVersionProvider : IVersionProvider
     {
-        public string Name { get { return "cloudscribe.Core"; } }
+        public string Name { get { return "cloudscribe-core"; } }
 
         public Version GetCodeVersion()
         {

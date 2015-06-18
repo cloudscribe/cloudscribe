@@ -1,7 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿// Author:					Joe Audette
+// Created:					2015-01-10
+// Last Modified:			2015-06-12
+// 
+using System;
 
 namespace cloudscribe.Configuration
 {

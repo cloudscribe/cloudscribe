@@ -31,7 +31,7 @@ namespace cloudscribe.Setup.Controllers
             IDb dbImplementation,
             ISiteRepository siteRepositoryImplementation,
             IUserRepository userRepositoryImplementation,
-            List<IVersionProvider> versionProviders
+            IVersionProviderFactory versionProviderFactory
         )
         {
             hostingEnvironment = env;
@@ -40,13 +40,13 @@ namespace cloudscribe.Setup.Controllers
             userRepository = userRepositoryImplementation;
             logFactory = loggerFactory;
             log = loggerFactory.CreateLogger(typeof(SetupController).FullName);
-            versionList = versionProviders;
+            versionProviders = versionProviderFactory;
         }
 
         private IHostingEnvironment hostingEnvironment;
         private ILoggerFactory logFactory;
         private ILogger log;
-        private List<IVersionProvider> versionList;
+        private IVersionProviderFactory versionProviders;
         private bool setupIsDisabled = false;
         private bool dataFolderIsWritable = false;
         private bool canAccessDatabase = false;
@@ -162,7 +162,7 @@ namespace cloudscribe.Setup.Controllers
                     if (schemaHasBeenCreated)
                     {
                         //recheck
-                        needSchemaUpgrade = SetupHelper.NeedsUpgrade(versionList, "cloudscribe-core", db);
+                        needSchemaUpgrade = SetupHelper.NeedsUpgrade(versionProviders, "cloudscribe-core", db);
                     }
 
                 }
@@ -537,7 +537,7 @@ namespace cloudscribe.Setup.Controllers
             Guid appID = db.GetOrGenerateSchemaApplicationId(applicationName);
             Version currentSchemaVersion = db.GetSchemaVersion(appID);
             Version versionToStopAt = null;
-            IVersionProvider appVersionProvider = SetupHelper.GetVersionProvider(versionList, applicationName);
+            IVersionProvider appVersionProvider = versionProviders.Get(applicationName);
 
             //if (VersionProviderManager.Providers[applicationName] != null)
             //{
@@ -865,7 +865,7 @@ namespace cloudscribe.Setup.Controllers
                         false);
 
 
-                    needSchemaUpgrade = SetupHelper.NeedsUpgrade(versionList, "cloudscribe-core", db);
+                    needSchemaUpgrade = SetupHelper.NeedsUpgrade(versionProviders, "cloudscribe-core", db);
 
                     if (needSchemaUpgrade)
                     {
@@ -938,7 +938,7 @@ namespace cloudscribe.Setup.Controllers
 
             if (!db.SitesTableExists()) return false;
 
-            if (SetupHelper.NeedsUpgrade(versionList, "cloudscribe-core", db)) { return false; }
+            if (SetupHelper.NeedsUpgrade(versionProviders, "cloudscribe-core", db)) { return false; }
 
 
 
@@ -996,7 +996,7 @@ namespace cloudscribe.Setup.Controllers
 
                 //dbCodeVersion = DatabaseHelper.DBCodeVersion();
                 //dbSchemaVersion = DatabaseHelper.DBSchemaVersion();
-                IVersionProvider coreVersionProvider = SetupHelper.GetVersionProvider(versionList, "cloudscribe-core");
+                IVersionProvider coreVersionProvider = versionProviders.Get("cloudscribe-core");
                 //if (VersionProviderManager.Providers["cloudscribe-core"] != null)
                 if(coreVersionProvider != null)
                 {

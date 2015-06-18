@@ -11,6 +11,7 @@ using Microsoft.Framework.OptionsModel;
 namespace cloudscribe.WebHost.Models
 {
     // Add profile data for application users by adding properties to the ApplicationUser class
+    //https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity.EntityFramework/IdentityUser.cs
     public class ApplicationUser : IdentityUser
     {
     }

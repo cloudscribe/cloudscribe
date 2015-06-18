@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2006-02-03
-// Last Modified:		    2015-06-12
+// Last Modified:		    2015-06-18
 
 
 using System;
@@ -243,11 +243,11 @@ namespace cloudscribe.Setup
         //}
 
         public static bool NeedsUpgrade(
-            List<IVersionProvider> providers,
+            IVersionProviderFactory providers,
             string applicationName, 
             IDb db)
         {
-            IVersionProvider provider = GetVersionProvider(providers, applicationName);
+            IVersionProvider provider = providers.Get(applicationName);
             //if (VersionProviderManager.Providers[applicationName] == null) { return true; }
             if(provider == null) { return true; }
 
@@ -262,17 +262,17 @@ namespace cloudscribe.Setup
             return result;
         }
 
-        public static IVersionProvider GetVersionProvider(
-            List<IVersionProvider> providers,
-            string applicationName)
-        {
-            foreach(IVersionProvider p in providers)
-            {
-                if(p.Name == applicationName) { return p; }
-            }
+        //public static IVersionProvider GetVersionProvider(
+        //    IVersionProviderFactory providers,
+        //    string applicationName)
+        //{
+        //    foreach(IVersionProvider p in providers.VersionProviders)
+        //    {
+        //        if(p.Name == applicationName) { return p; }
+        //    }
 
-            return null;
-        }
+        //    return null;
+        //}
 
 
         //public static bool RunningInFullTrust()

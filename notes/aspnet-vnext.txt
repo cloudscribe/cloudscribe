@@ -84,6 +84,8 @@ you can have it look for multiple files and the last one has the top priority so
 we should be able to do similar kind of things as we did with appSettings in user.config in mojoportal
 new config classes can use json or xml
 
+http://weblog.west-wind.com/posts/2015/Jun/03/Strongly-typed-AppSettings-Configuration-in-ASPNET-5
+
 
 http://gunnarpeipman.com/2014/11/asp-net-5-new-configuration-files-and-containers/
 
