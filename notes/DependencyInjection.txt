@@ -1,11 +1,10 @@
 
+http://www.strathweb.com/2014/07/dependency-injection-directly-actions-asp-net-web-api/
+
+
 Since there will be built in dependency injection in aspnet vnext I think we will use that instead of ninject
 
-Need to figure out how to inject logging. Seems like there are some issues injecting log4net for example because we want a typed logger to know what component is logging. if we just make a wrapper it will never know what component is doing the logging.
-
-maybe there are ways around that
-
-maybe we should consider nlog
+http://blog.dudak.me/2014/custom-middleware-with-dependency-injection-in-asp-net-5/
 
 http://blog.tonysneed.com/2011/10/09/using-nlog-with-dependency-injection/
 

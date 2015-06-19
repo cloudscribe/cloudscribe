@@ -22,6 +22,9 @@ using Microsoft.Framework.Logging;
 using Microsoft.Framework.Logging.Console;
 using Microsoft.Framework.Runtime;
 using cloudscribe.WebHost.Models;
+using cloudscribe.Core.Models;
+using cloudscribe.AspNet.Identity;
+using cloudscribe.Core.Repositories.MSSQL;
 
 namespace cloudscribe.WebHost
 {
@@ -61,13 +64,25 @@ namespace cloudscribe.WebHost
                 .AddDbContext<ApplicationDbContext>(options =>
                     options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]));
 
+
             // Add Identity services to the services container.
             // https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity/IdentityServiceCollectionExtensions.cs
             //https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity.EntityFramework/IdentityRole.cs
 
+            //https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity.EntityFramework/IdentityEntityFrameworkBuilderExtensions.cs
+            //https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity.EntityFramework/IdentityEntityFrameworkServices.cs
+
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+
+            //services.TryAdd(ServiceDescriptor.Scoped<UserManager<TUser>, SiteUserManager<SiteUser>>());
+
+            //services.TryAdd(ServiceDescriptor.Scoped<cloudscribe.AspNet.Identity.UserStore>());
+
+            
+            //services.AddIdentity<SiteUser, SiteRole>()
+            //    .AddDefaultTokenProviders();
 
             // Configure the options for the authentication middleware.
             // You can add options for Google, Twitter and other middleware as shown below.
@@ -133,6 +148,7 @@ namespace cloudscribe.WebHost
             //});
 
             //app.MapWhen()
+            
 
             string foundHost = string.Empty;
             app.MapWhen(ctx => {
