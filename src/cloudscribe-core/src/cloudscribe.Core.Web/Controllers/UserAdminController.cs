@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-12-08
-// Last Modified:			2015-06-11
+// Last Modified:			2015-06-20
 // 
 
 using cloudscribe.Configuration;
@@ -22,13 +22,22 @@ namespace cloudscribe.Core.Web.Controllers
     public class UserAdminController : CloudscribeBaseController
     {
         public UserAdminController(
-            ISiteContext siteContext
+            ISiteResolver siteResolver,
+            ISiteRepository siteRepository,
+            IUserRepository userRepository,
+            UserManager<SiteUser> userManager
             )
         {
-            Site = siteContext;
+            Site = siteResolver.Resolve();
+            userRepo = userRepository;
+            UserManager = userManager;
+            siteRepo = siteRepository;
         }
 
-        private ISiteContext Site;
+        private ISiteSettings Site;
+        private ISiteRepository siteRepo;
+        private IUserRepository userRepo;
+        public UserManager<SiteUser> UserManager { get; private set; }
 
         [HttpGet]
         public async Task<IActionResult> Index(
@@ -38,7 +47,7 @@ namespace cloudscribe.Core.Web.Controllers
             int pageSize = -1,
             int siteId = -1)
         {
-            ViewBag.SiteName = Site.SiteSettings.SiteName;
+            ViewBag.SiteName = Site.SiteName;
             ViewBag.Title = "User Management";
             //ViewBag.Heading = "Role Management";
 
@@ -50,24 +59,24 @@ namespace cloudscribe.Core.Web.Controllers
 
             if (siteId != -1)
             {
-                if (!Site.SiteSettings.IsServerAdminSite)
+                if (!Site.IsServerAdminSite)
                 {
-                    siteId = Site.SiteSettings.SiteId;
+                    siteId = Site.SiteId;
                 }
             }
             else
             {
-                siteId = Site.SiteSettings.SiteId;
+                siteId = Site.SiteId;
             }
 
-            var siteMembers = await Site.UserRepository.GetPage(
+            var siteMembers = await userRepo.GetPage(
                 siteId,
                 pageNumber,
                 itemsPerPage,
                 query,
                 sortMode);
 
-            var count = await Site.UserRepository.CountUsers(siteId, query);
+            var count = await userRepo.CountUsers(siteId, query);
 
             UserListViewModel model = new UserListViewModel();
             model.Heading = "User Management";
@@ -90,7 +99,7 @@ namespace cloudscribe.Core.Web.Controllers
             int pageSize = -1,
             int siteId = -1)
         {
-            ViewBag.SiteName = Site.SiteSettings.SiteName;
+            ViewBag.SiteName = Site.SiteName;
             ViewBag.Title = "User Management";
             //ViewBag.Heading = "Role Management";
 
@@ -102,24 +111,24 @@ namespace cloudscribe.Core.Web.Controllers
 
             if (siteId != -1)
             {
-                if (!Site.SiteSettings.IsServerAdminSite)
+                if (!Site.IsServerAdminSite)
                 {
-                    siteId = Site.SiteSettings.SiteId;
+                    siteId = Site.SiteId;
                 }
             }
             else
             {
-                siteId = Site.SiteSettings.SiteId;
+                siteId = Site.SiteId;
             }
 
-            var siteMembers = await Site.UserRepository.GetUserAdminSearchPage(
+            var siteMembers = await userRepo.GetUserAdminSearchPage(
                 siteId,
                 pageNumber,
                 itemsPerPage,
                 query,
                 sortMode);
 
-            var count = await Site.UserRepository.CountUsersForAdminSearch(siteId, query);
+            var count = await userRepo.CountUsersForAdminSearch(siteId, query);
 
             UserListViewModel model = new UserListViewModel();
             model.Heading = "User Management";
@@ -137,18 +146,18 @@ namespace cloudscribe.Core.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> IpSearch(string ipQuery = "", int siteId = -1)
         {
-            ViewBag.SiteName = Site.SiteSettings.SiteName;
+            ViewBag.SiteName = Site.SiteName;
             ViewBag.Title = "User Management";
             //ViewBag.Heading = "Role Management";
 
 
-            Guid siteGuid = Site.SiteSettings.SiteGuid;
+            Guid siteGuid = Site.SiteGuid;
 
             if (siteId != -1)
             {
-                if (Site.SiteSettings.IsServerAdminSite)
+                if (Site.IsServerAdminSite)
                 {
-                    ISiteSettings otherSite = await Site.SiteRepository.Fetch(siteId);
+                    ISiteSettings otherSite = await siteRepo.Fetch(siteId);
                     if (otherSite != null)
                     {
                         siteGuid = otherSite.SiteGuid;
@@ -172,7 +181,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             //}
 
-            siteMembers = await Site.UserRepository.GetByIPAddress(
+            siteMembers = await userRepo.GetByIPAddress(
                 siteGuid,
                 ipQuery);
 
@@ -197,15 +206,15 @@ namespace cloudscribe.Core.Web.Controllers
         //[MvcSiteMapNode(Title = "New User", ParentKey = "UserAdmin", Key = "UserEdit")]
         public async Task<ActionResult> UserEdit(int? userId)
         {
-            ViewBag.SiteName = Site.SiteSettings.SiteName;
+            ViewBag.SiteName = Site.SiteName;
             ViewBag.Title = "New User";
 
             EditUserViewModel model = new EditUserViewModel();
-            model.SiteGuid = Site.SiteSettings.SiteGuid;
+            model.SiteGuid = Site.SiteGuid;
 
             if (userId.HasValue)
             {
-                ISiteUser user = await Site.UserRepository.Fetch(Site.SiteSettings.SiteId, userId.Value);
+                ISiteUser user = await userRepo.Fetch(Site.SiteId, userId.Value);
                 if (user != null)
                 {
                     model.UserId = user.UserId;
@@ -240,7 +249,7 @@ namespace cloudscribe.Core.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UserEdit(EditUserViewModel model)
         {
-            ViewBag.SiteName = Site.SiteSettings.SiteName;
+            ViewBag.SiteName = Site.SiteName;
             ViewBag.Title = "New User";
 
             if (ModelState.IsValid)
@@ -248,7 +257,7 @@ namespace cloudscribe.Core.Web.Controllers
                 if (model.UserId > -1)
                 {
                     //editing an existing user
-                    ISiteUser user = await Site.UserRepository.Fetch(Site.SiteSettings.SiteId, model.UserId);
+                    ISiteUser user = await userRepo.Fetch(Site.SiteId, model.UserId);
                     if (user != null)
                     {
                         user.Email = model.Email;
@@ -265,7 +274,7 @@ namespace cloudscribe.Core.Web.Controllers
                             user.DateOfBirth = DateTime.MinValue;
                         }
 
-                        bool result = await Site.UserRepository.Save(user);
+                        bool result = await userRepo.Save(user);
                         if (result)
                         {
                             this.AlertSuccess(string.Format("user account for <b>{0}</b> was successfully updated.",
@@ -280,6 +289,8 @@ namespace cloudscribe.Core.Web.Controllers
                 {
                     var user = new SiteUser
                     {
+                        SiteId = Site.SiteId,
+                        SiteGuid = Site.SiteGuid,
                         UserName = model.LoginName,
                         Email = model.Email,
                         FirstName = model.FirstName,
@@ -292,7 +303,7 @@ namespace cloudscribe.Core.Web.Controllers
                         user.DateOfBirth = model.DateOfBirth.Value;
                     }
 
-                    var result = await Site.SiteUserManager.CreateAsync(user, model.Password);
+                    var result = await UserManager.CreateAsync(user, model.Password);
                     if (result.Succeeded)
                     {
                         this.AlertSuccess(string.Format("user account for <b>{0}</b> was successfully created.",

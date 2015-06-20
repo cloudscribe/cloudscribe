@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-11-15
-// Last Modified:			2015-06-11
+// Last Modified:			2015-06-20
 // 
 
 using cloudscribe.Configuration;
@@ -24,15 +24,15 @@ namespace cloudscribe.Core.Web.Controllers
     public class CoreDataController : CloudscribeBaseController
     {
         public CoreDataController(
-            ISiteContext siteContext,
+            ISiteResolver siteResolver,
             IGeoRepository geoRepository
             )
         {
-            Site = siteContext;
+            Site = siteResolver.Resolve();
             geoRepo = geoRepository;
         }
 
-        private ISiteContext Site;
+        private ISiteSettings Site;
         private IGeoRepository geoRepo;
 
         //disable warning about not really being async
@@ -43,7 +43,7 @@ namespace cloudscribe.Core.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            ViewBag.SiteName = Site.SiteSettings.SiteName;
+            ViewBag.SiteName = Site.SiteName;
             ViewBag.Title = "Core Data Administration";
             ViewBag.Heading = "Core Data Administration";
 
@@ -59,7 +59,7 @@ namespace cloudscribe.Core.Web.Controllers
             int pageNumber = 1,
             int pageSize = -1)
         {
-            ViewBag.SiteName = Site.SiteSettings.SiteName;
+            ViewBag.SiteName = Site.SiteName;
             ViewBag.Title = "Country List Administration";
             int itemsPerPage = AppSettings.DefaultPageSize_CountryList;
             if (pageSize > 0)
@@ -84,7 +84,7 @@ namespace cloudscribe.Core.Web.Controllers
             int returnPageNumber = 1,
             bool partial = false)
         {
-            ViewBag.SiteName = Site.SiteSettings.SiteName;
+            ViewBag.SiteName = Site.SiteName;
             ViewBag.Title = "Edit Country";
 
             GeoCountryViewModel model;
@@ -124,7 +124,7 @@ namespace cloudscribe.Core.Web.Controllers
             GeoCountryViewModel model,
             int returnPageNumber = 1)
         {
-            ViewBag.SiteName = Site.SiteSettings.SiteName;
+            ViewBag.SiteName = Site.SiteName;
             ViewBag.Title = "Edit Country";
 
             if (!ModelState.IsValid)
@@ -190,7 +190,7 @@ namespace cloudscribe.Core.Web.Controllers
                 return RedirectToAction("CountryListPage");
             }
 
-            ViewBag.SiteName = Site.SiteSettings.SiteName;
+            ViewBag.SiteName = Site.SiteName;
             ViewBag.Title = "State List Administration";
             int itemsPerPage = AppSettings.DefaultPageSize_StateList;
             if (pageSize > 0)
@@ -316,7 +316,7 @@ namespace cloudscribe.Core.Web.Controllers
             //int returnPage = 1;
             //if (returnPageNumber.HasValue) { returnPage = returnPageNumber.Value; }
 
-            ViewBag.SiteName = Site.SiteSettings.SiteName;
+            ViewBag.SiteName = Site.SiteName;
             ViewBag.Title = "Edit State";
 
             GeoZoneViewModel model;
@@ -371,7 +371,7 @@ namespace cloudscribe.Core.Web.Controllers
         public async Task<IActionResult> StateEdit(
             GeoZoneViewModel model)
         {
-            ViewBag.SiteName = Site.SiteSettings.SiteName;
+            ViewBag.SiteName = Site.SiteName;
             ViewBag.Title = "Edit State";
 
             if (!ModelState.IsValid)
@@ -451,7 +451,7 @@ namespace cloudscribe.Core.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> CurrencyList()
         {
-            ViewBag.SiteName = Site.SiteSettings.SiteName;
+            ViewBag.SiteName = Site.SiteName;
             ViewBag.Title = "Currency Administration";
             ViewBag.Heading = "Currency Administration";
 
@@ -463,7 +463,7 @@ namespace cloudscribe.Core.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> CurrencyEdit(Guid? currencyGuid)
         {
-            ViewBag.SiteName = Site.SiteSettings.SiteName;
+            ViewBag.SiteName = Site.SiteName;
             ViewBag.Title = "Edit Currency";
             ViewBag.Heading = "Edit Currency";
 
@@ -492,7 +492,7 @@ namespace cloudscribe.Core.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CurrencyEdit(CurrencyViewModel model)
         {
-            ViewBag.SiteName = Site.SiteSettings.SiteName;
+            ViewBag.SiteName = Site.SiteName;
             ViewBag.Title = "Edit Currency";
             ViewBag.Heading = "Edit Currency";
 

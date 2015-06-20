@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-06-11
+// Last Modified:			2015-06-20
 // 
 
 using cloudscribe.Configuration;
@@ -26,17 +26,21 @@ namespace cloudscribe.Core.Web.Controllers
     [Authorize(Roles = "Admins,Content Administrators")]
     public class SiteAdminController : CloudscribeBaseController
     {
-        private ISiteContext Site;
+        private ISiteSettings Site;
         private IGeoRepository geoRepo;
+        private ISiteRepository siteRepo;
+        private IUserRepository userRepo;
         //private ITriggerStartup startup;
 
         public SiteAdminController(
-            ISiteContext siteContext,
+            ISiteResolver siteResolver,
+            ISiteRepository siteRepository,
+            IUserRepository userRepository,
             IGeoRepository geoRepository
             //, ITriggerStartup startupTrigger
             )
         {
-            Site = siteContext;
+            Site = siteResolver.Resolve();
 
             if (geoRepository == null)
             {
@@ -49,6 +53,8 @@ namespace cloudscribe.Core.Web.Controllers
             //}
 
             geoRepo = geoRepository;
+            siteRepo = siteRepository;
+            userRepo = userRepository;
             //startup = startupTrigger;
         }
 
@@ -60,7 +66,7 @@ namespace cloudscribe.Core.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            ViewBag.SiteName = Site.SiteSettings.SiteName;
+            ViewBag.SiteName = Site.SiteName;
             ViewBag.Title = "Site Administration";
             ViewBag.Heading = "Site Administration";
             return View();
@@ -74,7 +80,7 @@ namespace cloudscribe.Core.Web.Controllers
         [Authorize(Roles = "ServerAdmins")]
         public async Task<IActionResult> SiteList(int pageNumber = 1, int pageSize = -1)
         {
-            ViewBag.SiteName = Site.SiteSettings.SiteName;
+            ViewBag.SiteName = Site.SiteName;
             ViewBag.Title = "Site List";
             ViewBag.Heading = "Site List";
 
@@ -86,12 +92,12 @@ namespace cloudscribe.Core.Web.Controllers
 
 
             int filteredSiteId = -1; //nothing filtered
-            var sites = await Site.SiteRepository.GetPageOtherSites(
+            var sites = await siteRepo.GetPageOtherSites(
                 filteredSiteId,
                 pageNumber,
                 itemsPerPage);
 
-            var count = await Site.SiteRepository.CountOtherSites(filteredSiteId);
+            var count = await siteRepo.CountOtherSites(filteredSiteId);
 
             SiteListViewModel model = new SiteListViewModel();
             model.Heading = "Site List";
@@ -112,18 +118,18 @@ namespace cloudscribe.Core.Web.Controllers
             Guid? siteGuid,
             int slp = 1)
         {
-            ViewBag.SiteName = Site.SiteSettings.SiteName;
+            ViewBag.SiteName = Site.SiteName;
             ViewBag.Title = "Site Settings";
 
             ISiteSettings selectedSite;
             // only server admin site can edit other sites settings
-            if ((siteGuid.HasValue) && (Site.SiteSettings.IsServerAdminSite))
+            if ((siteGuid.HasValue) && (Site.IsServerAdminSite))
             {
-                selectedSite = await Site.SiteRepository.Fetch(siteGuid.Value);
+                selectedSite = await siteRepo.Fetch(siteGuid.Value);
             }
             else
             {
-                selectedSite = Site.SiteSettings;
+                selectedSite = Site;
             }
 
             SiteBasicSettingsViewModel model = new SiteBasicSettingsViewModel();
@@ -185,9 +191,9 @@ namespace cloudscribe.Core.Web.Controllers
             }
 
             // can only delete from server admin site/cannot delete server admin site
-            if (Site.SiteSettings.IsServerAdminSite)
+            if (Site.IsServerAdminSite)
             {
-                if (model.SiteGuid != Site.SiteSettings.SiteGuid)
+                if (model.SiteGuid != Site.SiteGuid)
                 {
                     model.ShowDelete = AppSettings.AllowDeleteChildSites;
                 }
@@ -221,12 +227,12 @@ namespace cloudscribe.Core.Web.Controllers
         [Authorize(Roles = "Admins")]
         public async Task<ActionResult> SiteInfo(SiteBasicSettingsViewModel model)
         {
-            ViewBag.SiteName = Site.SiteSettings.SiteName;
+            ViewBag.SiteName = Site.SiteName;
 
             // can only delete from server admin site/cannot delete server admin site
-            if (Site.SiteSettings.IsServerAdminSite)
+            if (Site.IsServerAdminSite)
             {
-                if (model.SiteGuid != Site.SiteSettings.SiteGuid)
+                if (model.SiteGuid != Site.SiteGuid)
                 {
                     model.ShowDelete = AppSettings.AllowDeleteChildSites;
                 }
@@ -247,13 +253,13 @@ namespace cloudscribe.Core.Web.Controllers
             //model.SiteId = Site.SiteSettings.SiteId;
             //model.SiteGuid = Site.SiteSettings.SiteGuid;
             ISiteSettings selectedSite = null;
-            if (model.SiteGuid == Site.SiteSettings.SiteGuid)
+            if (model.SiteGuid == Site.SiteGuid)
             {
-                selectedSite = Site.SiteSettings;
+                selectedSite = Site;
             }
-            else if (Site.SiteSettings.IsServerAdminSite)
+            else if (Site.IsServerAdminSite)
             {
-                selectedSite = await Site.SiteRepository.Fetch(model.SiteGuid);
+                selectedSite = await siteRepo.Fetch(model.SiteGuid);
             }
 
             if (selectedSite == null)
@@ -276,7 +282,7 @@ namespace cloudscribe.Core.Web.Controllers
                     return View(model);
                 }
 
-                SiteFolder folder = await Site.SiteRepository.GetSiteFolder(model.SiteFolderName);
+                SiteFolder folder = await siteRepo.GetSiteFolder(model.SiteFolderName);
                 if ((folder != null) && (folder.SiteGuid != selectedSite.SiteGuid))
                 {
                     ModelState.AddModelError("foldererror", "The selected folder name is already in use on another site.");
@@ -293,7 +299,7 @@ namespace cloudscribe.Core.Web.Controllers
                 {
                     model.HostName = model.HostName.Replace("https://", string.Empty).Replace("http://", string.Empty);
 
-                    host = await Site.SiteRepository.GetSiteHost(model.HostName);
+                    host = await siteRepo.GetSiteHost(model.HostName);
 
                     if (host != null)
                     {
@@ -307,7 +313,7 @@ namespace cloudscribe.Core.Web.Controllers
                     }
                     else
                     {
-                        bool hostResult = await Site.SiteRepository.AddHost(
+                        bool hostResult = await siteRepo.AddHost(
                             selectedSite.SiteGuid,
                             selectedSite.SiteId,
                             model.HostName);
@@ -343,13 +349,13 @@ namespace cloudscribe.Core.Web.Controllers
             selectedSite.RequireCaptchaOnRegistration = model.RequireCaptchaOnRegistration;
             selectedSite.RequireCaptchaOnLogin = model.RequireCaptchaOnLogin;
 
-            bool result = await Site.SiteRepository.Save(selectedSite);
+            bool result = await siteRepo.Save(selectedSite);
 
             if ((result) && (AppSettings.UseFoldersInsteadOfHostnamesForMultipleSites))
             {
                 if (!string.IsNullOrEmpty(selectedSite.SiteFolderName))
                 {
-                    bool folderEnsured = await selectedSite.EnsureSiteFolder(Site.SiteRepository);
+                    bool folderEnsured = await selectedSite.EnsureSiteFolder(siteRepo);
                 }
 
             }
@@ -361,7 +367,7 @@ namespace cloudscribe.Core.Web.Controllers
             }
 
 
-            if ((Site.SiteSettings.IsServerAdminSite)
+            if ((Site.IsServerAdminSite)
                 //&&(Site.SiteSettings.SiteGuid != selectedSite.SiteGuid)
                 )
             {
@@ -378,7 +384,7 @@ namespace cloudscribe.Core.Web.Controllers
         [Authorize(Roles = "ServerAdmins")]
         public async Task<ActionResult> NewSite(int slp = 1)
         {
-            ViewBag.SiteName = Site.SiteSettings.SiteName;
+            ViewBag.SiteName = Site.SiteName;
             ViewBag.Title = "Create New Site";
 
             SiteBasicSettingsViewModel model = new SiteBasicSettingsViewModel();
@@ -387,7 +393,7 @@ namespace cloudscribe.Core.Web.Controllers
             model.SiteGuid = Guid.Empty;
             // model.SiteName = Site.SiteSettings.SiteName;
             //model.Slogan = Site.SiteSettings.Slogan;
-            model.TimeZoneId = Site.SiteSettings.TimeZoneId;
+            model.TimeZoneId = Site.TimeZoneId;
             model.AllTimeZones = DateTimeHelper.GetTimeZoneList();
             //model.CompanyName = Site.SiteSettings.CompanyName;
             //model.CompanyStreetAddress = Site.SiteSettings.CompanyStreetAddress;
@@ -441,7 +447,7 @@ namespace cloudscribe.Core.Web.Controllers
         [Authorize(Roles = "ServerAdmins")]
         public async Task<ActionResult> NewSite(SiteBasicSettingsViewModel model)
         {
-            ViewBag.SiteName = Site.SiteSettings.SiteName;
+            ViewBag.SiteName = Site.SiteName;
 
             if (!ModelState.IsValid)
             {
@@ -464,7 +470,7 @@ namespace cloudscribe.Core.Web.Controllers
                     return View(model);
                 }
 
-                SiteFolder folder = await Site.SiteRepository.GetSiteFolder(model.SiteFolderName);
+                SiteFolder folder = await siteRepo.GetSiteFolder(model.SiteFolderName);
                 if (folder != null)
                 {
                     ModelState.AddModelError("foldererror", "The selected folder name is already in use on another site.");
@@ -481,7 +487,7 @@ namespace cloudscribe.Core.Web.Controllers
                 {
                     model.HostName = model.HostName.Replace("https://", string.Empty).Replace("http://", string.Empty);
 
-                    host = await Site.SiteRepository.GetSiteHost(model.HostName);
+                    host = await siteRepo.GetSiteHost(model.HostName);
 
                     if (host != null)
                     {
@@ -537,12 +543,12 @@ namespace cloudscribe.Core.Web.Controllers
 
 
             //Site.SiteRepository.Save(newSite);
-            bool result = await NewSiteHelper.CreateNewSite(Site.SiteRepository, newSite);
-            result = await NewSiteHelper.CreateRequiredRolesAndAdminUser(newSite, Site.SiteRepository, Site.UserRepository);
+            bool result = await NewSiteHelper.CreateNewSite(siteRepo, newSite);
+            result = await NewSiteHelper.CreateRequiredRolesAndAdminUser(newSite, siteRepo, userRepo);
 
             if ((result) && (AppSettings.UseFoldersInsteadOfHostnamesForMultipleSites))
             {
-                bool folderResult = await newSite.EnsureSiteFolder(Site.SiteRepository);
+                bool folderResult = await newSite.EnsureSiteFolder(siteRepo);
 
                 // for folder sites we need routes that match the folder
                 // which are normally created during app startup
@@ -557,7 +563,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             if (result && addHostName)
             {
-                bool hostResult = await Site.SiteRepository.AddHost(
+                bool hostResult = await siteRepo.AddHost(
                             newSite.SiteGuid,
                             newSite.SiteId,
                             model.HostName);
@@ -584,7 +590,7 @@ namespace cloudscribe.Core.Web.Controllers
         {
             bool result = false;
 
-            ISiteSettings selectedSite = await Site.SiteRepository.Fetch(siteGuid);
+            ISiteSettings selectedSite = await siteRepo.Fetch(siteGuid);
 
             if (
                 (selectedSite != null)
@@ -611,8 +617,8 @@ namespace cloudscribe.Core.Web.Controllers
                 // a way to use dependency injection?
 
                 // delete users
-                bool resultStep = await Site.UserRepository.DeleteClaimsBySite(selectedSite.SiteGuid);
-                resultStep = await Site.UserRepository.DeleteLoginsBySite(selectedSite.SiteGuid);
+                bool resultStep = await userRepo.DeleteClaimsBySite(selectedSite.SiteGuid);
+                resultStep = await userRepo.DeleteLoginsBySite(selectedSite.SiteGuid);
 
 
                 // the below method deletes a lot of things by siteid including the following tables
@@ -628,7 +634,7 @@ namespace cloudscribe.Core.Web.Controllers
                 // mp_TaskQueue
                 // mp_SiteSettingsEx
                 // mp_Sites
-                result = await Site.SiteRepository.Delete(siteId);
+                result = await siteRepo.Delete(siteId);
             }
 
             if (result && (selectedSite != null))
@@ -650,13 +656,13 @@ namespace cloudscribe.Core.Web.Controllers
         {
             ISiteSettings selectedSite;
             // only server admin site can edit other sites settings
-            if ((siteGuid.HasValue) && (Site.SiteSettings.IsServerAdminSite))
+            if ((siteGuid.HasValue) && (Site.IsServerAdminSite))
             {
-                selectedSite = await Site.SiteRepository.Fetch(siteGuid.Value);
+                selectedSite = await siteRepo.Fetch(siteGuid.Value);
             }
             else
             {
-                selectedSite = Site.SiteSettings;
+                selectedSite = Site;
             }
 
             SiteHostMappingsViewModel model = new SiteHostMappingsViewModel();
@@ -667,7 +673,7 @@ namespace cloudscribe.Core.Web.Controllers
                 selectedSite.SiteName);
 
             //model.Heading = ViewBag.Title;
-            model.HostMappings = await Site.SiteRepository.GetSiteHosts(selectedSite.SiteId);
+            model.HostMappings = await siteRepo.GetSiteHosts(selectedSite.SiteId);
             if (slp > -1)
             {
                 model.SiteListReturnPageNumber = slp;
@@ -686,7 +692,7 @@ namespace cloudscribe.Core.Web.Controllers
             string hostName,
             int slp = -1)
         {
-            ISiteSettings selectedSite = await Site.SiteRepository.Fetch(siteGuid);
+            ISiteSettings selectedSite = await siteRepo.Fetch(siteGuid);
 
             if (selectedSite == null)
             {
@@ -699,7 +705,7 @@ namespace cloudscribe.Core.Web.Controllers
             {
                 hostName = hostName.Replace("https://", string.Empty).Replace("http://", string.Empty);
 
-                host = await Site.SiteRepository.GetSiteHost(hostName);
+                host = await siteRepo.GetSiteHost(hostName);
 
                 if (host != null)
                 {
@@ -712,7 +718,7 @@ namespace cloudscribe.Core.Web.Controllers
                 }
                 else
                 {
-                    bool hostResult = await Site.SiteRepository.AddHost(
+                    bool hostResult = await siteRepo.AddHost(
                             selectedSite.SiteGuid,
                             selectedSite.SiteId,
                             hostName);
@@ -739,14 +745,14 @@ namespace cloudscribe.Core.Web.Controllers
             string hostName,
             int slp = -1)
         {
-            ISiteSettings selectedSite = await Site.SiteRepository.Fetch(siteGuid);
+            ISiteSettings selectedSite = await siteRepo.Fetch(siteGuid);
 
             if (selectedSite == null)
             {
                 return RedirectToAction("Index");
             }
 
-            ISiteHost host = await Site.SiteRepository.GetSiteHost(hostName);
+            ISiteHost host = await siteRepo.GetSiteHost(hostName);
 
             bool result = false;
 
@@ -757,10 +763,10 @@ namespace cloudscribe.Core.Web.Controllers
                     if (selectedSite.PreferredHostName == host.HostName)
                     {
                         selectedSite.PreferredHostName = string.Empty;
-                        result = await Site.SiteRepository.Save(selectedSite);
+                        result = await siteRepo.Save(selectedSite);
                     }
 
-                    result = await Site.SiteRepository.DeleteHost(host.HostId);
+                    result = await siteRepo.DeleteHost(host.HostId);
 
                     if (result)
                     {
