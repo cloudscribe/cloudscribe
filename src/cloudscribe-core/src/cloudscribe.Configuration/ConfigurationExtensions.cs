@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2015-06-18
-// Last Modified:			2015-06-18
+// Last Modified:			2015-06-20
 // 
 
 
@@ -24,6 +24,15 @@ namespace cloudscribe.Configuration
         public static int GetOrDefault(this IConfiguration config, string key, int defaultIfNotFound)
         {
             int? result = config.Get<int>(key);
+
+            if (!result.HasValue) { return defaultIfNotFound; }
+
+            return result.Value;
+        }
+
+        public static bool GetOrDefault(this IConfiguration config, string key, bool defaultIfNotFound)
+        {
+            bool? result = config.Get<bool>(key);
 
             if (!result.HasValue) { return defaultIfNotFound; }
 

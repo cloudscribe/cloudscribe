@@ -15,6 +15,8 @@ using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Routing;
+using Microsoft.AspNet.Mvc;
+using Microsoft.AspNet.Mvc.Core;
 using Microsoft.Data.Entity;
 using Microsoft.Framework.ConfigurationModel;
 using Microsoft.Framework.DependencyInjection;
@@ -25,6 +27,7 @@ using cloudscribe.WebHost.Models;
 using cloudscribe.Core.Models;
 using cloudscribe.AspNet.Identity;
 using cloudscribe.Core.Repositories.MSSQL;
+using cloudscribe.Core.Web.Components;
 
 namespace cloudscribe.WebHost
 {
@@ -81,6 +84,8 @@ namespace cloudscribe.WebHost
             //services.TryAdd(ServiceDescriptor.Scoped<cloudscribe.AspNet.Identity.UserStore>());
 
             
+
+
             //services.AddIdentity<SiteUser, SiteRole>()
             //    .AddDefaultTokenProviders();
 
@@ -131,6 +136,46 @@ namespace cloudscribe.WebHost
 
             // Add static files to the request pipeline.
             app.UseStaticFiles();
+
+            app.Use(
+                next =>
+                {
+                   
+                    return async ctx =>
+                    {
+                        
+                        //await ctx.Response.WriteAsync("Hello from IApplicationBuilder.Use!\n");
+
+                       
+                        
+
+                        await next(ctx);
+                    };
+                });
+
+            app.Use(async (ctx, next) =>
+            {
+                //ctx.Items.Add("foo", "foo");
+                //ISiteRepository siteRepository = ctx.ApplicationServices.GetService<ISiteRepository>();
+                //if(siteRepository != null)
+                //{
+                //    ISiteResolver siteResolver = new RequestSiteResolver(siteRepository,
+                //        ctx.Request.Host.Value,
+                //        ctx.Request.Path.Value);
+
+                //    // adding to httpcontext.items
+                //    // would rather add it to the container (ApplicationServices)
+                //    ctx.Items.Add("ISiteResolver", siteResolver);
+                //    // and now how can we get this as a dependency
+                //}
+
+                //IGreeter greeter = ctx.ApplicationServices.GetService<IGreeter>();
+                //await ctx.Response.WriteAsync(greeter.Greet());
+
+                await next();
+            });
+
+            
 
             // Add cookie-based authentication to the request pipeline.
             //https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity/BuilderExtensions.cs

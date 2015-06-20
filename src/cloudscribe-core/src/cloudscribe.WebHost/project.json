@@ -32,7 +32,10 @@
         "cloudscribe.Core.Repositories.MSSQL": "1.0.0-*",
         "cloudscribe.Core.Web": "1.0.0-*",
         "cloudscribe.DbHelpers.MSSQL": "1.0.0-*",
-        "cloudscribe.Messaging": "1.0.0-*"
+        "cloudscribe.Messaging": "1.0.0-*",
+        "Microsoft.AspNet.Http": "1.0.0-beta4",
+        "Microsoft.AspNet.Http.Extensions": "1.0.0-beta4",
+        "Microsoft.Framework.DependencyInjection.Interfaces": "1.0.0-beta4"
     },
 
     "commands": {

@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2014-07-22
-// Last Modified:		    2015-06-09
+// Last Modified:		    2015-06-20
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -34,12 +34,18 @@ namespace cloudscribe.AspNet.Identity
         private ILoggerFactory logFactory;
         private ILogger log;
         private bool debugLog = AppSettings.UserStoreDebugEnabled;
-
-        private ISiteSettings siteSettings;
+        private ISiteResolver resolver;
+        private ISiteSettings siteSettings = null;
 
         public ISiteSettings SiteSettings
         {
-            get { return siteSettings; }
+            get {
+                if(siteSettings == null)
+                {
+                    siteSettings = resolver.Resolve();
+                }
+                return siteSettings;
+            }
         }
         private IUserRepository repo;
 
@@ -48,15 +54,15 @@ namespace cloudscribe.AspNet.Identity
 
         public UserStore(
             ILoggerFactory loggerFactory,
-            ISiteSettings site,
+            ISiteResolver siteResolver,
             IUserRepository userRepository
             )
         {
             logFactory = loggerFactory;
             log = loggerFactory.CreateLogger(this.GetType().FullName);
 
-            if (site == null) { throw new ArgumentException("SiteSettings cannot be null"); }
-            siteSettings = site;
+            if (siteResolver == null) { throw new ArgumentException("siteResolver cannot be null"); }
+            resolver = siteResolver;
 
             if (userRepository == null) { throw new ArgumentException("userRepository cannot be null"); }
             repo = userRepository;
