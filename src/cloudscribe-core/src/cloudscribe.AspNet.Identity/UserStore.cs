@@ -61,10 +61,10 @@ namespace cloudscribe.AspNet.Identity
             logFactory = loggerFactory;
             log = loggerFactory.CreateLogger(this.GetType().FullName);
 
-            if (siteResolver == null) { throw new ArgumentException("siteResolver cannot be null"); }
+            if (siteResolver == null) { throw new ArgumentNullException(nameof(siteResolver)); }
             resolver = siteResolver;
 
-            if (userRepository == null) { throw new ArgumentException("userRepository cannot be null"); }
+            if (userRepository == null) { throw new ArgumentNullException(nameof(userRepository)); }
             repo = userRepository;
 
             if (debugLog) { log.LogInformation("constructor"); }

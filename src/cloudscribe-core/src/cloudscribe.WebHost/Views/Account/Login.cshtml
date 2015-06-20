@@ -1,8 +1,9 @@
-﻿@model LoginViewModel
+﻿@model  cloudscribe.Core.Web.ViewModels.SiteUser.LoginViewModel
+
 @using System.Collections.Generic
 @using Microsoft.AspNet.Http
 @using Microsoft.AspNet.Http.Authentication
-@inject SignInManager<ApplicationUser> SignInManager
+@inject SignInManager<SiteUser> SignInManager
 
 @{
     ViewBag.Title = "Log in";

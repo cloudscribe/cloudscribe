@@ -23,7 +23,7 @@ using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
 using Microsoft.Framework.Logging.Console;
 using Microsoft.Framework.Runtime;
-using cloudscribe.WebHost.Models;
+//using cloudscribe.WebHost.Models;
 using cloudscribe.Core.Models;
 using cloudscribe.AspNet.Identity;
 using cloudscribe.Core.Repositories.MSSQL;
@@ -46,6 +46,15 @@ namespace cloudscribe.WebHost
                 // For more details on using the user secret store see http://go.microsoft.com/fwlink/?LinkID=532709
                 configuration.AddUserSecrets();
             }
+
+            // this file name is ignored by gitignore
+            // so you can create it and use on your local dev machine
+            // remember last config source added wins if it has the same settings
+            configuration.AddJsonFile("config.local.overrides.json", optional: true);
+
+            // most common use of environment variables would be in azure hosting
+            // since it is added last anything in env vars would trump the same setting in previous config sources
+            // so no risk of messing up settings if deploying a new version to azure
             configuration.AddEnvironmentVariables();
             Configuration = configuration;
 
@@ -62,10 +71,10 @@ namespace cloudscribe.WebHost
 
             // Add EF services to the services container.
             //https://github.com/aspnet/EntityFramework/blob/dev/src/EntityFramework.Core/Extensions/EntityFrameworkServiceCollectionExtensions.cs
-            services.AddEntityFramework()
-                .AddSqlServer()
-                .AddDbContext<ApplicationDbContext>(options =>
-                    options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]));
+            //services.AddEntityFramework()
+            //    .AddSqlServer()
+            //    .AddDbContext<ApplicationDbContext>(options =>
+            //        options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]));
 
 
             // Add Identity services to the services container.
@@ -75,20 +84,16 @@ namespace cloudscribe.WebHost
             //https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity.EntityFramework/IdentityEntityFrameworkBuilderExtensions.cs
             //https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity.EntityFramework/IdentityEntityFrameworkServices.cs
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders();
+            // Setup dependencies for cloudscribe Identity, Roles and and Site Administration
+            // this is in Startup.CloudscribeCore.cs
+            services.ConfigureCloudscribeCore();
 
-            //services.TryAdd(ServiceDescriptor.Scoped<UserManager<TUser>, SiteUserManager<SiteUser>>());
-
-            //services.TryAdd(ServiceDescriptor.Scoped<cloudscribe.AspNet.Identity.UserStore>());
-
-            
-
-
-            //services.AddIdentity<SiteUser, SiteRole>()
+            // previous entity framework dependencies
+            //services.AddIdentity<ApplicationUser, IdentityRole>()
+            //    .AddEntityFrameworkStores<ApplicationDbContext>()
             //    .AddDefaultTokenProviders();
 
+            
             // Configure the options for the authentication middleware.
             // You can add options for Google, Twitter and other middleware as shown below.
             // For more information see http://go.microsoft.com/fwlink/?LinkID=532715
@@ -136,126 +141,13 @@ namespace cloudscribe.WebHost
 
             // Add static files to the request pipeline.
             app.UseStaticFiles();
-
-            app.Use(
-                next =>
-                {
-                   
-                    return async ctx =>
-                    {
-                        
-                        //await ctx.Response.WriteAsync("Hello from IApplicationBuilder.Use!\n");
-
-                       
-                        
-
-                        await next(ctx);
-                    };
-                });
-
-            app.Use(async (ctx, next) =>
-            {
-                //ctx.Items.Add("foo", "foo");
-                //ISiteRepository siteRepository = ctx.ApplicationServices.GetService<ISiteRepository>();
-                //if(siteRepository != null)
-                //{
-                //    ISiteResolver siteResolver = new RequestSiteResolver(siteRepository,
-                //        ctx.Request.Host.Value,
-                //        ctx.Request.Path.Value);
-
-                //    // adding to httpcontext.items
-                //    // would rather add it to the container (ApplicationServices)
-                //    ctx.Items.Add("ISiteResolver", siteResolver);
-                //    // and now how can we get this as a dependency
-                //}
-
-                //IGreeter greeter = ctx.ApplicationServices.GetService<IGreeter>();
-                //await ctx.Response.WriteAsync(greeter.Greet());
-
-                await next();
-            });
-
             
+            // this is in Startup.CloudscribeCore.cs
+            app.UseCloudscribeCore(Configuration);
 
             // Add cookie-based authentication to the request pipeline.
             //https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity/BuilderExtensions.cs
             app.UseIdentity();
-
-            // some examples from http://stackoverflow.com/questions/24422903/setup-owin-dynamically-by-domain
-
-            //app.MapWhen(ctx => ctx.Request.Headers.Get("Host").Equals("customer1.cloudservice.net"), app2 =>
-            //{
-            //    app2.UseIdentity();
-            //});
-            //app.MapWhen(ctx => ctx.Request.Headers.Get("Host").Equals("customer2.cloudservice.net"), app2 =>
-            //{
-            //    app2.UseGoogleAuthentication(...);
-            //});
-
-            //app.MapWhen()
-            
-
-            string foundHost = string.Empty;
-            app.MapWhen(ctx => {
-
-                if( ctx.Request.Headers.Get("Host").Equals("customer1.cloudservice.net"))
-                {
-                    foundHost = "foo";
-                    return true;
-                }
-
-                return false;
-
-            }, app2 =>
-            {
-                if(!string.IsNullOrEmpty(foundHost))
-                {
-                    //app2.UseIdentity();
-
-                    //CookieAuthenticationOptions cookieOptions = new CookieAuthenticationOptions
-                    //{
-                    //    CookieName = "cloudscribe-app",
-                    //    CookiePath = "/",
-                    //    CookieDomain = foundHost,
-                    //    LoginPath = new PathString("/Account/Login"),
-                    //    LogoutPath = new PathString("/Account/Logout")
-                         
-                         
-                    //};
-
-                    //app.UseCookieAuthentication(cookieOptions);
-
-                    //app.UseCookieAuthentication(new CookieAuthenticationOptions
-                    //{
-                    //    AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
-                    //    LoginPath = new PathString("/Account/Login"),
-                    //    Provider = new CookieAuthenticationProvider
-                    //    {
-                    //        OnValidateIdentity = SecurityStampValidator.OnValidateIdentity<SiteUserManager, SiteUser>(
-                    //        validateInterval: TimeSpan.FromMinutes(30),
-                    //        regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager))
-                    //    },
-                    //    // here for folder sites we would like to be able to set the cookie name per tenant
-                    //    // ie based on the request, but it seems not possible except in startup
-                    //    CookieName = "cloudscribe-app"
-
-                    //    //http://aspnet.codeplex.com/SourceControl/latest#Samples/Katana/BranchingPipelines/Startup.cs
-
-                    //    //http://leastprivilege.com/2012/10/08/custom-claims-principals-in-net-4-5/
-                    //    // maybe we could add a per site claim
-                    //    // or a custom claimprincipal where we can override IsAuthenticated
-                    //    // based on something in addition to the auth cookie
-                    //    //http://msdn.microsoft.com/en-us/library/system.security.claims.claimsprincipal%28v=vs.110%29.aspx
-                    //    //http://msdn.microsoft.com/en-us/library/system.security.principal.iidentity%28v=vs.110%29.aspx
-                    //    // or custom IIdentity
-                    //    //http://msdn.microsoft.com/en-us/library/system.security.claims.claimsidentity%28v=vs.110%29.aspx
-
-                    //    //http://stackoverflow.com/questions/19763807/how-to-set-a-custom-claimsprincipal-in-mvc-5
-                    //});
-
-                }
-                
-            });
 
             // Add authentication middleware to the request pipeline. You can configure options such as Id and Secret in the ConfigureServices method.
             // For more information see http://go.microsoft.com/fwlink/?LinkID=532715

@@ -1,12 +1,14 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2015-06-16
+// Last Modified:			2015-06-20
 // 
 
-
+using cloudscribe.Configuration;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.DataExtensions;
+using cloudscribe.DbHelpers.MSSQL;
 using Microsoft.Framework.Logging;
+using Microsoft.Framework.ConfigurationModel;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -18,14 +20,17 @@ namespace cloudscribe.Core.Repositories.MSSQL
     public sealed class SiteRepository : ISiteRepository
     {
         public SiteRepository(
-            string dbReadConnectionString,
-            string dbWriteConnectionString,
+            IConfiguration configuration,
             ILoggerFactory loggerFactory)
         {
+            if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
+            if (loggerFactory == null) { throw new ArgumentNullException(nameof(loggerFactory)); }
+
             logFactory = loggerFactory;
             log = loggerFactory.CreateLogger(typeof(SiteRepository).FullName);
-            readConnectionString = dbReadConnectionString;
-            writeConnectionString = dbWriteConnectionString;
+
+            readConnectionString = configuration.GetMSSQLReadConnectionString();
+            writeConnectionString = configuration.GetMSSQLWriteConnectionString();
 
             dbSiteSettings = new DBSiteSettings(readConnectionString, writeConnectionString, logFactory);
             dbSiteSettingsEx = new DBSiteSettingsEx(readConnectionString, writeConnectionString, logFactory);

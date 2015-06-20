@@ -1,10 +1,11 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-11-03
-// Last Modified:			2015-06-15
+// Last Modified:			2015-06-20
 // 
 
-
 using cloudscribe.Core.Models.Geography;
+using cloudscribe.DbHelpers.Firebird;
+using Microsoft.Framework.ConfigurationModel;
 using Microsoft.Framework.Logging;
 using System;
 using System.Collections.Generic;
@@ -16,14 +17,17 @@ namespace cloudscribe.Core.Repositories.Firebird
     public class GeoRepository : IGeoRepository
     {
         public GeoRepository(
-            string dbReadConnectionString,
-            string dbWriteConnectionString,
+            IConfiguration configuration,
             ILoggerFactory loggerFactory)
         {
+            if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
+            if (loggerFactory == null) { throw new ArgumentNullException(nameof(loggerFactory)); }
+
             logFactory = loggerFactory;
             log = loggerFactory.CreateLogger(typeof(GeoRepository).FullName);
-            readConnectionString = dbReadConnectionString;
-            writeConnectionString = dbWriteConnectionString;
+
+            readConnectionString = configuration.GetFirebirdReadConnectionString();
+            writeConnectionString = configuration.GetFirebirdWriteConnectionString();
 
             dbGeoCountry = new DBGeoCountry(readConnectionString, writeConnectionString, logFactory);
             dbGeoZone = new DBGeoZone(readConnectionString, writeConnectionString, logFactory);

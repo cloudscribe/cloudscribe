@@ -12,7 +12,8 @@
         "Microsoft.Framework.Logging.Interfaces": "1.0.0-beta4",
         "cloudscribe.Core.Models": "1.0.0-*",
         "System.Diagnostics.Tools": "4.0.0-beta-22816",
-        "System.Collections.Concurrent": "4.0.10-beta-22816"
+        "System.Collections.Concurrent": "4.0.10-beta-22816",
+        "Microsoft.Framework.ConfigurationModel.Interfaces": "1.0.0-beta4"
     },
 
     "frameworks": {

@@ -1,12 +1,14 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-18
-// Last Modified:			2015-01-15
+// Last Modified:			2015-06-20
 // 
 
 
 using cloudscribe.Configuration;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.DataExtensions;
+using cloudscribe.DbHelpers.MySql;
+using Microsoft.Framework.ConfigurationModel;
 using Microsoft.Framework.Logging;
 using System;
 using System.Collections.Generic;
@@ -19,14 +21,17 @@ namespace cloudscribe.Core.Repositories.MySql
     public sealed class UserRepository : IUserRepository
     {
         public UserRepository(
-            string dbReadConnectionString,
-            string dbWriteConnectionString,
+            IConfiguration configuration,
             ILoggerFactory loggerFactory)
         {
+            if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
+            if (loggerFactory == null) { throw new ArgumentNullException(nameof(loggerFactory)); }
+
             logFactory = loggerFactory;
             log = loggerFactory.CreateLogger(typeof(UserRepository).FullName);
-            readConnectionString = dbReadConnectionString;
-            writeConnectionString = dbWriteConnectionString;
+
+            readConnectionString = configuration.GetMySqlReadConnectionString();
+            writeConnectionString = configuration.GetMySqlWriteConnectionString();
 
             dbSiteUser = new DBSiteUser(readConnectionString, writeConnectionString, logFactory);
             dbUserLogins = new DBUserLogins(readConnectionString, writeConnectionString, logFactory);

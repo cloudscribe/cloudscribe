@@ -11,7 +11,8 @@
         "cloudscribe.Core.Models": "1.0.0-*",
         "Microsoft.Framework.Logging.Interfaces": "1.0.0-beta4",
         "System.Data.SqlClient": "4.0.0-beta-22816",
-        "System.Data.Common": "4.0.0-beta-22816"
+        "System.Data.Common": "4.0.0-beta-22816",
+        "Microsoft.Framework.ConfigurationModel.Interfaces": "1.0.0-beta4"
     },
 
     "frameworks": {

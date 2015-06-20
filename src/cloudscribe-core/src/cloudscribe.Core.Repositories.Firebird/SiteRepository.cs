@@ -1,11 +1,13 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2015-06-16
+// Last Modified:			2015-06-20
 // 
 
-
+using cloudscribe.Configuration;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.DataExtensions;
+using cloudscribe.DbHelpers.Firebird;
+using Microsoft.Framework.ConfigurationModel;
 using Microsoft.Framework.Logging;
 using System;
 using System.Collections.Generic;
@@ -18,14 +20,17 @@ namespace cloudscribe.Core.Repositories.Firebird
     public sealed class SiteRepository : ISiteRepository
     {
         public SiteRepository(
-            string dbReadConnectionString,
-            string dbWriteConnectionString,
+            IConfiguration configuration,
             ILoggerFactory loggerFactory)
         {
+            if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
+            if (loggerFactory == null) { throw new ArgumentNullException(nameof(loggerFactory)); }
+
             logFactory = loggerFactory;
             log = loggerFactory.CreateLogger(typeof(SiteRepository).FullName);
-            readConnectionString = dbReadConnectionString;
-            writeConnectionString = dbWriteConnectionString;
+
+            readConnectionString = configuration.GetFirebirdReadConnectionString();
+            writeConnectionString = configuration.GetFirebirdWriteConnectionString();
 
             dbSiteSettings = new DBSiteSettings(readConnectionString, writeConnectionString, logFactory);
             dbSiteSettingsEx = new DBSiteSettingsEx(readConnectionString, writeConnectionString, logFactory);
