@@ -1,25 +1,27 @@
 {
-  "version": "1.0.0-*",
-  "description": "",
-  "authors": [ "" ],
-  "tags": [ "" ],
-  "projectUrl": "",
-  "licenseUrl": "",
+    "version": "1.0.0-*",
+    "description": "",
+    "authors": [ "" ],
+    "tags": [ "" ],
+    "projectUrl": "",
+    "licenseUrl": "",
 
-  "dependencies": {
-    "cloudscribe.Configuration": "1.0.0-*",
-    "cloudscribe.Core.Models": "1.0.0-*",
-    "Microsoft.Framework.DependencyInjection": "1.0.0-beta4",
-    "System.Data.Common": "4.0.0-beta-22816",
-    "Microsoft.SqlServer.Compact": "4.0.8876.1",
-    "Microsoft.Framework.Logging.Interfaces": "1.0.0-beta4"
-  },
+    "dependencies": {
+        "cloudscribe.Configuration": "1.0.0-*",
+        "cloudscribe.Core.Models": "1.0.0-*",
+        "Microsoft.Framework.DependencyInjection": "1.0.0-beta4",
+        "System.Data.Common": "4.0.0-beta-22816",
+        "Microsoft.SqlServer.Compact": "4.0.8876.1",
+        "Microsoft.Framework.Logging.Interfaces": "1.0.0-beta4",
+        "Microsoft.Framework.ConfigurationModel.Interfaces": "1.0.0-beta4",
+        "Microsoft.AspNet.Hosting.Interfaces": "1.0.0-beta4"
+    },
 
-  "frameworks": {
-    "dnx451": {
-      "frameworkAssemblies": {
-        "System.Web": "4.0.0.0"
-      }
+    "frameworks": {
+        "dnx451": {
+            "frameworkAssemblies": {
+                "System.Web": "4.0.0.0"
+            }
+        }
     }
-  }
 }

@@ -12,7 +12,8 @@
         "Microsoft.Framework.Logging.Interfaces": "1.0.0-beta4",
         "Npgsql": "3.0.0-beta0001",
         "System.Data.Common": "4.0.0-beta-22816",
-        "System.Diagnostics.Tools": "4.0.0-beta-22816"
+        "System.Diagnostics.Tools": "4.0.0-beta-22816",
+        "Microsoft.Framework.ConfigurationModel.Interfaces": "1.0.0-beta4"
     },
 
     "frameworks": {

@@ -1,10 +1,12 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-11-03
-// Last Modified:			2015-06-16
+// Last Modified:			2015-06-21
 // 
 
 
 using cloudscribe.Core.Models.Geography;
+using cloudscribe.DbHelpers.pgsql;
+using Microsoft.Framework.ConfigurationModel;
 using Microsoft.Framework.Logging;
 using System;
 using System.Collections.Generic;
@@ -16,14 +18,17 @@ namespace cloudscribe.Core.Repositories.pgsql
     public sealed class GeoRepository : IGeoRepository
     {
         public GeoRepository(
-            string dbReadConnectionString,
-            string dbWriteConnectionString,
+            IConfiguration configuration,
             ILoggerFactory loggerFactory)
         {
+            if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
+            if (loggerFactory == null) { throw new ArgumentNullException(nameof(loggerFactory)); }
+
             logFactory = loggerFactory;
             log = loggerFactory.CreateLogger(typeof(GeoRepository).FullName);
-            readConnectionString = dbReadConnectionString;
-            writeConnectionString = dbWriteConnectionString;
+
+            readConnectionString = configuration.GetPgsqlReadConnectionString();
+            writeConnectionString = configuration.GetPgsqlWriteConnectionString();
 
             dbGeoCountry = new DBGeoCountry(readConnectionString, writeConnectionString, logFactory);
             dbGeoZone = new DBGeoZone(readConnectionString, writeConnectionString, logFactory);

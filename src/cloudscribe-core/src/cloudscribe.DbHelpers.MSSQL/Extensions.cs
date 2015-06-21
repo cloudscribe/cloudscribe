@@ -1,11 +1,12 @@
 ﻿// Author:					Joe Audette
 // Created:					2015-06-16
-// Last Modified:			2015-06-20
+// Last Modified:			2015-06-21
 // 
 
 
 using cloudscribe.Configuration;
 using Microsoft.Framework.ConfigurationModel;
+using System;
 using System.Data.SqlClient;
 
 namespace cloudscribe.DbHelpers.MSSQL
@@ -14,16 +15,30 @@ namespace cloudscribe.DbHelpers.MSSQL
     {
         public static string GetMSSQLWriteConnectionString(this IConfiguration configuration)
         {
-            return configuration.GetOrDefault("AppSettings:MSSQLWriteConnectionString",
+            string connectionString = configuration.GetOrDefault("AppSettings:MSSQLWriteConnectionString",
                 configuration.Get("AppSettings:MSSQLConnectionString")
                 );
+
+            if (string.IsNullOrEmpty(connectionString))
+            {
+                throw new ArgumentException("could not find connection string AppSettings:MSSQLConnectionString");
+            }
+
+            return connectionString;
         }
 
         public static string GetMSSQLReadConnectionString(this IConfiguration configuration)
         {
-            return configuration.GetOrDefault("AppSettings:MSSQLReadConnectionString",
+            string connectionString = configuration.GetOrDefault("AppSettings:MSSQLReadConnectionString",
                 configuration.Get("AppSettings:MSSQLConnectionString")
                 );
+
+            if (string.IsNullOrEmpty(connectionString))
+            {
+                throw new ArgumentException("could not find connection string AppSettings:MSSQLConnectionString");
+            }
+
+            return connectionString;
         }
 
 

@@ -1,14 +1,16 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-11-03
-// Last Modified:			2015-06-15
+// Last Modified:			2015-06-21
 // 
 
 
 using cloudscribe.Core.Models.Geography;
+using cloudscribe.DbHelpers.SqlCe;
+using Microsoft.AspNet.Hosting;
+using Microsoft.Framework.ConfigurationModel;
 using Microsoft.Framework.Logging;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
 
@@ -21,12 +23,17 @@ namespace cloudscribe.Core.Repositories.SqlCe
     public sealed class GeoRepository : IGeoRepository
     {
         public GeoRepository(
-            string dbConnectionString,
+            IHostingEnvironment hostingEnvironment,
+            IConfiguration configuration,
             ILoggerFactory loggerFactory)
         {
+            if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
+            if (loggerFactory == null) { throw new ArgumentNullException(nameof(loggerFactory)); }
+            if (hostingEnvironment == null) { throw new ArgumentNullException(nameof(hostingEnvironment)); }
+
             logFactory = loggerFactory;
             log = loggerFactory.CreateLogger(typeof(GeoRepository).FullName);
-            connectionString = dbConnectionString;
+            connectionString = configuration.GetSqlCeConnectionString(hostingEnvironment);
 
             dbGeoCountry = new DBGeoCountry(connectionString, logFactory);
             dbGeoZone = new DBGeoZone(connectionString, logFactory);
