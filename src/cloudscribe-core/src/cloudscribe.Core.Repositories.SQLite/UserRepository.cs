@@ -1,12 +1,14 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-18
-// Last Modified:			2015-06-16
+// Last Modified:			2015-06-22
 // 
 
 
 using cloudscribe.Configuration;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.DataExtensions;
+using cloudscribe.DbHelpers.SQLite;
+using Microsoft.Framework.ConfigurationModel;
 using Microsoft.Framework.Logging;
 using System;
 using System.Collections.Generic;
@@ -22,12 +24,18 @@ namespace cloudscribe.Core.Repositories.SQLite
     public sealed class UserRepository : IUserRepository
     {
         public UserRepository(
-            string dbConnectionString,
+            SQLiteConnectionstringResolver connectionStringResolver,
+            IConfiguration configuration,
             ILoggerFactory loggerFactory)
         {
+            if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
+            if (connectionStringResolver == null) { throw new ArgumentNullException(nameof(connectionStringResolver)); }
+            if (loggerFactory == null) { throw new ArgumentNullException(nameof(loggerFactory)); }
+
+            config = configuration;
             logFactory = loggerFactory;
             log = loggerFactory.CreateLogger(typeof(UserRepository).FullName);
-            connectionString = dbConnectionString;
+            connectionString = connectionStringResolver.Resolve();
 
             dbSiteUser = new DBSiteUser(connectionString, logFactory);
             dbUserLogins = new DBUserLogins(connectionString, logFactory);
@@ -38,6 +46,7 @@ namespace cloudscribe.Core.Repositories.SQLite
 
         private ILoggerFactory logFactory;
         private ILogger log;
+        private IConfiguration config;
         private string connectionString;
         private DBSiteUser dbSiteUser;
         private DBUserLogins dbUserLogins;

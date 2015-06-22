@@ -1,10 +1,11 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-11-03
-// Last Modified:			2015-06-15
+// Last Modified:			2015-06-22
 // 
 
 
 using cloudscribe.Core.Models.Geography;
+using cloudscribe.DbHelpers.SQLite;
 using Microsoft.Framework.Logging;
 using System;
 using System.Collections.Generic;
@@ -20,12 +21,15 @@ namespace cloudscribe.Core.Repositories.SQLite
     public sealed class GeoRepository : IGeoRepository
     {
         public GeoRepository(
-            string dbConnectionString,
+            SQLiteConnectionstringResolver connectionStringResolver,
             ILoggerFactory loggerFactory)
         {
+            if (connectionStringResolver == null) { throw new ArgumentNullException(nameof(connectionStringResolver)); }
+            if (loggerFactory == null) { throw new ArgumentNullException(nameof(loggerFactory)); }
+
             logFactory = loggerFactory;
             log = loggerFactory.CreateLogger(typeof(GeoRepository).FullName);
-            connectionString = dbConnectionString;
+            connectionString = connectionStringResolver.Resolve();
 
             dbGeoCountry = new DBGeoCountry(connectionString, logFactory);
             dbGeoZone = new DBGeoZone(connectionString, logFactory);

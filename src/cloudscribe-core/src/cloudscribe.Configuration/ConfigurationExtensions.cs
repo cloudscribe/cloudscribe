@@ -48,6 +48,16 @@ namespace cloudscribe.Configuration
             return result.Value;
         }
 
-        
+        public static bool UseRelatedSiteMode (this IConfiguration config)
+        {
+            return config.GetOrDefault("AppSettings:UseRelatedSiteMode", false);
+        }
+
+        public static int RelatedSiteId (this IConfiguration config)
+        {
+            return config.GetOrDefault("AppSettings:RelatedSiteId", 1);
+        }
+
+
     }
 }
