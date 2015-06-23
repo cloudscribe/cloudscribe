@@ -650,7 +650,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
                     ExpandoSetting s = new ExpandoSetting();
                     s.SiteId = Convert.ToInt32(reader["SiteID"]);
                     s.KeyName = reader["KeyName"].ToString();
-                    s.KeyValue = reader["DefaultValue"].ToString();
+                    s.KeyValue = reader["KeyValue"].ToString();
                     s.GroupName = reader["GroupName"].ToString();
                     s.IsDirty = false;
 

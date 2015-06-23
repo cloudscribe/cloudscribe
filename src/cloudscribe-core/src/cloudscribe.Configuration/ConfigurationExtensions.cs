@@ -23,29 +23,30 @@ namespace cloudscribe.Configuration
 
         public static int GetOrDefault(this IConfiguration config, string key, int defaultIfNotFound)
         {
-            int? result = config.Get<int>(key);
+            string result = config.Get(key);
 
-            if (!result.HasValue) { return defaultIfNotFound; }
+            if (string.IsNullOrEmpty(result)) { return defaultIfNotFound; }
 
-            return result.Value;
+            return Convert.ToInt32(result);
         }
 
         public static bool GetOrDefault(this IConfiguration config, string key, bool defaultIfNotFound)
         {
-            bool? result = config.Get<bool>(key);
+            string result = config.Get(key);
 
-            if (!result.HasValue) { return defaultIfNotFound; }
+            if (string.IsNullOrEmpty(result)) { return defaultIfNotFound; }
 
-            return result.Value;
+            return Convert.ToBoolean(result);
         }
 
         public static Guid GetOrDefault(this IConfiguration config, string key, Guid defaultIfNotFound)
         {
-            Guid? result = config.Get<Guid>(key);
+            string result = config.Get(key);
 
-            if (!result.HasValue) { return defaultIfNotFound; }
+            if (string.IsNullOrEmpty(result)) { return defaultIfNotFound; }
+            if(result.Length != 36) { return defaultIfNotFound; }
 
-            return result.Value;
+            return new Guid(result);
         }
 
         public static bool UseRelatedSiteMode (this IConfiguration config)

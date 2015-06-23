@@ -23,9 +23,10 @@ namespace cloudscribe.WebHost
 {
     public static class CloudscribeCoreServiceCollectionExtensions
     {
-        public static IServiceCollection ConfigureCloudscribeCore(this IServiceCollection services)
+        public static IServiceCollection ConfigureCloudscribeCore(this IServiceCollection services, IConfiguration configuration)
         {
-
+            services.AddInstance<IConfiguration>(configuration);
+            //services.TryAdd(ServiceDescriptor.Singleton<IConfiguration, configuration>);
             services.TryAdd(ServiceDescriptor.Scoped<ISiteRepository, cloudscribe.Core.Repositories.MSSQL.SiteRepository>());
             services.TryAdd(ServiceDescriptor.Scoped<IUserRepository, cloudscribe.Core.Repositories.MSSQL.UserRepository>());
             services.TryAdd(ServiceDescriptor.Scoped<IGeoRepository, cloudscribe.Core.Repositories.MSSQL.GeoRepository>());

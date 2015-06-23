@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2014-06-19
-// Last Modified:		    2015-06-19
+// Last Modified:		    2015-06-23
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -18,13 +18,14 @@ using System.Threading.Tasks;
 namespace cloudscribe.AspNet.Identity
 {
     //https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity.EntityFramework/RoleStore.cs
-
+    //TODO: implement
     public sealed class RoleStore<TRole> : IRoleStore<TRole> where TRole : SiteRole
     {
         private ILoggerFactory logFactory;
         private ILogger log;
         private bool debugLog = AppSettings.UserStoreDebugEnabled;
 
+        private ISiteResolver resolver;
         private ISiteSettings siteSettings;
 
         public ISiteSettings SiteSettings
@@ -38,17 +39,22 @@ namespace cloudscribe.AspNet.Identity
 
         public RoleStore(
             ILoggerFactory loggerFactory,
-            ISiteSettings site,
+            ISiteResolver siteResolver,
             IUserRepository userRepository
             )
         {
+            if (loggerFactory == null) { throw new ArgumentNullException(nameof(loggerFactory)); }
+            if (siteResolver == null) { throw new ArgumentNullException(nameof(siteResolver)); }
+            if (userRepository == null) { throw new ArgumentNullException(nameof(userRepository)); }
+
+            resolver = siteResolver;
             logFactory = loggerFactory;
             log = loggerFactory.CreateLogger(this.GetType().FullName);
 
-            if (site == null) { throw new ArgumentException("SiteSettings cannot be null"); }
-            siteSettings = site;
+            
+            //siteSettings = site;
 
-            if (userRepository == null) { throw new ArgumentException("userRepository cannot be null"); }
+            
             repo = userRepository;
 
             if (debugLog) { log.LogInformation("constructor"); }

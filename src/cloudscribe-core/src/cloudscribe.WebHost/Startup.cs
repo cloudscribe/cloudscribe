@@ -69,6 +69,7 @@ namespace cloudscribe.WebHost
             // Add Application settings to the services container.
             services.Configure<AppSettings>(Configuration.GetSubKey("AppSettings"));
 
+
             // Add EF services to the services container.
             //https://github.com/aspnet/EntityFramework/blob/dev/src/EntityFramework.Core/Extensions/EntityFrameworkServiceCollectionExtensions.cs
             //services.AddEntityFramework()
@@ -84,9 +85,11 @@ namespace cloudscribe.WebHost
             //https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity.EntityFramework/IdentityEntityFrameworkBuilderExtensions.cs
             //https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity.EntityFramework/IdentityEntityFrameworkServices.cs
 
+
+            
             // Setup dependencies for cloudscribe Identity, Roles and and Site Administration
             // this is in Startup.CloudscribeCore.cs
-            services.ConfigureCloudscribeCore();
+            services.ConfigureCloudscribeCore(Configuration);
 
             // previous entity framework dependencies
             //services.AddIdentity<ApplicationUser, IdentityRole>()

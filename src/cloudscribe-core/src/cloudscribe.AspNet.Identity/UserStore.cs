@@ -35,16 +35,16 @@ namespace cloudscribe.AspNet.Identity
         private ILogger log;
         private bool debugLog = AppSettings.UserStoreDebugEnabled;
         private ISiteResolver resolver;
-        private ISiteSettings siteSettings = null;
+        private ISiteSettings _siteSettings = null;
 
-        public ISiteSettings SiteSettings
+        public ISiteSettings siteSettings
         {
             get {
-                if(siteSettings == null)
+                if(_siteSettings == null)
                 {
-                    siteSettings = resolver.Resolve();
+                    _siteSettings = resolver.Resolve();
                 }
-                return siteSettings;
+                return _siteSettings;
             }
         }
         private IUserRepository repo;
