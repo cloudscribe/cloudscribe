@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2015-06-20
-// Last Modified:			2015-06-20
+// Last Modified:			2015-06-23
 // 
 
 using System;
@@ -13,6 +13,7 @@ using Microsoft.AspNet.Authentication.Cookies;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.ConfigurationModel;
 using Microsoft.AspNet.Builder;
+using cloudscribe.Configuration;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Geography;
 using cloudscribe.Core.Web.Components;
@@ -28,8 +29,10 @@ namespace cloudscribe.WebHost
             services.TryAdd(ServiceDescriptor.Scoped<ISiteRepository, cloudscribe.Core.Repositories.MSSQL.SiteRepository>());
             services.TryAdd(ServiceDescriptor.Scoped<IUserRepository, cloudscribe.Core.Repositories.MSSQL.UserRepository>());
             services.TryAdd(ServiceDescriptor.Scoped<IGeoRepository, cloudscribe.Core.Repositories.MSSQL.GeoRepository>());
+            services.TryAdd(ServiceDescriptor.Scoped<IDb, cloudscribe.DbHelpers.MSSQL.Db>());
 
             services.TryAdd(ServiceDescriptor.Scoped<ISiteResolver, RequestSiteResolver>());
+            services.TryAdd(ServiceDescriptor.Scoped<IVersionProviderFactory, ConfigVersionProviderFactory>());
 
             services.TryAdd(ServiceDescriptor.Scoped<IUserStore<SiteUser>, UserStore<SiteUser>>());
             services.TryAdd(ServiceDescriptor.Scoped<IUserPasswordStore<SiteUser>, UserStore<SiteUser>>());

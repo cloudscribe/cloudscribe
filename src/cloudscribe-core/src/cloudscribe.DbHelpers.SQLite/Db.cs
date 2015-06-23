@@ -1,37 +1,54 @@
 ﻿// Author:					Joe Audette
 // Created:				    2004-08-03
-// Last Modified:		    2015-06-02
+// Last Modified:		    2015-06-23
 
 using cloudscribe.Configuration;
 using cloudscribe.Core.Models;
-//using log4net;
+using Microsoft.Data.SQLite;
+using Microsoft.Framework.ConfigurationModel;
+using Microsoft.Framework.Logging;
 using System;
 using System.Data;
 using System.Data.Common;
-//using System.Data.SQLite;
 using System.IO;
 using System.Text;
-using Microsoft.Data.SQLite;
-using Microsoft.Framework.Logging;
 
 namespace cloudscribe.DbHelpers.SQLite
 {
     public class Db : IDb
     {
 
-        public Db(ILoggerFactory loggerFactory)
+        public Db(
+            SQLiteConnectionstringResolver connectionStringResolver,
+            IConfiguration configuration,
+            ILoggerFactory loggerFactory,
+            IVersionProviderFactory versionProviderFactory)
         {
+            if (connectionStringResolver == null) { throw new ArgumentNullException(nameof(connectionStringResolver)); }
+            if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
+            if (loggerFactory == null) { throw new ArgumentNullException(nameof(loggerFactory)); }
+            if (versionProviderFactory == null) { throw new ArgumentNullException(nameof(versionProviderFactory)); }
+
+            config = configuration;
+            versionProviders = versionProviderFactory;
             logFactory = loggerFactory;
             log = loggerFactory.CreateLogger(typeof(Db).FullName);
+            connectionString = connectionStringResolver.Resolve();
 
         }
 
+        private IVersionProviderFactory versionProviders;
+        private IConfiguration config;
         private ILoggerFactory logFactory;
         private ILogger log;
+        private string connectionString;
 
-        //private static readonly ILog log = LogManager.GetLogger(typeof(Db));
+        public IVersionProviderFactory VersionProviders
+        {
+            get { return versionProviders; }
+        }
 
-        public String DBPlatform
+        public string DBPlatform
         {
             get { return "SQLite"; }
         }
@@ -51,7 +68,7 @@ namespace cloudscribe.DbHelpers.SQLite
             }
             else
             {
-                connection = new SQLiteConnection(ConnectionString.GetConnectionString());
+                connection = new SQLiteConnection(connectionString);
             }
 
             try
@@ -135,7 +152,7 @@ namespace cloudscribe.DbHelpers.SQLite
             }
             else
             {
-                connection = new SQLiteConnection(ConnectionString.GetConnectionString());
+                connection = new SQLiteConnection(connectionString);
             }
 
             try
@@ -237,7 +254,7 @@ namespace cloudscribe.DbHelpers.SQLite
             sqlCommand.Append(" DROP TABLE Temptest;");
             try
             {
-                RunScript(sqlCommand.ToString(), ConnectionString.GetConnectionString());
+                RunScript(sqlCommand.ToString(), connectionString);
             }
             catch
             {
@@ -278,7 +295,7 @@ namespace cloudscribe.DbHelpers.SQLite
             }
             else
             {
-                connection = new SQLiteConnection(ConnectionString.GetConnectionString());
+                connection = new SQLiteConnection(connectionString);
             }
 
             connection.Open();
@@ -363,7 +380,7 @@ namespace cloudscribe.DbHelpers.SQLite
             arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = dataFieldValue;
 
-            SQLiteConnection connection = new SQLiteConnection(ConnectionString.GetConnectionString());
+            SQLiteConnection connection = new SQLiteConnection(connectionString);
             connection.Open();
             try
             {
@@ -380,9 +397,9 @@ namespace cloudscribe.DbHelpers.SQLite
         }
 
         public DbDataReader GetReader(
-            String connectionString,
-            String tableName,
-            String whereClause)
+            string connectionString,
+            string tableName,
+            string whereClause)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT * ");
@@ -397,27 +414,27 @@ namespace cloudscribe.DbHelpers.SQLite
         }
 
         public DbDataReader GetReader(
-            string connectionString,
+            string connectString,
             string query
             )
         {
-            if (string.IsNullOrEmpty(connectionString)) { connectionString = ConnectionString.GetConnectionString(); }
+            if (string.IsNullOrEmpty(connectString)) { connectString = connectionString; }
 
             return AdoHelper.ExecuteReader(
-                connectionString,
+                connectString,
                 query);
 
         }
 
         public int ExecteNonQuery(
-            string connectionString,
+            string connectString,
             string query
             )
         {
-            if (string.IsNullOrEmpty(connectionString)) { connectionString = ConnectionString.GetConnectionString(); }
+            if (string.IsNullOrEmpty(connectString)) { connectString = connectionString; }
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
-                connectionString,
+                connectString,
                 query);
 
             return rowsAffected;
@@ -456,7 +473,7 @@ namespace cloudscribe.DbHelpers.SQLite
                 sqlCommand.Append(";");
 
                 count = Convert.ToInt32(AdoHelper.ExecuteScalar(
-                    ConnectionString.GetConnectionString(),
+                    connectionString,
                     sqlCommand.ToString(),
                     null));
             }
@@ -495,7 +512,7 @@ namespace cloudscribe.DbHelpers.SQLite
                 sqlCommand.Append("FROM " + tableName + "; ");
 
                 using (DbDataReader reader = AdoHelper.ExecuteReader(
-                    ConnectionString.GetConnectionString(),
+                    connectionString,
                     CommandType.Text,
                     sqlCommand.ToString(),
                     null))
@@ -549,15 +566,8 @@ namespace cloudscribe.DbHelpers.SQLite
 
         public Guid GetOrGenerateSchemaApplicationId(string applicationName)
         {
-
-            if (string.Equals(applicationName, "cloudscribe-core", StringComparison.CurrentCultureIgnoreCase))
-                return new Guid("b7dcd727-91c3-477f-bc42-d4e5c8721daa");
-
-            if (string.Equals(applicationName, "cloudscribe-cms", StringComparison.CurrentCultureIgnoreCase))
-                return new Guid("2ba3e968-dd0b-44cb-9689-188963ed2664");
-
-            string sguid = AppSettings.GetString(applicationName + "_appGuid", string.Empty);
-            if (sguid.Length == 36) { return new Guid(sguid); }
+            IVersionProvider versionProvider = versionProviders.Get(applicationName);
+            if (versionProvider != null) { return versionProvider.ApplicationId; }
 
             Guid appID = Guid.NewGuid();
 
@@ -586,7 +596,7 @@ namespace cloudscribe.DbHelpers.SQLite
         private DbDataReader GetSchemaId(string applicationName)
         {
             return GetReader(
-                ConnectionString.GetConnectionString(),
+                connectionString,
                 "mp_SchemaVersion",
                 " WHERE LOWER(ApplicationName) = '" + applicationName.ToLower() + "'");
 
@@ -647,7 +657,7 @@ namespace cloudscribe.DbHelpers.SQLite
             arParams[5].Value = revision;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
-                ConnectionString.GetConnectionString(),
+                connectionString,
                 sqlCommand.ToString(),
                 arParams);
 
@@ -705,7 +715,10 @@ namespace cloudscribe.DbHelpers.SQLite
 
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
-                ConnectionString.GetConnectionString(), sqlCommand.ToString(), arParams);
+                connectionString, 
+                sqlCommand.ToString(), 
+                arParams);
+
             return (rowsAffected > 0);
 
         }
@@ -765,7 +778,7 @@ namespace cloudscribe.DbHelpers.SQLite
             arParams[0].Value = applicationId.ToString();
 
             return AdoHelper.ExecuteReader(
-                ConnectionString.GetConnectionString(),
+                connectionString,
                 sqlCommand.ToString(),
                 arParams);
 
@@ -861,7 +874,7 @@ namespace cloudscribe.DbHelpers.SQLite
             int newID = 0;
             newID = Convert.ToInt32(
                 AdoHelper.ExecuteScalar(
-                ConnectionString.GetConnectionString(),
+                connectionString,
                 sqlCommand.ToString(),
                 arParams).ToString());
 

@@ -1,10 +1,11 @@
 ﻿// Author:					Joe Audette
 // Created:				    2014-11-24
-// Last Modified:		    2015-06-10
+// Last Modified:		    2015-06-23
 
 
 using cloudscribe.Configuration;
 using cloudscribe.Core.Models;
+using Microsoft.Framework.ConfigurationModel;
 using System;
 using System.Threading.Tasks;
 
@@ -89,7 +90,8 @@ namespace cloudscribe.Core.Web.Components
         public static async Task<bool> CreateRequiredRolesAndAdminUser(
             SiteSettings site,
             ISiteRepository siteRepository,
-            IUserRepository userRepository)
+            IUserRepository userRepository,
+            IConfiguration config)
         {
 
             SiteRole adminRole = new SiteRole();
@@ -137,7 +139,7 @@ namespace cloudscribe.Core.Web.Components
             string siteDifferentiator = string.Empty;
             if (
                 (countOfSites >= 1)
-                && (AppSettings.UseRelatedSiteMode)
+                && (config.UseRelatedSiteMode())
                 )
             {
                 if (site.SiteId > 1)

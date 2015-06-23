@@ -219,7 +219,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 case 1:
                     sph = new SqlParameterHelper(
                         logFactory,
-                        ConnectionString.GetReadConnectionString(), 
+                        readConnectionString, 
                         "mp_Users_SelectPageByDateDesc", 
                         4);
 
@@ -228,7 +228,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 case 2:
                     sph = new SqlParameterHelper(
                         logFactory,
-                        ConnectionString.GetReadConnectionString(), 
+                        readConnectionString, 
                         "mp_Users_SelectPageSortLF", 
                         4);
 
@@ -256,7 +256,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
-                ConnectionString.GetReadConnectionString(), 
+                readConnectionString, 
                 "mp_Users_CountForSearch", 
                 2);
 

@@ -1,6 +1,10 @@
-﻿using cloudscribe.Configuration;
-using cloudscribe.Core.Models;
-//using log4net;
+﻿// Author:					Joe Audette
+// Created:					2015-01-10
+// Last Modified:			2015-06-23
+// 
+
+using cloudscribe.Configuration;
+using Microsoft.Framework.ConfigurationModel;
 using Microsoft.Framework.Logging;
 using System;
 using System.Data;
@@ -13,17 +17,36 @@ namespace cloudscribe.DbHelpers.MSSQL
 {
     public class Db : cloudscribe.Core.Models.IDb
     {
-        public Db(ILoggerFactory loggerFactory)
+        public Db(
+            ILoggerFactory loggerFactory,
+            IConfiguration configuration,
+            IVersionProviderFactory versionProviderFactory)
         {
+            if (loggerFactory == null) { throw new ArgumentNullException(nameof(loggerFactory)); }
+            if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
+            if (versionProviderFactory == null) { throw new ArgumentNullException(nameof(versionProviderFactory)); }
+
+            config = configuration;
+            versionProviders = versionProviderFactory;
             logFactory = loggerFactory;
             log = loggerFactory.CreateLogger(typeof(Db).FullName);
-
+            writeConnectionString = configuration.GetMSSQLWriteConnectionString();
+            readConnectionString = configuration.GetMSSQLReadConnectionString();
+            ownerPrefix = configuration.MSSQLOwnerPrefix();
         }
 
+        private IVersionProviderFactory versionProviders;
         private ILoggerFactory logFactory;
         private ILogger log;
-
-        //private static readonly ILog log = LogManager.GetLogger(typeof(Db));
+        private IConfiguration config;
+        private string writeConnectionString;
+        private string readConnectionString;
+        private string ownerPrefix;
+        
+        public IVersionProviderFactory VersionProviders
+        {
+            get { return versionProviders; }
+        }
 
         public string DBPlatform { get { return "MSSQL"; } }
 
@@ -34,7 +57,7 @@ namespace cloudscribe.DbHelpers.MSSQL
             // only works if connection string has been configured and if you add this to user.config or Webc.onfig:
             // <add key="TryToCreateMsSqlDatabase" value="true"/>
 
-            SqlConnection connection = new SqlConnection(ConnectionString.GetWriteConnectionString());
+            SqlConnection connection = new SqlConnection(writeConnectionString);
             SqlConnection MasterConnection = new SqlConnection();
 
             try
@@ -100,7 +123,7 @@ namespace cloudscribe.DbHelpers.MSSQL
             }
             else
             {
-                connection = new SqlConnection(ConnectionString.GetReadConnectionString());
+                connection = new SqlConnection(readConnectionString);
             }
 
             try
@@ -136,7 +159,7 @@ namespace cloudscribe.DbHelpers.MSSQL
             }
             else
             {
-                connection = new SqlConnection(ConnectionString.GetReadConnectionString());
+                connection = new SqlConnection(readConnectionString);
             }
 
             try
@@ -268,7 +291,7 @@ namespace cloudscribe.DbHelpers.MSSQL
 
             try
             {
-                RunScript(sqlCommand.ToString(), ConnectionString.GetWriteConnectionString());
+                RunScript(sqlCommand.ToString(), writeConnectionString);
                 result = true;
             }
             catch
@@ -301,9 +324,9 @@ namespace cloudscribe.DbHelpers.MSSQL
             if ((script == null) || (script.Length == 0)) return true;
 
 
-            if (AppSettings.MSSQLOwnerPrefix != "[dbo].")
+            if (ownerPrefix != "[dbo].")
             {
-                script = script.Replace("[dbo].", AppSettings.MSSQLOwnerPrefix);
+                script = script.Replace("[dbo].", ownerPrefix);
             }
 
             bool result = false;
@@ -318,7 +341,7 @@ namespace cloudscribe.DbHelpers.MSSQL
             }
             else
             {
-                connection = new SqlConnection(ConnectionString.GetWriteConnectionString());
+                connection = new SqlConnection(writeConnectionString);
             }
 
             string[] delimiter = new string[] { "GO\r\n" };
@@ -442,7 +465,7 @@ namespace cloudscribe.DbHelpers.MSSQL
             //try
             //{
             int rowsAffected = AdoHelper.ExecuteNonQuery(
-                ConnectionString.GetWriteConnectionString(),
+                writeConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(), arParams);
 
@@ -481,7 +504,7 @@ namespace cloudscribe.DbHelpers.MSSQL
             string query
             )
         {
-            if (string.IsNullOrEmpty(connectionString)) { connectionString = ConnectionString.GetReadConnectionString(); }
+            if (string.IsNullOrEmpty(connectionString)) { connectionString = readConnectionString; }
 
             return AdoHelper.ExecuteReader(
                 connectionString,
@@ -495,7 +518,7 @@ namespace cloudscribe.DbHelpers.MSSQL
             string query
             )
         {
-            if (string.IsNullOrEmpty(connectionString)) { connectionString = ConnectionString.GetWriteConnectionString(); }
+            if (string.IsNullOrEmpty(connectionString)) { connectionString = writeConnectionString; }
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 connectionString,
@@ -530,7 +553,7 @@ namespace cloudscribe.DbHelpers.MSSQL
         {
             //return mojoPortal.Data.Common.DBPortal.DatabaseHelperTableExists(tableName);
 
-            using (SqlConnection connection = new SqlConnection(ConnectionString.GetReadConnectionString()))
+            using (SqlConnection connection = new SqlConnection(writeConnectionString))
             {
                 string[] restrictions = new string[4];
                 restrictions[2] = tableName;
@@ -554,7 +577,7 @@ namespace cloudscribe.DbHelpers.MSSQL
                 sqlCommand.Append("FROM " + tableName + " ");
 
                 using (DbDataReader reader = AdoHelper.ExecuteReader(
-                    ConnectionString.GetReadConnectionString(),
+                    readConnectionString,
                     CommandType.Text,
                     sqlCommand.ToString(),
                     null))
@@ -584,7 +607,7 @@ namespace cloudscribe.DbHelpers.MSSQL
             {
                 SqlParameterHelper sph = new SqlParameterHelper(
                     logFactory,
-                    ConnectionString.GetReadConnectionString(), 
+                    readConnectionString, 
                     "mp_Sites_CountOtherSites", 
                     1);
 
@@ -599,18 +622,11 @@ namespace cloudscribe.DbHelpers.MSSQL
         }
 
 
-
+        
         public Guid GetOrGenerateSchemaApplicationId(string applicationName)
         {
-
-            if (string.Equals(applicationName, "cloudscribe-core", StringComparison.CurrentCultureIgnoreCase))
-                return new Guid("b7dcd727-91c3-477f-bc42-d4e5c8721daa");
-
-            if (string.Equals(applicationName, "cloudscribe-cms", StringComparison.CurrentCultureIgnoreCase))
-                return new Guid("2ba3e968-dd0b-44cb-9689-188963ed2664");
-
-            string sguid = AppSettings.GetString(applicationName + "_appGuid", string.Empty);
-            if (sguid.Length == 36) { return new Guid(sguid); }
+            IVersionProvider versionProvider = versionProviders.Get(applicationName);
+            if(versionProvider != null) { return versionProvider.ApplicationId; }
 
             Guid appID = Guid.NewGuid();
 
@@ -639,7 +655,7 @@ namespace cloudscribe.DbHelpers.MSSQL
         private DbDataReader GetSchemaId(string applicationName)
         {
             return GetReader(
-                ConnectionString.GetReadConnectionString(),
+                readConnectionString,
                 "mp_SchemaVersion",
                 " WHERE LOWER(ApplicationName) = '" + applicationName.ToLower() + "'");
         }
@@ -656,7 +672,7 @@ namespace cloudscribe.DbHelpers.MSSQL
 
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
-                ConnectionString.GetWriteConnectionString(), 
+                writeConnectionString, 
                 "mp_SchemaVersion_Insert", 
                 6);
             sph.DefineSqlParameter("@ApplicationID", SqlDbType.UniqueIdentifier, ParameterDirection.Input, applicationId);
@@ -680,7 +696,7 @@ namespace cloudscribe.DbHelpers.MSSQL
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
-                ConnectionString.GetWriteConnectionString(), 
+                writeConnectionString, 
                 "mp_SchemaVersion_Update", 
                 6);
 
@@ -757,7 +773,7 @@ namespace cloudscribe.DbHelpers.MSSQL
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
-                ConnectionString.GetReadConnectionString(), 
+                readConnectionString, 
                 "mp_SchemaVersion_SelectOne", 
                 1);
             sph.DefineSqlParameter("@ApplicationID", SqlDbType.UniqueIdentifier, ParameterDirection.Input, applicationId);
@@ -781,7 +797,7 @@ namespace cloudscribe.DbHelpers.MSSQL
 
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
-                ConnectionString.GetWriteConnectionString(), 
+                writeConnectionString, 
                 "mp_SchemaScriptHistory_Insert", 
                 6);
             sph.DefineSqlParameter("@ApplicationID", SqlDbType.UniqueIdentifier, ParameterDirection.Input, applicationId);

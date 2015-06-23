@@ -81,25 +81,25 @@ namespace cloudscribe.Configuration
             get { return GetString("DbPlatform", "MSSQL"); }
         }
 
-        public static string MSSQLOwnerPrefix
-        {
-            get { return GetString("MSSQLOwnerPrefix", "[dbo]."); }
-        }
+        //public static string MSSQLOwnerPrefix
+        //{
+        //    get { return GetString("MSSQLOwnerPrefix", "[dbo]."); }
+        //}
 
-        public static string MSSQLConnectionString
-        {
-            get { return GetString("MSSQLConnectionString", string.Empty); }
-        }
+        //public static string MSSQLConnectionString
+        //{
+        //    get { return GetString("MSSQLConnectionString", string.Empty); }
+        //}
 
-        public static string MSSQLWriteConnectionString
-        {
-            get { return GetString("MSSQLWriteConnectionString", string.Empty); }
-        }
+        //public static string MSSQLWriteConnectionString
+        //{
+        //    get { return GetString("MSSQLWriteConnectionString", string.Empty); }
+        //}
 
-        public static bool CacheMSSQLParameters
-        {
-            get { return GetBool("CacheMSSQLParameters", true); }
-        }
+        //public static bool CacheMSSQLParameters
+        //{
+        //    get { return GetBool("CacheMSSQLParameters", true); }
+        //}
 
         public static bool TryToCreateMsSqlDatabase
         {
@@ -112,56 +112,56 @@ namespace cloudscribe.Configuration
         }
 
 
-        public static string MySqlConnectionString
-        {
-            get { return GetString("MySqlConnectionString", string.Empty); }
-        }
+        //public static string MySqlConnectionString
+        //{
+        //    get { return GetString("MySqlConnectionString", string.Empty); }
+        //}
 
-        public static string MySqlWriteConnectionString
-        {
-            get { return GetString("MySqlWriteConnectionString", string.Empty); }
-        }
+        //public static string MySqlWriteConnectionString
+        //{
+        //    get { return GetString("MySqlWriteConnectionString", string.Empty); }
+        //}
 
-        public static string PostgreSQLConnectionString
-        {
-            get { return GetString("PostgreSQLConnectionString", string.Empty); }
-        }
+        //public static string PostgreSQLConnectionString
+        //{
+        //    get { return GetString("PostgreSQLConnectionString", string.Empty); }
+        //}
 
-        public static string PostgreSQLWriteConnectionString
-        {
-            get { return GetString("PostgreSQLWriteConnectionString", string.Empty); }
-        }
+        //public static string PostgreSQLWriteConnectionString
+        //{
+        //    get { return GetString("PostgreSQLWriteConnectionString", string.Empty); }
+        //}
 
-        public static string FirebirdConnectionString
-        {
-            get { return GetString("FirebirdConnectionString", string.Empty); }
-        }
+        //public static string FirebirdConnectionString
+        //{
+        //    get { return GetString("FirebirdConnectionString", string.Empty); }
+        //}
 
-        public static string FirebirdWriteConnectionString
-        {
-            get { return GetString("FirebirdWriteConnectionString", string.Empty); }
-        }
+        //public static string FirebirdWriteConnectionString
+        //{
+        //    get { return GetString("FirebirdWriteConnectionString", string.Empty); }
+        //}
 
 
-        public static string SqlCeApp_Data_FileName
-        {
-            get { return GetString("SqlCeApp_Data_FileName", "cloudscribe.sdf"); }
-        }
+        //public static string SqlCeApp_Data_FileName
+        //{
+        //    get { return GetString("SqlCeApp_Data_FileName", "cloudscribe.sdf"); }
+        //}
 
-        public static string SqliteApp_Data_FileName
-        {
-            get { return GetString("SqliteApp_Data_FileName", "cloudscribe.sqlite"); }
-        }
+        //public static string SqliteApp_Data_FileName
+        //{
+        //    get { return GetString("SqliteApp_Data_FileName", "cloudscribe.sqlite"); }
+        //}
 
-        public static string SqlCeConnectionString
-        {
-            get { return GetString("SqlCeConnectionString", string.Empty); }
-        }
+        //public static string SqlCeConnectionString
+        //{
+        //    get { return GetString("SqlCeConnectionString", string.Empty); }
+        //}
 
-        public static string SqliteConnectionString
-        {
-            get { return GetString("SqliteConnectionString", string.Empty); }
-        }
+        //public static string SqliteConnectionString
+        //{
+        //    get { return GetString("SqliteConnectionString", string.Empty); }
+        //}
 
         public static bool SetupTryAnywayIfFailedAlterSchemaTest
         {
@@ -235,10 +235,10 @@ namespace cloudscribe.Configuration
             get { return GetBool("DisableSetup", false); }
         }
 
-        public static bool TryEnsureCustomMachineKeyOnSetup
-        {
-            get { return GetBool("TryEnsureCustomMachineKeyOnSetup", false); }
-        }
+        //public static bool TryEnsureCustomMachineKeyOnSetup
+        //{
+        //    get { return GetBool("TryEnsureCustomMachineKeyOnSetup", false); }
+        //}
 
 
         public static bool AllowDeleteChildSites
@@ -281,20 +281,20 @@ namespace cloudscribe.Configuration
             get { return GetString("RolesThatCannotBeDeleted", string.Empty); }
         }
 
-        public static bool UseRelatedSiteMode
-        {
-            get
-            {
-                //if (UseFoldersInsteadOfHostnamesForMultipleSites) { return true; }
+        //public static bool UseRelatedSiteMode
+        //{
+        //    get
+        //    {
+        //        //if (UseFoldersInsteadOfHostnamesForMultipleSites) { return true; }
 
-                return GetBool("UseRelatedSiteMode", false);
-            }
-        }
+        //        return GetBool("UseRelatedSiteMode", false);
+        //    }
+        //}
 
-        public static int RelatedSiteId
-        {
-            get { return GetInt("RelatedSiteId", 1); }
-        }
+        //public static int RelatedSiteId
+        //{
+        //    get { return GetInt("RelatedSiteId", 1); }
+        //}
 
         /// <summary>
         /// TODO: if true then users must use loginname to login instead of email

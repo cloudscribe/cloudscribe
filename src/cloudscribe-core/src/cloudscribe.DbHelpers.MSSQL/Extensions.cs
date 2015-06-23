@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2015-06-16
-// Last Modified:			2015-06-21
+// Last Modified:			2015-06-23
 // 
 
 
@@ -39,6 +39,11 @@ namespace cloudscribe.DbHelpers.MSSQL
             }
 
             return connectionString;
+        }
+
+        public static string MSSQLOwnerPrefix(this IConfiguration configuration)
+        {
+            return configuration.GetOrDefault("AppSettings:MSSQLOwnerPrefix", "[dbo].");
         }
 
 

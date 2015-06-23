@@ -1,4 +1,5 @@
 ﻿
+using cloudscribe.Configuration;
 using System;
 using System.Data;
 using System.Data.Common;
@@ -14,6 +15,7 @@ namespace cloudscribe.Core.Models
         bool CanAlterSchema(string overrideConnectionInfo);
         bool CanCreateTemporaryTables();
         string DBPlatform { get; }
+        IVersionProviderFactory VersionProviders { get; }
         int ExecteNonQuery(string connectionString, string query);
         DbException GetConnectionError(string overrideConnectionInfo);
         DbDataReader GetReader(string connectionString, string query);

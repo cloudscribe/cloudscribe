@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-06-20
+// Last Modified:			2015-06-23
 // 
 
 using cloudscribe.Configuration;
@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Rendering;
+using Microsoft.Framework.ConfigurationModel;
 //using MvcSiteMapProvider;
 
 namespace cloudscribe.Core.Web.Controllers
@@ -30,28 +31,27 @@ namespace cloudscribe.Core.Web.Controllers
         private IGeoRepository geoRepo;
         private ISiteRepository siteRepo;
         private IUserRepository userRepo;
+        private IConfiguration config;
         //private ITriggerStartup startup;
 
         public SiteAdminController(
             ISiteResolver siteResolver,
             ISiteRepository siteRepository,
             IUserRepository userRepository,
-            IGeoRepository geoRepository
+            IGeoRepository geoRepository,
+            IConfiguration configuration
             //, ITriggerStartup startupTrigger
             )
         {
+            if (siteResolver == null) { throw new ArgumentNullException(nameof(siteResolver)); }
+            if (siteRepository == null) { throw new ArgumentNullException(nameof(siteRepository)); }
+            if (userRepository == null) { throw new ArgumentNullException(nameof(userRepository)); }
+            if (geoRepository == null) { throw new ArgumentNullException(nameof(geoRepository)); }
+            if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
+
+            config = configuration;
             Site = siteResolver.Resolve();
-
-            if (geoRepository == null)
-            {
-                throw new ArgumentException("you must provide an impelementation of IGeoRegpository");
-            }
-
-            //if (startupTrigger == null)
-            //{
-            //    throw new ArgumentException("you must provide an impelementation of ITriggerStartup");
-            //}
-
+            
             geoRepo = geoRepository;
             siteRepo = siteRepository;
             userRepo = userRepository;
@@ -544,7 +544,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             //Site.SiteRepository.Save(newSite);
             bool result = await NewSiteHelper.CreateNewSite(siteRepo, newSite);
-            result = await NewSiteHelper.CreateRequiredRolesAndAdminUser(newSite, siteRepo, userRepo);
+            result = await NewSiteHelper.CreateRequiredRolesAndAdminUser(newSite, siteRepo, userRepo, config);
 
             if ((result) && (AppSettings.UseFoldersInsteadOfHostnamesForMultipleSites))
             {

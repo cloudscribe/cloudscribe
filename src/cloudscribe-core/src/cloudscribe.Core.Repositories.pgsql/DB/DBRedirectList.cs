@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2008-11-19
-// Last Modified:			2015-06-13
+// Last Modified:			2015-06-23
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -276,7 +276,7 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[1].Value = oldUrl;
 
             int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
-                ConnectionString.GetReadConnectionString(),
+                readConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams));

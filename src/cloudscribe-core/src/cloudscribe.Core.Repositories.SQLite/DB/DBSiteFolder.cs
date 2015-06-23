@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-06-14
+// Last Modified:			2015-06-23
 //
 // You must not remove this notice, or any other, from this software.
 
@@ -59,7 +59,7 @@ namespace cloudscribe.Core.Repositories.SQLite
             arParams[2].Value = folderName;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
-                ConnectionString.GetConnectionString(),
+                connectionString,
                 sqlCommand.ToString(),
                 arParams);
 

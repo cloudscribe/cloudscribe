@@ -1,34 +1,54 @@
 ﻿// Author:         Joe Audette
 // Created:        2010-03-09
-// Last Modified   2015-06-02
+// Last Modified   2015-06-23
 
 
+using cloudscribe.Configuration;
+using cloudscribe.Core.Models;
+using Microsoft.Framework.ConfigurationModel;
+using Microsoft.Framework.Logging;
 using System;
-using System.IO;
-using System.Text;
-using System.Collections;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlServerCe;
-using Microsoft.Framework.Logging;
-//using System.Configuration;
-//using log4net;
-using cloudscribe.Configuration;
-using cloudscribe.Core.Models;
+using System.IO;
+using System.Text;
 
 namespace cloudscribe.DbHelpers.SqlCe
 {
     public class Db : IDb
     {
-        public Db(ILoggerFactory loggerFactory)
+        public Db(
+            SqlCeConnectionStringResolver connectionStringResolver,
+            IConfiguration configuration,
+            ILoggerFactory loggerFactory,
+            IVersionProviderFactory versionProviderFactory)
         {
+            if (connectionStringResolver == null) { throw new ArgumentNullException(nameof(connectionStringResolver)); }
+            if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
+            if (loggerFactory == null) { throw new ArgumentNullException(nameof(loggerFactory)); }
+            if (versionProviderFactory == null) { throw new ArgumentNullException(nameof(versionProviderFactory)); }
+
+            config = configuration;
+            versionProviders = versionProviderFactory;
             logFactory = loggerFactory;
             log = loggerFactory.CreateLogger(typeof(Db).FullName);
+            connectionString = connectionStringResolver.Resolve();
+            sqlCeFilePath = connectionStringResolver.SqlCeFilePath;
 
         }
 
+        private IVersionProviderFactory versionProviders;
+        private IConfiguration config;
         private ILoggerFactory logFactory;
         private ILogger log;
+        private string connectionString;
+        private string sqlCeFilePath = string.Empty;
+
+        public IVersionProviderFactory VersionProviders
+        {
+            get { return versionProviders; }
+        }
 
         public string DBPlatform
         {
@@ -41,18 +61,16 @@ namespace cloudscribe.DbHelpers.SqlCe
         {
             try
             {
-                if (AppSettings.SqlCeApp_Data_FileName.Length > 0)
+                if (sqlCeFilePath.Length > 0)
                 {
-                    string path
-                        = System.Web.Hosting.HostingEnvironment.MapPath("~/App_Data/" + AppSettings.SqlCeApp_Data_FileName);
+                    
+                    //string connectionString = "Data Source=" + sqlCeFilePath + ";Persist Security Info=False;";
 
-                    string connectionString = "Data Source=" + path + ";Persist Security Info=False;";
-
-                    if (!File.Exists(path))
+                    if (!File.Exists(sqlCeFilePath))
                     {
                         lock (theLock)
                         {
-                            if (!File.Exists(path))
+                            if (!File.Exists(sqlCeFilePath))
                             {
                                 using (SqlCeEngine engine = new SqlCeEngine(connectionString))
                                 {
@@ -99,7 +117,7 @@ namespace cloudscribe.DbHelpers.SqlCe
             }
             else
             {
-                connection = new SqlCeConnection(ConnectionString.GetConnectionString());
+                connection = new SqlCeConnection(connectionString);
             }
 
             try
@@ -135,7 +153,7 @@ namespace cloudscribe.DbHelpers.SqlCe
             }
             else
             {
-                connection = new SqlCeConnection(ConnectionString.GetConnectionString());
+                connection = new SqlCeConnection(connectionString);
             }
 
             try
@@ -284,7 +302,7 @@ namespace cloudscribe.DbHelpers.SqlCe
             }
             else
             {
-                connection = new SqlCeConnection(ConnectionString.GetConnectionString());
+                connection = new SqlCeConnection(connectionString);
             }
 
             string[] delimiter = new string[] { "GO\r\n" };
@@ -408,7 +426,7 @@ namespace cloudscribe.DbHelpers.SqlCe
             arParams[0].Value = dataFieldValue;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
-                ConnectionString.GetConnectionString(),
+                connectionString,
                 CommandType.Text,
                 sqlCommand.ToString(), arParams);
 
@@ -439,28 +457,28 @@ namespace cloudscribe.DbHelpers.SqlCe
         }
 
         public DbDataReader GetReader(
-            string connectionString,
+            string connectString,
             string query
             )
         {
-            if (string.IsNullOrEmpty(connectionString)) { connectionString = ConnectionString.GetConnectionString(); }
+            if (string.IsNullOrEmpty(connectString)) { connectString = connectionString; }
 
             return AdoHelper.ExecuteReader(
-                connectionString,
+                connectString,
                 CommandType.Text,
                 query);
 
         }
 
         public int ExecteNonQuery(
-            string connectionString,
+            string connectString,
             string query
             )
         {
-            if (string.IsNullOrEmpty(connectionString)) { connectionString = ConnectionString.GetConnectionString(); }
+            if (string.IsNullOrEmpty(connectString)) { connectString = connectionString; }
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
-                connectionString,
+                connectString,
                 CommandType.Text,
                 query);
 
@@ -501,7 +519,7 @@ namespace cloudscribe.DbHelpers.SqlCe
                 sqlCommand.Append(";");
 
                 count = Convert.ToInt32(AdoHelper.ExecuteScalar(
-                    ConnectionString.GetConnectionString(),
+                    connectionString,
                     CommandType.Text,
                     sqlCommand.ToString(),
                     null));
@@ -541,7 +559,7 @@ namespace cloudscribe.DbHelpers.SqlCe
             arParams[0].Value = tableName;
 
             int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
-                ConnectionString.GetConnectionString(),
+                connectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams));
@@ -587,16 +605,9 @@ namespace cloudscribe.DbHelpers.SqlCe
 
         public Guid GetOrGenerateSchemaApplicationId(string applicationName)
         {
-
-            if (string.Equals(applicationName, "cloudscribe-core", StringComparison.InvariantCultureIgnoreCase))
-                return new Guid("b7dcd727-91c3-477f-bc42-d4e5c8721daa");
-
-            if (string.Equals(applicationName, "cloudscribe-cms", StringComparison.InvariantCultureIgnoreCase))
-                return new Guid("2ba3e968-dd0b-44cb-9689-188963ed2664");
-
-            string sguid = AppSettings.GetString(applicationName + "_appGuid", string.Empty);
-            if (sguid.Length == 36) { return new Guid(sguid); }
-
+            IVersionProvider versionProvider = versionProviders.Get(applicationName);
+            if (versionProvider != null) { return versionProvider.ApplicationId; }
+            
             Guid appID = Guid.NewGuid();
 
             try
@@ -624,7 +635,7 @@ namespace cloudscribe.DbHelpers.SqlCe
         private DbDataReader GetSchemaId(string applicationName)
         {
             return GetReader(
-                ConnectionString.GetConnectionString(),
+                connectionString,
                 "mp_SchemaVersion",
                 " WHERE LOWER(ApplicationName) = '" + applicationName.ToLower() + "'");
         }
@@ -688,7 +699,7 @@ namespace cloudscribe.DbHelpers.SqlCe
             arParams[5].Value = revision;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
-                ConnectionString.GetConnectionString(),
+                connectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -745,7 +756,7 @@ namespace cloudscribe.DbHelpers.SqlCe
             arParams[5].Value = revision;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
-                ConnectionString.GetConnectionString(),
+                connectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -811,7 +822,7 @@ namespace cloudscribe.DbHelpers.SqlCe
             arParams[0].Value = applicationId;
 
             return AdoHelper.ExecuteReader(
-                ConnectionString.GetConnectionString(),
+                connectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
@@ -893,7 +904,7 @@ namespace cloudscribe.DbHelpers.SqlCe
 
 
             int newId = Convert.ToInt32(AdoHelper.DoInsertGetIdentitiy(
-                ConnectionString.GetConnectionString(),
+                connectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams));

@@ -166,9 +166,12 @@ namespace cloudscribe.DbHelpers.MSSQL
                 , "parameter's type doesn't match cached parameters"
                 );
 
-
-            if (typeName.Length > 0)
-                arParams[index].TypeName = AppSettings.MSSQLOwnerPrefix + typeName;
+            //commented out 2015-06-23 by JA
+            // I think nowhere are we passing in typename
+            // static AppSettings is going away, if we really need this later
+            // we will have to pass in config object or pass in ownerprefix string (which would require significant re-work
+            //if (typeName.Length > 0)
+            //    arParams[index].TypeName = AppSettings.MSSQLOwnerPrefix + typeName;
 
 
             arParams[index].Value = value;

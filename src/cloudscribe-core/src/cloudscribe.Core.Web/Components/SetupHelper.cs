@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2006-02-03
-// Last Modified:		    2015-06-18
+// Last Modified:		    2015-06-23
 
 
 using System;
@@ -243,11 +243,10 @@ namespace cloudscribe.Setup
         //}
 
         public static bool NeedsUpgrade(
-            IVersionProviderFactory providers,
             string applicationName, 
             IDb db)
         {
-            IVersionProvider provider = providers.Get(applicationName);
+            IVersionProvider provider = db.VersionProviders.Get(applicationName);
             //if (VersionProviderManager.Providers[applicationName] == null) { return true; }
             if(provider == null) { return true; }
 

@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2010-04-06
-// Last Modified:			2015-01-19
+// Last Modified:			2015-06-23
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -649,7 +649,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             arParams[1].Value = searchInput;
 
             return AdoHelper.ExecuteReader(
-                ConnectionString.GetConnectionString(),
+                connectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);

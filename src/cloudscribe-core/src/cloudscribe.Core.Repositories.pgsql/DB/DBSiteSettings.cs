@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-06-13
+// Last Modified:			2015-06-23
 //
 // You must not remove this notice, or any other, from this software.
 
@@ -1266,7 +1266,7 @@ namespace cloudscribe.Core.Repositories.pgsql
                 sqlCommand.Append("LIMIT 1 ;");
 
                 using (DbDataReader reader = await AdoHelper.ExecuteReaderAsync(
-                ConnectionString.GetReadConnectionString(),
+                readConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
                 null))

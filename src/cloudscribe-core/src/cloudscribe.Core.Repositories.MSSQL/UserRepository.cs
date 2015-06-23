@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-18
-// Last Modified:			2015-06-20
+// Last Modified:			2015-06-23
 // 
 
 
@@ -27,6 +27,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
             if (loggerFactory == null) { throw new ArgumentNullException(nameof(loggerFactory)); }
 
+            config = configuration;
             logFactory = loggerFactory;
             log = loggerFactory.CreateLogger(typeof(UserRepository).FullName);
 
@@ -39,9 +40,10 @@ namespace cloudscribe.Core.Repositories.MSSQL
             dbUserLocation = new DBUserLocation(readConnectionString, writeConnectionString, logFactory);
             dbRoles = new DBRoles(readConnectionString, writeConnectionString, logFactory);
         }
-
+        
         private ILoggerFactory logFactory;
         private ILogger log;
+        private IConfiguration config;
         private string readConnectionString;
         private string writeConnectionString;
         private DBSiteUser dbSiteUser;
@@ -319,26 +321,26 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         public int GetCount(int siteId)
         {
-            if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
+            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
             return dbSiteUser.UserCount(siteId);
         }
 
         //public int UserCount(int siteId, String userNameBeginsWith)
         //{
-        //    if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
+        //    if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
         //    return DBSiteUser.UserCount(siteId, userNameBeginsWith);
         //}
 
         public int UsersOnlineSinceCount(int siteId, DateTime sinceTime)
         {
-            if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
+            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
             return dbSiteUser.CountOnlineSince(siteId, sinceTime);
         }
 
 
         public async Task<ISiteUser> FetchNewest(int siteId)
         {
-            if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
+            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
 
             int newestUserId = await GetNewestUserId(siteId);
             return await Fetch(siteId, newestUserId);
@@ -346,7 +348,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         public async Task<ISiteUser> Fetch(int siteId, int userId)
         {
-            if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
+            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
 
             using (DbDataReader reader = await dbSiteUser.GetSingleUser(userId))
             {
@@ -367,7 +369,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         public async Task<ISiteUser> Fetch(int siteId, Guid userGuid)
         {
-            if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
+            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
 
             using (DbDataReader reader = await dbSiteUser.GetSingleUser(userGuid))
             {
@@ -387,7 +389,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         public async Task<ISiteUser> FetchByConfirmationGuid(int siteId, Guid confirmGuid)
         {
-            if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
+            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
 
             using (DbDataReader reader = await dbSiteUser.GetUserByRegistrationGuid(siteId, confirmGuid))
             {
@@ -408,7 +410,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         public async Task<ISiteUser> Fetch(int siteId, string email)
         {
-            if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
+            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
 
             using (DbDataReader reader = await dbSiteUser.GetSingleUser(siteId, email))
             {
@@ -428,7 +430,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         public async Task<ISiteUser> FetchByLoginName(int siteId, string userName, bool allowEmailFallback)
         {
-            if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
+            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
 
             using (DbDataReader reader = await dbSiteUser.GetSingleUserByLoginName(siteId, userName, allowEmailFallback))
             {
@@ -454,7 +456,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
         {
             List<IUserInfo> userList = new List<IUserInfo>();
 
-            if (AppSettings.UseRelatedSiteMode) { siteGuid = Guid.Empty; }
+            if (config.UseRelatedSiteMode()) { siteGuid = Guid.Empty; }
 
             using (DbDataReader reader = await dbUserLocation.GetUsersByIPAddress(siteGuid, ipv4Address))
             {
@@ -492,7 +494,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         public async Task<int> CountUsers(int siteId, String userNameBeginsWith)
         {
-            if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
+            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
 
             return await dbSiteUser.CountUsers(siteId, userNameBeginsWith);
         }
@@ -504,7 +506,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             string userNameBeginsWith,
             int sortMode)
         {
-            if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
+            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
 
             //sortMode: 0 = DisplayName asc, 1 = JoinDate desc, 2 = Last, First
 
@@ -529,7 +531,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         public async Task<int> CountUsersForSearch(int siteId, string searchInput)
         {
-            if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
+            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
 
             return await dbSiteUser.CountUsersForSearch(siteId, searchInput);
         }
@@ -541,7 +543,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             string searchInput,
             int sortMode)
         {
-            if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
+            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
 
             //sortMode: 0 = DisplayName asc, 1 = JoinDate desc, 2 = Last, First
 
@@ -570,7 +572,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         public async Task<int> CountUsersForAdminSearch(int siteId, string searchInput)
         {
-            if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
+            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
 
             return await dbSiteUser.CountUsersForAdminSearch(siteId, searchInput);
         }
@@ -582,7 +584,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             string searchInput,
             int sortMode)
         {
-            if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
+            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
 
             List<IUserInfo> userList = new List<IUserInfo>();
 
@@ -606,7 +608,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         public async Task<int> CountLockedOutUsers(int siteId)
         {
-            if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
+            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
 
             return await dbSiteUser.CountLockedOutUsers(siteId);
         }
@@ -616,7 +618,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             int pageNumber,
             int pageSize)
         {
-            if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
+            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
 
             List<IUserInfo> userList = new List<IUserInfo>();
 
@@ -640,7 +642,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         public async Task<int> CountNotApprovedUsers(int siteId)
         {
-            if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
+            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
 
             return await dbSiteUser.CountNotApprovedUsers(siteId);
         }
@@ -652,7 +654,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
         {
             List<IUserInfo> userList = new List<IUserInfo>();
 
-            if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
+            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
 
             using (DbDataReader reader = await dbSiteUser.GetPageNotApprovedUsers(
                 siteId,
@@ -688,7 +690,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         public async Task<bool> EmailExistsInDB(int siteId, string email)
         {
-            if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
+            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
             bool found = false;
 
             using (DbDataReader r = await dbSiteUser.GetSingleUser(siteId, email))
@@ -700,7 +702,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         public async Task<bool> EmailExistsInDB(int siteId, int userId, string email)
         {
-            if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
+            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
             bool found = false;
 
             using (DbDataReader r = await dbSiteUser.GetSingleUser(siteId, email))
@@ -717,7 +719,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         public bool LoginExistsInDB(int siteId, string loginName)
         {
-            if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
+            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
             bool found = false;
 
             using (DbDataReader r = dbSiteUser.GetSingleUserByLoginNameNonAsync(siteId, loginName, false))
@@ -738,7 +740,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// <returns></returns>
         public bool LoginIsAvailable(int siteId, int userId, string loginName)
         {
-            if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
+            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
             bool available = true;
 
             using (DbDataReader r = dbSiteUser.GetSingleUserByLoginNameNonAsync(siteId, loginName, false))
@@ -757,7 +759,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         public async Task<string> GetUserNameFromEmail(int siteId, String email)
         {
-            if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
+            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
 
             string result = String.Empty;
             if ((email != null) && (email.Length > 0) && (siteId > 0))
@@ -782,7 +784,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         public async Task<int> GetNewestUserId(int siteId)
         {
-            if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
+            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
 
             return await dbSiteUser.GetNewestUserId(siteId);
 
@@ -848,9 +850,9 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
 
 
-        public async Task<bool> DeleteRole(int roleID)
+        public async Task<bool> DeleteRole(int roleId)
         {
-            return await dbRoles.Delete(roleID);
+            return await dbRoles.Delete(roleId);
         }
 
         public async Task<bool> AddUserToRole(
@@ -928,7 +930,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         public async Task<bool> RoleExists(int siteId, String roleName)
         {
-            if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
+            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
 
             return await dbRoles.Exists(siteId, roleName);
         }
@@ -950,9 +952,9 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         }
 
-        public async Task<ISiteRole> FetchRole(int roleID)
+        public async Task<ISiteRole> FetchRole(int roleId)
         {
-            using (DbDataReader reader = await dbRoles.GetById(roleID))
+            using (DbDataReader reader = await dbRoles.GetById(roleId))
             {
                 if (reader.Read())
                 {
@@ -967,7 +969,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         public async Task<ISiteRole> FetchRole(int siteId, string roleName)
         {
-            if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
+            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
 
             SiteRole role = null;
 
@@ -986,7 +988,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         public async Task<List<string>> GetUserRoles(int siteId, int userId)
         {
-            if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
+            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
 
             List<string> userRoles = new List<string>();
             using (DbDataReader reader = await dbSiteUser.GetRolesByUser(siteId, userId))
@@ -1003,7 +1005,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         public async Task<int> CountOfRoles(int siteId, string searchInput)
         {
-            if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
+            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
 
             return await dbRoles.GetCountOfSiteRoles(siteId, searchInput);
         }
@@ -1014,7 +1016,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             int pageNumber,
             int pageSize)
         {
-            if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
+            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
 
             IList<ISiteRole> roles = new List<ISiteRole>();
             using (DbDataReader reader = await dbRoles.GetPage(siteId, searchInput, pageNumber, pageSize))
@@ -1037,7 +1039,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             int siteId,
             int userId)
         {
-            if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
+            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
 
             IList<ISiteRole> roles = new List<ISiteRole>();
             using (DbDataReader reader = dbRoles.GetRolesUserIsNotIn(siteId, userId))
@@ -1087,6 +1089,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         public async Task<int> CountUsersInRole(int siteId, int roleId, string searchInput)
         {
+            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
             return await dbRoles.GetCountOfUsersInRole(siteId, roleId, searchInput);
         }
 
@@ -1099,7 +1102,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
         {
             IList<IUserInfo> users = new List<IUserInfo>();
 
-            if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
+            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
 
             using (DbDataReader reader = await dbRoles.GetUsersInRole(siteId, roleId, searchInput, pageNumber, pageSize))
             {
@@ -1122,7 +1125,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
         {
             IList<ISiteUser> users = new List<ISiteUser>();
 
-            if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
+            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
 
             ISiteRole role = await FetchRole(siteId, roleName);
             int roleId = -3;
@@ -1148,6 +1151,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         public async Task<int> CountUsersNotInRole(int siteId, int roleId, string searchInput)
         {
+            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
             return await dbRoles.GetCountOfUsersNotInRole(siteId, roleId, searchInput);
         }
 
@@ -1160,7 +1164,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
         {
             IList<IUserInfo> users = new List<IUserInfo>();
 
-            if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
+            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
 
             using (DbDataReader reader = await dbRoles.GetUsersNotInRole(siteId, roleId, searchInput, pageNumber, pageSize))
             {
@@ -1233,8 +1237,8 @@ namespace cloudscribe.Core.Repositories.MSSQL
         {
             IList<ISiteUser> users = new List<ISiteUser>();
 
-            if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
-            
+            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
+
             using (DbDataReader reader = await dbUserClaims.GetUsersByClaim(siteId, claimType, claimValue))
             {
                 while (reader.Read())

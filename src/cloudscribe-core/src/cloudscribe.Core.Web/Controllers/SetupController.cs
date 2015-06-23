@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2015-01-10
-// Last Modified:			2015-06-12
+// Last Modified:			2015-06-23
 // 
 
 using cloudscribe.Configuration;
@@ -10,6 +10,7 @@ using cloudscribe.Core.Web.Components;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc;
+using Microsoft.Framework.ConfigurationModel;
 using Microsoft.Framework.Logging;
 using System;
 using System.Collections.Generic;
@@ -28,25 +29,35 @@ namespace cloudscribe.Setup.Controllers
         public SetupController(
             IHostingEnvironment env,
             ILoggerFactory loggerFactory,
+            IConfiguration configuration,
             IDb dbImplementation,
             ISiteRepository siteRepositoryImplementation,
-            IUserRepository userRepositoryImplementation,
-            IVersionProviderFactory versionProviderFactory
+            IUserRepository userRepositoryImplementation
         )
         {
+            if (env == null) { throw new ArgumentNullException(nameof(env)); }
+            if (loggerFactory == null) { throw new ArgumentNullException(nameof(loggerFactory)); }
+            if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
+            if (dbImplementation == null) { throw new ArgumentNullException(nameof(dbImplementation)); }
+            if (siteRepositoryImplementation == null) { throw new ArgumentNullException(nameof(siteRepositoryImplementation)); }
+            if (userRepositoryImplementation == null) { throw new ArgumentNullException(nameof(userRepositoryImplementation)); }
+            //if (versionProviderFactory == null) { throw new ArgumentNullException(nameof(versionProviderFactory)); }
+
             hostingEnvironment = env;
+            config = configuration;
             db = dbImplementation;
             siteRepository = siteRepositoryImplementation;
             userRepository = userRepositoryImplementation;
             logFactory = loggerFactory;
             log = loggerFactory.CreateLogger(typeof(SetupController).FullName);
-            versionProviders = versionProviderFactory;
+            //versionProviders = db.VersionProviders;
         }
 
         private IHostingEnvironment hostingEnvironment;
         private ILoggerFactory logFactory;
         private ILogger log;
-        private IVersionProviderFactory versionProviders;
+        //private IVersionProviderFactory versionProviders;
+        private IConfiguration config;
         private bool setupIsDisabled = false;
         private bool dataFolderIsWritable = false;
         private bool canAccessDatabase = false;
@@ -162,7 +173,7 @@ namespace cloudscribe.Setup.Controllers
                     if (schemaHasBeenCreated)
                     {
                         //recheck
-                        needSchemaUpgrade = SetupHelper.NeedsUpgrade(versionProviders, "cloudscribe-core", db);
+                        needSchemaUpgrade = SetupHelper.NeedsUpgrade("cloudscribe-core", db);
                     }
 
                 }
@@ -287,17 +298,17 @@ namespace cloudscribe.Setup.Controllers
             //mojoSetup.EnsureAdditionalSiteFolders();
 
             // added 2013-10-18 
-            if (AppSettings.TryEnsureCustomMachineKeyOnSetup)
-            {
-                try
-                {
-                    //WebConfigSettings.EnsureCustomMachineKey();
-                }
-                catch (Exception ex)
-                {
-                    log.LogError("tried to ensure a custom machinekey in Web.config but an error occurred.", ex);
-                }
-            }
+            //if (AppSettings.TryEnsureCustomMachineKeyOnSetup)
+            //{
+            //    try
+            //    {
+            //        //WebConfigSettings.EnsureCustomMachineKey();
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        log.LogError("tried to ensure a custom machinekey in Web.config but an error occurred.", ex);
+            //    }
+            //}
 
             return result;
 
@@ -537,7 +548,7 @@ namespace cloudscribe.Setup.Controllers
             Guid appID = db.GetOrGenerateSchemaApplicationId(applicationName);
             Version currentSchemaVersion = db.GetSchemaVersion(appID);
             Version versionToStopAt = null;
-            IVersionProvider appVersionProvider = versionProviders.Get(applicationName);
+            IVersionProvider appVersionProvider = db.VersionProviders.Get(applicationName);
 
             //if (VersionProviderManager.Providers[applicationName] != null)
             //{
@@ -739,7 +750,8 @@ namespace cloudscribe.Setup.Controllers
             bool result = await NewSiteHelper.CreateRequiredRolesAndAdminUser(
                 newSite,
                 siteRepository,
-                userRepository
+                userRepository,
+                config
                 );
 
             return result;
@@ -865,7 +877,7 @@ namespace cloudscribe.Setup.Controllers
                         false);
 
 
-                    needSchemaUpgrade = SetupHelper.NeedsUpgrade(versionProviders, "cloudscribe-core", db);
+                    needSchemaUpgrade = SetupHelper.NeedsUpgrade("cloudscribe-core", db);
 
                     if (needSchemaUpgrade)
                     {
@@ -938,7 +950,7 @@ namespace cloudscribe.Setup.Controllers
 
             if (!db.SitesTableExists()) return false;
 
-            if (SetupHelper.NeedsUpgrade(versionProviders, "cloudscribe-core", db)) { return false; }
+            if (SetupHelper.NeedsUpgrade("cloudscribe-core", db)) { return false; }
 
 
 
@@ -996,7 +1008,7 @@ namespace cloudscribe.Setup.Controllers
 
                 //dbCodeVersion = DatabaseHelper.DBCodeVersion();
                 //dbSchemaVersion = DatabaseHelper.DBSchemaVersion();
-                IVersionProvider coreVersionProvider = versionProviders.Get("cloudscribe-core");
+                IVersionProvider coreVersionProvider = db.VersionProviders.Get("cloudscribe-core");
                 //if (VersionProviderManager.Providers["cloudscribe-core"] != null)
                 if(coreVersionProvider != null)
                 {

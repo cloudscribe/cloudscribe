@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-06-12
+// Last Modified:			2015-06-23
 //
 // You must not remove this notice, or any other, from this software.
 
@@ -1794,7 +1794,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             arParams[0].Value = siteId;
 
             return await AdoHelper.ExecuteReaderAsync(
-                ConnectionString.GetReadConnectionString(),
+                readConnectionString,
                 sqlCommand.ToString(),
                 arParams);
 
@@ -1839,7 +1839,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             arParams[0].Value = siteId;
 
             return AdoHelper.ExecuteReader(
-                ConnectionString.GetReadConnectionString(),
+                readConnectionString,
                 sqlCommand.ToString(),
                 arParams);
 

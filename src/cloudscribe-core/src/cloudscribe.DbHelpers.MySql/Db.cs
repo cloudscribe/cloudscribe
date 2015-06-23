@@ -1,10 +1,10 @@
 ﻿// Author:					Joe Audette
 // Created:				    2004-08-03
-// Last Modified:		    2015-06-03
+// Last Modified:		    2015-06-23
 
 using cloudscribe.Configuration;
 using cloudscribe.Core.Models;
-//using log4net;
+using Microsoft.Framework.ConfigurationModel;
 using Microsoft.Framework.Logging;
 using MySql.Data.MySqlClient;
 using System;
@@ -18,17 +18,36 @@ namespace cloudscribe.DbHelpers.MySql
 {
     public class Db : IDb
     {
-        public Db(ILoggerFactory loggerFactory)
+        public Db(
+            ILoggerFactory loggerFactory,
+            IConfiguration configuration,
+            IVersionProviderFactory versionProviderFactory)
         {
+            if (loggerFactory == null) { throw new ArgumentNullException(nameof(loggerFactory)); }
+            if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
+            if (versionProviderFactory == null) { throw new ArgumentNullException(nameof(versionProviderFactory)); }
+
+            config = configuration;
+            versionProviders = versionProviderFactory;
             logFactory = loggerFactory;
             log = loggerFactory.CreateLogger(typeof(Db).FullName);
 
+            writeConnectionString = configuration.GetMySqlWriteConnectionString();
+            readConnectionString = configuration.GetMySqlReadConnectionString();
+
         }
 
+        private IVersionProviderFactory versionProviders;
+        private IConfiguration config;
         private ILoggerFactory logFactory;
         private ILogger log;
+        private string writeConnectionString;
+        private string readConnectionString;
 
-        // private static readonly ILog log = LogManager.GetLogger(typeof(Db));
+        public IVersionProviderFactory VersionProviders
+        {
+            get { return versionProviders; }
+        }
 
         public string DBPlatform
         {
@@ -51,7 +70,7 @@ namespace cloudscribe.DbHelpers.MySql
             }
             else
             {
-                connection = new MySqlConnection(ConnectionString.GetWriteConnectionString());
+                connection = new MySqlConnection(writeConnectionString);
             }
 
             try
@@ -101,7 +120,7 @@ namespace cloudscribe.DbHelpers.MySql
             }
             else
             {
-                connection = new MySqlConnection(ConnectionString.GetWriteConnectionString());
+                connection = new MySqlConnection(writeConnectionString);
             }
 
             try
@@ -262,7 +281,7 @@ namespace cloudscribe.DbHelpers.MySql
             sqlCommand.Append(" DROP TABLE Temptest;");
             try
             {
-                RunScript(sqlCommand.ToString(), ConnectionString.GetWriteConnectionString());
+                RunScript(sqlCommand.ToString(), writeConnectionString);
             }
             catch (Exception)
             {
@@ -303,7 +322,7 @@ namespace cloudscribe.DbHelpers.MySql
             }
             else
             {
-                connection = new MySqlConnection(ConnectionString.GetWriteConnectionString());
+                connection = new MySqlConnection(writeConnectionString);
             }
 
             connection.Open();
@@ -396,7 +415,7 @@ namespace cloudscribe.DbHelpers.MySql
             arParams[0].Value = dataFieldValue;
 
             int rowsAffected = MySqlHelper.ExecuteNonQuery(
-                ConnectionString.GetWriteConnectionString(),
+                writeConnectionString,
                 sqlCommand.ToString(),
                 arParams);
 
@@ -426,7 +445,7 @@ namespace cloudscribe.DbHelpers.MySql
             string query
             )
         {
-            if (string.IsNullOrEmpty(connectionString)) { connectionString = ConnectionString.GetReadConnectionString(); }
+            if (string.IsNullOrEmpty(connectionString)) { connectionString = readConnectionString; }
 
             return MySqlHelper.ExecuteReader(
                 connectionString,
@@ -439,7 +458,7 @@ namespace cloudscribe.DbHelpers.MySql
             string query
             )
         {
-            if (string.IsNullOrEmpty(connectionString)) { connectionString = ConnectionString.GetWriteConnectionString(); }
+            if (string.IsNullOrEmpty(connectionString)) { connectionString = writeConnectionString; }
 
             int rowsAffected = MySqlHelper.ExecuteNonQuery(
                 connectionString,
@@ -482,7 +501,7 @@ namespace cloudscribe.DbHelpers.MySql
                 sqlCommand.Append(";");
 
                 count = Convert.ToInt32(AdoHelper.ExecuteScalar(
-                    ConnectionString.GetReadConnectionString(),
+                    readConnectionString,
                     sqlCommand.ToString(),
                     null));
 
@@ -524,7 +543,7 @@ namespace cloudscribe.DbHelpers.MySql
 
             sqlCommand.Append("ORDER BY	SiteName ;");
             return AdoHelper.ExecuteReader(
-                ConnectionString.GetReadConnectionString(),
+                readConnectionString,
                 sqlCommand.ToString());
         }
 
@@ -552,7 +571,7 @@ namespace cloudscribe.DbHelpers.MySql
                 sqlCommand.Append("FROM " + tableName + "; ");
 
                 using (DbDataReader reader = AdoHelper.ExecuteReader(
-                    ConnectionString.GetReadConnectionString(),
+                    readConnectionString,
                     CommandType.Text,
                     sqlCommand.ToString(),
                     null))
@@ -627,16 +646,9 @@ namespace cloudscribe.DbHelpers.MySql
 
         public Guid GetOrGenerateSchemaApplicationId(string applicationName)
         {
-
-            if (string.Equals(applicationName, "cloudscribe-core", StringComparison.CurrentCultureIgnoreCase))
-                return new Guid("b7dcd727-91c3-477f-bc42-d4e5c8721daa");
-
-            if (string.Equals(applicationName, "cloudscribe-cms", StringComparison.CurrentCultureIgnoreCase))
-                return new Guid("2ba3e968-dd0b-44cb-9689-188963ed2664");
-
-            string sguid = AppSettings.GetString(applicationName + "_appGuid", string.Empty);
-            if (sguid.Length == 36) { return new Guid(sguid); }
-
+            IVersionProvider versionProvider = versionProviders.Get(applicationName);
+            if (versionProvider != null) { return versionProvider.ApplicationId; }
+            
             Guid appID = Guid.NewGuid();
 
             try
@@ -664,7 +676,7 @@ namespace cloudscribe.DbHelpers.MySql
         private DbDataReader GetSchemaId(string applicationName)
         {
             return GetReader(
-                ConnectionString.GetReadConnectionString(),
+                readConnectionString,
                 "mp_SchemaVersion",
                 " WHERE LCASE(ApplicationName) = '" + applicationName.ToLower() + "'");
 
@@ -725,7 +737,7 @@ namespace cloudscribe.DbHelpers.MySql
             arParams[5].Value = revision;
 
             int rowsAffected = MySqlHelper.ExecuteNonQuery(
-                ConnectionString.GetWriteConnectionString(),
+                writeConnectionString,
                 sqlCommand.ToString(),
                 arParams);
 
@@ -785,7 +797,7 @@ namespace cloudscribe.DbHelpers.MySql
 
 
             int rowsAffected = MySqlHelper.ExecuteNonQuery(
-                ConnectionString.GetWriteConnectionString(),
+                writeConnectionString,
                 sqlCommand.ToString(),
                 arParams);
 
@@ -822,7 +834,7 @@ namespace cloudscribe.DbHelpers.MySql
         {
             bool result = false;
 
-            using (IDataReader reader = GetSchemaVersionFromGuid(applicationId))
+            using (DbDataReader reader = GetSchemaVersionFromGuid(applicationId))
             {
                 if (reader.Read())
                 {
@@ -849,7 +861,7 @@ namespace cloudscribe.DbHelpers.MySql
             arParams[0].Value = applicationId.ToString();
 
             return MySqlHelper.ExecuteReader(
-                ConnectionString.GetReadConnectionString(),
+                readConnectionString,
                 sqlCommand.ToString(),
                 arParams);
 
@@ -943,7 +955,7 @@ namespace cloudscribe.DbHelpers.MySql
 
             int newID = 0;
             newID = Convert.ToInt32(MySqlHelper.ExecuteScalar(
-                ConnectionString.GetWriteConnectionString(),
+                writeConnectionString,
                 sqlCommand.ToString(),
                 arParams).ToString());
             return newID;
