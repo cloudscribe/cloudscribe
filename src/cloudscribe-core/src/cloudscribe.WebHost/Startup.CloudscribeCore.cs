@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2015-06-20
-// Last Modified:			2015-06-23
+// Last Modified:			2015-06-24
 // 
 
 using System;
@@ -13,9 +13,12 @@ using Microsoft.AspNet.Authentication.Cookies;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.ConfigurationModel;
 using Microsoft.AspNet.Builder;
+using Microsoft.AspNet.Mvc;
+using Microsoft.AspNet.Mvc.Razor;
 using cloudscribe.Configuration;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Geography;
+using cloudscribe.Core.Web;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.AspNet.Identity;
 
@@ -23,18 +26,37 @@ namespace cloudscribe.WebHost
 {
     public static class CloudscribeCoreServiceCollectionExtensions
     {
+        /// <summary>
+        /// Setup dependency injection for cloudscribe components
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="configuration"></param>
+        /// <returns></returns>
         public static IServiceCollection ConfigureCloudscribeCore(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddInstance<IConfiguration>(configuration);
-            //services.TryAdd(ServiceDescriptor.Singleton<IConfiguration, configuration>);
+            //services.TryAdd(ServiceDescriptor.Scoped<IRazorViewEngine, CoreViewEngine>());
+
+            //*** Database platform ****************************************************************
+            // here is where you could change to use one of the other db platforms
+            // we have support for MySql, PostgreSql, Firebird, SQLite, and SqlCe
+            // as of 2015-06-24 those can only be used in the full desktop framework (there are not yet ado.net drivers that support dnxcore50 but they should be available at some point)
+            // so you would have to remove the dnxcore50 from the project.json in this project
+            // add a nuget for one of the other cloudscribe.Core.Repositories.dbplatform 
+            // and cloudscribe.DbHelpers.dbplatform packages
             services.TryAdd(ServiceDescriptor.Scoped<ISiteRepository, cloudscribe.Core.Repositories.MSSQL.SiteRepository>());
             services.TryAdd(ServiceDescriptor.Scoped<IUserRepository, cloudscribe.Core.Repositories.MSSQL.UserRepository>());
             services.TryAdd(ServiceDescriptor.Scoped<IGeoRepository, cloudscribe.Core.Repositories.MSSQL.GeoRepository>());
             services.TryAdd(ServiceDescriptor.Scoped<IDb, cloudscribe.DbHelpers.MSSQL.Db>());
+            //**************************************************************************************
 
+            // RequestSiteResolver resolves ISiteSettings based on the request to support multi tenancy based on either host name or first folder depending on configuration
             services.TryAdd(ServiceDescriptor.Scoped<ISiteResolver, RequestSiteResolver>());
+
+            // VersionProviders are used by the Setup controller to determine what install and upgrade scripts to run
             services.TryAdd(ServiceDescriptor.Scoped<IVersionProviderFactory, ConfigVersionProviderFactory>());
 
+            //****** cloudscribe implementation of AspNet.Identity****************************************************
             services.TryAdd(ServiceDescriptor.Scoped<IUserStore<SiteUser>, UserStore<SiteUser>>());
             services.TryAdd(ServiceDescriptor.Scoped<IUserPasswordStore<SiteUser>, UserStore<SiteUser>>());
             services.TryAdd(ServiceDescriptor.Scoped<IUserEmailStore<SiteUser>, UserStore<SiteUser>>());
@@ -44,15 +66,35 @@ namespace cloudscribe.WebHost
             services.TryAdd(ServiceDescriptor.Scoped<IUserPhoneNumberStore<SiteUser>, UserStore<SiteUser>>());
             services.TryAdd(ServiceDescriptor.Scoped<IUserLockoutStore<SiteUser>, UserStore<SiteUser>>());
             services.TryAdd(ServiceDescriptor.Scoped<IUserTwoFactorStore<SiteUser>, UserStore<SiteUser>>());
-
             services.TryAdd(ServiceDescriptor.Scoped<IRoleStore<SiteRole>, RoleStore<SiteRole>>());
+            // the DNX451 desktop version of SitePasswordHasher can validate against existing hashed or encrypted password from mojoportal users
+            // so to use existing users from mojoportal you would have to run on the desktop version at least until all users update their passwords
+            // then you could migrate to dnxcore50
+            // it also alllows us to create a default admin@admin.com user with administrator role with a cleartext password which would be updated 
+            // to the default identity hash as soon as you change the password from its default "admin"
             services.TryAdd(ServiceDescriptor.Transient<IPasswordHasher<SiteUser>, SitePasswordHasher<SiteUser>>());
-
             services.AddIdentity<SiteUser, SiteRole>();
+            //********************************************************************************************************
+
+            // Add MVC services to the services container.
+            services.AddMvc().Configure<MvcOptions>(options =>
+            {
+                options.ViewEngines.Clear();
+                options.ViewEngines.Add(typeof(CoreViewEngine));
+            });
 
             return services;
         }
 
+        /// <summary>
+        /// application configuration for cloudscribe core
+        /// here is where we will need to do some magic for mutli tenants by folder if configured for that as by default
+        /// we would also plug in any custom OWIN middleware components here
+        /// things that would historically be implemented as HttpModules would now be implemented as OWIN middleware components
+        /// </summary>
+        /// <param name="app"></param>
+        /// <param name="config"></param>
+        /// <returns></returns>
         public static IApplicationBuilder UseCloudscribeCore(this IApplicationBuilder app, IConfiguration config)
         {
 

@@ -25,7 +25,9 @@
         "Microsoft.AspNet.Authentication.MicrosoftAccount": "1.0.0-beta4",
         "Microsoft.AspNet.Authentication.Facebook": "1.0.0-beta4",
         "cloudscribe.Messaging": "1.0.0-*",
-        "Microsoft.Framework.Logging.Interfaces": "1.0.0-beta4"
+        "Microsoft.Framework.Logging.Interfaces": "1.0.0-beta4",
+        "Microsoft.AspNet.Razor": "4.0.0-beta4",
+        "Microsoft.AspNet.Mvc.Core": "6.0.0-beta4"
     },
 
     "frameworks": {

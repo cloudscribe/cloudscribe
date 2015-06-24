@@ -112,8 +112,9 @@ namespace cloudscribe.WebHost
                 options.ClientSecret = Configuration["Authentication:MicrosoftAccount:ClientSecret"];
             });
 
+            // we are adding this from Startup.CloudscribeCore.cs so it is not needed here
             // Add MVC services to the services container.
-            services.AddMvc();
+            //services.AddMvc();
 
             // Uncomment the following line to add Web API services which makes it easier to port Web API 2 controllers.
             // You will also need to add the Microsoft.AspNet.Mvc.WebApiCompatShim package to the 'dependencies' section of project.json.

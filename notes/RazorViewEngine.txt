@@ -3,6 +3,7 @@
 
 http://www.jeffreyfritz.com/2015/05/where-did-my-asp-net-bundles-go-in-asp-net-5/
 
+http://weblogs.asp.net/imranbaloch/custom-viewengine-aspnet5-mvc6
 http://www.jeffreyfritz.com/2015/05/customize-asp-net-mvc-6-view-location-easily/
 
 http://www.davepaquette.com/archive/2015/05/11/cleaner-forms-using-tag-helpers-in-mvc6.aspx

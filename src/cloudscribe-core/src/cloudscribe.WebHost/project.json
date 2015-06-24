@@ -7,6 +7,7 @@
         "EntityFramework.SqlServer": "7.0.0-beta4",
         "EntityFramework.Commands": "7.0.0-beta4",
         "Microsoft.AspNet.Mvc": "6.0.0-beta4",
+        "Microsoft.AspNet.Mvc.Core": "6.0.0-beta4",
         "Microsoft.AspNet.Mvc.TagHelpers": "6.0.0-beta4",
         "Microsoft.AspNet.Authentication.Cookies": "1.0.0-beta4",
         "Microsoft.AspNet.Authentication.Facebook": "1.0.0-beta4",
