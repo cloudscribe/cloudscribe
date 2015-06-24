@@ -46,6 +46,7 @@ namespace cloudscribe.WebHost
             services.TryAdd(ServiceDescriptor.Scoped<IUserTwoFactorStore<SiteUser>, UserStore<SiteUser>>());
 
             services.TryAdd(ServiceDescriptor.Scoped<IRoleStore<SiteRole>, RoleStore<SiteRole>>());
+            services.TryAdd(ServiceDescriptor.Transient<IPasswordHasher<SiteUser>, SitePasswordHasher<SiteUser>>());
 
             services.AddIdentity<SiteUser, SiteRole>();
 

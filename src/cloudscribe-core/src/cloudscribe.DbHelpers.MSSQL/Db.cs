@@ -548,7 +548,7 @@ namespace cloudscribe.DbHelpers.MSSQL
         //    return ds.Tables[0];
 
         //}
-#if dnx451
+#if DNX451
         public bool TableExists(string tableName)
         {
             //return mojoPortal.Data.Common.DBPortal.DatabaseHelperTableExists(tableName);

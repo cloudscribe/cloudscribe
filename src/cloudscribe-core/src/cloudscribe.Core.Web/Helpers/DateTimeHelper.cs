@@ -1,6 +1,6 @@
 ﻿// Author:				Joe Audette
 // Created:			    2005-08-22
-// Last Modified:	    2015-06-11
+// Last Modified:	    2015-06-24
 // 
 
 
@@ -191,7 +191,7 @@ namespace cloudscribe.Core.Web.Helpers
 
             //TODO: make our own extension method for FromSerializedString
             // to support dnxcore50
-#if dnx451
+#if DNX451
 
             timeZones.Add(TimeZoneInfo.FromSerializedString(AfghanistanStandardTime));
             timeZones.Add(TimeZoneInfo.FromSerializedString(AlaskanStandardTime));

@@ -98,6 +98,8 @@ usage example:
 
 other references:
 
+http://blog.simontimms.com/2015/06/09/getting-lookup-data-into-you-view/
+
 http://blogs.msdn.com/b/rickandy/archive/2012/01/09/cascasding-dropdownlist-in-asp-net-mvc.aspx
 
 http://stackoverflow.com/questions/19145641/how-can-i-reuse-a-dropdownlist-in-several-views-with-net-mvc

@@ -10,7 +10,7 @@ using Microsoft.AspNet.Identity;
 using System;
 using cloudscribe.Core.Models;
 
-#if dnx451
+#if DNX451
 using System.Security.Cryptography;
 using System.Text;
 #endif
@@ -59,7 +59,7 @@ namespace cloudscribe.AspNet.Identity
                 {
 
 
-#if dnx451
+#if DNX451
                     case 2: //encrypted
 
                         if (String.Equals(
@@ -114,7 +114,7 @@ namespace cloudscribe.AspNet.Identity
             }
         }
 
-#if dnx451
+#if DNX451
 
         private string EncryptPassword(string providedPassword, string salt)
         {
