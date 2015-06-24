@@ -1,0 +1,18 @@
+﻿@using cloudscribe.Core.Web.ViewModels.Common
+@{
+    var alerts = TempData.ContainsKey(Alert.TempDataKey)
+                ? (List<Alert>)TempData[Alert.TempDataKey]
+                : new List<Alert>();
+
+    foreach (var alert in alerts)
+    {
+        var dismissableClass = alert.Dismissable ? "alert-dismissable" : null;
+        <div class="alert alert-@alert.AlertStyle @dismissableClass">
+            @if (alert.Dismissable)
+            {
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true" aria-label="@CommonResources.Close">&times;</button>
+            }
+            @Html.Raw(alert.Message)
+        </div>
+    }
+}

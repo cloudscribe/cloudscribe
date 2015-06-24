@@ -5,6 +5,8 @@ http://www.asp.net/vnext/overview/aspnet-vnext/vc
 
 http://typecastexception.com/post/2015/05/17/DNVM-DNX-and-DNU-Understanding-the-ASPNET-5-Runtime-Options.aspx
 
+http://www.strathweb.com/2015/02/overriding-filters-asp-net-mvc-6/
+
 2014-11-15 it seems premature to try to build cloudscribe on vnext mainly because certain dependencies are not available yet
 such as log4net, mysql.data etc. supposedly you can use that if you target the desktop framework instead of core but it seems not to work.
 I can add a reference to MySql.Data via NuGet but it gives a build error the type or namespace cannot be found as if the reference was not there.

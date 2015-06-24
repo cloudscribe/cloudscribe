@@ -8,6 +8,10 @@
 @{
     ViewBag.Title = "Log in";
 }
+@if (Model.RecaptchaSiteKey.Length > 0)
+{
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+}
 
 <h2>@ViewBag.Title.</h2>
 <div class="row">
@@ -39,6 +43,16 @@
                         </div>
                     </div>
                 </div>
+                @if (Model.RecaptchaSiteKey.Length > 0)
+                {
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <div class="g-recaptcha" data-sitekey="@Model.RecaptchaSiteKey"></div>
+                        @Html.ValidationMessage("recaptchaerror", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                }
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
                         <input type="submit" value="Log in" class="btn btn-default" />

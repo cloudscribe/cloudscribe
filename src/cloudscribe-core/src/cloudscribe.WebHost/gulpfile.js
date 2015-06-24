@@ -2,13 +2,16 @@
 
 var gulp = require("gulp"),
   rimraf = require("rimraf"),
+  minifycss = require("gulp-minify-css"),
+  concat = require("gulp-concat"),
   fs = require("fs");
 
 eval("var project = " + fs.readFileSync("./project.json"));
 
 var paths = {
   bower: "./bower_components/",
-  lib: "./" + project.webroot + "/lib/"
+  lib: "./" + project.webroot + "/lib/",
+  css: "./" + project.webroot + "/css/"
 };
 
 gulp.task("clean", function (cb) {
@@ -29,4 +32,12 @@ gulp.task("copy", ["clean"], function () {
     gulp.src(paths.bower + bower[destinationDir])
       .pipe(gulp.dest(paths.lib + destinationDir));
   }
+});
+
+gulp.task("minifycss", function () {
+    return gulp.src([paths.css + "/*.css",
+                     "!" + paths.css + "/*.min.css"])
+            .pipe(minifycss())
+            .pipe(concat("site.min.css"))
+            .pipe(gulp.dest(paths.css));
 });

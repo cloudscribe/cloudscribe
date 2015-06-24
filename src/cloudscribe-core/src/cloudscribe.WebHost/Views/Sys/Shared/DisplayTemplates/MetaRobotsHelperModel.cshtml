@@ -1,0 +1,7 @@
+﻿@model MvcSiteMapProvider.Web.Html.Models.MetaRobotsHelperModel
+@using System.Web.Mvc.Html
+@using MvcSiteMapProvider.Web.Html.Models
+
+@if (Model.CurrentNode != null && !string.IsNullOrEmpty(Model.CurrentNode.MetaRobotsContent)) {
+    <meta name="robots" content="@Model.CurrentNode.MetaRobotsContent" />
+}

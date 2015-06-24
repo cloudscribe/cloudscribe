@@ -1,7 +1,15 @@
 
+
+http://www.davepaquette.com/archive/2014/10/08/how-to-use-gulp-in-visual-studio.aspx
+http://www.davepaquette.com/archive/2015/05/05/web-optimization-development-and-production-in-asp-net-mvc6.aspx
+
+
+
+
 AutoComplete
 https://github.com/twitter/typeahead.js
 http://instinctcoder.com/asp-net-mvc-4-jquery-autocomplete-dropdownlist/
 
 https://github.com/ghiden/angucomplete-alt
+
 

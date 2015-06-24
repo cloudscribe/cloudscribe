@@ -24,6 +24,14 @@ using cloudscribe.AspNet.Identity;
 
 namespace cloudscribe.WebHost
 {
+    /// <summary>
+    /// Setup dependency injection and application configuration for cloudscribe core
+    /// 
+    /// this file is part of cloudscribe.Core.Integration nuget package
+    /// there are only a few lines of cloudscribe specific code in main Startup.cs and those reference methods in this file
+    /// you are allowed to modify this file if needed but beware that if you upgrade the nuget package it would overwrite this file
+    /// so you should probably make a copy of your changes somewhere first so you could restore them after upgrading
+    /// </summary>
     public static class CloudscribeCoreServiceCollectionExtensions
     {
         /// <summary>
@@ -35,8 +43,7 @@ namespace cloudscribe.WebHost
         public static IServiceCollection ConfigureCloudscribeCore(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddInstance<IConfiguration>(configuration);
-            //services.TryAdd(ServiceDescriptor.Scoped<IRazorViewEngine, CoreViewEngine>());
-
+            
             //*** Database platform ****************************************************************
             // here is where you could change to use one of the other db platforms
             // we have support for MySql, PostgreSql, Firebird, SQLite, and SqlCe
@@ -67,7 +74,7 @@ namespace cloudscribe.WebHost
             services.TryAdd(ServiceDescriptor.Scoped<IUserLockoutStore<SiteUser>, UserStore<SiteUser>>());
             services.TryAdd(ServiceDescriptor.Scoped<IUserTwoFactorStore<SiteUser>, UserStore<SiteUser>>());
             services.TryAdd(ServiceDescriptor.Scoped<IRoleStore<SiteRole>, RoleStore<SiteRole>>());
-            // the DNX451 desktop version of SitePasswordHasher can validate against existing hashed or encrypted password from mojoportal users
+            // the DNX451 desktop version of SitePasswordHasher can validate against existing hashed or encrypted passwords from mojoportal users
             // so to use existing users from mojoportal you would have to run on the desktop version at least until all users update their passwords
             // then you could migrate to dnxcore50
             // it also alllows us to create a default admin@admin.com user with administrator role with a cleartext password which would be updated 
@@ -80,6 +87,13 @@ namespace cloudscribe.WebHost
             services.AddMvc().Configure<MvcOptions>(options =>
             {
                 options.ViewEngines.Clear();
+                // cloudscribe.Core.Web.CoreViewEngine adds /Views/Sys as the last place to search for views
+                // cloudscribe views are all under Views/Sys
+                // to modify a view just copy it to a higher priority location
+                // ie copy /Views/Sys/Manage/*.cshtml up to /Views/Manage/ and that one will have higher priority
+                // and you can modify it however you like
+                // upgrading to newer versions of cloudscribe could modify or add views below /Views/Sys
+                // so you may need to compare your custom views to the originals again after upgrades
                 options.ViewEngines.Add(typeof(CoreViewEngine));
             });
 

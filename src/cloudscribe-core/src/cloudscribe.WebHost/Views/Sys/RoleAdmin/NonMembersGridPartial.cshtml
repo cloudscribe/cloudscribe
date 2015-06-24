@@ -1,0 +1,99 @@
+﻿@model cloudscribe.Core.Web.ViewModels.RoleAdmin.RoleMemberListViewModel
+@{
+    
+}
+<p>
+    @using (Ajax.BeginForm("RoleNonMembers", "RoleAdmin", null,
+                new AjaxOptions { UpdateTargetId = "nonmembersgridcontainer", HttpMethod="POST", InsertionMode = InsertionMode.Replace },
+            new { @class = "form-inline", @role = "form" }))
+    {
+        @Html.Hidden("roleId", Model.Role.RoleId)
+        @Html.Hidden("ajaxGrid", true)
+        <div class="input-group">
+            @Html.TextBox("searchInput", Model.SearchQuery, new { @class = "form-control" })
+            <span class="input-group-btn">
+               
+                <button type="submit" value="@CommonResources.Search" class="btn btn-default">@CommonResources.Search</button>
+            </span>
+        </div>
+    }
+</p>
+<table class="table table-striped">
+    <tr>
+        <th>
+        </th>
+        <th>
+            @CommonResources.Email
+        </th>
+        @if (AppSettings.DontUseEmailForLogin)
+        {
+            <th>
+                @CommonResources.LoginName
+            </th>
+        }
+        <th>
+            @CommonResources.DisplayName
+        </th>
+        <th>
+            @CommonResources.FirstName
+        </th>
+        <th>
+            @CommonResources.LastName
+        </th>
+    </tr>
+    @foreach (var item in Model.Members)
+    {
+        <tr>
+            <td>
+                @using (Html.BeginForm("AddUser", "RoleAdmin", FormMethod.Post))
+                {
+                    @Html.Hidden("RoleGuid", Model.Role.RoleGuid)
+                    @Html.Hidden("RoleId", Model.Role.RoleId)
+                    @Html.Hidden("UserGuid", item.UserGuid)
+                    @Html.Hidden("UserId", item.UserId)
+                    <button type="submit" id="approve-btn"
+                            class="btn btn-success"
+                            onclick="javascript: return confirm('@Html.FormatValue(item.DisplayName, CommonResources.ConfirmAddFormat)');">
+                        @CommonResources.Add
+                    </button>
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            @if (AppSettings.DontUseEmailForLogin)
+            {
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserName)
+                </td>
+            }
+            <td>
+                @Html.DisplayFor(modelItem => item.DisplayName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastName)
+            </td>
+        </tr>
+    }
+</table>
+<div>
+    @Html.Pager(Model.Paging.ItemsPerPage, 
+    Model.Paging.CurrentPage, 
+    Model.Paging.TotalItems,
+                    new AjaxOptions { UpdateTargetId = "nonmembersgridcontainer" }
+        ).Options(o => o
+            .Action("RoleNonMembers")
+            .AddRouteValue("roleId", Model.Role.RoleId)
+            .AddRouteValue("searchInput", Model.SearchQuery)
+            .AddRouteValue("pageSize", Model.Paging.ItemsPerPage)
+            .AddRouteValue("ajaxGrid", true)
+            .DisplayTemplate("Bootstrap3Pagination")
+            .PageRouteValueKey("pageNumber")
+            .MaxNrOfPages(Model.Paging.MaxPagerItems)
+            
+    )
+</div>
+

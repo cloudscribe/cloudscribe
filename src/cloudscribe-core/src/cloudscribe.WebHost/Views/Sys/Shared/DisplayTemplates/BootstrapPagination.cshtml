@@ -1,0 +1,47 @@
+﻿@model PaginationModel
+<div class="pagination">
+	<ul>
+		@foreach (var link in Model.PaginationLinks)
+		{
+			@BuildLink(link)
+		}
+	</ul>
+</div>
+
+@helper BuildLink(PaginationLink link)
+{
+	var liBuilder = new TagBuilder("li");
+	if (link.IsCurrent)
+	{
+		liBuilder.MergeAttribute("class", "active");
+	}
+	if (! link.Active)
+	{
+		liBuilder.MergeAttribute("class", "disabled");
+	}
+	
+	var aBuilder = new TagBuilder("a");
+	if (link.Url == null)
+	{
+		aBuilder.MergeAttribute("href", "#");
+	}
+	else
+	{
+		aBuilder.MergeAttribute("href", link.Url);
+	}
+	
+	// Ajax support
+	if (Model.AjaxOptions != null)
+        {
+            foreach (var ajaxOption in Model.AjaxOptions.ToUnobtrusiveHtmlAttributes())
+            {
+                aBuilder.MergeAttribute(ajaxOption.Key, ajaxOption.Value.ToString(), true);
+            }
+        }
+	
+	aBuilder.SetInnerText(link.DisplayText);		
+
+	liBuilder.InnerHtml = aBuilder.ToString();
+	
+	@Html.Raw(liBuilder.ToString())
+}

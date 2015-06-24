@@ -1,0 +1,7 @@
+﻿@model MvcSiteMapProvider.Web.Html.Models.CanonicalHelperModel
+@using System.Web.Mvc.Html
+@using MvcSiteMapProvider.Web.Html.Models
+
+@if (Model.CurrentNode != null && !string.IsNullOrEmpty(Model.CurrentNode.CanonicalUrl)) {
+    <link rel="canonical" href="@Model.CurrentNode.CanonicalUrl" />
+}

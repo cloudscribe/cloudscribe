@@ -5,6 +5,9 @@ http://www.jeffreyfritz.com/2015/05/where-did-my-asp-net-bundles-go-in-asp-net-5
 
 http://weblogs.asp.net/imranbaloch/custom-viewengine-aspnet5-mvc6
 http://www.jeffreyfritz.com/2015/05/customize-asp-net-mvc-6-view-location-easily/
+http://stackoverflow.com/questions/27843749/mvc6-specify-custom-location-for-views-of-viewcomponents
+
+http://docs.asp.net/en/toc/mvc/migration/migratingfrommvc5.html
 
 http://www.davepaquette.com/archive/2015/05/11/cleaner-forms-using-tag-helpers-in-mvc6.aspx
 

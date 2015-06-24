@@ -1,0 +1,89 @@
+﻿@model cloudscribe.Core.Web.ViewModels.UserAdmin.UserListViewModel
+
+@{
+    
+}
+
+@if (Model.ShowAlphaPager)
+{
+    <div>
+        @Html.AlphabeticPager(Model.AlphaQuery,
+            CommonResources.AlphaPagerChars,
+            null,
+            CommonResources.All,
+            "",
+            false,
+            x => Url.Action("Index", new { query = x })
+    )
+    </div>
+}
+
+<table class="table table-striped">
+    <tr>
+        <th>
+            @Html.ActionLink(@CommonResources.NewUser, "UserEdit", null, new { @class = "btn btn-xs btn-default" })
+        </th>
+        <th>
+            @CommonResources.Email
+        </th>
+        <th>
+            @CommonResources.LoginName
+        </th>
+        <th>
+            @CommonResources.DisplayName
+        </th>
+        <th>
+            @CommonResources.FirstName
+        </th>
+        <th>
+            @CommonResources.LastName
+        </th>
+        
+    </tr>
+
+    @foreach (var item in Model.UserList)
+    {
+        <tr>
+            <td>
+                @Html.ActionLink(@CommonResources.Manage, "UserEdit",
+             new { userId = item.UserId },
+             new { @class = "btn btn-xs btn-default" }
+                ) 
+                @Html.ActionLink(@CommonResources.ViewProfile, "Details",
+             new { /* id=item.PrimaryKey */ }, new { @class = "btn btn-xs btn-default" }
+                ) 
+                
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserId)
+                
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DisplayName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastName)
+            </td>
+            
+        </tr>
+    }
+
+</table>
+<div>
+    @Html.Pager(Model.Paging.ItemsPerPage, Model.Paging.CurrentPage, Model.Paging.TotalItems).Options(o => o
+            //.Action("StateListPage")
+            .AddRouteValue("query", Model.AlphaQuery)
+            //.AddRouteValue("pageSize", Model.Paging.ItemsPerPage)
+            .DisplayTemplate("Bootstrap3Pagination")
+            .PageRouteValueKey("pageNumber")
+            .MaxNrOfPages(Model.Paging.MaxPagerItems)
+            
+    )
+</div>

@@ -1,0 +1,17 @@
+﻿
+@{
+    bool startingNodeInChildLevel = true;
+    bool showStartingNode = false;
+    int maxDepth = 2;
+}
+
+<h2>@ViewBag.Heading</h2>
+@*
+    @Html.MvcSiteMap().Menu("VerticalMenuHelperModel",
+    Html.MvcSiteMap().SiteMap.FindSiteMapNodeFromKey("SiteAdmin"),
+        startingNodeInChildLevel,
+        showStartingNode,
+        maxDepth,
+        new { name = "ChildMenu" }
+        )
+*@
