@@ -6,10 +6,11 @@
 <h2>@ViewBag.Title</h2>
 @Html.Partial("_BasicSettingsPartial", Model)
 
+
+
 @section Scripts {
-   
-    @Scripts.Render("~/Scripts/cloudscribe-cascade-unobtrusive.js")
-    @Scripts.Render("~/Scripts/ckeditor/ckeditor.js")
-    @Scripts.Render("~/Scripts/ckeditor/adapters/jquery.js")
-    @Scripts.Render("~/Scripts/cloudscribe-ckeditor-unobtrusive.js")
+<script src="~/js/cloudscribe-cascade-unobtrusive.js"></script>
+<script src="~/js/ckeditor/ckeditor.js"></script>
+<script src="~/js/ckeditor/adapters/jquery.js"></script>
+<script src="~/js/cloudscribe-ckeditor-unobtrusive.js"></script>
 }

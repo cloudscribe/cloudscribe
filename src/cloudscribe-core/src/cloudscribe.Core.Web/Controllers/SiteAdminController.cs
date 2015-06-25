@@ -77,7 +77,7 @@ namespace cloudscribe.Core.Web.Controllers
 #pragma warning restore 1998
 
         [HttpGet]
-        [Authorize(Roles = "ServerAdmins")]
+        [Authorize(Roles = "Admins")]
         public async Task<IActionResult> SiteList(int pageNumber = 1, int pageSize = -1)
         {
             ViewBag.SiteName = Site.SiteName;

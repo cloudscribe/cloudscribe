@@ -36,7 +36,9 @@
         "cloudscribe.Messaging": "1.0.0-*",
         "Microsoft.AspNet.Http": "1.0.0-beta4",
         "Microsoft.AspNet.Http.Extensions": "1.0.0-beta4",
-        "Microsoft.Framework.DependencyInjection.Interfaces": "1.0.0-beta4"
+        "Microsoft.Framework.DependencyInjection.Interfaces": "1.0.0-beta4",
+        "Microsoft.Framework.ConfigurationModel.Interfaces": "1.0.0-beta4",
+        "Microsoft.AspNet.Session": "1.0.0-beta4"
     },
 
     "commands": {

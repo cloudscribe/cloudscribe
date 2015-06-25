@@ -49,14 +49,25 @@ namespace cloudscribe.Configuration
             return new Guid(result);
         }
 
-        public static bool UseRelatedSiteMode (this IConfiguration config)
+        public static bool UseRelatedSiteMode(this IConfiguration config)
         {
             return config.GetOrDefault("AppSettings:UseRelatedSiteMode", false);
         }
 
+        public static bool UseFoldersInsteadOfHostnamesForMultipleSites(this IConfiguration config)
+        {
+            return config.GetOrDefault("AppSettings:UseFoldersInsteadOfHostnamesForMultipleSites", true);
+        }
+        
+
         public static int RelatedSiteId (this IConfiguration config)
         {
             return config.GetOrDefault("AppSettings:RelatedSiteId", 1);
+        }
+
+        public static string CkEditorCustomConfigPath(this IConfiguration config)
+        {
+            return config.GetOrDefault("CkEditor:CustomConfigPath", "~/js/cloudscribe-ckeditor-config.js");
         }
 
 

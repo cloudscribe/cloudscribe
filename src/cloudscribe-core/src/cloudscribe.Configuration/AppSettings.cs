@@ -476,10 +476,10 @@ namespace cloudscribe.Configuration
 
         //  ~/Config/applications/{0}/upgrade/{1}/
 
-        public static string CkEditorCustomConfigPath
-        {
-            get { return GetString("CkEditor:CustomConfigPath", "~/Scripts/cloudscribe-ckeditor-config.js"); }
-        }
+        //public static string CkEditorCustomConfigPath
+        //{
+        //    get { return GetString("CkEditor:CustomConfigPath", "~/Scripts/cloudscribe-ckeditor-config.js"); }
+        //}
 
         public static string RecaptchaSiteKey
         {

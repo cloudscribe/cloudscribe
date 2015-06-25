@@ -10,6 +10,7 @@ using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Authentication;
 using Microsoft.AspNet.Authentication.Cookies;
+using Microsoft.AspNet.Session;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.ConfigurationModel;
 using Microsoft.AspNet.Builder;
@@ -83,6 +84,8 @@ namespace cloudscribe.WebHost
             services.AddIdentity<SiteUser, SiteRole>();
             //********************************************************************************************************
 
+            
+
             // Add MVC services to the services container.
             services.AddMvc().Configure<MvcOptions>(options =>
             {
@@ -111,44 +114,46 @@ namespace cloudscribe.WebHost
         /// <returns></returns>
         public static IApplicationBuilder UseCloudscribeCore(this IApplicationBuilder app, IConfiguration config)
         {
+            // the only thing we are using session for is Alerts
+            //app.UseInMemorySession(configure: s => s.IdleTimeout = TimeSpan.FromMinutes(20));
 
-            app.Use(
-                next =>
-                {
+            //app.Use(
+            //    next =>
+            //    {
 
-                    return async ctx =>
-                    {
+            //        return async ctx =>
+            //        {
 
-                        //await ctx.Response.WriteAsync("Hello from IApplicationBuilder.Use!\n");
-
-
+            //            //await ctx.Response.WriteAsync("Hello from IApplicationBuilder.Use!\n");
 
 
-                        await next(ctx);
-                    };
-                });
 
-            app.Use(async (ctx, next) =>
-            {
-                //ctx.Items.Add("foo", "foo");
-                //ISiteRepository siteRepository = ctx.ApplicationServices.GetService<ISiteRepository>();
-                //if(siteRepository != null)
-                //{
-                //    ISiteResolver siteResolver = new RequestSiteResolver(siteRepository,
-                //        ctx.Request.Host.Value,
-                //        ctx.Request.Path.Value);
 
-                //    // adding to httpcontext.items
-                //    // would rather add it to the container (ApplicationServices)
-                //    ctx.Items.Add("ISiteResolver", siteResolver);
-                //    // and now how can we get this as a dependency
-                //}
+            //            await next(ctx);
+            //        };
+            //    });
 
-                //IGreeter greeter = ctx.ApplicationServices.GetService<IGreeter>();
-                //await ctx.Response.WriteAsync(greeter.Greet());
+            //app.Use(async (ctx, next) =>
+            //{
+            //    //ctx.Items.Add("foo", "foo");
+            //    //ISiteRepository siteRepository = ctx.ApplicationServices.GetService<ISiteRepository>();
+            //    //if(siteRepository != null)
+            //    //{
+            //    //    ISiteResolver siteResolver = new RequestSiteResolver(siteRepository,
+            //    //        ctx.Request.Host.Value,
+            //    //        ctx.Request.Path.Value);
 
-                await next();
-            });
+            //    //    // adding to httpcontext.items
+            //    //    // would rather add it to the container (ApplicationServices)
+            //    //    ctx.Items.Add("ISiteResolver", siteResolver);
+            //    //    // and now how can we get this as a dependency
+            //    //}
+
+            //    //IGreeter greeter = ctx.ApplicationServices.GetService<IGreeter>();
+            //    //await ctx.Response.WriteAsync(greeter.Greet());
+
+            //    await next();
+            //});
 
             // some examples from http://stackoverflow.com/questions/24422903/setup-owin-dynamically-by-domain
 
@@ -164,67 +169,67 @@ namespace cloudscribe.WebHost
             //app.MapWhen()
 
 
-            string foundHost = string.Empty;
-            app.MapWhen(ctx => {
+            //string foundHost = string.Empty;
+            //app.MapWhen(ctx => {
 
-                if (ctx.Request.Headers.Get("Host").Equals("customer1.cloudservice.net"))
-                {
-                    foundHost = "foo";
-                    return true;
-                }
+            //    if (ctx.Request.Headers.Get("Host").Equals("customer1.cloudservice.net"))
+            //    {
+            //        foundHost = "foo";
+            //        return true;
+            //    }
 
-                return false;
+            //    return false;
 
-            }, app2 =>
-            {
-                if (!string.IsNullOrEmpty(foundHost))
-                {
-                    //app2.UseIdentity();
+            //}, app2 =>
+            //{
+            //    if (!string.IsNullOrEmpty(foundHost))
+            //    {
+            //        //app2.UseIdentity();
 
-                    //CookieAuthenticationOptions cookieOptions = new CookieAuthenticationOptions
-                    //{
-                    //    CookieName = "cloudscribe-app",
-                    //    CookiePath = "/",
-                    //    CookieDomain = foundHost,
-                    //    LoginPath = new PathString("/Account/Login"),
-                    //    LogoutPath = new PathString("/Account/Logout")
+            //        //CookieAuthenticationOptions cookieOptions = new CookieAuthenticationOptions
+            //        //{
+            //        //    CookieName = "cloudscribe-app",
+            //        //    CookiePath = "/",
+            //        //    CookieDomain = foundHost,
+            //        //    LoginPath = new PathString("/Account/Login"),
+            //        //    LogoutPath = new PathString("/Account/Logout")
 
 
-                    //};
+            //        //};
 
-                    //app.UseCookieAuthentication(cookieOptions);
+            //        //app.UseCookieAuthentication(cookieOptions);
 
-                    //app.UseCookieAuthentication(new CookieAuthenticationOptions
-                    //{
-                    //    AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
-                    //    LoginPath = new PathString("/Account/Login"),
-                    //    Provider = new CookieAuthenticationProvider
-                    //    {
-                    //        OnValidateIdentity = SecurityStampValidator.OnValidateIdentity<SiteUserManager, SiteUser>(
-                    //        validateInterval: TimeSpan.FromMinutes(30),
-                    //        regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager))
-                    //    },
-                    //    // here for folder sites we would like to be able to set the cookie name per tenant
-                    //    // ie based on the request, but it seems not possible except in startup
-                    //    CookieName = "cloudscribe-app"
+            //        //app.UseCookieAuthentication(new CookieAuthenticationOptions
+            //        //{
+            //        //    AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
+            //        //    LoginPath = new PathString("/Account/Login"),
+            //        //    Provider = new CookieAuthenticationProvider
+            //        //    {
+            //        //        OnValidateIdentity = SecurityStampValidator.OnValidateIdentity<SiteUserManager, SiteUser>(
+            //        //        validateInterval: TimeSpan.FromMinutes(30),
+            //        //        regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager))
+            //        //    },
+            //        //    // here for folder sites we would like to be able to set the cookie name per tenant
+            //        //    // ie based on the request, but it seems not possible except in startup
+            //        //    CookieName = "cloudscribe-app"
 
-                    //    //http://aspnet.codeplex.com/SourceControl/latest#Samples/Katana/BranchingPipelines/Startup.cs
+            //        //    //http://aspnet.codeplex.com/SourceControl/latest#Samples/Katana/BranchingPipelines/Startup.cs
 
-                    //    //http://leastprivilege.com/2012/10/08/custom-claims-principals-in-net-4-5/
-                    //    // maybe we could add a per site claim
-                    //    // or a custom claimprincipal where we can override IsAuthenticated
-                    //    // based on something in addition to the auth cookie
-                    //    //http://msdn.microsoft.com/en-us/library/system.security.claims.claimsprincipal%28v=vs.110%29.aspx
-                    //    //http://msdn.microsoft.com/en-us/library/system.security.principal.iidentity%28v=vs.110%29.aspx
-                    //    // or custom IIdentity
-                    //    //http://msdn.microsoft.com/en-us/library/system.security.claims.claimsidentity%28v=vs.110%29.aspx
+            //        //    //http://leastprivilege.com/2012/10/08/custom-claims-principals-in-net-4-5/
+            //        //    // maybe we could add a per site claim
+            //        //    // or a custom claimprincipal where we can override IsAuthenticated
+            //        //    // based on something in addition to the auth cookie
+            //        //    //http://msdn.microsoft.com/en-us/library/system.security.claims.claimsprincipal%28v=vs.110%29.aspx
+            //        //    //http://msdn.microsoft.com/en-us/library/system.security.principal.iidentity%28v=vs.110%29.aspx
+            //        //    // or custom IIdentity
+            //        //    //http://msdn.microsoft.com/en-us/library/system.security.claims.claimsidentity%28v=vs.110%29.aspx
 
-                    //    //http://stackoverflow.com/questions/19763807/how-to-set-a-custom-claimsprincipal-in-mvc-5
-                    //});
+            //        //    //http://stackoverflow.com/questions/19763807/how-to-set-a-custom-claimsprincipal-in-mvc-5
+            //        //});
 
-                }
+            //    }
 
-            });
+            //});
 
 
             return app;

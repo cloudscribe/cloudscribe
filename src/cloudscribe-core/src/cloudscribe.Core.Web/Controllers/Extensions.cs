@@ -1,17 +1,17 @@
 ﻿// Author:					Joe Audette
 // Created:					2015-01-02
-// Last Modified:			2015-06-11
+// Last Modified:			2015-06-25
 // 
 
-//using cloudscribe.Core.Models;
+
 using cloudscribe.Core.Web.Models;
 using cloudscribe.Core.Web.ViewModels.Common;
-//using Microsoft.AspNet.Identity.Owin;
 using Newtonsoft.Json;
-//using System;
+using System;
 using System.Collections.Generic;
-//using System.Net.Http;  //2015-06-11 this seems available on dnxcore50 but not dnx451 though the package reference exists in both
-                            // seems like a packaging error from MS, the package doesn't list dnx451 as supported so vs gives an error
+//#if DNX451
+//using System.Net.Http;
+//#endif
 
 using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Http;
@@ -86,19 +86,26 @@ namespace cloudscribe.Core.Web.Controllers
             string message,
             bool dismissable)
         {
-            var alerts = controller.TempData.ContainsKey(Alert.TempDataKey)
+            
+            if (controller.Context.GetFeature<ISessionFeature>() != null)
+            {    
+                var alerts = controller.TempData.ContainsKey(Alert.TempDataKey)
                 ? (List<Alert>)controller.TempData[Alert.TempDataKey]
                 : new List<Alert>();
 
-            alerts.Add(new Alert
-            {
-                AlertStyle = alertStyle,
-                Message = message,
-                Dismissable = dismissable
-            });
+                alerts.Add(new Alert
+                {
+                    AlertStyle = alertStyle,
+                    Message = message,
+                    Dismissable = dismissable
+                });
 
-            controller.TempData[Alert.TempDataKey] = alerts;
+                controller.TempData[Alert.TempDataKey] = alerts;
+            }
+
         }
+
+       
 
     }
 }
