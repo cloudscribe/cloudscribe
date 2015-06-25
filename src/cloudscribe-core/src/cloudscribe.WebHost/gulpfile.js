@@ -10,7 +10,7 @@ eval("var project = " + fs.readFileSync("./project.json"));
 
 var paths = {
   bower: "./bower_components/",
-  lib: "./" + project.webroot + "/lib/",
+  lib: "./" + project.webroot + "/js/lib/",
   css: "./" + project.webroot + "/css/"
 };
 

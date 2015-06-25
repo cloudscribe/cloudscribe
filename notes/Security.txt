@@ -1,2 +1,5 @@
+
 http://www.troyhunt.com/2012/05/everything-you-ever-wanted-to-know.html
+
+http://blogs.msdn.com/b/webdev/archive/2014/01/06/implementing-custom-password-policy-using-asp-net-identity.aspx
 
