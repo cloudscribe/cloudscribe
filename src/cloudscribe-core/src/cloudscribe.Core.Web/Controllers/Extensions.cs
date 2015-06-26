@@ -43,10 +43,7 @@ namespace cloudscribe.Core.Web.Controllers
         //    return captchaResponse;
         //}
 
-        //public static ISiteContext GetSiteContext(this Controller controller)
-        //{
-        //    return controller.HttpContext.GetOwinContext().Get<ISiteContext>();
-        //}
+        
 
         public static void AlertSuccess(
             this Controller controller,

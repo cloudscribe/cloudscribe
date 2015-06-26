@@ -1,27 +1,33 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.SiteListViewModel
+@inject IConfiguration config
 
 @{
     var FolderHostLabel = "Preferred Host Name";
-    if (AppSettings.UseFoldersInsteadOfHostnamesForMultipleSites)
+    if (config.UseFoldersInsteadOfHostnamesForMultipleSites())
     {
         FolderHostLabel = "Folder";
     }
     
 }
-@section Styles {
-    @Styles.Render("~/Content/themes/base/all.css")
-    @Styles.Render("~/Content/themes/base/dialog.css")
-}
+@*
+    @section Styles {
+
+
+        @Styles.Render("~/Content/themes/base/all.css")
+        @Styles.Render("~/Content/themes/base/dialog.css")
+
+    }
+*@
 <h2>@Model.Heading</h2>
 <table class="table table-striped table-bordered">
     <tr>
         <th>
-            @Html.ActionLink(CommonResources.NewSite, "NewSite", 
-            new { slp = Model.Paging.CurrentPage },  
-            new { @class = "btn btn-xs btn-default" })
+            <a class="btn btn-xs btn-default" asp-action="NewSite"
+               asp-controller="SiteAdmin"
+               asp-route-slp="Model.Paging.CurrentPage">CommonResources.NewSite</a>
         </th>
         <th>
-            @CommonResources.SiteName
+            CommonResources.SiteName
         </th>
         <th>
             @FolderHostLabel
@@ -31,14 +37,19 @@
 {
     <tr class="@(item.IsServerAdminSite ? "adminsite danger" : "childsite")" >
         <td>
-            @Html.ActionLink(CommonResources.Settings, "SiteInfo",
-            new { siteGuid = item.SiteGuid, slp = Model.Paging.CurrentPage },
-            new { @class = "btn btn-xs btn-default" })
-@if (!AppSettings.UseFoldersInsteadOfHostnamesForMultipleSites)
+            <a class="btn btn-xs btn-default" asp-action="SiteInfo"
+               asp-controller="SiteAdmin"
+               asp-route-siteguid="@item.SiteGuid"
+               asp-route-slp="@Model.Paging.CurrentPage">CommonResources.Settings</a>
+
+@if (!config.UseFoldersInsteadOfHostnamesForMultipleSites())
 {
-    @Html.ActionLink(CommonResources.DomainMappings, "SiteHostMappings", "SiteAdmin",
-            new { siteGuid = item.SiteGuid, slp = Model.Paging.CurrentPage },
-                new { @class = "btn btn-xs btn-default hostmap" })
+    <a class="btn btn-xs btn-default hostmap" asp-action="SiteHostMappings"
+       asp-controller="SiteAdmin"
+       asp-route-siteguid="@item.SiteGuid"
+       asp-route-slp="@Model.Paging.CurrentPage">CommonResources.DomainMappings</a>
+
+   
 }
 
         </td>
@@ -46,7 +57,7 @@
             @Html.DisplayFor(modelItem => item.SiteName)
         </td>
         <td>
-            @if (AppSettings.UseFoldersInsteadOfHostnamesForMultipleSites)
+            @if (config.UseFoldersInsteadOfHostnamesForMultipleSites())
             {
                 <a href="/@item.SiteFolderName" target="_blank">/@item.SiteFolderName</a>
             }
@@ -62,14 +73,19 @@
 }
 </table>
 <div>
+    @*
+
+
     @Html.Pager(Model.Paging.ItemsPerPage, Model.Paging.CurrentPage, Model.Paging.TotalItems).Options(o => o
             .Action("SiteList")
-            
+
             .AddRouteValue("pageSize", Model.Paging.ItemsPerPage)
-            
+
             .DisplayTemplate("Bootstrap3Pagination")
             .PageRouteValueKey("pageNumber")
             .MaxNrOfPages(Model.Paging.MaxPagerItems)
 
     )
+
+    *@
 </div>

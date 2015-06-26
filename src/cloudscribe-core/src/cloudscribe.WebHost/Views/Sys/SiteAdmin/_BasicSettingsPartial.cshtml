@@ -5,47 +5,47 @@
 @{
 
 }
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form method="post" class="form-horizontal" role="form">
     <div class="form-horizontal">
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.SiteId)
-        @Html.HiddenFor(model => model.SiteGuid)
-        @Html.HiddenFor(model => model.ReturnPageNumber)
+        <div asp-validation-summary="ValidationSummary.All" class="text-danger"></div>
+        <input asp-for="SiteId" type="hidden" />
+        <input asp-for="SiteGuid" type="hidden" />
+        <input asp-for="ReturnPageNumber" type="hidden" />
         <div class="form-group">
-            @Html.LabelFor(model => model.SiteName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <label asp-for="SiteName" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                @Html.EditorFor(model => model.SiteName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.SiteName, "", new { @class = "text-danger" })
+                <input asp-for="SiteName" class="form-control" />
+                <span asp-validation-for="SiteName" class="text-danger"></span> 
             </div>
         </div>
-@if (config.UseFoldersInsteadOfHostnamesForMultipleSites()) {
-        <div class="form-group">
-            @Html.LabelFor(model => model.SiteFolderName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.SiteFolderName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.SiteFolderName, "", new { @class = "text-danger" })
-                @Html.ValidationMessage("foldererror", new { @class = "text-danger" })
+        @if (config.UseFoldersInsteadOfHostnamesForMultipleSites())
+        {
+            <div class="form-group">
+                <label asp-for="SiteFolderName" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="SiteFolderName" class="form-control" />
+                    <span asp-validation-for="SiteFolderName" class="text-danger"></span> 
+                    @Html.ValidationMessage("foldererror", new { @class = "text-danger" })
+                </div>
             </div>
-        </div>
-}
-else
-{
-    <div class="form-group">
-        @Html.LabelFor(model => model.HostName, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.HostName, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.HostName, "", new { @class = "text-danger" })
-            @Html.ValidationMessage("hosterror", new { @class = "text-danger" })
-            @Html.ActionLink("DomainMappings", "SiteHostMappings", "SiteAdmin",
-            new { siteGuid = Model.SiteGuid, slp = Model.ReturnPageNumber },
-                new { @class = "hostmap" })
-        </div>
-    </div>
-}
+        }
+        else
+        {
+            <div class="form-group">
+                <label asp-for="HostName" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="HostName" class="form-control" />
+                    <span asp-validation-for="HostName" class="text-danger"></span> 
+                    @Html.ValidationMessage("hosterror", new { @class = "text-danger" })
+                    <a class="hostmap" asp-action="SiteHostMappings" 
+                       asp-controller="SiteAdmin" 
+                       asp-route-siteGuid="SiteGuid" 
+                       asp-route-slp="ReturnPageNumber">DomainMappings</a>
+                </div>
+            </div>
+        }
         <div class="form-group">
-            @Html.LabelFor(model => model.TimeZoneId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <label asp-for="TimeZoneId" class="col-md-2 control-label"></label>
             <div class="col-md-10">
                 @Html.DropDownListFor(model => model.TimeZoneId,
                            Model.AllTimeZones.Select(x =>
@@ -57,108 +57,111 @@ else
                                     Selected = Model.TimeZoneId == x.Id
                                 }),
                                 new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.TimeZoneId, "", new { @class = "text-danger" })
+                <span asp-validation-for="TimeZoneId" class="text-danger"></span> 
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(model => model.Slogan, htmlAttributes: new { @class = "control-label col-md-2" })
+            <label asp-for="Slogan" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Slogan, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Slogan, "", new { @class = "text-danger" })
+                <input asp-for="Slogan" class="form-control" />
+                <span asp-validation-for="Slogan" class="text-danger"></span>    
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(model => model.CompanyName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <label asp-for="CompanyName" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                @Html.EditorFor(model => model.CompanyName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.CompanyName, "", new { @class = "text-danger" })
+                <input asp-for="CompanyName" class="form-control" />
+                <span asp-validation-for="CompanyName" class="text-danger"></span>    
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(model => model.CompanyStreetAddress, htmlAttributes: new { @class = "control-label col-md-2" })
+            <label asp-for="CompanyStreetAddress" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                @Html.EditorFor(model => model.CompanyStreetAddress, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.CompanyStreetAddress, "", new { @class = "text-danger" })
+                <input asp-for="CompanyStreetAddress" class="form-control" />
+                <span asp-validation-for="CompanyStreetAddress" class="text-danger"></span>    
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(model => model.CompanyStreetAddress2, htmlAttributes: new { @class = "control-label col-md-2" })
+            <label asp-for="CompanyStreetAddress2" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                @Html.EditorFor(model => model.CompanyStreetAddress2, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.CompanyStreetAddress2, "", new { @class = "text-danger" })
+                <input asp-for="CompanyStreetAddress2" class="form-control" />
+                <span asp-validation-for="CompanyStreetAddress2" class="text-danger"></span>     
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(model => model.CompanyLocality, htmlAttributes: new { @class = "control-label col-md-2" })
+            <label asp-for="CompanyLocality" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                @Html.EditorFor(model => model.CompanyLocality, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.CompanyLocality, "", new { @class = "text-danger" })
+                <input asp-for="CompanyLocality" class="form-control" />
+                <span asp-validation-for="CompanyLocality" class="text-danger"></span>     
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(model => model.CompanyCountry, htmlAttributes: new { @class = "control-label col-md-2" })
+            <label asp-for="CompanyCountry" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                @Html.DropDownListFor(model => model.CompanyCountry, Model.AvailableCountries, new { @id="CompanyCountry", @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.CompanyCountry, "", new { @class = "text-danger" })
+                <select id="CompanyCountry" asp-for="CompanyCountry"
+                        asp-items="Model.AvailableCountries" class="form-control"></select>
+                <span asp-validation-for="CompanyCountry" class="text-danger"></span>    
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(model => model.CompanyRegion, htmlAttributes: new { @class = "control-label col-md-2" })
+            <label asp-for="CompanyRegion" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                
-                @Html.DropDownListFor(model => model.CompanyRegion, Model.AvailableStates, 
-                new { @id = "CompanyRegion", @class = "form-control",
-                      @data_cascade_childof = "CompanyCountry",
-                    @data_cascade_serviceurl= Url.Content("~/CoreData/GetStatesJson/?countryCode="),
-                    @data_cascade_orig_val= Model.CompanyRegion,
-                      @data_cascade_select_label = "-Please select-"
-                })
-                @Html.ValidationMessageFor(model => model.CompanyRegion, "", new { @class = "text-danger" })  
+                <select id="CompanyRegion" class="form-control" 
+                        asp-for="CompanyRegion"
+                        asp-items="Model.AvailableStates" 
+                        data-cascade-childof="CompanyCountry"
+                        data-cascade-serviceurl='@Url.Content("~/CoreData/GetStatesJson/?countryCode=")'
+                        data-cascade-orig-val="@Model.CompanyRegion"
+                        data-cascade-select-label="-Please select-"
+                        ></select>
+                <span asp-validation-for="CompanyRegion" class="text-danger"></span>    
+
+               
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(model => model.CompanyPostalCode, htmlAttributes: new { @class = "control-label col-md-2" })
+            <label asp-for="CompanyPostalCode" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                @Html.EditorFor(model => model.CompanyPostalCode, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.CompanyPostalCode, "", new { @class = "text-danger" })
+                <input asp-for="CompanyPostalCode" class="form-control" />
+                <span asp-validation-for="CompanyPostalCode" class="text-danger"></span>  
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(model => model.CompanyPhone, htmlAttributes: new { @class = "control-label col-md-2" })
+            <label asp-for="CompanyPhone" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                @Html.EditorFor(model => model.CompanyPhone, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.CompanyPhone, "", new { @class = "text-danger" })
+                <input asp-for="CompanyPhone" class="form-control" />
+                <span asp-validation-for="CompanyPhone" class="text-danger"></span>   
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(model => model.CompanyFax, htmlAttributes: new { @class = "control-label col-md-2" })
+            <label asp-for="CompanyFax" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                @Html.EditorFor(model => model.CompanyFax, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.CompanyFax, "", new { @class = "text-danger" })
+                <input asp-for="CompanyFax" class="form-control" />
+                <span asp-validation-for="CompanyFax" class="text-danger"></span>     
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(model => model.CompanyPublicEmail, htmlAttributes: new { @class = "control-label col-md-2" })
+            <label asp-for="CompanyPublicEmail" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                @Html.EditorFor(model => model.CompanyPublicEmail, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.CompanyPublicEmail, "", new { @class = "text-danger" })
+                <input asp-for="CompanyPublicEmail" class="form-control" />
+                <span asp-validation-for="CompanyPublicEmail" class="text-danger"></span>     
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(model => model.RecaptchaPublicKey, htmlAttributes: new { @class = "control-label col-md-2" })
+            <label asp-for="RecaptchaPublicKey" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                @Html.EditorFor(model => model.RecaptchaPublicKey, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.RecaptchaPublicKey, "", new { @class = "text-danger" })
+                <input asp-for="RecaptchaPublicKey" class="form-control" />
+                <span asp-validation-for="RecaptchaPublicKey" class="text-danger"></span>  
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(model => model.RecaptchaPrivateKey, htmlAttributes: new { @class = "control-label col-md-2" })
+            <label asp-for="RecaptchaPrivateKey" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                @Html.EditorFor(model => model.RecaptchaPrivateKey, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.RecaptchaPrivateKey, "", new { @class = "text-danger" })
+                <input asp-for="RecaptchaPrivateKey" class="form-control" />
+                <span asp-validation-for="RecaptchaPrivateKey" class="text-danger"></span>
             </div>
         </div>
-        
+
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <div class="checkbox">
@@ -176,19 +179,16 @@ else
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(model => model.ClosedMessage, htmlAttributes: new { @class = "control-label col-md-2" })
+            <label asp-for="ClosedMessage" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                @Html.TextAreaFor(model => model.ClosedMessage,
-                new
-                {
-                    @rows = 5,
-                    @class = "form-control",
-                    @data_ckeditor_unobtrusive = "",
-                    @data_ckeditor_unobtrusive_config_url = Url.Content(config.CkEditorCustomConfigPath()),
-                    @data_ckeditor_unobtrusive_config_toolbar = "Full",
-                    @data_ckeditor_unobtrusive_config_language = System.Globalization.CultureInfo.CurrentUICulture.Name
-                })
-                @Html.ValidationMessageFor(model => model.ClosedMessage, "", new { @class = "text-danger" })
+                <textarea class="form-control" rows="5" asp-for="ClosedMessage"
+                          data-ckeditor-unobtrusive="" 
+                          data-ckeditor-unobtrusive-config-url="@Url.Content(config.CkEditorCustomConfigPath())"
+                          data-ckeditor-unobtrusive-config-toolbar="Full"
+                          data-ckeditor-unobtrusive-config-language="@System.Globalization.CultureInfo.CurrentUICulture.Name"
+                          ></textarea>
+                <span asp-validation-for="ClosedMessage" class="text-danger"></span>
+               
             </div>
         </div>
         <div class="form-group">
@@ -199,7 +199,7 @@ else
                 </div>
             </div>
         </div>
-        
+
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Save" class="btn btn-default" />
@@ -214,25 +214,22 @@ else
             </div>
         </div>
     </div>
-}
-@if ((Model.ShowDelete)&&(Model.SiteGuid != Guid.Empty))
+</form>
+@if ((Model.ShowDelete) && (Model.SiteGuid != Guid.Empty))
 {
-    using (Html.BeginForm("SiteDelete", "SiteAdmin", FormMethod.Post, new { @id = "deleteform", @class = "form-inline" }))
-    { @Html.AntiForgeryToken()
-        @Html.Hidden("siteId", Model.SiteId)
-        @Html.Hidden("siteGuid", Model.SiteGuid)
-        @Html.Hidden("returnPageNumber", Model.ReturnPageNumber)
-
+    <form id="deleteform" class="form-inline" asp-controller="SiteAdmin"
+          asp-action="SiteDelete">
+        <input asp-for="SiteId" type="hidden"/>
+        <input asp-for="SiteGuid" type="hidden" />
+        <input asp-for="ReturnPageNumber" type="hidden" />
+    </form>       
+}
+    <div>
+        <a class="btn btn-default" asp-action="SiteList"
+           asp-controller="SiteAdmin"
+           asp-route-siteguid="SiteGuid"
+           asp-route-pageNumber="ReturnPageNumber">BackToSiteList</a>  
+    </div>
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
     }
-}
-<div>
-    @Html.ActionLink(
-        "BackToSiteList",
-        "SiteList",
-        new { pageNumber = Model.ReturnPageNumber },
-        new { @class = "btn btn-default" }
-        )
-</div>
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
-}
