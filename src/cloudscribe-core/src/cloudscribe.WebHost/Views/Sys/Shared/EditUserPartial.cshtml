@@ -3,72 +3,70 @@
 
 }
 <div class="form-group">
-    @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
+    <label asp-for="Email" class="col-md-2 control-label"></label>
     <div class="col-md-10">
-        @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
     </div>
 </div>
 <div class="form-group">
-    @Html.LabelFor(m => m.LoginName, new { @class = "col-md-2 control-label" })
+    <label asp-for="LoginName" class="col-md-2 control-label"></label>
     <div class="col-md-10">
-        @Html.TextBoxFor(m => m.LoginName, new { @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.LoginName, "", new { @class = "text-danger" })
+        <input asp-for="LoginName" class="form-control" />
+        <span asp-validation-for="LoginName" class="text-danger"></span>
     </div>
 </div>
 <div class="form-group">
-    @Html.LabelFor(m => m.DisplayName, new { @class = "col-md-2 control-label" })
+    <label asp-for="DisplayName" class="col-md-2 control-label"></label>
     <div class="col-md-10">
-        @Html.TextBoxFor(m => m.DisplayName, new { @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.DisplayName, "", new { @class = "text-danger" })
+        <input asp-for="DisplayName" class="form-control" />
+        <span asp-validation-for="DisplayName" class="text-danger"></span>
     </div>
 </div>
 <div class="form-group">
-    @Html.LabelFor(m => m.FirstName, new { @class = "col-md-2 control-label" })
+    <label asp-for="FirstName" class="col-md-2 control-label"></label>
     <div class="col-md-10">
-        @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control" })
+        <input asp-for="FirstName" class="form-control" />
     </div>
 </div>
 <div class="form-group">
-    @Html.LabelFor(m => m.LastName, new { @class = "col-md-2 control-label" })
+    <label asp-for="LastName" class="col-md-2 control-label"></label>
     <div class="col-md-10">
-        @Html.TextBoxFor(m => m.LastName, new { @class = "form-control" })
+        <input asp-for="LastName" class="form-control" />
     </div>
 </div>
     @if (Model.UserId == -1)
     {
 <div class="form-group">
-    @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
+    <label asp-for="Password" class="col-md-2 control-label"></label>
     <div class="col-md-10">
-        @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+        <input asp-for="Password" type="password" class="form-control" />
+        <span asp-validation-for="Password" class="text-danger"></span> 
     </div>
 </div>
 <div class="form-group">
-    @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label" })
+    <label asp-for="ConfirmPassword" class="col-md-2 control-label"></label>
     <div class="col-md-10">
-        @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "text-danger" })
+        <input asp-for="ConfirmPassword" type="password" class="form-control" />
+        <span asp-validation-for="ConfirmPassword" class="text-danger"></span> 
     </div>
 </div>
     }
 <div class="form-group">
-    @Html.LabelFor(model => model.DateOfBirth, htmlAttributes: new { @class = "control-label col-md-2" })
+    <label asp-for="DateOfBirth" class="col-md-2 control-label"></label>
     <div class="col-md-10">
-        @Html.TextBoxFor(model => model.DateOfBirth,
-                new
-                {
-                    @Value = (Model.DateOfBirth.HasValue ? Model.DateOfBirth.Value.ToString("d") : string.Empty),
-                    @class = "form-control",
-                    @data_cs_datepicker = "true",
-                    @data_cs_datepicker_show_time = "false",
-                    @data_cs_datepicker_show_time_only = "false",
-                    @data_cs_datepicker_show_month_list = "true",
-                    @data_cs_datepicker_show_year_list = "true",
-                    @data_cs_datepicker_year_range = "c-100:c+0",
-                    @data_cs_datepicker_dateformat = ViewBag.DateFormat,
-                    @data_cs_datepicker_timeformat = ViewBag.TimeFormat
-                })
-        @Html.ValidationMessageFor(model => model.DateOfBirth, "", new { @class = "text-danger" })
+        <input value="@(Model.DateOfBirth.HasValue ? Model.DateOfBirth.Value.ToString("d") : string.Empty)" 
+               class="form-control" 
+               data-cs-datepicker="true"
+               data-cs-datepicker-show-time="false"
+               data-cs-datepicker-show-time-only="false"
+               data-cs-datepicker-show-month-list="true"
+               data-cs-datepicker-show-year-list="true"
+               data-cs-datepicker-year-range="c-100:c+0"
+               data-cs-datepicker-dateformat="@ViewBag.DateFormat"
+               data-cs-datepicker-timeformat="@ViewBag.TimeFormat"
+               />
+        <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+
     </div>
 </div>

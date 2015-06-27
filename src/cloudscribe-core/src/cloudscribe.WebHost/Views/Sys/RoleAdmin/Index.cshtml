@@ -1,12 +1,12 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.RoleAdmin.RoleListViewModel
+@inject IConfiguration config
 
 @{
 
 }
 <h2>@Model.Heading</h2>
 <p>
-    @Html.ActionLink(@CommonResources.NewRole, "RoleEdit", "RoleAdmin",
-            null, new { @class = "btn btn-default btn-sm" })
+    <a class="btn btn-sm btn-default" asp-action="RoleEdit" asp-controller="RoleAdmin">CommonResources.NewRole</a>  
 </p>
 <ul class="btn-group list-group">
     @foreach (var item in Model.SiteRoles)
@@ -17,39 +17,40 @@
                 &nbsp;
             </span>
             <div class="btn-group pull-right" role="group">
-                @using (Html.BeginForm("RoleDelete", "RoleAdmin"))
-                {
-                    @Html.AntiForgeryToken()
-                    @Html.Hidden("roleId", item.RoleId)
-                    @Html.Hidden("roleGuid", item.RoleGuid)
-
+                <form class="form-inline" asp-controller="RoleAdmin" asp-action="RoleDelete">
+                    <input id="roleId" name="roleId" type="hidden" value="@item.RoleId" />
+                    <input id="roleGuid" name="roleGuid" type="hidden" value="@item.RoleGuid" />
                     <span class="btn btn-default btn-xs">
-                        @Html.ActionLink(CommonResources.Members, "RoleMembers", "RoleAdmin",
-                         new { roleId = item.RoleId, roleGuid = item.RoleGuid }, null)
+                        <a asp-action="RoleMembers"
+                           asp-controller="RoleAdmin"
+                           asp-route-roleId="@item.RoleId"
+                           asp-route-roleGuid="@item.RoleGuid">CommonResources.Members</a>  
                         <span class="badge">@Html.DisplayFor(modelItem => item.MemberCount)</span>
                     </span>
-
-                    @Html.ActionLink(CommonResources.Edit, "RoleEdit", "RoleAdmin", new { roleId = item.RoleId }, new { @class = "btn btn-default btn-xs" })
-                    if (item.IsDeletable(AppSettings.RolesThatCannotBeDeleted))
+                    <a class="btn btn-xs btn-default" asp-action="RoleEdit" asp-controller="RoleAdmin"
+                       asp-route-roleid="@item.RoleId">CommonResources.Edit</a>  
+                    @if (item.IsDeletable(config.RolesThatCannotBeDeleted()))
                     {
-                        <button type="submit" 
-                                onclick="javascript: return confirm('@Html.FormatValue(item.DisplayName, CommonResources.ConfirmDeleteFormat)');"
-                                class="btn btn-default btn-xs">
-                            @CommonResources.Delete
-                        </button>
+                    <button type="submit"
+                            onclick="javascript: return confirm('@Html.FormatValue(item.DisplayName, "Are you sure you want to delete {0}?")');"
+                            class="btn btn-default btn-xs">
+                        CommonResources.Delete
+                    </button>
                     }
-                }
-            </div>
+                </form>      
+           </div>
         </li>
     }
 </ul>
 <div>
+    @*
     @Html.Pager(Model.Paging.ItemsPerPage, Model.Paging.CurrentPage, Model.Paging.TotalItems).Options(o => o
             .Action("Index")
             .AddRouteValue("pageSize", Model.Paging.ItemsPerPage)
             .DisplayTemplate("Bootstrap3Pagination")
             .PageRouteValueKey("pageNumber")
             .MaxNrOfPages(Model.Paging.MaxPagerItems)
-            
+
     )
+    *@
 </div>

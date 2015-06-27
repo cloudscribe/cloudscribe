@@ -58,7 +58,17 @@ namespace cloudscribe.Configuration
         {
             return config.GetOrDefault("AppSettings:UseFoldersInsteadOfHostnamesForMultipleSites", true);
         }
-        
+
+        public static string RolesThatCannotBeDeleted(this IConfiguration config)
+        {
+            return config.GetOrDefault("AppSettings:RolesThatCannotBeDeleted", string.Empty);
+        }
+
+        public static bool DontUseEmailForLogin(this IConfiguration config)
+        {
+            return config.GetOrDefault("AppSettings:DontUseEmailForLogin", false);
+        }
+
 
         public static int RelatedSiteId (this IConfiguration config)
         {

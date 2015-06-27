@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-12-10
-// Last Modified:			2015-06-11
+// Last Modified:			2015-06-27
 // TODO: make this templated
 
 using cloudscribe.Core.Models;
@@ -15,7 +15,7 @@ namespace cloudscribe.Core.Web.Helpers
     public static class AlphabeticPagination
     {
         public static HtmlString AlphabeticPager(
-            this HtmlHelper html,
+            this IHtmlHelper html,
             string selectedLetter,
             string alphabet,
             IEnumerable<string> firstLetters,

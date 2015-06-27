@@ -1,42 +1,49 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.Account.EditUserViewModel
 @{
-
+    var datePickerLocalizationScriptUrl = "~/js/jqueryui-i18n/datepicker-" + System.Globalization.CultureInfo.CurrentUICulture.Name + ".js";
+    var timePickerLocalizationScriptUrl = "~/js/timepicker/i18n/jquery-ui-timepicker-" + System.Globalization.CultureInfo.CurrentUICulture.Name + ".js";
 }
-@section Styles {
-    @Styles.Render("~/Content/themes/base/all.css")
-    @Styles.Render("~/Scripts/timepicker/jquery-ui-timepicker-addon.css")
-}
-<h2>@ViewBag.Title</h2>
-@using (Html.BeginForm("UserEdit", "UserAdmin", FormMethod.Post, 
-    new { @class = "form-horizontal", role = "form" }))
-{
-    @Html.AntiForgeryToken()
-    @Html.HiddenFor(m => m.UserId)
-    if (Model.UserId > -1)
-    {
-        <div class="form-group">
-            @Html.LabelFor(m => m.UserId, new { @class = "col-md-2 control-label" })
-            <div class="col-md-10">
-                @Html.Label("UserId", Model.UserId.ToInvariantString(), new { @class = "control-label" })
-            </div>
-        </div>
+@*
+    @section Styles {
+        @Styles.Render("~/Content/themes/base/all.css")
+        @Styles.Render("~/Scripts/timepicker/jquery-ui-timepicker-addon.css")
     }
-    @Html.Partial("EditUserPartial", Model)
+*@
+<h2>@ViewBag.Title</h2>
+<form class="form-horizontal" role="form" asp-controller="UserAdmin" asp-action="UserEdit">
+    <input asp-for="UserId" type="hidden" />
+    @if (Model.UserId > -1)
+    {
     <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" class="btn btn-default" value="@CommonResources.Save" />
+        <label asp-for="UserId" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <label class="control-label">@Model.UserId.ToInvariantString()</label>
         </div>
     </div>
-    @Html.ValidationSummary("", new { @class = "text-danger" })
-}
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-    @Scripts.Render("~/bundles/jqueryui")
-    @Scripts.Render("~/Scripts/timepicker/jquery-ui-timepicker-addon.js")
-    @if (System.Globalization.CultureInfo.CurrentUICulture.Name != "en-US")
-    {
-        @Scripts.Render("~/Scripts/jqueryui-i18n/datepicker-" + System.Globalization.CultureInfo.CurrentUICulture.Name + ".js")
-        @Scripts.Render("~/Scripts/timepicker/i18n/jquery-ui-timepicker-" + System.Globalization.CultureInfo.CurrentUICulture.Name + ".js")
     }
-    @Scripts.Render("~/Scripts/cloudscribe-datepicker-unobtrusive.js")
-}
+    @{ await Html.RenderPartialAsync("EditUserPartial", Model); }
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" class="btn btn-default" value="CommonResources.Save" />
+        </div>
+    </div>
+    <div asp-validation-summary="ValidationSummary.All" class="text-danger"></div>
+   
+</form>
+    
+    @section Scripts {
+        @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+
+        <script src="~/js/bundles/jqueryui.js"></script>
+        <script src="~/js/timepicker/jquery-ui-timepicker-addon.js"></script>
+
+        @if (System.Globalization.CultureInfo.CurrentUICulture.Name != "en-US")
+        {
+            <script src="@datePickerLocalizationScriptUrl"></script>
+            <script src="@timePickerLocalizationScriptUrl"></script>
+
+        }
+
+        <script src="~/js/cloudscribe-datepicker-unobtrusive.js"></script>
+    }

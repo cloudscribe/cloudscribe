@@ -11,43 +11,33 @@
             </th>    
             <th></th>
         </tr>
-    
     @foreach (var item in Model.HostMappings) {
         <tr>
-          
             <td>
                 @Html.DisplayFor(modelItem => item.HostName)
             </td>
-            
             <td>
-                @using (Html.BeginForm("HostDelete", "SiteAdmin"))
-                {
-                    @Html.AntiForgeryToken()
-                    @Html.Hidden("SiteGuid", Model.SiteGuid)
-                    @Html.Hidden("hostName", item.HostName)
-                    @Html.Hidden("slp", Model.SiteListReturnPageNumber)
-    <input type="submit" value="@CommonResources.Delete"
-           onclick="javascript: return confirm('@Html.FormatValue(item.HostName, CommonResources.ConfirmDeleteHostNameFormat)');"
-           class="btn btn-xs btn-default" />
-
-                }
-                
-               
+                <form class="form-inline" asp-controller="SiteAdmin" asp-action="HostDelete">
+                    <input id="SiteGuid" name="SiteGuid" type="hidden" value="@Model.SiteGuid" />
+                    <input id="hostName" name="hostName" type="hidden" value="@item.HostName" />
+                    <input id="slp" name="slp" type="hidden" value="@Model.SiteListReturnPageNumber" />
+                    <input type="submit" value="CommonResources.Delete"
+                           onclick="javascript: return confirm('@Html.FormatValue(item.HostName, "Are you sure you want to delete the host/domain name mapping {0}")');"
+                           class="btn btn-xs btn-default" />
+                </form>
             </td>
         </tr>
     }
-    
     </table>
 <div class="form-group">
-    @using (Html.BeginForm("HostAdd", "SiteAdmin", FormMethod.Post, new { @class = "form-inline" }))
-    {
-        @Html.AntiForgeryToken()
-        @Html.Hidden("SiteGuid", Model.SiteGuid)
-        @Html.Hidden("SiteId", Model.SiteId)
-        @Html.Hidden("slp", Model.SiteListReturnPageNumber)
-        @Html.TextBox("hostName", null, new { @class = "form-control" })
-        <button type="submit" value="@CommonResources.AddHostMapping" class="btn btn-default">@CommonResources.AddHostMapping</button>
-    }
+    <form class="form-inline" asp-controller="SiteAdmin" asp-action="HostAdd">
+        <input id="SiteGuid" name="SiteGuid" type="hidden" value="@Model.SiteGuid" />
+        <input id="SiteId" name="SiteId" type="hidden" value="@Model.SiteId" />
+        <input id="slp" name="slp" type="hidden" value="@Model.SiteListReturnPageNumber" />
+        <input type="text" id="hostName" name="hostName" class="form-control" />
+        <button type="submit" value="CommonResources.AddHostMapping" class="btn btn-default">CommonResources.AddHostMapping</button>
+    </form>
+
 </div>
 <p class="bg-warning">
     Domain/Host name mappings are used internally to resolve a specific site from the database when a web request comes in for that 
@@ -61,10 +51,6 @@
     server bindings so that the web server maps the request to the correct web site installation.
 </p>
 <div class="form-group">
-    @Html.ActionLink(
-        @CommonResources.BackToSiteList,
-        "SiteList",
-        new { pageNumber = Model.SiteListReturnPageNumber },
-        new { @class = "btn btn-default" }
-        )
+    <a class="btn btn-default" asp-action="SiteList" asp-controller="SiteAdmin"
+       asp-route-pagenumber="@Model.SiteListReturnPageNumber">CommonResources.BackToSiteList</a>
 </div>

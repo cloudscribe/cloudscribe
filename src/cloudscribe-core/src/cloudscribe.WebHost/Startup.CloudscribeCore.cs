@@ -75,6 +75,7 @@ namespace cloudscribe.WebHost
             services.TryAdd(ServiceDescriptor.Scoped<IUserLockoutStore<SiteUser>, UserStore<SiteUser>>());
             services.TryAdd(ServiceDescriptor.Scoped<IUserTwoFactorStore<SiteUser>, UserStore<SiteUser>>());
             services.TryAdd(ServiceDescriptor.Scoped<IRoleStore<SiteRole>, RoleStore<SiteRole>>());
+            services.TryAdd(ServiceDescriptor.Scoped<IUserClaimsPrincipalFactory<SiteUser>, SiteUserClaimsPrincipalFactory<SiteUser, SiteRole>>());
             // the DNX451 desktop version of SitePasswordHasher can validate against existing hashed or encrypted passwords from mojoportal users
             // so to use existing users from mojoportal you would have to run on the desktop version at least until all users update their passwords
             // then you could migrate to dnxcore50
@@ -115,7 +116,7 @@ namespace cloudscribe.WebHost
         public static IApplicationBuilder UseCloudscribeCore(this IApplicationBuilder app, IConfiguration config)
         {
             // the only thing we are using session for is Alerts
-            //app.UseInMemorySession(configure: s => s.IdleTimeout = TimeSpan.FromMinutes(20));
+            app.UseInMemorySession(configure: s => s.IdleTimeout = TimeSpan.FromMinutes(20));
 
             //app.Use(
             //    next =>

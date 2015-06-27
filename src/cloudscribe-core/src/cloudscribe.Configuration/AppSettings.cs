@@ -261,10 +261,10 @@ namespace cloudscribe.Configuration
         }
 
 
-        public static bool UseFoldersInsteadOfHostnamesForMultipleSites
-        {
-            get { return GetBool("UseFoldersInsteadOfHostnamesForMultipleSites", true); }
-        }
+        //public static bool UseFoldersInsteadOfHostnamesForMultipleSites
+        //{
+        //    get { return GetBool("UseFoldersInsteadOfHostnamesForMultipleSites", true); }
+        //}
 
         public static bool RegisterDefaultRoutesForFolderSites
         {

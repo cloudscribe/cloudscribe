@@ -77,7 +77,7 @@ namespace cloudscribe.Core.Web.Controllers
 #pragma warning restore 1998
 
         [HttpGet]
-        [Authorize(Roles = "Admins")]
+        [Authorize(Roles = "ServerAdmins")]
         public async Task<IActionResult> SiteList(int pageNumber = 1, int pageSize = -1)
         {
             ViewBag.SiteName = Site.SiteName;
@@ -269,7 +269,7 @@ namespace cloudscribe.Core.Web.Controllers
                 return RedirectToAction("Index");
             }
 
-            if (AppSettings.UseFoldersInsteadOfHostnamesForMultipleSites)
+            if (config.UseFoldersInsteadOfHostnamesForMultipleSites())
             {
                 if (
                     ((model.SiteFolderName == null) || (model.SiteFolderName.Length == 0))
@@ -351,7 +351,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             bool result = await siteRepo.Save(selectedSite);
 
-            if ((result) && (AppSettings.UseFoldersInsteadOfHostnamesForMultipleSites))
+            if ((result) && (config.UseFoldersInsteadOfHostnamesForMultipleSites()))
             {
                 if (!string.IsNullOrEmpty(selectedSite.SiteFolderName))
                 {
@@ -461,7 +461,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             bool addHostName = false;
 
-            if (AppSettings.UseFoldersInsteadOfHostnamesForMultipleSites)
+            if (config.UseFoldersInsteadOfHostnamesForMultipleSites())
             {
                 if (string.IsNullOrEmpty(model.SiteFolderName))
                 {
@@ -524,7 +524,7 @@ namespace cloudscribe.Core.Web.Controllers
             newSite.CompanyPhone = model.CompanyPhone;
             newSite.CompanyFax = model.CompanyFax;
             newSite.CompanyPublicEmail = model.CompanyPublicEmail;
-            if (AppSettings.UseFoldersInsteadOfHostnamesForMultipleSites)
+            if (config.UseFoldersInsteadOfHostnamesForMultipleSites())
             {
                 newSite.SiteFolderName = model.SiteFolderName;
             }
@@ -546,7 +546,7 @@ namespace cloudscribe.Core.Web.Controllers
             bool result = await NewSiteHelper.CreateNewSite(siteRepo, newSite);
             result = await NewSiteHelper.CreateRequiredRolesAndAdminUser(newSite, siteRepo, userRepo, config);
 
-            if ((result) && (AppSettings.UseFoldersInsteadOfHostnamesForMultipleSites))
+            if ((result) && (config.UseFoldersInsteadOfHostnamesForMultipleSites()))
             {
                 bool folderResult = await newSite.EnsureSiteFolder(siteRepo);
 

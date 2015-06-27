@@ -4,8 +4,7 @@
     
 }
 <h2>@ViewBag.Title</h2>
-@Html.Partial("_BasicSettingsPartial", Model)
-
+@{await Html.RenderPartialAsync("_BasicSettingsPartial", Model); }
 
 
 @section Scripts {

@@ -8,9 +8,9 @@
 {
     <div>
         @Html.AlphabeticPager(Model.AlphaQuery,
-            CommonResources.AlphaPagerChars,
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
             null,
-            CommonResources.All,
+            "CommonResources.All",
             "",
             false,
             x => Url.Action("Index", new { query = x })
@@ -21,22 +21,22 @@
 <table class="table table-striped">
     <tr>
         <th>
-            @Html.ActionLink(@CommonResources.NewUser, "UserEdit", null, new { @class = "btn btn-xs btn-default" })
+            <a class="btn btn-xs btn-default" asp-action="UserEdit" asp-controller="UserAdmin">CommonResources.NewUser</a> 
         </th>
         <th>
-            @CommonResources.Email
+            CommonResources.Email
         </th>
         <th>
-            @CommonResources.LoginName
+            CommonResources.LoginName
         </th>
         <th>
-            @CommonResources.DisplayName
+            CommonResources.DisplayName
         </th>
         <th>
-            @CommonResources.FirstName
+            CommonResources.FirstName
         </th>
         <th>
-            @CommonResources.LastName
+            CommonResources.LastName
         </th>
         
     </tr>
@@ -45,14 +45,9 @@
     {
         <tr>
             <td>
-                @Html.ActionLink(@CommonResources.Manage, "UserEdit",
-             new { userId = item.UserId },
-             new { @class = "btn btn-xs btn-default" }
-                ) 
-                @Html.ActionLink(@CommonResources.ViewProfile, "Details",
-             new { /* id=item.PrimaryKey */ }, new { @class = "btn btn-xs btn-default" }
-                ) 
-                
+                <a class="btn btn-xs btn-default" asp-action="UserEdit"
+                   asp-controller="UserAdmin"
+                   asp-route-userId="@item.UserId">CommonResources.Manage</a> 
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.UserId)
@@ -77,6 +72,7 @@
 
 </table>
 <div>
+    @*
     @Html.Pager(Model.Paging.ItemsPerPage, Model.Paging.CurrentPage, Model.Paging.TotalItems).Options(o => o
             //.Action("StateListPage")
             .AddRouteValue("query", Model.AlphaQuery)
@@ -84,6 +80,7 @@
             .DisplayTemplate("Bootstrap3Pagination")
             .PageRouteValueKey("pageNumber")
             .MaxNrOfPages(Model.Paging.MaxPagerItems)
-            
+
     )
+    *@
 </div>

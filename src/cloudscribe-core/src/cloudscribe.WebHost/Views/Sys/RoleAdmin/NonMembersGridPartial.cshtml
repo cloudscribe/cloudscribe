@@ -1,4 +1,5 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.RoleAdmin.RoleMemberListViewModel
+@inject IConfiguration config
 @{
     
 }
@@ -13,7 +14,7 @@
             @Html.TextBox("searchInput", Model.SearchQuery, new { @class = "form-control" })
             <span class="input-group-btn">
                
-                <button type="submit" value="@CommonResources.Search" class="btn btn-default">@CommonResources.Search</button>
+                <button type="submit" value="CommonResources.Search" class="btn btn-default">CommonResources.Search</button>
             </span>
         </div>
     }
@@ -23,22 +24,22 @@
         <th>
         </th>
         <th>
-            @CommonResources.Email
+            CommonResources.Email
         </th>
-        @if (AppSettings.DontUseEmailForLogin)
+        @if (config.DontUseEmailForLogin())
         {
             <th>
-                @CommonResources.LoginName
+                CommonResources.LoginName
             </th>
         }
         <th>
-            @CommonResources.DisplayName
+            CommonResources.DisplayName
         </th>
         <th>
-            @CommonResources.FirstName
+            CommonResources.FirstName
         </th>
         <th>
-            @CommonResources.LastName
+            CommonResources.LastName
         </th>
     </tr>
     @foreach (var item in Model.Members)
@@ -53,8 +54,8 @@
                     @Html.Hidden("UserId", item.UserId)
                     <button type="submit" id="approve-btn"
                             class="btn btn-success"
-                            onclick="javascript: return confirm('@Html.FormatValue(item.DisplayName, CommonResources.ConfirmAddFormat)');">
-                        @CommonResources.Add
+                            onclick="javascript: return confirm('@Html.FormatValue(item.DisplayName, "Are you sure you want to add {0}?")');">
+                        CommonResources.Add
                     </button>
                 }
             </td>
@@ -80,8 +81,9 @@
     }
 </table>
 <div>
-    @Html.Pager(Model.Paging.ItemsPerPage, 
-    Model.Paging.CurrentPage, 
+    @*
+    @Html.Pager(Model.Paging.ItemsPerPage,
+    Model.Paging.CurrentPage,
     Model.Paging.TotalItems,
                     new AjaxOptions { UpdateTargetId = "nonmembersgridcontainer" }
         ).Options(o => o
@@ -93,7 +95,8 @@
             .DisplayTemplate("Bootstrap3Pagination")
             .PageRouteValueKey("pageNumber")
             .MaxNrOfPages(Model.Paging.MaxPagerItems)
-            
+
     )
+    *@
 </div>
 
