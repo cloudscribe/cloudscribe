@@ -1,96 +1,95 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.RoleAdmin.RoleMemberListViewModel
+@inject IConfiguration config
 
 @{
 
 }
-
-@section Styles {
-    @Styles.Render("~/Content/themes/base/all.css")
-    @Styles.Render("~/Content/themes/base/dialog.css")
-}
-
+@*
+    @section Styles {
+        @Styles.Render("~/Content/themes/base/all.css")
+        @Styles.Render("~/Content/themes/base/dialog.css")
+    }
+*@
 <h2>@Model.Role.DisplayName</h2>
 <h3>@Model.Heading</h3>
-<p>
-        @using (Html.BeginForm("RoleMembers", "RoleAdmin",   FormMethod.Get, 
-            new { @class = "form-inline", @role = "form" }))
-        {
-            @Html.Hidden("roleId", Model.Role.RoleId)
-            <div class="input-group">
-                @Html.TextBox("searchInput", Model.SearchQuery, new { @class = "form-control" })
-                <span class="input-group-btn">
-                    <button type="submit" value="@CommonResources.Search" class="btn btn-default">@CommonResources.Search</button>
-                </span>
-            </div>
-        }
-</p>
-<div>
-    <table class="table table-striped">
-        <tr>
-            <th>
+<form class="form-inline" role="form" asp-controller="RoleAdmin" asp-action="RoleMembers" method="get">
+    <input asp-for="Role.RoleId" type="hidden" />
+    <div class="input-group">
+        <input id="searchInput" name="searchInput" value="@Model.SearchQuery" class="form-control" />
+        <span class="input-group-btn">
+            <button type="submit" value="CommonResources.Search" class="btn btn-default">CommonResources.Search</button>
+        </span>
+    </div>
+</form>
 
-                @Ajax.ModalDialogActionLinkBootstrap(@CommonResources.AddUser, "RoleNonMembers", "RoleAdmin",
+    <div>
+        <table class="table table-striped">
+            <tr>
+                <th>
+
+                    @Ajax.ModalDialogActionLinkBootstrap("CommonResources.AddUser", "RoleNonMembers", "RoleAdmin",
     new { roleId = Model.Role.RoleId }
         , new { @class = "btn btn-success btn-xs" })
-            </th>
-            <th>
-                @CommonResources.Email
-            </th>
-            @if (AppSettings.DontUseEmailForLogin)
-            {
-                <th>
-                    @CommonResources.LoginName
                 </th>
-            }
-            <th>
-                @CommonResources.DisplayName
-            </th>
-            <th>
-                @CommonResources.FirstName
-            </th>
-            <th>
-                @CommonResources.LastName
-            </th>
-
-        </tr>
-        @foreach (var item in Model.Members)
-        {
-            <tr>
-                <td>
-                    @using (Html.BeginForm("RemoveUser", "RoleAdmin", FormMethod.Post))
-                    {
-                        @Html.Hidden("RoleId", Model.Role.RoleId)
-                        @Html.Hidden("UserId", item.UserId)
-                        <button type="submit" id="approve-btn"
-                                class="btn btn-danger btn-xs"
-                                onclick="javascript: return confirm('@Html.FormatValue(item.DisplayName, CommonResources.ConfirmRemoveFormat)');">
-                            @CommonResources.Remove
-                        </button>
-                    }
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Email)
-                </td>
-                @if (AppSettings.DontUseEmailForLogin)
-                {
-                    <td>
-                        @Html.DisplayFor(modelItem => item.UserName)
-                    </td>
+                <th>
+                    CommonResources.Email
+                </th>
+                @if (config.DontUseEmailForLogin())
+            {
+                    <th>
+                        CommonResources.LoginName
+                    </th>
                 }
-                <td>
-                    @Html.DisplayFor(modelItem => item.DisplayName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FirstName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.LastName)
-                </td>
+                <th>
+                    CommonResources.DisplayName
+                </th>
+                <th>
+                    CommonResources.FirstName
+                </th>
+                <th>
+                    CommonResources.LastName
+                </th>
+
             </tr>
-        }
-    </table>
-    <div>
-        @Html.Pager(Model.Paging.ItemsPerPage, Model.Paging.CurrentPage, Model.Paging.TotalItems).Options(o => o
+            @foreach (var item in Model.Members)
+            {
+                <tr>
+                    <td>
+                        <form asp-controller="RoleAdmin" asp-action="RemoveUser">
+                            <input asp-for="Model.Role.RoleId" type="hidden" />
+                            <input asp-for="item.UserId" type="hidden" />
+                            <button type="submit" id="approve-btn"
+                                    class="btn btn-danger btn-xs"
+                                    onclick="javascript: return confirm('@Html.FormatValue(item.DisplayName, "Are you sure you want to remove {0}?")');">
+                                CommonResources.Remove
+                            </button>
+                        </form>                      
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    @if (config.DontUseEmailForLogin())
+                {
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UserName)
+                        </td>
+                    }
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DisplayName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FirstName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LastName)
+                    </td>
+                </tr>
+            }
+        </table>
+        <div>
+            @*
+
+            @Html.Pager(Model.Paging.ItemsPerPage, Model.Paging.CurrentPage, Model.Paging.TotalItems).Options(o => o
             .Action("RoleMembers")
             .AddRouteValue("roleId", Model.Role.RoleId)
             .AddRouteValue("searchInput", Model.SearchQuery)
@@ -98,13 +97,16 @@
             .DisplayTemplate("Bootstrap3Pagination")
             .PageRouteValueKey("pageNumber")
             .MaxNrOfPages(Model.Paging.MaxPagerItems)
-            
-    )
-    </div>
-</div>
+            )
 
-    @section Scripts {
-        @Scripts.Render("~/bundles/jqueryajax")
-        @Scripts.Render("~/bundles/jqueryui")
-        @Scripts.Render("~/Scripts/cloudscribe-modaldialog-bootstrap.js")
-    }
+            *@
+        </div>
+    </div>
+
+ @section Scripts {
+
+<script src="~/js/bundles/jqueryajax.js"></script>
+<script src="~/js/bundles/jqueryui.js"></script>
+<script src="~/js/cloudscribe-modaldialog-bootstrap.js"></script>
+
+ }
