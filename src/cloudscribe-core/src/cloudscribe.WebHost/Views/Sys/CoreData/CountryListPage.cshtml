@@ -16,20 +16,20 @@ new { guid = Guid.Empty, returnPageNumber = Model.Paging.CurrentPage }
             }
             else
             {
-                @Html.ActionLink(CommonResources.NewCountry, "CountryEdit", "CoreData",
-                                   new { guid = Guid.Empty, returnPageNumber = Model.Paging.CurrentPage }, 
-                                   new { @class = "btn btn-xs btn-default" })
+                <a class="btn btn-xs btn-default" asp-action="CountryEdit" asp-controller="CoreData"
+                   asp-route-guid="@Guid.Empty"
+                   asp-route-pagenumber="@Model.Paging.CurrentPage">CommonResources.NewCountry</a>
             }
             
         </th>
         <th>
-            @CommonResources.Name
+            CommonResources.Name
         </th>
         <th>
-            @CommonResources.ISOCode2
+            CommonResources.ISOCode2
         </th>
         <th>
-            @CommonResources.ISOCode3
+            CommonResources.ISOCode3
         </th>
     </tr>
 @foreach (var c in Model.Countries) {
@@ -47,17 +47,16 @@ new { guid = c.Guid, returnPageNumber = Model.Paging.CurrentPage, partial=true }
  }
  else
  {
-    @Html.ActionLink(CommonResources.Edit, "CountryEdit", "CoreData",
-        new { guid = c.Guid, returnPageNumber = Model.Paging.CurrentPage },
-        new { @class = "btn btn-xs btn-default" })
-     @Html.ActionLink(CommonResources.States, "StateListPage", "CoreData",
-             new { countryGuid = c.Guid, crp = Model.Paging.CurrentPage },
-        new { @class = "btn btn-xs btn-default" })
+    <a class="btn btn-xs btn-default" asp-action="CountryEdit" asp-controller="CoreData"
+       asp-route-guid="@c.Guid"
+       asp-route-returnPageNumber="@Model.Paging.CurrentPage">CommonResources.Edit</a>
+
+    <a class="btn btn-xs btn-default" asp-action="StateListPage" asp-controller="CoreData"
+       asp-route-countryGuid="@c.Guid"
+       asp-route-crp="@Model.Paging.CurrentPage">CommonResources.States</a>
 
  }
-            
-       
-           
+               
         </td>
         <td>
             @c.Name
@@ -73,6 +72,7 @@ new { guid = c.Guid, returnPageNumber = Model.Paging.CurrentPage, partial=true }
 
 </table>
 <div>
+    @*
     @Html.Pager(Model.Paging.ItemsPerPage, Model.Paging.CurrentPage, Model.Paging.TotalItems).Options(o => o
             .Action("CountryListPage")
             .AddRouteValue("pageSize", Model.Paging.ItemsPerPage)
@@ -80,10 +80,12 @@ new { guid = c.Guid, returnPageNumber = Model.Paging.CurrentPage, partial=true }
             .PageRouteValueKey("pageNumber")
             .MaxNrOfPages(Model.Paging.MaxPagerItems)
     )
+    *@
+
 </div>
 
 @section Scripts {
-    @Scripts.Render("~/bundles/jqueryajax")
-    @Scripts.Render("~/bundles/jqueryui")
-    @Scripts.Render("~/Scripts/cloudscribe-modaldialog-bootstrap.js")
+<script src="~/js/bundles/jqueryajax.js"></script>
+<script src="~/js/bundles/jqueryui.js"></script>
+<script src="~/js/cloudscribe-modaldialog-bootstrap.js"></script>
 }

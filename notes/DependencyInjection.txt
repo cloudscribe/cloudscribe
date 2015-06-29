@@ -1,4 +1,6 @@
 
+http://www.emadashi.com/2015/06/dependency-injection-in-asp-net-5-one-step-deeper/
+
 http://www.strathweb.com/2014/07/dependency-injection-directly-actions-asp-net-web-api/
 
 

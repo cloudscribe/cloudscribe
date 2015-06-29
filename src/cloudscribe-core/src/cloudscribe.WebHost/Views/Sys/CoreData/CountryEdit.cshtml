@@ -5,62 +5,50 @@
 }
 
 <h2>@ViewBag.Title</h2>
-
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    <div class="form-horizontal">  
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })   
-        @Html.HiddenFor(model => model.Guid)     
-        <div class="form-group">
-            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ISOCode2, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ISOCode2, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ISOCode2, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ISOCode3, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ISOCode3, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ISOCode3, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="@CommonResources.Save" class="btn btn-default" />
-                @if (Model.Guid != Guid.Empty)
-                {
-                    <button name="button" type="button" class="btn btn-default"
-                            onclick="javascript: if(confirm('@Html.FormatValue(Model.Name, CommonResources.ConfirmDeleteCountryFormat)')) {$('#deleteform').submit();}">
-                        @CommonResources.Delete
-                    </button>
-                }
-            </div>
+<form role="form">
+    <div asp-validation-summary="ValidationSummary.All" class="text-danger"></div>
+    <input asp-for="Guid" type="hidden" />
+    <div class="form-group">
+        <label asp-for="Name" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
         </div>
     </div>
-}
+    <div class="form-group">
+        <label asp-for="ISOCode2" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="ISOCode2" class="form-control" />
+            <span asp-validation-for="ISOCode2" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="ISOCode3" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="ISOCode3" class="form-control" />
+            <span asp-validation-for="ISOCode3" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="CommonResources.Save" class="btn btn-default" />
+            @if (Model.Guid != Guid.Empty)
+            {
+                <button name="button" type="button" class="btn btn-default"
+                        onclick="javascript: if(confirm('@Html.FormatValue(Model.Name, "Are you sure you want to delete the country {0} and all of its states? You cannot undo this action.")')) {$('#deleteform').submit();}">
+                    CommonResources.Delete
+                </button>
+            }
+        </div>
+    </div>
+</form>   
 @if (Model.Guid != Guid.Empty)
 {
-    using (Html.BeginForm("CountryDelete", "CoreData", FormMethod.Post, new { @id = "deleteform", @class = "form-inline" }))
-    { @Html.AntiForgeryToken()
-        @Html.Hidden("countryGuid", Model.Guid)
-        @Html.Hidden("returnPageNumber", Model.ReturnPageNumber)
-
-    }
+    <form id="deleteform" asp-controller="CoreData" asp-action="CountryDelete">
+        <input type="hidden" id="countryGuid" name="countryGuid" value="@Model.Guid" />
+        <input type="hidden" asp-for="ReturnPageNumber" />
+    </form>   
 }
 <div>
-    @Html.ActionLink(@CommonResources.BackToCountryList, "CountryListPage",
-            new { pageNumber = Model.ReturnPageNumber },
-                new { @class = "btn btn-default" })
+    <a class="btn btn-default" asp-action="CountryListPage" asp-route-pagenumber="ReturnPageNumber">CommonResources.BackToCountryList</a>  
 </div>

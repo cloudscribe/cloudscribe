@@ -6,31 +6,29 @@
 <h2>@ViewBag.Heading</h2>
 <table class="table table-striped">
     <tr>
-        <th>
-            @Html.ActionLink(CommonResources.NewCurrency, "CurrencyEdit",
-                              null, new { @class = "btn btn-xs btn-default" })
+        <th> 
+            <a class="btn btn-xs btn-default" asp-action="CurrencyEdit"
+               asp-controller="CoreData">CommonResources.NewCurrency</a> 
         </th>
         <th>
-            @CommonResources.Title
+            CommonResources.Title
         </th>
         <th>
-            @CommonResources.Code
+            CommonResources.Code
         </th>
     </tr>
 @foreach (var item in Model) {
     <tr>
         <td>
-            @using (Html.BeginForm("CurrencyDelete", "CoreData"))
-            {
-                @Html.AntiForgeryToken()
-                @Html.ActionLink(CommonResources.Edit, "CurrencyEdit", "CoreData",
-                    new { currencyGuid = item.Guid }
-                      , new { @class = "btn btn-xs btn-default" })
-                @Html.Hidden("currencyGuid", item.Guid)
-    <input type="submit" value="@CommonResources.Delete"
-           onclick="javascript: return confirm('@Html.FormatValue(item.Title, CommonResources.ConfirmDeleteFormat)');"
-           class="btn btn-xs btn-default" />
-            }
+            <form role="form" asp-controller="CoreData" asp-action="CurrencyDelete">
+                <input type="hidden" id="currencyGuid" name="currencyGuid" value="@item.Guid" />
+                <a class="btn btn-xs btn-default" asp-action="CurrencyEdit"
+                   asp-controller="CoreData"
+                   asp-route-currencyguid="@item.Guid">CommonResources.Edit</a>
+                <input type="submit" value="CommonResources.Delete"
+                       onclick="javascript: return confirm('@Html.FormatValue(item.Title, "Are you sure you want to delete {0}?")');"
+                       class="btn btn-xs btn-default" />
+            </form>  
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Title)

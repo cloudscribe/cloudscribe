@@ -6,62 +6,57 @@
 
 <h2>@Model.Heading</h2>
 <h3>@Model.Country.Name</h3>
-
     <div class="form-horizontal">
-      
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @using (Html.BeginForm("StateEdit", "CoreData", FormMethod.Post, null))
-                {
-            @Html.AntiForgeryToken()
-            @Html.HiddenFor(model => model.Guid)
-            @Html.HiddenFor(model => model.CountryGuid)
-            @Html.Hidden("returnPageNumber", Model.ReturnPageNumber)
-            @Html.Hidden("countryListReturnPageNumber", Model.CountryListReturnPageNumber)
-        <div class="form-group">
-            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+        <form role="form" asp-action="StateEdit" asp-controller="CoreData">
+            <div asp-validation-summary="ValidationSummary.All" class="text-danger"></div>
+            <input asp-for="Guid" type="hidden" />
+            <input asp-for="CountryGuid" type="hidden" />
+            <input asp-for="ReturnPageNumber" type="hidden" />
+            <input asp-for="CountryListReturnPageNumber" type="hidden" />
+            <div class="form-group">
+                <label asp-for="Name" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span> 
+                </div>
             </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Code, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
+            <div class="form-group">
+                <label asp-for="Code" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="Code" class="form-control" />
+                    <span asp-validation-for="Code" class="text-danger"></span> 
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                   <input type="submit" value="@CommonResources.Save" class="btn btn-default" />
-                @if (Model.Guid != Guid.Empty) { 
-                <button name="button" type="button" class="btn btn-default"
-                        onclick="javascript: if(confirm('@Html.FormatValue(Model.Name, CommonResources.ConfirmDeleteFormat)')) {$('#deleteform').submit();}">
-                    @CommonResources.Delete
-                </button>
-                }
-                </div>  
-        </div>
-        }   
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="CommonResources.Save" class="btn btn-default" />
+                    @if (Model.Guid != Guid.Empty)
+                    {
+                        <button name="button" type="button" class="btn btn-default"
+                                onclick="javascript: if(confirm('@Html.FormatValue(Model.Name, "Are you sure you want to delete {0}?")')) {$('#deleteform').submit();}">
+                            CommonResources.Delete
+                        </button>
+                    }
+                </div>
+            </div>
+
+        </form> 
     </div>
 @if (Model.Guid != Guid.Empty)
 {
-    using (Html.BeginForm("StateDelete", "CoreData", FormMethod.Post, new { @id = "deleteform", @class = "form-inline" }))
-    { @Html.AntiForgeryToken()
-        @Html.Hidden("countryGuid", Model.CountryGuid)
-        @Html.Hidden("guid", Model.Guid)
-        @Html.Hidden("crp", Model.CountryListReturnPageNumber)
-        @Html.Hidden("returnPageNumber", Model.ReturnPageNumber)
-
-    }
+    <form id="deleteform" asp-action="StateDelete" asp-controller="CoreData">
+        <input asp-for="Guid" type="hidden" />
+        <input asp-for="CountryGuid" type="hidden" />
+        <input asp-for="ReturnPageNumber" type="hidden" />
+        <input id="crp" name="crp" type="hidden" value="@Model.CountryListReturnPageNumber" />
+    </form>  
 }
-<div>
-    @Html.ActionLink(
-        @CommonResources.BackToStateList, 
-        "StateListPage", 
-        new { countryGuid = Model.CountryGuid, crp=Model.CountryListReturnPageNumber, pageNumber = Model.ReturnPageNumber },
-        new { @class = "btn btn-default" }
-        )
-</div>
+        <div>
+            <a class="btn btn-default" asp-action="StateListPage"
+               asp-controller="CoreData"
+               asp-route-countryGuid="@Model.CountryGuid"
+               asp-route-crp="@Model.CountryListReturnPageNumber"
+               asp-route-pageNumber="@Model.ReturnPageNumber">CommonResources.BackToStateList</a>
+ 
+        </div>
