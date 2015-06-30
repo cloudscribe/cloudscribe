@@ -5,36 +5,39 @@
 <table class="table table-striped">
     <tr>
         <th>
-            @Ajax.ModalDialogActionLinkBootstrap(@CommonResources.NewState, "StateEdit", "CoreData",
+            @Ajax.ModalDialogActionLinkBootstrap("CommonResources.NewState", "StateEdit", "CoreData",
                      new { countryGuid = Model.Country.Guid, returnPageNumber = Model.Paging.CurrentPage }
                  , new { @class = "btn btn-default btn-xs" })
         </th>
         <th>
-            @CommonResources.Name
+            CommonResources.Name
         </th>
         <th>
-            @CommonResources.Code
+            CommonResources.Code
         </th>
     </tr>
     @foreach (var item in Model.States) {
                         <tr>
                             <td>
-                                @using (Html.BeginForm("StateDelete", "CoreData"))
-{
-                                    @Ajax.ModalDialogActionLinkBootstrap(@CommonResources.Edit, "StateEdit", "CoreData",
-                                    new { countryGuid = Model.Country.Guid, 
-                                        guid = item.Guid, 
-                                        returnPageNumber = Model.Paging.CurrentPage }
+                                <form asp-controller="CoreData" asp-action="StateDelete">
+                                    @Ajax.ModalDialogActionLinkBootstrap("CommonResources.Edit", "StateEdit", "CoreData",
+                                    new
+                                    {
+                                        countryGuid = Model.Country.Guid,
+                                        guid = item.Guid,
+                                        returnPageNumber = Model.Paging.CurrentPage
+                                    }
                                      , new { @class = "btn btn-default btn-xs" })
-                                    
+
                                     @Html.AntiForgeryToken()
-                                    @Html.Hidden("countryGuid",item.CountryGuid)
-                                    @Html.Hidden("guid",item.Guid)
-                                    @Html.Hidden("returnPageNumber", Model.Paging.CurrentPage)
-                                    <input type="submit" value="@CommonResources.Delete"
-                                           onclick="javascript: return confirm('@Html.FormatValue(item.Name, CommonResources.ConfirmDeleteFormat)');"
+                                    <input asp-for="@item.Guid" type="hidden" />
+                                    <input asp-for="@item.CountryGuid" type="hidden" />
+                                    <input id="returnPageNumber" name="returnPageNumber" value="@Model.Paging.CurrentPage" type="hidden" />
+
+                                    <input type="submit" value="CommonResources.Delete"
+                                           onclick="javascript: return confirm('@Html.FormatValue(item.Name, "Are you sure you want to delete {0}?")');"
                                            class="btn btn-xs btn-default" />
-}
+                                </form>
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.Name)
@@ -47,6 +50,7 @@
 }
 </table>
 <div>
+    @*
     @Html.Pager(Model.Paging.ItemsPerPage,
     Model.Paging.CurrentPage,
     Model.Paging.TotalItems,
@@ -61,6 +65,7 @@
             .MaxNrOfPages(Model.Paging.MaxPagerItems)
 
     )
+    *@
 </div>
 
 

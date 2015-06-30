@@ -10,15 +10,16 @@
 <table class="table table-striped">
     <tr>
         <th>
-            @Html.ActionLink(@CommonResources.NewState, "StateEdit", "CoreData", 
-            new { countryGuid = Model.Country.Guid, crp = Model.CountryListReturnPageNumber, returnPageNumber = Model.Paging.CurrentPage },
-                              new { @class = "btn btn-xs btn-default" })
+            <a class="btn btn-xs btn-default" asp-action="StateEdit" asp-controller="CoreData"
+               asp-route-countryGuid="@Model.Country.Guid"
+               asp-route-crp="@Model.CountryListReturnPageNumber"
+               asp-route-returnPageNumber="@Model.Paging.CurrentPage">CommonResources.NewState</a> 
         </th>
         <th>
-            @CommonResources.Name
+            CommonResources.Name
         </th>
         <th>
-            @CommonResources.Code
+            CommonResources.Code
         </th>
     </tr>
 
@@ -26,26 +27,25 @@
     <tr>
         <td>
             
+<form asp-controller="CoreData" asp-action="StateDelete">
+    <a class="btn btn-xs btn-default" asp-action="StateEdit" asp-controller="CoreData"
+       asp-route-countryguid="@Model.Country.Guid"
+       asp-route-guid="@item.Guid"
+       asp-route-crp="@Model.CountryListReturnPageNumber"
+       asp-route-returnpagenumber="@Model.Paging.CurrentPage">CommonResources.Edit</a>
 
-@using (Html.BeginForm("StateDelete", "CoreData"))
-{
-    @Html.AntiForgeryToken()
+    <input type="hidden" name="countryGuid" value="@item.CountryGuid" />
+    <input type="hidden" name="guid" value="@item.Guid" />
+    <input type="hidden" name="crp" value="@Model.CountryListReturnPageNumber" />
+    <input type="hidden" name="returnPageNumber" value="@Model.Paging.CurrentPage" />
     
-    @Html.ActionLink(CommonResources.Edit, "StateEdit", "CoreData",
-            new { countryGuid = Model.Country.Guid, 
-                guid = item.Guid, 
-                returnPageNumber = Model.Paging.CurrentPage,
-            crp = Model.CountryListReturnPageNumber}
-         , new { @class = "btn btn-xs btn-default" })
 
-    @Html.Hidden("countryGuid",item.CountryGuid)
-    @Html.Hidden("guid",item.Guid)
-    @Html.Hidden("crp", Model.CountryListReturnPageNumber)
-    @Html.Hidden("returnPageNumber", Model.Paging.CurrentPage)
-    <input type="submit" value="@CommonResources.Delete" 
-           onclick="javascript: return confirm('@Html.FormatValue(item.Name, CommonResources.ConfirmDeleteFormat)');" 
+    <input type="submit" value="CommonResources.Delete"
+           onclick="javascript: return confirm('@Html.FormatValue(item.Name, "Are you sure you want to delete {0}?")');"
            class="btn btn-xs btn-default" />
-}
+
+</form>
+
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Name)
@@ -57,6 +57,7 @@
 }
 </table>
 <div>
+    @*
     @Html.Pager(Model.Paging.ItemsPerPage, Model.Paging.CurrentPage, Model.Paging.TotalItems).Options(o => o
             .Action("StateListPage")
             .AddRouteValue("countryGuid", Model.Country.Guid)
@@ -67,10 +68,11 @@
             .MaxNrOfPages(Model.Paging.MaxPagerItems)
 
     )
+    *@
 </div>
 <div>
-    @Html.ActionLink(@CommonResources.BackToCountryList, 
-    "CountryListPage", new { pageNumber = Model.CountryListReturnPageNumber },
-        new { @class = "btn btn-default" })
+    <a class="btn btn-default" asp-action="CountryListPage" asp-controller="CoreData"
+       asp-route-pageNumber="@Model.CountryListReturnPageNumber">CommonResources.BackToCountryList</a> 
+
 </div>
 
