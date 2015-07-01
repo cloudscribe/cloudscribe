@@ -1,10 +1,11 @@
 {
-  "name": "ASP.NET",
+  "name": "cloudscribe.WebHost",
   "private": true,
   "dependencies": {
     "bootstrap": "3.0.0",
     "jquery": "1.10.2",
     "jquery-ui": "~1.11.3",
+    "jquery-ajax-unobtrusive": "~3.2.3",
     "jquery-validation": "1.11.1",
     "jquery-validation-unobtrusive": "3.2.2",
     "hammer.js": "2.0.4",

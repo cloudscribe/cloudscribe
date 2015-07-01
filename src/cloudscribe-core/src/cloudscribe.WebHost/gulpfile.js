@@ -11,6 +11,7 @@ eval("var project = " + fs.readFileSync("./project.json"));
 var paths = {
   bower: "./bower_components/",
   lib: "./" + project.webroot + "/js/lib/",
+  scripts: "./Scripts/",
   css: "./" + project.webroot + "/css/"
 };
 
@@ -24,14 +25,20 @@ gulp.task("copy", ["clean"], function () {
     "bootstrap-touch-carousel": "bootstrap-touch-carousel/dist/**/*.{js,css}",
     "hammer.js": "hammer.js/hammer*.{js,map}",
     "jquery": "jquery/jquery*.{js,map}",
+    "jquery-ajax-unobtrusive": "jquery-ajax-unobtrusive/*.{js,map}",
     "jquery-validation": "jquery-validation/jquery.validate.js",
-    "jquery-validation-unobtrusive": "jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"
+    "jquery-validation-unobtrusive": "jquery-validation-unobtrusive/jquery.validate.unobtrusive.js",
+    "jquery-ui": "jquery-ui/**/*.{js,map,css}"
   }
 
   for (var destinationDir in bower) {
     gulp.src(paths.bower + bower[destinationDir])
       .pipe(gulp.dest(paths.lib + destinationDir));
   }
+
+  gulp.src(paths.scripts + '**.js')
+        .pipe(gulp.dest(paths.lib));
+
 });
 
 gulp.task("minifycss", function () {
