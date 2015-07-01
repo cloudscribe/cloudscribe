@@ -194,3 +194,5 @@ src/cloudscribe.WebHost/files/currentlog.config
 src/cloudscribe.WebHost/files/currentlog.config
 src/cloudscribe-core/.vs/config/applicationhost.config
 src/cloudscribe-core/src/cloudscribe.WebHost/config.local.overrides.json
+
+src/cloudscribe-core/src/cloudscribe.WebHost/wwwroot/js/lib/*
