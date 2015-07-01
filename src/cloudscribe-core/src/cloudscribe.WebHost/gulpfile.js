@@ -4,6 +4,7 @@ var gulp = require("gulp"),
   rimraf = require("rimraf"),
   minifycss = require("gulp-minify-css"),
   concat = require("gulp-concat"),
+  uglify = require("gulp-uglify"),
   fs = require("fs");
 
 eval("var project = " + fs.readFileSync("./project.json"));
@@ -36,7 +37,8 @@ gulp.task("copy", ["clean"], function () {
       .pipe(gulp.dest(paths.lib + destinationDir));
   }
 
-  gulp.src(paths.scripts + '**.js')
+    gulp.src(paths.scripts + '**.js')
+        .pipe(uglify())
         .pipe(gulp.dest(paths.lib));
 
 });

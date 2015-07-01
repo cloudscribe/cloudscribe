@@ -3,12 +3,11 @@
     var datePickerLocalizationScriptUrl = "~/js/jqueryui-i18n/datepicker-" + System.Globalization.CultureInfo.CurrentUICulture.Name + ".js";
     var timePickerLocalizationScriptUrl = "~/js/timepicker/i18n/jquery-ui-timepicker-" + System.Globalization.CultureInfo.CurrentUICulture.Name + ".js";
 }
-@*
-    @section Styles {
-        @Styles.Render("~/Content/themes/base/all.css")
-        @Styles.Render("~/Scripts/timepicker/jquery-ui-timepicker-addon.css")
-    }
-*@
+@section Styles {
+    <link rel="stylesheet" href="~/js/lib/jquery-ui/themes/base/all.css" />
+    <link rel="stylesheet" href="~/js/timepicker/jquery-ui-timepicker-addon.css" />
+
+}
 <h2>@ViewBag.Title</h2>
 <form class="form-horizontal" role="form" asp-controller="UserAdmin" asp-action="UserEdit">
     <input asp-for="UserId" type="hidden" />
@@ -35,7 +34,18 @@
     @section Scripts {
         @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 
-        <script src="~/js/bundles/jqueryui.js"></script>
+
+<environment names="Development">
+    <script src="~/js/lib/jquery-ui/jquery-ui.js"></script>
+  
+</environment>
+<environment names="Staging,Production">
+    <script src="//ajax.aspnetcdn.com/ajax/jquery.ui/1.11.3/jquery.ui.min.js"
+            asp-fallback-src="~/js/lib/jquery-ui/jquery-ui.min.js"
+            asp-fallback-test="window.jQuery.ui && window.jQuery.ui.version">
+    </script>
+    
+</environment>
         <script src="~/js/timepicker/jquery-ui-timepicker-addon.js"></script>
 
         @if (System.Globalization.CultureInfo.CurrentUICulture.Name != "en-US")

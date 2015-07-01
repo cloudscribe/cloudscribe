@@ -4,12 +4,13 @@
 @{
 
 }
-@*
+
     @section Styles {
-        @Styles.Render("~/Content/themes/base/all.css")
-        @Styles.Render("~/Content/themes/base/dialog.css")
+<link rel="stylesheet" href="~/js/lib/jquery-ui/themes/base/all.css" />
+<link rel="stylesheet" href="~/js/lib/jquery-ui/themes/base/dialog.css" />
+    
     }
-*@
+
 <h2>@Model.Role.DisplayName</h2>
 <h3>@Model.Heading</h3>
 <form class="form-inline" role="form" asp-controller="RoleAdmin" asp-action="RoleMembers" method="get">
@@ -69,7 +70,7 @@
                         @Html.DisplayFor(modelItem => item.Email)
                     </td>
                     @if (config.DontUseEmailForLogin())
-                {
+                    {
                         <td>
                             @Html.DisplayFor(modelItem => item.UserName)
                         </td>
@@ -105,8 +106,19 @@
 
  @section Scripts {
 
-<script src="~/js/bundles/jqueryajax.js"></script>
-<script src="~/js/bundles/jqueryui.js"></script>
-<script src="~/js/cloudscribe-modaldialog-bootstrap.js"></script>
+<environment names="Development">
+    <script src="~/js/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/js/lib/jquery-ui/jquery-ui.js"></script>
+    <script src="~/js/lib/cloudscribe-modaldialog-bootstrap.js"></script>
+</environment>
+<environment names="Staging,Production">
+    <script src="~/js/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="//ajax.aspnetcdn.com/ajax/jquery.ui/1.11.3/jquery.ui.min.js"
+            asp-fallback-src="~/js/lib/jquery-ui/jquery-ui.min.js"
+            asp-fallback-test="window.jQuery.ui && window.jQuery.ui.version">
+    </script>
+    <script src="~/js/lib/cloudscribe-modaldialog-bootstrap.js"></script>
+</environment>
+
 
  }

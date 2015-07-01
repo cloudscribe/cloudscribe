@@ -92,12 +92,11 @@ new { guid = c.Guid, returnPageNumber = Model.Paging.CurrentPage, partial=true }
     <script src="~/js/lib/cloudscribe-modaldialog-bootstrap.js"></script>
 </environment>
 <environment names="Staging,Production">
-    <script src="//ajax.aspnetcdn.com/ajax/jquery.validation/1.11.1/jquery.validate.min.js"
-            asp-fallback-src="~/js/lib/jquery-validation/jquery.validate.js"
-            asp-fallback-test="window.jquery && window.jquery.validator">
-    </script>
     <script src="~/js/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
-    <script src="~/js/lib/jquery-ui/jquery-ui.min.js"></script>
+    <script src="//ajax.aspnetcdn.com/ajax/jquery.ui/1.11.3/jquery.ui.min.js"
+            asp-fallback-src="~/js/lib/jquery-ui/jquery-ui.min.js"
+            asp-fallback-test="window.jQuery.ui && window.jQuery.ui.version">
+    </script>
     <script src="~/js/lib/cloudscribe-modaldialog-bootstrap.js"></script>
 </environment>
 
