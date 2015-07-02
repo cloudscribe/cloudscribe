@@ -116,6 +116,7 @@ namespace cloudscribe.WebHost
         public static IApplicationBuilder UseCloudscribeCore(this IApplicationBuilder app, IConfiguration config)
         {
             // the only thing we are using session for is Alerts
+            app.UseSession();
             app.UseInMemorySession(configure: s => s.IdleTimeout = TimeSpan.FromMinutes(20));
 
             //app.Use(

@@ -2,7 +2,7 @@
   "name": "cloudscribe.WebHost",
   "private": true,
   "dependencies": {
-    "bootstrap": "3.0.0",
+    "bootstrap": "~3.3.5",
     "jquery": "1.10.2",
     "jquery-ui": "~1.11.3",
     "jquery-ajax-unobtrusive": "~3.2.3",

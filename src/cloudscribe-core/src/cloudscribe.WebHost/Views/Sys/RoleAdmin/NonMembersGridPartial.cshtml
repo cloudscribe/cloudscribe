@@ -3,66 +3,77 @@
 @{
     
 }
-<p>
-    @using (Ajax.BeginForm("RoleNonMembers", "RoleAdmin", null,
-                new AjaxOptions { UpdateTargetId = "nonmembersgridcontainer", HttpMethod="POST", InsertionMode = InsertionMode.Replace },
-            new { @class = "form-inline", @role = "form" }))
-    {
-        @Html.Hidden("roleId", Model.Role.RoleId)
-        @Html.Hidden("ajaxGrid", true)
+
+    <form role="form" method="get" class="form-inline" asp-controller="RoleAdmin" asp-action="RoleNonMembers"
+        data-ajax="true" 
+        data-ajax-method="GET" 
+        data-ajax-mode="replace" 
+        data-ajax-update="#nonmembersgridcontainer" 
+          >
+        <input name="roleId" type="hidden" value="@Model.Role.RoleId" />
+        <input name="ajaxGrid" type="hidden" value="true" />
+
+
         <div class="input-group">
-            @Html.TextBox("searchInput", Model.SearchQuery, new { @class = "form-control" })
+            <input id="searchInput" type="search" name="searchInput" value="@Model.SearchQuery" class="form-control" />
             <span class="input-group-btn">
-               
+
                 <button type="submit" value="CommonResources.Search" class="btn btn-default">CommonResources.Search</button>
             </span>
         </div>
-    }
-</p>
+    </form>
+
 <table class="table table-striped">
     <tr>
         <th>
         </th>
         <th>
-            CommonResources.Email
+            CommonResources
+            .Email
         </th>
         @if (config.DontUseEmailForLogin())
         {
             <th>
-                CommonResources.LoginName
+                CommonResources
+                .LoginName
             </th>
         }
         <th>
-            CommonResources.DisplayName
+            CommonResources
+            .DisplayName
         </th>
         <th>
-            CommonResources.FirstName
+            CommonResources
+            .FirstName
         </th>
         <th>
-            CommonResources.LastName
+            CommonResources
+            .LastName
         </th>
     </tr>
     @foreach (var item in Model.Members)
     {
         <tr>
             <td>
-                @using (Html.BeginForm("AddUser", "RoleAdmin", FormMethod.Post))
-                {
-                    @Html.Hidden("RoleGuid", Model.Role.RoleGuid)
-                    @Html.Hidden("RoleId", Model.Role.RoleId)
-                    @Html.Hidden("UserGuid", item.UserGuid)
-                    @Html.Hidden("UserId", item.UserId)
+                <form role="form" asp-controller="RoleAdmin" asp-action="AddUser">
+                    <input name="RoleGuid" type="hidden" value="@Model.Role.RoleGuid" />
+                    <input name="roleId" type="hidden" value="@Model.Role.RoleId" />
+                    <input name="UserGuid" type="hidden" value="@item.UserGuid" />
+                    <input name="UserId" type="hidden" value="@item.UserId" />
+
+
                     <button type="submit" id="approve-btn"
                             class="btn btn-success"
                             onclick="javascript: return confirm('@Html.FormatValue(item.DisplayName, "Are you sure you want to add {0}?")');">
                         CommonResources.Add
                     </button>
-                }
+                </form>
+                
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
-            @if (AppSettings.DontUseEmailForLogin)
+            @if (config.DontUseEmailForLogin())
             {
                 <td>
                     @Html.DisplayFor(modelItem => item.UserName)

@@ -2,7 +2,11 @@
 @inject IConfiguration config
 
 @{
-
+    var dialogDivId = Guid.NewGuid().ToString();
+    var ajaxBegin = "prepareModalDialog(&#39;" + dialogDivId + "&#39;)";
+    var ajaxFailure = "clearModalDialog(&#39;" + dialogDivId + "&#39;);alert(&#39;Ajax call failed&#39;)";
+    var ajaxSuccess = "openModalDialog(&#39;" + dialogDivId + "&#39;)";
+    var ajaxUpdate = "#" + dialogDivId;
 }
 
     @section Styles {
@@ -16,7 +20,7 @@
 <form class="form-inline" role="form" asp-controller="RoleAdmin" asp-action="RoleMembers" method="get">
     <input asp-for="Role.RoleId" type="hidden" />
     <div class="input-group">
-        <input id="searchInput" name="searchInput" value="@Model.SearchQuery" class="form-control" />
+        <input id="searchInput" name="searchInput" type="search" value="@Model.SearchQuery" class="form-control" />
         <span class="input-group-btn">
             <button type="submit" value="CommonResources.Search" class="btn btn-default">CommonResources.Search</button>
         </span>
@@ -27,10 +31,18 @@
         <table class="table table-striped">
             <tr>
                 <th>
+                    <a class="btn btn-xs btn-default" asp-action="RoleNonMembers" asp-controller="RoleAdmin"
+                       asp-route-roleId="@Model.Role.RoleId"
+                       data-ajax="true"
+                       data-ajax-begin="@Html.Raw(ajaxBegin)"
+                       data-ajax-failure="@Html.Raw(ajaxFailure)" 
+                       data-ajax-method="GET"
+                       data-ajax-mode="replace"
+                       data-ajax-success="@Html.Raw(ajaxSuccess)" 
+                       data-ajax-update="@Html.Raw(ajaxUpdate)" 
+                       >CommonResources.AddUser</a>
 
-                    @Ajax.ModalDialogActionLinkBootstrap("CommonResources.AddUser", "RoleNonMembers", "RoleAdmin",
-    new { roleId = Model.Role.RoleId }
-        , new { @class = "btn btn-success btn-xs" })
+
                 </th>
                 <th>
                     CommonResources.Email
@@ -57,8 +69,8 @@
                 <tr>
                     <td>
                         <form asp-controller="RoleAdmin" asp-action="RemoveUser">
-                            <input asp-for="Model.Role.RoleId" type="hidden" />
-                            <input asp-for="item.UserId" type="hidden" />
+                            <input asp-for="Role.RoleId" type="hidden" />
+                            <input asp-for="@item.UserId" type="hidden" />
                             <button type="submit" id="approve-btn"
                                     class="btn btn-danger btn-xs"
                                     onclick="javascript: return confirm('@Html.FormatValue(item.DisplayName, "Are you sure you want to remove {0}?")');">

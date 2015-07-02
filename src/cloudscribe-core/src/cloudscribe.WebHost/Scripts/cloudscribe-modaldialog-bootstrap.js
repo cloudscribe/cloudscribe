@@ -1,5 +1,5 @@
 ﻿function prepareModalDialog(dialogDivId) {
-    var $wrapper = $("<div/>", { id: dialogDivId, class: "modal fade", tabindex: "-1" });
+    var $wrapper = $("<div/>", { id: dialogDivId, class: "modal fade",  tabindex: "-1" });
     $(document.body).append($wrapper);
 }
 

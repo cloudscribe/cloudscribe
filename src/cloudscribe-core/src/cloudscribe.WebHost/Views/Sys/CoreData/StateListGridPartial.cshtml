@@ -5,9 +5,13 @@
 <table class="table table-striped">
     <tr>
         <th>
-            @Ajax.ModalDialogActionLinkBootstrap("CommonResources.NewState", "StateEdit", "CoreData",
-                     new { countryGuid = Model.Country.Guid, returnPageNumber = Model.Paging.CurrentPage }
-                 , new { @class = "btn btn-default btn-xs" })
+            <a class="btn btn-xs btn-default" asp-action="StateEdit" asp-controller="CoreData"
+               asp-route-countryGuid="@Model.Country.Guid"
+               asp-route-partial="true"
+               asp-route-returnPageNumber="@Model.Paging.CurrentPage"
+               data-cloudscribe-bootstrapmodal="true">CommonResources.NewState</a>
+
+          
         </th>
         <th>
             CommonResources.Name
@@ -20,16 +24,14 @@
                         <tr>
                             <td>
                                 <form asp-controller="CoreData" asp-action="StateDelete">
-                                    @Ajax.ModalDialogActionLinkBootstrap("CommonResources.Edit", "StateEdit", "CoreData",
-                                    new
-                                    {
-                                        countryGuid = Model.Country.Guid,
-                                        guid = item.Guid,
-                                        returnPageNumber = Model.Paging.CurrentPage
-                                    }
-                                     , new { @class = "btn btn-default btn-xs" })
 
-                                    @Html.AntiForgeryToken()
+                                    <a class="btn btn-xs btn-default" asp-action="StateEdit" asp-controller="CoreData"
+                                       asp-route-countryGuid="@Model.Country.Guid"
+                                       asp-route-guid="@item.Guid"
+                                       asp-route-partial="true"
+                                       asp-route-returnpagenumber="@Model.Paging.CurrentPage"
+                                       data-cloudscribe-bootstrapmodal="true">CommonResources.Edit</a>
+
                                     <input asp-for="@item.Guid" type="hidden" />
                                     <input asp-for="@item.CountryGuid" type="hidden" />
                                     <input id="returnPageNumber" name="returnPageNumber" value="@Model.Paging.CurrentPage" type="hidden" />

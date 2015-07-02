@@ -1,50 +1,51 @@
 {
-  "version": "1.0.0-*",
-  "description": "",
-  "authors": [ "" ],
-  "tags": [ "" ],
-  "projectUrl": "",
-  "licenseUrl": "",
+    "version": "1.0.0-*",
+    "description": "",
+    "authors": [ "" ],
+    "tags": [ "" ],
+    "projectUrl": "",
+    "licenseUrl": "",
 
-  "dependencies": {
-    "cloudscribe.AspNet.Identity": "1.0.0-*",
-    "cloudscribe.Configuration": "1.0.0-*",
-    "cloudscribe.Core.Models": "1.0.0-*",
-    "Newtonsoft.Json": "7.0.1-beta3",
-    "Microsoft.DataAnnotations": "1.0.0-beta1",
-    "Microsoft.AspNet.Mvc": "6.0.0-beta4",
-    "System.Net.Http": "4.0.0-beta-22816",
-    "System.Net.Http.WinHttpHandler": "4.0.0-beta-22816",
-    "Microsoft.AspNet.Http": "1.0.0-beta4",
-    "Microsoft.AspNet.Authentication": "1.0.0-beta4",
-    "Microsoft.AspNet.Authentication.Cookies": "1.0.0-beta4",
-    "Microsoft.AspNet.Http.Core": "1.0.0-beta4",
-    "Microsoft.AspNet.Http.Extensions": "1.0.0-beta4",
-    "Microsoft.AspNet.Authorization": "1.0.0-beta4",
-    "Microsoft.AspNet.Security": "1.0.0-beta3",
-    "Microsoft.AspNet.Authentication.MicrosoftAccount": "1.0.0-beta4",
-    "Microsoft.AspNet.Authentication.Facebook": "1.0.0-beta4",
-    "cloudscribe.Messaging": "1.0.0-*",
-    "Microsoft.Framework.Logging.Interfaces": "1.0.0-beta4",
-    "Microsoft.AspNet.Razor": "4.0.0-beta4",
-    "Microsoft.AspNet.Mvc.Core": "6.0.0-beta4",
-    "Microsoft.AspNet.HttpFeature": "1.0.0-beta2",
-    "Microsoft.AspNet.Http.Interfaces": "1.0.0-beta4"
-  },
-
-  "frameworks": {
-    "dnx451": {
-      "dependencies": {
-        "System.Net.Http": ""
-      }
+    "dependencies": {
+        "cloudscribe.AspNet.Identity": "1.0.0-*",
+        "cloudscribe.Configuration": "1.0.0-*",
+        "cloudscribe.Core.Models": "1.0.0-*",
+        "Newtonsoft.Json": "7.0.1-beta3",
+        "Microsoft.DataAnnotations": "1.0.0-beta1",
+        "Microsoft.AspNet.Mvc": "6.0.0-beta4",
+        "System.Net.Http": "4.0.0-beta-22816",
+        "System.Net.Http.WinHttpHandler": "4.0.0-beta-22816",
+        "Microsoft.AspNet.Http": "1.0.0-beta4",
+        "Microsoft.AspNet.Authentication": "1.0.0-beta4",
+        "Microsoft.AspNet.Authentication.Cookies": "1.0.0-beta4",
+        "Microsoft.AspNet.Http.Core": "1.0.0-beta4",
+        "Microsoft.AspNet.Http.Extensions": "1.0.0-beta4",
+        "Microsoft.AspNet.Authorization": "1.0.0-beta4",
+        "Microsoft.AspNet.Security": "1.0.0-beta3",
+        "Microsoft.AspNet.Authentication.MicrosoftAccount": "1.0.0-beta4",
+        "Microsoft.AspNet.Authentication.Facebook": "1.0.0-beta4",
+        "cloudscribe.Messaging": "1.0.0-*",
+        "Microsoft.Framework.Logging.Interfaces": "1.0.0-beta4",
+        "Microsoft.AspNet.Razor": "4.0.0-beta4",
+        "Microsoft.AspNet.Mvc.Core": "6.0.0-beta4",
+        "Microsoft.AspNet.HttpFeature": "1.0.0-beta2",
+        "Microsoft.AspNet.Http.Interfaces": "1.0.0-beta4",
+        "Microsoft.AspNet.Mvc.TagHelpers": "6.0.0-beta5"
     },
-    "dnxcore50": {
-      "dependencies": {
-        "System.Collections": "4.0.10-beta-22816",
-        "System.Linq": "4.0.0-beta-22816",
-        "System.Threading": "4.0.10-beta-22816",
-        "Microsoft.CSharp": "4.0.0-beta-22816"
-      }
+
+    "frameworks": {
+        "dnx451": {
+            "dependencies": {
+                "System.Net.Http": ""
+            }
+        },
+        "dnxcore50": {
+            "dependencies": {
+                "System.Collections": "4.0.10-beta-22816",
+                "System.Linq": "4.0.0-beta-22816",
+                "System.Threading": "4.0.10-beta-22816",
+                "Microsoft.CSharp": "4.0.0-beta-22816"
+            }
+        }
     }
-  }
 }

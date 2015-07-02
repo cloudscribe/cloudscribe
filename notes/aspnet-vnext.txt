@@ -13,6 +13,11 @@ http://shazwazza.com/post/using-aspnet5-optionsmodel/
 
 http://www.strathweb.com/2015/06/action-filters-service-filters-type-filters-asp-net-5-mvc-6/
 
+
+http://www.mikesdotnetting.com/Article/275/custom-taghelpers-in-asp-net-mvc-6
+
+https://github.com/aspnet/Mvc/blob/dev/src/Microsoft.AspNet.Mvc.TagHelpers/AnchorTagHelper.cs
+
 2014-11-15 it seems premature to try to build cloudscribe on vnext mainly because certain dependencies are not available yet
 such as log4net, mysql.data etc. supposedly you can use that if you target the desktop framework instead of core but it seems not to work.
 I can add a reference to MySql.Data via NuGet but it gives a build error the type or namespace cannot be found as if the reference was not there.

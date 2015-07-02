@@ -10,9 +10,10 @@
         <th>
             @if (Model.UseModals)
             {
-                @Ajax.ModalDialogActionLinkBootstrap(@CommonResources.NewCountry, "CountryEdit", "CoreData",
-new { guid = Guid.Empty, returnPageNumber = Model.Paging.CurrentPage }
-     , new { @class = "btn btn-default btn-xs" })
+                <a class="btn btn-xs btn-default" asp-action="CountryEdit" asp-controller="CoreData"
+                   asp-route-guid="@Guid.Empty"
+                   asp-route-returnPageNumber="@Model.Paging.CurrentPage"
+                   data-cloudscribe-bootstrapmodal="true">CommonResources.NewCountry</a>
             }
             else
             {
@@ -37,13 +38,21 @@ new { guid = Guid.Empty, returnPageNumber = Model.Paging.CurrentPage }
         <td>
  @if (Model.UseModals)
  {
-     @Ajax.ModalDialogActionLinkBootstrap(@CommonResources.Edit, "CountryEdit", "CoreData",
-new { guid = c.Guid, returnPageNumber = Model.Paging.CurrentPage, partial=true }
-     , new { @class = "btn btn-default btn-xs" })
+    <a class="btn btn-xs btn-default" asp-action="CountryEdit" asp-controller="CoreData"
+       asp-route-guid="@c.Guid"
+       asp-route-partial="true"
+       asp-route-returnpagenumber="@Model.Paging.CurrentPage"
+       data-cloudscribe-bootstrapmodal="true">CommonResources.Edit</a>
 
-    @Ajax.ModalDialogActionLinkBootstrap(@CommonResources.States, "StateListPage", "CoreData",
-      new { countryGuid = c.Guid, pageNumber = 1, pageSize = -1, partial = true }
-     , new { @class = "btn btn-default btn-xs" })
+    <a class="btn btn-xs btn-default" asp-action="StateListPage" asp-controller="CoreData"
+       asp-route-countryGuid="@c.Guid"
+       asp-route-partial="true"
+       asp-route-pageNumber="1"
+       asp-route-pageSize="-1"
+       asp-route-returnpagenumber="@Model.Paging.CurrentPage"
+       data-cloudscribe-bootstrapmodal="true">CommonResources.States</a>
+
+    
  }
  else
  {
