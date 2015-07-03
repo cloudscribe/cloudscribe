@@ -1,7 +1,7 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.RoleAdmin.RoleMemberListViewModel
 @inject IConfiguration config
 @{
-    
+    var pagerUrl = Url.Action("RoleNonMembers", "RoleAdmin", new { roleId = Model.Role.RoleId, searchInput = Model.SearchQuery, ajaxGrid = true });
 }
 
     <form role="form" method="get" class="form-inline" asp-controller="RoleAdmin" asp-action="RoleNonMembers"
@@ -92,6 +92,11 @@
     }
 </table>
 <div>
+    <bs-pager bs-current-page="@Model.Paging.CurrentPage" 
+               bs-link-url="@pagerUrl"
+              bs-total-items="@Model.Paging.TotalItems"
+              bs-page-size="4"
+              />
     @*
     @Html.Pager(Model.Paging.ItemsPerPage,
     Model.Paging.CurrentPage,

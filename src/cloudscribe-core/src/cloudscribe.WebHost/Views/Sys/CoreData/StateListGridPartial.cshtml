@@ -9,7 +9,7 @@
                asp-route-countryGuid="@Model.Country.Guid"
                asp-route-partial="true"
                asp-route-returnPageNumber="@Model.Paging.CurrentPage"
-               data-cloudscribe-bootstrapmodal="true">CommonResources.NewState</a>
+               bs-modal-link="true">CommonResources.NewState</a>
 
           
         </th>
@@ -30,7 +30,7 @@
                                        asp-route-guid="@item.Guid"
                                        asp-route-partial="true"
                                        asp-route-returnpagenumber="@Model.Paging.CurrentPage"
-                                       data-cloudscribe-bootstrapmodal="true">CommonResources.Edit</a>
+                                       bs-modal-link="true">CommonResources.Edit</a>
 
                                     <input asp-for="@item.Guid" type="hidden" />
                                     <input asp-for="@item.CountryGuid" type="hidden" />

@@ -2,11 +2,7 @@
 @inject IConfiguration config
 
 @{
-    var dialogDivId = Guid.NewGuid().ToString();
-    var ajaxBegin = "prepareModalDialog(&#39;" + dialogDivId + "&#39;)";
-    var ajaxFailure = "clearModalDialog(&#39;" + dialogDivId + "&#39;);alert(&#39;Ajax call failed&#39;)";
-    var ajaxSuccess = "openModalDialog(&#39;" + dialogDivId + "&#39;)";
-    var ajaxUpdate = "#" + dialogDivId;
+    
 }
 
     @section Styles {
@@ -32,17 +28,8 @@
             <tr>
                 <th>
                     <a class="btn btn-xs btn-default" asp-action="RoleNonMembers" asp-controller="RoleAdmin"
-                       asp-route-roleId="@Model.Role.RoleId"
-                       data-ajax="true"
-                       data-ajax-begin="@Html.Raw(ajaxBegin)"
-                       data-ajax-failure="@Html.Raw(ajaxFailure)" 
-                       data-ajax-method="GET"
-                       data-ajax-mode="replace"
-                       data-ajax-success="@Html.Raw(ajaxSuccess)" 
-                       data-ajax-update="@Html.Raw(ajaxUpdate)" 
-                       >CommonResources.AddUser</a>
-
-
+                       asp-route-roleid="@Model.Role.RoleId"
+                       bs-modal-link="true">CommonResources.AddUser</a>
                 </th>
                 <th>
                     CommonResources.Email

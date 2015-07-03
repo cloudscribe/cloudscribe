@@ -13,8 +13,15 @@ http://shazwazza.com/post/using-aspnet5-optionsmodel/
 
 http://www.strathweb.com/2015/06/action-filters-service-filters-type-filters-asp-net-5-mvc-6/
 
+http://www.mikesdotnetting.com/Article/274/introducing-taghelpers-in-asp-net-mvc-6
 
 http://www.mikesdotnetting.com/Article/275/custom-taghelpers-in-asp-net-mvc-6
+
+http://blogs.msdn.com/b/msgulfcommunity/archive/2015/06/17/custom-tag-helpers-in-asp-net-5.aspx
+
+http://www.davepaquette.com/archive/2015/06/22/creating-custom-mvc-6-tag-helpers.aspx
+
+http://www.abhijainsblog.com/2015/05/tag-helpers-in-aspnet5.html
 
 https://github.com/aspnet/Mvc/blob/dev/src/Microsoft.AspNet.Mvc.TagHelpers/AnchorTagHelper.cs
 

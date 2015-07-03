@@ -233,7 +233,7 @@ namespace cloudscribe.Core.Web.Controllers
             int roleId,
             string searchInput = "",
             int pageNumber = 1,
-            int pageSize = -1,
+            int pageSize = 2,
             bool ajaxGrid = false)
         {
             ViewBag.SiteName = Site.SiteName;

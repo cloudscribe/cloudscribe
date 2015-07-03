@@ -13,7 +13,7 @@
                 <a class="btn btn-xs btn-default" asp-action="CountryEdit" asp-controller="CoreData"
                    asp-route-guid="@Guid.Empty"
                    asp-route-returnPageNumber="@Model.Paging.CurrentPage"
-                   data-cloudscribe-bootstrapmodal="true">CommonResources.NewCountry</a>
+                   bs-modal-link="true">CommonResources.NewCountry</a>
             }
             else
             {
@@ -42,7 +42,7 @@
        asp-route-guid="@c.Guid"
        asp-route-partial="true"
        asp-route-returnpagenumber="@Model.Paging.CurrentPage"
-       data-cloudscribe-bootstrapmodal="true">CommonResources.Edit</a>
+       bs-modal-link="true">CommonResources.Edit</a>
 
     <a class="btn btn-xs btn-default" asp-action="StateListPage" asp-controller="CoreData"
        asp-route-countryGuid="@c.Guid"
@@ -50,7 +50,7 @@
        asp-route-pageNumber="1"
        asp-route-pageSize="-1"
        asp-route-returnpagenumber="@Model.Paging.CurrentPage"
-       data-cloudscribe-bootstrapmodal="true">CommonResources.States</a>
+       bs-modal-link="true">CommonResources.States</a>
 
     
  }
