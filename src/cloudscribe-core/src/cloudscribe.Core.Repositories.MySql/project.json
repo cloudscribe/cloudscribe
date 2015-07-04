@@ -9,7 +9,7 @@
     "dependencies": {
         "cloudscribe.DbHelpers.MySql": "1.0.0-*",
         "cloudscribe.Core.Models": "1.0.0-*",
-        "Microsoft.Framework.Logging.Interfaces": "1.0.0-beta4",
+        "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta5",
         "MySql.Data": "6.9.6"
     },
 

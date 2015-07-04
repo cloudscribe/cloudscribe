@@ -9,11 +9,11 @@
     "dependencies": {
         "cloudscribe.Configuration": "1.0.0-*",
         "cloudscribe.Core.Models": "1.0.0-*",
-        "Microsoft.Framework.Logging.Interfaces": "1.0.0-beta4",
+        "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta5",
         "System.Diagnostics.Tools": "4.0.0-beta-22816",
         "System.Data.Common": "4.0.0-beta-22816",
         "FirebirdSql.Data.FirebirdClient": "4.6.2",
-        "Microsoft.Framework.ConfigurationModel.Interfaces": "1.0.0-beta4"
+        "Microsoft.Framework.Configuration.Abstractions": "1.0.0-beta5"
     },
 
     "frameworks": {

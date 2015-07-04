@@ -1,12 +1,12 @@
 ﻿// Original Author:					Joseph Hill
 // Created:							2005-02-16 
 // Additions and fixes have been added by Joe Audette, Dean Brettle, TJ Fontaine
-// Last Modified:                   2015-06-23
+// Last Modified:                   2015-07-04
 
 
 using cloudscribe.Configuration;
 using cloudscribe.Core.Models;
-using Microsoft.Framework.ConfigurationModel;
+using Microsoft.Framework.Configuration;
 using Microsoft.Framework.Logging;
 using Npgsql;
 using NpgsqlTypes;

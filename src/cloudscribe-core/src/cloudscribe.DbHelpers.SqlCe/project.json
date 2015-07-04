@@ -9,12 +9,12 @@
     "dependencies": {
         "cloudscribe.Configuration": "1.0.0-*",
         "cloudscribe.Core.Models": "1.0.0-*",
-        "Microsoft.Framework.DependencyInjection": "1.0.0-beta4",
+        "Microsoft.Framework.DependencyInjection": "1.0.0-beta5",
         "System.Data.Common": "4.0.0-beta-22816",
         "Microsoft.SqlServer.Compact": "4.0.8876.1",
-        "Microsoft.Framework.Logging.Interfaces": "1.0.0-beta4",
-        "Microsoft.Framework.ConfigurationModel.Interfaces": "1.0.0-beta4",
-        "Microsoft.AspNet.Hosting.Interfaces": "1.0.0-beta4"
+        "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta5",
+        "Microsoft.Framework.Configuration.Abstractions": "1.0.0-beta5",
+        "Microsoft.AspNet.Hosting.Abstractions": "1.0.0-beta5"
     },
 
     "frameworks": {

@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2015-06-23
+// Last Modified:			2015-07-04
 // 
 
 
@@ -8,7 +8,7 @@ using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.DataExtensions;
 using cloudscribe.DbHelpers.MySql;
 using Microsoft.Framework.Logging;
-using Microsoft.Framework.ConfigurationModel;
+using Microsoft.Framework.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;

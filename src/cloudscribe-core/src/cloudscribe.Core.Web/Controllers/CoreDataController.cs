@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-11-15
-// Last Modified:			2015-06-20
+// Last Modified:			2015-07-04
 // 
 
 using cloudscribe.Configuration;
@@ -10,6 +10,7 @@ using cloudscribe.Core.Web.ViewModels.CoreData;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Rendering;
+using Microsoft.Framework.ConfigurationModel;
 //using MvcSiteMapProvider;
 using System;
 using System.Collections.Generic;
@@ -25,15 +26,18 @@ namespace cloudscribe.Core.Web.Controllers
     {
         public CoreDataController(
             ISiteResolver siteResolver,
-            IGeoRepository geoRepository
+            IGeoRepository geoRepository,
+            IConfiguration configuration
             )
         {
             Site = siteResolver.Resolve();
             geoRepo = geoRepository;
+            config = configuration;
         }
 
         private ISiteSettings Site;
         private IGeoRepository geoRepo;
+        private IConfiguration config;
 
         //disable warning about not really being async
         // we know it is not, it is not needed to hit the db in these
@@ -61,7 +65,7 @@ namespace cloudscribe.Core.Web.Controllers
         {
             ViewBag.SiteName = Site.SiteName;
             ViewBag.Title = "Country List Administration";
-            int itemsPerPage = AppSettings.DefaultPageSize_CountryList;
+            int itemsPerPage = config.DefaultPageSize_CountryList();
             if (pageSize > 0)
             {
                 itemsPerPage = pageSize;
@@ -192,7 +196,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             ViewBag.SiteName = Site.SiteName;
             ViewBag.Title = "State List Administration";
-            int itemsPerPage = AppSettings.DefaultPageSize_StateList;
+            int itemsPerPage = config.DefaultPageSize_StateList();
             if (pageSize > 0)
             {
                 itemsPerPage = pageSize;

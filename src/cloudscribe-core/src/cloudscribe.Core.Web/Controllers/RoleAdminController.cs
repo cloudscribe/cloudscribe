@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-12-06
-// Last Modified:			2015-06-20
+// Last Modified:			2015-07-04
 // 
 
 using cloudscribe.Configuration;
@@ -8,6 +8,7 @@ using cloudscribe.Core.Models;
 using cloudscribe.Core.Web.ViewModels.RoleAdmin;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
+using Microsoft.Framework.ConfigurationModel;
 //using MvcSiteMapProvider;
 using System;
 using System.Threading.Tasks;
@@ -20,15 +21,18 @@ namespace cloudscribe.Core.Web.Controllers
 
         public RoleAdminController(
             ISiteResolver siteResolver,
-            IUserRepository userRepository
+            IUserRepository userRepository,
+            IConfiguration configuration
             )
         {
             Site = siteResolver.Resolve();
             UserRepository = userRepository;
+            config = configuration;
         }
 
         private ISiteSettings Site;
         private IUserRepository UserRepository;
+        private IConfiguration config;
 
         [HttpGet]
         [Authorize(Roles = "Admins,Role Admins")]
@@ -41,7 +45,7 @@ namespace cloudscribe.Core.Web.Controllers
             RoleListViewModel model = new RoleListViewModel();
             model.Heading = "Role Management";
 
-            int itemsPerPage = AppSettings.DefaultPageSize_CountryList;
+            int itemsPerPage = config.DefaultPageSize_RoleList();
             if (pageSize > 0)
             {
                 itemsPerPage = pageSize;
@@ -194,7 +198,7 @@ namespace cloudscribe.Core.Web.Controllers
                 return RedirectToAction("Index");
             }
 
-            int itemsPerPage = AppSettings.DefaultPageSize_RoleMemberList;
+            int itemsPerPage = config.DefaultPageSize_RoleMemberList();
             if (pageSize > 0)
             {
                 itemsPerPage = pageSize;
@@ -245,7 +249,7 @@ namespace cloudscribe.Core.Web.Controllers
                 return RedirectToAction("Index");
             }
 
-            int itemsPerPage = AppSettings.DefaultPageSize_RoleMemberList;
+            int itemsPerPage = config.DefaultPageSize_RoleMemberList();
             if (pageSize > 0)
             {
                 itemsPerPage = pageSize;

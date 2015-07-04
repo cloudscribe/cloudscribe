@@ -7,12 +7,12 @@
     "licenseUrl": "",
 
     "dependencies": {
-        "Microsoft.Framework.ConfigurationModel": "1.0.0-beta4",
-        "Microsoft.Framework.ConfigurationModel.Json": "1.0.0-beta4",
+        "Microsoft.Framework.Configuration": "1.0.0-beta5",
+        "Microsoft.Framework.Configuration.Json": "1.0.0-beta5",
         "Microsoft.DataAnnotations": "1.0.0-beta1",
-        "Microsoft.AspNet.Mvc.ModelBinding": "6.0.0-beta4",
-        "Microsoft.AspNet.Hosting.Interfaces": "1.0.0-beta4",
-        "Microsoft.Framework.Logging.Interfaces": "1.0.0-beta4",
+        "Microsoft.AspNet.Mvc.Core": "6.0.0-beta5",
+        "Microsoft.AspNet.Hosting.Abstractions": "1.0.0-beta5",
+        "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta5",
         "System.Xml.XmlDocument": "4.0.0-beta-22816"
     },
 

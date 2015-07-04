@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-06-23
+// Last Modified:			2015-07-04
 // 
 
 using cloudscribe.Configuration;
@@ -84,7 +84,7 @@ namespace cloudscribe.Core.Web.Controllers
             ViewBag.Title = "Site List";
             ViewBag.Heading = "Site List";
 
-            int itemsPerPage = AppSettings.DefaultPageSize_SiteList;
+            int itemsPerPage = config.DefaultPageSize_SiteList();
             if (pageSize > 0)
             {
                 itemsPerPage = pageSize;
@@ -195,7 +195,7 @@ namespace cloudscribe.Core.Web.Controllers
             {
                 if (model.SiteGuid != Site.SiteGuid)
                 {
-                    model.ShowDelete = AppSettings.AllowDeleteChildSites;
+                    model.ShowDelete = config.AllowDeleteChildSites();
                 }
             }
 
@@ -234,7 +234,7 @@ namespace cloudscribe.Core.Web.Controllers
             {
                 if (model.SiteGuid != Site.SiteGuid)
                 {
-                    model.ShowDelete = AppSettings.AllowDeleteChildSites;
+                    model.ShowDelete = config.AllowDeleteChildSites();
                 }
             }
 

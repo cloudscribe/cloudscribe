@@ -1,12 +1,12 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-08-26
-// Last Modified:			2015-06-01
+// Last Modified:			2015-07-04
 // 
 
 
 using System;
 //using System.Configuration;
-using Microsoft.Framework.ConfigurationModel;
+using Microsoft.Framework.Configuration;
 //using System.Globalization;
 
 namespace cloudscribe.Configuration
@@ -30,12 +30,14 @@ namespace cloudscribe.Configuration
 
         private static IConfiguration SetupConfig()
         {
-            IConfiguration configuration = new Microsoft.Framework.ConfigurationModel.Configuration()
-               .AddJsonFile("config.json");
+            //IConfiguration configuration = new Microsoft.Framework.Configuration.ConfigurationSource()
+            //   .AddJsonFile("config.json");
 
-            //configuration.AddEnvironmentVariables();
+            ////configuration.AddEnvironmentVariables();
 
-            return configuration.GetSubKey("AppSettings");
+            //return configuration.GetSubKey("AppSettings");
+
+            return null;
         }
 
         public static bool GetBool(string key, bool defaultIfNotFound)
@@ -199,30 +201,30 @@ namespace cloudscribe.Configuration
             get { return GetInt("CacheDurationInSeconds_TimeZoneList", 3600); } // 1 hour
         }
 
-        public static int DefaultPageSize_SiteList
-        {
-            get { return GetInt("DefaultPageSize_SiteList", 10); }
-        }
+        //public static int DefaultPageSize_SiteList
+        //{
+        //    get { return GetInt("DefaultPageSize_SiteList", 10); }
+        //}
 
-        public static int DefaultPageSize_UserList
-        {
-            get { return GetInt("DefaultPageSize_UserList", 10); }
-        }
+        //public static int DefaultPageSize_UserList
+        //{
+        //    get { return GetInt("DefaultPageSize_UserList", 10); }
+        //}
 
-        public static int DefaultPageSize_CountryList
-        {
-            get { return GetInt("DefaultPageSize_CountryList", 10); }
-        }
+        //public static int DefaultPageSize_CountryList
+        //{
+        //    get { return GetInt("DefaultPageSize_CountryList", 10); }
+        //}
 
-        public static int DefaultPageSize_StateList
-        {
-            get { return GetInt("DefaultPageSize_StateList", 10); }
-        }
+        //public static int DefaultPageSize_StateList
+        //{
+        //    get { return GetInt("DefaultPageSize_StateList", 10); }
+        //}
 
-        public static int DefaultPageSize_RoleMemberList
-        {
-            get { return GetInt("DefaultPageSize_RoleMemberList", 10); }
-        }
+        //public static int DefaultPageSize_RoleMemberList
+        //{
+        //    get { return GetInt("DefaultPageSize_RoleMemberList", 10); }
+        //}
 
         public static string RouteConfigPath
         {
@@ -241,10 +243,10 @@ namespace cloudscribe.Configuration
         //}
 
 
-        public static bool AllowDeleteChildSites
-        {
-            get { return GetBool("AllowDeleteChildSites", true); }
-        }
+        //public static bool AllowDeleteChildSites
+        //{
+        //    get { return GetBool("AllowDeleteChildSites", true); }
+        //}
 
 
         /// <summary>

@@ -1,11 +1,11 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-11-02
-// Last Modified:			2015-06-20
+// Last Modified:			2015-07-04
 // 
 
 using cloudscribe.Core.Models.Geography;
 using cloudscribe.DbHelpers.MSSQL;
-using Microsoft.Framework.ConfigurationModel;
+using Microsoft.Framework.Configuration;
 using Microsoft.Framework.Logging;
 using System;
 using System.Collections.Generic;

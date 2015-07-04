@@ -1,10 +1,10 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-06-22
-// Last Modified:			2015-06-23
+// Last Modified:			2015-07-04
 // 
 
 using Microsoft.AspNet.Hosting;
-using Microsoft.Framework.ConfigurationModel;
+using Microsoft.Framework.Configuration;
 using System;
 
 namespace cloudscribe.DbHelpers.SqlCe

@@ -1,11 +1,11 @@
 ﻿// Author:					Joe Audette
 // Created:					2015-06-22
-// Last Modified:			2015-06-22
+// Last Modified:			2015-07-04
 // 
 
 
 using Microsoft.AspNet.Hosting;
-using Microsoft.Framework.ConfigurationModel;
+using Microsoft.Framework.Configuration;
 using System;
 
 namespace cloudscribe.DbHelpers.SQLite

@@ -1,11 +1,11 @@
 ﻿// Author:         Joe Audette
 // Created:        2010-03-09
-// Last Modified   2015-06-23
+// Last Modified   2015-07-04
 
 
 using cloudscribe.Configuration;
 using cloudscribe.Core.Models;
-using Microsoft.Framework.ConfigurationModel;
+using Microsoft.Framework.Configuration;
 using Microsoft.Framework.Logging;
 using System;
 using System.Data;

@@ -1,10 +1,10 @@
 ﻿// Author:					Joe Audette
 // Created:					2015-06-18
-// Last Modified:			2015-06-20
+// Last Modified:			2015-07-04
 // 
 
 
-using Microsoft.Framework.ConfigurationModel;
+using Microsoft.Framework.Configuration;
 using System;
 
 namespace cloudscribe.Configuration
@@ -69,6 +69,11 @@ namespace cloudscribe.Configuration
             return config.GetOrDefault("AppSettings:DontUseEmailForLogin", false);
         }
 
+        public static bool AllowDeleteChildSites(this IConfiguration config)
+        {
+            return config.GetOrDefault("AppSettings:AllowDeleteChildSites", true);
+        }
+
 
         public static int RelatedSiteId (this IConfiguration config)
         {
@@ -80,6 +85,35 @@ namespace cloudscribe.Configuration
             return config.GetOrDefault("CkEditor:CustomConfigPath", "~/js/cloudscribe-ckeditor-config.js");
         }
 
+        public static int DefaultPageSize_RoleList(this IConfiguration config)
+        {
+            return config.GetOrDefault("AppSettings:DefaultPageSize_RoleList", 10);
+        }
+
+        public static int DefaultPageSize_RoleMemberList(this IConfiguration config)
+        {
+            return config.GetOrDefault("AppSettings:DefaultPageSize_RoleMemberList", 10);
+        }
+
+        public static int DefaultPageSize_StateList(this IConfiguration config)
+        {
+            return config.GetOrDefault("AppSettings:DefaultPageSize_StateList", 10);
+        }
+
+        public static int DefaultPageSize_CountryList(this IConfiguration config)
+        {
+            return config.GetOrDefault("AppSettings:DefaultPageSize_CountryList", 10);
+        }
+
+        public static int DefaultPageSize_UserList(this IConfiguration config)
+        {
+            return config.GetOrDefault("AppSettings:DefaultPageSize_UserList", 10);
+        }
+
+        public static int DefaultPageSize_SiteList(this IConfiguration config)
+        {
+            return config.GetOrDefault("AppSettings:DefaultPageSize_SiteList", 10);
+        }
 
     }
 }

@@ -11,7 +11,7 @@
         "cloudscribe.DbHelpers.SqlCe": "1.0.0-*",
         "Microsoft.SqlServer.Compact": "4.0.8876.1",
         "System.Data.Common": "4.0.0-beta-22816",
-        "Microsoft.Framework.Logging.Interfaces": "1.0.0-beta4"
+        "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta5"
     },
 
     "frameworks": {

@@ -1,11 +1,11 @@
 ﻿// Author:					Joe Audette
 // Created:				    2007-07-17
-// Last Modified:		    2015-06-23
+// Last Modified:		    2015-07-04
 
 using cloudscribe.Configuration;
 using cloudscribe.Core.Models;
 using FirebirdSql.Data.FirebirdClient;
-using Microsoft.Framework.ConfigurationModel;
+using Microsoft.Framework.Configuration;
 using Microsoft.Framework.Logging;
 using System;
 using System.Data;

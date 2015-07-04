@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-12-08
-// Last Modified:			2015-06-20
+// Last Modified:			2015-07-04
 // 
 
 using cloudscribe.Configuration;
@@ -10,6 +10,7 @@ using cloudscribe.Core.Web.ViewModels.UserAdmin;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Mvc;
+using Microsoft.Framework.ConfigurationModel;
 //using MvcSiteMapProvider;
 using System;
 using System.Collections.Generic;
@@ -25,15 +26,18 @@ namespace cloudscribe.Core.Web.Controllers
             ISiteResolver siteResolver,
             ISiteRepository siteRepository,
             IUserRepository userRepository,
-            UserManager<SiteUser> userManager
+            UserManager<SiteUser> userManager,
+            IConfiguration configuration
             )
         {
             Site = siteResolver.Resolve();
             userRepo = userRepository;
             UserManager = userManager;
             siteRepo = siteRepository;
+            config = configuration;
         }
 
+        private IConfiguration config;
         private ISiteSettings Site;
         private ISiteRepository siteRepo;
         private IUserRepository userRepo;
@@ -51,7 +55,7 @@ namespace cloudscribe.Core.Web.Controllers
             ViewBag.Title = "User Management";
             //ViewBag.Heading = "Role Management";
 
-            int itemsPerPage = AppSettings.DefaultPageSize_UserList;
+            int itemsPerPage = config.DefaultPageSize_UserList();
             if (pageSize > 0)
             {
                 itemsPerPage = pageSize;
@@ -103,7 +107,7 @@ namespace cloudscribe.Core.Web.Controllers
             ViewBag.Title = "User Management";
             //ViewBag.Heading = "Role Management";
 
-            int itemsPerPage = AppSettings.DefaultPageSize_UserList;
+            int itemsPerPage = config.DefaultPageSize_UserList();
             if (pageSize > 0)
             {
                 itemsPerPage = pageSize;
