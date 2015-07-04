@@ -18,7 +18,7 @@ using Microsoft.AspNet.Routing;
 using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Core;
 using Microsoft.Data.Entity;
-using Microsoft.Framework.ConfigurationModel;
+using Microsoft.Framework.Configuration;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
 using Microsoft.Framework.Logging.Console;
@@ -33,10 +33,10 @@ namespace cloudscribe.WebHost
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment env)
+        public Startup(IHostingEnvironment env, IApplicationEnvironment appEnv)
         {
             // Setup configuration sources.
-            var configuration = new Microsoft.Framework.ConfigurationModel.Configuration()
+            var configuration = new Microsoft.Framework.Configuration.Configuration(appEnv.ApplicationBasePath)
                 .AddJsonFile("config.json")
                 .AddJsonFile($"config.{env.EnvironmentName}.json", optional: true);
 
@@ -67,7 +67,7 @@ namespace cloudscribe.WebHost
         public void ConfigureServices(IServiceCollection services)
         {
             // Add Application settings to the services container.
-            services.Configure<AppSettings>(Configuration.GetSubKey("AppSettings"));
+            services.Configure<AppSettings>(Configuration.GetConfigurationSection("AppSettings"));
 
 
             // Add EF services to the services container.
