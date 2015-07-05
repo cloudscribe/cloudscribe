@@ -14,7 +14,7 @@
     "Microsoft.Framework.Configuration.Abstractions": "1.0.0-beta5",
     "Microsoft.AspNet.Authentication": "1.0.0-beta5",
     "Microsoft.AspNet.Authentication.Cookies": "1.0.0-beta5",
-    "System.Security.Claims": "4.0.0-beta-22816",
+    "System.Security.Claims": "4.0.0-beta-23019",
     "Microsoft.Framework.OptionsModel": "1.0.0-beta5",
     "Microsoft.Framework.DependencyInjection.Abstractions": "1.0.0-beta5",
     "Microsoft.AspNet.Hosting.Abstractions": "1.0.0-beta5",
@@ -31,10 +31,10 @@
     },
     "dnxcore50": {
       "dependencies": {
-        "System.Collections": "4.0.10-beta-22816",
-        "System.Linq": "4.0.0-beta-22816",
-        "System.Threading": "4.0.10-beta-22816",
-        "Microsoft.CSharp": "4.0.0-beta-22816"
+        "System.Collections": "4.0.10-beta-23019",
+        "System.Linq": "4.0.0-beta-23019",
+        "System.Threading": "4.0.10-beta-23019",
+        "Microsoft.CSharp": "4.0.0-beta-23019"
       }
     }
   }

@@ -6,7 +6,7 @@
 using cloudscribe.Configuration;
 using cloudscribe.Core.Models;
 using Microsoft.AspNet.Hosting;
-using Microsoft.Framework.ConfigurationModel;
+using Microsoft.Framework.Configuration;
 using System;
 
 namespace cloudscribe.Core.Web.Components

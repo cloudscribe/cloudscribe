@@ -36,7 +36,7 @@ namespace cloudscribe.WebHost
         public Startup(IHostingEnvironment env, IApplicationEnvironment appEnv)
         {
             // Setup configuration sources.
-            var configuration = new Microsoft.Framework.Configuration.Configuration(appEnv.ApplicationBasePath)
+            var configuration = new ConfigurationBuilder(appEnv.ApplicationBasePath)
                 .AddJsonFile("config.json")
                 .AddJsonFile($"config.{env.EnvironmentName}.json", optional: true);
 
@@ -56,7 +56,7 @@ namespace cloudscribe.WebHost
             // since it is added last anything in env vars would trump the same setting in previous config sources
             // so no risk of messing up settings if deploying a new version to azure
             configuration.AddEnvironmentVariables();
-            Configuration = configuration;
+            Configuration = configuration.Build();
 
             //env.MapPath
         }

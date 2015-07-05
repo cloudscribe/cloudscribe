@@ -7,7 +7,7 @@
     "licenseUrl": "",
 
     "dependencies": {
-        "System.Resources.ResourceManager": "4.0.0-beta-22816"
+        "System.Resources.ResourceManager": "4.0.0-beta-23019"
     },
 
     "frameworks": {

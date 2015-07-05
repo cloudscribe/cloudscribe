@@ -10,11 +10,11 @@
         "cloudscribe.Core.Models": "1.0.0-*",
         "cloudscribe.DbHelpers.SqlCe": "1.0.0-*",
         "Microsoft.SqlServer.Compact": "4.0.8876.1",
-        "System.Data.Common": "4.0.0-beta-22816",
+        "System.Data.Common": "4.0.0-beta-23019",
         "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta5"
     },
 
     "frameworks": {
         "dnx451": { }
     }
-} }
+} 

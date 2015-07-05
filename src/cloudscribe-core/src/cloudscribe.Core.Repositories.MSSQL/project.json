@@ -10,8 +10,8 @@
         "cloudscribe.DbHelpers.MSSQL": "1.0.0-*",
         "cloudscribe.Core.Models": "1.0.0-*",
         "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta5",
-        "System.Data.SqlClient": "4.0.0-beta-22816",
-        "System.Data.Common": "4.0.0-beta-22816",
+        "System.Data.SqlClient": "4.0.0-beta-23019",
+        "System.Data.Common": "4.0.0-beta-23019",
         "Microsoft.Framework.Configuration.Abstractions": "1.0.0-beta5"
     },
 
@@ -19,10 +19,10 @@
         "dnx451": { },
         "dnxcore50": {
             "dependencies": {
-                "System.Collections": "4.0.10-beta-22816",
-                "System.Linq": "4.0.0-beta-22816",
-                "System.Threading": "4.0.10-beta-22816",
-                "Microsoft.CSharp": "4.0.0-beta-22816"
+                "System.Collections": "4.0.10-beta-23019",
+                "System.Linq": "4.0.0-beta-23019",
+                "System.Threading": "4.0.10-beta-23019",
+                "Microsoft.CSharp": "4.0.0-beta-23019"
             }
         }
     }

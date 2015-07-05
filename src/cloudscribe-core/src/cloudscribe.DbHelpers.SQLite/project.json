@@ -10,7 +10,7 @@
         "cloudscribe.Configuration": "1.0.0-*",
         "cloudscribe.Core.Models": "1.0.0-*",
         "Microsoft.Data.SQLite": "1.0.0-beta1",
-        "System.Diagnostics.Tools": "4.0.0-beta-22816",
+        "System.Diagnostics.Tools": "4.0.0-beta-23019",
         "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta5",
         "Microsoft.Framework.Configuration.Abstractions": "1.0.0-beta5"
     },
