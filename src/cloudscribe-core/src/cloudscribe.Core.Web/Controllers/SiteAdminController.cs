@@ -19,7 +19,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Rendering;
-using Microsoft.Framework.ConfigurationModel;
+using Microsoft.Framework.Configuration;
 //using MvcSiteMapProvider;
 
 namespace cloudscribe.Core.Web.Controllers

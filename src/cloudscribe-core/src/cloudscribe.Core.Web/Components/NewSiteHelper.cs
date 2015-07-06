@@ -5,7 +5,7 @@
 
 using cloudscribe.Configuration;
 using cloudscribe.Core.Models;
-using Microsoft.Framework.ConfigurationModel;
+using Microsoft.Framework.Configuration;
 using System;
 using System.Threading.Tasks;
 

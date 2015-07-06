@@ -10,7 +10,7 @@ using cloudscribe.Core.Web.Components;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc;
-using Microsoft.Framework.ConfigurationModel;
+using Microsoft.Framework.Configuration;
 using Microsoft.Framework.Logging;
 using System;
 using System.Collections.Generic;

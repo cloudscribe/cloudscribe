@@ -18,35 +18,13 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "cloudscribe.Core.Models", "
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "cloudscribe.Configuration", "src\cloudscribe.Configuration\cloudscribe.Configuration.xproj", "{82709F68-6B50-4754-9C95-011E073AD223}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "cloudscribe.DbHelpers.SqlCe", "src\cloudscribe.DbHelpers.SqlCe\cloudscribe.DbHelpers.SqlCe.xproj", "{E59FC2F0-6808-4502-98BC-90E5C16CCFF9}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "cloudscribe.DbHelpers.SQLite", "src\cloudscribe.DbHelpers.SQLite\cloudscribe.DbHelpers.SQLite.xproj", "{DDFB41DA-6AA7-4656-A02D-1A41B0E69D0B}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "cloudscribe.DbHelpers.pgsql", "src\cloudscribe.DbHelpers.pgsql\cloudscribe.DbHelpers.pgsql.xproj", "{EF22969B-1A63-4724-99ED-7080AF9E966C}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "cloudscribe.DbHelpers.MySql", "src\cloudscribe.DbHelpers.MySql\cloudscribe.DbHelpers.MySql.xproj", "{54484BD9-BF09-4E00-A279-E8CC3C65D851}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "cloudscribe.DbHelpers.Firebird", "src\cloudscribe.DbHelpers.Firebird\cloudscribe.DbHelpers.Firebird.xproj", "{7171E4CB-64B4-4163-9493-84BADAF5DD87}"
-EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "cloudscribe.AspNet.Identity", "src\cloudscribe.AspNet.Identity\cloudscribe.AspNet.Identity.xproj", "{D20980F5-2141-4521-B142-0F45F797379B}"
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "cloudscribe.Core.Repositories.MSSQL", "src\cloudscribe.Core.Repositories.MSSQL\cloudscribe.Core.Repositories.MSSQL.xproj", "{97638773-6FBD-469B-A7C5-BFB0935D8EC5}"
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "cloudscribe.Core.Web", "src\cloudscribe.Core.Web\cloudscribe.Core.Web.xproj", "{6FEEB0C2-FCBB-4E2B-A135-8C3FBAF953C9}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "cloudscribe.Resources", "src\cloudscribe.Resources\cloudscribe.Resources.xproj", "{2EBD544D-E967-4103-A92E-FAF8A7152C69}"
-EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "cloudscribe.Messaging", "src\cloudscribe.Messaging\cloudscribe.Messaging.xproj", "{92BF2551-FF36-4852-A80B-D6DA83F1A7F6}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "cloudscribe.Core.Repositories.Firebird", "src\cloudscribe.Core.Repositories.Firebird\cloudscribe.Core.Repositories.Firebird.xproj", "{75A3CD39-6497-4172-A02A-F599F057B507}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "cloudscribe.Core.Repositories.MySql", "src\cloudscribe.Core.Repositories.MySql\cloudscribe.Core.Repositories.MySql.xproj", "{E076B7B3-8F33-4CB2-85FB-C2E4923653CF}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "cloudscribe.Core.Repositories.pgsql", "src\cloudscribe.Core.Repositories.pgsql\cloudscribe.Core.Repositories.pgsql.xproj", "{A0074022-0709-4F60-B1DF-061FD91E1C8E}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "cloudscribe.Core.Repositories.SQLite", "src\cloudscribe.Core.Repositories.SQLite\cloudscribe.Core.Repositories.SQLite.xproj", "{2B2D5513-7BC3-4F24-A0FF-525A49E5D924}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "cloudscribe.Core.Repositories.SqlCe", "src\cloudscribe.Core.Repositories.SqlCe\cloudscribe.Core.Repositories.SqlCe.xproj", "{2A692116-A2D6-4EA2-9D46-8054CB9345A2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -70,26 +48,6 @@ Global
 		{82709F68-6B50-4754-9C95-011E073AD223}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{82709F68-6B50-4754-9C95-011E073AD223}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{82709F68-6B50-4754-9C95-011E073AD223}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E59FC2F0-6808-4502-98BC-90E5C16CCFF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E59FC2F0-6808-4502-98BC-90E5C16CCFF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E59FC2F0-6808-4502-98BC-90E5C16CCFF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E59FC2F0-6808-4502-98BC-90E5C16CCFF9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DDFB41DA-6AA7-4656-A02D-1A41B0E69D0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DDFB41DA-6AA7-4656-A02D-1A41B0E69D0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DDFB41DA-6AA7-4656-A02D-1A41B0E69D0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DDFB41DA-6AA7-4656-A02D-1A41B0E69D0B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EF22969B-1A63-4724-99ED-7080AF9E966C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EF22969B-1A63-4724-99ED-7080AF9E966C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EF22969B-1A63-4724-99ED-7080AF9E966C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EF22969B-1A63-4724-99ED-7080AF9E966C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{54484BD9-BF09-4E00-A279-E8CC3C65D851}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{54484BD9-BF09-4E00-A279-E8CC3C65D851}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{54484BD9-BF09-4E00-A279-E8CC3C65D851}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{54484BD9-BF09-4E00-A279-E8CC3C65D851}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7171E4CB-64B4-4163-9493-84BADAF5DD87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7171E4CB-64B4-4163-9493-84BADAF5DD87}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7171E4CB-64B4-4163-9493-84BADAF5DD87}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7171E4CB-64B4-4163-9493-84BADAF5DD87}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D20980F5-2141-4521-B142-0F45F797379B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D20980F5-2141-4521-B142-0F45F797379B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D20980F5-2141-4521-B142-0F45F797379B}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -102,34 +60,10 @@ Global
 		{6FEEB0C2-FCBB-4E2B-A135-8C3FBAF953C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6FEEB0C2-FCBB-4E2B-A135-8C3FBAF953C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6FEEB0C2-FCBB-4E2B-A135-8C3FBAF953C9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2EBD544D-E967-4103-A92E-FAF8A7152C69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2EBD544D-E967-4103-A92E-FAF8A7152C69}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2EBD544D-E967-4103-A92E-FAF8A7152C69}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2EBD544D-E967-4103-A92E-FAF8A7152C69}.Release|Any CPU.Build.0 = Release|Any CPU
 		{92BF2551-FF36-4852-A80B-D6DA83F1A7F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{92BF2551-FF36-4852-A80B-D6DA83F1A7F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{92BF2551-FF36-4852-A80B-D6DA83F1A7F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{92BF2551-FF36-4852-A80B-D6DA83F1A7F6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{75A3CD39-6497-4172-A02A-F599F057B507}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{75A3CD39-6497-4172-A02A-F599F057B507}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{75A3CD39-6497-4172-A02A-F599F057B507}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{75A3CD39-6497-4172-A02A-F599F057B507}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E076B7B3-8F33-4CB2-85FB-C2E4923653CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E076B7B3-8F33-4CB2-85FB-C2E4923653CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E076B7B3-8F33-4CB2-85FB-C2E4923653CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E076B7B3-8F33-4CB2-85FB-C2E4923653CF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A0074022-0709-4F60-B1DF-061FD91E1C8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A0074022-0709-4F60-B1DF-061FD91E1C8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A0074022-0709-4F60-B1DF-061FD91E1C8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A0074022-0709-4F60-B1DF-061FD91E1C8E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2B2D5513-7BC3-4F24-A0FF-525A49E5D924}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2B2D5513-7BC3-4F24-A0FF-525A49E5D924}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2B2D5513-7BC3-4F24-A0FF-525A49E5D924}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2B2D5513-7BC3-4F24-A0FF-525A49E5D924}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2A692116-A2D6-4EA2-9D46-8054CB9345A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2A692116-A2D6-4EA2-9D46-8054CB9345A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2A692116-A2D6-4EA2-9D46-8054CB9345A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2A692116-A2D6-4EA2-9D46-8054CB9345A2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -139,20 +73,9 @@ Global
 		{BAE219E5-8A44-4475-B866-4EDE4688346D} = {AB912C2F-8861-48E9-A14A-94709004CB3D}
 		{464A7CC6-1443-47BA-9508-8B82463CD650} = {AB912C2F-8861-48E9-A14A-94709004CB3D}
 		{82709F68-6B50-4754-9C95-011E073AD223} = {AB912C2F-8861-48E9-A14A-94709004CB3D}
-		{E59FC2F0-6808-4502-98BC-90E5C16CCFF9} = {AB912C2F-8861-48E9-A14A-94709004CB3D}
-		{DDFB41DA-6AA7-4656-A02D-1A41B0E69D0B} = {AB912C2F-8861-48E9-A14A-94709004CB3D}
-		{EF22969B-1A63-4724-99ED-7080AF9E966C} = {AB912C2F-8861-48E9-A14A-94709004CB3D}
-		{54484BD9-BF09-4E00-A279-E8CC3C65D851} = {AB912C2F-8861-48E9-A14A-94709004CB3D}
-		{7171E4CB-64B4-4163-9493-84BADAF5DD87} = {AB912C2F-8861-48E9-A14A-94709004CB3D}
 		{D20980F5-2141-4521-B142-0F45F797379B} = {AB912C2F-8861-48E9-A14A-94709004CB3D}
 		{97638773-6FBD-469B-A7C5-BFB0935D8EC5} = {AB912C2F-8861-48E9-A14A-94709004CB3D}
 		{6FEEB0C2-FCBB-4E2B-A135-8C3FBAF953C9} = {AB912C2F-8861-48E9-A14A-94709004CB3D}
-		{2EBD544D-E967-4103-A92E-FAF8A7152C69} = {AB912C2F-8861-48E9-A14A-94709004CB3D}
 		{92BF2551-FF36-4852-A80B-D6DA83F1A7F6} = {AB912C2F-8861-48E9-A14A-94709004CB3D}
-		{75A3CD39-6497-4172-A02A-F599F057B507} = {AB912C2F-8861-48E9-A14A-94709004CB3D}
-		{E076B7B3-8F33-4CB2-85FB-C2E4923653CF} = {AB912C2F-8861-48E9-A14A-94709004CB3D}
-		{A0074022-0709-4F60-B1DF-061FD91E1C8E} = {AB912C2F-8861-48E9-A14A-94709004CB3D}
-		{2B2D5513-7BC3-4F24-A0FF-525A49E5D924} = {AB912C2F-8861-48E9-A14A-94709004CB3D}
-		{2A692116-A2D6-4EA2-9D46-8054CB9345A2} = {AB912C2F-8861-48E9-A14A-94709004CB3D}
 	EndGlobalSection
 EndGlobal

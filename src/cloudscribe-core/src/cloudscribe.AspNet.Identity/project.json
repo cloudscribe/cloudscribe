@@ -23,12 +23,7 @@
   },
 
   "frameworks": {
-    "dnx451": {
-      "frameworkAssemblies": {
-        "System.Configuration": "",
-        "System.Web.ApplicationServices": ""
-      }
-    },
+    
     "dnxcore50": {
       "dependencies": {
         "System.Collections": "4.0.10-beta-23019",

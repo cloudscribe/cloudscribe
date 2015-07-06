@@ -10,7 +10,7 @@ using cloudscribe.Core.Web.ViewModels.UserAdmin;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Mvc;
-using Microsoft.Framework.ConfigurationModel;
+using Microsoft.Framework.Configuration;
 //using MvcSiteMapProvider;
 using System;
 using System.Collections.Generic;

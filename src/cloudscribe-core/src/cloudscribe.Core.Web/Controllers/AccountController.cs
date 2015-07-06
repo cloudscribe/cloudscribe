@@ -117,7 +117,7 @@ namespace cloudscribe.Core.Web.Controllers
                 model.Email,
                 model.Password,
                 model.RememberMe,
-                shouldLockout: false);
+                lockoutOnFailure : false);
 
             //switch (result)
             //{

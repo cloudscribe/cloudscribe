@@ -7,24 +7,24 @@
   "licenseUrl": "",
 
   "dependencies": {
-    "Microsoft.Framework.Configuration": "1.0.0-beta5-*",
-    "Microsoft.Framework.Configuration.Abstractions": "1.0.0-beta5-*",
-    "Microsoft.Framework.Configuration.Json": "1.0.0-beta5-*",
-    "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta5-*",
-    "Microsoft.AspNet.Mvc.Abstractions": "6.0.0-beta5-*",
-    "System.ComponentModel.Annotations": "4.0.10-beta-23019",
+    "Microsoft.Framework.Configuration": "1.0.0-beta5",
+    "Microsoft.Framework.Configuration.Abstractions": "1.0.0-beta5",
+    "Microsoft.Framework.Configuration.Json": "1.0.0-beta5",
+    "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta5",
+    "Microsoft.AspNet.Mvc.Abstractions": "6.0.0-beta5",
+    "Microsoft.AspNet.Hosting.Abstractions": "1.0.0-beta5",
     "System.Xml.XmlDocument": "4.0.0-beta-23019",
-    "Microsoft.AspNet.Hosting.Abstractions": "1.0.0-beta5-*"
+    "System.ComponentModel.Annotations": "4.0.10-beta-23019"
   },
 
   "frameworks": {
-    "dnx451": { },
+   
     "dnxcore50": {
       "dependencies": {
-        "System.Collections": "4.0.10-beta-23019",
         "System.Linq": "4.0.0-beta-23019",
         "System.Threading": "4.0.10-beta-23019",
         "Microsoft.CSharp": "4.0.0-beta-23019"
+        
       }
     }
   }

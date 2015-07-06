@@ -1,10 +1,12 @@
 ﻿//  Author:                     Joe Audette
 //  Created:                    2014-10-13
-//	Last Modified:              2015-06-24
+//	Last Modified:              2015-07-05
 // 
 
 using Microsoft.AspNet.Mvc.Razor;
-using Microsoft.AspNet.Mvc.Razor.OptionDescriptors;
+using Microsoft.AspNet.Razor.Runtime;
+using Microsoft.Framework.OptionsModel;
+//using Microsoft.AspNet.Mvc.Razor.OptionDescriptors;
 using System.Collections.Generic;
 
 namespace cloudscribe.Core.Web
@@ -32,9 +34,9 @@ namespace cloudscribe.Core.Web
     {
         public CoreViewEngine(
             IRazorPageFactory pageFactory, 
-            IRazorViewFactory viewFactory, 
-            IViewLocationExpanderProvider viewLocationExpanderProvider, 
-            IViewLocationCache viewLocationCache):base(pageFactory, viewFactory, viewLocationExpanderProvider, viewLocationCache)
+            IRazorViewFactory viewFactory,
+            IOptions<RazorViewEngineOptions> optionsAccessor,
+            IViewLocationCache viewLocationCache):base(pageFactory, viewFactory, optionsAccessor, viewLocationCache)
         {
             //https://github.com/aspnet/Mvc/blob/dev/src/Microsoft.AspNet.Mvc.Razor/RazorViewEngine.cs
 

@@ -14,7 +14,7 @@ using System.Collections.Generic;
 //#endif
 
 using Microsoft.AspNet.Mvc;
-using Microsoft.AspNet.Http;
+using Microsoft.AspNet.Http.Features;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Controllers

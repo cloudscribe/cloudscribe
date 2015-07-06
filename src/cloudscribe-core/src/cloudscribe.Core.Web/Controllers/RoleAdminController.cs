@@ -8,7 +8,7 @@ using cloudscribe.Core.Models;
 using cloudscribe.Core.Web.ViewModels.RoleAdmin;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
-using Microsoft.Framework.ConfigurationModel;
+using Microsoft.Framework.Configuration;
 //using MvcSiteMapProvider;
 using System;
 using System.Threading.Tasks;
