@@ -66,7 +66,7 @@ namespace cloudscribe.Setup.Controllers
         private bool showConnectionError = false;
         private int existingSiteCount = 0;
         private bool needSchemaUpgrade = false;
-        private int scriptTimeout;
+       // private int scriptTimeout;
         private DateTime startTime;
         private string dbPlatform = string.Empty;
         private Version dbCodeVersion = new Version(0,0);
@@ -90,7 +90,7 @@ namespace cloudscribe.Setup.Controllers
             //siteRepository = ninjectKernel.Get<ISiteRepository>();
             //userRepository = ninjectKernel.Get<IUserRepository>();
             //db = ninjectKernel.Get<IDb>();
-            setupIsDisabled = AppSettings.DisableSetup;
+            setupIsDisabled = config.DisableSetup();
 
 
             bool isAdmin = User.IsInRole("Admins");
@@ -199,7 +199,7 @@ namespace cloudscribe.Setup.Controllers
                     , true);
 
 
-                SiteSettings newSite = await NewSiteHelper.CreateNewSite(siteRepository, true);
+                SiteSettings newSite = await NewSiteHelper.CreateNewSite(config, siteRepository, true);
 
                 await WritePageContent(response,
                     "CreatingRolesAndAdminUser" //SetupResources.CreatingRolesAndAdminUserMessage
@@ -335,7 +335,7 @@ namespace cloudscribe.Setup.Controllers
             //}
 
             string pathToScriptFolder = hostingEnvironment.MapPath(
-                string.Format(AppSettings.SetupInstallScriptPathFormat,
+                string.Format(config.SetupInstallScriptPathFormat(),
                 applicationName,
                 db.DBPlatform.ToLowerInvariant())
                 );
@@ -536,7 +536,7 @@ namespace cloudscribe.Setup.Controllers
 
         private string GetOverrideConnectionString(string applicationName)
         {
-            string overrideConnectionString = AppSettings.GetString(applicationName + "_ConnectionString", string.Empty);
+            string overrideConnectionString = config.GetOrDefault(applicationName + "_ConnectionString", string.Empty);
 
             if (string.IsNullOrEmpty(overrideConnectionString)) { return null; }
 
@@ -569,7 +569,7 @@ namespace cloudscribe.Setup.Controllers
             //        + "/");
 
             string pathToScriptFolder = hostingEnvironment.MapPath(
-                string.Format(AppSettings.SetupUpgradeScriptPathFormat,
+                string.Format(config.SetupUpgradeScriptPathFormat(),
                 applicationName,
                 db.DBPlatform.ToLowerInvariant())
                 );
@@ -797,7 +797,7 @@ namespace cloudscribe.Setup.Controllers
             // add this to user.config <add key="TryToCreateMsSqlDatabase" value="true"/>
             // and make sure the connection string is configured with a user that has permission to create the database
 
-            if ((!canAccessDatabase) && (dbPlatform == "MSSQL") && AppSettings.TryToCreateMsSqlDatabase)
+            if ((!canAccessDatabase) && (dbPlatform == "MSSQL") && config.TryToCreateMsSqlDatabase())
             {
                 await WritePageContent(response, dbPlatform + " " 
                     + "TryingToCreateDatabase" // SetupResources.TryingToCreateDatabase
@@ -829,7 +829,7 @@ namespace cloudscribe.Setup.Controllers
 
                 await WritePageContent(response, "<div>" + dbError + "</div>", false);
 
-                showConnectionError = AppSettings.GetBool("ShowConnectionErrorOnSetup", false);
+                showConnectionError = config.ShowConnectionErrorOnSetup();
 
 
                 if (showConnectionError)
@@ -855,7 +855,7 @@ namespace cloudscribe.Setup.Controllers
                 else
                 {
 
-                    if (AppSettings.SetupTryAnywayIfFailedAlterSchemaTest)
+                    if (config.SetupTryAnywayIfFailedAlterSchemaTest())
                     {
                         canAlterSchema = true;
                     }
@@ -1084,10 +1084,10 @@ namespace cloudscribe.Setup.Controllers
         private async Task WritePageHeader(HttpResponse response)
         {
 
-            string setupTemplatePath = AppSettings.SetupHeaderConfigPath;
+            string setupTemplatePath = config.SetupHeaderConfigPath();
             if (CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft)
             {
-                setupTemplatePath = AppSettings.SetupHeaderConfigPathRtl;
+                setupTemplatePath = config.SetupHeaderConfigPathRtl();
             }
 
             string fsPath = hostingEnvironment.MapPath(setupTemplatePath);

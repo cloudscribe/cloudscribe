@@ -883,7 +883,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
             ISiteRole role;
             bool result = true;
-            string defaultRoles = AppSettings.DefaultRolesForNewUsers;
+            string defaultRoles = config.DefaultRolesForNewUsers();
 
             if (defaultRoles.Length > 0)
             {

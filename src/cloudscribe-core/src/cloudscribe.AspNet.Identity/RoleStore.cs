@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2014-06-19
-// Last Modified:		    2015-06-23
+// Last Modified:		    2015-07-05
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -8,6 +8,7 @@
 using cloudscribe.Configuration;
 using cloudscribe.Core.Models;
 using Microsoft.Framework.Logging;
+using Microsoft.Framework.Configuration;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
@@ -23,14 +24,18 @@ namespace cloudscribe.AspNet.Identity
     {
         private ILoggerFactory logFactory;
         private ILogger log;
-        private bool debugLog = AppSettings.UserStoreDebugEnabled;
+        private bool debugLog = false;
 
         private ISiteResolver resolver;
-        private ISiteSettings siteSettings;
+        private ISiteSettings siteSettings = null;
+        private IConfiguration config;
 
         public ISiteSettings SiteSettings
         {
-            get { return siteSettings; }
+            get {
+                if(siteSettings == null) { siteSettings = resolver.Resolve(); }
+                return siteSettings;
+            }
         }
         private IUserRepository repo;
 
@@ -40,21 +45,25 @@ namespace cloudscribe.AspNet.Identity
         public RoleStore(
             ILoggerFactory loggerFactory,
             ISiteResolver siteResolver,
-            IUserRepository userRepository
+            IUserRepository userRepository,
+            IConfiguration configuration
             )
         {
             if (loggerFactory == null) { throw new ArgumentNullException(nameof(loggerFactory)); }
             if (siteResolver == null) { throw new ArgumentNullException(nameof(siteResolver)); }
             if (userRepository == null) { throw new ArgumentNullException(nameof(userRepository)); }
+            if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
 
             resolver = siteResolver;
             logFactory = loggerFactory;
             log = loggerFactory.CreateLogger(this.GetType().FullName);
+            config = configuration;
+            debugLog = config.UserStoreDebugEnabled();
 
-            
+
             //siteSettings = site;
 
-            
+
             repo = userRepository;
 
             if (debugLog) { log.LogInformation("constructor"); }

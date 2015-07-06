@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:				    2014-11-24
-// Last Modified:		    2015-06-23
+// Last Modified:		    2015-07-06
 
 
 using cloudscribe.Configuration;
@@ -13,7 +13,10 @@ namespace cloudscribe.Core.Web.Components
 {
     public class NewSiteHelper
     {
-        public static async Task<SiteSettings> CreateNewSite(ISiteRepository siteRepo, bool isServerAdminSite)
+        public static async Task<SiteSettings> CreateNewSite(
+            IConfiguration config,
+            ISiteRepository siteRepo, 
+            bool isServerAdminSite)
         {
             //string templateFolderPath = GetMessageTemplateFolder();
             //string templateFolder = templateFolderPath;
@@ -22,14 +25,17 @@ namespace cloudscribe.Core.Web.Components
             newSite.SiteName = "Sample Site";
             newSite.IsServerAdminSite = isServerAdminSite;
 
-            bool result = await CreateNewSite(siteRepo, newSite);
+            bool result = await CreateNewSite(config, siteRepo, newSite);
 
             return newSite;
 
 
         }
 
-        public static async Task<bool> CreateNewSite(ISiteRepository siteRepo, ISiteSettings newSite)
+        public static async Task<bool> CreateNewSite(
+            IConfiguration config,
+            ISiteRepository siteRepo, 
+            ISiteSettings newSite)
         {
             if (siteRepo == null) { throw new ArgumentNullException("you must pass in an instance of ISiteRepository"); }
             if (newSite == null) { throw new ArgumentNullException("you must pass in an instance of ISiteSettings"); }
@@ -41,7 +47,7 @@ namespace cloudscribe.Core.Web.Components
             //SiteSettings newSite = new SiteSettings();
 
 
-            newSite.Skin = AppSettings.DefaultInitialSkin;
+            newSite.Skin = config.DefaultInitialSkin();
 
             //newSite.Logo = GetMessageTemplate(templateFolder, "InitialSiteLogoContent.config");
 
@@ -62,7 +68,7 @@ namespace cloudscribe.Core.Web.Components
             newSite.UseEmailForLogin = true;
             newSite.UseLdapAuth = false;
             newSite.UseSecureRegistration = false;
-            newSite.UseSslOnAllPages = AppSettings.SslIsRequiredByWebServer;
+            newSite.UseSslOnAllPages = config.SslIsRequiredByWebServer();
             //newSite.CreateInitialDataOnCreate = false;
 
             newSite.AllowPasswordReset = true;

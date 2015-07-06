@@ -158,7 +158,7 @@ namespace cloudscribe.Core.Web.Controllers
         public async Task<IActionResult> RoleDelete(int roleId, int returnPageNumber = 1)
         {
             ISiteRole role = await UserRepository.FetchRole(roleId);
-            if (role != null && role.IsDeletable(AppSettings.RolesThatCannotBeDeleted))
+            if (role != null && role.IsDeletable(config.RolesThatCannotBeDeleted()))
             {
                 bool result = await UserRepository.DeleteUserRolesByRole(roleId);
 

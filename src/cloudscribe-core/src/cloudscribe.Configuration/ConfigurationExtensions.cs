@@ -115,5 +115,75 @@ namespace cloudscribe.Configuration
             return config.GetOrDefault("AppSettings:DefaultPageSize_SiteList", 10);
         }
 
+        public static bool UserStoreDebugEnabled(this IConfiguration config)
+        {
+            return config.GetOrDefault("AppSettings:UserStoreDebugEnabled", false);
+        }
+
+        public static string DefaultRolesForNewUsers(this IConfiguration config)
+        {
+            return config.GetOrDefault("AppSettings:DefaultRolesForNewUsers", "Authenticated Users");
+        }
+
+        public static string RecaptchaSiteKey(this IConfiguration config)
+        {
+            return config.GetOrDefault("AppSettings:RecaptchaSiteKey", string.Empty);
+        }
+
+        public static string RecaptchaSecretKey(this IConfiguration config)
+        {
+            return config.GetOrDefault("AppSettings:RecaptchaSecretKey", string.Empty);
+        }
+
+        public static string DefaultInitialSkin(this IConfiguration config)
+        {
+            return config.GetOrDefault("AppSettings:DefaultInitialSkin", "bootstrap");
+        }
+
+        public static bool SslIsRequiredByWebServer(this IConfiguration config)
+        {
+            return config.GetOrDefault("AppSettings:SslIsRequiredByWebServer", false);
+        }
+
+        public static bool DisableSetup(this IConfiguration config)
+        {
+            return config.GetOrDefault("AppSettings:DisableSetup", false);
+        }
+
+        public static string SetupInstallScriptPathFormat(this IConfiguration config)
+        {
+            return config.GetOrDefault("AppSettings:SetupInstallScriptPathFormat", "~/Config/applications/{0}/install/{1}/");
+        }
+
+        public static string SetupUpgradeScriptPathFormat(this IConfiguration config)
+        {
+            return config.GetOrDefault("AppSettings:SetupUpgradeScriptPathFormat", "~/Config/applications/{0}/upgrade/{1}/");
+        }
+
+        public static string SetupHeaderConfigPath(this IConfiguration config)
+        {
+            return config.GetOrDefault("AppSettings:SetupHeaderConfigPath", "~/Config/Setup/SetupHeader.config");
+        }
+
+        public static string SetupHeaderConfigPathRtl(this IConfiguration config)
+        {
+            return config.GetOrDefault("AppSettings:SetupHeaderConfigPathRtl", "~/Config/Setup/SetupHeader-rtl.config");
+        }
+
+        public static bool TryToCreateMsSqlDatabase(this IConfiguration config)
+        {
+            return config.GetOrDefault("AppSettings:TryToCreateMsSqlDatabase", false);
+        }
+
+        public static bool ShowConnectionErrorOnSetup(this IConfiguration config)
+        {
+            return config.GetOrDefault("AppSettings:ShowConnectionErrorOnSetup", false);
+        }
+
+        public static bool SetupTryAnywayIfFailedAlterSchemaTest(this IConfiguration config)
+        {
+            return config.GetOrDefault("AppSettings:SetupTryAnywayIfFailedAlterSchemaTest", false);
+        }
+
     }
 }

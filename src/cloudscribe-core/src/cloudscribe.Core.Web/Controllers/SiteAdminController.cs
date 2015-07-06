@@ -543,7 +543,7 @@ namespace cloudscribe.Core.Web.Controllers
 
 
             //Site.SiteRepository.Save(newSite);
-            bool result = await NewSiteHelper.CreateNewSite(siteRepo, newSite);
+            bool result = await NewSiteHelper.CreateNewSite(config, siteRepo, newSite);
             result = await NewSiteHelper.CreateRequiredRolesAndAdminUser(newSite, siteRepo, userRepo, config);
 
             if ((result) && (config.UseFoldersInsteadOfHostnamesForMultipleSites()))

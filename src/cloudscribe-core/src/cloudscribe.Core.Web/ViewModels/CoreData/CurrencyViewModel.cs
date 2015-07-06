@@ -6,7 +6,7 @@
 //using cloudscribe.Resources;
 using System;
 using System.ComponentModel.DataAnnotations;
-using cloudscribe.Configuration.DataAnnotations;
+//using cloudscribe.Configuration.DataAnnotations;
 
 namespace cloudscribe.Core.Web.ViewModels.CoreData
 {

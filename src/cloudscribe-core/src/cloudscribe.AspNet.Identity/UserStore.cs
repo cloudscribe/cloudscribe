@@ -1,12 +1,13 @@
 ﻿// Author:					Joe Audette
 // Created:				    2014-07-22
-// Last Modified:		    2015-06-20
+// Last Modified:		    2015-07-06
 // 
 // You must not remove this notice, or any other, from this software.
 
 
 using cloudscribe.Configuration;
 using cloudscribe.Core.Models;
+using Microsoft.Framework.Configuration;
 using Microsoft.Framework.Logging;
 using Microsoft.AspNet.Identity;
 using System;
@@ -33,9 +34,10 @@ namespace cloudscribe.AspNet.Identity
         //private static readonly ILog log = LogManager.GetLogger(typeof(UserStore<TUser>));
         private ILoggerFactory logFactory;
         private ILogger log;
-        private bool debugLog = AppSettings.UserStoreDebugEnabled;
+        private bool debugLog = false;
         private ISiteResolver resolver;
         private ISiteSettings _siteSettings = null;
+        private IConfiguration config;
 
         public ISiteSettings siteSettings
         {
@@ -55,7 +57,8 @@ namespace cloudscribe.AspNet.Identity
         public UserStore(
             ILoggerFactory loggerFactory,
             ISiteResolver siteResolver,
-            IUserRepository userRepository
+            IUserRepository userRepository,
+            IConfiguration configuration
             )
         {
             logFactory = loggerFactory;
@@ -66,6 +69,11 @@ namespace cloudscribe.AspNet.Identity
 
             if (userRepository == null) { throw new ArgumentNullException(nameof(userRepository)); }
             repo = userRepository;
+
+            if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
+            config = configuration;
+
+            debugLog = config.UserStoreDebugEnabled();
 
             if (debugLog) { log.LogInformation("constructor"); }
         }
