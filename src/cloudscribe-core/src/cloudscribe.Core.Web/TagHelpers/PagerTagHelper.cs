@@ -1,9 +1,11 @@
-﻿// Author:					Joe Audette
+﻿// Author:					Joe Audette/Martijn Boland
 // Created:					2015-07-02
 // Last Modified:			2015-07-06
 // 
 
+
 using cloudscribe.Core.Web.ViewModels;
+using cloudscribe.Core.Web.Components;
 using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.AspNet.Razor.Runtime.TagHelpers;
 using System;
@@ -32,15 +34,18 @@ namespace cloudscribe.Core.Web.TagHelpers
         private const string RouteValuesPrefix = "asp-route-";
 
        
-        public PagerTagHelper(IHtmlGenerator generator)
+        public PagerTagHelper(IHtmlGenerator generator, IBuildPaginationLinks linkBuilder)
         {
             Generator = generator;
+            this.linkBuilder = linkBuilder;
         }
+
+        private IBuildPaginationLinks linkBuilder;
 
         protected IHtmlGenerator Generator { get; }
 
         [HtmlAttributeName(PagingInfoAttributeName)]
-        public PagingInfo PagingModel { get; set; }
+        public PaginationSettings PagingModel { get; set; }
         
         [HtmlAttributeName(AjaxTargetAttributeName)]
         public string AjaxTarget { get; set; } = string.Empty;
@@ -154,11 +159,24 @@ namespace cloudscribe.Core.Web.TagHelpers
 
             string querySeparator;
 
+            //prepare things needed by generatpageeurl function
             TagBuilder linkTemplate = GenerateLinkTemplate();
             baseHref = linkTemplate.Attributes["href"];
             querySeparator = baseHref.Contains("?") ? "&" : "?";
             baseHref = baseHref + querySeparator + PageNumberParam + "=";
-            List<PaginationLink> links = BuildLinks(GeneratePageUrl);
+
+            List<PaginationLink> links = linkBuilder.BuildPaginationLinks(
+                PagingModel, 
+                GeneratePageUrl,
+                FirstPageText,
+                FirstPageTitle,
+                PreviousPageText,
+                PreviousPageTitle,
+                NextPageText,
+                NextPageTitle,
+                LastPageText,
+                LastPageTitle,
+                "...");
 
             var items = new StringBuilder();
            for (var i = 1; i <= totalPages; i++)
@@ -210,164 +228,7 @@ namespace cloudscribe.Core.Web.TagHelpers
             return baseHref + pageNumber.ToString();
         }
 
-        private List<PaginationLink> BuildLinks(Func<int, string> generateUrl)
-        {
-            List<PaginationLink>  paginationLinks = new List<PaginationLink>();
-
-            int totalPages = (int)Math.Ceiling(PagingModel.TotalItems / (double)PagingModel.ItemsPerPage);
-
-            // First page
-            if (ShowFirstLast)
-            {
-                paginationLinks.Add(
-                    new PaginationLink {
-                        Active = (PagingModel.CurrentPage > 1 ? true : false),
-                        DisplayText = FirstPageText,
-                        DisplayTitle = FirstPageTitle,
-                        PageIndex = 1,
-                        Url = generateUrl(1)
-                });
-            }
-
-            // Previous page
-            paginationLinks.Add(
-                PagingModel.CurrentPage > 1 ? new PaginationLink {
-                    Active = true,
-                    DisplayText = PreviousPageText,
-                    DisplayTitle = PreviousPageTitle,
-                    PageIndex = PagingModel.CurrentPage - 1,
-                    Url = generateUrl(PagingModel.CurrentPage - 1)
-                } : new PaginationLink { Active = false, DisplayText = PreviousPageText });
-
-            var start = 1;
-            var end = totalPages;
-            var nrOfPagesToDisplay = PagingModel.MaxPagerItems;
-
-            if (totalPages > nrOfPagesToDisplay)
-            {
-                var middle = (int)Math.Ceiling(nrOfPagesToDisplay / 2d) - 1;
-                var below = (PagingModel.CurrentPage - middle);
-                var above = (PagingModel.CurrentPage + middle);
-
-                if (below < 2)
-                {
-                    above = nrOfPagesToDisplay;
-                    below = 1;
-                }
-                else if (above > (totalPages - 2))
-                {
-                    above = totalPages;
-                    below = (totalPages - nrOfPagesToDisplay + 1);
-                }
-
-                start = below;
-                end = above;
-            }
-
-            if (start > 1)
-            {
-                paginationLinks.Add(new PaginationLink {
-                    Active = true,
-                    PageIndex = 1,
-                    DisplayText = "1",
-                    Url = generateUrl(1) });
-
-                if (start > 3)
-                {
-                    paginationLinks.Add(new PaginationLink {
-                        Active = true,
-                        PageIndex = 2,
-                        DisplayText = "2",
-                        Url = generateUrl(2) });
-                }
-
-                if (start > 2)
-                {
-                    paginationLinks.Add(new PaginationLink {
-                        Active = false,
-                        DisplayText = "...",
-                        IsSpacer = true });
-                }
-            }
-
-            for (var i = start; i <= end; i++)
-            {
-                if (i == PagingModel.CurrentPage || (PagingModel.CurrentPage <= 0 && i == 1))
-                {
-                    paginationLinks.Add(new PaginationLink {
-                        Active = true,
-                        PageIndex = i,
-                        IsCurrent = true,
-                        DisplayText = i.ToString() });
-                }
-                else
-                {
-                    paginationLinks.Add(new PaginationLink {
-                        Active = true,
-                        PageIndex = i,
-                        DisplayText = i.ToString(),
-                        Url = generateUrl(i) });
-                }
-            }
-
-            if (end < totalPages)
-            {
-                if (end < totalPages - 1)
-                {
-                    paginationLinks.Add(new PaginationLink {
-                        Active = false,
-                        DisplayText = "...",
-                        IsSpacer = true });
-                }
-                if (totalPages - 2 > end)
-                {
-                    paginationLinks.Add(new PaginationLink {
-                        Active = true,
-                        PageIndex = totalPages - 1,
-                        DisplayText = (totalPages - 1).ToString(),
-                        Url = generateUrl(totalPages - 1) });
-                }
-
-                paginationLinks.Add(new PaginationLink {
-                    Active = true,
-                    PageIndex = totalPages,
-                    DisplayText = totalPages.ToString(),
-                    Url = generateUrl(totalPages) });
-            }
-
-            // Next page
-            paginationLinks.Add(
-                PagingModel.CurrentPage < totalPages ? new PaginationLink {
-                    Active = true,
-                    PageIndex = PagingModel.CurrentPage + 1,
-                    DisplayText = NextPageText,
-                    DisplayTitle = NextPageTitle,
-                    Url = generateUrl(PagingModel.CurrentPage + 1) } 
-                : new PaginationLink {
-                        Active = false,
-                        DisplayText = NextPageText });
-
-            // Last page
-            if (ShowFirstLast)
-            {
-                paginationLinks.Add(new PaginationLink {
-                    Active = (PagingModel.CurrentPage < totalPages ? true : false),
-                    DisplayText = LastPageText,
-                    DisplayTitle = LastPageTitle,
-                    PageIndex = totalPages,
-                    Url = generateUrl(totalPages) });
-            }
-
-
-            //for (var i = 1; i <= totalPages; i++)
-            //{
-
-            //}
-
-
-            return paginationLinks;
-
-        }
+        
 
         private TagBuilder GenerateLinkTemplate()
         {

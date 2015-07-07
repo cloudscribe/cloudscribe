@@ -85,7 +85,8 @@ namespace cloudscribe.WebHost
             services.AddIdentity<SiteUser, SiteRole>();
             //********************************************************************************************************
 
-            
+            services.TryAdd(ServiceDescriptor.Transient<IBuildPaginationLinks, PaginationLinkBuilder>());
+
 
             // Add MVC services to the services container.
             services.AddMvc().Configure<MvcOptions>(options =>

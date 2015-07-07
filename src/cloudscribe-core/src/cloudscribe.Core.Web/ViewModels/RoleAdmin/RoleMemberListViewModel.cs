@@ -14,13 +14,13 @@ namespace cloudscribe.Core.Web.ViewModels.RoleAdmin
         {
             Role = new RoleViewModel();
             Members = new List<IUserInfo>();
-            Paging = new PagingInfo();
+            Paging = new PaginationSettings();
         }
 
         public string Heading { get; set; }
         public RoleViewModel Role { get; set; }
         public IList<IUserInfo> Members { get; set; }
-        public PagingInfo Paging { get; set; }
+        public PaginationSettings Paging { get; set; }
 
         private string searchQuery = string.Empty;
         public string SearchQuery

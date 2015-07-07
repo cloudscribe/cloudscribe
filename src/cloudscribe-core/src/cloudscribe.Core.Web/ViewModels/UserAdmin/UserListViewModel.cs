@@ -14,12 +14,12 @@ namespace cloudscribe.Core.Web.ViewModels.UserAdmin
         {
 
             UserList = new List<IUserInfo>();
-            Paging = new PagingInfo();
+            Paging = new PaginationSettings();
         }
 
         public string Heading { get; set; }
         public IList<IUserInfo> UserList { get; set; }
-        public PagingInfo Paging { get; set; }
+        public PaginationSettings Paging { get; set; }
 
         private string alphaQuery = string.Empty;
         public string AlphaQuery

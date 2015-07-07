@@ -13,11 +13,11 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         public SiteListViewModel()
         {
             Sites = new List<ISiteInfo>();
-            Paging = new PagingInfo();
+            Paging = new PaginationSettings();
         }
 
         public string Heading { get; set; }
         public List<ISiteInfo> Sites { get; set; }
-        public PagingInfo Paging { get; set; }
+        public PaginationSettings Paging { get; set; }
     }
 }

@@ -12,13 +12,13 @@ namespace cloudscribe.Core.Web.ViewModels.CoreData
     {
         public CountryListPageViewModel()
         {
-            Paging = new PagingInfo();
+            Paging = new PaginationSettings();
 
         }
 
         public string Heading { get; set; }
         public List<IGeoCountry> Countries { get; set; }
-        public PagingInfo Paging { get; set; }
+        public PaginationSettings Paging { get; set; }
 
         private bool useModals = false;
 

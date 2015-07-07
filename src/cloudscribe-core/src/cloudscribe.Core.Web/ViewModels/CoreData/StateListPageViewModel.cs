@@ -14,14 +14,14 @@ namespace cloudscribe.Core.Web.ViewModels.CoreData
         {
             Country = new GeoCountryViewModel();
             States = new List<IGeoZone>();
-            Paging = new PagingInfo();
+            Paging = new PaginationSettings();
 
         }
 
         public string Heading { get; set; }
         public GeoCountryViewModel Country { get; set; }
         public List<IGeoZone> States { get; set; }
-        public PagingInfo Paging { get; set; }
+        public PaginationSettings Paging { get; set; }
 
         private int returnPageNumber = 1;
 

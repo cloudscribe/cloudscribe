@@ -13,12 +13,12 @@ namespace cloudscribe.Core.Web.ViewModels.RoleAdmin
         public RoleListViewModel()
         {
             SiteRoles = new List<ISiteRole>();
-            Paging = new PagingInfo();
+            Paging = new PaginationSettings();
         }
 
         public string Heading { get; set; }
         public IList<ISiteRole> SiteRoles { get; set; }
-        public PagingInfo Paging { get; set; }
+        public PaginationSettings Paging { get; set; }
 
         //TODO: we don't currently have db paging for roles but we might want that
         //public PagingInfo Paging { get; set; }
