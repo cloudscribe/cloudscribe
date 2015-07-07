@@ -1,8 +1,8 @@
-﻿// Author:					Joe Audette
+﻿// Author:					Martijn Boland/Joe Audette
 // Created:					2015-07-06
-// Last Modified:			2015-07-06
+// Last Modified:			2015-07-07
 //
-// borrowed some code for building the list of links from Martijn Boland
+// borrowed most code for building the list of links from Martijn Boland
 // https://github.com/martijnboland/MvcPaging/blob/master/src/MvcPaging/Pager.cs MIT License
 
 using cloudscribe.Core.Web.ViewModels;
@@ -13,8 +13,27 @@ namespace cloudscribe.Core.Web.Components
 {
     public class PaginationLinkBuilder : IBuildPaginationLinks
     {
-
-
+        /// <summary>
+        /// the problem with paging is when you have too many pages
+        /// to fit in the pager based on PaginationSettings.MaxPagerItems
+        /// you need a strategy to leave out links for some pages
+        /// while still being possible to navigate to any page
+        /// this class implements one such strategy (implemented by  Martijn Boland)
+        /// if you want to implement a different strategy you can plugin your own
+        /// IBuildPaginationLinks implementation
+        /// </summary>
+        /// <param name="paginationSettings"></param>
+        /// <param name="generateUrl"></param>
+        /// <param name="firstPageText"></param>
+        /// <param name="firstPageTitle"></param>
+        /// <param name="previousPageText"></param>
+        /// <param name="previousPageTitle"></param>
+        /// <param name="nextPageText"></param>
+        /// <param name="nextPageTitle"></param>
+        /// <param name="lastPageText"></param>
+        /// <param name="lastPageTitle"></param>
+        /// <param name="spacerText"></param>
+        /// <returns></returns>
         public List<PaginationLink> BuildPaginationLinks(
             PaginationSettings paginationSettings, 
             Func<int, string> generateUrl,
@@ -39,9 +58,9 @@ namespace cloudscribe.Core.Web.Components
                     new PaginationLink
                     {
                         Active = (paginationSettings.CurrentPage > 1 ? true : false),
-                        DisplayText = firstPageText,
-                        DisplayTitle = firstPageTitle,
-                        PageIndex = 1,
+                        Text = firstPageText,
+                        Title = firstPageTitle,
+                        PageNumber = 1,
                         Url = generateUrl(1)
                     });
             }
@@ -51,11 +70,11 @@ namespace cloudscribe.Core.Web.Components
                 paginationSettings.CurrentPage > 1 ? new PaginationLink
                 {
                     Active = true,
-                    DisplayText = previousPageText,
-                    DisplayTitle = previousPageTitle,
-                    PageIndex = paginationSettings.CurrentPage - 1,
+                    Text = previousPageText,
+                    Title = previousPageTitle,
+                    PageNumber = paginationSettings.CurrentPage - 1,
                     Url = generateUrl(paginationSettings.CurrentPage - 1)
-                } : new PaginationLink { Active = false, DisplayText = previousPageText });
+                } : new PaginationLink { Active = false, Text = previousPageText });
 
             var start = 1;
             var end = totalPages;
@@ -87,8 +106,8 @@ namespace cloudscribe.Core.Web.Components
                 paginationLinks.Add(new PaginationLink
                 {
                     Active = true,
-                    PageIndex = 1,
-                    DisplayText = "1",
+                    PageNumber = 1,
+                    Text = "1",
                     Url = generateUrl(1)
                 });
 
@@ -97,8 +116,8 @@ namespace cloudscribe.Core.Web.Components
                     paginationLinks.Add(new PaginationLink
                     {
                         Active = true,
-                        PageIndex = 2,
-                        DisplayText = "2",
+                        PageNumber = 2,
+                        Text = "2",
                         Url = generateUrl(2)
                     });
                 }
@@ -108,7 +127,7 @@ namespace cloudscribe.Core.Web.Components
                     paginationLinks.Add(new PaginationLink
                     {
                         Active = false,
-                        DisplayText = spacerText,
+                        Text = spacerText,
                         IsSpacer = true
                     });
                 }
@@ -121,9 +140,9 @@ namespace cloudscribe.Core.Web.Components
                     paginationLinks.Add(new PaginationLink
                     {
                         Active = true,
-                        PageIndex = i,
+                        PageNumber = i,
                         IsCurrent = true,
-                        DisplayText = i.ToString()
+                        Text = i.ToString()
                     });
                 }
                 else
@@ -131,8 +150,8 @@ namespace cloudscribe.Core.Web.Components
                     paginationLinks.Add(new PaginationLink
                     {
                         Active = true,
-                        PageIndex = i,
-                        DisplayText = i.ToString(),
+                        PageNumber = i,
+                        Text = i.ToString(),
                         Url = generateUrl(i)
                     });
                 }
@@ -145,7 +164,7 @@ namespace cloudscribe.Core.Web.Components
                     paginationLinks.Add(new PaginationLink
                     {
                         Active = false,
-                        DisplayText = spacerText,
+                        Text = spacerText,
                         IsSpacer = true
                     });
                 }
@@ -154,8 +173,8 @@ namespace cloudscribe.Core.Web.Components
                     paginationLinks.Add(new PaginationLink
                     {
                         Active = true,
-                        PageIndex = totalPages - 1,
-                        DisplayText = (totalPages - 1).ToString(),
+                        PageNumber = totalPages - 1,
+                        Text = (totalPages - 1).ToString(),
                         Url = generateUrl(totalPages - 1)
                     });
                 }
@@ -163,8 +182,8 @@ namespace cloudscribe.Core.Web.Components
                 paginationLinks.Add(new PaginationLink
                 {
                     Active = true,
-                    PageIndex = totalPages,
-                    DisplayText = totalPages.ToString(),
+                    PageNumber = totalPages,
+                    Text = totalPages.ToString(),
                     Url = generateUrl(totalPages)
                 });
             }
@@ -174,15 +193,15 @@ namespace cloudscribe.Core.Web.Components
                 paginationSettings.CurrentPage < totalPages ? new PaginationLink
                 {
                     Active = true,
-                    PageIndex = paginationSettings.CurrentPage + 1,
-                    DisplayText = nextPageText,
-                    DisplayTitle = nextPageTitle,
+                    PageNumber = paginationSettings.CurrentPage + 1,
+                    Text = nextPageText,
+                    Title = nextPageTitle,
                     Url = generateUrl(paginationSettings.CurrentPage + 1)
                 }
                 : new PaginationLink
                 {
                     Active = false,
-                    DisplayText = nextPageText
+                    Text = nextPageText
                 });
 
             // Last page
@@ -191,9 +210,9 @@ namespace cloudscribe.Core.Web.Components
                 paginationLinks.Add(new PaginationLink
                 {
                     Active = (paginationSettings.CurrentPage < totalPages ? true : false),
-                    DisplayText = lastPageText,
-                    DisplayTitle = lastPageTitle,
-                    PageIndex = totalPages,
+                    Text = lastPageText,
+                    Title = lastPageTitle,
+                    PageNumber = totalPages,
                     Url = generateUrl(totalPages)
                 });
             }
@@ -202,8 +221,6 @@ namespace cloudscribe.Core.Web.Components
             return paginationLinks;
 
         }
-
-        
 
     }
 }

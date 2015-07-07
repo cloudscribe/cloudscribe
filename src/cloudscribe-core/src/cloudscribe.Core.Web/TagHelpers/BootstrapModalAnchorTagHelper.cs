@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2015-07-02
-// Last Modified:			2015-07-03
+// Last Modified:			2015-07-07
 // 
 
 
@@ -30,8 +30,12 @@ namespace cloudscribe.Core.Web.TagHelpers
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             // we don't need to output this attribute it was only used for matching in razor
-            output.Attributes.Remove(BootstrapModalLinkAttributeName);
+            TagHelperAttribute modalAttribute = null;
+            output.Attributes.TryGetAttribute(BootstrapModalLinkAttributeName, out modalAttribute);
+            if (modalAttribute != null) { output.Attributes.Remove(modalAttribute); }
             
+
+
             var dialogDivId = Guid.NewGuid().ToString();
             output.Attributes.Add("data-ajax", "true");
             output.Attributes.Add("data-ajax-begin", "prepareModalDialog('" + dialogDivId + "')");

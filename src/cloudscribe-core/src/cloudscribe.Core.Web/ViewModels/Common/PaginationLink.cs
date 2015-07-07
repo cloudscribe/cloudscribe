@@ -11,11 +11,11 @@ namespace cloudscribe.Core.Web.ViewModels
 
         public bool IsCurrent { get; set; } = false;
 
-        public int? PageIndex { get; set; } = -1;
+        public int? PageNumber { get; set; } = -1;
 
-        public string DisplayText { get; set; } = string.Empty;
+        public string Text { get; set; } = string.Empty;
 
-        public string DisplayTitle { get; set; } = string.Empty;
+        public string Title { get; set; } = string.Empty;
 
         public string Url { get; set; } = string.Empty;
 

@@ -1,7 +1,7 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.RoleAdmin.RoleMemberListViewModel
 @inject IConfiguration config
 @{
-    var pagerUrl = Url.Action("RoleNonMembers", "RoleAdmin", new { roleId = Model.Role.RoleId, searchInput = Model.SearchQuery, ajaxGrid = true });
+    
 }
 
     <form role="form" method="get" class="form-inline" asp-controller="RoleAdmin" asp-action="RoleNonMembers"
@@ -15,7 +15,7 @@
 
 
         <div class="input-group">
-            <input id="searchInput" type="search" name="searchInput" value="@Model.SearchQuery" class="form-control" />
+            <input type="search" name="searchInput" value="@Model.SearchQuery" class="form-control" />
             <span class="input-group-btn">
 
                 <button type="submit" value="CommonResources.Search" class="btn btn-default">CommonResources.Search</button>
@@ -62,7 +62,7 @@
                     <input name="UserId" type="hidden" value="@item.UserId" />
 
 
-                    <button type="submit" id="approve-btn"
+                    <button type="submit"
                             class="btn btn-success"
                             onclick="javascript: return confirm('@Html.FormatValue(item.DisplayName, "Are you sure you want to add {0}?")');">
                         CommonResources.Add
@@ -91,30 +91,10 @@
         </tr>
     }
 </table>
-
-
+<div>
     <cs-pager cs-paging-info="@Model.Paging"
               asp-action="RoleNonMembers" asp-controller="RoleAdmin"
-              asp-route-roleId="@Model.Role.RoleId"
-              asp-route-ajaxGrid="true"
-              cs-ajax-target="#nonmembersgridcontainer"
-              ></cs-pager>
-    @*
-    @Html.Pager(Model.Paging.ItemsPerPage,
-    Model.Paging.CurrentPage,
-    Model.Paging.TotalItems,
-                    new AjaxOptions { UpdateTargetId = "nonmembersgridcontainer" }
-        ).Options(o => o
-            .Action("RoleNonMembers")
-            .AddRouteValue("roleId", Model.Role.RoleId)
-            .AddRouteValue("searchInput", Model.SearchQuery)
-            .AddRouteValue("pageSize", Model.Paging.ItemsPerPage)
-            .AddRouteValue("ajaxGrid", true)
-            .DisplayTemplate("Bootstrap3Pagination")
-            .PageRouteValueKey("pageNumber")
-            .MaxNrOfPages(Model.Paging.MaxPagerItems)
-
-    )
-    *@
-
-
+              asp-route-roleid="@Model.Role.RoleId"
+              asp-route-ajaxgrid="true"
+              cs-ajax-target="#nonmembersgridcontainer"></cs-pager>
+</div>

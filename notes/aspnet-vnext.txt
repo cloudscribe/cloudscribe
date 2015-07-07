@@ -28,6 +28,9 @@ https://github.com/aspnet/Mvc/blob/dev/src/Microsoft.AspNet.Mvc.TagHelpers/Ancho
 
 http://xunit.github.io/docs/getting-started-dnx.html
 
+http://www.strathweb.com/2015/02/overriding-filters-asp-net-mvc-6/
+http://stackoverflow.com/questions/31237613/how-to-register-a-global-filter-with-mvc-6-asp-net-5
+
 2014-11-15 it seems premature to try to build cloudscribe on vnext mainly because certain dependencies are not available yet
 such as log4net, mysql.data etc. supposedly you can use that if you target the desktop framework instead of core but it seems not to work.
 I can add a reference to MySql.Data via NuGet but it gives a build error the type or namespace cannot be found as if the reference was not there.

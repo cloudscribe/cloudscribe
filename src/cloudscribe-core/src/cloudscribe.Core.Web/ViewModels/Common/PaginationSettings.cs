@@ -3,8 +3,6 @@
 // Last Modified:			2015-07-06
 //
 
-
-
 namespace cloudscribe.Core.Web.ViewModels
 {
     
@@ -22,6 +20,4 @@ namespace cloudscribe.Core.Web.ViewModels
 
     }
 
-
-    
 }

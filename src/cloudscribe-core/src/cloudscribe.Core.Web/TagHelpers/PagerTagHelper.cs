@@ -1,4 +1,4 @@
-﻿// Author:					Joe Audette/Martijn Boland
+﻿// Author:					Joe Audette
 // Created:					2015-07-02
 // Last Modified:			2015-07-06
 // 
@@ -83,6 +83,15 @@ namespace cloudscribe.Core.Web.TagHelpers
         [HtmlAttributeName("cs-next-page-title")]
         public string NextPageTitle { get; set; } = "Next page";
 
+        [HtmlAttributeName("cs-pager-ul-class")]
+        public string UlCssClass { get; set; } = "pagination";
+
+        [HtmlAttributeName("cs-pager-li-current-class")]
+        public string LiCurrentCssClass { get; set; } = "active";
+
+        [HtmlAttributeName("cs-pager-li-non-active-class")]
+        public string LiNonActiveCssClass { get; set; } = "disabled";
+
         /// <summary>
         /// The name of the action method.
         /// </summary>
@@ -152,11 +161,9 @@ namespace cloudscribe.Core.Web.TagHelpers
                 return;
             }
             
-            //change the bs-pager element into a normal div
-            output.TagName = "div";
+            //change the bs-pager element into a ul
+            output.TagName = "ul";
             
-            output.PreContent.SetContent("<ul class=\"pagination\">");
-
             string querySeparator;
 
             //prepare things needed by generatpageeurl function
@@ -179,22 +186,51 @@ namespace cloudscribe.Core.Web.TagHelpers
                 "...");
 
             var items = new StringBuilder();
-           for (var i = 1; i <= totalPages; i++)
-            //foreach(PaginationLink link in links)
+
+            foreach(PaginationLink link in links)
             {
                 var li = new TagBuilder("li");
 
+                if (link.IsCurrent)
+                {
+                    li.AddCssClass(LiCurrentCssClass);
+                }
+
+                if (!link.Active)
+                {
+                    li.AddCssClass(LiNonActiveCssClass);
+                }
+
                 var a = new TagBuilder("a");
-                //a.MergeAttribute("href", link.Url);
 
+                if(link.Url.Length > 0)
+                {
+                    a.MergeAttribute("href", link.Url);
+                }
+                else
+                {
+                    a.MergeAttribute("href", "#");
+                }
+                
 
-                a.MergeAttributes(linkTemplate.Attributes);
-                string href = a.Attributes["href"];
-                querySeparator = href.Contains("?") ? "&" : "?";
-                a.Attributes["href"] = href + querySeparator + PageNumberParam + "=" + i.ToString();
+                if (link.Text == "«")
+                {
+                    a.InnerHtml = "&laquo;";
+                }
+                else if (link.Text == "»")
+                {
+                    a.InnerHtml = "&raquo;";
+                }
+                else
+                {
+                    a.SetInnerText(link.Text);
+                }
 
-                a.MergeAttribute("title", $"Click to go to page {i}");
-
+                if(link.Title.Length > 0)
+                {
+                    a.MergeAttribute("title", link.Title);
+                }
+                
                 if (AjaxTarget.Length > 0)
                 {
                     a.MergeAttribute("data-ajax", "true");
@@ -202,25 +238,14 @@ namespace cloudscribe.Core.Web.TagHelpers
                     a.MergeAttribute("data-ajax-update", AjaxTarget);
                 }
 
-                a.InnerHtml = i.ToString();
-
-                if (i == PagingModel.CurrentPage)
-                {
-                    li.AddCssClass("active");
-                }
                 li.InnerHtml = a.ToString();
                 items.AppendLine(li.ToString());
             }
+
             output.Content.SetContent(items.ToString());
-            //output.
-            //output.Content.
-            // output.Content.Append("<p>Hey</p>");
-
-            output.PostContent.SetContent("</ul>");
             output.Attributes.Clear();
-            //output.Attributes.Add("class", "pager");
-
-            //base.Process(context, output);
+            output.Attributes.Add("class", UlCssClass);
+            
         }
 
         private string GeneratePageUrl(int pageNumber)
@@ -232,6 +257,12 @@ namespace cloudscribe.Core.Web.TagHelpers
 
         private TagBuilder GenerateLinkTemplate()
         {
+            // here I'm just letting the framework generate an actionlink
+            // in order to resolve the link url from the routing info
+            // there may be a better way to do this
+            // if I could find the implementation for Generator.GenerateActionLink
+            // maybe I would get a better idea
+
             var routeValues = RouteValues.ToDictionary(
                     kvp => kvp.Key,
                     kvp => (object)kvp.Value,
