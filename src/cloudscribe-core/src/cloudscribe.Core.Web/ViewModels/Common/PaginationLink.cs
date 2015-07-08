@@ -7,11 +7,11 @@ namespace cloudscribe.Core.Web.ViewModels
 {
     public class PaginationLink
     {
-        public bool Active { get; set; } = false;
+        public bool Active { get; set; } = true;
 
         public bool IsCurrent { get; set; } = false;
 
-        public int? PageNumber { get; set; } = -1;
+        public int PageNumber { get; set; } = -1;
 
         public string Text { get; set; } = string.Empty;
 

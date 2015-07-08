@@ -20,9 +20,18 @@ namespace cloudscribe.Core.Web.ViewModels
 
         }
 
+        private TreeNode<SiteMapNode> siteRoot = null;
+
         public TreeNode<SiteMapNode> GetTree()
         {
-            return BuildTree();
+            // ultimately we will need to cache sitemap per site
+
+            if(siteRoot == null)
+            {
+                siteRoot = BuildTree();
+            }
+
+            return siteRoot;
         }
 
         private TreeNode<SiteMapNode> BuildTree()
