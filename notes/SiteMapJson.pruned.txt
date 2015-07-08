@@ -1,0 +1,108 @@
+{"Value":
+{"Key":"hardcodedroot",
+"IncludeInMenu":false,
+"IncludeInSiteMap":false,
+"IncludeInChildSiteMap":false,
+"IncludeInSearchEngineSiteMap":false,
+"IsRootNode":true},
+"Children":[
+{"Value":
+	{"Key":"Home",
+	"Title":"Home",
+	"Url":"",
+	"Controller":"Home",
+	"Action":"Home"
+	},
+	"Children":[]},
+	{"Value":
+	{"Key":"About",
+	"Title":"About",
+	"Url":"",
+	"Controller":"Home",
+	"Action":"About"
+	},"Children":[]},
+	{"Value":
+	{"Key":"Contact",
+	"Title":"Contact",
+	"Url":"",
+	"Controller":"Home",
+	"Action":"Contact"
+	},"Children":[]},
+	{"Value":
+	{"Key":"SiteAdmin",
+	"Title":"Administration",
+	"Controller":"SiteAdmin",
+	"Action":"Index",
+	"ViewRoles":"Admins,Content Administrators"
+	},"Children":
+		[
+		{"Value":
+		{"Key":"BasicSettings",
+		"Title":"Site Settings",
+		"Controller":"SiteAdmin",
+		"Action":"SiteInfo",
+		"PreservedRouteParameters":"siteGuid",
+		"ComponentVisibility":"SiteMapPathHelper,ChildMenu,!*",
+		"ViewRoles":"Admins,Content Administrators"
+		},"Children":
+		[
+		{"Value":
+		{"Key":"SiteHostMappings",
+		"Title":"Domain Mappings",
+		"Controller":"SiteAdmin",
+		"Action":"SiteHostMappings",
+		"PreservedRouteParameters":"siteGuid",
+		"ComponentVisibility":"SiteMapPathHelper,!*",
+		"ViewRoles":"Admins,Content Administrators"
+		},"Children":[]}]},
+		{"Value":
+		{"Key":"SiteList",
+		"Title":"SiteList",
+		"Controller":"SiteAdmin",
+		"Action":"SiteList",
+		"ComponentVisibility":"SiteMapPathHelper,ChildMenu,!*",
+		"ViewRoles":"ServerAdmins"
+		},"Children":
+		[{"Value":{
+		"Key":"NewSite",
+		"Title":"NewSite",
+		"Controller":"SiteAdmin",
+		"Action":"NewSite",
+		"ComponentVisibility":"SiteMapPathHelper,ChildMenu,!*",
+		"ViewRoles":"ServerAdmins"
+		},"Children":[]}]},
+		{"Value":
+		{"Key":"UserAdmin",
+		"Title":"UserManagement",
+		"Controller":"UserAdmin",
+		"Action":"Index",
+		"ComponentVisibility":"SiteMapPathHelper,ChildMenu,!*",
+		"ViewRoles":"Admins"
+		},
+		"Children":[
+		{"Value":
+		{"Key":"UserEdit",
+		"Title":"NewUser",
+		"Controller":"UserAdmin",
+		"Action":"UserEdit",
+		"ComponentVisibility":"SiteMapPathHelper,ChildMenu,!*",
+		"ViewRoles":"Admins"
+		},"Children":[]},
+		{"Value":
+		{"Key":"UserSearch",
+		"Title":"User Search",
+		"Controller":"UserAdmin",
+		"Action":"Search",
+		"ComponentVisibility":"SiteMapPathHelper,!*",
+		"ViewRoles":"Admins"
+		},"Children":[]},
+		{"Value":
+		{"Key":"IpSearch",
+		"Title":"IpSearch",
+		"Controller":"UserAdmin",
+		"Action":"IpSearch",
+		"ComponentVisibility":"SiteMapPathHelper,!*",
+		"ViewRoles":"Admins"
+		},"Children":[]}
+		]}]}]}
+		

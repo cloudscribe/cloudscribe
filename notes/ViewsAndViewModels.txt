@@ -1,5 +1,9 @@
 
 
+viewcomponents tutorial
+http://www.asp.net/vnext/overview/aspnet-vnext/vc
+
+
 
 http://stackoverflow.com/questions/14762680/how-should-i-structure-my-view-model-asp-net-mvc
 

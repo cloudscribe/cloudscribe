@@ -69,6 +69,8 @@ namespace cloudscribe.Core.Web.Controllers
             ViewBag.SiteName = Site.SiteName;
             ViewBag.Title = "Site Administration";
             ViewBag.Heading = "Site Administration";
+            ViewModels.SiteMapTreeBuilder builder = new ViewModels.SiteMapTreeBuilder();
+            object o = builder.GetTree();
             return View();
 
 
