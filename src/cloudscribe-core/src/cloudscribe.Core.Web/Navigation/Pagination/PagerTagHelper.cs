@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2015-07-02
-// Last Modified:			2015-07-06
+// Last Modified:			2015-07-09
 // 
 
 
@@ -14,7 +14,7 @@ using System.Linq;
 using System.Text;
 
 
-namespace cloudscribe.Core.Web.TagHelpers
+namespace cloudscribe.Core.Web.Navigation
 {
     [TargetElement("cs-pager", Attributes = PagingInfoAttributeName)]
     public class PagerTagHelper : TagHelper

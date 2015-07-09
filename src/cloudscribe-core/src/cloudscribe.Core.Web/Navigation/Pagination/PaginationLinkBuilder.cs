@@ -1,6 +1,6 @@
 ﻿// Author:					Martijn Boland/Joe Audette
 // Created:					2015-07-06
-// Last Modified:			2015-07-07
+// Last Modified:			2015-07-09
 //
 // borrowed most code for building the list of links from Martijn Boland
 // https://github.com/martijnboland/MvcPaging/blob/master/src/MvcPaging/Pager.cs MIT License
@@ -9,7 +9,7 @@ using cloudscribe.Core.Web.ViewModels;
 using System;
 using System.Collections.Generic;
 
-namespace cloudscribe.Core.Web.Components
+namespace cloudscribe.Core.Web.Navigation
 {
     public class PaginationLinkBuilder : IBuildPaginationLinks
     {

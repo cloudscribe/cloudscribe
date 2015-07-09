@@ -1,6 +1,6 @@
 ﻿
 
-namespace cloudscribe.Core.Web.Components
+namespace cloudscribe.Core.Web.Navigation
 {
     public enum PageChangeFrequency
     {

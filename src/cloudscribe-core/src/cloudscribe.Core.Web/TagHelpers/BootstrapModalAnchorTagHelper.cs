@@ -33,9 +33,7 @@ namespace cloudscribe.Core.Web.TagHelpers
             TagHelperAttribute modalAttribute = null;
             output.Attributes.TryGetAttribute(BootstrapModalLinkAttributeName, out modalAttribute);
             if (modalAttribute != null) { output.Attributes.Remove(modalAttribute); }
-            
-
-
+   
             var dialogDivId = Guid.NewGuid().ToString();
             output.Attributes.Add("data-ajax", "true");
             output.Attributes.Add("data-ajax-begin", "prepareModalDialog('" + dialogDivId + "')");

@@ -1,9 +1,10 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-11-16
-// Last Modified:			2015-06-10
+// Last Modified:			2015-07-09
 //
 
 using cloudscribe.Core.Models.Geography;
+using cloudscribe.Core.Web.Navigation;
 using System.Collections.Generic;
 
 namespace cloudscribe.Core.Web.ViewModels.CoreData

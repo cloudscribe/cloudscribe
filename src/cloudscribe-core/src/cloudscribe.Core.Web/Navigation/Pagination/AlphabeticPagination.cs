@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2014-12-10
-// Last Modified:			2015-06-27
+// Last Modified:			2015-07-09
 // TODO: make this templated
 
 using cloudscribe.Core.Models;
@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace cloudscribe.Core.Web.Helpers
+namespace cloudscribe.Core.Web.Navigation
 {
     public static class AlphabeticPagination
     {

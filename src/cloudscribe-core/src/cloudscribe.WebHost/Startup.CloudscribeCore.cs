@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2015-06-20
-// Last Modified:			2015-06-24
+// Last Modified:			2015-07-09
 // 
 
 using System;
@@ -21,6 +21,7 @@ using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Geography;
 using cloudscribe.Core.Web;
 using cloudscribe.Core.Web.Components;
+using cloudscribe.Core.Web.Navigation;
 using cloudscribe.AspNet.Identity;
 
 namespace cloudscribe.WebHost

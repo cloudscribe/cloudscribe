@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace cloudscribe.Core.Web.ViewModels
+namespace cloudscribe.Core.Web.Navigation
 {
     //http://stackoverflow.com/questions/66893/tree-data-structure-in-c-sharp
 

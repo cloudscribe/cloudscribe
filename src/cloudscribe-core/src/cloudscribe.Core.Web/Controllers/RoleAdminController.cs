@@ -274,11 +274,7 @@ namespace cloudscribe.Core.Web.Controllers
                 role.SiteId,
                 role.RoleId,
                 searchInput);
-
-            //model.Paging.CurrentPage = 1;
-            //model.Paging.ItemsPerPage = 2;
-            //model.Paging.TotalItems = 5;
-
+            
             if (ajaxGrid)
             {
                 return PartialView("NonMembersGridPartial", model);

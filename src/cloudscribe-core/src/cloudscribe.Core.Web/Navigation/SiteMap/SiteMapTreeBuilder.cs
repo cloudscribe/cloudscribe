@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2015-07-07
-// Last Modified:			2015-07-07
+// Last Modified:			2015-07-09
 // 
 
 
@@ -11,7 +11,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace cloudscribe.Core.Web.ViewModels
+namespace cloudscribe.Core.Web.Navigation
 {
     public class SiteMapTreeBuilder
     {

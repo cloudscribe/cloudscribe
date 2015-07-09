@@ -1,9 +1,9 @@
 ﻿// Author:					Joe Audette
 // Created:					2015-07-06
-// Last Modified:			2015-07-06
+// Last Modified:			2015-07-09
 //
 
-namespace cloudscribe.Core.Web.ViewModels
+namespace cloudscribe.Core.Web.Navigation
 {
     public class PaginationLink
     {

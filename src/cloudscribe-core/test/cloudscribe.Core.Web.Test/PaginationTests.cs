@@ -1,13 +1,12 @@
 ﻿// Author:					Joe Audette
 // Created:					2015-07-08
-// Last Modified:			2015-07-08
+// Last Modified:			2015-07-09
 // 
 // borrowed/modified from Martijn Boland
 // trying to replicate some of the tests that Martijn Boland did here
 // https://github.com/martijnboland/MvcPaging/blob/master/src/MvcPaging.Tests/PagerTests.cs
 
-using cloudscribe.Core.Web.Components;
-using cloudscribe.Core.Web.ViewModels;
+using cloudscribe.Core.Web.Navigation;
 using System.Collections.Generic;
 using Xunit;
 

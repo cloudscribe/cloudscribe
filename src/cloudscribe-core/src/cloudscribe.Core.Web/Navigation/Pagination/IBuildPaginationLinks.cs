@@ -1,13 +1,12 @@
 ﻿// Author:					Joe Audette
 // Created:					2015-07-06
-// Last Modified:			2015-07-06
+// Last Modified:			2015-07-09
 //
 
-using cloudscribe.Core.Web.ViewModels;
 using System;
 using System.Collections.Generic;
 
-namespace cloudscribe.Core.Web.Components
+namespace cloudscribe.Core.Web.Navigation
 {
     public interface IBuildPaginationLinks
     {
