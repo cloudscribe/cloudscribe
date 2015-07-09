@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace cloudscribe.Core.Web.Navigation
 {
@@ -20,13 +21,13 @@ namespace cloudscribe.Core.Web.Navigation
 
         }
 
-        private TreeNode<SiteMapNode> siteRoot = null;
+        private TreeNode<NavigationNode> siteRoot = null;
 
-        public TreeNode<SiteMapNode> GetTree()
+        public TreeNode<NavigationNode> GetTree()
         {
             // ultimately we will need to cache sitemap per site
 
-            if(siteRoot == null)
+            if (siteRoot == null)
             {
                 siteRoot = BuildTree();
             }
@@ -34,16 +35,28 @@ namespace cloudscribe.Core.Web.Navigation
             return siteRoot;
         }
 
-        private TreeNode<SiteMapNode> BuildTree()
+        private TreeNode<NavigationNode> BuildTree()
         {
+            // note that from the Tree point of view we are using
+            // the lighter NavigationNode class
+            // but actually we are populating it with the richer class
+            // SiteMapNode
+            // basically get the larger object out of the way so it doesn't clutter
+            // the more common useage scenarios
+            // scenarios that need the richer object can cast it
+            // or we could add extension methods to NavigationNode to access things from SiteMapNode where needed
+            // we are making a conscious choice here that when we want to serialize-deserialze nodes
+            // we are limiting to the properties on NavigationNode
+
             SiteMapNode rootNode = new SiteMapNode();
             rootNode.IsRootNode = true;
-            rootNode.Key = "hardcodedroot";
+            rootNode.Key = "RootNode";
 
-            TreeNode<SiteMapNode> treeRoot = new TreeNode<SiteMapNode>(rootNode);
+            TreeNode<NavigationNode> treeRoot = new TreeNode<NavigationNode>(rootNode);
 
             SiteMapNode home = new SiteMapNode();
             home.Key = "Home";
+            home.ParentKey = "RootNode";
             home.Controller = "Home";
             home.Action = "Home";
             home.Title = "Home";
@@ -51,6 +64,7 @@ namespace cloudscribe.Core.Web.Navigation
 
             SiteMapNode about = new SiteMapNode();
             about.Key = "About";
+            about.ParentKey = "RootNode";
             about.Controller = "Home";
             about.Action = "About";
             about.Title = "About";
@@ -58,6 +72,7 @@ namespace cloudscribe.Core.Web.Navigation
 
             SiteMapNode contact = new SiteMapNode();
             contact.Key = "Contact";
+            contact.ParentKey = "RootNode";
             contact.Controller = "Home";
             contact.Action = "Contact";
             contact.Title = "Contact";
@@ -66,91 +81,110 @@ namespace cloudscribe.Core.Web.Navigation
 
             SiteMapNode siteAdmin = new SiteMapNode();
             siteAdmin.Key = "SiteAdmin";
+            siteAdmin.ParentKey = "RootNode";
             siteAdmin.Controller = "SiteAdmin";
             siteAdmin.Action = "Index";
             siteAdmin.Title = "Administration";
             siteAdmin.ViewRoles = "Admins,Content Administrators";
-            TreeNode<SiteMapNode> adminRoot = treeRoot.AddChild(siteAdmin);
+            TreeNode<NavigationNode> adminRoot = treeRoot.AddChild(siteAdmin);
 
             SiteMapNode siteSettings = new SiteMapNode();
             siteSettings.Key = "BasicSettings";
+            siteSettings.ParentKey = "SiteAdmin";
             siteSettings.Controller = "SiteAdmin";
             siteSettings.Action = "SiteInfo";
             siteSettings.Title = "Site Settings";
             siteSettings.ViewRoles = "Admins,Content Administrators";
             siteSettings.ComponentVisibility = "SiteMapPathHelper,ChildMenu,!*"; //this pattern was used in mvcsitemapprovider may change
             siteSettings.PreservedRouteParameters = "siteGuid";
-            TreeNode<SiteMapNode> siteT  = adminRoot.AddChild(siteSettings);
+            TreeNode<NavigationNode> siteT = adminRoot.AddChild(siteSettings);
 
             SiteMapNode hosts = new SiteMapNode();
             hosts.Key = "SiteHostMappings";
+            hosts.ParentKey = "BasicSettings";
             hosts.Controller = "SiteAdmin";
             hosts.Action = "SiteHostMappings";
             hosts.Title = "Domain Mappings";
             hosts.ViewRoles = "Admins,Content Administrators";
             hosts.ComponentVisibility = "SiteMapPathHelper,!*";
             hosts.PreservedRouteParameters = "siteGuid";
-            TreeNode<SiteMapNode> hostsT = siteT.AddChild(hosts);
+            TreeNode<NavigationNode> hostsT = siteT.AddChild(hosts);
 
             SiteMapNode siteList = new SiteMapNode();
             siteList.Key = "SiteList";
+            siteList.ParentKey = "SiteAdmin";
             siteList.Controller = "SiteAdmin";
             siteList.Action = "SiteList";
             siteList.Title = "SiteList";
             siteList.ViewRoles = "ServerAdmins";
             siteList.ComponentVisibility = "SiteMapPathHelper,ChildMenu,!*";
-            TreeNode<SiteMapNode> siteListT = adminRoot.AddChild(siteList);
+            TreeNode<NavigationNode> siteListT = adminRoot.AddChild(siteList);
 
             SiteMapNode newSite = new SiteMapNode();
             newSite.Key = "NewSite";
+            newSite.ParentKey = "SiteList";
             newSite.Controller = "SiteAdmin";
             newSite.Action = "NewSite";
             newSite.Title = "NewSite";
             newSite.ViewRoles = "ServerAdmins";
             newSite.ComponentVisibility = "SiteMapPathHelper,ChildMenu,!*";
-            TreeNode<SiteMapNode> newSiteT = siteListT.AddChild(newSite);
+            TreeNode<NavigationNode> newSiteT = siteListT.AddChild(newSite);
 
 
             SiteMapNode userAdmin = new SiteMapNode();
             userAdmin.Key = "UserAdmin";
+            userAdmin.ParentKey = "SiteAdmin";
             userAdmin.Controller = "UserAdmin";
             userAdmin.Action = "Index";
             userAdmin.Title = "UserManagement";
             userAdmin.ViewRoles = "ServerAdmins";
             userAdmin.ComponentVisibility = "SiteMapPathHelper,ChildMenu,!*";
-            TreeNode<SiteMapNode> userAdminT = adminRoot.AddChild(userAdmin);
+            TreeNode<NavigationNode> userAdminT = adminRoot.AddChild(userAdmin);
 
             SiteMapNode newUser = new SiteMapNode();
             newUser.Key = "UserEdit";
+            newUser.ParentKey = "UserAdmin";
             newUser.Controller = "UserAdmin";
             newUser.Action = "UserEdit";
             newUser.Title = "NewUser";
             newUser.ViewRoles = "Admins";
             newUser.ComponentVisibility = "SiteMapPathHelper,ChildMenu,!*";
-            TreeNode<SiteMapNode> newUserT = userAdminT.AddChild(newUser);
+            TreeNode<NavigationNode> newUserT = userAdminT.AddChild(newUser);
 
             SiteMapNode userSearch = new SiteMapNode();
             userSearch.Key = "UserSearch";
+            userSearch.ParentKey = "UserAdmin";
             userSearch.Controller = "UserAdmin";
             userSearch.Action = "Search";
             userSearch.Title = "User Search";
             userSearch.ViewRoles = "Admins";
             userSearch.ComponentVisibility = "SiteMapPathHelper,!*";
-            TreeNode<SiteMapNode> userSearchT = userAdminT.AddChild(userSearch);
+            TreeNode<NavigationNode> userSearchT = userAdminT.AddChild(userSearch);
 
             SiteMapNode ipSearch = new SiteMapNode();
             ipSearch.Key = "IpSearch";
+            ipSearch.ParentKey = "UserAdmin";
             ipSearch.Controller = "UserAdmin";
             ipSearch.Action = "IpSearch";
             ipSearch.Title = "IpSearch";
             ipSearch.ViewRoles = "Admins";
             ipSearch.ComponentVisibility = "SiteMapPathHelper,!*";
-            TreeNode<SiteMapNode> ipSearchT = userAdminT.AddChild(ipSearch);
+            TreeNode<NavigationNode> ipSearchT = userAdminT.AddChild(ipSearch);
 
-            //string serialized = JsonConvert.SerializeObject(treeRoot);
+            //string serialized = JsonConvert.SerializeObject(treeRoot,Formatting.Indented);
 
 
             return treeRoot;
         }
+
+        //public TreeNode<NavigationNode> BuildTreeFromJson(string jsonString)
+        //{
+
+        //}
+
+        
+
     }
+
+    
 }
