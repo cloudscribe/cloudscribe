@@ -59,7 +59,7 @@ namespace cloudscribe.Core.Web.Navigation
             home.ParentKey = "RootNode";
             home.Controller = "Home";
             home.Action = "Home";
-            home.Title = "Home";
+            home.Text = "Home";
             treeRoot.AddChild(home);
 
             SiteMapNode about = new SiteMapNode();
@@ -67,7 +67,7 @@ namespace cloudscribe.Core.Web.Navigation
             about.ParentKey = "RootNode";
             about.Controller = "Home";
             about.Action = "About";
-            about.Title = "About";
+            about.Text = "About";
             treeRoot.AddChild(about);
 
             SiteMapNode contact = new SiteMapNode();
@@ -75,7 +75,7 @@ namespace cloudscribe.Core.Web.Navigation
             contact.ParentKey = "RootNode";
             contact.Controller = "Home";
             contact.Action = "Contact";
-            contact.Title = "Contact";
+            contact.Text = "Contact";
             treeRoot.AddChild(contact);
 
 
@@ -84,7 +84,7 @@ namespace cloudscribe.Core.Web.Navigation
             siteAdmin.ParentKey = "RootNode";
             siteAdmin.Controller = "SiteAdmin";
             siteAdmin.Action = "Index";
-            siteAdmin.Title = "Administration";
+            siteAdmin.Text = "Administration";
             siteAdmin.ViewRoles = "Admins,Content Administrators";
             TreeNode<NavigationNode> adminRoot = treeRoot.AddChild(siteAdmin);
 
@@ -93,7 +93,7 @@ namespace cloudscribe.Core.Web.Navigation
             siteSettings.ParentKey = "SiteAdmin";
             siteSettings.Controller = "SiteAdmin";
             siteSettings.Action = "SiteInfo";
-            siteSettings.Title = "Site Settings";
+            siteSettings.Text = "Site Settings";
             siteSettings.ViewRoles = "Admins,Content Administrators";
             siteSettings.ComponentVisibility = "SiteMapPathHelper,ChildMenu,!*"; //this pattern was used in mvcsitemapprovider may change
             siteSettings.PreservedRouteParameters = "siteGuid";
@@ -104,7 +104,7 @@ namespace cloudscribe.Core.Web.Navigation
             hosts.ParentKey = "BasicSettings";
             hosts.Controller = "SiteAdmin";
             hosts.Action = "SiteHostMappings";
-            hosts.Title = "Domain Mappings";
+            hosts.Text = "Domain Mappings";
             hosts.ViewRoles = "Admins,Content Administrators";
             hosts.ComponentVisibility = "SiteMapPathHelper,!*";
             hosts.PreservedRouteParameters = "siteGuid";
@@ -115,7 +115,7 @@ namespace cloudscribe.Core.Web.Navigation
             siteList.ParentKey = "SiteAdmin";
             siteList.Controller = "SiteAdmin";
             siteList.Action = "SiteList";
-            siteList.Title = "SiteList";
+            siteList.Text = "SiteList";
             siteList.ViewRoles = "ServerAdmins";
             siteList.ComponentVisibility = "SiteMapPathHelper,ChildMenu,!*";
             TreeNode<NavigationNode> siteListT = adminRoot.AddChild(siteList);
@@ -125,7 +125,7 @@ namespace cloudscribe.Core.Web.Navigation
             newSite.ParentKey = "SiteList";
             newSite.Controller = "SiteAdmin";
             newSite.Action = "NewSite";
-            newSite.Title = "NewSite";
+            newSite.Text = "NewSite";
             newSite.ViewRoles = "ServerAdmins";
             newSite.ComponentVisibility = "SiteMapPathHelper,ChildMenu,!*";
             TreeNode<NavigationNode> newSiteT = siteListT.AddChild(newSite);
@@ -136,7 +136,7 @@ namespace cloudscribe.Core.Web.Navigation
             userAdmin.ParentKey = "SiteAdmin";
             userAdmin.Controller = "UserAdmin";
             userAdmin.Action = "Index";
-            userAdmin.Title = "UserManagement";
+            userAdmin.Text = "UserManagement";
             userAdmin.ViewRoles = "ServerAdmins";
             userAdmin.ComponentVisibility = "SiteMapPathHelper,ChildMenu,!*";
             TreeNode<NavigationNode> userAdminT = adminRoot.AddChild(userAdmin);
@@ -146,7 +146,7 @@ namespace cloudscribe.Core.Web.Navigation
             newUser.ParentKey = "UserAdmin";
             newUser.Controller = "UserAdmin";
             newUser.Action = "UserEdit";
-            newUser.Title = "NewUser";
+            newUser.Text = "NewUser";
             newUser.ViewRoles = "Admins";
             newUser.ComponentVisibility = "SiteMapPathHelper,ChildMenu,!*";
             TreeNode<NavigationNode> newUserT = userAdminT.AddChild(newUser);
@@ -156,7 +156,7 @@ namespace cloudscribe.Core.Web.Navigation
             userSearch.ParentKey = "UserAdmin";
             userSearch.Controller = "UserAdmin";
             userSearch.Action = "Search";
-            userSearch.Title = "User Search";
+            userSearch.Text = "User Search";
             userSearch.ViewRoles = "Admins";
             userSearch.ComponentVisibility = "SiteMapPathHelper,!*";
             TreeNode<NavigationNode> userSearchT = userAdminT.AddChild(userSearch);
@@ -166,7 +166,7 @@ namespace cloudscribe.Core.Web.Navigation
             ipSearch.ParentKey = "UserAdmin";
             ipSearch.Controller = "UserAdmin";
             ipSearch.Action = "IpSearch";
-            ipSearch.Title = "IpSearch";
+            ipSearch.Text = "IpSearch";
             ipSearch.ViewRoles = "Admins";
             ipSearch.ComponentVisibility = "SiteMapPathHelper,!*";
             TreeNode<NavigationNode> ipSearchT = userAdminT.AddChild(ipSearch);

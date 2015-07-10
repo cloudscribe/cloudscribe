@@ -59,6 +59,18 @@ namespace cloudscribe.Core.Models
             foreach (var child in _children)
                 child.Traverse(action);
         }
+        
+        public TreeNode<T> Find(Func<TreeNode<T>, bool> predicate)
+        {
+            if(predicate(this)) { return this; }
+            foreach(var n in Children)
+            {
+                var found = n.Find(predicate);
+                if (found != null) return found;
+            }
+
+            return null;
+        }
 
         public IEnumerable<T> Flatten()
         {

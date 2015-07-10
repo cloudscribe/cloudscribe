@@ -1,0 +1,24 @@
+﻿@using cloudscribe.Core.Web.Navigation
+@using cloudscribe.Core.Models
+
+@model BreadcrumbsViewModel
+
+@*
+
+
+*@
+@{
+// ViewBag.Title = "Home Page";
+}
+
+@if (Model.RootNode.Children.Count > 0)
+{
+    @:<ul class="breadcrumb">
+    foreach (var node in Model.RootNode.Children)
+    {
+
+        @:
+        <li><a href="@Url.Content(node.Value.ResolveUrl())">@node.Value.Text</a><span class="divider"></span></li>
+    }
+    @:</ul>
+}

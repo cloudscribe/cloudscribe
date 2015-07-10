@@ -103,6 +103,7 @@ namespace cloudscribe.Core.Web
             "/Views/Shared/{0}" + ViewExtension,
             "~/Views/Sys/{1}/{0}" + ViewExtension,
             "~/Views/Sys/Shared/{0}" + ViewExtension,
+           
         };
 
         private static readonly IEnumerable<string> _areaViewLocationFormats = new[]
