@@ -15,12 +15,12 @@ using Xunit.Abstractions;
 
 namespace cloudscribe.Core.Web.Test.Navigation
 {
-    public class SiteMapTreeBuilderTests
+    public class NavigationTreeBuilderTests
     {
 
         private readonly ITestOutputHelper output;
 
-        public SiteMapTreeBuilderTests(ITestOutputHelper output)
+        public NavigationTreeBuilderTests(ITestOutputHelper output)
         {
             this.output = output;
         }
@@ -29,7 +29,7 @@ namespace cloudscribe.Core.Web.Test.Navigation
         public void Can_Serialize_To_Json()
         {
             // Assemble
-            SiteMapTreeBuilder builder = new SiteMapTreeBuilder();
+            NavigationTreeBuilder builder = new NavigationTreeBuilder();
 
             //Act
             string json = builder.GetTree().ToJson();

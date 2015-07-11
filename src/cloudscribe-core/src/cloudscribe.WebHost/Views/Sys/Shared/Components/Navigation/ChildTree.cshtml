@@ -1,0 +1,26 @@
+﻿@using cloudscribe.Core.Web.Navigation
+@using cloudscribe.Core.Models
+
+@model NavigationViewModel
+
+@*
+
+
+*@
+@{
+// ViewBag.Title = "Home Page";
+}
+
+@if (Model.CurrentNode.Children.Count > 0)
+{
+    @:<ul class="menu">
+    foreach (var node in Model.CurrentNode.Children)
+    {
+
+        @:
+        <li><a href="@Url.Content(node.Value.Url)">@node.Value.Text</a></li>
+
+    }
+    @:</ul>
+}
+

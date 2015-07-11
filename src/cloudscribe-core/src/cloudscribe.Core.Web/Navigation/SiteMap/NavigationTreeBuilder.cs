@@ -14,9 +14,9 @@ using Newtonsoft.Json.Converters;
 
 namespace cloudscribe.Core.Web.Navigation
 {
-    public class SiteMapTreeBuilder
+    public class NavigationTreeBuilder
     {
-        public SiteMapTreeBuilder()
+        public NavigationTreeBuilder()
         {
 
         }
