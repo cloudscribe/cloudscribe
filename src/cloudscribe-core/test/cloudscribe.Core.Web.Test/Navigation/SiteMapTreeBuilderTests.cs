@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2015-07-09
-// Last Modified:			2015-07-09
+// Last Modified:			2015-07-11
 // 
 // borrowed/modified from Martijn Boland
 // trying to replicate some of the tests that Martijn Boland did here
@@ -8,7 +8,6 @@
 
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.Navigation;
-using cloudscribe.Core.Web.Navigation.SiteMap;
 using System.Collections.Generic;
 using System.IO;
 using Xunit;

@@ -19,6 +19,9 @@ namespace cloudscribe.Core.Web.Navigation
 
         }
 
-        public TreeNode<NavigationNode> RootNode { get; set; }
+        public TreeNode<NavigationNode> RootNode { get; set; } = null;
+        public TreeNode<NavigationNode> CurrentNode { get; set; } = null;
+        public List<TreeNode<NavigationNode>> ParentChain { get; set; } = null;
+        public Func<TreeNode<NavigationNode>, bool> ShouldAllowView { get; set; } = null;
     }
 }

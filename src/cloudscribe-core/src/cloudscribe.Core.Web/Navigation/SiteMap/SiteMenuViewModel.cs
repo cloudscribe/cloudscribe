@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2015-07-10
-// Last Modified:			2015-07-10
+// Last Modified:			2015-07-11
 // 
 
 using cloudscribe.Core.Models;
@@ -19,6 +19,9 @@ namespace cloudscribe.Core.Web.Navigation
 
         }
 
+        public Func<TreeNode<NavigationNode>, bool> ShouldAllowView { get; set; } = null;
+
         public TreeNode<NavigationNode> RootNode { get; set; }
+
     }
 }

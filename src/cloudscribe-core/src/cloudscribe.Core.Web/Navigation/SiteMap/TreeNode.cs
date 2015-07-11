@@ -1,13 +1,16 @@
-﻿using System;
+﻿// http://stackoverflow.com/questions/66893/tree-data-structure-in-c-sharp
+// integrated 2015-07-10
+// Modified by Joe Audette
+// Last Modified 2015-07-11
+
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Newtonsoft.Json;
 
-namespace cloudscribe.Core.Models
+namespace cloudscribe.Core.Web.Navigation
 {
-    //http://stackoverflow.com/questions/66893/tree-data-structure-in-c-sharp
-
     public class TreeNode<T>
     {
         private readonly T _value;
@@ -25,7 +28,7 @@ namespace cloudscribe.Core.Models
 
         //JsonConvert throws an error if an object has a reference to its parent
         [JsonIgnore]
-        public TreeNode<T> Parent { get; private set; }
+        public TreeNode<T> Parent { get; private set; } = null;
 
         //JA would like it better if this serialized to Json as "Node" rather than "Value"
         // after testing roudtrip serialization try renaming this to Node then make sure it doesn't break deserialization
@@ -60,6 +63,8 @@ namespace cloudscribe.Core.Models
                 child.Traverse(action);
         }
         
+
+        // added by Joe Audette 2015-07-11
         public TreeNode<T> Find(Func<TreeNode<T>, bool> predicate)
         {
             if(predicate(this)) { return this; }
@@ -71,6 +76,8 @@ namespace cloudscribe.Core.Models
 
             return null;
         }
+
+        
 
         public IEnumerable<T> Flatten()
         {

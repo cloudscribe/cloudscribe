@@ -32,3 +32,6 @@ textarea {
         z-index: 10 !important;
     }
 }
+ul.nav li.dropdown:hover ul.dropdown-menu {
+            display: block;
+        }

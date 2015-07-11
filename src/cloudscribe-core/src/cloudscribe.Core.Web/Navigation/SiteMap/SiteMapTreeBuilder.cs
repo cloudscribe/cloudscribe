@@ -1,6 +1,6 @@
 ﻿// Author:					Joe Audette
 // Created:					2015-07-07
-// Last Modified:			2015-07-09
+// Last Modified:			2015-07-11
 // 
 
 
@@ -48,19 +48,22 @@ namespace cloudscribe.Core.Web.Navigation
             // we are making a conscious choice here that when we want to serialize-deserialze nodes
             // we are limiting to the properties on NavigationNode
 
-            SiteMapNode rootNode = new SiteMapNode();
-            rootNode.IsRootNode = true;
-            rootNode.Key = "RootNode";
+            //SiteMapNode rootNode = new SiteMapNode();
+            //rootNode.IsRootNode = true;
+            //rootNode.Key = "RootNode";
 
-            TreeNode<NavigationNode> treeRoot = new TreeNode<NavigationNode>(rootNode);
+           // TreeNode<NavigationNode> treeRoot = new TreeNode<NavigationNode>(rootNode);
 
             SiteMapNode home = new SiteMapNode();
             home.Key = "Home";
             home.ParentKey = "RootNode";
             home.Controller = "Home";
-            home.Action = "Home";
+            home.Action = "Index";
             home.Text = "Home";
-            treeRoot.AddChild(home);
+            home.Url = home.ResolveUrl();
+            home.IsRootNode = true;
+            // TreeNode<NavigationNode>  tHome = treeRoot.AddChild(home);
+            TreeNode<NavigationNode> treeRoot = new TreeNode<NavigationNode>(home);
 
             SiteMapNode about = new SiteMapNode();
             about.Key = "About";
@@ -68,6 +71,7 @@ namespace cloudscribe.Core.Web.Navigation
             about.Controller = "Home";
             about.Action = "About";
             about.Text = "About";
+            about.Url = about.ResolveUrl();
             treeRoot.AddChild(about);
 
             SiteMapNode contact = new SiteMapNode();
@@ -76,6 +80,7 @@ namespace cloudscribe.Core.Web.Navigation
             contact.Controller = "Home";
             contact.Action = "Contact";
             contact.Text = "Contact";
+            contact.Url = contact.ResolveUrl();
             treeRoot.AddChild(contact);
 
 
@@ -86,6 +91,7 @@ namespace cloudscribe.Core.Web.Navigation
             siteAdmin.Action = "Index";
             siteAdmin.Text = "Administration";
             siteAdmin.ViewRoles = "Admins,Content Administrators";
+            siteAdmin.Url = siteAdmin.ResolveUrl();
             TreeNode<NavigationNode> adminRoot = treeRoot.AddChild(siteAdmin);
 
             SiteMapNode siteSettings = new SiteMapNode();
@@ -97,6 +103,7 @@ namespace cloudscribe.Core.Web.Navigation
             siteSettings.ViewRoles = "Admins,Content Administrators";
             siteSettings.ComponentVisibility = "SiteMapPathHelper,ChildMenu,!*"; //this pattern was used in mvcsitemapprovider may change
             siteSettings.PreservedRouteParameters = "siteGuid";
+            siteSettings.Url = siteSettings.ResolveUrl();
             TreeNode<NavigationNode> siteT = adminRoot.AddChild(siteSettings);
 
             SiteMapNode hosts = new SiteMapNode();
@@ -108,6 +115,7 @@ namespace cloudscribe.Core.Web.Navigation
             hosts.ViewRoles = "Admins,Content Administrators";
             hosts.ComponentVisibility = "SiteMapPathHelper,!*";
             hosts.PreservedRouteParameters = "siteGuid";
+            hosts.Url = hosts.ResolveUrl();
             TreeNode<NavigationNode> hostsT = siteT.AddChild(hosts);
 
             SiteMapNode siteList = new SiteMapNode();
@@ -118,6 +126,7 @@ namespace cloudscribe.Core.Web.Navigation
             siteList.Text = "SiteList";
             siteList.ViewRoles = "ServerAdmins";
             siteList.ComponentVisibility = "SiteMapPathHelper,ChildMenu,!*";
+            siteList.Url = siteList.ResolveUrl();
             TreeNode<NavigationNode> siteListT = adminRoot.AddChild(siteList);
 
             SiteMapNode newSite = new SiteMapNode();
@@ -128,6 +137,7 @@ namespace cloudscribe.Core.Web.Navigation
             newSite.Text = "NewSite";
             newSite.ViewRoles = "ServerAdmins";
             newSite.ComponentVisibility = "SiteMapPathHelper,ChildMenu,!*";
+            newSite.Url = newSite.ResolveUrl();
             TreeNode<NavigationNode> newSiteT = siteListT.AddChild(newSite);
 
 
@@ -139,6 +149,7 @@ namespace cloudscribe.Core.Web.Navigation
             userAdmin.Text = "UserManagement";
             userAdmin.ViewRoles = "ServerAdmins";
             userAdmin.ComponentVisibility = "SiteMapPathHelper,ChildMenu,!*";
+            userAdmin.Url = userAdmin.ResolveUrl();
             TreeNode<NavigationNode> userAdminT = adminRoot.AddChild(userAdmin);
 
             SiteMapNode newUser = new SiteMapNode();
@@ -149,6 +160,7 @@ namespace cloudscribe.Core.Web.Navigation
             newUser.Text = "NewUser";
             newUser.ViewRoles = "Admins";
             newUser.ComponentVisibility = "SiteMapPathHelper,ChildMenu,!*";
+            newUser.Url = newUser.ResolveUrl();
             TreeNode<NavigationNode> newUserT = userAdminT.AddChild(newUser);
 
             SiteMapNode userSearch = new SiteMapNode();
@@ -159,6 +171,7 @@ namespace cloudscribe.Core.Web.Navigation
             userSearch.Text = "User Search";
             userSearch.ViewRoles = "Admins";
             userSearch.ComponentVisibility = "SiteMapPathHelper,!*";
+            userSearch.Url = userSearch.ResolveUrl();
             TreeNode<NavigationNode> userSearchT = userAdminT.AddChild(userSearch);
 
             SiteMapNode ipSearch = new SiteMapNode();
@@ -169,6 +182,7 @@ namespace cloudscribe.Core.Web.Navigation
             ipSearch.Text = "IpSearch";
             ipSearch.ViewRoles = "Admins";
             ipSearch.ComponentVisibility = "SiteMapPathHelper,!*";
+            ipSearch.Url = ipSearch.ResolveUrl();
             TreeNode<NavigationNode> ipSearchT = userAdminT.AddChild(ipSearch);
 
             //string serialized = JsonConvert.SerializeObject(treeRoot,Formatting.Indented);
