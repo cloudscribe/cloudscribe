@@ -1,11 +1,12 @@
-﻿// Author:					Martijn Boland/Joe Audette
+﻿// Copyright (c) Source Tree Solutions, LLC. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+// Author:					Martijn Boland/Joe Audette
 // Created:					2015-07-06
 // Last Modified:			2015-07-09
 //
 // borrowed most code for building the list of links from Martijn Boland
 // https://github.com/martijnboland/MvcPaging/blob/master/src/MvcPaging/Pager.cs MIT License
 
-using cloudscribe.Core.Web.ViewModels;
 using System;
 using System.Collections.Generic;
 

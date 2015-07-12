@@ -1,4 +1,6 @@
-﻿// Author:        Petr Kures
+﻿// Copyright (c) Source Tree Solutions, LLC. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+// Author:        Petr Kures
 // Created:	      2007-09-05
 // Last Modified: 2007-09-05
 // This class encapsulates parameter handling for stored procedures and text commands.
