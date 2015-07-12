@@ -6,6 +6,7 @@
 }
 
 <h2>@ViewBag.Heading</h2>
+@await Component.InvokeAsync("Navigation", "ChildTree")
 @*
     @Html.MvcSiteMap().Menu("VerticalMenuHelperModel",
     Html.MvcSiteMap().SiteMap.FindSiteMapNodeFromKey("CoreData"),

@@ -31,7 +31,7 @@ namespace cloudscribe.Core.Web.Navigation
             TreeNode<NavigationNode> rootNode = builder.GetTree();
 
             NavigationViewModel model = new NavigationViewModel(
-                Request.Path,
+                Request.HttpContext,
                 rootNode,
                 permissionResolver);
            

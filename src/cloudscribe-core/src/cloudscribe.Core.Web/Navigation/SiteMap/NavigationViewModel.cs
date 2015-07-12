@@ -5,6 +5,7 @@
 // Last Modified:			2015-07-12
 // 
 
+using Microsoft.AspNet.Http;
 using System;
 using System.Collections.Generic;
 
@@ -13,11 +14,11 @@ namespace cloudscribe.Core.Web.Navigation
     public class NavigationViewModel
     {
         public NavigationViewModel(
-            string requestPath,
+            HttpContext context,
             TreeNode<NavigationNode> rootNode,
             INavigationNodePermissionResolver permissionResolver)
         {
-            this.requestPath = requestPath;
+            this.context = context;
             this.RootNode = rootNode;
             this.permissionResolver = permissionResolver;
 
@@ -25,6 +26,7 @@ namespace cloudscribe.Core.Web.Navigation
             
         }
 
+        private HttpContext context;
         private string requestPath;
         private INavigationNodePermissionResolver permissionResolver;
 
@@ -35,7 +37,7 @@ namespace cloudscribe.Core.Web.Navigation
         {
             // lazy load
             get {
-                if (currentNode == null) { currentNode = RootNode.FindByUrl(requestPath); }
+                if (currentNode == null) { currentNode = RootNode.FindByUrl(context.Request.Path); }
                 return currentNode;
                 }
         }
@@ -49,6 +51,32 @@ namespace cloudscribe.Core.Web.Navigation
                 return parentChain;
             }
         } 
+
+        public string AdjustText(TreeNode<NavigationNode> node)
+        {
+            string key = "breadcrumb-" + node.Value.Key;
+            if (context.Items[key] != null)
+            {
+                BreadcrumbAdjuster adjuster = (BreadcrumbAdjuster)context.Items[key];
+                if (adjuster.AdjustedText.Length > 0) { return adjuster.AdjustedText; }
+            }
+
+            return node.Value.Text;
+        }
+
+        public string AdjustUrl(TreeNode<NavigationNode> node)
+        {
+            //string key = "breadcrumb-" + node.Value.Key;
+            //if (context.Items[key] != null)
+            //{
+            //    BreadcrumbAdjuster adjuster = (BreadcrumbAdjuster)context.Items[key];
+            //    if (adjuster.AdjustedText.Length > 0) { return adjuster.AdjustedText; }
+            //}
+            //TODO: figure out how to store multiple routeparams and merge them into the url
+            // or update them if they are already there
+
+            return node.Value.Url;
+        }
 
 
         public Func<TreeNode<NavigationNode>, bool> ShouldAllowView { get; private set; } = null;

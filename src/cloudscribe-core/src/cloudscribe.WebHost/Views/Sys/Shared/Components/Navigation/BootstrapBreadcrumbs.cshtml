@@ -19,12 +19,12 @@
         if (node.EqualsNode(Model.CurrentNode))
         {
             @:
-            <li class="active">@node.Value.Text</li>
+            <li class="active">@Model.AdjustText(node)</li>
         }
         else
         {
             @:
-            <li><a href="@Url.Content(node.Value.Url)">@node.Value.Text</a><span class="divider"></span></li>
+            <li><a href="@Url.Content(Model.AdjustUrl(node))">@Model.AdjustText(node)</a><span class="divider"></span></li>
         }
 
     }
