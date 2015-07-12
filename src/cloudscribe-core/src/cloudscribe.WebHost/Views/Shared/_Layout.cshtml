@@ -34,13 +34,13 @@
                     <a asp-controller="Home" asp-action="Index" class="navbar-brand">@ViewBag.SiteName</a>
                 </div>
                 <div class="navbar-collapse collapse">
-                    @await Component.InvokeAsync("Navigation", "TopNav")          
+                    @await Component.InvokeAsync("Navigation", "BootstrapTopNav")          
                     @await Html.PartialAsync("_LoginPartial")
                 </div>
             </div>
         </div>
         <div class="container body-content">
-            @await Component.InvokeAsync("Navigation", "Breadcrumbs")
+            @await Component.InvokeAsync("Navigation", "BootstrapBreadcrumbs")
             @RenderBody()
             <hr />
             <footer>

@@ -1,4 +1,6 @@
-﻿// Author:					Joe Audette
+﻿// Copyright (c) Source Tree Solutions, LLC. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+// Author:					Joe Audette
 // Created:					2015-07-07
 // Last Modified:			2015-07-11
 // 
@@ -184,6 +186,131 @@ namespace cloudscribe.Core.Web.Navigation
             ipSearch.ComponentVisibility = "SiteMapPathHelper,!*";
             ipSearch.Url = ipSearch.ResolveUrl();
             TreeNode<NavigationNode> ipSearchT = userAdminT.AddChild(ipSearch);
+
+
+            SiteMapNode roleAdmin = new SiteMapNode();
+            roleAdmin.Key = "RoleAdmin";
+            roleAdmin.ParentKey = "SiteAdmin";
+            roleAdmin.Controller = "RoleAdmin";
+            roleAdmin.Action = "Index";
+            roleAdmin.Text = "RoleManagement";
+            roleAdmin.ViewRoles = "Admins";
+            roleAdmin.ComponentVisibility = "SiteMapPathHelper,ChildMenu,!*";
+            roleAdmin.Url = roleAdmin.ResolveUrl();
+            TreeNode<NavigationNode> roleAdminT = adminRoot.AddChild(roleAdmin);
+
+            // TODO: this one should not be in main or child menus
+            // we can't have just one url since it depends on roleId
+            // but we do want it to appear ar the active breadcrumb
+            SiteMapNode roleMembers = new SiteMapNode();
+            roleMembers.Key = "RoleMembers";
+            roleMembers.ParentKey = "RoleAdmin";
+            roleMembers.Controller = "RoleAdmin";
+            roleMembers.Action = "RoleMembers";
+            roleMembers.Text = "RoleManagement";
+            roleMembers.ViewRoles = "Admins";
+            roleMembers.ComponentVisibility = "SiteMapPathHelper,!*";
+            roleMembers.Url = roleMembers.ResolveUrl();
+            roleMembers.PreservedRouteParameters = "roleId,pageNumber,pageSize";
+            TreeNode<NavigationNode> roleMembersT = roleAdminT.AddChild(roleMembers);
+
+            SiteMapNode roleEdit = new SiteMapNode();
+            roleEdit.Key = "RoleEdit";
+            roleEdit.ParentKey = "RoleAdmin";
+            roleEdit.Controller = "RoleAdmin";
+            roleEdit.Action = "RoleEdit";
+            roleEdit.Text = "NewRole";
+            roleEdit.ViewRoles = "Admins";
+            roleEdit.ComponentVisibility = "SiteMapPathHelper,ChildMenu,!*";
+            roleEdit.Url = roleEdit.ResolveUrl();
+            roleEdit.PreservedRouteParameters = "roleIde";
+            TreeNode<NavigationNode> roleEditT = roleAdminT.AddChild(roleEdit);
+
+
+            SiteMapNode coreData = new SiteMapNode();
+            coreData.Key = "CoreData";
+            coreData.ParentKey = "SiteAdmin";
+            coreData.Controller = "CoreData";
+            coreData.Action = "Index";
+            coreData.Text = "CoreData";
+            coreData.ViewRoles = "ServerAdmins";
+            coreData.ComponentVisibility = "SiteMapPathHelper,ChildMenu,!*";
+            coreData.Url = coreData.ResolveUrl();
+            TreeNode<NavigationNode> coreDataT = adminRoot.AddChild(coreData);
+
+            SiteMapNode currencyList = new SiteMapNode();
+            currencyList.Key = "CurrencyList";
+            currencyList.ParentKey = "SiteAdmin";
+            currencyList.Controller = "CoreData";
+            currencyList.Action = "CurrencyList";
+            currencyList.Text = "CurrencyAdministration";
+            currencyList.ViewRoles = "ServerAdmins";
+            currencyList.ComponentVisibility = "SiteMapPathHelper,ChildMenu,!*";
+            currencyList.Url = currencyList.ResolveUrl();
+            TreeNode<NavigationNode> currencyListT = coreDataT.AddChild(currencyList);
+
+            //TODO: again I think we just want to be a breadcrumb here
+            SiteMapNode currencyEdit = new SiteMapNode();
+            currencyEdit.Key = "CurrencyEdit";
+            currencyEdit.ParentKey = "CurrencyList";
+            currencyEdit.Controller = "CoreData";
+            currencyEdit.Action = "CurrencyEdit";
+            currencyEdit.Text = "NewCurrency";
+            currencyEdit.ViewRoles = "ServerAdmins";
+            currencyEdit.ComponentVisibility = "SiteMapPathHelper,!*";
+            currencyEdit.Url = currencyEdit.ResolveUrl();
+            currencyEdit.PreservedRouteParameters = "currencyGuid";
+            TreeNode<NavigationNode> currencyEditT = currencyListT.AddChild(currencyEdit);
+
+
+            SiteMapNode countryList = new SiteMapNode();
+            countryList.Key = "CountryListPage";
+            countryList.ParentKey = "SiteAdmin";
+            countryList.Controller = "CoreData";
+            countryList.Action = "CountryListPage";
+            countryList.Text = "CountryStateAdministration";
+            countryList.ViewRoles = "ServerAdmins";
+            countryList.ComponentVisibility = "SiteMapPathHelper,ChildMenu,!*";
+            countryList.Url = countryList.ResolveUrl();
+            TreeNode<NavigationNode> countryListT = coreDataT.AddChild(countryList);
+
+            SiteMapNode countryEdit = new SiteMapNode();
+            countryEdit.Key = "CountryEdit";
+            countryEdit.ParentKey = "CountryListPage";
+            countryEdit.Controller = "CoreData";
+            countryEdit.Action = "CountryEdit";
+            countryEdit.Text = "NewCountry";
+            countryEdit.ViewRoles = "ServerAdmins";
+            countryEdit.ComponentVisibility = "SiteMapPathHelper,!*";
+            countryEdit.Url = countryEdit.ResolveUrl();
+            countryEdit.PreservedRouteParameters = "guid";
+            TreeNode<NavigationNode> countryEditT = countryListT.AddChild(countryEdit);
+
+            SiteMapNode stateList = new SiteMapNode();
+            stateList.Key = "StateListPage";
+            stateList.ParentKey = "CountryListPage";
+            stateList.Controller = "CoreData";
+            stateList.Action = "StateListPage";
+            stateList.Text = "States";
+            stateList.ViewRoles = "ServerAdmins";
+            stateList.ComponentVisibility = "SiteMapPathHelper,!*";
+            stateList.Url = stateList.ResolveUrl();
+            stateList.PreservedRouteParameters = "countryGuid";
+            TreeNode<NavigationNode> stateListT = countryListT.AddChild(stateList);
+
+            SiteMapNode stateEdit = new SiteMapNode();
+            stateEdit.Key = "StateEdit";
+            stateEdit.ParentKey = "StateListPage";
+            stateEdit.Controller = "CoreData";
+            stateEdit.Action = "StateEdit";
+            stateEdit.Text = "New State";
+            stateEdit.ViewRoles = "ServerAdmins";
+            stateEdit.ComponentVisibility = "SiteMapPathHelper,!*";
+            stateEdit.Url = stateEdit.ResolveUrl();
+            stateEdit.PreservedRouteParameters = "countryGuid";
+            TreeNode<NavigationNode> stateEditT = stateListT.AddChild(stateEdit);
+
+
 
             //string serialized = JsonConvert.SerializeObject(treeRoot,Formatting.Indented);
 

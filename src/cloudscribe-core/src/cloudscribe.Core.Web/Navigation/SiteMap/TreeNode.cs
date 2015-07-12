@@ -1,4 +1,4 @@
-﻿// http://stackoverflow.com/questions/66893/tree-data-structure-in-c-sharp
+﻿// based on answers found here http://stackoverflow.com/questions/66893/tree-data-structure-in-c-sharp
 // integrated 2015-07-10
 // Modified by Joe Audette
 // Last Modified 2015-07-11

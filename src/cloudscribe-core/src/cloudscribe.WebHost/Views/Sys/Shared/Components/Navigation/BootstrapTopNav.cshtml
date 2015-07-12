@@ -4,22 +4,25 @@
 
 @model NavigationViewModel
 
-@{
+@{ 
     // Copyright (c) Source Tree Solutions, LLC. All rights reserved.
     // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
     // Author: Joe Audette
     // Created 2015-07-11
     // Last Modified: 2015-07-12
+
+    //string function is kind of ugly, would be cleaner if @helper could be used but it was dropped in mvc6
 }
+
 
 @functions {
 
-    public string RenderChildren(TreeNode<NavigationNode> node)
+    public string BuildDropDown(TreeNode<NavigationNode> node)
     {
         var sb = new StringBuilder();
 
         var ul = new TagBuilder("ul");
-       // ul.AddCssClass("dropdown-menu");
+        ul.AddCssClass("dropdown-menu");
         ul.Attributes.Add("role", "menu");
 
         foreach (var childNode in node.Children)
@@ -27,7 +30,14 @@
             if (!Model.ShouldAllowView(childNode)) { continue; }
 
             var listItem = new TagBuilder("li");
-            
+
+            if (childNode.Value.Text == "Separator")
+            {
+                listItem.AddCssClass("divider");
+                sb.AppendLine(listItem.ToString(TagRenderMode.Normal));
+                continue;
+            }
+
             var link = new TagBuilder("a");
             link.Attributes.Add("href", Url.Content(childNode.Value.Url));
 
@@ -40,11 +50,11 @@
             {
                 link.InnerHtml = childNode.Value.Text;
 
-               // listItem.AddCssClass("dropdown-submenu");
+                listItem.AddCssClass("dropdown-submenu");
                 // recursion
                 listItem.InnerHtml =
                     link.ToString(TagRenderMode.Normal)
-                    + RenderChildren(childNode)
+                    + BuildDropDown(childNode)
                     ;
             }
 
@@ -56,31 +66,31 @@
     }
 
 
-}
-
-@if (Model.CurrentNode.Children.Count > 0)
-{
-    @:<ul>
-    foreach (var node in Model.CurrentNode.Children)
-    {
-
-        if (!Model.ShouldAllowView(node)) { continue; }
-        if (node.Children.Count == 0)
-        {
-            @:
-            <li><a href="@Url.Content(node.Value.Url)">@node.Value.Text</a></li>
-        }
-        else
-        {
-            @:
-            <li><a href="@Url.Content(node.Value.Url)">@node.Value.Text</a>
-            @Html.Raw(RenderChildren(node))
-            </li>
-
         }
 
+    @if (Model.RootNode.Children.Count > 0)
+        {
+        @:<ul class="nav navbar-nav">
+    @:<li><a href="@Url.Content(Model.RootNode.Value.Url)">@Model.RootNode.Value.Text</a></li>
+        foreach (var node in Model.RootNode.Children)
+        {
+            if(!Model.ShouldAllowView(node)) { continue; }
+            if (node.Children.Count == 0)
+            {
+                @:
+                <li><a href="@Url.Content(node.Value.Url)">@node.Value.Text</a></li>
+            }
+            else
+            {
+                @:
+                <li class="dropdown">
+                    <a href="@Url.Content(node.Value.Url)">
+                    @node.Value.Text <span class="caret"></span></a>
+                    
+                    @Html.Raw(BuildDropDown(node))  
+                </li>
+            }
 
+        }
+        @:</ul>
     }
-    @:</ul>
-}
-

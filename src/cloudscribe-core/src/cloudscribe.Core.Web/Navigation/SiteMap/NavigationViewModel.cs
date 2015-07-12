@@ -1,6 +1,8 @@
-﻿// Author:					Joe Audette
+﻿// Copyright (c) Source Tree Solutions, LLC. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+// Author:					Joe Audette
 // Created:					2015-07-10
-// Last Modified:			2015-07-11
+// Last Modified:			2015-07-12
 // 
 
 using System;
@@ -12,23 +14,21 @@ namespace cloudscribe.Core.Web.Navigation
     {
         public NavigationViewModel(
             string requestPath,
-            NavigationTreeBuilder siteMapTreeBuilder,
+            TreeNode<NavigationNode> rootNode,
             INavigationNodePermissionResolver permissionResolver)
         {
             this.requestPath = requestPath;
-            this.siteMapTreeBuilder = siteMapTreeBuilder;
+            this.RootNode = rootNode;
             this.permissionResolver = permissionResolver;
 
             ShouldAllowView = permissionResolver.ShouldAllowView;
-            RootNode = this.siteMapTreeBuilder.GetTree();
-
+            
         }
 
         private string requestPath;
-        private NavigationTreeBuilder siteMapTreeBuilder;
         private INavigationNodePermissionResolver permissionResolver;
 
-        public TreeNode<NavigationNode> RootNode { get; private set; } = null;
+        public TreeNode<NavigationNode> RootNode { get; private set; }
 
         private TreeNode<NavigationNode> currentNode = null;
         public TreeNode<NavigationNode> CurrentNode
