@@ -103,7 +103,7 @@ namespace cloudscribe.Core.Web.Navigation
             siteSettings.Action = "SiteInfo";
             siteSettings.Text = "Site Settings";
             siteSettings.ViewRoles = "Admins,Content Administrators";
-            siteSettings.ComponentVisibility = "SiteMapPathHelper,ChildMenu,!*"; //this pattern was used in mvcsitemapprovider may change
+            siteSettings.ComponentVisibility = NamedNavigationFilters.Breadcrumbs + "," + NamedNavigationFilters.ChildTree; 
             siteSettings.PreservedRouteParameters = "siteGuid";
             siteSettings.Url = siteSettings.ResolveUrl();
             TreeNode<NavigationNode> siteT = adminRoot.AddChild(siteSettings);
@@ -115,7 +115,7 @@ namespace cloudscribe.Core.Web.Navigation
             hosts.Action = "SiteHostMappings";
             hosts.Text = "Domain Mappings";
             hosts.ViewRoles = "Admins,Content Administrators";
-            hosts.ComponentVisibility = "SiteMapPathHelper,!*";
+            hosts.ComponentVisibility = NamedNavigationFilters.Breadcrumbs;
             hosts.PreservedRouteParameters = "siteGuid";
             hosts.Url = hosts.ResolveUrl();
             TreeNode<NavigationNode> hostsT = siteT.AddChild(hosts);
@@ -127,7 +127,7 @@ namespace cloudscribe.Core.Web.Navigation
             siteList.Action = "SiteList";
             siteList.Text = "SiteList";
             siteList.ViewRoles = "ServerAdmins";
-            siteList.ComponentVisibility = "SiteMapPathHelper,ChildMenu,!*";
+            siteList.ComponentVisibility = NamedNavigationFilters.Breadcrumbs + "," + NamedNavigationFilters.ChildTree;
             siteList.Url = siteList.ResolveUrl();
             TreeNode<NavigationNode> siteListT = adminRoot.AddChild(siteList);
 
@@ -138,7 +138,7 @@ namespace cloudscribe.Core.Web.Navigation
             newSite.Action = "NewSite";
             newSite.Text = "NewSite";
             newSite.ViewRoles = "ServerAdmins";
-            newSite.ComponentVisibility = "SiteMapPathHelper,ChildMenu,!*";
+            newSite.ComponentVisibility = NamedNavigationFilters.Breadcrumbs + "," + NamedNavigationFilters.ChildTree;
             newSite.Url = newSite.ResolveUrl();
             TreeNode<NavigationNode> newSiteT = siteListT.AddChild(newSite);
 
@@ -150,7 +150,7 @@ namespace cloudscribe.Core.Web.Navigation
             userAdmin.Action = "Index";
             userAdmin.Text = "UserManagement";
             userAdmin.ViewRoles = "ServerAdmins";
-            userAdmin.ComponentVisibility = "SiteMapPathHelper,ChildMenu,!*";
+            userAdmin.ComponentVisibility = NamedNavigationFilters.Breadcrumbs + "," + NamedNavigationFilters.ChildTree;
             userAdmin.Url = userAdmin.ResolveUrl();
             TreeNode<NavigationNode> userAdminT = adminRoot.AddChild(userAdmin);
 
@@ -161,7 +161,7 @@ namespace cloudscribe.Core.Web.Navigation
             newUser.Action = "UserEdit";
             newUser.Text = "NewUser";
             newUser.ViewRoles = "Admins";
-            newUser.ComponentVisibility = "SiteMapPathHelper,ChildMenu,!*";
+            newUser.ComponentVisibility = NamedNavigationFilters.Breadcrumbs + "," + NamedNavigationFilters.ChildTree;
             newUser.Url = newUser.ResolveUrl();
             TreeNode<NavigationNode> newUserT = userAdminT.AddChild(newUser);
 
@@ -172,7 +172,7 @@ namespace cloudscribe.Core.Web.Navigation
             userSearch.Action = "Search";
             userSearch.Text = "User Search";
             userSearch.ViewRoles = "Admins";
-            userSearch.ComponentVisibility = "SiteMapPathHelper,!*";
+            userSearch.ComponentVisibility = NamedNavigationFilters.Breadcrumbs;
             userSearch.Url = userSearch.ResolveUrl();
             TreeNode<NavigationNode> userSearchT = userAdminT.AddChild(userSearch);
 
@@ -183,7 +183,7 @@ namespace cloudscribe.Core.Web.Navigation
             ipSearch.Action = "IpSearch";
             ipSearch.Text = "IpSearch";
             ipSearch.ViewRoles = "Admins";
-            ipSearch.ComponentVisibility = "SiteMapPathHelper,!*";
+            ipSearch.ComponentVisibility = NamedNavigationFilters.Breadcrumbs;
             ipSearch.Url = ipSearch.ResolveUrl();
             TreeNode<NavigationNode> ipSearchT = userAdminT.AddChild(ipSearch);
 
@@ -195,7 +195,7 @@ namespace cloudscribe.Core.Web.Navigation
             roleAdmin.Action = "Index";
             roleAdmin.Text = "RoleManagement";
             roleAdmin.ViewRoles = "Admins";
-            roleAdmin.ComponentVisibility = "SiteMapPathHelper,ChildMenu,!*";
+            roleAdmin.ComponentVisibility = NamedNavigationFilters.Breadcrumbs + "," + NamedNavigationFilters.ChildTree;
             roleAdmin.Url = roleAdmin.ResolveUrl();
             TreeNode<NavigationNode> roleAdminT = adminRoot.AddChild(roleAdmin);
 
@@ -209,7 +209,7 @@ namespace cloudscribe.Core.Web.Navigation
             roleMembers.Action = "RoleMembers";
             roleMembers.Text = "RoleManagement";
             roleMembers.ViewRoles = "Admins";
-            roleMembers.ComponentVisibility = "SiteMapPathHelper,!*";
+            roleMembers.ComponentVisibility = NamedNavigationFilters.Breadcrumbs;
             roleMembers.Url = roleMembers.ResolveUrl();
             roleMembers.PreservedRouteParameters = "roleId,pageNumber,pageSize";
             TreeNode<NavigationNode> roleMembersT = roleAdminT.AddChild(roleMembers);
@@ -221,7 +221,7 @@ namespace cloudscribe.Core.Web.Navigation
             roleEdit.Action = "RoleEdit";
             roleEdit.Text = "NewRole";
             roleEdit.ViewRoles = "Admins";
-            roleEdit.ComponentVisibility = "SiteMapPathHelper,ChildMenu,!*";
+            roleEdit.ComponentVisibility = NamedNavigationFilters.Breadcrumbs + "," + NamedNavigationFilters.ChildTree;
             roleEdit.Url = roleEdit.ResolveUrl();
             roleEdit.PreservedRouteParameters = "roleIde";
             TreeNode<NavigationNode> roleEditT = roleAdminT.AddChild(roleEdit);
@@ -234,7 +234,7 @@ namespace cloudscribe.Core.Web.Navigation
             coreData.Action = "Index";
             coreData.Text = "CoreData";
             coreData.ViewRoles = "ServerAdmins";
-            coreData.ComponentVisibility = "SiteMapPathHelper,ChildMenu,!*";
+            coreData.ComponentVisibility = NamedNavigationFilters.Breadcrumbs + "," + NamedNavigationFilters.ChildTree;
             coreData.Url = coreData.ResolveUrl();
             TreeNode<NavigationNode> coreDataT = adminRoot.AddChild(coreData);
 
@@ -245,7 +245,7 @@ namespace cloudscribe.Core.Web.Navigation
             currencyList.Action = "CurrencyList";
             currencyList.Text = "CurrencyAdministration";
             currencyList.ViewRoles = "ServerAdmins";
-            currencyList.ComponentVisibility = "SiteMapPathHelper,ChildMenu,!*";
+            currencyList.ComponentVisibility = NamedNavigationFilters.Breadcrumbs + "," + NamedNavigationFilters.ChildTree;
             currencyList.Url = currencyList.ResolveUrl();
             TreeNode<NavigationNode> currencyListT = coreDataT.AddChild(currencyList);
 
@@ -257,7 +257,7 @@ namespace cloudscribe.Core.Web.Navigation
             currencyEdit.Action = "CurrencyEdit";
             currencyEdit.Text = "NewCurrency";
             currencyEdit.ViewRoles = "ServerAdmins";
-            currencyEdit.ComponentVisibility = "SiteMapPathHelper,!*";
+            currencyEdit.ComponentVisibility = NamedNavigationFilters.Breadcrumbs;
             currencyEdit.Url = currencyEdit.ResolveUrl();
             currencyEdit.PreservedRouteParameters = "currencyGuid";
             TreeNode<NavigationNode> currencyEditT = currencyListT.AddChild(currencyEdit);
@@ -270,7 +270,7 @@ namespace cloudscribe.Core.Web.Navigation
             countryList.Action = "CountryListPage";
             countryList.Text = "CountryStateAdministration";
             countryList.ViewRoles = "ServerAdmins";
-            countryList.ComponentVisibility = "SiteMapPathHelper,ChildMenu,!*";
+            countryList.ComponentVisibility = NamedNavigationFilters.Breadcrumbs + "," + NamedNavigationFilters.ChildTree;
             countryList.Url = countryList.ResolveUrl();
             TreeNode<NavigationNode> countryListT = coreDataT.AddChild(countryList);
 
@@ -281,7 +281,7 @@ namespace cloudscribe.Core.Web.Navigation
             countryEdit.Action = "CountryEdit";
             countryEdit.Text = "NewCountry";
             countryEdit.ViewRoles = "ServerAdmins";
-            countryEdit.ComponentVisibility = "SiteMapPathHelper,!*";
+            countryEdit.ComponentVisibility = NamedNavigationFilters.Breadcrumbs + "," + NamedNavigationFilters.ChildTree;
             countryEdit.Url = countryEdit.ResolveUrl();
             countryEdit.PreservedRouteParameters = "guid";
             TreeNode<NavigationNode> countryEditT = countryListT.AddChild(countryEdit);
@@ -293,7 +293,7 @@ namespace cloudscribe.Core.Web.Navigation
             stateList.Action = "StateListPage";
             stateList.Text = "States";
             stateList.ViewRoles = "ServerAdmins";
-            stateList.ComponentVisibility = "SiteMapPathHelper,!*";
+            stateList.ComponentVisibility = NamedNavigationFilters.Breadcrumbs;
             stateList.Url = stateList.ResolveUrl();
             stateList.PreservedRouteParameters = "countryGuid";
             TreeNode<NavigationNode> stateListT = countryListT.AddChild(stateList);
@@ -305,7 +305,7 @@ namespace cloudscribe.Core.Web.Navigation
             stateEdit.Action = "StateEdit";
             stateEdit.Text = "New State";
             stateEdit.ViewRoles = "ServerAdmins";
-            stateEdit.ComponentVisibility = "SiteMapPathHelper,!*";
+            stateEdit.ComponentVisibility = NamedNavigationFilters.Breadcrumbs;
             stateEdit.Url = stateEdit.ResolveUrl();
             stateEdit.PreservedRouteParameters = "countryGuid";
             TreeNode<NavigationNode> stateEditT = stateListT.AddChild(stateEdit);

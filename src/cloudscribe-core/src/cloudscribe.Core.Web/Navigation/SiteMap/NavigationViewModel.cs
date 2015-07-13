@@ -14,21 +14,28 @@ namespace cloudscribe.Core.Web.Navigation
     public class NavigationViewModel
     {
         public NavigationViewModel(
+            string navigationFilterName,
             HttpContext context,
             TreeNode<NavigationNode> rootNode,
             INavigationNodePermissionResolver permissionResolver)
         {
+            this.navigationFilterName = navigationFilterName;
             this.context = context;
             this.RootNode = rootNode;
             this.permissionResolver = permissionResolver;
 
-            ShouldAllowView = permissionResolver.ShouldAllowView;
+            removalFilters.Add(FilterIsAllowed);
+            removalFilters.Add(permissionResolver.ShouldAllowView);
+
+            
             
         }
 
+        private string navigationFilterName;
         private HttpContext context;
         private string requestPath;
         private INavigationNodePermissionResolver permissionResolver;
+        private List<Func<TreeNode<NavigationNode>, bool>> removalFilters = new List<Func<TreeNode<NavigationNode>, bool>>();
 
         public TreeNode<NavigationNode> RootNode { get; private set; }
 
@@ -66,22 +73,40 @@ namespace cloudscribe.Core.Web.Navigation
 
         public string AdjustUrl(TreeNode<NavigationNode> node)
         {
-            //string key = "breadcrumb-" + node.Value.Key;
-            //if (context.Items[key] != null)
-            //{
-            //    BreadcrumbAdjuster adjuster = (BreadcrumbAdjuster)context.Items[key];
-            //    if (adjuster.AdjustedText.Length > 0) { return adjuster.AdjustedText; }
-            //}
-            //TODO: figure out how to store multiple routeparams and merge them into the url
-            // or update them if they are already there
-
+            string key = "breadcrumb-" + node.Value.Key;
+            if (context.Items[key] != null)
+            {
+                BreadcrumbAdjuster adjuster = (BreadcrumbAdjuster)context.Items[key];
+                if (adjuster.AdjustedUrl.Length > 0) { return adjuster.AdjustedUrl; }
+            }
+       
             return node.Value.Url;
         }
 
 
-        public Func<TreeNode<NavigationNode>, bool> ShouldAllowView { get; private set; } = null;
+        //public Func<TreeNode<NavigationNode>, bool> ShouldAllowView { get; private set; } = null;
 
-        
+        public bool ShouldAllowView(TreeNode<NavigationNode> node)
+        {
+            foreach(var filter in removalFilters)
+            {
+                if (!filter.Invoke(node)) { return false; }
+            }
+
+            return true;
+        }
+
+        private bool FilterIsAllowed(TreeNode<NavigationNode> node)
+        {
+            if (node.Value.ComponentVisibility.Length == 0) { return true; }
+            if (navigationFilterName.Length == 0) { return false; }
+            if (node.Value.ComponentVisibility.Contains(navigationFilterName)) { return true; }
+           
+            return false;
+        }
+
+
+
 
     }
 }

@@ -1,18 +1,4 @@
-﻿
-@{
-    bool startingNodeInChildLevel = true;
-    bool showStartingNode = false;
-    int maxDepth = 2;
-}
+﻿@using cloudscribe.Core.Web.Navigation;
 
 <h2>@ViewBag.Heading</h2>
-@await Component.InvokeAsync("Navigation", "ChildTree")
-@*
-    @Html.MvcSiteMap().Menu("VerticalMenuHelperModel",
-    Html.MvcSiteMap().SiteMap.FindSiteMapNodeFromKey("SiteAdmin"),
-        startingNodeInChildLevel,
-        showStartingNode,
-        maxDepth,
-        new { name = "ChildMenu" }
-        )
-*@
+@await Component.InvokeAsync("Navigation", "ChildTree", NamedNavigationFilters.ChildTree)

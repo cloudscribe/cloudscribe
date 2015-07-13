@@ -23,7 +23,7 @@ namespace cloudscribe.Core.Web.Navigation
         private NavigationTreeBuilder builder;
         INavigationNodePermissionResolver permissionResolver;
 
-        public async Task<IViewComponentResult> InvokeAsync(string viewName)
+        public async Task<IViewComponentResult> InvokeAsync(string viewName, string filterName)
         {
             // TODO: await something
             // make builder async
@@ -31,6 +31,7 @@ namespace cloudscribe.Core.Web.Navigation
             TreeNode<NavigationNode> rootNode = builder.GetTree();
 
             NavigationViewModel model = new NavigationViewModel(
+                filterName,
                 Request.HttpContext,
                 rootNode,
                 permissionResolver);

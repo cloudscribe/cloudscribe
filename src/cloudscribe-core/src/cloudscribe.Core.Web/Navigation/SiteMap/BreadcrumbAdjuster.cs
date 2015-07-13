@@ -27,6 +27,8 @@ namespace cloudscribe.Core.Web.Navigation
 
         public string AdjustedText { get; set; } = string.Empty;
 
+        public string AdjustedUrl { get; set; } = string.Empty;
+
         public void AddToContext()
         {
             if(string.IsNullOrWhiteSpace(KeyToAdjust)) { return; }
