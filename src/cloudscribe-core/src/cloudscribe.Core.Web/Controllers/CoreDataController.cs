@@ -30,21 +30,19 @@ namespace cloudscribe.Core.Web.Controllers
         public CoreDataController(
             ISiteResolver siteResolver,
             IGeoRepository geoRepository,
-            IConfiguration configuration,
-            IApplicationEnvironment appEnv
+            IConfiguration configuration
             )
         {
             Site = siteResolver.Resolve();
             geoRepo = geoRepository;
             config = configuration;
-            this.appEnv = appEnv;
+            
         }
 
         private ISiteSettings Site;
         private IGeoRepository geoRepo;
         private IConfiguration config;
-        private IApplicationEnvironment appEnv;
-
+        
         //disable warning about not really being async
         // we know it is not, it is not needed to hit the db in these
 #pragma warning disable 1998
@@ -55,8 +53,9 @@ namespace cloudscribe.Core.Web.Controllers
         {
             ViewBag.SiteName = Site.SiteName;
             ViewBag.Title = "Core Data Administration";
-            ViewBag.Heading = "Core Data Administration" + appEnv.ApplicationBasePath;
+            ViewBag.Heading = "Core Data Administration";
 
+            
             return View();
 
 
@@ -104,11 +103,13 @@ namespace cloudscribe.Core.Web.Controllers
                 IGeoCountry country = await geoRepo.FetchCountry(guid.Value);
                 model = GeoCountryViewModel.FromIGeoCountry(country);
 
-                //var node = SiteMaps.Current.FindSiteMapNodeFromKey("CountryEdit");
-                //if (node != null)
-                //{
-                //    node.Title = "Edit Country";
-                //}
+                NavigationNodeAdjuster currentCrumbAdjuster = new NavigationNodeAdjuster(Request.HttpContext);
+                currentCrumbAdjuster.KeyToAdjust = "CountryEdit";
+                currentCrumbAdjuster.AdjustedText = "Edit Country";
+                currentCrumbAdjuster.ViewFilterName = NamedNavigationFilters.Breadcrumbs; // this is default but showing here for readers of code 
+                currentCrumbAdjuster.AddToContext();
+
+               
             }
             else
             {
@@ -223,21 +224,19 @@ namespace cloudscribe.Core.Web.Controllers
             NavigationNodeAdjuster currentCrumbAdjuster = new NavigationNodeAdjuster(Request.HttpContext);
             currentCrumbAdjuster.KeyToAdjust = "StateListPage";
             currentCrumbAdjuster.AdjustedText = model.Country.Name + " States";
+            currentCrumbAdjuster.AdjustedUrl = Request.Path.ToString()
+                + "?countryGuid=" + country.Guid.ToString()
+                + "&crp=" + crp.ToInvariantString();
             currentCrumbAdjuster.ViewFilterName = NamedNavigationFilters.Breadcrumbs; // this is default but showing here for readers of code 
             currentCrumbAdjuster.AddToContext();
 
-            // too bad this does not work
-            //node = SiteMaps.Current.FindSiteMapNodeFromKey("CountryListPage");
-            //if (node != null)
-            //{
-            //    node.RouteValues.Add("pageNumber", countryReturnPageNumber);
-
-            //}
-
-
-
-
-
+            NavigationNodeAdjuster countryListCrumbAdjuster = new NavigationNodeAdjuster(Request.HttpContext);
+            countryListCrumbAdjuster.KeyToAdjust = "CountryListPage";
+            countryListCrumbAdjuster.AdjustedUrl = Request.Path.ToString().Replace("StateListPage", "CountryListPage")
+                + "?pageNumber=" + crp.ToInvariantString();
+            countryListCrumbAdjuster.ViewFilterName = NamedNavigationFilters.Breadcrumbs; // this is default but showing here for readers of code 
+            countryListCrumbAdjuster.AddToContext();
+            
             if (ajaxGrid)
             {
                 return PartialView("StateListGridPartial", model);
@@ -360,6 +359,12 @@ namespace cloudscribe.Core.Web.Controllers
 
             IGeoCountry country = await geoRepo.FetchCountry(countryGuid);
             model.Country = GeoCountryViewModel.FromIGeoCountry(country);
+
+            NavigationNodeAdjuster currentCrumbAdjuster = new NavigationNodeAdjuster(Request.HttpContext);
+            currentCrumbAdjuster.KeyToAdjust = "StateEdit";
+            currentCrumbAdjuster.AdjustedText = model.Heading;
+            currentCrumbAdjuster.ViewFilterName = NamedNavigationFilters.Breadcrumbs; // this is default but showing here for readers of code 
+            currentCrumbAdjuster.AddToContext();
 
             //var node = SiteMaps.Current.FindSiteMapNodeFromKey("StateEdit");
             //if (node != null)
