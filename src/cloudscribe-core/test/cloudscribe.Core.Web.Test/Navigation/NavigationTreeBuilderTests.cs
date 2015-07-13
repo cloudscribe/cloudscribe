@@ -34,7 +34,7 @@ namespace cloudscribe.Core.Web.Test.Navigation
             NavigationTreeBuilder builder = new NavigationTreeBuilder();
 
             //Act
-            string json = builder.GetTree().ToJson();
+            string json = builder.GetTree().ToJsonIndented();
 
 
 
@@ -46,9 +46,38 @@ namespace cloudscribe.Core.Web.Test.Navigation
             //    stream.WriteLine(json);
             //}
 
-                //System.Console.WriteLine(json);
+            //System.Console.WriteLine(json);
 
             //output.WriteLine(json);
+        }
+
+        [Fact]
+        public void Can_Roundtrip_Serialize_To_Json()
+        {
+            // Assemble
+            NavigationTreeBuilder builder = new NavigationTreeBuilder();
+            TreeNode<NavigationNode> rootNode = builder.GetTree();
+
+            //Act
+            string json = rootNode.ToJsonIndented();
+
+            TreeNode<NavigationNode> roundTripNode = builder.BuildTreeFromJson(json);
+
+            string json2 = roundTripNode.ToJsonIndented();
+
+            //using (StreamWriter stream = File.CreateText("dumpjson-roundtrip.txt"))
+            //{
+            //    stream.WriteLine(json2);
+            //}
+
+            //Assert
+
+            Assert.True(roundTripNode != null);
+
+            // currently fails
+            Assert.True(roundTripNode.Children.Count > 2);
+
+
         }
 
     }

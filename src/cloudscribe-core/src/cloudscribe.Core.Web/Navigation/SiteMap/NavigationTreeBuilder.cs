@@ -49,13 +49,7 @@ namespace cloudscribe.Core.Web.Navigation
             // or we could add extension methods to NavigationNode to access things from SiteMapNode where needed
             // we are making a conscious choice here that when we want to serialize-deserialze nodes
             // we are limiting to the properties on NavigationNode
-
-            //SiteMapNode rootNode = new SiteMapNode();
-            //rootNode.IsRootNode = true;
-            //rootNode.Key = "RootNode";
-
-           // TreeNode<NavigationNode> treeRoot = new TreeNode<NavigationNode>(rootNode);
-
+            
             ExtendedNavigationNode home = new ExtendedNavigationNode();
             home.Key = "Home";
             home.ParentKey = "RootNode";
@@ -64,7 +58,6 @@ namespace cloudscribe.Core.Web.Navigation
             home.Text = "Home";
             home.Url = home.ResolveUrl();
             home.IsRootNode = true;
-            // TreeNode<NavigationNode>  tHome = treeRoot.AddChild(home);
             TreeNode<NavigationNode> treeRoot = new TreeNode<NavigationNode>(home);
 
             ExtendedNavigationNode about = new ExtendedNavigationNode();
@@ -318,12 +311,17 @@ namespace cloudscribe.Core.Web.Navigation
             return treeRoot;
         }
 
-        //public TreeNode<NavigationNode> BuildTreeFromJson(string jsonString)
-        //{
+        public TreeNode<NavigationNode> BuildTreeFromJson(string jsonString)
+        {
+            TreeNode<NavigationNode> rootNode =
+                    JsonConvert.DeserializeObject<TreeNode<NavigationNode>>(jsonString, new NavigationTreeConverter());
 
-        //}
 
-        
+            return rootNode;
+
+        }
+
+
 
     }
 

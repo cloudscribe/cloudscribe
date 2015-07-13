@@ -112,10 +112,22 @@ namespace cloudscribe.Core.Web.Navigation
 
 
 
-        public static string ToJson(this TreeNode<NavigationNode> node)
+        public static string ToJsonIndented(this TreeNode<NavigationNode> node)
         {
-         
-            return JsonConvert.SerializeObject(node, Formatting.Indented);
+            return JsonConvert.SerializeObject(
+                node,
+                Formatting.Indented,
+                new JsonSerializerSettings { DefaultValueHandling = DefaultValueHandling.Ignore }
+                );
+        }
+
+        public static string ToJsonCompact(this TreeNode<NavigationNode> node)
+        {
+            return JsonConvert.SerializeObject(
+                node,
+                Formatting.None,
+                new JsonSerializerSettings { DefaultValueHandling = DefaultValueHandling.Ignore }
+                );
         }
     }
 }

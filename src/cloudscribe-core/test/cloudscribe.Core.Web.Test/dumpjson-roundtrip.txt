@@ -38,8 +38,7 @@
         "Text": "Administration",
         "Url": "~/SiteAdmin/Index",
         "Controller": "SiteAdmin",
-        "Action": "Index",
-        "ViewRoles": "Admins,Content Administrators"
+        "Action": "Index"
       },
       "Children": [
         {
@@ -51,8 +50,7 @@
             "Controller": "SiteAdmin",
             "Action": "SiteInfo",
             "PreservedRouteParameters": "siteGuid",
-            "ComponentVisibility": "breadcrumbs,childtree",
-            "ViewRoles": "Admins,Content Administrators"
+            "ComponentVisibility": "breadcrumbs,childtree"
           },
           "Children": [
             {
@@ -64,8 +62,7 @@
                 "Controller": "SiteAdmin",
                 "Action": "SiteHostMappings",
                 "PreservedRouteParameters": "siteGuid",
-                "ComponentVisibility": "breadcrumbs",
-                "ViewRoles": "Admins,Content Administrators"
+                "ComponentVisibility": "breadcrumbs"
               },
               "Children": []
             }
@@ -79,8 +76,7 @@
             "Url": "~/SiteAdmin/SiteList",
             "Controller": "SiteAdmin",
             "Action": "SiteList",
-            "ComponentVisibility": "breadcrumbs,childtree",
-            "ViewRoles": "ServerAdmins"
+            "ComponentVisibility": "breadcrumbs,childtree"
           },
           "Children": [
             {
@@ -91,8 +87,7 @@
                 "Url": "~/SiteAdmin/NewSite",
                 "Controller": "SiteAdmin",
                 "Action": "NewSite",
-                "ComponentVisibility": "breadcrumbs,childtree",
-                "ViewRoles": "ServerAdmins"
+                "ComponentVisibility": "breadcrumbs,childtree"
               },
               "Children": []
             }
@@ -106,8 +101,7 @@
             "Url": "~/UserAdmin/Index",
             "Controller": "UserAdmin",
             "Action": "Index",
-            "ComponentVisibility": "breadcrumbs,childtree",
-            "ViewRoles": "ServerAdmins"
+            "ComponentVisibility": "breadcrumbs,childtree"
           },
           "Children": [
             {
@@ -118,8 +112,7 @@
                 "Url": "~/UserAdmin/UserEdit",
                 "Controller": "UserAdmin",
                 "Action": "UserEdit",
-                "ComponentVisibility": "breadcrumbs,childtree",
-                "ViewRoles": "Admins"
+                "ComponentVisibility": "breadcrumbs,childtree"
               },
               "Children": []
             },
@@ -131,8 +124,7 @@
                 "Url": "~/UserAdmin/Search",
                 "Controller": "UserAdmin",
                 "Action": "Search",
-                "ComponentVisibility": "breadcrumbs",
-                "ViewRoles": "Admins"
+                "ComponentVisibility": "breadcrumbs"
               },
               "Children": []
             },
@@ -144,8 +136,7 @@
                 "Url": "~/UserAdmin/IpSearch",
                 "Controller": "UserAdmin",
                 "Action": "IpSearch",
-                "ComponentVisibility": "breadcrumbs",
-                "ViewRoles": "Admins"
+                "ComponentVisibility": "breadcrumbs"
               },
               "Children": []
             }
@@ -159,8 +150,7 @@
             "Url": "~/RoleAdmin/Index",
             "Controller": "RoleAdmin",
             "Action": "Index",
-            "ComponentVisibility": "breadcrumbs,childtree",
-            "ViewRoles": "Admins"
+            "ComponentVisibility": "breadcrumbs,childtree"
           },
           "Children": [
             {
@@ -172,8 +162,7 @@
                 "Controller": "RoleAdmin",
                 "Action": "RoleMembers",
                 "PreservedRouteParameters": "roleId,pageNumber,pageSize",
-                "ComponentVisibility": "breadcrumbs",
-                "ViewRoles": "Admins"
+                "ComponentVisibility": "breadcrumbs"
               },
               "Children": []
             },
@@ -186,8 +175,7 @@
                 "Controller": "RoleAdmin",
                 "Action": "RoleEdit",
                 "PreservedRouteParameters": "roleIde",
-                "ComponentVisibility": "breadcrumbs,childtree",
-                "ViewRoles": "Admins"
+                "ComponentVisibility": "breadcrumbs,childtree"
               },
               "Children": []
             }
@@ -201,8 +189,7 @@
             "Url": "~/CoreData/Index",
             "Controller": "CoreData",
             "Action": "Index",
-            "ComponentVisibility": "breadcrumbs,childtree",
-            "ViewRoles": "ServerAdmins"
+            "ComponentVisibility": "breadcrumbs,childtree"
           },
           "Children": [
             {
@@ -213,8 +200,7 @@
                 "Url": "~/CoreData/CurrencyList",
                 "Controller": "CoreData",
                 "Action": "CurrencyList",
-                "ComponentVisibility": "breadcrumbs,childtree",
-                "ViewRoles": "ServerAdmins"
+                "ComponentVisibility": "breadcrumbs,childtree"
               },
               "Children": [
                 {
@@ -226,8 +212,7 @@
                     "Controller": "CoreData",
                     "Action": "CurrencyEdit",
                     "PreservedRouteParameters": "currencyGuid",
-                    "ComponentVisibility": "breadcrumbs",
-                    "ViewRoles": "ServerAdmins"
+                    "ComponentVisibility": "breadcrumbs"
                   },
                   "Children": []
                 }
@@ -241,8 +226,7 @@
                 "Url": "~/CoreData/CountryListPage",
                 "Controller": "CoreData",
                 "Action": "CountryListPage",
-                "ComponentVisibility": "breadcrumbs,childtree",
-                "ViewRoles": "ServerAdmins"
+                "ComponentVisibility": "breadcrumbs,childtree"
               },
               "Children": [
                 {
@@ -254,8 +238,7 @@
                     "Controller": "CoreData",
                     "Action": "CountryEdit",
                     "PreservedRouteParameters": "guid",
-                    "ComponentVisibility": "breadcrumbs,childtree",
-                    "ViewRoles": "ServerAdmins"
+                    "ComponentVisibility": "breadcrumbs,childtree"
                   },
                   "Children": []
                 },
@@ -268,8 +251,7 @@
                     "Controller": "CoreData",
                     "Action": "StateListPage",
                     "PreservedRouteParameters": "countryGuid",
-                    "ComponentVisibility": "breadcrumbs",
-                    "ViewRoles": "ServerAdmins"
+                    "ComponentVisibility": "breadcrumbs"
                   },
                   "Children": [
                     {
@@ -281,8 +263,7 @@
                         "Controller": "CoreData",
                         "Action": "StateEdit",
                         "PreservedRouteParameters": "countryGuid",
-                        "ComponentVisibility": "breadcrumbs",
-                        "ViewRoles": "ServerAdmins"
+                        "ComponentVisibility": "breadcrumbs"
                       },
                       "Children": []
                     }
