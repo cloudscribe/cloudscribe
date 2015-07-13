@@ -9,53 +9,7 @@
     // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
     // Author: Joe Audette
     // Created 2015-07-11
-    // Last Modified: 2015-07-12
-}
-
-@functions {
-
-    public string RenderChildren(TreeNode<NavigationNode> node)
-    {
-        var sb = new StringBuilder();
-
-        var ul = new TagBuilder("ul");
-       // ul.AddCssClass("dropdown-menu");
-        ul.Attributes.Add("role", "menu");
-
-        foreach (var childNode in node.Children)
-        {
-            if (!Model.ShouldAllowView(childNode)) { continue; }
-
-            var listItem = new TagBuilder("li");
-            
-            var link = new TagBuilder("a");
-            link.Attributes.Add("href", Url.Content(childNode.Value.Url));
-
-            if (childNode.Children.Count == 0)
-            {
-                link.InnerHtml = childNode.Value.Text;
-                listItem.InnerHtml = link.ToString(TagRenderMode.Normal);
-            }
-            else
-            {
-                link.InnerHtml = childNode.Value.Text;
-
-               // listItem.AddCssClass("dropdown-submenu");
-                // recursion
-                listItem.InnerHtml =
-                    link.ToString(TagRenderMode.Normal)
-                    + RenderChildren(childNode)
-                    ;
-            }
-
-
-            sb.AppendLine(listItem.ToString(TagRenderMode.Normal));
-        }
-        ul.InnerHtml = sb.ToString();
-        return ul.ToString(TagRenderMode.Normal);
-    }
-
-
+    // Last Modified: 2015-07-13
 }
 
 @if (Model.CurrentNode.Children.Count > 0)
@@ -63,7 +17,6 @@
     @:<ul>
     foreach (var node in Model.CurrentNode.Children)
     {
-
         if (!Model.ShouldAllowView(node)) { continue; }
         if (node.Children.Count == 0)
         {
@@ -74,13 +27,10 @@
         {
             @:
             <li><a href="@Url.Content(node.Value.Url)">@node.Value.Text</a>
-            @Html.Raw(RenderChildren(node))
+            @Model.UpdateTempNode(node)
+            @Html.Partial("NavigationNodeChildTreePartial", Model) 
             </li>
-
         }
-
-
     }
     @:</ul>
 }
-

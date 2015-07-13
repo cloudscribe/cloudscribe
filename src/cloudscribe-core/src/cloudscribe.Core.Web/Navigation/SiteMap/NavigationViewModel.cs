@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-10
-// Last Modified:			2015-07-12
+// Last Modified:			2015-07-13
 // 
 
 using Microsoft.AspNet.Http;
@@ -26,20 +26,28 @@ namespace cloudscribe.Core.Web.Navigation
 
             removalFilters.Add(FilterIsAllowed);
             removalFilters.Add(permissionResolver.ShouldAllowView);
+            removalFilters.Add(IsAllowedByAdjuster);
 
-            
-            
+
+
         }
 
         private string navigationFilterName;
         private HttpContext context;
-        private string requestPath;
         private INavigationNodePermissionResolver permissionResolver;
         private List<Func<TreeNode<NavigationNode>, bool>> removalFilters = new List<Func<TreeNode<NavigationNode>, bool>>();
 
         public TreeNode<NavigationNode> RootNode { get; private set; }
 
+        /// <summary>
+        /// a place to temporarily stash a node for processing by a template
+        /// </summary>
+        public TreeNode<NavigationNode> TempNode { get; private set; } = null;
+
         private TreeNode<NavigationNode> currentNode = null;
+        /// <summary>
+        /// the node corresponding to the current request url
+        /// </summary>
         public TreeNode<NavigationNode> CurrentNode
         {
             // lazy load
@@ -61,11 +69,15 @@ namespace cloudscribe.Core.Web.Navigation
 
         public string AdjustText(TreeNode<NavigationNode> node)
         {
-            string key = "breadcrumb-" + node.Value.Key;
+            string key = NavigationNodeAdjuster.KeyPrefix + node.Value.Key;
             if (context.Items[key] != null)
             {
-                BreadcrumbAdjuster adjuster = (BreadcrumbAdjuster)context.Items[key];
-                if (adjuster.AdjustedText.Length > 0) { return adjuster.AdjustedText; }
+                NavigationNodeAdjuster adjuster = (NavigationNodeAdjuster)context.Items[key];
+                if(adjuster.ViewFilterName == navigationFilterName)
+                {
+                    if (adjuster.AdjustedText.Length > 0) { return adjuster.AdjustedText; }
+                }
+                
             }
 
             return node.Value.Text;
@@ -73,11 +85,15 @@ namespace cloudscribe.Core.Web.Navigation
 
         public string AdjustUrl(TreeNode<NavigationNode> node)
         {
-            string key = "breadcrumb-" + node.Value.Key;
+            string key = NavigationNodeAdjuster.KeyPrefix + node.Value.Key;
+
             if (context.Items[key] != null)
             {
-                BreadcrumbAdjuster adjuster = (BreadcrumbAdjuster)context.Items[key];
-                if (adjuster.AdjustedUrl.Length > 0) { return adjuster.AdjustedUrl; }
+                NavigationNodeAdjuster adjuster = (NavigationNodeAdjuster)context.Items[key];
+                if (adjuster.ViewFilterName == navigationFilterName)
+                {
+                    if (adjuster.AdjustedUrl.Length > 0) { return adjuster.AdjustedUrl; }
+                }
             }
        
             return node.Value.Url;
@@ -91,6 +107,38 @@ namespace cloudscribe.Core.Web.Navigation
             foreach(var filter in removalFilters)
             {
                 if (!filter.Invoke(node)) { return false; }
+            }
+
+            return true;
+        }
+
+        public bool HasVisibleChildren(TreeNode<NavigationNode> node)
+        {
+            foreach(var childNode in node.Children)
+            {
+                if(ShouldAllowView(childNode)) { return true; }
+            }
+
+            return false;
+        }
+
+        public string UpdateTempNode(TreeNode<NavigationNode> node)
+        {
+            TempNode = node;
+
+            return string.Empty;
+        }
+
+        private bool IsAllowedByAdjuster(TreeNode<NavigationNode> node)
+        {
+            string key = NavigationNodeAdjuster.KeyPrefix + node.Value.Key;
+            if (context.Items[key] != null)
+            {
+                NavigationNodeAdjuster adjuster = (NavigationNodeAdjuster)context.Items[key];
+                if (adjuster.ViewFilterName == navigationFilterName)
+                {
+                    if(adjuster.AdjustRemove) { return false; }
+                }
             }
 
             return true;

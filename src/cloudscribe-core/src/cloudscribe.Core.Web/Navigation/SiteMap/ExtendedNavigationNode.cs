@@ -2,22 +2,18 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-07
-// Last Modified:			2015-07-07
+// Last Modified:			2015-07-13
 // 
 
 
-using cloudscribe.Core.Web.Components;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Navigation
 {
     //http://stackoverflow.com/questions/66893/tree-data-structure-in-c-sharp
 
 
-    public class SiteMapNode : NavigationNode, 
+    public class ExtendedNavigationNode : NavigationNode, 
         INavigationNodeSeoSettings, 
         INavigationNodeEditPermissionMeta,
         INavigationNodeDesignMeta,

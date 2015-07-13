@@ -554,14 +554,15 @@ namespace cloudscribe.Core.Web.Controllers
             {
                 bool folderResult = await newSite.EnsureSiteFolder(siteRepo);
 
-                // for folder sites we need routes that match the folder
-                // which are normally created during app startup
-                // can we add routes here? or do we need to force the app to recycle?
-                // this seems to work, but we really do need to restart
-                // so that the per folder authentication gets setup too
-                //cloudscribe.Web.Routing.RouteRegistrar.AddDefaultRouteForNewSiteFolder(folder.FolderName);
+            // for folder sites we need routes that match the folder
+            // which are normally created during app startup
+            // can we add routes here? or do we need to force the app to recycle?
+            // this seems to work, but we really do need to restart
+            // so that the per folder authentication gets setup too
+            //cloudscribe.Web.Routing.RouteRegistrar.AddDefaultRouteForNewSiteFolder(folder.FolderName);
 
-                //startup.TriggerStartup();
+            //startup.TriggerStartup();
+            //http://stackoverflow.com/questions/31339896/replacement-httpruntime-unloadappdomain-in-asp-net-5
 
             }
 

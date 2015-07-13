@@ -57,4 +57,64 @@ Editor templates are searched in the following way according to Pro MVC 5 book
 8. If all else fails the Object template will be used, subject to the rule that scaffolding is not recursive
 
 
+example of Razor function
+@helper is no longer supported but @function is
+I used this function at first inside BootstrapTopNav.cshtml
+but I didn't like it since it is not easy to change the template without editing C# code
+so I managed to replace it with a partial view ChildDropdownPartial.cshtml which is called from BootstrapTopNav.cshtml, then called recursively 
+from inside ChildDropdownPartial.cshtml
+
+
+@functions {
+
+    public string BuildDropDown(TreeNode<NavigationNode> node)
+    {
+        var sb = new StringBuilder();
+
+        var ul = new TagBuilder("ul");
+        ul.AddCssClass("dropdown-menu");
+        ul.Attributes.Add("role", "menu");
+
+        foreach (var childNode in node.Children)
+        {
+            if (!Model.ShouldAllowView(childNode)) { continue; }
+
+            var listItem = new TagBuilder("li");
+
+            if (childNode.Value.Text == "Separator")
+            {
+                listItem.AddCssClass("divider");
+                sb.AppendLine(listItem.ToString(TagRenderMode.Normal));
+                continue;
+            }
+
+            var link = new TagBuilder("a");
+            link.Attributes.Add("href", Url.Content(childNode.Value.Url));
+
+            if (!Model.HasVisibleChildren(childNode))
+            {
+                link.InnerHtml = childNode.Value.Text;
+                listItem.InnerHtml = link.ToString(TagRenderMode.Normal);
+            }
+            else
+            {
+                link.InnerHtml = childNode.Value.Text;
+
+                listItem.AddCssClass("dropdown-submenu");
+                // recursion
+                listItem.InnerHtml =
+                    link.ToString(TagRenderMode.Normal)
+                    + BuildDropDown(childNode)
+                    ;
+            }
+
+
+            sb.AppendLine(listItem.ToString(TagRenderMode.Normal));
+        }
+        ul.InnerHtml = sb.ToString();
+        return ul.ToString(TagRenderMode.Normal);
+    }
+
+
+        }
 

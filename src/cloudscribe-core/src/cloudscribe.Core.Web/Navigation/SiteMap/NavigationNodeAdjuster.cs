@@ -2,24 +2,22 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-12
-// Last Modified:			2015-07-12
+// Last Modified:			2015-07-13
 // 
 
 
 using Microsoft.AspNet.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Navigation
 {
-    public class BreadcrumbAdjuster
+    public class NavigationNodeAdjuster
     {
-        public BreadcrumbAdjuster(HttpContext context)
+        public NavigationNodeAdjuster(HttpContext context)
         {
             this.context = context;
         }
+
+        public const string KeyPrefix = "nav-adjuster-";
 
         private HttpContext context;
 
@@ -29,12 +27,20 @@ namespace cloudscribe.Core.Web.Navigation
 
         public string AdjustedUrl { get; set; } = string.Empty;
 
+        public bool AdjustRemove { get; set; } = false;
+
+        /// <summary>
+        /// breadcrumb adjustment is the most common  expected usage scenario so that is the default value
+        /// but other named navigation filters could be adjusted by changing the ViewFilterName here
+        /// and adding Model.Adjust* logic in the related razor file
+        /// </summary>
+        public string ViewFilterName { get; set; } = NamedNavigationFilters.Breadcrumbs;
+
         public void AddToContext()
         {
             if(string.IsNullOrWhiteSpace(KeyToAdjust)) { return; }
-           
-            string key = "breadcrumb-" + KeyToAdjust;
-            if(context.Items[key] == null)
+            string key = KeyPrefix + KeyToAdjust;
+            if (context.Items[key] == null)
             {
                 context.Items[key] = this;
             }

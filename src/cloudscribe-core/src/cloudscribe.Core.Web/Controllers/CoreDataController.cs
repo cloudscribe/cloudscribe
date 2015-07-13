@@ -217,9 +217,10 @@ namespace cloudscribe.Core.Web.Controllers
             model.CountryListReturnPageNumber = crp;
 
             // below we are just manipiulating the bread crumbs
-            BreadcrumbAdjuster currentCrumbAdjuster = new BreadcrumbAdjuster(Request.HttpContext);
+            NavigationNodeAdjuster currentCrumbAdjuster = new NavigationNodeAdjuster(Request.HttpContext);
             currentCrumbAdjuster.KeyToAdjust = "StateListPage";
             currentCrumbAdjuster.AdjustedText = model.Country.Name + " States";
+            currentCrumbAdjuster.ViewFilterName = NamedNavigationFilters.Breadcrumbs; // this is default but showing here for readers of code 
             currentCrumbAdjuster.AddToContext();
 
             // too bad this does not work

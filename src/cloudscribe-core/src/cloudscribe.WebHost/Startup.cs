@@ -40,6 +40,9 @@ namespace cloudscribe.WebHost
                 .AddJsonFile("config.json")
                 .AddJsonFile($"config.{env.EnvironmentName}.json", optional: true);
 
+            //appEnv.
+            
+
             if (env.IsEnvironment("Development"))
             {
                 // This reads the configuration keys from the secret store.
