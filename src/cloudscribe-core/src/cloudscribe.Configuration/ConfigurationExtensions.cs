@@ -154,22 +154,22 @@ namespace cloudscribe.Configuration
 
         public static string SetupInstallScriptPathFormat(this IConfiguration config)
         {
-            return config.GetOrDefault("AppSettings:SetupInstallScriptPathFormat", "~/Config/applications/{0}/install/{1}/");
+            return config.GetOrDefault("AppSettings:SetupInstallScriptPathFormat", "/config/applications/{0}/install/{1}");
         }
 
         public static string SetupUpgradeScriptPathFormat(this IConfiguration config)
         {
-            return config.GetOrDefault("AppSettings:SetupUpgradeScriptPathFormat", "~/Config/applications/{0}/upgrade/{1}/");
+            return config.GetOrDefault("AppSettings:SetupUpgradeScriptPathFormat", "/config/applications/{0}/upgrade/{1}");
         }
 
         public static string SetupHeaderConfigPath(this IConfiguration config)
         {
-            return config.GetOrDefault("AppSettings:SetupHeaderConfigPath", "~/Config/Setup/SetupHeader.config");
+            return config.GetOrDefault("AppSettings:SetupHeaderConfigPath", "/config/setup/SetupHeader.config");
         }
 
         public static string SetupHeaderConfigPathRtl(this IConfiguration config)
         {
-            return config.GetOrDefault("AppSettings:SetupHeaderConfigPathRtl", "~/Config/Setup/SetupHeader-rtl.config");
+            return config.GetOrDefault("AppSettings:SetupHeaderConfigPathRtl", "/config/setup/SetupHeader-rtl.config");
         }
 
         public static bool TryToCreateMsSqlDatabase(this IConfiguration config)

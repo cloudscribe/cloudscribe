@@ -14,7 +14,7 @@ using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.Framework.Configuration;
-//using MvcSiteMapProvider;
+using Microsoft.Framework.Runtime;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -30,17 +30,20 @@ namespace cloudscribe.Core.Web.Controllers
         public CoreDataController(
             ISiteResolver siteResolver,
             IGeoRepository geoRepository,
-            IConfiguration configuration
+            IConfiguration configuration,
+            IApplicationEnvironment appEnv
             )
         {
             Site = siteResolver.Resolve();
             geoRepo = geoRepository;
             config = configuration;
+            this.appEnv = appEnv;
         }
 
         private ISiteSettings Site;
         private IGeoRepository geoRepo;
         private IConfiguration config;
+        private IApplicationEnvironment appEnv;
 
         //disable warning about not really being async
         // we know it is not, it is not needed to hit the db in these
@@ -52,7 +55,7 @@ namespace cloudscribe.Core.Web.Controllers
         {
             ViewBag.SiteName = Site.SiteName;
             ViewBag.Title = "Core Data Administration";
-            ViewBag.Heading = "Core Data Administration";
+            ViewBag.Heading = "Core Data Administration" + appEnv.ApplicationBasePath;
 
             return View();
 

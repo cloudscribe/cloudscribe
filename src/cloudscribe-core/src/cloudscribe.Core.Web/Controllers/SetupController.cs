@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-01-10
-// Last Modified:			2015-06-23
+// Last Modified:			2015-07-13
 // 
 
 using cloudscribe.Configuration;
@@ -14,6 +14,7 @@ using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc;
 using Microsoft.Framework.Configuration;
 using Microsoft.Framework.Logging;
+using Microsoft.Framework.Runtime;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -30,6 +31,7 @@ namespace cloudscribe.Setup.Controllers
        
         public SetupController(
             IHostingEnvironment env,
+            IApplicationEnvironment appEnv,
             ILoggerFactory loggerFactory,
             IConfiguration configuration,
             IDb dbImplementation,
@@ -52,8 +54,11 @@ namespace cloudscribe.Setup.Controllers
             userRepository = userRepositoryImplementation;
             logFactory = loggerFactory;
             log = loggerFactory.CreateLogger(typeof(SetupController).FullName);
+            appBasePath = appEnv.ApplicationBasePath;
             //versionProviders = db.VersionProviders;
         }
+
+        private string appBasePath;
 
         private IHostingEnvironment hostingEnvironment;
         private ILoggerFactory logFactory;
@@ -225,9 +230,11 @@ namespace cloudscribe.Setup.Controllers
 
             // install other apps
 
-            String pathToApplicationsFolder
-                = hostingEnvironment.MapPath(
-                "~/Config/applications/");
+            //string pathToApplicationsFolder
+            //    = hostingEnvironment.MapPath(
+            //    "~/Config/applications/");
+
+            string pathToApplicationsFolder = appBasePath + "/config/applications".Replace("/",Path.DirectorySeparatorChar.ToString());
 
             if (!Directory.Exists(pathToApplicationsFolder))
             {
@@ -336,11 +343,17 @@ namespace cloudscribe.Setup.Controllers
             //    //versionToStopAt = DatabaseHelper.DBCodeVersion (); ;
             //}
 
-            string pathToScriptFolder = hostingEnvironment.MapPath(
-                string.Format(config.SetupInstallScriptPathFormat(),
-                applicationName,
-                db.DBPlatform.ToLowerInvariant())
-                );
+            //string pathToScriptFolder = hostingEnvironment.MapPath(
+            //    string.Format(config.SetupInstallScriptPathFormat(),
+            //    applicationName,
+            //    db.DBPlatform.ToLowerInvariant())
+            //    );
+
+            string pathToScriptFolder = appBasePath
+               + string.Format(config.SetupInstallScriptPathFormat().Replace("/",Path.DirectorySeparatorChar.ToString()),
+               applicationName,
+               db.DBPlatform.ToLowerInvariant())
+               ;
 
             //String pathToScriptFolder
             //    = hostingEnvironment.MapPath(
@@ -570,11 +583,17 @@ namespace cloudscribe.Setup.Controllers
             //        + db.DBPlatform.ToLowerInvariant()
             //        + "/");
 
-            string pathToScriptFolder = hostingEnvironment.MapPath(
-                string.Format(config.SetupUpgradeScriptPathFormat(),
+            //string pathToScriptFolder = hostingEnvironment.MapPath(
+            //    string.Format(config.SetupUpgradeScriptPathFormat(),
+            //    applicationName,
+            //    db.DBPlatform.ToLowerInvariant())
+            //    );
+
+            string pathToScriptFolder = appBasePath
+                + string.Format(config.SetupUpgradeScriptPathFormat().Replace("/", Path.DirectorySeparatorChar.ToString()),
                 applicationName,
                 db.DBPlatform.ToLowerInvariant())
-                );
+                ;
 
 
             if (!Directory.Exists(pathToScriptFolder))
@@ -585,7 +604,7 @@ namespace cloudscribe.Setup.Controllers
 
                 //log.Warn(warning);
 
-                //WritePageContent(warning);
+                await WritePageContent(response, pathToScriptFolder + "not found");
                 return false;
 
             }
@@ -1086,13 +1105,14 @@ namespace cloudscribe.Setup.Controllers
         private async Task WritePageHeader(HttpResponse response)
         {
 
-            string setupTemplatePath = config.SetupHeaderConfigPath();
+            string setupTemplatePath = config.SetupHeaderConfigPath().Replace("/", Path.DirectorySeparatorChar.ToString());
             if (CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft)
             {
-                setupTemplatePath = config.SetupHeaderConfigPathRtl();
+                setupTemplatePath = config.SetupHeaderConfigPathRtl().Replace("/", Path.DirectorySeparatorChar.ToString());
             }
 
-            string fsPath = hostingEnvironment.MapPath(setupTemplatePath);
+            //string fsPath = hostingEnvironment.MapPath(setupTemplatePath);
+            string fsPath = appBasePath + setupTemplatePath;
 
             if (System.IO.File.Exists(fsPath))
             {
