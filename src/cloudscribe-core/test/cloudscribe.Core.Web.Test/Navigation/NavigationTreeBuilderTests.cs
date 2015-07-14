@@ -82,5 +82,26 @@ namespace cloudscribe.Core.Web.Test.Navigation
 
         }
 
+        [Fact]
+        public void Can_Roundtrip_Serialize_To_Xml()
+        {
+            // Assemble
+            HardCodedNavigationTreeBuilder builder = new HardCodedNavigationTreeBuilder();
+            TreeNode<NavigationNode> rootNode = builder.GetTree();
+            NavigationTreeXmlConverter converter = new NavigationTreeXmlConverter();
+
+            //Act
+            string xml = converter.ToXmlString(rootNode);
+
+            Assert.True(xml.Length > 10);
+
+            //using (StreamWriter stream = File.CreateText("dumpxml.txt"))
+            //{
+            //    stream.WriteLine(xml);
+            //}
+        }
+
+
+
     }
- }
+}

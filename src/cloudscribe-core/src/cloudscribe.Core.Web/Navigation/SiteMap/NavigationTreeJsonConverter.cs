@@ -100,7 +100,32 @@ namespace cloudscribe.Core.Web.Navigation
                 navNode.ViewRoles = (string)jNode["Value"]["ViewRoles"];
             }
 
-            if(tNode == null)
+            if (jNode["Value"]["IsRootNode"] != null)
+            {
+                navNode.IsRootNode = Convert.ToBoolean((string)jNode["Value"]["IsRootNode"]);
+            }
+
+            if (jNode["Value"]["ResourceName"] != null)
+            {
+                navNode.ResourceName = (string)jNode["Value"]["ResourceName"];
+            }
+
+            if (jNode["Value"]["ResourceTextKey"] != null)
+            {
+                navNode.ResourceTextKey = (string)jNode["Value"]["ResourceTextKey"];
+            }
+
+            if (jNode["Value"]["ResourceTitleKey"] != null)
+            {
+                navNode.ResourceTitleKey = (string)jNode["Value"]["ResourceTitleKey"];
+            }
+
+            if (jNode["Value"]["IncludeAmbientValuesInUrl"] != null)
+            {
+                navNode.IncludeAmbientValuesInUrl = Convert.ToBoolean((string)jNode["Value"]["IncludeAmbientValuesInUrl"]);
+            }
+
+            if (tNode == null)
             {
                 TreeNode<NavigationNode> rootNode = new TreeNode<NavigationNode>(navNode);
                 return rootNode;

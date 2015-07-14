@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-16"?>
+<NavNode key="Home" parentKey="RootNode" controller="Home" action="Index" text="Home" url="~/Home" isRootNode="true">
+  <Children>
+    <NavNode key="About" parentKey="RootNode" controller="Home" action="About" text="About" url="~/Home/About">
+      <Children />
+    </NavNode>
+    <NavNode key="Contact" parentKey="RootNode" controller="Home" action="Contact" text="Contact" url="~/Home/Contact">
+      <Children />
+    </NavNode>
+    <NavNode key="SiteAdmin" parentKey="RootNode" controller="SiteAdmin" action="Index" text="Administration" url="~/SiteAdmin" viewRoles="Admins,Content Administrators">
+      <Children>
+        <NavNode key="BasicSettings" parentKey="SiteAdmin" controller="SiteAdmin" action="SiteInfo" text="Site Settings" url="~/SiteAdmin/SiteInfo" preservedRouteParameters="siteGuid" componentVisibility="breadcrumbs,childtree" viewRoles="Admins,Content Administrators">
+          <Children>
+            <NavNode key="SiteHostMappings" parentKey="BasicSettings" controller="SiteAdmin" action="SiteHostMappings" text="Domain Mappings" url="~/SiteAdmin/SiteHostMappings" preservedRouteParameters="siteGuid" componentVisibility="breadcrumbs" viewRoles="Admins,Content Administrators">
+              <Children />
+            </NavNode>
+          </Children>
+        </NavNode>
+        <NavNode key="SiteList" parentKey="SiteAdmin" controller="SiteAdmin" action="SiteList" text="SiteList" url="~/SiteAdmin/SiteList" componentVisibility="breadcrumbs,childtree" viewRoles="ServerAdmins">
+          <Children>
+            <NavNode key="NewSite" parentKey="SiteList" controller="SiteAdmin" action="NewSite" text="NewSite" url="~/SiteAdmin/NewSite" componentVisibility="breadcrumbs,childtree" viewRoles="ServerAdmins">
+              <Children />
+            </NavNode>
+          </Children>
+        </NavNode>
+        <NavNode key="UserAdmin" parentKey="SiteAdmin" controller="UserAdmin" action="Index" text="UserManagement" url="~/UserAdmin" componentVisibility="breadcrumbs,childtree" viewRoles="ServerAdmins">
+          <Children>
+            <NavNode key="UserEdit" parentKey="UserAdmin" controller="UserAdmin" action="UserEdit" text="NewUser" url="~/UserAdmin/UserEdit" componentVisibility="breadcrumbs,childtree" viewRoles="Admins">
+              <Children />
+            </NavNode>
+            <NavNode key="UserSearch" parentKey="UserAdmin" controller="UserAdmin" action="Search" text="User Search" url="~/UserAdmin/Search" componentVisibility="breadcrumbs" viewRoles="Admins">
+              <Children />
+            </NavNode>
+            <NavNode key="IpSearch" parentKey="UserAdmin" controller="UserAdmin" action="IpSearch" text="IpSearch" url="~/UserAdmin/IpSearch" componentVisibility="breadcrumbs" viewRoles="Admins">
+              <Children />
+            </NavNode>
+          </Children>
+        </NavNode>
+        <NavNode key="RoleAdmin" parentKey="SiteAdmin" controller="RoleAdmin" action="Index" text="RoleManagement" url="~/RoleAdmin" componentVisibility="breadcrumbs,childtree" viewRoles="Admins">
+          <Children>
+            <NavNode key="RoleMembers" parentKey="RoleAdmin" controller="RoleAdmin" action="RoleMembers" text="RoleManagement" url="~/RoleAdmin/RoleMembers" preservedRouteParameters="roleId,pageNumber,pageSize" componentVisibility="breadcrumbs" viewRoles="Admins">
+              <Children />
+            </NavNode>
+            <NavNode key="RoleEdit" parentKey="RoleAdmin" controller="RoleAdmin" action="RoleEdit" text="NewRole" url="~/RoleAdmin/RoleEdit" preservedRouteParameters="roleIde" componentVisibility="breadcrumbs,childtree" viewRoles="Admins">
+              <Children />
+            </NavNode>
+          </Children>
+        </NavNode>
+        <NavNode key="CoreData" parentKey="SiteAdmin" controller="CoreData" action="Index" text="CoreData" url="~/CoreData" componentVisibility="breadcrumbs,childtree" viewRoles="ServerAdmins">
+          <Children>
+            <NavNode key="CurrencyList" parentKey="SiteAdmin" controller="CoreData" action="CurrencyList" text="CurrencyAdministration" url="~/CoreData/CurrencyList" componentVisibility="breadcrumbs,childtree" viewRoles="ServerAdmins">
+              <Children>
+                <NavNode key="CurrencyEdit" parentKey="CurrencyList" controller="CoreData" action="CurrencyEdit" text="NewCurrency" url="~/CoreData/CurrencyEdit" preservedRouteParameters="currencyGuid" componentVisibility="breadcrumbs" viewRoles="ServerAdmins">
+                  <Children />
+                </NavNode>
+              </Children>
+            </NavNode>
+            <NavNode key="CountryListPage" parentKey="SiteAdmin" controller="CoreData" action="CountryListPage" text="CountryStateAdministration" url="~/CoreData/CountryListPage" componentVisibility="breadcrumbs,childtree" viewRoles="ServerAdmins">
+              <Children>
+                <NavNode key="CountryEdit" parentKey="CountryListPage" controller="CoreData" action="CountryEdit" text="NewCountry" url="~/CoreData/CountryEdit" preservedRouteParameters="guid" componentVisibility="breadcrumbs,childtree" viewRoles="ServerAdmins">
+                  <Children />
+                </NavNode>
+                <NavNode key="StateListPage" parentKey="CountryListPage" controller="CoreData" action="StateListPage" text="States" url="~/CoreData/StateListPage" preservedRouteParameters="countryGuid" componentVisibility="breadcrumbs" viewRoles="ServerAdmins">
+                  <Children>
+                    <NavNode key="StateEdit" parentKey="StateListPage" controller="CoreData" action="StateEdit" text="New State" url="~/CoreData/StateEdit" preservedRouteParameters="countryGuid" componentVisibility="breadcrumbs" viewRoles="ServerAdmins">
+                      <Children />
+                    </NavNode>
+                  </Children>
+                </NavNode>
+              </Children>
+            </NavNode>
+          </Children>
+        </NavNode>
+      </Children>
+    </NavNode>
+  </Children>
+</NavNode>
