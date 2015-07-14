@@ -88,11 +88,9 @@ namespace cloudscribe.WebHost
             services.AddIdentity<SiteUser, SiteRole>();
             //********************************************************************************************************
 
-            // TODO: create interface and add as scoped to request?
-            services.AddInstance<NavigationTreeBuilder>(new NavigationTreeBuilder());
+            //services.TryAdd(ServiceDescriptor.Scoped<INavigationTreeBuilder, HardCodedNavigationTreeBuilder>());
+            services.TryAdd(ServiceDescriptor.Scoped<INavigationTreeBuilder, JsonNavigationTreeBuilder>());
             services.TryAdd(ServiceDescriptor.Scoped<INavigationNodePermissionResolver, NavigationNodePermissionResolver>());
-
-
             services.TryAdd(ServiceDescriptor.Transient<IBuildPaginationLinks, PaginationLinkBuilder>());
 
 

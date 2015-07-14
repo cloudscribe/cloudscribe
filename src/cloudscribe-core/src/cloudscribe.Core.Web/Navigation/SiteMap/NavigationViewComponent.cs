@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-10
-// Last Modified:			2015-07-12
+// Last Modified:			2015-07-14
 // 
 
 using Microsoft.AspNet.Mvc;
@@ -13,14 +13,14 @@ namespace cloudscribe.Core.Web.Navigation
     public class NavigationViewComponent : ViewComponent
     {
         public NavigationViewComponent(
-            NavigationTreeBuilder siteMapTreeBuilder,
+            INavigationTreeBuilder siteMapTreeBuilder,
             INavigationNodePermissionResolver permissionResolver)
         {
             builder = siteMapTreeBuilder;
             this.permissionResolver = permissionResolver;
         }
 
-        private NavigationTreeBuilder builder;
+        private INavigationTreeBuilder builder;
         INavigationNodePermissionResolver permissionResolver;
 
         public async Task<IViewComponentResult> InvokeAsync(string viewName, string filterName)

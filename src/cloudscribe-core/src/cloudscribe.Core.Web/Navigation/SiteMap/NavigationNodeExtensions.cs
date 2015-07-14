@@ -24,7 +24,11 @@ namespace cloudscribe.Core.Web.Navigation
                 {
                     url = "~/" + node.Controller;
                 }
-                url = "~/" + node.Controller + "/" + node.Action;
+                else
+                {
+                    url = "~/" + node.Controller + "/" + node.Action;
+                }
+                
             }
 
             return url;

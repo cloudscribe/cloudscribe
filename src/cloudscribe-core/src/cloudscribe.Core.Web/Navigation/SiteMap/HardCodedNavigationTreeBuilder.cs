@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-07
-// Last Modified:			2015-07-11
+// Last Modified:			2015-07-14
 // 
 
 
@@ -16,9 +16,9 @@ using Newtonsoft.Json.Converters;
 
 namespace cloudscribe.Core.Web.Navigation
 {
-    public class NavigationTreeBuilder
+    public class HardCodedNavigationTreeBuilder : INavigationTreeBuilder
     {
-        public NavigationTreeBuilder()
+        public HardCodedNavigationTreeBuilder()
         {
 
         }
@@ -50,7 +50,7 @@ namespace cloudscribe.Core.Web.Navigation
             // we are making a conscious choice here that when we want to serialize-deserialze nodes
             // we are limiting to the properties on NavigationNode
             
-            ExtendedNavigationNode home = new ExtendedNavigationNode();
+            NavigationNode home = new NavigationNode();
             home.Key = "Home";
             home.ParentKey = "RootNode";
             home.Controller = "Home";
@@ -60,7 +60,7 @@ namespace cloudscribe.Core.Web.Navigation
             home.IsRootNode = true;
             TreeNode<NavigationNode> treeRoot = new TreeNode<NavigationNode>(home);
 
-            ExtendedNavigationNode about = new ExtendedNavigationNode();
+            NavigationNode about = new NavigationNode();
             about.Key = "About";
             about.ParentKey = "RootNode";
             about.Controller = "Home";
@@ -69,7 +69,7 @@ namespace cloudscribe.Core.Web.Navigation
             about.Url = about.ResolveUrl();
             treeRoot.AddChild(about);
 
-            ExtendedNavigationNode contact = new ExtendedNavigationNode();
+            NavigationNode contact = new NavigationNode();
             contact.Key = "Contact";
             contact.ParentKey = "RootNode";
             contact.Controller = "Home";
@@ -79,7 +79,7 @@ namespace cloudscribe.Core.Web.Navigation
             treeRoot.AddChild(contact);
 
 
-            ExtendedNavigationNode siteAdmin = new ExtendedNavigationNode();
+            NavigationNode siteAdmin = new NavigationNode();
             siteAdmin.Key = "SiteAdmin";
             siteAdmin.ParentKey = "RootNode";
             siteAdmin.Controller = "SiteAdmin";
@@ -89,7 +89,7 @@ namespace cloudscribe.Core.Web.Navigation
             siteAdmin.Url = siteAdmin.ResolveUrl();
             TreeNode<NavigationNode> adminRoot = treeRoot.AddChild(siteAdmin);
 
-            ExtendedNavigationNode siteSettings = new ExtendedNavigationNode();
+            NavigationNode siteSettings = new NavigationNode();
             siteSettings.Key = "BasicSettings";
             siteSettings.ParentKey = "SiteAdmin";
             siteSettings.Controller = "SiteAdmin";
@@ -101,7 +101,7 @@ namespace cloudscribe.Core.Web.Navigation
             siteSettings.Url = siteSettings.ResolveUrl();
             TreeNode<NavigationNode> siteT = adminRoot.AddChild(siteSettings);
 
-            ExtendedNavigationNode hosts = new ExtendedNavigationNode();
+            NavigationNode hosts = new NavigationNode();
             hosts.Key = "SiteHostMappings";
             hosts.ParentKey = "BasicSettings";
             hosts.Controller = "SiteAdmin";
@@ -113,7 +113,7 @@ namespace cloudscribe.Core.Web.Navigation
             hosts.Url = hosts.ResolveUrl();
             TreeNode<NavigationNode> hostsT = siteT.AddChild(hosts);
 
-            ExtendedNavigationNode siteList = new ExtendedNavigationNode();
+            NavigationNode siteList = new NavigationNode();
             siteList.Key = "SiteList";
             siteList.ParentKey = "SiteAdmin";
             siteList.Controller = "SiteAdmin";
@@ -124,7 +124,7 @@ namespace cloudscribe.Core.Web.Navigation
             siteList.Url = siteList.ResolveUrl();
             TreeNode<NavigationNode> siteListT = adminRoot.AddChild(siteList);
 
-            ExtendedNavigationNode newSite = new ExtendedNavigationNode();
+            NavigationNode newSite = new NavigationNode();
             newSite.Key = "NewSite";
             newSite.ParentKey = "SiteList";
             newSite.Controller = "SiteAdmin";
@@ -136,7 +136,7 @@ namespace cloudscribe.Core.Web.Navigation
             TreeNode<NavigationNode> newSiteT = siteListT.AddChild(newSite);
 
 
-            ExtendedNavigationNode userAdmin = new ExtendedNavigationNode();
+            NavigationNode userAdmin = new NavigationNode();
             userAdmin.Key = "UserAdmin";
             userAdmin.ParentKey = "SiteAdmin";
             userAdmin.Controller = "UserAdmin";
@@ -147,7 +147,7 @@ namespace cloudscribe.Core.Web.Navigation
             userAdmin.Url = userAdmin.ResolveUrl();
             TreeNode<NavigationNode> userAdminT = adminRoot.AddChild(userAdmin);
 
-            ExtendedNavigationNode newUser = new ExtendedNavigationNode();
+            NavigationNode newUser = new NavigationNode();
             newUser.Key = "UserEdit";
             newUser.ParentKey = "UserAdmin";
             newUser.Controller = "UserAdmin";
@@ -158,7 +158,7 @@ namespace cloudscribe.Core.Web.Navigation
             newUser.Url = newUser.ResolveUrl();
             TreeNode<NavigationNode> newUserT = userAdminT.AddChild(newUser);
 
-            ExtendedNavigationNode userSearch = new ExtendedNavigationNode();
+            NavigationNode userSearch = new NavigationNode();
             userSearch.Key = "UserSearch";
             userSearch.ParentKey = "UserAdmin";
             userSearch.Controller = "UserAdmin";
@@ -169,7 +169,7 @@ namespace cloudscribe.Core.Web.Navigation
             userSearch.Url = userSearch.ResolveUrl();
             TreeNode<NavigationNode> userSearchT = userAdminT.AddChild(userSearch);
 
-            ExtendedNavigationNode ipSearch = new ExtendedNavigationNode();
+            NavigationNode ipSearch = new NavigationNode();
             ipSearch.Key = "IpSearch";
             ipSearch.ParentKey = "UserAdmin";
             ipSearch.Controller = "UserAdmin";
@@ -181,7 +181,7 @@ namespace cloudscribe.Core.Web.Navigation
             TreeNode<NavigationNode> ipSearchT = userAdminT.AddChild(ipSearch);
 
 
-            ExtendedNavigationNode roleAdmin = new ExtendedNavigationNode();
+            NavigationNode roleAdmin = new NavigationNode();
             roleAdmin.Key = "RoleAdmin";
             roleAdmin.ParentKey = "SiteAdmin";
             roleAdmin.Controller = "RoleAdmin";
@@ -195,7 +195,7 @@ namespace cloudscribe.Core.Web.Navigation
             // TODO: this one should not be in main or child menus
             // we can't have just one url since it depends on roleId
             // but we do want it to appear ar the active breadcrumb
-            ExtendedNavigationNode roleMembers = new ExtendedNavigationNode();
+            NavigationNode roleMembers = new NavigationNode();
             roleMembers.Key = "RoleMembers";
             roleMembers.ParentKey = "RoleAdmin";
             roleMembers.Controller = "RoleAdmin";
@@ -207,7 +207,7 @@ namespace cloudscribe.Core.Web.Navigation
             roleMembers.PreservedRouteParameters = "roleId,pageNumber,pageSize";
             TreeNode<NavigationNode> roleMembersT = roleAdminT.AddChild(roleMembers);
 
-            ExtendedNavigationNode roleEdit = new ExtendedNavigationNode();
+            NavigationNode roleEdit = new NavigationNode();
             roleEdit.Key = "RoleEdit";
             roleEdit.ParentKey = "RoleAdmin";
             roleEdit.Controller = "RoleAdmin";
@@ -220,7 +220,7 @@ namespace cloudscribe.Core.Web.Navigation
             TreeNode<NavigationNode> roleEditT = roleAdminT.AddChild(roleEdit);
 
 
-            ExtendedNavigationNode coreData = new ExtendedNavigationNode();
+            NavigationNode coreData = new NavigationNode();
             coreData.Key = "CoreData";
             coreData.ParentKey = "SiteAdmin";
             coreData.Controller = "CoreData";
@@ -231,7 +231,7 @@ namespace cloudscribe.Core.Web.Navigation
             coreData.Url = coreData.ResolveUrl();
             TreeNode<NavigationNode> coreDataT = adminRoot.AddChild(coreData);
 
-            ExtendedNavigationNode currencyList = new ExtendedNavigationNode();
+            NavigationNode currencyList = new NavigationNode();
             currencyList.Key = "CurrencyList";
             currencyList.ParentKey = "SiteAdmin";
             currencyList.Controller = "CoreData";
@@ -243,7 +243,7 @@ namespace cloudscribe.Core.Web.Navigation
             TreeNode<NavigationNode> currencyListT = coreDataT.AddChild(currencyList);
 
             //TODO: again I think we just want to be a breadcrumb here
-            ExtendedNavigationNode currencyEdit = new ExtendedNavigationNode();
+            NavigationNode currencyEdit = new NavigationNode();
             currencyEdit.Key = "CurrencyEdit";
             currencyEdit.ParentKey = "CurrencyList";
             currencyEdit.Controller = "CoreData";
@@ -256,7 +256,7 @@ namespace cloudscribe.Core.Web.Navigation
             TreeNode<NavigationNode> currencyEditT = currencyListT.AddChild(currencyEdit);
 
 
-            ExtendedNavigationNode countryList = new ExtendedNavigationNode();
+            NavigationNode countryList = new NavigationNode();
             countryList.Key = "CountryListPage";
             countryList.ParentKey = "SiteAdmin";
             countryList.Controller = "CoreData";
@@ -267,7 +267,7 @@ namespace cloudscribe.Core.Web.Navigation
             countryList.Url = countryList.ResolveUrl();
             TreeNode<NavigationNode> countryListT = coreDataT.AddChild(countryList);
 
-            ExtendedNavigationNode countryEdit = new ExtendedNavigationNode();
+            NavigationNode countryEdit = new NavigationNode();
             countryEdit.Key = "CountryEdit";
             countryEdit.ParentKey = "CountryListPage";
             countryEdit.Controller = "CoreData";
@@ -279,7 +279,7 @@ namespace cloudscribe.Core.Web.Navigation
             countryEdit.PreservedRouteParameters = "guid";
             TreeNode<NavigationNode> countryEditT = countryListT.AddChild(countryEdit);
 
-            ExtendedNavigationNode stateList = new ExtendedNavigationNode();
+            NavigationNode stateList = new NavigationNode();
             stateList.Key = "StateListPage";
             stateList.ParentKey = "CountryListPage";
             stateList.Controller = "CoreData";
@@ -291,7 +291,7 @@ namespace cloudscribe.Core.Web.Navigation
             stateList.PreservedRouteParameters = "countryGuid";
             TreeNode<NavigationNode> stateListT = countryListT.AddChild(stateList);
 
-            ExtendedNavigationNode stateEdit = new ExtendedNavigationNode();
+            NavigationNode stateEdit = new NavigationNode();
             stateEdit.Key = "StateEdit";
             stateEdit.ParentKey = "StateListPage";
             stateEdit.Controller = "CoreData";
@@ -311,15 +311,7 @@ namespace cloudscribe.Core.Web.Navigation
             return treeRoot;
         }
 
-        public TreeNode<NavigationNode> BuildTreeFromJson(string jsonString)
-        {
-            TreeNode<NavigationNode> rootNode =
-                    JsonConvert.DeserializeObject<TreeNode<NavigationNode>>(jsonString, new NavigationTreeConverter());
-
-
-            return rootNode;
-
-        }
+        
 
 
 

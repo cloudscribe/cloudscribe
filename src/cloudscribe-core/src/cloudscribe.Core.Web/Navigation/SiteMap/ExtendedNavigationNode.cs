@@ -5,6 +5,10 @@
 // Last Modified:			2015-07-13
 // 
 
+    //TODO: this file probably should be part of cms not core
+    // cms will have its own CmsNavigationTreeBuilder and it could use this class
+    // but we are not using it here in core
+
 using System.ComponentModel;
 using Newtonsoft.Json;
 using System;

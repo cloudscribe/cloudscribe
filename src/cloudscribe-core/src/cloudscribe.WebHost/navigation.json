@@ -3,7 +3,7 @@
     "Key": "Home",
     "ParentKey": "RootNode",
     "Text": "Home",
-    "Url": "~/Home/Index",
+    "Url": "~/",
     "Controller": "Home",
     "Action": "Index",
     "IsRootNode": true

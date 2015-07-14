@@ -30,8 +30,6 @@ namespace cloudscribe.Core.Web.Navigation
         [JsonIgnore]
         public TreeNode<T> Parent { get; private set; } = null;
 
-        //JA would like it better if this serialized to Json as "Node" rather than "Value"
-        // after testing roudtrip serialization try renaming this to Node then make sure it doesn't break deserialization
         public T Value { get { return _value; } }
 
         public ReadOnlyCollection<TreeNode<T>> Children
