@@ -6,9 +6,15 @@
 // 
 
 using cloudscribe.Web.Navigation;
+using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Navigation
 {
+    /// <summary>
+    /// this class is useful for tests as a mock
+    /// it was also used when implementing json and xml builders
+    /// I was serializing the tree created here to test serialization and deserialization of the json and xml builders
+    /// </summary>
     public class HardCodedNavigationTreeBuilder : INavigationTreeBuilder
     {
         public HardCodedNavigationTreeBuilder()
@@ -18,7 +24,7 @@ namespace cloudscribe.Core.Web.Navigation
 
         private TreeNode<NavigationNode> siteRoot = null;
 
-        public TreeNode<NavigationNode> GetTree()
+        public async Task<TreeNode<NavigationNode>> GetTree()
         {
             // ultimately we will need to cache sitemap per site
 

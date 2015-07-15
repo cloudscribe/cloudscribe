@@ -88,8 +88,17 @@ namespace cloudscribe.WebHost
             services.AddIdentity<SiteUser, SiteRole>();
             //********************************************************************************************************
 
-            //services.TryAdd(ServiceDescriptor.Scoped<INavigationTreeBuilder, HardCodedNavigationTreeBuilder>());
-            services.TryAdd(ServiceDescriptor.Scoped<INavigationTreeBuilder, JsonNavigationTreeBuilder>());
+            // you can use either json or xml to maintain your navigation map we provide examples of each navigation.xml and 
+            // navigation.json in the root of this project
+            // you can override the name of the file used with AppSettings:NavigationXmlFileName or AppSettings:NavigationJsonFileName in config.json
+            // the file must live in the root of the web project code not in wwwroot
+
+            // it is arguable which is easier for humans to read and maintain, myself I think for something like a navigation tree
+            // that could get large xml is easier to work with and not make mistakes. in json one missing or extra comma can break it
+            // granted xml can be broken by typos too but the end tags make it easier to keep track of where you are imho (JA)
+            //services.TryAdd(ServiceDescriptor.Scoped<INavigationTreeBuilder, JsonNavigationTreeBuilder>());
+            services.TryAdd(ServiceDescriptor.Scoped<INavigationTreeBuilder, XmlNavigationTreeBuilder>());
+            
             services.TryAdd(ServiceDescriptor.Scoped<INavigationNodePermissionResolver, NavigationNodePermissionResolver>());
             services.TryAdd(ServiceDescriptor.Transient<IBuildPaginationLinks, PaginationLinkBuilder>());
 

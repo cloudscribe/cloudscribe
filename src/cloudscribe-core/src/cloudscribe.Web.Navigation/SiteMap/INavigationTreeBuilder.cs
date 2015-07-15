@@ -5,11 +5,12 @@
 // Last Modified:			2015-07-15
 // 
 
+using System.Threading.Tasks;
 
 namespace cloudscribe.Web.Navigation
 {
     public interface INavigationTreeBuilder
     {
-        TreeNode<NavigationNode> GetTree();
+        Task<TreeNode<NavigationNode>> GetTree();
     }
 }

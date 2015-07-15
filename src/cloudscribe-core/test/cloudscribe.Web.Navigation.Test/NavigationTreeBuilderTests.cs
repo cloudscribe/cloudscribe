@@ -8,11 +8,11 @@
 // trying to replicate some of the tests that Martijn Boland did here
 // https://github.com/martijnboland/MvcPaging/blob/master/src/MvcPaging.Tests/PagerTests.cs
 
-using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.Navigation;
 using cloudscribe.Web.Navigation;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -29,13 +29,15 @@ namespace cloudscribe.Web.Navigation.Test
         }
 
         [Fact]
-        public void Can_Serialize_To_Json()
+        public async Task Can_Serialize_To_Json()
         {
             // Assemble
             HardCodedNavigationTreeBuilder builder = new HardCodedNavigationTreeBuilder();
+            NavigationTreeJsonConverter jsonConverter = new NavigationTreeJsonConverter();
 
             //Act
-            string json = builder.GetTree().ToJsonIndented();
+            TreeNode<NavigationNode> rootNode = await builder.GetTree();
+            string json = jsonConverter.ConvertToJsonIndented(rootNode);
 
 
 
@@ -53,11 +55,11 @@ namespace cloudscribe.Web.Navigation.Test
         }
 
         [Fact]
-        public void Can_Roundtrip_Serialize_To_Json()
+        public async Task Can_Roundtrip_Serialize_To_Json()
         {
             // Assemble
             HardCodedNavigationTreeBuilder builder = new HardCodedNavigationTreeBuilder();
-            TreeNode<NavigationNode> rootNode = builder.GetTree();
+            TreeNode<NavigationNode> rootNode = await builder.GetTree();
 
             //Act
             string json = rootNode.ToJsonIndented();
@@ -84,11 +86,11 @@ namespace cloudscribe.Web.Navigation.Test
         }
 
         [Fact]
-        public void Can_Roundtrip_Serialize_To_Xml()
+        public async Task Can_Roundtrip_Serialize_To_Xml()
         {
             // Assemble
             HardCodedNavigationTreeBuilder builder = new HardCodedNavigationTreeBuilder();
-            TreeNode<NavigationNode> rootNode = builder.GetTree();
+            TreeNode<NavigationNode> rootNode = await builder.GetTree();
             NavigationTreeXmlConverter converter = new NavigationTreeXmlConverter();
 
             //Act

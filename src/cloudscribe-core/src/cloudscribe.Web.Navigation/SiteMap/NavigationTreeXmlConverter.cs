@@ -6,7 +6,6 @@
 // 
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -131,16 +130,17 @@ namespace cloudscribe.Web.Navigation
         { 
             if(xml.Root.Name != "NavNode") { throw new ArgumentException("Expected NavNode"); }
 
-            NavigationNode rootNav = BuildNavNode(xml.Root.Attributes());
+            NavigationNode rootNav = BuildNavNode(xml.Root);
 
             TreeNode<NavigationNode> treeRoot = new TreeNode<NavigationNode>(rootNav);
 
-            foreach (XElement childNode in xml.Root.Elements())
+            foreach (XElement childrenNode in xml.Root.Elements(XName.Get("Children")))
             {
-                if (childNode.Name == "Children")
+                foreach (XElement childNode in childrenNode.Elements(XName.Get("NavNode")))
                 {
                     AddChildNode(treeRoot, childNode);
                 }
+                    
             }
 
             return treeRoot;
@@ -148,112 +148,75 @@ namespace cloudscribe.Web.Navigation
 
         private void AddChildNode(TreeNode<NavigationNode> node, XElement xmlNode)
         {
-            NavigationNode navNode = BuildNavNode(xmlNode.Attributes());
+            NavigationNode navNode = BuildNavNode(xmlNode);
             TreeNode<NavigationNode> navNodeT = node.AddChild(navNode);
 
-            foreach (XElement childNode in xmlNode.Elements())
+            foreach (XElement childrenNode in xmlNode.Elements(XName.Get("Children")))
             {
-                if (childNode.Name == "Children")
+                foreach (XElement childNode in childrenNode.Elements(XName.Get("NavNode")))
                 {
-                    AddChildNode(navNodeT, childNode); //recursion
+                    AddChildNode(navNodeT, childNode); //recursion   
                 }
             }
         }
 
-        private NavigationNode BuildNavNode(IEnumerable<XAttribute> attributeCollection)
+        private NavigationNode BuildNavNode(XElement xmlNode)
         {
             NavigationNode navNode = new NavigationNode();
 
-            foreach(XAttribute attribute in attributeCollection)
+            var a = xmlNode.Attribute("key");
+            if(a != null) {  navNode.Key = a.Value; }
+
+            a = xmlNode.Attribute("parentKey");
+            if (a != null) { navNode.ParentKey = a.Value; }
+
+            a = xmlNode.Attribute("controller");
+            if (a != null) { navNode.Controller = a.Value; }
+
+            a = xmlNode.Attribute("action");
+            if (a != null) { navNode.Action = a.Value; }
+
+            a = xmlNode.Attribute("text");
+            if (a != null) { navNode.Text = a.Value; }
+
+            a = xmlNode.Attribute("title");
+            if (a  != null) { navNode.Title = a.Value; }
+
+            a = xmlNode.Attribute("url");
+            if (a != null) { navNode.Url = a.Value; }
+            else
             {
-                if(attribute.Name == "key")
-                { 
-                    navNode.Key = attribute.Value;
-                }
-
-                if (attribute.Name == "parentKey")
-                {
-                    navNode.ParentKey = attribute.Value;
-                }
-
-                if (attribute.Name == "controller")
-                {
-                    navNode.Controller = attribute.Value;
-                }
-
-                if (attribute.Name == "action")
-                {
-                    navNode.Action = attribute.Value;
-                }
-
-                if (attribute.Name == "text")
-                {
-                    navNode.Text = attribute.Value;
-                }
-
-                if (attribute.Name == "title")
-                {
-                    navNode.Title = attribute.Value;
-                }
-
-                if (attribute.Name == "url")
-                {
-                    navNode.Url = attribute.Value;
-                }
-                else
-                {
-                    navNode.Url = navNode.ResolveUrl();
-                }
-
-                if (attribute.Name == "isRootNode")
-                {
-                    navNode.IsRootNode = Convert.ToBoolean(attribute.Value);
-                }
-
-                if (attribute.Name == "includeAmbientValuesInUrl")
-                {
-                    navNode.IncludeAmbientValuesInUrl = Convert.ToBoolean(attribute.Value);
-                }
-
-                if (attribute.Name == "resourceName")
-                {
-                    navNode.ResourceName = attribute.Value;
-                }
-
-                if (attribute.Name == "resourceTextKey")
-                {
-                    navNode.ResourceTextKey = attribute.Value;
-                }
-
-                if (attribute.Name == "resourceTitleKey")
-                {
-                    navNode.ResourceTitleKey = attribute.Value;
-                }
-
-                if (attribute.Name == "preservedRouteParameters")
-                {
-                    navNode.PreservedRouteParameters = attribute.Value;
-                }
-
-                if (attribute.Name == "componentVisibility")
-                {
-                    navNode.ComponentVisibility = attribute.Value;
-                }
-
-                if (attribute.Name == "viewRoles")
-                {
-                    navNode.ViewRoles = attribute.Value;
-                }
-
+                navNode.Url = navNode.ResolveUrl();
             }
+
+            a = xmlNode.Attribute("isRootNode");
+            if (a != null) { navNode.IsRootNode = Convert.ToBoolean(a.Value); }
+
+            a = xmlNode.Attribute("includeAmbientValuesInUrl");
+            if (a != null) { navNode.IncludeAmbientValuesInUrl = Convert.ToBoolean(a.Value); }
+
+            a = xmlNode.Attribute("resourceName");
+            if (a != null) { navNode.ResourceName = a.Value; }
+
+            a = xmlNode.Attribute("resourceTextKey");
+            if (a != null) { navNode.ResourceTextKey = a.Value; }
+
+            a = xmlNode.Attribute("resourceTitleKey");
+            if (a != null) { navNode.ResourceTitleKey = a.Value; }
+
+            a = xmlNode.Attribute("preservedRouteParameters");
+            if (a != null) { navNode.PreservedRouteParameters = a.Value; }
+
+            a = xmlNode.Attribute("componentVisibility");
+            if (a != null) { navNode.ComponentVisibility = a.Value; }
+
+            a = xmlNode.Attribute("viewRoles");
+            if (a != null) { navNode.ViewRoles = a.Value; }
+
             
             
             return navNode;
         }
-
-        
-
-
 
     }
 }

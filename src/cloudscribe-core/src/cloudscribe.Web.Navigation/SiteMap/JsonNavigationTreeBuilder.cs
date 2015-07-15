@@ -12,6 +12,7 @@ using Microsoft.Framework.Runtime;
 using Newtonsoft.Json;
 using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace cloudscribe.Web.Navigation
 {
@@ -38,19 +39,19 @@ namespace cloudscribe.Web.Navigation
         private ILogger log;
         private TreeNode<NavigationNode> rootNode = null;
 
-        public TreeNode<NavigationNode> GetTree()
+        public async Task<TreeNode<NavigationNode>> GetTree()
         {
             // ultimately we will need to cache sitemap per site
 
             if (rootNode == null)
             {
-                rootNode = BuildTree();
+                rootNode = await BuildTree();
             }
 
             return rootNode;
         }
 
-        private TreeNode<NavigationNode> BuildTree()
+        private async Task<TreeNode<NavigationNode>> BuildTree()
         {
             string filePath = ResolveFilePath();
 
@@ -66,11 +67,13 @@ namespace cloudscribe.Web.Navigation
             {
                 using (StreamReader streamReader = new StreamReader(fileStream))
                 {
-                    json = streamReader.ReadToEnd();
+                    json = await streamReader.ReadToEndAsync();
                 }
             }
 
-            return BuildTreeFromJson(json);
+            TreeNode<NavigationNode> result = BuildTreeFromJson(json);
+
+            return result;
             
         }
 
@@ -82,7 +85,10 @@ namespace cloudscribe.Web.Navigation
             return filePath;
         }
 
-       
+
+        // started to make this async since there are async methods of deserializeobject
+        // but found this thread which says not to use them as there is no benefit
+        //https://github.com/JamesNK/Newtonsoft.Json/issues/66
         public TreeNode<NavigationNode> BuildTreeFromJson(string jsonString)
         {
             TreeNode<NavigationNode> rootNode =

@@ -13,7 +13,9 @@
     "cloudscribe.Core.Web": "1.0.0-*"
 
   },
-
+   "commands": {
+    "test": "xunit.runner.dnx"
+  },
     "frameworks": {
         "dnxcore50": {
             "dependencies": {

@@ -25,10 +25,7 @@ namespace cloudscribe.Web.Navigation
 
         public async Task<IViewComponentResult> InvokeAsync(string viewName, string filterName)
         {
-            // TODO: await something
-            // make builder async
-
-            TreeNode<NavigationNode> rootNode = builder.GetTree();
+            TreeNode<NavigationNode> rootNode = await builder.GetTree();
 
             NavigationViewModel model = new NavigationViewModel(
                 filterName,
