@@ -6,7 +6,7 @@
 //
 
 using cloudscribe.Core.Models.Geography;
-using cloudscribe.Core.Web.Navigation;
+using cloudscribe.Web.Navigation;
 using System.Collections.Generic;
 
 namespace cloudscribe.Core.Web.ViewModels.CoreData

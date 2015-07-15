@@ -6,7 +6,7 @@
 //
 
 using cloudscribe.Core.Models;
-using cloudscribe.Core.Web.Navigation;
+using cloudscribe.Web.Navigation;
 using System.Collections.Generic;
 
 namespace cloudscribe.Core.Web.ViewModels.UserAdmin

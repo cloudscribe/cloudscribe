@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-11
-// Last Modified:			2015-07-11
+// Last Modified:			2015-07-15
 // 
 
 using System.Security.Claims;
@@ -15,7 +15,19 @@ namespace cloudscribe.AspNet.Identity
         public static bool IsInRoles(this ClaimsPrincipal principal, string allowedRolesCsv)
         {
             if(string.IsNullOrEmpty(allowedRolesCsv)) { return true; } // empty indicates no role filtering
-            string[] roles = allowedRolesCsv.Split(',');
+            string[] roles;
+            // in some cases we are using semicolon separated not comma
+            if (allowedRolesCsv.Contains(";"))
+            {
+                roles = allowedRolesCsv.Split(';');
+            }
+            else
+            {
+                roles = allowedRolesCsv.Split(',');
+            }
+            
+
+
             if(roles.Length == 0) { return true; }
 
             if (!principal.IsSignedIn()) { return false; } 
