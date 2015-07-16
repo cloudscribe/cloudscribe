@@ -7,7 +7,7 @@
 //using Microsoft.AspNet.Builder;
 //using Microsoft.AspNet.Identity;
 
-//namespace cloudscribe.AspNet.Identity
+//namespace cloudscribe.Core.Identity
 //{
 //    public static class BuilderExtensions
 //    {

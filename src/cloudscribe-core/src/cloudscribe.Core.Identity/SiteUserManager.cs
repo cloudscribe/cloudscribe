@@ -12,7 +12,7 @@
 //using System.Threading.Tasks;
 
 
-//namespace cloudscribe.AspNet.Identity
+//namespace cloudscribe.Core.Identity
 //{
 //    /// <summary>
 //    /// an instance of this class is created and configured in cloudscribe.Core.Web.SiteContext.cs

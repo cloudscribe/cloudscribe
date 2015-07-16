@@ -18,7 +18,7 @@ using System.Text;
 #endif
 
 
-namespace cloudscribe.AspNet.Identity
+namespace cloudscribe.Core.Identity
 {
     /// <summary>
     /// unfortunately conversion of pre-exisitng mojoportal accounts

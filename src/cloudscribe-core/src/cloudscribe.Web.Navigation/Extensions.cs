@@ -28,7 +28,7 @@ namespace cloudscribe.Web.Navigation.Helpers
         }
 
         /// <summary>
-        /// this is replicated from cloudscribe.AspNet.Identity.ClaimsPrincipalExtensions.cs
+        /// this is replicated from cloudscribe.Core.Identity.ClaimsPrincipalExtensions.cs
         /// so that this project does not have a dependency and can be used without other cloudscribe components
         /// </summary>
         /// <param name="principal"></param>

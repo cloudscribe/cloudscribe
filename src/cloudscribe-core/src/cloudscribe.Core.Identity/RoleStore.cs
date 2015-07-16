@@ -18,7 +18,7 @@ using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace cloudscribe.AspNet.Identity
+namespace cloudscribe.Core.Identity
 {
     //https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity.EntityFramework/RoleStore.cs
     //TODO: implement

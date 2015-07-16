@@ -17,7 +17,7 @@
 //using log4net;
 
 
-//namespace cloudscribe.AspNet.Identity
+//namespace cloudscribe.Core.Identity
 //{
 //    public static class SiteUserExtensions
 //    {
@@ -44,7 +44,7 @@
 //                //if(manager is SiteUserManager)
 //                //{
 //                //    SiteUserManager siteManager = manager as SiteUserManager;
-//                //    if(siteManager.Store is cloudscribe.AspNet.Identity.UserStore<SiteUser>)
+//                //    if(siteManager.Store is cloudscribe.Core.Identity.UserStore<SiteUser>)
 //                //    {
 
 //                //    }

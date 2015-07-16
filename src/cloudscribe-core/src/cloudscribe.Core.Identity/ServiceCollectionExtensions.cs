@@ -12,7 +12,7 @@
 ////using Microsoft.Framework.OptionsModel;
 
 
-//namespace cloudscribe.AspNet.Identity
+//namespace cloudscribe.Core.Identity
 //{
 //    public static class ServiceCollectionExtensions
 //    {

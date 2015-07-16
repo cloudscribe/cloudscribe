@@ -18,7 +18,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 
-namespace cloudscribe.AspNet.Identity
+namespace cloudscribe.Core.Identity
 {
     public sealed class UserStore<TUser> :
         IUserStore<TUser>,

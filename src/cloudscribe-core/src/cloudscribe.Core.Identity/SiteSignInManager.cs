@@ -6,7 +6,7 @@
 //using System.Security.Claims;
 //using System.Threading.Tasks;
 
-//namespace cloudscribe.AspNet.Identity
+//namespace cloudscribe.Core.Identity
 //{
 //    public class SiteSignInManager<TUser> : SignInManager<TUser> where TUser : SiteUser
 //    {

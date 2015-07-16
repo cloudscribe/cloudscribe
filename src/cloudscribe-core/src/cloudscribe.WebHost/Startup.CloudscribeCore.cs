@@ -26,7 +26,7 @@ using cloudscribe.Core.Models.Geography;
 using cloudscribe.Core.Web;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Web.Navigation;
-using cloudscribe.AspNet.Identity;
+using cloudscribe.Core.Identity;
 
 namespace cloudscribe.WebHost
 {

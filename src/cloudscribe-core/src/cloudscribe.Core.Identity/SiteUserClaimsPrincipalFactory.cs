@@ -13,7 +13,7 @@ using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace cloudscribe.AspNet.Identity
+namespace cloudscribe.Core.Identity
 {
     public class SiteUserClaimsPrincipalFactory<TUser, TRole> : UserClaimsPrincipalFactory<TUser, TRole>
         where TUser : SiteUser

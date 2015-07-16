@@ -27,7 +27,7 @@ using Microsoft.Framework.Logging.Console;
 using Microsoft.Framework.Runtime;
 //using cloudscribe.WebHost.Models;
 using cloudscribe.Core.Models;
-using cloudscribe.AspNet.Identity;
+using cloudscribe.Core.Identity;
 using cloudscribe.Core.Repositories.MSSQL;
 using cloudscribe.Core.Web.Components;
 

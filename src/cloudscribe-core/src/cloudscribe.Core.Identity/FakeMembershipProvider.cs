@@ -2,7 +2,7 @@
 
 using System.Web.Security;
 
-namespace cloudscribe.AspNet.Identity
+namespace cloudscribe.Core.Identity
 {
     public class FakeMembershipProvider : MembershipProvider
     {
