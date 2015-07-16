@@ -14,6 +14,8 @@ using Microsoft.AspNet.Authentication;
 using Microsoft.AspNet.Authentication.Cookies;
 using Microsoft.AspNet.Session;
 using Microsoft.Framework.DependencyInjection;
+using Microsoft.Framework.Caching;
+using Microsoft.Framework.Caching.Distributed;
 using Microsoft.Framework.Configuration;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Mvc;
@@ -47,6 +49,8 @@ namespace cloudscribe.WebHost
         public static IServiceCollection ConfigureCloudscribeCore(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddInstance<IConfiguration>(configuration);
+            services.AddCaching();
+            
             
             //*** Database platform ****************************************************************
             // here is where you could change to use one of the other db platforms
@@ -131,6 +135,9 @@ namespace cloudscribe.WebHost
         /// <returns></returns>
         public static IApplicationBuilder UseCloudscribeCore(this IApplicationBuilder app, IConfiguration config)
         {
+            
+
+
             // the only thing we are using session for is Alerts
             app.UseSession();
             app.UseInMemorySession(configure: s => s.IdleTimeout = TimeSpan.FromMinutes(20));

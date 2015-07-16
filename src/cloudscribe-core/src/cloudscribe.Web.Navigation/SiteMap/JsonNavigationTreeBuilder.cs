@@ -6,12 +6,14 @@
 // 
 
 using cloudscribe.Web.Navigation.Helpers;
+using Microsoft.Framework.Caching.Distributed;
 using Microsoft.Framework.Configuration;
 using Microsoft.Framework.Logging;
 using Microsoft.Framework.Runtime;
 using Newtonsoft.Json;
 using System;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Web.Navigation
@@ -21,7 +23,8 @@ namespace cloudscribe.Web.Navigation
         public JsonNavigationTreeBuilder(
             IApplicationEnvironment appEnv,
             IConfiguration configuration,
-            ILoggerFactory loggerFactory)
+            ILoggerFactory loggerFactory,
+            IDistributedCache cache)
         {
             if(appEnv == null) { throw new ArgumentNullException(nameof(appEnv)); }
             if (loggerFactory == null) { throw new ArgumentNullException(nameof(loggerFactory)); }
@@ -31,8 +34,11 @@ namespace cloudscribe.Web.Navigation
             config = configuration;
             logFactory = loggerFactory;
             log = loggerFactory.CreateLogger(typeof(JsonNavigationTreeBuilder).FullName);
+            this.cache = cache;
         }
 
+        private IDistributedCache cache;
+        private const string cacheKey = "navjsonbuild";
         private IApplicationEnvironment appEnv;
         private IConfiguration config;
         private ILoggerFactory logFactory;
@@ -45,7 +51,26 @@ namespace cloudscribe.Web.Navigation
 
             if (rootNode == null)
             {
-                rootNode = await BuildTree();
+                
+                await cache.ConnectAsync();
+                byte[] bytes = await cache.GetAsync(cacheKey);
+                if (bytes != null)
+                {
+                    string json = Encoding.UTF8.GetString(bytes);
+                    rootNode = BuildTreeFromJson(json);
+                }
+                else
+                {
+                    rootNode = await BuildTree();
+                    string json = rootNode.ToJsonCompact();
+
+                    await cache.SetAsync(
+                                        cacheKey,
+                                        Encoding.UTF8.GetBytes(json),
+                                        new DistributedCacheEntryOptions().SetSlidingExpiration(
+                                            TimeSpan.FromSeconds(100))
+                                            );
+                }
             }
 
             return rootNode;

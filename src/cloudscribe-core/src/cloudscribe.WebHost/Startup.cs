@@ -18,6 +18,8 @@ using Microsoft.AspNet.Routing;
 using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Core;
 using Microsoft.Data.Entity;
+using Microsoft.Framework.Caching;
+using Microsoft.Framework.Caching.Distributed;
 using Microsoft.Framework.Configuration;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;

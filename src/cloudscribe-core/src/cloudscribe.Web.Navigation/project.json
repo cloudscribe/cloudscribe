@@ -16,7 +16,8 @@
         "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta5",
         "Newtonsoft.Json": "7.0.1",
         "Microsoft.Framework.Configuration.Abstractions": "1.0.0-beta5",
-        "System.Xml.XDocument": "4.0.10-beta-23019"
+        "System.Xml.XDocument": "4.0.10-beta-23019",
+        "Microsoft.Framework.Caching.Abstractions": "1.0.0-beta5"
     },
 
     "frameworks": {

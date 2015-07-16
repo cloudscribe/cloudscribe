@@ -6,11 +6,13 @@
 // 
 
 using cloudscribe.Web.Navigation.Helpers;
+using Microsoft.Framework.Caching.Distributed;
 using Microsoft.Framework.Configuration;
 using Microsoft.Framework.Logging;
 using Microsoft.Framework.Runtime;
 using System;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -21,7 +23,8 @@ namespace cloudscribe.Web.Navigation
         public XmlNavigationTreeBuilder(
             IApplicationEnvironment appEnv,
             IConfiguration configuration,
-            ILoggerFactory loggerFactory)
+            ILoggerFactory loggerFactory,
+            IDistributedCache cache)
         {
             if (appEnv == null) { throw new ArgumentNullException(nameof(appEnv)); }
             if (loggerFactory == null) { throw new ArgumentNullException(nameof(loggerFactory)); }
@@ -31,6 +34,7 @@ namespace cloudscribe.Web.Navigation
             config = configuration;
             logFactory = loggerFactory;
             log = loggerFactory.CreateLogger(typeof(XmlNavigationTreeBuilder).FullName);
+            this.cache = cache;
 
         }
 
@@ -39,6 +43,8 @@ namespace cloudscribe.Web.Navigation
         private ILoggerFactory logFactory;
         private ILogger log;
         private TreeNode<NavigationNode> rootNode = null;
+        private IDistributedCache cache;
+        private const string cacheKey = "navxmlbuild";
 
         public async Task<TreeNode<NavigationNode>> GetTree()
         {
@@ -46,7 +52,31 @@ namespace cloudscribe.Web.Navigation
 
             if (rootNode == null)
             {
-                rootNode = await BuildTree();
+                NavigationTreeXmlConverter converter = new NavigationTreeXmlConverter();
+
+                await cache.ConnectAsync();
+                byte[] bytes = await cache.GetAsync(cacheKey);
+                if (bytes != null)
+                {
+                    string xml = Encoding.UTF8.GetString(bytes);
+                    XDocument doc = XDocument.Parse(xml);
+                    
+                    rootNode = converter.FromXml(doc);
+                }
+                else
+                {
+                    rootNode = await BuildTree();
+                    string xml2 = converter.ToXmlString(rootNode);
+
+                    await cache.SetAsync(
+                                        cacheKey,
+                                        Encoding.UTF8.GetBytes(xml2),
+                                        new DistributedCacheEntryOptions().SetSlidingExpiration(
+                                            TimeSpan.FromSeconds(100))
+                                            );
+                                        }
+
+                
             }
 
             return rootNode;
