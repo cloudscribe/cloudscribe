@@ -102,7 +102,9 @@ namespace cloudscribe.WebHost
             // granted xml can be broken by typos too but the end tags make it easier to keep track of where you are imho (JA)
             //services.TryAdd(ServiceDescriptor.Scoped<INavigationTreeBuilder, JsonNavigationTreeBuilder>());
             services.TryAdd(ServiceDescriptor.Scoped<INavigationTreeBuilder, XmlNavigationTreeBuilder>());
+
             
+
             services.TryAdd(ServiceDescriptor.Scoped<INavigationNodePermissionResolver, NavigationNodePermissionResolver>());
             services.TryAdd(ServiceDescriptor.Transient<IBuildPaginationLinks, PaginationLinkBuilder>());
 

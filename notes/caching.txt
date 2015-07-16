@@ -49,3 +49,9 @@ and definitely that will want to be in distributed cache
 in fact the node can be chained together with multiple INavigationTreeBuilders adding more nodes to the tree and the whole object should be cached
 
 so even for this scenario it seems distributed cache is what we should use
+
+Is there any guidance for caching patterns in ASP.NET 5
+http://stackoverflow.com/questions/31458950/is-there-any-guidance-for-caching-patterns-in-asp-net-5
+
+For my semi expensive BuildTree method that deserializes from string, suppose I register my ITreebuilder as a singleton in DI.
+It can check its local variable for the tree so only on first request would it need to build since it would be kept in memory for the life of the app right? each server node has its own copy in memory in this case right? it would check the cache before building, just need a way to know if the cache was invalidated so it can rebuild the internal copy if needed.
