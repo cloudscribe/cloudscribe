@@ -40,7 +40,7 @@ namespace cloudscribe.Core.Identity
         private ISiteSettings _siteSettings = null;
         private IConfiguration config;
 
-        public ISiteSettings siteSettings
+        private ISiteSettings siteSettings
         {
             get {
                 if(_siteSettings == null)
@@ -231,67 +231,110 @@ namespace cloudscribe.Core.Identity
 
         //disable warning about not really being async
         // we know it is not, it is not needed to hit the db in these
-#pragma warning disable 1998
+//#pragma warning disable 1998
 
-        public async Task<string> GetUserIdAsync(TUser user, CancellationToken token)
+        public Task<string> GetUserIdAsync(TUser user, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("GetUserIdAsync"); }
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+            return Task.FromResult(user.UserGuid.ToString());
 
-            return user.UserGuid.ToString();
+            
         }
 
-        public async Task<string> GetUserNameAsync(TUser user, CancellationToken token)
+        public Task<string> GetUserNameAsync(TUser user, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("GetUserNameAsync"); }
 
-            return user.UserName;
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+            return Task.FromResult(user.UserName);
         }
 
-        public async Task<string> GetNormalizedUserNameAsync(TUser user, CancellationToken token)
+        public Task<string> GetNormalizedUserNameAsync(TUser user, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("GetUserNameAsync"); }
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+            return Task.FromResult(user.UserName);
 
-            return user.UserName.ToLowerInvariant();
+            //return user.UserName.ToLowerInvariant();
         }
 
-#pragma warning restore 1998
+//#pragma warning restore 1998
 
         #endregion
 
         #region IUserEmailStore
 
-        //disable warning about not really being async
-        // we know it is not, it is not needed to hit the db in these
-#pragma warning disable 1998
+        
 
-        public async Task<string> GetEmailAsync(TUser user, CancellationToken token)
+        public Task<string> GetEmailAsync(TUser user, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("GetEmailAsync"); }
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
 
-            return user.Email;
+            return Task.FromResult(user.Email);
         }
 
-        public async Task<string> GetNormalizedEmailAsync(TUser user, CancellationToken token)
+        public Task<string> GetNormalizedEmailAsync(TUser user, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("GetEmailAsync"); }
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
 
-            return user.LoweredEmail;
+            return Task.FromResult(user.LoweredEmail);
         }
 
 
 
-        public async Task<bool> GetEmailConfirmedAsync(TUser user, CancellationToken token)
+        public Task<bool> GetEmailConfirmedAsync(TUser user, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("GetEmailConfirmedAsync"); }
 
-            return user.EmailConfirmed;
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+
+            return Task.FromResult(user.EmailConfirmed);
         }
 
-#pragma warning restore 1998
+
 
         public async Task SetEmailAsync(TUser user, string email, CancellationToken token)
         {
             if (debugLog) { log.LogInformation("SetEmailAsync"); }
+
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
 
             if (user.SiteGuid == Guid.Empty)
             {
@@ -315,6 +358,12 @@ namespace cloudscribe.Core.Identity
         {
             if (debugLog) { log.LogInformation("SetEmailAsync"); }
 
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+
             if (user.SiteGuid == Guid.Empty)
             {
                 user.SiteGuid = siteSettings.SiteGuid;
@@ -336,6 +385,12 @@ namespace cloudscribe.Core.Identity
         public async Task SetEmailConfirmedAsync(TUser user, bool confirmed, CancellationToken token)
         {
             if (debugLog) { log.LogInformation("SetEmailConfirmedAsync"); }
+
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
 
             if (user.SiteGuid == Guid.Empty)
             {
@@ -376,11 +431,12 @@ namespace cloudscribe.Core.Identity
         {
             if (debugLog) { log.LogInformation("GetPasswordHashAsync"); }
 
+            ThrowIfDisposed();
             if (user == null)
             {
-                return string.Empty;
+                throw new ArgumentNullException("user");
             }
-
+            
             return user.PasswordHash;
         }
 
@@ -388,9 +444,10 @@ namespace cloudscribe.Core.Identity
         {
             if (debugLog) { log.LogInformation("HasPasswordAsync"); }
 
+            ThrowIfDisposed();
             if (user == null)
             {
-                return false;
+                throw new ArgumentNullException("user");
             }
 
             return string.IsNullOrEmpty(user.PasswordHash);
@@ -400,9 +457,10 @@ namespace cloudscribe.Core.Identity
         {
             if (debugLog) { log.LogInformation("SetPasswordHashAsync"); }
 
+            ThrowIfDisposed();
             if (user == null)
             {
-                return;
+                throw new ArgumentNullException("user");
             }
 
             user.PasswordHash = passwordHash;
@@ -435,43 +493,67 @@ namespace cloudscribe.Core.Identity
 
         #region IUserLockoutStore
 
-        //disable warning about not really being async
-        // we know it is not, it is not needed to hit the db in these
-#pragma warning disable 1998
-
-        public async Task<int> GetAccessFailedCountAsync(TUser user, CancellationToken token)
+        
+        public Task<int> GetAccessFailedCountAsync(TUser user, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("GetAccessFailedCountAsync"); }
 
-            return user.FailedPasswordAttemptCount;
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+
+            return Task.FromResult(user.FailedPasswordAttemptCount);
         }
 
-        public async Task<bool> GetLockoutEnabledAsync(TUser user, CancellationToken token)
+        public Task<bool> GetLockoutEnabledAsync(TUser user, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("GetLockoutEnabledAsync"); }
 
-            return user.IsLockedOut;
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+
+            return Task.FromResult(user.IsLockedOut);
         }
 
-        public async Task<DateTimeOffset?> GetLockoutEndDateAsync(TUser user, CancellationToken token)
+        public Task<DateTimeOffset?> GetLockoutEndDateAsync(TUser user, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("GetLockoutEndDateAsync"); }
 
-            DateTimeOffset d = new DateTimeOffset(DateTime.MinValue);
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+
+            DateTimeOffset? d = new DateTimeOffset(DateTime.MinValue);
             if (user.LockoutEndDateUtc != null)
             {
                 d = new DateTimeOffset(user.LockoutEndDateUtc.Value);
-                return d;
+                return Task.FromResult(d);
             }
             return null;
         }
 
 
-#pragma warning restore 1998
+
 
         public async Task<int> IncrementAccessFailedCountAsync(TUser user, CancellationToken token)
         {
             if (debugLog) { log.LogInformation("IncrementAccessFailedCountAsync"); }
+
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
 
             user.FailedPasswordAttemptCount += 1;
             token.ThrowIfCancellationRequested();
@@ -483,6 +565,12 @@ namespace cloudscribe.Core.Identity
         {
             if (debugLog) { log.LogInformation("ResetAccessFailedCountAsync"); }
 
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+
             user.FailedPasswordAttemptCount = 0;
             token.ThrowIfCancellationRequested();
             bool result = await repo.UpdateFailedPasswordAttemptCount(user.UserGuid, user.FailedPasswordAttemptCount);
@@ -492,6 +580,13 @@ namespace cloudscribe.Core.Identity
         public async Task SetLockoutEnabledAsync(TUser user, bool enabled, CancellationToken token)
         {
             if (debugLog) { log.LogInformation("SetLockoutEnabledAsync"); }
+
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+
             bool result;
             token.ThrowIfCancellationRequested();
             if (enabled)
@@ -510,7 +605,13 @@ namespace cloudscribe.Core.Identity
         {
             if (debugLog) { log.LogInformation("SetLockoutEndDateAsync"); }
 
-            if(lockoutEnd.HasValue)
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+
+            if (lockoutEnd.HasValue)
             {
                 user.LockoutEndDateUtc = lockoutEnd.Value.DateTime;
             }
@@ -533,7 +634,13 @@ namespace cloudscribe.Core.Identity
         {
             if (debugLog) { log.LogInformation("AddClaimsAsync"); }
 
-            foreach(Claim claim in claims)
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+
+            foreach (Claim claim in claims)
             {
                 UserClaim userClaim = new UserClaim();
                 userClaim.UserId = user.UserGuid.ToString();
@@ -549,7 +656,14 @@ namespace cloudscribe.Core.Identity
         public async Task RemoveClaimsAsync(TUser user, IEnumerable<Claim> claims, CancellationToken token)
         {
             if (debugLog) { log.LogInformation("RemoveClaimAsync"); }
-            foreach(Claim claim in claims)
+
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+
+            foreach (Claim claim in claims)
             {
                 token.ThrowIfCancellationRequested();
                 await repo.DeleteClaimByUser(user.Id, claim.Type);
@@ -562,6 +676,13 @@ namespace cloudscribe.Core.Identity
             if (debugLog) { log.LogInformation("ReplaceClaimAsync"); }
 
             token.ThrowIfCancellationRequested();
+
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+
             await repo.DeleteClaimByUser(user.Id, claim.Type);
 
             UserClaim userClaim = new UserClaim();
@@ -576,6 +697,12 @@ namespace cloudscribe.Core.Identity
         public async Task<IList<Claim>> GetClaimsAsync(TUser user, CancellationToken token)
         {
             if (debugLog) { log.LogInformation("GetClaimsAsync"); }
+
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
 
             IList<Claim> claims = new List<Claim>();
             token.ThrowIfCancellationRequested();
@@ -606,6 +733,12 @@ namespace cloudscribe.Core.Identity
         public async Task AddLoginAsync(TUser user, UserLoginInfo login, CancellationToken token)
         {
             if (debugLog) { log.LogInformation("AddLoginAsync"); }
+
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
 
             UserLogin userlogin = new UserLogin();
             userlogin.UserId = user.UserGuid.ToString();
@@ -638,6 +771,11 @@ namespace cloudscribe.Core.Identity
         public async Task<IList<UserLoginInfo>> GetLoginsAsync(TUser user, CancellationToken token)
         {
             if (debugLog) { log.LogInformation("GetLoginsAsync"); }
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
 
             IList<UserLoginInfo> logins = new List<UserLoginInfo>();
             token.ThrowIfCancellationRequested();
@@ -655,6 +793,11 @@ namespace cloudscribe.Core.Identity
         public async Task RemoveLoginAsync(TUser user, string loginProvider, string providerKey, CancellationToken token)
         {
             if (debugLog) { log.LogInformation("RemoveLoginAsync"); }
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
             token.ThrowIfCancellationRequested();
             bool result = await repo.DeleteLogin(
                 loginProvider,
@@ -669,22 +812,31 @@ namespace cloudscribe.Core.Identity
 
         #region IUserTwoFactorStore
 
-        //disable warning about not really being async
-        // we know it is not, it is not needed to hit the db in these
-#pragma warning disable 1998
 
-        public async Task<bool> GetTwoFactorEnabledAsync(TUser user, CancellationToken token)
+        public Task<bool> GetTwoFactorEnabledAsync(TUser user, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("GetTwoFactorEnabledAsync"); }
 
-            return user.TwoFactorEnabled;
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+
+            return Task.FromResult(user.TwoFactorEnabled);
         }
 
-#pragma warning restore 1998
 
         public async Task SetTwoFactorEnabledAsync(TUser user, bool enabled, CancellationToken token)
         {
             if (debugLog) { log.LogInformation("SetTwoFactorEnabledAsync"); }
+
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
 
             user.TwoFactorEnabled = enabled;
             token.ThrowIfCancellationRequested();
@@ -698,25 +850,36 @@ namespace cloudscribe.Core.Identity
 
         #region IUserPhoneNumberStore
 
-        //disable warning about not really being async
-        // we know it is not, it is not needed to hit the db in these
-#pragma warning disable 1998
-
-        public async Task<string> GetPhoneNumberAsync(TUser user, CancellationToken token)
+       
+        public Task<string> GetPhoneNumberAsync(TUser user, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("GetPhoneNumberAsync"); }
 
-            return user.PhoneNumber;
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+
+            return Task.FromResult(user.PhoneNumber);
         }
 
-        public async Task<bool> GetPhoneNumberConfirmedAsync(TUser user, CancellationToken token)
+        public Task<bool> GetPhoneNumberConfirmedAsync(TUser user, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("GetPhoneNumberConfirmedAsync"); }
 
-            return user.PhoneNumberConfirmed;
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+
+            return Task.FromResult(user.PhoneNumberConfirmed);
         }
 
-#pragma warning restore 1998
+
 
         public async Task SetPhoneNumberAsync(TUser user, string phoneNumber, CancellationToken token)
         {
@@ -836,11 +999,49 @@ namespace cloudscribe.Core.Identity
 
         #endregion
 
+        private void ThrowIfDisposed()
+        {
+            if (disposedValue)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+        }
 
+
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+        void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // TODO: dispose managed state (managed objects).
+                }
+
+                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
+                // TODO: set large fields to null.
+
+                disposedValue = true;
+            }
+        }
+
+        // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
+        // ~SiteRoleStore() {
+        //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+        //   Dispose(false);
+        // }
+
+        // This code added to correctly implement the disposable pattern.
         public void Dispose()
         {
-
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
+            // TODO: uncomment the following line if the finalizer is overridden above.
+            // GC.SuppressFinalize(this);
         }
+        #endregion
 
     }
 }

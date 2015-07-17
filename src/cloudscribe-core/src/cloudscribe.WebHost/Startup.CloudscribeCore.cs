@@ -91,6 +91,7 @@ namespace cloudscribe.WebHost
             services.TryAdd(ServiceDescriptor.Transient<IPasswordHasher<SiteUser>, SitePasswordHasher<SiteUser>>());
 
             services.TryAdd(ServiceDescriptor.Scoped<SiteUserManager<SiteUser>, SiteUserManager<SiteUser>>());
+            services.TryAdd(ServiceDescriptor.Scoped<SiteRoleManager<SiteRole>, SiteRoleManager<SiteRole>>());
 
             services.AddIdentity<SiteUser, SiteRole>();
             //********************************************************************************************************

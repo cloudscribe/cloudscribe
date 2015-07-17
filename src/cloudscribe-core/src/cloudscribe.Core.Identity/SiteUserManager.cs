@@ -20,19 +20,12 @@ using System.Threading.Tasks;
 namespace cloudscribe.Core.Identity
 {
     /// <summary>
-    /// an instance of this class is created and configured in cloudscribe.Core.Web.SiteContext.cs
+    /// extends the standard UserManager with our own methods
     /// </summary>
+    /// <typeparam name="TUser"></typeparam>
     public class SiteUserManager<TUser> : UserManager<TUser> where TUser : SiteUser
     {
-        //private static readonly ILog log = LogManager.GetLogger(typeof(SiteUserManager));
-
-        //private IUserStore<SiteUser> _store = null;
-
-        //public IUserStore<SiteUser> Store
-        //{
-        //    get { return _store; }
-        //}
-
+        
         public SiteUserManager(
             IUserRepository userRepository,
             ISiteResolver siteResolver,
@@ -60,16 +53,29 @@ namespace cloudscribe.Core.Identity
         {
             userRepo = userRepository;
             this.siteResolver = siteResolver;
-            site = this.siteResolver.Resolve();
+            
         }
 
         private IUserRepository userRepo;
         private ISiteResolver siteResolver;
-        private ISiteSettings site;
+
+
+        private ISiteSettings siteSettings = null;
+
+
+        private ISiteSettings Site
+        {
+            get
+            {
+                if (siteSettings == null) { siteSettings = siteResolver.Resolve(); }
+                return siteSettings;
+            }
+        }
+        //private ILogger<UserManager<TUser>> logger;
 
         public async Task<bool> LoginIsAvailable(int userId, string loginName)
         {
-            return await userRepo.LoginIsAvailable(site.SiteId, userId, loginName);
+            return await userRepo.LoginIsAvailable(Site.SiteId, userId, loginName);
  
         }
 

@@ -2,10 +2,8 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-06-19
-// Last Modified:		    2015-07-05
+// Last Modified:		    2015-07-17
 // 
-// You must not remove this notice, or any other, from this software.
-
 
 using cloudscribe.Configuration;
 using cloudscribe.Core.Models;
@@ -14,36 +12,13 @@ using Microsoft.Framework.Configuration;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
-using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Identity
 {
-    //https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity.EntityFramework/RoleStore.cs
-    //TODO: implement
     public sealed class RoleStore<TRole> : IRoleStore<TRole> where TRole : SiteRole
     {
-        private ILoggerFactory logFactory;
-        private ILogger log;
-        private bool debugLog = false;
-
-        private ISiteResolver resolver;
-        private ISiteSettings siteSettings = null;
-        private IConfiguration config;
-
-        public ISiteSettings SiteSettings
-        {
-            get {
-                if(siteSettings == null) { siteSettings = resolver.Resolve(); }
-                return siteSettings;
-            }
-        }
-        private IUserRepository repo;
-
-
-        private RoleStore() { }
-
         public RoleStore(
             ILoggerFactory loggerFactory,
             ISiteResolver siteResolver,
@@ -60,65 +35,185 @@ namespace cloudscribe.Core.Identity
             logFactory = loggerFactory;
             log = loggerFactory.CreateLogger(this.GetType().FullName);
             config = configuration;
-            debugLog = config.UserStoreDebugEnabled();
+            //debugLog = config.UserStoreDebugEnabled();
 
 
             //siteSettings = site;
 
 
-            repo = userRepository;
+            userRepo = userRepository;
 
-            if (debugLog) { log.LogInformation("constructor"); }
+            //if (debugLog) { log.LogInformation("constructor"); }
         }
 
-        public Task<IdentityResult> CreateAsync(TRole role, CancellationToken cancellationToken)
+        private ILoggerFactory logFactory;
+        private ILogger log;
+        //private bool debugLog = false;
+        private IConfiguration config;
+        private ISiteResolver resolver;
+        private IUserRepository userRepo;
+        private ISiteSettings siteSettings = null;
+        
+        private ISiteSettings Site
         {
-            throw new NotImplementedException();
+            get
+            {
+                if (siteSettings == null) { siteSettings = resolver.Resolve(); }
+                return siteSettings;
+            }
+        }
+        
+        public async Task<IdentityResult> CreateAsync(TRole role, CancellationToken cancellationToken)
+        {
+            if (role == null)
+            {
+                throw new ArgumentNullException("role");
+            }
+
+            if (role.SiteGuid == Guid.Empty)
+            {
+                role.SiteGuid = Site.SiteGuid;
+            }
+            if(role.SiteId == -1)
+            {
+                role.SiteId = Site.SiteId;
+            }
+
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+
+            bool result = await userRepo.SaveRole(role);
+
+            if(result) { return IdentityResult.Success; }
+
+            return IdentityResult.Failed(null);
         }
 
-        public Task<IdentityResult> DeleteAsync(TRole role, CancellationToken cancellationToken)
+        public async Task<IdentityResult> DeleteAsync(TRole role, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+
+            if (role == null)
+            {
+                throw new ArgumentNullException("role");
+            }
+
+            // remove all users form the role
+            bool result = await userRepo.DeleteUserRolesByRole(role.RoleId);
+            result = await userRepo.DeleteRole(role.RoleId);
+
+            if (result) { return IdentityResult.Success; }
+
+            return IdentityResult.Failed(null);
         }
 
-        public Task<TRole> FindByIdAsync(string roleId, CancellationToken cancellationToken)
+        public async Task<TRole> FindByIdAsync(string roleId, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+            ISiteRole role = await userRepo.FetchRole(Convert.ToInt32(roleId));
+
+            return (TRole)role;
         }
 
-        public Task<TRole> FindByNameAsync(string normalizedRoleName, CancellationToken cancellationToken)
+        public async Task<TRole> FindByNameAsync(string normalizedRoleName, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+            ISiteRole role = await userRepo.FetchRole(Site.SiteId, normalizedRoleName);
+
+            return (TRole)role;
         }
 
         public Task<string> GetNormalizedRoleNameAsync(TRole role, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+            if (role == null)
+            {
+                throw new ArgumentNullException("role");
+            }
+
+            return Task.FromResult(role.RoleName);
         }
 
         public Task<string> GetRoleIdAsync(TRole role, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+
+            if (role == null)
+            {
+                throw new ArgumentNullException("role");
+            }
+
+            return Task.FromResult(role.RoleId.ToInvariantString());
         }
 
         public Task<string> GetRoleNameAsync(TRole role, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+
+            if (role == null)
+            {
+                throw new ArgumentNullException("role");
+            }
+
+            return Task.FromResult(role.RoleName);
         }
 
         public Task SetNormalizedRoleNameAsync(TRole role, string normalizedName, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+
+            if (role == null)
+            {
+                throw new ArgumentNullException("role");
+            }
+
+            role.RoleName = normalizedName;
+            return Task.FromResult(0);
         }
 
         public Task SetRoleNameAsync(TRole role, string roleName, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+
+            if (role == null)
+            {
+                throw new ArgumentNullException("role");
+            }
+            role.RoleName = roleName;
+            return Task.FromResult(0);
         }
 
-        public Task<IdentityResult> UpdateAsync(TRole role, CancellationToken cancellationToken)
+        public async Task<IdentityResult> UpdateAsync(TRole role, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+
+            if (role == null)
+            {
+                throw new ArgumentNullException("role");
+            }
+
+            bool result = await userRepo.SaveRole(role);
+
+            if (result) { return IdentityResult.Success; }
+
+            return IdentityResult.Failed(null);
+        }
+
+        private void ThrowIfDisposed()
+        {
+            if (disposedValue)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
         }
 
         #region IDisposable Support

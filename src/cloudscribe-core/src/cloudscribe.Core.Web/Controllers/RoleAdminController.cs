@@ -25,6 +25,7 @@ namespace cloudscribe.Core.Web.Controllers
         public RoleAdminController(
             ISiteResolver siteResolver,
             SiteUserManager<SiteUser> userManager,
+            SiteRoleManager<SiteRole> roleManager,
             IUserRepository userRepository,
             IConfiguration configuration
             )

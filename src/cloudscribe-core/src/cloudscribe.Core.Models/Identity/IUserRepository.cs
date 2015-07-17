@@ -64,7 +64,7 @@ namespace cloudscribe.Core.Models
         Task<bool> DeleteUserRoles(int userId);
         Task<bool> DeleteUserRolesByRole(int roleId);
         Task<bool> RoleExists(int siteId, string roleName);
-        Task<ISiteRole> FetchRole(int roleID);
+        Task<ISiteRole> FetchRole(int roleId);
         Task<ISiteRole> FetchRole(int siteId, string roleName);
         Task<IList<ISiteRole>> GetRolesBySite(
             int siteId,
