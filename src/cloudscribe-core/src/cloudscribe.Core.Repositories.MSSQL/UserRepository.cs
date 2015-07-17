@@ -740,12 +740,12 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// <param name="userId"></param>
         /// <param name="loginName"></param>
         /// <returns></returns>
-        public bool LoginIsAvailable(int siteId, int userId, string loginName)
+        public async Task<bool> LoginIsAvailable(int siteId, int userId, string loginName)
         {
             if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
             bool available = true;
 
-            using (DbDataReader r = dbSiteUser.GetSingleUserByLoginNameNonAsync(siteId, loginName, false))
+            using (DbDataReader r = await dbSiteUser.GetSingleUserByLoginName(siteId, loginName, false))
             {
                 while (r.Read())
                 {

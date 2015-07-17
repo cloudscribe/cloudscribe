@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-07
-// Last Modified:			2015-07-15
+// Last Modified:			2015-07-17
 // 
 
 using cloudscribe.Web.Navigation;
@@ -24,6 +24,10 @@ namespace cloudscribe.Core.Web.Navigation
 
         private TreeNode<NavigationNode> siteRoot = null;
 
+        //disable warning about not really being async
+        // we know it is not since it is hard coded building of the tree there is nothign to wait for
+#pragma warning disable 1998
+
         public async Task<TreeNode<NavigationNode>> GetTree()
         {
             // ultimately we will need to cache sitemap per site
@@ -35,6 +39,8 @@ namespace cloudscribe.Core.Web.Navigation
 
             return siteRoot;
         }
+
+#pragma warning restore 1998
 
         private TreeNode<NavigationNode> BuildTree()
         {

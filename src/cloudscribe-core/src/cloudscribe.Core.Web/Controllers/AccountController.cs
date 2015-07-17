@@ -9,6 +9,7 @@ using cloudscribe.Configuration;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Web.ViewModels.Account;
 using cloudscribe.Core.Web.ViewModels.SiteUser;
+using cloudscribe.Core.Identity;
 using cloudscribe.Messaging;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Identity;
@@ -28,13 +29,13 @@ namespace cloudscribe.Core.Web.Controllers
 
         public AccountController(
             ISiteResolver siteResolver,
-            IUserRepository userRepository,
-            UserManager<SiteUser> userManager,
+            //IUserRepository userRepository,
+            SiteUserManager<SiteUser> userManager,
             SignInManager<SiteUser> signInManager,
             IConfiguration configuration)
         {
             Site = siteResolver.Resolve();
-            userRepo = userRepository;
+            //userRepo = userRepository;
             UserManager = userManager;
             SignInManager = signInManager;
             config = configuration;
@@ -42,9 +43,9 @@ namespace cloudscribe.Core.Web.Controllers
 
         //private ISiteResolver resolver;
         private ISiteSettings Site;
-        private IUserRepository userRepo;
+        //private IUserRepository userRepo;
         private IConfiguration config;
-        public UserManager<SiteUser> UserManager { get; private set; }
+        public SiteUserManager<SiteUser> UserManager { get; private set; }
         public SignInManager<SiteUser> SignInManager { get; private set; }
 
         //public ISiteContext Site
@@ -405,15 +406,14 @@ namespace cloudscribe.Core.Web.Controllers
         }
 
 
-        public JsonResult LoginNameAvailable(int? userId, string loginName)
+        public async Task<JsonResult> LoginNameAvailable(int? userId, string loginName)
         {
             // same validation is used when editing or creating a user
             // if editing then the loginname is valid if found attached to the selected user
             // otherwise if found it is not already in use and not available
             int selectedUserId = -1;
             if (userId.HasValue) { selectedUserId = userId.Value; }
-            bool available = userRepo.LoginIsAvailable(
-                Site.SiteId, selectedUserId, loginName);
+            bool available = await UserManager.LoginIsAvailable(selectedUserId, loginName);
 
 
             return Json(available);

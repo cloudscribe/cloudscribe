@@ -2,10 +2,11 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-06
-// Last Modified:			2015-07-04
+// Last Modified:			2015-07-17
 // 
 
 using cloudscribe.Configuration;
+using cloudscribe.Core.Identity;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Web.ViewModels.RoleAdmin;
 using Microsoft.AspNet.Authorization;
@@ -23,11 +24,13 @@ namespace cloudscribe.Core.Web.Controllers
 
         public RoleAdminController(
             ISiteResolver siteResolver,
+            SiteUserManager<SiteUser> userManager,
             IUserRepository userRepository,
             IConfiguration configuration
             )
         {
             Site = siteResolver.Resolve();
+            UserManager = userManager;
             UserRepository = userRepository;
             config = configuration;
         }
@@ -35,6 +38,7 @@ namespace cloudscribe.Core.Web.Controllers
         private ISiteSettings Site;
         private IUserRepository UserRepository;
         private IConfiguration config;
+        public SiteUserManager<SiteUser> UserManager { get; private set; }
 
         [HttpGet]
         [Authorize(Roles = "Admins,Role Admins")]

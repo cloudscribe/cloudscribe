@@ -1,4 +1,8 @@
 
+http://stackoverflow.com/questions/31464359/custom-authorizeattribute-in-asp-net-5-mvc-6
+
+https://github.com/aspnet/MusicStore/blob/master/src/MusicStore/Startup.cs#L118-L121
+
 http://www.troyhunt.com/2012/05/everything-you-ever-wanted-to-know.html
 
 http://blogs.msdn.com/b/webdev/archive/2014/01/06/implementing-custom-password-policy-using-asp-net-identity.aspx

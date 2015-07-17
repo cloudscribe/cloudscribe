@@ -2,10 +2,11 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-06-20
+// Last Modified:			2015-07-17
 // 
 
 using cloudscribe.Core.Models;
+using cloudscribe.Core.Identity;
 using cloudscribe.Core.Web.ViewModels.SiteUser;
 using cloudscribe.Messaging;
 using Microsoft.AspNet.Authorization;
@@ -23,7 +24,7 @@ namespace cloudscribe.Core.Web.Controllers
     {
         public ManageController(
             ISiteResolver siteResolver,
-            UserManager<SiteUser> userManager,
+            SiteUserManager<SiteUser> userManager,
             SignInManager<SiteUser> signInManager)
         {
             Site = siteResolver.Resolve();
@@ -32,7 +33,7 @@ namespace cloudscribe.Core.Web.Controllers
         }
 
         private ISiteSettings Site;
-        public UserManager<SiteUser> UserManager { get; private set; }
+        public SiteUserManager<SiteUser> UserManager { get; private set; }
         public SignInManager<SiteUser> SignInManager { get; private set; }
 
 

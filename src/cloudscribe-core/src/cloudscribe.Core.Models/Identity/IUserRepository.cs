@@ -48,7 +48,7 @@ namespace cloudscribe.Core.Models
         Task<int> CountLockedOutUsers(int siteId);
         Task<int> CountNotApprovedUsers(int siteId);
         bool LoginExistsInDB(int siteId, string loginName);
-        bool LoginIsAvailable(int siteId, int userId, string loginName);
+        Task<bool> LoginIsAvailable(int siteId, int userId, string loginName);
         //int UserCount(int siteId, string userNameBeginsWith);
         int UsersOnlineSinceCount(int siteId, DateTime sinceTime);
         int GetCount(int siteId);

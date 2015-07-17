@@ -89,6 +89,9 @@ namespace cloudscribe.WebHost
             // it also alllows us to create a default admin@admin.com user with administrator role with a cleartext password which would be updated 
             // to the default identity hash as soon as you change the password from its default "admin"
             services.TryAdd(ServiceDescriptor.Transient<IPasswordHasher<SiteUser>, SitePasswordHasher<SiteUser>>());
+
+            services.TryAdd(ServiceDescriptor.Scoped<SiteUserManager<SiteUser>, SiteUserManager<SiteUser>>());
+
             services.AddIdentity<SiteUser, SiteRole>();
             //********************************************************************************************************
 

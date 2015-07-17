@@ -2,11 +2,12 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-08
-// Last Modified:			2015-07-04
+// Last Modified:			2015-07-17
 // 
 
 using cloudscribe.Configuration;
 using cloudscribe.Core.Models;
+using cloudscribe.Core.Identity;
 using cloudscribe.Core.Web.ViewModels.Account;
 using cloudscribe.Core.Web.ViewModels.UserAdmin;
 using Microsoft.AspNet.Authorization;
@@ -27,13 +28,11 @@ namespace cloudscribe.Core.Web.Controllers
         public UserAdminController(
             ISiteResolver siteResolver,
             ISiteRepository siteRepository,
-            IUserRepository userRepository,
-            UserManager<SiteUser> userManager,
+            SiteUserManager<SiteUser> userManager,
             IConfiguration configuration
             )
         {
             Site = siteResolver.Resolve();
-            userRepo = userRepository;
             UserManager = userManager;
             siteRepo = siteRepository;
             config = configuration;
@@ -42,8 +41,7 @@ namespace cloudscribe.Core.Web.Controllers
         private IConfiguration config;
         private ISiteSettings Site;
         private ISiteRepository siteRepo;
-        private IUserRepository userRepo;
-        public UserManager<SiteUser> UserManager { get; private set; }
+        public SiteUserManager<SiteUser> UserManager { get; private set; }
 
         [HttpGet]
         public async Task<IActionResult> Index(
@@ -75,14 +73,14 @@ namespace cloudscribe.Core.Web.Controllers
                 siteId = Site.SiteId;
             }
 
-            var siteMembers = await userRepo.GetPage(
+            var siteMembers = await UserManager.GetPage(
                 siteId,
                 pageNumber,
                 itemsPerPage,
                 query,
                 sortMode);
 
-            var count = await userRepo.CountUsers(siteId, query);
+            var count = await UserManager.CountUsers(siteId, query);
 
             UserListViewModel model = new UserListViewModel();
             model.Heading = "User Management";
@@ -127,14 +125,14 @@ namespace cloudscribe.Core.Web.Controllers
                 siteId = Site.SiteId;
             }
 
-            var siteMembers = await userRepo.GetUserAdminSearchPage(
+            var siteMembers = await UserManager.GetUserAdminSearchPage(
                 siteId,
                 pageNumber,
                 itemsPerPage,
                 query,
                 sortMode);
 
-            var count = await userRepo.CountUsersForAdminSearch(siteId, query);
+            var count = await UserManager.CountUsersForAdminSearch(siteId, query);
 
             UserListViewModel model = new UserListViewModel();
             model.Heading = "User Management";
@@ -187,7 +185,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             //}
 
-            siteMembers = await userRepo.GetByIPAddress(
+            siteMembers = await UserManager.GetByIPAddress(
                 siteGuid,
                 ipQuery);
 
@@ -220,7 +218,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             if (userId.HasValue)
             {
-                ISiteUser user = await userRepo.Fetch(Site.SiteId, userId.Value);
+                ISiteUser user = await UserManager.Fetch(Site.SiteId, userId.Value);
                 if (user != null)
                 {
                     model.UserId = user.UserId;
@@ -263,7 +261,7 @@ namespace cloudscribe.Core.Web.Controllers
                 if (model.UserId > -1)
                 {
                     //editing an existing user
-                    ISiteUser user = await userRepo.Fetch(Site.SiteId, model.UserId);
+                    ISiteUser user = await UserManager.Fetch(Site.SiteId, model.UserId);
                     if (user != null)
                     {
                         user.Email = model.Email;
@@ -280,7 +278,7 @@ namespace cloudscribe.Core.Web.Controllers
                             user.DateOfBirth = DateTime.MinValue;
                         }
 
-                        bool result = await userRepo.Save(user);
+                        bool result = await UserManager.Save(user);
                         if (result)
                         {
                             this.AlertSuccess(string.Format("user account for <b>{0}</b> was successfully updated.",
