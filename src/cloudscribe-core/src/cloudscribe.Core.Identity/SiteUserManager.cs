@@ -27,8 +27,8 @@ namespace cloudscribe.Core.Identity
     {
         
         public SiteUserManager(
-            IUserRepository userRepository,
             ISiteResolver siteResolver,
+            IUserRepository userRepository,
             IUserStore<TUser> store,
             IOptions<IdentityOptions> optionsAccessor,
             IPasswordHasher<TUser> passwordHasher,

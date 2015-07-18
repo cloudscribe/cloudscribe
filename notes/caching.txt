@@ -55,3 +55,66 @@ http://stackoverflow.com/questions/31458950/is-there-any-guidance-for-caching-pa
 
 For my semi expensive BuildTree method that deserializes from string, suppose I register my ITreebuilder as a singleton in DI.
 It can check its local variable for the tree so only on first request would it need to build since it would be kept in memory for the life of the app right? each server node has its own copy in memory in this case right? it would check the cache before building, just need a way to know if the cache was invalidated so it can rebuild the internal copy if needed.
+
+How to configured nested dependency in ASP.NET 5 DI?
+
+I would like to wrap a repository inside another repository that will handle caching while internally using the passed in repository.
+This way my caching logic can be completely separate from the repository implementation. This pattern would also allow me to easily change from memory cache to distributed cache, that is I could have different caching repositories that use different cache types so I can plug them in depending on the environment. On Azure I could use distributed cache but on a single server I could use memory cache for example.
+
+public sealed class CachingFooRepository : IFooRepository
+{
+	private IFooRepository repo;
+	private IMemoryCache  cache;
+
+	public CachingFooRepository(IFooRepository implementation, IMemoryCache  cache, IFooCachingRules)
+	{
+		if ((implementation == null)||(implementation is CachingFooRepository))
+		{
+			throw new ArgumentException("you must pass in an implementation of IFooRpository");
+		}
+		repo = implementation;
+		this.cache = cache;
+	}
+
+	public async Task<bool> Save(IFooItem foo)
+	{
+		// TODO throw if foo is null
+		bool result = await repo.Save(user);
+		string key = "Key-" + foo.Id.ToString();
+		cache.Remove(key);
+		return result;
+	}
+	
+	public async Task<IFooItem> Fetch(int fooId)
+    {
+		string key = "Key-" + fooId.ToString();
+		object result = cache.Get(key);
+		if(result != null) { return (foo)result; }
+		foo = await repo.Fetch(fooId);
+		if(foo != null)
+		cache.Set(key, foo);
+		
+		return foo;
+	}
+	
+}
+
+Obviously while CachingFooRepository implements IFooRepository, I must make sure that a different implementation of IFooRepository is passed into the constructor for CachingFooRepository since it isn't a real implementation of IFooREpository but depends on a real implementation.
+
+This example is simplified, pseudo-ish code, whether to cache and how long to cache can be passed in as IFooCachingRules or IOptions<FooCachingRepository> or something like that.
+
+So my question is how can I reigster the services in such a way that things that depend on IFooRepository will get an instance of CachingFooRepository, but CachingFooRepository will get some other implementation of IFooRepository such as SqlFooRepository?
+I would likke to keep other classes depending only on IFooRepository, I don't want to make anything depend specifically on CachingFooRepository.
+
+Is this possible, feasible, a good idea, a bad idea?
+
+what if I just define public interface IFooRepositoryWrapper : IFooRepository, with no additional methods or properties vs IFooRepository. Then I make a DefaultFooRepositoryWrapper that takes IFooRepository and delegates all the methods to it. I can make most classes depend on IFooRepositoryWrapper instead of on IFooRepository, then I can implement CachingFooWrapper. This I think should work with the default DI.
+
+http://stackoverflow.com/questions/31492976/how-to-configured-nested-dependency-in-asp-net-5-di
+
+ok so IFooRepositoryWrapper is probably a bad idea
+in order to be able to use decorator pattern I probably should just switch to AutoFac instead of the standard DI
+http://druss.co/2015/05/vnext-asp-net-5-dependency-injection/
+then I can wire up FooCachingRepository as in this example:
+http://nblumhardt.com/2011/01/decorator-support-in-autofac-2-4/
+

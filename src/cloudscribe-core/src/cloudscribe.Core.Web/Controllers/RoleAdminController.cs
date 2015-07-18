@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-06
-// Last Modified:			2015-07-17
+// Last Modified:			2015-07-18
 // 
 
 using cloudscribe.Configuration;
@@ -12,7 +12,6 @@ using cloudscribe.Core.Web.ViewModels.RoleAdmin;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
 using Microsoft.Framework.Configuration;
-//using MvcSiteMapProvider;
 using System;
 using System.Threading.Tasks;
 
@@ -32,6 +31,7 @@ namespace cloudscribe.Core.Web.Controllers
         {
             Site = siteResolver.Resolve();
             UserManager = userManager;
+            RoleManager = roleManager;
             UserRepository = userRepository;
             config = configuration;
         }
@@ -40,6 +40,7 @@ namespace cloudscribe.Core.Web.Controllers
         private IUserRepository UserRepository;
         private IConfiguration config;
         public SiteUserManager<SiteUser> UserManager { get; private set; }
+        public SiteRoleManager<SiteRole> RoleManager { get; private set; }
 
         [HttpGet]
         [Authorize(Roles = "Admins,Role Admins")]
@@ -58,11 +59,11 @@ namespace cloudscribe.Core.Web.Controllers
                 itemsPerPage = pageSize;
             }
 
-            int totalItems = await UserRepository.CountOfRoles(
+            int totalItems = await RoleManager.CountOfRoles(
                 Site.SiteId,
                 searchInput);
 
-            model.SiteRoles = await UserRepository.GetRolesBySite(
+            model.SiteRoles = await RoleManager.GetRolesBySite(
                 Site.SiteId,
                 searchInput,
                 pageNumber,
@@ -91,7 +92,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             if (roleId.HasValue)
             {
-                ISiteRole role = await UserRepository.FetchRole(roleId.Value);
+                ISiteRole role = await RoleManager.FetchRole(roleId.Value);
                 if ((role != null) && (role.SiteId == Site.SiteId || Site.IsServerAdminSite))
                 {
                     model = RoleViewModel.FromISiteRole(role);
@@ -147,7 +148,7 @@ namespace cloudscribe.Core.Web.Controllers
                 successFormat = "The role <b>{0}</b> was successfully updated.";
             }
 
-            bool result = await UserRepository.SaveRole(model);
+            bool result = await RoleManager.SaveRole(model);
 
             if (result)
             {
@@ -164,12 +165,12 @@ namespace cloudscribe.Core.Web.Controllers
         [Authorize(Roles = "Admins,Role Admins")]
         public async Task<IActionResult> RoleDelete(int roleId, int returnPageNumber = 1)
         {
-            ISiteRole role = await UserRepository.FetchRole(roleId);
+            ISiteRole role = await RoleManager.FetchRole(roleId);
             if (role != null && role.IsDeletable(config.RolesThatCannotBeDeleted()))
             {
-                bool result = await UserRepository.DeleteUserRolesByRole(roleId);
+                bool result = await RoleManager.DeleteUserRolesByRole(roleId);
 
-                result = await UserRepository.DeleteRole(roleId);
+                result = await RoleManager.DeleteRole(roleId);
 
                 if (result)
                 {
@@ -199,7 +200,7 @@ namespace cloudscribe.Core.Web.Controllers
             ViewBag.SiteName = Site.SiteName;
             ViewBag.Title = "Role Members";
 
-            ISiteRole role = await UserRepository.FetchRole(roleId);
+            ISiteRole role = await RoleManager.FetchRole(roleId);
             if ((role == null) || (role.SiteId != Site.SiteId && !Site.IsServerAdminSite))
             {
                 return RedirectToAction("Index");
@@ -217,7 +218,7 @@ namespace cloudscribe.Core.Web.Controllers
             model.Heading = "Role Members";
             model.SearchQuery = searchInput;
 
-            model.Members = await UserRepository.GetUsersInRole(
+            model.Members = await RoleManager.GetUsersInRole(
                 role.SiteId,
                 role.RoleId,
                 searchInput,
@@ -226,7 +227,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             model.Paging.CurrentPage = pageNumber;
             model.Paging.ItemsPerPage = itemsPerPage;
-            model.Paging.TotalItems = await UserRepository.CountUsersInRole(role.SiteId, role.RoleId, searchInput);
+            model.Paging.TotalItems = await RoleManager.CountUsersInRole(role.SiteId, role.RoleId, searchInput);
 
             //var node = SiteMaps.Current.FindSiteMapNodeFromKey("RoleMembers");
             //if (node != null)
@@ -250,7 +251,7 @@ namespace cloudscribe.Core.Web.Controllers
             ViewBag.SiteName = Site.SiteName;
             ViewBag.Title = "Non Role Members";
 
-            ISiteRole role = await UserRepository.FetchRole(roleId);
+            ISiteRole role = await RoleManager.FetchRole(roleId);
             if ((role == null) || (role.SiteId != Site.SiteId && !Site.IsServerAdminSite))
             {
                 return RedirectToAction("Index");
@@ -268,7 +269,7 @@ namespace cloudscribe.Core.Web.Controllers
             model.Heading = "Non Role Members";
             model.SearchQuery = searchInput; // unsafe input
 
-            model.Members = await UserRepository.GetUsersNotInRole(
+            model.Members = await RoleManager.GetUsersNotInRole(
                 role.SiteId,
                 role.RoleId,
                 searchInput,
@@ -277,7 +278,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             model.Paging.CurrentPage = pageNumber;
             model.Paging.ItemsPerPage = itemsPerPage;
-            model.Paging.TotalItems = await UserRepository.CountUsersNotInRole(
+            model.Paging.TotalItems = await RoleManager.CountUsersNotInRole(
                 role.SiteId,
                 role.RoleId,
                 searchInput);
@@ -299,7 +300,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             if (user != null)
             {
-                ISiteRole role = await UserRepository.FetchRole(roleId);
+                ISiteRole role = await RoleManager.FetchRole(roleId);
                 if (role != null)
                 {
                     bool result = await UserRepository.AddUserToRole(roleId, roleGuid, userId, userGuid);
@@ -329,7 +330,7 @@ namespace cloudscribe.Core.Web.Controllers
             ISiteUser user = await UserRepository.Fetch(Site.SiteId, userId);
             if (user != null)
             {
-                ISiteRole role = await UserRepository.FetchRole(roleId);
+                ISiteRole role = await RoleManager.FetchRole(roleId);
                 if (role != null)
                 {
                     bool result = await UserRepository.RemoveUserFromRole(roleId, userId);

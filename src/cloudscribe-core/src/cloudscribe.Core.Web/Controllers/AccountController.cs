@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-07-06
+// Last Modified:			2015-07-18
 // 
 
 using cloudscribe.Configuration;
@@ -29,30 +29,21 @@ namespace cloudscribe.Core.Web.Controllers
 
         public AccountController(
             ISiteResolver siteResolver,
-            //IUserRepository userRepository,
             SiteUserManager<SiteUser> userManager,
             SignInManager<SiteUser> signInManager,
             IConfiguration configuration)
         {
             Site = siteResolver.Resolve();
-            //userRepo = userRepository;
             UserManager = userManager;
             SignInManager = signInManager;
             config = configuration;
         }
 
         //private ISiteResolver resolver;
-        private ISiteSettings Site;
-        //private IUserRepository userRepo;
-        private IConfiguration config;
+        protected ISiteSettings Site;
+        protected IConfiguration config;
         public SiteUserManager<SiteUser> UserManager { get; private set; }
         public SignInManager<SiteUser> SignInManager { get; private set; }
-
-        //public ISiteContext Site
-        //{
-        //    get {  return HttpContext.GetOwinContext().Get<ISiteContext>(); }
-
-        //}
 
 
         // GET: /Account/Login
@@ -108,13 +99,13 @@ namespace cloudscribe.Core.Web.Controllers
                     recpatchaSecretKey = Site.RecaptchaPrivateKey;
                 }
 
-                //var captchaResponse = await this.ValidateRecaptcha(Request, recpatchaSecretKey);
+                var captchaResponse = await this.ValidateRecaptcha(Request, recpatchaSecretKey);
 
-                //if (!captchaResponse.Success)
-                //{
-                //    ModelState.AddModelError("recaptchaerror", "reCAPTCHA Error occured. Please try again");
-                //    return View(model);
-                //}
+                if (!captchaResponse.Success)
+                {
+                    ModelState.AddModelError("recaptchaerror", "reCAPTCHA Error occured. Please try again");
+                    return View(model);
+                }
             }
 
 
@@ -216,39 +207,39 @@ namespace cloudscribe.Core.Web.Controllers
                     }
 
 
-                    //var captchaResponse = await this.ValidateRecaptcha(Request, recpatchaSecretKey);
+                    var captchaResponse = await this.ValidateRecaptcha(Request, recpatchaSecretKey);
 
-                    //if (!captchaResponse.Success)
-                    //{
-                    //    //if (captchaResponse.ErrorCodes.Count <= 0)
-                    //    //{
-                    //    //    return View(model);
-                    //    //}
+                    if (!captchaResponse.Success)
+                    {
+                        //if (captchaResponse.ErrorCodes.Count <= 0)
+                        //{
+                        //    return View(model);
+                        //}
 
-                    //    ////TODO: log these errors rather than show them in the ui
-                    //    //var error = captchaResponse.ErrorCodes[0].ToLower();
-                    //    //switch (error)
-                    //    //{
-                    //    //    case ("missing-input-secret"):
-                    //    //        ModelState.AddModelError("recaptchaerror", "The secret parameter is missing.");     
-                    //    //        break;
-                    //    //    case ("invalid-input-secret"):
-                    //    //        ModelState.AddModelError("recaptchaerror", "The secret parameter is invalid or malformed.");
-                    //    //        break;
-                    //    //    case ("missing-input-response"):
-                    //    //        ModelState.AddModelError("recaptchaerror", "The response parameter is missing.");
-                    //    //        break;
-                    //    //    case ("invalid-input-response"):
-                    //    //        ModelState.AddModelError("recaptchaerror", "The response parameter is invalid or malformed.");
-                    //    //        break;
-                    //    //    default:
-                    //    //        ModelState.AddModelError("recaptchaerror", "Error occured. Please try again");
-                    //    //        break;
-                    //    //}
+                        ////TODO: log these errors rather than show them in the ui
+                        //var error = captchaResponse.ErrorCodes[0].ToLower();
+                        //switch (error)
+                        //{
+                        //    case ("missing-input-secret"):
+                        //        ModelState.AddModelError("recaptchaerror", "The secret parameter is missing.");     
+                        //        break;
+                        //    case ("invalid-input-secret"):
+                        //        ModelState.AddModelError("recaptchaerror", "The secret parameter is invalid or malformed.");
+                        //        break;
+                        //    case ("missing-input-response"):
+                        //        ModelState.AddModelError("recaptchaerror", "The response parameter is missing.");
+                        //        break;
+                        //    case ("invalid-input-response"):
+                        //        ModelState.AddModelError("recaptchaerror", "The response parameter is invalid or malformed.");
+                        //        break;
+                        //    default:
+                        //        ModelState.AddModelError("recaptchaerror", "Error occured. Please try again");
+                        //        break;
+                        //}
 
-                    //    ModelState.AddModelError("recaptchaerror", "reCAPTCHA Error occured. Please try again");
-                    //    return View(model);
-                    //}
+                        ModelState.AddModelError("recaptchaerror", "reCAPTCHA Error occured. Please try again");
+                        return View(model);
+                    }
 
                 }
 

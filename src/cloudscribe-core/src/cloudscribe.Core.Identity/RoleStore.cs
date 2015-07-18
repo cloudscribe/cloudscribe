@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-06-19
-// Last Modified:		    2015-07-17
+// Last Modified:		    2015-07-18
 // 
 
 using cloudscribe.Configuration;
@@ -37,7 +37,7 @@ namespace cloudscribe.Core.Identity
             config = configuration;
             //debugLog = config.UserStoreDebugEnabled();
 
-
+            
             //siteSettings = site;
 
 

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-22
-// Last Modified:		    2015-07-06
+// Last Modified:		    2015-07-18
 // 
 
 
@@ -83,11 +83,17 @@ namespace cloudscribe.Core.Identity
         #region IUserStore
 
 
-        public async Task<IdentityResult> CreateAsync(TUser user, CancellationToken token)
+        public async Task<IdentityResult> CreateAsync(TUser user, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("CreateAsync"); }
 
-            token.ThrowIfCancellationRequested();
+            cancellationToken.ThrowIfCancellationRequested();
+ 
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
 
             if (user.SiteGuid == Guid.Empty)
             {
@@ -108,7 +114,7 @@ namespace cloudscribe.Core.Identity
                 user.DisplayName = SuggestLoginNameFromEmail(siteSettings.SiteId, user.Email);
             }
 
-            token.ThrowIfCancellationRequested();
+            cancellationToken.ThrowIfCancellationRequested();
 
             bool result = await repo.Save(user);
             
@@ -117,7 +123,7 @@ namespace cloudscribe.Core.Identity
             //IdentityResult identityResult;
             if (result)
             {
-                token.ThrowIfCancellationRequested();
+                cancellationToken.ThrowIfCancellationRequested();
                 result = result && await repo.AddUserToDefaultRoles(user);
                     
             }
@@ -131,48 +137,55 @@ namespace cloudscribe.Core.Identity
 
         }
 
-        public async Task<IdentityResult> UpdateAsync(TUser user, CancellationToken token)
+        public async Task<IdentityResult> UpdateAsync(TUser user, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("UpdateAsync"); }
-            token.ThrowIfCancellationRequested();
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+
+            cancellationToken.ThrowIfCancellationRequested();
             bool result = await repo.Save(user);
 
             return IdentityResult.Success;
 
         }
 
-        public async Task<IdentityResult> DeleteAsync(TUser user, CancellationToken token)
+        public async Task<IdentityResult> DeleteAsync(TUser user, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("UpdateAsync"); }
 
             if (siteSettings.ReallyDeleteUsers)
             {
                 Task[] tasks = new Task[4];
-                token.ThrowIfCancellationRequested();
+                cancellationToken.ThrowIfCancellationRequested();
                 tasks[0] = repo.DeleteLoginsByUser(user.Id);
-                token.ThrowIfCancellationRequested();
+                cancellationToken.ThrowIfCancellationRequested();
                 tasks[1] = repo.DeleteClaimsByUser(user.Id);
-                token.ThrowIfCancellationRequested();
+                cancellationToken.ThrowIfCancellationRequested();
                 tasks[2] = repo.DeleteUserRoles(user.UserId);
-                token.ThrowIfCancellationRequested();
+                cancellationToken.ThrowIfCancellationRequested();
                 tasks[3] = repo.Delete(user.UserId);
-                token.ThrowIfCancellationRequested();
+                cancellationToken.ThrowIfCancellationRequested();
 
                 Task.WaitAll(tasks);
             }
             else
             {
-                token.ThrowIfCancellationRequested();
+                cancellationToken.ThrowIfCancellationRequested();
                 bool result = await repo.FlagAsDeleted(user.UserId);
             }
 
             return IdentityResult.Success;
         }
 
-        public async Task<TUser> FindByIdAsync(string userId, CancellationToken token)
+        public async Task<TUser> FindByIdAsync(string userId, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("FindByIdAsync"); }
-            token.ThrowIfCancellationRequested();
+            cancellationToken.ThrowIfCancellationRequested();
 
             Guid userGuid = new Guid(userId);
 
@@ -182,18 +195,25 @@ namespace cloudscribe.Core.Identity
         }
 
 
-        public async Task<TUser> FindByNameAsync(string userName, CancellationToken token)
+        public async Task<TUser> FindByNameAsync(string userName, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("FindByNameAsync"); }
-            token.ThrowIfCancellationRequested();
+            cancellationToken.ThrowIfCancellationRequested();
             ISiteUser siteUser = await repo.FetchByLoginName(siteSettings.SiteId, userName, true);
             return (TUser)siteUser;
 
         }
 
-        public async Task SetUserNameAsync(TUser user, string userName, CancellationToken token)
+        public async Task SetUserNameAsync(TUser user, string userName, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("SetEmailAsync"); }
+
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
 
             if (user.SiteGuid == Guid.Empty)
             {
@@ -205,14 +225,20 @@ namespace cloudscribe.Core.Identity
             }
 
             user.UserName = userName;
-            token.ThrowIfCancellationRequested();
+            cancellationToken.ThrowIfCancellationRequested();
             bool result = await repo.Save(user);
 
         }
 
-        public async Task SetNormalizedUserNameAsync(TUser user, string userName, CancellationToken token)
+        public async Task SetNormalizedUserNameAsync(TUser user, string userName, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("SetEmailAsync"); }
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
 
             if (user.SiteGuid == Guid.Empty)
             {
@@ -224,13 +250,12 @@ namespace cloudscribe.Core.Identity
             }
 
             user.UserName = userName;
-            token.ThrowIfCancellationRequested();
+            cancellationToken.ThrowIfCancellationRequested();
             bool result = await repo.Save(user);
 
         }
 
-        //disable warning about not really being async
-        // we know it is not, it is not needed to hit the db in these
+        
 //#pragma warning disable 1998
 
         public Task<string> GetUserIdAsync(TUser user, CancellationToken cancellationToken)
@@ -326,7 +351,7 @@ namespace cloudscribe.Core.Identity
 
 
 
-        public async Task SetEmailAsync(TUser user, string email, CancellationToken token)
+        public async Task SetEmailAsync(TUser user, string email, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("SetEmailAsync"); }
 
@@ -345,7 +370,7 @@ namespace cloudscribe.Core.Identity
                 user.SiteId = siteSettings.SiteId;
             }
 
-            token.ThrowIfCancellationRequested();
+            cancellationToken.ThrowIfCancellationRequested();
 
             user.Email = email;
             user.LoweredEmail = email.ToLower();
@@ -354,7 +379,7 @@ namespace cloudscribe.Core.Identity
 
         }
 
-        public async Task SetNormalizedEmailAsync(TUser user, string email, CancellationToken token)
+        public async Task SetNormalizedEmailAsync(TUser user, string email, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("SetEmailAsync"); }
 
@@ -376,13 +401,13 @@ namespace cloudscribe.Core.Identity
             //user.Email = email;
             user.LoweredEmail = email.ToLower();
 
-            token.ThrowIfCancellationRequested();
+            cancellationToken.ThrowIfCancellationRequested();
 
             bool result = await repo.Save(user);
 
         }
 
-        public async Task SetEmailConfirmedAsync(TUser user, bool confirmed, CancellationToken token)
+        public async Task SetEmailConfirmedAsync(TUser user, bool confirmed, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("SetEmailConfirmedAsync"); }
 
@@ -403,17 +428,17 @@ namespace cloudscribe.Core.Identity
 
             user.EmailConfirmed = confirmed;
 
-            token.ThrowIfCancellationRequested();
+            cancellationToken.ThrowIfCancellationRequested();
             // I don't not sure this method is expected to
             // persist this change to the db
             bool result = await repo.Save(user);
 
         }
 
-        public async Task<TUser> FindByEmailAsync(string email, CancellationToken token)
+        public async Task<TUser> FindByEmailAsync(string email, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("FindByEmailAsync"); }
-            token.ThrowIfCancellationRequested();
+            cancellationToken.ThrowIfCancellationRequested();
             ISiteUser siteUser = await repo.Fetch(siteSettings.SiteId, email);
 
             return (TUser)siteUser;
@@ -423,40 +448,39 @@ namespace cloudscribe.Core.Identity
 
         #region IUserPasswordStore
 
-        //disable warning about not really being async
-        // we know it is not, it is not needed to hit the db in these
-#pragma warning disable 1998
+        
+//#pragma warning disable 1998
 
-        public async Task<string> GetPasswordHashAsync(TUser user, CancellationToken token)
+        public Task<string> GetPasswordHashAsync(TUser user, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("GetPasswordHashAsync"); }
-
+            cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
             if (user == null)
             {
                 throw new ArgumentNullException("user");
             }
             
-            return user.PasswordHash;
+            return Task.FromResult(user.PasswordHash);
         }
 
-        public async Task<bool> HasPasswordAsync(TUser user, CancellationToken token)
+        public Task<bool> HasPasswordAsync(TUser user, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("HasPasswordAsync"); }
-
+            cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
             if (user == null)
             {
                 throw new ArgumentNullException("user");
             }
 
-            return string.IsNullOrEmpty(user.PasswordHash);
+            return Task.FromResult(string.IsNullOrEmpty(user.PasswordHash));
         }
 
-        public async Task SetPasswordHashAsync(TUser user, string passwordHash, CancellationToken token)
+        public Task SetPasswordHashAsync(TUser user, string passwordHash, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("SetPasswordHashAsync"); }
-
+            cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
             if (user == null)
             {
@@ -483,11 +507,11 @@ namespace cloudscribe.Core.Identity
             //user.PasswordHash = passwordHash;
             //userRepo.Save(user);
 
-
+            return Task.FromResult(0);
 
         }
 
-#pragma warning restore 1998
+//#pragma warning restore 1998
 
         #endregion
 
@@ -545,7 +569,7 @@ namespace cloudscribe.Core.Identity
 
 
 
-        public async Task<int> IncrementAccessFailedCountAsync(TUser user, CancellationToken token)
+        public async Task<int> IncrementAccessFailedCountAsync(TUser user, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("IncrementAccessFailedCountAsync"); }
 
@@ -556,15 +580,15 @@ namespace cloudscribe.Core.Identity
             }
 
             user.FailedPasswordAttemptCount += 1;
-            token.ThrowIfCancellationRequested();
+            cancellationToken.ThrowIfCancellationRequested();
             await repo.UpdateFailedPasswordAttemptCount(user.UserGuid, user.FailedPasswordAttemptCount);
             return user.FailedPasswordAttemptCount;
         }
 
-        public async Task ResetAccessFailedCountAsync(TUser user, CancellationToken token)
+        public async Task ResetAccessFailedCountAsync(TUser user, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("ResetAccessFailedCountAsync"); }
-
+            cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
             if (user == null)
             {
@@ -572,15 +596,17 @@ namespace cloudscribe.Core.Identity
             }
 
             user.FailedPasswordAttemptCount = 0;
-            token.ThrowIfCancellationRequested();
+            // EF implementation doesn't save here
+            // but we have to since our save doesn't update this
+            // we have specific methods as shown here
             bool result = await repo.UpdateFailedPasswordAttemptCount(user.UserGuid, user.FailedPasswordAttemptCount);
 
         }
 
-        public async Task SetLockoutEnabledAsync(TUser user, bool enabled, CancellationToken token)
+        public async Task SetLockoutEnabledAsync(TUser user, bool enabled, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("SetLockoutEnabledAsync"); }
-
+            cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
             if (user == null)
             {
@@ -588,7 +614,8 @@ namespace cloudscribe.Core.Identity
             }
 
             bool result;
-            token.ThrowIfCancellationRequested();
+            // EF implementation doesn't save here but I think our save doesn't set lockout so we have to
+
             if (enabled)
             {
                 result = await repo.LockoutAccount(user.UserGuid);
@@ -598,13 +625,12 @@ namespace cloudscribe.Core.Identity
                 result = await repo.UnLockAccount(user.UserGuid);
             }
 
-
         }
 
-        public async Task SetLockoutEndDateAsync(TUser user, DateTimeOffset? lockoutEnd, CancellationToken token)
+        public Task SetLockoutEndDateAsync(TUser user, DateTimeOffset? lockoutEnd, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("SetLockoutEndDateAsync"); }
-
+            cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
             if (user == null)
             {
@@ -620,8 +646,9 @@ namespace cloudscribe.Core.Identity
                 user.LockoutEndDateUtc = DateTime.MinValue;
             }
 
-            token.ThrowIfCancellationRequested();
-            bool result = await repo.Save(user);
+            // EF implementation doesn't save here
+            //bool result = await repo.Save(user);
+            return Task.FromResult(0);
         }
 
 
@@ -630,7 +657,7 @@ namespace cloudscribe.Core.Identity
 
         #region IUserClaimStore
 
-        public async Task AddClaimsAsync(TUser user, IEnumerable<Claim> claims, CancellationToken token)
+        public async Task AddClaimsAsync(TUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("AddClaimsAsync"); }
 
@@ -646,14 +673,14 @@ namespace cloudscribe.Core.Identity
                 userClaim.UserId = user.UserGuid.ToString();
                 userClaim.ClaimType = claim.Type;
                 userClaim.ClaimValue = claim.Value;
-                token.ThrowIfCancellationRequested();
+                cancellationToken.ThrowIfCancellationRequested();
                 bool result = await repo.SaveClaim(userClaim);
             }
             
 
         }
 
-        public async Task RemoveClaimsAsync(TUser user, IEnumerable<Claim> claims, CancellationToken token)
+        public async Task RemoveClaimsAsync(TUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("RemoveClaimAsync"); }
 
@@ -665,17 +692,17 @@ namespace cloudscribe.Core.Identity
 
             foreach (Claim claim in claims)
             {
-                token.ThrowIfCancellationRequested();
+                cancellationToken.ThrowIfCancellationRequested();
                 await repo.DeleteClaimByUser(user.Id, claim.Type);
             }
            
         }
 
-        public async Task ReplaceClaimAsync(TUser user, Claim claim, Claim newClaim, CancellationToken token)
+        public async Task ReplaceClaimAsync(TUser user, Claim claim, Claim newClaim, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("ReplaceClaimAsync"); }
 
-            token.ThrowIfCancellationRequested();
+            cancellationToken.ThrowIfCancellationRequested();
 
             ThrowIfDisposed();
             if (user == null)
@@ -689,12 +716,12 @@ namespace cloudscribe.Core.Identity
             userClaim.UserId = user.UserGuid.ToString();
             userClaim.ClaimType = newClaim.Type;
             userClaim.ClaimValue = newClaim.Value;
-            token.ThrowIfCancellationRequested();
+            cancellationToken.ThrowIfCancellationRequested();
             bool result = await repo.SaveClaim(userClaim);
 
         }
 
-        public async Task<IList<Claim>> GetClaimsAsync(TUser user, CancellationToken token)
+        public async Task<IList<Claim>> GetClaimsAsync(TUser user, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("GetClaimsAsync"); }
 
@@ -705,7 +732,7 @@ namespace cloudscribe.Core.Identity
             }
 
             IList<Claim> claims = new List<Claim>();
-            token.ThrowIfCancellationRequested();
+            cancellationToken.ThrowIfCancellationRequested();
             IList<IUserClaim> userClaims = await repo.GetClaimsByUser(user.Id);
             foreach (UserClaim uc in userClaims)
             {
@@ -717,10 +744,17 @@ namespace cloudscribe.Core.Identity
 
         }
 
-        public async Task<IList<TUser>> GetUsersForClaimAsync(Claim claim, CancellationToken token)
+        public async Task<IList<TUser>> GetUsersForClaimAsync(Claim claim, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("GetRolesAsync"); }
-            token.ThrowIfCancellationRequested();
+
+            ThrowIfDisposed();
+            if (claim == null)
+            {
+                throw new ArgumentNullException("claim");
+            }
+
+            cancellationToken.ThrowIfCancellationRequested();
             IList<ISiteUser> users = await repo.GetUsersForClaim(siteSettings.SiteId, claim.Type, claim.Value);
 
             return (IList<TUser>)users;
@@ -730,7 +764,7 @@ namespace cloudscribe.Core.Identity
 
         #region IUserLoginStore
 
-        public async Task AddLoginAsync(TUser user, UserLoginInfo login, CancellationToken token)
+        public async Task AddLoginAsync(TUser user, UserLoginInfo login, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("AddLoginAsync"); }
 
@@ -744,20 +778,20 @@ namespace cloudscribe.Core.Identity
             userlogin.UserId = user.UserGuid.ToString();
             userlogin.LoginProvider = login.LoginProvider;
             userlogin.ProviderKey = login.ProviderKey;
-            token.ThrowIfCancellationRequested();
+            cancellationToken.ThrowIfCancellationRequested();
             bool result = await repo.CreateLogin(userlogin);
 
         }
 
-        public async Task<TUser> FindByLoginAsync(string loginProvider, string providerKey, CancellationToken token)
+        public async Task<TUser> FindByLoginAsync(string loginProvider, string providerKey, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("FindAsync"); }
-            token.ThrowIfCancellationRequested();
+            cancellationToken.ThrowIfCancellationRequested();
             IUserLogin userlogin = await repo.FindLogin(loginProvider, providerKey);
             if (userlogin != null && userlogin.UserId.Length == 36)
             {
                 Guid userGuid = new Guid(userlogin.UserId);
-                token.ThrowIfCancellationRequested();
+                cancellationToken.ThrowIfCancellationRequested();
                 ISiteUser siteUser = await repo.Fetch(siteSettings.SiteId, userGuid);
                 if (siteUser != null)
                 {
@@ -768,7 +802,7 @@ namespace cloudscribe.Core.Identity
             return default(TUser);
         }
 
-        public async Task<IList<UserLoginInfo>> GetLoginsAsync(TUser user, CancellationToken token)
+        public async Task<IList<UserLoginInfo>> GetLoginsAsync(TUser user, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("GetLoginsAsync"); }
             ThrowIfDisposed();
@@ -778,7 +812,7 @@ namespace cloudscribe.Core.Identity
             }
 
             IList<UserLoginInfo> logins = new List<UserLoginInfo>();
-            token.ThrowIfCancellationRequested();
+            cancellationToken.ThrowIfCancellationRequested();
             IList<IUserLogin> userLogins = await repo.GetLoginsByUser(user.UserGuid.ToString());
             foreach (UserLogin ul in userLogins)
             {
@@ -790,7 +824,7 @@ namespace cloudscribe.Core.Identity
             return logins;
         }
 
-        public async Task RemoveLoginAsync(TUser user, string loginProvider, string providerKey, CancellationToken token)
+        public async Task RemoveLoginAsync(TUser user, string loginProvider, string providerKey, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("RemoveLoginAsync"); }
             ThrowIfDisposed();
@@ -798,7 +832,7 @@ namespace cloudscribe.Core.Identity
             {
                 throw new ArgumentNullException("user");
             }
-            token.ThrowIfCancellationRequested();
+            cancellationToken.ThrowIfCancellationRequested();
             bool result = await repo.DeleteLogin(
                 loginProvider,
                 providerKey,
@@ -828,10 +862,10 @@ namespace cloudscribe.Core.Identity
         }
 
 
-        public async Task SetTwoFactorEnabledAsync(TUser user, bool enabled, CancellationToken token)
+        public Task SetTwoFactorEnabledAsync(TUser user, bool enabled, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("SetTwoFactorEnabledAsync"); }
-
+            cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
             if (user == null)
             {
@@ -839,10 +873,11 @@ namespace cloudscribe.Core.Identity
             }
 
             user.TwoFactorEnabled = enabled;
-            token.ThrowIfCancellationRequested();
-            bool result = await repo.Save(user);
+            
+            //EF implementation doesn't save here
+            //bool result = await repo.Save(user);
 
-
+            return Task.FromResult(0);
         }
 
 
@@ -881,22 +916,36 @@ namespace cloudscribe.Core.Identity
 
 
 
-        public async Task SetPhoneNumberAsync(TUser user, string phoneNumber, CancellationToken token)
+        public Task SetPhoneNumberAsync(TUser user, string phoneNumber, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("SetPhoneNumberAsync"); }
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
 
             user.PhoneNumber = phoneNumber;
-            token.ThrowIfCancellationRequested();
-            bool result = await repo.Save(user);
+            // EF implementation doesn't save here
+            //bool result = await repo.Save(user);
+            return Task.FromResult(0);
         }
 
-        public async Task SetPhoneNumberConfirmedAsync(TUser user, bool confirmed, CancellationToken token)
+        public Task SetPhoneNumberConfirmedAsync(TUser user, bool confirmed, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("SetPhoneNumberConfirmedAsync"); }
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
 
             user.PhoneNumberConfirmed = confirmed;
-            token.ThrowIfCancellationRequested();
-            bool result = await repo.Save(user);
+            // EF implementation does not save here
+            //bool result = await repo.Save(user);
+            return Task.FromResult(0);
 
         }
 
@@ -904,43 +953,58 @@ namespace cloudscribe.Core.Identity
 
         #region IUserRoleStore
 
-        public async Task AddToRoleAsync(TUser user, string role, CancellationToken token)
+        public async Task AddToRoleAsync(TUser user, string role, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("AddToRoleAsync"); }
-            token.ThrowIfCancellationRequested();
+
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+
+            cancellationToken.ThrowIfCancellationRequested();
             ISiteRole siteRole = await repo.FetchRole(siteSettings.SiteId, role);
             bool result = false;
             if (siteRole != null)
             {
-                token.ThrowIfCancellationRequested();
+                cancellationToken.ThrowIfCancellationRequested();
                 result = await repo.AddUserToRole(siteRole.RoleId, siteRole.RoleGuid, user.UserId, user.UserGuid);
             }
 
         }
 
-        public async Task<IList<string>> GetRolesAsync(TUser user, CancellationToken token)
+        public async Task<IList<string>> GetRolesAsync(TUser user, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("GetRolesAsync"); }
 
-            IList<string> roles = new List<string>();
-
+            ThrowIfDisposed();
             if (user == null)
             {
-                return roles;
+                throw new ArgumentNullException("user");
             }
-            token.ThrowIfCancellationRequested();
+
+            IList<string> roles = new List<string>();
+
+            cancellationToken.ThrowIfCancellationRequested();
             roles = await repo.GetUserRoles(siteSettings.SiteId, user.UserId);
 
             return roles;
         }
 
-        public async Task<bool> IsInRoleAsync(TUser user, string role, CancellationToken token)
+        public async Task<bool> IsInRoleAsync(TUser user, string role, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("IsInRoleAsync"); }
 
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+
             bool result = false;
-            if (user == null) { return result; }
-            token.ThrowIfCancellationRequested();
+
+            cancellationToken.ThrowIfCancellationRequested();
             IList<string> roles = await repo.GetUserRoles(siteSettings.SiteId, user.UserId);
 
             foreach (string r in roles)
@@ -955,24 +1019,30 @@ namespace cloudscribe.Core.Identity
             return result;
         }
 
-        public async Task<IList<TUser>> GetUsersInRoleAsync(string role, CancellationToken token)
+        public async Task<IList<TUser>> GetUsersInRoleAsync(string role, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("GetRolesAsync"); }
-            token.ThrowIfCancellationRequested();
+            cancellationToken.ThrowIfCancellationRequested();
             IList<ISiteUser> users = await repo.GetUsersInRole(siteSettings.SiteId, role);
 
             return (IList<TUser>)users; 
         }
 
-        public async Task RemoveFromRoleAsync(TUser user, string role, CancellationToken token)
+        public async Task RemoveFromRoleAsync(TUser user, string role, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("RemoveFromRoleAsync"); }
-            token.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+
+            cancellationToken.ThrowIfCancellationRequested();
             ISiteRole siteRole = await repo.FetchRole(siteSettings.SiteId, role);
             bool result = false;
             if (siteRole != null)
             {
-                token.ThrowIfCancellationRequested();
+                cancellationToken.ThrowIfCancellationRequested();
                 result = await repo.RemoveUserFromRole(siteRole.RoleId, user.UserId);
             }
 
