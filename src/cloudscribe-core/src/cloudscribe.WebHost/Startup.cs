@@ -30,11 +30,15 @@ using cloudscribe.Core.Models;
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Repositories.MSSQL;
 using cloudscribe.Core.Web.Components;
+//using Autofac;
+//using Autofac.Dnx;
 
 namespace cloudscribe.WebHost
 {
     public class Startup
     {
+        
+
         public Startup(IHostingEnvironment env, IApplicationEnvironment appEnv)
         {
             // Setup configuration sources.
@@ -124,6 +128,18 @@ namespace cloudscribe.WebHost
             // Uncomment the following line to add Web API services which makes it easier to port Web API 2 controllers.
             // You will also need to add the Microsoft.AspNet.Mvc.WebApiCompatShim package to the 'dependencies' section of project.json.
             // services.AddWebApiConventions();
+
+            //Autofac config
+            //var builder = new ContainerBuilder();
+
+            ////Populate the container with services that were previously registered
+            //// it seems this depends on beta4
+            //builder.Populate(services);
+
+            //var container = builder.Build();
+
+            //return container.Resolve<IServiceProvider>();
+
         }
 
         // Configure is called after ConfigureServices is called.

@@ -41,6 +41,9 @@ namespace cloudscribe.Core.Identity
                 logger, 
                 contextAccessor)
         {
+            if (siteResolver == null) { throw new ArgumentNullException(nameof(siteResolver)); }
+            if (userRepository == null) { throw new ArgumentNullException(nameof(userRepository)); }
+            if (roleStore == null) { throw new ArgumentNullException(nameof(roleStore)); }
 
             this.siteResolver = siteResolver;
             userRepo = userRepository;
@@ -121,6 +124,40 @@ namespace cloudscribe.Core.Identity
         public async Task<int> CountUsersNotInRole(int siteId, int roleId, string searchInput)
         {
             return await userRepo.CountUsersNotInRole(siteId, roleId, searchInput);
+        }
+
+        public async Task<bool> AddUserToRole(ISiteUser user, ISiteRole role)
+        {
+            if (user == null) { throw new ArgumentNullException(nameof(user)); }
+            if (role == null) { throw new ArgumentNullException(nameof(role)); }
+            if(role.SiteId != user.SiteId) { throw new ArgumentException("user and role must have the same siteid"); }
+
+            bool result = await userRepo.AddUserToRole(role.RoleId, role.RoleGuid, user.UserId, user.UserGuid);
+            if (result)
+            {
+                user.RolesChanged = true;
+                bool result2 = await userRepo.Save(user);
+            }
+
+            return result;
+
+        }
+
+        public async Task<bool> RemoveUserFromRole(ISiteUser user, ISiteRole role)
+        {
+            if (user == null) { throw new ArgumentNullException(nameof(user)); }
+            if (role == null) { throw new ArgumentNullException(nameof(role)); }
+
+            bool result = await userRepo.RemoveUserFromRole(role.RoleId, user.UserId);
+
+            if (result)
+            {
+                user.RolesChanged = true;
+                bool result2 = await userRepo.Save(user);
+            }
+
+            return result;
+
         }
 
     }

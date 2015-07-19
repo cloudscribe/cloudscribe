@@ -1,26 +1,31 @@
 {
-    "version": "1.0.0-*",
-    "description": "",
-    "authors": [ "" ],
-    "tags": [ "" ],
-    "projectUrl": "",
-    "licenseUrl": "",
+  "version": "1.0.0-*",
+  "description": "",
+  "authors": [ "" ],
+  "tags": [ "" ],
+  "projectUrl": "",
+  "licenseUrl": "",
 
-    "dependencies": {
-        "cloudscribe.Configuration": "1.0.0-*",
-        "System.Data.Common": "4.0.0-beta-23019",
-        "Microsoft.AspNet.Identity": "3.0.0-beta5"
+  "dependencies": {
+    "cloudscribe.Configuration": "1.0.0-*",
+
+    "Microsoft.AspNet.Identity": "3.0.0-beta5"
+  },
+
+  "frameworks": {
+    "dnx451": {
+      "frameworkAssemblies": {
+        "System.Data": ""
+      }
     },
-
-    "frameworks": {
-       
-        "dnxcore50": {
-            "dependencies": {
-                "System.Collections": "4.0.10-beta-23019",
-                "System.Linq": "4.0.0-beta-23019",
-                "System.Threading": "4.0.10-beta-23019",
-                "Microsoft.CSharp": "4.0.0-beta-23019"
-            }
-        }
+    "dnxcore50": {
+      "dependencies": {
+        "System.Collections": "4.0.10-beta-23019",
+        "System.Data.Common": "4.0.0-beta-23019",
+        "System.Linq": "4.0.0-beta-23019",
+        "System.Threading": "4.0.10-beta-23019",
+        "Microsoft.CSharp": "4.0.0-beta-23019"
+      }
     }
+  }
 }

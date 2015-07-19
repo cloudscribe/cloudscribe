@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-06
-// Last Modified:			2015-07-18
+// Last Modified:			2015-07-19
 // 
 
 using cloudscribe.Configuration;
@@ -25,19 +25,16 @@ namespace cloudscribe.Core.Web.Controllers
             ISiteResolver siteResolver,
             SiteUserManager<SiteUser> userManager,
             SiteRoleManager<SiteRole> roleManager,
-            IUserRepository userRepository,
             IConfiguration configuration
             )
         {
             Site = siteResolver.Resolve();
             UserManager = userManager;
             RoleManager = roleManager;
-            UserRepository = userRepository;
             config = configuration;
         }
 
         private ISiteSettings Site;
-        private IUserRepository UserRepository;
         private IConfiguration config;
         public SiteUserManager<SiteUser> UserManager { get; private set; }
         public SiteRoleManager<SiteRole> RoleManager { get; private set; }
@@ -296,24 +293,20 @@ namespace cloudscribe.Core.Web.Controllers
         [Authorize(Roles = "Admins,Role Admins")]
         public async Task<IActionResult> AddUser(int roleId, Guid roleGuid, int userId, Guid userGuid)
         {
-            ISiteUser user = await UserRepository.Fetch(Site.SiteId, userId);
+            ISiteUser user = await UserManager.Fetch(Site.SiteId, userId);
 
             if (user != null)
             {
                 ISiteRole role = await RoleManager.FetchRole(roleId);
                 if (role != null)
                 {
-                    bool result = await UserRepository.AddUserToRole(roleId, roleGuid, userId, userGuid);
+                    bool result = await RoleManager.AddUserToRole(user, role);
                     if (result)
                     {
-                        user.RolesChanged = true;
-                        result = await UserRepository.Save(user);
-                        if (result)
-                        {
-                            this.AlertSuccess(string.Format("<b>{0}</b> was successfully added to the role {1}.",
-                            user.DisplayName, role.DisplayName), true);
-                        }
-
+                        
+                        this.AlertSuccess(string.Format("<b>{0}</b> was successfully added to the role {1}.",
+                        user.DisplayName, role.DisplayName), true);
+                        
                     }
                 }
 
@@ -327,27 +320,20 @@ namespace cloudscribe.Core.Web.Controllers
         public async Task<IActionResult> RemoveUser(int roleId, int userId)
         {
 
-            ISiteUser user = await UserRepository.Fetch(Site.SiteId, userId);
+            ISiteUser user = await UserManager.Fetch(Site.SiteId, userId);
             if (user != null)
             {
                 ISiteRole role = await RoleManager.FetchRole(roleId);
                 if (role != null)
                 {
-                    bool result = await UserRepository.RemoveUserFromRole(roleId, userId);
+                    bool result = await RoleManager.RemoveUserFromRole(user, role);
                     if (result)
                     {
-                        user.RolesChanged = true;
-
-                        result = await UserRepository.Save(user);
-
-                        if (result)
-                        {
-                            this.AlertWarning(string.Format(
+                        this.AlertWarning(string.Format(
                             "<b>{0}</b> was successfully removed from the role {1}.",
                             user.DisplayName, role.DisplayName)
                             , true);
-                        }
-
+                       
                     }
 
                 }

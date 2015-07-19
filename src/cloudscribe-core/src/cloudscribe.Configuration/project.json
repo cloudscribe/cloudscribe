@@ -12,19 +12,25 @@
     "Microsoft.Framework.Configuration.Json": "1.0.0-beta5",
     "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta5",
     "Microsoft.AspNet.Mvc.Abstractions": "6.0.0-beta5",
-    "Microsoft.AspNet.Hosting.Abstractions": "1.0.0-beta5",
-    "System.Xml.XmlDocument": "4.0.0-beta-23019",
-    "System.ComponentModel.Annotations": "4.0.10-beta-23019"
+    "Microsoft.AspNet.Hosting.Abstractions": "1.0.0-beta5"
+
+
   },
 
   "frameworks": {
-   
+    "dnx451": {
+      "frameworkAssemblies": {
+        "System.Xml": ""
+      }
+    },
     "dnxcore50": {
       "dependencies": {
         "System.Linq": "4.0.0-beta-23019",
         "System.Threading": "4.0.10-beta-23019",
-        "Microsoft.CSharp": "4.0.0-beta-23019"
-        
+        "Microsoft.CSharp": "4.0.0-beta-23019",
+        "System.Xml.XmlDocument": "4.0.0-beta-23019",
+        "System.ComponentModel.Annotations": "4.0.10-beta-23019"
+
       }
     }
   }
