@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-06
-// Last Modified:			2015-07-19
+// Last Modified:			2015-07-20
 // 
 
 using cloudscribe.Configuration;
@@ -43,7 +43,7 @@ namespace cloudscribe.Core.Web.Controllers
         [Authorize(Roles = "Admins,Role Admins")]
         public async Task<IActionResult> Index(string searchInput = "", int pageNumber = 1, int pageSize = -1)
         {
-            ViewBag.SiteName = Site.SiteName;
+            ViewData["SiteName"] = Site.SiteName;
             ViewBag.Title = "Role Management";
             //ViewBag.Heading = "Role Management";
 
@@ -81,7 +81,7 @@ namespace cloudscribe.Core.Web.Controllers
         //[MvcSiteMapNode(Title = "New Role", ParentKey = "Roles", Key = "RoleEdit")]
         public async Task<IActionResult> RoleEdit(int? roleId)
         {
-            ViewBag.SiteName = Site.SiteName;
+            ViewData["SiteName"] = Site.SiteName;
             ViewBag.Title = "New Role";
 
             RoleViewModel model = new RoleViewModel();
@@ -124,7 +124,7 @@ namespace cloudscribe.Core.Web.Controllers
         [Authorize(Roles = "Admins,Role Admins")]
         public async Task<IActionResult> RoleEdit(RoleViewModel model, int returnPageNumber = 1)
         {
-            ViewBag.SiteName = Site.SiteName;
+            ViewData["SiteName"] = Site.SiteName;
             ViewBag.Title = "Edit Role";
 
             if (!ModelState.IsValid)
@@ -194,7 +194,7 @@ namespace cloudscribe.Core.Web.Controllers
             int pageNumber = 1,
             int pageSize = -1)
         {
-            ViewBag.SiteName = Site.SiteName;
+            ViewData["SiteName"] = Site.SiteName;
             ViewBag.Title = "Role Members";
 
             ISiteRole role = await RoleManager.FetchRole(roleId);
@@ -245,7 +245,7 @@ namespace cloudscribe.Core.Web.Controllers
             int pageSize = 2,
             bool ajaxGrid = false)
         {
-            ViewBag.SiteName = Site.SiteName;
+            ViewData["SiteName"] = Site.SiteName;
             ViewBag.Title = "Non Role Members";
 
             ISiteRole role = await RoleManager.FetchRole(roleId);

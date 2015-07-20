@@ -19,23 +19,23 @@ namespace cloudscribe.WebHost.Controllers
 
         public IActionResult Index()
         {
-            ViewBag.SiteName = Site.SiteName;
+            ViewData["SiteName"] = Site.SiteName;
 
             return View();
         }
 
         public IActionResult About()
         {
-            ViewBag.SiteName = Site.SiteName;
-            ViewBag.Message = "Your application description page.";
+            ViewData["SiteName"] = Site.SiteName;
+            ViewData["Message"] = "Your application description page.";
 
             return View();
         }
 
         public IActionResult Contact()
         {
-            ViewBag.SiteName = Site.SiteName;
-            ViewBag.Message = "Your contact page.";
+            ViewData["SiteName"] = Site.SiteName;
+            ViewData["Message"] = "Your contact page.";
 
             return View();
         }

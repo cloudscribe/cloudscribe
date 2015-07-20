@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-07-18
+// Last Modified:			2015-07-20
 // 
 
 using cloudscribe.Configuration;
@@ -52,7 +52,7 @@ namespace cloudscribe.Core.Web.Controllers
         public IActionResult Login(string returnUrl)
         {
 
-            ViewBag.SiteName = Site.SiteName;
+            ViewData["SiteName"] = Site.SiteName;
 
             ViewBag.ReturnUrl = returnUrl;
             LoginViewModel model = new LoginViewModel();
@@ -75,7 +75,7 @@ namespace cloudscribe.Core.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model, string returnUrl)
         {
-            ViewBag.SiteName = Site.SiteName;
+            ViewData["SiteName"] = Site.SiteName;
 
             if (Site.RequireCaptchaOnLogin)
             {
@@ -162,7 +162,8 @@ namespace cloudscribe.Core.Web.Controllers
         {
             ViewBag.Title = "Register";
 
-            ViewBag.SiteName = Site.SiteName;
+            ViewData["SiteName"] = Site.SiteName;
+
             EditUserViewModel model = new EditUserViewModel();
             model.SiteGuid = Site.SiteGuid;
             if (Site.RequireCaptchaOnRegistration)
@@ -185,7 +186,7 @@ namespace cloudscribe.Core.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(EditUserViewModel model)
         {
-            ViewBag.SiteName = Site.SiteName;
+            ViewData["SiteName"] = Site.SiteName;
 
             if (Site.RequireCaptchaOnRegistration)
             {
@@ -305,7 +306,7 @@ namespace cloudscribe.Core.Web.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult ExternalLogin(string provider, string returnUrl = null)
         {
-            ViewBag.SiteName = Site.SiteName;
+            ViewData["SiteName"] = Site.SiteName;
 
             // Request a redirect to the external login provider.
             var redirectUrl = Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl });
@@ -318,7 +319,7 @@ namespace cloudscribe.Core.Web.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null)
         {
-            ViewBag.SiteName = Site.SiteName;
+            ViewData["SiteName"] = Site.SiteName;
 
             var info = await SignInManager.GetExternalLoginInfoAsync();
             if (info == null)
@@ -363,8 +364,8 @@ namespace cloudscribe.Core.Web.Controllers
                 return RedirectToAction("Index", "Manage");
             }
 
-            ViewBag.SiteName = Site.SiteName;
-            
+            ViewData["SiteName"] = Site.SiteName;
+
             if (ModelState.IsValid)
             {
                 // Get the information about the user from the external login provider
@@ -416,7 +417,7 @@ namespace cloudscribe.Core.Web.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> ConfirmEmail(string userId, string code)
         {
-            ViewBag.SiteName = Site.SiteName;
+            ViewData["SiteName"] = Site.SiteName;
 
             if (userId == null || code == null)
             {
@@ -437,7 +438,7 @@ namespace cloudscribe.Core.Web.Controllers
         [AllowAnonymous]
         public IActionResult ForgotPassword()
         {
-            ViewBag.SiteName = Site.SiteName;
+            ViewData["SiteName"] = Site.SiteName;
 
             return View();
         }
@@ -449,7 +450,7 @@ namespace cloudscribe.Core.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
-            ViewBag.SiteName = Site.SiteName;
+            ViewData["SiteName"] = Site.SiteName;
 
             if (ModelState.IsValid)
             {
@@ -479,7 +480,7 @@ namespace cloudscribe.Core.Web.Controllers
         [AllowAnonymous]
         public IActionResult ForgotPasswordConfirmation()
         {
-            ViewBag.SiteName = Site.SiteName;
+            ViewData["SiteName"] = Site.SiteName;
 
             return View();
         }
@@ -490,7 +491,7 @@ namespace cloudscribe.Core.Web.Controllers
         [AllowAnonymous]
         public IActionResult ResetPassword(string code = null)
         {
-            ViewBag.SiteName = Site.SiteName;
+            ViewData["SiteName"] = Site.SiteName;
 
             return code == null ? View("Error") : View();
         }
@@ -502,7 +503,7 @@ namespace cloudscribe.Core.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {
-            ViewBag.SiteName = Site.SiteName;
+            ViewData["SiteName"] = Site.SiteName;
 
             if (!ModelState.IsValid)
             {
@@ -529,7 +530,7 @@ namespace cloudscribe.Core.Web.Controllers
         [AllowAnonymous]
         public IActionResult ResetPasswordConfirmation()
         {
-            ViewBag.SiteName = Site.SiteName;
+            ViewData["SiteName"] = Site.SiteName;
 
             return View();
         }
@@ -543,7 +544,7 @@ namespace cloudscribe.Core.Web.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> SendCode(string returnUrl = null, bool rememberMe = false)
         {
-            ViewBag.SiteName = Site.SiteName;
+            ViewData["SiteName"] = Site.SiteName;
 
             var user = await SignInManager.GetTwoFactorAuthenticationUserAsync();
             if (user == null)
@@ -562,7 +563,7 @@ namespace cloudscribe.Core.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> SendCode(SendCodeViewModel model)
         {
-            ViewBag.SiteName = Site.SiteName;
+            ViewData["SiteName"] = Site.SiteName;
 
             if (!ModelState.IsValid)
             {
@@ -601,7 +602,7 @@ namespace cloudscribe.Core.Web.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> VerifyCode(string provider, string returnUrl, bool rememberMe)
         {
-            ViewBag.SiteName = Site.SiteName;
+            ViewData["SiteName"] = Site.SiteName;
 
             // Require that the user has already logged in via username/password or external login
             var user = await SignInManager.GetTwoFactorAuthenticationUserAsync();
@@ -620,7 +621,7 @@ namespace cloudscribe.Core.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> VerifyCode(VerifyCodeViewModel model)
         {
-            ViewBag.SiteName = Site.SiteName;
+            ViewData["SiteName"] = Site.SiteName;
 
             if (!ModelState.IsValid)
             {

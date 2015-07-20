@@ -5,7 +5,7 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>@ViewBag.Title - @ViewBag.SiteName</title>
+        <title>@ViewData["Title"] - @ViewData["SiteName"]</title>
 
         <environment names="Development">
             <link rel="stylesheet" href="~/js/lib/bootstrap/css/bootstrap.css" />
@@ -32,7 +32,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a asp-controller="Home" asp-action="Index" class="navbar-brand">@ViewBag.SiteName</a>
+                    <a asp-controller="Home" asp-action="Index" class="navbar-brand">@ViewData["SiteName"]</a>
                 </div>
                 <div class="navbar-collapse collapse">
                     @await Component.InvokeAsync("Navigation", "BootstrapTopNav", NamedNavigationFilters.TopNav)          
@@ -45,7 +45,7 @@
             @RenderBody()
             <hr />
             <footer>
-                <p>&copy; 2015 - @ViewBag.SiteName</p>
+                <p>&copy; 2015 - @ViewData["SiteName"]</p>
             </footer>
         </div>
 
@@ -72,6 +72,7 @@
                     asp-fallback-src="~/js/lib/bootstrap-touch-carousel/js/bootstrap-touch-carousel.js"
                     asp-fallback-test="window.Zepto">
             </script>
+            @* <script src="~/js/site.js" asp-file-version="true"></script> *@
         </environment>
 
         @RenderSection("scripts", required: false)

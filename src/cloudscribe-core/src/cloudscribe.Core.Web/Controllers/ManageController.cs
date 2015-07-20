@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-07-17
+// Last Modified:			2015-07-20
 // 
 
 using cloudscribe.Core.Models;
@@ -41,7 +41,7 @@ namespace cloudscribe.Core.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            ViewBag.SiteName = Site.SiteName;
+            ViewData["SiteName"] = Site.SiteName;
 
             var user = await UserManager.FindByIdAsync(Context.User.GetUserId());
             var model = new AccountIndexViewModel
@@ -61,7 +61,7 @@ namespace cloudscribe.Core.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> RemoveLogin()
         {
-            ViewBag.SiteName = Site.SiteName;
+            ViewData["SiteName"] = Site.SiteName;
             var user = await UserManager.FindByIdAsync(Context.User.GetUserId());
             var linkedAccounts = await UserManager.GetLoginsAsync(user);
             ViewBag.ShowRemoveButton = await UserManager.HasPasswordAsync(user) || linkedAccounts.Count > 1;
@@ -74,7 +74,7 @@ namespace cloudscribe.Core.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoveLogin(string loginProvider, string providerKey)
         {
-            ViewBag.SiteName = Site.SiteName;
+            ViewData["SiteName"] = Site.SiteName;
 
             var user = await UserManager.FindByIdAsync(Context.User.GetUserId());
 
@@ -101,7 +101,7 @@ namespace cloudscribe.Core.Web.Controllers
         [HttpGet]
         public IActionResult AddPhoneNumber()
         {
-            ViewBag.SiteName = Site.SiteName;
+            ViewData["SiteName"] = Site.SiteName;
 
             return View();
         }
@@ -112,7 +112,7 @@ namespace cloudscribe.Core.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddPhoneNumber(AddPhoneNumberViewModel model)
         {
-            ViewBag.SiteName = Site.SiteName;
+            ViewData["SiteName"] = Site.SiteName;
 
             if (!ModelState.IsValid)
             {
@@ -159,7 +159,7 @@ namespace cloudscribe.Core.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> VerifyPhoneNumber(string phoneNumber)
         {
-            ViewBag.SiteName = Site.SiteName;
+            ViewData["SiteName"] = Site.SiteName;
             var user = await UserManager.FindByIdAsync(Context.User.GetUserId());
             var code = await UserManager.GenerateChangePhoneNumberTokenAsync(user, phoneNumber);
             // Send an SMS to verify the phone number
@@ -172,7 +172,7 @@ namespace cloudscribe.Core.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> VerifyPhoneNumber(VerifyPhoneNumberViewModel model)
         {
-            ViewBag.SiteName = Site.SiteName;
+            ViewData["SiteName"] = Site.SiteName;
 
             if (!ModelState.IsValid)
             {
@@ -224,7 +224,7 @@ namespace cloudscribe.Core.Web.Controllers
         [HttpGet]
         public IActionResult ChangePassword()
         {
-            ViewBag.SiteName = Site.SiteName;
+            ViewData["SiteName"] = Site.SiteName;
 
             return View();
         }
@@ -235,7 +235,7 @@ namespace cloudscribe.Core.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
         {
-            ViewBag.SiteName = Site.SiteName;
+            ViewData["SiteName"] = Site.SiteName;
 
             if (!ModelState.IsValid)
             {
@@ -268,7 +268,7 @@ namespace cloudscribe.Core.Web.Controllers
         [HttpGet]
         public IActionResult SetPassword()
         {
-            ViewBag.SiteName = Site.SiteName;
+            ViewData["SiteName"] = Site.SiteName;
 
             return View();
         }
@@ -279,7 +279,7 @@ namespace cloudscribe.Core.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SetPassword(SetPasswordViewModel model)
         {
-            ViewBag.SiteName = Site.SiteName;
+            ViewData["SiteName"] = Site.SiteName;
 
             if (!ModelState.IsValid)
             {
@@ -316,7 +316,7 @@ namespace cloudscribe.Core.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> ManageLogins()
         {
-            ViewBag.SiteName = Site.SiteName;
+            ViewData["SiteName"] = Site.SiteName;
 
             var user = await UserManager.FindByIdAsync(Context.User.GetUserId());
             if (user == null)

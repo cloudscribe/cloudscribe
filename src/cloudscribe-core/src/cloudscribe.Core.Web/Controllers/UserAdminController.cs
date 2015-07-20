@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-08
-// Last Modified:			2015-07-17
+// Last Modified:			2015-07-20
 // 
 
 using cloudscribe.Configuration;
@@ -51,7 +51,7 @@ namespace cloudscribe.Core.Web.Controllers
             int pageSize = -1,
             int siteId = -1)
         {
-            ViewBag.SiteName = Site.SiteName;
+            ViewData["SiteName"] = Site.SiteName;
             ViewBag.Title = "User Management";
             //ViewBag.Heading = "Role Management";
 
@@ -103,7 +103,7 @@ namespace cloudscribe.Core.Web.Controllers
             int pageSize = -1,
             int siteId = -1)
         {
-            ViewBag.SiteName = Site.SiteName;
+            ViewData["SiteName"] = Site.SiteName;
             ViewBag.Title = "User Management";
             //ViewBag.Heading = "Role Management";
 
@@ -150,7 +150,7 @@ namespace cloudscribe.Core.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> IpSearch(string ipQuery = "", int siteId = -1)
         {
-            ViewBag.SiteName = Site.SiteName;
+            ViewData["SiteName"] = Site.SiteName;
             ViewBag.Title = "User Management";
             //ViewBag.Heading = "Role Management";
 
@@ -210,7 +210,7 @@ namespace cloudscribe.Core.Web.Controllers
         //[MvcSiteMapNode(Title = "New User", ParentKey = "UserAdmin", Key = "UserEdit")]
         public async Task<ActionResult> UserEdit(int? userId)
         {
-            ViewBag.SiteName = Site.SiteName;
+            ViewData["SiteName"] = Site.SiteName;
             ViewBag.Title = "New User";
 
             EditUserViewModel model = new EditUserViewModel();
@@ -253,7 +253,7 @@ namespace cloudscribe.Core.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UserEdit(EditUserViewModel model)
         {
-            ViewBag.SiteName = Site.SiteName;
+            ViewData["SiteName"] = Site.SiteName;
             ViewBag.Title = "New User";
 
             if (ModelState.IsValid)

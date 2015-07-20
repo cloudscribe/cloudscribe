@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-07-04
+// Last Modified:			2015-07-20
 // 
 
 using cloudscribe.Configuration;
@@ -68,7 +68,7 @@ namespace cloudscribe.Core.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            ViewBag.SiteName = Site.SiteName;
+            ViewData["SiteName"] = Site.SiteName;
             ViewBag.Title = "Site Administration";
             ViewBag.Heading = "Site Administration";
             //ViewModels.SiteMapTreeBuilder builder = new ViewModels.SiteMapTreeBuilder();
@@ -84,7 +84,7 @@ namespace cloudscribe.Core.Web.Controllers
         [Authorize(Roles = "ServerAdmins")]
         public async Task<IActionResult> SiteList(int pageNumber = 1, int pageSize = -1)
         {
-            ViewBag.SiteName = Site.SiteName;
+            ViewData["SiteName"] = Site.SiteName;
             ViewBag.Title = "Site List";
             ViewBag.Heading = "Site List";
 
@@ -122,7 +122,7 @@ namespace cloudscribe.Core.Web.Controllers
             Guid? siteGuid,
             int slp = 1)
         {
-            ViewBag.SiteName = Site.SiteName;
+            ViewData["SiteName"] = Site.SiteName;
             ViewBag.Title = "Site Settings";
 
             ISiteSettings selectedSite;
@@ -231,7 +231,7 @@ namespace cloudscribe.Core.Web.Controllers
         [Authorize(Roles = "Admins")]
         public async Task<ActionResult> SiteInfo(SiteBasicSettingsViewModel model)
         {
-            ViewBag.SiteName = Site.SiteName;
+            ViewData["SiteName"] = Site.SiteName;
 
             // can only delete from server admin site/cannot delete server admin site
             if (Site.IsServerAdminSite)
@@ -388,7 +388,7 @@ namespace cloudscribe.Core.Web.Controllers
         [Authorize(Roles = "ServerAdmins")]
         public async Task<ActionResult> NewSite(int slp = 1)
         {
-            ViewBag.SiteName = Site.SiteName;
+            ViewData["SiteName"] = Site.SiteName;
             ViewBag.Title = "Create New Site";
 
             SiteBasicSettingsViewModel model = new SiteBasicSettingsViewModel();
@@ -451,7 +451,7 @@ namespace cloudscribe.Core.Web.Controllers
         [Authorize(Roles = "ServerAdmins")]
         public async Task<ActionResult> NewSite(SiteBasicSettingsViewModel model)
         {
-            ViewBag.SiteName = Site.SiteName;
+            ViewData["SiteName"] = Site.SiteName;
 
             if (!ModelState.IsValid)
             {
@@ -672,7 +672,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             SiteHostMappingsViewModel model = new SiteHostMappingsViewModel();
 
-            ViewBag.SiteName = selectedSite.SiteName;
+            ViewData["SiteName"] = Site.SiteName;
             ViewBag.Title = string.Format(CultureInfo.InvariantCulture,
                 "Domain/Host Name Mappings for {0}",
                 selectedSite.SiteName);
