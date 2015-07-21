@@ -24,6 +24,7 @@ using Microsoft.Framework.Configuration;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
 using Microsoft.Framework.Logging.Console;
+using Microsoft.Framework.OptionsModel;
 using Microsoft.Framework.Runtime;
 //using cloudscribe.WebHost.Models;
 using cloudscribe.Core.Models;
@@ -146,7 +147,7 @@ namespace cloudscribe.WebHost
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerfactory)
         {
             // Configure the HTTP request pipeline.
-
+           
             // Add the console logger.
             loggerfactory.AddConsole(minLevel: LogLevel.Warning);
 

@@ -2,47 +2,74 @@
 
 var gulp = require("gulp"),
   rimraf = require("rimraf"),
-  minifycss = require("gulp-minify-css"),
   concat = require("gulp-concat"),
+  cssmin = require("gulp-cssmin"),
   uglify = require("gulp-uglify"),
-  fs = require("fs");
+  project = require("./project.json");
 
-eval("var project = " + fs.readFileSync("./project.json"));
-
+/*
 var paths = {
   bower: "./bower_components/",
   lib: "./" + project.webroot + "/js/lib/",
   scripts: "./Scripts/",
   css: "./" + project.webroot + "/css/"
 };
+*/
 
+var paths = {
+    webroot: "./" + project.webroot + "/",
+    appJsSrc: "./Scripts/"
+};
+
+paths.js = paths.webroot + "js/site/*.js";
+paths.minJs = paths.webroot + "js/site/*.min.js";
+paths.css = paths.webroot + "css/**/*.css";
+paths.minCss = paths.webroot + "css/**/*.min.css";
+paths.concatJsDest = paths.webroot + "js/site/site.min.js";
+paths.concatCssDest = paths.webroot + "css/site.min.css";
+paths.appJsDest = paths.webroot + "js/app/";
+
+/*
 gulp.task("clean", function (cb) {
   rimraf(paths.lib, cb);
 });
+*/
 
-gulp.task("copy", ["clean"], function () {
-  var bower = {
-    "bootstrap": "bootstrap/dist/**/*.{js,map,css,ttf,svg,woff,eot}",
-    "bootstrap-touch-carousel": "bootstrap-touch-carousel/dist/**/*.{js,css}",
-    "hammer.js": "hammer.js/hammer*.{js,map}",
-    "jquery": "jquery/jquery*.{js,map}",
-    "jquery-ajax-unobtrusive": "jquery-ajax-unobtrusive/*.{js,map}",
-    "jquery-validation": "jquery-validation/jquery.validate.js",
-    "jquery-validation-unobtrusive": "jquery-validation-unobtrusive/jquery.validate.unobtrusive.js",
-    "jquery-ui": "jquery-ui/**/*.{js,map,css}"
-  }
+gulp.task("clean:js", function (cb) {
+    rimraf(paths.concatJsDest, cb);
+});
 
-  for (var destinationDir in bower) {
-    gulp.src(paths.bower + bower[destinationDir])
-      .pipe(gulp.dest(paths.lib + destinationDir));
-  }
+gulp.task("clean:css", function (cb) {
+    rimraf(paths.concatCssDest, cb);
+});
 
-    gulp.src(paths.scripts + '**.js')
+gulp.task("clean", ["clean:js", "clean:css"]);
+
+gulp.task("min:js", function () {
+    gulp.src([paths.js, "!" + paths.minJs], { base: "." })
+        .pipe(concat(paths.concatJsDest))
         .pipe(uglify())
-        .pipe(gulp.dest(paths.lib));
+        .pipe(gulp.dest("."));
+
+    gulp.src(paths.appJsSrc + '**.js')
+        .pipe(uglify())
+        .pipe(gulp.dest(paths.appJsDest));
 
 });
 
+gulp.task("min:css", function () {
+    gulp.src([paths.css, "!" + paths.minCss])
+        .pipe(concat(paths.concatCssDest))
+        .pipe(cssmin())
+        .pipe(gulp.dest("."));
+});
+
+gulp.task("min", ["min:js", "min:css"]);
+
+
+
+
+/*
 gulp.task("minifycss", function () {
     return gulp.src([paths.css + "/*.css",
                      "!" + paths.css + "/*.min.css"])
@@ -50,3 +77,4 @@ gulp.task("minifycss", function () {
             .pipe(concat("site.min.css"))
             .pipe(gulp.dest(paths.css));
 });
+*/

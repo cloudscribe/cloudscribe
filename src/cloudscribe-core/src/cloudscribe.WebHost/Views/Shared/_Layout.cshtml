@@ -70,9 +70,9 @@
             </script>
             <script src="//ajax.aspnetcdn.com/ajax/bootstrap-touch-carousel/0.8.0/js/bootstrap-touch-carousel.js"
                     asp-fallback-src="~/js/lib/bootstrap-touch-carousel/js/bootstrap-touch-carousel.js"
-                    asp-fallback-test="window.Zepto">
+                    asp-fallback-test="window.Hammer && window.Hammer.Instance">
             </script>
-            @* <script src="~/js/site.js" asp-file-version="true"></script> *@
+            @* <script src="~/js/site/site.js" asp-file-version="true"></script> *@
         </environment>
 
         @RenderSection("scripts", required: false)

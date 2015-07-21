@@ -3,13 +3,15 @@
   "private": true,
   "dependencies": {
     "bootstrap": "~3.3.5",
-    "jquery": "1.10.2",
-    "jquery-ui": "~1.11.3",
+    "bootstrap-touch-carousel": "0.8.0",
+    "hammer.js": "2.0.4",
+    "jquery": "2.1.4",
     "jquery-ajax-unobtrusive": "~3.2.3",
     "jquery-validation": "1.11.1",
     "jquery-validation-unobtrusive": "3.2.2",
-    "hammer.js": "2.0.4",
-    "bootstrap-touch-carousel": "0.8.0"
+    "jquery-ui": "~1.11.3"
+    
+    
   },
   "exportsOverride": {
     "jquery-ui": {
