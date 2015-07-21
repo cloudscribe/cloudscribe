@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-07-20
+// Last Modified:			2015-07-21
 // 
 
 using cloudscribe.Configuration;
@@ -31,19 +31,25 @@ namespace cloudscribe.Core.Web.Controllers
             ISiteResolver siteResolver,
             SiteUserManager<SiteUser> userManager,
             SignInManager<SiteUser> signInManager,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            IEmailSender emailSender,
+            ISmsSender smsSender)
         {
             Site = siteResolver.Resolve();
-            UserManager = userManager;
-            SignInManager = signInManager;
+            this.userManager = userManager;
+            this.signInManager = signInManager;
             config = configuration;
+            this.emailSender = emailSender;
+            this.smsSender = smsSender;
         }
 
         //private ISiteResolver resolver;
-        protected ISiteSettings Site;
-        protected IConfiguration config;
-        public SiteUserManager<SiteUser> UserManager { get; private set; }
-        public SignInManager<SiteUser> SignInManager { get; private set; }
+        private readonly ISiteSettings Site;
+        private readonly IConfiguration config;
+        private readonly SiteUserManager<SiteUser> userManager;
+        private readonly SignInManager<SiteUser> signInManager;
+        private readonly IEmailSender emailSender;
+        private readonly ISmsSender smsSender;
 
 
         // GET: /Account/Login
@@ -53,8 +59,7 @@ namespace cloudscribe.Core.Web.Controllers
         {
 
             ViewData["SiteName"] = Site.SiteName;
-
-            ViewBag.ReturnUrl = returnUrl;
+            ViewData["ReturnUrl"] = returnUrl;
             LoginViewModel model = new LoginViewModel();
             if (Site.RequireCaptchaOnLogin)
             {
@@ -76,7 +81,7 @@ namespace cloudscribe.Core.Web.Controllers
         public async Task<IActionResult> Login(LoginViewModel model, string returnUrl)
         {
             ViewData["SiteName"] = Site.SiteName;
-
+            ViewData["ReturnUrl"] = returnUrl;
             if (Site.RequireCaptchaOnLogin)
             {
                 model.RecaptchaSiteKey = config.RecaptchaSiteKey();
@@ -111,34 +116,19 @@ namespace cloudscribe.Core.Web.Controllers
 
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(
+            var result = await signInManager.PasswordSignInAsync(
                 model.Email,
                 model.Password,
                 model.RememberMe,
                 lockoutOnFailure : false);
-
-            //switch (result)
-            //{
-            //    case SignInStatus.Success:
-            //        //AuthenticationManager.SignIn()
-            //        return RedirectToLocal(returnUrl);
-            //    case SignInStatus.LockedOut:
-            //        return View("Lockout");
-            //    case SignInStatus.RequiresVerification:
-            //        return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
-            //    case SignInStatus.Failure:
-            //    default:
-            //        ModelState.AddModelError("", "Invalid login attempt.");
-            //        return View(model);
-            //}
-
+            
             if (result.Succeeded)
             {
                 return RedirectToLocal(returnUrl);
             }
             if (result.RequiresTwoFactor)
             {
-                return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
+                return RedirectToAction(nameof(SendCode), new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
             }
             if (result.IsLockedOut)
             {
@@ -160,8 +150,7 @@ namespace cloudscribe.Core.Web.Controllers
         [AllowAnonymous]
         public IActionResult Register()
         {
-            ViewBag.Title = "Register";
-
+            ViewData["Title"] = "Register";
             ViewData["SiteName"] = Site.SiteName;
 
             EditUserViewModel model = new EditUserViewModel();
@@ -258,7 +247,7 @@ namespace cloudscribe.Core.Web.Controllers
                 }
 
 
-                var result = await UserManager.CreateAsync(user, model.Password);
+                var result = await userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=532713
@@ -267,7 +256,7 @@ namespace cloudscribe.Core.Web.Controllers
                     //var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Context.Request.Scheme);
                     //await MessageServices.SendEmailAsync(model.Email, "Confirm your account",
                     //    "Please confirm your account by clicking this link: <a href=\"" + callbackUrl + "\">link</a>");
-                    await SignInManager.SignInAsync(user, isPersistent: false);
+                    await signInManager.SignInAsync(user, isPersistent: false);
                     return RedirectToAction("Index", "Home");
 
                     
@@ -289,7 +278,7 @@ namespace cloudscribe.Core.Web.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult LogOff()
         {
-            SignInManager.SignOut();
+            signInManager.SignOut();
             return RedirectToAction("Index", "Home");
         }
 
@@ -310,7 +299,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             // Request a redirect to the external login provider.
             var redirectUrl = Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl });
-            var properties = SignInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+            var properties = signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
             return new ChallengeResult(provider, properties);
         }
 
@@ -321,14 +310,14 @@ namespace cloudscribe.Core.Web.Controllers
         {
             ViewData["SiteName"] = Site.SiteName;
 
-            var info = await SignInManager.GetExternalLoginInfoAsync();
+            var info = await signInManager.GetExternalLoginInfoAsync();
             if (info == null)
             {
                 return RedirectToAction("Login");
             }
 
             // Sign in the user with this external login provider if the user already has a login.
-            var result = await SignInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
+            var result = await signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
             if (result.Succeeded)
             {
                 return RedirectToLocal(returnUrl);
@@ -344,8 +333,8 @@ namespace cloudscribe.Core.Web.Controllers
             else
             {
                 // If the user does not have an account, then ask the user to create an account.
-                ViewBag.ReturnUrl = returnUrl;
-                ViewBag.LoginProvider = info.LoginProvider;
+                ViewData["ReturnUrl"] = returnUrl;
+                ViewData["LoginProvider"] = info.LoginProvider;
                 var email = info.ExternalPrincipal.FindFirstValue(ClaimTypes.Email);
                 return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = email });
             }
@@ -369,7 +358,7 @@ namespace cloudscribe.Core.Web.Controllers
             if (ModelState.IsValid)
             {
                 // Get the information about the user from the external login provider
-                var info = await SignInManager.GetExternalLoginInfoAsync();
+                var info = await signInManager.GetExternalLoginInfoAsync();
                 if (info == null)
                 {
                     return View("ExternalLoginFailure");
@@ -380,20 +369,20 @@ namespace cloudscribe.Core.Web.Controllers
                     UserName = model.Email,
                     Email = model.Email
                 };
-                var result = await UserManager.CreateAsync(user);
+                var result = await userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
-                    result = await UserManager.AddLoginAsync(user, info);
+                    result = await userManager.AddLoginAsync(user, info);
                     if (result.Succeeded)
                     {
-                        await SignInManager.SignInAsync(user, isPersistent: false);
+                        await signInManager.SignInAsync(user, isPersistent: false);
                         return RedirectToLocal(returnUrl);
                     }
                 }
                 AddErrors(result);
             }
 
-            ViewBag.ReturnUrl = returnUrl;
+            ViewData["ReturnUrl"] = returnUrl;
             return View(model);
         }
 
@@ -405,7 +394,7 @@ namespace cloudscribe.Core.Web.Controllers
             // otherwise if found it is not already in use and not available
             int selectedUserId = -1;
             if (userId.HasValue) { selectedUserId = userId.Value; }
-            bool available = await UserManager.LoginIsAvailable(selectedUserId, loginName);
+            bool available = await userManager.LoginIsAvailable(selectedUserId, loginName);
 
 
             return Json(available);
@@ -423,12 +412,12 @@ namespace cloudscribe.Core.Web.Controllers
             {
                 return View("Error");
             }
-            var user = await UserManager.FindByIdAsync(userId);
+            var user = await userManager.FindByIdAsync(userId);
             if (user == null)
             {
                 return View("Error");
             }
-            var result = await UserManager.ConfirmEmailAsync(user, code);
+            var result = await userManager.ConfirmEmailAsync(user, code);
             return View(result.Succeeded ? "ConfirmEmail" : "Error");
         }
 
@@ -454,8 +443,8 @@ namespace cloudscribe.Core.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                var user = await UserManager.FindByNameAsync(model.Email);
-                if (user == null || !(await UserManager.IsEmailConfirmedAsync(user)))
+                var user = await userManager.FindByNameAsync(model.Email);
+                if (user == null || !(await userManager.IsEmailConfirmedAsync(user)))
                 {
                     // Don't reveal that the user does not exist or is not confirmed
                     return View("ForgotPasswordConfirmation");
@@ -465,7 +454,7 @@ namespace cloudscribe.Core.Web.Controllers
                 // Send an email with this link
                 // var code = await UserManager.GeneratePasswordResetTokenAsync(user);
                 // var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Context.Request.Scheme);
-                // await MessageServices.SendEmailAsync(model.Email, "Reset Password",
+                // await emailSender.SendEmailAsync(model.Email, "Reset Password",
                 //    "Please reset your password by clicking here: <a href=\"" + callbackUrl + "\">link</a>");
                 // return View("ForgotPasswordConfirmation");
             }
@@ -509,13 +498,13 @@ namespace cloudscribe.Core.Web.Controllers
             {
                 return View(model);
             }
-            var user = await UserManager.FindByNameAsync(model.Email);
+            var user = await userManager.FindByNameAsync(model.Email);
             if (user == null)
             {
                 // Don't reveal that the user does not exist
                 return RedirectToAction("ResetPasswordConfirmation", "Account");
             }
-            var result = await UserManager.ResetPasswordAsync(user, model.Code, model.Password);
+            var result = await userManager.ResetPasswordAsync(user, model.Code, model.Password);
             if (result.Succeeded)
             {
                 return RedirectToAction("ResetPasswordConfirmation", "Account");
@@ -546,12 +535,12 @@ namespace cloudscribe.Core.Web.Controllers
         {
             ViewData["SiteName"] = Site.SiteName;
 
-            var user = await SignInManager.GetTwoFactorAuthenticationUserAsync();
+            var user = await signInManager.GetTwoFactorAuthenticationUserAsync();
             if (user == null)
             {
                 return View("Error");
             }
-            var userFactors = await UserManager.GetValidTwoFactorProvidersAsync(user);
+            var userFactors = await userManager.GetValidTwoFactorProvidersAsync(user);
             var factorOptions = userFactors.Select(purpose => new SelectListItem { Text = purpose, Value = purpose }).ToList();
             return View(new SendCodeViewModel { Providers = factorOptions, ReturnUrl = returnUrl, RememberMe = rememberMe });
         }
@@ -570,14 +559,14 @@ namespace cloudscribe.Core.Web.Controllers
                 return View();
             }
 
-            var user = await SignInManager.GetTwoFactorAuthenticationUserAsync();
+            var user = await signInManager.GetTwoFactorAuthenticationUserAsync();
             if (user == null)
             {
                 return View("Error");
             }
 
             // Generate the token and send it
-            var code = await UserManager.GenerateTwoFactorTokenAsync(user, model.SelectedProvider);
+            var code = await userManager.GenerateTwoFactorTokenAsync(user, model.SelectedProvider);
             if (string.IsNullOrWhiteSpace(code))
             {
                 return View("Error");
@@ -586,11 +575,11 @@ namespace cloudscribe.Core.Web.Controllers
             var message = "Your security code is: " + code;
             if (model.SelectedProvider == "Email")
             {
-                await MessageServices.SendEmailAsync(await UserManager.GetEmailAsync(user), "Security Code", message);
+                await emailSender.SendEmailAsync(await userManager.GetEmailAsync(user), "Security Code", message);
             }
             else if (model.SelectedProvider == "Phone")
             {
-                await MessageServices.SendSmsAsync(await UserManager.GetPhoneNumberAsync(user), message);
+                await smsSender.SendSmsAsync(await userManager.GetPhoneNumberAsync(user), message);
             }
 
             return RedirectToAction("VerifyCode", new { Provider = model.SelectedProvider, ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe });
@@ -605,7 +594,7 @@ namespace cloudscribe.Core.Web.Controllers
             ViewData["SiteName"] = Site.SiteName;
 
             // Require that the user has already logged in via username/password or external login
-            var user = await SignInManager.GetTwoFactorAuthenticationUserAsync();
+            var user = await signInManager.GetTwoFactorAuthenticationUserAsync();
             if (user == null)
             {
                 return View("Error");
@@ -631,7 +620,7 @@ namespace cloudscribe.Core.Web.Controllers
             // The following code protects for brute force attacks against the two factor codes.
             // If a user enters incorrect codes for a specified amount of time then the user account
             // will be locked out for a specified amount of time.
-            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, model.RememberMe, model.RememberBrowser);
+            var result = await signInManager.TwoFactorSignInAsync(model.Provider, model.Code, model.RememberMe, model.RememberBrowser);
             if (result.Succeeded)
             {
                 return RedirectToLocal(model.ReturnUrl);

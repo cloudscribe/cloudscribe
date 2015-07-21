@@ -144,12 +144,13 @@ namespace cloudscribe.WebHost
         }
 
         // Configure is called after ConfigureServices is called.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerfactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             // Configure the HTTP request pipeline.
-           
+
             // Add the console logger.
-            loggerfactory.AddConsole(minLevel: LogLevel.Warning);
+            loggerFactory.MinimumLevel = LogLevel.Information;
+            loggerFactory.AddConsole();
 
             // Add the following to the request pipeline only in development environment.
             if (env.IsEnvironment("Development"))
@@ -162,8 +163,8 @@ namespace cloudscribe.WebHost
             {
                 // Add Error handling middleware which catches all application specific errors and
                 // sends the request to the following path or controller action.
-                //app.UseErrorHandler("/Home/Error");
-                app.UseErrorPage(ErrorPageOptions.ShowAll);
+                app.UseErrorHandler("/Home/Error");
+                //app.UseErrorPage(ErrorPageOptions.ShowAll);
             }
 
             // Add static files to the request pipeline.

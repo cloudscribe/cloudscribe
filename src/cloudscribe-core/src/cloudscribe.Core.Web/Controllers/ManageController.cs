@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-07-20
+// Last Modified:			2015-07-21
 // 
 
 using cloudscribe.Core.Models;
@@ -25,16 +25,22 @@ namespace cloudscribe.Core.Web.Controllers
         public ManageController(
             ISiteResolver siteResolver,
             SiteUserManager<SiteUser> userManager,
-            SignInManager<SiteUser> signInManager)
+            SignInManager<SiteUser> signInManager,
+            IEmailSender emailSender,
+            ISmsSender smsSender)
         {
             Site = siteResolver.Resolve();
-            UserManager = userManager;
-            SignInManager = signInManager;
+            this.userManager = userManager;
+            this.signInManager = signInManager;
+            this.emailSender = emailSender;
+            this.smsSender = smsSender;
         }
 
-        private ISiteSettings Site;
-        public SiteUserManager<SiteUser> UserManager { get; private set; }
-        public SignInManager<SiteUser> SignInManager { get; private set; }
+        private readonly ISiteSettings Site;
+        private readonly SiteUserManager<SiteUser> userManager;
+        private readonly SignInManager<SiteUser> signInManager;
+        private readonly IEmailSender emailSender;
+        private readonly ISmsSender smsSender;
 
 
         // GET: /Manage/Index
@@ -43,14 +49,14 @@ namespace cloudscribe.Core.Web.Controllers
         {
             ViewData["SiteName"] = Site.SiteName;
 
-            var user = await UserManager.FindByIdAsync(Context.User.GetUserId());
+            var user = await userManager.FindByIdAsync(Context.User.GetUserId());
             var model = new AccountIndexViewModel
             {
                 HasPassword = (user.PasswordHash.Length > 0),
                 PhoneNumber = user.PhoneNumber,
                 TwoFactor = user.TwoFactorEnabled,
-                Logins = await UserManager.GetLoginsAsync(user),
-                BrowserRemembered = await SignInManager.IsTwoFactorClientRememberedAsync(user)
+                Logins = await userManager.GetLoginsAsync(user),
+                BrowserRemembered = await signInManager.IsTwoFactorClientRememberedAsync(user)
             };
             
             return View(model);
@@ -62,9 +68,9 @@ namespace cloudscribe.Core.Web.Controllers
         public async Task<IActionResult> RemoveLogin()
         {
             ViewData["SiteName"] = Site.SiteName;
-            var user = await UserManager.FindByIdAsync(Context.User.GetUserId());
-            var linkedAccounts = await UserManager.GetLoginsAsync(user);
-            ViewBag.ShowRemoveButton = await UserManager.HasPasswordAsync(user) || linkedAccounts.Count > 1;
+            var user = await userManager.FindByIdAsync(Context.User.GetUserId());
+            var linkedAccounts = await userManager.GetLoginsAsync(user);
+            ViewData["ShowRemoveButton"] = await userManager.HasPasswordAsync(user) || linkedAccounts.Count > 1;
             return View(linkedAccounts);
         }
 
@@ -76,14 +82,14 @@ namespace cloudscribe.Core.Web.Controllers
         {
             ViewData["SiteName"] = Site.SiteName;
 
-            var user = await UserManager.FindByIdAsync(Context.User.GetUserId());
+            var user = await userManager.FindByIdAsync(Context.User.GetUserId());
 
             if (user != null)
             {
-                var result = await UserManager.RemoveLoginAsync(user, loginProvider, providerKey);
+                var result = await userManager.RemoveLoginAsync(user, loginProvider, providerKey);
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent: false);
+                    await signInManager.SignInAsync(user, isPersistent: false);
                     this.AlertSuccess("The external login was removed.");
                 }
                 else
@@ -119,9 +125,9 @@ namespace cloudscribe.Core.Web.Controllers
                 return View(model);
             }
             // Generate the token and send it
-            var user = await UserManager.FindByIdAsync(Context.User.GetUserId());
-            var code = await UserManager.GenerateChangePhoneNumberTokenAsync(user, model.Number);
-            await MessageServices.SendSmsAsync(model.Number, "Your security code is: " + code);
+            var user = await userManager.FindByIdAsync(Context.User.GetUserId());
+            var code = await userManager.GenerateChangePhoneNumberTokenAsync(user, model.Number);
+            await smsSender.SendSmsAsync(model.Number, "Your security code is: " + code);
             return RedirectToAction("VerifyPhoneNumber", new { PhoneNumber = model.Number });
 
         }
@@ -129,13 +135,14 @@ namespace cloudscribe.Core.Web.Controllers
 
         // POST: /Manage/EnableTwoFactorAuthentication
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> EnableTwoFactorAuthentication()
         {
-            var user = await UserManager.FindByIdAsync(Context.User.GetUserId());
+            var user = await userManager.FindByIdAsync(Context.User.GetUserId());
             if (user != null)
             {
-                await UserManager.SetTwoFactorEnabledAsync(user, true);
-                await SignInManager.SignInAsync(user, isPersistent: false);
+                await userManager.SetTwoFactorEnabledAsync(user, true);
+                await signInManager.SignInAsync(user, isPersistent: false);
             }
             return RedirectToAction("Index", "Manage");
         }
@@ -143,13 +150,14 @@ namespace cloudscribe.Core.Web.Controllers
 
         // POST: /Manage/DisableTwoFactorAuthentication
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DisableTwoFactorAuthentication()
         {
-            var user = await UserManager.FindByIdAsync(Context.User.GetUserId());
+            var user = await userManager.FindByIdAsync(Context.User.GetUserId());
             if (user != null)
             {
-                await UserManager.SetTwoFactorEnabledAsync(user, false);
-                await SignInManager.SignInAsync(user, isPersistent: false);
+                await userManager.SetTwoFactorEnabledAsync(user, false);
+                await signInManager.SignInAsync(user, isPersistent: false);
             }
             return RedirectToAction("Index", "Manage");
         }
@@ -160,8 +168,8 @@ namespace cloudscribe.Core.Web.Controllers
         public async Task<IActionResult> VerifyPhoneNumber(string phoneNumber)
         {
             ViewData["SiteName"] = Site.SiteName;
-            var user = await UserManager.FindByIdAsync(Context.User.GetUserId());
-            var code = await UserManager.GenerateChangePhoneNumberTokenAsync(user, phoneNumber);
+            var user = await userManager.FindByIdAsync(Context.User.GetUserId());
+            var code = await userManager.GenerateChangePhoneNumberTokenAsync(user, phoneNumber);
             // Send an SMS to verify the phone number
             return phoneNumber == null ? View("Error") : View(new VerifyPhoneNumberViewModel { PhoneNumber = phoneNumber });
         }
@@ -178,13 +186,13 @@ namespace cloudscribe.Core.Web.Controllers
             {
                 return View(model);
             }
-            var user = await UserManager.FindByIdAsync(Context.User.GetUserId());
+            var user = await userManager.FindByIdAsync(Context.User.GetUserId());
             if (user != null)
             {
-                var result = await UserManager.ChangePhoneNumberAsync(user, model.PhoneNumber, model.Code);
+                var result = await userManager.ChangePhoneNumberAsync(user, model.PhoneNumber, model.Code);
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent: false);
+                    await signInManager.SignInAsync(user, isPersistent: false);
 
                     this.AlertSuccess("Your phone number was added.");
 
@@ -202,13 +210,13 @@ namespace cloudscribe.Core.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> RemovePhoneNumber()
         {
-            var user = await UserManager.FindByIdAsync(Context.User.GetUserId());
+            var user = await userManager.FindByIdAsync(Context.User.GetUserId());
             if (user != null)
             {
-                var result = await UserManager.SetPhoneNumberAsync(user, null);
+                var result = await userManager.SetPhoneNumberAsync(user, null);
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent: false);
+                    await signInManager.SignInAsync(user, isPersistent: false);
                     this.AlertSuccess("Your phone number was removed.");
                 }
                 else
@@ -241,13 +249,13 @@ namespace cloudscribe.Core.Web.Controllers
             {
                 return View(model);
             }
-            var user = await UserManager.FindByIdAsync(Context.User.GetUserId());
+            var user = await userManager.FindByIdAsync(Context.User.GetUserId());
             if (user != null)
             {
-                var result = await UserManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+                var result = await userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent: false);
+                    await signInManager.SignInAsync(user, isPersistent: false);
 
                     this.AlertSuccess("Your password has been changed.");
                     return RedirectToAction("Index");
@@ -286,13 +294,13 @@ namespace cloudscribe.Core.Web.Controllers
                 return View(model);
             }
 
-            var user = await UserManager.FindByIdAsync(Context.User.GetUserId());
+            var user = await userManager.FindByIdAsync(Context.User.GetUserId());
             if (user != null)
             {
-                var result = await UserManager.AddPasswordAsync(user, model.NewPassword);
+                var result = await userManager.AddPasswordAsync(user, model.NewPassword);
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent: false);
+                    await signInManager.SignInAsync(user, isPersistent: false);
                     this.AlertSuccess("your password has been set");
 
                     return RedirectToAction("Index");
@@ -318,13 +326,13 @@ namespace cloudscribe.Core.Web.Controllers
         {
             ViewData["SiteName"] = Site.SiteName;
 
-            var user = await UserManager.FindByIdAsync(Context.User.GetUserId());
+            var user = await userManager.FindByIdAsync(Context.User.GetUserId());
             if (user == null)
             {
                 return View("Error");
             }
-            var userLogins = await UserManager.GetLoginsAsync(user);
-            var otherLogins = SignInManager.GetExternalAuthenticationSchemes().Where(auth => userLogins.All(ul => auth.AuthenticationScheme != ul.LoginProvider)).ToList();
+            var userLogins = await userManager.GetLoginsAsync(user);
+            var otherLogins = signInManager.GetExternalAuthenticationSchemes().Where(auth => userLogins.All(ul => auth.AuthenticationScheme != ul.LoginProvider)).ToList();
             ViewBag.ShowRemoveButton = user.PasswordHash != null || userLogins.Count > 1;
             return View(new ManageLoginsViewModel
             {
@@ -343,7 +351,7 @@ namespace cloudscribe.Core.Web.Controllers
         {
             // Request a redirect to the external login provider to link a login for the current user
             var redirectUrl = Url.Action("LinkLoginCallback", "Manage");
-            var properties = SignInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl, User.GetUserId());
+            var properties = signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl, User.GetUserId());
             return new ChallengeResult(provider, properties);
         }
 
@@ -352,18 +360,18 @@ namespace cloudscribe.Core.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> LinkLoginCallback()
         {
-            var user = await UserManager.FindByIdAsync(Context.User.GetUserId());
+            var user = await userManager.FindByIdAsync(Context.User.GetUserId());
             if (user == null)
             {
                 return View("Error");
             }
-            var info = await SignInManager.GetExternalLoginInfoAsync(User.GetUserId());
+            var info = await signInManager.GetExternalLoginInfoAsync(User.GetUserId());
             if (info == null)
             {
                 this.AlertDanger("oops something went wrong please try again");
                 return RedirectToAction("ManageLogins");
             }
-            var result = await UserManager.AddLoginAsync(user, info);
+            var result = await userManager.AddLoginAsync(user, info);
             if (!result.Succeeded)
             {
                 this.AlertDanger("oops something went wrong, please try again");
