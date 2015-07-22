@@ -9,9 +9,11 @@
     "jquery-ajax-unobtrusive": "~3.2.3",
     "jquery-validation": "1.11.1",
     "jquery-validation-unobtrusive": "3.2.2",
-    "jquery-ui": "~1.11.3"
-    
-    
+    "jquery-ui": "~1.11.3",
+    "ckeditor": "~4.5.1",
+    "tinymce": "~4.2.2"
+
+
   },
   "exportsOverride": {
     "jquery-ui": {

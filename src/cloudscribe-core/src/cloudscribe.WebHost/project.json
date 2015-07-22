@@ -62,7 +62,8 @@
         "bower_components",
         "**.xproj",
         "**.user",
-        "**.vspscc"
+      "**.vspscc",
+      "wwwroot/js/lib/ckeditor/samples"
     ],
     "scripts": {
     "prepublish": [ "npm install", "bower install", "gulp clean", "gulp min" ]
