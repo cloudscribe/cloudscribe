@@ -2,27 +2,23 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-07-22
+// Last Modified:			2015-07-23
 // 
 
 using cloudscribe.Configuration;
 using cloudscribe.Core.Models;
-using cloudscribe.Core.Models.Site;
 using cloudscribe.Core.Models.Geography;
-using cloudscribe.Core.Web.Components;
+using cloudscribe.Core.Models.Site;
 using cloudscribe.Core.Web.Helpers;
 using cloudscribe.Core.Web.ViewModels.SiteSettings;
-
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Threading.Tasks;
-
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.Framework.Configuration;
-//using MvcSiteMapProvider;
+using System;
+using System.Globalization;
+using System.Threading.Tasks;
+
 
 namespace cloudscribe.Core.Web.Controllers
 {
@@ -31,27 +27,27 @@ namespace cloudscribe.Core.Web.Controllers
     {
         private ISiteSettings Site;
         private SiteManager siteManager;
-        private IGeoRepository geoRepo;
+        private GeoDataManager geoDataManager;
         private IConfiguration config;
         //private ITriggerStartup startup;
 
         public SiteAdminController(
             ISiteResolver siteResolver,
             SiteManager siteManager,
-            IGeoRepository geoRepository,
+            GeoDataManager geoDataManager,
             IConfiguration configuration
             //, ITriggerStartup startupTrigger
             )
         {
             if (siteResolver == null) { throw new ArgumentNullException(nameof(siteResolver)); }
-            if (geoRepository == null) { throw new ArgumentNullException(nameof(geoRepository)); }
+            if (geoDataManager == null) { throw new ArgumentNullException(nameof(geoDataManager)); }
             if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
 
             config = configuration;
             Site = siteResolver.Resolve();
 
             this.siteManager = siteManager;
-            geoRepo = geoRepository;
+            this.geoDataManager = geoDataManager;
             
             //startup = startupTrigger;
         }
@@ -160,7 +156,7 @@ namespace cloudscribe.Core.Web.Controllers
             model.RequireCaptchaOnLogin = selectedSite.RequireCaptchaOnLogin;
 
             model.AvailableCountries.Add(new SelectListItem { Text = "-Please select-", Value = "Selects items" });
-            var countries = await geoRepo.GetAllCountries();
+            var countries = await geoDataManager.GetAllCountries();
             Guid selectedCountryGuid = Guid.Empty;
             foreach (var country in countries)
             {
@@ -178,7 +174,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             if (selectedCountryGuid != Guid.Empty)
             {
-                var states = await geoRepo.GetGeoZonesByCountry(selectedCountryGuid);
+                var states = await geoDataManager.GetGeoZonesByCountry(selectedCountryGuid);
                 foreach (var state in states)
                 {
                     model.AvailableStates.Add(new SelectListItem()
@@ -408,7 +404,7 @@ namespace cloudscribe.Core.Web.Controllers
             //.SiteFolderName = Site.SiteSettings.SiteFolderName;
 
             model.AvailableCountries.Add(new SelectListItem { Text = "-Please select-", Value = "" });
-            var countries = await geoRepo.GetAllCountries();
+            var countries = await geoDataManager.GetAllCountries();
             Guid selectedCountryGuid = Guid.Empty;
             foreach (var country in countries)
             {
@@ -426,7 +422,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             if (selectedCountryGuid != Guid.Empty)
             {
-                var states = await geoRepo.GetGeoZonesByCountry(selectedCountryGuid);
+                var states = await geoDataManager.GetGeoZonesByCountry(selectedCountryGuid);
                 foreach (var state in states)
                 {
                     model.AvailableStates.Add(new SelectListItem()

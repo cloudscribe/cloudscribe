@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-22
-// Last Modified:			2015-07-22
+// Last Modified:			2015-07-23
 // 
 
 using System;
@@ -59,6 +59,11 @@ namespace cloudscribe.Core.Models.Site
         public async Task<ISiteSettings> Fetch(Guid siteGuid)
         {
             return await siteRepo.Fetch(siteGuid);
+        }
+
+        public async Task<ISiteSettings> Fetch(int siteId)
+        {
+            return await siteRepo.Fetch(siteId);
         }
 
         public async Task<bool> Save(ISiteSettings site)

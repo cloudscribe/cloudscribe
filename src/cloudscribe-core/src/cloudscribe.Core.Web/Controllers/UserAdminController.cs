@@ -2,11 +2,12 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-08
-// Last Modified:			2015-07-20
+// Last Modified:			2015-07-23
 // 
 
 using cloudscribe.Configuration;
 using cloudscribe.Core.Models;
+using cloudscribe.Core.Models.Site;
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Web.ViewModels.Account;
 using cloudscribe.Core.Web.ViewModels.UserAdmin;
@@ -14,7 +15,6 @@ using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Mvc;
 using Microsoft.Framework.Configuration;
-//using MvcSiteMapProvider;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -27,20 +27,20 @@ namespace cloudscribe.Core.Web.Controllers
     {
         public UserAdminController(
             ISiteResolver siteResolver,
-            ISiteRepository siteRepository,
+            SiteManager siteManager,
             SiteUserManager<SiteUser> userManager,
             IConfiguration configuration
             )
         {
             Site = siteResolver.Resolve();
             UserManager = userManager;
-            siteRepo = siteRepository;
+            this.siteManager = siteManager;
             config = configuration;
         }
 
         private IConfiguration config;
         private ISiteSettings Site;
-        private ISiteRepository siteRepo;
+        private SiteManager siteManager;
         public SiteUserManager<SiteUser> UserManager { get; private set; }
 
         [HttpGet]
@@ -161,7 +161,7 @@ namespace cloudscribe.Core.Web.Controllers
             {
                 if (Site.IsServerAdminSite)
                 {
-                    ISiteSettings otherSite = await siteRepo.Fetch(siteId);
+                    ISiteSettings otherSite = await siteManager.Fetch(siteId);
                     if (otherSite != null)
                     {
                         siteGuid = otherSite.SiteGuid;

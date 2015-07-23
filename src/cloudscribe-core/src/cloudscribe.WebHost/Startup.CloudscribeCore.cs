@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-06-20
-// Last Modified:			2015-07-11
+// Last Modified:			2015-07-23
 // 
 
 using System;
@@ -22,6 +22,7 @@ using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Razor;
 using cloudscribe.Configuration;
 using cloudscribe.Core.Models;
+using cloudscribe.Core.Models.Site;
 using cloudscribe.Core.Models.Geography;
 using cloudscribe.Core.Web;
 using cloudscribe.Core.Web.Components;
@@ -49,6 +50,7 @@ namespace cloudscribe.WebHost
         /// <returns></returns>
         public static IServiceCollection ConfigureCloudscribeCore(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddSession();
             services.AddInstance<IConfiguration>(configuration);
             services.AddCaching();
             
@@ -68,6 +70,8 @@ namespace cloudscribe.WebHost
 
             // RequestSiteResolver resolves ISiteSettings based on the request to support multi tenancy based on either host name or first folder depending on configuration
             services.TryAdd(ServiceDescriptor.Scoped<ISiteResolver, RequestSiteResolver>());
+            services.TryAdd(ServiceDescriptor.Scoped<SiteManager, SiteManager>());
+            services.TryAdd(ServiceDescriptor.Scoped<GeoDataManager, GeoDataManager>());
 
             // VersionProviders are used by the Setup controller to determine what install and upgrade scripts to run
             services.TryAdd(ServiceDescriptor.Scoped<IVersionProviderFactory, ConfigVersionProviderFactory>());
