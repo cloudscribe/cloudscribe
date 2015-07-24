@@ -325,6 +325,29 @@ namespace cloudscribe.WebHost
 
             //});
 
+            // Add cookie-based authentication to the request pipeline.
+            //https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity/BuilderExtensions.cs
+            app.UseIdentity();
+
+            // Add authentication middleware to the request pipeline. You can configure options such as Id and Secret in the ConfigureServices method.
+            // For more information see http://go.microsoft.com/fwlink/?LinkID=532715
+            // app.UseFacebookAuthentication();
+            // app.UseGoogleAuthentication();
+            // app.UseMicrosoftAccountAuthentication();
+            // app.UseTwitterAuthentication();
+
+            // Add MVC to the request pipeline.
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller}/{action}/{id?}",
+                    defaults: new { controller = "Home", action = "Index" });
+
+                // Uncomment the following line to add a route for porting Web API 2 controllers.
+                // routes.MapWebApiRoute("DefaultApi", "api/{controller}/{id?}");
+            });
+
 
             return app;
         }

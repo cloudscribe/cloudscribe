@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-22
-// Last Modified:			2015-07-23
+// Last Modified:			2015-07-24
 // 
 
 using System;
@@ -38,6 +38,11 @@ namespace cloudscribe.Core.Models.Site
                 if (siteSettings == null) { siteSettings = resolver.Resolve(); }
                 return siteSettings;
             }
+        }
+
+        public ISiteSettings CurrentSite
+        {
+            get { return Site; }
         }
 
 

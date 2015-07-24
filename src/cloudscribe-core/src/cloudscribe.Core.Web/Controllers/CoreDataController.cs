@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-11-15
-// Last Modified:			2015-07-23
+// Last Modified:			2015-07-24
 // 
 
 using cloudscribe.Configuration;
@@ -17,8 +17,6 @@ using Microsoft.Framework.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
-
 
 
 namespace cloudscribe.Core.Web.Controllers
@@ -49,7 +47,6 @@ namespace cloudscribe.Core.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            ViewData["SiteName"] = Site.SiteName;
             ViewBag.Title = "Core Data Administration";
             ViewBag.Heading = "Core Data Administration";
 
@@ -66,7 +63,6 @@ namespace cloudscribe.Core.Web.Controllers
             int pageNumber = 1,
             int pageSize = -1)
         {
-            ViewData["SiteName"] = Site.SiteName;
             ViewBag.Title = "Country List Administration";
             int itemsPerPage = config.DefaultPageSize_CountryList();
             if (pageSize > 0)
@@ -91,7 +87,6 @@ namespace cloudscribe.Core.Web.Controllers
             int returnPageNumber = 1,
             bool partial = false)
         {
-            ViewData["SiteName"] = Site.SiteName;
             ViewBag.Title = "Edit Country";
 
             GeoCountryViewModel model;
@@ -133,7 +128,6 @@ namespace cloudscribe.Core.Web.Controllers
             GeoCountryViewModel model,
             int returnPageNumber = 1)
         {
-            ViewData["SiteName"] = Site.SiteName;
             ViewBag.Title = "Edit Country";
 
             if (!ModelState.IsValid)
@@ -202,7 +196,6 @@ namespace cloudscribe.Core.Web.Controllers
                 return RedirectToAction("CountryListPage");
             }
 
-            ViewData["SiteName"] = Site.SiteName;
             ViewBag.Title = "State List Administration";
             int itemsPerPage = config.DefaultPageSize_StateList();
             if (pageSize > 0)
@@ -326,7 +319,6 @@ namespace cloudscribe.Core.Web.Controllers
             //int returnPage = 1;
             //if (returnPageNumber.HasValue) { returnPage = returnPageNumber.Value; }
 
-            ViewData["SiteName"] = Site.SiteName;
             ViewBag.Title = "Edit State";
 
             GeoZoneViewModel model;
@@ -387,7 +379,6 @@ namespace cloudscribe.Core.Web.Controllers
         public async Task<IActionResult> StateEdit(
             GeoZoneViewModel model)
         {
-            ViewData["SiteName"] = Site.SiteName;
             ViewBag.Title = "Edit State";
 
             if (!ModelState.IsValid)
@@ -471,7 +462,6 @@ namespace cloudscribe.Core.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> CurrencyList()
         {
-            ViewData["SiteName"] = Site.SiteName;
             ViewBag.Title = "Currency Administration";
             ViewBag.Heading = "Currency Administration";
 
@@ -483,7 +473,6 @@ namespace cloudscribe.Core.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> CurrencyEdit(Guid? currencyGuid)
         {
-            ViewData["SiteName"] = Site.SiteName;
             ViewBag.Title = "Edit Currency";
             ViewBag.Heading = "Edit Currency";
 
@@ -512,7 +501,6 @@ namespace cloudscribe.Core.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CurrencyEdit(CurrencyViewModel model)
         {
-            ViewData["SiteName"] = Site.SiteName;
             ViewBag.Title = "Edit Currency";
             ViewBag.Heading = "Edit Currency";
 
@@ -554,7 +542,6 @@ namespace cloudscribe.Core.Web.Controllers
         public async Task<IActionResult> CurrencyDelete(Guid currencyGuid)
         {
             ICurrency currency = await dataManager.FetchCurrency(currencyGuid);
-
             
             if (currency != null)
             {

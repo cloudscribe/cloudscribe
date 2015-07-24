@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-01-02
-// Last Modified:			2015-07-18
+// Last Modified:			2015-07-24
 // 
 
 
@@ -102,7 +102,18 @@ namespace cloudscribe.Core.Web.Controllers
 
         }
 
-       
+        public static IActionResult RedirectToLocal(this Controller controller, string returnUrl)
+        {
+            if (controller.Url.IsLocalUrl(returnUrl))
+            {
+                return controller.Redirect(returnUrl);
+            }
+            else
+            {
+                return controller.RedirectToAction("Index", "Home");
+            }
+        }
+
 
     }
 }

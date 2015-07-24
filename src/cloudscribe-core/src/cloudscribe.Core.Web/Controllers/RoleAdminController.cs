@@ -43,7 +43,6 @@ namespace cloudscribe.Core.Web.Controllers
         [Authorize(Roles = "Admins,Role Admins")]
         public async Task<IActionResult> Index(string searchInput = "", int pageNumber = 1, int pageSize = -1)
         {
-            ViewData["SiteName"] = Site.SiteName;
             ViewBag.Title = "Role Management";
             //ViewBag.Heading = "Role Management";
 
@@ -81,7 +80,6 @@ namespace cloudscribe.Core.Web.Controllers
         //[MvcSiteMapNode(Title = "New Role", ParentKey = "Roles", Key = "RoleEdit")]
         public async Task<IActionResult> RoleEdit(int? roleId)
         {
-            ViewData["SiteName"] = Site.SiteName;
             ViewBag.Title = "New Role";
 
             RoleViewModel model = new RoleViewModel();
@@ -124,7 +122,6 @@ namespace cloudscribe.Core.Web.Controllers
         [Authorize(Roles = "Admins,Role Admins")]
         public async Task<IActionResult> RoleEdit(RoleViewModel model, int returnPageNumber = 1)
         {
-            ViewData["SiteName"] = Site.SiteName;
             ViewBag.Title = "Edit Role";
 
             if (!ModelState.IsValid)
@@ -194,7 +191,6 @@ namespace cloudscribe.Core.Web.Controllers
             int pageNumber = 1,
             int pageSize = -1)
         {
-            ViewData["SiteName"] = Site.SiteName;
             ViewBag.Title = "Role Members";
 
             ISiteRole role = await RoleManager.FetchRole(roleId);
@@ -245,7 +241,6 @@ namespace cloudscribe.Core.Web.Controllers
             int pageSize = 2,
             bool ajaxGrid = false)
         {
-            ViewData["SiteName"] = Site.SiteName;
             ViewBag.Title = "Non Role Members";
 
             ISiteRole role = await RoleManager.FetchRole(roleId);

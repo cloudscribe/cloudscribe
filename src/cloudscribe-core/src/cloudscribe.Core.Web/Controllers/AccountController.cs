@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-07-21
+// Last Modified:			2015-07-24
 // 
 
 using cloudscribe.Configuration;
@@ -58,7 +58,6 @@ namespace cloudscribe.Core.Web.Controllers
         public IActionResult Login(string returnUrl)
         {
 
-            ViewData["SiteName"] = Site.SiteName;
             ViewData["ReturnUrl"] = returnUrl;
             LoginViewModel model = new LoginViewModel();
             if (Site.RequireCaptchaOnLogin)
@@ -80,7 +79,6 @@ namespace cloudscribe.Core.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model, string returnUrl)
         {
-            ViewData["SiteName"] = Site.SiteName;
             ViewData["ReturnUrl"] = returnUrl;
             if (Site.RequireCaptchaOnLogin)
             {
@@ -124,7 +122,7 @@ namespace cloudscribe.Core.Web.Controllers
             
             if (result.Succeeded)
             {
-                return RedirectToLocal(returnUrl);
+                return this.RedirectToLocal(returnUrl);
             }
             if (result.RequiresTwoFactor)
             {
@@ -151,8 +149,7 @@ namespace cloudscribe.Core.Web.Controllers
         public IActionResult Register()
         {
             ViewData["Title"] = "Register";
-            ViewData["SiteName"] = Site.SiteName;
-
+            
             EditUserViewModel model = new EditUserViewModel();
             model.SiteGuid = Site.SiteGuid;
             if (Site.RequireCaptchaOnRegistration)
@@ -175,8 +172,7 @@ namespace cloudscribe.Core.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(EditUserViewModel model)
         {
-            ViewData["SiteName"] = Site.SiteName;
-
+            
             if (Site.RequireCaptchaOnRegistration)
             {
                 model.RecaptchaSiteKey = config.RecaptchaSiteKey();
@@ -295,8 +291,7 @@ namespace cloudscribe.Core.Web.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult ExternalLogin(string provider, string returnUrl = null)
         {
-            ViewData["SiteName"] = Site.SiteName;
-
+            
             // Request a redirect to the external login provider.
             var redirectUrl = Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl });
             var properties = signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
@@ -308,8 +303,7 @@ namespace cloudscribe.Core.Web.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null)
         {
-            ViewData["SiteName"] = Site.SiteName;
-
+            
             var info = await signInManager.GetExternalLoginInfoAsync();
             if (info == null)
             {
@@ -320,7 +314,7 @@ namespace cloudscribe.Core.Web.Controllers
             var result = await signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
             if (result.Succeeded)
             {
-                return RedirectToLocal(returnUrl);
+                return this.RedirectToLocal(returnUrl);
             }
             if (result.RequiresTwoFactor)
             {
@@ -353,8 +347,6 @@ namespace cloudscribe.Core.Web.Controllers
                 return RedirectToAction("Index", "Manage");
             }
 
-            ViewData["SiteName"] = Site.SiteName;
-
             if (ModelState.IsValid)
             {
                 // Get the information about the user from the external login provider
@@ -376,7 +368,7 @@ namespace cloudscribe.Core.Web.Controllers
                     if (result.Succeeded)
                     {
                         await signInManager.SignInAsync(user, isPersistent: false);
-                        return RedirectToLocal(returnUrl);
+                        return this.RedirectToLocal(returnUrl);
                     }
                 }
                 AddErrors(result);
@@ -406,8 +398,7 @@ namespace cloudscribe.Core.Web.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> ConfirmEmail(string userId, string code)
         {
-            ViewData["SiteName"] = Site.SiteName;
-
+           
             if (userId == null || code == null)
             {
                 return View("Error");
@@ -427,7 +418,6 @@ namespace cloudscribe.Core.Web.Controllers
         [AllowAnonymous]
         public IActionResult ForgotPassword()
         {
-            ViewData["SiteName"] = Site.SiteName;
 
             return View();
         }
@@ -439,8 +429,7 @@ namespace cloudscribe.Core.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
-            ViewData["SiteName"] = Site.SiteName;
-
+            
             if (ModelState.IsValid)
             {
                 var user = await userManager.FindByNameAsync(model.Email);
@@ -469,8 +458,7 @@ namespace cloudscribe.Core.Web.Controllers
         [AllowAnonymous]
         public IActionResult ForgotPasswordConfirmation()
         {
-            ViewData["SiteName"] = Site.SiteName;
-
+            
             return View();
         }
 
@@ -480,8 +468,7 @@ namespace cloudscribe.Core.Web.Controllers
         [AllowAnonymous]
         public IActionResult ResetPassword(string code = null)
         {
-            ViewData["SiteName"] = Site.SiteName;
-
+            
             return code == null ? View("Error") : View();
         }
 
@@ -492,8 +479,7 @@ namespace cloudscribe.Core.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {
-            ViewData["SiteName"] = Site.SiteName;
-
+            
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -519,8 +505,6 @@ namespace cloudscribe.Core.Web.Controllers
         [AllowAnonymous]
         public IActionResult ResetPasswordConfirmation()
         {
-            ViewData["SiteName"] = Site.SiteName;
-
             return View();
         }
 
@@ -533,8 +517,6 @@ namespace cloudscribe.Core.Web.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> SendCode(string returnUrl = null, bool rememberMe = false)
         {
-            ViewData["SiteName"] = Site.SiteName;
-
             var user = await signInManager.GetTwoFactorAuthenticationUserAsync();
             if (user == null)
             {
@@ -551,9 +533,7 @@ namespace cloudscribe.Core.Web.Controllers
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> SendCode(SendCodeViewModel model)
-        {
-            ViewData["SiteName"] = Site.SiteName;
-
+        { 
             if (!ModelState.IsValid)
             {
                 return View();
@@ -591,8 +571,7 @@ namespace cloudscribe.Core.Web.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> VerifyCode(string provider, string returnUrl, bool rememberMe)
         {
-            ViewData["SiteName"] = Site.SiteName;
-
+            
             // Require that the user has already logged in via username/password or external login
             var user = await signInManager.GetTwoFactorAuthenticationUserAsync();
             if (user == null)
@@ -610,8 +589,7 @@ namespace cloudscribe.Core.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> VerifyCode(VerifyCodeViewModel model)
         {
-            ViewData["SiteName"] = Site.SiteName;
-
+            
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -623,7 +601,7 @@ namespace cloudscribe.Core.Web.Controllers
             var result = await signInManager.TwoFactorSignInAsync(model.Provider, model.Code, model.RememberMe, model.RememberBrowser);
             if (result.Succeeded)
             {
-                return RedirectToLocal(model.ReturnUrl);
+                return this.RedirectToLocal(model.ReturnUrl);
             }
             if (result.IsLockedOut)
             {
@@ -658,17 +636,17 @@ namespace cloudscribe.Core.Web.Controllers
         //    return await UserManager.FindByIdAsync(Context.User.GetUserId());
         //}
 
-        private IActionResult RedirectToLocal(string returnUrl)
-        {
-            if (Url.IsLocalUrl(returnUrl))
-            {
-                return Redirect(returnUrl);
-            }
-            else
-            {
-                return RedirectToAction("Index", "Home");
-            }
-        }
+        //private IActionResult RedirectToLocal(string returnUrl)
+        //{
+        //    if (Url.IsLocalUrl(returnUrl))
+        //    {
+        //        return Redirect(returnUrl);
+        //    }
+        //    else
+        //    {
+        //        return RedirectToAction("Index", "Home");
+        //    }
+        //}
 
         #endregion
     }

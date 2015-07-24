@@ -1,5 +1,14 @@
 ﻿@using cloudscribe.Core.Web.Navigation;
 
+@inject ISiteResolver siteResolver
+@{ 
+    ISiteSettings SiteSettings = siteResolver.Resolve();
+    ViewData["SiteName"] = SiteSettings.SiteName;
+}
+
+
+
+
 <!DOCTYPE html>
 <html>
     <head>

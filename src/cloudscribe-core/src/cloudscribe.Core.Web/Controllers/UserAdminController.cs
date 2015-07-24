@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-08
-// Last Modified:			2015-07-23
+// Last Modified:			2015-07-24
 // 
 
 using cloudscribe.Configuration;
@@ -26,20 +26,18 @@ namespace cloudscribe.Core.Web.Controllers
     public class UserAdminController : CloudscribeBaseController
     {
         public UserAdminController(
-            ISiteResolver siteResolver,
             SiteManager siteManager,
             SiteUserManager<SiteUser> userManager,
             IConfiguration configuration
             )
         {
-            Site = siteResolver.Resolve();
+           
             UserManager = userManager;
             this.siteManager = siteManager;
             config = configuration;
         }
 
         private IConfiguration config;
-        private ISiteSettings Site;
         private SiteManager siteManager;
         public SiteUserManager<SiteUser> UserManager { get; private set; }
 
@@ -51,8 +49,7 @@ namespace cloudscribe.Core.Web.Controllers
             int pageSize = -1,
             int siteId = -1)
         {
-            ViewData["SiteName"] = Site.SiteName;
-            ViewBag.Title = "User Management";
+            ViewData["Title"] = "User Management";
             //ViewBag.Heading = "Role Management";
 
             int itemsPerPage = config.DefaultPageSize_UserList();
@@ -63,14 +60,14 @@ namespace cloudscribe.Core.Web.Controllers
 
             if (siteId != -1)
             {
-                if (!Site.IsServerAdminSite)
+                if (!siteManager.CurrentSite.IsServerAdminSite)
                 {
-                    siteId = Site.SiteId;
+                    siteId = siteManager.CurrentSite.SiteId;
                 }
             }
             else
             {
-                siteId = Site.SiteId;
+                siteId = siteManager.CurrentSite.SiteId;
             }
 
             var siteMembers = await UserManager.GetPage(
@@ -103,8 +100,7 @@ namespace cloudscribe.Core.Web.Controllers
             int pageSize = -1,
             int siteId = -1)
         {
-            ViewData["SiteName"] = Site.SiteName;
-            ViewBag.Title = "User Management";
+            ViewData["Title"] = "User Management";
             //ViewBag.Heading = "Role Management";
 
             int itemsPerPage = config.DefaultPageSize_UserList();
@@ -115,14 +111,14 @@ namespace cloudscribe.Core.Web.Controllers
 
             if (siteId != -1)
             {
-                if (!Site.IsServerAdminSite)
+                if (!siteManager.CurrentSite.IsServerAdminSite)
                 {
-                    siteId = Site.SiteId;
+                    siteId = siteManager.CurrentSite.SiteId;
                 }
             }
             else
             {
-                siteId = Site.SiteId;
+                siteId = siteManager.CurrentSite.SiteId;
             }
 
             var siteMembers = await UserManager.GetUserAdminSearchPage(
@@ -150,16 +146,15 @@ namespace cloudscribe.Core.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> IpSearch(string ipQuery = "", int siteId = -1)
         {
-            ViewData["SiteName"] = Site.SiteName;
-            ViewBag.Title = "User Management";
+            ViewData["Title"] = "User Management";
             //ViewBag.Heading = "Role Management";
 
 
-            Guid siteGuid = Site.SiteGuid;
+            Guid siteGuid = siteManager.CurrentSite.SiteGuid;
 
             if (siteId != -1)
             {
-                if (Site.IsServerAdminSite)
+                if (siteManager.CurrentSite.IsServerAdminSite)
                 {
                     ISiteSettings otherSite = await siteManager.Fetch(siteId);
                     if (otherSite != null)
@@ -210,15 +205,14 @@ namespace cloudscribe.Core.Web.Controllers
         //[MvcSiteMapNode(Title = "New User", ParentKey = "UserAdmin", Key = "UserEdit")]
         public async Task<ActionResult> UserEdit(int? userId)
         {
-            ViewData["SiteName"] = Site.SiteName;
-            ViewBag.Title = "New User";
+            ViewData["Title"] = "New User";
 
             EditUserViewModel model = new EditUserViewModel();
-            model.SiteGuid = Site.SiteGuid;
+            model.SiteGuid = siteManager.CurrentSite.SiteGuid;
 
             if (userId.HasValue)
             {
-                ISiteUser user = await UserManager.Fetch(Site.SiteId, userId.Value);
+                ISiteUser user = await UserManager.Fetch(siteManager.CurrentSite.SiteId, userId.Value);
                 if (user != null)
                 {
                     model.UserId = user.UserId;
@@ -253,15 +247,14 @@ namespace cloudscribe.Core.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UserEdit(EditUserViewModel model)
         {
-            ViewData["SiteName"] = Site.SiteName;
-            ViewBag.Title = "New User";
+            ViewData["Title"] = "New User";
 
             if (ModelState.IsValid)
             {
                 if (model.UserId > -1)
                 {
                     //editing an existing user
-                    ISiteUser user = await UserManager.Fetch(Site.SiteId, model.UserId);
+                    ISiteUser user = await UserManager.Fetch(siteManager.CurrentSite.SiteId, model.UserId);
                     if (user != null)
                     {
                         user.Email = model.Email;
@@ -293,8 +286,8 @@ namespace cloudscribe.Core.Web.Controllers
                 {
                     var user = new SiteUser
                     {
-                        SiteId = Site.SiteId,
-                        SiteGuid = Site.SiteGuid,
+                        SiteId = siteManager.CurrentSite.SiteId,
+                        SiteGuid = siteManager.CurrentSite.SiteGuid,
                         UserName = model.LoginName,
                         Email = model.Email,
                         FirstName = model.FirstName,

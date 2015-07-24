@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-07-23
+// Last Modified:			2015-07-24
 // 
 
 using cloudscribe.Configuration;
@@ -25,26 +25,25 @@ namespace cloudscribe.Core.Web.Controllers
     [Authorize(Roles = "Admins,Content Administrators")]
     public class SiteAdminController : CloudscribeBaseController
     {
-        private ISiteSettings Site;
+        //private ISiteSettings Site;
         private SiteManager siteManager;
         private GeoDataManager geoDataManager;
         private IConfiguration config;
         //private ITriggerStartup startup;
 
         public SiteAdminController(
-            ISiteResolver siteResolver,
             SiteManager siteManager,
             GeoDataManager geoDataManager,
             IConfiguration configuration
             //, ITriggerStartup startupTrigger
             )
         {
-            if (siteResolver == null) { throw new ArgumentNullException(nameof(siteResolver)); }
+            //if (siteResolver == null) { throw new ArgumentNullException(nameof(siteResolver)); }
             if (geoDataManager == null) { throw new ArgumentNullException(nameof(geoDataManager)); }
             if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
 
             config = configuration;
-            Site = siteResolver.Resolve();
+            //Site = siteResolver.Resolve();
 
             this.siteManager = siteManager;
             this.geoDataManager = geoDataManager;
@@ -60,9 +59,8 @@ namespace cloudscribe.Core.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            ViewData["SiteName"] = Site.SiteName;
-            ViewBag.Title = "Site Administration";
-            ViewBag.Heading = "Site Administration";
+            ViewData["Title"] = "Site Administration";
+            ViewData["Heading"] = "Site Administration";
             //ViewModels.SiteMapTreeBuilder builder = new ViewModels.SiteMapTreeBuilder();
             //object o = builder.GetTree();
             return View();
@@ -76,9 +74,8 @@ namespace cloudscribe.Core.Web.Controllers
         [Authorize(Roles = "ServerAdmins")]
         public async Task<IActionResult> SiteList(int pageNumber = 1, int pageSize = -1)
         {
-            ViewData["SiteName"] = Site.SiteName;
-            ViewBag.Title = "Site List";
-            ViewBag.Heading = "Site List";
+            ViewData["Title"] = "Site List";
+            ViewData["Heading"] = "Site List";
 
             int itemsPerPage = config.DefaultPageSize_SiteList();
             if (pageSize > 0)
@@ -114,18 +111,17 @@ namespace cloudscribe.Core.Web.Controllers
             Guid? siteGuid,
             int slp = 1)
         {
-            ViewData["SiteName"] = Site.SiteName;
-            ViewBag.Title = "Site Settings";
+            ViewData["Title"] = "Site Settings";
 
             ISiteSettings selectedSite;
             // only server admin site can edit other sites settings
-            if ((siteGuid.HasValue) && (Site.IsServerAdminSite))
+            if ((siteGuid.HasValue) && (siteManager.CurrentSite.IsServerAdminSite))
             {
                 selectedSite = await siteManager.Fetch(siteGuid.Value);
             }
             else
             {
-                selectedSite = Site;
+                selectedSite = siteManager.CurrentSite;
             }
 
             SiteBasicSettingsViewModel model = new SiteBasicSettingsViewModel();
@@ -187,9 +183,9 @@ namespace cloudscribe.Core.Web.Controllers
             }
 
             // can only delete from server admin site/cannot delete server admin site
-            if (Site.IsServerAdminSite)
+            if (siteManager.CurrentSite.IsServerAdminSite)
             {
-                if (model.SiteGuid != Site.SiteGuid)
+                if (model.SiteGuid != siteManager.CurrentSite.SiteGuid)
                 {
                     model.ShowDelete = config.AllowDeleteChildSites();
                 }
@@ -223,12 +219,10 @@ namespace cloudscribe.Core.Web.Controllers
         [Authorize(Roles = "Admins")]
         public async Task<ActionResult> SiteInfo(SiteBasicSettingsViewModel model)
         {
-            ViewData["SiteName"] = Site.SiteName;
-
             // can only delete from server admin site/cannot delete server admin site
-            if (Site.IsServerAdminSite)
+            if (siteManager.CurrentSite.IsServerAdminSite)
             {
-                if (model.SiteGuid != Site.SiteGuid)
+                if (model.SiteGuid != siteManager.CurrentSite.SiteGuid)
                 {
                     model.ShowDelete = config.AllowDeleteChildSites();
                 }
@@ -249,11 +243,11 @@ namespace cloudscribe.Core.Web.Controllers
             //model.SiteId = Site.SiteSettings.SiteId;
             //model.SiteGuid = Site.SiteSettings.SiteGuid;
             ISiteSettings selectedSite = null;
-            if (model.SiteGuid == Site.SiteGuid)
+            if (model.SiteGuid == siteManager.CurrentSite.SiteGuid)
             {
-                selectedSite = Site;
+                selectedSite = siteManager.CurrentSite;
             }
-            else if (Site.IsServerAdminSite)
+            else if (siteManager.CurrentSite.IsServerAdminSite)
             {
                 selectedSite = await siteManager.Fetch(model.SiteGuid);
             }
@@ -363,7 +357,7 @@ namespace cloudscribe.Core.Web.Controllers
             }
 
 
-            if ((Site.IsServerAdminSite)
+            if ((siteManager.CurrentSite.IsServerAdminSite)
                 //&&(Site.SiteSettings.SiteGuid != selectedSite.SiteGuid)
                 )
             {
@@ -380,8 +374,7 @@ namespace cloudscribe.Core.Web.Controllers
         [Authorize(Roles = "ServerAdmins")]
         public async Task<ActionResult> NewSite(int slp = 1)
         {
-            ViewData["SiteName"] = Site.SiteName;
-            ViewBag.Title = "Create New Site";
+            ViewData["Title"] = "Create New Site";
 
             SiteBasicSettingsViewModel model = new SiteBasicSettingsViewModel();
             model.ReturnPageNumber = slp; //site list return page
@@ -389,7 +382,7 @@ namespace cloudscribe.Core.Web.Controllers
             model.SiteGuid = Guid.Empty;
             // model.SiteName = Site.SiteSettings.SiteName;
             //model.Slogan = Site.SiteSettings.Slogan;
-            model.TimeZoneId = Site.TimeZoneId;
+            model.TimeZoneId = siteManager.CurrentSite.TimeZoneId;
             model.AllTimeZones = DateTimeHelper.GetTimeZoneList();
             //model.CompanyName = Site.SiteSettings.CompanyName;
             //model.CompanyStreetAddress = Site.SiteSettings.CompanyStreetAddress;
@@ -443,8 +436,7 @@ namespace cloudscribe.Core.Web.Controllers
         [Authorize(Roles = "ServerAdmins")]
         public async Task<ActionResult> NewSite(SiteBasicSettingsViewModel model)
         {
-            ViewData["SiteName"] = Site.SiteName;
-
+            
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -628,18 +620,17 @@ namespace cloudscribe.Core.Web.Controllers
         {
             ISiteSettings selectedSite;
             // only server admin site can edit other sites settings
-            if ((siteGuid.HasValue) && (Site.IsServerAdminSite))
+            if ((siteGuid.HasValue) && (siteManager.CurrentSite.IsServerAdminSite))
             {
                 selectedSite = await siteManager.Fetch(siteGuid.Value);
             }
             else
             {
-                selectedSite = Site;
+                selectedSite = siteManager.CurrentSite;
             }
 
             SiteHostMappingsViewModel model = new SiteHostMappingsViewModel();
 
-            ViewData["SiteName"] = Site.SiteName;
             ViewData["Title"] = string.Format(CultureInfo.InvariantCulture,
                 "Domain/Host Name Mappings for {0}",
                 selectedSite.SiteName);
