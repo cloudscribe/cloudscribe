@@ -31,8 +31,8 @@ using cloudscribe.Core.Models;
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Repositories.MSSQL;
 using cloudscribe.Core.Web.Components;
-//using Autofac;
-//using Autofac.Dnx;
+using Autofac;
+using Autofac.Framework.DependencyInjection;
 
 namespace cloudscribe.WebHost
 {
@@ -74,7 +74,7 @@ namespace cloudscribe.WebHost
         public IConfiguration Configuration { get; set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             // Add Application settings to the services container.
             services.Configure<AppSettings>(Configuration.GetConfigurationSection("AppSettings"));
@@ -131,15 +131,15 @@ namespace cloudscribe.WebHost
             // services.AddWebApiConventions();
 
             //Autofac config
-            //var builder = new ContainerBuilder();
+            var builder = new ContainerBuilder();
 
             ////Populate the container with services that were previously registered
             //// it seems this depends on beta4
-            //builder.Populate(services);
+            builder.Populate(services);
 
-            //var container = builder.Build();
+            var container = builder.Build();
 
-            //return container.Resolve<IServiceProvider>();
+            return container.Resolve<IServiceProvider>();
 
         }
 

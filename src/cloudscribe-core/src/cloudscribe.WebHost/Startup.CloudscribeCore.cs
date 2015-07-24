@@ -6,6 +6,7 @@
 // 
 
 using System;
+using System.Collections.Generic;
 //using Microsoft.AspNet.Hosting;
 using JetBrains.Annotations;
 using Microsoft.AspNet.Http;
@@ -50,11 +51,18 @@ namespace cloudscribe.WebHost
         /// <returns></returns>
         public static IServiceCollection ConfigureCloudscribeCore(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddSession();
-            services.AddInstance<IConfiguration>(configuration);
+            
             services.AddCaching();
-            
-            
+            services.AddSession();
+            //services.ConfigureSession(o =>
+            //{
+            //    o.IdleTimeout = TimeSpan.FromSeconds(10);
+            //});
+
+
+            services.AddInstance<IConfiguration>(configuration);
+
+
             //*** Database platform ****************************************************************
             // here is where you could change to use one of the other db platforms
             // we have support for MySql, PostgreSql, Firebird, SQLite, and SqlCe
@@ -149,12 +157,59 @@ namespace cloudscribe.WebHost
         /// <returns></returns>
         public static IApplicationBuilder UseCloudscribeCore(this IApplicationBuilder app, IConfiguration config)
         {
-            
-
+      
 
             // the only thing we are using session for is Alerts
             app.UseSession();
             app.UseInMemorySession(configure: s => s.IdleTimeout = TimeSpan.FromMinutes(20));
+
+            bool useFolderSites = config.UseFoldersInsteadOfHostnamesForMultipleSites();
+            if(useFolderSites)
+            {
+                ISiteRepository siteRepo = app.ApplicationServices.GetService<ISiteRepository>();
+                List<SiteFolder> allFolders = siteRepo.GetAllSiteFoldersNonAsync();
+
+                string firstFolderSegment = string.Empty;
+                Guid siteGuid = Guid.Empty;
+
+                Func<HttpContext, bool> IsFolderMatch = delegate (HttpContext context)
+                {
+                    firstFolderSegment = RequestSiteResolver.GetFirstFolderSegment(context.Request.Path);
+                    foreach(SiteFolder folder in allFolders)
+                    {
+                        if(folder.FolderName == firstFolderSegment)
+                        {
+                            siteGuid = folder.SiteGuid;
+                            return true;
+                        }
+                    }
+
+                    return false;
+                };
+
+                
+                app.MapWhen(IsFolderMatch,
+                    async next =>
+                    {
+                        ISiteSettings siteSettings = await siteRepo.Fetch(siteGuid);
+                        next.UseCookieAuthentication(options =>
+                        {
+                            options.LoginPath = new PathString("/" + firstFolderSegment + "/Account/Login");
+                            options.LogoutPath = new PathString("/" + firstFolderSegment + "/Account/LogOff");
+                            options.CookieName = firstFolderSegment + "-app";
+                        });
+
+                        
+
+                        
+                    });
+
+            }
+            else
+            {
+                //host name tenants
+
+            }
 
             //app.Use(
             //    next =>
