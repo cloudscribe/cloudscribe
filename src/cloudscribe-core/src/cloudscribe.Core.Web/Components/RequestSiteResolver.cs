@@ -2,12 +2,13 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-06-19
-// Last Modified:			2015-06-20
+// Last Modified:			2015-07-24
 // 
 
 using cloudscribe.Configuration;
 using cloudscribe.Core.Models;
 using Microsoft.AspNet.Hosting;
+using Microsoft.AspNet.Http;
 using Microsoft.Framework.Configuration;
 using System;
 
@@ -34,17 +35,22 @@ namespace cloudscribe.Core.Web.Components
 
         public ISiteSettings Resolve()
         {
-            requestPath = contextAccessor.HttpContext.Request.Path.Value;
-            host = contextAccessor.HttpContext.Request.Host.Value;
-            int siteId = -1;
-            bool useFoldersInsteadOfHostnamesForMultipleSites = config.GetOrDefault("AppSettings:UseFoldersInsteadOfHostnamesForMultipleSites", true);
+            return Resolve(contextAccessor.HttpContext);
+        }
 
-            if(useFoldersInsteadOfHostnamesForMultipleSites)
+        public ISiteSettings Resolve(HttpContext context)
+        {
+            requestPath = context.Request.Path.Value;
+            host = context.Request.Host.Value;
+            int siteId = -1;
+            bool useFoldersInsteadOfHostnamesForMultipleSites = config.UseFoldersInsteadOfHostnamesForMultipleSites();
+
+            if (useFoldersInsteadOfHostnamesForMultipleSites)
             {
                 string siteFolderName = GetFirstFolderSegment(requestPath);
                 if (siteFolderName.Length == 0) siteFolderName = "root";
                 siteId = siteRepo.GetSiteIdByFolderNonAsync(siteFolderName);
-                
+
                 if (siteId == -1)
                 {
                     // error would be expected here on initial setup
@@ -57,11 +63,11 @@ namespace cloudscribe.Core.Web.Components
                 }
             }
             else
-            {   
+            {
                 return siteRepo.FetchNonAsync(host);
             }
 
-            
+
         }
 
         public static string GetFirstFolderSegment(string url)
