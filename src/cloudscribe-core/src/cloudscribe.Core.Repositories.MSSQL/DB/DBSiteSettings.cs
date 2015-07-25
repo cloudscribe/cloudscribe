@@ -484,6 +484,18 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return await sph.ExecuteReaderAsync();
         }
 
+        public DbDataReader GetSiteNonAsync(Guid siteGuid)
+        {
+            SqlParameterHelper sph = new SqlParameterHelper(
+                logFactory,
+                readConnectionString,
+                "mp_Sites_SelectOneByGuid",
+                1);
+
+            sph.DefineSqlParameter("@SiteGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, siteGuid);
+            return sph.ExecuteReader();
+        }
+
 
 
         //public DbDataReader GetPageListForAdmin(int siteId)

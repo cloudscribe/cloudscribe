@@ -41,6 +41,17 @@ namespace cloudscribe.Core.Web.Components
         public ISiteSettings Resolve(HttpContext context)
         {
             requestPath = context.Request.Path.Value;
+            // this seems to behave different in IIS vs weblistener
+            string pathBase = context.Request.PathBase;
+            // this is true for folder sites
+            if (pathBase.Length > 0)
+            {
+                if(!requestPath.StartsWith(pathBase))
+                {
+                    requestPath = pathBase + requestPath;
+                }
+                
+            }
             host = context.Request.Host.Value;
             int siteId = -1;
             bool useFoldersInsteadOfHostnamesForMultipleSites = config.UseFoldersInsteadOfHostnamesForMultipleSites();

@@ -245,6 +245,29 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         }
 
+        public ISiteSettings FetchNonAsync(Guid siteGuid)
+        {
+            SiteSettings site = new SiteSettings();
+
+            using (DbDataReader reader = dbSiteSettings.GetSiteNonAsync(siteGuid))
+            {
+                if (reader.Read())
+                {
+                    site.LoadFromReader(reader);
+                }
+
+            }
+
+            if (site.SiteGuid == Guid.Empty) { return null; }//not found 
+
+            List<ExpandoSetting> expandoProperties = GetExpandoProperties(site.SiteId);
+            site.LoadExpandoSettings(expandoProperties);
+
+            return site;
+
+
+        }
+
         public async Task<ISiteSettings> Fetch(string hostName)
         {
             SiteSettings site = new SiteSettings();

@@ -48,7 +48,7 @@ namespace cloudscribe.WebHost
                 .AddJsonFile($"config.{env.EnvironmentName}.json", optional: true);
 
             //appEnv.
-            
+            //env.EnvironmentName = "Development";
 
             if (env.IsEnvironment("Development"))
             {
@@ -98,7 +98,7 @@ namespace cloudscribe.WebHost
 
             
             // Setup dependencies for cloudscribe Identity, Roles and and Site Administration
-            // this is in Startup.CloudscribeCore.cs
+            // this is in Startup.CloudscribeCore.DI.MS.cs
             services.ConfigureCloudscribeCore(Configuration);
 
             // previous entity framework dependencies
