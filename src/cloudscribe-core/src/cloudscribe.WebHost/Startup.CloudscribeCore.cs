@@ -67,66 +67,74 @@ namespace cloudscribe.WebHost
             bool useFolderSites = config.UseFoldersInsteadOfHostnamesForMultipleSites();
             ISiteRepository siteRepo = app.ApplicationServices.GetService<ISiteRepository>();
 
-            
 
-           
+
+
 
             //// Add cookie-based authentication to the request pipeline.
             ////https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity/BuilderExtensions.cs
             //app.UseIdentity();
-            app.UseCookieAuthentication(options =>
-            {
-                options.LoginPath = new PathString("/Account/Login");
-                options.LogoutPath = new PathString("/Account/LogOff");
-                options.CookieName = "cloudscribe-ext";
-                options.SlidingExpiration = true;
-                //options.CookiePath = "/";
-            },
+
+            app.UseWhen(IsNotFolderMatch,
+               branchApp =>
+               {
+                   branchApp.UseCookieAuthentication(options =>
+                   {
+                       options.LoginPath = new PathString("/Account/Login");
+                       options.LogoutPath = new PathString("/Account/LogOff");
+                       options.CookieName = "cloudscribe-ext";
+                       options.SlidingExpiration = true;
+                       //options.CookiePath = "/";
+                   },
                     IdentityOptions.ExternalCookieAuthenticationScheme
                     );
 
-            app.UseCookieAuthentication(options =>
-            {
-                options.LoginPath = new PathString("/Account/Login");
-                options.LogoutPath = new PathString("/Account/LogOff");
-                options.CookieName = "cloudscribe-tfr";
-                options.SlidingExpiration = true;
-                //options.CookiePath = "/";
-            },
-            IdentityOptions.TwoFactorRememberMeCookieAuthenticationScheme
-            );
+                   branchApp.UseCookieAuthentication(options =>
+                   {
+                       options.LoginPath = new PathString("/Account/Login");
+                       options.LogoutPath = new PathString("/Account/LogOff");
+                       options.CookieName = "cloudscribe-tfr";
+                       options.SlidingExpiration = true;
+                       //options.CookiePath = "/";
+                   },
+                   IdentityOptions.TwoFactorRememberMeCookieAuthenticationScheme
+                   );
 
-            app.UseCookieAuthentication(options =>
-            {
-                options.LoginPath = new PathString("/Account/Login");
-                options.LogoutPath = new PathString("/Account/LogOff");
-                options.CookieName = "cloudscribe-tf";
-                options.SlidingExpiration = true;
-                //options.CookiePath = "/";
-            },
-            IdentityOptions.TwoFactorUserIdCookieAuthenticationScheme
-            );
+                   branchApp.UseCookieAuthentication(options =>
+                   {
+                       options.LoginPath = new PathString("/Account/Login");
+                       options.LogoutPath = new PathString("/Account/LogOff");
+                       options.CookieName = "cloudscribe-tf";
+                       options.SlidingExpiration = true;
+                       //options.CookiePath = "/";
+                   },
+                   IdentityOptions.TwoFactorUserIdCookieAuthenticationScheme
+                   );
 
-            app.UseCookieAuthentication(options =>
-            {
-                options.LoginPath = new PathString("/Account/Login");
-                options.LogoutPath = new PathString("/Account/LogOff");
-                options.CookieName = "cloudscribe-app";
-                options.SlidingExpiration = true;
-                //options.CookiePath = "/";
-            },
-            IdentityOptions.ApplicationCookieAuthenticationScheme
-            );
+                   branchApp.UseCookieAuthentication(options =>
+                   {
+                       options.LoginPath = new PathString("/Account/Login");
+                       options.LogoutPath = new PathString("/Account/LogOff");
+                       options.CookieName = "cloudscribe-app";
+                       options.SlidingExpiration = true;
+                       //options.CookiePath = "/";
+                   },
+                   IdentityOptions.ApplicationCookieAuthenticationScheme
+                   );
 
-            if (useFolderSites)
-            {
-                app.UseCloudscribeCoreFolderTenantsv2(config, siteRepo);
-            }
-            else
-            {
-                app.UseCloudscribeCoreHostTenants(config, siteRepo);
+                   if (useFolderSites)
+                   {
+                       app.UseCloudscribeCoreFolderTenantsv2(config, siteRepo);
+                   }
+                   else
+                   {
+                       app.UseCloudscribeCoreHostTenants(config, siteRepo);
 
-            }
+                   }
+
+               });
+
+                   
 
 
             // Add MVC to the request pipeline.
@@ -334,6 +342,13 @@ namespace cloudscribe.WebHost
             }
 
             return app;
+        }
+
+        private static bool IsNotFolderMatch(HttpContext context)
+        {
+            if(IsFolderMatch(context)) { return false; }
+
+            return true;
         }
 
         private static string firstFolderSegment = string.Empty;
