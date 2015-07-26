@@ -122,19 +122,20 @@ namespace cloudscribe.WebHost
                    IdentityOptions.ApplicationCookieAuthenticationScheme
                    );
 
-                   if (useFolderSites)
-                   {
-                       app.UseCloudscribeCoreFolderTenantsv2(config, siteRepo);
-                   }
-                   else
-                   {
-                       app.UseCloudscribeCoreHostTenants(config, siteRepo);
-
-                   }
+                   
 
                });
 
-                   
+
+            if (useFolderSites)
+            {
+                app.UseCloudscribeCoreFolderTenantsv2(config, siteRepo);
+            }
+            else
+            {
+                app.UseCloudscribeCoreHostTenants(config, siteRepo);
+
+            }
 
 
             // Add MVC to the request pipeline.
