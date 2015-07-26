@@ -69,15 +69,7 @@ namespace cloudscribe.WebHost
 
             
 
-            if (useFolderSites)
-            {
-                app.UseCloudscribeCoreFolderTenants(config, siteRepo);
-            }
-            else
-            {
-                app.UseCloudscribeCoreHostTenants(config, siteRepo);
-
-            }
+           
 
             //// Add cookie-based authentication to the request pipeline.
             ////https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity/BuilderExtensions.cs
@@ -88,6 +80,7 @@ namespace cloudscribe.WebHost
                 options.LogoutPath = new PathString("/Account/LogOff");
                 options.CookieName = "cloudscribe-ext";
                 options.SlidingExpiration = true;
+                //options.CookiePath = "/";
             },
                     IdentityOptions.ExternalCookieAuthenticationScheme
                     );
@@ -98,6 +91,7 @@ namespace cloudscribe.WebHost
                 options.LogoutPath = new PathString("/Account/LogOff");
                 options.CookieName = "cloudscribe-tfr";
                 options.SlidingExpiration = true;
+                //options.CookiePath = "/";
             },
             IdentityOptions.TwoFactorRememberMeCookieAuthenticationScheme
             );
@@ -108,6 +102,7 @@ namespace cloudscribe.WebHost
                 options.LogoutPath = new PathString("/Account/LogOff");
                 options.CookieName = "cloudscribe-tf";
                 options.SlidingExpiration = true;
+                //options.CookiePath = "/";
             },
             IdentityOptions.TwoFactorUserIdCookieAuthenticationScheme
             );
@@ -118,9 +113,20 @@ namespace cloudscribe.WebHost
                 options.LogoutPath = new PathString("/Account/LogOff");
                 options.CookieName = "cloudscribe-app";
                 options.SlidingExpiration = true;
+                //options.CookiePath = "/";
             },
             IdentityOptions.ApplicationCookieAuthenticationScheme
             );
+
+            if (useFolderSites)
+            {
+                app.UseCloudscribeCoreFolderTenantsv2(config, siteRepo);
+            }
+            else
+            {
+                app.UseCloudscribeCoreHostTenants(config, siteRepo);
+
+            }
 
 
             // Add MVC to the request pipeline.
@@ -133,7 +139,7 @@ namespace cloudscribe.WebHost
                 // default routes for folder site go second to last
                 if (useFolderSites)
                 {
-                    //RegisterFolderSiteDefaultRoutes(routes, siteRepo);
+                    RegisterFolderSiteDefaultRoutes(routes, siteRepo);
                 }
 
 
@@ -215,8 +221,16 @@ namespace cloudscribe.WebHost
                 app.Map(path,
                 siteApp =>
                 {
+                    //http://stackoverflow.com/questions/31638100/resolving-js-and-css-urls-affected-by-app-map-in-asp-net-5
+                    // when we branch on a path like this it is like a virtual directory
+                    // urls with ~/ are resolved as /foldername
+                    // so our css and json files all get resolved with /foldername
+                    // this makes it find those files even though they don't actually exist on disk there
+                    siteApp.UseStaticFiles();
+
                     //ISiteSettings siteSettings = siteRepo.FetchNonAsync(f.SiteGuid);
                     //siteApp.UseIdentity();
+
 
                     siteApp.UseCookieAuthentication(options =>
                     {
@@ -224,6 +238,7 @@ namespace cloudscribe.WebHost
                         options.LogoutPath = new PathString("/" + f.FolderName + "/Account/LogOff");
                         options.CookieName = f.FolderName + "-ext";
                         options.SlidingExpiration = true;
+                        //options.CookiePath = "/" + f.FolderName;
                     },
                     IdentityOptions.ExternalCookieAuthenticationScheme
                     );
@@ -234,6 +249,7 @@ namespace cloudscribe.WebHost
                         options.LogoutPath = new PathString("/" + f.FolderName + "/Account/LogOff");
                         options.CookieName = f.FolderName + "-tfr";
                         options.SlidingExpiration = true;
+                        //options.CookiePath = "/" + f.FolderName;
                     },
                     IdentityOptions.TwoFactorRememberMeCookieAuthenticationScheme
                     );
@@ -244,6 +260,7 @@ namespace cloudscribe.WebHost
                         options.LogoutPath = new PathString("/" + f.FolderName + "/Account/LogOff");
                         options.CookieName = f.FolderName + "-tf";
                         options.SlidingExpiration = true;
+                        //options.CookiePath = "/" + f.FolderName;
                     },
                     IdentityOptions.TwoFactorUserIdCookieAuthenticationScheme
                     );
@@ -254,6 +271,7 @@ namespace cloudscribe.WebHost
                         options.LogoutPath = new PathString("/" + f.FolderName + "/Account/LogOff");
                         options.CookieName = f.FolderName + "-app";
                         options.SlidingExpiration = true;
+                        //options.CookiePath = "/" + f.FolderName;
                     },
                     IdentityOptions.ApplicationCookieAuthenticationScheme
                     );
@@ -318,36 +336,37 @@ namespace cloudscribe.WebHost
             return app;
         }
 
-        public static IApplicationBuilder UseCloudscribeCoreFolderTenantsv1(
+        private static string firstFolderSegment = string.Empty;
+        private static Guid siteGuid = Guid.Empty;
+        private static ISiteRepository siteRepository = null;
+
+        private static bool IsFolderMatch(HttpContext context)
+        {
+            firstFolderSegment = RequestSiteResolver.GetFirstFolderSegment(context.Request.Path);
+            if (string.IsNullOrWhiteSpace(firstFolderSegment)) { return false; }
+
+            List<SiteFolder>  allFolders = siteRepository.GetAllSiteFoldersNonAsync();
+            foreach (SiteFolder folder in allFolders)
+            {
+                if (folder.FolderName == firstFolderSegment)
+                {
+                    siteGuid = folder.SiteGuid;
+                    return true;
+                }
+            }
+
+
+            return false;
+        }
+
+        public static IApplicationBuilder UseCloudscribeCoreFolderTenantsv2(
             this IApplicationBuilder app,
             IConfiguration config,
             ISiteRepository siteRepo)
         {
+            siteRepository = siteRepo;
 
-            List<SiteFolder> allFolders;
-            string firstFolderSegment = string.Empty;
-            Guid siteGuid = Guid.Empty;
-
-            Func<HttpContext, bool> IsFolderMatch = delegate (HttpContext context)
-            {
-                firstFolderSegment = RequestSiteResolver.GetFirstFolderSegment(context.Request.Path);
-                if (string.IsNullOrWhiteSpace(firstFolderSegment)) { return false; }
-
-                allFolders = siteRepo.GetAllSiteFoldersNonAsync();
-                foreach (SiteFolder folder in allFolders)
-                {
-                    if (folder.FolderName == firstFolderSegment)
-                    {
-                        siteGuid = folder.SiteGuid;
-                        return true;
-                    }
-                }
-
-                return false;
-            };
-
-
-            app.MapWhen(IsFolderMatch,
+            app.UseWhen(IsFolderMatch,
                 siteApp =>
                 {
                     //ISiteSettings siteSettings = siteRepo.FetchNonAsync(siteGuid);
@@ -356,9 +375,46 @@ namespace cloudscribe.WebHost
                     {
                         options.LoginPath = new PathString("/" + firstFolderSegment + "/Account/Login");
                         options.LogoutPath = new PathString("/" + firstFolderSegment + "/Account/LogOff");
+                        options.CookieName = firstFolderSegment + "-ext";
+                        options.SlidingExpiration = true;
+                        //options.CookiePath = "/" + firstFolderSegment;
+                        //options.AuthenticationScheme = 
+                    },
+                    IdentityOptions.ExternalCookieAuthenticationScheme
+                    );
+
+                    siteApp.UseCookieAuthentication(options =>
+                    {
+                        options.LoginPath = new PathString("/" + firstFolderSegment + "/Account/Login");
+                        options.LogoutPath = new PathString("/" + firstFolderSegment + "/Account/LogOff");
+                        options.CookieName = firstFolderSegment + "-tfr";
+                        options.SlidingExpiration = true;
+                        //options.CookiePath = "/" + firstFolderSegment;
+                    },
+                    IdentityOptions.TwoFactorRememberMeCookieAuthenticationScheme
+                    );
+
+                    siteApp.UseCookieAuthentication(options =>
+                    {
+                        options.LoginPath = new PathString("/" + firstFolderSegment + "/Account/Login");
+                        options.LogoutPath = new PathString("/" + firstFolderSegment + "/Account/LogOff");
+                        options.CookieName = firstFolderSegment + "-tf";
+                        options.SlidingExpiration = true;
+                        //options.CookiePath = "/" + firstFolderSegment;
+                    },
+                    IdentityOptions.TwoFactorUserIdCookieAuthenticationScheme
+                    );
+
+                    siteApp.UseCookieAuthentication(options =>
+                    {
+                        options.LoginPath = new PathString("/" + firstFolderSegment + "/Account/Login");
+                        options.LogoutPath = new PathString("/" + firstFolderSegment + "/Account/LogOff");
                         options.CookieName = firstFolderSegment + "-app";
                         options.SlidingExpiration = true;
-                    });
+                        //options.CookiePath = "/" + firstFolderSegment;
+                    },
+                    IdentityOptions.ApplicationCookieAuthenticationScheme
+                    );
 
                     //TODO: the things could come from site settings
 
@@ -386,29 +442,29 @@ namespace cloudscribe.WebHost
                     //    options.ConsumerSecret = "";
                     //});
 
-                    siteApp.UseMvc(routes =>
-                    {
-                        //if you are adding custom routes you should probably put them first
-                        // add your routes here
+                    //siteApp.UseMvc(routes =>
+                    //{
+                    //    //if you are adding custom routes you should probably put them first
+                    //    // add your routes here
 
-                        //routes.MapRoute(
-                        //    name: "default",
-                        //    template: f.FolderName + "/{controller}/{action}/{id?}",
-                        //    defaults: new { controller = "Home", action = "Index" }
-                        //    //,constraints: new { name = new SiteFolderRouteConstraint(f.FolderName)}
-                        //    );
+                    //    //routes.MapRoute(
+                    //    //    name: "default",
+                    //    //    template: f.FolderName + "/{controller}/{action}/{id?}",
+                    //    //    defaults: new { controller = "Home", action = "Index" }
+                    //    //    //,constraints: new { name = new SiteFolderRouteConstraint(f.FolderName)}
+                    //    //    );
 
-                        // the default route has to be added last
-                        routes.MapRoute(
-                            name: "default",
-                            template: "{controller}/{action}/{id?}",
-                            defaults: new { controller = "Home", action = "Index" });
+                    //    // the default route has to be added last
+                    //    routes.MapRoute(
+                    //        name: "default",
+                    //        template: "{controller}/{action}/{id?}",
+                    //        defaults: new { controller = "Home", action = "Index" });
 
 
 
-                        // Uncomment the following line to add a route for porting Web API 2 controllers.
-                        // routes.MapWebApiRoute("DefaultApi", "api/{controller}/{id?}");
-                    });
+                    //    // Uncomment the following line to add a route for porting Web API 2 controllers.
+                    //    // routes.MapWebApiRoute("DefaultApi", "api/{controller}/{id?}");
+                    //});
 
 
                 });

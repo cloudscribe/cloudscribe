@@ -48,7 +48,7 @@ namespace cloudscribe.WebHost
                 .AddJsonFile($"config.{env.EnvironmentName}.json", optional: true);
 
             //appEnv.
-            //env.EnvironmentName = "Development";
+            env.EnvironmentName = "Development";
 
             if (env.IsEnvironment("Development"))
             {
