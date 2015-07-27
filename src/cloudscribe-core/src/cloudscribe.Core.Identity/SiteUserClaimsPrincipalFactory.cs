@@ -45,10 +45,22 @@ namespace cloudscribe.Core.Identity
                 {
                     identity.AddClaim(displayNameClaim);
                 }
+                
+                ISiteSettings site = await siteRepo.Fetch(user.SiteId);
+
+                if(site != null)
+                {
+                    Claim siteGuidClaim = new Claim("SiteGuid", site.SiteGuid.ToString());
+                    if (!identity.HasClaim(siteGuidClaim.Type, siteGuidClaim.Value))
+                    {
+                        identity.AddClaim(siteGuidClaim);
+                    }
+
+                }
+                
 
                 if (principal.IsInRole("Admins"))
                 {
-                    ISiteSettings site = await siteRepo.Fetch(user.SiteId);
                     if (site != null && site.IsServerAdminSite)
                     {
                         // if the user is an admin of a server admin site
