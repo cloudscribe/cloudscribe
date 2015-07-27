@@ -89,15 +89,25 @@ namespace cloudscribe.WebHost
                        );
                });
 
+            bool useMapBranching = false;
 
             if (useFolderSites)
             {
-                // this one uses app.Map(/folderName
-                // addFolderRoutesToMainApp = false; // in this case we have to add folder routes to the branch not the main app
-                //app.UseCloudscribeCoreFolderTenants(config, siteRepo);
+                
+                if(useMapBranching)
+                {
+                    // this one uses app.Map(/folderName
+                    addFolderRoutesToMainApp = false; // in this case we have to add folder routes to the branch not the main app
+                    app.UseCloudscribeCoreFolderTenants(config, siteRepo);
+                }
+                else
+                {
+                    // this one uses app.UseWhen(IsFolderMatch
+                    app.UseCloudscribeCoreFolderTenantsv2(config, siteRepo);
+                }
 
-                // this one uses app.UseWhen(IsFolderMatch
-                app.UseCloudscribeCoreFolderTenantsv2(config, siteRepo);
+
+
             }
             else
             {
