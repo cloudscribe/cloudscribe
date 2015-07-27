@@ -101,6 +101,9 @@ namespace cloudscribe.WebHost
             services.TryAdd(ServiceDescriptor.Scoped<SiteRoleManager<SiteRole>, SiteRoleManager<SiteRole>>());
 
             services.AddIdentity<SiteUser, SiteRole>();
+            services.TryAdd(ServiceDescriptor.Scoped<MultiTenantAuthCookieValidator, MultiTenantAuthCookieValidator>());
+            services.TryAdd(ServiceDescriptor.Scoped<MultiTenantCookieAuthenticationNotifications, MultiTenantCookieAuthenticationNotifications>());
+
             //********************************************************************************************************
 
             // you can use either json or xml to maintain your navigation map we provide examples of each navigation.xml and 

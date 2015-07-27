@@ -290,6 +290,8 @@ namespace cloudscribe.WebHost
             string cookieNamePrefix,
             string cookiePath)
         {
+            MultiTenantCookieAuthenticationNotifications cookieNotifications 
+                = siteApp.ApplicationServices.GetService<MultiTenantCookieAuthenticationNotifications>();
 
             siteApp.UseCookieAuthentication(options =>
             {
@@ -298,6 +300,7 @@ namespace cloudscribe.WebHost
                 options.CookieName = cookieNamePrefix + "-ext";
                 options.SlidingExpiration = true;
                 if (cookiePath.Length > 0) { options.CookiePath = cookiePath; }
+                options.Notifications = cookieNotifications;
             },
             IdentityOptions.ExternalCookieAuthenticationScheme
             );
@@ -309,6 +312,7 @@ namespace cloudscribe.WebHost
                 options.CookieName = cookieNamePrefix + "-tfr";
                 options.SlidingExpiration = true;
                 if (cookiePath.Length > 0) { options.CookiePath = cookiePath; }
+                options.Notifications = cookieNotifications;
             },
             IdentityOptions.TwoFactorRememberMeCookieAuthenticationScheme
             );
@@ -320,6 +324,7 @@ namespace cloudscribe.WebHost
                 options.CookieName = cookieNamePrefix + "-tf";
                 options.SlidingExpiration = true;
                 if (cookiePath.Length > 0) { options.CookiePath = cookiePath; }
+                options.Notifications = cookieNotifications;
             },
             IdentityOptions.TwoFactorUserIdCookieAuthenticationScheme
             );
@@ -331,6 +336,8 @@ namespace cloudscribe.WebHost
                 options.CookieName = cookieNamePrefix + "-app";
                 options.SlidingExpiration = true;
                 if (cookiePath.Length > 0) { options.CookiePath = cookiePath; }
+
+                options.Notifications = cookieNotifications;
             },
             IdentityOptions.ApplicationCookieAuthenticationScheme
             );
