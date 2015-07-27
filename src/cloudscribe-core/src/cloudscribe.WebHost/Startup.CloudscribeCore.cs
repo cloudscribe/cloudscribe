@@ -89,7 +89,7 @@ namespace cloudscribe.WebHost
                        );
                });
 
-            bool useMapBranching = false;
+            bool useMapBranching = true;
 
             if (useFolderSites)
             {
@@ -295,6 +295,9 @@ namespace cloudscribe.WebHost
 
             siteApp.UseCookieAuthentication(options =>
             {
+               
+                //options.AuthenticationScheme = options.AuthenticationScheme + cookieNamePrefix;
+
                 options.LoginPath = new PathString(loginPath);
                 options.LogoutPath = new PathString(logoutPath);
                 options.CookieName = cookieNamePrefix + "-ext";
@@ -307,6 +310,8 @@ namespace cloudscribe.WebHost
 
             siteApp.UseCookieAuthentication(options =>
             {
+                //options.AuthenticationScheme = options.AuthenticationScheme + cookieNamePrefix;
+
                 options.LoginPath = new PathString(loginPath);
                 options.LogoutPath = new PathString(logoutPath);
                 options.CookieName = cookieNamePrefix + "-tfr";
@@ -319,6 +324,8 @@ namespace cloudscribe.WebHost
 
             siteApp.UseCookieAuthentication(options =>
             {
+                //options.AuthenticationScheme = options.AuthenticationScheme + cookieNamePrefix;
+
                 options.LoginPath = new PathString(loginPath);
                 options.LogoutPath = new PathString(logoutPath);
                 options.CookieName = cookieNamePrefix + "-tf";
@@ -331,6 +338,10 @@ namespace cloudscribe.WebHost
 
             siteApp.UseCookieAuthentication(options =>
             {
+                // changing this breaks login causes exceptions
+                // trying to overcome it by implementing a custom SignInManager
+                //options.AuthenticationScheme = options.AuthenticationScheme + cookieNamePrefix;
+
                 options.LoginPath = new PathString(loginPath);
                 options.LogoutPath = new PathString(logoutPath);
                 options.CookieName = cookieNamePrefix + "-app";

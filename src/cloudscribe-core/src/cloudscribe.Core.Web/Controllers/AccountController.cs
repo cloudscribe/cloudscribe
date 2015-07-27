@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-07-24
+// Last Modified:			2015-07-27
 // 
 
 using cloudscribe.Configuration;
@@ -30,7 +30,7 @@ namespace cloudscribe.Core.Web.Controllers
         public AccountController(
             ISiteResolver siteResolver,
             SiteUserManager<SiteUser> userManager,
-            SignInManager<SiteUser> signInManager,
+            SiteSignInManager<SiteUser> signInManager,
             IConfiguration configuration,
             IEmailSender emailSender,
             ISmsSender smsSender)
@@ -47,7 +47,7 @@ namespace cloudscribe.Core.Web.Controllers
         private readonly ISiteSettings Site;
         private readonly IConfiguration config;
         private readonly SiteUserManager<SiteUser> userManager;
-        private readonly SignInManager<SiteUser> signInManager;
+        private readonly SiteSignInManager<SiteUser> signInManager;
         private readonly IEmailSender emailSender;
         private readonly ISmsSender smsSender;
 

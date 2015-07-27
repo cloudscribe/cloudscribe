@@ -7,9 +7,6 @@
 
 using cloudscribe.Core.Models;
 using Microsoft.AspNet.Authentication.Cookies;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 

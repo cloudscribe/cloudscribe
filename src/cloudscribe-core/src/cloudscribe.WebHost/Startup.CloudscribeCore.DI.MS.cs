@@ -99,6 +99,7 @@ namespace cloudscribe.WebHost
 
             services.TryAdd(ServiceDescriptor.Scoped<SiteUserManager<SiteUser>, SiteUserManager<SiteUser>>());
             services.TryAdd(ServiceDescriptor.Scoped<SiteRoleManager<SiteRole>, SiteRoleManager<SiteRole>>());
+            services.TryAdd(ServiceDescriptor.Scoped<SiteSignInManager<SiteUser>, SiteSignInManager<SiteUser>>());
 
             services.AddIdentity<SiteUser, SiteRole>();
             services.TryAdd(ServiceDescriptor.Scoped<MultiTenantAuthCookieValidator, MultiTenantAuthCookieValidator>());

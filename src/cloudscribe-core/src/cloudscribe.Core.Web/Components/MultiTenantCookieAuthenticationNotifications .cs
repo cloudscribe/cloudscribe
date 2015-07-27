@@ -5,20 +5,16 @@
 // Last Modified:			2015-07-27
 // 
 
-using cloudscribe.Core.Models;
 using Microsoft.AspNet.Authentication.Cookies;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Components
 {
+    //https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.Cookies/Notifications/CookieAuthenticationNotifications.cs#L32
+
     public class MultiTenantCookieAuthenticationNotifications : CookieAuthenticationNotifications
     {
         public MultiTenantCookieAuthenticationNotifications(
-            MultiTenantAuthCookieValidator validator)
+            MultiTenantAuthCookieValidator validator):base()
         {
             OnValidatePrincipal = validator.ValidatePrincipal;
         }
