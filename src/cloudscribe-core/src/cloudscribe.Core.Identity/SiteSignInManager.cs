@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-27
-// Last Modified:		    2015-07-27
+// Last Modified:		    2015-07-28
 // 
 //
 
@@ -39,12 +39,13 @@ namespace cloudscribe.Core.Identity
         {
 
 
-
+            UserManager = userManager;
             this.context = contextAccessor.HttpContext;
 
 
         }
 
+        private UserManager<TUser> UserManager { get; set; }
         private HttpContext context;
 
         //https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity/SignInManager.cs
@@ -55,55 +56,55 @@ namespace cloudscribe.Core.Identity
         // I think beta5 is not in sync
         // looks like beta6 came out today so I will upgrade before moving forward
 
-        //public override async Task SignInAsync(TUser user, AuthenticationProperties authenticationProperties, string authenticationMethod = null)
-        //{
-        //    var userPrincipal = await CreateUserPrincipalAsync(user);
-        //    // Review: should we guard against CreateUserPrincipal returning null?
-        //    if (authenticationMethod != null)
-        //    {
-        //        userPrincipal.Identities.First().AddClaim(new Claim(ClaimTypes.AuthenticationMethod, authenticationMethod));
-        //    }
-        //    await context.Authentication.SignInAsync(IdentityOptions.ApplicationCookieAuthenticationScheme,
-        //        userPrincipal,
-        //        authenticationProperties ?? new AuthenticationProperties());
-        //}
+        public override async Task SignInAsync(TUser user, AuthenticationProperties authenticationProperties, string authenticationMethod = null)
+        {
+            var userPrincipal = await CreateUserPrincipalAsync(user);
+            // Review: should we guard against CreateUserPrincipal returning null?
+            if (authenticationMethod != null)
+            {
+                userPrincipal.Identities.First().AddClaim(new Claim(ClaimTypes.AuthenticationMethod, authenticationMethod));
+            }
+            await context.Authentication.SignInAsync(IdentityOptions.ApplicationCookieAuthenticationScheme,
+                userPrincipal,
+                authenticationProperties ?? new AuthenticationProperties());
+        }
 
-        //public override async Task RefreshSignInAsync(TUser user)
-        //{
-        //    var auth = new AuthenticateContext(IdentityOptions.ApplicationCookieAuthenticationScheme);
-        //    await context.Authentication.AuthenticateAsync(auth);
-        //    var authenticationMethod = auth.Principal?.FindFirstValue(ClaimTypes.AuthenticationMethod);
-        //    await SignInAsync(user, new AuthenticationProperties(auth.Properties), authenticationMethod);
-        //}
+        public override async Task RefreshSignInAsync(TUser user)
+        {
+            var auth = new AuthenticateContext(IdentityOptions.ApplicationCookieAuthenticationScheme);
+            await context.Authentication.AuthenticateAsync(auth);
+            var authenticationMethod = auth.Principal?.FindFirstValue(ClaimTypes.AuthenticationMethod);
+            await SignInAsync(user, new AuthenticationProperties(auth.Properties), authenticationMethod);
+        }
 
-        //public override async Task SignOutAsync()
-        //{
-        //    await context.Authentication.SignOutAsync(IdentityOptions.ApplicationCookieAuthenticationScheme);
-        //    await context.Authentication.SignOutAsync(IdentityOptions.ExternalCookieAuthenticationScheme);
-        //    await context.Authentication.SignOutAsync(IdentityOptions.TwoFactorUserIdCookieAuthenticationScheme);
-        //}
+        public override async Task SignOutAsync()
+        {
+            await context.Authentication.SignOutAsync(IdentityOptions.ApplicationCookieAuthenticationScheme);
+            await context.Authentication.SignOutAsync(IdentityOptions.ExternalCookieAuthenticationScheme);
+            await context.Authentication.SignOutAsync(IdentityOptions.TwoFactorUserIdCookieAuthenticationScheme);
+        }
 
-        //public override async Task<bool> IsTwoFactorClientRememberedAsync(TUser user)
-        //{
-        //    var userId = await UserManager.GetUserIdAsync(user);
-        //    var result = await context.Authentication.AuthenticateAsync(IdentityOptions.TwoFactorRememberMeCookieAuthenticationScheme);
-        //    return (result != null && result.FindFirstValue(ClaimTypes.Name) == userId);
-        //}
+        public override async Task<bool> IsTwoFactorClientRememberedAsync(TUser user)
+        {
+            var userId = await UserManager.GetUserIdAsync(user);
+            var result = await context.Authentication.AuthenticateAsync(IdentityOptions.TwoFactorRememberMeCookieAuthenticationScheme);
+            return (result != null && result.FindFirstValue(ClaimTypes.Name) == userId);
+        }
 
-        //public override async Task RememberTwoFactorClientAsync(TUser user)
-        //{
-        //    var userId = await UserManager.GetUserIdAsync(user);
-        //    var rememberBrowserIdentity = new ClaimsIdentity(IdentityOptions.TwoFactorRememberMeCookieAuthenticationType);
-        //    rememberBrowserIdentity.AddClaim(new Claim(ClaimTypes.Name, userId));
-        //    await context.Authentication.SignInAsync(IdentityOptions.TwoFactorRememberMeCookieAuthenticationScheme,
-        //        new ClaimsPrincipal(rememberBrowserIdentity),
-        //        new AuthenticationProperties { IsPersistent = true });
-        //}
+        public override async Task RememberTwoFactorClientAsync(TUser user)
+        {
+            var userId = await UserManager.GetUserIdAsync(user);
+            var rememberBrowserIdentity = new ClaimsIdentity(IdentityOptions.TwoFactorRememberMeCookieAuthenticationType);
+            rememberBrowserIdentity.AddClaim(new Claim(ClaimTypes.Name, userId));
+            await context.Authentication.SignInAsync(IdentityOptions.TwoFactorRememberMeCookieAuthenticationScheme,
+                new ClaimsPrincipal(rememberBrowserIdentity),
+                new AuthenticationProperties { IsPersistent = true });
+        }
 
-        //public override Task ForgetTwoFactorClientAsync()
-        //{
-        //    return context.Authentication.SignOutAsync(IdentityOptions.TwoFactorRememberMeCookieAuthenticationScheme);
-        //}
+        public override Task ForgetTwoFactorClientAsync()
+        {
+            return context.Authentication.SignOutAsync(IdentityOptions.TwoFactorRememberMeCookieAuthenticationScheme);
+        }
 
 
     }
