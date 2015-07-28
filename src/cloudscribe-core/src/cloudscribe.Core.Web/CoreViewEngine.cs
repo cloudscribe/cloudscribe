@@ -34,6 +34,7 @@ namespace cloudscribe.Core.Web
     /// </summary>
     public class CoreViewEngine : RazorViewEngine
     {
+        //IRazorViewEngine
         public CoreViewEngine(
             IRazorPageFactory pageFactory, 
             IRazorViewFactory viewFactory,

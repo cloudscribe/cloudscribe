@@ -308,7 +308,7 @@ namespace cloudscribe.Core.Web.Helpers
             foreach (TimeZoneInfo t in timeZones)
             {
 
-                if (t.Id == id) { return t; }
+                if (t.StandardName == id) { return t; }
             }
 
             return null;

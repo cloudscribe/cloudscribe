@@ -9,10 +9,10 @@
   "dependencies": {
 
     "cloudscribe.Configuration": "1.0.0-*",
-    "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta5",
+    "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta6",
     "cloudscribe.Core.Models": "1.0.0-*",
 
-    "Microsoft.Framework.Configuration.Abstractions": "1.0.0-beta5"
+    "Microsoft.Framework.Configuration.Abstractions": "1.0.0-beta6"
   },
 
   "frameworks": {
@@ -23,13 +23,14 @@
     },
     "dnxcore50": {
       "dependencies": {
-        "System.Data.SqlClient": "4.0.0-beta-23019",
-        "System.Collections": "4.0.10-beta-23019",
-        "System.Linq": "4.0.0-beta-23019",
-        "System.Threading": "4.0.10-beta-23019",
-        "System.Diagnostics.Tools": "4.0.0-beta-23019",
-        "System.Collections.Concurrent": "4.0.10-beta-23019",
-        "Microsoft.CSharp": "4.0.0-beta-23019"
+        "System.Data.SqlClient": "4.0.0-beta-23109",
+        "System.Collections": "4.0.10-beta-23109",
+        "System.Linq": "4.0.0-beta-23109",
+        "System.Threading": "4.0.10-beta-23109",
+        "System.Runtime": "4.0.20-beta-23109",
+        "System.Diagnostics.Tools": "4.0.0-beta-23109",
+        "System.Collections.Concurrent": "4.0.10-beta-23109",
+        "Microsoft.CSharp": "4.0.0-beta-23109"
       }
     }
   }

@@ -2,6 +2,8 @@
 
 http://stephenwalther.com/archive/2015/02/07/asp-net-5-deep-dive-routing
 
+http://blogs.msdn.com/b/visualstudioalm/archive/2015/07/20/performance-and-diagnostic-tools-in-visual-studio-2015.aspx
+
 
 http://shazwazza.com/post/aspnet-5-re-learning-a-few-things-part-1/
 http://weblogs.asp.net/imranbaloch/aspnet-vnext-folder-structure

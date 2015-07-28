@@ -2,13 +2,13 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-06-20
-// Last Modified:			2015-07-24
+// Last Modified:			2015-07-28
 // 
 
 using System;
 using System.Collections.Generic;
 //using Microsoft.AspNet.Hosting;
-using JetBrains.Annotations;
+//using JetBrains.Annotations;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Authentication;
@@ -60,7 +60,7 @@ namespace cloudscribe.WebHost
 
             // the only thing we are using session for is Alerts
             app.UseSession();
-            app.UseInMemorySession(configure: s => s.IdleTimeout = TimeSpan.FromMinutes(20));
+            //app.UseInMemorySession(configure: s => s.IdleTimeout = TimeSpan.FromMinutes(20));
             app.UseStatusCodePages();
 
             bool useFolderSites = config.UseFoldersInsteadOfHostnamesForMultipleSites();

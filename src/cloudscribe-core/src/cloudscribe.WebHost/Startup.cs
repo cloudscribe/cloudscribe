@@ -17,7 +17,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Routing;
 using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Core;
-using Microsoft.Data.Entity;
+//using Microsoft.Data.Entity;
 using Microsoft.Framework.Caching;
 using Microsoft.Framework.Caching.Distributed;
 using Microsoft.Framework.Configuration;
@@ -156,7 +156,7 @@ namespace cloudscribe.WebHost
             if (env.IsEnvironment("Development"))
             {
                 //app.UseBrowserLink();
-                app.UseErrorPage(ErrorPageOptions.ShowAll);
+                app.UseErrorPage();
                 //app.UseDatabaseErrorPage(DatabaseErrorPageOptions.ShowAll);
             }
             else

@@ -8,7 +8,7 @@
 using System;
 using System.Collections.Generic;
 //using Microsoft.AspNet.Hosting;
-using JetBrains.Annotations;
+//using JetBrains.Annotations;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Authentication;
@@ -126,9 +126,9 @@ namespace cloudscribe.WebHost
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
 
-
+            
             // Add MVC services to the services container.
-            services.AddMvc().Configure<MvcOptions>(options =>
+            services.AddMvc().ConfigureMvcViews(options =>
             {
                 options.ViewEngines.Clear();
                 // cloudscribe.Core.Web.CoreViewEngine adds /Views/Sys as the last place to search for views
