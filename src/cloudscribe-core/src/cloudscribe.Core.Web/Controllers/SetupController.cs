@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-01-10
-// Last Modified:			2015-07-13
+// Last Modified:			2015-07-28
 // 
 
 using cloudscribe.Configuration;
@@ -560,8 +560,7 @@ namespace cloudscribe.Setup.Controllers
 
         private async Task<bool> UpgradeSchema(HttpResponse response, string applicationName)
         {
-            Guid appID = db.GetOrGenerateSchemaApplicationId(applicationName);
-            Version currentSchemaVersion = db.GetSchemaVersion(appID);
+            
             Version versionToStopAt = null;
             IVersionProvider appVersionProvider = db.VersionProviders.Get(applicationName);
 
@@ -571,10 +570,20 @@ namespace cloudscribe.Setup.Controllers
             //    versionToStopAt = appVersionProvider.GetCodeVersion();
 
             //}
-            if(appVersionProvider != null)
+            Guid appID;
+            if (appVersionProvider != null)
             {
                 versionToStopAt = appVersionProvider.GetCodeVersion();
+                appID = appVersionProvider.ApplicationId;
             }
+            else
+            {
+                appID = db.GetOrGenerateSchemaApplicationId(applicationName);
+            }
+
+            
+            Version currentSchemaVersion = db.GetSchemaVersion(appID);
+
 
             //String pathToScriptFolder
             //    = hostingEnvironment.MapPath(

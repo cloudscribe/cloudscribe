@@ -11,6 +11,7 @@
     "Microsoft.Framework.Configuration.Abstractions": "1.0.0-beta5",
     "Microsoft.Framework.Configuration.Json": "1.0.0-beta5",
     "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta5",
+    "Microsoft.Framework.Runtime.Abstractions": "1.0.0-beta5",
     "Microsoft.AspNet.Mvc.Abstractions": "6.0.0-beta5",
     "Microsoft.AspNet.Hosting.Abstractions": "1.0.0-beta5"
 

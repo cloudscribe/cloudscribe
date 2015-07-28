@@ -91,29 +91,35 @@ namespace cloudscribe.WebHost
 
             bool useMapBranching = true;
 
-            if (useFolderSites)
+            try
             {
-                
-                if(useMapBranching)
+                // errors expected here if db has not yet been initilaized and populated
+                if (useFolderSites)
                 {
-                    // this one uses app.Map(/folderName
-                    addFolderRoutesToMainApp = false; // in this case we have to add folder routes to the branch not the main app
-                    app.UseCloudscribeCoreFolderTenants(config, siteRepo);
+
+                    if (useMapBranching)
+                    {
+                        // this one uses app.Map(/folderName
+                        addFolderRoutesToMainApp = false; // in this case we have to add folder routes to the branch not the main app
+                        app.UseCloudscribeCoreFolderTenants(config, siteRepo);
+                    }
+                    else
+                    {
+                        // this one uses app.UseWhen(IsFolderMatch
+                        app.UseCloudscribeCoreFolderTenantsv2(config, siteRepo);
+                    }
+
+
+
                 }
                 else
                 {
-                    // this one uses app.UseWhen(IsFolderMatch
-                    app.UseCloudscribeCoreFolderTenantsv2(config, siteRepo);
+                    app.UseCloudscribeCoreHostTenants(config, siteRepo);
+
                 }
-
-
-
             }
-            else
-            {
-                app.UseCloudscribeCoreHostTenants(config, siteRepo);
-
-            }
+            catch { }
+            
 
             // Add MVC to the request pipeline.
             app.UseMvc(routes =>
@@ -123,10 +129,16 @@ namespace cloudscribe.WebHost
 
 
                 // default routes for folder site go second to last
-                if (useFolderSites)
+                try
                 {
-                    RegisterFolderSiteDefaultRoutes(routes, siteRepo);
+                    // exceptions expected here on new install until db has been initialized
+                    if (useFolderSites)
+                    {
+                        RegisterFolderSiteDefaultRoutes(routes, siteRepo);
+                    }
                 }
+                catch { }
+                
 
 
                 // the default route has to be added last
@@ -370,16 +382,20 @@ namespace cloudscribe.WebHost
         {
             firstFolderSegment = RequestSiteResolver.GetFirstFolderSegment(context.Request.Path);
             if (string.IsNullOrWhiteSpace(firstFolderSegment)) { return false; }
-
-            List<SiteFolder> allFolders = siteRepository.GetAllSiteFoldersNonAsync();
-            foreach (SiteFolder folder in allFolders)
+            try
             {
-                if (folder.FolderName == firstFolderSegment)
+                List<SiteFolder> allFolders = siteRepository.GetAllSiteFoldersNonAsync();
+                foreach (SiteFolder folder in allFolders)
                 {
-                    siteGuid = folder.SiteGuid;
-                    return true;
+                    if (folder.FolderName == firstFolderSegment)
+                    {
+                        siteGuid = folder.SiteGuid;
+                        return true;
+                    }
                 }
             }
+            catch { }
+            
 
 
             return false;

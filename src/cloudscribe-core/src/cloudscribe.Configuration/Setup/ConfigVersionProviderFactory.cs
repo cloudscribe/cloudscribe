@@ -2,12 +2,13 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-06-18
-// Last Modified:			2015-06-18
+// Last Modified:			2015-07-28
 // 
 
 using Microsoft.AspNet.Hosting;
 using Microsoft.Framework.Configuration;
 using Microsoft.Framework.Logging;
+using Microsoft.Framework.Runtime;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,13 +19,14 @@ namespace cloudscribe.Configuration
     public class ConfigVersionProviderFactory : IVersionProviderFactory
     {
         public ConfigVersionProviderFactory(
-            IHostingEnvironment hostingEnvironment,
+            IApplicationEnvironment appEnv,
             IConfiguration configuration,
             ILoggerFactory loggerFactory)
         {
             //logFactory = loggerFactory;
             log = loggerFactory.CreateLogger(typeof(ConfigVersionProviderFactory).FullName);
-            env = hostingEnvironment;
+            //env = hostingEnvironment;
+            appBasePath = appEnv.ApplicationBasePath;
             config = configuration;
             configFolderName = config.GetOrDefault("AppSettings:VersionProviderFolderPath", configFolderName);
             didLoadList = LoadList();
@@ -35,7 +37,7 @@ namespace cloudscribe.Configuration
             bool result = false;
 
             string pathToConfigFolder
-                    = env.MapPath(configFolderName);
+                    = appBasePath + configFolderName.Replace("/", Path.DirectorySeparatorChar.ToString());
 
 
             if (!Directory.Exists(pathToConfigFolder))
@@ -65,10 +67,10 @@ namespace cloudscribe.Configuration
             return result;
         }
 
-        
 
-        private string configFolderName = "~/Config/CodeVersionProviders/";
-        private IHostingEnvironment env;
+        private string appBasePath;
+        private string configFolderName = "/config/codeversionproviders";
+       // private IHostingEnvironment env;
         private IConfiguration config;
         private ILogger log;
         private bool didLoadList = false;
@@ -119,12 +121,19 @@ namespace cloudscribe.Configuration
                                 string name = providerNode.Attributes["name"].Value;
                                 string type = providerNode.Attributes["type"].Value;
 
-                                //providerSettingsCollection.Add(providerSettings);
-                                object o = Activator.CreateInstance(Type.GetType(type));
-                                if (o is IVersionProvider)
+                                try
                                 {
-                                    versionProviders.Add((IVersionProvider)o);
+                                    object o = Activator.CreateInstance(Type.GetType(type));
+                                    if (o is IVersionProvider)
+                                    {
+                                        versionProviders.Add((IVersionProvider)o);
+                                    }
                                 }
+                                catch(Exception ex)
+                                {
+                                    log.LogError("could not load version provider " + name + " of type " + type, ex);
+                                }
+                                
                             }
 
                         }
