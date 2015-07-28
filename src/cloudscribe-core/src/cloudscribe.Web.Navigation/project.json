@@ -16,7 +16,11 @@
   },
 
   "frameworks": {
-    "dnx451": {},
+    "dnx451": {
+      "frameworkAssemblies": {
+        "System.Xml": ""
+      }
+    },
     "dnxcore50": {
       "dependencies": {
         "System.Collections": "4.0.10-beta-23019",
