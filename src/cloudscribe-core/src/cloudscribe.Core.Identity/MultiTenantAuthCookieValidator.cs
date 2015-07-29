@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-27
-// Last Modified:			2015-07-27
+// Last Modified:			2015-07-28
 // 
 
 using cloudscribe.Core.Models;
@@ -10,7 +10,7 @@ using Microsoft.AspNet.Authentication.Cookies;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace cloudscribe.Core.Web.Components
+namespace cloudscribe.Core.Identity
 {
     public class MultiTenantAuthCookieValidator
     {

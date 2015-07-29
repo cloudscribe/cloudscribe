@@ -24,6 +24,7 @@ using Microsoft.AspNet.Mvc.Razor;
 using Microsoft.AspNet.Routing;
 using cloudscribe.Configuration;
 using cloudscribe.Core.Models;
+using cloudscribe.Core.Models.Identity;
 using cloudscribe.Core.Models.Site;
 using cloudscribe.Core.Models.Geography;
 using cloudscribe.Core.Web;
@@ -101,7 +102,18 @@ namespace cloudscribe.WebHost
             services.TryAdd(ServiceDescriptor.Scoped<SiteRoleManager<SiteRole>, SiteRoleManager<SiteRole>>());
             services.TryAdd(ServiceDescriptor.Scoped<SiteSignInManager<SiteUser>, SiteSignInManager<SiteUser>>());
 
+
+
+            // this extension is where the cookie options are setup
+            // we are oing to have to roll our own for folder tenancy so we can control the cookie auth schemes
+            //https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity/IdentityServiceCollectionExtensions.cs
             services.AddIdentity<SiteUser, SiteRole>();
+
+
+            //services.TryAdd(ServiceDescriptor.Scoped<ICookieAuthenticationSchemeSet, DefaultCookieAuthenticationSchemeSet>());
+            services.TryAdd(ServiceDescriptor.Scoped<ICookieAuthenticationSchemeSet, FolderTenantCookieAuthSchemeResolver>());
+
+
             services.TryAdd(ServiceDescriptor.Scoped<MultiTenantAuthCookieValidator, MultiTenantAuthCookieValidator>());
             services.TryAdd(ServiceDescriptor.Scoped<MultiTenantCookieAuthenticationNotifications, MultiTenantCookieAuthenticationNotifications>());
 

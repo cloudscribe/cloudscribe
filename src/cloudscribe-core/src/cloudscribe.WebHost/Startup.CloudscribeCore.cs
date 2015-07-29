@@ -77,6 +77,7 @@ namespace cloudscribe.WebHost
                {
                    string loginPath = "/Account/Login";
                    string logoutPath = "/Account/LogOff";
+                   string cookieAuthSchemeSuffix = "-cloudscribeApp";
                    string cookiePath = string.Empty;
                    string cookieNamePrefix = "cloudscribe";
                    
@@ -84,6 +85,7 @@ namespace cloudscribe.WebHost
                        branchApp,
                        loginPath,
                        logoutPath,
+                       cookieAuthSchemeSuffix,
                        cookieNamePrefix,
                        cookiePath
                        );
@@ -226,6 +228,7 @@ namespace cloudscribe.WebHost
             //ISiteSettings siteSettings = siteRepo.FetchNonAsync(f.SiteGuid);
             string loginPath = "/" + folderSegment + "/Account/Login";
             string logoutPath = "/" + folderSegment + "/Account/LogOff";
+            string cookieAuthSchemeSuffix = "-" + folderSegment;
             string cookiePath = string.Empty;
             string cookieNamePrefix = folderSegment;
             if (adjustCookiePath) { cookiePath = "/" + folderSegment; }
@@ -234,6 +237,7 @@ namespace cloudscribe.WebHost
                 siteApp,
                 loginPath,
                 logoutPath,
+                cookieAuthSchemeSuffix,
                 cookieNamePrefix,
                 cookiePath
                 );
@@ -299,16 +303,24 @@ namespace cloudscribe.WebHost
             IApplicationBuilder siteApp,
             string loginPath,
             string logoutPath,
+            string cookieAuthSchemeSuffix,
             string cookieNamePrefix,
             string cookiePath)
         {
             MultiTenantCookieAuthenticationNotifications cookieNotifications 
                 = siteApp.ApplicationServices.GetService<MultiTenantCookieAuthenticationNotifications>();
 
+            string externalAuthScheme = IdentityOptions.ExternalCookieAuthenticationScheme;
+
+            if (!string.IsNullOrWhiteSpace(cookieAuthSchemeSuffix))
+            {
+                externalAuthScheme = "External" + cookieAuthSchemeSuffix;
+            }
+
             siteApp.UseCookieAuthentication(options =>
             {
                
-                //options.AuthenticationScheme = options.AuthenticationScheme + cookieNamePrefix;
+                options.AuthenticationScheme = externalAuthScheme;
 
                 options.LoginPath = new PathString(loginPath);
                 options.LogoutPath = new PathString(logoutPath);
@@ -317,12 +329,19 @@ namespace cloudscribe.WebHost
                 if (cookiePath.Length > 0) { options.CookiePath = cookiePath; }
                 options.Notifications = cookieNotifications;
             },
-            IdentityOptions.ExternalCookieAuthenticationScheme
+            externalAuthScheme
             );
+
+            string twoFactorRememberMeAuthScheme = IdentityOptions.TwoFactorRememberMeCookieAuthenticationScheme;
+
+            if (!string.IsNullOrWhiteSpace(cookieAuthSchemeSuffix))
+            {
+                twoFactorRememberMeAuthScheme = "TwoFactorRememberMe" + cookieAuthSchemeSuffix;
+            }
 
             siteApp.UseCookieAuthentication(options =>
             {
-                //options.AuthenticationScheme = options.AuthenticationScheme + cookieNamePrefix;
+                options.AuthenticationScheme = twoFactorRememberMeAuthScheme;
 
                 options.LoginPath = new PathString(loginPath);
                 options.LogoutPath = new PathString(logoutPath);
@@ -331,12 +350,20 @@ namespace cloudscribe.WebHost
                 if (cookiePath.Length > 0) { options.CookiePath = cookiePath; }
                 options.Notifications = cookieNotifications;
             },
-            IdentityOptions.TwoFactorRememberMeCookieAuthenticationScheme
+            twoFactorRememberMeAuthScheme
             );
+
+
+            string twoFactorUserIdAuthScheme = IdentityOptions.TwoFactorUserIdCookieAuthenticationScheme;
+
+            if (!string.IsNullOrWhiteSpace(cookieAuthSchemeSuffix))
+            {
+                twoFactorUserIdAuthScheme = "TwoFactorUserId" + cookieAuthSchemeSuffix;
+            }
 
             siteApp.UseCookieAuthentication(options =>
             {
-                //options.AuthenticationScheme = options.AuthenticationScheme + cookieNamePrefix;
+                options.AuthenticationScheme = twoFactorUserIdAuthScheme;
 
                 options.LoginPath = new PathString(loginPath);
                 options.LogoutPath = new PathString(logoutPath);
@@ -345,14 +372,21 @@ namespace cloudscribe.WebHost
                 if (cookiePath.Length > 0) { options.CookiePath = cookiePath; }
                 options.Notifications = cookieNotifications;
             },
-            IdentityOptions.TwoFactorUserIdCookieAuthenticationScheme
+            twoFactorUserIdAuthScheme
             );
+
+            string applicationAuthScheme = IdentityOptions.ApplicationCookieAuthenticationScheme;
+
+            if (!string.IsNullOrWhiteSpace(cookieAuthSchemeSuffix))
+            {
+                applicationAuthScheme = "Application" + cookieAuthSchemeSuffix;
+            }
 
             siteApp.UseCookieAuthentication(options =>
             {
                 // changing this breaks login causes exceptions
                 // trying to overcome it by implementing a custom SignInManager
-                //options.AuthenticationScheme = options.AuthenticationScheme + cookieNamePrefix;
+                options.AuthenticationScheme = applicationAuthScheme;
 
                 options.LoginPath = new PathString(loginPath);
                 options.LogoutPath = new PathString(logoutPath);
