@@ -396,6 +396,8 @@ namespace cloudscribe.WebHost
 
                 options.Notifications = cookieNotifications;
             },
+            //applicationAuthScheme
+            
             IdentityOptions.ApplicationCookieAuthenticationScheme
             );
  

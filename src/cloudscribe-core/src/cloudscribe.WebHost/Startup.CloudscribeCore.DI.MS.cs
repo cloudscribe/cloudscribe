@@ -107,7 +107,39 @@ namespace cloudscribe.WebHost
             // this extension is where the cookie options are setup
             // we are oing to have to roll our own for folder tenancy so we can control the cookie auth schemes
             //https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity/IdentityServiceCollectionExtensions.cs
+
+            //services.AddAuthentication();
+
+           
+
+            services.ConfigureIdentityApplicationCookie(options =>
+            {
+                options.AuthenticationScheme = "Application-cloudscribeApp";
+                options.AutomaticAuthentication = true;
+                options.LoginPath = new PathString("/Account/Login");
+                options.Notifications = new CookieAuthenticationNotifications
+                {
+                    //https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity/SecurityStampValidator.cs
+                    OnValidatePrincipal = SecurityStampValidator.ValidatePrincipalAsync
+                    
+                };
+            });
+
+            services.ConfigureIdentityApplicationCookie(options =>
+            {
+                options.AuthenticationScheme = "Application-junk";
+                options.AutomaticAuthentication = true;
+                options.LoginPath = new PathString("/junk/Account/Login");
+                options.Notifications = new CookieAuthenticationNotifications
+                {
+                    OnValidatePrincipal = SecurityStampValidator.ValidatePrincipalAsync
+                };
+            });
+
             services.AddIdentity<SiteUser, SiteRole>();
+
+            
+
 
 
             //services.TryAdd(ServiceDescriptor.Scoped<ICookieAuthenticationSchemeSet, DefaultCookieAuthenticationSchemeSet>());
