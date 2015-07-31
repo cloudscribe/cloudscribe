@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-22
-// Last Modified:		    2015-07-18
+// Last Modified:		    2015-07-31
 // 
 
 
@@ -33,7 +33,7 @@ namespace cloudscribe.Core.Identity
         where TUser : SiteUser
     {
         //private static readonly ILog log = LogManager.GetLogger(typeof(UserStore<TUser>));
-        private ILoggerFactory logFactory;
+        //private ILoggerFactory logFactory;
         private ILogger log;
         private bool debugLog = false;
         private ISiteResolver resolver;
@@ -56,14 +56,16 @@ namespace cloudscribe.Core.Identity
         private UserStore() { }
 
         public UserStore(
-            ILoggerFactory loggerFactory,
+            //ILoggerFactory loggerFactory,
+            ILogger<UserStore<TUser>> logger,
             ISiteResolver siteResolver,
             IUserRepository userRepository,
             IConfiguration configuration
             )
         {
-            logFactory = loggerFactory;
-            log = loggerFactory.CreateLogger(this.GetType().FullName);
+            //logFactory = loggerFactory;
+            //log = loggerFactory.CreateLogger(this.GetType().FullName);
+            log = logger;
 
             if (siteResolver == null) { throw new ArgumentNullException(nameof(siteResolver)); }
             resolver = siteResolver;

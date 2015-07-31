@@ -2,16 +2,14 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-06-19
-// Last Modified:		    2015-07-18
+// Last Modified:		    2015-07-31
 // 
 
-using cloudscribe.Configuration;
 using cloudscribe.Core.Models;
-using Microsoft.Framework.Logging;
-using Microsoft.Framework.Configuration;
 using Microsoft.AspNet.Identity;
+using Microsoft.Framework.Configuration;
+using Microsoft.Framework.Logging;
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -20,20 +18,23 @@ namespace cloudscribe.Core.Identity
     public sealed class RoleStore<TRole> : IRoleStore<TRole> where TRole : SiteRole
     {
         public RoleStore(
-            ILoggerFactory loggerFactory,
+            //ILoggerFactory loggerFactory,
+            ILogger<RoleStore<TRole>> logger,
             ISiteResolver siteResolver,
             IUserRepository userRepository,
             IConfiguration configuration
             )
         {
-            if (loggerFactory == null) { throw new ArgumentNullException(nameof(loggerFactory)); }
+            if (logger == null) { throw new ArgumentNullException(nameof(logger)); }
             if (siteResolver == null) { throw new ArgumentNullException(nameof(siteResolver)); }
             if (userRepository == null) { throw new ArgumentNullException(nameof(userRepository)); }
             if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
 
             resolver = siteResolver;
-            logFactory = loggerFactory;
-            log = loggerFactory.CreateLogger(this.GetType().FullName);
+            //logFactory = loggerFactory;
+            //log = loggerFactory.CreateLogger(this.GetType().FullName);
+            log = logger;
+
             config = configuration;
             //debugLog = config.UserStoreDebugEnabled();
 
@@ -46,7 +47,7 @@ namespace cloudscribe.Core.Identity
             //if (debugLog) { log.LogInformation("constructor"); }
         }
 
-        private ILoggerFactory logFactory;
+        //private ILoggerFactory logFactory;
         private ILogger log;
         //private bool debugLog = false;
         private IConfiguration config;

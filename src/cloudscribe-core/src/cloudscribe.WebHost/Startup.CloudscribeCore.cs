@@ -91,6 +91,11 @@ namespace cloudscribe.WebHost
                        );
                });
 
+
+            // this is ugly that we have to wireup cookie middleware per site
+            // it will work ok with a reasonable number of sites
+            // but will get worse as the number of sites goes up we end up with too much middleware
+
             bool useMapBranching = true;
 
             try
@@ -396,9 +401,9 @@ namespace cloudscribe.WebHost
 
                 options.Notifications = cookieNotifications;
             },
-            //applicationAuthScheme
+            applicationAuthScheme
             
-            IdentityOptions.ApplicationCookieAuthenticationScheme
+            //IdentityOptions.ApplicationCookieAuthenticationScheme
             );
  
         }

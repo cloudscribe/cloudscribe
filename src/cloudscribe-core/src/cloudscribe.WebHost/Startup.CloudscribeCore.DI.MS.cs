@@ -10,6 +10,7 @@ using System.Collections.Generic;
 //using Microsoft.AspNet.Hosting;
 //using JetBrains.Annotations;
 using Microsoft.AspNet.Http;
+using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Authentication;
 using Microsoft.AspNet.Authentication.Cookies;
@@ -101,6 +102,7 @@ namespace cloudscribe.WebHost
             services.TryAdd(ServiceDescriptor.Scoped<SiteUserManager<SiteUser>, SiteUserManager<SiteUser>>());
             services.TryAdd(ServiceDescriptor.Scoped<SiteRoleManager<SiteRole>, SiteRoleManager<SiteRole>>());
             services.TryAdd(ServiceDescriptor.Scoped<SiteSignInManager<SiteUser>, SiteSignInManager<SiteUser>>());
+            //services.TryAdd(ServiceDescriptor.Scoped<SignInManager<SiteUser>, SignInManager<SiteUser>>());
 
 
 
@@ -110,35 +112,122 @@ namespace cloudscribe.WebHost
 
             //services.AddAuthentication();
 
-           
 
-            services.ConfigureIdentityApplicationCookie(options =>
+
+            services.ConfigureCookieAuthentication(options =>
             {
                 options.AuthenticationScheme = "Application-cloudscribeApp";
                 options.AutomaticAuthentication = true;
                 options.LoginPath = new PathString("/Account/Login");
+                options.CookieName = "Application-cloudscribeApp";
                 options.Notifications = new CookieAuthenticationNotifications
                 {
                     //https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity/SecurityStampValidator.cs
                     OnValidatePrincipal = SecurityStampValidator.ValidatePrincipalAsync
                     
                 };
-            });
+            }
+            , "Application-cloudscribeApp"
+            );
 
-            services.ConfigureIdentityApplicationCookie(options =>
+            // this is ugly and a problem that we have to wire up the cookies for each folder site using DI
+            // and we also have to wire up cookie middleware per site using IApplicationBuilder
+
+            services.ConfigureCookieAuthentication(options =>
             {
                 options.AuthenticationScheme = "Application-junk";
                 options.AutomaticAuthentication = true;
                 options.LoginPath = new PathString("/junk/Account/Login");
+                options.CookieName = "Application-junk";
                 options.Notifications = new CookieAuthenticationNotifications
                 {
                     OnValidatePrincipal = SecurityStampValidator.ValidatePrincipalAsync
                 };
-            });
+            }
+            ,  "Application-junk"
+            );
 
+            services.ConfigureCookieAuthentication(options =>
+            {
+                options.AuthenticationScheme = "Application-hunk";
+                options.AutomaticAuthentication = true;
+                options.LoginPath = new PathString("/hunk/Account/Login");
+                options.CookieName = "Application-hunk";
+                options.Notifications = new CookieAuthenticationNotifications
+                {
+                    OnValidatePrincipal = SecurityStampValidator.ValidatePrincipalAsync
+                };
+            }
+            , "Application-hunk"
+            );
+
+            //https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity/IdentityServiceCollectionExtensions.cs
+            // start ********services.AddIdentity<SiteUser, SiteRole>();
             services.AddIdentity<SiteUser, SiteRole>();
 
-            
+            // Services used by identity
+            //services.AddOptions();
+            //services.AddAuthentication();
+
+            //// Identity services
+            //services.TryAdd(ServiceDescriptor.Transient<IUserValidator<SiteUser>, UserValidator<SiteUser>>());
+            //services.TryAdd(ServiceDescriptor.Transient<IPasswordValidator<SiteUser>, PasswordValidator<SiteUser>>());
+            ////services.TryAdd(ServiceDescriptor.Transient<IPasswordHasher<SiteUser>, PasswordHasher<SiteUser>>());
+            //services.TryAdd(ServiceDescriptor.Transient<ILookupNormalizer, UpperInvariantLookupNormalizer>());
+            //services.TryAdd(ServiceDescriptor.Transient<IRoleValidator<SiteRole>, RoleValidator<SiteRole>>());
+            //// No interface for the error describer so we can add errors without rev'ing the interface
+            //services.TryAdd(ServiceDescriptor.Transient<IdentityErrorDescriber, IdentityErrorDescriber>());
+            //services.TryAdd(ServiceDescriptor.Scoped<ISecurityStampValidator, SecurityStampValidator<SiteUser>>());
+            //services.TryAdd(ServiceDescriptor.Scoped<IUserClaimsPrincipalFactory<TUser>, UserClaimsPrincipalFactory<TUser, TRole>>());
+            //services.TryAdd(ServiceDescriptor.Scoped<UserManager<TUser>, UserManager<TUser>>());
+            //services.TryAdd(ServiceDescriptor.Scoped<SignInManager<TUser>, SignInManager<TUser>>());
+            //services.TryAdd(ServiceDescriptor.Scoped<RoleManager<TRole>, RoleManager<TRole>>());
+
+            ////services.Configure<SharedAuthenticationOptions>(options =>
+            ////{
+            ////    options.SignInScheme = IdentityOptions.ExternalCookieAuthenticationScheme;
+            ////});
+
+            //// Configure all of the cookie middlewares
+            ////services.ConfigureIdentityApplicationCookie(options =>
+            //services.ConfigureCookieAuthentication(options =>
+            //{
+            //    options.AuthenticationScheme = IdentityOptions.ApplicationCookieAuthenticationScheme;
+            //    options.AutomaticAuthentication = true;
+            //    options.LoginPath = new PathString("/Account/Login");
+            //    options.Notifications = new CookieAuthenticationNotifications
+            //    {
+            //        OnValidatePrincipal = SecurityStampValidator.ValidatePrincipalAsync
+            //    };
+            //},
+            //    IdentityOptions.ApplicationCookieAuthenticationScheme
+            //);
+
+            //services.ConfigureCookieAuthentication(options =>
+            //{
+            //    options.AuthenticationScheme = IdentityOptions.ExternalCookieAuthenticationScheme;
+            //    options.CookieName = IdentityOptions.ExternalCookieAuthenticationScheme;
+            //    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+            //}, 
+            //IdentityOptions.ExternalCookieAuthenticationScheme);
+
+            //services.ConfigureCookieAuthentication(options =>
+            //{
+            //    options.AuthenticationScheme = IdentityOptions.TwoFactorRememberMeCookieAuthenticationScheme;
+            //    options.CookieName = IdentityOptions.TwoFactorRememberMeCookieAuthenticationScheme;
+            //}, 
+            //IdentityOptions.TwoFactorRememberMeCookieAuthenticationScheme);
+
+            //services.ConfigureCookieAuthentication(options =>
+            //{
+            //    options.AuthenticationScheme = IdentityOptions.TwoFactorUserIdCookieAuthenticationScheme;
+            //    options.CookieName = IdentityOptions.TwoFactorUserIdCookieAuthenticationScheme;
+            //    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+            //}, 
+            //IdentityOptions.TwoFactorUserIdCookieAuthenticationScheme);
+
+            // end ********services.AddIdentity<SiteUser, SiteRole>();
+
 
 
 

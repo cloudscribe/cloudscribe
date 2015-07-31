@@ -1,4 +1,37 @@
 
+seems like this is what we want to override
+IAuthenticationHandler
+https://github.com/aspnet/HttpAbstractions/blob/dev/src/Microsoft.AspNet.Http.Features/Authentication/IAuthenticationHandler.cs
+public interface IAuthenticationHandler
+{
+	void GetDescriptions(DescribeSchemesContext context);
+
+	Task AuthenticateAsync(AuthenticateContext context);
+
+	Task ChallengeAsync(ChallengeContext context);
+
+	Task SignInAsync(SignInContext context);
+
+	Task SignOutAsync(SignOutContext context);
+}
+
+HttpAuthenticationFeature implements IHttpAuthenticationFeature contains ref to IAuthenticationHandler and ClaimsPrincipal User
+https://github.com/aspnet/HttpAbstractions/blob/dev/src/Microsoft.AspNet.Http/Features/Authentication/HttpAuthenticationFeature.cs
+
+abstract AuthenticationManager
+https://github.com/aspnet/HttpAbstractions/blob/dev/src/Microsoft.AspNet.Http.Abstractions/Authentication/AuthenticationManager.cs
+
+DefaultAuthenticationManager inherits AuthenticationManager
+https://github.com/aspnet/HttpAbstractions/blob/dev/src/Microsoft.AspNet.Http/Authentication/DefaultAuthenticationManager.cs
+private FeatureReference<IHttpAuthenticationFeature> _authentication = FeatureReference<IHttpAuthenticationFeature>.Default;
+takes IFeatureCollection features in its constructor
+private IHttpAuthenticationFeature HttpAuthenticationFeature
+{
+	get { return _authentication.Fetch(_features) ?? _authentication.Update(_features, new HttpAuthenticationFeature()); }
+}
+
+
+
 
 http://bitoftech.net/2015/03/31/asp-net-web-api-claims-authorization-with-asp-net-identity-2-1/
 

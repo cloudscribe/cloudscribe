@@ -2,9 +2,8 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-27
-// Last Modified:		    2015-07-29
+// Last Modified:		    2015-07-31
 // 
-//
 
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Identity;
@@ -26,7 +25,7 @@ namespace cloudscribe.Core.Identity
     public class SiteSignInManager<TUser> : SignInManager<TUser> where TUser : SiteUser
     {
         public SiteSignInManager(
-            UserManager<TUser> userManager, 
+            SiteUserManager<TUser> userManager, 
             IHttpContextAccessor contextAccessor,
             ICookieAuthenticationSchemeSet schemeSet,
             IUserClaimsPrincipalFactory<TUser> claimsFactory,
@@ -48,18 +47,14 @@ namespace cloudscribe.Core.Identity
 
         }
 
-        private UserManager<TUser> UserManager { get; set; }
+        private SiteUserManager<TUser> UserManager { get; set; }
         private HttpContext context;
         private ICookieAuthenticationSchemeSet schemeSet;
 
         //https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity/SignInManager.cs
 
-        //maybe we can override the authenticationscheme per site here
-
-        // 2015-07-27 these are from the latest source code
-        // I think beta5 is not in sync
-        // looks like beta6 came out today so I will upgrade before moving forward
-
+        //here we need to override the authenticationscheme per site 
+        
         public override async Task SignInAsync(TUser user, AuthenticationProperties authenticationProperties, string authenticationMethod = null)
         {
             var userPrincipal = await CreateUserPrincipalAsync(user);

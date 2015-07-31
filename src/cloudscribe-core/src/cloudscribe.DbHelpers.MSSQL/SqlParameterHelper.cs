@@ -55,6 +55,7 @@ namespace cloudscribe.DbHelpers.MSSQL
             int paramCnt)
         {
             log = loggerFactory.CreateLogger(typeof(SqlParameterHelper).FullName);
+            //log = logger;
             Initialize(connectionString, commandText, cmdType, paramCnt);
         }
 
@@ -65,6 +66,7 @@ namespace cloudscribe.DbHelpers.MSSQL
             int paramCnt)
         {
             log = loggerFactory.CreateLogger(typeof(SqlParameterHelper).FullName);
+            //log = logger;
             Initialize(connectionString, commandText, CommandType.StoredProcedure, paramCnt);
         }
 

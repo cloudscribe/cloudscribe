@@ -2,11 +2,12 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-06-27
-// Last Modified:			2015-06-27
+// Last Modified:			2015-07-31
 // 
 
 
 using cloudscribe.Core.Models;
+using cloudscribe.Core.Models.Identity;
 using Microsoft.AspNet.Identity;
 using Microsoft.Framework.OptionsModel;
 using System;
@@ -21,20 +22,67 @@ namespace cloudscribe.Core.Identity
     {
         public SiteUserClaimsPrincipalFactory(
             ISiteRepository siteRepository,
-            UserManager<TUser> userManager,
-            RoleManager<TRole> roleManager, 
+            ICookieAuthenticationSchemeSet schemeSet,
+            SiteUserManager<TUser> userManager,
+            SiteRoleManager<TRole> roleManager, 
             IOptions<IdentityOptions> optionsAccessor) : base(userManager, roleManager, optionsAccessor)
         {
             if (siteRepository == null) { throw new ArgumentNullException(nameof(siteRepository)); }
 
             siteRepo = siteRepository;
+            this.schemeSet = schemeSet;
         }
 
         private ISiteRepository siteRepo;
+        private ICookieAuthenticationSchemeSet schemeSet;
 
         public override async Task<ClaimsPrincipal> CreateAsync(TUser user)
         {
-            ClaimsPrincipal principal = await base.CreateAsync(user);
+            // this one was using IdentityOptions.ApplicationCookieAuthenticationScheme
+            //ClaimsPrincipal principal = await base.CreateAsync(user);
+
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+            var userId = await UserManager.GetUserIdAsync(user);
+            var userName = await UserManager.GetUserNameAsync(user);
+            var id = new ClaimsIdentity(
+
+                schemeSet.ApplicationScheme,
+                Options.ClaimsIdentity.UserNameClaimType,
+                Options.ClaimsIdentity.RoleClaimType
+                );
+            id.AddClaim(new Claim(Options.ClaimsIdentity.UserIdClaimType, userId));
+            id.AddClaim(new Claim(Options.ClaimsIdentity.UserNameClaimType, userName));
+            if (UserManager.SupportsUserSecurityStamp)
+            {
+                id.AddClaim(new Claim(Options.ClaimsIdentity.SecurityStampClaimType,
+                    await UserManager.GetSecurityStampAsync(user)));
+            }
+            if (UserManager.SupportsUserRole)
+            {
+                var roles = await UserManager.GetRolesAsync(user);
+                foreach (var roleName in roles)
+                {
+                    id.AddClaim(new Claim(Options.ClaimsIdentity.RoleClaimType, roleName));
+                    if (RoleManager.SupportsRoleClaims)
+                    {
+                        var role = await RoleManager.FindByNameAsync(roleName);
+                        if (role != null)
+                        {
+                            id.AddClaims(await RoleManager.GetClaimsAsync(role));
+                        }
+                    }
+                }
+            }
+            if (UserManager.SupportsUserClaim)
+            {
+                id.AddClaims(await UserManager.GetClaimsAsync(user));
+            }
+
+            ClaimsPrincipal principal = new ClaimsPrincipal(id);
+
 
             if (principal.Identity is ClaimsIdentity)
             {

@@ -23,14 +23,15 @@ namespace cloudscribe.Core.Repositories.MSSQL
     {
         public SiteRepository(
             IConfiguration configuration,
-            ILoggerFactory loggerFactory)
+            ILoggerFactory loggerFactory
+            )
         {
             if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
             if (loggerFactory == null) { throw new ArgumentNullException(nameof(loggerFactory)); }
 
             logFactory = loggerFactory;
             log = loggerFactory.CreateLogger(typeof(SiteRepository).FullName);
-
+           
             readConnectionString = configuration.GetMSSQLReadConnectionString();
             writeConnectionString = configuration.GetMSSQLWriteConnectionString();
 
