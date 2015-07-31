@@ -167,6 +167,7 @@ namespace cloudscribe.WebHost
 
             // Services used by identity
             //services.AddOptions();
+            //https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication/AuthenticationServiceCollectionExtensions.cs
             //services.AddAuthentication();
 
             //// Identity services

@@ -1,4 +1,7 @@
 
+MS does not show much interest in helping us with multi tenancy
+https://github.com/aspnet/Security/issues/35
+
 seems like this is what we want to override
 IAuthenticationHandler
 https://github.com/aspnet/HttpAbstractions/blob/dev/src/Microsoft.AspNet.Http.Features/Authentication/IAuthenticationHandler.cs
@@ -15,6 +18,11 @@ public interface IAuthenticationHandler
 	Task SignOutAsync(SignOutContext context);
 }
 
+public abstract class AuthenticationHandler : IAuthenticationHandler
+https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication/AuthenticationHandler.cs
+
+https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication/AuthenticationHandler%601.cs
+
 HttpAuthenticationFeature implements IHttpAuthenticationFeature contains ref to IAuthenticationHandler and ClaimsPrincipal User
 https://github.com/aspnet/HttpAbstractions/blob/dev/src/Microsoft.AspNet.Http/Features/Authentication/HttpAuthenticationFeature.cs
 
@@ -29,6 +37,27 @@ private IHttpAuthenticationFeature HttpAuthenticationFeature
 {
 	get { return _authentication.Fetch(_features) ?? _authentication.Update(_features, new HttpAuthenticationFeature()); }
 }
+
+this is internal so we can't inherit from it and it depends on wired up cookie options
+CookieAuthenticationHandler 
+https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.Cookies/CookieAuthenticationHandler.cs
+
+CookieAuthenticationMiddleware is public so we can perhaps inherit from it and override things
+public class CookieAuthenticationMiddleware : AuthenticationMiddleware<CookieAuthenticationOptions>
+https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.Cookies/CookieAuthenticationMiddleware.cs
+
+it creates the CookieAuthenticationHandler
+protected override AuthenticationHandler<CookieAuthenticationOptions> CreateHandler()
+{
+	return new CookieAuthenticationHandler();
+}
+
+which in turn uses the wired up cookie options
+by implementing ourt own cookie middleware we could wire up our own handler that inherits from AuthenticationHandler<CookieAuthenticationOptions>
+internally we could ignore the options or use them depending on context
+
+public abstract class AuthenticationMiddleware<TOptions> where TOptions : AuthenticationOptions, new()
+https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication/AuthenticationMiddleware.cs
 
 
 
