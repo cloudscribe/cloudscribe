@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-06-20
-// Last Modified:			2015-07-28
+// Last Modified:			2015-07-31
 // 
 
 using System;
@@ -322,7 +322,7 @@ namespace cloudscribe.WebHost
                 externalAuthScheme = "External" + cookieAuthSchemeSuffix;
             }
 
-            siteApp.UseCookieAuthentication(options =>
+            siteApp.UseMultiTenantCookieAuthentication(options =>
             {
                
                 options.AuthenticationScheme = externalAuthScheme;
@@ -344,7 +344,7 @@ namespace cloudscribe.WebHost
                 twoFactorRememberMeAuthScheme = "TwoFactorRememberMe" + cookieAuthSchemeSuffix;
             }
 
-            siteApp.UseCookieAuthentication(options =>
+            siteApp.UseMultiTenantCookieAuthentication(options =>
             {
                 options.AuthenticationScheme = twoFactorRememberMeAuthScheme;
 
@@ -366,7 +366,7 @@ namespace cloudscribe.WebHost
                 twoFactorUserIdAuthScheme = "TwoFactorUserId" + cookieAuthSchemeSuffix;
             }
 
-            siteApp.UseCookieAuthentication(options =>
+            siteApp.UseMultiTenantCookieAuthentication(options =>
             {
                 options.AuthenticationScheme = twoFactorUserIdAuthScheme;
 
@@ -387,7 +387,7 @@ namespace cloudscribe.WebHost
                 applicationAuthScheme = "Application" + cookieAuthSchemeSuffix;
             }
 
-            siteApp.UseCookieAuthentication(options =>
+            siteApp.UseMultiTenantCookieAuthentication(options =>
             {
                 // changing this breaks login causes exceptions
                 // trying to overcome it by implementing a custom SignInManager

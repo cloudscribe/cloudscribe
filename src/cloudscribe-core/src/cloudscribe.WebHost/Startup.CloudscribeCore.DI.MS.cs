@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-06-20
-// Last Modified:			2015-07-24
+// Last Modified:			2015-07-31
 // 
 
 using System;
@@ -163,7 +163,7 @@ namespace cloudscribe.WebHost
 
             //https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity/IdentityServiceCollectionExtensions.cs
             // start ********services.AddIdentity<SiteUser, SiteRole>();
-            services.AddIdentity<SiteUser, SiteRole>();
+            services.AddCloudscribeIdentity<SiteUser, SiteRole>();
 
             // Services used by identity
             //services.AddOptions();
@@ -276,6 +276,89 @@ namespace cloudscribe.WebHost
             });
 
             return services;
+        }
+
+
+        public static IdentityBuilder AddCloudscribeIdentity<TUser, TRole>(
+            this IServiceCollection services)
+            where TUser : class
+            where TRole : class
+        {
+            // Services used by identity
+            services.AddOptions();
+            services.AddAuthentication();
+
+            // Identity services
+            services.TryAdd(ServiceDescriptor.Transient<IUserValidator<TUser>, UserValidator<TUser>>());
+            services.TryAdd(ServiceDescriptor.Transient<IPasswordValidator<TUser>, PasswordValidator<TUser>>());
+            services.TryAdd(ServiceDescriptor.Transient<IPasswordHasher<TUser>, PasswordHasher<TUser>>());
+            services.TryAdd(ServiceDescriptor.Transient<ILookupNormalizer, UpperInvariantLookupNormalizer>());
+            services.TryAdd(ServiceDescriptor.Transient<IRoleValidator<TRole>, RoleValidator<TRole>>());
+            // No interface for the error describer so we can add errors without rev'ing the interface
+            services.TryAdd(ServiceDescriptor.Transient<IdentityErrorDescriber, IdentityErrorDescriber>());
+            services.TryAdd(ServiceDescriptor.Scoped<ISecurityStampValidator, SecurityStampValidator<TUser>>());
+            services.TryAdd(ServiceDescriptor.Scoped<IUserClaimsPrincipalFactory<TUser>, UserClaimsPrincipalFactory<TUser, TRole>>());
+            services.TryAdd(ServiceDescriptor.Scoped<UserManager<TUser>, UserManager<TUser>>());
+            services.TryAdd(ServiceDescriptor.Scoped<SignInManager<TUser>, SignInManager<TUser>>());
+            services.TryAdd(ServiceDescriptor.Scoped<RoleManager<TRole>, RoleManager<TRole>>());
+
+            // this doesn't build must be out of sync with beta6
+            //services.Configure<SharedAuthenticationOptions>(options =>
+            //{
+            //    options.SignInScheme = IdentityOptions.ExternalCookieAuthenticationScheme;
+            //});
+
+            // Configure all of the cookie middlewares
+            //services.ConfigureIdentityApplicationCookie(options =>
+            //{
+            //    options.AuthenticationScheme = IdentityOptions.ApplicationCookieAuthenticationScheme;
+            //    options.AutomaticAuthentication = true;
+            //    options.LoginPath = new PathString("/Account/Login");
+            //    options.Notifications = new CookieAuthenticationNotifications
+            //    {
+            //        OnValidatePrincipal = SecurityStampValidator.ValidatePrincipalAsync
+            //    };
+            //});
+
+
+            services.ConfigureCookieAuthentication(options =>
+            {
+                options.AuthenticationScheme = IdentityOptions.ApplicationCookieAuthenticationScheme;
+                options.AutomaticAuthentication = true;
+                options.LoginPath = new PathString("/Account/Login");
+                options.Notifications = new CookieAuthenticationNotifications
+                {
+                    OnValidatePrincipal = SecurityStampValidator.ValidatePrincipalAsync
+                };
+            }
+            , IdentityOptions.ApplicationCookieAuthenticationScheme
+            );
+
+            services.ConfigureCookieAuthentication(options =>
+            {
+                options.AuthenticationScheme = IdentityOptions.ExternalCookieAuthenticationScheme;
+                options.CookieName = IdentityOptions.ExternalCookieAuthenticationScheme;
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+            }
+            , IdentityOptions.ExternalCookieAuthenticationScheme);
+
+            services.ConfigureCookieAuthentication(options =>
+            {
+                options.AuthenticationScheme = IdentityOptions.TwoFactorRememberMeCookieAuthenticationScheme;
+                options.CookieName = IdentityOptions.TwoFactorRememberMeCookieAuthenticationScheme;
+            }
+            , IdentityOptions.TwoFactorRememberMeCookieAuthenticationScheme);
+
+            services.ConfigureCookieAuthentication(options =>
+            {
+                options.AuthenticationScheme = IdentityOptions.TwoFactorUserIdCookieAuthenticationScheme;
+                options.CookieName = IdentityOptions.TwoFactorUserIdCookieAuthenticationScheme;
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+            }
+            , IdentityOptions.TwoFactorUserIdCookieAuthenticationScheme);
+
+
+            return new IdentityBuilder(typeof(TUser), typeof(TRole), services);
         }
 
     }
