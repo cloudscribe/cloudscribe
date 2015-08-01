@@ -67,65 +67,66 @@ namespace cloudscribe.WebHost
             bool addFolderRoutesToMainApp = useFolderSites;
             ISiteRepository siteRepo = app.ApplicationServices.GetService<ISiteRepository>();
 
-            
+
             //// Add cookie-based authentication to the request pipeline.
             ////https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity/BuilderExtensions.cs
             //app.UseIdentity();
+            app.UseCloudscribeIdentity();
 
-            app.UseWhen(IsNotFolderMatch, //request does not match any folder tenant so it is root site
-               branchApp =>
-               {
-                   string loginPath = "/Account/Login";
-                   string logoutPath = "/Account/LogOff";
-                   string cookieAuthSchemeSuffix = "-cloudscribeApp";
-                   string cookiePath = string.Empty;
-                   string cookieNamePrefix = "cloudscribe";
+            //app.UseWhen(IsNotFolderMatch, //request does not match any folder tenant so it is root site
+            //   branchApp =>
+            //   {
+            //       string loginPath = "/Account/Login";
+            //       string logoutPath = "/Account/LogOff";
+            //       string cookieAuthSchemeSuffix = "-cloudscribeApp";
+            //       string cookiePath = string.Empty;
+            //       string cookieNamePrefix = "cloudscribe";
                    
-                   ConfigureAppCookieOptions(
-                       branchApp,
-                       loginPath,
-                       logoutPath,
-                       cookieAuthSchemeSuffix,
-                       cookieNamePrefix,
-                       cookiePath
-                       );
-               });
+            //       ConfigureAppCookieOptions(
+            //           branchApp,
+            //           loginPath,
+            //           logoutPath,
+            //           cookieAuthSchemeSuffix,
+            //           cookieNamePrefix,
+            //           cookiePath
+            //           );
+            //   });
 
 
-            // this is ugly that we have to wireup cookie middleware per site
-            // it will work ok with a reasonable number of sites
-            // but will get worse as the number of sites goes up we end up with too much middleware
+            //// this is ugly that we have to wireup cookie middleware per site
+            //// it will work ok with a reasonable number of sites
+            //// but will get worse as the number of sites goes up we end up with too much middleware
 
-            bool useMapBranching = true;
+            //bool useMapBranching = true;
 
-            try
-            {
-                // errors expected here if db has not yet been initilaized and populated
-                if (useFolderSites)
-                {
+            //try
+            //{
+            //    // errors expected here if db has not yet been initilaized and populated
+            //    if (useFolderSites)
+            //    {
 
-                    if (useMapBranching)
-                    {
-                        // this one uses app.Map(/folderName
-                        addFolderRoutesToMainApp = false; // in this case we have to add folder routes to the branch not the main app
-                        app.UseCloudscribeCoreFolderTenants(config, siteRepo);
-                    }
-                    else
-                    {
-                        // this one uses app.UseWhen(IsFolderMatch
-                        app.UseCloudscribeCoreFolderTenantsv2(config, siteRepo);
-                    }
+            //        if (useMapBranching)
+            //        {
+            //            // this one uses app.Map(/folderName
+            //            addFolderRoutesToMainApp = false; // in this case we have to add folder routes to the branch not the main app
+            //            app.UseCloudscribeCoreFolderTenants(config, siteRepo);
+            //        }
+            //        else
+            //        {
+            //            // this one uses app.UseWhen(IsFolderMatch
+            //            app.UseCloudscribeCoreFolderTenantsv2(config, siteRepo);
+            //        }
 
 
 
-                }
-                else
-                {
-                    app.UseCloudscribeCoreHostTenants(config, siteRepo);
+            //    }
+            //    else
+            //    {
+            //        app.UseCloudscribeCoreHostTenants(config, siteRepo);
 
-                }
-            }
-            catch { }
+            //    }
+            //}
+            //catch { }
             
 
             // Add MVC to the request pipeline.

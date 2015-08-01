@@ -2,13 +2,15 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-31
-// Last Modified:			2015-07-31
+// Last Modified:			2015-08-01
 // 
 
 
 using Microsoft.AspNet.Builder;
+using Microsoft.AspNet.Identity;
 using Microsoft.Framework.OptionsModel;
 using Microsoft.AspNet.Authentication.Cookies;
+using Microsoft.Framework.DependencyInjection;
 using Microsoft.AspNet.Authentication.Cookies.Infrastructure;
 using System;
 using System.Collections.Generic;
@@ -31,11 +33,51 @@ namespace cloudscribe.Core.Identity
             Action<CookieAuthenticationOptions> configureOptions = null, 
             string optionsName = "")
         {
+            
+
             return app.UseMiddleware<MultiTenantCookieAuthenticationMiddleware>(
                 new ConfigureOptions<CookieAuthenticationOptions>(configureOptions ?? (o => { }))
                 {
                     Name = optionsName
+                    
                 });
+        }
+
+        public static IApplicationBuilder UseCloudscribeIdentity(this IApplicationBuilder app)
+        {
+            if (app == null)
+            {
+                throw new ArgumentNullException(nameof(app));
+            }
+
+            MultiTenantCookieAuthenticationNotifications cookieNotifications
+                = app.ApplicationServices.GetService<MultiTenantCookieAuthenticationNotifications>();
+
+            app.UseMultiTenantCookieAuthentication(options =>
+            {
+                options.Notifications = cookieNotifications;
+            }
+            , IdentityOptions.ExternalCookieAuthenticationScheme);
+
+            app.UseMultiTenantCookieAuthentication(options =>
+            {
+                options.Notifications = cookieNotifications;
+            }
+            , IdentityOptions.TwoFactorRememberMeCookieAuthenticationScheme);
+
+            app.UseMultiTenantCookieAuthentication(options =>
+            {
+                options.Notifications = cookieNotifications;
+            }
+            , IdentityOptions.TwoFactorUserIdCookieAuthenticationScheme);
+
+            app.UseMultiTenantCookieAuthentication(options =>
+            {
+                options.Notifications = cookieNotifications;
+            }
+            , IdentityOptions.ApplicationCookieAuthenticationScheme);
+
+            return app;
         }
 
     }

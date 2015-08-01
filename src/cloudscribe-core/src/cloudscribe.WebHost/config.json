@@ -2,7 +2,12 @@
   "AppSettings": {
     "SiteTitle": "cloudscribe.WebHost",
     "MSSQLConnectionString": "server=yourservername;UID=yourdatabaseusername;PWD=yourdatabaseuserpassword;database=yourdatabasename",
-    "MSSQLOwnerPrefix" : "[dbo]."
+    "MSSQLOwnerPrefix": "[dbo]."
+  },
+  "MultiTenantOptions": {
+    "Mode": "FolderName",
+    "UseRelatedSitesMode": "false",
+    "RelatedSiteId": "1"
   },
   "Data": {
     "DefaultConnection": {

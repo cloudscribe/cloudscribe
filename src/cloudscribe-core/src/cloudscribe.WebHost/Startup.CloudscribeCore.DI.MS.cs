@@ -58,6 +58,8 @@ namespace cloudscribe.WebHost
 
             services.AddInstance<IConfiguration>(configuration);
 
+            services.Configure<MultiTenantOptions>(configuration.GetConfigurationSection("MultiTenantOptions"));
+
 
             //*** Database platform ****************************************************************
             // here is where you could change to use one of the other db platforms
@@ -114,52 +116,52 @@ namespace cloudscribe.WebHost
 
 
 
-            services.ConfigureCookieAuthentication(options =>
-            {
-                options.AuthenticationScheme = "Application-cloudscribeApp";
-                options.AutomaticAuthentication = true;
-                options.LoginPath = new PathString("/Account/Login");
-                options.CookieName = "Application-cloudscribeApp";
-                options.Notifications = new CookieAuthenticationNotifications
-                {
-                    //https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity/SecurityStampValidator.cs
-                    OnValidatePrincipal = SecurityStampValidator.ValidatePrincipalAsync
+            //services.ConfigureCookieAuthentication(options =>
+            //{
+            //    options.AuthenticationScheme = "Application-cloudscribeApp";
+            //    options.AutomaticAuthentication = true;
+            //    options.LoginPath = new PathString("/Account/Login");
+            //    options.CookieName = "Application-cloudscribeApp";
+            //    options.Notifications = new CookieAuthenticationNotifications
+            //    {
+            //        //https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity/SecurityStampValidator.cs
+            //        OnValidatePrincipal = SecurityStampValidator.ValidatePrincipalAsync
                     
-                };
-            }
-            , "Application-cloudscribeApp"
-            );
+            //    };
+            //}
+            //, "Application-cloudscribeApp"
+            //);
 
-            // this is ugly and a problem that we have to wire up the cookies for each folder site using DI
-            // and we also have to wire up cookie middleware per site using IApplicationBuilder
+            //// this is ugly and a problem that we have to wire up the cookies for each folder site using DI
+            //// and we also have to wire up cookie middleware per site using IApplicationBuilder
 
-            services.ConfigureCookieAuthentication(options =>
-            {
-                options.AuthenticationScheme = "Application-junk";
-                options.AutomaticAuthentication = true;
-                options.LoginPath = new PathString("/junk/Account/Login");
-                options.CookieName = "Application-junk";
-                options.Notifications = new CookieAuthenticationNotifications
-                {
-                    OnValidatePrincipal = SecurityStampValidator.ValidatePrincipalAsync
-                };
-            }
-            ,  "Application-junk"
-            );
+            //services.ConfigureCookieAuthentication(options =>
+            //{
+            //    options.AuthenticationScheme = "Application-junk";
+            //    options.AutomaticAuthentication = true;
+            //    options.LoginPath = new PathString("/junk/Account/Login");
+            //    options.CookieName = "Application-junk";
+            //    options.Notifications = new CookieAuthenticationNotifications
+            //    {
+            //        OnValidatePrincipal = SecurityStampValidator.ValidatePrincipalAsync
+            //    };
+            //}
+            //,  "Application-junk"
+            //);
 
-            services.ConfigureCookieAuthentication(options =>
-            {
-                options.AuthenticationScheme = "Application-hunk";
-                options.AutomaticAuthentication = true;
-                options.LoginPath = new PathString("/hunk/Account/Login");
-                options.CookieName = "Application-hunk";
-                options.Notifications = new CookieAuthenticationNotifications
-                {
-                    OnValidatePrincipal = SecurityStampValidator.ValidatePrincipalAsync
-                };
-            }
-            , "Application-hunk"
-            );
+            //services.ConfigureCookieAuthentication(options =>
+            //{
+            //    options.AuthenticationScheme = "Application-hunk";
+            //    options.AutomaticAuthentication = true;
+            //    options.LoginPath = new PathString("/hunk/Account/Login");
+            //    options.CookieName = "Application-hunk";
+            //    options.Notifications = new CookieAuthenticationNotifications
+            //    {
+            //        OnValidatePrincipal = SecurityStampValidator.ValidatePrincipalAsync
+            //    };
+            //}
+            //, "Application-hunk"
+            //);
 
             //https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity/IdentityServiceCollectionExtensions.cs
             // start ********services.AddIdentity<SiteUser, SiteRole>();
@@ -232,10 +234,11 @@ namespace cloudscribe.WebHost
 
 
 
-            //services.TryAdd(ServiceDescriptor.Scoped<ICookieAuthenticationSchemeSet, DefaultCookieAuthenticationSchemeSet>());
-            services.TryAdd(ServiceDescriptor.Scoped<ICookieAuthenticationSchemeSet, FolderTenantCookieAuthSchemeResolver>());
+            services.TryAdd(ServiceDescriptor.Scoped<ICookieAuthenticationSchemeSet, DefaultCookieAuthenticationSchemeSet>());
+            //services.TryAdd(ServiceDescriptor.Scoped<ICookieAuthenticationSchemeSet, FolderTenantCookieAuthSchemeResolver>());
 
 
+            services.TryAdd(ServiceDescriptor.Scoped<MultiTenantCookieOptionsResolver, MultiTenantCookieOptionsResolver>());
             services.TryAdd(ServiceDescriptor.Scoped<MultiTenantAuthCookieValidator, MultiTenantAuthCookieValidator>());
             services.TryAdd(ServiceDescriptor.Scoped<MultiTenantCookieAuthenticationNotifications, MultiTenantCookieAuthenticationNotifications>());
 
@@ -324,6 +327,7 @@ namespace cloudscribe.WebHost
             services.ConfigureCookieAuthentication(options =>
             {
                 options.AuthenticationScheme = IdentityOptions.ApplicationCookieAuthenticationScheme;
+                options.CookieName = IdentityOptions.ApplicationCookieAuthenticationScheme;
                 options.AutomaticAuthentication = true;
                 options.LoginPath = new PathString("/Account/Login");
                 options.Notifications = new CookieAuthenticationNotifications

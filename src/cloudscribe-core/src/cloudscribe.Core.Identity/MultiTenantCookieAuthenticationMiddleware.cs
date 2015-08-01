@@ -20,7 +20,10 @@ using System;
 
 namespace cloudscribe.Core.Identity
 {
+    // this implementation is based on the file:
     //https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.Cookies/CookieAuthenticationMiddleware.cs
+    // as such we need to keep an eye on that file for any changes that we may need to sync here
+    // any code we change from the default code we should comment out the default code so that we can still compare it to the current version of the file
 
     //https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication/AuthenticationMiddleware.cs
 
@@ -33,21 +36,34 @@ namespace cloudscribe.Core.Identity
             ILoggerFactory loggerFactory,
             IUrlEncoder urlEncoder,
             IOptions<CookieAuthenticationOptions> options,
-            ConfigureOptions<CookieAuthenticationOptions> configureOptions)
+            ConfigureOptions<CookieAuthenticationOptions> configureOptions,
+            MultiTenantCookieOptionsResolver tenant
+            )
             : base(next, options, loggerFactory, urlEncoder, configureOptions)
         {
+            this.dataProtectionProvider = dataProtectionProvider;
+            tenantResolver = tenant;
+
             if (Options.Notifications == null)
             {
                 Options.Notifications = new CookieAuthenticationNotifications();
             }
-            if (String.IsNullOrEmpty(Options.CookieName))
-            {
-                Options.CookieName = CookieAuthenticationDefaults.CookiePrefix + Options.AuthenticationScheme;
-            }
+
+            // commented out we are specifying a cookie name so this would not be hit anyway
+            //if (String.IsNullOrEmpty(Options.CookieName))
+            //{
+            //    Options.CookieName = CookieAuthenticationDefaults.CookiePrefix + Options.AuthenticationScheme;
+            //}
+
             if (Options.TicketDataFormat == null)
             {
                 var dataProtector = dataProtectionProvider.CreateProtector(
                     typeof(CookieAuthenticationMiddleware).FullName, Options.AuthenticationScheme, "v2");
+
+                //var dataProtector = dataProtectionProvider.CreateProtector(
+                //    typeof(CookieAuthenticationMiddleware).FullName, tenant.ResolveAuthScheme(Options.AuthenticationScheme), "v2");
+
+
                 Options.TicketDataFormat = new TicketDataFormat(dataProtector);
             }
             if (Options.CookieManager == null)
@@ -56,9 +72,15 @@ namespace cloudscribe.Core.Identity
             }
         }
 
+        private IDataProtectionProvider dataProtectionProvider;
+        private MultiTenantCookieOptionsResolver tenantResolver = null;
+
         protected override AuthenticationHandler<CookieAuthenticationOptions> CreateHandler()
         {
-            return new MultiTenantCookieAuthenticationHandler();
+            MultiTenantCookieAuthenticationHandler middleware = new MultiTenantCookieAuthenticationHandler(dataProtectionProvider, tenantResolver);
+            
+
+            return middleware;
         }
     }
 }
