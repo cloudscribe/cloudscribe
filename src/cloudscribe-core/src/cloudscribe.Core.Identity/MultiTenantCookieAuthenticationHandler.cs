@@ -76,6 +76,7 @@ namespace cloudscribe.Core.Identity
         private async Task<AuthenticationTicket> ReadCookieTicket()
         {
             //var cookie = Options.CookieManager.GetRequestCookie(Context, Options.CookieName);
+            tenantResolver.Reset(); 
             var cookie = Options.CookieManager.GetRequestCookie(Context, tenantResolver.ResolveCookieName(Options.CookieName));
             if (string.IsNullOrEmpty(cookie))
             {
@@ -167,6 +168,7 @@ namespace cloudscribe.Core.Identity
                 }
 
                 //return new AuthenticationTicket(context.Principal, context.Properties, Options.AuthenticationScheme);
+                tenantResolver.Reset();
                 return new AuthenticationTicket(context.Principal, context.Properties, tenantResolver.ResolveAuthScheme(Options.AuthenticationScheme));
             }
             catch (Exception exception)
@@ -226,6 +228,8 @@ namespace cloudscribe.Core.Identity
                     ticket.Properties.ExpiresUtc = _renewExpiresUtc;
                 }
 
+                tenantResolver.Reset();
+
                 if (Options.SessionStore != null && _sessionKey != null)
                 {
                     await Options.SessionStore.RenewAsync(_sessionKey, ticket);
@@ -234,7 +238,7 @@ namespace cloudscribe.Core.Identity
                     //    new ClaimsIdentity(
                     //        new[] { new Claim(SessionIdClaim, _sessionKey, ClaimValueTypes.String, Options.ClaimsIssuer) },
                     //        Options.AuthenticationScheme));
-
+                    
                     var principal = new ClaimsPrincipal(
                         new ClaimsIdentity(
                             new[] { new Claim(SessionIdClaim, _sessionKey, ClaimValueTypes.String, Options.ClaimsIssuer) },
@@ -285,6 +289,8 @@ namespace cloudscribe.Core.Identity
             var ticket = await EnsureCookieTicket();
             try
             {
+                tenantResolver.Reset();
+
                 var cookieOptions = BuildCookieOptions();
 
                 //var signInContext = new CookieResponseSignInContext(
@@ -397,6 +403,8 @@ namespace cloudscribe.Core.Identity
             var ticket = await EnsureCookieTicket();
             try
             {
+                tenantResolver.Reset();
+
                 var cookieOptions = BuildCookieOptions();
                 if (Options.SessionStore != null && _sessionKey != null)
                 {
@@ -448,6 +456,7 @@ namespace cloudscribe.Core.Identity
             {
                 var query = Request.Query;
                 //var redirectUri = query.Get(Options.ReturnUrlParameter);
+                tenantResolver.Reset();
                 var redirectUri = query.Get(tenantResolver.ResolveReturnUrlParameter(Options.ReturnUrlParameter));
 
                 if (!string.IsNullOrEmpty(redirectUri)
@@ -522,6 +531,7 @@ namespace cloudscribe.Core.Identity
                 }
 
                 //var loginUri = Options.LoginPath + QueryString.Create(Options.ReturnUrlParameter, redirectUri);
+                tenantResolver.Reset();
                 var loginUri = Options.LoginPath + QueryString.Create(tenantResolver.ResolveReturnUrlParameter(Options.ReturnUrlParameter), redirectUri);
 
                 var redirectContext = new CookieApplyRedirectContext(Context, Options, BuildRedirectUri(loginUri));

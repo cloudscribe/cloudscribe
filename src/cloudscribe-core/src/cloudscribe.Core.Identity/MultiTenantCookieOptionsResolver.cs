@@ -32,9 +32,15 @@ namespace cloudscribe.Core.Identity
         {
             get
             {
+                //return siteResolver.Resolve();
                 if(site == null) { site = siteResolver.Resolve(); }
                 return site;
             }
+        }
+
+        public void Reset()
+        {
+            site = null;
         }
 
         public string ResolveCookieName(string suppliedCookieName)
