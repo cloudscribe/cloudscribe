@@ -17,11 +17,11 @@ namespace cloudscribe.Core.Identity
     {
         public MultiTenantCookieOptionsResolver(
             ISiteResolver siteResolver,
-            IOptions<MultiTenantOptions> multiTenantOptions)
+            MultiTenantOptions multiTenantOptions)
         {
 
             this.siteResolver = siteResolver;
-            this.multiTenantOptions = multiTenantOptions.Options;
+            this.multiTenantOptions = multiTenantOptions;
 
         }
 
@@ -38,6 +38,10 @@ namespace cloudscribe.Core.Identity
             }
         }
 
+        /// <summary>
+        /// since this object is kept around inside MultiTenantCookieAuthenticationHandler
+        /// we need a way to reset so that the sitesettings from previous request is cleared
+        /// </summary>
         public void Reset()
         {
             site = null;
@@ -123,8 +127,7 @@ namespace cloudscribe.Core.Identity
 
             return suppliedReturnUrlParameter;
         }
-
-        //public ISecureDataFormat<AuthenticationTicket> TicketDataFormat { get; set; }
+  
 
     }
 }

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-31
-// Last Modified:			2015-07-31
+// Last Modified:			2015-08-01
 // 
 
 
@@ -16,7 +16,7 @@ using Microsoft.AspNet.DataProtection;
 using Microsoft.Framework.Logging;
 using Microsoft.Framework.OptionsModel;
 using Microsoft.Framework.WebEncoders;
-using System;
+
 
 namespace cloudscribe.Core.Identity
 {
@@ -37,12 +37,12 @@ namespace cloudscribe.Core.Identity
             IUrlEncoder urlEncoder,
             IOptions<CookieAuthenticationOptions> options,
             ConfigureOptions<CookieAuthenticationOptions> configureOptions,
-            MultiTenantCookieOptionsResolver tenant
+            MultiTenantCookieOptionsResolverFactory tenantResolverFactory
             )
             : base(next, options, loggerFactory, urlEncoder, configureOptions)
         {
             this.dataProtectionProvider = dataProtectionProvider;
-            tenantResolver = tenant;
+            this.tenantResolverFactory = tenantResolverFactory;
 
             if (Options.Notifications == null)
             {
@@ -60,10 +60,6 @@ namespace cloudscribe.Core.Identity
                 var dataProtector = dataProtectionProvider.CreateProtector(
                     typeof(CookieAuthenticationMiddleware).FullName, Options.AuthenticationScheme, "v2");
 
-                //var dataProtector = dataProtectionProvider.CreateProtector(
-                //    typeof(CookieAuthenticationMiddleware).FullName, tenant.ResolveAuthScheme(Options.AuthenticationScheme), "v2");
-
-
                 Options.TicketDataFormat = new TicketDataFormat(dataProtector);
             }
             if (Options.CookieManager == null)
@@ -73,14 +69,12 @@ namespace cloudscribe.Core.Identity
         }
 
         private IDataProtectionProvider dataProtectionProvider;
-        private MultiTenantCookieOptionsResolver tenantResolver = null;
+        private MultiTenantCookieOptionsResolverFactory tenantResolverFactory = null;
 
         protected override AuthenticationHandler<CookieAuthenticationOptions> CreateHandler()
         {
-            MultiTenantCookieAuthenticationHandler middleware = new MultiTenantCookieAuthenticationHandler(dataProtectionProvider, tenantResolver);
+            return new MultiTenantCookieAuthenticationHandler(dataProtectionProvider, tenantResolverFactory);
             
-
-            return middleware;
         }
     }
 }

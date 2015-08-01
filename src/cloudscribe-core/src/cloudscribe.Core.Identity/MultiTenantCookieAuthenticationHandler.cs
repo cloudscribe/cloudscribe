@@ -46,10 +46,10 @@ namespace cloudscribe.Core.Identity
 
         public MultiTenantCookieAuthenticationHandler(
             IDataProtectionProvider dataProtectionProvider,
-            MultiTenantCookieOptionsResolver tenantResolver) :base()
+            MultiTenantCookieOptionsResolverFactory tenantResolverFactory) :base()
         {
             this.dataProtectionProvider = dataProtectionProvider;
-            this.tenantResolver = tenantResolver;
+            this.tenantResolverFactory = tenantResolverFactory;
         }
 
         private Task<AuthenticationTicket> EnsureCookieTicket()
@@ -62,10 +62,10 @@ namespace cloudscribe.Core.Identity
             return _cookieTicketTask;
         }
 
-        private MultiTenantCookieOptionsResolver tenantResolver;
+        private MultiTenantCookieOptionsResolverFactory tenantResolverFactory;
         private IDataProtectionProvider dataProtectionProvider;
 
-        private ISecureDataFormat<AuthenticationTicket> GetTicketDataFormat()
+        private ISecureDataFormat<AuthenticationTicket> GetTicketDataFormat(MultiTenantCookieOptionsResolver tenantResolver)
         {
             var dataProtector = dataProtectionProvider.CreateProtector(
                 typeof(CookieAuthenticationMiddleware).FullName, tenantResolver.ResolveAuthScheme(Options.AuthenticationScheme), "v2");
@@ -76,7 +76,7 @@ namespace cloudscribe.Core.Identity
         private async Task<AuthenticationTicket> ReadCookieTicket()
         {
             //var cookie = Options.CookieManager.GetRequestCookie(Context, Options.CookieName);
-            tenantResolver.Reset(); 
+            var tenantResolver = tenantResolverFactory.GetResolver();
             var cookie = Options.CookieManager.GetRequestCookie(Context, tenantResolver.ResolveCookieName(Options.CookieName));
             if (string.IsNullOrEmpty(cookie))
             {
@@ -84,7 +84,7 @@ namespace cloudscribe.Core.Identity
             }
 
             //var ticket = Options.TicketDataFormat.Unprotect(cookie);
-            var ticketFormat = GetTicketDataFormat();
+            var ticketFormat = GetTicketDataFormat(tenantResolver);
             var ticket = ticketFormat.Unprotect(cookie);
 
 
@@ -168,7 +168,7 @@ namespace cloudscribe.Core.Identity
                 }
 
                 //return new AuthenticationTicket(context.Principal, context.Properties, Options.AuthenticationScheme);
-                tenantResolver.Reset();
+                var tenantResolver = tenantResolverFactory.GetResolver();
                 return new AuthenticationTicket(context.Principal, context.Properties, tenantResolver.ResolveAuthScheme(Options.AuthenticationScheme));
             }
             catch (Exception exception)
@@ -228,7 +228,7 @@ namespace cloudscribe.Core.Identity
                     ticket.Properties.ExpiresUtc = _renewExpiresUtc;
                 }
 
-                tenantResolver.Reset();
+                var tenantResolver = tenantResolverFactory.GetResolver();
 
                 if (Options.SessionStore != null && _sessionKey != null)
                 {
@@ -249,7 +249,7 @@ namespace cloudscribe.Core.Identity
                 }
 
                 //var cookieValue = Options.TicketDataFormat.Protect(ticket);
-                var ticketDataFormat = GetTicketDataFormat();
+                var ticketDataFormat = GetTicketDataFormat(tenantResolver);
                 var cookieValue = ticketDataFormat.Protect(ticket);
 
                 var cookieOptions = BuildCookieOptions();
@@ -289,7 +289,7 @@ namespace cloudscribe.Core.Identity
             var ticket = await EnsureCookieTicket();
             try
             {
-                tenantResolver.Reset();
+                var tenantResolver = tenantResolverFactory.GetResolver();
 
                 var cookieOptions = BuildCookieOptions();
 
@@ -351,7 +351,7 @@ namespace cloudscribe.Core.Identity
                 }
 
                 //var cookieValue = Options.TicketDataFormat.Protect(ticket);
-                var ticketDataFormet = GetTicketDataFormat();
+                var ticketDataFormet = GetTicketDataFormat(tenantResolver);
                 var cookieValue = ticketDataFormet.Protect(ticket);
 
                 //Options.CookieManager.AppendResponseCookie(
@@ -403,7 +403,7 @@ namespace cloudscribe.Core.Identity
             var ticket = await EnsureCookieTicket();
             try
             {
-                tenantResolver.Reset();
+                var tenantResolver = tenantResolverFactory.GetResolver();
 
                 var cookieOptions = BuildCookieOptions();
                 if (Options.SessionStore != null && _sessionKey != null)
@@ -456,7 +456,7 @@ namespace cloudscribe.Core.Identity
             {
                 var query = Request.Query;
                 //var redirectUri = query.Get(Options.ReturnUrlParameter);
-                tenantResolver.Reset();
+                var tenantResolver = tenantResolverFactory.GetResolver();
                 var redirectUri = query.Get(tenantResolver.ResolveReturnUrlParameter(Options.ReturnUrlParameter));
 
                 if (!string.IsNullOrEmpty(redirectUri)
@@ -531,7 +531,7 @@ namespace cloudscribe.Core.Identity
                 }
 
                 //var loginUri = Options.LoginPath + QueryString.Create(Options.ReturnUrlParameter, redirectUri);
-                tenantResolver.Reset();
+                var tenantResolver = tenantResolverFactory.GetResolver();
                 var loginUri = Options.LoginPath + QueryString.Create(tenantResolver.ResolveReturnUrlParameter(Options.ReturnUrlParameter), redirectUri);
 
                 var redirectContext = new CookieApplyRedirectContext(Context, Options, BuildRedirectUri(loginUri));
