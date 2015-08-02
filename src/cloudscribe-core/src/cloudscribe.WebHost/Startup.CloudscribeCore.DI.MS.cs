@@ -106,9 +106,10 @@ namespace cloudscribe.WebHost
             services.TryAdd(ServiceDescriptor.Scoped<SiteSignInManager<SiteUser>, SiteSignInManager<SiteUser>>());
             //services.TryAdd(ServiceDescriptor.Scoped<SignInManager<SiteUser>, SignInManager<SiteUser>>());
 
-            services.TryAdd(ServiceDescriptor.Scoped<ICookieAuthenticationSchemeSet, DefaultCookieAuthenticationSchemeSet>());
+            //services.TryAdd(ServiceDescriptor.Scoped<ICookieAuthenticationSchemeSet, DefaultCookieAuthenticationSchemeSet>());
             //services.TryAdd(ServiceDescriptor.Scoped<ICookieAuthenticationSchemeSet, FolderTenantCookieAuthSchemeResolver>());
 
+            services.TryAdd(ServiceDescriptor.Scoped<MultiTenantCookieOptionsResolver, MultiTenantCookieOptionsResolver>());
             services.TryAdd(ServiceDescriptor.Scoped<MultiTenantCookieOptionsResolverFactory, MultiTenantCookieOptionsResolverFactory>());
             services.TryAdd(ServiceDescriptor.Scoped<MultiTenantAuthCookieValidator, MultiTenantAuthCookieValidator>());
             services.TryAdd(ServiceDescriptor.Scoped<MultiTenantCookieAuthenticationNotifications, MultiTenantCookieAuthenticationNotifications>());
@@ -207,8 +208,8 @@ namespace cloudscribe.WebHost
 
             services.ConfigureCookieAuthentication(options =>
             {
-                options.AuthenticationScheme = IdentityOptions.ApplicationCookieAuthenticationScheme;
-                options.CookieName = IdentityOptions.ApplicationCookieAuthenticationScheme;
+                options.AuthenticationScheme = AuthenticationScheme.Application;
+                options.CookieName = AuthenticationScheme.Application;
                 options.AutomaticAuthentication = true;
                 options.LoginPath = new PathString("/Account/Login");
                 options.Notifications = new CookieAuthenticationNotifications
@@ -216,31 +217,31 @@ namespace cloudscribe.WebHost
                     OnValidatePrincipal = SecurityStampValidator.ValidatePrincipalAsync
                 };
             }
-            , IdentityOptions.ApplicationCookieAuthenticationScheme
+            , AuthenticationScheme.Application
             );
 
             services.ConfigureCookieAuthentication(options =>
             {
-                options.AuthenticationScheme = IdentityOptions.ExternalCookieAuthenticationScheme;
-                options.CookieName = IdentityOptions.ExternalCookieAuthenticationScheme;
+                options.AuthenticationScheme = AuthenticationScheme.External;
+                options.CookieName = AuthenticationScheme.External;
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
             }
-            , IdentityOptions.ExternalCookieAuthenticationScheme);
+            , AuthenticationScheme.External);
 
             services.ConfigureCookieAuthentication(options =>
             {
-                options.AuthenticationScheme = IdentityOptions.TwoFactorRememberMeCookieAuthenticationScheme;
-                options.CookieName = IdentityOptions.TwoFactorRememberMeCookieAuthenticationScheme;
+                options.AuthenticationScheme = AuthenticationScheme.TwoFactorRememberMe;
+                options.CookieName = AuthenticationScheme.TwoFactorRememberMe;
             }
-            , IdentityOptions.TwoFactorRememberMeCookieAuthenticationScheme);
+            , AuthenticationScheme.TwoFactorRememberMe);
 
             services.ConfigureCookieAuthentication(options =>
             {
-                options.AuthenticationScheme = IdentityOptions.TwoFactorUserIdCookieAuthenticationScheme;
-                options.CookieName = IdentityOptions.TwoFactorUserIdCookieAuthenticationScheme;
+                options.AuthenticationScheme = AuthenticationScheme.TwoFactorUserId;
+                options.CookieName = AuthenticationScheme.TwoFactorUserId;
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
             }
-            , IdentityOptions.TwoFactorUserIdCookieAuthenticationScheme);
+            , AuthenticationScheme.TwoFactorUserId);
 
 
             return new IdentityBuilder(typeof(TUser), typeof(TRole), services);

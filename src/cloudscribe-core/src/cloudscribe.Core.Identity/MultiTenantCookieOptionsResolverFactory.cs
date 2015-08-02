@@ -18,10 +18,10 @@ namespace cloudscribe.Core.Identity
             IOptions<MultiTenantOptions> multiTenantOptions)
         {
             this.siteResolver = siteResolver;
-            this.multiTenantOptions = multiTenantOptions.Options;
+            this.multiTenantOptions = multiTenantOptions;
         }
 
-        private MultiTenantOptions multiTenantOptions;
+        private IOptions<MultiTenantOptions> multiTenantOptions;
         private ISiteResolver siteResolver;
 
         public MultiTenantCookieOptionsResolver GetResolver()

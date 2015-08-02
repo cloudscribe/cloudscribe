@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-08-01
-// Last Modified:			2015-08-01
+// Last Modified:			2015-08-02
 // 
 
 using cloudscribe.Core.Models;
@@ -17,11 +17,11 @@ namespace cloudscribe.Core.Identity
     {
         public MultiTenantCookieOptionsResolver(
             ISiteResolver siteResolver,
-            MultiTenantOptions multiTenantOptions)
+            IOptions<MultiTenantOptions> multiTenantOptions)
         {
 
             this.siteResolver = siteResolver;
-            this.multiTenantOptions = multiTenantOptions;
+            this.multiTenantOptions = multiTenantOptions.Options;
 
         }
 
@@ -37,16 +37,7 @@ namespace cloudscribe.Core.Identity
                 return site;
             }
         }
-
-        /// <summary>
-        /// since this object is kept around inside MultiTenantCookieAuthenticationHandler
-        /// we need a way to reset so that the sitesettings from previous request is cleared
-        /// </summary>
-        public void Reset()
-        {
-            site = null;
-        }
-
+        
         public string ResolveCookieName(string suppliedCookieName)
         {
             if(multiTenantOptions.Mode == MultiTenantMode.FolderName)

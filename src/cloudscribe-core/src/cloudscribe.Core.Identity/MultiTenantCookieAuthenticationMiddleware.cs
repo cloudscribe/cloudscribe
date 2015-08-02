@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-31
-// Last Modified:			2015-08-01
+// Last Modified:			2015-08-02
 // 
 
 
@@ -27,7 +27,7 @@ namespace cloudscribe.Core.Identity
 
     //https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication/AuthenticationMiddleware.cs
 
-    //TODO: modify this to support multi tenants
+
     public class MultiTenantCookieAuthenticationMiddleware : AuthenticationMiddleware<CookieAuthenticationOptions>
     {
         public MultiTenantCookieAuthenticationMiddleware(
@@ -55,6 +55,9 @@ namespace cloudscribe.Core.Identity
             //    Options.CookieName = CookieAuthenticationDefaults.CookiePrefix + Options.AuthenticationScheme;
             //}
 
+            // we are not actually using this TicketDataFormat
+            // we are passing dataProtectionProvider into MultiTenantCookieAuthenticationHandler
+            // so it can make tenant specific ticketDataFormat
             if (Options.TicketDataFormat == null)
             {
                 var dataProtector = dataProtectionProvider.CreateProtector(
@@ -62,6 +65,7 @@ namespace cloudscribe.Core.Identity
 
                 Options.TicketDataFormat = new TicketDataFormat(dataProtector);
             }
+
             if (Options.CookieManager == null)
             {
                 Options.CookieManager = new ChunkingCookieManager(urlEncoder);

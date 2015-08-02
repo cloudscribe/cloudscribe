@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-27
-// Last Modified:		    2015-07-31
+// Last Modified:		    2015-08-02
 // 
 
 using cloudscribe.Core.Models;
@@ -27,7 +27,7 @@ namespace cloudscribe.Core.Identity
         public SiteSignInManager(
             SiteUserManager<TUser> userManager, 
             IHttpContextAccessor contextAccessor,
-            ICookieAuthenticationSchemeSet schemeSet,
+            MultiTenantCookieOptionsResolver tenantResolver,
             IUserClaimsPrincipalFactory<TUser> claimsFactory,
             IOptions<IdentityOptions> optionsAccessor,
             ILogger<SignInManager<TUser>> logger)
@@ -39,38 +39,37 @@ namespace cloudscribe.Core.Identity
                  )
         {
 
-
             UserManager = userManager;
             this.context = contextAccessor.HttpContext;
-            this.schemeSet = schemeSet;
-
-
+            this.tenantResolver = tenantResolver;
+       
         }
 
         private SiteUserManager<TUser> UserManager { get; set; }
         private HttpContext context;
-        private ICookieAuthenticationSchemeSet schemeSet;
+        private MultiTenantCookieOptionsResolver tenantResolver;
+        
 
         //https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity/SignInManager.cs
 
         //here we need to override the authenticationscheme per site 
-        
+
         public override async Task SignInAsync(TUser user, AuthenticationProperties authenticationProperties, string authenticationMethod = null)
         {
             var userPrincipal = await CreateUserPrincipalAsync(user);
-            // Review: should we guard against CreateUserPrincipal returning null?
+
             if (authenticationMethod != null)
             {
                 userPrincipal.Identities.First().AddClaim(new Claim(ClaimTypes.AuthenticationMethod, authenticationMethod));
             }
-            await context.Authentication.SignInAsync(schemeSet.ApplicationScheme,
+            await context.Authentication.SignInAsync(AuthenticationScheme.Application,
                 userPrincipal,
                 authenticationProperties ?? new AuthenticationProperties());
         }
 
         public override async Task RefreshSignInAsync(TUser user)
         {
-            var auth = new AuthenticateContext(schemeSet.ApplicationScheme);
+            var auth = new AuthenticateContext(tenantResolver.ResolveAuthScheme(AuthenticationScheme.Application));
             await context.Authentication.AuthenticateAsync(auth);
             var authenticationMethod = auth.Principal?.FindFirstValue(ClaimTypes.AuthenticationMethod);
             await SignInAsync(user, new AuthenticationProperties(auth.Properties), authenticationMethod);
@@ -78,31 +77,32 @@ namespace cloudscribe.Core.Identity
 
         public override async Task SignOutAsync()
         {
-            await context.Authentication.SignOutAsync(schemeSet.ApplicationScheme);
-            await context.Authentication.SignOutAsync(schemeSet.ExternalScheme);
-            await context.Authentication.SignOutAsync(schemeSet.TwoFactorUserIdScheme);
+            await context.Authentication.SignOutAsync(AuthenticationScheme.Application);
+            await context.Authentication.SignOutAsync(AuthenticationScheme.External);
+            await context.Authentication.SignOutAsync(AuthenticationScheme.TwoFactorUserId);
         }
 
         public override async Task<bool> IsTwoFactorClientRememberedAsync(TUser user)
         {
             var userId = await UserManager.GetUserIdAsync(user);
-            var result = await context.Authentication.AuthenticateAsync(schemeSet.TwoFactorRememberMeScheme);
+            var result = await context.Authentication.AuthenticateAsync(AuthenticationScheme.TwoFactorRememberMe);
             return (result != null && result.FindFirstValue(ClaimTypes.Name) == userId);
         }
 
         public override async Task RememberTwoFactorClientAsync(TUser user)
         {
             var userId = await UserManager.GetUserIdAsync(user);
-            var rememberBrowserIdentity = new ClaimsIdentity(schemeSet.TwoFactorRememberMeScheme);
+            var rememberBrowserIdentity = new ClaimsIdentity(tenantResolver.ResolveAuthScheme(AuthenticationScheme.TwoFactorRememberMe));
             rememberBrowserIdentity.AddClaim(new Claim(ClaimTypes.Name, userId));
-            await context.Authentication.SignInAsync(schemeSet.TwoFactorRememberMeScheme,
+
+            await context.Authentication.SignInAsync(AuthenticationScheme.TwoFactorRememberMe,
                 new ClaimsPrincipal(rememberBrowserIdentity),
                 new AuthenticationProperties { IsPersistent = true });
         }
 
         public override Task ForgetTwoFactorClientAsync()
         {
-            return context.Authentication.SignOutAsync(schemeSet.TwoFactorRememberMeScheme);
+            return context.Authentication.SignOutAsync(AuthenticationScheme.TwoFactorRememberMe);
         }
 
         //public override async Task<SignInResult> TwoFactorSignInAsync(string provider, string code, bool isPersistent,

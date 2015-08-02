@@ -6,16 +6,11 @@
 // 
 
 
-using Microsoft.AspNet.Builder;
-using Microsoft.AspNet.Identity;
-using Microsoft.Framework.OptionsModel;
 using Microsoft.AspNet.Authentication.Cookies;
+using Microsoft.AspNet.Builder;
 using Microsoft.Framework.DependencyInjection;
-using Microsoft.AspNet.Authentication.Cookies.Infrastructure;
+using Microsoft.Framework.OptionsModel;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Identity
 {
@@ -57,25 +52,29 @@ namespace cloudscribe.Core.Identity
             {
                 options.Notifications = cookieNotifications;
             }
-            , IdentityOptions.ExternalCookieAuthenticationScheme);
+            , 
+            AuthenticationScheme.External);
 
             app.UseMultiTenantCookieAuthentication(options =>
             {
                 options.Notifications = cookieNotifications;
             }
-            , IdentityOptions.TwoFactorRememberMeCookieAuthenticationScheme);
+            , 
+            AuthenticationScheme.TwoFactorRememberMe);
 
             app.UseMultiTenantCookieAuthentication(options =>
             {
                 options.Notifications = cookieNotifications;
             }
-            , IdentityOptions.TwoFactorUserIdCookieAuthenticationScheme);
+            , 
+            AuthenticationScheme.TwoFactorUserId);
 
             app.UseMultiTenantCookieAuthentication(options =>
             {
                 options.Notifications = cookieNotifications;
             }
-            , IdentityOptions.ApplicationCookieAuthenticationScheme);
+            , 
+            AuthenticationScheme.Application);
 
             return app;
         }
