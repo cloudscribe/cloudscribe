@@ -2,13 +2,11 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-06-20
-// Last Modified:			2015-08-01
+// Last Modified:			2015-08-02
 // 
 
 using System;
 using System.Collections.Generic;
-//using Microsoft.AspNet.Hosting;
-//using JetBrains.Annotations;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Authentication;
@@ -36,7 +34,7 @@ using cloudscribe.Core.Identity;
 namespace cloudscribe.WebHost
 {
     /// <summary>
-    /// Setup dependency injection and application configuration for cloudscribe core
+    /// Setup application configuration for cloudscribe core
     /// 
     /// this file is part of cloudscribe.Core.Integration nuget package
     /// there are only a few lines of cloudscribe specific code in main Startup.cs and those reference methods in this file
@@ -66,11 +64,6 @@ namespace cloudscribe.WebHost
 
             IOptions<MultiTenantOptions> multiTenantOptions = app.ApplicationServices.GetService<IOptions<MultiTenantOptions>>();
 
-            //bool useFolderSites = config.UseFoldersInsteadOfHostnamesForMultipleSites();
-            //bool addFolderRoutesToMainApp = useFolderSites;
-            ISiteRepository siteRepo = app.ApplicationServices.GetService<ISiteRepository>();
-
-
             //// Add cookie-based authentication to the request pipeline.
             ////https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity/BuilderExtensions.cs
             //app.UseIdentity();
@@ -83,26 +76,18 @@ namespace cloudscribe.WebHost
                 // add your routes here
 
 
-                // default routes for folder site go second to last
-                try
-                {
-                    
-                    if (multiTenantOptions.Options.Mode == MultiTenantMode.FolderName)
-                    {
-                        //RegisterFolderSiteDefaultRoutes(routes, siteRepo);
-
-                        routes.MapRoute(
-                        name: "folderdefault",
-                        template: "{sitefolder}/{controller}/{action}/{id?}",
-                        defaults: new { controller = "Home", action = "Index" },
-                        constraints: new { name = new SiteFolderRouteConstraint() }
-                        );
-                    }
+                // default route for folder sites must be second to last
+                if (multiTenantOptions.Options.Mode == MultiTenantMode.FolderName)
+                {  
+                    routes.MapRoute(
+                    name: "folderdefault",
+                    template: "{sitefolder}/{controller}/{action}/{id?}",
+                    defaults: new { controller = "Home", action = "Index" },
+                    constraints: new { name = new SiteFolderRouteConstraint() }
+                    );
                 }
-                catch { }
+               
                 
-
-
                 // the default route has to be added last
                 routes.MapRoute(
                     name: "default",
@@ -120,36 +105,7 @@ namespace cloudscribe.WebHost
             
         }
 
-        
-
-        //private static void RegisterFolderSiteDefaultRoutes(IRouteBuilder routes, ISiteRepository siteRepo)
-        //{
-        //    // exceptions expected here on new install until db has been initialized
-
-        //    List<SiteFolder> allFolders = siteRepo.GetAllSiteFoldersNonAsync();
-        //    foreach (SiteFolder f in allFolders)
-        //    {
-        //        // if you need to make your custom routes "folder aware"
-        //        // you can add them here appending the folder to the front of your template
-        //        // and giving them each a unique name that does not clash with other routes
-        //        // your routes should have more specific template than the default route
-
-        //        // go ahead add your own routes here
-
-
-        //        // the default route for a folder site should be last
-        //        routes.MapRoute(
-        //        name: f.FolderName + "Default",
-        //        template: f.FolderName + "/{controller}/{action}/{id?}",
-        //        defaults: new { controller = "Home", action = "Index" },
-        //        constraints: new { name = new SiteFolderRouteConstraint(f.FolderName) }
-        //        );
-
-        //    }
-        //}
-
-        
-        
+       
         
     }
 }

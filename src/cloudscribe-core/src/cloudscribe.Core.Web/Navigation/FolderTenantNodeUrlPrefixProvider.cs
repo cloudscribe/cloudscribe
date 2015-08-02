@@ -5,14 +5,10 @@
 // Last Modified:			2015-08-02
 // 
 
-using cloudscribe.Web.Navigation;
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Models;
+using cloudscribe.Web.Navigation;
 using Microsoft.Framework.OptionsModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Navigation
 {

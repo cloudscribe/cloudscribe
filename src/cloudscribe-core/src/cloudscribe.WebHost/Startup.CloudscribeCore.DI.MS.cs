@@ -83,6 +83,51 @@ namespace cloudscribe.WebHost
             // VersionProviders are used by the Setup controller to determine what install and upgrade scripts to run
             services.TryAdd(ServiceDescriptor.Scoped<IVersionProviderFactory, ConfigVersionProviderFactory>());
 
+            services.AddCloudscribeIdentity<SiteUser, SiteRole>();
+            
+            
+
+            // you can use either json or xml to maintain your navigation map we provide examples of each navigation.xml and 
+            // navigation.json in the root of this project
+            // you can override the name of the file used with AppSettings:NavigationXmlFileName or AppSettings:NavigationJsonFileName in config.json
+            // the file must live in the root of the web project code not in wwwroot
+
+            // it is arguable which is easier for humans to read and maintain, myself I think for something like a navigation tree
+            // that could get large xml is easier to work with and not make mistakes. in json one missing or extra comma can break it
+            // granted xml can be broken by typos too but the end tags make it easier to keep track of where you are imho (JA)
+            //services.TryAdd(ServiceDescriptor.Scoped<INavigationTreeBuilder, JsonNavigationTreeBuilder>());
+            services.TryAdd(ServiceDescriptor.Scoped<INavigationTreeBuilder, XmlNavigationTreeBuilder>());
+            services.TryAdd(ServiceDescriptor.Scoped<INodeUrlPrefixProvider, FolderTenantNodeUrlPrefixProvider>()); 
+            services.TryAdd(ServiceDescriptor.Scoped<INavigationNodePermissionResolver, NavigationNodePermissionResolver>());
+            services.TryAdd(ServiceDescriptor.Transient<IBuildPaginationLinks, PaginationLinkBuilder>());
+
+            services.AddTransient<IEmailSender, AuthMessageSender>();
+            services.AddTransient<ISmsSender, AuthMessageSender>();
+
+            
+            // Add MVC services to the services container.
+            services.AddMvc().ConfigureMvcViews(options =>
+            {
+                options.ViewEngines.Clear();
+                // cloudscribe.Core.Web.CoreViewEngine adds /Views/Sys as the last place to search for views
+                // cloudscribe views are all under Views/Sys
+                // to modify a view just copy it to a higher priority location
+                // ie copy /Views/Sys/Manage/*.cshtml up to /Views/Manage/ and that one will have higher priority
+                // and you can modify it however you like
+                // upgrading to newer versions of cloudscribe could modify or add views below /Views/Sys
+                // so you may need to compare your custom views to the originals again after upgrades
+                options.ViewEngines.Add(typeof(CoreViewEngine));
+            });
+
+            return services;
+        }
+
+
+        public static IdentityBuilder AddCloudscribeIdentity<TUser, TRole>(
+            this IServiceCollection services)
+            where TUser : class
+            where TRole : class
+        {
             //****** cloudscribe implementation of AspNet.Identity****************************************************
             services.TryAdd(ServiceDescriptor.Scoped<IUserStore<SiteUser>, UserStore<SiteUser>>());
             services.TryAdd(ServiceDescriptor.Scoped<IUserPasswordStore<SiteUser>, UserStore<SiteUser>>());
@@ -114,61 +159,9 @@ namespace cloudscribe.WebHost
             services.TryAdd(ServiceDescriptor.Scoped<MultiTenantCookieOptionsResolverFactory, MultiTenantCookieOptionsResolverFactory>());
             services.TryAdd(ServiceDescriptor.Scoped<MultiTenantAuthCookieValidator, MultiTenantAuthCookieValidator>());
             services.TryAdd(ServiceDescriptor.Scoped<MultiTenantCookieAuthenticationNotifications, MultiTenantCookieAuthenticationNotifications>());
-
-            services.AddCloudscribeIdentity<SiteUser, SiteRole>();
-
-            
-
-
-            
-
             //********************************************************************************************************
 
-            // you can use either json or xml to maintain your navigation map we provide examples of each navigation.xml and 
-            // navigation.json in the root of this project
-            // you can override the name of the file used with AppSettings:NavigationXmlFileName or AppSettings:NavigationJsonFileName in config.json
-            // the file must live in the root of the web project code not in wwwroot
-
-            // it is arguable which is easier for humans to read and maintain, myself I think for something like a navigation tree
-            // that could get large xml is easier to work with and not make mistakes. in json one missing or extra comma can break it
-            // granted xml can be broken by typos too but the end tags make it easier to keep track of where you are imho (JA)
-            //services.TryAdd(ServiceDescriptor.Scoped<INavigationTreeBuilder, JsonNavigationTreeBuilder>());
-            services.TryAdd(ServiceDescriptor.Scoped<INavigationTreeBuilder, XmlNavigationTreeBuilder>());
-            services.TryAdd(ServiceDescriptor.Scoped<INodeUrlPrefixProvider, FolderTenantNodeUrlPrefixProvider>());
-
-
-
-            services.TryAdd(ServiceDescriptor.Scoped<INavigationNodePermissionResolver, NavigationNodePermissionResolver>());
-            services.TryAdd(ServiceDescriptor.Transient<IBuildPaginationLinks, PaginationLinkBuilder>());
-
-            services.AddTransient<IEmailSender, AuthMessageSender>();
-            services.AddTransient<ISmsSender, AuthMessageSender>();
-
-            
-            // Add MVC services to the services container.
-            services.AddMvc().ConfigureMvcViews(options =>
-            {
-                options.ViewEngines.Clear();
-                // cloudscribe.Core.Web.CoreViewEngine adds /Views/Sys as the last place to search for views
-                // cloudscribe views are all under Views/Sys
-                // to modify a view just copy it to a higher priority location
-                // ie copy /Views/Sys/Manage/*.cshtml up to /Views/Manage/ and that one will have higher priority
-                // and you can modify it however you like
-                // upgrading to newer versions of cloudscribe could modify or add views below /Views/Sys
-                // so you may need to compare your custom views to the originals again after upgrades
-                options.ViewEngines.Add(typeof(CoreViewEngine));
-            });
-
-            return services;
-        }
-
-
-        public static IdentityBuilder AddCloudscribeIdentity<TUser, TRole>(
-            this IServiceCollection services)
-            where TUser : class
-            where TRole : class
-        {
-            // most of this code was borrowed from here:
+            // most of the below code was borrowed from here:
             //https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity/IdentityServiceCollectionExtensions.cs
 
 
