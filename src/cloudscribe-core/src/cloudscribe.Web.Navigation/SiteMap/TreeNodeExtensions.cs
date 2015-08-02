@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-09
-// Last Modified:			2015-07-15
+// Last Modified:			2015-08-02
 // 
 
 using Newtonsoft.Json;
@@ -19,11 +19,18 @@ namespace cloudscribe.Web.Navigation
         /// <param name="currentNode"></param>
         /// <param name="urlToMatch"></param>
         /// <returns></returns>
-        public static TreeNode<NavigationNode> FindByUrl(this TreeNode<NavigationNode> currentNode, string urlToMatch)
+        public static TreeNode<NavigationNode> FindByUrl(this TreeNode<NavigationNode> currentNode, string urlToMatch, string urlPrefix = "")
         {
             Func<TreeNode<NavigationNode>, bool> match = delegate (TreeNode<NavigationNode> n)
             {
-                return n.Value.Url.Contains(urlToMatch);
+                if( n.Value.Url.Contains(urlToMatch)) { return true; }
+                if(urlPrefix.Length > 0)
+                {
+                    string targetUrl = n.Value.Url.Replace("~/", "~/" + urlPrefix + "/");
+                    if(targetUrl.Contains(urlToMatch)) { return true; }
+                }
+
+                return false;
             };
 
             return currentNode.Find(match);

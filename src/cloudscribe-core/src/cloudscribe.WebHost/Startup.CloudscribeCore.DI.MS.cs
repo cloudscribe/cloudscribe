@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-06-20
-// Last Modified:			2015-08-01
+// Last Modified:			2015-08-02
 // 
 
 using System;
@@ -30,6 +30,7 @@ using cloudscribe.Core.Models.Site;
 using cloudscribe.Core.Models.Geography;
 using cloudscribe.Core.Web;
 using cloudscribe.Core.Web.Components;
+using cloudscribe.Core.Web.Navigation;
 using cloudscribe.Messaging;
 using cloudscribe.Web.Navigation;
 using cloudscribe.Core.Identity;
@@ -133,6 +134,7 @@ namespace cloudscribe.WebHost
             // granted xml can be broken by typos too but the end tags make it easier to keep track of where you are imho (JA)
             //services.TryAdd(ServiceDescriptor.Scoped<INavigationTreeBuilder, JsonNavigationTreeBuilder>());
             services.TryAdd(ServiceDescriptor.Scoped<INavigationTreeBuilder, XmlNavigationTreeBuilder>());
+            services.TryAdd(ServiceDescriptor.Scoped<INodeUrlPrefixProvider, FolderTenantNodeUrlPrefixProvider>());
 
 
 

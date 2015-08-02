@@ -2,10 +2,11 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-10
-// Last Modified:			2015-07-15
+// Last Modified:			2015-08-02
 // 
 
 using Microsoft.AspNet.Http;
+using Microsoft.AspNet.Mvc;
 using System;
 using System.Collections.Generic;
 
@@ -16,13 +17,17 @@ namespace cloudscribe.Web.Navigation
         public NavigationViewModel(
             string navigationFilterName,
             HttpContext context,
+            IUrlHelper urlHelper,
             TreeNode<NavigationNode> rootNode,
-            INavigationNodePermissionResolver permissionResolver)
+            INavigationNodePermissionResolver permissionResolver,
+            string nodeSearchUrlPrefix)
         {
             this.navigationFilterName = navigationFilterName;
+            this.nodeSearchUrlPrefix = nodeSearchUrlPrefix;
             this.context = context;
             this.RootNode = rootNode;
             this.permissionResolver = permissionResolver;
+            this.urlHelper = urlHelper;
 
             removalFilters.Add(FilterIsAllowed);
             removalFilters.Add(permissionResolver.ShouldAllowView);
@@ -33,7 +38,9 @@ namespace cloudscribe.Web.Navigation
         }
 
         private string navigationFilterName;
+        private string nodeSearchUrlPrefix;
         private HttpContext context;
+        private IUrlHelper urlHelper;
         private INavigationNodePermissionResolver permissionResolver;
         private List<Func<TreeNode<NavigationNode>, bool>> removalFilters = new List<Func<TreeNode<NavigationNode>, bool>>();
 
@@ -52,7 +59,7 @@ namespace cloudscribe.Web.Navigation
         {
             // lazy load
             get {
-                if (currentNode == null) { currentNode = RootNode.FindByUrl(context.Request.Path); }
+                if (currentNode == null) { currentNode = RootNode.FindByUrl(context.Request.Path, nodeSearchUrlPrefix); }
                 return currentNode;
                 }
         }
@@ -85,6 +92,12 @@ namespace cloudscribe.Web.Navigation
 
         public string AdjustUrl(TreeNode<NavigationNode> node)
         {
+            string urlToUse = string.Empty;
+            if ((node.Value.Action.Length > 0)&&(node.Value.Controller.Length > 0))
+            {
+                urlToUse = urlHelper.Action(node.Value.Action, node.Value.Controller);
+            }
+
             string key = NavigationNodeAdjuster.KeyPrefix + node.Value.Key;
 
             if (context.Items[key] != null)
@@ -95,6 +108,8 @@ namespace cloudscribe.Web.Navigation
                     if (adjuster.AdjustedUrl.Length > 0) { return adjuster.AdjustedUrl; }
                 }
             }
+
+            if(urlToUse.Length > 0) { return urlToUse; }
        
             return node.Value.Url;
         }
@@ -114,6 +129,8 @@ namespace cloudscribe.Web.Navigation
 
         public bool HasVisibleChildren(TreeNode<NavigationNode> node)
         {
+            if(node == null) { return false; }
+
             foreach(var childNode in node.Children)
             {
                 if(ShouldAllowView(childNode)) { return true; }

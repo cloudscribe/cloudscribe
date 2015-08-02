@@ -1,11 +1,15 @@
-﻿
+﻿// Copyright (c) Source Tree Solutions, LLC. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+// Author:					Joe Audette
+// Created:					2015-06-19
+// Last Modified:			2015-08-02
+// 
 
-using Microsoft.AspNet.Routing;
+using cloudscribe.Core.Models;
 using Microsoft.AspNet.Http;
-using System;
+using Microsoft.AspNet.Routing;
+using Microsoft.Framework.DependencyInjection;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Components
 {
@@ -16,12 +20,17 @@ namespace cloudscribe.Core.Web.Components
     /// </summary>
     public class SiteFolderRouteConstraint : IRouteConstraint
     {
-        private string requiredSiteFolder;
-
-        public SiteFolderRouteConstraint(string folderParam)
+        public SiteFolderRouteConstraint()
         {
-            requiredSiteFolder = folderParam;
+            
         }
+
+        //private string requiredSiteFolder;
+
+        //public SiteFolderRouteConstraint(string folderParam)
+        //{
+        //    requiredSiteFolder = folderParam;
+        //}
 
         public bool Match(
             HttpContext httpContext,
@@ -31,7 +40,15 @@ namespace cloudscribe.Core.Web.Components
             RouteDirection routeDirection)
         {
             string requestFolder = RequestSiteResolver.GetFirstFolderSegment(httpContext.Request.Path);
-            return string.Equals(requiredSiteFolder, requestFolder, StringComparison.CurrentCultureIgnoreCase);
+            //return string.Equals(requiredSiteFolder, requestFolder, StringComparison.CurrentCultureIgnoreCase);
+            ISiteResolver siteResolver = httpContext.ApplicationServices.GetService<ISiteResolver>();
+            if(siteResolver != null)
+            {
+                ISiteSettings site = siteResolver.Resolve();
+                if((site != null)&&(site.SiteFolderName == requestFolder)) { return true; }
+            }
+
+            return false;
         }
     }
 }

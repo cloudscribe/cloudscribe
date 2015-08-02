@@ -86,10 +86,17 @@ namespace cloudscribe.WebHost
                 // default routes for folder site go second to last
                 try
                 {
-                    // exceptions expected here on new install until db has been initialized
+                    
                     if (multiTenantOptions.Options.Mode == MultiTenantMode.FolderName)
                     {
-                        RegisterFolderSiteDefaultRoutes(routes, siteRepo);
+                        //RegisterFolderSiteDefaultRoutes(routes, siteRepo);
+
+                        routes.MapRoute(
+                        name: "folderdefault",
+                        template: "{sitefolder}/{controller}/{action}/{id?}",
+                        defaults: new { controller = "Home", action = "Index" },
+                        constraints: new { name = new SiteFolderRouteConstraint() }
+                        );
                     }
                 }
                 catch { }
@@ -100,7 +107,9 @@ namespace cloudscribe.WebHost
                 routes.MapRoute(
                     name: "default",
                     template: "{controller}/{action}/{id?}",
-                    defaults: new { controller = "Home", action = "Index" });
+                    defaults: new { controller = "Home", action = "Index" }
+                    
+                    );
 
                 // Uncomment the following line to add a route for porting Web API 2 controllers.
                 // routes.MapWebApiRoute("DefaultApi", "api/{controller}/{id?}");
@@ -113,29 +122,31 @@ namespace cloudscribe.WebHost
 
         
 
-        private static void RegisterFolderSiteDefaultRoutes(IRouteBuilder routes, ISiteRepository siteRepo)
-        {
-            List<SiteFolder> allFolders = siteRepo.GetAllSiteFoldersNonAsync();
-            foreach (SiteFolder f in allFolders)
-            {
-                // if you need to make your custom routes "folder aware"
-                // you can add them here appending the folder to the front of your template
-                // and giving them each a unique name that does not clash with other routes
-                // your routes should have more specific template than the default route
+        //private static void RegisterFolderSiteDefaultRoutes(IRouteBuilder routes, ISiteRepository siteRepo)
+        //{
+        //    // exceptions expected here on new install until db has been initialized
 
-                // go ahead add your own routes here
+        //    List<SiteFolder> allFolders = siteRepo.GetAllSiteFoldersNonAsync();
+        //    foreach (SiteFolder f in allFolders)
+        //    {
+        //        // if you need to make your custom routes "folder aware"
+        //        // you can add them here appending the folder to the front of your template
+        //        // and giving them each a unique name that does not clash with other routes
+        //        // your routes should have more specific template than the default route
+
+        //        // go ahead add your own routes here
 
 
-                // the default route for a folder site should be last
-                routes.MapRoute(
-                name: f.FolderName + "Default",
-                template: f.FolderName + "/{controller}/{action}/{id?}",
-                defaults: new { controller = "Home", action = "Index" },
-                constraints: new { name = new SiteFolderRouteConstraint(f.FolderName) }
-                );
+        //        // the default route for a folder site should be last
+        //        routes.MapRoute(
+        //        name: f.FolderName + "Default",
+        //        template: f.FolderName + "/{controller}/{action}/{id?}",
+        //        defaults: new { controller = "Home", action = "Index" },
+        //        constraints: new { name = new SiteFolderRouteConstraint(f.FolderName) }
+        //        );
 
-            }
-        }
+        //    }
+        //}
 
         
         
