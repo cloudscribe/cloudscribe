@@ -1,10 +1,16 @@
 {
   "version": "1.0.0-*",
-  "description": "",
-  "authors": [ "" ],
-  "tags": [ "" ],
-  "projectUrl": "",
-  "licenseUrl": "",
+  "title": "cloudscribe.Web.Navigation",
+  "description": "an ASP.NET 5 library of navigation components for menus, breadcrumbs, pagination, and bootstrap modal dialogs",
+  "authors": [ "Joe Audette" ],
+  "owners": [ "Source Tree Solutions" ],
+  "tags": [ "cloudscribe","mvc6","mvcsitemapprovider","pagination","navigation","menus","breadcrumbs" ],
+  "projectUrl": "https://github.com/joeaudette/cloudscribe",
+  "licenseUrl": "http://www.apache.org/licenses/LICENSE-2.0",
+  "copyright": "2015 Source Tree Solutions",
+  "iconUrl": "http://download.mojoportal.com/images/cloudscribe-rocket-32.png",
+  "requireLicenseAcceptance": false,
+  "releaseNotes": "",
 
   "dependencies": {
     "Microsoft.AspNet.Mvc": "6.0.0-beta6",
