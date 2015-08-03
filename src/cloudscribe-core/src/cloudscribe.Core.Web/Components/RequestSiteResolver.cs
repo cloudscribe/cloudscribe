@@ -2,14 +2,13 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-06-19
-// Last Modified:			2015-07-24
+// Last Modified:			2015-08-03
 // 
 
-using cloudscribe.Configuration;
 using cloudscribe.Core.Models;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Http;
-using Microsoft.Framework.Configuration;
+using Microsoft.Framework.OptionsModel;
 using System;
 
 namespace cloudscribe.Core.Web.Components
@@ -18,16 +17,16 @@ namespace cloudscribe.Core.Web.Components
     {
         public RequestSiteResolver(
             ISiteRepository siteRepository,
-            IConfiguration configuration,
+            IOptions<MultiTenantOptions> multiTenantOptions,
             IHttpContextAccessor httpContextAccessor)
         {
             contextAccessor = httpContextAccessor;
             siteRepo = siteRepository;
-            config = configuration;
-            
+            this.multiTenantOptions = multiTenantOptions.Options;
+
         }
 
-        private IConfiguration config;
+        private MultiTenantOptions multiTenantOptions;
         private IHttpContextAccessor contextAccessor;
         private ISiteRepository siteRepo;
         private string requestPath;
@@ -54,9 +53,8 @@ namespace cloudscribe.Core.Web.Components
             }
             host = context.Request.Host.Value;
             int siteId = -1;
-            bool useFoldersInsteadOfHostnamesForMultipleSites = config.UseFoldersInsteadOfHostnamesForMultipleSites();
-
-            if (useFoldersInsteadOfHostnamesForMultipleSites)
+           
+            if (multiTenantOptions.Mode == MultiTenantMode.FolderName)
             {
                 string siteFolderName = GetFirstFolderSegment(requestPath);
                 if (siteFolderName.Length == 0) siteFolderName = "root";

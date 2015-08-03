@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-22
-// Last Modified:			2015-07-24
+// Last Modified:			2015-08-03
 // 
 
 using System;
@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Framework.Configuration;
+using Microsoft.Framework.OptionsModel;
 using cloudscribe.Configuration;
 
 namespace cloudscribe.Core.Models.Site
@@ -20,13 +21,16 @@ namespace cloudscribe.Core.Models.Site
         public SiteManager(
             ISiteResolver siteResolver, 
             ISiteRepository siteRepository,
-            IUserRepository userRepository)
+            IUserRepository userRepository,
+            IOptions<MultiTenantOptions> multiTenantOptions)
         {
             resolver = siteResolver;
             siteRepo = siteRepository;
             userRepo = userRepository;
+            this.multiTenantOptions = multiTenantOptions.Options;
         }
 
+        private MultiTenantOptions multiTenantOptions;
         private ISiteResolver resolver;
         private ISiteRepository siteRepo;
         private IUserRepository userRepo;
@@ -105,6 +109,24 @@ namespace cloudscribe.Core.Models.Site
             // mp_Sites
 
             return await siteRepo.Delete(site.SiteId);
+        }
+
+        public async Task<SiteSettings> CreateNewSite(
+            IConfiguration config,
+            bool isServerAdminSite)
+        {
+            //string templateFolderPath = GetMessageTemplateFolder();
+            //string templateFolder = templateFolderPath;
+
+            SiteSettings newSite = new SiteSettings();
+            newSite.SiteName = "Sample Site";
+            newSite.IsServerAdminSite = isServerAdminSite;
+
+            bool result = await CreateNewSite(config, newSite);
+
+            return newSite;
+
+
         }
 
         public async Task<bool> CreateNewSite(
@@ -217,7 +239,7 @@ namespace cloudscribe.Core.Models.Site
             string siteDifferentiator = string.Empty;
             if (
                 (countOfSites >= 1)
-                && (config.UseRelatedSiteMode())
+                && (multiTenantOptions.UseRelatedSitesMode)
                 )
             {
                 if (site.SiteId > 1)

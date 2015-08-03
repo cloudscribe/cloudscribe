@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-07-24
+// Last Modified:			2015-08-03
 // 
 
 using cloudscribe.Configuration;
@@ -15,6 +15,7 @@ using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.Framework.Configuration;
+using Microsoft.Framework.OptionsModel;
 using System;
 using System.Globalization;
 using System.Threading.Tasks;
@@ -29,11 +30,13 @@ namespace cloudscribe.Core.Web.Controllers
         private SiteManager siteManager;
         private GeoDataManager geoDataManager;
         private IConfiguration config;
+        private MultiTenantOptions multiTenantOptions;
         //private ITriggerStartup startup;
 
         public SiteAdminController(
             SiteManager siteManager,
             GeoDataManager geoDataManager,
+            IOptions<MultiTenantOptions> multiTenantOptions,
             IConfiguration configuration
             //, ITriggerStartup startupTrigger
             )
@@ -43,6 +46,7 @@ namespace cloudscribe.Core.Web.Controllers
             if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
 
             config = configuration;
+            this.multiTenantOptions = multiTenantOptions.Options;
             //Site = siteResolver.Resolve();
 
             this.siteManager = siteManager;
@@ -259,7 +263,7 @@ namespace cloudscribe.Core.Web.Controllers
                 return RedirectToAction("Index");
             }
 
-            if (config.UseFoldersInsteadOfHostnamesForMultipleSites())
+            if (multiTenantOptions.Mode == MultiTenantMode.FolderName)
             {
                 if (
                     ((model.SiteFolderName == null) || (model.SiteFolderName.Length == 0))
@@ -341,7 +345,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             bool result = await siteManager.Save(selectedSite);
 
-            if ((result) && (config.UseFoldersInsteadOfHostnamesForMultipleSites()))
+            if ((result) && (multiTenantOptions.Mode == MultiTenantMode.FolderName))
             {
                 if (!string.IsNullOrEmpty(selectedSite.SiteFolderName))
                 {
@@ -441,15 +445,10 @@ namespace cloudscribe.Core.Web.Controllers
             {
                 return View(model);
             }
-
-            //if(AppSettings.UseFoldersInsteadOfHostnamesForMultipleSites)
-            //{
-            //    int foundFolderSiteId = await Site.SiteRepository.GetSiteIdByFolder(model.SiteFolderName);
-            //}
-
+            
             bool addHostName = false;
 
-            if (config.UseFoldersInsteadOfHostnamesForMultipleSites())
+            if (multiTenantOptions.Mode == MultiTenantMode.FolderName)
             {
                 if (string.IsNullOrEmpty(model.SiteFolderName))
                 {
@@ -512,7 +511,7 @@ namespace cloudscribe.Core.Web.Controllers
             newSite.CompanyPhone = model.CompanyPhone;
             newSite.CompanyFax = model.CompanyFax;
             newSite.CompanyPublicEmail = model.CompanyPublicEmail;
-            if (config.UseFoldersInsteadOfHostnamesForMultipleSites())
+            if (multiTenantOptions.Mode == MultiTenantMode.FolderName)
             {
                 newSite.SiteFolderName = model.SiteFolderName;
             }
@@ -534,7 +533,7 @@ namespace cloudscribe.Core.Web.Controllers
             bool result = await siteManager.CreateNewSite(config, newSite);
             result = await siteManager.CreateRequiredRolesAndAdminUser(newSite, config);
 
-            if ((result) && (config.UseFoldersInsteadOfHostnamesForMultipleSites()))
+            if ((result) && (multiTenantOptions.Mode == MultiTenantMode.FolderName))
             {
                 bool folderResult = await siteManager.EnsureSiteFolder(newSite);
 

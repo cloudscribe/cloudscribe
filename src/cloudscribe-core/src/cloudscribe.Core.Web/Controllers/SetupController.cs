@@ -2,11 +2,12 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-01-10
-// Last Modified:			2015-07-28
+// Last Modified:			2015-08-03
 // 
 
 using cloudscribe.Configuration;
 using cloudscribe.Core.Models;
+using cloudscribe.Core.Models.Site;
 using cloudscribe.Core.Web.Components;
 //using cloudscribe.Resources;
 using Microsoft.AspNet.Hosting;
@@ -35,6 +36,7 @@ namespace cloudscribe.Setup.Controllers
             ILoggerFactory loggerFactory,
             IConfiguration configuration,
             IDb dbImplementation,
+            SiteManager siteManager,
             ISiteRepository siteRepositoryImplementation,
             IUserRepository userRepositoryImplementation
         )
@@ -55,11 +57,12 @@ namespace cloudscribe.Setup.Controllers
             logFactory = loggerFactory;
             log = loggerFactory.CreateLogger(typeof(SetupController).FullName);
             appBasePath = appEnv.ApplicationBasePath;
+            this.siteManager = siteManager;
             //versionProviders = db.VersionProviders;
         }
 
         private string appBasePath;
-
+        private SiteManager siteManager;
         private IHostingEnvironment hostingEnvironment;
         private ILoggerFactory logFactory;
         private ILogger log;
@@ -206,7 +209,8 @@ namespace cloudscribe.Setup.Controllers
                     , true);
 
 
-                SiteSettings newSite = await NewSiteHelper.CreateNewSite(config, siteRepository, true);
+                //SiteSettings newSite = await NewSiteHelper.CreateNewSite(config, siteRepository, true);
+                SiteSettings newSite = await siteManager.CreateNewSite(config, true);
 
                 await WritePageContent(response,
                     "CreatingRolesAndAdminUser" //SetupResources.CreatingRolesAndAdminUserMessage
@@ -777,10 +781,15 @@ namespace cloudscribe.Setup.Controllers
         private async Task<bool> CreateAdminUser(SiteSettings newSite)
         {
 
-            bool result = await NewSiteHelper.CreateRequiredRolesAndAdminUser(
+            //bool result = await NewSiteHelper.CreateRequiredRolesAndAdminUser(
+            //    newSite,
+            //    siteRepository,
+            //    userRepository,
+            //    config
+            //    );
+
+            bool result = await siteManager.CreateRequiredRolesAndAdminUser(
                 newSite,
-                siteRepository,
-                userRepository,
                 config
                 );
 
