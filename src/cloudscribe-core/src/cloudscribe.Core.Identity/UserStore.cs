@@ -126,7 +126,7 @@ namespace cloudscribe.Core.Identity
             if (result)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                result = result && await repo.AddUserToDefaultRoles(user);
+                result = result && await AddUserToDefaultRoles(user);
                     
             }
             //else
@@ -137,6 +137,51 @@ namespace cloudscribe.Core.Identity
             return IdentityResult.Success;
 
 
+        }
+
+        private async Task<bool> AddUserToDefaultRoles(ISiteUser siteUser)
+        {
+            // moved this to the config setting below instead of hard coded
+            //IRole role = Fetch(siteUser.SiteId, "Authenticated Users");
+            //if (role.RoleID > -1)
+            //{
+            //    AddUser(role.RoleID, role.RoleGuid, siteUser.UserId, siteUser.UserGuid);
+            //}
+
+            ISiteRole role;
+            bool result = true;
+            string defaultRoles = config.DefaultRolesForNewUsers();
+
+            if (defaultRoles.Length > 0)
+            {
+                if (defaultRoles.IndexOf(";") == -1)
+                {
+                    role = await repo.FetchRole(siteUser.SiteId, defaultRoles);
+                    if ((role != null) && (role.RoleId > -1))
+                    {
+                        result = await repo.AddUserToRole(role.RoleId, role.RoleGuid, siteUser.UserId, siteUser.UserGuid);
+                    }
+                }
+                else
+                {
+                    string[] roleArray = defaultRoles.Split(';');
+                    foreach (string roleName in roleArray)
+                    {
+                        if (!string.IsNullOrEmpty(roleName))
+                        {
+                            role = await repo.FetchRole(siteUser.SiteId, roleName);
+                            if ((role != null) && (role.RoleId > -1))
+                            {
+                                result = result && await repo.AddUserToRole(role.RoleId, role.RoleGuid, siteUser.UserId, siteUser.UserGuid);
+                            }
+                        }
+                    }
+
+                }
+
+            }
+
+            return result;
         }
 
         public async Task<IdentityResult> UpdateAsync(TUser user, CancellationToken cancellationToken)

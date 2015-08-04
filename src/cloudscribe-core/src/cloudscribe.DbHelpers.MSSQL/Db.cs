@@ -2,10 +2,10 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-01-10
-// Last Modified:			2015-07-04
+// Last Modified:			2015-08-04
 // 
 
-using cloudscribe.Configuration;
+using cloudscribe.Core.Models;
 using Microsoft.Framework.Configuration;
 using Microsoft.Framework.Logging;
 using System;
@@ -28,7 +28,7 @@ namespace cloudscribe.DbHelpers.MSSQL
             if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
             if (versionProviderFactory == null) { throw new ArgumentNullException(nameof(versionProviderFactory)); }
 
-            config = configuration;
+            //config = configuration;
             versionProviders = versionProviderFactory;
             logFactory = loggerFactory;
             log = loggerFactory.CreateLogger(typeof(Db).FullName);
@@ -40,7 +40,7 @@ namespace cloudscribe.DbHelpers.MSSQL
         private IVersionProviderFactory versionProviders;
         private ILoggerFactory logFactory;
         private ILogger log;
-        private IConfiguration config;
+        //private IConfiguration config;
         private string writeConnectionString;
         private string readConnectionString;
         private string ownerPrefix;

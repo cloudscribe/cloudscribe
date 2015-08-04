@@ -7,6 +7,7 @@
 
 using cloudscribe.Configuration;
 using cloudscribe.Core.Models;
+using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.ViewModels.Account;
 using cloudscribe.Core.Web.ViewModels.SiteUser;
 using cloudscribe.Core.Identity;

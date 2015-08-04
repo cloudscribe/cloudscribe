@@ -2,12 +2,13 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-06
-// Last Modified:			2015-07-20
+// Last Modified:			2015-08-04
 // 
 
 using cloudscribe.Configuration;
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Models;
+using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.ViewModels.RoleAdmin;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;

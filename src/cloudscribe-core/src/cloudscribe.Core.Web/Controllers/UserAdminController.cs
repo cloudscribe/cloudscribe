@@ -2,12 +2,12 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-08
-// Last Modified:			2015-07-24
+// Last Modified:			2015-08-04
 // 
 
 using cloudscribe.Configuration;
 using cloudscribe.Core.Models;
-using cloudscribe.Core.Models.Site;
+using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Web.ViewModels.Account;
 using cloudscribe.Core.Web.ViewModels.UserAdmin;

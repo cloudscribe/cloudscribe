@@ -2,9 +2,11 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-06-18
-// Last Modified:			2015-07-28
+// Last Modified:			2015-08-04
 // 
 
+using cloudscribe.Configuration;
+using cloudscribe.Core.Models;
 using Microsoft.AspNet.Hosting;
 using Microsoft.Framework.Configuration;
 using Microsoft.Framework.Logging;
@@ -14,7 +16,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 
-namespace cloudscribe.Configuration
+namespace cloudscribe.Core.Web.Components
 {
     public class ConfigVersionProviderFactory : IVersionProviderFactory
     {

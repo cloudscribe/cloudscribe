@@ -219,8 +219,7 @@ namespace cloudscribe.Core.Models
             set { primarySearchEngine = value; }
         }
 
-        private bool showAlternateSearchIfConfigured = false;
-
+        
         public bool ShowAlternateSearchIfConfigured { get; set; } = false;
         
         public string Slogan { get; set; } = string.Empty;

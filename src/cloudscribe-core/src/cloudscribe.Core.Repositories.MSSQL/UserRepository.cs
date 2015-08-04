@@ -878,50 +878,50 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
 
 
-        public async Task<bool> AddUserToDefaultRoles(ISiteUser siteUser)
-        {
-            // moved this to the config setting below instead of hard coded
-            //IRole role = Fetch(siteUser.SiteId, "Authenticated Users");
-            //if (role.RoleID > -1)
-            //{
-            //    AddUser(role.RoleID, role.RoleGuid, siteUser.UserId, siteUser.UserGuid);
-            //}
+        //public async Task<bool> AddUserToDefaultRoles(ISiteUser siteUser)
+        //{
+        //    // moved this to the config setting below instead of hard coded
+        //    //IRole role = Fetch(siteUser.SiteId, "Authenticated Users");
+        //    //if (role.RoleID > -1)
+        //    //{
+        //    //    AddUser(role.RoleID, role.RoleGuid, siteUser.UserId, siteUser.UserGuid);
+        //    //}
 
-            ISiteRole role;
-            bool result = true;
-            string defaultRoles = config.DefaultRolesForNewUsers();
+        //    ISiteRole role;
+        //    bool result = true;
+        //    string defaultRoles = config.DefaultRolesForNewUsers();
 
-            if (defaultRoles.Length > 0)
-            {
-                if (defaultRoles.IndexOf(";") == -1)
-                {
-                    role = await FetchRole(siteUser.SiteId, defaultRoles);
-                    if ((role != null) && (role.RoleId > -1))
-                    {
-                        result = await AddUserToRole(role.RoleId, role.RoleGuid, siteUser.UserId, siteUser.UserGuid);
-                    }
-                }
-                else
-                {
-                    string[] roleArray = defaultRoles.Split(';');
-                    foreach (string roleName in roleArray)
-                    {
-                        if (!string.IsNullOrEmpty(roleName))
-                        {
-                            role = await FetchRole(siteUser.SiteId, roleName);
-                            if ((role != null) && (role.RoleId > -1))
-                            {
-                                result = result && await AddUserToRole(role.RoleId, role.RoleGuid, siteUser.UserId, siteUser.UserGuid);
-                            }
-                        }
-                    }
+        //    if (defaultRoles.Length > 0)
+        //    {
+        //        if (defaultRoles.IndexOf(";") == -1)
+        //        {
+        //            role = await FetchRole(siteUser.SiteId, defaultRoles);
+        //            if ((role != null) && (role.RoleId > -1))
+        //            {
+        //                result = await AddUserToRole(role.RoleId, role.RoleGuid, siteUser.UserId, siteUser.UserGuid);
+        //            }
+        //        }
+        //        else
+        //        {
+        //            string[] roleArray = defaultRoles.Split(';');
+        //            foreach (string roleName in roleArray)
+        //            {
+        //                if (!string.IsNullOrEmpty(roleName))
+        //                {
+        //                    role = await FetchRole(siteUser.SiteId, roleName);
+        //                    if ((role != null) && (role.RoleId > -1))
+        //                    {
+        //                        result = result && await AddUserToRole(role.RoleId, role.RoleGuid, siteUser.UserId, siteUser.UserGuid);
+        //                    }
+        //                }
+        //            }
 
-                }
+        //        }
 
-            }
+        //    }
 
-            return result;
-        }
+        //    return result;
+        //}
 
         public async Task<bool> DeleteUserRoles(int userId)
         {

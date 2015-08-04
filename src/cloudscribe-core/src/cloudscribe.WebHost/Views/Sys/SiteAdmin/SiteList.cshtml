@@ -1,9 +1,10 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.SiteListViewModel
-@inject IConfiguration config
+@inject IOptions<MultiTenantOptions> multiTenantOptions
 
 @{
     var FolderHostLabel = "Preferred Host Name";
-    if (config.UseFoldersInsteadOfHostnamesForMultipleSites())
+    var options = multiTenantOptions.Options;
+    if (options.Mode == MultiTenantMode.FolderName)
     {
         FolderHostLabel = "Folder";
     }
@@ -42,7 +43,7 @@
                asp-route-siteguid="@item.SiteGuid"
                asp-route-slp="@Model.Paging.CurrentPage">CommonResources.Settings</a>
 
-@if (!config.UseFoldersInsteadOfHostnamesForMultipleSites())
+@if (!(options.Mode == MultiTenantMode.FolderName))
 {
     <a class="btn btn-xs btn-default hostmap" asp-action="SiteHostMappings"
        asp-controller="SiteAdmin"
@@ -54,7 +55,7 @@
             @Html.DisplayFor(modelItem => item.SiteName)
         </td>
         <td>
-            @if (config.UseFoldersInsteadOfHostnamesForMultipleSites())
+            @if (options.Mode == MultiTenantMode.FolderName)
             {
                 <a href="/@item.SiteFolderName" target="_blank">/@item.SiteFolderName</a>
             }
