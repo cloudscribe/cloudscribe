@@ -7,9 +7,7 @@
 // TODO: support custom profile properties that are required for registration
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using cloudscribe.Configuration;
 //using cloudscribe.Configuration.DataAnnotations;
 //using ExpressiveAnnotations.Attributes;
 

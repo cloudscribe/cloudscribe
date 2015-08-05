@@ -2,14 +2,14 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-08-03
-// Last Modified:			2015-08-03
+// Last Modified:			2015-08-05
 // 
 
 using Microsoft.Framework.Configuration;
 using System;
 
 
-namespace cloudscribe.Configuration
+namespace cloudscribe.Core.Models
 {
     public class ConfigHelper
     {

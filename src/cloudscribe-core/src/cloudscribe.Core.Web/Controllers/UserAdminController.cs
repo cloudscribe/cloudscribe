@@ -2,19 +2,17 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-08
-// Last Modified:			2015-08-04
+// Last Modified:			2015-08-05
 // 
 
-using cloudscribe.Configuration;
+using cloudscribe.Core.Identity;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Web.Components;
-using cloudscribe.Core.Identity;
 using cloudscribe.Core.Web.ViewModels.Account;
 using cloudscribe.Core.Web.ViewModels.UserAdmin;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Mvc;
-using Microsoft.Framework.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -28,7 +26,7 @@ namespace cloudscribe.Core.Web.Controllers
         public UserAdminController(
             SiteManager siteManager,
             SiteUserManager<SiteUser> userManager,
-            IConfiguration configuration
+            ConfigHelper configuration
             )
         {
            
@@ -37,7 +35,7 @@ namespace cloudscribe.Core.Web.Controllers
             config = configuration;
         }
 
-        private IConfiguration config;
+        private ConfigHelper config;
         private SiteManager siteManager;
         public SiteUserManager<SiteUser> UserManager { get; private set; }
 

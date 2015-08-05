@@ -2,13 +2,10 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-22
-// Last Modified:		    2015-07-31
+// Last Modified:		    2015-08-05
 // 
 
-
-using cloudscribe.Configuration;
 using cloudscribe.Core.Models;
-using Microsoft.Framework.Configuration;
 using Microsoft.Framework.Logging;
 using Microsoft.AspNet.Identity;
 using System;
@@ -32,13 +29,13 @@ namespace cloudscribe.Core.Identity
         IUserTwoFactorStore<TUser>
         where TUser : SiteUser
     {
-        //private static readonly ILog log = LogManager.GetLogger(typeof(UserStore<TUser>));
-        //private ILoggerFactory logFactory;
+        
         private ILogger log;
         private bool debugLog = false;
         private ISiteResolver resolver;
         private ISiteSettings _siteSettings = null;
-        private IConfiguration config;
+        private ConfigHelper config;
+        
 
         private ISiteSettings siteSettings
         {
@@ -56,15 +53,13 @@ namespace cloudscribe.Core.Identity
         private UserStore() { }
 
         public UserStore(
-            //ILoggerFactory loggerFactory,
             ILogger<UserStore<TUser>> logger,
             ISiteResolver siteResolver,
             IUserRepository userRepository,
-            IConfiguration configuration
+            ConfigHelper config
             )
         {
-            //logFactory = loggerFactory;
-            //log = loggerFactory.CreateLogger(this.GetType().FullName);
+            
             log = logger;
 
             if (siteResolver == null) { throw new ArgumentNullException(nameof(siteResolver)); }
@@ -72,11 +67,10 @@ namespace cloudscribe.Core.Identity
 
             if (userRepository == null) { throw new ArgumentNullException(nameof(userRepository)); }
             repo = userRepository;
+            
+            this.config = config;
 
-            if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
-            config = configuration;
-
-            debugLog = config.UserStoreDebugEnabled();
+            debugLog = config.GetOrDefault("AppSettings:UserStoreDebugEnabled", false);
 
             if (debugLog) { log.LogInformation("constructor"); }
         }
@@ -150,7 +144,7 @@ namespace cloudscribe.Core.Identity
 
             ISiteRole role;
             bool result = true;
-            string defaultRoles = config.DefaultRolesForNewUsers();
+            string defaultRoles = config.GetOrDefault("AppSettings:DefaultRolesForNewUsers", "Authenticated Users");
 
             if (defaultRoles.Length > 0)
             {

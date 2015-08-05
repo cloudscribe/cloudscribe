@@ -2,15 +2,13 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-18
-// Last Modified:			2015-08-03
+// Last Modified:			2015-08-05
 // 
 
 
-using cloudscribe.Configuration;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.DataExtensions;
 using cloudscribe.DbHelpers.MSSQL;
-using Microsoft.Framework.Configuration;
 using Microsoft.Framework.Logging;
 using Microsoft.Framework.OptionsModel;
 using System;
@@ -24,20 +22,20 @@ namespace cloudscribe.Core.Repositories.MSSQL
     {
         
         public UserRepository(
-            IConfiguration configuration,
+            IOptions<MSSQLConnectionOptions> connectionOptions,
             IOptions<MultiTenantOptions> multiTenantOptions,
             ILoggerFactory loggerFactory)
         {
-            if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
+            if (connectionOptions == null) { throw new ArgumentNullException(nameof(connectionOptions)); }
+            if (multiTenantOptions == null) { throw new ArgumentNullException(nameof(multiTenantOptions)); }
             if (loggerFactory == null) { throw new ArgumentNullException(nameof(loggerFactory)); }
 
-            config = configuration;
             this.multiTenantOptions = multiTenantOptions.Options;
             logFactory = loggerFactory;
             log = loggerFactory.CreateLogger(typeof(UserRepository).FullName);
 
-            readConnectionString = configuration.GetMSSQLReadConnectionString();
-            writeConnectionString = configuration.GetMSSQLWriteConnectionString();
+            readConnectionString = connectionOptions.Options.ReadConnectionString;
+            writeConnectionString = connectionOptions.Options.WriteConnectionString;
 
             dbSiteUser = new DBSiteUser(readConnectionString, writeConnectionString, logFactory);
             dbUserLogins = new DBUserLogins(readConnectionString, writeConnectionString, logFactory);
@@ -49,7 +47,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
         private MultiTenantOptions multiTenantOptions;
         private ILoggerFactory logFactory;
         private ILogger log;
-        private IConfiguration config;
+        //private IConfiguration config;
         private string readConnectionString;
         private string writeConnectionString;
         private DBSiteUser dbSiteUser;

@@ -13,9 +13,8 @@
   "releaseNotes": "",
 
   "dependencies": {
-    "cloudscribe.Configuration": "1.0.0-*",
-
-    "Microsoft.AspNet.Identity": "3.0.0-beta6"
+    "Microsoft.AspNet.Identity": "3.0.0-beta6",
+    "Microsoft.Framework.Configuration": "1.0.0-beta6"
   },
 
   "frameworks": {

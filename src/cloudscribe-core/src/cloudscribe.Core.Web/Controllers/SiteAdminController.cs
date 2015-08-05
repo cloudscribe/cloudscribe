@@ -5,16 +5,13 @@
 // Last Modified:			2015-08-04
 // 
 
-using cloudscribe.Configuration;
 using cloudscribe.Core.Models;
-using cloudscribe.Core.Models.Geography;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.Helpers;
 using cloudscribe.Core.Web.ViewModels.SiteSettings;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Rendering;
-using Microsoft.Framework.Configuration;
 using Microsoft.Framework.OptionsModel;
 using System;
 using System.Globalization;
@@ -29,7 +26,7 @@ namespace cloudscribe.Core.Web.Controllers
         //private ISiteSettings Site;
         private SiteManager siteManager;
         private GeoDataManager geoDataManager;
-        private IConfiguration config;
+        private ConfigHelper config;
         private MultiTenantOptions multiTenantOptions;
         //private ITriggerStartup startup;
 
@@ -37,7 +34,7 @@ namespace cloudscribe.Core.Web.Controllers
             SiteManager siteManager,
             GeoDataManager geoDataManager,
             IOptions<MultiTenantOptions> multiTenantOptions,
-            IConfiguration configuration
+            ConfigHelper configuration
             //, ITriggerStartup startupTrigger
             )
         {

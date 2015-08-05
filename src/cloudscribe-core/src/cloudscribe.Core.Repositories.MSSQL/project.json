@@ -15,9 +15,7 @@
   "dependencies": {
     "cloudscribe.DbHelpers.MSSQL": "1.0.0-*",
     "cloudscribe.Core.Models": "1.0.0-*",
-    "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta6",
-
-    "Microsoft.Framework.Configuration.Abstractions": "1.0.0-beta6"
+    "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta6"
   },
 
   "frameworks": {

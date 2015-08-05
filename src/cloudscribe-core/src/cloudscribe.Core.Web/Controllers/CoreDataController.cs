@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-11-15
-// Last Modified:			2015-08-04
+// Last Modified:			2015-08-05
 // 
 
 using cloudscribe.Core.Web.Components;
@@ -13,7 +13,6 @@ using cloudscribe.Web.Navigation;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Rendering;
-using Microsoft.Framework.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -27,7 +26,7 @@ namespace cloudscribe.Core.Web.Controllers
         public CoreDataController(
             ISiteResolver siteResolver,
             GeoDataManager geoDataManager,
-            IConfiguration configuration
+            ConfigHelper configuration
             )
         {
             Site = siteResolver.Resolve();
@@ -36,7 +35,7 @@ namespace cloudscribe.Core.Web.Controllers
         }
 
         private ISiteSettings Site;
-        private IConfiguration config;
+        private ConfigHelper config;
         private GeoDataManager dataManager;
 
         //disable warning about not really being async

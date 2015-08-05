@@ -24,7 +24,6 @@
         "Microsoft.Framework.Logging": "1.0.0-beta6",
         "Microsoft.Framework.Logging.Console": "1.0.0-beta6",
         "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.0.0-beta6",
-        "cloudscribe.Configuration": "1.0.0-*",
         "cloudscribe.Core.Identity": "1.0.0-*",
         "cloudscribe.Core.Models": "1.0.0-*",
         "cloudscribe.Core.Repositories.MSSQL": "1.0.0-*",

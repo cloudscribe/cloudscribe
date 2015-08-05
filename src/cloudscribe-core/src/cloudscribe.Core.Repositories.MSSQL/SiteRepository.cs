@@ -2,15 +2,14 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2015-07-04
+// Last Modified:			2015-08-05
 // 
 
-using cloudscribe.Configuration;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.DataExtensions;
 using cloudscribe.DbHelpers.MSSQL;
 using Microsoft.Framework.Logging;
-using Microsoft.Framework.Configuration;
+using Microsoft.Framework.OptionsModel;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -22,18 +21,18 @@ namespace cloudscribe.Core.Repositories.MSSQL
     public sealed class SiteRepository : ISiteRepository
     {
         public SiteRepository(
-            IConfiguration configuration,
+            IOptions<MSSQLConnectionOptions> connectionOptions,
             ILoggerFactory loggerFactory
             )
         {
-            if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
+            if (connectionOptions == null) { throw new ArgumentNullException(nameof(connectionOptions)); }
             if (loggerFactory == null) { throw new ArgumentNullException(nameof(loggerFactory)); }
 
             logFactory = loggerFactory;
             log = loggerFactory.CreateLogger(typeof(SiteRepository).FullName);
-           
-            readConnectionString = configuration.GetMSSQLReadConnectionString();
-            writeConnectionString = configuration.GetMSSQLWriteConnectionString();
+
+            readConnectionString = connectionOptions.Options.ReadConnectionString;
+            writeConnectionString = connectionOptions.Options.WriteConnectionString;
 
             dbSiteSettings = new DBSiteSettings(readConnectionString, writeConnectionString, logFactory);
             dbSiteSettingsEx = new DBSiteSettingsEx(readConnectionString, writeConnectionString, logFactory);

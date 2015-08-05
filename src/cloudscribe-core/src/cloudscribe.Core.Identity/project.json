@@ -13,11 +13,9 @@
   "releaseNotes": "",
 
     "dependencies": {
-        "cloudscribe.Configuration": "1.0.0-*",
         "cloudscribe.Core.Models": "1.0.0-*",
         "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta6",
         "Microsoft.AspNet.Identity": "3.0.0-beta6",
-        "Microsoft.Framework.Configuration.Abstractions": "1.0.0-beta6",
         "Microsoft.AspNet.Authentication": "1.0.0-beta6",
         "Microsoft.AspNet.Authentication.Cookies": "1.0.0-beta6",
         "Microsoft.AspNet.Http": "1.0.0-beta6",

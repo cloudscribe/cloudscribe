@@ -8,6 +8,8 @@ http://blogs.msdn.com/b/visualstudioalm/archive/2015/07/20/performance-and-diagn
 http://shazwazza.com/post/aspnet-5-re-learning-a-few-things-part-1/
 http://weblogs.asp.net/imranbaloch/aspnet-vnext-folder-structure
 
+https://weblog.west-wind.com/posts/2015/Jun/03/Strongly-typed-AppSettings-Configuration-in-ASPNET-5
+
 
 ViewComponents
 http://www.asp.net/vnext/overview/aspnet-vnext/vc

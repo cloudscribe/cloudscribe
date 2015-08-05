@@ -2,11 +2,11 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-01-10
-// Last Modified:			2015-08-04
+// Last Modified:			2015-08-05
 // 
 
 using cloudscribe.Core.Models;
-using Microsoft.Framework.Configuration;
+using Microsoft.Framework.OptionsModel;
 using Microsoft.Framework.Logging;
 using System;
 using System.Data;
@@ -21,26 +21,25 @@ namespace cloudscribe.DbHelpers.MSSQL
     {
         public Db(
             ILoggerFactory loggerFactory,
-            IConfiguration configuration,
+            IOptions<MSSQLConnectionOptions> connectionOptions,
             IVersionProviderFactory versionProviderFactory)
         {
             if (loggerFactory == null) { throw new ArgumentNullException(nameof(loggerFactory)); }
-            if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
+            if (connectionOptions == null) { throw new ArgumentNullException(nameof(connectionOptions)); }
             if (versionProviderFactory == null) { throw new ArgumentNullException(nameof(versionProviderFactory)); }
 
-            //config = configuration;
             versionProviders = versionProviderFactory;
             logFactory = loggerFactory;
             log = loggerFactory.CreateLogger(typeof(Db).FullName);
-            writeConnectionString = configuration.GetMSSQLWriteConnectionString();
-            readConnectionString = configuration.GetMSSQLReadConnectionString();
-            ownerPrefix = configuration.MSSQLOwnerPrefix();
+ 
+            readConnectionString = connectionOptions.Options.ReadConnectionString;
+            writeConnectionString = connectionOptions.Options.WriteConnectionString;
+            ownerPrefix = connectionOptions.Options.OwnerPrefix;
         }
 
         private IVersionProviderFactory versionProviders;
         private ILoggerFactory logFactory;
         private ILogger log;
-        //private IConfiguration config;
         private string writeConnectionString;
         private string readConnectionString;
         private string ownerPrefix;

@@ -2,13 +2,10 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-11-15
-// Last Modified:			2014-12-14
+// Last Modified:			2015-08-05
 // 
 
-using cloudscribe.Configuration;
-using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Globalization;
 
 namespace cloudscribe.Core.Models

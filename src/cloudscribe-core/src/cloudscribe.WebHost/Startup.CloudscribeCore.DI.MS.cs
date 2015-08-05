@@ -23,7 +23,6 @@ using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Razor;
 using Microsoft.AspNet.Routing;
-using cloudscribe.Configuration;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Identity;
 using cloudscribe.Core.Models.Site;
@@ -31,6 +30,7 @@ using cloudscribe.Core.Models.Geography;
 using cloudscribe.Core.Web;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.Navigation;
+
 using cloudscribe.Messaging;
 using cloudscribe.Web.Navigation;
 using cloudscribe.Core.Identity;
@@ -58,7 +58,7 @@ namespace cloudscribe.WebHost
 
 
             services.AddInstance<IConfiguration>(configuration);
-
+            services.TryAdd(ServiceDescriptor.Scoped<ConfigHelper, ConfigHelper>());
             services.Configure<MultiTenantOptions>(configuration.GetConfigurationSection("MultiTenantOptions"));
 
 
@@ -69,6 +69,7 @@ namespace cloudscribe.WebHost
             // so you would have to remove the dnxcore50 from the project.json in this project
             // add a nuget for one of the other cloudscribe.Core.Repositories.dbplatform 
             // and cloudscribe.DbHelpers.dbplatform packages
+            services.Configure<cloudscribe.DbHelpers.MSSQL.MSSQLConnectionOptions>(configuration.GetConfigurationSection("Data:MSSQLConnectionOptions"));
             services.TryAdd(ServiceDescriptor.Scoped<ISiteRepository, cloudscribe.Core.Repositories.MSSQL.SiteRepository>());
             services.TryAdd(ServiceDescriptor.Scoped<IUserRepository, cloudscribe.Core.Repositories.MSSQL.UserRepository>());
             services.TryAdd(ServiceDescriptor.Scoped<IGeoRepository, cloudscribe.Core.Repositories.MSSQL.GeoRepository>());

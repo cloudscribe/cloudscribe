@@ -2,12 +2,12 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-11-02
-// Last Modified:			2015-07-04
+// Last Modified:			2015-08-05
 // 
 
 using cloudscribe.Core.Models.Geography;
 using cloudscribe.DbHelpers.MSSQL;
-using Microsoft.Framework.Configuration;
+using Microsoft.Framework.OptionsModel;
 using Microsoft.Framework.Logging;
 using System;
 using System.Collections.Generic;
@@ -19,17 +19,17 @@ namespace cloudscribe.Core.Repositories.MSSQL
     public sealed class GeoRepository : IGeoRepository
     {
         public GeoRepository(
-            IConfiguration configuration,
+            IOptions<MSSQLConnectionOptions> connectionOptions,
             ILoggerFactory loggerFactory)
         {
-            if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
+            if (connectionOptions == null) { throw new ArgumentNullException(nameof(connectionOptions)); }
             if (loggerFactory == null) { throw new ArgumentNullException(nameof(loggerFactory)); }
 
             logFactory = loggerFactory;
             log = loggerFactory.CreateLogger(typeof(GeoRepository).FullName);
 
-            readConnectionString = configuration.GetMSSQLReadConnectionString();
-            writeConnectionString = configuration.GetMSSQLWriteConnectionString();
+            readConnectionString = connectionOptions.Options.ReadConnectionString;
+            writeConnectionString = connectionOptions.Options.WriteConnectionString;
 
             dbGeoCountry = new DBGeoCountry(readConnectionString, writeConnectionString, logFactory);
             dbGeoZone = new DBGeoZone(readConnectionString, writeConnectionString, logFactory);

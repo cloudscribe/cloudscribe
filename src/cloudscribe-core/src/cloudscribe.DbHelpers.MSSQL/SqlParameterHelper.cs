@@ -26,7 +26,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 //using log4net;
 using Microsoft.Framework.Logging;
-using cloudscribe.Configuration;
+
 
 namespace cloudscribe.DbHelpers.MSSQL
 {

@@ -14,8 +14,7 @@
 
   "dependencies": {
     "Microsoft.Framework.Caching.Abstractions": "1.0.0-beta6",
-    "cloudscribe.Core.Models": "1.0.0-*",
-    "cloudscribe.Configuration": "1.0.0-*"
+    "cloudscribe.Core.Models": "1.0.0-*"
 
   },
 

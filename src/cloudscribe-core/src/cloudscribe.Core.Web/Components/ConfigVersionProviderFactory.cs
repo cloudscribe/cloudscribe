@@ -2,13 +2,10 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-06-18
-// Last Modified:			2015-08-04
+// Last Modified:			2015-08-05
 // 
 
-using cloudscribe.Configuration;
 using cloudscribe.Core.Models;
-using Microsoft.AspNet.Hosting;
-using Microsoft.Framework.Configuration;
 using Microsoft.Framework.Logging;
 using Microsoft.Framework.Runtime;
 using System;
@@ -22,17 +19,23 @@ namespace cloudscribe.Core.Web.Components
     {
         public ConfigVersionProviderFactory(
             IApplicationEnvironment appEnv,
-            IConfiguration configuration,
+            ConfigHelper configuration,
             ILoggerFactory loggerFactory)
         {
-            //logFactory = loggerFactory;
+
             log = loggerFactory.CreateLogger(typeof(ConfigVersionProviderFactory).FullName);
-            //env = hostingEnvironment;
             appBasePath = appEnv.ApplicationBasePath;
             config = configuration;
             configFolderName = config.GetOrDefault("AppSettings:VersionProviderFolderPath", configFolderName);
             didLoadList = LoadList();
         }
+
+        private string appBasePath;
+        private string configFolderName = "/config/codeversionproviders";
+        private ConfigHelper config;
+        private ILogger log;
+        private bool didLoadList = false;
+        private List<IVersionProvider> versionProviders = new List<IVersionProvider>();
 
         private bool LoadList()
         {
@@ -70,13 +73,7 @@ namespace cloudscribe.Core.Web.Components
         }
 
 
-        private string appBasePath;
-        private string configFolderName = "/config/codeversionproviders";
-       // private IHostingEnvironment env;
-        private IConfiguration config;
-        private ILogger log;
-        private bool didLoadList = false;
-        private List<IVersionProvider> versionProviders = new List<IVersionProvider>();
+       
 
         #region IVersionProviderFactory
 

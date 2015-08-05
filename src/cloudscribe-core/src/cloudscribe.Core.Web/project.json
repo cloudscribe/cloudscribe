@@ -15,7 +15,7 @@
 
   "dependencies": {
     "cloudscribe.Core.Identity": "1.0.0-*",
-    "cloudscribe.Configuration": "1.0.0-*",
+
     "cloudscribe.Core.Models": "1.0.0-*",
     "Newtonsoft.Json": "7.0.1",
     "Microsoft.AspNet.Mvc": "6.0.0-beta6",
@@ -51,6 +51,7 @@
         "System.Linq": "4.0.0-beta-23109",
         "System.Threading": "4.0.10-beta-23109",
         "System.Runtime": "4.0.20-beta-23109",
+        "System.Xml.XmlDocument": "4.0.0-beta-23109",
         "Microsoft.CSharp": "4.0.0-beta-23109"
       }
     }

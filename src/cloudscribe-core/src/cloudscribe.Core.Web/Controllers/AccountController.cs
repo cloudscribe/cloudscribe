@@ -5,18 +5,16 @@
 // Last Modified:			2015-07-28
 // 
 
-using cloudscribe.Configuration;
+using cloudscribe.Core.Identity;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.ViewModels.Account;
 using cloudscribe.Core.Web.ViewModels.SiteUser;
-using cloudscribe.Core.Identity;
 using cloudscribe.Messaging;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Rendering;
-using Microsoft.Framework.Configuration;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -32,7 +30,7 @@ namespace cloudscribe.Core.Web.Controllers
             ISiteResolver siteResolver,
             SiteUserManager<SiteUser> userManager,
             SiteSignInManager<SiteUser> signInManager,
-            IConfiguration configuration,
+            ConfigHelper configuration,
             IEmailSender emailSender,
             ISmsSender smsSender)
         {
@@ -46,7 +44,7 @@ namespace cloudscribe.Core.Web.Controllers
 
         //private ISiteResolver resolver;
         private readonly ISiteSettings Site;
-        private readonly IConfiguration config;
+        private readonly ConfigHelper config;
         private readonly SiteUserManager<SiteUser> userManager;
         private readonly SiteSignInManager<SiteUser> signInManager;
         private readonly IEmailSender emailSender;

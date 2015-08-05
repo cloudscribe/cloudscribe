@@ -5,19 +5,15 @@
 // Last Modified:			2015-08-03
 // 
 
-using cloudscribe.Configuration;
 using cloudscribe.Core.Models;
-using cloudscribe.Core.Models.Site;
 using cloudscribe.Core.Web.Components;
 //using cloudscribe.Resources;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc;
-using Microsoft.Framework.Configuration;
 using Microsoft.Framework.Logging;
 using Microsoft.Framework.Runtime;
 using System;
-using System.Collections.Generic;
 using System.Data.Common;
 using System.Globalization;
 using System.IO;
@@ -34,7 +30,7 @@ namespace cloudscribe.Setup.Controllers
             IHostingEnvironment env,
             IApplicationEnvironment appEnv,
             ILoggerFactory loggerFactory,
-            IConfiguration configuration,
+            ConfigHelper configuration,
             IDb dbImplementation,
             SiteManager siteManager,
             ISiteRepository siteRepositoryImplementation,
@@ -67,7 +63,7 @@ namespace cloudscribe.Setup.Controllers
         private ILoggerFactory logFactory;
         private ILogger log;
         //private IVersionProviderFactory versionProviders;
-        private IConfiguration config;
+        private ConfigHelper config;
         private bool setupIsDisabled = false;
         private bool dataFolderIsWritable = false;
         private bool canAccessDatabase = false;
