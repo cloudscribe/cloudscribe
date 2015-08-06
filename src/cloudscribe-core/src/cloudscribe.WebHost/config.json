@@ -12,9 +12,10 @@
       "ConnectionString": "Server=(localdb)\\mssqllocaldb;Database=aspnet5-cloudscribe.WebHost-2e617978-2b5e-4a31-8ece-1e957d5503b0;Trusted_Connection=True;MultipleActiveResultSets=true"
     },
     "MSSQLConnectionOptions": {
-      "ReadConnectionString": "server=yourservername;UID=yourdatabaseusername;PWD=yourdatabaseuserpassword;database=yourdatabasename",
-      "WriteConnectionString": "server=yourservername;UID=yourdatabaseusername;PWD=yourdatabaseuserpassword;database=yourdatabasename",
-      "OwnerPrefix": "[dbo]."
+      "ConnectionString": "server=yourservername;UID=yourdatabaseusername;PWD=yourdatabaseuserpassword;database=yourdatabasename"
+    },
+    "FirebirdConnectionOptions": {
+      "ConnectionString": "Data Source=localhost;Server Type=0;Port Number=3050;Database=C:\\yourpath\\yourdbname.fdb;Dialect=3;Charset=UTF8;Pooling=True;Min Pool Size=0;Max Pool Size=200;Connection Timeout=10;Connection Lifetime=60;Fetch Size=200;User Id=SYSDBA;Password=masterkey"
     }
     
   }

@@ -15,26 +15,26 @@
 
   "dependencies": {
     "cloudscribe.Core.Identity": "1.0.0-*",
-
     "cloudscribe.Core.Models": "1.0.0-*",
+    "cloudscribe.Messaging": "1.0.0-*",
+    "cloudscribe.Web.Navigation": "1.0.0-*",
     "Newtonsoft.Json": "7.0.1",
     "Microsoft.AspNet.Mvc": "6.0.0-beta6",
-
     "Microsoft.AspNet.Authentication": "1.0.0-beta6",
     "Microsoft.AspNet.Authentication.Cookies": "1.0.0-beta6",
     "Microsoft.AspNet.Http.Extensions": "1.0.0-beta6",
     "Microsoft.AspNet.Authorization": "1.0.0-beta6",
     "Microsoft.AspNet.Authentication.MicrosoftAccount": "1.0.0-beta6",
     "Microsoft.AspNet.Authentication.Facebook": "1.0.0-beta6",
-    "cloudscribe.Messaging": "1.0.0-*",
+    
     "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta6",
     "Microsoft.AspNet.Razor": "4.0.0-beta6",
     "Microsoft.AspNet.Http.Abstractions": "1.0.0-beta6",
     "Microsoft.AspNet.Http.Features": "1.0.0-beta6",
     "Microsoft.AspNet.Mvc.TagHelpers": "6.0.0-beta6",
-    "Microsoft.Framework.OptionsModel": "1.0.0-beta6",
+    "Microsoft.Framework.OptionsModel": "1.0.0-beta6"
 
-    "cloudscribe.Web.Navigation": "1.0.0-*"
+    
   },
 
   "frameworks": {
@@ -46,10 +46,9 @@
     "dnxcore50": {
       "dependencies": {
         "System.Collections": "4.0.10-beta-23109",
-        "System.Net.Http": "4.0.0-beta-23109",
+        "System.Net.Http": "4.0.0-*",
         "System.Net.Http.WinHttpHandler": "4.0.0-beta-23109",
         "System.Linq": "4.0.0-beta-23109",
-        "System.Threading": "4.0.10-beta-23109",
         "System.Runtime": "4.0.20-beta-23109",
         "System.Xml.XmlDocument": "4.0.0-beta-23109",
         "Microsoft.CSharp": "4.0.0-beta-23109"

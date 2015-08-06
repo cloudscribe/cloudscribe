@@ -36,8 +36,8 @@
         "Microsoft.Framework.DependencyInjection.Abstractions": "1.0.0-beta6",
         "Microsoft.AspNet.Session": "1.0.0-beta6",
       "Microsoft.Framework.Caching.Memory": "1.0.0-beta6",
-      "Autofac": "4.0.0-beta5-90",
-      "Autofac.Framework.DependencyInjection": "4.0.0-beta5-90"
+      "Autofac": "4.0.0-beta6-110",
+      "Autofac.Framework.DependencyInjection": "4.0.0-beta6-110"
         
     },
 

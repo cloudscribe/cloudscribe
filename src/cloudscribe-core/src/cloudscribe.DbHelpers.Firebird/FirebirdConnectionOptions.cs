@@ -1,14 +1,17 @@
 ﻿// Copyright (c) Source Tree Solutions, LLC. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
-// Created:					2015-08-05
+// Created:					2015-08-06
 // Last Modified:			2015-08-06
 // 
 
-namespace cloudscribe.DbHelpers.MSSQL
+
+
+namespace cloudscribe.DbHelpers.Firebird
 {
-    public class MSSQLConnectionOptions
+    public class FirebirdConnectionOptions
     {
+
         private string connectionString = string.Empty;
 
         public string ConnectionString
@@ -21,7 +24,8 @@ namespace cloudscribe.DbHelpers.MSSQL
 
         public string ReadConnectionString
         {
-            get {
+            get
+            {
                 if (readConnectionString.Length > 0) { return readConnectionString; }
                 return connectionString;
             }
@@ -32,13 +36,12 @@ namespace cloudscribe.DbHelpers.MSSQL
 
         public string WriteConnectionString
         {
-            get {  if(writeConnectionString.Length > 0) { return writeConnectionString; }
-                    return connectionString;   
-                 } 
+            get
+            {
+                if (writeConnectionString.Length > 0) { return writeConnectionString; }
+                return connectionString;
+            }
             set { writeConnectionString = value; }
         }
-
-
-        public string OwnerPrefix { get; set; } = "[dbo].";
     }
 }

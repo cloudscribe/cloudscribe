@@ -33,7 +33,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
             readConnectionString = connectionOptions.Options.ReadConnectionString;
             writeConnectionString = connectionOptions.Options.WriteConnectionString;
-
+            
             dbSiteSettings = new DBSiteSettings(readConnectionString, writeConnectionString, logFactory);
             dbSiteSettingsEx = new DBSiteSettingsEx(readConnectionString, writeConnectionString, logFactory);
             dbSiteFolder = new DBSiteFolder(readConnectionString, writeConnectionString, logFactory);
