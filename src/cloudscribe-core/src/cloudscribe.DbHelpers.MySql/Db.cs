@@ -2,11 +2,10 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2004-08-03
-// Last Modified:		    2015-07-04
+// Last Modified:		    2015-08-06
 
-using cloudscribe.Configuration;
 using cloudscribe.Core.Models;
-using Microsoft.Framework.Configuration;
+using Microsoft.Framework.OptionsModel;
 using Microsoft.Framework.Logging;
 using MySql.Data.MySqlClient;
 using System;
@@ -22,25 +21,23 @@ namespace cloudscribe.DbHelpers.MySql
     {
         public Db(
             ILoggerFactory loggerFactory,
-            IConfiguration configuration,
+            IOptions<MySqlConnectionOptionscs> configuration,
             IVersionProviderFactory versionProviderFactory)
         {
             if (loggerFactory == null) { throw new ArgumentNullException(nameof(loggerFactory)); }
             if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
             if (versionProviderFactory == null) { throw new ArgumentNullException(nameof(versionProviderFactory)); }
 
-            config = configuration;
             versionProviders = versionProviderFactory;
             logFactory = loggerFactory;
             log = loggerFactory.CreateLogger(typeof(Db).FullName);
 
-            writeConnectionString = configuration.GetMySqlWriteConnectionString();
-            readConnectionString = configuration.GetMySqlReadConnectionString();
+            writeConnectionString = configuration.Options.WriteConnectionString;
+            readConnectionString = configuration.Options.ReadConnectionString;
 
         }
 
         private IVersionProviderFactory versionProviders;
-        private IConfiguration config;
         private ILoggerFactory logFactory;
         private ILogger log;
         private string writeConnectionString;

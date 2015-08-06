@@ -2,12 +2,12 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-11-03
-// Last Modified:			2015-07-04
+// Last Modified:			2015-08-06
 // 
 
 using cloudscribe.Core.Models.Geography;
 using cloudscribe.DbHelpers.MySql;
-using Microsoft.Framework.Configuration;
+using Microsoft.Framework.OptionsModel;
 using Microsoft.Framework.Logging;
 using System;
 using System.Collections.Generic;
@@ -19,7 +19,7 @@ namespace cloudscribe.Core.Repositories.MySql
     public sealed class GeoRepository : IGeoRepository
     {
         public GeoRepository(
-            IConfiguration configuration,
+            IOptions<MySqlConnectionOptionscs> configuration,
             ILoggerFactory loggerFactory)
         {
             if(configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
@@ -28,8 +28,8 @@ namespace cloudscribe.Core.Repositories.MySql
             logFactory = loggerFactory;
             log = loggerFactory.CreateLogger(typeof(GeoRepository).FullName);
 
-            readConnectionString = configuration.GetMySqlReadConnectionString();
-            writeConnectionString = configuration.GetMySqlWriteConnectionString();
+            readConnectionString = configuration.Options.ReadConnectionString;
+            writeConnectionString = configuration.Options.WriteConnectionString;
 
             dbGeoCountry = new DBGeoCountry(readConnectionString, writeConnectionString, logFactory);
             dbGeoZone = new DBGeoZone(readConnectionString, writeConnectionString, logFactory);

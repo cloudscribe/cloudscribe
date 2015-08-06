@@ -47,7 +47,6 @@ namespace cloudscribe.Core.Repositories.MSSQL
         private MultiTenantOptions multiTenantOptions;
         private ILoggerFactory logFactory;
         private ILogger log;
-        //private IConfiguration config;
         private string readConnectionString;
         private string writeConnectionString;
         private DBSiteUser dbSiteUser;

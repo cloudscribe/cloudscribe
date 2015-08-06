@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-06-23
+// Last Modified:			2015-08-06
 //
 
 using cloudscribe.DbHelpers.Firebird;
@@ -1750,6 +1750,26 @@ namespace cloudscribe.Core.Repositories.Firebird
             arParams[0].Value = siteGuid.ToString();
 
             return await AdoHelper.ExecuteReaderAsync(
+                readConnectionString,
+                sqlCommand.ToString(),
+                arParams);
+        }
+
+        public DbDataReader GetSiteNonAsync(Guid siteGuid)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+
+            sqlCommand.Append("SELECT * ");
+            sqlCommand.Append("FROM	mp_Sites ");
+            sqlCommand.Append("WHERE SiteGuid = @SiteGuid ");
+            sqlCommand.Append("ORDER BY	SiteName ;");
+
+            FbParameter[] arParams = new FbParameter[1];
+
+            arParams[0] = new FbParameter("@SiteGuid", FbDbType.VarChar, 36);
+            arParams[0].Value = siteGuid.ToString();
+
+            return AdoHelper.ExecuteReader(
                 readConnectionString,
                 sqlCommand.ToString(),
                 arParams);

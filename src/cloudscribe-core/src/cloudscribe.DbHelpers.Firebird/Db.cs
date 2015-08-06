@@ -7,9 +7,8 @@
 
 using cloudscribe.Core.Models;
 using FirebirdSql.Data.FirebirdClient;
-using Microsoft.Framework.Configuration;
-using Microsoft.Framework.OptionsModel;
 using Microsoft.Framework.Logging;
+using Microsoft.Framework.OptionsModel;
 using System;
 using System.Data;
 using System.Data.Common;

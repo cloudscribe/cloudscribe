@@ -13,40 +13,7 @@ namespace cloudscribe.DbHelpers.MSSQL
 {
     public static class Extensions
     {
-        //public static string GetMSSQLWriteConnectionString(this IConfiguration configuration)
-        //{
-        //    string connectionString = configuration.GetOrDefault("AppSettings:MSSQLWriteConnectionString",
-        //        configuration.Get("AppSettings:MSSQLConnectionString")
-        //        );
-
-        //    if (string.IsNullOrEmpty(connectionString))
-        //    {
-        //        throw new ArgumentException("could not find connection string AppSettings:MSSQLConnectionString");
-        //    }
-
-        //    return connectionString;
-        //}
-
-        //public static string GetMSSQLReadConnectionString(this IConfiguration configuration)
-        //{
-        //    string connectionString = configuration.GetOrDefault("AppSettings:MSSQLReadConnectionString",
-        //        configuration.Get("AppSettings:MSSQLConnectionString")
-        //        );
-
-        //    if (string.IsNullOrEmpty(connectionString))
-        //    {
-        //        throw new ArgumentException("could not find connection string AppSettings:MSSQLConnectionString");
-        //    }
-
-        //    return connectionString;
-        //}
-
-        //public static string MSSQLOwnerPrefix(this IConfiguration configuration)
-        //{
-        //    return configuration.GetOrDefault("AppSettings:MSSQLOwnerPrefix", "[dbo].");
-        //}
-
-
+      
         public static SqlParameter Copy(this SqlParameter origParam)
         {
             SqlParameter newParam = new SqlParameter();

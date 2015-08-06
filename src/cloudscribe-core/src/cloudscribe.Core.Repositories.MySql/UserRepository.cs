@@ -2,15 +2,14 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-18
-// Last Modified:			2015-07-04
+// Last Modified:			2015-08-06
 // 
 
 
-using cloudscribe.Configuration;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.DataExtensions;
 using cloudscribe.DbHelpers.MySql;
-using Microsoft.Framework.Configuration;
+using Microsoft.Framework.OptionsModel;
 using Microsoft.Framework.Logging;
 using System;
 using System.Collections.Generic;
@@ -23,18 +22,19 @@ namespace cloudscribe.Core.Repositories.MySql
     public sealed class UserRepository : IUserRepository
     {
         public UserRepository(
-            IConfiguration configuration,
+            IOptions<MySqlConnectionOptionscs> configuration,
+            IOptions<MultiTenantOptions> multiTenantOptions,
             ILoggerFactory loggerFactory)
         {
             if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
             if (loggerFactory == null) { throw new ArgumentNullException(nameof(loggerFactory)); }
 
-            config = configuration;
+            this.multiTenantOptions = multiTenantOptions.Options;
             logFactory = loggerFactory;
             log = loggerFactory.CreateLogger(typeof(UserRepository).FullName);
 
-            readConnectionString = configuration.GetMySqlReadConnectionString();
-            writeConnectionString = configuration.GetMySqlWriteConnectionString();
+            readConnectionString = configuration.Options.ReadConnectionString;
+            writeConnectionString = configuration.Options.WriteConnectionString;
 
             dbSiteUser = new DBSiteUser(readConnectionString, writeConnectionString, logFactory);
             dbUserLogins = new DBUserLogins(readConnectionString, writeConnectionString, logFactory);
@@ -43,9 +43,9 @@ namespace cloudscribe.Core.Repositories.MySql
             dbRoles = new DBRoles(readConnectionString, writeConnectionString, logFactory);
         }
 
+        private MultiTenantOptions multiTenantOptions;
         private ILoggerFactory logFactory;
         private ILogger log;
-        private IConfiguration config;
         private string readConnectionString;
         private string writeConnectionString;
         private DBSiteUser dbSiteUser;
@@ -328,20 +328,20 @@ namespace cloudscribe.Core.Repositories.MySql
 
         public int GetCount(int siteId)
         {
-            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             return dbSiteUser.UserCount(siteId);
         }
 
         //public int UserCount(int siteId, String userNameBeginsWith)
         //{
-        //    //if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
+        //    if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
         //    return DBSiteUser.UserCount(siteId, userNameBeginsWith);
         //}
 
         public int UsersOnlineSinceCount(int siteId, DateTime sinceTime)
         {
-            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             return dbSiteUser.CountOnlineSince(siteId, sinceTime);
         }
@@ -349,7 +349,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
         public async Task<ISiteUser> FetchNewest(int siteId)
         {
-            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             int newestUserId = await GetNewestUserId(siteId);
             return await Fetch(siteId, newestUserId);
@@ -357,7 +357,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
         public async Task<ISiteUser> Fetch(int siteId, int userId)
         {
-            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             using (DbDataReader reader = await dbSiteUser.GetSingleUser(userId))
             {
@@ -378,7 +378,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
         public async Task<ISiteUser> Fetch(int siteId, Guid userGuid)
         {
-            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             using (DbDataReader reader = await dbSiteUser.GetSingleUser(userGuid))
             {
@@ -398,7 +398,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
         public async Task<ISiteUser> FetchByConfirmationGuid(int siteId, Guid confirmGuid)
         {
-            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             using (DbDataReader reader = await dbSiteUser.GetUserByRegistrationGuid(siteId, confirmGuid))
             {
@@ -419,7 +419,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
         public async Task<ISiteUser> Fetch(int siteId, string email)
         {
-            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             using (DbDataReader reader = await dbSiteUser.GetSingleUser(siteId, email))
             {
@@ -439,7 +439,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
         public async Task<ISiteUser> FetchByLoginName(int siteId, string userName, bool allowEmailFallback)
         {
-            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             using (DbDataReader reader = await dbSiteUser.GetSingleUserByLoginName(siteId, userName, allowEmailFallback))
             {
@@ -465,7 +465,7 @@ namespace cloudscribe.Core.Repositories.MySql
         {
             List<IUserInfo> userList = new List<IUserInfo>();
 
-            if (config.UseRelatedSiteMode()) { siteGuid = Guid.Empty; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = Guid.Empty; }
 
             using (DbDataReader reader = await dbUserLocation.GetUsersByIPAddress(siteGuid, ipv4Address))
             {
@@ -503,7 +503,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
         public async Task<int> CountUsers(int siteId, string userNameBeginsWith)
         {
-            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             return await dbSiteUser.CountUsers(siteId, userNameBeginsWith);
         }
@@ -515,7 +515,7 @@ namespace cloudscribe.Core.Repositories.MySql
             string userNameBeginsWith,
             int sortMode)
         {
-            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             //sortMode: 0 = DisplayName asc, 1 = JoinDate desc, 2 = Last, First
 
@@ -544,7 +544,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
         public async Task<int> CountUsersForSearch(int siteId, string searchInput)
         {
-            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             return await dbSiteUser.CountUsersForSearch(siteId, searchInput);
         }
@@ -556,7 +556,7 @@ namespace cloudscribe.Core.Repositories.MySql
             string searchInput,
             int sortMode)
         {
-            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             //sortMode: 0 = DisplayName asc, 1 = JoinDate desc, 2 = Last, First
 
@@ -585,7 +585,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
         public async Task<int> CountUsersForAdminSearch(int siteId, string searchInput)
         {
-            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             return await dbSiteUser.CountUsersForAdminSearch(siteId, searchInput);
         }
@@ -597,7 +597,7 @@ namespace cloudscribe.Core.Repositories.MySql
             string searchInput,
             int sortMode)
         {
-            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             List<IUserInfo> userList = new List<IUserInfo>();
 
@@ -623,7 +623,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
         public async Task<int> CountLockedOutUsers(int siteId)
         {
-            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             return await dbSiteUser.CountLockedOutUsers(siteId);
         }
@@ -633,7 +633,7 @@ namespace cloudscribe.Core.Repositories.MySql
             int pageNumber,
             int pageSize)
         {
-            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             List<IUserInfo> userList = new List<IUserInfo>();
 
@@ -657,7 +657,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
         public async Task<int> CountNotApprovedUsers(int siteId)
         {
-            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             return await dbSiteUser.CountNotApprovedUsers(siteId);
         }
@@ -667,7 +667,7 @@ namespace cloudscribe.Core.Repositories.MySql
             int pageNumber,
             int pageSize)
         {
-            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             List<IUserInfo> userList = new List<IUserInfo>();
 
@@ -691,21 +691,21 @@ namespace cloudscribe.Core.Repositories.MySql
 
         //public IDataReader GetSmartDropDownData(int siteId, string query, int rowsToGet)
         //{
-        //    //if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
+        //    if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
         //    return DBSiteUser.GetSmartDropDownData(siteId, query, rowsToGet);
         //}
 
         //public IDataReader EmailLookup(int siteId, string query, int rowsToGet)
         //{
-        //    //if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
+        //    if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
         //    return DBSiteUser.EmailLookup(siteId, query, rowsToGet);
         //}
 
         public async Task<bool> EmailExistsInDB(int siteId, string email)
         {
-            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             bool found = false;
 
@@ -718,7 +718,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
         public async Task<bool> EmailExistsInDB(int siteId, int userId, string email)
         {
-            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             bool found = false;
 
@@ -736,7 +736,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
         public bool LoginExistsInDB(int siteId, string loginName)
         {
-            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             bool found = false;
 
@@ -756,13 +756,13 @@ namespace cloudscribe.Core.Repositories.MySql
         /// <param name="userId"></param>
         /// <param name="loginName"></param>
         /// <returns></returns>
-        public bool LoginIsAvailable(int siteId, int userId, string loginName)
+        public async Task<bool> LoginIsAvailable(int siteId, int userId, string loginName)
         {
-            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             bool available = true;
 
-            using (DbDataReader r = dbSiteUser.GetSingleUserByLoginNameNonAsync(siteId, loginName, false))
+            using (DbDataReader r = await dbSiteUser.GetSingleUserByLoginName(siteId, loginName, false))
             {
                 while (r.Read())
                 {
@@ -778,7 +778,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
         public async Task<string> GetUserNameFromEmail(int siteId, String email)
         {
-            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             String result = String.Empty;
             if ((email != null) && (email.Length > 0) && (siteId > 0))
@@ -803,7 +803,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
         public async Task<int> GetNewestUserId(int siteId)
         {
-            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             return await dbSiteUser.GetNewestUserId(siteId);
 
@@ -885,44 +885,44 @@ namespace cloudscribe.Core.Repositories.MySql
             return await dbRoles.RemoveUser(roleId, userId);
         }
 
-        public async Task<bool> AddUserToDefaultRoles(ISiteUser siteUser)
-        {
+        //public async Task<bool> AddUserToDefaultRoles(ISiteUser siteUser)
+        //{
 
-            ISiteRole role;
-            bool result = true;
-            string defaultRoles = AppSettings.DefaultRolesForNewUsers;
+        //    ISiteRole role;
+        //    bool result = true;
+        //    string defaultRoles = AppSettings.DefaultRolesForNewUsers;
 
-            if (defaultRoles.Length > 0)
-            {
-                if (defaultRoles.IndexOf(";") == -1)
-                {
-                    role = await FetchRole(siteUser.SiteId, defaultRoles);
-                    if ((role != null) && (role.RoleId > -1))
-                    {
-                        result = await AddUserToRole(role.RoleId, role.RoleGuid, siteUser.UserId, siteUser.UserGuid);
-                    }
-                }
-                else
-                {
-                    string[] roleArray = defaultRoles.Split(';');
-                    foreach (string roleName in roleArray)
-                    {
-                        if (!string.IsNullOrEmpty(roleName))
-                        {
-                            role = await FetchRole(siteUser.SiteId, roleName);
-                            if ((role != null) && (role.RoleId > -1))
-                            {
-                                result = result && await AddUserToRole(role.RoleId, role.RoleGuid, siteUser.UserId, siteUser.UserGuid);
-                            }
-                        }
-                    }
+        //    if (defaultRoles.Length > 0)
+        //    {
+        //        if (defaultRoles.IndexOf(";") == -1)
+        //        {
+        //            role = await FetchRole(siteUser.SiteId, defaultRoles);
+        //            if ((role != null) && (role.RoleId > -1))
+        //            {
+        //                result = await AddUserToRole(role.RoleId, role.RoleGuid, siteUser.UserId, siteUser.UserGuid);
+        //            }
+        //        }
+        //        else
+        //        {
+        //            string[] roleArray = defaultRoles.Split(';');
+        //            foreach (string roleName in roleArray)
+        //            {
+        //                if (!string.IsNullOrEmpty(roleName))
+        //                {
+        //                    role = await FetchRole(siteUser.SiteId, roleName);
+        //                    if ((role != null) && (role.RoleId > -1))
+        //                    {
+        //                        result = result && await AddUserToRole(role.RoleId, role.RoleGuid, siteUser.UserId, siteUser.UserGuid);
+        //                    }
+        //                }
+        //            }
 
-                }
+        //        }
 
-            }
+        //    }
 
-            return result;
-        }
+        //    return result;
+        //}
 
         public async Task<bool> DeleteUserRoles(int userId)
         {
@@ -936,7 +936,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
         public async Task<bool> RoleExists(int siteId, String roleName)
         {
-            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
             return await dbRoles.Exists(siteId, roleName);
         }
 
@@ -974,7 +974,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
         public async Task<ISiteRole> FetchRole(int siteId, string roleName)
         {
-            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
             SiteRole role = null;
 
             using (DbDataReader reader = await dbRoles.GetByName(siteId, roleName))
@@ -992,7 +992,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
         public async Task<List<string>> GetUserRoles(int siteId, int userId)
         {
-            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             List<string> userRoles = new List<string>();
             using (DbDataReader reader = await dbSiteUser.GetRolesByUser(siteId, userId))
@@ -1013,7 +1013,7 @@ namespace cloudscribe.Core.Repositories.MySql
             int pageNumber,
             int pageSize)
         {
-            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             IList<ISiteRole> roles = new List<ISiteRole>();
             using (DbDataReader reader = await dbRoles.GetPage(siteId, searchInput, pageNumber, pageSize))
@@ -1036,7 +1036,7 @@ namespace cloudscribe.Core.Repositories.MySql
             int siteId,
             int userId)
         {
-            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             IList<ISiteRole> roles = new List<ISiteRole>();
             using (DbDataReader reader = dbRoles.GetRolesUserIsNotIn(siteId, userId))
@@ -1051,7 +1051,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
         public async Task<List<int>> GetRoleIds(int siteId, string roleNamesSeparatedBySemiColons)
         {
-            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             List<int> roleIds = new List<int>();
             List<string> roleNames = GetRolesNames(roleNamesSeparatedBySemiColons);
@@ -1087,13 +1087,13 @@ namespace cloudscribe.Core.Repositories.MySql
 
         public async Task<int> CountOfRoles(int siteId, string searchInput)
         {
-            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
             return await dbRoles.GetCountOfSiteRoles(siteId, searchInput);
         }
 
         public async Task<int> CountUsersInRole(int siteId, int roleId, string searchInput)
         {
-            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
             return await dbRoles.GetCountOfUsersInRole(siteId, roleId, searchInput);
         }
 
@@ -1106,7 +1106,7 @@ namespace cloudscribe.Core.Repositories.MySql
         {
             IList<IUserInfo> users = new List<IUserInfo>();
 
-            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
             using (DbDataReader reader = await dbRoles.GetUsersInRole(siteId, roleId, searchInput, pageNumber, pageSize))
             {
                 while (reader.Read())
@@ -1128,7 +1128,7 @@ namespace cloudscribe.Core.Repositories.MySql
         {
             IList<ISiteUser> users = new List<ISiteUser>();
 
-            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             ISiteRole role = await FetchRole(siteId, roleName);
             int roleId = -3;
@@ -1154,7 +1154,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
         public async Task<int> CountUsersNotInRole(int siteId, int roleId, string searchInput)
         {
-            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             return await dbRoles.GetCountOfUsersNotInRole(siteId, roleId, searchInput);
         }
@@ -1168,7 +1168,7 @@ namespace cloudscribe.Core.Repositories.MySql
         {
             IList<IUserInfo> users = new List<IUserInfo>();
 
-            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             using (DbDataReader reader = await dbRoles.GetUsersNotInRole(siteId, roleId, searchInput, pageNumber, pageSize))
             {
@@ -1241,7 +1241,7 @@ namespace cloudscribe.Core.Repositories.MySql
         {
             IList<ISiteUser> users = new List<ISiteUser>();
 
-            if (config.UseRelatedSiteMode()) { siteId = config.RelatedSiteId(); }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             using (DbDataReader reader = await dbUserClaims.GetUsersByClaim(siteId, claimType, claimValue))
             {

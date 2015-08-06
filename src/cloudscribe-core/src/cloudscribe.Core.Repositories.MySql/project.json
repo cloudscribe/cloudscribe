@@ -1,15 +1,21 @@
 {
     "version": "1.0.0-*",
-    "description": "",
-    "authors": [ "" ],
-    "tags": [ "" ],
-    "projectUrl": "",
-    "licenseUrl": "",
+   "title": "cloudscribe.Core.Repositories.MySql",
+  "description": "cloudscribe core repositories for MySql. Install this if you want to use MySql with cloudscribe.Core.Web, then change the dependency injection for repositories.",
+  "authors": [ "Joe Audette" ],
+  "owners": [ "Source Tree Solutions" ],
+  "tags": [ "cloudscribe","mysql","repositories" ],
+  "projectUrl": "https://github.com/joeaudette/cloudscribe",
+  "licenseUrl": "http://www.apache.org/licenses/LICENSE-2.0",
+  "copyright": "2015 Source Tree Solutions",
+  "iconUrl": "http://download.mojoportal.com/images/cloudscribe-rocket-32.png",
+  "requireLicenseAcceptance": false,
+  "releaseNotes": "",
 
     "dependencies": {
         "cloudscribe.DbHelpers.MySql": "1.0.0-*",
         "cloudscribe.Core.Models": "1.0.0-*",
-        "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta5",
+        "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta6",
         "MySql.Data": "6.9.6"
     },
 
