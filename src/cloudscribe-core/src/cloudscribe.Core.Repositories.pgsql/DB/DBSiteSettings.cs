@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-06-23
+// Last Modified:			2015-08-07
 //
 
 using cloudscribe.DbHelpers.pgsql;
@@ -964,6 +964,20 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[0].Value = siteGuid.ToString();
 
             return await AdoHelper.ExecuteReaderAsync(
+                readConnectionString,
+                CommandType.StoredProcedure,
+                "mp_sites_selectonebyguidv2(:siteguid)",
+                arParams);
+        }
+
+        public DbDataReader GetSiteNonAsync(Guid siteGuid)
+        {
+            NpgsqlParameter[] arParams = new NpgsqlParameter[1];
+
+            arParams[0] = new NpgsqlParameter("siteguid", NpgsqlTypes.NpgsqlDbType.Varchar, 36);
+            arParams[0].Value = siteGuid.ToString();
+
+            return AdoHelper.ExecuteReader(
                 readConnectionString,
                 CommandType.StoredProcedure,
                 "mp_sites_selectonebyguidv2(:siteguid)",

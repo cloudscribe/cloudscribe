@@ -14,9 +14,21 @@
     "MSSQLConnectionOptions": {
       "ConnectionString": "server=yourservername;UID=yourdatabaseusername;PWD=yourdatabaseuserpassword;database=yourdatabasename"
     },
+    "MySqlConnectionOptions": {
+      "ConnectionString": "Server=yourserver;Database=yourdbname;Uid=yourdbuser;Pwd=yourdbuserpassword;Charset=utf8;"
+    },
+    "PostgreSqlConnectionOptions": {
+      "ConnectionString": "Server=yourdbserver;Port=5432;User Id=yourdbusername;Password=yourdbuserpassword;Database=yourdatabasename;Encoding=UNICODE;"
+    },
     "FirebirdConnectionOptions": {
       "ConnectionString": "Data Source=localhost;Server Type=0;Port Number=3050;Database=C:\\yourpath\\yourdbname.fdb;Dialect=3;Charset=UTF8;Pooling=True;Min Pool Size=0;Max Pool Size=200;Connection Timeout=10;Connection Lifetime=60;Fetch Size=200;User Id=SYSDBA;Password=masterkey"
+    },
+    "SqliteConnectionOptions": {
+      "DbFileName": "cloudscribe.sqlite"
+    },
+    "SqlCeConnectionOptions": {
+      "DbFileName": "cloudscribe.sdf"
     }
-    
+
   }
 }

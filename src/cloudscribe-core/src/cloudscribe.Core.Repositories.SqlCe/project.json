@@ -1,20 +1,29 @@
 {
-    "version": "1.0.0-*",
-    "description": "",
-    "authors": [ "" ],
-    "tags": [ "" ],
-    "projectUrl": "",
-    "licenseUrl": "",
+  "version": "1.0.0-*",
+  "title": "cloudscribe.Core.Repositories.SqlCe",
+  "description": "cloudscribe Core Repositories for SqlServer Compact edition",
+  "authors": [ "Joe Audette" ],
+  "owners": [ "Source Tree Solutions" ],
+  "tags": [ "cloudscribe","repositories","sqlce","SqlServerCe" ],
+  "projectUrl": "https://github.com/joeaudette/cloudscribe",
+  "licenseUrl": "http://www.apache.org/licenses/LICENSE-2.0",
+  "copyright": "2015 Source Tree Solutions",
+  "iconUrl": "http://download.mojoportal.com/images/cloudscribe-rocket-32.png",
+  "requireLicenseAcceptance": false,
+  "releaseNotes": "",
 
-    "dependencies": {
-        "cloudscribe.Core.Models": "1.0.0-*",
-        "cloudscribe.DbHelpers.SqlCe": "1.0.0-*",
-        "Microsoft.SqlServer.Compact": "4.0.8876.1",
-        "System.Data.Common": "4.0.0-beta-23019",
-        "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta5"
-    },
+  "dependencies": {
+    "cloudscribe.Core.Models": "1.0.0-*",
+    "cloudscribe.DbHelpers.SqlCe": "1.0.0-*",
+    "Microsoft.SqlServer.Compact": "4.0.8876.1",
+    "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta6"
+  },
 
-    "frameworks": {
-        "dnx451": { }
+  "frameworks": {
+    "dnx451": {
+      "frameworkAssemblies": {
+        "System.Data": ""
+      }
     }
+  }
 } 

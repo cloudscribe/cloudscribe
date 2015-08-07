@@ -2,12 +2,10 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:         Joe Audette
 // Created:        2010-03-09
-// Last Modified   2015-07-04
+// Last Modified   2015-08-07
 
 
-using cloudscribe.Configuration;
 using cloudscribe.Core.Models;
-using Microsoft.Framework.Configuration;
 using Microsoft.Framework.Logging;
 using System;
 using System.Data;
@@ -22,16 +20,13 @@ namespace cloudscribe.DbHelpers.SqlCe
     {
         public Db(
             SqlCeConnectionStringResolver connectionStringResolver,
-            IConfiguration configuration,
             ILoggerFactory loggerFactory,
             IVersionProviderFactory versionProviderFactory)
         {
             if (connectionStringResolver == null) { throw new ArgumentNullException(nameof(connectionStringResolver)); }
-            if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
             if (loggerFactory == null) { throw new ArgumentNullException(nameof(loggerFactory)); }
             if (versionProviderFactory == null) { throw new ArgumentNullException(nameof(versionProviderFactory)); }
 
-            config = configuration;
             versionProviders = versionProviderFactory;
             logFactory = loggerFactory;
             log = loggerFactory.CreateLogger(typeof(Db).FullName);
@@ -41,7 +36,6 @@ namespace cloudscribe.DbHelpers.SqlCe
         }
 
         private IVersionProviderFactory versionProviders;
-        private IConfiguration config;
         private ILoggerFactory logFactory;
         private ILogger log;
         private string connectionString;

@@ -1,12 +1,11 @@
 ﻿// Original Author:					Joseph Hill
 // Created:							2005-02-16 
 // Additions and fixes have been added by Joe Audette, Dean Brettle, TJ Fontaine
-// Last Modified:                   2015-07-04
+// Last Modified:                   2015-08-07
 
 
-using cloudscribe.Configuration;
 using cloudscribe.Core.Models;
-using Microsoft.Framework.Configuration;
+using Microsoft.Framework.OptionsModel;
 using Microsoft.Framework.Logging;
 using Npgsql;
 using NpgsqlTypes;
@@ -22,25 +21,23 @@ namespace cloudscribe.DbHelpers.pgsql
     {
         public Db(
             ILoggerFactory loggerFactory,
-            IConfiguration configuration,
+            IOptions<PostgreSqlConnectionOptions> configuration,
             IVersionProviderFactory versionProviderFactory)
         {
             if (loggerFactory == null) { throw new ArgumentNullException(nameof(loggerFactory)); }
             if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
             if (versionProviderFactory == null) { throw new ArgumentNullException(nameof(versionProviderFactory)); }
 
-            config = configuration;
             versionProviders = versionProviderFactory;
             logFactory = loggerFactory;
             log = loggerFactory.CreateLogger(typeof(Db).FullName);
 
-            writeConnectionString = configuration.GetPgsqlWriteConnectionString();
-            readConnectionString = configuration.GetPgsqlReadConnectionString();
+            writeConnectionString = configuration.Options.WriteConnectionString;
+            readConnectionString = configuration.Options.ReadConnectionString;
 
         }
 
         private IVersionProviderFactory versionProviders;
-        private IConfiguration config;
         private ILoggerFactory logFactory;
         private ILogger log;
         private string writeConnectionString;

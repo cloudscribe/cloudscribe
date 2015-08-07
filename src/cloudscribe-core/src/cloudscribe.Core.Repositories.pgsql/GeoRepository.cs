@@ -2,13 +2,13 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-11-03
-// Last Modified:			2015-07-04
+// Last Modified:			2015-08-07
 // 
 
 
 using cloudscribe.Core.Models.Geography;
 using cloudscribe.DbHelpers.pgsql;
-using Microsoft.Framework.Configuration;
+using Microsoft.Framework.OptionsModel;
 using Microsoft.Framework.Logging;
 using System;
 using System.Collections.Generic;
@@ -20,7 +20,7 @@ namespace cloudscribe.Core.Repositories.pgsql
     public sealed class GeoRepository : IGeoRepository
     {
         public GeoRepository(
-            IConfiguration configuration,
+            IOptions<PostgreSqlConnectionOptions> configuration,
             ILoggerFactory loggerFactory)
         {
             if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
@@ -29,8 +29,8 @@ namespace cloudscribe.Core.Repositories.pgsql
             logFactory = loggerFactory;
             log = loggerFactory.CreateLogger(typeof(GeoRepository).FullName);
 
-            readConnectionString = configuration.GetPgsqlReadConnectionString();
-            writeConnectionString = configuration.GetPgsqlWriteConnectionString();
+            readConnectionString = configuration.Options.ReadConnectionString;
+            writeConnectionString = configuration.Options.WriteConnectionString;
 
             dbGeoCountry = new DBGeoCountry(readConnectionString, writeConnectionString, logFactory);
             dbGeoZone = new DBGeoZone(readConnectionString, writeConnectionString, logFactory);

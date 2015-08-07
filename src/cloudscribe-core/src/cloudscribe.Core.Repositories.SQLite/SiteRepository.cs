@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2015-06-22
+// Last Modified:			2015-08-07
 // 
 
 
@@ -226,6 +226,29 @@ namespace cloudscribe.Core.Repositories.SQLite
         }
 
         public async Task<ISiteSettings> Fetch(Guid siteGuid)
+        {
+            SiteSettings site = new SiteSettings();
+
+            using (DbDataReader reader = dbSiteSettings.GetSite(siteGuid))
+            {
+                if (reader.Read())
+                {
+                    site.LoadFromReader(reader);
+                }
+
+            }
+
+            if (site.SiteGuid == Guid.Empty) { return null; }//not found 
+
+            List<ExpandoSetting> expandoProperties = GetExpandoProperties(site.SiteId);
+            site.LoadExpandoSettings(expandoProperties);
+
+            return site;
+
+
+        }
+
+        public ISiteSettings FetchNonAsync(Guid siteGuid)
         {
             SiteSettings site = new SiteSettings();
 

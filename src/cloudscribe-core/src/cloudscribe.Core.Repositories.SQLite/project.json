@@ -1,17 +1,23 @@
 {
     "version": "1.0.0-*",
-    "description": "",
-    "authors": [ "" ],
-    "tags": [ "" ],
-    "projectUrl": "",
-    "licenseUrl": "",
+    "title": "cloudscribe.Core.Repositories.SQLite",
+  "description": "cloudscribe Core Repositories for SQLite",
+  "authors": [ "Joe Audette" ],
+  "owners": [ "Source Tree Solutions" ],
+  "tags": [ "cloudscribe","repositories","sqlite" ],
+  "projectUrl": "https://github.com/joeaudette/cloudscribe",
+  "licenseUrl": "http://www.apache.org/licenses/LICENSE-2.0",
+  "copyright": "2015 Source Tree Solutions",
+  "iconUrl": "http://download.mojoportal.com/images/cloudscribe-rocket-32.png",
+  "requireLicenseAcceptance": false,
+  "releaseNotes": "",
 
     "dependencies": {
         "cloudscribe.Core.Models": "1.0.0-*",
         "cloudscribe.DbHelpers.SQLite": "1.0.0-*",
-        "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta5",
-        "Microsoft.Data.SQLite": "1.0.0-beta1",
-        "System.Diagnostics.Tools": "4.0.0-beta-23019"
+        "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta6",
+        "Microsoft.Data.SQLite": "1.0.0-beta1"
+        
     },
 
     "frameworks": {

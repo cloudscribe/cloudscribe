@@ -2,14 +2,14 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2015-07-04
+// Last Modified:			2015-08-07
 // 
 
 
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.DataExtensions;
 using cloudscribe.DbHelpers.pgsql;
-using Microsoft.Framework.Configuration;
+using Microsoft.Framework.OptionsModel;
 using Microsoft.Framework.Logging;
 using System;
 using System.Collections.Generic;
@@ -22,7 +22,7 @@ namespace cloudscribe.Core.Repositories.pgsql
     public sealed class SiteRepository : ISiteRepository
     {
         public SiteRepository(
-            IConfiguration configuration,
+            IOptions<PostgreSqlConnectionOptions> configuration,
             ILoggerFactory loggerFactory)
         {
             if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
@@ -31,8 +31,8 @@ namespace cloudscribe.Core.Repositories.pgsql
             logFactory = loggerFactory;
             log = loggerFactory.CreateLogger(typeof(SiteRepository).FullName);
 
-            readConnectionString = configuration.GetPgsqlReadConnectionString();
-            writeConnectionString = configuration.GetPgsqlWriteConnectionString();
+            readConnectionString = configuration.Options.ReadConnectionString;
+            writeConnectionString = configuration.Options.WriteConnectionString;
 
             dbSiteSettings = new DBSiteSettings(readConnectionString, writeConnectionString, logFactory);
             dbSiteSettingsEx = new DBSiteSettingsEx(readConnectionString, writeConnectionString, logFactory);
@@ -228,6 +228,29 @@ namespace cloudscribe.Core.Repositories.pgsql
             SiteSettings site = new SiteSettings();
 
             using (DbDataReader reader = await dbSiteSettings.GetSite(siteGuid))
+            {
+                if (reader.Read())
+                {
+                    site.LoadFromReader(reader);
+                }
+
+            }
+
+            if (site.SiteGuid == Guid.Empty) { return null; }//not found 
+
+            List<ExpandoSetting> expandoProperties = GetExpandoProperties(site.SiteId);
+            site.LoadExpandoSettings(expandoProperties);
+
+            return site;
+
+
+        }
+
+        public ISiteSettings FetchNonAsync(Guid siteGuid)
+        {
+            SiteSettings site = new SiteSettings();
+
+            using (DbDataReader reader = dbSiteSettings.GetSiteNonAsync(siteGuid))
             {
                 if (reader.Read())
                 {

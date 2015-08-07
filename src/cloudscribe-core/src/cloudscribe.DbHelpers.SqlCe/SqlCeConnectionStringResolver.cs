@@ -2,64 +2,54 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-06-22
-// Last Modified:			2015-07-04
+// Last Modified:			2015-08-07
 // 
 
-using Microsoft.AspNet.Hosting;
-using Microsoft.Framework.Configuration;
+using Microsoft.Framework.OptionsModel;
+using Microsoft.Framework.Runtime;
 using System;
+using System.IO;
 
 namespace cloudscribe.DbHelpers.SqlCe
 {
     public class SqlCeConnectionStringResolver
     {
         public SqlCeConnectionStringResolver(
-            IHostingEnvironment hostingEnvironment,
-            IConfiguration configuration)
+            IApplicationEnvironment appEnv,
+            IOptions<SqlCeConnectionOptions> configuration)
         {
             if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
-            if (hostingEnvironment == null) { throw new ArgumentNullException(nameof(hostingEnvironment)); }
+            if (appEnv == null) { throw new ArgumentNullException(nameof(appEnv)); }
 
-            env = hostingEnvironment;
-            config = configuration;
+            appBasePath = appEnv.ApplicationBasePath;
+            options = configuration.Options;
 
         }
 
-        private IHostingEnvironment env;
-        private IConfiguration config;
-        private string sqlCeFilePath = string.Empty;
+        private SqlCeConnectionOptions options;
+        private string appBasePath;
+        private string pathToDbFile()
+        {
+            return appBasePath + "/config/sqlcedb/".Replace("/", Path.DirectorySeparatorChar.ToString()) + options.DbFileName;
+        }
 
         public string SqlCeFilePath
         {
-            get { return sqlCeFilePath; }
+            get {
+                if(options.ConnectionString.Length > 0) { return string.Empty; }
+                return pathToDbFile(); 
+            }
         }
 
         public string Resolve()
         {
-            string sqlCeFileName = config.Get("AppSettings:SqlCeApp_Data_FileName");
-            string connectionString;
 
-            if (!string.IsNullOrEmpty(sqlCeFileName))
-            {
-                //TODO: is App_Data folder still a  thing in dnxcore apps?
-                // is there another folder outside the web root that we could use easily?
-                // I know that the dlls are no longer below the webroot, need to look at
-                // publishing artifacts to see where we might could put it
-                sqlCeFilePath = env.MapPath("~/App_Data/" + sqlCeFileName);
-                connectionString = "Data Source=" + sqlCeFilePath + ";Persist Security Info=False;";
+            if (options.ConnectionString.Length > 0) { return options.ConnectionString; }
 
-                return connectionString;
-            }
-
-            connectionString = config.Get("AppSettings:SqlCeConnectionString");
-
-
-            if (string.IsNullOrEmpty(connectionString))
-            {
-                throw new ArgumentException("could not find connection string AppSettings:SqlCeConnectionString");
-            }
-
+            string connectionString = "Data Source=" + pathToDbFile() + ";Persist Security Info=False;";
             return connectionString;
+
+            
         }
     }
 }
