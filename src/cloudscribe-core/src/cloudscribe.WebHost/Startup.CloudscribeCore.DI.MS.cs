@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-06-20
-// Last Modified:			2015-08-02
+// Last Modified:			2015-08-08
 // 
 
 using System;
@@ -74,6 +74,38 @@ namespace cloudscribe.WebHost
             services.TryAdd(ServiceDescriptor.Scoped<IUserRepository, cloudscribe.Core.Repositories.MSSQL.UserRepository>());
             services.TryAdd(ServiceDescriptor.Scoped<IGeoRepository, cloudscribe.Core.Repositories.MSSQL.GeoRepository>());
             services.TryAdd(ServiceDescriptor.Scoped<IDb, cloudscribe.DbHelpers.MSSQL.Db>());
+
+            //services.Configure<cloudscribe.DbHelpers.MySql.MySqlConnectionOptions>(configuration.GetConfigurationSection("Data:MySqlConnectionOptions"));
+            //services.TryAdd(ServiceDescriptor.Scoped<ISiteRepository, cloudscribe.Core.Repositories.MySql.SiteRepository>());
+            //services.TryAdd(ServiceDescriptor.Scoped<IUserRepository, cloudscribe.Core.Repositories.MySql.UserRepository>());
+            //services.TryAdd(ServiceDescriptor.Scoped<IGeoRepository, cloudscribe.Core.Repositories.MySql.GeoRepository>());
+            //services.TryAdd(ServiceDescriptor.Scoped<IDb, cloudscribe.DbHelpers.MySql.Db>());
+
+            //services.Configure<cloudscribe.DbHelpers.pgsql.PostgreSqlConnectionOptions>(configuration.GetConfigurationSection("Data:PostgreSqlConnectionOptions"));
+            //services.TryAdd(ServiceDescriptor.Scoped<ISiteRepository, cloudscribe.Core.Repositories.pgsql.SiteRepository>());
+            //services.TryAdd(ServiceDescriptor.Scoped<IUserRepository, cloudscribe.Core.Repositories.pgsql.UserRepository>());
+            //services.TryAdd(ServiceDescriptor.Scoped<IGeoRepository, cloudscribe.Core.Repositories.pgsql.GeoRepository>());
+            //services.TryAdd(ServiceDescriptor.Scoped<IDb, cloudscribe.DbHelpers.pgsql.Db>());
+
+            //services.Configure<cloudscribe.DbHelpers.Firebird.FirebirdConnectionOptions>(configuration.GetConfigurationSection("Data:FirebirdConnectionOptions"));
+            //services.TryAdd(ServiceDescriptor.Scoped<ISiteRepository, cloudscribe.Core.Repositories.Firebird.SiteRepository>());
+            //services.TryAdd(ServiceDescriptor.Scoped<IUserRepository, cloudscribe.Core.Repositories.Firebird.UserRepository>());
+            //services.TryAdd(ServiceDescriptor.Scoped<IGeoRepository, cloudscribe.Core.Repositories.Firebird.GeoRepository>());
+            //services.TryAdd(ServiceDescriptor.Scoped<IDb, cloudscribe.DbHelpers.Firebird.Db>());
+
+            //services.Configure<cloudscribe.DbHelpers.SQLite.SqliteConnectionOptions>(configuration.GetConfigurationSection("Data:SqliteConnectionOptions"));
+            //services.TryAdd(ServiceDescriptor.Scoped<ISiteRepository, cloudscribe.Core.Repositories.SQLite.SiteRepository>());
+            //services.TryAdd(ServiceDescriptor.Scoped<IUserRepository, cloudscribe.Core.Repositories.SQLite.UserRepository>());
+            //services.TryAdd(ServiceDescriptor.Scoped<IGeoRepository, cloudscribe.Core.Repositories.SQLite.GeoRepository>());
+            //services.TryAdd(ServiceDescriptor.Scoped<IDb, cloudscribe.DbHelpers.SQLite.Db>());
+
+            //services.Configure<cloudscribe.DbHelpers.SqlCe.SqliteConnectionOptions>(configuration.GetConfigurationSection("Data:SqlCeConnectionOptions"));
+            //services.TryAdd(ServiceDescriptor.Scoped<ISiteRepository, cloudscribe.Core.Repositories.SqlCe.SiteRepository>());
+            //services.TryAdd(ServiceDescriptor.Scoped<IUserRepository, cloudscribe.Core.Repositories.SqlCe.UserRepository>());
+            //services.TryAdd(ServiceDescriptor.Scoped<IGeoRepository, cloudscribe.Core.Repositories.SqlCe.GeoRepository>());
+            //services.TryAdd(ServiceDescriptor.Scoped<IDb, cloudscribe.DbHelpers.SqlCe.Db>());
+
+
             //**************************************************************************************
 
             // RequestSiteResolver resolves ISiteSettings based on the request to support multi tenancy based on either host name or first folder depending on configuration

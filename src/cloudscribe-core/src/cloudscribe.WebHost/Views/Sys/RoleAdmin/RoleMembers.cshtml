@@ -1,8 +1,8 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.RoleAdmin.RoleMemberListViewModel
-@inject IConfiguration config
+@inject ISiteResolver siteResolver
 
 @{
-    
+    ISiteSettings SiteSettings = siteResolver.Resolve();
 }
 
     @section Styles {
@@ -34,7 +34,7 @@
                 <th>
                     CommonResources.Email
                 </th>
-                @if (config.DontUseEmailForLogin())
+                @if (!SiteSettings.UseEmailForLogin)
             {
                     <th>
                         CommonResources.LoginName
@@ -68,7 +68,7 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.Email)
                     </td>
-                    @if (config.DontUseEmailForLogin())
+                    @if (!SiteSettings.UseEmailForLogin)
                     {
                         <td>
                             @Html.DisplayFor(modelItem => item.UserName)
