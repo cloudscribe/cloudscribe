@@ -7,8 +7,6 @@
 
 using System;
 using System.Collections.Generic;
-//using Microsoft.AspNet.Hosting;
-//using JetBrains.Annotations;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Identity;

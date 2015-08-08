@@ -3,7 +3,9 @@
 
 
 @{
+    bool useEmailForLogin = true;
     ISiteSettings SiteSettings = siteResolver.Resolve();
+    if(SiteSettings != null) { useEmailForLogin = SiteSettings.UseEmailForLogin; }
 }
 
     <form role="form" method="get" class="form-inline" asp-controller="RoleAdmin" asp-action="RoleNonMembers"
@@ -33,7 +35,7 @@
             CommonResources
             .Email
         </th>
-        @if (!SiteSettings.UseEmailForLogin)
+        @if (!useEmailForLogin)
         {
             <th>
                 CommonResources
@@ -75,7 +77,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
-            @if (!SiteSettings.UseEmailForLogin)
+            @if (!useEmailForLogin)
             {
                 <td>
                     @Html.DisplayFor(modelItem => item.UserName)

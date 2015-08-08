@@ -10,7 +10,7 @@ using cloudscribe.Core.Models;
 
 namespace cloudscribe.Core.Web.Components
 {
-    public static class ConfigurationExtensions
+    public static class ConfigExtensions
     {
 
         public static string RolesThatCannotBeDeleted(this ConfigHelper config)

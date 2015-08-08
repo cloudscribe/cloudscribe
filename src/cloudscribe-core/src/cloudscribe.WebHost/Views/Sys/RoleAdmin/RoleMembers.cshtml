@@ -2,7 +2,9 @@
 @inject ISiteResolver siteResolver
 
 @{
+    bool useEmailForLogin = true;
     ISiteSettings SiteSettings = siteResolver.Resolve();
+    if (SiteSettings != null) { useEmailForLogin = SiteSettings.UseEmailForLogin; }
 }
 
     @section Styles {
@@ -34,7 +36,7 @@
                 <th>
                     CommonResources.Email
                 </th>
-                @if (!SiteSettings.UseEmailForLogin)
+                @if (!useEmailForLogin)
             {
                     <th>
                         CommonResources.LoginName
@@ -68,7 +70,7 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.Email)
                     </td>
-                    @if (!SiteSettings.UseEmailForLogin)
+                    @if (!useEmailForLogin)
                     {
                         <td>
                             @Html.DisplayFor(modelItem => item.UserName)
