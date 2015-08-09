@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-01-10
-// Last Modified:			2015-08-03
+// Last Modified:			2015-08-09
 // 
 
 using cloudscribe.Core.Models;
@@ -406,7 +406,7 @@ namespace cloudscribe.Setup.Controllers
             DirectoryInfo directoryInfo
                 = new DirectoryInfo(pathToScriptFolder);
 
-            FileInfo[] scriptFiles = directoryInfo.GetFiles("*.config");
+            FileInfo[] scriptFiles = directoryInfo.GetFiles("*.sql");
             Array.Sort(scriptFiles, SetupHelper.CompareFileNames);
 
 
@@ -443,7 +443,7 @@ namespace cloudscribe.Setup.Controllers
                 string message = string.Format(
                     "RunningScript", //SetupResources.RunningScriptMessage,
                     applicationName,
-                    scriptFile.Name.Replace(".config", string.Empty));
+                    scriptFile.Name.Replace(".sql", string.Empty));
 
                 await WritePageContent(response,
                     message,
@@ -621,7 +621,7 @@ namespace cloudscribe.Setup.Controllers
             DirectoryInfo directoryInfo
                 = new DirectoryInfo(pathToScriptFolder);
 
-            FileInfo[] scriptFiles = directoryInfo.GetFiles("*.config");
+            FileInfo[] scriptFiles = directoryInfo.GetFiles("*.sql");
 
 
             if (scriptFiles.Length == 0)
@@ -669,7 +669,7 @@ namespace cloudscribe.Setup.Controllers
             DirectoryInfo directoryInfo
                 = new DirectoryInfo(pathToScriptFolder);
 
-            FileInfo[] scriptFiles = directoryInfo.GetFiles("*.config");
+            FileInfo[] scriptFiles = directoryInfo.GetFiles("*.sql");
             Array.Sort(scriptFiles, SetupHelper.CompareFileNames);
 
             if (scriptFiles.Length == 0)
@@ -709,7 +709,7 @@ namespace cloudscribe.Setup.Controllers
                     string message = string.Format(
                         "RunningScript {0} {1}", //SetupResources.RunningScriptMessage,
                         applicationName,
-                        scriptFile.Name.Replace(".config", string.Empty));
+                        scriptFile.Name.Replace(".sql", string.Empty));
 
                     await WritePageContent(response,
                         message,
