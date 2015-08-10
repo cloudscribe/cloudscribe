@@ -2,10 +2,11 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-08-01
-// Last Modified:			2015-08-01
+// Last Modified:			2015-08-10
 // 
 
 using cloudscribe.Core.Models;
+using Microsoft.Framework.Logging;
 using Microsoft.Framework.OptionsModel;
 
 namespace cloudscribe.Core.Identity
@@ -15,18 +16,21 @@ namespace cloudscribe.Core.Identity
 
         public MultiTenantCookieOptionsResolverFactory(
             ISiteResolver siteResolver,
-            IOptions<MultiTenantOptions> multiTenantOptions)
+            IOptions<MultiTenantOptions> multiTenantOptions,
+            ILoggerFactory loggerFactory)
         {
             this.siteResolver = siteResolver;
             this.multiTenantOptions = multiTenantOptions;
+            this.loggerFactory = loggerFactory;
         }
 
         private IOptions<MultiTenantOptions> multiTenantOptions;
         private ISiteResolver siteResolver;
+        private ILoggerFactory loggerFactory;
 
         public MultiTenantCookieOptionsResolver GetResolver()
         {
-            return new MultiTenantCookieOptionsResolver(siteResolver, multiTenantOptions);
+            return new MultiTenantCookieOptionsResolver(siteResolver, multiTenantOptions, loggerFactory);
         }
 
     }

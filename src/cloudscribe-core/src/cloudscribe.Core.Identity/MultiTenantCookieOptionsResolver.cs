@@ -2,14 +2,13 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-08-01
-// Last Modified:			2015-08-02
+// Last Modified:			2015-08-10
 // 
 
 using cloudscribe.Core.Models;
 using Microsoft.Framework.OptionsModel;
-using Microsoft.AspNet.Authentication.Cookies;
-using System.Security.Claims;
-using System.Threading.Tasks;
+using Microsoft.Framework.Logging;
+using System;
 
 namespace cloudscribe.Core.Identity
 {
@@ -17,14 +16,16 @@ namespace cloudscribe.Core.Identity
     {
         public MultiTenantCookieOptionsResolver(
             ISiteResolver siteResolver,
-            IOptions<MultiTenantOptions> multiTenantOptions)
+            IOptions<MultiTenantOptions> multiTenantOptions,
+            ILoggerFactory loggerFactory)
         {
 
             this.siteResolver = siteResolver;
             this.multiTenantOptions = multiTenantOptions.Options;
-
+            log = loggerFactory.CreateLogger<MultiTenantCookieOptionsResolver>();
         }
 
+        private ILogger log;
         private MultiTenantOptions multiTenantOptions;
         private ISiteResolver siteResolver;
         private ISiteSettings site = null;
@@ -32,8 +33,18 @@ namespace cloudscribe.Core.Identity
         {
             get
             {
-                //return siteResolver.Resolve();
-                if(site == null) { site = siteResolver.Resolve(); }
+                if(site == null)
+                {
+                    try
+                    {
+                        site = siteResolver.Resolve();
+                    }
+                    catch(Exception ex)
+                    {
+                        log.LogError("failed to resolve site", ex);
+                    }
+                    
+                }
                 return site;
             }
         }
@@ -44,7 +55,7 @@ namespace cloudscribe.Core.Identity
             {
                 if(!multiTenantOptions.UseRelatedSitesMode)
                 {
-                    if(Site.SiteFolderName.Length > 0)
+                    if((Site != null)&&(Site.SiteFolderName.Length > 0))
                     {
                         return suppliedCookieName + "-" + Site.SiteFolderName;
                     }
@@ -60,7 +71,7 @@ namespace cloudscribe.Core.Identity
             {
                 if (!multiTenantOptions.UseRelatedSitesMode)
                 {
-                    if (Site.SiteFolderName.Length > 0)
+                    if ((Site != null) && (Site.SiteFolderName.Length > 0))
                     {
                         return suppliedAuthScheme + "-" + Site.SiteFolderName;
                     }
@@ -77,7 +88,7 @@ namespace cloudscribe.Core.Identity
             {
                 if (!multiTenantOptions.UseRelatedSitesMode)
                 {
-                    if (Site.SiteFolderName.Length > 0)
+                    if ((Site != null) && (Site.SiteFolderName.Length > 0))
                     {
                         return "/" + Site.SiteFolderName + suppliedLoginPath;
                     }
@@ -93,7 +104,7 @@ namespace cloudscribe.Core.Identity
             {
                 if (!multiTenantOptions.UseRelatedSitesMode)
                 {
-                    if (Site.SiteFolderName.Length > 0)
+                    if ((Site != null) && (Site.SiteFolderName.Length > 0))
                     {
                         return "/" + Site.SiteFolderName + suppliedLogoutPath;
                     }
@@ -109,9 +120,10 @@ namespace cloudscribe.Core.Identity
             {
                 if (!multiTenantOptions.UseRelatedSitesMode)
                 {
-                    if (Site.SiteFolderName.Length > 0)
+                    if ((Site != null) && (Site.SiteFolderName.Length > 0))
                     {
-
+                        //TODO: is this right? what does return url param look like?
+                        //return "/" + Site.SiteFolderName + suppliedReturnUrlParameter;
                     }
                 }
             }

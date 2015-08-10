@@ -43,6 +43,7 @@ namespace cloudscribe.Core.Identity
         {
             this.dataProtectionProvider = dataProtectionProvider;
             this.tenantResolverFactory = tenantResolverFactory;
+            this.loggerFactory = loggerFactory;
 
             if (Options.Notifications == null)
             {
@@ -72,6 +73,7 @@ namespace cloudscribe.Core.Identity
             }
         }
 
+        private ILoggerFactory loggerFactory;
         private IDataProtectionProvider dataProtectionProvider;
         private MultiTenantCookieOptionsResolverFactory tenantResolverFactory = null;
 

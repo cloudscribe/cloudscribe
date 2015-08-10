@@ -44,8 +44,17 @@ namespace cloudscribe.Core.Web.Components
             ISiteResolver siteResolver = httpContext.ApplicationServices.GetService<ISiteResolver>();
             if(siteResolver != null)
             {
-                ISiteSettings site = siteResolver.Resolve();
-                if((site != null)&&(site.SiteFolderName == requestFolder)) { return true; }
+                try
+                {
+                    // exceptions expected here until db install scripts have run or if db connection error
+                    ISiteSettings site = siteResolver.Resolve();
+                    if ((site != null) && (site.SiteFolderName == requestFolder)) { return true; }
+                }
+                catch
+                {
+                    // do we need to log this?
+                }
+
             }
 
             return false;

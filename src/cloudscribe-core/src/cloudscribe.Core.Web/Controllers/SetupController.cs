@@ -27,7 +27,7 @@ namespace cloudscribe.Setup.Controllers
     {
        
         public SetupController(
-            IHostingEnvironment env,
+            //IHostingEnvironment env,
             IApplicationEnvironment appEnv,
             ILoggerFactory loggerFactory,
             ConfigHelper configuration,
@@ -37,7 +37,7 @@ namespace cloudscribe.Setup.Controllers
             IUserRepository userRepositoryImplementation
         )
         {
-            if (env == null) { throw new ArgumentNullException(nameof(env)); }
+            //if (env == null) { throw new ArgumentNullException(nameof(env)); }
             if (loggerFactory == null) { throw new ArgumentNullException(nameof(loggerFactory)); }
             if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
             if (dbImplementation == null) { throw new ArgumentNullException(nameof(dbImplementation)); }
@@ -45,7 +45,7 @@ namespace cloudscribe.Setup.Controllers
             if (userRepositoryImplementation == null) { throw new ArgumentNullException(nameof(userRepositoryImplementation)); }
             //if (versionProviderFactory == null) { throw new ArgumentNullException(nameof(versionProviderFactory)); }
 
-            hostingEnvironment = env;
+            //hostingEnvironment = env;
             config = configuration;
             db = dbImplementation;
             siteRepository = siteRepositoryImplementation;
@@ -59,7 +59,7 @@ namespace cloudscribe.Setup.Controllers
 
         private string appBasePath;
         private SiteManager siteManager;
-        private IHostingEnvironment hostingEnvironment;
+        //private IHostingEnvironment hostingEnvironment;
         private ILoggerFactory logFactory;
         private ILogger log;
         //private IVersionProviderFactory versionProviders;
