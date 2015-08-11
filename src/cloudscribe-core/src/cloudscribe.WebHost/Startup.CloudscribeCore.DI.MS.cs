@@ -59,6 +59,8 @@ namespace cloudscribe.WebHost
             services.TryAdd(ServiceDescriptor.Scoped<ConfigHelper, ConfigHelper>());
             services.Configure<MultiTenantOptions>(configuration.GetConfigurationSection("MultiTenantOptions"));
 
+            
+
 
             //*** Database platform ****************************************************************
             // here is where you could change to use one of the other db platforms

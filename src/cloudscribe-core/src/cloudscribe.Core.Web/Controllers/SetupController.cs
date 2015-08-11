@@ -2,13 +2,12 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-01-10
-// Last Modified:			2015-08-09
+// Last Modified:			2015-08-11
 // 
 
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Web.Components;
 //using cloudscribe.Resources;
-using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc;
 using Microsoft.Framework.Logging;
@@ -18,6 +17,7 @@ using System.Data.Common;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 
@@ -27,42 +27,30 @@ namespace cloudscribe.Setup.Controllers
     {
        
         public SetupController(
-            //IHostingEnvironment env,
             IApplicationEnvironment appEnv,
-            ILoggerFactory loggerFactory,
+            ILogger<SetupController> logger,
             ConfigHelper configuration,
             IDb dbImplementation,
-            SiteManager siteManager,
-            ISiteRepository siteRepositoryImplementation,
-            IUserRepository userRepositoryImplementation
+            SiteManager siteManager 
         )
         {
-            //if (env == null) { throw new ArgumentNullException(nameof(env)); }
-            if (loggerFactory == null) { throw new ArgumentNullException(nameof(loggerFactory)); }
+
+            if (logger == null) { throw new ArgumentNullException(nameof(logger)); }
             if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
             if (dbImplementation == null) { throw new ArgumentNullException(nameof(dbImplementation)); }
-            if (siteRepositoryImplementation == null) { throw new ArgumentNullException(nameof(siteRepositoryImplementation)); }
-            if (userRepositoryImplementation == null) { throw new ArgumentNullException(nameof(userRepositoryImplementation)); }
-            //if (versionProviderFactory == null) { throw new ArgumentNullException(nameof(versionProviderFactory)); }
-
-            //hostingEnvironment = env;
+            
+           
             config = configuration;
             db = dbImplementation;
-            siteRepository = siteRepositoryImplementation;
-            userRepository = userRepositoryImplementation;
-            logFactory = loggerFactory;
-            log = loggerFactory.CreateLogger(typeof(SetupController).FullName);
+            log = logger;
             appBasePath = appEnv.ApplicationBasePath;
             this.siteManager = siteManager;
-            //versionProviders = db.VersionProviders;
+        
         }
 
         private string appBasePath;
         private SiteManager siteManager;
-        //private IHostingEnvironment hostingEnvironment;
-        private ILoggerFactory logFactory;
         private ILogger log;
-        //private IVersionProviderFactory versionProviders;
         private ConfigHelper config;
         private bool setupIsDisabled = false;
         private bool dataFolderIsWritable = false;
@@ -78,10 +66,8 @@ namespace cloudscribe.Setup.Controllers
         private Version dbCodeVersion = new Version(0,0);
         private Version dbSchemaVersion = new Version(0,0);
         private IDb db;
-        private ISiteRepository siteRepository;
-        private IUserRepository userRepository;
-
         
+        private static object Lock = new object();
 
 
 
@@ -90,12 +76,6 @@ namespace cloudscribe.Setup.Controllers
             //scriptTimeout = Server.ScriptTimeout;
             //Response.Cache.SetCacheability(HttpCacheability.ServerAndNoCache);
             
-
-            //IOwinContext owinContext = HttpContext.GetOwinContext();
-            //StandardKernel ninjectKernel = owinContext.Get<StandardKernel>();
-            //siteRepository = ninjectKernel.Get<ISiteRepository>();
-            //userRepository = ninjectKernel.Get<IUserRepository>();
-            //db = ninjectKernel.Get<IDb>();
             setupIsDisabled = config.DisableSetup();
 
 
@@ -106,8 +86,6 @@ namespace cloudscribe.Setup.Controllers
             {
                 log.LogInformation("returning 404 becuase setup is disabled and user is not logged in as an admin");
                 Response.StatusCode = 404;
-                //HttpContext.ApplicationInstance.CompleteRequest();
-               
                 return new EmptyResult();
             }
 
@@ -127,8 +105,18 @@ namespace cloudscribe.Setup.Controllers
 
             }
 
-            if (LockForSetup())
-            {
+            int lockTimeoutMilliseconds = config.GetOrDefault("AppSetings:SetupLockTimeoutMilliseconds", 60000); // 1 minute
+
+            //if(!Monitor.TryEnter(Lock, lockTimeoutMilliseconds))
+            //{
+            //    //throw new Exception("setup is already locked and runnning")
+
+            //    await WritePageContent(Response,
+            //            "SetupAlreadyInProgress" //SetupResources.SetupAlreadyInProgress
+            //            );
+            //}
+            //else
+            //{
                 try
                 {
                     await ProbeSystem(Response);
@@ -141,20 +129,16 @@ namespace cloudscribe.Setup.Controllers
                 }
                 finally
                 {
-                    ClearSetupLock();
+                    //ClearSetupLock();
+                    //Monitor.Exit(Lock);
                 }
 
-            }
-            else
-            {
-                await WritePageContent(Response,
-                    "SetupAlreadyInProgress" //SetupResources.SetupAlreadyInProgress
-                    );
-            }
+            //}
+            
 
-            await WritePageContent(Response,
-                "SetupEnabled" //SetupResources.SetupEnabledMessage
-                );
+            //await WritePageContent(Response,
+            //    "SetupEnabled" //SetupResources.SetupEnabledMessage
+            //    );
 
             await WritePageFooter(Response);
 
@@ -175,7 +159,7 @@ namespace cloudscribe.Setup.Controllers
                 {
 
                     schemaHasBeenCreated = await CreateInitialSchema(response, "cloudscribe-core");
-                    //schemaHasBeenCreated = DatabaseHelper.SchemaHasBeenCreated();
+                   
                     if (schemaHasBeenCreated)
                     {
                         //recheck
@@ -229,11 +213,7 @@ namespace cloudscribe.Setup.Controllers
             #region setup other applications
 
             // install other apps
-
-            //string pathToApplicationsFolder
-            //    = hostingEnvironment.MapPath(
-            //    "~/Config/applications/");
-
+            
             string pathToApplicationsFolder = appBasePath + "/config/applications".Replace("/",Path.DirectorySeparatorChar.ToString());
 
             if (!Directory.Exists(pathToApplicationsFolder))
@@ -323,10 +303,7 @@ namespace cloudscribe.Setup.Controllers
 
         }
 
-        //private static void SyncDefinitions(object o)
-        //{
-        //    ModuleDefinition.SyncDefinitions();
-        //}
+        
 
         private async Task<bool> CreateInitialSchema(HttpResponse response, string applicationName)
         {
@@ -337,30 +314,14 @@ namespace cloudscribe.Setup.Controllers
             if (currentSchemaVersion > zeroVersion) { return true; } //already installed only run upgrade scripts
 
             Version versionToStopAt = null;
-            //Guid mojoAppGuid = new Guid("077e4857-f583-488e-836e-34a4b04be855");
-            //if (appID == mojoAppGuid)
-            //{
-            //    //versionToStopAt = DatabaseHelper.DBCodeVersion (); ;
-            //}
-
-            //string pathToScriptFolder = hostingEnvironment.MapPath(
-            //    string.Format(config.SetupInstallScriptPathFormat(),
-            //    applicationName,
-            //    db.DBPlatform.ToLowerInvariant())
-            //    );
-
+            
             string pathToScriptFolder = appBasePath
                + string.Format(config.SetupInstallScriptPathFormat().Replace("/",Path.DirectorySeparatorChar.ToString()),
                applicationName,
                db.DBPlatform.ToLowerInvariant())
                ;
 
-            //String pathToScriptFolder
-            //    = hostingEnvironment.MapPath(
-            //    "~/Config/applications/" + applicationName
-            //    + "/SchemaInstallScripts/"
-            //        + db.DBPlatform.ToLowerInvariant()
-            //        + "/");
+            
 
             if (!Directory.Exists(pathToScriptFolder))
             {
@@ -531,8 +492,7 @@ namespace cloudscribe.Setup.Controllers
 
             try
             {
-                bool result = db.RunScript(
-                    scriptFile, overrideConnectionInfo);
+                bool result = db.RunScript(scriptFile, overrideConnectionInfo);
 
                 if (!result)
                 {
@@ -564,12 +524,7 @@ namespace cloudscribe.Setup.Controllers
             Version versionToStopAt = null;
             IVersionProvider appVersionProvider = db.VersionProviders.Get(applicationName);
 
-            //if (VersionProviderManager.Providers[applicationName] != null)
-            //{
-            //    VersionProvider appVersionProvider = VersionProviderManager.Providers[applicationName];
-            //    versionToStopAt = appVersionProvider.GetCodeVersion();
-
-            //}
+            
             Guid appID;
             if (appVersionProvider != null)
             {
@@ -585,18 +540,7 @@ namespace cloudscribe.Setup.Controllers
             Version currentSchemaVersion = db.GetSchemaVersion(appID);
 
 
-            //String pathToScriptFolder
-            //    = hostingEnvironment.MapPath(
-            //    "~/Config/applications/" + applicationName
-            //        + "/SchemaUpgradeScripts/"
-            //        + db.DBPlatform.ToLowerInvariant()
-            //        + "/");
-
-            //string pathToScriptFolder = hostingEnvironment.MapPath(
-            //    string.Format(config.SetupUpgradeScriptPathFormat(),
-            //    applicationName,
-            //    db.DBPlatform.ToLowerInvariant())
-            //    );
+           
 
             string pathToScriptFolder = appBasePath
                 + string.Format(config.SetupUpgradeScriptPathFormat().Replace("/", Path.DirectorySeparatorChar.ToString()),
@@ -1148,24 +1092,9 @@ namespace cloudscribe.Setup.Controllers
             //response.Flush();
         }
 
-        private bool LockForSetup()
-        {
+        
 
-            //if (HttpContext.Application["UpgradeInProgress"] != null)
-            //{
-            //    bool upgradeInProgress = (bool)HttpContext.Application["UpgradeInProgress"];
-            //    if (upgradeInProgress) return false;
-
-            //}
-
-            //HttpContext.Application["UpgradeInProgress"] = true;
-            return true;
-        }
-
-        private void ClearSetupLock()
-        {
-            //HttpContext.Application["UpgradeInProgress"] = false;
-        }
+        
 
 
 
