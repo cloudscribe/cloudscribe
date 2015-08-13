@@ -104,7 +104,11 @@ namespace cloudscribe.Core.Web.Components
         {
             IVersionProvider provider = versionProviderFactory.Get(applicationName);
 
-            if (provider == null) { return true; }
+            if (provider == null)
+            {
+                log.LogInformation("IVersionProvider not found for " + applicationName);
+                return true;
+            }
 
             Version codeVersion = provider.GetCodeVersion();
 
@@ -112,7 +116,11 @@ namespace cloudscribe.Core.Web.Components
             Version schemaVersion = db.GetSchemaVersion(appId);
 
             bool result = false;
-            if (codeVersion > schemaVersion) { result = true; }
+            if (codeVersion > schemaVersion)
+            {
+                //log.LogInformation(applicationName + " needs upgrade");
+                result = true;
+            }
 
             return result;
         }
@@ -246,32 +254,43 @@ namespace cloudscribe.Core.Web.Components
             int build,
             int revision)
         {
-            return db.UpdateSchemaVersion(
+            if(!db.UpdateSchemaVersion(
+                applicationId,
+                applicationName,
+                major,
+                minor,
+                build,
+                revision))
+            {
+                return db.AddSchemaVersion(
                 applicationId,
                 applicationName,
                 major,
                 minor,
                 build,
                 revision);
+            }
+
+            return true;
 
         }
 
-        public bool AddSchemaVersion(
-          Guid applicationId,
-          string applicationName,
-          int major,
-          int minor,
-          int build,
-          int revision)
-        {
-            return db.AddSchemaVersion(
-                applicationId,
-                applicationName,
-                major,
-                minor,
-                build,
-                revision);
-        }
+        //public bool AddSchemaVersion(
+        //  Guid applicationId,
+        //  string applicationName,
+        //  int major,
+        //  int minor,
+        //  int build,
+        //  int revision)
+        //{
+        //    return db.AddSchemaVersion(
+        //        applicationId,
+        //        applicationName,
+        //        major,
+        //        minor,
+        //        build,
+        //        revision);
+        //}
 
         public int AddSchemaScriptHistory(
             Guid applicationId,

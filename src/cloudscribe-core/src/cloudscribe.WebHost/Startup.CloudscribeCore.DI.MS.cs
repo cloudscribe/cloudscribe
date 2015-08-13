@@ -111,6 +111,7 @@ namespace cloudscribe.WebHost
             // RequestSiteResolver resolves ISiteSettings based on the request to support multi tenancy based on either host name or first folder depending on configuration
             services.TryAdd(ServiceDescriptor.Scoped<ISiteResolver, RequestSiteResolver>());
             services.TryAdd(ServiceDescriptor.Scoped<SiteManager, SiteManager>());
+            services.TryAdd(ServiceDescriptor.Scoped<SetupManager, SetupManager>());
             services.TryAdd(ServiceDescriptor.Scoped<GeoDataManager, GeoDataManager>());
 
             // VersionProviders are used by the Setup controller to determine what install and upgrade scripts to run
