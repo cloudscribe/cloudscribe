@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-01-02
-// Last Modified:			2015-07-24
+// Last Modified:			2015-08-14
 // 
 
 
@@ -15,6 +15,7 @@ using System.Net.Http;
 using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Http.Features;
+using Newtonsoft.Json.Converters;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Controllers
@@ -85,10 +86,24 @@ namespace cloudscribe.Core.Web.Controllers
         {
             
             if (controller.Context.GetFeature<ISessionFeature>() != null)
-            {    
-                var alerts = controller.TempData.ContainsKey(Alert.TempDataKey)
-                ? (List<Alert>)controller.TempData[Alert.TempDataKey]
-                : new List<Alert>();
+            {
+                // this only works with in memory session state we need to do our own serilaization/deserialization
+                //https://github.com/aspnet/Mvc/issues/2850
+                // 
+                //var alerts = controller.TempData.ContainsKey(Alert.TempDataKey)
+                //? (List<Alert>)controller.TempData[Alert.TempDataKey]
+                //: new List<Alert>();
+
+                //alerts.Add(new Alert
+                //{
+                //    AlertStyle = alertStyle,
+                //    Message = message,
+                //    Dismissable = dismissable
+                //});
+
+                //controller.TempData[Alert.TempDataKey] = alerts;
+
+                var alerts = controller.TempData.GetAlerts();
 
                 alerts.Add(new Alert
                 {
@@ -97,9 +112,26 @@ namespace cloudscribe.Core.Web.Controllers
                     Dismissable = dismissable
                 });
 
-                controller.TempData[Alert.TempDataKey] = alerts;
+                controller.TempData.AddAlerts(alerts);
             }
 
+        }
+
+        public static void AddAlerts(this ITempDataDictionary tempData, List<Alert> alerts)
+        {
+            tempData[Alert.TempDataKey] = JsonConvert.SerializeObject(alerts);
+        }
+
+        public static List<Alert> GetAlerts(this ITempDataDictionary tempData)
+        {
+            if(tempData.ContainsKey(Alert.TempDataKey))
+            {
+                string json = (string)tempData[Alert.TempDataKey];
+                List<Alert> alerts = JsonConvert.DeserializeObject<List<Alert>>(json);
+                return alerts;
+            }
+
+            return new List<Alert>();
         }
 
         public static IActionResult RedirectToLocal(this Controller controller, string returnUrl)

@@ -9,11 +9,8 @@ using cloudscribe.Core.Models;
 using Microsoft.Framework.Logging;
 using Microsoft.Framework.Runtime;
 using System;
-using System.IO;
 using System.Data.Common;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.IO;
 
 namespace cloudscribe.Core.Web.Components
 {

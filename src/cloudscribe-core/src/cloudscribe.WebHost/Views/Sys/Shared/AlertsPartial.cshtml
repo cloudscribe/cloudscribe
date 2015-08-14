@@ -1,8 +1,7 @@
 ﻿@using cloudscribe.Core.Web.ViewModels.Common
+@using cloudscribe.Core.Web.Controllers
 @{
-    var alerts = TempData.ContainsKey(Alert.TempDataKey)
-                ? (List<Alert>)TempData[Alert.TempDataKey]
-                : new List<Alert>();
+    var alerts = TempData.GetAlerts();
 
     foreach (var alert in alerts)
     {
@@ -10,7 +9,7 @@
         <div class="alert alert-@alert.AlertStyle @dismissableClass">
             @if (alert.Dismissable)
             {
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true" aria-label="@CommonResources.Close">&times;</button>
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true" aria-label="CommonResources.Close">&times;</button>
             }
             @Html.Raw(alert.Message)
         </div>

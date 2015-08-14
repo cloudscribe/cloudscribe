@@ -1,5 +1,7 @@
 
 
+http://stackoverflow.com/questions/31194352/how-to-run-asp-net-mvc6-on-iis-without-publishing-application
+
 http://stephenwalther.com/archive/2015/02/07/asp-net-5-deep-dive-routing
 
 http://blogs.msdn.com/b/visualstudioalm/archive/2015/07/20/performance-and-diagnostic-tools-in-visual-studio-2015.aspx

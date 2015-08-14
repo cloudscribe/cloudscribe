@@ -113,6 +113,11 @@ namespace cloudscribe.Core.Web.Components
             return config.GetOrDefault("AppSettings:SetupTryAnywayIfFailedAlterSchemaTest", false);
         }
 
+        public static string CkEditorCustomConfigPath(this ConfigHelper config)
+        {
+            return config.GetOrDefault("AppSettings:CkEditorCustomConfigPath", "~/js/app/cloudscribe-ckeditor-config.js");
+        }
+
 
     }
 }

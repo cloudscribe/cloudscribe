@@ -105,7 +105,8 @@ namespace cloudscribe.Setup.Controllers
 
             }
 
-            int lockTimeoutMilliseconds = config.GetOrDefault("AppSetings:SetupLockTimeoutMilliseconds", 60000); // 1 minute
+            // this locking strategy did not work as expected perhaps because we are doing things async
+            //int lockTimeoutMilliseconds = config.GetOrDefault("AppSetings:SetupLockTimeoutMilliseconds", 60000); // 1 minute
 
             //if(!Monitor.TryEnter(Lock, lockTimeoutMilliseconds))
             //{
@@ -303,7 +304,7 @@ namespace cloudscribe.Setup.Controllers
 
             if (currentSchemaVersion > zeroVersion) { return true; } //already installed only run upgrade scripts
 
-            Version versionToStopAt = null; // because we don't stop on install we start with the highest version in the folder which is also the last one
+            Version versionToStopAt = null; // null because we don't stop on install we start with the highest version in the folder which is also the last one
 
             string pathToScriptFolder = setupManager.GetPathToInstallScriptFolder(applicationName);
             

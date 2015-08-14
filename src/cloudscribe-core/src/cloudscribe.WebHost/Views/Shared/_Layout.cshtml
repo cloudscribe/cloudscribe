@@ -5,10 +5,6 @@
     ISiteSettings SiteSettings = siteResolver.Resolve();
     ViewData["SiteName"] = SiteSettings.SiteName;
 }
-
-
-
-
 <!DOCTYPE html>
 <html>
     <head>
@@ -44,13 +40,14 @@
                     <a asp-controller="Home" asp-action="Index" class="navbar-brand">@ViewData["SiteName"]</a>
                 </div>
                 <div class="navbar-collapse collapse">
-                    @await Component.InvokeAsync("Navigation", "BootstrapTopNav", NamedNavigationFilters.TopNav)          
-                    @await Html.PartialAsync("_LoginPartial")
+                    @await Component.InvokeAsync("Navigation", "BootstrapTopNav", NamedNavigationFilters.TopNav)   
+                    <partial name="_LoginPartial"></partial>       
                 </div>
             </div>
         </div>
         <div class="container body-content">
             @await Component.InvokeAsync("Navigation", "BootstrapBreadcrumbs", NamedNavigationFilters.Breadcrumbs)
+            <partial name="AlertsPartial"></partial>
             @RenderBody()
             <hr />
             <footer>

@@ -1,11 +1,13 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.SiteBasicSettingsViewModel
 
-@inject IConfiguration config
+@inject ConfigHelper config
+@inject IOptions<MultiTenantOptions> multiTenantOptions
 
 @{
-
+    bool useFolderTenants = true;
+    if(multiTenantOptions.Options.Mode != MultiTenantMode.FolderName) { useFolderTenants = false; }
 }
-<form method="post" class="form-horizontal" role="form">
+<form method="post" class="form-horizontal" role="form" asp-antiforgery="true">
     <div class="form-horizontal">
         <div asp-validation-summary="ValidationSummary.All" class="text-danger"></div>
         <input asp-for="SiteId" type="hidden" />
@@ -18,7 +20,7 @@
                 <span asp-validation-for="SiteName" class="text-danger"></span> 
             </div>
         </div>
-        @if (config.UseFoldersInsteadOfHostnamesForMultipleSites())
+        @if (useFolderTenants)
         {
             <div class="form-group">
                 <label asp-for="SiteFolderName" class="col-md-2 control-label"></label>

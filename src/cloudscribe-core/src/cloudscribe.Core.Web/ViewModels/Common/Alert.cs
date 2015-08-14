@@ -1,8 +1,11 @@
 ﻿// Copyright (c) Source Tree Solutions, LLC. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System;
+
 namespace cloudscribe.Core.Web.ViewModels.Common
 {
+    //[Serializable]
     public class Alert
     {
         public const string TempDataKey = "TempDataAlerts";
@@ -11,6 +14,7 @@ namespace cloudscribe.Core.Web.ViewModels.Common
         public string Message { get; set; }
         public bool Dismissable { get; set; }
     }
+
 
     public static class AlertStyles
     {
