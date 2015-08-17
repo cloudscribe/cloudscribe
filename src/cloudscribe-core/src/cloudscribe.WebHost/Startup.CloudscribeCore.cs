@@ -52,7 +52,10 @@ namespace cloudscribe.WebHost
         /// <param name="app"></param>
         /// <param name="config"></param>
         /// <returns></returns>
-        public static IApplicationBuilder UseCloudscribeCore(this IApplicationBuilder app, IConfiguration config)
+        public static IApplicationBuilder UseCloudscribeCore(
+            this IApplicationBuilder app, 
+            IConfiguration config,
+            IOptions<MultiTenantOptions> multiTenantOptions)
         {
 
             // the only thing we are using session for is Alerts
@@ -60,7 +63,7 @@ namespace cloudscribe.WebHost
             //app.UseInMemorySession(configure: s => s.IdleTimeout = TimeSpan.FromMinutes(20));
             app.UseStatusCodePages();
 
-            IOptions<MultiTenantOptions> multiTenantOptions = app.ApplicationServices.GetService<IOptions<MultiTenantOptions>>();
+            //IOptions<MultiTenantOptions> multiTenantOptions = app.ApplicationServices.GetService<IOptions<MultiTenantOptions>>();
 
             //// Add cookie-based authentication to the request pipeline.
             ////https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity/BuilderExtensions.cs

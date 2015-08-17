@@ -21,3 +21,14 @@ http://stackoverflow.com/questions/17509768/changing-the-response-object-from-ow
 http://stackoverflow.com/questions/26214113/how-can-i-safely-intercept-the-response-stream-in-a-custom-owin-middleware
 
 http://dotnetcodr.com/2014/04/21/owin-and-katana-part-3-more-complex-middleware/
+
+maybe should make my own APM solution based on applicaiton insights api
+https://github.com/Microsoft/ApplicationInsights-aspnet5/blob/master/src/Microsoft.ApplicationInsights.AspNet/RequestTrackingMiddleware.cs
+
+https://github.com/Microsoft/ApplicationInsights-aspnet5/blob/master/src/Microsoft.ApplicationInsights.AspNet/ExceptionTrackingMiddleware.cs
+
+http://azure.microsoft.com/blog/2015/06/25/announcing-the-1-0-0-release-of-application-insights-windows-sdks/
+
+https://azure.microsoft.com/en-us/pricing/details/application-insights/
+
+https://azure.microsoft.com/en-us/documentation/articles/app-insights-start-monitoring-app-health-usage/

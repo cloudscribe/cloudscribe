@@ -144,7 +144,15 @@ namespace cloudscribe.WebHost
         }
 
         // Configure is called after ConfigureServices is called.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        // you can change this method signature to include any dependencies that need to be injected into this method
+        // you can see we added the dependency for IOptions<MultiTenantOptions>
+        // so basically if you need any service in this method that was previously setup in ConfigureServices
+        // you can just add it to the method signature and it will be provided by dependency injection
+        public void Configure(
+            IApplicationBuilder app, 
+            IHostingEnvironment env, 
+            ILoggerFactory loggerFactory,
+            IOptions<MultiTenantOptions> multiTenantOptions)
         {
             // Configure the HTTP request pipeline.
 
@@ -167,11 +175,13 @@ namespace cloudscribe.WebHost
                 //app.UseErrorPage(ErrorPageOptions.ShowAll);
             }
 
+            app.UseRuntimeInfoPage("/info");
+
             // Add static files to the request pipeline.
             app.UseStaticFiles();
             
             // this is in Startup.CloudscribeCore.cs
-            app.UseCloudscribeCore(Configuration);
+            app.UseCloudscribeCore(Configuration, multiTenantOptions);
 
             
         }
