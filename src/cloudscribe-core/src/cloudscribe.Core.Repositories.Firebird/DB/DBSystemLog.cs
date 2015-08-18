@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //	Author:                 Joe Audette
 //  Created:			    2011-07-23
-//	Last Modified:		    2015-06-12
+//	Last Modified:		    2015-08-18
 // 
 
 using cloudscribe.DbHelpers.Firebird;
@@ -101,7 +101,7 @@ namespace cloudscribe.Core.Repositories.Firebird
         /// <summary>
         /// Deletes rows from the mp_SystemLog table. Returns true if rows deleted.
         /// </summary>
-        public void DeleteAll()
+        public async Task<bool> DeleteAll()
         {
 
             //TODO: does firebird support truncate table?
@@ -116,11 +116,12 @@ namespace cloudscribe.Core.Repositories.Firebird
             //arParams[0] = new FbParameter("@ID", FbDbType.Integer);
             //arParams[0].Value = id;
 
-            AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 sqlCommand.ToString(),
                 null);
 
+            return (rowsAffected > 0);
         }
 
         /// <summary>
@@ -128,7 +129,7 @@ namespace cloudscribe.Core.Repositories.Firebird
         /// </summary>
         /// <param name="id"> id </param>
         /// <returns>bool</returns>
-        public bool Delete(int id)
+        public async Task<bool> Delete(int id)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_SystemLog ");
@@ -140,7 +141,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             arParams[0] = new FbParameter("@ID", FbDbType.Integer);
             arParams[0].Value = id;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 sqlCommand.ToString(),
                 arParams);
@@ -154,7 +155,7 @@ namespace cloudscribe.Core.Repositories.Firebird
         /// </summary>
         /// <param name="id"> id </param>
         /// <returns>bool</returns>
-        public bool DeleteOlderThan(DateTime cutoffDate)
+        public async Task<bool> DeleteOlderThan(DateTime cutoffDate)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_SystemLog ");
@@ -166,7 +167,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             arParams[0] = new FbParameter("@CutoffDate", FbDbType.TimeStamp);
             arParams[0].Value = cutoffDate;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 sqlCommand.ToString(),
                 arParams);
@@ -180,7 +181,7 @@ namespace cloudscribe.Core.Repositories.Firebird
         /// </summary>
         /// <param name="id"> id </param>
         /// <returns>bool</returns>
-        public bool DeleteByLevel(string logLevel)
+        public async Task<bool> DeleteByLevel(string logLevel)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_SystemLog ");
@@ -192,7 +193,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             arParams[0] = new FbParameter("@LogLevel", FbDbType.VarChar, 20);
             arParams[0].Value = logLevel;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 sqlCommand.ToString(),
                 arParams);
@@ -204,17 +205,19 @@ namespace cloudscribe.Core.Repositories.Firebird
         /// <summary>
         /// Gets a count of rows in the mp_SystemLog table.
         /// </summary>
-        public int GetCount()
+        public async Task<int> GetCount()
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  Count(*) ");
             sqlCommand.Append("FROM	mp_SystemLog ");
             sqlCommand.Append(";");
 
-            return Convert.ToInt32(AdoHelper.ExecuteScalar(
+            object result = await AdoHelper.ExecuteScalarAsync(
                 readConnectionString,
                 sqlCommand.ToString(),
-                null));
+                null);
+
+            return Convert.ToInt32(result);
 
         }
 
@@ -224,7 +227,7 @@ namespace cloudscribe.Core.Repositories.Firebird
         /// <param name="pageNumber">The page number.</param>
         /// <param name="pageSize">Size of the page.</param>
         /// <param name="totalPages">total pages</param>
-        public DbDataReader GetPageAscending(
+        public async Task<DbDataReader> GetPageAscending(
             int pageNumber,
             int pageSize)
         {
@@ -265,7 +268,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             //arParams[0] = new FbParameter("@CountryGuid", FbDbType.Char, 36);
             //arParams[0].Value = countryGuid.ToString();
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
                 sqlCommand.ToString(),
                 null);
@@ -278,7 +281,7 @@ namespace cloudscribe.Core.Repositories.Firebird
         /// <param name="pageNumber">The page number.</param>
         /// <param name="pageSize">Size of the page.</param>
         /// <param name="totalPages">total pages</param>
-        public DbDataReader GetPageDescending(
+        public async Task<DbDataReader> GetPageDescending(
             int pageNumber,
             int pageSize)
         {
@@ -319,7 +322,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             //arParams[0] = new FbParameter("@CountryGuid", FbDbType.Char, 36);
             //arParams[0].Value = countryGuid.ToString();
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
                 sqlCommand.ToString(),
                 null);

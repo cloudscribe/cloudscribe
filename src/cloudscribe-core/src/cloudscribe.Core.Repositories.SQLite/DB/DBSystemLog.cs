@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //	Author:                 Joe Audette
 //  Created:			    2011-07-23
-//	Last Modified:		    2015-06-14
+//	Last Modified:		    2015-08-18
 // 
 
 using cloudscribe.DbHelpers.SQLite;
@@ -122,7 +122,7 @@ namespace cloudscribe.Core.Repositories.SQLite
         /// <summary>
         /// Deletes rows from the mp_SystemLog table. Returns true if rows deleted.
         /// </summary>
-        public void DeleteAll()
+        public bool DeleteAll()
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_SystemLog ");
@@ -135,10 +135,12 @@ namespace cloudscribe.Core.Repositories.SQLite
             //arParams[0] = new SQLiteParameter(":ID", DbType.Int32);
             //arParams[0].Value = id;
 
-            AdoHelper.ExecuteNonQuery(
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
                 connectionString,
                 sqlCommand.ToString(),
                 null);
+
+            return (rowsAffected > 0);
 
         }
 

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //	Author:                 Joe Audette
 //  Created:			    2011-07-23
-//	Last Modified:		    2015-06-09
+//	Last Modified:		    2015-08-18
 // 
 
 
@@ -71,14 +71,14 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@LogLevel", SqlDbType.NVarChar, 20, ParameterDirection.Input, logLevel);
             sph.DefineSqlParameter("@Logger", SqlDbType.NVarChar, 255, ParameterDirection.Input, logger);
             sph.DefineSqlParameter("@Message", SqlDbType.NVarChar, -1, ParameterDirection.Input, message);
-            int newID = Convert.ToInt32(sph.ExecuteScalar());
+            int newID = Convert.ToInt32(sph.ExecuteScalarAsync());
             return newID;
         }
 
         /// <summary>
         /// Deletes rows from the mp_SystemLog table. Returns true if rows deleted.
         /// </summary>
-        public void DeleteAll()
+        public async Task<bool> DeleteAll()
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -87,7 +87,8 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 0);
 
             //sph.DefineSqlParameter("@ID", SqlDbType.Int, ParameterDirection.Input, id);
-            sph.ExecuteNonQuery();
+            int rowsAffected = await sph.ExecuteNonQueryAsync();
+            return (rowsAffected > 0);
 
 
         }
@@ -97,7 +98,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// </summary>
         /// <param name="id"> id </param>
         /// <returns>bool</returns>
-        public bool Delete(int id)
+        public async Task<bool> Delete(int id)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -106,7 +107,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 1);
 
             sph.DefineSqlParameter("@ID", SqlDbType.Int, ParameterDirection.Input, id);
-            int rowsAffected = sph.ExecuteNonQuery();
+            int rowsAffected = await sph.ExecuteNonQueryAsync();
             return (rowsAffected > 0);
 
         }
@@ -116,7 +117,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// </summary>
         /// <param name="id"> id </param>
         /// <returns>bool</returns>
-        public bool DeleteOlderThan(DateTime cutoffDate)
+        public async Task<bool> DeleteOlderThan(DateTime cutoffDate)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -125,7 +126,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 1);
 
             sph.DefineSqlParameter("@CutoffDate", SqlDbType.DateTime, ParameterDirection.Input, cutoffDate);
-            int rowsAffected = sph.ExecuteNonQuery();
+            int rowsAffected = await sph.ExecuteNonQueryAsync();
             return (rowsAffected > 0);
 
         }
@@ -135,7 +136,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// </summary>
         /// <param name="id"> id </param>
         /// <returns>bool</returns>
-        public bool DeleteByLevel(string logLevel)
+        public async Task<bool> DeleteByLevel(string logLevel)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -144,7 +145,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 1);
 
             sph.DefineSqlParameter("@LogLevel", SqlDbType.NVarChar, 20, ParameterDirection.Input, logLevel);
-            int rowsAffected = sph.ExecuteNonQuery();
+            int rowsAffected = await sph.ExecuteNonQueryAsync();
             return (rowsAffected > 0);
 
         }
@@ -152,14 +153,15 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// <summary>
         /// Gets a count of rows in the mp_SystemLog table.
         /// </summary>
-        public int GetCount()
+        public async Task<int> GetCount()
         {
-
-            return Convert.ToInt32(AdoHelper.ExecuteScalar(
+            object result = await AdoHelper.ExecuteScalarAsync(
                 readConnectionString,
                 CommandType.StoredProcedure,
                 "mp_SystemLog_GetCount",
-                null));
+                null);
+
+            return Convert.ToInt32(result);
 
         }
 
@@ -169,7 +171,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// <param name="pageNumber">The page number.</param>
         /// <param name="pageSize">Size of the page.</param>
         /// <param name="totalPages">total pages</param>
-        public DbDataReader GetPageAscending(
+        public async Task<DbDataReader> GetPageAscending(
             int pageNumber,
             int pageSize)
         {
@@ -200,7 +202,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
             sph.DefineSqlParameter("@PageNumber", SqlDbType.Int, ParameterDirection.Input, pageNumber);
             sph.DefineSqlParameter("@PageSize", SqlDbType.Int, ParameterDirection.Input, pageSize);
-            return sph.ExecuteReader();
+            return await sph.ExecuteReaderAsync();
 
         }
 
@@ -210,7 +212,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// <param name="pageNumber">The page number.</param>
         /// <param name="pageSize">Size of the page.</param>
         /// <param name="totalPages">total pages</param>
-        public DbDataReader GetPageDescending(
+        public async Task<DbDataReader> GetPageDescending(
             int pageNumber,
             int pageSize)
         {
@@ -241,7 +243,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
             sph.DefineSqlParameter("@PageNumber", SqlDbType.Int, ParameterDirection.Input, pageNumber);
             sph.DefineSqlParameter("@PageSize", SqlDbType.Int, ParameterDirection.Input, pageSize);
-            return sph.ExecuteReader();
+            return await sph.ExecuteReaderAsync();
 
         }
 

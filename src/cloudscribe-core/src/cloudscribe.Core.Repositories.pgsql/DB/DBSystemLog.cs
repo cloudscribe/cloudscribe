@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //	Author:                 Joe Audette
 //  Created:			    2011-07-23
-//	Last Modified:		    2015-06-13
+//	Last Modified:		    2015-08-18
 // 
 
 using cloudscribe.DbHelpers.pgsql;
@@ -12,6 +12,7 @@ using System;
 using System.Data;
 using System.Data.Common;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.pgsql
 {
@@ -123,18 +124,20 @@ namespace cloudscribe.Core.Repositories.pgsql
         /// <summary>
         /// Deletes rows from the mp_SystemLog table. Returns true if rows deleted.
         /// </summary>
-        public void DeleteAll()
+        public async Task<bool> DeleteAll()
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_systemlog ");
 
             sqlCommand.Append(";");
 
-            AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
                 null);
+
+            return (rowsAffected > 0);
 
         }
 
@@ -143,7 +146,7 @@ namespace cloudscribe.Core.Repositories.pgsql
         /// </summary>
         /// <param name="id"> id </param>
         /// <returns>bool</returns>
-        public bool Delete(int id)
+        public async Task<bool> Delete(int id)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_systemlog ");
@@ -156,7 +159,7 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[0] = new NpgsqlParameter("id", NpgsqlTypes.NpgsqlDbType.Integer);
             arParams[0].Value = id;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
@@ -171,7 +174,7 @@ namespace cloudscribe.Core.Repositories.pgsql
         /// </summary>
         /// <param name="id"> id </param>
         /// <returns>bool</returns>
-        public bool DeleteOlderThan(DateTime cutoffDate)
+        public async Task<bool> DeleteOlderThan(DateTime cutoffDate)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_systemlog ");
@@ -184,7 +187,7 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[0] = new NpgsqlParameter("cutoffdate", NpgsqlTypes.NpgsqlDbType.Timestamp);
             arParams[0].Value = cutoffDate;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
@@ -199,7 +202,7 @@ namespace cloudscribe.Core.Repositories.pgsql
         /// </summary>
         /// <param name="id"> id </param>
         /// <returns>bool</returns>
-        public bool DeleteByLevel(string logLevel)
+        public async Task<bool> DeleteByLevel(string logLevel)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_systemlog ");
@@ -212,7 +215,7 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[0] = new NpgsqlParameter("loglevel", NpgsqlTypes.NpgsqlDbType.Integer);
             arParams[0].Value = logLevel;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
@@ -225,18 +228,20 @@ namespace cloudscribe.Core.Repositories.pgsql
         /// <summary>
         /// Gets a count of rows in the mp_SystemLog table.
         /// </summary>
-        public int GetCount()
+        public async Task<int> GetCount()
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  Count(*) ");
             sqlCommand.Append("FROM	mp_systemlog ");
             sqlCommand.Append(";");
 
-            return Convert.ToInt32(AdoHelper.ExecuteScalar(
+            object result = await AdoHelper.ExecuteScalarAsync(
                 readConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                null));
+                null);
+
+            return Convert.ToInt32(result);
         }
 
         /// <summary>
@@ -245,7 +250,7 @@ namespace cloudscribe.Core.Repositories.pgsql
         /// <param name="pageNumber">The page number.</param>
         /// <param name="pageSize">Size of the page.</param>
         /// <param name="totalPages">total pages</param>
-        public DbDataReader GetPageAscending(
+        public async Task<DbDataReader> GetPageAscending(
             int pageNumber,
             int pageSize)
         {
@@ -290,7 +295,7 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             sqlCommand.Append(";");
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
@@ -304,7 +309,7 @@ namespace cloudscribe.Core.Repositories.pgsql
         /// <param name="pageNumber">The page number.</param>
         /// <param name="pageSize">Size of the page.</param>
         /// <param name="totalPages">total pages</param>
-        public DbDataReader GetPageDescending(
+        public async Task<DbDataReader> GetPageDescending(
             int pageNumber,
             int pageSize)
         {
@@ -349,7 +354,7 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             sqlCommand.Append(";");
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),

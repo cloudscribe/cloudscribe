@@ -167,7 +167,7 @@
               "Value": {
                 "Key": "RoleMembers",
                 "ParentKey": "RoleAdmin",
-                "Text": "RoleManagement",
+                "Text": "RoleMembers",
                 "Url": "~/RoleAdmin/RoleMembers",
                 "Controller": "RoleAdmin",
                 "Action": "RoleMembers",

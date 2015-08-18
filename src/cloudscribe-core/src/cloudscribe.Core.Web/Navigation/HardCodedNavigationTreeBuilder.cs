@@ -195,7 +195,7 @@ namespace cloudscribe.Core.Web.Navigation
             roleMembers.ParentKey = "RoleAdmin";
             roleMembers.Controller = "RoleAdmin";
             roleMembers.Action = "RoleMembers";
-            roleMembers.Text = "RoleManagement";
+            roleMembers.Text = "RoleMembers";
             roleMembers.ViewRoles = "Admins";
             roleMembers.ComponentVisibility = NamedNavigationFilters.Breadcrumbs;
             roleMembers.Url = roleMembers.ResolveUrl();

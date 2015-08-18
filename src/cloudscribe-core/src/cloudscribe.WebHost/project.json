@@ -63,7 +63,8 @@
         "**.xproj",
         "**.user",
       "**.vspscc",
-      "wwwroot/js/lib/ckeditor/samples"
+      "wwwroot/js/lib/ckeditor/samples",
+      "config.local.overrides.json"
     ],
     "scripts": {
     "prepublish": [ "npm install", "bower install", "gulp clean", "gulp min" ]
