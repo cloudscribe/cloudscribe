@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //	Author:                 Joe Audette
 //  Created:			    2011-07-23
-//	Last Modified:		    2015-08-18
+//	Last Modified:		    2015-08-19
 // 
 
 
@@ -27,7 +27,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             writeConnectionString = dbWriteConnectionString;
         }
 
-        private ILoggerFactory logFactory;
+        private ILoggerFactory logFactory = null;
         //private ILogger log;
         private string readConnectionString;
         private string writeConnectionString;
@@ -71,7 +71,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@LogLevel", SqlDbType.NVarChar, 20, ParameterDirection.Input, logLevel);
             sph.DefineSqlParameter("@Logger", SqlDbType.NVarChar, 255, ParameterDirection.Input, logger);
             sph.DefineSqlParameter("@Message", SqlDbType.NVarChar, -1, ParameterDirection.Input, message);
-            int newID = Convert.ToInt32(sph.ExecuteScalarAsync());
+            int newID = Convert.ToInt32(sph.ExecuteScalar());
             return newID;
         }
 

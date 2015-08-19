@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //	Author:                 Joe Audette
 //  Created:			    2011-08-18
-//	Last Modified:		    2015-08-18
+//	Last Modified:		    2015-08-19
 // 
 
 using cloudscribe.Core.Models.DataExtensions;
@@ -20,23 +20,24 @@ namespace cloudscribe.Core.Repositories.MSSQL
     public class LogRepository : ILogRepository
     {
         public LogRepository(
-            IOptions<MSSQLConnectionOptions> connectionOptions,
-            ILoggerFactory loggerFactory)
+            IOptions<MSSQLConnectionOptions> connectionOptions)
         {
             if (connectionOptions == null) { throw new ArgumentNullException(nameof(connectionOptions)); }
-            if (loggerFactory == null) { throw new ArgumentNullException(nameof(loggerFactory)); }
+            //if (loggerFactory == null) { throw new ArgumentNullException(nameof(loggerFactory)); }
 
-            logFactory = loggerFactory;
-            log = loggerFactory.CreateLogger(typeof(GeoRepository).FullName);
+            //logFactory = loggerFactory;
+            //log = loggerFactory.CreateLogger(typeof(GeoRepository).FullName);
 
             readConnectionString = connectionOptions.Options.ReadConnectionString;
             writeConnectionString = connectionOptions.Options.WriteConnectionString;
 
-            dbSystemLog = new DBSystemLog(readConnectionString, writeConnectionString, logFactory);
+            // passing in null for loggerFactory because we don't want to allow debug sql logging for log related sql activity
+            // it would cause a never ending loop condition if logging events generate more logging events
+            dbSystemLog = new DBSystemLog(readConnectionString, writeConnectionString, null);
         }
 
-        private ILoggerFactory logFactory;
-        private ILogger log;
+        //private ILoggerFactory logFactory;
+       // private ILogger log;
         private string readConnectionString;
         private string writeConnectionString;
         private DBSystemLog dbSystemLog;

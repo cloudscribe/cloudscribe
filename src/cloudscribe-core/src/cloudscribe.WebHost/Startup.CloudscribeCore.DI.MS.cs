@@ -23,7 +23,7 @@ using Microsoft.AspNet.Mvc.Razor;
 using Microsoft.AspNet.Routing;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Identity;
-using cloudscribe.Core.Models.Site;
+using cloudscribe.Core.Models.Logging;
 using cloudscribe.Core.Models.Geography;
 using cloudscribe.Core.Web;
 using cloudscribe.Core.Web.Components;
@@ -74,6 +74,7 @@ namespace cloudscribe.WebHost
             services.TryAdd(ServiceDescriptor.Scoped<IUserRepository, cloudscribe.Core.Repositories.MSSQL.UserRepository>());
             services.TryAdd(ServiceDescriptor.Scoped<IGeoRepository, cloudscribe.Core.Repositories.MSSQL.GeoRepository>());
             services.TryAdd(ServiceDescriptor.Scoped<IDb, cloudscribe.DbHelpers.MSSQL.Db>());
+            services.TryAdd(ServiceDescriptor.Scoped<ILogRepository, cloudscribe.Core.Repositories.MSSQL.LogRepository>());
 
             //services.Configure<cloudscribe.DbHelpers.MySql.MySqlConnectionOptions>(configuration.GetConfigurationSection("Data:MySqlConnectionOptions"));
             //services.TryAdd(ServiceDescriptor.Scoped<ISiteRepository, cloudscribe.Core.Repositories.MySql.SiteRepository>());

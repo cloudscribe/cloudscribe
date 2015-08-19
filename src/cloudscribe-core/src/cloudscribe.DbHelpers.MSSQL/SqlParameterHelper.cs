@@ -34,7 +34,7 @@ namespace cloudscribe.DbHelpers.MSSQL
     {
         //private static readonly ILog log = LogManager.GetLogger(typeof(SqlParameterHelper));
         //private static bool debugLog = log.IsDebugEnabled;
-        private ILogger log;
+        private ILogger log = null;
 
         private SqlParameter[] arParams;
         private int index = 0;
@@ -54,7 +54,11 @@ namespace cloudscribe.DbHelpers.MSSQL
             CommandType cmdType, 
             int paramCnt)
         {
-            log = loggerFactory.CreateLogger(typeof(SqlParameterHelper).FullName);
+            if(loggerFactory != null)
+            {
+                log = loggerFactory.CreateLogger(typeof(SqlParameterHelper).FullName);
+            }
+            
             //log = logger;
             Initialize(connectionString, commandText, cmdType, paramCnt);
         }
@@ -65,7 +69,11 @@ namespace cloudscribe.DbHelpers.MSSQL
             string commandText, 
             int paramCnt)
         {
-            log = loggerFactory.CreateLogger(typeof(SqlParameterHelper).FullName);
+            if (loggerFactory != null)
+            {
+                log = loggerFactory.CreateLogger(typeof(SqlParameterHelper).FullName);
+            }
+            
             //log = logger;
             Initialize(connectionString, commandText, CommandType.StoredProcedure, paramCnt);
         }
@@ -186,7 +194,7 @@ namespace cloudscribe.DbHelpers.MSSQL
         {
             Debug.Assert((arParams.Length == index) && (paramCnt == index), "not all parameters were defined");
             //if (debugLog) { log.Debug("ExecuteReader " + commandText); }
-            log.LogDebug("ExecuteReader " + commandText);
+            if (log != null) { log.LogDebug("ExecuteReader " + commandText); }
             
             return AdoHelper.ExecuteReader(connectionString, cmdType, commandText, arParams);
         }
@@ -195,7 +203,7 @@ namespace cloudscribe.DbHelpers.MSSQL
         {
             Debug.Assert((arParams.Length == index) && (paramCnt == index), "not all parameters were defined");
             //if (debugLog) { log.Debug("ExecuteReader " + commandText); }
-            log.LogDebug("ExecuteReader " + commandText);
+            if (log != null)  log.LogDebug("ExecuteReader " + commandText);
             return AdoHelper.ExecuteReader(connectionString, cmdType, commandText, commandTimeout, arParams);
         }
 
@@ -203,7 +211,7 @@ namespace cloudscribe.DbHelpers.MSSQL
         {
             Debug.Assert((arParams.Length == index) && (paramCnt == index), "not all parameters were defined");
             //if (debugLog) { log.Debug("ExecuteReader " + commandText); }
-            log.LogDebug("ExecuteReader " + commandText);
+            if (log != null)  log.LogDebug("ExecuteReader " + commandText);
             return await AdoHelper.ExecuteReaderAsync(connectionString, cmdType, commandText, arParams);
         }
 
@@ -211,7 +219,7 @@ namespace cloudscribe.DbHelpers.MSSQL
         {
             Debug.Assert((arParams.Length == index) && (paramCnt == index), "not all parameters were defined");
             //if (debugLog) { log.Debug("ExecuteReader " + commandText); }
-            log.LogDebug("ExecuteReader " + commandText);
+            if (log != null)  log.LogDebug("ExecuteReader " + commandText);
             return await AdoHelper.ExecuteReaderAsync(connectionString, cmdType, commandText, commandTimeout, arParams);
         }
 
@@ -219,7 +227,7 @@ namespace cloudscribe.DbHelpers.MSSQL
         {
             Debug.Assert((arParams.Length == index) && (paramCnt == index), "not all parameters were defined");
             //if (debugLog) { log.Debug("ExecuteNonQuery " + commandText); }
-            log.LogDebug("ExecuteReader " + commandText);
+            if (log != null)  log.LogDebug("ExecuteReader " + commandText);
             return AdoHelper.ExecuteNonQuery(connectionString, cmdType, commandText, arParams);
         }
 
@@ -227,7 +235,7 @@ namespace cloudscribe.DbHelpers.MSSQL
         {
             Debug.Assert((arParams.Length == index) && (paramCnt == index), "not all parameters were defined");
             //if (debugLog) { log.Debug("ExecuteNonQuery " + commandText); }
-            log.LogDebug("ExecuteReader " + commandText);
+            if (log != null) log.LogDebug("ExecuteReader " + commandText);
             return AdoHelper.ExecuteNonQuery(connectionString, cmdType, commandText, commandTimeout, arParams);
         }
 
@@ -235,7 +243,7 @@ namespace cloudscribe.DbHelpers.MSSQL
         {
             Debug.Assert((arParams.Length == index) && (paramCnt == index), "not all parameters were defined");
             //if (debugLog) { log.Debug("ExecuteNonQuery " + commandText); }
-            log.LogDebug("ExecuteReader " + commandText);
+            if (log != null) log.LogDebug("ExecuteReader " + commandText);
             return await AdoHelper.ExecuteNonQueryAsync(connectionString, cmdType, commandText, arParams);
         }
 
@@ -243,7 +251,7 @@ namespace cloudscribe.DbHelpers.MSSQL
         {
             Debug.Assert((arParams.Length == index) && (paramCnt == index), "not all parameters were defined");
             //if (debugLog) { log.Debug("ExecuteNonQuery " + commandText); }
-            log.LogDebug("ExecuteReader " + commandText);
+            if (log != null) log.LogDebug("ExecuteReader " + commandText);
             return await AdoHelper.ExecuteNonQueryAsync(connectionString, cmdType, commandText, commandTimeout, arParams);
         }
 
@@ -253,7 +261,7 @@ namespace cloudscribe.DbHelpers.MSSQL
         {
             Debug.Assert((arParams.Length == index) && (paramCnt == index), "not all parameters were defined");
             //if (debugLog) { log.Debug("ExecuteScalar " + commandText); }
-            log.LogDebug("ExecuteScalar " + commandText);
+            if (log != null) log.LogDebug("ExecuteScalar " + commandText);
             return AdoHelper.ExecuteScalar(connectionString, cmdType, commandText, arParams);
         }
 
@@ -261,7 +269,7 @@ namespace cloudscribe.DbHelpers.MSSQL
         {
             Debug.Assert((arParams.Length == index) && (paramCnt == index), "not all parameters were defined");
             //if (debugLog) { log.Debug("ExecuteScalar " + commandText); }
-            log.LogDebug("ExecuteScalar " + commandText);
+            if (log != null) log.LogDebug("ExecuteScalar " + commandText);
             return AdoHelper.ExecuteScalar(connectionString, cmdType, commandText, commandTimeout, arParams);
         }
 
@@ -269,7 +277,7 @@ namespace cloudscribe.DbHelpers.MSSQL
         {
             Debug.Assert((arParams.Length == index) && (paramCnt == index), "not all parameters were defined");
             //if (debugLog) { log.Debug("ExecuteScalar " + commandText); }
-            log.LogDebug("ExecuteScalar " + commandText);
+            if (log != null) log.LogDebug("ExecuteScalar " + commandText);
             return await AdoHelper.ExecuteScalarAsync(connectionString, cmdType, commandText, arParams);
         }
 
@@ -277,7 +285,7 @@ namespace cloudscribe.DbHelpers.MSSQL
         {
             Debug.Assert((arParams.Length == index) && (paramCnt == index), "not all parameters were defined");
             //if (debugLog) { log.Debug("ExecuteScalar " + commandText); }
-            log.LogDebug("ExecuteScalar " + commandText);
+            if (log != null) log.LogDebug("ExecuteScalar " + commandText);
             return await AdoHelper.ExecuteScalarAsync(connectionString, cmdType, commandText, commandTimeout, arParams);
         }
 

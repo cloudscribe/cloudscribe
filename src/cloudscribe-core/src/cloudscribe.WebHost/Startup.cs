@@ -28,9 +28,11 @@ using Microsoft.Framework.OptionsModel;
 using Microsoft.Framework.Runtime;
 //using cloudscribe.WebHost.Models;
 using cloudscribe.Core.Models;
+using cloudscribe.Core.Models.Logging;
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Repositories.MSSQL;
 using cloudscribe.Core.Web.Components;
+using cloudscribe.Core.Web.Components.Logging;
 using Autofac;
 using Autofac.Framework.DependencyInjection;
 
@@ -152,13 +154,24 @@ namespace cloudscribe.WebHost
             IApplicationBuilder app, 
             IHostingEnvironment env, 
             ILoggerFactory loggerFactory,
-            IOptions<MultiTenantOptions> multiTenantOptions)
+            IOptions<MultiTenantOptions> multiTenantOptions,
+            IServiceProvider serviceProvider,
+            ILogRepository logRepository)
         {
             // Configure the HTTP request pipeline.
 
-            // Add the console logger.
+            // LogLevels
+            //Debug = 1,
+            //Verbose = 2,
+            //Information = 3,
+            //Warning = 4,
+            //Error = 5,
+            //Critical = 6,
             loggerFactory.MinimumLevel = LogLevel.Information;
+            // Add the console logger.
             loggerFactory.AddConsole();
+            // Add cloudscribe db logging
+            loggerFactory.AddDbLogger(serviceProvider, logRepository);
 
             // Add the following to the request pipeline only in development environment.
             if (env.IsEnvironment("Development"))
