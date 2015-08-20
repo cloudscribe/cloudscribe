@@ -1,0 +1,61 @@
+﻿@model cloudscribe.Core.Web.ViewModels.SystemInfo.SystemInfoViewModel
+
+@{
+    // ViewBag.Title = "Home Page";
+}
+
+<h2>@ViewData["Heading"]</h2>
+
+<dl class="dl-horizontal">
+    <dt>
+        Server Host Name
+    </dt>
+    <dd>
+        @Model.Name
+    </dd>
+    <dt>
+        Server IP Address
+    </dt>
+    <dd>
+        @Model.LocalAddress
+    </dd>
+    <dt>
+        Operating System
+    </dt>
+    <dd>
+        @Model.OperatingSystem
+    </dd>
+    <dt>
+        Runtime
+    </dt>
+    <dd>
+        @Model.Runtime
+    </dd>
+    <dt>
+        Environment Name
+    </dt>
+    <dd>
+        @Model.EnvironmentName
+    </dd>
+    <dt>
+        Cloudscribe Version
+    </dt>
+    <dd>
+        @Model.CloudscribeCoreVersion
+    </dd>
+    <dt>
+        Database Platform
+    </dt>
+    <dd>
+        @Model.DatabasePlatform
+    </dd>
+    <dt>
+        Server Time UTC
+    </dt>
+    <dd>
+        @Model.ServerTimeUtc
+    </dd>
+</dl>
+
+
+@await Component.InvokeAsync("Navigation", "ChildTree", NamedNavigationFilters.ChildTree)
