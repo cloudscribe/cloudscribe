@@ -2,23 +2,15 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //	Author:                 Joe Audette
 //  Created:			    2011-08-19
-//	Last Modified:		    2015-08-20
+//	Last Modified:		    2015-08-21
 // 
-
 
 
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Web.Components;
-using cloudscribe.Core.Web.Helpers;
 using cloudscribe.Core.Web.ViewModels.SystemInfo;
 using Microsoft.AspNet.Authorization;
-using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Mvc;
-using Microsoft.AspNet.Mvc.Rendering;
-using Microsoft.Framework.OptionsModel;
-using Microsoft.Framework.Runtime;
-using System;
-using System.Globalization;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Controllers
@@ -26,26 +18,23 @@ namespace cloudscribe.Core.Web.Controllers
     public class SystemInfoController : CloudscribeBaseController
     {
         public SystemInfoController(
-            IRuntimeEnvironment runtimeEnvironment,
-            IHostingEnvironment hostingEnvironment,
-            IApplicationEnvironment appEnvironment,
-            IVersionProviderFactory versionProviderFactory,
-            IDb database)
+            SystemInfoManager systemInfoManager,
+
+            ConfigHelper configuration
+            )
         {
-            runtimeInfo = runtimeEnvironment;
-            appInfo = appEnvironment;
-            hostingInfo = hostingEnvironment;
-            db = database;
-            versionProviders = versionProviderFactory;
+            systemInfo = systemInfoManager;
+
+            config = configuration;
 
         }
 
-        private IRuntimeEnvironment runtimeInfo;
-        private IApplicationEnvironment appInfo;
-        private IHostingEnvironment hostingInfo;
-        private IVersionProviderFactory versionProviders;
-        private IDb db;
+        private SystemInfoManager systemInfo;
 
+        private ConfigHelper config;
+
+
+        [Authorize(Roles = "Admins")]
         public IActionResult Index()
         {
             ViewData["Title"] = "System Information";
@@ -54,19 +43,74 @@ namespace cloudscribe.Core.Web.Controllers
             var serverInfo = new SystemInfoViewModel();
             serverInfo.Name = this.Context.Request.Host.Value;
             serverInfo.LocalAddress = this.Context.Connection.LocalIpAddress.ToString();
-            serverInfo.OperatingSystem = runtimeInfo.OperatingSystem + " " + runtimeInfo.OperatingSystemVersion;
-            serverInfo.Runtime = runtimeInfo.RuntimeType + " " + runtimeInfo.RuntimeVersion + " " + runtimeInfo.RuntimeArchitecture;
-            serverInfo.EnvironmentName = hostingInfo.EnvironmentName;
-            serverInfo.DatabasePlatform = db.DBPlatform;
-            IVersionProvider cloudscribeVersionProvider = versionProviders.Get("cloudscribe-core");
-            if(cloudscribeVersionProvider != null)
-            {
-                serverInfo.CloudscribeCoreVersion = cloudscribeVersionProvider.GetCodeVersion().ToString();
-            }
+            serverInfo.OperatingSystem = systemInfo.OperatingSystem;
+            serverInfo.Runtime = systemInfo.Runtime;
+            serverInfo.EnvironmentName = systemInfo.EnvironmentName;
+            serverInfo.DatabasePlatform = systemInfo.DatabasePlatform;
+            serverInfo.CloudscribeCoreVersion = systemInfo.CloudscribeCoreVersion;
+
+
 
 
             return View(serverInfo);
         }
+
+        [Authorize(Roles = "ServerAdmins")]
+        public async Task<IActionResult> ViewLog(
+            int pageNumber = 1,
+            int pageSize = -1,
+            string sort = "desc")
+        {
+            ViewData["Title"] = "System Log";
+            ViewData["Heading"] = "System Log";
+
+            int itemsPerPage = config.DefaultPageSize_LogView();
+            if (pageSize > 0)
+            {
+                itemsPerPage = pageSize;
+            }
+
+            var model = new LogListViewModel();
+            if (sort == "desc")
+            {
+                model.LogPage = await systemInfo.GetLogsDescending(pageNumber, itemsPerPage);
+            }
+            else
+            {
+                model.LogPage = await systemInfo.GetLogsAscending(pageNumber, itemsPerPage);
+            }
+
+            var count = await systemInfo.GetLogItemCount();
+
+            model.Paging.CurrentPage = pageNumber;
+            model.Paging.ItemsPerPage = itemsPerPage;
+            model.Paging.TotalItems = count;
+
+            return View(model);
+
+        }
+
+        [Authorize(Roles = "ServerAdmins")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> LogItemDelete(int id)
+        {
+            bool result = await systemInfo.DeleteLogItem(id);
+               
+            return RedirectToAction("ViewLog");
+        }
+
+        [Authorize(Roles = "ServerAdmins")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> LogDeleteAll()
+        {
+            bool result = await systemInfo.DeleteAllLogItems();
+
+            return RedirectToAction("ViewLog");
+        }
+
+
 
     }
 }

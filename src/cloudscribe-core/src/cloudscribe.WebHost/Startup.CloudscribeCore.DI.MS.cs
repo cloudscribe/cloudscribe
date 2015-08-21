@@ -114,6 +114,9 @@ namespace cloudscribe.WebHost
             services.TryAdd(ServiceDescriptor.Scoped<SiteManager, SiteManager>());
             services.TryAdd(ServiceDescriptor.Scoped<SetupManager, SetupManager>());
             services.TryAdd(ServiceDescriptor.Scoped<GeoDataManager, GeoDataManager>());
+            services.TryAdd(ServiceDescriptor.Scoped<SystemInfoManager, SystemInfoManager>());
+
+            
 
             // VersionProviders are used by the Setup controller to determine what install and upgrade scripts to run
             services.TryAdd(ServiceDescriptor.Scoped<IVersionProviderFactory, ConfigVersionProviderFactory>());

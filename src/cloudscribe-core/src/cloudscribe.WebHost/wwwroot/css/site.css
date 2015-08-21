@@ -78,3 +78,9 @@ ul.nav li.dropdown:hover>ul.dropdown-menu {
     -moz-border-radius:6px 0 6px 6px;
     border-radius:6px 0 6px 6px;
 }
+
+.padded {padding: 10px 0 0 0; }
+.margin10 {margin-left :170px;}
+.inline {display:inline-block;}
+
+h2.logitem { font-size: 1.1em;  }

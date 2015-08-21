@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-08-04
-// Last Modified:			2015-08-05
+// Last Modified:			2015-08-21
 // 
 
 
@@ -51,6 +51,11 @@ namespace cloudscribe.Core.Web.Components
         public static int DefaultPageSize_SiteList(this ConfigHelper config)
         {
             return config.GetOrDefault("AppSettings:DefaultPageSize_SiteList", 10);
+        }
+
+        public static int DefaultPageSize_LogView(this ConfigHelper config)
+        {
+            return config.GetOrDefault("AppSettings:DefaultPageSize_LogView", 10);
         }
 
         public static string RecaptchaSiteKey(this ConfigHelper config)
