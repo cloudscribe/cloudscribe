@@ -32,8 +32,8 @@
                 <input type="submit" value="CommonResources.Delete" class="btn btn-xs btn-default pull-left" />
             </form>  
             <h2 class="logitem">
-                @item.LogDateUtc
-                @item.LogLevel
+                @item.LogDateUtc.ToLocalTime(Model.TimeZone);
+               <strong>@item.LogLevel</strong> 
                 @item.IpAddress
                 @item.Logger
                 @item.ShortUrl

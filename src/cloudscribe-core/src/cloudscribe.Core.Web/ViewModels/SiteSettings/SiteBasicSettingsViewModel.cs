@@ -2,13 +2,14 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-06-10
+// Last Modified:			2015-08-23
 // 
 
 //using cloudscribe.Configuration.DataAnnotations;
 //using cloudscribe.Resources;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNet.Mvc.Rendering;
 
@@ -79,9 +80,9 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
             set { timeZoneId = value; }
         }
 
-        private List<TimeZoneInfo> allTimeZones = new List<TimeZoneInfo>();
+        private ReadOnlyCollection<TimeZoneInfo> allTimeZones = null;
 
-        public List<TimeZoneInfo> AllTimeZones
+        public ReadOnlyCollection<TimeZoneInfo> AllTimeZones
         {
             get { return allTimeZones; }
             set { allTimeZones = value; }

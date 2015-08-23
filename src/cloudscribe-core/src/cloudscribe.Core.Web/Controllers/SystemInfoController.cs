@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //	Author:                 Joe Audette
 //  Created:			    2011-08-19
-//	Last Modified:		    2015-08-21
+//	Last Modified:		    2015-08-23
 // 
 
 
@@ -19,19 +19,20 @@ namespace cloudscribe.Core.Web.Controllers
     {
         public SystemInfoController(
             SystemInfoManager systemInfoManager,
-
-            ConfigHelper configuration
+            ConfigHelper configuration,
+            ITimeZoneResolver timeZoneResolver
             )
         {
             systemInfo = systemInfoManager;
 
             config = configuration;
+            this.timeZoneResolver = timeZoneResolver;
 
         }
 
         private SystemInfoManager systemInfo;
-
         private ConfigHelper config;
+        private ITimeZoneResolver timeZoneResolver;
 
 
         [Authorize(Roles = "Admins")]
@@ -48,9 +49,7 @@ namespace cloudscribe.Core.Web.Controllers
             serverInfo.EnvironmentName = systemInfo.EnvironmentName;
             serverInfo.DatabasePlatform = systemInfo.DatabasePlatform;
             serverInfo.CloudscribeCoreVersion = systemInfo.CloudscribeCoreVersion;
-
-
-
+            
 
             return View(serverInfo);
         }
@@ -79,6 +78,8 @@ namespace cloudscribe.Core.Web.Controllers
             {
                 model.LogPage = await systemInfo.GetLogsAscending(pageNumber, itemsPerPage);
             }
+
+            model.TimeZone = await timeZoneResolver.GetUserTimeZone();
 
             var count = await systemInfo.GetLogItemCount();
 
