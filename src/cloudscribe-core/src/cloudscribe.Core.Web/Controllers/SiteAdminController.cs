@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-08-04
+// Last Modified:			2015-08-24
 // 
 
 using cloudscribe.Core.Models;
@@ -144,7 +144,7 @@ namespace cloudscribe.Core.Web.Controllers
             model.CompanyPhone = selectedSite.CompanyPhone;
             model.CompanyFax = selectedSite.CompanyFax;
             model.CompanyPublicEmail = selectedSite.CompanyPublicEmail;
-            model.SiteFolderName = selectedSite.SiteFolderName;
+            
             model.IsClosed = selectedSite.SiteIsClosed;
             model.ClosedMessage = selectedSite.SiteIsClosedMessage;
             model.RecaptchaPublicKey = selectedSite.RecaptchaPublicKey;
@@ -152,7 +152,16 @@ namespace cloudscribe.Core.Web.Controllers
             model.RequireCaptchaOnRegistration = selectedSite.RequireCaptchaOnRegistration;
             model.RequireCaptchaOnLogin = selectedSite.RequireCaptchaOnLogin;
 
-            model.AvailableCountries.Add(new SelectListItem { Text = "-Please select-", Value = "Selects items" });
+            if (multiTenantOptions.Mode == MultiTenantMode.FolderName)
+            {
+                model.SiteFolderName = selectedSite.SiteFolderName;
+            }
+            else if (multiTenantOptions.Mode == MultiTenantMode.HostName)
+            {
+                model.HostName = selectedSite.PreferredHostName;
+            }
+
+                model.AvailableCountries.Add(new SelectListItem { Text = "-Please select-", Value = "Selects items" });
             var countries = await geoDataManager.GetAllCountries();
             Guid selectedCountryGuid = Guid.Empty;
             foreach (var country in countries)
@@ -282,7 +291,7 @@ namespace cloudscribe.Core.Web.Controllers
                 }
 
             }
-            else
+            else if (multiTenantOptions.Mode == MultiTenantMode.HostName)
             {
                 ISiteHost host;
 

@@ -6,6 +6,8 @@
 @{
     bool useFolderTenants = true;
     if(multiTenantOptions.Options.Mode != MultiTenantMode.FolderName) { useFolderTenants = false; }
+    bool useHostTenants = true;
+    if (multiTenantOptions.Options.Mode != MultiTenantMode.HostName) { useHostTenants = false; }
 }
 <form method="post" class="form-horizontal" role="form" asp-antiforgery="true">
     <div class="form-horizontal">
@@ -31,7 +33,7 @@
                 </div>
             </div>
         }
-        else
+        else if(useHostTenants)
         {
             <div class="form-group">
                 <label asp-for="HostName" class="col-md-2 control-label"></label>
@@ -229,8 +231,7 @@
     <div>
         <a class="btn btn-default" asp-action="SiteList"
            asp-controller="SiteAdmin"
-           asp-route-siteguid="SiteGuid"
-           asp-route-pageNumber="ReturnPageNumber">BackToSiteList</a>  
+           asp-route-pageNumber="@Model.ReturnPageNumber">BackToSiteList</a>  
     </div>
     @section Scripts {
         @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
