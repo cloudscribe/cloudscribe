@@ -27,6 +27,7 @@ namespace cloudscribe.Core.Identity
     //https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.Cookies/CookieAuthenticationHandler.cs
     // as such we need to keep an eye on that file for any changes that we may need to sync here
     // any code we change from the default code we should comment out the default code so that we can still compare it to the current version of the file
+    // https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication/AuthenticationHandler.cs
 
     //TODO: modify this to support multi tenants
     internal class MultiTenantCookieAuthenticationHandler : AuthenticationHandler<CookieAuthenticationOptions>

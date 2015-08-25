@@ -102,13 +102,14 @@ namespace cloudscribe.WebHost
             {
                 options.AppId = Configuration["Authentication:Facebook:AppId"];
                 options.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
+      
             });
 
-            services.Configure<MicrosoftAccountAuthenticationOptions>(options =>
-            {
-                options.ClientId = Configuration["Authentication:MicrosoftAccount:ClientId"];
-                options.ClientSecret = Configuration["Authentication:MicrosoftAccount:ClientSecret"];
-            });
+            //services.Configure<MicrosoftAccountAuthenticationOptions>(options =>
+            //{
+            //    options.ClientId = Configuration["Authentication:MicrosoftAccount:ClientId"];
+            //    options.ClientSecret = Configuration["Authentication:MicrosoftAccount:ClientSecret"];
+            //});
 
             // we are adding this from Startup.CloudscribeCore.cs so it is not needed here
             // Add MVC services to the services container.
@@ -182,7 +183,41 @@ namespace cloudscribe.WebHost
             // this is in Startup.CloudscribeCore.cs
             app.UseCloudscribeCore(Configuration, multiTenantOptions);
 
-            
+            // it is very important that all authentication configuration be set before configuring mvc
+            // ie if app.UseFacebookAuthentication(); was below app.UseMvc the facebook login button will not be shown
+
+            // Add MVC to the request pipeline.
+            app.UseMvc(routes =>
+            {
+                //if you are adding custom routes you should probably put them first
+                // add your routes here
+
+
+                // default route for folder sites must be second to last
+                if (multiTenantOptions.Options.Mode == MultiTenantMode.FolderName)
+                {
+                    routes.MapRoute(
+                    name: "folderdefault",
+                    template: "{sitefolder}/{controller}/{action}/{id?}",
+                    defaults: new { controller = "Home", action = "Index" },
+                    constraints: new { name = new SiteFolderRouteConstraint() }
+                    );
+                }
+
+
+                // the default route has to be added last
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller}/{action}/{id?}",
+                    defaults: new { controller = "Home", action = "Index" }
+
+                    );
+
+                // Uncomment the following line to add a route for porting Web API 2 controllers.
+                // routes.MapWebApiRoute("DefaultApi", "api/{controller}/{id?}");
+            });
+
+
         }
     }
 }

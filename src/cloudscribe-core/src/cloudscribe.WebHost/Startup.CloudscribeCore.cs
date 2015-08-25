@@ -63,43 +63,16 @@ namespace cloudscribe.WebHost
             //app.UseInMemorySession(configure: s => s.IdleTimeout = TimeSpan.FromMinutes(20));
             app.UseStatusCodePages();
 
-            //IOptions<MultiTenantOptions> multiTenantOptions = app.ApplicationServices.GetService<IOptions<MultiTenantOptions>>();
+            
 
             //// Add cookie-based authentication to the request pipeline.
             ////https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity/BuilderExtensions.cs
             //app.UseIdentity();
             app.UseCloudscribeIdentity();
+
+            app.UseFacebookAuthentication();
+
             
-            // Add MVC to the request pipeline.
-            app.UseMvc(routes =>
-            {
-                //if you are adding custom routes you should probably put them first
-                // add your routes here
-
-
-                // default route for folder sites must be second to last
-                if (multiTenantOptions.Options.Mode == MultiTenantMode.FolderName)
-                {  
-                    routes.MapRoute(
-                    name: "folderdefault",
-                    template: "{sitefolder}/{controller}/{action}/{id?}",
-                    defaults: new { controller = "Home", action = "Index" },
-                    constraints: new { name = new SiteFolderRouteConstraint() }
-                    );
-                }
-               
-                
-                // the default route has to be added last
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller}/{action}/{id?}",
-                    defaults: new { controller = "Home", action = "Index" }
-                    
-                    );
-
-                // Uncomment the following line to add a route for porting Web API 2 controllers.
-                // routes.MapWebApiRoute("DefaultApi", "api/{controller}/{id?}");
-            });
 
             
             return app;

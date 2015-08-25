@@ -227,6 +227,12 @@ namespace cloudscribe.WebHost
             //    options.SignInScheme = IdentityOptions.ExternalCookieAuthenticationScheme;
             //});
 
+            services.Configure<ExternalAuthenticationOptions>(options =>
+            {
+                //options.SignInScheme = IdentityOptions.ExternalCookieAuthenticationScheme;
+                options.SignInScheme = AuthenticationScheme.External;
+            });
+
             // Configure all of the cookie middlewares
             //services.ConfigureIdentityApplicationCookie(options =>
             //{
