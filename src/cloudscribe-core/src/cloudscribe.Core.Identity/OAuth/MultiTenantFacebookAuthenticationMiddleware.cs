@@ -2,11 +2,12 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-25
-// Last Modified:		    2015-08-25
+// Last Modified:		    2015-08-26
 // 
 
 using System;
 using System.Globalization;
+using cloudscribe.Core.Models;
 using Microsoft.AspNet.Authentication;
 using Microsoft.AspNet.Authentication.OAuth;
 using Microsoft.AspNet.Authentication.Facebook;
@@ -28,6 +29,7 @@ namespace cloudscribe.Core.Identity.OAuth
             RequestDelegate next,
             IDataProtectionProvider dataProtectionProvider,
             ILoggerFactory loggerFactory,
+            ISiteResolver siteResolver,
             IUrlEncoder encoder,
             //IOptions<SharedAuthenticationOptions> sharedOptions,
             IOptions<ExternalAuthenticationOptions> sharedOptions,
@@ -43,11 +45,16 @@ namespace cloudscribe.Core.Identity.OAuth
             //{
             //    throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, Resources.Exception_OptionMustBeProvided, nameof(Options.AppSecret)));
             //}
+            this.loggerFactory = loggerFactory;
+            this.siteResolver = siteResolver;
         }
+
+        private ILoggerFactory loggerFactory;
+        private ISiteResolver siteResolver;
 
         protected override AuthenticationHandler<FacebookAuthenticationOptions> CreateHandler()
         {
-            return new MultiTenantFacebookAuthenticationHandler(Backchannel);
+            return new MultiTenantFacebookAuthenticationHandler(Backchannel, siteResolver, loggerFactory);
         }
 
     }

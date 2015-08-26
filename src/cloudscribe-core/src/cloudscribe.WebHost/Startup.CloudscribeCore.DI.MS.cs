@@ -231,6 +231,7 @@ namespace cloudscribe.WebHost
             {
                 //options.SignInScheme = IdentityOptions.ExternalCookieAuthenticationScheme;
                 options.SignInScheme = AuthenticationScheme.External;
+                
             });
 
             // Configure all of the cookie middlewares
@@ -283,6 +284,13 @@ namespace cloudscribe.WebHost
             }
             , AuthenticationScheme.TwoFactorUserId);
 
+            services.ConfigureCookieAuthentication(options =>
+            {
+                options.AuthenticationScheme = "Facebook";
+                options.CookieName = AuthenticationScheme.External;
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+            }
+            , "Facebook");
 
             return new IdentityBuilder(typeof(TUser), typeof(TRole), services);
         }

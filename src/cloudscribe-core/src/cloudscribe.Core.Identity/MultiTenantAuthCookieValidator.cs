@@ -2,11 +2,12 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-27
-// Last Modified:			2015-07-28
+// Last Modified:			2015-08-26
 // 
 
 using cloudscribe.Core.Models;
 using Microsoft.AspNet.Authentication.Cookies;
+using Microsoft.Framework.Logging;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -14,12 +15,17 @@ namespace cloudscribe.Core.Identity
 {
     public class MultiTenantAuthCookieValidator
     {
-        public MultiTenantAuthCookieValidator(ISiteResolver siteResolver)
+        public MultiTenantAuthCookieValidator(
+            ISiteResolver siteResolver,
+            ILogger<MultiTenantAuthCookieValidator> logger
+            )
         {
             this.siteResolver = siteResolver;
+            log = logger;
         }
 
         private ISiteResolver siteResolver;
+        private ILogger log;
 
         public Task ValidatePrincipal(CookieValidatePrincipalContext context)
         {
@@ -30,8 +36,11 @@ namespace cloudscribe.Core.Identity
 
             if (!context.Principal.HasClaim(siteGuidClaim.Type, siteGuidClaim.Value))
             {
+                log.LogInformation("rejecting principal because it does not have siteguid");
                 context.RejectPrincipal();
             }
+
+            
 
             return Task.FromResult(0);
         }

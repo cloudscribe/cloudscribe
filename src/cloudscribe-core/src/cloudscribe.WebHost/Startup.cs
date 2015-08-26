@@ -98,11 +98,13 @@ namespace cloudscribe.WebHost
             // Configure the options for the authentication middleware.
             // You can add options for Google, Twitter and other middleware as shown below.
             // For more information see http://go.microsoft.com/fwlink/?LinkID=532715
+            // https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.Facebook/FacebookAuthenticationOptions.cs
             services.Configure<FacebookAuthenticationOptions>(options =>
             {
                 options.AppId = Configuration["Authentication:Facebook:AppId"];
                 options.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
-      
+                //options.AuthenticationScheme = AuthenticationScheme.External;
+
             });
 
             //services.Configure<MicrosoftAccountAuthenticationOptions>(options =>

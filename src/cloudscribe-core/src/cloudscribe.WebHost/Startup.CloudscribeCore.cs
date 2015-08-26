@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-06-20
-// Last Modified:			2015-08-02
+// Last Modified:			2015-08-26
 // 
 
 using System;
@@ -10,12 +10,14 @@ using System.Collections.Generic;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Authentication;
+using Microsoft.AspNet.Authentication.Facebook;
 using Microsoft.AspNet.Authentication.Cookies;
 using Microsoft.AspNet.Session;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Caching;
 using Microsoft.Framework.Caching.Distributed;
 using Microsoft.Framework.OptionsModel;
+using Microsoft.Framework.Internal;
 using Microsoft.Framework.Configuration;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Mvc;
@@ -28,6 +30,7 @@ using cloudscribe.Core.Web.Components;
 using cloudscribe.Messaging;
 using cloudscribe.Web.Navigation;
 using cloudscribe.Core.Identity;
+using cloudscribe.Core.Identity.OAuth;
 
 namespace cloudscribe.WebHost
 {
@@ -70,16 +73,30 @@ namespace cloudscribe.WebHost
             //app.UseIdentity();
             app.UseCloudscribeIdentity();
 
-            app.UseFacebookAuthentication();
+            //app.UseFacebookAuthentication();
+            app.UseMultiTenantFacebookAuthentication();
 
-            
 
-            
+
+
             return app;
             
         }
 
-       
-        
+        public static IApplicationBuilder UseMultiTenantFacebookAuthentication(
+            this IApplicationBuilder app, 
+            Action<FacebookAuthenticationOptions> configureOptions = null, 
+            string optionsName = "")
+        {
+            //https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.Facebook/FacebookAuthenticationOptions.cs
+            return app.UseMiddleware<MultiTenantFacebookAuthenticationMiddleware>(
+                 new ConfigureOptions<FacebookAuthenticationOptions>(configureOptions ?? (o => { }))
+                 {
+                     Name = optionsName
+                 });
+        }
+
+
+
     }
 }

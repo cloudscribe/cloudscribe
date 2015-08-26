@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-25
-// Last Modified:		    2015-08-25
+// Last Modified:		    2015-08-26
 // 
 
 using System;
@@ -12,6 +12,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using cloudscribe.Core.Models;
 using Microsoft.AspNet.Authentication;
 using Microsoft.AspNet.Authentication.OAuth;
 using Microsoft.AspNet.Authentication.Facebook;
@@ -19,22 +20,34 @@ using Microsoft.AspNet.Http.Authentication;
 using Microsoft.AspNet.Http.Extensions;
 using Microsoft.AspNet.Http.Internal;
 using Microsoft.AspNet.WebUtilities;
+using Microsoft.Framework.Logging;
 using Newtonsoft.Json.Linq;
 
 namespace cloudscribe.Core.Identity.OAuth
 {
     /// <summary>
     /// based on  https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.Facebook/FacebookAuthenticationHandler.cs
+    /// https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.OAuth/OAuthAuthenticationHandler.cs
+    /// https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication/AuthenticationHandler.cs
     /// </summary>
     internal class MultiTenantFacebookAuthenticationHandler : OAuthAuthenticationHandler<FacebookAuthenticationOptions>
     {
-        public MultiTenantFacebookAuthenticationHandler(HttpClient httpClient)
+        public MultiTenantFacebookAuthenticationHandler(
+            HttpClient httpClient,
+            ISiteResolver siteResolver,
+            ILoggerFactory loggerFactory)
             : base(httpClient)
         {
+            log = loggerFactory.CreateLogger<MultiTenantFacebookAuthenticationHandler>();
+            this.siteResolver = siteResolver;
         }
+
+        private ILogger log;
+        private ISiteResolver siteResolver;
 
         protected override async Task<OAuthTokenResponse> ExchangeCodeAsync(string code, string redirectUri)
         {
+            log.LogInformation("ExchangeCodeAsync called with code " + code + " redirectUri " + redirectUri);
             var queryBuilder = new QueryBuilder()
             {
                 { "grant_type", "authorization_code" },
@@ -60,6 +73,9 @@ namespace cloudscribe.Core.Identity.OAuth
 
         protected override async Task<AuthenticationTicket> CreateTicketAsync(ClaimsIdentity identity, AuthenticationProperties properties, OAuthTokenResponse tokens)
         {
+            log.LogInformation("CreateTicketAsync called");
+            //Options.AuthenticationScheme = AuthenticationScheme.External;
+
             var endpoint = QueryHelpers.AddQueryString(Options.UserInformationEndpoint, "access_token", tokens.AccessToken);
             if (Options.SendAppSecretProof)
             {
@@ -80,24 +96,32 @@ namespace cloudscribe.Core.Identity.OAuth
             var identifier = FacebookAuthenticationHelper.GetId(payload);
             if (!string.IsNullOrEmpty(identifier))
             {
+                log.LogInformation("CreateTicketAsync FacebookAuthenticationHelper.GetId(payload) " + identifier);
+
                 identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, identifier, ClaimValueTypes.String, Options.ClaimsIssuer));
             }
 
             var userName = FacebookAuthenticationHelper.GetUserName(payload);
             if (!string.IsNullOrEmpty(userName))
             {
+                log.LogInformation("CreateTicketAsync FacebookAuthenticationHelper.GetUserName(payload) " + userName);
+
                 identity.AddClaim(new Claim(ClaimsIdentity.DefaultNameClaimType, userName, ClaimValueTypes.String, Options.ClaimsIssuer));
             }
 
             var email = FacebookAuthenticationHelper.GetEmail(payload);
             if (!string.IsNullOrEmpty(email))
             {
+                log.LogInformation("CreateTicketAsync FacebookAuthenticationHelper.GetEmail(payload) " + email);
+
                 identity.AddClaim(new Claim(ClaimTypes.Email, email, ClaimValueTypes.String, Options.ClaimsIssuer));
             }
 
             var name = FacebookAuthenticationHelper.GetName(payload);
             if (!string.IsNullOrEmpty(name))
             {
+                log.LogInformation("CreateTicketAsync FacebookAuthenticationHelper.GetName(payload) " + name);
+
                 identity.AddClaim(new Claim("urn:facebook:name", name, ClaimValueTypes.String, Options.ClaimsIssuer));
 
                 // Many Facebook accounts do not set the UserName field.  Fall back to the Name field instead.
@@ -110,12 +134,33 @@ namespace cloudscribe.Core.Identity.OAuth
             var link = FacebookAuthenticationHelper.GetLink(payload);
             if (!string.IsNullOrEmpty(link))
             {
+                log.LogInformation("CreateTicketAsync FacebookAuthenticationHelper.GetLink(payload) " + link);
+
                 identity.AddClaim(new Claim("urn:facebook:link", link, ClaimValueTypes.String, Options.ClaimsIssuer));
             }
 
+            log.LogInformation("CreateTicketAsync notification.Options.AuthenticationScheme " + notification.Options.AuthenticationScheme);
+
             await Options.Notifications.Authenticated(notification);
 
-            return new AuthenticationTicket(notification.Principal, notification.Properties, notification.Options.AuthenticationScheme);
+            ISiteSettings site = siteResolver.Resolve();
+
+            if (site != null)
+            {
+                Claim siteGuidClaim = new Claim("SiteGuid", site.SiteGuid.ToString());
+                if (!identity.HasClaim(siteGuidClaim.Type, siteGuidClaim.Value))
+                {
+                    identity.AddClaim(siteGuidClaim);
+                }
+
+            }
+
+
+            log.LogInformation("CreateTicketAsync notification.Principal " + notification.Principal.Identity.Name.ToString());
+
+            //https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication/AuthenticationTicket.cs
+            //return new AuthenticationTicket(notification.Principal, notification.Properties, notification.Options.AuthenticationScheme);
+            return new AuthenticationTicket(notification.Principal, notification.Properties, AuthenticationScheme.External);
         }
 
         private string GenerateAppSecretProof(string accessToken)

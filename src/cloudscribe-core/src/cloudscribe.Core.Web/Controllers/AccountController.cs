@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-07-28
+// Last Modified:			2015-08-26
 // 
 
 using cloudscribe.Core.Identity;
@@ -15,6 +15,7 @@ using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Rendering;
+using Microsoft.Framework.Logging;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -32,7 +33,8 @@ namespace cloudscribe.Core.Web.Controllers
             SiteSignInManager<SiteUser> signInManager,
             ConfigHelper configuration,
             IEmailSender emailSender,
-            ISmsSender smsSender)
+            ISmsSender smsSender,
+            ILogger<AccountController> logger)
         {
             Site = siteResolver.Resolve();
             this.userManager = userManager;
@@ -40,6 +42,7 @@ namespace cloudscribe.Core.Web.Controllers
             config = configuration;
             this.emailSender = emailSender;
             this.smsSender = smsSender;
+            log = logger;
         }
 
         //private ISiteResolver resolver;
@@ -49,6 +52,7 @@ namespace cloudscribe.Core.Web.Controllers
         private readonly SiteSignInManager<SiteUser> signInManager;
         private readonly IEmailSender emailSender;
         private readonly ISmsSender smsSender;
+        private ILogger log;
 
 
         // GET: /Account/Login
@@ -290,7 +294,8 @@ namespace cloudscribe.Core.Web.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult ExternalLogin(string provider, string returnUrl = null)
         {
-            
+            log.LogInformation("ExternalLogin called for " + provider +" with returnurl " + returnUrl);
+
             // Request a redirect to the external login provider.
             var redirectUrl = Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl });
             var properties = signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
@@ -302,10 +307,12 @@ namespace cloudscribe.Core.Web.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null)
         {
-            
+            log.LogInformation("ExternalLoginCallback called with returnurl " + returnUrl);
+
             var info = await signInManager.GetExternalLoginInfoAsync();
             if (info == null)
             {
+                log.LogInformation("ExternalLoginCallback redirecting to login because GetExternalLoginInfoAsync returned null ");
                 return RedirectToAction("Login");
             }
 
@@ -313,18 +320,22 @@ namespace cloudscribe.Core.Web.Controllers
             var result = await signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
             if (result.Succeeded)
             {
+                log.LogInformation("ExternalLoginCallback ExternalLoginSignInAsync succeeded ");
                 return this.RedirectToLocal(returnUrl);
             }
             if (result.RequiresTwoFactor)
             {
+                log.LogInformation("ExternalLoginCallback ExternalLoginSignInAsync RequiresTwoFactor ");
                 return RedirectToAction("SendCode", new { ReturnUrl = returnUrl });
             }
             if (result.IsLockedOut)
             {
+                log.LogInformation("ExternalLoginCallback ExternalLoginSignInAsync IsLockedOut ");
                 return View("Lockout");
             }
             else
             {
+                log.LogInformation("ExternalLoginCallback needs new account ");
                 // If the user does not have an account, then ask the user to create an account.
                 ViewData["ReturnUrl"] = returnUrl;
                 ViewData["LoginProvider"] = info.LoginProvider;
@@ -340,6 +351,7 @@ namespace cloudscribe.Core.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationViewModel model, string returnUrl)
         {
+            log.LogInformation("ExternalLoginConfirmation called with returnurl " + returnUrl);
 
             if (User.IsSignedIn())
             {
@@ -363,14 +375,30 @@ namespace cloudscribe.Core.Web.Controllers
                 var result = await userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
+                    log.LogInformation("ExternalLoginConfirmation user created ");
+
                     result = await userManager.AddLoginAsync(user, info);
                     if (result.Succeeded)
                     {
+                        log.LogInformation("ExternalLoginConfirmation AddLoginAsync succeeded ");
                         await signInManager.SignInAsync(user, isPersistent: false);
                         return this.RedirectToLocal(returnUrl);
                     }
+                    else
+                    {
+                        log.LogInformation("ExternalLoginConfirmation AddLoginAsync failed ");
+                    }
                 }
+                else
+                {
+                    log.LogInformation("ExternalLoginConfirmation failed to user created ");
+                }
+
                 AddErrors(result);
+            }
+            else
+            {
+                log.LogInformation("ExternalLoginConfirmation called with ModelStateInvalid ");
             }
 
             ViewData["ReturnUrl"] = returnUrl;
