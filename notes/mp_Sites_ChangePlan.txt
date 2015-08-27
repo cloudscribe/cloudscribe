@@ -1,0 +1,44 @@
+
+#fields to add
+
+#fields currently in expando settings
+
+FacebookAppId
+
+# legacyfields that could be dropped from mp_Sites
+
+DefaultPageKeywords
+DefaultPageDescription
+DefaultPageEncoding
+DefaultAdditionalMetaTag
+DefaultFriendlyUrlPatternEnum
+EnableMyPageFeature
+DatePickerProvider
+AllowOpenIdAuth
+
+EditorSkin
+
+
+
+
+#fields to ideally rename currently mapped
+ 
+ApiKeyExtra1 > AddThisDotComUsername
+ApiKeyExtra2 > GoogleAnalyticsAccountCode
+ApiKeyExtra4 > SiteFolderName
+ApiKeyExtra5 > PreferredHostName
+WordpressApiKey
+ApiKeyExtra3
+WindowsLiveAppId > MicrosoftClientId
+WindowsLiveKey > MicrosoftClientSecret
+
+
+#fields not used and maybe also to be dropped
+Logo
+Icon
+
+AllowUserSkins
+AllowPageSkins
+AllowHideMenuOnPages
+CaptchaProvider
+EditorProviderName

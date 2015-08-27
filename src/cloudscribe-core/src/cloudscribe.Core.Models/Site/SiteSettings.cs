@@ -153,9 +153,18 @@ namespace cloudscribe.Core.Models
         public string WordpressApiKey { get; set; } = string.Empty;
 
 
-        public string WindowsLiveAppId { get; set; } = string.Empty;
-        public string WindowsLiveKey { get; set; } = string.Empty;
-        
+        public string FacebookAppId { get; set; } = string.Empty;
+        public string FacebookAppSecret { get; set; } = string.Empty;
+
+        public string MicrosoftClientId { get; set; } = string.Empty;
+        public string MicrosoftClientSecret { get; set; } = string.Empty;
+
+        public string GoogleClientId { get; set; } = string.Empty;
+        public string GoogleClientSecret { get; set; } = string.Empty;
+
+        public string TwitterConsumerKey { get; set; } = string.Empty;
+        public string TwitterConsumerSecret { get; set; } = string.Empty;
+
         public bool AllowOpenIdAuth { get; set; } = false;
         
         public bool AllowWindowsLiveAuth { get; set; } = false;
@@ -287,7 +296,7 @@ namespace cloudscribe.Core.Models
         public Guid SkinVersion { get; set; } = Guid.Empty;
         public string AvatarSystem { get; set; } = "gravatar";
         public string CommentProvider { get; set; } = "intensedebate";
-        public string FacebookAppId { get; set; } = string.Empty;
+        
         public string IntenseDebateAccountId { get; set; } = string.Empty;
         public string DisqusSiteShortName { get; set; } = string.Empty;
 

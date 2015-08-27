@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-08-24
+// Last Modified:			2015-08-27
 // 
 
 using cloudscribe.Core.Models;
@@ -201,6 +201,15 @@ namespace cloudscribe.Core.Web.Controllers
                 }
             }
 
+            model.MicrosoftClientId = selectedSite.MicrosoftClientId;
+            model.MicrosoftClientSecret = selectedSite.MicrosoftClientSecret;
+            model.GoogleClientId = selectedSite.GoogleClientId;
+            model.GoogleClientSecret = selectedSite.GoogleClientSecret;
+            model.FacebookAppId = selectedSite.FacebookAppId;
+            model.FacebookAppSecret = selectedSite.FacebookAppSecret;
+            model.TwitterConsumerKey = selectedSite.TwitterConsumerKey;
+            model.TwitterConsumerSecret = selectedSite.TwitterConsumerSecret;
+
 
             //dpBeginDate.Text = blog.StartDate.ToLocalTime(timeZone).ToString("g");
             //TimeZoneInfo timeZone = DateTimeHelper.GetTimeZone(model.AllTimeZones, "Eastern Standard Time");
@@ -348,6 +357,15 @@ namespace cloudscribe.Core.Web.Controllers
             selectedSite.RecaptchaPrivateKey = model.RecaptchaPrivateKey;
             selectedSite.RequireCaptchaOnRegistration = model.RequireCaptchaOnRegistration;
             selectedSite.RequireCaptchaOnLogin = model.RequireCaptchaOnLogin;
+
+            selectedSite.MicrosoftClientId = model.MicrosoftClientId;
+            selectedSite.MicrosoftClientSecret = model.MicrosoftClientSecret;
+            selectedSite.GoogleClientId = model.GoogleClientId;
+            selectedSite.GoogleClientSecret = model.GoogleClientSecret;
+            selectedSite.FacebookAppId = model.FacebookAppId;
+            selectedSite.FacebookAppSecret = model.FacebookAppSecret;
+            selectedSite.TwitterConsumerKey = model.TwitterConsumerKey;
+            selectedSite.TwitterConsumerSecret = model.TwitterConsumerSecret;
 
             bool result = await siteManager.Save(selectedSite);
 

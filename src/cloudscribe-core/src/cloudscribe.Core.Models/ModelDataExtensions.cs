@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-09
-// Last Modified:			2015-08-18
+// Last Modified:			2015-08-27
 // 
 
 using System;
@@ -342,8 +342,8 @@ namespace cloudscribe.Core.Models.DataExtensions
             site.RecaptchaPrivateKey = reader["RecaptchaPrivateKey"].ToString();
             site.RecaptchaPublicKey = reader["RecaptchaPublicKey"].ToString();
             site.WordpressApiKey = reader["WordpressAPIKey"].ToString();
-            site.WindowsLiveAppId = reader["WindowsLiveAppID"].ToString();
-            site.WindowsLiveKey = reader["WindowsLiveKey"].ToString();
+            site.MicrosoftClientId = reader["WindowsLiveAppID"].ToString();
+            site.MicrosoftClientSecret = reader["WindowsLiveKey"].ToString();
             //site.AllowOpenIDAuth = Convert.ToBoolean(reader["AllowOpenIDAuth"]);
             //site.AllowWindowsLiveAuth = Convert.ToBoolean(reader["AllowWindowsLiveAuth"]);
             site.GmapApiKey = reader["GmapApiKey"].ToString();
@@ -407,7 +407,7 @@ namespace cloudscribe.Core.Models.DataExtensions
             site.EmailAdressesForUserApprovalNotification = GetExpandoProperty(expandoProperties, "EmailAdressesForUserApprovalNotification");
             b = GetExpandoProperty(expandoProperties, "EnableContentWorkflow");
             if (!string.IsNullOrEmpty(b)) { site.EnableContentWorkflow = Convert.ToBoolean(b); }
-            site.FacebookAppId = GetExpandoProperty(expandoProperties, "FacebookAppId");
+            
             b = GetExpandoProperty(expandoProperties, "ForceContentVersioning");
             if (!string.IsNullOrEmpty(b)) { site.ForceContentVersioning = Convert.ToBoolean(b); }
             site.GoogleAnalyticsSettings = GetExpandoProperty(expandoProperties, "GoogleAnalyticsSettings");
@@ -497,7 +497,14 @@ namespace cloudscribe.Core.Models.DataExtensions
             b = GetExpandoProperty(expandoProperties, "RequireCaptchaOnRegistration");
             if (!string.IsNullOrEmpty(b)) { site.RequireCaptchaOnRegistration = Convert.ToBoolean(b); }
 
+            site.FacebookAppId = GetExpandoProperty(expandoProperties, "FacebookAppId");
+            site.FacebookAppSecret = GetExpandoProperty(expandoProperties, "FacebookAppSecret");
 
+            site.TwitterConsumerKey = GetExpandoProperty(expandoProperties, "TwitterConsumerKey");
+            site.TwitterConsumerSecret = GetExpandoProperty(expandoProperties, "TwitterConsumerSecret");
+
+            site.GoogleClientId = GetExpandoProperty(expandoProperties, "GoogleClientId");
+            site.GoogleClientSecret = GetExpandoProperty(expandoProperties, "GoogleClientSecret");
 
 
         }
@@ -526,7 +533,7 @@ namespace cloudscribe.Core.Models.DataExtensions
             SetExpandoProperty(expandoProperties, "DisqusSiteShortName", site.DisqusSiteShortName);
             SetExpandoProperty(expandoProperties, "EmailAdressesForUserApprovalNotification", site.EmailAdressesForUserApprovalNotification);
             SetExpandoProperty(expandoProperties, "EnableContentWorkflow", site.EnableContentWorkflow.ToString());
-            SetExpandoProperty(expandoProperties, "FacebookAppId", site.FacebookAppId);
+            
             SetExpandoProperty(expandoProperties, "ForceContentVersioning", site.ForceContentVersioning.ToString());
             SetExpandoProperty(expandoProperties, "GoogleAnalyticsSettings", site.GoogleAnalyticsSettings);
             SetExpandoProperty(expandoProperties, "GoogleAnalyticsProfileId", site.GoogleAnalyticsProfileId);
@@ -592,6 +599,15 @@ namespace cloudscribe.Core.Models.DataExtensions
             SetExpandoProperty(expandoProperties, "RequireCaptchaOnLogin", site.RequireCaptchaOnLogin.ToString());
             SetExpandoProperty(expandoProperties, "RequireCaptchaOnRegistration", site.RequireCaptchaOnRegistration.ToString());
             SetExpandoProperty(expandoProperties, "AllowPersistentLogin", site.AllowPersistentLogin.ToString());
+
+            SetExpandoProperty(expandoProperties, "FacebookAppId", site.FacebookAppId);
+            SetExpandoProperty(expandoProperties, "FacebookAppSecret", site.FacebookAppSecret);
+
+            SetExpandoProperty(expandoProperties, "TwitterConsumerKey", site.TwitterConsumerKey);
+            SetExpandoProperty(expandoProperties, "TwitterConsumerSecret", site.TwitterConsumerSecret);
+
+            SetExpandoProperty(expandoProperties, "GoogleClientId", site.GoogleClientId);
+            SetExpandoProperty(expandoProperties, "GoogleClientSecret", site.GoogleClientSecret);
 
         }
 

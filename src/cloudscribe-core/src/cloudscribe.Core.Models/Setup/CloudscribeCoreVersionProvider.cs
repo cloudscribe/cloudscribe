@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //  Author:                     Joe Audette
 //  Created:                    2014-10-09
-//	Last Modified:              2015-08-05
+//	Last Modified:              2015-08-27
 // 
 
 using System;
@@ -22,7 +22,7 @@ namespace cloudscribe.Core.Models
             // schema script version script that will be run for cloudscribe-core
             // this allows us to work on the next version script without triggering it
             // to execute until we set this version to match the new script version
-            return new Version(1, 0, 0, 4);
+            return new Version(1, 0, 0, 5);
         }
     }
 

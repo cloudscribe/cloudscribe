@@ -30,6 +30,7 @@ namespace cloudscribe.Core.Identity.OAuth
             IDataProtectionProvider dataProtectionProvider,
             ILoggerFactory loggerFactory,
             ISiteResolver siteResolver,
+            IOptions<MultiTenantOptions> multiTenantOptionsAccesor,
             IUrlEncoder encoder,
             //IOptions<SharedAuthenticationOptions> sharedOptions,
             IOptions<ExternalAuthenticationOptions> sharedOptions,
@@ -47,14 +48,16 @@ namespace cloudscribe.Core.Identity.OAuth
             //}
             this.loggerFactory = loggerFactory;
             this.siteResolver = siteResolver;
+            multiTenantOptions = multiTenantOptionsAccesor.Options;
         }
 
         private ILoggerFactory loggerFactory;
         private ISiteResolver siteResolver;
+        private MultiTenantOptions multiTenantOptions;
 
         protected override AuthenticationHandler<FacebookAuthenticationOptions> CreateHandler()
         {
-            return new MultiTenantFacebookAuthenticationHandler(Backchannel, siteResolver, loggerFactory);
+            return new MultiTenantFacebookAuthenticationHandler(Backchannel, siteResolver, multiTenantOptions, loggerFactory);
         }
 
     }

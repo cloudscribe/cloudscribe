@@ -1,3 +1,42 @@
+INSERT INTO [mp_SiteSettingsExDef]([KeyName],[DefaultValue],[GroupName],[SortOrder]) 
+VALUES('FacebookAppId','','Settings', 700)
+
+GO
+
+
+
+INSERT INTO [mp_SiteSettingsExDef]([KeyName],[DefaultValue],[GroupName],[SortOrder]) 
+VALUES('FacebookAppSecret','','Settings', 700)
+
+GO
+
+INSERT INTO [mp_SiteSettingsExDef]([KeyName],[DefaultValue],[GroupName],[SortOrder]) 
+VALUES('GoogleClientId','','Settings', 700)
+
+GO
+
+INSERT INTO [mp_SiteSettingsExDef]([KeyName],[DefaultValue],[GroupName],[SortOrder]) 
+VALUES('GoogleClientSecret','','Settings', 700)
+
+GO
+
+INSERT INTO [mp_SiteSettingsExDef]([KeyName],[DefaultValue],[GroupName],[SortOrder]) 
+VALUES('TwitterConsumerKey','','Settings', 700)
+
+GO
+
+INSERT INTO [mp_SiteSettingsExDef]([KeyName],[DefaultValue],[GroupName],[SortOrder]) 
+VALUES('TwitterConsumerSecret','','Settings', 700)
+
+GO
+
+
+
+
+
+
+
+
 CREATE PROCEDURE [dbo].[mp_Users_SelectAllByClaim]
 
   --Author:			Joe Audette

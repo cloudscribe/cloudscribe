@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-08-23
+// Last Modified:			2015-08-27
 // 
 
 //using cloudscribe.Configuration.DataAnnotations;
@@ -266,6 +266,74 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
             get { return recaptchaPrivateKey; }
             set { recaptchaPrivateKey = value; }
         }
+
+        private string microsoftClientId = string.Empty;
+
+        public string MicrosoftClientId
+        {
+            get { return microsoftClientId; }
+            set { microsoftClientId = value; }
+        }
+
+        private string microsoftClientSecret = string.Empty;
+
+        public string MicrosoftClientSecret
+        {
+            get { return microsoftClientSecret; }
+            set { microsoftClientSecret = value; }
+        }
+
+        private string googleClientId = string.Empty;
+
+        public string GoogleClientId
+        {
+            get { return googleClientId; }
+            set { googleClientId = value; }
+        }
+
+        private string googleClientSecret = string.Empty;
+
+        public string GoogleClientSecret
+        {
+            get { return googleClientSecret; }
+            set { googleClientSecret = value; }
+        }
+
+        private string facebookAppId = string.Empty;
+
+        public string FacebookAppId
+        {
+            get { return facebookAppId; }
+            set { facebookAppId = value; }
+        }
+
+        private string facebookAppSecret = string.Empty;
+
+        public string FacebookAppSecret
+        {
+            get { return facebookAppSecret; }
+            set { facebookAppSecret = value; }
+        }
+
+        private string twitterConsumerKey = string.Empty;
+
+        public string TwitterConsumerKey
+        {
+            get { return twitterConsumerKey; }
+            set { twitterConsumerKey = value; }
+        }
+
+        private string twitterConsumerSecret = string.Empty;
+
+        public string TwitterConsumerSecret
+        {
+            get { return twitterConsumerSecret; }
+            set { twitterConsumerSecret = value; }
+        }
+
+
+
+
 
     }
 }

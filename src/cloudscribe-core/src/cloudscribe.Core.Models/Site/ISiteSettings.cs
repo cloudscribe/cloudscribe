@@ -28,7 +28,7 @@ namespace cloudscribe.Core.Models
     // the full monty
     public interface ISiteSettings : ISiteInfo
     {
-        string AddThisDotComUsername { get; set; }
+        
         bool AllowDbFallbackWithLdap { get; set; }
         bool AllowEmailLoginWithLdapDbFallback { get; set; }
         bool AllowHideMenuOnPages { get; set; }
@@ -42,10 +42,8 @@ namespace cloudscribe.Core.Models
         bool AllowUserSkins { get; set; }
         bool AutoCreateLdapUserOnFirstLogin { get; set; }
         string AvatarSystem { get; set; }
-        string BingAPIId { get; set; }
-        string CaptchaProvider { get; set; }
-        string CommentProvider { get; set; }
-        string CommerceReportViewRoles { get; set; }
+        
+        
         string CompanyCountry { get; set; }
         string CompanyFax { get; set; }
         string CompanyLocality { get; set; }
@@ -60,16 +58,14 @@ namespace cloudscribe.Core.Models
         Guid DefaultCountryGuid { get; set; }
         string DefaultEmailFromAddress { get; set; }
         string DefaultFromEmailAlias { get; set; }
-        string DefaultRootPageCreateChildPageRoles { get; set; }
-        string DefaultRootPageEditRoles { get; set; }
-        string DefaultRootPageViewRoles { get; set; }
+        
         Guid DefaultStateGuid { get; set; }
         bool DisableDbAuth { get; set; }
-        string DisqusSiteShortName { get; set; }
+        
         string EditorProviderName { get; set; }
         string EmailAdressesForUserApprovalNotification { get; set; }
         bool EnableContentWorkflow { get; set; }
-        string FacebookAppId { get; set; }
+        
         bool ForceContentVersioning { get; set; }
         string GeneralBrowseAndUploadRoles { get; set; }
         string GmapApiKey { get; set; }
@@ -110,6 +106,9 @@ namespace cloudscribe.Core.Models
         bool RequireEnterEmailTwiceOnRegistration { get; set; }
         bool RequirePasswordChangeOnResetRecover { get; set; }
         bool RequiresQuestionAndAnswer { get; set; }
+
+
+        //probably much of this should be moved to a new apppermissions table
         //bool RequiresUniqueEmail { get; set; }
         string RolesNotAllowedToEditModuleSettings { get; set; }
         string RolesThatCanApproveNewUsers { get; set; }
@@ -124,9 +123,16 @@ namespace cloudscribe.Core.Models
         string RolesThatCanManageUsers { get; set; }
         //string RolesThatCanViewGoogleAnalytics { get; set; }
         string RolesThatCanViewMemberList { get; set; }
-        string RpxNowAdminUrl { get; set; }
-        string RpxNowApiKey { get; set; }
-        string RpxNowApplicationName { get; set; }
+        string SiteRootDraftApprovalRoles { get; set; }
+        string SiteRootDraftEditRoles { get; set; }
+        string SiteRootEditRoles { get; set; }
+        string DefaultRootPageCreateChildPageRoles { get; set; }
+        string DefaultRootPageEditRoles { get; set; }
+        string DefaultRootPageViewRoles { get; set; }
+        string CommerceReportViewRoles { get; set; }
+
+
+
         bool ShowAlternateSearchIfConfigured { get; set; }
         //bool ShowPasswordStrengthOnRegistration { get; set; }
 
@@ -136,9 +142,7 @@ namespace cloudscribe.Core.Models
         LdapSettings SiteLdapSettings { get; set; }
         string SiteMapSkin { get; set; }
 
-        string SiteRootDraftApprovalRoles { get; set; }
-        string SiteRootDraftEditRoles { get; set; }
-        string SiteRootEditRoles { get; set; }
+        
         string Skin { get; set; }
         Guid SkinVersion { get; set; }
         string Slogan { get; set; }
@@ -155,8 +159,29 @@ namespace cloudscribe.Core.Models
         string UserFilesBrowseAndUploadRoles { get; set; }
         bool UseSecureRegistration { get; set; }
         bool UseSslOnAllPages { get; set; }
-        string WindowsLiveAppId { get; set; }
-        string WindowsLiveKey { get; set; }
+
+
+        string BingAPIId { get; set; }
+        string CaptchaProvider { get; set; } //prob will only use recaptcha
+        string CommentProvider { get; set; }
+
+        //social login stuff
+        string FacebookAppId { get; set; }
+        string FacebookAppSecret { get; set; }
+        string MicrosoftClientId { get; set; }
+        string MicrosoftClientSecret { get; set; }
+        string GoogleClientId { get; set; }
+        string GoogleClientSecret { get; set; }
+        string TwitterConsumerKey { get; set; }
+        string TwitterConsumerSecret { get; set; }
+
         string WordpressApiKey { get; set; }
+        string DisqusSiteShortName { get; set; }
+        string AddThisDotComUsername { get; set; }
+
+        // these probobly won't be used
+        string RpxNowAdminUrl { get; set; }
+        string RpxNowApiKey { get; set; }
+        string RpxNowApplicationName { get; set; }
     }
 }

@@ -95,8 +95,8 @@ namespace cloudscribe.Core.Repositories.MSSQL
                     site.RecaptchaPrivateKey,
                     site.RecaptchaPublicKey,
                     site.WordpressApiKey,
-                    site.WindowsLiveAppId,
-                    site.WindowsLiveKey,
+                    site.MicrosoftClientId,
+                    site.MicrosoftClientSecret,
                     site.AllowOpenIdAuth,
                     false, //legacy site.AllowWindowsLiveAuth,
                     site.GmapApiKey,
@@ -148,12 +148,12 @@ namespace cloudscribe.Core.Repositories.MSSQL
                     site.RecaptchaPrivateKey,
                     site.RecaptchaPublicKey,
                     site.WordpressApiKey,
-                    site.WindowsLiveAppId,
-                    site.WindowsLiveKey,
+                    site.MicrosoftClientId,
+                    site.MicrosoftClientSecret,
                     site.AllowOpenIdAuth,
                     false, //legacy site.AllowWindowsLiveAuth,
                     site.GmapApiKey,
-                    site.AddThisDotComUsername, //apiKeyExtra2
+                    site.AddThisDotComUsername, //apiKeyExtra1
                     site.GoogleAnalyticsAccountCode, //apiKeyExtra2
                     string.Empty, //legacy apiKeyExtra3
                     site.SiteFolderName, // legacy apiKeyExtra4

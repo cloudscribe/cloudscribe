@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-25
-// Last Modified:		    2015-08-26
+// Last Modified:		    2015-08-27
 // 
 
 using System;
@@ -35,26 +35,40 @@ namespace cloudscribe.Core.Identity.OAuth
         public MultiTenantFacebookAuthenticationHandler(
             HttpClient httpClient,
             ISiteResolver siteResolver,
+            MultiTenantOptions multiTenantOptions,
             ILoggerFactory loggerFactory)
             : base(httpClient)
         {
             log = loggerFactory.CreateLogger<MultiTenantFacebookAuthenticationHandler>();
             this.siteResolver = siteResolver;
+            this.multiTenantOptions = multiTenantOptions;
         }
 
         private ILogger log;
         private ISiteResolver siteResolver;
+        private MultiTenantOptions multiTenantOptions;
 
         protected override async Task<OAuthTokenResponse> ExchangeCodeAsync(string code, string redirectUri)
         {
             log.LogInformation("ExchangeCodeAsync called with code " + code + " redirectUri " + redirectUri);
+            //var queryBuilder = new QueryBuilder()
+            //{
+            //    { "grant_type", "authorization_code" },
+            //    { "code", code },
+            //    { "redirect_uri", redirectUri },
+            //    { "client_id", Options.AppId },
+            //    { "client_secret", Options.AppSecret },
+            //};
+
+            var fbOptions = GetFacebookOptions(siteResolver, redirectUri, Options);
+
             var queryBuilder = new QueryBuilder()
             {
                 { "grant_type", "authorization_code" },
                 { "code", code },
-                { "redirect_uri", redirectUri },
-                { "client_id", Options.AppId },
-                { "client_secret", Options.AppSecret },
+                { "redirect_uri", fbOptions.Caption },
+                { "client_id", fbOptions.AppId },
+                { "client_secret", fbOptions.AppSecret },
             };
 
             var response = await Backchannel.GetAsync(Options.TokenEndpoint + queryBuilder.ToString(), Context.RequestAborted);
@@ -70,6 +84,87 @@ namespace cloudscribe.Core.Identity.OAuth
             // The refresh token is not available.
             return new OAuthTokenResponse(payload);
         }
+
+        protected override string BuildChallengeUrl(AuthenticationProperties properties, string redirectUri)
+        {
+            log.LogInformation("BuildChallengeUrl called with redirectUri = " + redirectUri);
+
+            var scope = FormatOAuthScope();
+
+            var state = Options.StateDataFormat.Protect(properties);
+
+            //var queryBuilder = new QueryBuilder()
+            //{
+            //    { "client_id", Options.ClientId },
+            //    { "scope", scope },
+            //    { "response_type", "code" },
+            //    { "redirect_uri", redirectUri },
+            //    { "state", state },
+            //};
+
+            var fbOptions = GetFacebookOptions(siteResolver, redirectUri, Options);
+
+            var queryBuilder = new QueryBuilder()
+            {
+                { "client_id", fbOptions.AppId },
+                { "scope", scope },
+                { "response_type", "code" },
+                { "redirect_uri", fbOptions.Caption }, // we are hijacking this property here
+                { "state", state },
+            };
+
+
+            return Options.AuthorizationEndpoint + queryBuilder.ToString();
+        }
+
+
+        private FacebookAuthenticationOptions GetFacebookOptions(
+            ISiteResolver siteResolver,
+            string redirectUri,
+            FacebookAuthenticationOptions originalOptions)
+        {
+            if(multiTenantOptions.Mode != MultiTenantMode.None)
+            {
+                ISiteSettings site = siteResolver.Resolve();
+                if (site != null)
+                {
+                    if((site.FacebookAppId.Length > 0)&&(site.FacebookAppSecret.Length > 0))
+                    {
+                        FacebookAuthenticationOptions options = new FacebookAuthenticationOptions();
+                        options.AppId = site.FacebookAppId;
+                        options.AppSecret = site.FacebookAppSecret;
+                        options.Caption = redirectUri.Replace("signin-facebook", site.SiteFolderName + "/signin-facebook");
+                        log.LogInformation("GetFacebookOptions returning site specific options ");
+                        return options;
+                    }
+                }
+            }
+
+            log.LogInformation("GetFacebookOptions returning original options ");
+
+            return originalOptions;
+        }
+
+        //protected string BuildRedirectUri(string targetPath)
+        //{
+        //    log.LogInformation("BuildRedirectUri called ");
+
+        //    if (multiTenantOptions.Mode == MultiTenantMode.FolderName)
+        //    {
+        //        ISiteSettings site = siteResolver.Resolve();
+        //        if(site != null)
+        //        {
+        //            if(site.SiteFolderName.Length > 0)
+        //            {
+        //                log.LogInformation("BuildRedirectUri Request.PathBase + Request.Path " + Request.PathBase + Request.Path);
+
+        //                return Request.Scheme + "://" + Request.Host + Request.PathBase + Request.Path + targetPath;
+        //            }
+        //        }
+        //    }
+
+        //    return Request.Scheme + "://" + Request.Host + OriginalPathBase + targetPath;
+        //}
 
         protected override async Task<AuthenticationTicket> CreateTicketAsync(ClaimsIdentity identity, AuthenticationProperties properties, OAuthTokenResponse tokens)
         {
@@ -165,7 +260,10 @@ namespace cloudscribe.Core.Identity.OAuth
 
         private string GenerateAppSecretProof(string accessToken)
         {
-            using (var algorithm = new HMACSHA256(Encoding.ASCII.GetBytes(Options.AppSecret)))
+            var fbOptions = GetFacebookOptions(siteResolver, string.Empty, Options);
+
+            //using (var algorithm = new HMACSHA256(Encoding.ASCII.GetBytes(Options.AppSecret)))
+            using (var algorithm = new HMACSHA256(Encoding.ASCII.GetBytes(fbOptions.AppSecret)))
             {
                 var hash = algorithm.ComputeHash(Encoding.ASCII.GetBytes(accessToken));
                 var builder = new StringBuilder();
@@ -175,6 +273,12 @@ namespace cloudscribe.Core.Identity.OAuth
                 }
                 return builder.ToString();
             }
+        }
+
+        protected virtual string FormatOAuthScope()
+        {
+            // OAuth2 3.3 space separated
+            return string.Join(" ", Options.Scope);
         }
 
         protected override string FormatScope()
