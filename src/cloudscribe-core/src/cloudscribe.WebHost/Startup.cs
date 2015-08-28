@@ -101,10 +101,9 @@ namespace cloudscribe.WebHost
             // https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.Facebook/FacebookAuthenticationOptions.cs
             services.Configure<FacebookAuthenticationOptions>(options =>
             {
-                options.AppId = "faketopreventexception";
-                options.AppSecret = "faketopreventexception";
-                //options.AppId = Configuration["Authentication:Facebook:AppId"];
-                //options.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
+                // options here are only used if not specified in site settings
+                options.AppId = Configuration["Authentication:Facebook:AppId"];
+                options.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
                 //options.AuthenticationScheme = AuthenticationScheme.External;
 
             });

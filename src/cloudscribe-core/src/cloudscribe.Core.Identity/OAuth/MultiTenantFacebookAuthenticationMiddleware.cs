@@ -23,7 +23,7 @@ namespace cloudscribe.Core.Identity.OAuth
     /// <summary>
     /// based on https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.Facebook/FacebookAuthenticationMiddleware.cs
     /// </summary>
-    public class MultiTenantFacebookAuthenticationMiddleware : OAuthAuthenticationMiddleware<FacebookAuthenticationOptions>
+    public class MultiTenantFacebookAuthenticationMiddleware : MultiTenantOAuthAuthenticationMiddleware<FacebookAuthenticationOptions>
     {
         public MultiTenantFacebookAuthenticationMiddleware(
             RequestDelegate next,

@@ -28,6 +28,8 @@ namespace cloudscribe.Core.Identity.OAuth
     [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable", Justification = "Middleware are not disposable.")]
     public class MultiTenantOAuthAuthenticationMiddleware<TOptions> : AuthenticationMiddleware<TOptions> where TOptions : OAuthAuthenticationOptions, new()
     {
+        //https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication/AuthenticationMiddleware.cs
+
         /// <summary>
         /// Initializes a new <see cref="OAuthAuthenticationMiddleware"/>.
         /// </summary>
@@ -46,7 +48,7 @@ namespace cloudscribe.Core.Identity.OAuth
             ConfigureOptions<TOptions> configureOptions = null)
             : base(next, options, loggerFactory, encoder, configureOptions)
         {
-            // todo: review error handling
+            
             //if (string.IsNullOrEmpty(Options.AuthenticationScheme))
             //{
             //    throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, Resources.Exception_OptionMustBeProvided, nameof(Options.AuthenticationScheme)));

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-27
-// Last Modified:		    2015-08-02
+// Last Modified:		    2015-08-28
 // 
 
 using cloudscribe.Core.Models;
@@ -28,6 +28,8 @@ namespace cloudscribe.Core.Identity
             SiteUserManager<TUser> userManager, 
             IHttpContextAccessor contextAccessor,
             MultiTenantCookieOptionsResolver tenantResolver,
+            IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
+            ISiteRepository siteRepository,
             IUserClaimsPrincipalFactory<TUser> claimsFactory,
             IOptions<IdentityOptions> optionsAccessor,
             ILogger<SignInManager<TUser>> logger)
@@ -43,13 +45,17 @@ namespace cloudscribe.Core.Identity
             this.context = contextAccessor.HttpContext;
             this.tenantResolver = tenantResolver;
             log = logger;
-       
+            multiTenantOptions = multiTenantOptionsAccessor.Options;
+            siteRepo = siteRepository;
+
         }
 
         private SiteUserManager<TUser> UserManager { get; set; }
         private HttpContext context;
         private MultiTenantCookieOptionsResolver tenantResolver;
         private ILogger<SignInManager<TUser>> log;
+        private MultiTenantOptions multiTenantOptions;
+        private ISiteRepository siteRepo;
 
 
         //https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity/SignInManager.cs
@@ -118,14 +124,93 @@ namespace cloudscribe.Core.Identity
             return context.Authentication.SignOutAsync(AuthenticationScheme.TwoFactorRememberMe);
         }
 
-        //public override IEnumerable<AuthenticationDescription> GetExternalAuthenticationSchemes()
-        //{
-        //    //https://github.com/aspnet/HttpAbstractions/blob/dev/src/Microsoft.AspNet.Http.Abstractions/Authentication/AuthenticationManager.cs
-        //    //https://github.com/aspnet/HttpAbstractions/blob/dev/src/Microsoft.AspNet.Http/Authentication/DefaultAuthenticationManager.cs
+        public override IEnumerable<AuthenticationDescription> GetExternalAuthenticationSchemes()
+        {
+            //log.LogInformation("GetExternalAuthenticationSchemes called");
+            //https://github.com/aspnet/HttpAbstractions/blob/dev/src/Microsoft.AspNet.Http.Abstractions/Authentication/AuthenticationManager.cs
+            //https://github.com/aspnet/HttpAbstractions/blob/dev/src/Microsoft.AspNet.Http/Authentication/DefaultAuthenticationManager.cs
 
-        //    //return context.Authentication.GetAuthenticationSchemes().Where(d => !string.IsNullOrEmpty(d.Caption));
-        //    return context.Authentication.GetAuthenticationSchemes();
-        //}
+            IEnumerable<AuthenticationDescription> all = context.Authentication.GetAuthenticationSchemes().Where(d => !string.IsNullOrEmpty(d.Caption));
+            
+
+            if (multiTenantOptions.Mode != MultiTenantMode.None)
+            {
+                // here we need to filter the list to ones configured for the current tenant
+                if(multiTenantOptions.Mode == MultiTenantMode.FolderName)
+                {
+                    if(multiTenantOptions.UseRelatedSitesMode)
+                    {
+                        ISiteSettings site = siteRepo.FetchNonAsync(multiTenantOptions.RelatedSiteId);
+
+                        return BuildFilteredAuthList(site, all);
+                    }
+
+                }
+
+                return BuildFilteredAuthList(UserManager.Site, all);
+
+            }
+
+
+            return all;
+            //return context.Authentication.GetAuthenticationSchemes();
+        }
+
+        private IEnumerable<AuthenticationDescription> BuildFilteredAuthList(ISiteSettings site, IEnumerable<AuthenticationDescription> all)
+        {
+            //log.LogInformation("BuildFilteredAuthList called");
+
+            if (site == null)
+            {
+                //log.LogInformation("BuildFilteredAuthList returning all because site was null");
+                return all;
+            }
+
+            List<AuthenticationDescription> filtered = new List<AuthenticationDescription>();
+
+            foreach(AuthenticationDescription authDesc in all)
+            {
+                //log.LogInformation("BuildFilteredAuthList authDesc.AuthenticationScheme was " + authDesc.AuthenticationScheme);
+
+                switch (authDesc.AuthenticationScheme)
+                {
+                    case "Microsoft":
+                        if ((site.MicrosoftClientId.Length > 0) && (site.MicrosoftClientSecret.Length > 0))
+                        {
+                            filtered.Add(authDesc);
+                        }
+                        break;
+
+                    case "Google":
+                        if ((site.GoogleClientId.Length > 0) && (site.GoogleClientSecret.Length > 0))
+                        {
+                            filtered.Add(authDesc);
+                        }
+                        break;
+
+                    case "Facebook":
+                        if((site.FacebookAppId.Length > 0)&& (site.FacebookAppSecret.Length > 0))
+                        {
+                            filtered.Add(authDesc);
+                        }
+                        break;
+
+                    case "Twitter":
+                        if ((site.TwitterConsumerKey.Length > 0) && (site.TwitterConsumerSecret.Length > 0))
+                        {
+                            filtered.Add(authDesc);
+                        }
+                        break;
+
+
+                }
+
+                
+            }
+
+            return filtered;
+
+        }
 
 
         private const string LoginProviderKey = "LoginProvider";

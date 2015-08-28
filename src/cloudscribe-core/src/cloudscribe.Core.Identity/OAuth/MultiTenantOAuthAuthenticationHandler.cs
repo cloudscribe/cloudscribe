@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-27
-// Last Modified:		    2015-08-27
+// Last Modified:		    2015-08-28
 // 
 
 
@@ -47,9 +47,20 @@ namespace cloudscribe.Core.Identity.OAuth
 
         protected HttpClient Backchannel { get; private set; }
 
+        /// <summary>
+        /// Called once by common code after initialization. If an authentication middleware responds directly to
+        /// specifically known paths it must override this virtual, compare the request path to it's known paths, 
+        /// provide any response information as appropriate, and true to stop further processing.
+        /// </summary>
+        /// <returns>Returning false will cause the common code to call the next middleware in line. Returning true will
+        /// cause the common code to begin the async completion journey without calling the rest of the middleware
+        /// pipeline.</returns>
         public override async Task<bool> InvokeAsync()
         {
-            if (Options.CallbackPath.HasValue && Options.CallbackPath == Request.Path)
+            //if (Options.CallbackPath.HasValue && Options.CallbackPath == Request.Path) // original logic
+            // we need to respond not just to /signin-facebook but also folder sites /foldername/signin-facebook
+            // for example so changed to check contains instead of exact match
+            if (Options.CallbackPath.HasValue &&  Request.Path.Value.Contains(Options.CallbackPath.Value))
             {
                 return await InvokeReturnPathAsync();
             }

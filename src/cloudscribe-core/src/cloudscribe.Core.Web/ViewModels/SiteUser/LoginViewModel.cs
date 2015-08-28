@@ -3,11 +3,17 @@
 
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNet.Http.Authentication;
 
 namespace cloudscribe.Core.Web.ViewModels.SiteUser
 {
     public class LoginViewModel
     {
+        public LoginViewModel()
+        {
+            ExternalAuthenticationList = new List<AuthenticationDescription>();
+        }
+
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]
@@ -28,5 +34,7 @@ namespace cloudscribe.Core.Web.ViewModels.SiteUser
             get { return recaptchaSiteKey; }
             set { recaptchaSiteKey = value; }
         }
+
+        public IEnumerable<AuthenticationDescription> ExternalAuthenticationList {get;set;}
     }
 }

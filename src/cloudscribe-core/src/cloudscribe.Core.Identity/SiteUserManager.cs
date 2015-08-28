@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-22
-// Last Modified:		    2015-07-17
+// Last Modified:		    2015-08-28
 // 
 //
 
@@ -63,7 +63,7 @@ namespace cloudscribe.Core.Identity
         private ISiteSettings siteSettings = null;
 
 
-        private ISiteSettings Site
+        public ISiteSettings Site
         {
             get
             {

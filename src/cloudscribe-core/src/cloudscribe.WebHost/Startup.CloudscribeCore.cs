@@ -89,6 +89,8 @@ namespace cloudscribe.WebHost
             string optionsName = "")
         {
             //https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.Facebook/FacebookAuthenticationOptions.cs
+            // https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.OAuth/OAuthAuthenticationOptions.cs
+
             return app.UseMiddleware<MultiTenantFacebookAuthenticationMiddleware>(
                  new ConfigureOptions<FacebookAuthenticationOptions>(configureOptions ?? (o => { }))
                  {

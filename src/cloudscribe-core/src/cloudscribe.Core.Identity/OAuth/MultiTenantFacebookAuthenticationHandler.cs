@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-25
-// Last Modified:		    2015-08-27
+// Last Modified:		    2015-08-28
 // 
 
 using System;
@@ -30,7 +30,7 @@ namespace cloudscribe.Core.Identity.OAuth
     /// https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.OAuth/OAuthAuthenticationHandler.cs
     /// https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication/AuthenticationHandler.cs
     /// </summary>
-    internal class MultiTenantFacebookAuthenticationHandler : OAuthAuthenticationHandler<FacebookAuthenticationOptions>
+    internal class MultiTenantFacebookAuthenticationHandler : MultiTenantOAuthAuthenticationHandler<FacebookAuthenticationOptions>
     {
         public MultiTenantFacebookAuthenticationHandler(
             HttpClient httpClient,
@@ -60,15 +60,16 @@ namespace cloudscribe.Core.Identity.OAuth
             //    { "client_secret", Options.AppSecret },
             //};
 
-            var fbOptions = GetFacebookOptions(siteResolver, redirectUri, Options);
+            var tenantFbOptions = new MultiTenantFacebookOptionsResolver(Options, siteResolver, multiTenantOptions);
 
+            
             var queryBuilder = new QueryBuilder()
             {
                 { "grant_type", "authorization_code" },
                 { "code", code },
-                { "redirect_uri", fbOptions.Caption },
-                { "client_id", fbOptions.AppId },
-                { "client_secret", fbOptions.AppSecret },
+                { "redirect_uri", tenantFbOptions.ResolveRedirectUrl(redirectUri) },
+                { "client_id", tenantFbOptions.AppId },
+                { "client_secret", tenantFbOptions.AppSecret },
             };
 
             var response = await Backchannel.GetAsync(Options.TokenEndpoint + queryBuilder.ToString(), Context.RequestAborted);
@@ -102,14 +103,16 @@ namespace cloudscribe.Core.Identity.OAuth
             //    { "state", state },
             //};
 
-            var fbOptions = GetFacebookOptions(siteResolver, redirectUri, Options);
+            var tenantFbOptions = new MultiTenantFacebookOptionsResolver(Options, siteResolver, multiTenantOptions);
+
+            //var fbOptions = GetFacebookOptions(siteResolver, redirectUri, Options);
 
             var queryBuilder = new QueryBuilder()
             {
-                { "client_id", fbOptions.AppId },
+                { "client_id", tenantFbOptions.AppId },
                 { "scope", scope },
                 { "response_type", "code" },
-                { "redirect_uri", fbOptions.Caption }, // we are hijacking this property here
+                { "redirect_uri", tenantFbOptions.ResolveRedirectUrl(redirectUri) }, // we are hijacking this property here
                 { "state", state },
             };
 
@@ -118,53 +121,7 @@ namespace cloudscribe.Core.Identity.OAuth
         }
 
 
-        private FacebookAuthenticationOptions GetFacebookOptions(
-            ISiteResolver siteResolver,
-            string redirectUri,
-            FacebookAuthenticationOptions originalOptions)
-        {
-            if(multiTenantOptions.Mode != MultiTenantMode.None)
-            {
-                ISiteSettings site = siteResolver.Resolve();
-                if (site != null)
-                {
-                    if((site.FacebookAppId.Length > 0)&&(site.FacebookAppSecret.Length > 0))
-                    {
-                        FacebookAuthenticationOptions options = new FacebookAuthenticationOptions();
-                        options.AppId = site.FacebookAppId;
-                        options.AppSecret = site.FacebookAppSecret;
-                        options.Caption = redirectUri.Replace("signin-facebook", site.SiteFolderName + "/signin-facebook");
-                        log.LogInformation("GetFacebookOptions returning site specific options ");
-                        return options;
-                    }
-                }
-            }
 
-            log.LogInformation("GetFacebookOptions returning original options ");
-
-            return originalOptions;
-        }
-
-        //protected string BuildRedirectUri(string targetPath)
-        //{
-        //    log.LogInformation("BuildRedirectUri called ");
-
-        //    if (multiTenantOptions.Mode == MultiTenantMode.FolderName)
-        //    {
-        //        ISiteSettings site = siteResolver.Resolve();
-        //        if(site != null)
-        //        {
-        //            if(site.SiteFolderName.Length > 0)
-        //            {
-        //                log.LogInformation("BuildRedirectUri Request.PathBase + Request.Path " + Request.PathBase + Request.Path);
-
-        //                return Request.Scheme + "://" + Request.Host + Request.PathBase + Request.Path + targetPath;
-        //            }
-        //        }
-        //    }
-
-        //    return Request.Scheme + "://" + Request.Host + OriginalPathBase + targetPath;
-        //}
 
         protected override async Task<AuthenticationTicket> CreateTicketAsync(ClaimsIdentity identity, AuthenticationProperties properties, OAuthTokenResponse tokens)
         {
@@ -260,10 +217,12 @@ namespace cloudscribe.Core.Identity.OAuth
 
         private string GenerateAppSecretProof(string accessToken)
         {
-            var fbOptions = GetFacebookOptions(siteResolver, string.Empty, Options);
+            
+
+            var tenantFbOptions = new MultiTenantFacebookOptionsResolver(Options, siteResolver, multiTenantOptions);
 
             //using (var algorithm = new HMACSHA256(Encoding.ASCII.GetBytes(Options.AppSecret)))
-            using (var algorithm = new HMACSHA256(Encoding.ASCII.GetBytes(fbOptions.AppSecret)))
+            using (var algorithm = new HMACSHA256(Encoding.ASCII.GetBytes(tenantFbOptions.AppSecret)))
             {
                 var hash = algorithm.ComputeHash(Encoding.ASCII.GetBytes(accessToken));
                 var builder = new StringBuilder();
@@ -288,5 +247,9 @@ namespace cloudscribe.Core.Identity.OAuth
             // http://tools.ietf.org/html/rfc6749#section-3.3
             return string.Join(",", Options.Scope);
         }
+
+        
+
+
     }
 }

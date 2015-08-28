@@ -63,6 +63,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             ViewData["ReturnUrl"] = returnUrl;
             LoginViewModel model = new LoginViewModel();
+            model.ExternalAuthenticationList = signInManager.GetExternalAuthenticationSchemes();
             if (Site.RequireCaptchaOnLogin)
             {
                 model.RecaptchaSiteKey = config.RecaptchaSiteKey();

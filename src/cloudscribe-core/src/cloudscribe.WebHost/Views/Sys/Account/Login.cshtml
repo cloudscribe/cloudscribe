@@ -3,7 +3,7 @@
 @using System.Collections.Generic
 @using Microsoft.AspNet.Http
 @using Microsoft.AspNet.Http.Authentication
-@inject SignInManager<SiteUser> SignInManager
+
 
 @{
     ViewBag.Title = "Log in";
@@ -45,12 +45,12 @@
                 </div>
                 @if (Model.RecaptchaSiteKey.Length > 0)
                 {
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <div class="g-recaptcha" data-sitekey="@Model.RecaptchaSiteKey"></div>
-                        @Html.ValidationMessage("recaptchaerror", new { @class = "text-danger" })
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <div class="g-recaptcha" data-sitekey="@Model.RecaptchaSiteKey"></div>
+                            @Html.ValidationMessage("recaptchaerror", new { @class = "text-danger" })
+                        </div>
                     </div>
-                </div>
 
                 }
                 <div class="form-group">
@@ -68,39 +68,32 @@
         </section>
     </div>
     <div class="col-md-4">
-        <section id="socialLoginForm">
-            <h4>Use another service to log in.</h4>
-            <hr />
-            @{
-                var LoginProviders = SignInManager.GetExternalAuthenticationSchemes().ToList();
-                if (LoginProviders.Count == 0)
-                {
-                    <div>
-                        <p>
-                            There are no external authentication services configured. See <a href="http://go.microsoft.com/fwlink/?LinkID=532715">this article</a>
-                            for details on setting up this ASP.NET application to support logging in via external services.
-                        </p>
-                    </div>
-                }
-                else
-                {
+        @{
+            var LoginProviders = Model.ExternalAuthenticationList.ToList();
+            if (LoginProviders.Count > 0)
+            {
+                <section id="socialLoginForm">
+                    <h4>Use another service to log in.</h4>
+                    <hr />
                     <form asp-controller="Account" asp-action="ExternalLogin" asp-route-returnurl="@ViewBag.ReturnUrl" method="post" class="form-horizontal" role="form">
-
                         <div id="socialLoginList">
                             <p>
                                 @foreach (AuthenticationDescription p in LoginProviders)
                                 {
-                                    <button type="submit" class="btn btn-default" id="@p.AuthenticationScheme" name="provider" value="@p.AuthenticationScheme" title="Log in using your @p.Caption account">@p.AuthenticationScheme</button>
+                                    <button type="submit" class="btn btn-default" id="@p.AuthenticationScheme" name="provider" value="@p.AuthenticationScheme"
+                                            title="Log in using your @p.Caption account">
+                                        @p.AuthenticationScheme
+                                    </button>
                                 }
                             </p>
                         </div>
                     </form>
-                }
+                </section>
+            
             }
-        </section>
-    </div>
+        }
+     </div>
 </div>
-
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }
