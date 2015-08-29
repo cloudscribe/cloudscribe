@@ -108,23 +108,23 @@ namespace cloudscribe.WebHost
 
             });
 
-            //services.Configure<MicrosoftAccountAuthenticationOptions>(options =>
-            //{
-            //    options.ClientId = Configuration["Authentication:MicrosoftAccount:ClientId"];
-            //    options.ClientSecret = Configuration["Authentication:MicrosoftAccount:ClientSecret"];
-            //});
+            services.Configure<MicrosoftAccountAuthenticationOptions>(options =>
+            {
+                options.ClientId = Configuration["Authentication:MicrosoftAccount:ClientId"];
+                options.ClientSecret = Configuration["Authentication:MicrosoftAccount:ClientSecret"];
+            });
 
-            //services.Configure<GoogleAuthenticationOptions>(options =>
-            //{
-            //    options.ClientId = Configuration["Authentication:Google:ClientId"];
-            //    options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
-            //});
+            services.Configure<GoogleAuthenticationOptions>(options =>
+            {
+                options.ClientId = Configuration["Authentication:Google:ClientId"];
+                options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
+            });
 
-            //services.Configure<TwitterAuthenticationOptions>(options =>
-            //{
-            //    options.ConsumerKey = Configuration["Authentication:Twitter:ConsumerKey"];
-            //    options.ConsumerSecret = Configuration["Authentication:Twitter:ConsumerSecret"];
-            //});
+            services.Configure<TwitterAuthenticationOptions>(options =>
+            {
+                options.ConsumerKey = Configuration["Authentication:Twitter:ConsumerKey"];
+                options.ConsumerSecret = Configuration["Authentication:Twitter:ConsumerSecret"];
+            });
 
             // we are adding this from Startup.CloudscribeCore.cs so it is not needed here
             // Add MVC services to the services container.

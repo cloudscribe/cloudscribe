@@ -10,7 +10,11 @@ using System.Collections.Generic;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Authentication;
+using Microsoft.AspNet.Authentication.MicrosoftAccount;
+using Microsoft.AspNet.Authentication.Google;
 using Microsoft.AspNet.Authentication.Facebook;
+using Microsoft.AspNet.Authentication.Twitter;
+
 using Microsoft.AspNet.Authentication.Cookies;
 using Microsoft.AspNet.Session;
 using Microsoft.Framework.DependencyInjection;
@@ -83,6 +87,37 @@ namespace cloudscribe.WebHost
             
         }
 
+        public static IApplicationBuilder UseMultiTenantMicrosoftAccountAuthentication(
+            this IApplicationBuilder app, 
+            Action<MicrosoftAccountAuthenticationOptions> configureOptions = null, 
+            string optionsName = "")
+        {
+            //https://github.com/aspnet/Security/blob/582f562bbb20fc76f37023086e2b2d861eb4d43d/src/Microsoft.AspNet.Authentication.MicrosoftAccount/MicrosoftAccountAuthenticationOptions.cs
+            //https://github.com/aspnet/Security/blob/582f562bbb20fc76f37023086e2b2d861eb4d43d/src/Microsoft.AspNet.Authentication.MicrosoftAccount/MicrosoftAccountAuthenticationDefaults.cs
+
+            return app.UseMiddleware<MultiTenantMicrosoftAccountAuthenticationMiddleware>(
+                 new ConfigureOptions<MicrosoftAccountAuthenticationOptions>(configureOptions ?? (o => { }))
+                 {
+                     Name = optionsName
+                 });
+        }
+
+        public static IApplicationBuilder UseMultiTenantGoogleAuthentication(
+            this IApplicationBuilder app, 
+            Action<GoogleAuthenticationOptions> configureOptions = null, 
+            string optionsName = "")
+        {
+            //https://github.com/aspnet/Security/blob/582f562bbb20fc76f37023086e2b2d861eb4d43d/src/Microsoft.AspNet.Authentication.Google/GoogleAuthenticationOptions.cs
+            //https://github.com/aspnet/Security/blob/582f562bbb20fc76f37023086e2b2d861eb4d43d/src/Microsoft.AspNet.Authentication.Google/GoogleAuthenticationDefaults.cs
+
+            return app.UseMiddleware<MultiTenantGoogleAuthenticationMiddleware>(
+                 new ConfigureOptions<GoogleAuthenticationOptions>(configureOptions ?? (o => { }))
+                 {
+                     Name = optionsName
+                 });
+        }
+
+
         public static IApplicationBuilder UseMultiTenantFacebookAuthentication(
             this IApplicationBuilder app, 
             Action<FacebookAuthenticationOptions> configureOptions = null, 
@@ -98,6 +133,20 @@ namespace cloudscribe.WebHost
                  });
         }
 
+       
+        public static IApplicationBuilder UseMultiTenantTwitterAuthentication(
+            this IApplicationBuilder app, 
+            Action<TwitterAuthenticationOptions> configureOptions = null, string optionsName = "")
+        {
+            //https://github.com/aspnet/Security/blob/582f562bbb20fc76f37023086e2b2d861eb4d43d/src/Microsoft.AspNet.Authentication.Twitter/TwitterAuthenticationOptions.cs
+
+            return app.UseMiddleware<MultiTenantTwitterAuthenticationMiddleware>(
+                    new ConfigureOptions<TwitterAuthenticationOptions>(configureOptions ?? (o => { }))
+                    {
+                        Name = optionsName
+                    });
+        }
+        
 
 
     }
