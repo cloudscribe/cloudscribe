@@ -95,36 +95,7 @@ namespace cloudscribe.WebHost
             //});
 
 
-            // Configure the options for the authentication middleware.
-            // You can add options for Google, Twitter and other middleware as shown below.
-            // For more information see http://go.microsoft.com/fwlink/?LinkID=532715
-            // https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.Facebook/FacebookAuthenticationOptions.cs
-            services.Configure<FacebookAuthenticationOptions>(options =>
-            {
-                // options here are only used if not specified in site settings
-                options.AppId = Configuration["Authentication:Facebook:AppId"];
-                options.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
-                //options.AuthenticationScheme = AuthenticationScheme.External;
-
-            });
-
-            services.Configure<MicrosoftAccountAuthenticationOptions>(options =>
-            {
-                options.ClientId = Configuration["Authentication:MicrosoftAccount:ClientId"];
-                options.ClientSecret = Configuration["Authentication:MicrosoftAccount:ClientSecret"];
-            });
-
-            services.Configure<GoogleAuthenticationOptions>(options =>
-            {
-                options.ClientId = Configuration["Authentication:Google:ClientId"];
-                options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
-            });
-
-            services.Configure<TwitterAuthenticationOptions>(options =>
-            {
-                options.ConsumerKey = Configuration["Authentication:Twitter:ConsumerKey"];
-                options.ConsumerSecret = Configuration["Authentication:Twitter:ConsumerSecret"];
-            });
+            
 
             // we are adding this from Startup.CloudscribeCore.cs so it is not needed here
             // Add MVC services to the services container.

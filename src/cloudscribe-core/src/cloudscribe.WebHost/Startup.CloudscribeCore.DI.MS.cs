@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-06-20
-// Last Modified:			2015-08-08
+// Last Modified:			2015-08-31
 // 
 
 using System;
@@ -12,6 +12,10 @@ using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Authentication;
 using Microsoft.AspNet.Authentication.Cookies;
+using Microsoft.AspNet.Authentication.Facebook;
+using Microsoft.AspNet.Authentication.Google;
+using Microsoft.AspNet.Authentication.MicrosoftAccount;
+using Microsoft.AspNet.Authentication.Twitter;
 using Microsoft.AspNet.Session;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Caching;
@@ -158,6 +162,46 @@ namespace cloudscribe.WebHost
                 options.ViewEngines.Add(typeof(CoreViewEngine));
             });
 
+
+            // Configure the options for the authentication middleware.
+            // You can add options for Google, Twitter and other middleware as shown below.
+            // For more information see http://go.microsoft.com/fwlink/?LinkID=532715
+            // establish AppId and AppSecret here https://developers.facebook.com/apps
+            // https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.Facebook/FacebookAuthenticationOptions.cs
+            services.Configure<FacebookAuthenticationOptions>(options =>
+            {
+                // options here are only used if not specified in site settings
+                options.AppId = configuration["Authentication:Facebook:AppId"];
+                options.AppSecret = configuration["Authentication:Facebook:AppSecret"];
+                //options.AuthenticationScheme = AuthenticationScheme.External;
+
+            });
+
+            // get clientid and secret here https://account.live.com/developers/applications/index
+            services.Configure<MicrosoftAccountAuthenticationOptions>(options =>
+            {
+                options.ClientId = configuration["Authentication:MicrosoftAccount:ClientId"];
+                options.ClientSecret = configuration["Authentication:MicrosoftAccount:ClientSecret"];
+            });
+
+            //https://auth0.com/docs/connections/social/google
+            // get clientid and secret here https://console.developers.google.com/
+            services.Configure<GoogleAuthenticationOptions>(options =>
+            {
+                options.ClientId = configuration["Authentication:Google:ClientId"];
+                options.ClientSecret = configuration["Authentication:Google:ClientSecret"];
+            });
+
+
+            // get consumerkey and secret here https://apps.twitter.com/
+            // unlike the other providers twitter does not allow creating localhost apps for testing
+            // but you can use an url shortener to mask the localhost urls
+            services.Configure<TwitterAuthenticationOptions>(options =>
+            {
+                options.ConsumerKey = configuration["Authentication:Twitter:ConsumerKey"];
+                options.ConsumerSecret = configuration["Authentication:Twitter:ConsumerSecret"];
+            });
+
             return services;
         }
 
@@ -220,6 +264,14 @@ namespace cloudscribe.WebHost
             services.TryAdd(ServiceDescriptor.Scoped<UserManager<TUser>, UserManager<TUser>>());
             services.TryAdd(ServiceDescriptor.Scoped<SignInManager<TUser>, SignInManager<TUser>>());
             services.TryAdd(ServiceDescriptor.Scoped<RoleManager<TRole>, RoleManager<TRole>>());
+
+            //http://docs.asp.net/en/latest/security/2fa.html
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                //options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
+                //options.Lockout.MaxFailedAccessAttempts = 10;
+            });
 
             // this doesn't build must be out of sync with beta6
             //services.Configure<SharedAuthenticationOptions>(options =>
