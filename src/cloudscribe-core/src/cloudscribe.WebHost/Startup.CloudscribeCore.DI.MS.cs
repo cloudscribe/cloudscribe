@@ -336,13 +336,21 @@ namespace cloudscribe.WebHost
             }
             , AuthenticationScheme.TwoFactorUserId);
 
-            services.ConfigureCookieAuthentication(options =>
-            {
-                options.AuthenticationScheme = "Facebook";
-                options.CookieName = AuthenticationScheme.External;
-                options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
-            }
-            , "Facebook");
+            //services.ConfigureCookieAuthentication(options =>
+            //{
+            //    options.AuthenticationScheme = "Facebook";
+            //    options.CookieName = AuthenticationScheme.External;
+            //    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+            //}
+            //, "Facebook");
+
+            //services.ConfigureCookieAuthentication(options =>
+            //{
+            //    options.AuthenticationScheme = "Microsoft";
+            //    options.CookieName = AuthenticationScheme.External;
+            //    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+            //}
+            //, "Microsoft");
 
             return new IdentityBuilder(typeof(TUser), typeof(TRole), services);
         }

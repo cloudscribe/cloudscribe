@@ -2,10 +2,11 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-29
-// Last Modified:		    2015-08-29
+// Last Modified:		    2015-09-01
 // based on https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.Google/GoogleAuthenticationMiddleware.cs
 
 
+using cloudscribe.Core.Models;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNet.Authentication;
 using Microsoft.AspNet.Authentication.OAuth;
@@ -39,6 +40,9 @@ namespace cloudscribe.Core.Identity.OAuth
             RequestDelegate next,
             IDataProtectionProvider dataProtectionProvider,
             ILoggerFactory loggerFactory,
+            ISiteResolver siteResolver,
+            ISiteRepository siteRepository,
+            IOptions<MultiTenantOptions> multiTenantOptionsAccesor,
             IUrlEncoder encoder,
             IOptions<ExternalAuthenticationOptions> sharedOptions,
             //IOptions<SharedAuthenticationOptions> sharedOptions,
@@ -55,7 +59,18 @@ namespace cloudscribe.Core.Identity.OAuth
                 Options.Scope.Add("profile");
                 Options.Scope.Add("email");
             }
+
+            this.loggerFactory = loggerFactory;
+            this.siteResolver = siteResolver;
+            multiTenantOptions = multiTenantOptionsAccesor.Options;
+            siteRepo = siteRepository;
         }
+
+
+        private ILoggerFactory loggerFactory;
+        private ISiteResolver siteResolver;
+        private ISiteRepository siteRepo;
+        private MultiTenantOptions multiTenantOptions;
 
         /// <summary>
         /// Provides the <see cref="AuthenticationHandler"/> object for processing authentication-related requests.
@@ -63,7 +78,7 @@ namespace cloudscribe.Core.Identity.OAuth
         /// <returns>An <see cref="AuthenticationHandler"/> configured with the <see cref="GoogleAuthenticationOptions"/> supplied to the constructor.</returns>
         protected override AuthenticationHandler<GoogleAuthenticationOptions> CreateHandler()
         {
-            return new MultiTenantGoogleAuthenticationHandler(Backchannel);
+            return new MultiTenantGoogleAuthenticationHandler(Backchannel,siteResolver, siteRepo, multiTenantOptions, loggerFactory);
         }
 
     }

@@ -81,8 +81,11 @@ namespace cloudscribe.WebHost
             app.UseMultiTenantFacebookAuthentication();
 
             //app.UseGoogleAuthentication();
+            app.UseMultiTenantGoogleAuthentication();
             //app.UseMicrosoftAccountAuthentication();
+            app.UseMultiTenantMicrosoftAccountAuthentication();
             //app.UseTwitterAuthentication();
+            app.UseMultiTenantTwitterAuthentication();
 
 
 

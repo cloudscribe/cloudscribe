@@ -90,7 +90,11 @@ namespace cloudscribe.Core.Identity.OAuth
             {
                 Options.SignInScheme = sharedOptions.Options.SignInScheme;
             }
+
+            this.loggerFactory = loggerFactory;
         }
+
+        private ILoggerFactory loggerFactory;
 
         protected HttpClient Backchannel { get; private set; }
 
@@ -100,7 +104,7 @@ namespace cloudscribe.Core.Identity.OAuth
         /// <returns>An <see cref="AuthenticationHandler"/> configured with the <see cref="OAuthAuthenticationOptions"/> supplied to the constructor.</returns>
         protected override AuthenticationHandler<TOptions> CreateHandler()
         {
-            return new MultiTenantOAuthAuthenticationHandler<TOptions>(Backchannel);
+            return new MultiTenantOAuthAuthenticationHandler<TOptions>(Backchannel, loggerFactory);
         }
 
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Managed by caller")]

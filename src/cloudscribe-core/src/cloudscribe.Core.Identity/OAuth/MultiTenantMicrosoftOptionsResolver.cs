@@ -1,20 +1,21 @@
 ﻿// Copyright (c) Source Tree Solutions, LLC. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
-// Created:				    2014-08-28
+// Created:				    2014-09-01
 // Last Modified:		    2015-09-01
 // 
 
 
 using cloudscribe.Core.Models;
-using Microsoft.AspNet.Authentication.Facebook;
+using Microsoft.AspNet.Authentication.MicrosoftAccount;
 
 namespace cloudscribe.Core.Identity.OAuth
 {
-    public class MultiTenantFacebookOptionsResolver
+    public class MultiTenantMicrosoftOptionsResolver
     {
-        public MultiTenantFacebookOptionsResolver(
-            FacebookAuthenticationOptions originalOptions,
+
+        public MultiTenantMicrosoftOptionsResolver(
+            MicrosoftAccountAuthenticationOptions originalOptions,
             ISiteResolver siteResolver,
             ISiteRepository siteRepository,
             MultiTenantOptions multiTenantOptions)
@@ -25,7 +26,7 @@ namespace cloudscribe.Core.Identity.OAuth
             siteRepo = siteRepository;
         }
 
-        private FacebookAuthenticationOptions originalOptions;
+        private MicrosoftAccountAuthenticationOptions originalOptions;
         private ISiteResolver siteResolver;
         private ISiteRepository siteRepo;
         private MultiTenantOptions multiTenantOptions;
@@ -34,11 +35,11 @@ namespace cloudscribe.Core.Identity.OAuth
         {
             get
             {
-                if(site == null)
+                if (site == null)
                 {
-                    if(multiTenantOptions.UseRelatedSitesMode)
+                    if (multiTenantOptions.UseRelatedSitesMode)
                     {
-                        if(multiTenantOptions.Mode == MultiTenantMode.FolderName)
+                        if (multiTenantOptions.Mode == MultiTenantMode.FolderName)
                         {
                             site = siteRepo.FetchNonAsync(multiTenantOptions.RelatedSiteId);
                         }
@@ -51,35 +52,35 @@ namespace cloudscribe.Core.Identity.OAuth
             }
         }
 
-        public string AppId
+        public string ClientId
         {
             get
             {
                 if (Site != null)
                 {
-                    if ((Site.FacebookAppId.Length > 0) && (Site.FacebookAppSecret.Length > 0))
+                    if ((Site.MicrosoftClientId.Length > 0) && (Site.MicrosoftClientSecret.Length > 0))
                     {
-                        return Site.FacebookAppId;
+                        return Site.MicrosoftClientId;
                     }
                 }
 
-                return originalOptions.AppId;
+                return originalOptions.ClientId;
             }
         }
 
-        public string AppSecret
+        public string ClientSecret
         {
             get
             {
                 if (Site != null)
                 {
-                    if ((Site.FacebookAppId.Length > 0) && (Site.FacebookAppSecret.Length > 0))
+                    if ((Site.MicrosoftClientId.Length > 0) && (Site.MicrosoftClientSecret.Length > 0))
                     {
-                        return Site.FacebookAppSecret;
+                        return Site.MicrosoftClientSecret;
                     }
                 }
 
-                return originalOptions.AppSecret;
+                return originalOptions.ClientSecret;
             }
         }
 
@@ -87,15 +88,15 @@ namespace cloudscribe.Core.Identity.OAuth
         {
             if (multiTenantOptions.Mode == MultiTenantMode.FolderName)
             {
-                if ((Site != null)&&(Site.SiteFolderName.Length > 0))
+                if ((Site != null) && (Site.SiteFolderName.Length > 0))
                 {
-                    if ((Site.FacebookAppId.Length > 0) && (Site.FacebookAppSecret.Length > 0))
+                    if ((Site.MicrosoftClientId.Length > 0) && (Site.MicrosoftClientSecret.Length > 0))
                     {
-                        return redirectUrl.Replace("signin-facebook", site.SiteFolderName + "/signin-facebook");
+                        return redirectUrl.Replace("signin-microsoft", site.SiteFolderName + "/signin-microsoft");
                     }
                 }
             }
-            
+
 
             return redirectUrl;
         }

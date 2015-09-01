@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-29
-// Last Modified:		    2015-08-29
+// Last Modified:		    2015-09-01
 // based on https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.Google/GoogleAuthenticationHandler.cs
 
 
@@ -18,14 +18,21 @@ using Microsoft.AspNet.Authentication;
 using Microsoft.AspNet.Authentication.OAuth;
 using Microsoft.AspNet.WebUtilities;
 using Microsoft.AspNet.Authentication.Google;
+using Microsoft.Framework.Logging;
+using cloudscribe.Core.Models;
 using Newtonsoft.Json.Linq;
 
 namespace cloudscribe.Core.Identity.OAuth
 {
     internal class MultiTenantGoogleAuthenticationHandler : MultiTenantOAuthAuthenticationHandler<GoogleAuthenticationOptions>
     {
-        public MultiTenantGoogleAuthenticationHandler(HttpClient httpClient)
-            : base(httpClient)
+        public MultiTenantGoogleAuthenticationHandler(
+            HttpClient httpClient,
+            ISiteResolver siteResolver,
+            ISiteRepository siteRepository,
+            MultiTenantOptions multiTenantOptions,
+            ILoggerFactory loggerFactory)
+            : base(httpClient, loggerFactory)
         {
 
         }

@@ -819,6 +819,9 @@ namespace cloudscribe.Core.Identity
             userlogin.UserId = user.UserGuid.ToString();
             userlogin.LoginProvider = login.LoginProvider;
             userlogin.ProviderKey = login.ProviderKey;
+            //TODO: add fields for siteid and providerdisplayname
+            //login.ProviderDisplayName
+
             cancellationToken.ThrowIfCancellationRequested();
             bool result = await repo.CreateLogin(userlogin);
 
@@ -826,11 +829,15 @@ namespace cloudscribe.Core.Identity
 
         public async Task<TUser> FindByLoginAsync(string loginProvider, string providerKey, CancellationToken cancellationToken)
         {
-            if (debugLog) { log.LogInformation("FindAsync"); }
+            if (debugLog) { log.LogInformation("FindAsync called for " + loginProvider + " with providerKey " + providerKey); }
+
+            log.LogInformation("FindAsync called for " + loginProvider + " with providerKey " + providerKey);
             cancellationToken.ThrowIfCancellationRequested();
             IUserLogin userlogin = await repo.FindLogin(loginProvider, providerKey);
             if (userlogin != null && userlogin.UserId.Length == 36)
             {
+                log.LogInformation("FindAsync userLogin found for " + loginProvider + " with providerKey " + providerKey);
+
                 Guid userGuid = new Guid(userlogin.UserId);
                 cancellationToken.ThrowIfCancellationRequested();
                 ISiteUser siteUser = await repo.Fetch(siteSettings.SiteId, userGuid);
@@ -838,6 +845,19 @@ namespace cloudscribe.Core.Identity
                 {
                     return (TUser)siteUser;
                 }
+                else
+                {
+                    //log.LogInformation("FindAsync siteUser not found for " + loginProvider + " with providerKey " + providerKey);
+                    // problem happens here because userLogin does not have a site id
+                    // if the user is  registered in mutliple sites with the same external account they get the same providerid
+                    //and the found row may not be for the correct site
+                    // we need to add siteGuid to mp_UserLogins
+                    // and pass that in when looking up a userlogin
+                }
+            }
+            else
+            {
+                log.LogInformation("FindAsync userLogin not found for " + loginProvider + " with providerKey " + providerKey);
             }
 
             return default(TUser);

@@ -282,7 +282,7 @@ namespace cloudscribe.Core.Identity
 
         public override async Task<SignInResult> ExternalLoginSignInAsync(string loginProvider, string providerKey, bool isPersistent)
         {
-            log.LogInformation("ExternalLoginSignInAsync called");
+            log.LogInformation("ExternalLoginSignInAsync called for " + loginProvider + " with key " + providerKey);
 
             var user = await UserManager.FindByLoginAsync(loginProvider, providerKey);
             if (user == null)
@@ -365,7 +365,7 @@ namespace cloudscribe.Core.Identity
 
         public override AuthenticationProperties ConfigureExternalAuthenticationProperties(string provider, string redirectUrl, string userId = null)
         {
-            log.LogInformation("ConfigureExternalAuthenticationProperties called");
+            log.LogInformation("ConfigureExternalAuthenticationProperties called for " + provider + " with redirectUrl " + redirectUrl);
 
             var properties = new AuthenticationProperties { RedirectUri = redirectUrl };
             properties.Items[LoginProviderKey] = provider;

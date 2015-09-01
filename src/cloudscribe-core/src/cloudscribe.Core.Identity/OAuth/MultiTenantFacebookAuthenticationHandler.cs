@@ -35,17 +35,20 @@ namespace cloudscribe.Core.Identity.OAuth
         public MultiTenantFacebookAuthenticationHandler(
             HttpClient httpClient,
             ISiteResolver siteResolver,
+            ISiteRepository siteRepository,
             MultiTenantOptions multiTenantOptions,
             ILoggerFactory loggerFactory)
-            : base(httpClient)
+            : base(httpClient, loggerFactory)
         {
             log = loggerFactory.CreateLogger<MultiTenantFacebookAuthenticationHandler>();
             this.siteResolver = siteResolver;
             this.multiTenantOptions = multiTenantOptions;
+            siteRepo = siteRepository;
         }
 
         private ILogger log;
         private ISiteResolver siteResolver;
+        private ISiteRepository siteRepo;
         private MultiTenantOptions multiTenantOptions;
 
         protected override async Task<OAuthTokenResponse> ExchangeCodeAsync(string code, string redirectUri)
@@ -60,7 +63,7 @@ namespace cloudscribe.Core.Identity.OAuth
             //    { "client_secret", Options.AppSecret },
             //};
 
-            var tenantFbOptions = new MultiTenantFacebookOptionsResolver(Options, siteResolver, multiTenantOptions);
+            var tenantFbOptions = new MultiTenantFacebookOptionsResolver(Options, siteResolver, siteRepo, multiTenantOptions);
 
             
             var queryBuilder = new QueryBuilder()
@@ -103,10 +106,9 @@ namespace cloudscribe.Core.Identity.OAuth
             //    { "state", state },
             //};
 
-            var tenantFbOptions = new MultiTenantFacebookOptionsResolver(Options, siteResolver, multiTenantOptions);
+            var tenantFbOptions = new MultiTenantFacebookOptionsResolver(Options, siteResolver, siteRepo, multiTenantOptions);
 
-            //var fbOptions = GetFacebookOptions(siteResolver, redirectUri, Options);
-
+            
             var queryBuilder = new QueryBuilder()
             {
                 { "client_id", tenantFbOptions.AppId },
@@ -219,7 +221,7 @@ namespace cloudscribe.Core.Identity.OAuth
         {
             
 
-            var tenantFbOptions = new MultiTenantFacebookOptionsResolver(Options, siteResolver, multiTenantOptions);
+            var tenantFbOptions = new MultiTenantFacebookOptionsResolver(Options, siteResolver, siteRepo, multiTenantOptions);
 
             //using (var algorithm = new HMACSHA256(Encoding.ASCII.GetBytes(Options.AppSecret)))
             using (var algorithm = new HMACSHA256(Encoding.ASCII.GetBytes(tenantFbOptions.AppSecret)))

@@ -40,10 +40,15 @@ namespace cloudscribe.Core.Identity.OAuth
     {
         private static readonly RandomNumberGenerator CryptoRandom = RandomNumberGenerator.Create();
 
-        public MultiTenantOAuthAuthenticationHandler(HttpClient backchannel)
+        public MultiTenantOAuthAuthenticationHandler(
+            HttpClient backchannel,
+            ILoggerFactory loggerFactory)
         {
             Backchannel = backchannel;
+            log = loggerFactory.CreateLogger<MultiTenantOAuthAuthenticationHandler<TOptions>>();
         }
+
+        private ILogger log;
 
         protected HttpClient Backchannel { get; private set; }
 
@@ -57,6 +62,9 @@ namespace cloudscribe.Core.Identity.OAuth
         /// pipeline.</returns>
         public override async Task<bool> InvokeAsync()
         {
+            // this is called on every request
+            //log.LogInformation("InvokeAsync called");
+
             //if (Options.CallbackPath.HasValue && Options.CallbackPath == Request.Path) // original logic
             // we need to respond not just to /signin-facebook but also folder sites /foldername/signin-facebook
             // for example so changed to check contains instead of exact match
@@ -69,6 +77,8 @@ namespace cloudscribe.Core.Identity.OAuth
 
         public async Task<bool> InvokeReturnPathAsync()
         {
+            log.LogInformation("InvokeReturnPathAsync called");
+
             var ticket = await HandleAuthenticateOnceAsync();
             if (ticket == null)
             {
@@ -107,6 +117,8 @@ namespace cloudscribe.Core.Identity.OAuth
 
         protected override async Task<AuthenticationTicket> HandleAuthenticateAsync()
         {
+            log.LogInformation("HandleAuthenticateAsync called");
+
             AuthenticationProperties properties = null;
             try
             {
@@ -187,6 +199,9 @@ namespace cloudscribe.Core.Identity.OAuth
 
         protected virtual async Task<OAuthTokenResponse> ExchangeCodeAsync(string code, string redirectUri)
         {
+            log.LogInformation("ExchangeCodeAsync called with code " + code + " redirectUri " + redirectUri);
+            
+
             var tokenRequestParameters = new Dictionary<string, string>()
             {
                 { "client_id", Options.ClientId },
@@ -210,6 +225,8 @@ namespace cloudscribe.Core.Identity.OAuth
 
         protected virtual async Task<AuthenticationTicket> CreateTicketAsync(ClaimsIdentity identity, AuthenticationProperties properties, OAuthTokenResponse tokens)
         {
+            log.LogInformation("CreateTicketAsync called");
+
             var notification = new OAuthAuthenticatedContext(Context, Options, Backchannel, tokens)
             {
                 Principal = new ClaimsPrincipal(identity),
@@ -228,6 +245,8 @@ namespace cloudscribe.Core.Identity.OAuth
 
         protected override Task<bool> HandleUnauthorizedAsync(ChallengeContext context)
         {
+            log.LogInformation("HandleUnauthorizedAsync called");
+
             var properties = new AuthenticationProperties(context.Properties);
             if (string.IsNullOrEmpty(properties.RedirectUri))
             {
@@ -248,6 +267,8 @@ namespace cloudscribe.Core.Identity.OAuth
 
         protected override Task HandleSignOutAsync(SignOutContext context)
         {
+            
+
             throw new NotSupportedException();
         }
 
@@ -263,6 +284,8 @@ namespace cloudscribe.Core.Identity.OAuth
 
         protected virtual string BuildChallengeUrl(AuthenticationProperties properties, string redirectUri)
         {
+            log.LogInformation("BuildChallengeUrl called with redirectUri = " + redirectUri);
+
             var scope = FormatScope();
 
             var state = Options.StateDataFormat.Protect(properties);
@@ -286,7 +309,11 @@ namespace cloudscribe.Core.Identity.OAuth
 
         protected void GenerateCorrelationId(AuthenticationProperties properties)
         {
+            
+
             var correlationKey = Constants.CorrelationPrefix + Options.AuthenticationScheme;
+
+            log.LogInformation("GenerateCorrelationId called, correlationKey was " + correlationKey);
 
             var nonceBytes = new byte[32];
             CryptoRandom.GetBytes(nonceBytes);
@@ -305,7 +332,11 @@ namespace cloudscribe.Core.Identity.OAuth
 
         protected bool ValidateCorrelationId(AuthenticationProperties properties)
         {
+            
             var correlationKey = Constants.CorrelationPrefix + Options.AuthenticationScheme;
+
+            log.LogInformation("ValidateCorrelationId called, correlationKey was " + correlationKey);
+
             var correlationCookie = Request.Cookies[correlationKey];
             if (string.IsNullOrEmpty(correlationCookie))
             {
