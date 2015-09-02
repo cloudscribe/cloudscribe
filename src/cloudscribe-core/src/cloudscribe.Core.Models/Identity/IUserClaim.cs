@@ -6,6 +6,7 @@ namespace cloudscribe.Core.Models
 {
     public interface IUserClaim
     {
+        int SiteId { get; set; }
         string ClaimType { get; set; }
         string ClaimValue { get; set; }
         int Id { get; set; }

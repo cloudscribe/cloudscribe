@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-11
-// Last Modified:			2015-06-16
+// Last Modified:			2015-09-02
 // 
 
 using cloudscribe.DbHelpers.Firebird;
@@ -35,12 +35,13 @@ namespace cloudscribe.Core.Repositories.Firebird
 
 
         public async Task<int> Create(
+            int siteId,
             string userId,
             string claimType,
             string claimValue)
         {
 
-            FbParameter[] arParams = new FbParameter[3];
+            FbParameter[] arParams = new FbParameter[4];
 
             arParams[0] = new FbParameter(":UserId", FbDbType.VarChar, 128);
             arParams[0].Value = userId;
@@ -50,6 +51,9 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             arParams[2] = new FbParameter(":ClaimValue", FbDbType.VarChar, -1);
             arParams[2].Value = claimValue;
+
+            arParams[3] = new FbParameter(":SiteId", FbDbType.Integer);
+            arParams[3].Value = siteId;
 
             string statement = "EXECUTE PROCEDURE mp_USERCLAIMS_INSERT ("
                 + AdoHelper.GetParamString(arParams.Length) + ")";
@@ -167,18 +171,18 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         }
 
-        public async Task<bool> DeleteBySite(Guid siteGuid)
+        public async Task<bool> DeleteBySite(int siteId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_UserClaims ");
             sqlCommand.Append("WHERE ");
-            sqlCommand.Append("UserId IN (SELECT UserGuid FROM mp_Users WHERE SiteGuid = @SiteGuid) ");
+            sqlCommand.Append("SiteId  = @SiteId ");
             sqlCommand.Append(";");
 
             FbParameter[] arParams = new FbParameter[1];
 
-            arParams[0] = new FbParameter("@SiteGuid", FbDbType.VarChar, 36);
-            arParams[0].Value = siteGuid.ToString();
+            arParams[0] = new FbParameter("@SiteId", FbDbType.Integer);
+            arParams[0].Value = siteId;
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                writeConnectionString,

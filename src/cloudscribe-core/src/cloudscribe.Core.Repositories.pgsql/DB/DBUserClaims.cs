@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-11
-// Last Modified:			2015-06-16
+// Last Modified:			2015-09-02
 // 
 
 using cloudscribe.DbHelpers.pgsql;
@@ -36,6 +36,7 @@ namespace cloudscribe.Core.Repositories.pgsql
 
 
         public async Task<int> Create(
+            int siteId,
             string userId,
             string claimType,
             string claimValue)
@@ -43,18 +44,21 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("INSERT INTO mp_userclaims (");
+            sqlCommand.Append("siteid, ");
             sqlCommand.Append("userid, ");
             sqlCommand.Append("claimtype, ");
             sqlCommand.Append("claimvalue )");
 
             sqlCommand.Append(" VALUES (");
+            sqlCommand.Append(":siteid, ");
             sqlCommand.Append(":userid, ");
             sqlCommand.Append(":claimtype, ");
             sqlCommand.Append(":claimvalue )");
             sqlCommand.Append(";");
             sqlCommand.Append(" SELECT CURRVAL('mp_userclaimsid_seq');");
 
-            NpgsqlParameter[] arParams = new NpgsqlParameter[3];
+            NpgsqlParameter[] arParams = new NpgsqlParameter[4];
+
             arParams[0] = new NpgsqlParameter("userid", NpgsqlTypes.NpgsqlDbType.Varchar, 128);
             arParams[0].Value = userId;
 
@@ -63,6 +67,9 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             arParams[2] = new NpgsqlParameter("claimvalue", NpgsqlTypes.NpgsqlDbType.Text);
             arParams[2].Value = claimValue;
+
+            arParams[3] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
+            arParams[3].Value = siteId;
 
             object result = await AdoHelper.ExecuteScalarAsync(
                 writeConnectionString,
@@ -183,18 +190,18 @@ namespace cloudscribe.Core.Repositories.pgsql
 
         }
 
-        public async Task<bool> DeleteBySite(Guid siteGuid)
+        public async Task<bool> DeleteBySite(int siteId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_userclaims ");
             sqlCommand.Append("WHERE ");
-            sqlCommand.Append("userid IN (SELECT userguid FROM mp_users WHERE siteguid = :siteguid) ");
+            sqlCommand.Append("siteid = :siteid ");
             sqlCommand.Append(";");
 
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
-            arParams[0] = new NpgsqlParameter("siteguid", NpgsqlTypes.NpgsqlDbType.Varchar, 36);
-            arParams[0].Value = siteGuid.ToString();
+            arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
+            arParams[0].Value = siteId;
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,

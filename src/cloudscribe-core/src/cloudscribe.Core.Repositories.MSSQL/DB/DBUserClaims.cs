@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-10
-// Last Modified:			2015-06-09
+// Last Modified:			2015-09-02
 // 
 
 using cloudscribe.DbHelpers.MSSQL;
@@ -34,6 +34,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
         private string writeConnectionString;
 
         public async Task<int> Create(
+            int siteId,
             string userId,
             string claimType,
             string claimValue)
@@ -42,11 +43,13 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 logFactory,
                 writeConnectionString, 
                 "mp_UserClaims_Insert", 
-                3);
+                4);
 
             sph.DefineSqlParameter("@UserId", SqlDbType.NVarChar, 128, ParameterDirection.Input, userId);
             sph.DefineSqlParameter("@ClaimType", SqlDbType.NVarChar, -1, ParameterDirection.Input, claimType);
             sph.DefineSqlParameter("@ClaimValue", SqlDbType.NVarChar, -1, ParameterDirection.Input, claimValue);
+            sph.DefineSqlParameter("@SiteId", SqlDbType.Int, ParameterDirection.Input, siteId);
+
             object result = await sph.ExecuteScalarAsync();
             int newID = Convert.ToInt32(result);
             return newID;
@@ -114,7 +117,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         }
 
-        public async Task<bool> DeleteBySite(Guid siteGuid)
+        public async Task<bool> DeleteBySite(int siteId)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -122,7 +125,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 "mp_UserClaims_DeleteBySite", 
                 1);
 
-            sph.DefineSqlParameter("@SiteGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, siteGuid);
+            sph.DefineSqlParameter("@SiteId", SqlDbType.Int, ParameterDirection.Input, siteId);
             int rowsAffected = await sph.ExecuteNonQueryAsync();
             return (rowsAffected > 0);
 

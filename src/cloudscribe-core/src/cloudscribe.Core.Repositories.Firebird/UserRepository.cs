@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-18
-// Last Modified:			2015-08-06
+// Last Modified:			2015-09-02
 // 
 
 
@@ -1179,6 +1179,7 @@ namespace cloudscribe.Core.Repositories.Firebird
         public async Task<bool> SaveClaim(IUserClaim userClaim)
         {
             int newId = await dbUserClaims.Create(
+                userClaim.SiteId,
                 userClaim.UserId,
                 userClaim.ClaimType,
                 userClaim.ClaimValue);
@@ -1205,9 +1206,9 @@ namespace cloudscribe.Core.Repositories.Firebird
             return await dbUserClaims.DeleteByUser(userId, claimType);
         }
 
-        public async Task<bool> DeleteClaimsBySite(Guid siteGuid)
+        public async Task<bool> DeleteClaimsBySite(int siteId)
         {
-            return await dbUserClaims.DeleteBySite(siteGuid);
+            return await dbUserClaims.DeleteBySite(siteId);
         }
 
         public async Task<IList<IUserClaim>> GetClaimsByUser(string userId)
@@ -1277,6 +1278,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             if (userLogin.UserId.Length == -1) { return false; }
 
             return await dbUserLogins.Create(
+                userLogin.SiteId,
                 userLogin.LoginProvider,
                 userLogin.ProviderKey,
                 userLogin.UserId);
@@ -1288,10 +1290,12 @@ namespace cloudscribe.Core.Repositories.Firebird
         /// <param name="loginProvider"> loginProvider </param>
         /// <param name="providerKey"> providerKey </param>
         public async Task<IUserLogin> FindLogin(
+            int siteId,
             string loginProvider,
             string providerKey)
         {
             using (DbDataReader reader = await dbUserLogins.Find(
+                siteId,
                 loginProvider,
                 providerKey))
             {
@@ -1331,9 +1335,9 @@ namespace cloudscribe.Core.Repositories.Firebird
             return await dbUserLogins.DeleteByUser(userId);
         }
 
-        public async Task<bool> DeleteLoginsBySite(Guid siteGuid)
+        public async Task<bool> DeleteLoginsBySite(int siteId)
         {
-            return await dbUserLogins.DeleteBySite(siteGuid);
+            return await dbUserLogins.DeleteBySite(siteId);
         }
 
 
@@ -1342,10 +1346,12 @@ namespace cloudscribe.Core.Repositories.Firebird
         /// <summary>
         /// Gets an IList with all instances of UserLogin.
         /// </summary>
-        public async Task<IList<IUserLogin>> GetLoginsByUser(string userId)
+        public async Task<IList<IUserLogin>> GetLoginsByUser(
+            int siteId,
+            string userId)
         {
             List<IUserLogin> userLoginList = new List<IUserLogin>();
-            using (DbDataReader reader = await dbUserLogins.GetByUser(userId))
+            using (DbDataReader reader = await dbUserLogins.GetByUser(siteId, userId))
             {
                 while (reader.Read())
                 {

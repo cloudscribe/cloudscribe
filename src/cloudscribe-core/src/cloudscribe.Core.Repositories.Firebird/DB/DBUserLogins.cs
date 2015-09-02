@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-10
-// Last Modified:			2015-06-12
+// Last Modified:			2015-09-02
 // 
 
 
@@ -34,24 +34,33 @@ namespace cloudscribe.Core.Repositories.Firebird
         private string writeConnectionString;
 
 
-        public async Task<bool> Create(string loginProvider, string providerKey, string userId)
+        public async Task<bool> Create(
+            int siteId,
+            string loginProvider, 
+            string providerKey, 
+            string providerDisplayName,
+            string userId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("INSERT INTO mp_UserLogins (");
             sqlCommand.Append("LoginProvider ,");
             sqlCommand.Append("ProviderKey, ");
-            sqlCommand.Append("UserId ");
+            sqlCommand.Append("ProviderDisplayName, ");
+            sqlCommand.Append("UserId, ");
+            sqlCommand.Append("SiteId ");
             sqlCommand.Append(") ");
 
             sqlCommand.Append("VALUES (");
             sqlCommand.Append("@LoginProvider, ");
             sqlCommand.Append("@ProviderKey, ");
-            sqlCommand.Append("@UserId ");
+            sqlCommand.Append("@ProviderDisplayName, ");
+            sqlCommand.Append("@UserId, ");
+            sqlCommand.Append("@SiteId ");
             sqlCommand.Append(")");
 
             sqlCommand.Append(";");
 
-            FbParameter[] arParams = new FbParameter[3];
+            FbParameter[] arParams = new FbParameter[5];
 
             arParams[0] = new FbParameter("@LoginProvider", FbDbType.VarChar, 128);
             arParams[0].Value = loginProvider;
@@ -61,6 +70,12 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             arParams[2] = new FbParameter("@UserId", FbDbType.VarChar, 128);
             arParams[2].Value = userId;
+
+            arParams[3] = new FbParameter("@SiteId", FbDbType.Integer);
+            arParams[3].Value = siteId;
+
+            arParams[4] = new FbParameter("@ProviderDisplayName", FbDbType.VarChar, 100);
+            arParams[4].Value = providerDisplayName;
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
@@ -123,19 +138,19 @@ namespace cloudscribe.Core.Repositories.Firebird
             return (rowsAffected > -1);
         }
 
-        public async Task<bool> DeleteBySite(Guid siteGuid)
+        public async Task<bool> DeleteBySite(int siteId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_UserLogins ");
             sqlCommand.Append("WHERE ");
 
-            sqlCommand.Append("UserId IN (SELECT UserGuid FROM mp_Users WHERE SiteGuid = @SiteGuid) ");
+            sqlCommand.Append("SiteId = @SiteId ");
             sqlCommand.Append(";");
 
             FbParameter[] arParams = new FbParameter[1];
 
-            arParams[0] = new FbParameter("@SiteGuid", FbDbType.VarChar, 36);
-            arParams[0].Value = siteGuid.ToString();
+            arParams[0] = new FbParameter("@SiteId", FbDbType.Integer);
+            arParams[0].Value = siteId;
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
@@ -145,24 +160,33 @@ namespace cloudscribe.Core.Repositories.Firebird
             return (rowsAffected > -1);
         }
 
-        public async Task<DbDataReader> Find(string loginProvider, string providerKey)
+        public async Task<DbDataReader> Find(
+            int siteId,
+            string loginProvider, 
+            string providerKey)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  * ");
             sqlCommand.Append("FROM	mp_UserLogins ");
             sqlCommand.Append("WHERE ");
-            sqlCommand.Append("LoginProvider = @LoginProvider AND ");
+            sqlCommand.Append("SiteId = @SiteId ");
+            sqlCommand.Append(" AND ");
+            sqlCommand.Append("LoginProvider = @LoginProvider ");
+            sqlCommand.Append(" AND ");
             sqlCommand.Append("ProviderKey = @ProviderKey ");
 
             sqlCommand.Append(";");
 
-            FbParameter[] arParams = new FbParameter[2];
+            FbParameter[] arParams = new FbParameter[3];
 
             arParams[0] = new FbParameter("@LoginProvider", FbDbType.VarChar, 128);
             arParams[0].Value = loginProvider;
 
             arParams[1] = new FbParameter("@ProviderKey", FbDbType.VarChar, 128);
             arParams[1].Value = providerKey;
+
+            arParams[2] = new FbParameter("@SiteId", FbDbType.Integer);
+            arParams[2].Value = siteId;
 
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
@@ -171,20 +195,27 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         }
 
-        public async Task<DbDataReader> GetByUser(string userId)
+        public async Task<DbDataReader> GetByUser(
+            int siteId,
+            string userId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  * ");
             sqlCommand.Append("FROM	mp_UserLogins ");
             sqlCommand.Append("WHERE ");
+            sqlCommand.Append("SiteId = @SiteId ");
+            sqlCommand.Append(" AND ");
             sqlCommand.Append("UserId = @UserId ");
-
+            
             sqlCommand.Append(";");
 
-            FbParameter[] arParams = new FbParameter[1];
+            FbParameter[] arParams = new FbParameter[2];
 
             arParams[0] = new FbParameter("@UserId", FbDbType.VarChar, 128);
             arParams[0].Value = userId;
+
+            arParams[1] = new FbParameter("@SiteId", FbDbType.Integer);
+            arParams[1].Value = siteId;
 
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,

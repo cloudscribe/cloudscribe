@@ -84,7 +84,7 @@ namespace cloudscribe.Core.Models
 
         //claims
         Task<bool> DeleteClaim(int id);
-        Task<bool> DeleteClaimsBySite(Guid siteGuid);
+        Task<bool> DeleteClaimsBySite(int siteId);
         Task<bool> DeleteClaimsByUser(string userId);
         Task<bool> DeleteClaimByUser(string userId, string claimType);
         Task<IList<IUserClaim>> GetClaimsByUser(string userId);
@@ -94,9 +94,9 @@ namespace cloudscribe.Core.Models
         //logins
         Task<bool> CreateLogin(cloudscribe.Core.Models.IUserLogin userLogin);
         Task<bool> DeleteLogin(string loginProvider, string providerKey, string userId);
-        Task<bool> DeleteLoginsBySite(Guid siteGuid);
+        Task<bool> DeleteLoginsBySite(int siteId);
         Task<bool> DeleteLoginsByUser(string userId);
-        Task<IUserLogin> FindLogin(string loginProvider, string providerKey);
-        Task<IList<IUserLogin>> GetLoginsByUser(string userId);
+        Task<IUserLogin> FindLogin(int siteId, string loginProvider, string providerKey);
+        Task<IList<IUserLogin>> GetLoginsByUser(int siteId, string userId);
     }
 }

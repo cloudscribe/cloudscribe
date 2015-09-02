@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-10
-// Last Modified:			2015-06-15
+// Last Modified:			2015-09-02
 //
 
 using cloudscribe.DbHelpers.SqlCe;
@@ -31,24 +31,33 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
 
 
-        public bool Create(string loginProvider, string providerKey, string userId)
+        public bool Create(
+            int siteId,
+            string loginProvider, 
+            string providerKey,
+            string providerDisplayName,
+            string userId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("INSERT INTO mp_UserLogins (");
             sqlCommand.Append("LoginProvider ,");
             sqlCommand.Append("ProviderKey, ");
-            sqlCommand.Append("UserId ");
+            sqlCommand.Append("UserId, ");
+            sqlCommand.Append("SiteId, ");
+            sqlCommand.Append("ProviderDisplayName ");
             sqlCommand.Append(") ");
 
             sqlCommand.Append("VALUES (");
             sqlCommand.Append("@LoginProvider, ");
             sqlCommand.Append("@ProviderKey, ");
-            sqlCommand.Append("@UserId ");
+            sqlCommand.Append("@UserId, ");
+            sqlCommand.Append("@SiteId, ");
+            sqlCommand.Append("@ProviderDisplayName ");
             sqlCommand.Append(")");
 
             sqlCommand.Append(";");
 
-            SqlCeParameter[] arParams = new SqlCeParameter[3];
+            SqlCeParameter[] arParams = new SqlCeParameter[5];
 
             arParams[0] = new SqlCeParameter("@LoginProvider", SqlDbType.NVarChar, 128);
             arParams[0].Value = loginProvider;
@@ -58,6 +67,12 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
             arParams[2] = new SqlCeParameter("@UserId", SqlDbType.NVarChar, 128);
             arParams[2].Value = userId;
+
+            arParams[3] = new SqlCeParameter("@SiteId", SqlDbType.Int);
+            arParams[3].Value = siteId;
+
+            arParams[4] = new SqlCeParameter("@ProviderDisplayName", SqlDbType.NVarChar, 100);
+            arParams[4].Value = providerDisplayName;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 connectionString,
@@ -127,19 +142,19 @@ namespace cloudscribe.Core.Repositories.SqlCe
             return (rowsAffected > -1);
         }
 
-        public bool DeleteBySite(Guid siteGuid)
+        public bool DeleteBySite(int siteId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_UserLogins ");
             sqlCommand.Append("WHERE ");
 
-            sqlCommand.Append("UserId IN (SELECT UserGuid FROM mp_Users WHERE SiteGuid = @SiteGuid) ");
+            sqlCommand.Append("SiteId = @SiteId ");
             sqlCommand.Append(";");
 
             SqlCeParameter[] arParams = new SqlCeParameter[1];
 
-            arParams[0] = new SqlCeParameter("@SiteGuid", SqlDbType.UniqueIdentifier);
-            arParams[0].Value = siteGuid;
+            arParams[0] = new SqlCeParameter("@SiteId", SqlDbType.Int);
+            arParams[0].Value = siteId;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 connectionString,
@@ -151,24 +166,33 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
         }
 
-        public DbDataReader Find(string loginProvider, string providerKey)
+        public DbDataReader Find(
+            int siteId,
+            string loginProvider, 
+            string providerKey)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  * ");
             sqlCommand.Append("FROM	mp_UserLogins ");
             sqlCommand.Append("WHERE ");
-            sqlCommand.Append("LoginProvider = @LoginProvider AND ");
+            sqlCommand.Append("SiteId = @SiteId ");
+            sqlCommand.Append(" AND ");
+            sqlCommand.Append("LoginProvider = @LoginProvider ");
+            sqlCommand.Append(" AND ");
             sqlCommand.Append("ProviderKey = @ProviderKey  ");
 
             sqlCommand.Append(";");
 
-            SqlCeParameter[] arParams = new SqlCeParameter[2];
+            SqlCeParameter[] arParams = new SqlCeParameter[3];
 
             arParams[0] = new SqlCeParameter("@LoginProvider", SqlDbType.NVarChar, 128);
             arParams[0].Value = loginProvider;
 
             arParams[1] = new SqlCeParameter("@ProviderKey", SqlDbType.NVarChar, 128);
             arParams[1].Value = providerKey;
+
+            arParams[2] = new SqlCeParameter("@SiteId", SqlDbType.Int);
+            arParams[2].Value = siteId;
 
             return AdoHelper.ExecuteReader(
                 connectionString,
@@ -178,20 +202,27 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
         }
 
-        public DbDataReader GetByUser(string userId)
+        public DbDataReader GetByUser(
+            int siteId,
+            string userId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  * ");
             sqlCommand.Append("FROM	mp_UserLogins ");
             sqlCommand.Append("WHERE ");
+            sqlCommand.Append("SiteId = @SiteId ");
+            sqlCommand.Append(" AND ");
             sqlCommand.Append("UserId = @UserId  ");
 
             sqlCommand.Append(";");
 
-            SqlCeParameter[] arParams = new SqlCeParameter[1];
+            SqlCeParameter[] arParams = new SqlCeParameter[2];
 
             arParams[0] = new SqlCeParameter("@UserId", SqlDbType.NVarChar, 128);
             arParams[0].Value = userId;
+
+            arParams[1] = new SqlCeParameter("@SiteId", SqlDbType.Int);
+            arParams[1].Value = siteId;
 
             return AdoHelper.ExecuteReader(
                 connectionString,

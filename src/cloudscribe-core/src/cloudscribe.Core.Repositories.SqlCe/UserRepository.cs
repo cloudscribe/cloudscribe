@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-18
-// Last Modified:			2015-08-07
+// Last Modified:			2015-09-02
 // 
 
 
@@ -1207,6 +1207,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
         public async Task<bool> SaveClaim(IUserClaim userClaim)
         {
             int newId = dbUserClaims.Create(
+                userClaim.SiteId,
                 userClaim.UserId,
                 userClaim.ClaimType,
                 userClaim.ClaimValue);
@@ -1233,9 +1234,9 @@ namespace cloudscribe.Core.Repositories.SqlCe
             return dbUserClaims.DeleteByUser(userId, claimType);
         }
 
-        public async Task<bool> DeleteClaimsBySite(Guid siteGuid)
+        public async Task<bool> DeleteClaimsBySite(int siteId)
         {
-            return dbUserClaims.DeleteBySite(siteGuid);
+            return dbUserClaims.DeleteBySite(siteId);
         }
 
         public async Task<IList<IUserClaim>> GetClaimsByUser(string userId)
@@ -1305,8 +1306,10 @@ namespace cloudscribe.Core.Repositories.SqlCe
             if (userLogin.UserId.Length == -1) { return false; }
 
             return dbUserLogins.Create(
+                userLogin.SiteId,
                 userLogin.LoginProvider,
                 userLogin.ProviderKey,
+                userLogin.ProviderDisplayName,
                 userLogin.UserId);
 
 
@@ -1316,10 +1319,12 @@ namespace cloudscribe.Core.Repositories.SqlCe
         /// <param name="loginProvider"> loginProvider </param>
         /// <param name="providerKey"> providerKey </param>
         public async Task<IUserLogin> FindLogin(
+            int siteId,
             string loginProvider,
             string providerKey)
         {
             using (DbDataReader reader = dbUserLogins.Find(
+                siteId,
                 loginProvider,
                 providerKey))
             {
@@ -1359,9 +1364,9 @@ namespace cloudscribe.Core.Repositories.SqlCe
             return dbUserLogins.DeleteByUser(userId);
         }
 
-        public async Task<bool> DeleteLoginsBySite(Guid siteGuid)
+        public async Task<bool> DeleteLoginsBySite(int siteId)
         {
-            return dbUserLogins.DeleteBySite(siteGuid);
+            return dbUserLogins.DeleteBySite(siteId);
         }
 
 
@@ -1370,10 +1375,12 @@ namespace cloudscribe.Core.Repositories.SqlCe
         /// <summary>
         /// Gets an IList with all instances of UserLogin.
         /// </summary>
-        public async Task<IList<IUserLogin>> GetLoginsByUser(string userId)
+        public async Task<IList<IUserLogin>> GetLoginsByUser(
+            int siteId,
+            string userId)
         {
             List<IUserLogin> userLoginList = new List<IUserLogin>();
-            using (DbDataReader reader = dbUserLogins.GetByUser(userId))
+            using (DbDataReader reader = dbUserLogins.GetByUser(siteId, userId))
             {
                 while (reader.Read())
                 {

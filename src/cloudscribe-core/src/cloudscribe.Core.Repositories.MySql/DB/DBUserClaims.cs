@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-11
-// Last Modified:			2015-06-16
+// Last Modified:			2015-09-02
 // 
 
 using cloudscribe.DbHelpers.MySql;
@@ -29,11 +29,11 @@ namespace cloudscribe.Core.Repositories.MySql
         }
 
         private ILoggerFactory logFactory;
-        //private ILogger log;
         private string readConnectionString;
         private string writeConnectionString;
 
         public async Task<int> Create(
+            int siteId,
             string userId,
             string claimType,
             string claimValue)
@@ -41,11 +41,13 @@ namespace cloudscribe.Core.Repositories.MySql
 
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("INSERT INTO mp_UserClaims (");
+            sqlCommand.Append("SiteId, ");
             sqlCommand.Append("UserId, ");
             sqlCommand.Append("ClaimType, ");
             sqlCommand.Append("ClaimValue )");
 
             sqlCommand.Append(" VALUES (");
+            sqlCommand.Append("?SiteId, ");
             sqlCommand.Append("?UserId, ");
             sqlCommand.Append("?ClaimType, ");
             sqlCommand.Append("?ClaimValue )");
@@ -53,7 +55,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
             sqlCommand.Append("SELECT LAST_INSERT_ID();");
 
-            MySqlParameter[] arParams = new MySqlParameter[3];
+            MySqlParameter[] arParams = new MySqlParameter[4];
 
             arParams[0] = new MySqlParameter("?UserId", MySqlDbType.VarChar, 128);
             arParams[0].Value = userId;
@@ -63,6 +65,9 @@ namespace cloudscribe.Core.Repositories.MySql
 
             arParams[2] = new MySqlParameter("?ClaimValue", MySqlDbType.Text);
             arParams[2].Value = claimValue;
+
+            arParams[3] = new MySqlParameter("?SiteId", MySqlDbType.Int32);
+            arParams[3].Value = siteId;
 
             object result = await AdoHelper.ExecuteScalarAsync(
                 writeConnectionString,
@@ -180,18 +185,18 @@ namespace cloudscribe.Core.Repositories.MySql
 
         }
 
-        public async Task<bool> DeleteBySite(Guid siteGuid)
+        public async Task<bool> DeleteBySite(int siteId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_UserClaims ");
             sqlCommand.Append("WHERE ");
-            sqlCommand.Append("UserId IN (SELECT UserGuid FROM mp_Users WHERE SiteGuid = ?SiteGuid) ");
+            sqlCommand.Append("SiteId  = ?SiteId ");
             sqlCommand.Append(";");
 
             MySqlParameter[] arParams = new MySqlParameter[1];
 
-            arParams[0] = new MySqlParameter("?SiteGuid", MySqlDbType.VarChar, 128);
-            arParams[0].Value = siteGuid.ToString();
+            arParams[0] = new MySqlParameter("?SiteId", MySqlDbType.Int32);
+            arParams[0].Value = siteId;
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,

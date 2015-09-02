@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-11
-// Last Modified:			2015-06-16
+// Last Modified:			2015-09-02
 //
 
 using cloudscribe.DbHelpers.SqlCe;
@@ -30,6 +30,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
         private string connectionString;
 
         public int Create(
+            int siteId,
             string userId,
             string claimType,
             string claimValue)
@@ -37,6 +38,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("INSERT INTO mp_UserClaims ");
             sqlCommand.Append("(");
+            sqlCommand.Append("SiteId, ");
             sqlCommand.Append("UserId, ");
             sqlCommand.Append("ClaimType, ");
             sqlCommand.Append("ClaimValue ");
@@ -44,13 +46,14 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
             sqlCommand.Append(" VALUES ");
             sqlCommand.Append("(");
+            sqlCommand.Append("@SiteId, ");
             sqlCommand.Append("@UserId, ");
             sqlCommand.Append("@ClaimType, ");
             sqlCommand.Append("@ClaimValue ");
             sqlCommand.Append(")");
             sqlCommand.Append(";");
 
-            SqlCeParameter[] arParams = new SqlCeParameter[3];
+            SqlCeParameter[] arParams = new SqlCeParameter[4];
 
             arParams[0] = new SqlCeParameter("@UserId", SqlDbType.NVarChar, 128);
             arParams[0].Value = userId;
@@ -60,6 +63,9 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
             arParams[2] = new SqlCeParameter("@ClaimValue", SqlDbType.NText);
             arParams[2].Value = claimValue;
+
+            arParams[3] = new SqlCeParameter("@SiteId", SqlDbType.Int);
+            arParams[3].Value = siteId;
 
             int newId = Convert.ToInt32(AdoHelper.DoInsertGetIdentitiy(
                 connectionString,
@@ -222,18 +228,18 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
         }
 
-        public bool DeleteBySite(Guid siteGuid)
+        public bool DeleteBySite(int siteId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_UserClaims ");
             sqlCommand.Append("WHERE ");
-            sqlCommand.Append("UserId IN (SELECT UserGuid FROM mp_Users WHERE SiteGuid = @SiteGuid) ");
+            sqlCommand.Append("SiteId = @SiteId ");
             sqlCommand.Append(";");
 
             SqlCeParameter[] arParams = new SqlCeParameter[1];
 
-            arParams[0] = new SqlCeParameter("@SiteGuid", SqlDbType.UniqueIdentifier);
-            arParams[0].Value = siteGuid.ToString();
+            arParams[0] = new SqlCeParameter("@SiteId", SqlDbType.Int);
+            arParams[0].Value = siteId;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 connectionString,

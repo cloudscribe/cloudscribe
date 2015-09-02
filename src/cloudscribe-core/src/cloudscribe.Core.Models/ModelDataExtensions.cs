@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-09
-// Last Modified:			2015-08-27
+// Last Modified:			2015-09-02
 // 
 
 using System;
@@ -29,13 +29,16 @@ namespace cloudscribe.Core.Models.DataExtensions
 
         public static void LoadFromReader(this IUserLogin userLogin, DbDataReader reader)
         {
+            userLogin.SiteId = Convert.ToInt32(reader["SiteId"]);
             userLogin.LoginProvider = reader["LoginProvider"].ToString();
             userLogin.ProviderKey = reader["ProviderKey"].ToString();
             userLogin.UserId = reader["UserId"].ToString();
+            userLogin.ProviderDisplayName = reader["ProviderDisplayName"].ToString();
         }
 
         public static void LoadFromReader(this IUserClaim userClaim, DbDataReader reader)
         {
+            userClaim.SiteId = Convert.ToInt32(reader["SiteId"]);
             userClaim.Id = Convert.ToInt32(reader["Id"]);
             userClaim.UserId = reader["UserId"].ToString();
             userClaim.ClaimType = reader["ClaimType"].ToString();

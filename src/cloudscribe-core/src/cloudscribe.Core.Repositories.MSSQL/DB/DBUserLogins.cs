@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-10
-// Last Modified:			2015-06-09
+// Last Modified:			2015-09-02
 // 
 
 using cloudscribe.DbHelpers.MSSQL;
@@ -36,17 +36,24 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// Inserts a row in the mp_UserLogins table. Returns new integer id.
         /// </summary>
         /// <returns>int</returns>
-        public async Task<bool> Create(string loginProvider, string providerKey, string userId)
+        public async Task<bool> Create(
+            int siteId,
+            string loginProvider, 
+            string providerKey,
+            string providerDisplayName,
+            string userId)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
                 writeConnectionString, 
                 "mp_UserLogins_Insert", 
-                3);
+                5);
 
             sph.DefineSqlParameter("@LoginProvider", SqlDbType.NVarChar, 128, ParameterDirection.Input, loginProvider);
             sph.DefineSqlParameter("@ProviderKey", SqlDbType.NVarChar, 128, ParameterDirection.Input, providerKey);
             sph.DefineSqlParameter("@UserId", SqlDbType.NVarChar, 128, ParameterDirection.Input, userId);
+            sph.DefineSqlParameter("@SiteId", SqlDbType.Int, ParameterDirection.Input, siteId);
+            sph.DefineSqlParameter("@ProviderDisplayName", SqlDbType.NVarChar, 100, ParameterDirection.Input, providerDisplayName);
 
             int rowsAffected = await sph.ExecuteNonQueryAsync();
             return (rowsAffected > 0);
@@ -90,7 +97,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         }
 
-        public async Task<bool> DeleteBySite(Guid siteGuid)
+        public async Task<bool> DeleteBySite(int siteId)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -98,36 +105,43 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 "mp_UserLogins_DeleteBySite", 
                 1);
 
-            sph.DefineSqlParameter("@SiteGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, siteGuid);
+            sph.DefineSqlParameter("@SiteId", SqlDbType.Int, ParameterDirection.Input, siteId);
             int rowsAffected = await sph.ExecuteNonQueryAsync();
             return (rowsAffected > 0);
 
         }
 
-        public async Task<DbDataReader> Find(string loginProvider, string providerKey)
+        public async Task<DbDataReader> Find(
+            int siteId,
+            string loginProvider, 
+            string providerKey)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
                 readConnectionString, 
                 "mp_UserLogins_Find", 
-                2);
+                3);
 
             sph.DefineSqlParameter("@LoginProvider", SqlDbType.NVarChar, 128, ParameterDirection.Input, loginProvider);
             sph.DefineSqlParameter("@ProviderKey", SqlDbType.NVarChar, 128, ParameterDirection.Input, providerKey);
+            sph.DefineSqlParameter("@SiteId", SqlDbType.Int, ParameterDirection.Input, siteId);
             return await sph.ExecuteReaderAsync();
 
         }
 
 
-        public async Task<DbDataReader> GetByUser(string userId)
+        public async Task<DbDataReader> GetByUser(
+            int siteId,
+            string userId)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
                 readConnectionString, 
                 "mp_UserLogins_SelectByUser", 
-                1);
+                2);
 
             sph.DefineSqlParameter("@UserId", SqlDbType.NVarChar, 128, ParameterDirection.Input, userId);
+            sph.DefineSqlParameter("@SiteId", SqlDbType.Int, ParameterDirection.Input, userId);
             return await sph.ExecuteReaderAsync();
 
         }
