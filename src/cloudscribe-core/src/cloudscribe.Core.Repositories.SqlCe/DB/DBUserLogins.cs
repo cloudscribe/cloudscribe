@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-10
-// Last Modified:			2015-09-02
+// Last Modified:			2015-09-03
 //
 
 using cloudscribe.DbHelpers.SqlCe;
@@ -86,6 +86,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
 
         public bool Delete(
+            int siteId,
             string loginProvider,
             string providerKey,
             string userId)
@@ -93,12 +94,14 @@ namespace cloudscribe.Core.Repositories.SqlCe
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_UserLogins ");
             sqlCommand.Append("WHERE ");
+            sqlCommand.Append("((@SiteId = -1) OR (SiteId = @SiteId)) ");
+            sqlCommand.Append(" AND ");
             sqlCommand.Append("LoginProvider = @LoginProvider AND ");
             sqlCommand.Append("ProviderKey = @ProviderKey AND ");
             sqlCommand.Append("UserId = @UserId ");
             sqlCommand.Append(";");
 
-            SqlCeParameter[] arParams = new SqlCeParameter[3];
+            SqlCeParameter[] arParams = new SqlCeParameter[4];
 
             arParams[0] = new SqlCeParameter("@LoginProvider", SqlDbType.NVarChar, 128);
             arParams[0].Value = loginProvider;
@@ -108,6 +111,9 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
             arParams[2] = new SqlCeParameter("@UserId", SqlDbType.NVarChar, 128);
             arParams[2].Value = userId;
+
+            arParams[3] = new SqlCeParameter("@SiteId", SqlDbType.Int);
+            arParams[3].Value = siteId;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 connectionString,
@@ -119,19 +125,23 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
         }
 
-        public bool DeleteByUser(string userId)
+        public bool DeleteByUser(int siteId, string userId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_UserLogins ");
             sqlCommand.Append("WHERE ");
-
+            sqlCommand.Append("((@SiteId = -1) OR (SiteId = @SiteId)) ");
+            sqlCommand.Append(" AND ");
             sqlCommand.Append("UserId = @UserId ");
             sqlCommand.Append(";");
 
-            SqlCeParameter[] arParams = new SqlCeParameter[1];
+            SqlCeParameter[] arParams = new SqlCeParameter[2];
 
             arParams[0] = new SqlCeParameter("@UserId", SqlDbType.NVarChar, 128);
             arParams[0].Value = userId;
+
+            arParams[1] = new SqlCeParameter("@SiteId", SqlDbType.Int);
+            arParams[1].Value = siteId;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 connectionString,

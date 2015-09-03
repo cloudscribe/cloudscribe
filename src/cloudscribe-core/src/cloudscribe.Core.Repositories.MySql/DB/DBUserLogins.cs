@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-10
-// Last Modified:			2015-09-02
+// Last Modified:			2015-09-03
 // 
 
 using cloudscribe.DbHelpers.MySql;
@@ -88,6 +88,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
 
         public async Task<bool> Delete(
+            int siteId,
             string loginProvider,
             string providerKey,
             string userId)
@@ -95,12 +96,14 @@ namespace cloudscribe.Core.Repositories.MySql
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_UserLogins ");
             sqlCommand.Append("WHERE ");
+            sqlCommand.Append("((?SiteId = -1) OR (SiteId = ?SiteId)) ");
+            sqlCommand.Append(" AND ");
             sqlCommand.Append("LoginProvider = ?LoginProvider AND ");
             sqlCommand.Append("ProviderKey = ?ProviderKey AND ");
             sqlCommand.Append("UserId = ?UserId ");
             sqlCommand.Append(";");
 
-            MySqlParameter[] arParams = new MySqlParameter[3];
+            MySqlParameter[] arParams = new MySqlParameter[4];
 
             arParams[0] = new MySqlParameter("?LoginProvider", MySqlDbType.VarChar, 128);
             arParams[0].Value = loginProvider;
@@ -111,6 +114,9 @@ namespace cloudscribe.Core.Repositories.MySql
             arParams[2] = new MySqlParameter("?UserId", MySqlDbType.VarChar, 128);
             arParams[2].Value = userId;
 
+            arParams[3] = new MySqlParameter("?SiteId", MySqlDbType.Int32);
+            arParams[3].Value = siteId;
+
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 sqlCommand.ToString(),
@@ -120,19 +126,23 @@ namespace cloudscribe.Core.Repositories.MySql
 
         }
 
-        public async Task<bool> DeleteByUser(string userId)
+        public async Task<bool> DeleteByUser(int siteId, string userId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_UserLogins ");
             sqlCommand.Append("WHERE ");
-
+            sqlCommand.Append("((?SiteId = -1) OR (SiteId = ?SiteId)) ");
+            sqlCommand.Append(" AND ");
             sqlCommand.Append("UserId = ?UserId ");
             sqlCommand.Append(";");
 
-            MySqlParameter[] arParams = new MySqlParameter[1];
+            MySqlParameter[] arParams = new MySqlParameter[2];
 
             arParams[0] = new MySqlParameter("?UserId", MySqlDbType.VarChar, 128);
             arParams[0].Value = userId;
+
+            arParams[1] = new MySqlParameter("?SiteId", MySqlDbType.Int32);
+            arParams[1].Value = siteId;
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,

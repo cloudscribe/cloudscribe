@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-10
-// Last Modified:			2015-09-02
+// Last Modified:			2015-09-03
 // 
 
 
@@ -87,6 +87,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
 
         public async Task<bool> Delete(
+            int siteId,
             string loginProvider,
             string providerKey,
             string userId)
@@ -94,11 +95,13 @@ namespace cloudscribe.Core.Repositories.Firebird
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_UserLogins ");
             sqlCommand.Append("WHERE ");
+            sqlCommand.Append("((@SiteId = -1) OR (SiteId = @SiteId)) ");
+            sqlCommand.Append(" AND ");
             sqlCommand.Append("LoginProvider = @LoginProvider AND ");
             sqlCommand.Append("ProviderKey = @ProviderKey AND ");
             sqlCommand.Append("UserId = @UserId ");
             sqlCommand.Append(";");
-            FbParameter[] arParams = new FbParameter[3];
+            FbParameter[] arParams = new FbParameter[4];
 
             arParams[0] = new FbParameter("@LoginProvider", FbDbType.VarChar, 128);
             arParams[0].Value = loginProvider;
@@ -109,6 +112,9 @@ namespace cloudscribe.Core.Repositories.Firebird
             arParams[2] = new FbParameter("@UserId", FbDbType.VarChar, 128);
             arParams[2].Value = userId;
 
+            arParams[3] = new FbParameter("@SiteId", FbDbType.Integer);
+            arParams[3].Value = siteId;
+
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 sqlCommand.ToString(),
@@ -117,18 +123,22 @@ namespace cloudscribe.Core.Repositories.Firebird
             return (rowsAffected > -1);
         }
 
-        public async Task<bool> DeleteByUser(string userId)
+        public async Task<bool> DeleteByUser(int siteId, string userId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_UserLogins ");
             sqlCommand.Append("WHERE ");
-
+            sqlCommand.Append("((@SiteId = -1) OR (SiteId = @SiteId)) ");
+            sqlCommand.Append(" AND ");
             sqlCommand.Append("UserId = @UserId ");
             sqlCommand.Append(";");
-            FbParameter[] arParams = new FbParameter[1];
+            FbParameter[] arParams = new FbParameter[2];
 
             arParams[0] = new FbParameter("@UserId", FbDbType.VarChar, 128);
             arParams[0].Value = userId;
+
+            arParams[1] = new FbParameter("@SiteId", FbDbType.Integer);
+            arParams[1].Value = siteId;
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,

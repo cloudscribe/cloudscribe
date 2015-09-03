@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-10
-// Last Modified:			2015-09-02
+// Last Modified:			2015-09-03
 // 
 
 using cloudscribe.DbHelpers.MSSQL;
@@ -67,31 +67,33 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// <param name="providerKey"> providerKey </param>
         /// <param name="userId"> userId </param>
         /// <returns>bool</returns>
-        public async Task<bool> Delete(string loginProvider, string providerKey, string userId)
+        public async Task<bool> Delete(int siteId, string loginProvider, string providerKey, string userId)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
                 writeConnectionString, 
                 "mp_UserLogins_Delete", 
-                3);
+                4);
 
             sph.DefineSqlParameter("@LoginProvider", SqlDbType.NVarChar, 128, ParameterDirection.Input, loginProvider);
             sph.DefineSqlParameter("@ProviderKey", SqlDbType.NVarChar, 128, ParameterDirection.Input, providerKey);
             sph.DefineSqlParameter("@UserId", SqlDbType.NVarChar, 128, ParameterDirection.Input, userId);
+            sph.DefineSqlParameter("@SiteId", SqlDbType.Int, ParameterDirection.Input, siteId);
             int rowsAffected = await sph.ExecuteNonQueryAsync();
             return (rowsAffected > 0);
 
         }
 
-        public async Task<bool> DeleteByUser(string userId)
+        public async Task<bool> DeleteByUser(int siteId, string userId)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
                 writeConnectionString, 
                 "mp_UserLogins_DeleteByUser", 
-                1);
+                2);
 
             sph.DefineSqlParameter("@UserId", SqlDbType.NVarChar, 128, ParameterDirection.Input, userId);
+            sph.DefineSqlParameter("@SiteId", SqlDbType.Int, ParameterDirection.Input, siteId);
             int rowsAffected = await sph.ExecuteNonQueryAsync();
             return (rowsAffected > 0);
 

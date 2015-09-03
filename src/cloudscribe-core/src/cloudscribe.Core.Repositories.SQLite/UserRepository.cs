@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-18
-// Last Modified:			2015-08-07
+// Last Modified:			2015-09-03
 // 
 
 
@@ -1192,6 +1192,7 @@ namespace cloudscribe.Core.Repositories.SQLite
         public async Task<bool> SaveClaim(IUserClaim userClaim)
         {
             int newId = dbUserClaims.Create(
+                userClaim.SiteId,
                 userClaim.UserId,
                 userClaim.ClaimType,
                 userClaim.ClaimValue);
@@ -1206,24 +1207,24 @@ namespace cloudscribe.Core.Repositories.SQLite
             return dbUserClaims.Delete(id);
         }
 
-        public async Task<bool> DeleteClaimsByUser(string userId)
+        public async Task<bool> DeleteClaimsByUser(int siteId, string userId)
         {
-            return dbUserClaims.DeleteByUser(userId);
+            return dbUserClaims.DeleteByUser(siteId, userId);
         }
 
-        public async Task<bool> DeleteClaimByUser(string userId, string claimType)
+        public async Task<bool> DeleteClaimByUser(int siteId, string userId, string claimType)
         {
-            return dbUserClaims.DeleteByUser(userId, claimType);
+            return dbUserClaims.DeleteByUser(siteId, userId, claimType);
         }
 
-        public async Task<bool> DeleteClaimsBySite(Guid siteGuid)
+        public async Task<bool> DeleteClaimsBySite(int siteId)
         {
-            return dbUserClaims.DeleteBySite(siteGuid);
+            return dbUserClaims.DeleteBySite(siteId);
         }
 
-        public async Task<IList<IUserClaim>> GetClaimsByUser(string userId)
+        public async Task<IList<IUserClaim>> GetClaimsByUser(int siteId, string userId)
         {
-            DbDataReader reader = dbUserClaims.GetByUser(userId);
+            DbDataReader reader = dbUserClaims.GetByUser(siteId, userId);
             return LoadClaimListFromReader(reader);
 
         }
@@ -1288,8 +1289,10 @@ namespace cloudscribe.Core.Repositories.SQLite
             if (userLogin.UserId.Length == -1) { return false; }
 
             return dbUserLogins.Create(
+                userLogin.SiteId,
                 userLogin.LoginProvider,
                 userLogin.ProviderKey,
+                userLogin.ProviderDisplayName,
                 userLogin.UserId);
 
 
@@ -1299,10 +1302,12 @@ namespace cloudscribe.Core.Repositories.SQLite
         /// <param name="loginProvider"> loginProvider </param>
         /// <param name="providerKey"> providerKey </param>
         public async Task<IUserLogin> FindLogin(
+            int siteId,
             string loginProvider,
             string providerKey)
         {
             using (DbDataReader reader = dbUserLogins.Find(
+                siteId,
                 loginProvider,
                 providerKey))
             {
@@ -1327,24 +1332,26 @@ namespace cloudscribe.Core.Repositories.SQLite
         /// <param name="userId"> userId </param>
         /// <returns>bool</returns>
         public async Task<bool> DeleteLogin(
+            int siteId,
             string loginProvider,
             string providerKey,
             string userId)
         {
             return dbUserLogins.Delete(
+                siteId,
                 loginProvider,
                 providerKey,
                 userId);
         }
 
-        public async Task<bool> DeleteLoginsByUser(string userId)
+        public async Task<bool> DeleteLoginsByUser(int siteId, string userId)
         {
-            return dbUserLogins.DeleteByUser(userId);
+            return dbUserLogins.DeleteByUser(siteId, userId);
         }
 
-        public async Task<bool> DeleteLoginsBySite(Guid siteGuid)
+        public async Task<bool> DeleteLoginsBySite(int siteId)
         {
-            return dbUserLogins.DeleteBySite(siteGuid);
+            return dbUserLogins.DeleteBySite(siteId);
         }
 
 
@@ -1353,10 +1360,12 @@ namespace cloudscribe.Core.Repositories.SQLite
         /// <summary>
         /// Gets an IList with all instances of UserLogin.
         /// </summary>
-        public async Task<IList<IUserLogin>> GetLoginsByUser(string userId)
+        public async Task<IList<IUserLogin>> GetLoginsByUser(
+            int siteId,
+            string userId)
         {
             List<IUserLogin> userLoginList = new List<IUserLogin>();
-            using (DbDataReader reader = dbUserLogins.GetByUser(userId))
+            using (DbDataReader reader = dbUserLogins.GetByUser(siteId, userId))
             {
                 while (reader.Read())
                 {

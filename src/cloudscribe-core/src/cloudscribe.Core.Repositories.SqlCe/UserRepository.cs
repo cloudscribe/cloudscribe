@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-18
-// Last Modified:			2015-09-02
+// Last Modified:			2015-09-03
 // 
 
 
@@ -1224,14 +1224,14 @@ namespace cloudscribe.Core.Repositories.SqlCe
             return dbUserClaims.Delete(id);
         }
 
-        public async Task<bool> DeleteClaimsByUser(string userId)
+        public async Task<bool> DeleteClaimsByUser(int siteId, string userId)
         {
-            return dbUserClaims.DeleteByUser(userId);
+            return dbUserClaims.DeleteByUser(siteId, userId);
         }
 
-        public async Task<bool> DeleteClaimByUser(string userId, string claimType)
+        public async Task<bool> DeleteClaimByUser(int siteId, string userId, string claimType)
         {
-            return dbUserClaims.DeleteByUser(userId, claimType);
+            return dbUserClaims.DeleteByUser(siteId, userId, claimType);
         }
 
         public async Task<bool> DeleteClaimsBySite(int siteId)
@@ -1239,9 +1239,9 @@ namespace cloudscribe.Core.Repositories.SqlCe
             return dbUserClaims.DeleteBySite(siteId);
         }
 
-        public async Task<IList<IUserClaim>> GetClaimsByUser(string userId)
+        public async Task<IList<IUserClaim>> GetClaimsByUser(int siteId, string userId)
         {
-            DbDataReader reader = dbUserClaims.GetByUser(userId);
+            DbDataReader reader = dbUserClaims.GetByUser(siteId, userId);
             return LoadClaimListFromReader(reader);
 
         }
@@ -1349,19 +1349,21 @@ namespace cloudscribe.Core.Repositories.SqlCe
         /// <param name="userId"> userId </param>
         /// <returns>bool</returns>
         public async Task<bool> DeleteLogin(
+            int siteId,
             string loginProvider,
             string providerKey,
             string userId)
         {
             return dbUserLogins.Delete(
+                siteId,
                 loginProvider,
                 providerKey,
                 userId);
         }
 
-        public async Task<bool> DeleteLoginsByUser(string userId)
+        public async Task<bool> DeleteLoginsByUser(int siteId, string userId)
         {
-            return dbUserLogins.DeleteByUser(userId);
+            return dbUserLogins.DeleteByUser(siteId, userId);
         }
 
         public async Task<bool> DeleteLoginsBySite(int siteId)

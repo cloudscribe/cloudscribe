@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-11
-// Last Modified:			2015-09-02
+// Last Modified:			2015-09-03
 //
 
 using cloudscribe.DbHelpers.SqlCe;
@@ -26,7 +26,6 @@ namespace cloudscribe.Core.Repositories.SqlCe
         }
 
         private ILoggerFactory logFactory;
-        //private ILogger log;
         private string connectionString;
 
         public int Create(
@@ -145,36 +144,14 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
         }
 
-        public bool DeleteByUser(string userId)
+        public bool DeleteByUser(int siteId, string userId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_UserClaims ");
             sqlCommand.Append("WHERE ");
+            sqlCommand.Append("((@SiteId = -1) OR (SiteId = @SiteId)) ");
+            sqlCommand.Append(" AND ");
             sqlCommand.Append("UserId = @UserId ");
-            sqlCommand.Append(";");
-
-            SqlCeParameter[] arParams = new SqlCeParameter[1];
-
-            arParams[0] = new SqlCeParameter("@UserId", SqlDbType.NVarChar, 128);
-            arParams[0].Value = userId;
-
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
-                connectionString,
-                CommandType.Text,
-                sqlCommand.ToString(),
-                arParams);
-
-            return (rowsAffected > -1);
-        }
-
-        public bool DeleteByUser(string userId, string claimType)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("DELETE FROM mp_UserClaims ");
-            sqlCommand.Append("WHERE ");
-            sqlCommand.Append("UserId = @UserId ");
-            sqlCommand.Append("AND ");
-            sqlCommand.Append("ClaimType = @ClaimType ");
             sqlCommand.Append(";");
 
             SqlCeParameter[] arParams = new SqlCeParameter[2];
@@ -182,8 +159,8 @@ namespace cloudscribe.Core.Repositories.SqlCe
             arParams[0] = new SqlCeParameter("@UserId", SqlDbType.NVarChar, 128);
             arParams[0].Value = userId;
 
-            arParams[1] = new SqlCeParameter("@ClaimType", SqlDbType.NVarChar);
-            arParams[1].Value = claimType;
+            arParams[1] = new SqlCeParameter("@SiteId", SqlDbType.Int);
+            arParams[1].Value = siteId;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 connectionString,
@@ -192,19 +169,18 @@ namespace cloudscribe.Core.Repositories.SqlCe
                 arParams);
 
             return (rowsAffected > -1);
-
         }
 
-        public bool DeleteByUser(string userId, string claimType, string claimValue)
+        public bool DeleteByUser(int siteId, string userId, string claimType)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_UserClaims ");
             sqlCommand.Append("WHERE ");
+            sqlCommand.Append("((@SiteId = -1) OR (SiteId = @SiteId)) ");
+            sqlCommand.Append(" AND ");
             sqlCommand.Append("UserId = @UserId ");
             sqlCommand.Append("AND ");
             sqlCommand.Append("ClaimType = @ClaimType ");
-            sqlCommand.Append("AND ");
-            sqlCommand.Append("ClaimValue = @ClaimValue ");
             sqlCommand.Append(";");
 
             SqlCeParameter[] arParams = new SqlCeParameter[3];
@@ -215,8 +191,46 @@ namespace cloudscribe.Core.Repositories.SqlCe
             arParams[1] = new SqlCeParameter("@ClaimType", SqlDbType.NVarChar);
             arParams[1].Value = claimType;
 
+            arParams[2] = new SqlCeParameter("@SiteId", SqlDbType.Int);
+            arParams[2].Value = siteId;
+
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
+                connectionString,
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams);
+
+            return (rowsAffected > -1);
+
+        }
+
+        public bool DeleteByUser(int siteId, string userId, string claimType, string claimValue)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("DELETE FROM mp_UserClaims ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("((@SiteId = -1) OR (SiteId = @SiteId)) ");
+            sqlCommand.Append(" AND ");
+            sqlCommand.Append("UserId = @UserId ");
+            sqlCommand.Append("AND ");
+            sqlCommand.Append("ClaimType = @ClaimType ");
+            sqlCommand.Append("AND ");
+            sqlCommand.Append("ClaimValue = @ClaimValue ");
+            sqlCommand.Append(";");
+
+            SqlCeParameter[] arParams = new SqlCeParameter[4];
+
+            arParams[0] = new SqlCeParameter("@UserId", SqlDbType.NVarChar, 128);
+            arParams[0].Value = userId;
+
+            arParams[1] = new SqlCeParameter("@ClaimType", SqlDbType.NVarChar);
+            arParams[1].Value = claimType;
+
             arParams[2] = new SqlCeParameter("@ClaimValue", SqlDbType.NVarChar);
             arParams[2].Value = claimValue;
+
+            arParams[3] = new SqlCeParameter("@SiteId", SqlDbType.Int);
+            arParams[3].Value = siteId;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 connectionString,
@@ -251,19 +265,24 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
         }
 
-        public DbDataReader GetByUser(string userId)
+        public DbDataReader GetByUser(int siteId, string userId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  * ");
             sqlCommand.Append("FROM	mp_UserClaims ");
             sqlCommand.Append("WHERE ");
+            sqlCommand.Append("SiteId = @SiteId ");
+            sqlCommand.Append(" AND ");
             sqlCommand.Append("UserId = @UserId ");
             sqlCommand.Append(";");
 
-            SqlCeParameter[] arParams = new SqlCeParameter[1];
+            SqlCeParameter[] arParams = new SqlCeParameter[2];
 
             arParams[0] = new SqlCeParameter("@UserId", SqlDbType.NVarChar, 128);
             arParams[0].Value = userId;
+
+            arParams[1] = new SqlCeParameter("@SiteId", SqlDbType.Int);
+            arParams[1].Value = siteId;
 
             return AdoHelper.ExecuteReader(
                 connectionString,

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-11
-// Last Modified:			2015-09-02
+// Last Modified:			2015-09-03
 // 
 
 using cloudscribe.DbHelpers.MySql;
@@ -103,36 +103,14 @@ namespace cloudscribe.Core.Repositories.MySql
 
         }
 
-        public async Task<bool> DeleteByUser(string userId)
+        public async Task<bool> DeleteByUser(int siteId, string userId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_UserClaims ");
             sqlCommand.Append("WHERE ");
+            sqlCommand.Append("((?SiteId = -1) OR (SiteId = ?SiteId)) ");
+            sqlCommand.Append(" AND ");
             sqlCommand.Append("UserId = ?UserId ");
-            sqlCommand.Append(";");
-
-            MySqlParameter[] arParams = new MySqlParameter[1];
-
-            arParams[0] = new MySqlParameter("?UserId", MySqlDbType.VarChar, 128);
-            arParams[0].Value = userId;
-
-            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
-                writeConnectionString,
-                sqlCommand.ToString(),
-                arParams);
-
-            return (rowsAffected > 0);
-
-        }
-
-        public async Task<bool> DeleteByUser(string userId, string claimType)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("DELETE FROM mp_UserClaims ");
-            sqlCommand.Append("WHERE ");
-            sqlCommand.Append("UserId = ?UserId ");
-            sqlCommand.Append("AND ");
-            sqlCommand.Append("ClaimType = ?ClaimType ");
             sqlCommand.Append(";");
 
             MySqlParameter[] arParams = new MySqlParameter[2];
@@ -140,8 +118,8 @@ namespace cloudscribe.Core.Repositories.MySql
             arParams[0] = new MySqlParameter("?UserId", MySqlDbType.VarChar, 128);
             arParams[0].Value = userId;
 
-            arParams[1] = new MySqlParameter("?ClaimType", MySqlDbType.Text);
-            arParams[1].Value = claimType;
+            arParams[1] = new MySqlParameter("?SiteId", MySqlDbType.Int32);
+            arParams[1].Value = siteId;
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
@@ -150,19 +128,18 @@ namespace cloudscribe.Core.Repositories.MySql
 
             return (rowsAffected > 0);
 
-
         }
 
-        public async Task<bool> DeleteByUser(string userId, string claimType, string claimValue)
+        public async Task<bool> DeleteByUser(int siteId, string userId, string claimType)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_UserClaims ");
             sqlCommand.Append("WHERE ");
+            sqlCommand.Append("((?SiteId = -1) OR (SiteId = ?SiteId)) ");
+            sqlCommand.Append(" AND ");
             sqlCommand.Append("UserId = ?UserId ");
             sqlCommand.Append("AND ");
             sqlCommand.Append("ClaimType = ?ClaimType ");
-            sqlCommand.Append("AND ");
-            sqlCommand.Append("ClaimValue = ?ClaimValue ");
             sqlCommand.Append(";");
 
             MySqlParameter[] arParams = new MySqlParameter[3];
@@ -173,8 +150,46 @@ namespace cloudscribe.Core.Repositories.MySql
             arParams[1] = new MySqlParameter("?ClaimType", MySqlDbType.Text);
             arParams[1].Value = claimType;
 
+            arParams[2] = new MySqlParameter("?SiteId", MySqlDbType.Int32);
+            arParams[2].Value = siteId;
+
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
+                writeConnectionString,
+                sqlCommand.ToString(),
+                arParams);
+
+            return (rowsAffected > 0);
+
+
+        }
+
+        public async Task<bool> DeleteByUser(int siteId, string userId, string claimType, string claimValue)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("DELETE FROM mp_UserClaims ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("((?SiteId = -1) OR (SiteId = ?SiteId)) ");
+            sqlCommand.Append(" AND ");
+            sqlCommand.Append("UserId = ?UserId ");
+            sqlCommand.Append("AND ");
+            sqlCommand.Append("ClaimType = ?ClaimType ");
+            sqlCommand.Append("AND ");
+            sqlCommand.Append("ClaimValue = ?ClaimValue ");
+            sqlCommand.Append(";");
+
+            MySqlParameter[] arParams = new MySqlParameter[4];
+
+            arParams[0] = new MySqlParameter("?UserId", MySqlDbType.VarChar, 128);
+            arParams[0].Value = userId;
+
+            arParams[1] = new MySqlParameter("?ClaimType", MySqlDbType.Text);
+            arParams[1].Value = claimType;
+
             arParams[2] = new MySqlParameter("?ClaimValue", MySqlDbType.Text);
             arParams[2].Value = claimValue;
+
+            arParams[3] = new MySqlParameter("?SiteId", MySqlDbType.Int32);
+            arParams[3].Value = siteId;
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
@@ -207,19 +222,24 @@ namespace cloudscribe.Core.Repositories.MySql
 
         }
 
-        public async Task<DbDataReader> GetByUser(string userId)
+        public async Task<DbDataReader> GetByUser(int siteId, string userId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  * ");
             sqlCommand.Append("FROM	mp_UserClaims ");
             sqlCommand.Append("WHERE ");
+            sqlCommand.Append("SiteId  = ?SiteId ");
+            sqlCommand.Append(" AND ");
             sqlCommand.Append("UserId = ?UserId ");
             sqlCommand.Append(";");
 
-            MySqlParameter[] arParams = new MySqlParameter[1];
+            MySqlParameter[] arParams = new MySqlParameter[2];
 
             arParams[0] = new MySqlParameter("?UserId", MySqlDbType.VarChar, 128);
             arParams[0].Value = userId;
+
+            arParams[1] = new MySqlParameter("?SiteId", MySqlDbType.Int32);
+            arParams[1].Value = siteId;
 
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,

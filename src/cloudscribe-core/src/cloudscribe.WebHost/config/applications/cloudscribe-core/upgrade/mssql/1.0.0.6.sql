@@ -148,6 +148,52 @@ WHERE
 GO
 
 
+ALTER PROCEDURE [dbo].[mp_UserLogins_DeleteByUser]
+
+/*
+Author:   			Joe Audette
+Created: 			2014-07-29
+Last Modified: 		2015-09-03
+*/
+
+
+@UserId nvarchar(128),
+@siteId int
+
+AS
+
+DELETE FROM [dbo].[mp_UserLogins]
+WHERE
+	((@SiteId = -1) OR (SiteId = @SiteId))
+	AND [UserId] = @UserId
+
+GO
+
+ALTER PROCEDURE [dbo].[mp_UserLogins_Delete]
+
+/*
+Author:   			Joe Audette
+Created: 			2014-07-29
+Last Modified: 		2015-09-03
+*/
+
+@LoginProvider nvarchar(128),
+@ProviderKey nvarchar(128),
+@UserId nvarchar(128),
+@SiteId int
+
+AS
+
+DELETE FROM [dbo].[mp_UserLogins]
+WHERE
+((@SiteId = -1) OR (SiteId = @SiteId))
+	AND [LoginProvider] = @LoginProvider
+	AND [ProviderKey] = @ProviderKey
+	AND [UserId] = @UserId
+
+GO
+
+
 
 
 
@@ -203,6 +249,73 @@ AS
 DELETE FROM [dbo].[mp_UserClaims]
 WHERE
 	[SiteId] = @SiteId
+
+GO
+
+ALTER PROCEDURE [dbo].[mp_UserClaims_SelectByUser]
+
+/*
+Author:   			Joe Audette
+Created: 			2014-07-29
+Last Modified: 		2015-09-03
+*/
+
+@UserId nvarchar(128),
+@SiteId int
+
+AS
+
+
+SELECT *
+		
+FROM
+		[dbo].[mp_UserClaims]
+		
+WHERE
+		SiteId = @SiteID
+		AND [UserId] = @UserId
+
+GO
+
+ALTER PROCEDURE [dbo].[mp_UserClaims_DeleteByUser]
+
+/*
+Author:   			Joe Audette
+Created: 			2014-07-29
+Last Modified: 		2015-09-03
+*/
+
+@UserId nvarchar(128),
+@SiteId int
+
+AS
+
+DELETE FROM [dbo].[mp_UserClaims]
+WHERE
+	((@SiteId = -1) OR (SiteId = @SiteId))
+	AND [UserId] = @UserId
+
+GO
+
+ALTER PROCEDURE [dbo].[mp_UserClaims_DeleteByUserByType]
+
+/*
+Author:   			Joe Audette
+Created: 			2014-07-29
+Last Modified: 		2015-09-03
+*/
+
+@UserId nvarchar(128),
+@ClaimType nvarchar(max),
+@SiteId int
+
+AS
+
+DELETE FROM [dbo].[mp_UserClaims]
+WHERE
+	((@SiteId = -1) OR (SiteId = @SiteId))
+	AND [UserId] = @UserId
+	AND ClaimType = @ClaimType
 
 GO
 

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-10
-// Last Modified:			2015-09-02
+// Last Modified:			2015-09-03
 // 
 
 using cloudscribe.DbHelpers.pgsql;
@@ -30,7 +30,6 @@ namespace cloudscribe.Core.Repositories.pgsql
         }
 
         private ILoggerFactory logFactory;
-        //private ILogger log;
         private string readConnectionString;
         private string writeConnectionString;
 
@@ -89,6 +88,7 @@ namespace cloudscribe.Core.Repositories.pgsql
 
 
         public async Task<bool> Delete(
+            int siteId,
             string loginProvider,
             string providerKey,
             string userId)
@@ -97,12 +97,14 @@ namespace cloudscribe.Core.Repositories.pgsql
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_userlogins ");
             sqlCommand.Append("WHERE ");
+            sqlCommand.Append("((:siteid = -1) OR (siteid = :siteid)) ");
+            sqlCommand.Append(" AND ");
             sqlCommand.Append("loginprovider = :loginprovider AND ");
             sqlCommand.Append("providerkey = :providerkey AND ");
             sqlCommand.Append("userid = :userid ");
             sqlCommand.Append(";");
 
-            NpgsqlParameter[] arParams = new NpgsqlParameter[3];
+            NpgsqlParameter[] arParams = new NpgsqlParameter[4];
 
             arParams[0] = new NpgsqlParameter("loginprovider", NpgsqlTypes.NpgsqlDbType.Varchar, 128);
             arParams[0].Value = loginProvider;
@@ -112,6 +114,9 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             arParams[2] = new NpgsqlParameter("userid", NpgsqlTypes.NpgsqlDbType.Varchar, 128);
             arParams[2].Value = userId;
+
+            arParams[3] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
+            arParams[3].Value = siteId;
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
@@ -123,19 +128,23 @@ namespace cloudscribe.Core.Repositories.pgsql
 
         }
 
-        public async Task<bool> DeleteByUser(string userId)
+        public async Task<bool> DeleteByUser(int siteId, string userId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_userlogins ");
             sqlCommand.Append("WHERE ");
-
+            sqlCommand.Append("((:siteid = -1) OR (siteid = :siteid)) ");
+            sqlCommand.Append(" AND ");
             sqlCommand.Append("userid = :userid ");
             sqlCommand.Append(";");
 
-            NpgsqlParameter[] arParams = new NpgsqlParameter[1];
+            NpgsqlParameter[] arParams = new NpgsqlParameter[2];
 
             arParams[0] = new NpgsqlParameter("userid", NpgsqlTypes.NpgsqlDbType.Varchar, 128);
             arParams[0].Value = userId;
+
+            arParams[1] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
+            arParams[1].Value = siteId;
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-11
-// Last Modified:			2015-06-16
+// Last Modified:			2015-09-03
 // 
 
 using cloudscribe.DbHelpers.SQLite;
@@ -33,17 +33,20 @@ namespace cloudscribe.Core.Repositories.SQLite
 
 
         public int Create(
+            int siteId,
             string userId,
             string claimType,
             string claimValue)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("INSERT INTO mp_UserClaims (");
+            sqlCommand.Append("SiteId, ");
             sqlCommand.Append("UserId, ");
             sqlCommand.Append("ClaimType, ");
             sqlCommand.Append("ClaimValue )");
 
             sqlCommand.Append(" VALUES (");
+            sqlCommand.Append(":SiteId, ");
             sqlCommand.Append(":UserId, ");
             sqlCommand.Append(":ClaimType, ");
             sqlCommand.Append(":ClaimValue )");
@@ -51,7 +54,7 @@ namespace cloudscribe.Core.Repositories.SQLite
 
             sqlCommand.Append("SELECT LAST_INSERT_ROWID();");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[3];
+            SQLiteParameter[] arParams = new SQLiteParameter[4];
 
             arParams[0] = new SQLiteParameter(":UserId", DbType.String);
             arParams[0].Value = userId;
@@ -61,6 +64,9 @@ namespace cloudscribe.Core.Repositories.SQLite
 
             arParams[2] = new SQLiteParameter(":ClaimValue", DbType.Object);
             arParams[2].Value = claimValue;
+
+            arParams[3] = new SQLiteParameter(":SiteId", DbType.Int32);
+            arParams[3].Value = siteId;
 
             int newID = Convert.ToInt32(AdoHelper.ExecuteScalar(
                 connectionString,
@@ -94,36 +100,14 @@ namespace cloudscribe.Core.Repositories.SQLite
 
         }
 
-        public bool DeleteByUser(string userId)
+        public bool DeleteByUser(int siteId, string userId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_UserClaims ");
             sqlCommand.Append("WHERE ");
+            sqlCommand.Append("((:SiteId = -1) OR (SiteId = :SiteId)) ");
+            sqlCommand.Append(" AND ");
             sqlCommand.Append("UserId = :UserId ");
-            sqlCommand.Append(";");
-
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
-
-            arParams[0] = new SQLiteParameter(":UserId", DbType.String);
-            arParams[0].Value = userId;
-
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
-                connectionString,
-                sqlCommand.ToString(),
-                arParams);
-
-            return (rowsAffected > 0);
-
-        }
-
-        public bool DeleteByUser(string userId, string claimType)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("DELETE FROM mp_UserClaims ");
-            sqlCommand.Append("WHERE ");
-            sqlCommand.Append("UserId = :UserId ");
-            sqlCommand.Append("AND ");
-            sqlCommand.Append("ClaimType = :ClaimType ");
             sqlCommand.Append(";");
 
             SQLiteParameter[] arParams = new SQLiteParameter[2];
@@ -131,8 +115,8 @@ namespace cloudscribe.Core.Repositories.SQLite
             arParams[0] = new SQLiteParameter(":UserId", DbType.String);
             arParams[0].Value = userId;
 
-            arParams[1] = new SQLiteParameter(":ClaimType", DbType.Object);
-            arParams[1].Value = claimType;
+            arParams[1] = new SQLiteParameter(":SiteId", DbType.Int32);
+            arParams[1].Value = siteId;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 connectionString,
@@ -143,16 +127,16 @@ namespace cloudscribe.Core.Repositories.SQLite
 
         }
 
-        public bool DeleteByUser(string userId, string claimType, string claimValue)
+        public bool DeleteByUser(int siteId, string userId, string claimType)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_UserClaims ");
             sqlCommand.Append("WHERE ");
+            sqlCommand.Append("((:SiteId = -1) OR (SiteId = :SiteId)) ");
+            sqlCommand.Append(" AND ");
             sqlCommand.Append("UserId = :UserId ");
             sqlCommand.Append("AND ");
             sqlCommand.Append("ClaimType = :ClaimType ");
-            sqlCommand.Append("AND ");
-            sqlCommand.Append("ClaimValue = :ClaimValue ");
             sqlCommand.Append(";");
 
             SQLiteParameter[] arParams = new SQLiteParameter[3];
@@ -163,8 +147,8 @@ namespace cloudscribe.Core.Repositories.SQLite
             arParams[1] = new SQLiteParameter(":ClaimType", DbType.Object);
             arParams[1].Value = claimType;
 
-            arParams[2] = new SQLiteParameter(":ClaimValue", DbType.Object);
-            arParams[2].Value = claimValue;
+            arParams[2] = new SQLiteParameter(":SiteId", DbType.Int32);
+            arParams[2].Value = siteId;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 connectionString,
@@ -175,18 +159,55 @@ namespace cloudscribe.Core.Repositories.SQLite
 
         }
 
-        public bool DeleteBySite(Guid siteGuid)
+        public bool DeleteByUser(int siteId, string userId, string claimType, string claimValue)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_UserClaims ");
             sqlCommand.Append("WHERE ");
-            sqlCommand.Append("UserId IN (SELECT UserGuid FROM mp_Users WHERE SiteGuid = :SiteGuid) ");
+            sqlCommand.Append("((:SiteId = -1) OR (SiteId = :SiteId)) ");
+            sqlCommand.Append(" AND ");
+            sqlCommand.Append("UserId = :UserId ");
+            sqlCommand.Append("AND ");
+            sqlCommand.Append("ClaimType = :ClaimType ");
+            sqlCommand.Append("AND ");
+            sqlCommand.Append("ClaimValue = :ClaimValue ");
+            sqlCommand.Append(";");
+
+            SQLiteParameter[] arParams = new SQLiteParameter[4];
+
+            arParams[0] = new SQLiteParameter(":UserId", DbType.String);
+            arParams[0].Value = userId;
+
+            arParams[1] = new SQLiteParameter(":ClaimType", DbType.Object);
+            arParams[1].Value = claimType;
+
+            arParams[2] = new SQLiteParameter(":ClaimValue", DbType.Object);
+            arParams[2].Value = claimValue;
+
+            arParams[3] = new SQLiteParameter(":SiteId", DbType.Int32);
+            arParams[3].Value = siteId;
+
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
+                connectionString,
+                sqlCommand.ToString(),
+                arParams);
+
+            return (rowsAffected > 0);
+
+        }
+
+        public bool DeleteBySite(int siteId)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("DELETE FROM mp_UserClaims ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("SiteId = :SiteId ");
             sqlCommand.Append(";");
 
             SQLiteParameter[] arParams = new SQLiteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":SiteGuid", DbType.String);
-            arParams[0].Value = siteGuid.ToString();
+            arParams[0] = new SQLiteParameter(":SiteId", DbType.Int32);
+            arParams[0].Value = siteId;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 connectionString,
@@ -196,19 +217,26 @@ namespace cloudscribe.Core.Repositories.SQLite
             return (rowsAffected > 0);
         }
 
-        public DbDataReader GetByUser(string userId)
+        public DbDataReader GetByUser(
+            int siteId,
+            string userId)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  * ");
             sqlCommand.Append("FROM	mp_UserClaims ");
             sqlCommand.Append("WHERE ");
+            sqlCommand.Append("SiteId = :SiteId ");
+            sqlCommand.Append(" AND ");
             sqlCommand.Append("UserId = :UserId ");
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SQLiteParameter[] arParams = new SQLiteParameter[2];
 
             arParams[0] = new SQLiteParameter(":UserId", DbType.String);
             arParams[0].Value = userId;
+
+            arParams[1] = new SQLiteParameter(":SiteId", DbType.Int32);
+            arParams[1].Value = siteId;
 
             return AdoHelper.ExecuteReader(
                 connectionString,
