@@ -38,7 +38,11 @@ namespace cloudscribe.Core.Identity.OAuth
             ISiteRepository siteRepository,
             MultiTenantOptions multiTenantOptions,
             ILoggerFactory loggerFactory)
-            : base(httpClient, loggerFactory)
+            : base(
+                  httpClient, 
+                  loggerFactory,
+                  new MultiTenantOAuthOptionsResolver(siteResolver, multiTenantOptions)
+                  )
         {
             log = loggerFactory.CreateLogger<MultiTenantFacebookAuthenticationHandler>();
             this.siteResolver = siteResolver;

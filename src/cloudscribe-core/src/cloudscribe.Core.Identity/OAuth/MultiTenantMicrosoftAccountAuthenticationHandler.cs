@@ -31,7 +31,11 @@ namespace cloudscribe.Core.Identity.OAuth
             ISiteRepository siteRepository,
             MultiTenantOptions multiTenantOptions,
             ILoggerFactory loggerFactory)
-            : base(httpClient, loggerFactory)
+            : base(
+                  httpClient, 
+                  loggerFactory,
+                  new MultiTenantOAuthOptionsResolver(siteResolver, multiTenantOptions)
+                  )
         {
             log = loggerFactory.CreateLogger<MultiTenantMicrosoftAccountAuthenticationHandler>();
             this.siteResolver = siteResolver;
@@ -98,13 +102,15 @@ namespace cloudscribe.Core.Identity.OAuth
             //};
 
             var tenantFbOptions = new MultiTenantMicrosoftOptionsResolver(Options, siteResolver, siteRepo, multiTenantOptions);
+            string resolvedRedirectUri = tenantFbOptions.ResolveRedirectUrl(redirectUri);
+            log.LogInformation("resolvedRedirectUri was " + resolvedRedirectUri);
 
             var queryBuilder = new QueryBuilder()
             {
                 { "client_id", tenantFbOptions.ClientId },
                 { "scope", scope },
                 { "response_type", "code" },
-                { "redirect_uri", tenantFbOptions.ResolveRedirectUrl(redirectUri)  },
+                { "redirect_uri", resolvedRedirectUri  },
                 { "state", state },
             };
 

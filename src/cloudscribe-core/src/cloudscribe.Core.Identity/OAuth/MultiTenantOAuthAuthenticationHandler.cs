@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-27
-// Last Modified:		    2015-08-28
+// Last Modified:		    2015-09-04
 // 
 
 
@@ -42,13 +42,16 @@ namespace cloudscribe.Core.Identity.OAuth
 
         public MultiTenantOAuthAuthenticationHandler(
             HttpClient backchannel,
-            ILoggerFactory loggerFactory)
+            ILoggerFactory loggerFactory,
+            MultiTenantOAuthOptionsResolver tenantOptions)
         {
             Backchannel = backchannel;
             log = loggerFactory.CreateLogger<MultiTenantOAuthAuthenticationHandler<TOptions>>();
+            this.tenantOptions = tenantOptions;
         }
 
         private ILogger log;
+        private MultiTenantOAuthOptionsResolver tenantOptions;
 
         protected HttpClient Backchannel { get; private set; }
 
@@ -309,9 +312,12 @@ namespace cloudscribe.Core.Identity.OAuth
 
         protected void GenerateCorrelationId(AuthenticationProperties properties)
         {
-            
+            // I think here we need to use a different correlationkey per folder site
+            // becuase that is used for the cookie name
+            // unless using related sites mode we want fodler sites to use different cookies
 
             var correlationKey = Constants.CorrelationPrefix + Options.AuthenticationScheme;
+            correlationKey = tenantOptions.ResolveCorrelationKey(correlationKey);
 
             log.LogInformation("GenerateCorrelationId called, correlationKey was " + correlationKey);
 
@@ -334,6 +340,7 @@ namespace cloudscribe.Core.Identity.OAuth
         {
             
             var correlationKey = Constants.CorrelationPrefix + Options.AuthenticationScheme;
+            correlationKey = tenantOptions.ResolveCorrelationKey(correlationKey);
 
             log.LogInformation("ValidateCorrelationId called, correlationKey was " + correlationKey);
 

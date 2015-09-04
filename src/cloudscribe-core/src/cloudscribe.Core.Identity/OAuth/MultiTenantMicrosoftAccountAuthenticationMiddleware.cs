@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-29
-// Last Modified:		    2015-09-01
+// Last Modified:		    2015-09-04
 // based on https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.MicrosoftAccount/MicrosoftAccountAuthenticationMiddleware.cs
 
 
@@ -41,7 +41,16 @@ namespace cloudscribe.Core.Identity.OAuth
             //IOptions<SharedAuthenticationOptions> sharedOptions,
             IOptions<MicrosoftAccountAuthenticationOptions> options,
             ConfigureOptions<MicrosoftAccountAuthenticationOptions> configureOptions = null)
-            : base(next, dataProtectionProvider, loggerFactory, encoder, sharedOptions, options, configureOptions)
+            : base(
+                  next, 
+                  dataProtectionProvider, 
+                  loggerFactory, 
+                  encoder,
+                  siteResolver,
+                  multiTenantOptionsAccesor,
+                  sharedOptions, 
+                  options, 
+                  configureOptions)
         {
             if (Options.Scope.Count == 0)
             {

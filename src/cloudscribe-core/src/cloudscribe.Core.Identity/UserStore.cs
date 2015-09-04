@@ -873,11 +873,7 @@ namespace cloudscribe.Core.Identity
                 else
                 {
                     log.LogInformation("FindAsync siteUser not found for " + loginProvider + " with providerKey " + providerKey);
-                    // problem happens here because userLogin does not have a site id
-                    // if the user is  registered in mutliple sites with the same external account they get the same providerid
-                    //and the found row may not be for the correct site
-                    // we need to add siteGuid to mp_UserLogins
-                    // and pass that in when looking up a userlogin
+                   
                 }
             }
             else

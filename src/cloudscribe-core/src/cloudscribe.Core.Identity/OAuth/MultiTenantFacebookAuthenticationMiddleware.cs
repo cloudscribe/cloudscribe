@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-25
-// Last Modified:		    2015-09-01
+// Last Modified:		    2015-09-04
 // 
 
 using cloudscribe.Core.Models;
@@ -33,7 +33,15 @@ namespace cloudscribe.Core.Identity.OAuth
             IOptions<ExternalAuthenticationOptions> sharedOptions,
             IOptions<FacebookAuthenticationOptions> options,
             ConfigureOptions<FacebookAuthenticationOptions> configureOptions = null)
-            : base(next, dataProtectionProvider, loggerFactory, encoder, sharedOptions, options, configureOptions)
+            : base(next, 
+                  dataProtectionProvider, 
+                  loggerFactory, 
+                  encoder, 
+                  siteResolver,
+                  multiTenantOptionsAccesor,
+                  sharedOptions, 
+                  options, 
+                  configureOptions)
         {
             //if (string.IsNullOrEmpty(Options.AppId))
             //{

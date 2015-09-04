@@ -2,23 +2,22 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-27
-// Last Modified:		    2015-08-27
+// Last Modified:		    2015-09-04
 // 
 
 
-using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
-using System.Net.Http;
+using cloudscribe.Core.Models;
+using Microsoft.AspNet.Authentication;
+using Microsoft.AspNet.Authentication.DataHandler;
+using Microsoft.AspNet.Authentication.OAuth;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.DataProtection;
-using Microsoft.AspNet.Authentication.DataHandler;
-using Microsoft.Framework.Internal;
 using Microsoft.Framework.Logging;
 using Microsoft.Framework.OptionsModel;
 using Microsoft.Framework.WebEncoders;
-using Microsoft.AspNet.Authentication;
-using Microsoft.AspNet.Authentication.OAuth;
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Net.Http;
 
 namespace cloudscribe.Core.Identity.OAuth
 {
@@ -42,6 +41,8 @@ namespace cloudscribe.Core.Identity.OAuth
             IDataProtectionProvider dataProtectionProvider,
             ILoggerFactory loggerFactory,
             IUrlEncoder encoder,
+            ISiteResolver siteResolver,
+            IOptions<MultiTenantOptions> multiTenantOptionsAccesor,
             //IOptions<SharedAuthenticationOptions> sharedOptions,
             IOptions<ExternalAuthenticationOptions> sharedOptions,
             IOptions<TOptions> options,
@@ -92,9 +93,13 @@ namespace cloudscribe.Core.Identity.OAuth
             }
 
             this.loggerFactory = loggerFactory;
+            this.siteResolver = siteResolver;
+            multiTenantOptions = multiTenantOptionsAccesor.Options;
         }
 
         private ILoggerFactory loggerFactory;
+        private ISiteResolver siteResolver;
+        private MultiTenantOptions multiTenantOptions;
 
         protected HttpClient Backchannel { get; private set; }
 
@@ -104,7 +109,11 @@ namespace cloudscribe.Core.Identity.OAuth
         /// <returns>An <see cref="AuthenticationHandler"/> configured with the <see cref="OAuthAuthenticationOptions"/> supplied to the constructor.</returns>
         protected override AuthenticationHandler<TOptions> CreateHandler()
         {
-            return new MultiTenantOAuthAuthenticationHandler<TOptions>(Backchannel, loggerFactory);
+            return new MultiTenantOAuthAuthenticationHandler<TOptions>(
+                Backchannel, 
+                loggerFactory,
+                new MultiTenantOAuthOptionsResolver(siteResolver, multiTenantOptions)
+                );
         }
 
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Managed by caller")]
