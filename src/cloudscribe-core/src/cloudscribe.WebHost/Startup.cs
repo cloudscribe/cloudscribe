@@ -25,7 +25,7 @@ using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
 using Microsoft.Framework.Logging.Console;
 using Microsoft.Framework.OptionsModel;
-using Microsoft.Framework.Runtime;
+using Microsoft.Dnx.Runtime;
 //using cloudscribe.WebHost.Models;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Logging;
@@ -73,7 +73,7 @@ namespace cloudscribe.WebHost
             //env.MapPath
         }
 
-        public IConfiguration Configuration { get; set; }
+        public IConfigurationRoot Configuration { get; set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)

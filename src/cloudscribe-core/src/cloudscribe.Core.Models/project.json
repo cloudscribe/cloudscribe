@@ -13,8 +13,8 @@
   "releaseNotes": "",
 
   "dependencies": {
-    "Microsoft.AspNet.Identity": "3.0.0-beta6",
-    "Microsoft.Framework.Configuration": "1.0.0-beta6"
+    "Microsoft.AspNet.Identity": "3.0.0-beta7",
+    "Microsoft.Framework.Configuration": "1.0.0-beta7"
   },
 
   "frameworks": {
@@ -25,11 +25,11 @@
     },
     "dnxcore50": {
       "dependencies": {
-        "System.Collections": "4.0.10-beta-23109",
-        "System.Data.Common": "4.0.0-beta-23109",
-        "System.Linq": "4.0.0-beta-23109",
-        "System.Runtime": "4.0.20-beta-23109",
-        "Microsoft.CSharp": "4.0.0-beta-23109"
+        "System.Collections": "4.0.11-beta-23225",
+        "System.Data.Common": "4.0.1-beta-23225",
+        "System.Linq": "4.0.1-beta-23225",
+        "System.Runtime": "4.0.21-beta-23225",
+        "Microsoft.CSharp": "4.0.1-beta-23225"
       }
     }
   }

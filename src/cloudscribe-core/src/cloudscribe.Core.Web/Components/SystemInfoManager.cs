@@ -2,14 +2,14 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //	Author:                 Joe Audette
 //  Created:			    2011-08-21
-//	Last Modified:		    2015-08-21
+//	Last Modified:		    2015-09-04
 // 
 
 
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Logging;
 using Microsoft.AspNet.Hosting;
-using Microsoft.Framework.Runtime;
+using Microsoft.Dnx.Runtime;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

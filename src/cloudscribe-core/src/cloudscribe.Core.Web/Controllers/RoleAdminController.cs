@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-06
-// Last Modified:			2015-08-05
+// Last Modified:			2015-09-04
 // 
 
 using cloudscribe.Core.Identity;
@@ -11,6 +11,7 @@ using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.ViewModels.RoleAdmin;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
+using Microsoft.Framework.OptionsModel;
 using System;
 using System.Threading.Tasks;
 
@@ -24,17 +25,20 @@ namespace cloudscribe.Core.Web.Controllers
             ISiteResolver siteResolver,
             SiteUserManager<SiteUser> userManager,
             SiteRoleManager<SiteRole> roleManager,
-            ConfigHelper configuration
+            IOptions<UIOptions> uiOptionsAccessor,
+            IOptions<SetupOptions> setupOptionsAccessor
             )
         {
             Site = siteResolver.Resolve();
             UserManager = userManager;
             RoleManager = roleManager;
-            config = configuration;
+            uiOptions = uiOptionsAccessor.Options;
+            setupOptions = setupOptionsAccessor.Options;
         }
 
         private ISiteSettings Site;
-        private ConfigHelper config;
+        private UIOptions uiOptions;
+        private SetupOptions setupOptions;
         public SiteUserManager<SiteUser> UserManager { get; private set; }
         public SiteRoleManager<SiteRole> RoleManager { get; private set; }
 
@@ -48,7 +52,7 @@ namespace cloudscribe.Core.Web.Controllers
             RoleListViewModel model = new RoleListViewModel();
             model.Heading = "Role Management";
 
-            int itemsPerPage = config.DefaultPageSize_RoleList();
+            int itemsPerPage = uiOptions.DefaultPageSize_RoleList;
             if (pageSize > 0)
             {
                 itemsPerPage = pageSize;
@@ -159,7 +163,7 @@ namespace cloudscribe.Core.Web.Controllers
         public async Task<IActionResult> RoleDelete(int roleId, int returnPageNumber = 1)
         {
             ISiteRole role = await RoleManager.FetchRole(roleId);
-            if (role != null && role.IsDeletable(config.RolesThatCannotBeDeleted()))
+            if (role != null && role.IsDeletable(setupOptions.RolesThatCannotBeDeleted))
             {
                 bool result = await RoleManager.DeleteUserRolesByRole(roleId);
 
@@ -198,7 +202,7 @@ namespace cloudscribe.Core.Web.Controllers
                 return RedirectToAction("Index");
             }
 
-            int itemsPerPage = config.DefaultPageSize_RoleMemberList();
+            int itemsPerPage = uiOptions.DefaultPageSize_RoleMemberList;
             if (pageSize > 0)
             {
                 itemsPerPage = pageSize;
@@ -248,7 +252,7 @@ namespace cloudscribe.Core.Web.Controllers
                 return RedirectToAction("Index");
             }
 
-            int itemsPerPage = config.DefaultPageSize_RoleMemberList();
+            int itemsPerPage = uiOptions.DefaultPageSize_RoleMemberList;
             if (pageSize > 0)
             {
                 itemsPerPage = pageSize;

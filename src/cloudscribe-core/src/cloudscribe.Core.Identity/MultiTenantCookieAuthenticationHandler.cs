@@ -10,7 +10,7 @@
 using Microsoft.AspNet.Authentication;
 using Microsoft.AspNet.Authentication.Cookies;
 using Microsoft.AspNet.DataProtection;
-using Microsoft.AspNet.Authentication.DataHandler;
+//using Microsoft.AspNet.Authentication.DataHandler;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Http.Authentication;
 using Microsoft.AspNet.Http.Features.Authentication;

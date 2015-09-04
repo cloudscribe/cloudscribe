@@ -18,7 +18,7 @@ using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Http.Authentication;
 using Microsoft.AspNet.Http.Extensions;
 using Microsoft.AspNet.Http.Features.Authentication;
-using Microsoft.AspNet.Authentication.DataHandler.Encoder;
+//using Microsoft.AspNet.Authentication.DataHandler.Encoder;
 using Microsoft.AspNet.WebUtilities;
 using Microsoft.Framework.Internal;
 using Microsoft.Framework.Logging;

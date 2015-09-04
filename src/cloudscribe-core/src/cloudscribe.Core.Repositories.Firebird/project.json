@@ -16,8 +16,8 @@
         "cloudscribe.Core.Models": "1.0.0-*",
         "cloudscribe.DbHelpers.Firebird": "1.0.0-*",
         "FirebirdSql.Data.FirebirdClient": "4.6.2",
-        "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta6",
-        "Microsoft.Framework.Configuration.Abstractions": "1.0.0-beta6"
+        "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta7",
+        "Microsoft.Framework.Configuration.Abstractions": "1.0.0-beta7"
     },
 
     "frameworks": {

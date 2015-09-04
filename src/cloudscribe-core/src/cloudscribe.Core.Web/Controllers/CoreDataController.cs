@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-11-15
-// Last Modified:			2015-08-05
+// Last Modified:			2015-09-04
 // 
 
 using cloudscribe.Core.Web.Components;
@@ -13,6 +13,7 @@ using cloudscribe.Web.Navigation;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Rendering;
+using Microsoft.Framework.OptionsModel;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -26,17 +27,18 @@ namespace cloudscribe.Core.Web.Controllers
         public CoreDataController(
             ISiteResolver siteResolver,
             GeoDataManager geoDataManager,
-            ConfigHelper configuration
+            IOptions<UIOptions> uiOptionsAccessor
             )
         {
             Site = siteResolver.Resolve();
-            config = configuration;
             dataManager = geoDataManager;
+            uiOptions = uiOptionsAccessor.Options;
         }
 
         private ISiteSettings Site;
-        private ConfigHelper config;
+        //private ConfigHelper config;
         private GeoDataManager dataManager;
+        private UIOptions uiOptions;
 
         //disable warning about not really being async
         // we know it is not, it is not needed to hit the db in these
@@ -63,7 +65,7 @@ namespace cloudscribe.Core.Web.Controllers
             int pageSize = -1)
         {
             ViewBag.Title = "Country List Administration";
-            int itemsPerPage = config.DefaultPageSize_CountryList();
+            int itemsPerPage = uiOptions.DefaultPageSize_CountryList;
             if (pageSize > 0)
             {
                 itemsPerPage = pageSize;
@@ -196,7 +198,7 @@ namespace cloudscribe.Core.Web.Controllers
             }
 
             ViewBag.Title = "State List Administration";
-            int itemsPerPage = config.DefaultPageSize_StateList();
+            int itemsPerPage = uiOptions.DefaultPageSize_StateList;
             if (pageSize > 0)
             {
                 itemsPerPage = pageSize;

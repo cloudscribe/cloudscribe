@@ -29,8 +29,7 @@ namespace cloudscribe.Core.Identity.OAuth
             ISiteRepository siteRepository,
             IOptions<MultiTenantOptions> multiTenantOptionsAccesor,
             IUrlEncoder encoder,
-            //IOptions<SharedAuthenticationOptions> sharedOptions,
-            IOptions<ExternalAuthenticationOptions> sharedOptions,
+            IOptions<SharedAuthenticationOptions> sharedOptions,
             IOptions<FacebookAuthenticationOptions> options,
             ConfigureOptions<FacebookAuthenticationOptions> configureOptions = null)
             : base(next, 

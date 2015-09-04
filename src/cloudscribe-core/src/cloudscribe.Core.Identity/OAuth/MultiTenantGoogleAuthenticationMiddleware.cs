@@ -44,8 +44,7 @@ namespace cloudscribe.Core.Identity.OAuth
             ISiteRepository siteRepository,
             IOptions<MultiTenantOptions> multiTenantOptionsAccesor,
             IUrlEncoder encoder,
-            IOptions<ExternalAuthenticationOptions> sharedOptions,
-            //IOptions<SharedAuthenticationOptions> sharedOptions,
+            IOptions<SharedAuthenticationOptions> sharedOptions,
             IOptions<GoogleAuthenticationOptions> options,
             ConfigureOptions<GoogleAuthenticationOptions> configureOptions = null)
             : base(

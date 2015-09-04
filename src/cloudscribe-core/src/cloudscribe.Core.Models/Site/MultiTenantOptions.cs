@@ -2,13 +2,9 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-08-01
-// Last Modified:			2015-08-07
+// Last Modified:			2015-09-04
 // 
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Models
 {
@@ -37,5 +33,7 @@ namespace cloudscribe.Core.Models
         /// the siteId of the site whose users and roles are shared when UseRelatedSitesMode is true
         /// </summary>
         public int RelatedSiteId { get; set; } = 1;
+
+        public string DefaultNewUserRoles { get; set; } = "Authenticated Users";
     }
 }

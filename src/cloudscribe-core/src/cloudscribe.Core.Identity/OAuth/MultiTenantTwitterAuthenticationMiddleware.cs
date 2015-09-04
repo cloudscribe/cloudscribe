@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-29
-// Last Modified:		    2015-08-29
+// Last Modified:		    2015-09-04
 // based on https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.Twitter/TwitterAuthenticationMiddleware.cs
 
 using System;
@@ -12,15 +12,15 @@ using System.Net.Http;
 using System.Text;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.DataProtection;
-using Microsoft.AspNet.Authentication.DataHandler;
-using Microsoft.AspNet.Authentication.DataHandler.Encoder;
+//using Microsoft.AspNet.Authentication.DataHandler;
+//using Microsoft.AspNet.Authentication.DataHandler.Encoder;
 using Microsoft.Framework.Internal;
 using Microsoft.Framework.Logging;
 using Microsoft.Framework.OptionsModel;
 using Microsoft.Framework.WebEncoders;
 using Microsoft.AspNet.Authentication;
 using Microsoft.AspNet.Authentication.Twitter;
-using Microsoft.AspNet.Authentication.Twitter.Messages;
+//using Microsoft.AspNet.Authentication.Twitter.Messages;
 
 namespace cloudscribe.Core.Identity.OAuth
 {
@@ -48,8 +48,7 @@ namespace cloudscribe.Core.Identity.OAuth
                 IDataProtectionProvider dataProtectionProvider,
                 ILoggerFactory loggerFactory,
                 IUrlEncoder encoder,
-                IOptions<ExternalAuthenticationOptions> sharedOptions,
-                //IOptions<SharedAuthenticationOptions> sharedOptions,
+                IOptions<SharedAuthenticationOptions> sharedOptions,
                 IOptions<TwitterAuthenticationOptions> options,
                 ConfigureOptions<TwitterAuthenticationOptions> configureOptions = null)
                 : base(next, options, loggerFactory, encoder, configureOptions)

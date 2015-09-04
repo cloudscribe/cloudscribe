@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-22
-// Last Modified:			2015-08-05
+// Last Modified:			2015-09-04
 // 
 
 using cloudscribe.Core.Models;
@@ -20,15 +20,18 @@ namespace cloudscribe.Core.Web.Components
             ISiteResolver siteResolver, 
             ISiteRepository siteRepository,
             IUserRepository userRepository,
-            IOptions<MultiTenantOptions> multiTenantOptions)
+            IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
+            IOptions<SetupOptions> setupOptionsAccessor)
         {
             resolver = siteResolver;
             siteRepo = siteRepository;
             userRepo = userRepository;
-            this.multiTenantOptions = multiTenantOptions.Options;
+            multiTenantOptions = multiTenantOptionsAccessor.Options;
+            setupOptions = setupOptionsAccessor.Options;
         }
 
         private MultiTenantOptions multiTenantOptions;
+        private SetupOptions setupOptions;
         private ISiteResolver resolver;
         private ISiteRepository siteRepo;
         private IUserRepository userRepo;
@@ -110,7 +113,6 @@ namespace cloudscribe.Core.Web.Components
         }
 
         public async Task<SiteSettings> CreateNewSite(
-            ConfigHelper config,
             bool isServerAdminSite)
         {
             //string templateFolderPath = GetMessageTemplateFolder();
@@ -120,7 +122,7 @@ namespace cloudscribe.Core.Web.Components
             newSite.SiteName = "Sample Site";
             newSite.IsServerAdminSite = isServerAdminSite;
 
-            bool result = await CreateNewSite(config, newSite);
+            bool result = await CreateNewSite(newSite);
 
             return newSite;
 
@@ -128,7 +130,6 @@ namespace cloudscribe.Core.Web.Components
         }
 
         public async Task<bool> CreateNewSite(
-            ConfigHelper config,
             ISiteSettings newSite)
         {
             if (siteRepo == null) { throw new ArgumentNullException("you must pass in an instance of ISiteRepository"); }
@@ -141,7 +142,7 @@ namespace cloudscribe.Core.Web.Components
             //SiteSettings newSite = new SiteSettings();
 
 
-            newSite.Skin = config.DefaultInitialSkin();
+            newSite.Skin = setupOptions.DefaultInitialSkin;
 
             //newSite.Logo = GetMessageTemplate(templateFolder, "InitialSiteLogoContent.config");
 
@@ -162,7 +163,7 @@ namespace cloudscribe.Core.Web.Components
             newSite.UseEmailForLogin = true;
             newSite.UseLdapAuth = false;
             newSite.UseSecureRegistration = false;
-            newSite.UseSslOnAllPages = config.SslIsRequiredByWebServer();
+            newSite.UseSslOnAllPages = setupOptions.SslIsRequiredByWebServer;
             //newSite.CreateInitialDataOnCreate = false;
 
             newSite.AllowPasswordReset = true;
@@ -188,8 +189,7 @@ namespace cloudscribe.Core.Web.Components
         }
 
         public async Task<bool> CreateRequiredRolesAndAdminUser(
-            SiteSettings site,
-            ConfigHelper config)
+            SiteSettings site)
         {
 
             SiteRole adminRole = new SiteRole();

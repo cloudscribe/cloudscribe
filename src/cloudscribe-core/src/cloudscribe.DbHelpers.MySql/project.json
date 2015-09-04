@@ -14,7 +14,7 @@
 
   "dependencies": {
     "cloudscribe.Core.Models": "1.0.0-*",
-    "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta6",
+    "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta7",
     "MySql.Data": "6.9.6"
   },
 

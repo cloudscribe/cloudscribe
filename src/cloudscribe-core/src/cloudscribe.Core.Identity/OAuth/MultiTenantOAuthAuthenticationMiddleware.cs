@@ -8,7 +8,7 @@
 
 using cloudscribe.Core.Models;
 using Microsoft.AspNet.Authentication;
-using Microsoft.AspNet.Authentication.DataHandler;
+//using Microsoft.AspNet.Authentication.DataHandler;
 using Microsoft.AspNet.Authentication.OAuth;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.DataProtection;
@@ -43,8 +43,7 @@ namespace cloudscribe.Core.Identity.OAuth
             IUrlEncoder encoder,
             ISiteResolver siteResolver,
             IOptions<MultiTenantOptions> multiTenantOptionsAccesor,
-            //IOptions<SharedAuthenticationOptions> sharedOptions,
-            IOptions<ExternalAuthenticationOptions> sharedOptions,
+            IOptions<SharedAuthenticationOptions> sharedOptions,
             IOptions<TOptions> options,
             ConfigureOptions<TOptions> configureOptions = null)
             : base(next, options, loggerFactory, encoder, configureOptions)

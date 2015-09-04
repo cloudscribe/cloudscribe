@@ -13,12 +13,12 @@
   "releaseNotes": "",
 
   "dependencies": {
-    "Microsoft.AspNet.Mvc": "6.0.0-beta6",
-    "Microsoft.AspNet.Mvc.TagHelpers": "6.0.0-beta6",
-    "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta6",
+    "Microsoft.AspNet.Mvc": "6.0.0-beta7",
+    "Microsoft.AspNet.Mvc.TagHelpers": "6.0.0-beta7",
+    "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta7",
     "Newtonsoft.Json": "7.0.1",
-    "Microsoft.Framework.Configuration.Abstractions": "1.0.0-beta6",
-    "Microsoft.Framework.Caching.Abstractions": "1.0.0-beta6"
+    "Microsoft.Framework.Configuration.Abstractions": "1.0.0-beta7",
+    "Microsoft.Framework.Caching.Abstractions": "1.0.0-beta7"
   },
 
   "frameworks": {
@@ -29,11 +29,11 @@
     },
     "dnxcore50": {
       "dependencies": {
-        "System.Collections": "4.0.10-beta-23109",
-        "Microsoft.CSharp": "4.0.0-beta-23109",
-        "System.Linq": "4.0.0-beta-23109",
-        "System.Runtime": "4.0.20-beta-23109",
-        "System.Xml.XDocument": "4.0.10-beta-23109"
+        "System.Collections": "4.0.11-beta-23225",
+        "Microsoft.CSharp": "4.0.1-beta-23225",
+        "System.Linq": "4.0.1-beta-23225",
+        "System.Runtime": "4.0.21-beta-23225",
+        "System.Xml.XDocument": "4.0.11-beta-23225"
       }
     }
   }

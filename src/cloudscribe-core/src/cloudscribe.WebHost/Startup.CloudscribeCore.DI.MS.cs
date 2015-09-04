@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-06-20
-// Last Modified:			2015-08-31
+// Last Modified:			2015-09-04
 // 
 
 using System;
@@ -18,6 +18,7 @@ using Microsoft.AspNet.Authentication.MicrosoftAccount;
 using Microsoft.AspNet.Authentication.Twitter;
 using Microsoft.AspNet.Session;
 using Microsoft.Framework.DependencyInjection;
+using Microsoft.Framework.DependencyInjection.Extensions;
 using Microsoft.Framework.Caching;
 using Microsoft.Framework.Caching.Distributed;
 using Microsoft.Framework.Configuration;
@@ -48,7 +49,7 @@ namespace cloudscribe.WebHost
         /// <param name="services"></param>
         /// <param name="configuration"></param>
         /// <returns></returns>
-        public static IServiceCollection ConfigureCloudscribeCore(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection ConfigureCloudscribeCore(this IServiceCollection services, IConfigurationRoot configuration)
         {
 
             services.AddCaching();
@@ -60,8 +61,10 @@ namespace cloudscribe.WebHost
 
 
             services.AddInstance<IConfiguration>(configuration);
-            services.TryAdd(ServiceDescriptor.Scoped<ConfigHelper, ConfigHelper>());
-            services.Configure<MultiTenantOptions>(configuration.GetConfigurationSection("MultiTenantOptions"));
+            //services.TryAddScoped<ConfigHelper, ConfigHelper>();
+            services.Configure<MultiTenantOptions>(configuration.GetSection("MultiTenantOptions"));
+            services.Configure<SetupOptions>(configuration.GetSection("SetupOptions"));
+            services.Configure<UIOptions>(configuration.GetSection("UIOptions"));
 
             
 
@@ -73,58 +76,58 @@ namespace cloudscribe.WebHost
             // so you would have to remove the dnxcore50 from the project.json in this project
             // add a nuget for one of the other cloudscribe.Core.Repositories.dbplatform 
             // and cloudscribe.DbHelpers.dbplatform packages
-            services.Configure<cloudscribe.DbHelpers.MSSQL.MSSQLConnectionOptions>(configuration.GetConfigurationSection("Data:MSSQLConnectionOptions"));
-            services.TryAdd(ServiceDescriptor.Scoped<ISiteRepository, cloudscribe.Core.Repositories.MSSQL.SiteRepository>());
-            services.TryAdd(ServiceDescriptor.Scoped<IUserRepository, cloudscribe.Core.Repositories.MSSQL.UserRepository>());
-            services.TryAdd(ServiceDescriptor.Scoped<IGeoRepository, cloudscribe.Core.Repositories.MSSQL.GeoRepository>());
-            services.TryAdd(ServiceDescriptor.Scoped<IDb, cloudscribe.DbHelpers.MSSQL.Db>());
-            services.TryAdd(ServiceDescriptor.Scoped<ILogRepository, cloudscribe.Core.Repositories.MSSQL.LogRepository>());
+            services.Configure<cloudscribe.DbHelpers.MSSQL.MSSQLConnectionOptions>(configuration.GetSection("Data:MSSQLConnectionOptions"));
+            services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.MSSQL.SiteRepository>();
+            services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.MSSQL.UserRepository>();
+            services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.MSSQL.GeoRepository>();
+            services.TryAddScoped<IDb, cloudscribe.DbHelpers.MSSQL.Db>();
+            services.TryAddScoped<ILogRepository, cloudscribe.Core.Repositories.MSSQL.LogRepository>();
 
-            //services.Configure<cloudscribe.DbHelpers.MySql.MySqlConnectionOptions>(configuration.GetConfigurationSection("Data:MySqlConnectionOptions"));
-            //services.TryAdd(ServiceDescriptor.Scoped<ISiteRepository, cloudscribe.Core.Repositories.MySql.SiteRepository>());
-            //services.TryAdd(ServiceDescriptor.Scoped<IUserRepository, cloudscribe.Core.Repositories.MySql.UserRepository>());
-            //services.TryAdd(ServiceDescriptor.Scoped<IGeoRepository, cloudscribe.Core.Repositories.MySql.GeoRepository>());
-            //services.TryAdd(ServiceDescriptor.Scoped<IDb, cloudscribe.DbHelpers.MySql.Db>());
+            //services.Configure<cloudscribe.DbHelpers.MySql.MySqlConnectionOptions>(configuration.GetSection("Data:MySqlConnectionOptions"));
+            //services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.MySql.SiteRepository>();
+            //services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.MySql.UserRepository>();
+            //services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.MySql.GeoRepository>();
+            //services.TryAddScoped<IDb, cloudscribe.DbHelpers.MySql.Db>();
 
-            //services.Configure<cloudscribe.DbHelpers.pgsql.PostgreSqlConnectionOptions>(configuration.GetConfigurationSection("Data:PostgreSqlConnectionOptions"));
-            //services.TryAdd(ServiceDescriptor.Scoped<ISiteRepository, cloudscribe.Core.Repositories.pgsql.SiteRepository>());
-            //services.TryAdd(ServiceDescriptor.Scoped<IUserRepository, cloudscribe.Core.Repositories.pgsql.UserRepository>());
-            //services.TryAdd(ServiceDescriptor.Scoped<IGeoRepository, cloudscribe.Core.Repositories.pgsql.GeoRepository>());
-            //services.TryAdd(ServiceDescriptor.Scoped<IDb, cloudscribe.DbHelpers.pgsql.Db>());
+            //services.Configure<cloudscribe.DbHelpers.pgsql.PostgreSqlConnectionOptions>(configuration.GetSection("Data:PostgreSqlConnectionOptions"));
+            //services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.pgsql.SiteRepository>();
+            //services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.pgsql.UserRepository>();
+            //services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.pgsql.GeoRepository>();
+            //services.TryAddScoped<IDb, cloudscribe.DbHelpers.pgsql.Db>();
 
-            //services.Configure<cloudscribe.DbHelpers.Firebird.FirebirdConnectionOptions>(configuration.GetConfigurationSection("Data:FirebirdConnectionOptions"));
-            //services.TryAdd(ServiceDescriptor.Scoped<ISiteRepository, cloudscribe.Core.Repositories.Firebird.SiteRepository>());
-            //services.TryAdd(ServiceDescriptor.Scoped<IUserRepository, cloudscribe.Core.Repositories.Firebird.UserRepository>());
-            //services.TryAdd(ServiceDescriptor.Scoped<IGeoRepository, cloudscribe.Core.Repositories.Firebird.GeoRepository>());
-            //services.TryAdd(ServiceDescriptor.Scoped<IDb, cloudscribe.DbHelpers.Firebird.Db>());
+            //services.Configure<cloudscribe.DbHelpers.Firebird.FirebirdConnectionOptions>(configuration.GetSection("Data:FirebirdConnectionOptions"));
+            //services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.Firebird.SiteRepository>();
+            //services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.Firebird.UserRepository>();
+            //services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.Firebird.GeoRepository>();
+            //services.TryAddScoped<IDb, cloudscribe.DbHelpers.Firebird.Db>();
 
-            //services.Configure<cloudscribe.DbHelpers.SQLite.SqliteConnectionOptions>(configuration.GetConfigurationSection("Data:SqliteConnectionOptions"));
-            //services.TryAdd(ServiceDescriptor.Scoped<ISiteRepository, cloudscribe.Core.Repositories.SQLite.SiteRepository>());
-            //services.TryAdd(ServiceDescriptor.Scoped<IUserRepository, cloudscribe.Core.Repositories.SQLite.UserRepository>());
-            //services.TryAdd(ServiceDescriptor.Scoped<IGeoRepository, cloudscribe.Core.Repositories.SQLite.GeoRepository>());
-            //services.TryAdd(ServiceDescriptor.Scoped<IDb, cloudscribe.DbHelpers.SQLite.Db>());
+            //services.Configure<cloudscribe.DbHelpers.SQLite.SqliteConnectionOptions>(configuration.GetSection("Data:SqliteConnectionOptions"));
+            //services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.SQLite.SiteRepository>();
+            //services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.SQLite.UserRepository>();
+            //services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.SQLite.GeoRepository>();
+            //services.TryAddScoped<IDb, cloudscribe.DbHelpers.SQLite.Db>();
 
-            //services.Configure<cloudscribe.DbHelpers.SqlCe.SqliteConnectionOptions>(configuration.GetConfigurationSection("Data:SqlCeConnectionOptions"));
-            //services.TryAdd(ServiceDescriptor.Scoped<ISiteRepository, cloudscribe.Core.Repositories.SqlCe.SiteRepository>());
-            //services.TryAdd(ServiceDescriptor.Scoped<IUserRepository, cloudscribe.Core.Repositories.SqlCe.UserRepository>());
-            //services.TryAdd(ServiceDescriptor.Scoped<IGeoRepository, cloudscribe.Core.Repositories.SqlCe.GeoRepository>());
-            //services.TryAdd(ServiceDescriptor.Scoped<IDb, cloudscribe.DbHelpers.SqlCe.Db>());
+            //services.Configure<cloudscribe.DbHelpers.SqlCe.SqliteConnectionOptions>(configuration.GetSection("Data:SqlCeConnectionOptions"));
+            //services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.SqlCe.SiteRepository>();
+            //services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.SqlCe.UserRepository>();
+            //services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.SqlCe.GeoRepository>();
+            //services.TryAddScoped<IDb, cloudscribe.DbHelpers.SqlCe.Db>();
 
 
             //**************************************************************************************
 
             // RequestSiteResolver resolves ISiteSettings based on the request to support multi tenancy based on either host name or first folder depending on configuration
-            services.TryAdd(ServiceDescriptor.Scoped<ISiteResolver, RequestSiteResolver>());
-            services.TryAdd(ServiceDescriptor.Scoped<ITimeZoneResolver, RequestTimeZoneResolver>());
-            services.TryAdd(ServiceDescriptor.Scoped<SiteManager, SiteManager>());
-            services.TryAdd(ServiceDescriptor.Scoped<SetupManager, SetupManager>());
-            services.TryAdd(ServiceDescriptor.Scoped<GeoDataManager, GeoDataManager>());
-            services.TryAdd(ServiceDescriptor.Scoped<SystemInfoManager, SystemInfoManager>());
+            services.TryAddScoped<ISiteResolver, RequestSiteResolver>();
+            services.TryAddScoped<ITimeZoneResolver, RequestTimeZoneResolver>();
+            services.TryAddScoped<SiteManager, SiteManager>();
+            services.TryAddScoped<SetupManager, SetupManager>();
+            services.TryAddScoped<GeoDataManager, GeoDataManager>();
+            services.TryAddScoped<SystemInfoManager, SystemInfoManager>();
 
             
 
             // VersionProviders are used by the Setup controller to determine what install and upgrade scripts to run
-            services.TryAdd(ServiceDescriptor.Scoped<IVersionProviderFactory, ConfigVersionProviderFactory>());
+            services.TryAddScoped<IVersionProviderFactory, ConfigVersionProviderFactory>();
 
             services.AddCloudscribeIdentity<SiteUser, SiteRole>();
             
@@ -138,20 +141,21 @@ namespace cloudscribe.WebHost
             // it is arguable which is easier for humans to read and maintain, myself I think for something like a navigation tree
             // that could get large xml is easier to work with and not make mistakes. in json one missing or extra comma can break it
             // granted xml can be broken by typos too but the end tags make it easier to keep track of where you are imho (JA)
-            //services.TryAdd(ServiceDescriptor.Scoped<INavigationTreeBuilder, JsonNavigationTreeBuilder>());
-            services.TryAdd(ServiceDescriptor.Scoped<INavigationTreeBuilder, XmlNavigationTreeBuilder>());
-            services.TryAdd(ServiceDescriptor.Scoped<INodeUrlPrefixProvider, FolderTenantNodeUrlPrefixProvider>()); 
-            services.TryAdd(ServiceDescriptor.Scoped<INavigationNodePermissionResolver, NavigationNodePermissionResolver>());
-            services.TryAdd(ServiceDescriptor.Transient<IBuildPaginationLinks, PaginationLinkBuilder>());
+            //services.TryAddScoped<INavigationTreeBuilder, JsonNavigationTreeBuilder>();
+            services.TryAddScoped<INavigationTreeBuilder, XmlNavigationTreeBuilder>();
+            services.TryAddScoped<INodeUrlPrefixProvider, FolderTenantNodeUrlPrefixProvider>(); 
+            services.TryAddScoped<INavigationNodePermissionResolver, NavigationNodePermissionResolver>();
+            services.TryAddTransient<IBuildPaginationLinks, PaginationLinkBuilder>();
 
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
 
             
             // Add MVC services to the services container.
-            services.AddMvc().ConfigureMvcViews(options =>
+            services.AddMvc()
+                .AddViewOptions(options =>
             {
-                options.ViewEngines.Clear();
+                //options.ViewEngines.Clear();
                 // cloudscribe.Core.Web.CoreViewEngine adds /Views/Sys as the last place to search for views
                 // cloudscribe views are all under Views/Sys
                 // to modify a view just copy it to a higher priority location
@@ -159,7 +163,8 @@ namespace cloudscribe.WebHost
                 // and you can modify it however you like
                 // upgrading to newer versions of cloudscribe could modify or add views below /Views/Sys
                 // so you may need to compare your custom views to the originals again after upgrades
-                options.ViewEngines.Add(typeof(CoreViewEngine));
+                //options.ViewEngines.Add(typeof(CoreViewEngine));
+                //options.ViewEngines.Add(new CoreViewEngine());
             });
 
 
@@ -212,36 +217,36 @@ namespace cloudscribe.WebHost
             where TRole : class
         {
             //****** cloudscribe implementation of AspNet.Identity****************************************************
-            services.TryAdd(ServiceDescriptor.Scoped<IUserStore<SiteUser>, UserStore<SiteUser>>());
-            services.TryAdd(ServiceDescriptor.Scoped<IUserPasswordStore<SiteUser>, UserStore<SiteUser>>());
-            services.TryAdd(ServiceDescriptor.Scoped<IUserEmailStore<SiteUser>, UserStore<SiteUser>>());
-            services.TryAdd(ServiceDescriptor.Scoped<IUserLoginStore<SiteUser>, UserStore<SiteUser>>());
-            services.TryAdd(ServiceDescriptor.Scoped<IUserRoleStore<SiteUser>, UserStore<SiteUser>>());
-            services.TryAdd(ServiceDescriptor.Scoped<IUserClaimStore<SiteUser>, UserStore<SiteUser>>());
-            services.TryAdd(ServiceDescriptor.Scoped<IUserPhoneNumberStore<SiteUser>, UserStore<SiteUser>>());
-            services.TryAdd(ServiceDescriptor.Scoped<IUserLockoutStore<SiteUser>, UserStore<SiteUser>>());
-            services.TryAdd(ServiceDescriptor.Scoped<IUserTwoFactorStore<SiteUser>, UserStore<SiteUser>>());
-            services.TryAdd(ServiceDescriptor.Scoped<IRoleStore<SiteRole>, RoleStore<SiteRole>>());
-            services.TryAdd(ServiceDescriptor.Scoped<IUserClaimsPrincipalFactory<SiteUser>, SiteUserClaimsPrincipalFactory<SiteUser, SiteRole>>());
+            services.TryAddScoped<IUserStore<SiteUser>, UserStore<SiteUser>>();
+            services.TryAddScoped<IUserPasswordStore<SiteUser>, UserStore<SiteUser>>();
+            services.TryAddScoped<IUserEmailStore<SiteUser>, UserStore<SiteUser>>();
+            services.TryAddScoped<IUserLoginStore<SiteUser>, UserStore<SiteUser>>();
+            services.TryAddScoped<IUserRoleStore<SiteUser>, UserStore<SiteUser>>();
+            services.TryAddScoped<IUserClaimStore<SiteUser>, UserStore<SiteUser>>();
+            services.TryAddScoped<IUserPhoneNumberStore<SiteUser>, UserStore<SiteUser>>();
+            services.TryAddScoped<IUserLockoutStore<SiteUser>, UserStore<SiteUser>>();
+            services.TryAddScoped<IUserTwoFactorStore<SiteUser>, UserStore<SiteUser>>();
+            services.TryAddScoped<IRoleStore<SiteRole>, RoleStore<SiteRole>>();
+            services.TryAddScoped<IUserClaimsPrincipalFactory<SiteUser>, SiteUserClaimsPrincipalFactory<SiteUser, SiteRole>>();
             // the DNX451 desktop version of SitePasswordHasher can validate against existing hashed or encrypted passwords from mojoportal users
             // so to use existing users from mojoportal you would have to run on the desktop version at least until all users update their passwords
             // then you could migrate to dnxcore50
             // it also alllows us to create a default admin@admin.com user with administrator role with a cleartext password which would be updated 
             // to the default identity hash as soon as you change the password from its default "admin"
-            services.TryAdd(ServiceDescriptor.Transient<IPasswordHasher<SiteUser>, SitePasswordHasher<SiteUser>>());
+            services.TryAddScoped<IPasswordHasher<SiteUser>, SitePasswordHasher<SiteUser>>();
 
-            services.TryAdd(ServiceDescriptor.Scoped<SiteUserManager<SiteUser>, SiteUserManager<SiteUser>>());
-            services.TryAdd(ServiceDescriptor.Scoped<SiteRoleManager<SiteRole>, SiteRoleManager<SiteRole>>());
-            services.TryAdd(ServiceDescriptor.Scoped<SiteSignInManager<SiteUser>, SiteSignInManager<SiteUser>>());
-            //services.TryAdd(ServiceDescriptor.Scoped<SignInManager<SiteUser>, SignInManager<SiteUser>>());
+            services.TryAddScoped<SiteUserManager<SiteUser>, SiteUserManager<SiteUser>>();
+            services.TryAddScoped<SiteRoleManager<SiteRole>, SiteRoleManager<SiteRole>>();
+            services.TryAddScoped<SiteSignInManager<SiteUser>, SiteSignInManager<SiteUser>>();
+            //services.TryAddScoped<SignInManager<SiteUser>, SignInManager<SiteUser>>();
 
-            //services.TryAdd(ServiceDescriptor.Scoped<ICookieAuthenticationSchemeSet, DefaultCookieAuthenticationSchemeSet>());
-            //services.TryAdd(ServiceDescriptor.Scoped<ICookieAuthenticationSchemeSet, FolderTenantCookieAuthSchemeResolver>());
+            //services.TryAddScoped<ICookieAuthenticationSchemeSet, DefaultCookieAuthenticationSchemeSet>();
+            //services.TryAddScoped<ICookieAuthenticationSchemeSet, FolderTenantCookieAuthSchemeResolver>();
 
-            services.TryAdd(ServiceDescriptor.Scoped<MultiTenantCookieOptionsResolver, MultiTenantCookieOptionsResolver>());
-            services.TryAdd(ServiceDescriptor.Scoped<MultiTenantCookieOptionsResolverFactory, MultiTenantCookieOptionsResolverFactory>());
-            services.TryAdd(ServiceDescriptor.Scoped<MultiTenantAuthCookieValidator, MultiTenantAuthCookieValidator>());
-            services.TryAdd(ServiceDescriptor.Scoped<MultiTenantCookieAuthenticationNotifications, MultiTenantCookieAuthenticationNotifications>());
+            services.TryAddScoped<MultiTenantCookieOptionsResolver, MultiTenantCookieOptionsResolver>();
+            services.TryAddScoped<MultiTenantCookieOptionsResolverFactory, MultiTenantCookieOptionsResolverFactory>();
+            services.TryAddScoped<MultiTenantAuthCookieValidator, MultiTenantAuthCookieValidator>();
+            services.TryAddScoped<MultiTenantCookieAuthenticationNotifications, MultiTenantCookieAuthenticationNotifications>();
             //********************************************************************************************************
 
             // most of the below code was borrowed from here:
@@ -253,18 +258,19 @@ namespace cloudscribe.WebHost
             services.AddAuthentication();
 
             // Identity services
-            services.TryAdd(ServiceDescriptor.Transient<IUserValidator<TUser>, UserValidator<TUser>>());
-            services.TryAdd(ServiceDescriptor.Transient<IPasswordValidator<TUser>, PasswordValidator<TUser>>());
-            services.TryAdd(ServiceDescriptor.Transient<IPasswordHasher<TUser>, PasswordHasher<TUser>>());
-            services.TryAdd(ServiceDescriptor.Transient<ILookupNormalizer, UpperInvariantLookupNormalizer>());
-            services.TryAdd(ServiceDescriptor.Transient<IRoleValidator<TRole>, RoleValidator<TRole>>());
-            services.TryAdd(ServiceDescriptor.Transient<IdentityErrorDescriber, IdentityErrorDescriber>());
-            services.TryAdd(ServiceDescriptor.Scoped<ISecurityStampValidator, SecurityStampValidator<TUser>>());
-            services.TryAdd(ServiceDescriptor.Scoped<IUserClaimsPrincipalFactory<TUser>, UserClaimsPrincipalFactory<TUser, TRole>>());
-            services.TryAdd(ServiceDescriptor.Scoped<UserManager<TUser>, UserManager<TUser>>());
-            services.TryAdd(ServiceDescriptor.Scoped<SignInManager<TUser>, SignInManager<TUser>>());
-            services.TryAdd(ServiceDescriptor.Scoped<RoleManager<TRole>, RoleManager<TRole>>());
-
+            //services.TryAddSingleton<IdentityMarkerService>();
+            services.TryAddScoped<IUserValidator<TUser>, UserValidator<TUser>>();
+            services.TryAddScoped<IPasswordValidator<TUser>, PasswordValidator<TUser>>();
+            services.TryAddScoped<IPasswordHasher<TUser>, PasswordHasher<TUser>>();
+            services.TryAddScoped<ILookupNormalizer, UpperInvariantLookupNormalizer>();
+            services.TryAddScoped<IRoleValidator<TRole>, RoleValidator<TRole>>();
+            services.TryAddScoped<IdentityErrorDescriber>();
+            services.TryAddScoped<ISecurityStampValidator, SecurityStampValidator<TUser>>();
+            services.TryAddScoped<IUserClaimsPrincipalFactory<TUser>, UserClaimsPrincipalFactory<TUser, TRole>>();
+            services.TryAddScoped<UserManager<TUser>, UserManager<TUser>>();
+            services.TryAddScoped<SignInManager<TUser>, SignInManager<TUser>>();
+            services.TryAddScoped<RoleManager<TRole>, RoleManager<TRole>>();
+            
             //http://docs.asp.net/en/latest/security/2fa.html
 
             services.Configure<IdentityOptions>(options =>
@@ -273,13 +279,8 @@ namespace cloudscribe.WebHost
                 //options.Lockout.MaxFailedAccessAttempts = 10;
             });
 
-            // this doesn't build must be out of sync with beta6
-            //services.Configure<SharedAuthenticationOptions>(options =>
-            //{
-            //    options.SignInScheme = IdentityOptions.ExternalCookieAuthenticationScheme;
-            //});
-
-            services.Configure<ExternalAuthenticationOptions>(options =>
+            
+            services.Configure<SharedAuthenticationOptions>(options =>
             {
                 //options.SignInScheme = IdentityOptions.ExternalCookieAuthenticationScheme;
                 options.SignInScheme = AuthenticationScheme.External;

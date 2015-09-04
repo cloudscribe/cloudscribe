@@ -1,62 +1,62 @@
-﻿// Copyright (c) Source Tree Solutions, LLC. All rights reserved.
-// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
-// Author:					Joe Audette
-// Created:					2015-08-03
-// Last Modified:			2015-08-05
-// 
+﻿//// Copyright (c) Source Tree Solutions, LLC. All rights reserved.
+//// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+//// Author:					Joe Audette
+//// Created:					2015-08-03
+//// Last Modified:			2015-09-04
+//// 
 
-using Microsoft.Framework.Configuration;
-using System;
-
-
-namespace cloudscribe.Core.Models
-{
-    public class ConfigHelper
-    {
-        public ConfigHelper(IConfiguration configuration)
-        {
-            config = configuration;
-        }
-
-        private IConfiguration config;
+//using Microsoft.Framework.Configuration;
+//using System;
 
 
-        public string GetOrDefault(string key, string defaultIfNotFound)
-        {
-            string result = config.Get(key);
+//namespace cloudscribe.Core.Models
+//{
+//    public class ConfigHelper
+//    {
+//        public ConfigHelper(IConfiguration configuration)
+//        {
+//            config = configuration;
+//        }
 
-            if (string.IsNullOrEmpty(result)) { return defaultIfNotFound; }
+//        private IConfiguration config;
 
-            return result;
-        }
 
-        public int GetOrDefault(string key, int defaultIfNotFound)
-        {
-            string result = config.Get(key);
+//        public string GetOrDefault(string key, string defaultIfNotFound)
+//        {
+//            string result = config.Get(key);
 
-            if (string.IsNullOrEmpty(result)) { return defaultIfNotFound; }
+//            if (string.IsNullOrEmpty(result)) { return defaultIfNotFound; }
 
-            return Convert.ToInt32(result);
-        }
+//            return result;
+//        }
 
-        public bool GetOrDefault(string key, bool defaultIfNotFound)
-        {
-            string result = config.Get(key);
+//        public int GetOrDefault(string key, int defaultIfNotFound)
+//        {
+//            string result = config.Get(key);
 
-            if (string.IsNullOrEmpty(result)) { return defaultIfNotFound; }
+//            if (string.IsNullOrEmpty(result)) { return defaultIfNotFound; }
 
-            return Convert.ToBoolean(result);
-        }
+//            return Convert.ToInt32(result);
+//        }
 
-        public Guid GetOrDefault(string key, Guid defaultIfNotFound)
-        {
-            string result = config.Get(key);
+//        public bool GetOrDefault(string key, bool defaultIfNotFound)
+//        {
+//            string result = config.Get(key);
 
-            if (string.IsNullOrEmpty(result)) { return defaultIfNotFound; }
-            if (result.Length != 36) { return defaultIfNotFound; }
+//            if (string.IsNullOrEmpty(result)) { return defaultIfNotFound; }
 
-            return new Guid(result);
-        }
+//            return Convert.ToBoolean(result);
+//        }
 
-    }
-}
+//        public Guid GetOrDefault(string key, Guid defaultIfNotFound)
+//        {
+//            string result = config.Get(key);
+
+//            if (string.IsNullOrEmpty(result)) { return defaultIfNotFound; }
+//            if (result.Length != 36) { return defaultIfNotFound; }
+
+//            return new Guid(result);
+//        }
+
+//    }
+//}

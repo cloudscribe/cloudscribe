@@ -2,12 +2,13 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-08-11
-// Last Modified:			2015-08-12
+// Last Modified:			2015-09-04
 // 
 
 using cloudscribe.Core.Models;
 using Microsoft.Framework.Logging;
-using Microsoft.Framework.Runtime;
+using Microsoft.Framework.OptionsModel;
+using Microsoft.Dnx.Runtime;
 using System;
 using System.Data.Common;
 using System.IO;
@@ -20,7 +21,7 @@ namespace cloudscribe.Core.Web.Components
         public SetupManager(
             IApplicationEnvironment appEnv,
             ILogger<SetupManager> logger,
-            ConfigHelper configuration,
+            IOptions<SetupOptions> setupOptionsAccessor,
             IDb dbImplementation,
             IVersionProviderFactory versionProviderFactory,
             SiteManager siteManager)
@@ -29,14 +30,14 @@ namespace cloudscribe.Core.Web.Components
             this.siteManager = siteManager;
             log = logger;
             db = dbImplementation;
-            config = configuration;
             this.versionProviderFactory = versionProviderFactory;
-
+            setupOptions = setupOptionsAccessor.Options;
         }
+
+        private SetupOptions setupOptions;
 
         private string appBasePath;
         private SiteManager siteManager;
-        private ConfigHelper config;
         private IDb db;
         private ILogger log;
         private IVersionProviderFactory versionProviderFactory;
@@ -53,7 +54,7 @@ namespace cloudscribe.Core.Web.Components
                 db.EnsureDatabase();
             }
 
-            if ((db.DBPlatform == "MSSQL") && config.TryToCreateMsSqlDatabase())
+            if ((db.DBPlatform == "MSSQL") && setupOptions.TryToCreateMsSqlDatabase)
             {
                 if (!db.CanAccessDatabase())
                 {
@@ -65,11 +66,12 @@ namespace cloudscribe.Core.Web.Components
 
         public string GetOverrideConnectionString(string applicationName)
         {
-            string overrideConnectionString = config.GetOrDefault("Data:" + applicationName + ":ConnectionString", string.Empty);
+            return null;
+            //string overrideConnectionString = config.GetOrDefault("Data:" + applicationName + ":ConnectionString", string.Empty);
 
-            if (string.IsNullOrEmpty(overrideConnectionString)) { return null; }
+            //if (string.IsNullOrEmpty(overrideConnectionString)) { return null; }
 
-            return overrideConnectionString;
+            //return overrideConnectionString;
         }
 
         public bool CanAccessDatabase()
@@ -130,7 +132,7 @@ namespace cloudscribe.Core.Web.Components
         public string GetPathToInstallScriptFolder(string applicationName)
         {
             return appBasePath
-               + string.Format(config.SetupInstallScriptPathFormat().Replace("/", Path.DirectorySeparatorChar.ToString()),
+               + string.Format(setupOptions.InstallScriptPathFormat.Replace("/", Path.DirectorySeparatorChar.ToString()),
                applicationName,
                db.DBPlatform.ToLowerInvariant())
                ;
@@ -139,7 +141,7 @@ namespace cloudscribe.Core.Web.Components
         public string GetPathToUpgradeScriptFolder(string applicationName)
         {
             return appBasePath
-                + string.Format(config.SetupUpgradeScriptPathFormat().Replace("/", Path.DirectorySeparatorChar.ToString()),
+                + string.Format(setupOptions.UpgradeScriptPathFormat.Replace("/", Path.DirectorySeparatorChar.ToString()),
                 applicationName,
                 db.DBPlatform.ToLowerInvariant())
                 ;

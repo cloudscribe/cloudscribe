@@ -15,8 +15,8 @@
   "dependencies": {
     "cloudscribe.Core.Models": "1.0.0-*",
     "Microsoft.SqlServer.Compact": "4.0.8876.1",
-    "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta6",
-    "Microsoft.Framework.OptionsModel": "1.0.0-beta6"
+    "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta7",
+    "Microsoft.Framework.OptionsModel": "1.0.0-beta7"
 
   },
 

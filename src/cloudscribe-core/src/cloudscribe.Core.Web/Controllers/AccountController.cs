@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-08-26
+// Last Modified:			2015-09-04
 // 
 
 using cloudscribe.Core.Identity;
@@ -31,7 +31,7 @@ namespace cloudscribe.Core.Web.Controllers
             ISiteResolver siteResolver,
             SiteUserManager<SiteUser> userManager,
             SiteSignInManager<SiteUser> signInManager,
-            ConfigHelper configuration,
+           // ConfigHelper configuration,
             IEmailSender emailSender,
             ISmsSender smsSender,
             ILogger<AccountController> logger)
@@ -39,7 +39,7 @@ namespace cloudscribe.Core.Web.Controllers
             Site = siteResolver.Resolve();
             this.userManager = userManager;
             this.signInManager = signInManager;
-            config = configuration;
+            //config = configuration;
             this.emailSender = emailSender;
             this.smsSender = smsSender;
             log = logger;
@@ -47,7 +47,7 @@ namespace cloudscribe.Core.Web.Controllers
 
         //private ISiteResolver resolver;
         private readonly ISiteSettings Site;
-        private readonly ConfigHelper config;
+        //private readonly ConfigHelper config;
         private readonly SiteUserManager<SiteUser> userManager;
         private readonly SiteSignInManager<SiteUser> signInManager;
         private readonly IEmailSender emailSender;
@@ -64,13 +64,9 @@ namespace cloudscribe.Core.Web.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             LoginViewModel model = new LoginViewModel();
             model.ExternalAuthenticationList = signInManager.GetExternalAuthenticationSchemes();
-            if (Site.RequireCaptchaOnLogin)
+            if ((Site.RequireCaptchaOnLogin)&& (Site.RecaptchaPublicKey.Length > 0))
             {
-                model.RecaptchaSiteKey = config.RecaptchaSiteKey();
-                if (Site.RecaptchaPublicKey.Length > 0)
-                {
-                    model.RecaptchaSiteKey = Site.RecaptchaPublicKey;
-                }
+                model.RecaptchaSiteKey = Site.RecaptchaPublicKey;     
             }
 
             return View(model);
@@ -84,13 +80,9 @@ namespace cloudscribe.Core.Web.Controllers
         public async Task<IActionResult> Login(LoginViewModel model, string returnUrl)
         {
             ViewData["ReturnUrl"] = returnUrl;
-            if (Site.RequireCaptchaOnLogin)
+            if ((Site.RequireCaptchaOnLogin)&& (Site.RecaptchaPublicKey.Length > 0))
             {
-                model.RecaptchaSiteKey = config.RecaptchaSiteKey();
-                if (Site.RecaptchaPublicKey.Length > 0)
-                {
-                    model.RecaptchaSiteKey = Site.RecaptchaPublicKey;
-                }
+               model.RecaptchaSiteKey = Site.RecaptchaPublicKey;    
             }
 
             if (!ModelState.IsValid)
@@ -98,14 +90,10 @@ namespace cloudscribe.Core.Web.Controllers
                 return View(model);
             }
 
-            if (Site.RequireCaptchaOnLogin)
+            if ((Site.RequireCaptchaOnLogin) && (Site.RecaptchaPublicKey.Length > 0))
             {
-                string recpatchaSecretKey = config.RecaptchaSecretKey();
-                if (Site.RecaptchaPrivateKey.Length > 0)
-                {
-                    recpatchaSecretKey = Site.RecaptchaPrivateKey;
-                }
-
+                string recpatchaSecretKey = Site.RecaptchaPrivateKey;
+                
                 var captchaResponse = await this.ValidateRecaptcha(Request, recpatchaSecretKey);
 
                 if (!captchaResponse.Success)
@@ -156,13 +144,9 @@ namespace cloudscribe.Core.Web.Controllers
             
             EditUserViewModel model = new EditUserViewModel();
             model.SiteGuid = Site.SiteGuid;
-            if (Site.RequireCaptchaOnRegistration)
+            if ((Site.RequireCaptchaOnRegistration)&& (Site.RecaptchaPublicKey.Length > 0))
             {
-                model.RecaptchaSiteKey = config.RecaptchaSiteKey();
-                if (Site.RecaptchaPublicKey.Length > 0)
-                {
-                    model.RecaptchaSiteKey = Site.RecaptchaPublicKey;
-                }
+                model.RecaptchaSiteKey = Site.RecaptchaPublicKey;  
             }
 
 
@@ -177,26 +161,17 @@ namespace cloudscribe.Core.Web.Controllers
         public async Task<IActionResult> Register(EditUserViewModel model)
         {
             
-            if (Site.RequireCaptchaOnRegistration)
+            if ((Site.RequireCaptchaOnRegistration)&& (Site.RecaptchaPublicKey.Length > 0))
             {
-                model.RecaptchaSiteKey = config.RecaptchaSiteKey();
-                if (Site.RecaptchaPublicKey.Length > 0)
-                {
-                    model.RecaptchaSiteKey = Site.RecaptchaPublicKey;
-                }
+                model.RecaptchaSiteKey = Site.RecaptchaPublicKey;     
             }
 
             if (ModelState.IsValid)
             {
-                if (Site.RequireCaptchaOnRegistration)
+                if ((Site.RequireCaptchaOnRegistration)&& (Site.RecaptchaPublicKey.Length > 0))
                 {
-                    string recpatchaSecretKey = config.RecaptchaSecretKey();
-                    if (Site.RecaptchaPrivateKey.Length > 0)
-                    {
-                        recpatchaSecretKey = Site.RecaptchaPrivateKey;
-                    }
-
-
+                    string recpatchaSecretKey = Site.RecaptchaPrivateKey;
+                    
                     var captchaResponse = await this.ValidateRecaptcha(Request, recpatchaSecretKey);
 
                     if (!captchaResponse.Success)

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-22
-// Last Modified:		    2015-08-05
+// Last Modified:		    2015-09-04
 // 
 
 using cloudscribe.Core.Models;
@@ -37,7 +37,7 @@ namespace cloudscribe.Core.Identity
             ILogger<UserStore<TUser>> logger,
             ISiteResolver siteResolver,
             IUserRepository userRepository,
-            ConfigHelper config,
+            //ConfigHelper config,
             IOptions<MultiTenantOptions> multiTenantOptionsAccessor
             )
         {
@@ -50,10 +50,10 @@ namespace cloudscribe.Core.Identity
             if (userRepository == null) { throw new ArgumentNullException(nameof(userRepository)); }
             repo = userRepository;
             
-            this.config = config;
+         
             multiTenantOptions = multiTenantOptionsAccessor.Options;
 
-            debugLog = config.GetOrDefault("AppSettings:UserStoreDebugEnabled", false);
+            //debugLog = config.GetOrDefault("AppSettings:UserStoreDebugEnabled", false);
 
             if (debugLog) { log.LogInformation("constructor"); }
         }
@@ -62,7 +62,6 @@ namespace cloudscribe.Core.Identity
         private bool debugLog = false;
         private ISiteResolver resolver;
         private ISiteSettings _siteSettings = null;
-        private ConfigHelper config;
         private MultiTenantOptions multiTenantOptions;
 
 
@@ -138,16 +137,11 @@ namespace cloudscribe.Core.Identity
 
         private async Task<bool> AddUserToDefaultRoles(ISiteUser siteUser)
         {
-            // moved this to the config setting below instead of hard coded
-            //IRole role = Fetch(siteUser.SiteId, "Authenticated Users");
-            //if (role.RoleID > -1)
-            //{
-            //    AddUser(role.RoleID, role.RoleGuid, siteUser.UserId, siteUser.UserGuid);
-            //}
-
+            
             ISiteRole role;
             bool result = true;
-            string defaultRoles = config.GetOrDefault("AppSettings:DefaultRolesForNewUsers", "Authenticated Users");
+            
+            string defaultRoles = multiTenantOptions.DefaultNewUserRoles;
 
             if (defaultRoles.Length > 0)
             {

@@ -15,7 +15,7 @@
     "dependencies": {
         "cloudscribe.Core.Models": "1.0.0-*",
         "Microsoft.Data.SQLite": "1.0.0-beta1",
-        "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta6"
+        "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta7"
      
     },
 

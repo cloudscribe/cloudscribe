@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-01-10
-// Last Modified:			2015-08-13
+// Last Modified:			2015-09-04
 // 
 
 using cloudscribe.Core.Models;
@@ -11,7 +11,8 @@ using cloudscribe.Core.Web.Components;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc;
 using Microsoft.Framework.Logging;
-using Microsoft.Framework.Runtime;
+using Microsoft.Framework.OptionsModel;
+using Microsoft.Dnx.Runtime;
 using System;
 using System.Data.Common;
 using System.Globalization;
@@ -29,30 +30,32 @@ namespace cloudscribe.Setup.Controllers
         public SetupController(
             IApplicationEnvironment appEnv,
             ILogger<SetupController> logger,
-            ConfigHelper configuration,
+            IOptions<SetupOptions> setupOptionsAccessor,
             SetupManager setupManager,
             SiteManager siteManager 
         )
         {
             if (appEnv == null) { throw new ArgumentNullException(nameof(appEnv)); }
             if (logger == null) { throw new ArgumentNullException(nameof(logger)); }
-            if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
+            //if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
             if (setupManager == null) { throw new ArgumentNullException(nameof(setupManager)); }
             if (siteManager == null) { throw new ArgumentNullException(nameof(siteManager)); }
 
-            config = configuration;
+            //config = configuration;
             log = logger;
             appBasePath = appEnv.ApplicationBasePath;
             this.siteManager = siteManager;
             this.setupManager = setupManager;
+            setupOptions = setupOptionsAccessor.Options;
 
         }
 
+        private SetupOptions setupOptions;
         private SetupManager setupManager;
         private string appBasePath;
         private SiteManager siteManager;
         private ILogger log;
-        private ConfigHelper config;
+        //private ConfigHelper config;
         private bool setupIsDisabled = false;
         //private bool dataFolderIsWritable = false;
         private bool canAccessDatabase = false;
@@ -76,7 +79,7 @@ namespace cloudscribe.Setup.Controllers
             //scriptTimeout = Server.ScriptTimeout;
             //Response.Cache.SetCacheability(HttpCacheability.ServerAndNoCache);
             
-            setupIsDisabled = config.DisableSetup();
+            setupIsDisabled = setupOptions.DisableSetup;
 
 
             bool isAdmin = User.IsInRole("Admins");
@@ -194,13 +197,13 @@ namespace cloudscribe.Setup.Controllers
                     "CreatingSite" //SetupResources.CreatingSiteMessage
                     , true);
 
-                SiteSettings newSite = await siteManager.CreateNewSite(config, true);
+                SiteSettings newSite = await siteManager.CreateNewSite(true);
 
                 await WritePageContent(response,
                     "CreatingRolesAndAdminUser" //SetupResources.CreatingRolesAndAdminUserMessage
                     , true);
 
-                result = await siteManager.CreateRequiredRolesAndAdminUser(newSite, config);
+                result = await siteManager.CreateRequiredRolesAndAdminUser(newSite);
             }
 
             
@@ -623,7 +626,7 @@ namespace cloudscribe.Setup.Controllers
 
                 await WritePageContent(response, "<div>" + dbError + "</div>", false);
 
-                showConnectionError = config.ShowConnectionErrorOnSetup();
+                showConnectionError = setupOptions.ShowConnectionError;
 
 
                 if (showConnectionError)
@@ -649,7 +652,7 @@ namespace cloudscribe.Setup.Controllers
                 else
                 {
 
-                    if (config.SetupTryAnywayIfFailedAlterSchemaTest())
+                    if (setupOptions.TryAnywayIfFailedAlterSchemaTest)
                     {
                         canAlterSchema = true;
                     }
@@ -839,10 +842,10 @@ namespace cloudscribe.Setup.Controllers
         private async Task WritePageHeader(HttpResponse response)
         {
 
-            string setupTemplatePath = config.SetupHeaderConfigPath().Replace("/", Path.DirectorySeparatorChar.ToString());
+            string setupTemplatePath = setupOptions.SetupHeaderConfigPath.Replace("/", Path.DirectorySeparatorChar.ToString());
             if (CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft)
             {
-                setupTemplatePath = config.SetupHeaderConfigPathRtl().Replace("/", Path.DirectorySeparatorChar.ToString());
+                setupTemplatePath = setupOptions.SetupHeaderConfigPathRtl.Replace("/", Path.DirectorySeparatorChar.ToString());
             }
 
             //string fsPath = hostingEnvironment.MapPath(setupTemplatePath);
