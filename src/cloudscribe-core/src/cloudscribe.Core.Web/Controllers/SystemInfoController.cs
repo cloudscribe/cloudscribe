@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //	Author:                 Joe Audette
 //  Created:			    2011-08-19
-//	Last Modified:		    2015-08-23
+//	Last Modified:		    2015-09-05
 // 
 
 
@@ -11,6 +11,7 @@ using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.ViewModels.SystemInfo;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
+using Microsoft.Framework.OptionsModel;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Controllers
@@ -19,21 +20,20 @@ namespace cloudscribe.Core.Web.Controllers
     {
         public SystemInfoController(
             SystemInfoManager systemInfoManager,
-            ConfigHelper configuration,
+            IOptions<UIOptions> uiOptionsAccessor,
             ITimeZoneResolver timeZoneResolver
             )
         {
             systemInfo = systemInfoManager;
 
-            config = configuration;
             this.timeZoneResolver = timeZoneResolver;
+            uiOptions = uiOptionsAccessor.Options;
 
         }
 
         private SystemInfoManager systemInfo;
-        private ConfigHelper config;
         private ITimeZoneResolver timeZoneResolver;
-
+        private UIOptions uiOptions;
 
         [Authorize(Roles = "Admins")]
         public IActionResult Index()
@@ -63,7 +63,7 @@ namespace cloudscribe.Core.Web.Controllers
             ViewData["Title"] = "System Log";
             ViewData["Heading"] = "System Log";
 
-            int itemsPerPage = config.DefaultPageSize_LogView();
+            int itemsPerPage = uiOptions.DefaultPageSize_LogView;
             if (pageSize > 0)
             {
                 itemsPerPage = pageSize;

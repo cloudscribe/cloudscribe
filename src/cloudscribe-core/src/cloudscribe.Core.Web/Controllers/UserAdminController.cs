@@ -13,6 +13,7 @@ using cloudscribe.Core.Web.ViewModels.UserAdmin;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Mvc;
+using Microsoft.Framework.OptionsModel;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -26,18 +27,19 @@ namespace cloudscribe.Core.Web.Controllers
         public UserAdminController(
             SiteManager siteManager,
             SiteUserManager<SiteUser> userManager,
-            ConfigHelper configuration
+            IOptions<UIOptions> uiOptionsAccessor
             )
         {
            
             UserManager = userManager;
             this.siteManager = siteManager;
-            config = configuration;
+            uiOptions = uiOptionsAccessor.Options;
+
         }
 
-        private ConfigHelper config;
         private SiteManager siteManager;
         public SiteUserManager<SiteUser> UserManager { get; private set; }
+        private UIOptions uiOptions;
 
         [HttpGet]
         public async Task<IActionResult> Index(
@@ -50,7 +52,7 @@ namespace cloudscribe.Core.Web.Controllers
             ViewData["Title"] = "User Management";
             //ViewBag.Heading = "Role Management";
 
-            int itemsPerPage = config.DefaultPageSize_UserList();
+            int itemsPerPage = uiOptions.DefaultPageSize_UserList;
             if (pageSize > 0)
             {
                 itemsPerPage = pageSize;
@@ -101,7 +103,7 @@ namespace cloudscribe.Core.Web.Controllers
             ViewData["Title"] = "User Management";
             //ViewBag.Heading = "Role Management";
 
-            int itemsPerPage = config.DefaultPageSize_UserList();
+            int itemsPerPage = uiOptions.DefaultPageSize_UserList;
             if (pageSize > 0)
             {
                 itemsPerPage = pageSize;

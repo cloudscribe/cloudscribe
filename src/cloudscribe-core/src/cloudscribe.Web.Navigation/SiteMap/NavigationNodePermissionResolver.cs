@@ -2,11 +2,11 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-11
-// Last Modified:			2015-07-15
+// Last Modified:			2015-09-05
 // 
 
 using cloudscribe.Web.Navigation.Helpers;
-using Microsoft.AspNet.Hosting;
+using Microsoft.AspNet.Http;
 
 namespace cloudscribe.Web.Navigation
 {

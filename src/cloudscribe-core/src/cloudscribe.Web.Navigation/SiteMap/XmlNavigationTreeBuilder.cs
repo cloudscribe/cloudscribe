@@ -2,14 +2,14 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-14
-// Last Modified:			2015-07-15
+// Last Modified:			2015-09-05
 // 
 
 using cloudscribe.Web.Navigation.Helpers;
 using Microsoft.Framework.Caching.Distributed;
-using Microsoft.Framework.Configuration;
+using Microsoft.Framework.OptionsModel;
 using Microsoft.Framework.Logging;
-using Microsoft.Framework.Runtime;
+using Microsoft.Dnx.Runtime;
 using System;
 using System.IO;
 using System.Text;
@@ -22,16 +22,16 @@ namespace cloudscribe.Web.Navigation
     {
         public XmlNavigationTreeBuilder(
             IApplicationEnvironment appEnv,
-            IConfiguration configuration,
+            IOptions<NavigationOptions> navigationOptionsAccessor,
             ILoggerFactory loggerFactory,
             IDistributedCache cache)
         {
             if (appEnv == null) { throw new ArgumentNullException(nameof(appEnv)); }
             if (loggerFactory == null) { throw new ArgumentNullException(nameof(loggerFactory)); }
-            if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
+            if (navigationOptionsAccessor == null) { throw new ArgumentNullException(nameof(navigationOptionsAccessor)); }
 
             this.appEnv = appEnv;
-            config = configuration;
+            navOptions = navigationOptionsAccessor.Options;
             logFactory = loggerFactory;
             log = loggerFactory.CreateLogger(typeof(XmlNavigationTreeBuilder).FullName);
             this.cache = cache;
@@ -39,7 +39,7 @@ namespace cloudscribe.Web.Navigation
         }
 
         private IApplicationEnvironment appEnv;
-        private IConfiguration config;
+        private NavigationOptions navOptions;
         private ILoggerFactory logFactory;
         private ILogger log;
         private TreeNode<NavigationNode> rootNode = null;
@@ -85,7 +85,7 @@ namespace cloudscribe.Web.Navigation
         private string ResolveFilePath()
         {
             string filePath = appEnv.ApplicationBasePath + Path.DirectorySeparatorChar
-                + config.GetOrDefault("AppSettings:NavigationXmlFileName", "navigation.xml");
+                + navOptions.NavigationMapXmlFileName;
 
             return filePath;
         }

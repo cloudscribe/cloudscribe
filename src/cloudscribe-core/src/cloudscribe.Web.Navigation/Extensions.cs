@@ -2,9 +2,10 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-15
-// Last Modified:			2015-07-15
+// Last Modified:			2015-09-05
 // 
 
+using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.Framework.Configuration;
 using System;
 using System.Collections.Generic;
@@ -63,21 +64,11 @@ namespace cloudscribe.Web.Navigation.Helpers
 
         }
 
-        /// <summary>
-        /// this is replicated from cloudscribe.Configuration.ConfigurationExtensions
-        /// so that this project has no "cloudscribe" dependencies and can be used without using other cloudscribe components
-        /// </summary>
-        /// <param name="config"></param>
-        /// <param name="key"></param>
-        /// <param name="defaultIfNotFound"></param>
-        /// <returns></returns>
-        public static string GetOrDefault(this IConfiguration config, string key, string defaultIfNotFound)
+        public static HtmlString ToHtmlString(this TagBuilder tag)
         {
-            string result = config.Get(key);
-
-            if (string.IsNullOrEmpty(result)) { return defaultIfNotFound; }
-
-            return result;
+            return new HtmlString(tag.ToString());
         }
+
+        
     }
 }

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-08-27
+// Last Modified:			2015-09-05
 // 
 
 using cloudscribe.Core.Models;
@@ -23,34 +23,38 @@ namespace cloudscribe.Core.Web.Controllers
     [Authorize(Roles = "Admins,Content Administrators")]
     public class SiteAdminController : CloudscribeBaseController
     {
-        //private ISiteSettings Site;
-        private SiteManager siteManager;
-        private GeoDataManager geoDataManager;
-        private ConfigHelper config;
-        private MultiTenantOptions multiTenantOptions;
-        //private ITriggerStartup startup;
-
         public SiteAdminController(
             SiteManager siteManager,
             GeoDataManager geoDataManager,
             IOptions<MultiTenantOptions> multiTenantOptions,
-            ConfigHelper configuration
+            IOptions<UIOptions> uiOptionsAccessor
+            //ConfigHelper configuration
             //, ITriggerStartup startupTrigger
             )
         {
             //if (siteResolver == null) { throw new ArgumentNullException(nameof(siteResolver)); }
             if (geoDataManager == null) { throw new ArgumentNullException(nameof(geoDataManager)); }
-            if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
+            //if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
 
-            config = configuration;
+            //config = configuration;
             this.multiTenantOptions = multiTenantOptions.Options;
             //Site = siteResolver.Resolve();
 
             this.siteManager = siteManager;
             this.geoDataManager = geoDataManager;
-            
+            uiOptions = uiOptionsAccessor.Options;
+
             //startup = startupTrigger;
         }
+
+        //private ISiteSettings Site;
+        private SiteManager siteManager;
+        private GeoDataManager geoDataManager;
+        //private ConfigHelper config;
+        private MultiTenantOptions multiTenantOptions;
+        //private ITriggerStartup startup;
+
+        private UIOptions uiOptions;
 
         //disable warning about not really being async
         // we know it is not, it is not needed to hit the db in these
@@ -78,7 +82,7 @@ namespace cloudscribe.Core.Web.Controllers
             ViewData["Title"] = "Site List";
             ViewData["Heading"] = "Site List";
 
-            int itemsPerPage = config.DefaultPageSize_SiteList();
+            int itemsPerPage = uiOptions.DefaultPageSize_SiteList;
             if (pageSize > 0)
             {
                 itemsPerPage = pageSize;
@@ -197,7 +201,7 @@ namespace cloudscribe.Core.Web.Controllers
             {
                 if (model.SiteGuid != siteManager.CurrentSite.SiteGuid)
                 {
-                    model.ShowDelete = config.AllowDeleteChildSites();
+                    model.ShowDelete = uiOptions.AllowDeleteChildSites;
                 }
             }
 
@@ -243,7 +247,7 @@ namespace cloudscribe.Core.Web.Controllers
             {
                 if (model.SiteGuid != siteManager.CurrentSite.SiteGuid)
                 {
-                    model.ShowDelete = config.AllowDeleteChildSites();
+                    model.ShowDelete = uiOptions.AllowDeleteChildSites;
                 }
             }
 
@@ -554,8 +558,8 @@ namespace cloudscribe.Core.Web.Controllers
 
 
             //Site.SiteRepository.Save(newSite);
-            bool result = await siteManager.CreateNewSite(config, newSite);
-            result = await siteManager.CreateRequiredRolesAndAdminUser(newSite, config);
+            bool result = await siteManager.CreateNewSite(newSite);
+            result = await siteManager.CreateRequiredRolesAndAdminUser(newSite);
 
             if ((result) && (multiTenantOptions.Mode == MultiTenantMode.FolderName))
             {

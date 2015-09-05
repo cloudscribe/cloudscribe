@@ -25,6 +25,11 @@ using Microsoft.Framework.Configuration;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Razor;
+using Microsoft.AspNet.Mvc.ViewFeatures;
+using Microsoft.AspNet.Mvc.Localization;
+using Microsoft.AspNet.Mvc.Rendering;
+using Microsoft.AspNet.Mvc.Internal;
+using Microsoft.AspNet.Mvc.Core;
 using Microsoft.AspNet.Routing;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Identity;
@@ -146,26 +151,40 @@ namespace cloudscribe.WebHost
             services.TryAddScoped<INodeUrlPrefixProvider, FolderTenantNodeUrlPrefixProvider>(); 
             services.TryAddScoped<INavigationNodePermissionResolver, NavigationNodePermissionResolver>();
             services.TryAddTransient<IBuildPaginationLinks, PaginationLinkBuilder>();
+            services.Configure<NavigationOptions>(configuration.GetSection("NavigationOptions"));
+            
 
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
 
-            
+
             // Add MVC services to the services container.
-            services.AddMvc()
-                .AddViewOptions(options =>
+            services.TryAddSingleton<IRazorViewEngine, CoreViewEngine>();
+
+            services.AddMvc(options =>
             {
-                //options.ViewEngines.Clear();
-                // cloudscribe.Core.Web.CoreViewEngine adds /Views/Sys as the last place to search for views
-                // cloudscribe views are all under Views/Sys
-                // to modify a view just copy it to a higher priority location
-                // ie copy /Views/Sys/Manage/*.cshtml up to /Views/Manage/ and that one will have higher priority
-                // and you can modify it however you like
-                // upgrading to newer versions of cloudscribe could modify or add views below /Views/Sys
-                // so you may need to compare your custom views to the originals again after upgrades
-                //options.ViewEngines.Add(typeof(CoreViewEngine));
-                //options.ViewEngines.Add(new CoreViewEngine());
-            });
+               
+                //options.Filters.Add(...);
+            })
+            .AddViewLocalization(LanguageViewLocationExpanderFormat.SubFolder)
+            //.AddXmlDataContractSerializerFormatters()
+            .AddViewOptions(options =>
+             {
+                 
+                 //options.ViewEngines.Clear();
+                 // cloudscribe.Core.Web.CoreViewEngine adds /Views/Sys as the last place to search for views
+                 // cloudscribe views are all under Views/Sys
+                 // to modify a view just copy it to a higher priority location
+                 // ie copy /Views/Sys/Manage/*.cshtml up to /Views/Manage/ and that one will have higher priority
+                 // and you can modify it however you like
+                 // upgrading to newer versions of cloudscribe could modify or add views below /Views/Sys
+                 // so you may need to compare your custom views to the originals again after upgrades
+                 //options.ViewEngines.Add(typeof(CoreViewEngine));
+                 //options.ViewEngines.Add(new CoreViewEngine());
+             });
+
+            
+                
 
 
             // Configure the options for the authentication middleware.

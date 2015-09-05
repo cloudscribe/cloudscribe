@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-10
-// Last Modified:			2015-07-15
+// Last Modified:			2015-09-05
 
 
 using cloudscribe.Web.Navigation.Helpers;
@@ -69,7 +69,9 @@ namespace cloudscribe.Web.Navigation
                         li.AddCssClass("active");
                         var span = new TagBuilder("span");
                         span.SetInnerText(letter);
-                        li.InnerHtml = span.ToString();
+                        //li.InnerHtml = span.ToString();
+                        li.InnerHtml = span.ToHtmlString();
+
                     }
                     else
                     {
@@ -83,8 +85,11 @@ namespace cloudscribe.Web.Navigation
                         {
                             a.MergeAttribute("href", pageLink(letter));
                         }
-                        a.InnerHtml = letter;
-                        li.InnerHtml = a.ToString();
+                        //a.InnerHtml = letter;
+                        a.SetInnerText(letter);
+                        //li.InnerHtml = a.ToString();
+                        li.InnerHtml = a.ToHtmlString();
+
                     }
                 }
                 else
@@ -92,11 +97,18 @@ namespace cloudscribe.Web.Navigation
                     li.AddCssClass("inactive");
                     var span = new TagBuilder("span");
                     span.SetInnerText(letter);
-                    li.InnerHtml = span.ToString();
+                    //li.InnerHtml = span.ToString();
+
+                    li.InnerHtml = span.ToHtmlString();
+
                 }
                 sb.Append(li.ToString());
             }
-            ul.InnerHtml = sb.ToString();
+            //ul.InnerHtml = sb.ToString();
+            ul.InnerHtml = new HtmlString(sb.ToString());
+
+
+
             return new HtmlString(ul.ToString());
         }
 
