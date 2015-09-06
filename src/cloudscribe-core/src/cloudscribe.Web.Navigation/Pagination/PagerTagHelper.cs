@@ -2,11 +2,9 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-02
-// Last Modified:			2015-09-05
+// Last Modified:			2015-09-06
 // 
 
-
-using cloudscribe.Web.Navigation.Helpers;
 using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.AspNet.Razor.Runtime.TagHelpers;
 using System;
@@ -186,8 +184,6 @@ namespace cloudscribe.Web.Navigation
                 LastPageTitle,
                 "...");
 
-            var items = new StringBuilder();
-
             foreach(PaginationLink link in links)
             {
                 var li = new TagBuilder("li");
@@ -242,15 +238,12 @@ namespace cloudscribe.Web.Navigation
                     a.MergeAttribute("data-ajax-mode", AjaxMode);
                     a.MergeAttribute("data-ajax-update", AjaxTarget);
                 }
-
-                //li.InnerHtml = a.ToString(TagRenderMode.Normal);
-                li.InnerHtml = a.ToHtmlString();
-
-
-                items.AppendLine(li.ToString());
+                
+                li.InnerHtml = a;
+                
+                output.Content.Append(li);
             }
 
-            output.Content.SetContent(items.ToString());
             output.Attributes.Clear();
             output.Attributes.Add("class", UlCssClass);
             

@@ -2,15 +2,10 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-15
-// Last Modified:			2015-09-05
+// Last Modified:			2015-09-06
 // 
 
-using Microsoft.AspNet.Mvc.Rendering;
-using Microsoft.Framework.Configuration;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Security.Claims;
 
 namespace cloudscribe.Web.Navigation.Helpers
@@ -64,10 +59,7 @@ namespace cloudscribe.Web.Navigation.Helpers
 
         }
 
-        public static HtmlString ToHtmlString(this TagBuilder tag)
-        {
-            return new HtmlString(tag.ToString());
-        }
+        
 
         
     }

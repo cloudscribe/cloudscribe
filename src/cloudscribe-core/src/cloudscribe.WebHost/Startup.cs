@@ -45,7 +45,7 @@ namespace cloudscribe.WebHost
         public Startup(IHostingEnvironment env, IApplicationEnvironment appEnv)
         {
             // Setup configuration sources.
-            var configuration = new ConfigurationBuilder(appEnv.ApplicationBasePath)
+            var builder = new ConfigurationBuilder(appEnv.ApplicationBasePath)
                 .AddJsonFile("config.json")
                 .AddJsonFile($"config.{env.EnvironmentName}.json", optional: true);
 
@@ -56,19 +56,19 @@ namespace cloudscribe.WebHost
             {
                 // This reads the configuration keys from the secret store.
                 // For more details on using the user secret store see http://go.microsoft.com/fwlink/?LinkID=532709
-                configuration.AddUserSecrets();
+                builder.AddUserSecrets();
             }
 
             // this file name is ignored by gitignore
             // so you can create it and use on your local dev machine
             // remember last config source added wins if it has the same settings
-            configuration.AddJsonFile("config.local.overrides.json", optional: true);
+            builder.AddJsonFile("config.local.overrides.json", optional: true);
 
             // most common use of environment variables would be in azure hosting
             // since it is added last anything in env vars would trump the same setting in previous config sources
             // so no risk of messing up settings if deploying a new version to azure
-            configuration.AddEnvironmentVariables();
-            Configuration = configuration.Build();
+            builder.AddEnvironmentVariables();
+            Configuration = builder.Build();
 
             //env.MapPath
         }
@@ -76,7 +76,8 @@ namespace cloudscribe.WebHost
         public IConfigurationRoot Configuration { get; set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public IServiceProvider ConfigureServices(IServiceCollection services)
+        //public IServiceProvider ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
             // Add Application settings to the services container.
             //services.Configure<AppSettings>(Configuration.GetConfigurationSection("AppSettings"));
@@ -106,15 +107,15 @@ namespace cloudscribe.WebHost
             // services.AddWebApiConventions();
 
             //Autofac config
-            var builder = new ContainerBuilder();
+           // var builder = new ContainerBuilder();
 
             ////Populate the container with services that were previously registered
             //// it seems this depends on beta4
-            builder.Populate(services);
+            //builder.Populate(services);
 
-            var container = builder.Build();
+            //var container = builder.Build();
 
-            return container.Resolve<IServiceProvider>();
+            //return container.Resolve<IServiceProvider>();
 
         }
 

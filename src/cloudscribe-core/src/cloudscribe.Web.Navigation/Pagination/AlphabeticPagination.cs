@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-10
-// Last Modified:			2015-09-05
+// Last Modified:			2015-09-06
 
 
 using cloudscribe.Web.Navigation.Helpers;
@@ -26,7 +26,10 @@ namespace cloudscribe.Web.Navigation
             bool includeNumbers,
             Func<string, string> pageLink)
         {
-            var sb = new StringBuilder();
+            //TagBuilder got funky in beta7 http://stackoverflow.com/questions/32416425/tagbuilder-innerhtml-in-asp-net-5-mvc-6
+            // so just using stringbuilder as of 2015-09-06
+            // probably can change back to TagBuilder after beta 8 as it should then have an .Append method to set innerhtml
+
             var numbers = Enumerable.Range(0, 10).Select(i => i.ToString());
             List<string> alphabetList;
             if (string.IsNullOrEmpty(alphabet))
@@ -48,14 +51,20 @@ namespace cloudscribe.Web.Navigation
                 alphabetList.Insert(1, "0-9");
             }
 
+            var sb = new StringBuilder();
 
-            var ul = new TagBuilder("ul");
-            ul.AddCssClass("pagination");
-            ul.AddCssClass("alpha");
+            //var ul = new TagBuilder("ul");
+            //ul.AddCssClass("pagination");
+            //ul.AddCssClass("alpha");
+            sb.Append("<ul class='pagination alpha'>");
+
+
+            //BufferedHtmlContent innerHtml = new BufferedHtmlContent();
 
             foreach (var letter in alphabetList)
             {
-                var li = new TagBuilder("li");
+                //var li = new TagBuilder("li");
+                sb.Append("<li");
 
                 // firstletters is a list of which alpha chars actually have results
                 // so that ones without data can be non links
@@ -66,50 +75,65 @@ namespace cloudscribe.Web.Navigation
                 {
                     if (selectedLetter == letter || string.IsNullOrEmpty(selectedLetter) && letter == "All")
                     {
-                        li.AddCssClass("active");
-                        var span = new TagBuilder("span");
-                        span.SetInnerText(letter);
-                        //li.InnerHtml = span.ToString();
-                        li.InnerHtml = span.ToHtmlString();
+                        //li.AddCssClass("active");
+                        //var span = new TagBuilder("span");
+                        //span.SetInnerText(letter);
+                        //li.InnerHtml = span;
+                        sb.Append(" class='active'>");
+                        sb.Append("<span>" + letter + "</span>");
+                        sb.Append("</li>");
 
                     }
                     else
                     {
-                        var a = new TagBuilder("a");
+                        sb.Append(">");
+
+                        //var a = new TagBuilder("a");
+                        sb.Append("<a href='");
 
                         if (letter == allLabel)
                         {
-                            a.MergeAttribute("href", pageLink(allValue));
+                            sb.Append(pageLink(allValue) + "'");
+                            //a.MergeAttribute("href", pageLink(allValue));
                         }
                         else
                         {
-                            a.MergeAttribute("href", pageLink(letter));
+                            sb.Append(pageLink(letter) + "'");
+                            // a.MergeAttribute("href", pageLink(letter));
                         }
-                        //a.InnerHtml = letter;
-                        a.SetInnerText(letter);
-                        //li.InnerHtml = a.ToString();
-                        li.InnerHtml = a.ToHtmlString();
+                        sb.Append(">");
+
+                        //a.SetInnerText(letter);
+                        sb.Append(letter);
+                        sb.Append("</a>");
+                        //li.InnerHtml = a;
+                        sb.Append("</li>");
 
                     }
                 }
                 else
                 {
-                    li.AddCssClass("inactive");
-                    var span = new TagBuilder("span");
-                    span.SetInnerText(letter);
-                    //li.InnerHtml = span.ToString();
+                    sb.Append(" class='inactive'>");
+                    sb.Append("<span>" + letter + "</span>");
+                    sb.Append("</li>");
 
-                    li.InnerHtml = span.ToHtmlString();
+                    //li.AddCssClass("inactive");
+                    //var span = new TagBuilder("span");
+                    //span.SetInnerText(letter);
+                    //li.InnerHtml = span;
+
+                    
 
                 }
-                sb.Append(li.ToString());
+                //sb.Append(li.ToString());
             }
             //ul.InnerHtml = sb.ToString();
-            ul.InnerHtml = new HtmlString(sb.ToString());
+            //ul.InnerHtml = new HtmlString(sb.ToString());
+            sb.Append("</ul>");
 
 
 
-            return new HtmlString(ul.ToString());
+            return new HtmlString(sb.ToString());
         }
 
     }
