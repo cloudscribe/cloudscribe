@@ -1,7 +1,7 @@
 {
   "version": "1.0.0-*",
   "title": "cloudscribe.Core.Web",
-  "description": "Multi-tenant MVC and WebApi application foundation with management for sites, users, roles, and geographic data.  You should only install this into an empty web application project that does not already have startup code or AspNet Identity installed. This is the main library for cloudscribe. Typically you should not install this directly but instead install the package cloudscribe.Core.Web.Integration which will also install cloudscribe.Web.Core aalong with the integration code needed to wire it up in your empty web application project. You are allowed to modify the integration code after it is added to your project.",
+  "description": "Multi-tenant MVC and WebApi application foundation with management for sites, users, roles, and geographic data.  You should only install this into an empty web application project that does not already have startup code or AspNet Identity installed. This is the main library for cloudscribe. Typically you should not install this directly but instead install the package cloudscribe.Core.Web.Integration which will also install cloudscribe.Web.Core along with the integration code needed to wire it up in your empty web application project. You are allowed to modify the integration code after it is added to your project.",
   "summary": "Multi-tenant MVC and WebApi application foundation with management for sites, users, roles, and geographic data",
   "authors": [ "Joe Audette" ],
   "owners": [ "Source Tree Solutions" ],
@@ -31,9 +31,8 @@
     "Microsoft.AspNet.Http.Abstractions": "1.0.0-beta7",
     "Microsoft.AspNet.Http.Features": "1.0.0-beta7",
     "Microsoft.AspNet.Mvc.TagHelpers": "6.0.0-beta7",
-    "Microsoft.Framework.OptionsModel": "1.0.0-beta7"
-
-    
+    "Microsoft.Framework.OptionsModel": "1.0.0-beta7",
+    "cloudscribe.Resources": "1.0.0-*"
   },
 
   "frameworks": {

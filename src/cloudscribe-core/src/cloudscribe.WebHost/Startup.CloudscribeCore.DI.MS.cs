@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-06-20
-// Last Modified:			2015-09-04
+// Last Modified:			2015-09-07
 // 
 
 using System;
@@ -65,7 +65,7 @@ namespace cloudscribe.WebHost
             //});
 
 
-            services.AddInstance<IConfiguration>(configuration);
+            //services.AddInstance<IConfiguration>(configuration);
             //services.TryAddScoped<ConfigHelper, ConfigHelper>();
             services.Configure<MultiTenantOptions>(configuration.GetSection("MultiTenantOptions"));
             services.Configure<SetupOptions>(configuration.GetSection("SetupOptions"));
@@ -135,8 +135,8 @@ namespace cloudscribe.WebHost
             services.TryAddScoped<IVersionProviderFactory, ConfigVersionProviderFactory>();
 
             services.AddCloudscribeIdentity<SiteUser, SiteRole>();
-            
-            
+
+
 
             // you can use either json or xml to maintain your navigation map we provide examples of each navigation.xml and 
             // navigation.json in the root of this project
@@ -147,6 +147,7 @@ namespace cloudscribe.WebHost
             // that could get large xml is easier to work with and not make mistakes. in json one missing or extra comma can break it
             // granted xml can be broken by typos too but the end tags make it easier to keep track of where you are imho (JA)
             //services.TryAddScoped<INavigationTreeBuilder, JsonNavigationTreeBuilder>();
+            //services.TryAddScoped<INavigationTreeBuilder, HardCodedNavigationTreeBuilder>();
             services.TryAddScoped<INavigationTreeBuilder, XmlNavigationTreeBuilder>();
             services.TryAddScoped<INodeUrlPrefixProvider, FolderTenantNodeUrlPrefixProvider>(); 
             services.TryAddScoped<INavigationNodePermissionResolver, NavigationNodePermissionResolver>();
@@ -160,6 +161,13 @@ namespace cloudscribe.WebHost
 
             // Add MVC services to the services container.
             services.TryAddSingleton<IRazorViewEngine, CoreViewEngine>();
+            // cloudscribe.Core.Web.CoreViewEngine adds /Views/Sys as the last place to search for views
+            // cloudscribe views are all under Views/Sys
+            // to modify a view just copy it to a higher priority location
+            // ie copy /Views/Sys/Manage/*.cshtml up to /Views/Manage/ and that one will have higher priority
+            // and you can modify it however you like
+            // upgrading to newer versions of cloudscribe could modify or add views below /Views/Sys
+            // so you may need to compare your custom views to the originals again after upgrades
 
             services.AddMvc(options =>
             {
@@ -171,16 +179,7 @@ namespace cloudscribe.WebHost
             .AddViewOptions(options =>
              {
                  
-                 //options.ViewEngines.Clear();
-                 // cloudscribe.Core.Web.CoreViewEngine adds /Views/Sys as the last place to search for views
-                 // cloudscribe views are all under Views/Sys
-                 // to modify a view just copy it to a higher priority location
-                 // ie copy /Views/Sys/Manage/*.cshtml up to /Views/Manage/ and that one will have higher priority
-                 // and you can modify it however you like
-                 // upgrading to newer versions of cloudscribe could modify or add views below /Views/Sys
-                 // so you may need to compare your custom views to the originals again after upgrades
-                 //options.ViewEngines.Add(typeof(CoreViewEngine));
-                 //options.ViewEngines.Add(new CoreViewEngine());
+                 
              });
 
             

@@ -26,15 +26,14 @@ using Microsoft.Framework.Logging;
 using Microsoft.Framework.Logging.Console;
 using Microsoft.Framework.OptionsModel;
 using Microsoft.Dnx.Runtime;
-//using cloudscribe.WebHost.Models;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Logging;
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Repositories.MSSQL;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.Components.Logging;
-using Autofac;
-using Autofac.Framework.DependencyInjection;
+//using Autofac;
+//using Autofac.Framework.DependencyInjection;
 
 namespace cloudscribe.WebHost
 {
@@ -50,7 +49,7 @@ namespace cloudscribe.WebHost
                 .AddJsonFile($"config.{env.EnvironmentName}.json", optional: true);
 
             //appEnv.
-            env.EnvironmentName = "Development";
+            //env.EnvironmentName = "Development";
 
             if (env.IsEnvironment("Development"))
             {
@@ -79,9 +78,10 @@ namespace cloudscribe.WebHost
         //public IServiceProvider ConfigureServices(IServiceCollection services)
         public void ConfigureServices(IServiceCollection services)
         {
-            // Add Application settings to the services container.
-            //services.Configure<AppSettings>(Configuration.GetConfigurationSection("AppSettings"));
             
+            // we may need this on linux/mac as urls are case sensitive by default
+            //services.Configure<RouteOptions>(routeOptions => routeOptions.LowercaseUrls = true);
+
             // Setup dependencies for cloudscribe Identity, Roles and and Site Administration
             // this is in Startup.CloudscribeCore.DI.MS.cs
             services.ConfigureCloudscribeCore(Configuration);
@@ -162,13 +162,13 @@ namespace cloudscribe.WebHost
                 //app.UseErrorPage(ErrorPageOptions.ShowAll);
             }
 
-            app.UseRuntimeInfoPage("/info");
+            //app.UseRuntimeInfoPage("/info");
 
             // Add static files to the request pipeline.
             app.UseStaticFiles();
             
             // this is in Startup.CloudscribeCore.cs
-            app.UseCloudscribeCore(Configuration, multiTenantOptions);
+            app.UseCloudscribeCore(multiTenantOptions);
 
             // it is very important that all authentication configuration be set before configuring mvc
             // ie if app.UseFacebookAuthentication(); was below app.UseMvc the facebook login button will not be shown

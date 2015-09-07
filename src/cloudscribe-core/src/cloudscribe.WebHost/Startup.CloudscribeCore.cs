@@ -20,11 +20,13 @@ using Microsoft.AspNet.Session;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Caching;
 using Microsoft.Framework.Caching.Distributed;
+using Microsoft.Framework.Localization;
 using Microsoft.Framework.OptionsModel;
 using Microsoft.Framework.Internal;
 using Microsoft.Framework.Configuration;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Mvc;
+using Microsoft.AspNet.Mvc.Localization;
 using Microsoft.AspNet.Mvc.Razor;
 using Microsoft.AspNet.Routing;
 using cloudscribe.Core.Models;
@@ -61,14 +63,13 @@ namespace cloudscribe.WebHost
         /// <returns></returns>
         public static IApplicationBuilder UseCloudscribeCore(
             this IApplicationBuilder app, 
-            IConfiguration config,
             IOptions<MultiTenantOptions> multiTenantOptions)
         {
 
             // the only thing we are using session for is Alerts
             app.UseSession();
             //app.UseInMemorySession(configure: s => s.IdleTimeout = TimeSpan.FromMinutes(20));
-            app.UseStatusCodePages();
+            //app.UseStatusCodePages();
 
             
 
@@ -87,7 +88,9 @@ namespace cloudscribe.WebHost
             //app.UseTwitterAuthentication();
             app.UseMultiTenantTwitterAuthentication();
 
+            //app.UseCultureReplacer();
 
+            //app.UseRequestLocalization();
 
 
             return app;
