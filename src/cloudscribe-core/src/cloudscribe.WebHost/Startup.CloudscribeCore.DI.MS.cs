@@ -70,8 +70,11 @@ namespace cloudscribe.WebHost
             services.Configure<MultiTenantOptions>(configuration.GetSection("MultiTenantOptions"));
             services.Configure<SetupOptions>(configuration.GetSection("SetupOptions"));
             services.Configure<UIOptions>(configuration.GetSection("UIOptions"));
+            services.Configure<UIOptions>(configuration.GetSection("CkeditorOptions"));
 
             
+
+
 
 
             //*** Database platform ****************************************************************

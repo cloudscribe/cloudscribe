@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-06-19
-// Last Modified:		    2015-07-31
+// Last Modified:		    2015-09-08
 // 
 
 using cloudscribe.Core.Models;
@@ -18,24 +18,22 @@ namespace cloudscribe.Core.Identity
     public sealed class RoleStore<TRole> : IRoleStore<TRole> where TRole : SiteRole
     {
         public RoleStore(
-            //ILoggerFactory loggerFactory,
             ILogger<RoleStore<TRole>> logger,
             ISiteResolver siteResolver,
-            IUserRepository userRepository,
-            IConfiguration configuration
+            IUserRepository userRepository
             )
         {
             if (logger == null) { throw new ArgumentNullException(nameof(logger)); }
             if (siteResolver == null) { throw new ArgumentNullException(nameof(siteResolver)); }
             if (userRepository == null) { throw new ArgumentNullException(nameof(userRepository)); }
-            if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
+            //if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
 
             resolver = siteResolver;
             //logFactory = loggerFactory;
             //log = loggerFactory.CreateLogger(this.GetType().FullName);
             log = logger;
 
-            config = configuration;
+            //config = configuration;
             //debugLog = config.UserStoreDebugEnabled();
 
             
@@ -47,7 +45,7 @@ namespace cloudscribe.Core.Identity
             //if (debugLog) { log.LogInformation("constructor"); }
         }
 
-        //private ILoggerFactory logFactory;
+        
         private ILogger log;
         //private bool debugLog = false;
         private IConfiguration config;

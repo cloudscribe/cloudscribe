@@ -1,13 +1,14 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.SiteBasicSettingsViewModel
-
-@inject ConfigHelper config
-@inject IOptions<MultiTenantOptions> multiTenantOptions
+@inject IOptions<CkeditorOptions> ckOptionsAccessor
+@inject IOptions<MultiTenantOptions> multiTenantOptionsAccessor
 
 @{
+    MultiTenantOptions multiTenantOptions = multiTenantOptionsAccessor.Options;
     bool useFolderTenants = true;
-    if(multiTenantOptions.Options.Mode != MultiTenantMode.FolderName) { useFolderTenants = false; }
+    if(multiTenantOptions.Mode != MultiTenantMode.FolderName) { useFolderTenants = false; }
     bool useHostTenants = true;
-    if (multiTenantOptions.Options.Mode != MultiTenantMode.HostName) { useHostTenants = false; }
+    if (multiTenantOptions.Mode != MultiTenantMode.HostName) { useHostTenants = false; }
+    CkeditorOptions ckOptions = ckOptionsAccessor.Options;
 }
 <form method="post" class="form-horizontal" role="form" asp-antiforgery="true">
     <div class="form-horizontal">
@@ -238,13 +239,12 @@
                 <span asp-validation-for="TwitterConsumerSecret" class="text-danger"></span>
             </div>
         </div>
-
         <div class="form-group">
             <label asp-for="ClosedMessage" class="col-md-2 control-label"></label>
             <div class="col-md-10">
                 <textarea class="form-control" rows="5" asp-for="ClosedMessage"
                           data-ckeditor-unobtrusive="" 
-                          data-ckeditor-unobtrusive-config-url="@Url.Content(config.CkEditorCustomConfigPath())"
+                          data-ckeditor-unobtrusive-config-url="@Url.Content(ckOptions.CustomConfigPath)"
                           data-ckeditor-unobtrusive-config-toolbar="Full"
                           data-ckeditor-unobtrusive-config-language="@System.Globalization.CultureInfo.CurrentUICulture.Name"
                           ></textarea>
