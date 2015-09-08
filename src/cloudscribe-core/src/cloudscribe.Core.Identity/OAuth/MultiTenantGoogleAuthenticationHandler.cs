@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-29
-// Last Modified:		    2015-09-01
+// Last Modified:		    2015-09-08
 // based on https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.Google/GoogleAuthenticationHandler.cs
 
 
@@ -38,11 +38,24 @@ namespace cloudscribe.Core.Identity.OAuth
                   new MultiTenantOAuthOptionsResolver(siteResolver, multiTenantOptions)
                   )
         {
-
+            log = loggerFactory.CreateLogger<MultiTenantGoogleAuthenticationHandler>();
+            this.siteResolver = siteResolver;
+            this.multiTenantOptions = multiTenantOptions;
+            siteRepo = siteRepository;
         }
 
-        protected override async Task<AuthenticationTicket> CreateTicketAsync(ClaimsIdentity identity, AuthenticationProperties properties, OAuthTokenResponse tokens)
+        private ILogger log;
+        private ISiteResolver siteResolver;
+        private ISiteRepository siteRepo;
+        private MultiTenantOptions multiTenantOptions;
+
+        protected override async Task<AuthenticationTicket> CreateTicketAsync(
+            ClaimsIdentity identity, 
+            AuthenticationProperties properties, 
+            OAuthTokenResponse tokens)
         {
+            log.LogInformation("CreateTicketAsync called");
+
             // Get the Google user
             var request = new HttpRequestMessage(HttpMethod.Get, Options.UserInformationEndpoint);
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", tokens.AccessToken);
@@ -96,7 +109,20 @@ namespace cloudscribe.Core.Identity.OAuth
 
             await Options.Notifications.Authenticated(notification);
 
-            return new AuthenticationTicket(notification.Principal, notification.Properties, notification.Options.AuthenticationScheme);
+            ISiteSettings site = siteResolver.Resolve();
+
+            if (site != null)
+            {
+                Claim siteGuidClaim = new Claim("SiteGuid", site.SiteGuid.ToString());
+                if (!identity.HasClaim(siteGuidClaim.Type, siteGuidClaim.Value))
+                {
+                    identity.AddClaim(siteGuidClaim);
+                }
+
+            }
+
+            //return new AuthenticationTicket(notification.Principal, notification.Properties, notification.Options.AuthenticationScheme);
+            return new AuthenticationTicket(notification.Principal, notification.Properties, AuthenticationScheme.External);
         }
 
         // TODO: Abstract this properties override pattern into the base class?
@@ -104,10 +130,17 @@ namespace cloudscribe.Core.Identity.OAuth
         {
             var scope = FormatScope();
 
+            var tenantOptions = new MultiTenantGoogleOptionsResolver(Options, siteResolver, siteRepo, multiTenantOptions);
+            string resolvedRedirectUri = tenantOptions.ResolveRedirectUrl(redirectUri);
+            log.LogInformation("resolvedRedirectUri was " + resolvedRedirectUri);
+
             var queryStrings = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
             queryStrings.Add("response_type", "code");
-            queryStrings.Add("client_id", Options.ClientId);
-            queryStrings.Add("redirect_uri", redirectUri);
+            //queryStrings.Add("client_id", Options.ClientId);
+            //queryStrings.Add("redirect_uri", redirectUri);
+            queryStrings.Add("client_id", tenantOptions.ClientId);
+            queryStrings.Add("redirect_uri", resolvedRedirectUri);
 
             AddQueryString(queryStrings, properties, "scope", scope);
 
@@ -142,6 +175,43 @@ namespace cloudscribe.Core.Identity.OAuth
             }
 
             queryStrings[name] = value;
+        }
+
+        protected override async Task<OAuthTokenResponse> ExchangeCodeAsync(string code, string redirectUri)
+        {
+            log.LogInformation("ExchangeCodeAsync called with code " + code + " redirectUri " + redirectUri);
+
+
+            //var tokenRequestParameters = new Dictionary<string, string>()
+            //{
+            //    { "client_id", Options.ClientId },
+            //    { "redirect_uri", redirectUri },
+            //    { "client_secret", Options.ClientSecret },
+            //    { "code", code },
+            //    { "grant_type", "authorization_code" },
+            //};
+
+            var tenantOptions = new MultiTenantGoogleOptionsResolver(Options, siteResolver, siteRepo, multiTenantOptions);
+
+            var tokenRequestParameters = new Dictionary<string, string>()
+            {
+                { "client_id", tenantOptions.ClientId },
+                { "redirect_uri", tenantOptions.ResolveRedirectUrl(redirectUri) },
+                { "client_secret", tenantOptions.ClientSecret },
+                { "code", code },
+                { "grant_type", "authorization_code" },
+            };
+
+            var requestContent = new FormUrlEncodedContent(tokenRequestParameters);
+
+            var requestMessage = new HttpRequestMessage(HttpMethod.Post, Options.TokenEndpoint);
+            requestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            requestMessage.Content = requestContent;
+            var response = await Backchannel.SendAsync(requestMessage, Context.RequestAborted);
+            response.EnsureSuccessStatusCode();
+            var payload = JObject.Parse(await response.Content.ReadAsStringAsync());
+
+            return new OAuthTokenResponse(payload);
         }
 
     }
