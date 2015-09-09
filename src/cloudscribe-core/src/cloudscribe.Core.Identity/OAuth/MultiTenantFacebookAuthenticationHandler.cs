@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-25
-// Last Modified:		    2015-08-28
+// Last Modified:		    2015-09-09
 // 
 
 using System;
@@ -57,7 +57,7 @@ namespace cloudscribe.Core.Identity.OAuth
 
         protected override async Task<OAuthTokenResponse> ExchangeCodeAsync(string code, string redirectUri)
         {
-            log.LogInformation("ExchangeCodeAsync called with code " + code + " redirectUri " + redirectUri);
+            log.LogDebug("ExchangeCodeAsync called with code " + code + " redirectUri " + redirectUri);
             //var queryBuilder = new QueryBuilder()
             //{
             //    { "grant_type", "authorization_code" },
@@ -95,7 +95,7 @@ namespace cloudscribe.Core.Identity.OAuth
 
         protected override string BuildChallengeUrl(AuthenticationProperties properties, string redirectUri)
         {
-            log.LogInformation("BuildChallengeUrl called with redirectUri = " + redirectUri);
+            log.LogDebug("BuildChallengeUrl called with redirectUri = " + redirectUri);
 
             var scope = FormatOAuthScope();
 
@@ -131,7 +131,7 @@ namespace cloudscribe.Core.Identity.OAuth
 
         protected override async Task<AuthenticationTicket> CreateTicketAsync(ClaimsIdentity identity, AuthenticationProperties properties, OAuthTokenResponse tokens)
         {
-            log.LogInformation("CreateTicketAsync called");
+            log.LogDebug("CreateTicketAsync called");
             //Options.AuthenticationScheme = AuthenticationScheme.External;
 
             var endpoint = QueryHelpers.AddQueryString(Options.UserInformationEndpoint, "access_token", tokens.AccessToken);
@@ -154,7 +154,7 @@ namespace cloudscribe.Core.Identity.OAuth
             var identifier = FacebookAuthenticationHelper.GetId(payload);
             if (!string.IsNullOrEmpty(identifier))
             {
-                log.LogInformation("CreateTicketAsync FacebookAuthenticationHelper.GetId(payload) " + identifier);
+                log.LogDebug("CreateTicketAsync FacebookAuthenticationHelper.GetId(payload) " + identifier);
 
                 identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, identifier, ClaimValueTypes.String, Options.ClaimsIssuer));
             }
@@ -162,7 +162,7 @@ namespace cloudscribe.Core.Identity.OAuth
             var userName = FacebookAuthenticationHelper.GetUserName(payload);
             if (!string.IsNullOrEmpty(userName))
             {
-                log.LogInformation("CreateTicketAsync FacebookAuthenticationHelper.GetUserName(payload) " + userName);
+                log.LogDebug("CreateTicketAsync FacebookAuthenticationHelper.GetUserName(payload) " + userName);
 
                 identity.AddClaim(new Claim(ClaimsIdentity.DefaultNameClaimType, userName, ClaimValueTypes.String, Options.ClaimsIssuer));
             }
@@ -170,7 +170,7 @@ namespace cloudscribe.Core.Identity.OAuth
             var email = FacebookAuthenticationHelper.GetEmail(payload);
             if (!string.IsNullOrEmpty(email))
             {
-                log.LogInformation("CreateTicketAsync FacebookAuthenticationHelper.GetEmail(payload) " + email);
+                log.LogDebug("CreateTicketAsync FacebookAuthenticationHelper.GetEmail(payload) " + email);
 
                 identity.AddClaim(new Claim(ClaimTypes.Email, email, ClaimValueTypes.String, Options.ClaimsIssuer));
             }
@@ -178,7 +178,7 @@ namespace cloudscribe.Core.Identity.OAuth
             var name = FacebookAuthenticationHelper.GetName(payload);
             if (!string.IsNullOrEmpty(name))
             {
-                log.LogInformation("CreateTicketAsync FacebookAuthenticationHelper.GetName(payload) " + name);
+                log.LogDebug("CreateTicketAsync FacebookAuthenticationHelper.GetName(payload) " + name);
 
                 identity.AddClaim(new Claim("urn:facebook:name", name, ClaimValueTypes.String, Options.ClaimsIssuer));
 
@@ -192,12 +192,12 @@ namespace cloudscribe.Core.Identity.OAuth
             var link = FacebookAuthenticationHelper.GetLink(payload);
             if (!string.IsNullOrEmpty(link))
             {
-                log.LogInformation("CreateTicketAsync FacebookAuthenticationHelper.GetLink(payload) " + link);
+                log.LogDebug("CreateTicketAsync FacebookAuthenticationHelper.GetLink(payload) " + link);
 
                 identity.AddClaim(new Claim("urn:facebook:link", link, ClaimValueTypes.String, Options.ClaimsIssuer));
             }
 
-            log.LogInformation("CreateTicketAsync notification.Options.AuthenticationScheme " + notification.Options.AuthenticationScheme);
+            log.LogDebug("CreateTicketAsync notification.Options.AuthenticationScheme " + notification.Options.AuthenticationScheme);
 
             await Options.Notifications.Authenticated(notification);
 
@@ -214,7 +214,7 @@ namespace cloudscribe.Core.Identity.OAuth
             }
 
 
-            log.LogInformation("CreateTicketAsync notification.Principal " + notification.Principal.Identity.Name.ToString());
+            log.LogDebug("CreateTicketAsync notification.Principal " + notification.Principal.Identity.Name.ToString());
 
             //https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication/AuthenticationTicket.cs
             //return new AuthenticationTicket(notification.Principal, notification.Properties, notification.Options.AuthenticationScheme);

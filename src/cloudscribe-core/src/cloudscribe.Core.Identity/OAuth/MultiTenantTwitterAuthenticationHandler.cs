@@ -2,9 +2,18 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-29
-// Last Modified:		    2015-09-04
+// Last Modified:		    2015-09-09
 // based on https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.Twitter/TwitterAuthenticationHandler.cs
 
+using cloudscribe.Core.Models;
+using Microsoft.AspNet.Authentication;
+using Microsoft.AspNet.Authentication.Twitter;
+using Microsoft.AspNet.Http;
+using Microsoft.AspNet.Http.Authentication;
+using Microsoft.AspNet.Http.Features.Authentication;
+using Microsoft.AspNet.Http.Internal;
+using Microsoft.AspNet.WebUtilities;
+using Microsoft.Framework.Logging;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -13,18 +22,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNet.Authentication;
-using Microsoft.AspNet.Authentication.OAuth;
-using Microsoft.AspNet.Authentication.Twitter;
-//using Microsoft.AspNet.Authentication.Twitter.Messages;
-using Microsoft.AspNet.Http;
-using Microsoft.AspNet.Http.Authentication;
-using Microsoft.AspNet.Http.Features.Authentication;
-using Microsoft.AspNet.Http.Internal;
-using Microsoft.AspNet.WebUtilities;
-using Microsoft.Framework.Internal;
-using Microsoft.Framework.Logging;
-// this is not available in beta6 guess this will have to wait till beta 7 or later
+// this is not available in beta6/7 guess this will have to wait till beta 8 or later
 //using Microsoft.Framework.Primitives;
 
 
@@ -40,14 +38,32 @@ namespace cloudscribe.Core.Identity.OAuth
 
         private readonly HttpClient _httpClient;
 
-        public MultiTenantTwitterAuthenticationHandler(HttpClient httpClient)
+        public MultiTenantTwitterAuthenticationHandler(
+            HttpClient httpClient,
+            ISiteResolver siteResolver,
+            ISiteRepository siteRepository,
+            MultiTenantOptions multiTenantOptions,
+            ILoggerFactory loggerFactory)
         {
             _httpClient = httpClient;
+
+            log = loggerFactory.CreateLogger<MultiTenantTwitterAuthenticationHandler>();
+            this.siteResolver = siteResolver;
+            this.multiTenantOptions = multiTenantOptions;
+            siteRepo = siteRepository;
         }
+
+        private ILogger log;
+        private ISiteResolver siteResolver;
+        private ISiteRepository siteRepo;
+        private MultiTenantOptions multiTenantOptions;
 
         public override async Task<bool> InvokeAsync()
         {
-            if (Options.CallbackPath.HasValue && Options.CallbackPath == Request.Path)
+            //if (Options.CallbackPath.HasValue && Options.CallbackPath == Request.Path)
+            // we need to respond not just to /signin-twitter but also folder sites /foldername/signin-twitter
+            // for example so changed to check contains instead of exact match
+            if (Options.CallbackPath.HasValue && Request.Path.Value.Contains(Options.CallbackPath.Value))
             {
                 return await InvokeReturnPathAsync();
             }
@@ -59,8 +75,10 @@ namespace cloudscribe.Core.Identity.OAuth
             AuthenticationProperties properties = null;
             try
             {
+                var tenantOptions = new MultiTenantTwitterOptionsResolver(Options, siteResolver, siteRepo, multiTenantOptions);
+
                 var query = Request.Query;
-                var protectedRequestToken = Request.Cookies[StateCookie];
+                var protectedRequestToken = Request.Cookies[tenantOptions.ResolveStateCookieName(StateCookie)];
 
                 var requestToken = Options.StateDataFormat.Unprotect(protectedRequestToken);
 
@@ -100,9 +118,21 @@ namespace cloudscribe.Core.Identity.OAuth
                     Secure = Request.IsHttps
                 };
 
-                Response.Cookies.Delete(StateCookie, cookieOptions);
+                Response.Cookies.Delete(tenantOptions.ResolveStateCookieName(StateCookie), cookieOptions);
 
-                var accessToken = await ObtainAccessTokenAsync(Options.ConsumerKey, Options.ConsumerSecret, requestToken, oauthVerifier);
+                
+
+                //var accessToken = await ObtainAccessTokenAsync(
+                //    Options.ConsumerKey, 
+                //    Options.ConsumerSecret, 
+                //    requestToken, 
+                //    oauthVerifier);
+
+                var accessToken = await ObtainAccessTokenAsync(
+                    tenantOptions.ConsumerKey,
+                    tenantOptions.ConsumerSecret,
+                    requestToken,
+                    oauthVerifier);
 
                 var identity = new ClaimsIdentity(new[]
                 {
@@ -127,8 +157,13 @@ namespace cloudscribe.Core.Identity.OAuth
             }
         }
 
-        protected virtual async Task<AuthenticationTicket> CreateTicketAsync(ClaimsIdentity identity, AuthenticationProperties properties, AccessToken token)
+        protected virtual async Task<AuthenticationTicket> CreateTicketAsync(
+            ClaimsIdentity identity, 
+            AuthenticationProperties properties, 
+            AccessToken token)
         {
+            log.LogDebug("CreateTicketAsync called tokens.ScreenName was " + token.ScreenName);
+
             var notification = new TwitterAuthenticatedContext(Context, token.UserId, token.ScreenName, token.Token, token.TokenSecret)
             {
                 Principal = new ClaimsPrincipal(identity),
@@ -142,7 +177,20 @@ namespace cloudscribe.Core.Identity.OAuth
                 return null;
             }
 
-            return new AuthenticationTicket(notification.Principal, notification.Properties, Options.AuthenticationScheme);
+            ISiteSettings site = siteResolver.Resolve();
+
+            if (site != null)
+            {
+                Claim siteGuidClaim = new Claim("SiteGuid", site.SiteGuid.ToString());
+                if (!identity.HasClaim(siteGuidClaim.Type, siteGuidClaim.Value))
+                {
+                    identity.AddClaim(siteGuidClaim);
+                }
+
+            }
+
+            //return new AuthenticationTicket(notification.Principal, notification.Properties, Options.AuthenticationScheme);
+            return new AuthenticationTicket(notification.Principal, notification.Properties, AuthenticationScheme.External);
         }
 
         protected override async Task<bool> HandleUnauthorizedAsync(ChallengeContext context)
@@ -153,7 +201,20 @@ namespace cloudscribe.Core.Identity.OAuth
                 properties.RedirectUri = CurrentUri;
             }
 
-            var requestToken = await ObtainRequestTokenAsync(Options.ConsumerKey, Options.ConsumerSecret, BuildRedirectUri(Options.CallbackPath), properties);
+            var tenantOptions = new MultiTenantTwitterOptionsResolver(Options, siteResolver, siteRepo, multiTenantOptions);
+
+            //var requestToken = await ObtainRequestTokenAsync(
+            //    Options.ConsumerKey, 
+            //    Options.ConsumerSecret, 
+            //    BuildRedirectUri(Options.CallbackPath), 
+            //    properties);
+
+            var requestToken = await ObtainRequestTokenAsync(
+                tenantOptions.ConsumerKey,
+                tenantOptions.ConsumerSecret,
+                BuildRedirectUri(tenantOptions.ResolveRedirectUrl(Options.CallbackPath)),
+                properties);
+
             if (requestToken.CallbackConfirmed)
             {
                 var twitterAuthenticationEndpoint = AuthenticationEndpoint + requestToken.Token;
@@ -164,11 +225,15 @@ namespace cloudscribe.Core.Identity.OAuth
                     Secure = Request.IsHttps
                 };
 
-                Response.Cookies.Append(StateCookie, Options.StateDataFormat.Protect(requestToken), cookieOptions);
+                Response.Cookies.Append(
+                    tenantOptions.ResolveStateCookieName(StateCookie), 
+                    Options.StateDataFormat.Protect(requestToken), 
+                    cookieOptions);
 
                 var redirectContext = new TwitterApplyRedirectContext(
                     Context, Options,
                     properties, twitterAuthenticationEndpoint);
+
                 Options.Notifications.ApplyRedirect(redirectContext);
                 return true;
             }
@@ -232,9 +297,15 @@ namespace cloudscribe.Core.Identity.OAuth
             throw new NotSupportedException();
         }
 
-        private async Task<RequestToken> ObtainRequestTokenAsync(string consumerKey, string consumerSecret, string callBackUri, AuthenticationProperties properties)
+        private async Task<RequestToken> ObtainRequestTokenAsync(
+            string consumerKey, 
+            string consumerSecret, 
+            string callBackUri, 
+            AuthenticationProperties properties)
         {
             Logger.LogVerbose("ObtainRequestToken");
+
+            log.LogDebug("ObtainRequestTokenAsync called with consumerKey " + consumerKey + " and callBackUri " + callBackUri);
 
             var nonce = Guid.NewGuid().ToString("N");
 
@@ -296,6 +367,8 @@ namespace cloudscribe.Core.Identity.OAuth
             // https://dev.twitter.com/docs/api/1/post/oauth/access_token
 
             Logger.LogVerbose("ObtainAccessToken");
+
+            log.LogDebug("ObtainRequestTokenAsync called with consumerKey " + consumerKey + " and token " + token.Token + " and verifier " + verifier);
 
             var nonce = Guid.NewGuid().ToString("N");
 
@@ -376,6 +449,8 @@ namespace cloudscribe.Core.Identity.OAuth
 
         private string ComputeSignature(string consumerSecret, string tokenSecret, string signatureData)
         {
+            //log.LogDebug("ComputeSignature called with consumerSecret " + consumerSecret);
+
             using (var algorithm = new HMACSHA1())
             {
                 algorithm.Key = Encoding.ASCII.GetBytes(

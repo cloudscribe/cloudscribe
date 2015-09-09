@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-29
-// Last Modified:		    2015-09-01
+// Last Modified:		    2015-09-09
 // based on https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.MicrosoftAccount/MicrosoftAccountAuthenticationHandler.cs
 
 
@@ -50,7 +50,7 @@ namespace cloudscribe.Core.Identity.OAuth
 
         protected override async Task<OAuthTokenResponse> ExchangeCodeAsync(string code, string redirectUri)
         {
-            log.LogInformation("ExchangeCodeAsync called with code " + code + " redirectUri " + redirectUri);
+            log.LogDebug("ExchangeCodeAsync called with code " + code + " redirectUri " + redirectUri);
 
             //var tokenRequestParameters = new Dictionary<string, string>()
             //{
@@ -86,7 +86,7 @@ namespace cloudscribe.Core.Identity.OAuth
 
         protected override string BuildChallengeUrl(AuthenticationProperties properties, string redirectUri)
         {
-            log.LogInformation("BuildChallengeUrl called with redirectUri = " + redirectUri);
+            log.LogDebug("BuildChallengeUrl called with redirectUri = " + redirectUri);
 
             var scope = FormatScope();
 
@@ -103,7 +103,7 @@ namespace cloudscribe.Core.Identity.OAuth
 
             var tenantFbOptions = new MultiTenantMicrosoftOptionsResolver(Options, siteResolver, siteRepo, multiTenantOptions);
             string resolvedRedirectUri = tenantFbOptions.ResolveRedirectUrl(redirectUri);
-            log.LogInformation("resolvedRedirectUri was " + resolvedRedirectUri);
+            log.LogDebug("resolvedRedirectUri was " + resolvedRedirectUri);
 
             var queryBuilder = new QueryBuilder()
             {
@@ -119,7 +119,7 @@ namespace cloudscribe.Core.Identity.OAuth
 
         protected override async Task<AuthenticationTicket> CreateTicketAsync(ClaimsIdentity identity, AuthenticationProperties properties, OAuthTokenResponse tokens)
         {
-            log.LogInformation("CreateTicketAsync called");
+            log.LogDebug("CreateTicketAsync called");
 
             var request = new HttpRequestMessage(HttpMethod.Get, Options.UserInformationEndpoint);
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", tokens.AccessToken);

@@ -7,20 +7,20 @@
 
 
 
+using cloudscribe.Core.Models;
+using Microsoft.AspNet.Authentication;
+using Microsoft.AspNet.Authentication.Google;
+using Microsoft.AspNet.Authentication.OAuth;
+using Microsoft.AspNet.Http.Authentication;
+using Microsoft.AspNet.WebUtilities;
+using Microsoft.Framework.Logging;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNet.Http.Authentication;
-using Microsoft.AspNet.Authentication;
-using Microsoft.AspNet.Authentication.OAuth;
-using Microsoft.AspNet.WebUtilities;
-using Microsoft.AspNet.Authentication.Google;
-using Microsoft.Framework.Logging;
-using cloudscribe.Core.Models;
-using Newtonsoft.Json.Linq;
 
 namespace cloudscribe.Core.Identity.OAuth
 {
@@ -54,7 +54,7 @@ namespace cloudscribe.Core.Identity.OAuth
             AuthenticationProperties properties, 
             OAuthTokenResponse tokens)
         {
-            log.LogInformation("CreateTicketAsync called tokens.AccessToken was " + tokens.AccessToken);
+            log.LogDebug("CreateTicketAsync called tokens.AccessToken was " + tokens.AccessToken);
 
             // Get the Google user
             var request = new HttpRequestMessage(HttpMethod.Get, Options.UserInformationEndpoint);
@@ -135,7 +135,7 @@ namespace cloudscribe.Core.Identity.OAuth
 
             var tenantOptions = new MultiTenantGoogleOptionsResolver(Options, siteResolver, siteRepo, multiTenantOptions);
             string resolvedRedirectUri = tenantOptions.ResolveRedirectUrl(redirectUri);
-            log.LogInformation("resolvedRedirectUri was " + resolvedRedirectUri);
+            log.LogDebug("resolvedRedirectUri was " + resolvedRedirectUri);
 
             var queryStrings = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
@@ -182,7 +182,7 @@ namespace cloudscribe.Core.Identity.OAuth
 
         protected override async Task<OAuthTokenResponse> ExchangeCodeAsync(string code, string redirectUri)
         {
-            log.LogInformation("ExchangeCodeAsync called with code " + code + " redirectUri " + redirectUri);
+            log.LogDebug("ExchangeCodeAsync called with code " + code + " redirectUri " + redirectUri);
 
 
             //var tokenRequestParameters = new Dictionary<string, string>()

@@ -48,7 +48,7 @@ namespace cloudscribe.Core.Identity
         
         private ILogger log;
         //private bool debugLog = false;
-        private IConfiguration config;
+        //private IConfiguration config;
         private ISiteResolver resolver;
         private IUserRepository userRepo;
         private ISiteSettings siteSettings = null;

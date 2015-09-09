@@ -2,25 +2,20 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-29
-// Last Modified:		    2015-09-04
+// Last Modified:		    2015-09-09
 // based on https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.Twitter/TwitterAuthenticationMiddleware.cs
 
-using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
-using System.Net.Http;
-using System.Text;
+using cloudscribe.Core.Models;
+using Microsoft.AspNet.Authentication;
+using Microsoft.AspNet.Authentication.Twitter;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.DataProtection;
-//using Microsoft.AspNet.Authentication.DataHandler;
-//using Microsoft.AspNet.Authentication.DataHandler.Encoder;
-using Microsoft.Framework.Internal;
 using Microsoft.Framework.Logging;
 using Microsoft.Framework.OptionsModel;
 using Microsoft.Framework.WebEncoders;
-using Microsoft.AspNet.Authentication;
-using Microsoft.AspNet.Authentication.Twitter;
-//using Microsoft.AspNet.Authentication.Twitter.Messages;
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Net.Http;
 
 namespace cloudscribe.Core.Identity.OAuth
 {
@@ -31,22 +26,29 @@ namespace cloudscribe.Core.Identity.OAuth
     public class MultiTenantTwitterAuthenticationMiddleware : AuthenticationMiddleware<TwitterAuthenticationOptions>
     {
         
-            private readonly HttpClient _httpClient;
+        private readonly HttpClient _httpClient;
+        private ILoggerFactory loggerFactory;
+        private ISiteResolver siteResolver;
+        private ISiteRepository siteRepo;
+        private MultiTenantOptions multiTenantOptions;
 
-            /// <summary>
-            /// Initializes a <see cref="TwitterAuthenticationMiddleware"/>
-            /// </summary>
-            /// <param name="next">The next middleware in the HTTP pipeline to invoke</param>
-            /// <param name="dataProtectionProvider"></param>
-            /// <param name="loggerFactory"></param>
-            /// <param name="encoder"></param>
-            /// <param name="sharedOptions"></param>
-            /// <param name="options">Configuration options for the middleware</param>
-            /// <param name="configureOptions"></param>
-            public MultiTenantTwitterAuthenticationMiddleware(
+        /// <summary>
+        /// Initializes a <see cref="TwitterAuthenticationMiddleware"/>
+        /// </summary>
+        /// <param name="next">The next middleware in the HTTP pipeline to invoke</param>
+        /// <param name="dataProtectionProvider"></param>
+        /// <param name="loggerFactory"></param>
+        /// <param name="encoder"></param>
+        /// <param name="sharedOptions"></param>
+        /// <param name="options">Configuration options for the middleware</param>
+        /// <param name="configureOptions"></param>
+        public MultiTenantTwitterAuthenticationMiddleware(
                 RequestDelegate next,
                 IDataProtectionProvider dataProtectionProvider,
                 ILoggerFactory loggerFactory,
+                ISiteResolver siteResolver,
+                ISiteRepository siteRepository,
+                IOptions<MultiTenantOptions> multiTenantOptionsAccesor,
                 IUrlEncoder encoder,
                 IOptions<SharedAuthenticationOptions> sharedOptions,
                 IOptions<TwitterAuthenticationOptions> options,
@@ -93,7 +95,15 @@ namespace cloudscribe.Core.Identity.OAuth
                 _httpClient.DefaultRequestHeaders.Accept.ParseAdd("*/*");
                 _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Microsoft ASP.NET Twitter middleware");
                 _httpClient.DefaultRequestHeaders.ExpectContinue = false;
+
+                this.loggerFactory = loggerFactory;
+                this.siteResolver = siteResolver;
+                multiTenantOptions = multiTenantOptionsAccesor.Options;
+                siteRepo = siteRepository;
+
             }
+
+
 
             /// <summary>
             /// Provides the <see cref="AuthenticationHandler"/> object for processing authentication-related requests.
@@ -101,7 +111,12 @@ namespace cloudscribe.Core.Identity.OAuth
             /// <returns>An <see cref="AuthenticationHandler"/> configured with the <see cref="TwitterAuthenticationOptions"/> supplied to the constructor.</returns>
             protected override AuthenticationHandler<TwitterAuthenticationOptions> CreateHandler()
             {
-                return new MultiTenantTwitterAuthenticationHandler(_httpClient);
+                return new MultiTenantTwitterAuthenticationHandler(
+                    _httpClient,
+                    siteResolver,
+                    siteRepo,
+                    multiTenantOptions,
+                    loggerFactory);
             }
 
             [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Managed by caller")]

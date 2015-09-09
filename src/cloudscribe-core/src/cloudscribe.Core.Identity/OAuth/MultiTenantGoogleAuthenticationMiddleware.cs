@@ -2,21 +2,19 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-29
-// Last Modified:		    2015-09-04
+// Last Modified:		    2015-09-09
 // based on https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.Google/GoogleAuthenticationMiddleware.cs
 
 
 using cloudscribe.Core.Models;
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNet.Authentication;
-using Microsoft.AspNet.Authentication.OAuth;
 using Microsoft.AspNet.Authentication.Google;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.DataProtection;
-using Microsoft.Framework.Internal;
 using Microsoft.Framework.Logging;
 using Microsoft.Framework.OptionsModel;
 using Microsoft.Framework.WebEncoders;
+using System.Diagnostics.CodeAnalysis;
 
 namespace cloudscribe.Core.Identity.OAuth
 {

@@ -2,30 +2,27 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-27
-// Last Modified:		    2015-09-04
+// Last Modified:		    2015-09-09
 // 
 
 
 
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Security.Cryptography;
-using System.Security.Claims;
-using System.Threading.Tasks;
+using Microsoft.AspNet.Authentication;
+using Microsoft.AspNet.Authentication.OAuth;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Http.Authentication;
 using Microsoft.AspNet.Http.Extensions;
 using Microsoft.AspNet.Http.Features.Authentication;
-//using Microsoft.AspNet.Authentication.DataHandler.Encoder;
 using Microsoft.AspNet.WebUtilities;
-using Microsoft.Framework.Internal;
 using Microsoft.Framework.Logging;
-using Microsoft.Framework.WebEncoders;
-using Microsoft.AspNet.Authentication;
-using Microsoft.AspNet.Authentication.OAuth;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Threading.Tasks;
 
 
 namespace cloudscribe.Core.Identity.OAuth
@@ -66,7 +63,7 @@ namespace cloudscribe.Core.Identity.OAuth
         public override async Task<bool> InvokeAsync()
         {
             // this is called on every request
-            //log.LogInformation("InvokeAsync called");
+            log.LogDebug("InvokeAsync called");
 
             //if (Options.CallbackPath.HasValue && Options.CallbackPath == Request.Path) // original logic
             // we need to respond not just to /signin-facebook but also folder sites /foldername/signin-facebook
@@ -80,7 +77,7 @@ namespace cloudscribe.Core.Identity.OAuth
 
         public async Task<bool> InvokeReturnPathAsync()
         {
-            log.LogInformation("InvokeReturnPathAsync called");
+            log.LogDebug("InvokeReturnPathAsync called");
 
             var ticket = await HandleAuthenticateOnceAsync();
             if (ticket == null)
@@ -120,7 +117,7 @@ namespace cloudscribe.Core.Identity.OAuth
 
         protected override async Task<AuthenticationTicket> HandleAuthenticateAsync()
         {
-            log.LogInformation("HandleAuthenticateAsync called");
+            log.LogDebug("HandleAuthenticateAsync called");
 
             AuthenticationProperties properties = null;
             try
@@ -202,7 +199,7 @@ namespace cloudscribe.Core.Identity.OAuth
 
         protected virtual async Task<OAuthTokenResponse> ExchangeCodeAsync(string code, string redirectUri)
         {
-            log.LogInformation("ExchangeCodeAsync called with code " + code + " redirectUri " + redirectUri);
+            log.LogDebug("ExchangeCodeAsync called with code " + code + " redirectUri " + redirectUri);
             
 
             var tokenRequestParameters = new Dictionary<string, string>()
@@ -228,7 +225,7 @@ namespace cloudscribe.Core.Identity.OAuth
 
         protected virtual async Task<AuthenticationTicket> CreateTicketAsync(ClaimsIdentity identity, AuthenticationProperties properties, OAuthTokenResponse tokens)
         {
-            log.LogInformation("CreateTicketAsync called");
+            log.LogDebug("CreateTicketAsync called");
 
             var notification = new OAuthAuthenticatedContext(Context, Options, Backchannel, tokens)
             {
@@ -248,7 +245,7 @@ namespace cloudscribe.Core.Identity.OAuth
 
         protected override Task<bool> HandleUnauthorizedAsync(ChallengeContext context)
         {
-            log.LogInformation("HandleUnauthorizedAsync called");
+            log.LogDebug("HandleUnauthorizedAsync called");
 
             var properties = new AuthenticationProperties(context.Properties);
             if (string.IsNullOrEmpty(properties.RedirectUri))
@@ -287,7 +284,7 @@ namespace cloudscribe.Core.Identity.OAuth
 
         protected virtual string BuildChallengeUrl(AuthenticationProperties properties, string redirectUri)
         {
-            log.LogInformation("BuildChallengeUrl called with redirectUri = " + redirectUri);
+            log.LogDebug("BuildChallengeUrl called with redirectUri = " + redirectUri);
 
             var scope = FormatScope();
 
@@ -319,7 +316,7 @@ namespace cloudscribe.Core.Identity.OAuth
             var correlationKey = Constants.CorrelationPrefix + Options.AuthenticationScheme;
             correlationKey = tenantOptions.ResolveCorrelationKey(correlationKey);
 
-            log.LogInformation("GenerateCorrelationId called, correlationKey was " + correlationKey);
+            log.LogDebug("GenerateCorrelationId called, correlationKey was " + correlationKey);
 
             var nonceBytes = new byte[32];
             CryptoRandom.GetBytes(nonceBytes);
@@ -342,7 +339,7 @@ namespace cloudscribe.Core.Identity.OAuth
             var correlationKey = Constants.CorrelationPrefix + Options.AuthenticationScheme;
             correlationKey = tenantOptions.ResolveCorrelationKey(correlationKey);
 
-            log.LogInformation("ValidateCorrelationId called, correlationKey was " + correlationKey);
+            log.LogDebug("ValidateCorrelationId called, correlationKey was " + correlationKey);
 
             var correlationCookie = Request.Cookies[correlationKey];
             if (string.IsNullOrEmpty(correlationCookie))
