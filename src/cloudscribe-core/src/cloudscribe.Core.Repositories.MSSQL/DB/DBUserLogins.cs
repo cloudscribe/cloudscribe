@@ -143,7 +143,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 2);
 
             sph.DefineSqlParameter("@UserId", SqlDbType.NVarChar, 128, ParameterDirection.Input, userId);
-            sph.DefineSqlParameter("@SiteId", SqlDbType.Int, ParameterDirection.Input, userId);
+            sph.DefineSqlParameter("@SiteId", SqlDbType.Int, ParameterDirection.Input, siteId);
             return await sph.ExecuteReaderAsync();
 
         }

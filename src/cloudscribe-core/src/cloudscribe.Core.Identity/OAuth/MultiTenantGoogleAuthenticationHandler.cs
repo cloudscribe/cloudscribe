@@ -54,14 +54,17 @@ namespace cloudscribe.Core.Identity.OAuth
             AuthenticationProperties properties, 
             OAuthTokenResponse tokens)
         {
-            log.LogInformation("CreateTicketAsync called");
+            log.LogInformation("CreateTicketAsync called tokens.AccessToken was " + tokens.AccessToken);
 
             // Get the Google user
             var request = new HttpRequestMessage(HttpMethod.Get, Options.UserInformationEndpoint);
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", tokens.AccessToken);
 
             var response = await Backchannel.SendAsync(request, Context.RequestAborted);
+            //string r = await response.Content.ReadAsStringAsync();
+            //log.LogInformation(r);
             response.EnsureSuccessStatusCode();
+
 
             var payload = JObject.Parse(await response.Content.ReadAsStringAsync());
 
