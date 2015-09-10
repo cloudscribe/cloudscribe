@@ -11,7 +11,10 @@
     "jquery-validation-unobtrusive": "3.2.2",
     "jquery-ui": "~1.11.3",
     "ckeditor": "~4.5.1",
-    "tinymce": "~4.2.2"
+    "tinymce": "~4.2.2",
+    "eonasdan-bootstrap-datetimepicker": "~4.15.35",
+    "metisMenu": "~2.1.0",
+    "font-awesome" : "~4.2.0"
 
 
   },

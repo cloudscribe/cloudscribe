@@ -2,10 +2,11 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-10
-// Last Modified:			2015-08-02
+// Last Modified:			2015-09-10
 // 
 
 using Microsoft.AspNet.Mvc;
+using Microsoft.Framework.Logging;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Web.Navigation
@@ -16,7 +17,8 @@ namespace cloudscribe.Web.Navigation
             INavigationTreeBuilder siteMapTreeBuilder,
             INavigationNodePermissionResolver permissionResolver,
             IUrlHelper urlHelper,
-            INodeUrlPrefixProvider prefixProvider)
+            INodeUrlPrefixProvider prefixProvider,
+            ILogger<NavigationViewComponent> logger)
         {
             builder = siteMapTreeBuilder;
             this.permissionResolver = permissionResolver;
@@ -29,8 +31,10 @@ namespace cloudscribe.Web.Navigation
             {
                 this.prefixProvider = prefixProvider;
             }
+            log = logger;
         }
 
+        private ILogger log;
         private INavigationTreeBuilder builder;
         private INavigationNodePermissionResolver permissionResolver;
         private IUrlHelper urlHelper;
@@ -46,7 +50,8 @@ namespace cloudscribe.Web.Navigation
                 urlHelper,
                 rootNode,
                 permissionResolver,
-                prefixProvider.GetPrefix());
+                prefixProvider.GetPrefix(),
+                log);
            
             return View(viewName, model);
         }

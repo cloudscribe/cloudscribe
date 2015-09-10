@@ -1,0 +1,295 @@
+﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.SiteBasicSettingsViewModel
+@inject IOptions<CkeditorOptions> ckOptionsAccessor
+@inject IOptions<MultiTenantOptions> multiTenantOptionsAccessor
+
+@{
+    MultiTenantOptions multiTenantOptions = multiTenantOptionsAccessor.Options;
+    bool useFolderTenants = true;
+    if(multiTenantOptions.Mode != MultiTenantMode.FolderName) { useFolderTenants = false; }
+    bool useHostTenants = true;
+    if (multiTenantOptions.Mode != MultiTenantMode.HostName) { useHostTenants = false; }
+    CkeditorOptions ckOptions = ckOptionsAccessor.Options;
+}
+<form method="post" class="form-horizontal" role="form" asp-antiforgery="true">
+    <div class="form-horizontal">
+        <div asp-validation-summary="ValidationSummary.All" class="text-danger"></div>
+        <input asp-for="SiteId" type="hidden" />
+        <input asp-for="SiteGuid" type="hidden" />
+        <input asp-for="ReturnPageNumber" type="hidden" />
+        <div class="form-group">
+            <label asp-for="SiteName" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="SiteName" class="form-control" />
+                <span asp-validation-for="SiteName" class="text-danger"></span> 
+            </div>
+        </div>
+        @if (useFolderTenants)
+        {
+            <div class="form-group">
+                <label asp-for="SiteFolderName" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="SiteFolderName" class="form-control" />
+                    <span asp-validation-for="SiteFolderName" class="text-danger"></span> 
+                    @Html.ValidationMessage("foldererror", new { @class = "text-danger" })
+                </div>
+            </div>
+        }
+        else if(useHostTenants)
+        {
+            <div class="form-group">
+                <label asp-for="HostName" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="HostName" class="form-control" />
+                    <span asp-validation-for="HostName" class="text-danger"></span> 
+                    @Html.ValidationMessage("hosterror", new { @class = "text-danger" })
+                    <a class="hostmap" asp-action="SiteHostMappings" 
+                       asp-controller="SiteAdmin" 
+                       asp-route-siteGuid="SiteGuid" 
+                       asp-route-slp="ReturnPageNumber">DomainMappings</a>
+                </div>
+            </div>
+        }
+        <div class="form-group">
+            <label asp-for="TimeZoneId" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.TimeZoneId,
+                           Model.AllTimeZones.Select(x =>
+                                new SelectListItem
+                                {
+                                    Text = x.DisplayName,
+                                    Value = x.Id
+                                    ,
+                                    Selected = Model.TimeZoneId == x.Id
+                                }),
+                                new { @class = "form-control" })
+                <span asp-validation-for="TimeZoneId" class="text-danger"></span> 
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Slogan" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Slogan" class="form-control" />
+                <span asp-validation-for="Slogan" class="text-danger"></span>    
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="CompanyName" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="CompanyName" class="form-control" />
+                <span asp-validation-for="CompanyName" class="text-danger"></span>    
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="CompanyStreetAddress" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="CompanyStreetAddress" class="form-control" />
+                <span asp-validation-for="CompanyStreetAddress" class="text-danger"></span>    
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="CompanyStreetAddress2" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="CompanyStreetAddress2" class="form-control" />
+                <span asp-validation-for="CompanyStreetAddress2" class="text-danger"></span>     
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="CompanyLocality" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="CompanyLocality" class="form-control" />
+                <span asp-validation-for="CompanyLocality" class="text-danger"></span>     
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="CompanyCountry" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <select id="CompanyCountry" asp-for="CompanyCountry"
+                        asp-items="Model.AvailableCountries" class="form-control"></select>
+                <span asp-validation-for="CompanyCountry" class="text-danger"></span>    
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="CompanyRegion" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <select id="CompanyRegion" class="form-control" 
+                        asp-for="CompanyRegion"
+                        asp-items="Model.AvailableStates" 
+                        data-cascade-childof="CompanyCountry"
+                        data-cascade-serviceurl='@Url.Content("~/CoreData/GetStatesJson/?countryCode=")'
+                        data-cascade-orig-val="@Model.CompanyRegion"
+                        data-cascade-select-label="-Please select-"
+                        ></select>
+                <span asp-validation-for="CompanyRegion" class="text-danger"></span>    
+
+               
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="CompanyPostalCode" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="CompanyPostalCode" class="form-control" />
+                <span asp-validation-for="CompanyPostalCode" class="text-danger"></span>  
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="CompanyPhone" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="CompanyPhone" class="form-control" />
+                <span asp-validation-for="CompanyPhone" class="text-danger"></span>   
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="CompanyFax" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="CompanyFax" class="form-control" />
+                <span asp-validation-for="CompanyFax" class="text-danger"></span>     
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="CompanyPublicEmail" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="CompanyPublicEmail" class="form-control" />
+                <span asp-validation-for="CompanyPublicEmail" class="text-danger"></span>     
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="RecaptchaPublicKey" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="RecaptchaPublicKey" class="form-control" />
+                <span asp-validation-for="RecaptchaPublicKey" class="text-danger"></span>  
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="RecaptchaPrivateKey" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="RecaptchaPrivateKey" class="form-control" />
+                <span asp-validation-for="RecaptchaPrivateKey" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <div class="checkbox">
+                    <input asp-for="RequireCaptchaOnRegistration" />
+                    <label asp-for="RequireCaptchaOnRegistration"></label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <div class="checkbox">
+                    <input asp-for="RequireCaptchaOnLogin" />
+                    <label asp-for="RequireCaptchaOnLogin"></label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="MicrosoftClientId" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="MicrosoftClientId" class="form-control" />
+                <span asp-validation-for="MicrosoftClientId" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="MicrosoftClientSecret" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="MicrosoftClientSecret" class="form-control" />
+                <span asp-validation-for="MicrosoftClientSecret" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="GoogleClientId" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="GoogleClientId" class="form-control" />
+                <span asp-validation-for="GoogleClientId" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="GoogleClientSecret" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="GoogleClientSecret" class="form-control" />
+                <span asp-validation-for="GoogleClientSecret" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="FacebookAppId" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="FacebookAppId" class="form-control" />
+                <span asp-validation-for="FacebookAppId" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="FacebookAppSecret" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="FacebookAppSecret" class="form-control" />
+                <span asp-validation-for="FacebookAppSecret" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="TwitterConsumerKey" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="TwitterConsumerKey" class="form-control" />
+                <span asp-validation-for="TwitterConsumerKey" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="TwitterConsumerSecret" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="TwitterConsumerSecret" class="form-control" />
+                <span asp-validation-for="TwitterConsumerSecret" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="ClosedMessage" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <textarea class="form-control" rows="5" asp-for="ClosedMessage"
+                          data-ckeditor-unobtrusive="" 
+                          data-ckeditor-unobtrusive-config-url="@Url.Content(ckOptions.CustomConfigPath)"
+                          data-ckeditor-unobtrusive-config-toolbar="Full"
+                          data-ckeditor-unobtrusive-config-language="@System.Globalization.CultureInfo.CurrentUICulture.Name"
+                          ></textarea>
+                <span asp-validation-for="ClosedMessage" class="text-danger"></span>
+               
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <div class="checkbox">
+                    <input asp-for="IsClosed" />
+                    <label asp-for="IsClosed"></label>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+                @if ((Model.ShowDelete) && (Model.SiteGuid != Guid.Empty))
+                {
+                    <button name="button" type="button" class="btn btn-default"
+                            onclick="javascript: if(confirm('@Html.FormatValue(Model.SiteName, "Are you sure you want to delete the site {0} and all related data? You cannot undo this action.")')) {$('#deleteform').submit();}">
+                        Delete
+                    </button>
+                    @Html.ValidationMessage("deleteerror", new { @class = "text-danger" })
+                }
+            </div>
+        </div>
+    </div>
+</form>
+@if ((Model.ShowDelete) && (Model.SiteGuid != Guid.Empty))
+{
+    <form id="deleteform" class="form-inline" asp-controller="SiteAdmin"
+          asp-action="SiteDelete">
+        <input asp-for="SiteId" type="hidden"/>
+        <input asp-for="SiteGuid" type="hidden" />
+        <input asp-for="ReturnPageNumber" type="hidden" />
+    </form>       
+}
+    <div>
+        <a class="btn btn-default" asp-action="SiteList"
+           asp-controller="SiteAdmin"
+           asp-route-pageNumber="@Model.ReturnPageNumber">BackToSiteList</a>  
+    </div>
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    }

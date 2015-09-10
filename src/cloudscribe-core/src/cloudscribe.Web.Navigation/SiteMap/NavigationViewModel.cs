@@ -2,11 +2,12 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-10
-// Last Modified:			2015-08-02
+// Last Modified:			2015-09-10
 // 
 
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc;
+using Microsoft.Framework.Logging;
 using System;
 using System.Collections.Generic;
 
@@ -20,7 +21,8 @@ namespace cloudscribe.Web.Navigation
             IUrlHelper urlHelper,
             TreeNode<NavigationNode> rootNode,
             INavigationNodePermissionResolver permissionResolver,
-            string nodeSearchUrlPrefix)
+            string nodeSearchUrlPrefix,
+            ILogger logger)
         {
             this.navigationFilterName = navigationFilterName;
             this.nodeSearchUrlPrefix = nodeSearchUrlPrefix;
@@ -28,6 +30,7 @@ namespace cloudscribe.Web.Navigation
             this.RootNode = rootNode;
             this.permissionResolver = permissionResolver;
             this.urlHelper = urlHelper;
+            log = logger;
 
             removalFilters.Add(FilterIsAllowed);
             removalFilters.Add(permissionResolver.ShouldAllowView);
@@ -37,6 +40,7 @@ namespace cloudscribe.Web.Navigation
 
         }
 
+        private ILogger log;
         private string navigationFilterName;
         private string nodeSearchUrlPrefix;
         private HttpContext context;
@@ -58,10 +62,29 @@ namespace cloudscribe.Web.Navigation
         public TreeNode<NavigationNode> CurrentNode
         {
             // lazy load
-            get {
-                if (currentNode == null) { currentNode = RootNode.FindByUrl(context.Request.Path, nodeSearchUrlPrefix); }
-                return currentNode;
+            get
+            {
+                if (currentNode == null)
+                {
+                    //log.LogInformation("currentNode was null so lazy loading it");
+
+                    currentNode = RootNode.FindByUrl(context.Request.Path, nodeSearchUrlPrefix);
+                    if(navigationFilterName == NamedNavigationFilters.ParentTree)
+                    {
+                        if(currentNode.Parent != null)
+                        {
+                            //log.LogInformation("NamedNavigationFilters.ParentTree so currentNode set to parent");
+
+                            currentNode = currentNode.Parent;
+                        }
+                        else
+                        {
+                            //log.LogInformation("currentNode.Parent was null");
+                        }
+                    }
                 }
+                return currentNode;
+            }
         }
 
         private List<TreeNode<NavigationNode>> parentChain = null;
@@ -109,9 +132,11 @@ namespace cloudscribe.Web.Navigation
                 }
             }
 
-            if(urlToUse.Length > 0) { return urlToUse; }
+            if(string.IsNullOrEmpty(urlToUse)) { return node.Value.Url; }
+
+            //if(urlToUse.Length > 0) { return urlToUse; }
        
-            return node.Value.Url;
+            return urlToUse;
         }
 
 

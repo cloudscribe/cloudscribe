@@ -1,5 +1,4 @@
 ﻿@using cloudscribe.Core.Web.Navigation;
-
 @inject ISiteResolver siteResolver
 @{ 
     ISiteSettings SiteSettings = siteResolver.Resolve();
@@ -11,7 +10,6 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>@ViewData["Title"] - @ViewData["SiteName"]</title>
-
         <environment names="Development">
             <link rel="stylesheet" href="~/js/lib/bootstrap/dist/css/bootstrap.css" />
             <link rel="stylesheet" href="~/js/lib/bootstrap-touch-carousel/dist/css/bootstrap-touch-carousel.css" />
