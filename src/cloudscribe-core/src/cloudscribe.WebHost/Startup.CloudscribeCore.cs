@@ -66,10 +66,7 @@ namespace cloudscribe.WebHost
             IOptions<MultiTenantOptions> multiTenantOptions)
         {
 
-            // the only thing we are using session for is Alerts
-            app.UseSession();
-            //app.UseInMemorySession(configure: s => s.IdleTimeout = TimeSpan.FromMinutes(20));
-            //app.UseStatusCodePages();
+           
 
             
 

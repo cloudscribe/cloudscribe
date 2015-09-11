@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-01-02
-// Last Modified:			2015-08-14
+// Last Modified:			2015-09-11
 // 
 
 
@@ -144,6 +144,24 @@ namespace cloudscribe.Core.Web.Controllers
             {
                 return controller.RedirectToAction("Index", "Home");
             }
+        }
+
+        private const string RequestedWithHeader = "X-Requested-With";
+        private const string XmlHttpRequest = "XMLHttpRequest";
+
+        public static bool IsAjaxRequest(this HttpRequest request)
+        {
+            if (request == null)
+            {
+                throw new ArgumentNullException("request");
+            }
+
+            if (request.Headers != null)
+            {
+                return request.Headers[RequestedWithHeader] == XmlHttpRequest;
+            }
+
+            return false;
         }
 
 

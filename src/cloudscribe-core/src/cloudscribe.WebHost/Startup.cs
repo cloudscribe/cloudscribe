@@ -151,22 +151,42 @@ namespace cloudscribe.WebHost
             if (env.IsEnvironment("Development"))
             {
                 //app.UseBrowserLink();
+
                 app.UseErrorPage();
+
                 //app.UseDatabaseErrorPage(DatabaseErrorPageOptions.ShowAll);
+                //app.UseStatusCodePagesWithReExecute("/error/{0}");
+                app.UseStatusCodePagesWithReExecute("/error/{0}");
             }
             else
             {
                 // Add Error handling middleware which catches all application specific errors and
                 // sends the request to the following path or controller action.
-                app.UseErrorHandler("/Home/Error");
+                //app.UseErrorHandler("/Home/Error");
                 //app.UseErrorPage(ErrorPageOptions.ShowAll);
+
+                // handle 404 and other non success
+                //app.UseStatusCodePages();
+
+                // app.UseStatusCodePages(context => context.HttpContext.Response.SendAsync("Handler, status code: " + context.HttpContext.Response.StatusCode, "text/plain"));
+                // app.UseStatusCodePages("text/plain", "Response, status code: {0}");
+                // app.UseStatusCodePagesWithRedirects("~/errors/{0}"); // PathBase relative
+                // app.UseStatusCodePagesWithRedirects("/base/errors/{0}"); // Absolute
+                // app.UseStatusCodePages(builder => builder.UseWelcomePage());
+                //app.UseStatusCodePagesWithReExecute("/errors/{0}");
+                //app.UseStatusCodePagesWithReExecute("/error/{0}");
             }
 
             //app.UseRuntimeInfoPage("/info");
 
             // Add static files to the request pipeline.
             app.UseStaticFiles();
+
+            // the only thing we are using session for is Alerts
+            app.UseSession();
+            //app.UseInMemorySession(configure: s => s.IdleTimeout = TimeSpan.FromMinutes(20));
             
+
             // this is in Startup.CloudscribeCore.cs
             app.UseCloudscribeCore(multiTenantOptions);
 
@@ -203,6 +223,19 @@ namespace cloudscribe.WebHost
                 // Uncomment the following line to add a route for porting Web API 2 controllers.
                 // routes.MapWebApiRoute("DefaultApi", "api/{controller}/{id?}");
             });
+
+            // https://github.com/aspnet/Announcements/issues/54
+            // if you want to run the IIS pipeline for requests not handled 
+            // ie you won't see the IIS 404 page without this.
+            // if nothing else handles the 404 then you get a blank white page in the browser
+            //app.RunIISPipeline();
+
+            //app.Run(context =>
+            //{
+            //    context.Response.StatusCode = 404;
+            //    return Task.FromResult(0);
+            //});
+
 
 
         }

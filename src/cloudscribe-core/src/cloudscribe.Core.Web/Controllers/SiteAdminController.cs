@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-09-06
+// Last Modified:			2015-09-11
 // 
 
 using cloudscribe.Core.Models;
@@ -137,18 +137,9 @@ namespace cloudscribe.Core.Web.Controllers
             model.SiteId = selectedSite.SiteId;
             model.SiteGuid = selectedSite.SiteGuid;
             model.SiteName = selectedSite.SiteName;
-            model.Slogan = selectedSite.Slogan;
+            
             model.TimeZoneId = selectedSite.TimeZoneId;
-            model.CompanyName = selectedSite.CompanyName;
-            model.CompanyStreetAddress = selectedSite.CompanyStreetAddress;
-            model.CompanyStreetAddress2 = selectedSite.CompanyStreetAddress2;
-            model.CompanyLocality = selectedSite.CompanyLocality;
-            model.CompanyRegion = selectedSite.CompanyRegion;
-            model.CompanyPostalCode = selectedSite.CompanyPostalCode;
-            model.CompanyCountry = selectedSite.CompanyCountry;
-            model.CompanyPhone = selectedSite.CompanyPhone;
-            model.CompanyFax = selectedSite.CompanyFax;
-            model.CompanyPublicEmail = selectedSite.CompanyPublicEmail;
+            
             
             model.IsClosed = selectedSite.SiteIsClosed;
             model.ClosedMessage = selectedSite.SiteIsClosedMessage;
@@ -166,37 +157,7 @@ namespace cloudscribe.Core.Web.Controllers
                 model.HostName = selectedSite.PreferredHostName;
             }
 
-                model.AvailableCountries.Add(new SelectListItem { Text = "-Please select-", Value = "Selects items" });
-            var countries = await geoDataManager.GetAllCountries();
-            Guid selectedCountryGuid = Guid.Empty;
-            foreach (var country in countries)
-            {
-                if (country.ISOCode2 == model.CompanyCountry)
-                {
-                    selectedCountryGuid = country.Guid;
-                }
-                model.AvailableCountries.Add(new SelectListItem()
-                {
-                    Text = country.Name,
-                    Value = country.ISOCode2.ToString()
-
-                });
-            }
-
-            if (selectedCountryGuid != Guid.Empty)
-            {
-                var states = await geoDataManager.GetGeoZonesByCountry(selectedCountryGuid);
-                foreach (var state in states)
-                {
-                    model.AvailableStates.Add(new SelectListItem()
-                    {
-                        Text = state.Name,
-                        Value = state.Code
-                    });
-                }
-
-            }
-
+            
             // can only delete from server admin site/cannot delete server admin site
             if (siteManager.CurrentSite.IsServerAdminSite)
             {
@@ -338,22 +299,9 @@ namespace cloudscribe.Core.Web.Controllers
                 selectedSite.PreferredHostName = model.HostName;
 
             }
-
-
-
+            
             selectedSite.SiteName = model.SiteName;
-            selectedSite.Slogan = model.Slogan;
             selectedSite.TimeZoneId = model.TimeZoneId;
-            selectedSite.CompanyName = model.CompanyName;
-            selectedSite.CompanyStreetAddress = model.CompanyStreetAddress;
-            selectedSite.CompanyStreetAddress2 = model.CompanyStreetAddress2;
-            selectedSite.CompanyLocality = model.CompanyLocality;
-            selectedSite.CompanyRegion = model.CompanyRegion;
-            selectedSite.CompanyPostalCode = model.CompanyPostalCode;
-            selectedSite.CompanyCountry = model.CompanyCountry;
-            selectedSite.CompanyPhone = model.CompanyPhone;
-            selectedSite.CompanyFax = model.CompanyFax;
-            selectedSite.CompanyPublicEmail = model.CompanyPublicEmail;
             selectedSite.SiteFolderName = model.SiteFolderName;
             selectedSite.SiteIsClosed = model.IsClosed;
             selectedSite.SiteIsClosedMessage = model.ClosedMessage;
@@ -405,7 +353,7 @@ namespace cloudscribe.Core.Web.Controllers
         // GET: /SiteAdmin/NewSite
         [HttpGet]
         [Authorize(Roles = "ServerAdmins")]
-        public async Task<ActionResult> NewSite(int slp = 1)
+        public ActionResult NewSite(int slp = 1)
         {
             ViewData["Title"] = "Create New Site";
 
@@ -414,52 +362,11 @@ namespace cloudscribe.Core.Web.Controllers
             model.SiteId = -1;
             model.SiteGuid = Guid.Empty;
             // model.SiteName = Site.SiteSettings.SiteName;
-            //model.Slogan = Site.SiteSettings.Slogan;
+            
             model.TimeZoneId = siteManager.CurrentSite.TimeZoneId;
             model.AllTimeZones = DateTimeHelper.GetTimeZoneList();
-            //model.CompanyName = Site.SiteSettings.CompanyName;
-            //model.CompanyStreetAddress = Site.SiteSettings.CompanyStreetAddress;
-            //model.CompanyStreetAddress2 = Site.SiteSettings.CompanyStreetAddress2;
-            //model.CompanyLocality = Site.SiteSettings.CompanyLocality;
-            //model.CompanyRegion = Site.SiteSettings.CompanyRegion;
-            //model.CompanyPostalCode = Site.SiteSettings.CompanyPostalCode;
-            //model.CompanyCountry = Site.SiteSettings.CompanyCountry;
-            //model.CompanyPhone = Site.SiteSettings.CompanyPhone;
-            //model.CompanyFax = Site.SiteSettings.CompanyFax;
-            //model.CompanyPublicEmail = Site.SiteSettings.CompanyPublicEmail;
-            //.SiteFolderName = Site.SiteSettings.SiteFolderName;
-
-            model.AvailableCountries.Add(new SelectListItem { Text = "-Please select-", Value = "" });
-            var countries = await geoDataManager.GetAllCountries();
-            Guid selectedCountryGuid = Guid.Empty;
-            foreach (var country in countries)
-            {
-                if (country.ISOCode2 == model.CompanyCountry)
-                {
-                    selectedCountryGuid = country.Guid;
-                }
-                model.AvailableCountries.Add(new SelectListItem()
-                {
-                    Text = country.Name,
-                    Value = country.ISOCode2.ToString()
-
-                });
-            }
-
-            if (selectedCountryGuid != Guid.Empty)
-            {
-                var states = await geoDataManager.GetGeoZonesByCountry(selectedCountryGuid);
-                foreach (var state in states)
-                {
-                    model.AvailableStates.Add(new SelectListItem()
-                    {
-                        Text = state.Name,
-                        Value = state.Code
-                    });
-                }
-
-            }
-
+            
+            
 
             return View(model);
         }
@@ -528,18 +435,7 @@ namespace cloudscribe.Core.Web.Controllers
             newSite.IsServerAdminSite = false;
 
             newSite.SiteName = model.SiteName;
-            newSite.Slogan = model.Slogan;
-            newSite.TimeZoneId = model.TimeZoneId;
-            newSite.CompanyName = model.CompanyName;
-            newSite.CompanyStreetAddress = model.CompanyStreetAddress;
-            newSite.CompanyStreetAddress2 = model.CompanyStreetAddress2;
-            newSite.CompanyLocality = model.CompanyLocality;
-            newSite.CompanyRegion = model.CompanyRegion;
-            newSite.CompanyPostalCode = model.CompanyPostalCode;
-            newSite.CompanyCountry = model.CompanyCountry;
-            newSite.CompanyPhone = model.CompanyPhone;
-            newSite.CompanyFax = model.CompanyFax;
-            newSite.CompanyPublicEmail = model.CompanyPublicEmail;
+            
             if (multiTenantOptions.Mode == MultiTenantMode.FolderName)
             {
                 newSite.SiteFolderName = model.SiteFolderName;
@@ -594,6 +490,149 @@ namespace cloudscribe.Core.Web.Controllers
             }
 
             return RedirectToAction("SiteList", new { pageNumber = model.ReturnPageNumber });
+
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admins")]
+        public async Task<IActionResult> CompanyInfo(
+            Guid? siteGuid,
+            int slp = 1)
+        {
+            
+
+            ISiteSettings selectedSite;
+            // only server admin site can edit other sites settings
+            if ((siteGuid.HasValue) && (siteManager.CurrentSite.IsServerAdminSite))
+            {
+                selectedSite = await siteManager.Fetch(siteGuid.Value);
+            }
+            else
+            {
+                selectedSite = siteManager.CurrentSite;
+            }
+
+            ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - Company Info", selectedSite.SiteName);
+
+            CompanyInfoViewModel model = new CompanyInfoViewModel();
+            model.SiteGuid = selectedSite.SiteGuid;
+            model.SiteId = selectedSite.SiteId;
+            model.Slogan = selectedSite.Slogan;
+            model.CompanyName = selectedSite.CompanyName;
+            model.CompanyStreetAddress = selectedSite.CompanyStreetAddress;
+            model.CompanyStreetAddress2 = selectedSite.CompanyStreetAddress2;
+            model.CompanyLocality = selectedSite.CompanyLocality;
+            model.CompanyRegion = selectedSite.CompanyRegion;
+            model.CompanyPostalCode = selectedSite.CompanyPostalCode;
+            model.CompanyCountry = selectedSite.CompanyCountry;
+            model.CompanyPhone = selectedSite.CompanyPhone;
+            model.CompanyFax = selectedSite.CompanyFax;
+            model.CompanyPublicEmail = selectedSite.CompanyPublicEmail;
+
+            model.AvailableCountries.Add(new SelectListItem { Text = "-Please select-", Value = "Selects items" });
+            var countries = await geoDataManager.GetAllCountries();
+            Guid selectedCountryGuid = Guid.Empty;
+            foreach (var country in countries)
+            {
+                if (country.ISOCode2 == model.CompanyCountry)
+                {
+                    selectedCountryGuid = country.Guid;
+                }
+                model.AvailableCountries.Add(new SelectListItem()
+                {
+                    Text = country.Name,
+                    Value = country.ISOCode2.ToString()
+
+                });
+            }
+
+            if (selectedCountryGuid != Guid.Empty)
+            {
+                var states = await geoDataManager.GetGeoZonesByCountry(selectedCountryGuid);
+                foreach (var state in states)
+                {
+                    model.AvailableStates.Add(new SelectListItem()
+                    {
+                        Text = state.Name,
+                        Value = state.Code
+                    });
+                }
+
+            }
+
+
+            return View(model);
+
+        }
+
+        // Post: /SiteAdmin/SiteInfo
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admins")]
+        public async Task<ActionResult> CompanyInfo(CompanyInfoViewModel model)
+        {
+           
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            if (model.SiteGuid == Guid.Empty)
+            {
+                this.AlertDanger("oops something went wrong, site was not found.", true);
+
+                return RedirectToAction("Index");
+            }
+
+            //model.SiteId = Site.SiteSettings.SiteId;
+            //model.SiteGuid = Site.SiteSettings.SiteGuid;
+            ISiteSettings selectedSite = null;
+            if (model.SiteGuid == siteManager.CurrentSite.SiteGuid)
+            {
+                selectedSite = siteManager.CurrentSite;
+            }
+            else if (siteManager.CurrentSite.IsServerAdminSite)
+            {
+                selectedSite = await siteManager.Fetch(model.SiteGuid);
+            }
+
+            if (selectedSite == null)
+            {
+                this.AlertDanger("oops something went wrong.", true);
+
+                return RedirectToAction("Index");
+            }
+
+            selectedSite.Slogan = model.Slogan;
+            selectedSite.CompanyName = model.CompanyName;
+            selectedSite.CompanyStreetAddress = model.CompanyStreetAddress;
+            selectedSite.CompanyStreetAddress2 = model.CompanyStreetAddress2;
+            selectedSite.CompanyLocality = model.CompanyLocality;
+            selectedSite.CompanyRegion = model.CompanyRegion;
+            selectedSite.CompanyPostalCode = model.CompanyPostalCode;
+            selectedSite.CompanyCountry = model.CompanyCountry;
+            selectedSite.CompanyPhone = model.CompanyPhone;
+            selectedSite.CompanyFax = model.CompanyFax;
+            selectedSite.CompanyPublicEmail = model.CompanyPublicEmail;
+
+            bool result = await siteManager.Save(selectedSite);
+            
+            if (result)
+            {
+                this.AlertSuccess(string.Format("Company Info for <b>{0}</b> wwas successfully updated.",
+                            selectedSite.SiteName), true);
+            }
+
+
+            if ((siteManager.CurrentSite.IsServerAdminSite)
+                //&&(Site.SiteSettings.SiteGuid != selectedSite.SiteGuid)
+                )
+            {
+                // just edited from site list so redirect there
+                return RedirectToAction("CompanyInfo");
+            }
+
+            return RedirectToAction("CompanyInfo");
 
         }
 
