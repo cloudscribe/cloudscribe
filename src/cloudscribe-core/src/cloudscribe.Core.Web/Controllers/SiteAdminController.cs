@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-09-11
+// Last Modified:			2015-09-12
 // 
 
 using cloudscribe.Core.Models;
@@ -140,14 +140,9 @@ namespace cloudscribe.Core.Web.Controllers
             
             model.TimeZoneId = selectedSite.TimeZoneId;
             
-            
             model.IsClosed = selectedSite.SiteIsClosed;
             model.ClosedMessage = selectedSite.SiteIsClosedMessage;
-            model.RecaptchaPublicKey = selectedSite.RecaptchaPublicKey;
-            model.RecaptchaPrivateKey = selectedSite.RecaptchaPrivateKey;
-            model.RequireCaptchaOnRegistration = selectedSite.RequireCaptchaOnRegistration;
-            model.RequireCaptchaOnLogin = selectedSite.RequireCaptchaOnLogin;
-
+            
             if (multiTenantOptions.Mode == MultiTenantMode.FolderName)
             {
                 model.SiteFolderName = selectedSite.SiteFolderName;
@@ -167,16 +162,7 @@ namespace cloudscribe.Core.Web.Controllers
                 }
             }
 
-            model.MicrosoftClientId = selectedSite.MicrosoftClientId;
-            model.MicrosoftClientSecret = selectedSite.MicrosoftClientSecret;
-            model.GoogleClientId = selectedSite.GoogleClientId;
-            model.GoogleClientSecret = selectedSite.GoogleClientSecret;
-            model.FacebookAppId = selectedSite.FacebookAppId;
-            model.FacebookAppSecret = selectedSite.FacebookAppSecret;
-            model.TwitterConsumerKey = selectedSite.TwitterConsumerKey;
-            model.TwitterConsumerSecret = selectedSite.TwitterConsumerSecret;
-
-
+           
             //dpBeginDate.Text = blog.StartDate.ToLocalTime(timeZone).ToString("g");
             //TimeZoneInfo timeZone = DateTimeHelper.GetTimeZone(model.AllTimeZones, "Eastern Standard Time");
 
@@ -305,21 +291,7 @@ namespace cloudscribe.Core.Web.Controllers
             selectedSite.SiteFolderName = model.SiteFolderName;
             selectedSite.SiteIsClosed = model.IsClosed;
             selectedSite.SiteIsClosedMessage = model.ClosedMessage;
-
-            selectedSite.RecaptchaPublicKey = model.RecaptchaPublicKey;
-            selectedSite.RecaptchaPrivateKey = model.RecaptchaPrivateKey;
-            selectedSite.RequireCaptchaOnRegistration = model.RequireCaptchaOnRegistration;
-            selectedSite.RequireCaptchaOnLogin = model.RequireCaptchaOnLogin;
-
-            selectedSite.MicrosoftClientId = model.MicrosoftClientId;
-            selectedSite.MicrosoftClientSecret = model.MicrosoftClientSecret;
-            selectedSite.GoogleClientId = model.GoogleClientId;
-            selectedSite.GoogleClientSecret = model.GoogleClientSecret;
-            selectedSite.FacebookAppId = model.FacebookAppId;
-            selectedSite.FacebookAppSecret = model.FacebookAppSecret;
-            selectedSite.TwitterConsumerKey = model.TwitterConsumerKey;
-            selectedSite.TwitterConsumerSecret = model.TwitterConsumerSecret;
-
+            
             bool result = await siteManager.Save(selectedSite);
 
             if ((result) && (multiTenantOptions.Mode == MultiTenantMode.FolderName))
@@ -447,13 +419,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             newSite.SiteIsClosed = model.IsClosed;
             newSite.SiteIsClosedMessage = model.ClosedMessage;
-
-            newSite.RecaptchaPublicKey = model.RecaptchaPublicKey;
-            newSite.RecaptchaPrivateKey = model.RecaptchaPrivateKey;
-            newSite.RequireCaptchaOnRegistration = model.RequireCaptchaOnRegistration;
-            newSite.RequireCaptchaOnLogin = model.RequireCaptchaOnLogin;
-
-
+            
             //Site.SiteRepository.Save(newSite);
             bool result = await siteManager.CreateNewSite(newSite);
             result = await siteManager.CreateRequiredRolesAndAdminUser(newSite);
@@ -565,7 +531,7 @@ namespace cloudscribe.Core.Web.Controllers
 
         }
 
-        // Post: /SiteAdmin/SiteInfo
+        // Post: /SiteAdmin/CompanyInfo
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admins")]
@@ -625,14 +591,215 @@ namespace cloudscribe.Core.Web.Controllers
 
 
             if ((siteManager.CurrentSite.IsServerAdminSite)
-                //&&(Site.SiteSettings.SiteGuid != selectedSite.SiteGuid)
+                && (siteManager.CurrentSite.SiteGuid != selectedSite.SiteGuid)
                 )
             {
-                // just edited from site list so redirect there
-                return RedirectToAction("CompanyInfo");
+                
+                return RedirectToAction("CompanyInfo", new { siteGuid = model.SiteGuid });
             }
 
             return RedirectToAction("CompanyInfo");
+
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admins")]
+        public async Task<IActionResult> Captcha(
+            Guid? siteGuid,
+            int slp = 1)
+        {
+            
+            ISiteSettings selectedSite;
+            // only server admin site can edit other sites settings
+            if ((siteGuid.HasValue) && (siteManager.CurrentSite.IsServerAdminSite))
+            {
+                selectedSite = await siteManager.Fetch(siteGuid.Value);
+            }
+            else
+            {
+                selectedSite = siteManager.CurrentSite;
+            }
+
+            ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - Captcha Settings", selectedSite.SiteName);
+
+            CaptchaSettingsViewModel model = new CaptchaSettingsViewModel();
+            model.SiteGuid = selectedSite.SiteGuid;
+            model.SiteId = selectedSite.SiteId;
+            model.RecaptchaPrivateKey = selectedSite.RecaptchaPrivateKey;
+            model.RecaptchaPublicKey = selectedSite.RecaptchaPublicKey;
+            model.RequireCaptchaOnLogin = selectedSite.RequireCaptchaOnLogin;
+            model.RequireCaptchaOnRegistration = selectedSite.RequireCaptchaOnRegistration;
+
+            return View("CaptchaSettings", model);
+            
+
+        }
+
+        // Post: /SiteAdmin/Captcha
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admins")]
+        public async Task<ActionResult> Captcha(CaptchaSettingsViewModel model)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            if (model.SiteGuid == Guid.Empty)
+            {
+                this.AlertDanger("oops something went wrong, site was not found.", true);
+
+                return RedirectToAction("Index");
+            }
+
+            //model.SiteId = Site.SiteSettings.SiteId;
+            //model.SiteGuid = Site.SiteSettings.SiteGuid;
+            ISiteSettings selectedSite = null;
+            if (model.SiteGuid == siteManager.CurrentSite.SiteGuid)
+            {
+                selectedSite = siteManager.CurrentSite;
+            }
+            else if (siteManager.CurrentSite.IsServerAdminSite)
+            {
+                selectedSite = await siteManager.Fetch(model.SiteGuid);
+            }
+
+            if (selectedSite == null)
+            {
+                this.AlertDanger("oops something went wrong.", true);
+
+                return RedirectToAction("Index");
+            }
+
+            selectedSite.RecaptchaPublicKey = model.RecaptchaPublicKey;
+            selectedSite.RecaptchaPrivateKey = model.RecaptchaPrivateKey;
+            selectedSite.RequireCaptchaOnRegistration = model.RequireCaptchaOnRegistration;
+            selectedSite.RequireCaptchaOnLogin = model.RequireCaptchaOnLogin;
+
+            bool result = await siteManager.Save(selectedSite);
+
+            if (result)
+            {
+                this.AlertSuccess(string.Format("Captcha Settings for <b>{0}</b> wwas successfully updated.",
+                            selectedSite.SiteName), true);
+            }
+
+
+            if ((siteManager.CurrentSite.IsServerAdminSite)
+                &&(siteManager.CurrentSite.SiteGuid != selectedSite.SiteGuid)
+                )
+            {
+                
+                return RedirectToAction("Captcha", new { siteGuid = model.SiteGuid });
+            }
+
+            return RedirectToAction("Captcha");
+
+        }
+
+        // GET: /SiteAdmin/SocialLogins
+        [HttpGet]
+        [Authorize(Roles = "Admins")]
+        public async Task<IActionResult> SocialLogins(
+            Guid? siteGuid,
+            int slp = 1)
+        {
+            ISiteSettings selectedSite;
+            // only server admin site can edit other sites settings
+            if ((siteGuid.HasValue) && (siteManager.CurrentSite.IsServerAdminSite))
+            {
+                selectedSite = await siteManager.Fetch(siteGuid.Value);
+            }
+            else
+            {
+                selectedSite = siteManager.CurrentSite;
+            }
+
+            ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - Social Login Settings", selectedSite.SiteName);
+
+            SocialLoginSettingsViewModel model = new SocialLoginSettingsViewModel();
+            model.SiteGuid = selectedSite.SiteGuid;
+            model.SiteId = selectedSite.SiteId;
+            model.FacebookAppId = selectedSite.FacebookAppId;
+            model.FacebookAppSecret = selectedSite.FacebookAppSecret;
+            model.GoogleClientId = selectedSite.GoogleClientId;
+            model.GoogleClientSecret = selectedSite.GoogleClientSecret;
+            model.MicrosoftClientId = selectedSite.MicrosoftClientId;
+            model.MicrosoftClientSecret = selectedSite.MicrosoftClientSecret;
+            model.TwitterConsumerKey = selectedSite.TwitterConsumerKey;
+            model.TwitterConsumerSecret = selectedSite.TwitterConsumerSecret;
+
+            return View(model);
+
+        }
+
+        // Post: /SiteAdmin/SocialLogins
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admins")]
+        public async Task<ActionResult> SocialLogins(SocialLoginSettingsViewModel model)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            if (model.SiteGuid == Guid.Empty)
+            {
+                this.AlertDanger("oops something went wrong, site was not found.", true);
+
+                return RedirectToAction("Index");
+            }
+
+            //model.SiteId = Site.SiteSettings.SiteId;
+            //model.SiteGuid = Site.SiteSettings.SiteGuid;
+            ISiteSettings selectedSite = null;
+            if (model.SiteGuid == siteManager.CurrentSite.SiteGuid)
+            {
+                selectedSite = siteManager.CurrentSite;
+            }
+            else if (siteManager.CurrentSite.IsServerAdminSite)
+            {
+                selectedSite = await siteManager.Fetch(model.SiteGuid);
+            }
+
+            if (selectedSite == null)
+            {
+                this.AlertDanger("oops something went wrong.", true);
+
+                return RedirectToAction("Index");
+            }
+
+            selectedSite.FacebookAppId = model.FacebookAppId;
+            selectedSite.FacebookAppSecret = model.FacebookAppSecret;
+            selectedSite.GoogleClientId = model.GoogleClientId;
+            selectedSite.GoogleClientSecret = model.GoogleClientSecret;
+            selectedSite.MicrosoftClientId = model.MicrosoftClientId;
+            selectedSite.MicrosoftClientSecret = model.MicrosoftClientSecret;
+            selectedSite.TwitterConsumerKey = model.TwitterConsumerKey;
+            selectedSite.TwitterConsumerSecret = model.TwitterConsumerSecret;
+
+            bool result = await siteManager.Save(selectedSite);
+
+            if (result)
+            {
+                this.AlertSuccess(string.Format("Social Login Settings for <b>{0}</b> wwas successfully updated.",
+                            selectedSite.SiteName), true);
+            }
+
+
+            if ((siteManager.CurrentSite.IsServerAdminSite)
+                && (siteManager.CurrentSite.SiteGuid != selectedSite.SiteGuid)
+                )
+            {
+
+                return RedirectToAction("SocialLogins", new { siteGuid = model.SiteGuid });
+            }
+
+            return RedirectToAction("SocialLogins");
 
         }
 

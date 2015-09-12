@@ -7,6 +7,7 @@
 /// <reference path="../scripts/cloudscribe-datepicker-unobtrusive.js" />
 /// <reference path="../scripts/cloudscribe-modaldialog-bootstrap.js" />
 /// <reference path="../scripts/cloudscribe-modaldialog-jqui.js" />
+/// <reference path="../scripts/cloudscribe-sidemen.js" />
 /// <reference path="../scripts/expressive.annotations.validate.js" />
 /// <reference path="js/app/cloudscribe-autosuggest-unobtrusive.js" />
 /// <reference path="js/app/cloudscribe-cascade-unobtrusive.js" />

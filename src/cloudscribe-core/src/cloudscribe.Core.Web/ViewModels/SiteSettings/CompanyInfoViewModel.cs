@@ -29,13 +29,7 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         [Display(Name = "SiteGuid")]
         public Guid SiteGuid { get; set; } = Guid.Empty;
         
-        //[Required(ErrorMessageResourceName = "SiteNameRequired", ErrorMessageResourceType = typeof(CommonResources))]
-        //[StringLengthWithConfig(MinimumLength = 3, MaximumLength = 255, MinLengthKey = "SiteNameMinLength", MaxLengthKey = "SiteNameMaxLength", ErrorMessageResourceName = "SiteNameLengthErrorFormat", ErrorMessageResourceType = typeof(CommonResources))]
-        //[Display(Name = "SiteName", ResourceType = typeof(CommonResources))]
-        public string SiteName { get; set; } = string.Empty;
         
-
-
         //[RequiredWithConfig(RequiredKey = "SloganRequired", ErrorMessageResourceName = "SiteNameRequired", ErrorMessageResourceType = typeof(CommonResources))]
         [StringLength(255, MinimumLength = 3, ErrorMessage = "Slogan Length Error")]
         //[Display(Name = "SiteSlogan", ResourceType = typeof(CommonResources))]

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2014-11-24
+// Last Modified:			2015-09-12
 // 
 
 using System;
@@ -26,24 +26,67 @@ namespace cloudscribe.Core.Models
     }
 
     // the full monty
+    // need to review each and consider removing some
     public interface ISiteSettings : ISiteInfo
     {
-        
+
+        //TODO: implement ldap auth middleware or helper for accountcontroller
+        bool UseLdapAuth { get; set; }
         bool AllowDbFallbackWithLdap { get; set; }
         bool AllowEmailLoginWithLdapDbFallback { get; set; }
-        bool AllowHideMenuOnPages { get; set; }
+        bool AutoCreateLdapUserOnFirstLogin { get; set; }
+        LdapSettings SiteLdapSettings { get; set; }
+
+        // TODO use this to force ONLY social logins or ldap option?
+        bool DisableDbAuth { get; set; }
+        bool UseSecureRegistration { get; set; } // rename to reflect function RequireConfirmedEmailAddress
+        bool RequireApprovalBeforeLogin { get; set; } // TODO: implement
+        int MaxInvalidPasswordAttempts { get; set; }
+        int MinRequiredNonAlphanumericCharacters { get; set; }
+        int MinRequiredPasswordLength { get; set; }
+        int PasswordAttemptWindowMinutes { get; set; }
+        int PasswordFormat { get; set; } // only used for migration from mojoportal
+        bool UseEmailForLogin { get; set; }
+        
+        bool UseSslOnAllPages { get; set; }
+        string PasswordRegexWarning { get; set; }
+        string PasswordStrengthRegularExpression { get; set; }
+        bool RequireEnterEmailTwiceOnRegistration { get; set; }
+        bool RequirePasswordChangeOnResetRecover { get; set; }
+        bool RequiresQuestionAndAnswer { get; set; }
+        bool ReallyDeleteUsers { get; set; }
         bool AllowNewRegistration { get; set; }
-        bool AllowOpenIdAuth { get; set; }
-        bool AllowPageSkins { get; set; }
-        bool AllowPasswordReset { get; set; }
-        bool AllowPasswordRetrieval { get; set; }
+        bool AllowOpenIdAuth { get; set; } //remove
+        
+        bool AllowPasswordReset { get; set; } //remove
+        bool AllowPasswordRetrieval { get; set; } //remove
         bool AllowPersistentLogin { get; set; }
         bool AllowUserFullNameChange { get; set; }
-        bool AllowUserSkins { get; set; }
-        bool AutoCreateLdapUserOnFirstLogin { get; set; }
-        string AvatarSystem { get; set; }
+
+        bool RequireCaptchaOnLogin { get; set; }
+        bool RequireCaptchaOnRegistration { get; set; }
+        string RecaptchaPrivateKey { get; set; }
+        string RecaptchaPublicKey { get; set; }
+
+        //probably much of this should be moved to a new apppermissions table
+        //bool RequiresUniqueEmail { get; set; }
+
+        string RolesThatCanApproveNewUsers { get; set; }
+        string RolesThatCanCreateUsers { get; set; }
+        //string RolesThatCanEditGoogleAnalyticsQueries { get; set; }
+        string RolesThatCanLookupUsers { get; set; }
+        string RolesThatCanManageUsers { get; set; }
+        //string RolesThatCanViewGoogleAnalytics { get; set; }
+        string RolesThatCanViewMemberList { get; set; }
+
+        string UserFilesBrowseAndUploadRoles { get; set; }
+        string GeneralBrowseAndUploadRoles { get; set; }
+        string RolesThatCanDeleteFilesInEditor { get; set; }
         
         
+
+        //company info
+        string Slogan { get; set; }
         string CompanyCountry { get; set; }
         string CompanyFax { get; set; }
         string CompanyLocality { get; set; }
@@ -58,94 +101,17 @@ namespace cloudscribe.Core.Models
         Guid DefaultCountryGuid { get; set; }
         string DefaultEmailFromAddress { get; set; }
         string DefaultFromEmailAlias { get; set; }
-        
         Guid DefaultStateGuid { get; set; }
-        bool DisableDbAuth { get; set; }
         
-        string EditorProviderName { get; set; }
-        string EmailAdressesForUserApprovalNotification { get; set; }
-        bool EnableContentWorkflow { get; set; }
-        
-        bool ForceContentVersioning { get; set; }
-        string GeneralBrowseAndUploadRoles { get; set; }
-        string GmapApiKey { get; set; }
-        string GoogleAnalyticsAccountCode { get; set; }
-        //string GoogleAnalyticsEmail { get; set; }
-        //string GoogleAnalyticsPassword { get; set; }
-        string GoogleAnalyticsProfileId { get; set; }
-        string GoogleAnalyticsSettings { get; set; }
-        string GoogleCustomSearchId { get; set; }
-        string Icon { get; set; }
-        string IntenseDebateAccountId { get; set; }
-
         string LoginInfoBottom { get; set; }
         string LoginInfoTop { get; set; }
-        string Logo { get; set; }
-        int MaxInvalidPasswordAttempts { get; set; }
-        string MetaProfile { get; set; }
-        int MinRequiredNonAlphanumericCharacters { get; set; }
-        int MinRequiredPasswordLength { get; set; }
-        string MobileSkin { get; set; }
-        string NewsletterEditor { get; set; }
-        string OpenSearchName { get; set; }
-        int PasswordAttemptWindowMinutes { get; set; }
-        int PasswordFormat { get; set; }
-        string PasswordRegexWarning { get; set; }
-        string PasswordStrengthRegularExpression { get; set; }
-
-        string PrimarySearchEngine { get; set; }
-        string PrivacyPolicyUrl { get; set; }
-        bool ReallyDeleteUsers { get; set; }
-        string RecaptchaPrivateKey { get; set; }
-        string RecaptchaPublicKey { get; set; }
         string RegistrationAgreement { get; set; }
         string RegistrationPreamble { get; set; }
-        bool RequireApprovalBeforeLogin { get; set; }
-        bool RequireCaptchaOnLogin { get; set; }
-        bool RequireCaptchaOnRegistration { get; set; }
-        bool RequireEnterEmailTwiceOnRegistration { get; set; }
-        bool RequirePasswordChangeOnResetRecover { get; set; }
-        bool RequiresQuestionAndAnswer { get; set; }
-
-
-        //probably much of this should be moved to a new apppermissions table
-        //bool RequiresUniqueEmail { get; set; }
-        string RolesNotAllowedToEditModuleSettings { get; set; }
-        string RolesThatCanApproveNewUsers { get; set; }
-        string RolesThatCanAssignSkinsToPages { get; set; }
-        string RolesThatCanCreateRootPages { get; set; }
-        string RolesThatCanCreateUsers { get; set; }
-        string RolesThatCanDeleteFilesInEditor { get; set; }
-        string RolesThatCanEditContentTemplates { get; set; }
-        //string RolesThatCanEditGoogleAnalyticsQueries { get; set; }
-        string RolesThatCanLookupUsers { get; set; }
-        string RolesThatCanManageSkins { get; set; }
-        string RolesThatCanManageUsers { get; set; }
-        //string RolesThatCanViewGoogleAnalytics { get; set; }
-        string RolesThatCanViewMemberList { get; set; }
-        string SiteRootDraftApprovalRoles { get; set; }
-        string SiteRootDraftEditRoles { get; set; }
-        string SiteRootEditRoles { get; set; }
-        string DefaultRootPageCreateChildPageRoles { get; set; }
-        string DefaultRootPageEditRoles { get; set; }
-        string DefaultRootPageViewRoles { get; set; }
-        string CommerceReportViewRoles { get; set; }
-
-
-
-        bool ShowAlternateSearchIfConfigured { get; set; }
-        //bool ShowPasswordStrengthOnRegistration { get; set; }
-
-
+        
+        string TimeZoneId { get; set; }
         bool SiteIsClosed { get; set; }
         string SiteIsClosedMessage { get; set; }
-        LdapSettings SiteLdapSettings { get; set; }
-        string SiteMapSkin { get; set; }
-
         
-        string Skin { get; set; }
-        Guid SkinVersion { get; set; }
-        string Slogan { get; set; }
         string SMTPPassword { get; set; }
         int SMTPPort { get; set; }
         string SMTPPreferredEncoding { get; set; }
@@ -153,17 +119,34 @@ namespace cloudscribe.Core.Models
         string SMTPServer { get; set; }
         string SMTPUser { get; set; }
         bool SMTPUseSsl { get; set; }
-        string TimeZoneId { get; set; }
-        bool UseEmailForLogin { get; set; }
-        bool UseLdapAuth { get; set; }
-        string UserFilesBrowseAndUploadRoles { get; set; }
-        bool UseSecureRegistration { get; set; }
-        bool UseSslOnAllPages { get; set; }
+        
+        
+        string OpenSearchName { get; set; }
+        string PrimarySearchEngine { get; set; }
+        string PrivacyPolicyUrl { get; set; }
+        
+        string MetaProfile { get; set; }
+        string Icon { get; set; }
+        string Logo { get; set; }
+        string Skin { get; set; }
+        string MobileSkin { get; set; }
+        string SiteMapSkin { get; set; }
+        Guid SkinVersion { get; set; }
+        bool AllowUserSkins { get; set; }
 
 
+        string GoogleAnalyticsAccountCode { get; set; }
+        //string GoogleAnalyticsEmail { get; set; }
+        //string GoogleAnalyticsPassword { get; set; }
+        string GoogleAnalyticsProfileId { get; set; }
+        string GoogleAnalyticsSettings { get; set; }
+        string GoogleCustomSearchId { get; set; }
         string BingAPIId { get; set; }
-        string CaptchaProvider { get; set; } //prob will only use recaptcha
-        string CommentProvider { get; set; }
+        string GmapApiKey { get; set; }
+        string CaptchaProvider { get; set; } //remove
+        string CommentProvider { get; set; } //remove
+        string IntenseDebateAccountId { get; set; }
+        string AvatarSystem { get; set; }
 
         //social login stuff
         string FacebookAppId { get; set; }
@@ -179,9 +162,36 @@ namespace cloudscribe.Core.Models
         string DisqusSiteShortName { get; set; }
         string AddThisDotComUsername { get; set; }
 
+        string NewsletterEditor { get; set; } // remove or move to cms application settings
+
+        // cms stuff to remove or move to cms application settings
+        bool AllowHideMenuOnPages { get; set; } 
+        bool AllowPageSkins { get; set; } 
+        string EditorProviderName { get; set; } 
+        string EmailAdressesForUserApprovalNotification { get; set; }
+        bool EnableContentWorkflow { get; set; }
+        bool ForceContentVersioning { get; set; }
+        string RolesNotAllowedToEditModuleSettings { get; set; }
+        string RolesThatCanAssignSkinsToPages { get; set; }
+        string RolesThatCanCreateRootPages { get; set; }
+        string RolesThatCanEditContentTemplates { get; set; }
+        string RolesThatCanManageSkins { get; set; }
+        string SiteRootDraftApprovalRoles { get; set; }
+        string SiteRootDraftEditRoles { get; set; }
+        string SiteRootEditRoles { get; set; }
+        string DefaultRootPageCreateChildPageRoles { get; set; }
+        string DefaultRootPageEditRoles { get; set; }
+        string DefaultRootPageViewRoles { get; set; }
+
+        
+
         // these probobly won't be used
         string RpxNowAdminUrl { get; set; }
         string RpxNowApiKey { get; set; }
         string RpxNowApplicationName { get; set; }
+        string CommerceReportViewRoles { get; set; }
+
+        bool ShowAlternateSearchIfConfigured { get; set; }
+        //bool ShowPasswordStrengthOnRegistration { get; set; }
     }
 }
