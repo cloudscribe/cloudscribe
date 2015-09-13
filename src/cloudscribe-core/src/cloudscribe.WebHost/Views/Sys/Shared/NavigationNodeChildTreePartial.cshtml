@@ -21,12 +21,12 @@
             if (!Model.HasVisibleChildren(childNode))
             {
                 @:
-                <li><a href="@Url.Content(childNode.Value.Url)">@childNode.Value.Text</a></li>
+                <li><a href="@Url.Content(Model.AdjustUrl(childNode))">@childNode.Value.Text</a></li>
             }
             else
             {
                 <li>
-                    <a href="@Url.Content(childNode.Value.Url)">
+                    <a href="@Url.Content(Model.AdjustUrl(childNode))">
                         @childNode.Value.Text
                     </a>
                     @Model.UpdateTempNode(childNode)

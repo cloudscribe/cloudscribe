@@ -67,9 +67,20 @@ namespace cloudscribe.Core.Web.Controllers
         {
             ViewData["Title"] = "Site Administration";
             ViewData["Heading"] = "Site Administration";
-            //ViewModels.SiteMapTreeBuilder builder = new ViewModels.SiteMapTreeBuilder();
-            //object o = builder.GetTree();
+            // this view just has navigation map
             return View();
+
+
+        }
+
+        // GET: /SiteAdmin
+        [HttpGet]
+        public async Task<IActionResult> Security()
+        {
+            ViewData["Title"] = "Security Settings";
+            ViewData["Heading"] = "Security Settings";
+            // this view just has navigation map
+            return View("Index");
 
 
         }
@@ -117,8 +128,7 @@ namespace cloudscribe.Core.Web.Controllers
             Guid? siteGuid,
             int slp = 1)
         {
-            ViewData["Title"] = "Site Settings";
-
+            
             ISiteSettings selectedSite;
             // only server admin site can edit other sites settings
             if ((siteGuid.HasValue) && (siteManager.CurrentSite.IsServerAdminSite))
@@ -129,6 +139,8 @@ namespace cloudscribe.Core.Web.Controllers
             {
                 selectedSite = siteManager.CurrentSite;
             }
+
+            ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - Settings", selectedSite.SiteName);
 
             SiteBasicSettingsViewModel model = new SiteBasicSettingsViewModel();
             model.ReturnPageNumber = slp; // site list page number to return to
@@ -786,7 +798,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             if (result)
             {
-                this.AlertSuccess(string.Format("Social Login Settings for <b>{0}</b> wwas successfully updated.",
+                this.AlertSuccess(string.Format("Social Login Settings for <b>{0}</b> was successfully updated.",
                             selectedSite.SiteName), true);
             }
 
@@ -800,6 +812,193 @@ namespace cloudscribe.Core.Web.Controllers
             }
 
             return RedirectToAction("SocialLogins");
+
+        }
+
+        // GET: /SiteAdmin/LoginPageInfo
+        [HttpGet]
+        [Authorize(Roles = "Admins")]
+        public async Task<IActionResult> LoginPageInfo(
+            Guid? siteGuid,
+            int slp = 1)
+        {
+
+            ISiteSettings selectedSite;
+            // only server admin site can edit other sites settings
+            if ((siteGuid.HasValue) && (siteManager.CurrentSite.IsServerAdminSite))
+            {
+                selectedSite = await siteManager.Fetch(siteGuid.Value);
+            }
+            else
+            {
+                selectedSite = siteManager.CurrentSite;
+            }
+
+            ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - Login Page Content", selectedSite.SiteName);
+
+            LoginInfoViewModel model = new LoginInfoViewModel();
+            model.SiteGuid = selectedSite.SiteGuid;
+            model.LoginInfoTop = selectedSite.LoginInfoTop;
+            model.LoginInfoBottom = selectedSite.LoginInfoBottom;
+
+            return View(model);
+
+
+        }
+
+        // Post: /SiteAdmin/LoginPageInfo
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admins")]
+        public async Task<ActionResult> LoginPageInfo(LoginInfoViewModel model)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            if (model.SiteGuid == Guid.Empty)
+            {
+                this.AlertDanger("oops something went wrong, site was not found.", true);
+
+                return RedirectToAction("Index");
+            }
+
+           
+            ISiteSettings selectedSite = null;
+            if (model.SiteGuid == siteManager.CurrentSite.SiteGuid)
+            {
+                selectedSite = siteManager.CurrentSite;
+            }
+            else if (siteManager.CurrentSite.IsServerAdminSite)
+            {
+                selectedSite = await siteManager.Fetch(model.SiteGuid);
+            }
+
+            if (selectedSite == null)
+            {
+                this.AlertDanger("oops something went wrong.", true);
+
+                return RedirectToAction("Index");
+            }
+
+            selectedSite.LoginInfoTop = model.LoginInfoTop;
+            selectedSite.LoginInfoBottom = model.LoginInfoBottom;
+            
+
+            bool result = await siteManager.Save(selectedSite);
+
+            if (result)
+            {
+                this.AlertSuccess(string.Format("Login Page Info for <b>{0}</b> was successfully updated.",
+                            selectedSite.SiteName), true);
+            }
+
+
+            if ((siteManager.CurrentSite.IsServerAdminSite)
+                && (siteManager.CurrentSite.SiteGuid != selectedSite.SiteGuid)
+                )
+            {
+
+                return RedirectToAction("LoginPageInfo", new { siteGuid = model.SiteGuid });
+            }
+
+            return RedirectToAction("LoginPageInfo");
+
+        }
+
+        // GET: /SiteAdmin/RegisterPageInfo
+        [HttpGet]
+        [Authorize(Roles = "Admins")]
+        public async Task<IActionResult> RegisterPageInfo(
+            Guid? siteGuid,
+            int slp = 1)
+        {
+
+            ISiteSettings selectedSite;
+            // only server admin site can edit other sites settings
+            if ((siteGuid.HasValue) && (siteManager.CurrentSite.IsServerAdminSite))
+            {
+                selectedSite = await siteManager.Fetch(siteGuid.Value);
+            }
+            else
+            {
+                selectedSite = siteManager.CurrentSite;
+            }
+
+            ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - Registration Page Content", selectedSite.SiteName);
+
+            var model = new RegisterInfoViewModel();
+            model.SiteGuid = selectedSite.SiteGuid;
+            model.RegistrationPreamble = selectedSite.RegistrationPreamble;
+            model.RegistrationAgreement = selectedSite.RegistrationAgreement;
+
+            return View(model);
+
+
+        }
+
+
+        // Post: /SiteAdmin/RegisterPageInfo
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admins")]
+        public async Task<ActionResult> RegisterPageInfo(RegisterInfoViewModel model)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            if (model.SiteGuid == Guid.Empty)
+            {
+                this.AlertDanger("oops something went wrong, site was not found.", true);
+
+                return RedirectToAction("Index");
+            }
+
+
+            ISiteSettings selectedSite = null;
+            if (model.SiteGuid == siteManager.CurrentSite.SiteGuid)
+            {
+                selectedSite = siteManager.CurrentSite;
+            }
+            else if (siteManager.CurrentSite.IsServerAdminSite)
+            {
+                selectedSite = await siteManager.Fetch(model.SiteGuid);
+            }
+
+            if (selectedSite == null)
+            {
+                this.AlertDanger("oops something went wrong.", true);
+
+                return RedirectToAction("Index");
+            }
+
+            selectedSite.RegistrationPreamble = model.RegistrationPreamble;
+            selectedSite.RegistrationAgreement = model.RegistrationAgreement;
+
+
+            bool result = await siteManager.Save(selectedSite);
+
+            if (result)
+            {
+                this.AlertSuccess(string.Format("Registration Page Content for <b>{0}</b> was successfully updated.",
+                            selectedSite.SiteName), true);
+            }
+
+
+            if ((siteManager.CurrentSite.IsServerAdminSite)
+                && (siteManager.CurrentSite.SiteGuid != selectedSite.SiteGuid)
+                )
+            {
+
+                return RedirectToAction("RegisterPageInfo", new { siteGuid = model.SiteGuid });
+            }
+
+            return RedirectToAction("RegisterPageInfo");
 
         }
 

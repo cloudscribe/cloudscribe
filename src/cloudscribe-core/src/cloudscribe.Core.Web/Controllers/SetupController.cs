@@ -206,7 +206,8 @@ namespace cloudscribe.Setup.Controllers
                 result = await siteManager.CreateRequiredRolesAndAdminUser(newSite);
             }
 
-            
+            //TODO dbSiteSettingsEx.EnsureSettings(); add to ISiteRepository
+
 
             return result;
         }

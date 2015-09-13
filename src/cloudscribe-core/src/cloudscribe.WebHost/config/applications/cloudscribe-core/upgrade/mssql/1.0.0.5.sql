@@ -1,4 +1,31 @@
 INSERT INTO [mp_SiteSettingsExDef]([KeyName],[DefaultValue],[GroupName],[SortOrder]) 
+VALUES('RegistrationPreamble','','Settings', 700)
+
+GO
+
+INSERT INTO [mp_SiteSettingsExDef]([KeyName],[DefaultValue],[GroupName],[SortOrder]) 
+VALUES('RegistrationAgreement','','Settings', 700)
+
+GO
+
+INSERT INTO [mp_SiteSettingsExDef]([KeyName],[DefaultValue],[GroupName],[SortOrder]) 
+VALUES('LoginInfoTop','','Settings', 700)
+
+GO
+
+INSERT INTO [mp_SiteSettingsExDef]([KeyName],[DefaultValue],[GroupName],[SortOrder]) 
+VALUES('LoginInfoBottom','','Settings', 700)
+
+GO
+
+
+
+
+
+
+
+
+INSERT INTO [mp_SiteSettingsExDef]([KeyName],[DefaultValue],[GroupName],[SortOrder]) 
 VALUES('FacebookAppId','','Settings', 700)
 
 GO

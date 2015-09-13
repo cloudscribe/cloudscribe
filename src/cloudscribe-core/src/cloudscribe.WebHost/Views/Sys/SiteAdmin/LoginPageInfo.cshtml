@@ -1,0 +1,62 @@
+﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.LoginInfoViewModel
+@inject IOptions<CkeditorOptions> ckOptionsAccessor
+
+
+@{
+    CkeditorOptions ckOptions = ckOptionsAccessor.Options;
+}
+<div class="row">
+    <div class="col-md-10 col-md-push-2">
+        <h2>@ViewBag.Title</h2>
+        <form method="post" class="form-horizontal" role="form" asp-antiforgery="true">
+            <div class="form-horizontal">
+                <div asp-validation-summary="ValidationSummary.All" class="text-danger"></div>
+                <input asp-for="SiteGuid" type="hidden" />
+                <div class="form-group">
+                    <label asp-for="LoginInfoTop" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <textarea class="form-control" rows="5" asp-for="LoginInfoTop"
+                                  data-ckeditor-unobtrusive=""
+                                  data-ckeditor-unobtrusive-config-url="@Url.Content(ckOptions.CustomConfigPath)"
+                                  data-ckeditor-unobtrusive-config-toolbar="Full"
+                                  data-ckeditor-unobtrusive-config-language="@System.Globalization.CultureInfo.CurrentUICulture.Name"></textarea>
+                        <span asp-validation-for="LoginInfoTop" class="text-danger"></span>
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="LoginInfoBottom" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <textarea class="form-control" rows="5" asp-for="LoginInfoBottom"
+                                  data-ckeditor-unobtrusive=""
+                                  data-ckeditor-unobtrusive-config-url="@Url.Content(ckOptions.CustomConfigPath)"
+                                  data-ckeditor-unobtrusive-config-toolbar="Full"
+                                  data-ckeditor-unobtrusive-config-language="@System.Globalization.CultureInfo.CurrentUICulture.Name"></textarea>
+                        <span asp-validation-for="LoginInfoBottom" class="text-danger"></span>
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Save" class="btn btn-default" />
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-2 col-md-pull-10">
+        @await Component.InvokeAsync("Navigation", "SideNav", NamedNavigationFilters.ParentTree, "SiteAdmin")
+    </div>
+</div>
+
+
+    
+    @section Scripts {
+<script src="~/js/app/cloudscribe-cascade-unobtrusive.js"></script>
+<script src="~/js/lib/ckeditor/ckeditor.js"></script>
+<script src="~/js/lib/ckeditor/adapters/jquery.js"></script>
+<script src="~/js/app/cloudscribe-ckeditor-unobtrusive.js"></script>
+<script src="~/js/lib/metisMenu/dist/metisMenu.min.js"></script>
+<script src="~/js/app/cloudscribe-sidemenu.js"></script>
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    }

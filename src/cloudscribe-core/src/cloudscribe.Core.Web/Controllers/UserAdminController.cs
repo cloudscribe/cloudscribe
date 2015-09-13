@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-08
-// Last Modified:			2015-08-05
+// Last Modified:			2015-09-13
 // 
 
 using cloudscribe.Core.Identity;
@@ -16,6 +16,7 @@ using Microsoft.AspNet.Mvc;
 using Microsoft.Framework.OptionsModel;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 
 
@@ -43,14 +44,27 @@ namespace cloudscribe.Core.Web.Controllers
 
         [HttpGet]
         public async Task<IActionResult> Index(
+            Guid? siteGuid,
             string query = "",
             int sortMode = 2,
             int pageNumber = 1,
-            int pageSize = -1,
-            int siteId = -1)
+            int pageSize = -1
+            )
         {
-            ViewData["Title"] = "User Management";
-            //ViewBag.Heading = "Role Management";
+            ISiteSettings selectedSite;
+            // only server admin site can edit other sites settings
+            if ((siteGuid.HasValue) &&(siteGuid.Value != Guid.Empty) && (siteManager.CurrentSite.IsServerAdminSite))
+            {
+                selectedSite = await siteManager.Fetch(siteGuid.Value);
+            }
+            else
+            {
+                selectedSite = siteManager.CurrentSite;
+            }
+
+            
+            ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - User Management", selectedSite.SiteName);
+           // ViewData["Heading"] = ViewData["Title"];
 
             int itemsPerPage = uiOptions.DefaultPageSize_UserList;
             if (pageSize > 0)
@@ -58,29 +72,20 @@ namespace cloudscribe.Core.Web.Controllers
                 itemsPerPage = pageSize;
             }
 
-            if (siteId != -1)
-            {
-                if (!siteManager.CurrentSite.IsServerAdminSite)
-                {
-                    siteId = siteManager.CurrentSite.SiteId;
-                }
-            }
-            else
-            {
-                siteId = siteManager.CurrentSite.SiteId;
-            }
+            
 
             var siteMembers = await UserManager.GetPage(
-                siteId,
+                selectedSite.SiteId,
                 pageNumber,
                 itemsPerPage,
                 query,
                 sortMode);
 
-            var count = await UserManager.CountUsers(siteId, query);
+            var count = await UserManager.CountUsers(selectedSite.SiteId, query);
 
             UserListViewModel model = new UserListViewModel();
-            model.Heading = "User Management";
+            model.SiteGuid = selectedSite.SiteGuid;
+           // model.Heading = "User Management";
             model.UserList = siteMembers;
             model.Paging.CurrentPage = pageNumber;
             model.Paging.ItemsPerPage = itemsPerPage;
@@ -94,44 +99,44 @@ namespace cloudscribe.Core.Web.Controllers
 
         [HttpGet]
         public async Task<IActionResult> Search(
+            Guid? siteGuid,
             string query = "",
             int sortMode = 2,
             int pageNumber = 1,
-            int pageSize = -1,
-            int siteId = -1)
+            int pageSize = -1)
         {
-            ViewData["Title"] = "User Management";
-            //ViewBag.Heading = "Role Management";
+            ISiteSettings selectedSite;
+            // only server admin site can edit other sites settings
+            if ((siteGuid.HasValue) && (siteGuid.Value != Guid.Empty) && (siteManager.CurrentSite.IsServerAdminSite))
+            {
+                selectedSite = await siteManager.Fetch(siteGuid.Value);
+            }
+            else
+            {
+                selectedSite = siteManager.CurrentSite;
+            }
 
+            ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - User Management", selectedSite.SiteName);
+            
             int itemsPerPage = uiOptions.DefaultPageSize_UserList;
             if (pageSize > 0)
             {
                 itemsPerPage = pageSize;
             }
-
-            if (siteId != -1)
-            {
-                if (!siteManager.CurrentSite.IsServerAdminSite)
-                {
-                    siteId = siteManager.CurrentSite.SiteId;
-                }
-            }
-            else
-            {
-                siteId = siteManager.CurrentSite.SiteId;
-            }
+            
 
             var siteMembers = await UserManager.GetUserAdminSearchPage(
-                siteId,
+                selectedSite.SiteId,
                 pageNumber,
                 itemsPerPage,
                 query,
                 sortMode);
 
-            var count = await UserManager.CountUsersForAdminSearch(siteId, query);
+            var count = await UserManager.CountUsersForAdminSearch(selectedSite.SiteId, query);
 
             UserListViewModel model = new UserListViewModel();
-            model.Heading = "User Management";
+            model.SiteGuid = selectedSite.SiteGuid;
+            //model.Heading = "User Management";
             model.UserList = siteMembers;
             model.Paging.CurrentPage = pageNumber;
             model.Paging.ItemsPerPage = itemsPerPage;
@@ -144,49 +149,31 @@ namespace cloudscribe.Core.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> IpSearch(string ipQuery = "", int siteId = -1)
+        public async Task<IActionResult> IpSearch(
+            Guid? siteGuid,
+            string ipQuery = "")
         {
-            ViewData["Title"] = "User Management";
-            //ViewBag.Heading = "Role Management";
-
-
-            Guid siteGuid = siteManager.CurrentSite.SiteGuid;
-
-            if (siteId != -1)
+            ISiteSettings selectedSite;
+            // only server admin site can edit other sites settings
+            if ((siteGuid.HasValue) && (siteGuid.Value != Guid.Empty) && (siteManager.CurrentSite.IsServerAdminSite))
             {
-                if (siteManager.CurrentSite.IsServerAdminSite)
-                {
-                    ISiteSettings otherSite = await siteManager.Fetch(siteId);
-                    if (otherSite != null)
-                    {
-                        siteGuid = otherSite.SiteGuid;
-                    }
-                }
+                selectedSite = await siteManager.Fetch(siteGuid.Value);
+            }
+            else
+            {
+                selectedSite = siteManager.CurrentSite;
             }
 
-
-            List<IUserInfo> siteMembers;
-            //if(searchExp.Length > 0)
-            //{
-            //    siteMembers = Site.UserRepository.GetUserAdminSearchPage(
-            //    siteId,
-            //    pageNumber,
-            //    pageSize,
-            //    searchExp,
-            //    sortMode, out totalPages);
-            //}
-            //else
-            //{
-
-            //}
-
-            siteMembers = await UserManager.GetByIPAddress(
-                siteGuid,
+            ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - User Management", selectedSite.SiteName);
+            
+            List<IUserInfo> siteMembers = await UserManager.GetByIPAddress(
+                selectedSite.SiteGuid,
                 ipQuery);
 
 
             UserListViewModel model = new UserListViewModel();
-            model.Heading = "User Management";
+            model.SiteGuid = selectedSite.SiteGuid;
+            //model.Heading = "User Management";
             model.UserList = siteMembers;
             //model.Paging.CurrentPage = pageNumber;
             //model.Paging.ItemsPerPage = itemsPerPage;
@@ -203,16 +190,30 @@ namespace cloudscribe.Core.Web.Controllers
         [HttpGet]
         //[Authorize(Roles = "Admins")]
         //[MvcSiteMapNode(Title = "New User", ParentKey = "UserAdmin", Key = "UserEdit")]
-        public async Task<ActionResult> UserEdit(int? userId)
+        public async Task<ActionResult> UserEdit(
+            Guid? siteGuid,
+            int? userId)
         {
-            ViewData["Title"] = "New User";
+            ISiteSettings selectedSite;
+            // only server admin site can edit other sites settings
+            if ((siteGuid.HasValue) && (siteGuid.Value != Guid.Empty) && (siteManager.CurrentSite.IsServerAdminSite))
+            {
+                selectedSite = await siteManager.Fetch(siteGuid.Value);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - New User", selectedSite.SiteName);
+            }
+            else
+            {
+                selectedSite = siteManager.CurrentSite;
+                ViewData["Title"] = "New User";
+            }
+            
 
             EditUserViewModel model = new EditUserViewModel();
-            model.SiteGuid = siteManager.CurrentSite.SiteGuid;
+            model.SiteGuid = selectedSite.SiteGuid;
 
             if (userId.HasValue)
             {
-                ISiteUser user = await UserManager.Fetch(siteManager.CurrentSite.SiteId, userId.Value);
+                ISiteUser user = await UserManager.Fetch(selectedSite.SiteId, userId.Value);
                 if (user != null)
                 {
                     model.UserId = user.UserId;
@@ -227,7 +228,16 @@ namespace cloudscribe.Core.Web.Controllers
                         model.DateOfBirth = user.DateOfBirth;
                     }
 
-                    ViewBag.Title = "Manage User";
+                    if ((siteGuid.HasValue) && (siteGuid.Value != Guid.Empty))
+                    {
+                        ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - Manage User", selectedSite.SiteName);
+                    }
+                    else
+                    {
+                        ViewBag.Title = "Manage User";
+                    }
+
+                    
 
                     //var node = SiteMaps.Current.FindSiteMapNodeFromKey("UserEdit");
                     //if (node != null)
@@ -247,6 +257,17 @@ namespace cloudscribe.Core.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UserEdit(EditUserViewModel model)
         {
+            ISiteSettings selectedSite;
+            // only server admin site can edit other sites settings
+            if ((model.SiteGuid != siteManager.CurrentSite.SiteGuid) && (model.SiteGuid != Guid.Empty) && (siteManager.CurrentSite.IsServerAdminSite))
+            {
+                selectedSite = await siteManager.Fetch(model.SiteGuid);
+            }
+            else
+            {
+                selectedSite = siteManager.CurrentSite;
+            }
+
             ViewData["Title"] = "New User";
 
             if (ModelState.IsValid)
@@ -254,7 +275,7 @@ namespace cloudscribe.Core.Web.Controllers
                 if (model.UserId > -1)
                 {
                     //editing an existing user
-                    ISiteUser user = await UserManager.Fetch(siteManager.CurrentSite.SiteId, model.UserId);
+                    ISiteUser user = await UserManager.Fetch(selectedSite.SiteId, model.UserId);
                     if (user != null)
                     {
                         user.Email = model.Email;
@@ -286,8 +307,8 @@ namespace cloudscribe.Core.Web.Controllers
                 {
                     var user = new SiteUser
                     {
-                        SiteId = siteManager.CurrentSite.SiteId,
-                        SiteGuid = siteManager.CurrentSite.SiteGuid,
+                        SiteId = selectedSite.SiteId,
+                        SiteGuid = selectedSite.SiteGuid,
                         UserName = model.LoginName,
                         Email = model.Email,
                         FirstName = model.FirstName,

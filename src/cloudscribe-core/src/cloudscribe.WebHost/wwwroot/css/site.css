@@ -130,7 +130,7 @@ ul.breadcrumb {margin-bottom:0;}
     .sidebar {
         z-index: 1;
         position: absolute;
-        width: 250px;
+        /* width: 250px; */
         /* margin-top: 51px; */
     }
     .sidebar-nav.navbar-collapse { padding: 0 0 0 0;}

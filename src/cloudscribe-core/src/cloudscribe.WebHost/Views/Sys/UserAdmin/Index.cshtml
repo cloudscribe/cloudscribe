@@ -3,29 +3,45 @@
 @{
 
 }
-<h2>@Model.Heading</h2>
+
 <div class="row">
-    <div class="col-lg-6">
-        <form class="form-inline" role="form" asp-controller="UserAdmin" asp-action="Search" method="get">
-            <div class="input-group">
-                <input asp-for="SearchQuery" name="query" class="form-control" />
-                <span class="input-group-btn">
-                    <button type="submit" value="CommonResources.Search" class="btn btn-default">CommonResources.Search</button>
-                </span>
+    <div class="col-md-10 col-md-push-2">
+        <h2>@ViewData["Title"]</h2>
+        <div class="row">
+            <div class="col-md-5">
+                <form class="form-inline" role="form" asp-controller="UserAdmin" asp-action="Search" method="get">
+                    <input asp-for="SiteGuid" type="hidden" />
+                    <div class="input-group">
+                        <input asp-for="SearchQuery" name="query" class="form-control" />
+                        <span class="input-group-btn">
+                            <button type="submit" value="CommonResources.Search" class="btn btn-default">CommonResources.Search</button>
+                        </span>
+                    </div>
+                </form>
             </div>
-        </form>
+            <div class="col-md-5">
+                <form class="form-inline" role="form" asp-controller="UserAdmin" asp-action="IpSearch" method="get">
+                    <input asp-for="SiteGuid" type="hidden" />
+                    <div class="input-group">
+                        <input asp-for="IpQuery" name="ipquery" class="form-control" />
+                        <span class="input-group-btn">
+                            <button type="submit" value="CommonResources.SearchByIpAddress" class="btn btn-default">CommonResources.SearchByIpAddress</button>
+                        </span>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            @{await Html.RenderPartialAsync("UserListPartial", Model); }
+        </div>
     </div>
-    <div class="col-lg-6">
-        <form class="form-inline" role="form" asp-controller="UserAdmin" asp-action="IpSearch" method="get">
-            <div class="input-group">
-                <input asp-for="IpQuery" name="ipquery" class="form-control" />
-                <span class="input-group-btn">
-                    <button type="submit" value="CommonResources.SearchByIpAddress" class="btn btn-default">CommonResources.SearchByIpAddress</button>
-                </span>
-            </div>
-        </form>
+    <div class="col-md-2 col-md-pull-10">
+        @await Component.InvokeAsync("Navigation", "SideNav", NamedNavigationFilters.ParentTree, "SiteAdmin")
     </div>
 </div>
-<div class="row">
-    @{await Html.RenderPartialAsync("UserListPartial", Model); }
-</div>
+@section scripts {
+   
+    <script src="~/js/lib/metisMenu/dist/metisMenu.min.js"></script>
+    <script src="~/js/app/cloudscribe-sidemenu.js"></script>
+}
+

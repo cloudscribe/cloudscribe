@@ -2,20 +2,24 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-10
-// Last Modified:			2015-09-10
+// Last Modified:			2015-09-13
 // 
 
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc;
+using Microsoft.AspNet.Http.Extensions;
+using Microsoft.AspNet.WebUtilities;
 using Microsoft.Framework.Logging;
 using System;
 using System.Collections.Generic;
+using cloudscribe.Web.Navigation.Helpers;
 
 namespace cloudscribe.Web.Navigation
 {
     public class NavigationViewModel
     {
         public NavigationViewModel(
+            string startingNodeKey,
             string navigationFilterName,
             HttpContext context,
             IUrlHelper urlHelper,
@@ -30,6 +34,7 @@ namespace cloudscribe.Web.Navigation
             this.RootNode = rootNode;
             this.permissionResolver = permissionResolver;
             this.urlHelper = urlHelper;
+            this.startingNodeKey = startingNodeKey;
             log = logger;
 
             removalFilters.Add(FilterIsAllowed);
@@ -41,6 +46,7 @@ namespace cloudscribe.Web.Navigation
         }
 
         private ILogger log;
+        private string startingNodeKey;
         private string navigationFilterName;
         private string nodeSearchUrlPrefix;
         private HttpContext context;
@@ -67,23 +73,38 @@ namespace cloudscribe.Web.Navigation
                 if (currentNode == null)
                 {
                     //log.LogInformation("currentNode was null so lazy loading it");
-
-                    currentNode = RootNode.FindByUrl(context.Request.Path, nodeSearchUrlPrefix);
-                    if(navigationFilterName == NamedNavigationFilters.ParentTree)
+                    if(startingNodeKey.Length > 0)
                     {
-                        if(currentNode.Parent != null)
+                        currentNode = RootNode.FindByKey(startingNodeKey);
+                        if(currentNode == null)
                         {
-                            //log.LogInformation("NamedNavigationFilters.ParentTree so currentNode set to parent");
-
-                            currentNode = currentNode.Parent;
-                        }
-                        else
-                        {
-                            //log.LogInformation("currentNode.Parent was null");
+                            log.LogWarning("could not find navigation node for starting node key " 
+                                + startingNodeKey 
+                                + " will try fallback to current url node if it exists.");
                         }
                     }
+
+                    if (currentNode == null)
+                    {
+                        currentNode = RootNode.FindByUrl(context.Request.Path, nodeSearchUrlPrefix);
+                    }
+                        
+                    
                 }
                 return currentNode;
+            }
+        }
+
+        public TreeNode<NavigationNode> ParentNode
+        {
+            // lazy load
+            get
+            {
+                if (CurrentNode.Parent != null)
+                {
+                    return CurrentNode.Parent;
+                }
+                return null;
             }
         }
 
@@ -118,7 +139,32 @@ namespace cloudscribe.Web.Navigation
             string urlToUse = string.Empty;
             if ((node.Value.Action.Length > 0)&&(node.Value.Controller.Length > 0))
             {
-                urlToUse = urlHelper.Action(node.Value.Action, node.Value.Controller);
+                if(node.Value.PreservedRouteParameters.Length > 0)
+                {
+                    List<string> preservedParams = node.Value.PreservedRouteParameters.SplitOnChar(',');
+                    //var queryBuilder = new QueryBuilder();
+                    //var routeParams = new { };
+                    var queryStrings = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+                    foreach (string p in preservedParams)
+                    {
+                        if(context.Request.Query.ContainsKey(p))
+                        {
+                            queryStrings.Add(p, context.Request.Query[p]);
+                        }
+                    }
+                    
+                    urlToUse = urlHelper.Action(node.Value.Action, node.Value.Controller);
+                    if((urlToUse != null)&&(queryStrings.Count > 0))
+                    {
+                        urlToUse = QueryHelpers.AddQueryString(urlToUse, queryStrings);
+                    }
+                    
+                }
+                else
+                {
+                    urlToUse = urlHelper.Action(node.Value.Action, node.Value.Controller);
+                }
+                
             }
 
             string key = NavigationNodeAdjuster.KeyPrefix + node.Value.Key;

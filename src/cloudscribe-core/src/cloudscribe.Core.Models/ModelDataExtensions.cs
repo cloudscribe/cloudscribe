@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-09
-// Last Modified:			2015-09-02
+// Last Modified:			2015-09-13
 // 
 
 using System;
@@ -419,7 +419,7 @@ namespace cloudscribe.Core.Models.DataExtensions
             //SetExpandoProperty(expandoProperties, "GoogleAnalyticsEmail", site.GoogleAnalyticsEmail);
             site.IntenseDebateAccountId = GetExpandoProperty(expandoProperties, "IntenseDebateAccountId");
             site.LoginInfoBottom = GetExpandoProperty(expandoProperties, "LoginInfoBottom");
-            site.LoginInfoBottom = GetExpandoProperty(expandoProperties, "LoginInfoTop");
+            site.LoginInfoTop = GetExpandoProperty(expandoProperties, "LoginInfoTop");
             site.MetaProfile = GetExpandoProperty(expandoProperties, "MetaProfile");
             site.NewsletterEditor = GetExpandoProperty(expandoProperties, "NewsletterEditor");
             site.PasswordRegexWarning = GetExpandoProperty(expandoProperties, "PasswordRegexWarning");
@@ -544,7 +544,7 @@ namespace cloudscribe.Core.Models.DataExtensions
             //SetExpandoProperty(expandoProperties, "GoogleAnalyticsEmail", site.GoogleAnalyticsEmail);
             SetExpandoProperty(expandoProperties, "IntenseDebateAccountId", site.IntenseDebateAccountId);
             SetExpandoProperty(expandoProperties, "LoginInfoBottom", site.LoginInfoBottom);
-            SetExpandoProperty(expandoProperties, "LoginInfoTop", site.LoginInfoBottom);
+            SetExpandoProperty(expandoProperties, "LoginInfoTop", site.LoginInfoTop);
             SetExpandoProperty(expandoProperties, "MetaProfile", site.MetaProfile);
             SetExpandoProperty(expandoProperties, "NewsletterEditor", site.NewsletterEditor);
             SetExpandoProperty(expandoProperties, "PasswordRegexWarning", site.PasswordRegexWarning);

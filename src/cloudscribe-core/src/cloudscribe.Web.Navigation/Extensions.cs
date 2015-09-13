@@ -23,6 +23,21 @@ namespace cloudscribe.Web.Navigation.Helpers
             return list;
         }
 
+        public static List<string> SplitOnChar(this string s, char c)
+        {
+            List<string> list = new List<string>();
+            if (string.IsNullOrEmpty(s)) { return list; }
+
+            string[] a = s.Split(c);
+            foreach (string item in a)
+            {
+                if (!string.IsNullOrEmpty(item)) { list.Add(item); }
+            }
+
+
+            return list;
+        }
+
         /// <summary>
         /// this is replicated from cloudscribe.Core.Identity.ClaimsPrincipalExtensions.cs
         /// so that this project does not have a dependency and can be used without other cloudscribe components

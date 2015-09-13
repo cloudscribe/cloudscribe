@@ -333,6 +333,7 @@ namespace cloudscribe.Core.Web.Components
 
         public async Task<bool> DeleteHost(int hostId)
         {
+            
             return await siteRepo.DeleteHost(hostId);
         }
 

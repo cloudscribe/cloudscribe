@@ -45,6 +45,7 @@ namespace cloudscribe.Web.Navigation
             TreeNode<NavigationNode> rootNode = await builder.GetTree();
 
             NavigationViewModel model = new NavigationViewModel(
+                string.Empty,
                 filterName,
                 Request.HttpContext,
                 urlHelper,
@@ -56,7 +57,24 @@ namespace cloudscribe.Web.Navigation
             return View(viewName, model);
         }
 
+        public async Task<IViewComponentResult> InvokeAsync(string viewName, string filterName, string startingNodeKey)
+        {
+            TreeNode<NavigationNode> rootNode = await builder.GetTree();
 
-        
+            NavigationViewModel model = new NavigationViewModel(
+                startingNodeKey,
+                filterName,
+                Request.HttpContext,
+                urlHelper,
+                rootNode,
+                permissionResolver,
+                prefixProvider.GetPrefix(),
+                log);
+
+            return View(viewName, model);
+        }
+
+
+
     }
 }

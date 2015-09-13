@@ -1,4 +1,7 @@
 
+review existing rows in mp_SiteSettingExDef
+some need to be removed
+
 #fields to add
 
 #fields currently in expando settings

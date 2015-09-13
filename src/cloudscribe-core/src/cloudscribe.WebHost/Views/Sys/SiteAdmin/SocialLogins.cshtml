@@ -5,7 +5,7 @@
     
 }
 <div class="row">
-    <div class="col-md-9 col-md-push-3">
+    <div class="col-md-10 col-md-push-2">
         <h2>@ViewBag.Title</h2>
         <form method="post" class="form-horizontal" role="form" asp-antiforgery="true">
             <div class="form-horizontal">
@@ -79,8 +79,8 @@
             </div>
         </form>
     </div>
-    <div class="col-md-3 col-md-pull-9">
-        @await Component.InvokeAsync("Navigation", "SideNav", NamedNavigationFilters.ParentTree)
+    <div class="col-md-2 col-md-pull-10">
+        @await Component.InvokeAsync("Navigation", "SideNav", NamedNavigationFilters.ParentTree, "SiteAdmin")
     </div>
 </div>
     @section Scripts {
