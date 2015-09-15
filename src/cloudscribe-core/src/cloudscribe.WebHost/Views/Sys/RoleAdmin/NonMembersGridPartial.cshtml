@@ -1,32 +1,23 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.RoleAdmin.RoleMemberListViewModel
-@inject ISiteResolver siteResolver
-
 
 @{
-    bool useEmailForLogin = true;
-    ISiteSettings SiteSettings = siteResolver.Resolve();
-    if(SiteSettings != null) { useEmailForLogin = SiteSettings.UseEmailForLogin; }
+    
 }
-
-    <form role="form" method="get" class="form-inline" asp-controller="RoleAdmin" asp-action="RoleNonMembers"
+    <form role="form" method="get" class="form-inline" asp-controller="RoleAdmin" asp-action="RoleNonMembers" asp-antiforgery="false"
         data-ajax="true" 
         data-ajax-method="GET" 
         data-ajax-mode="replace" 
-        data-ajax-update="#nonmembersgridcontainer" 
-          >
+        data-ajax-update="#nonmembersgridcontainer">
+         <input asp-for="Role.SiteGuid" type="hidden" />
         <input name="roleId" type="hidden" value="@Model.Role.RoleId" />
         <input name="ajaxGrid" type="hidden" value="true" />
-
-
         <div class="input-group">
             <input type="search" name="searchInput" value="@Model.SearchQuery" class="form-control" />
             <span class="input-group-btn">
-
                 <button type="submit" value="CommonResources.Search" class="btn btn-default">CommonResources.Search</button>
             </span>
         </div>
     </form>
-
 <table class="table table-striped">
     <tr>
         <th>
@@ -35,7 +26,7 @@
             CommonResources
             .Email
         </th>
-        @if (!useEmailForLogin)
+        @if (!Model.UseEmailForLogin)
         {
             <th>
                 CommonResources
@@ -60,12 +51,11 @@
         <tr>
             <td>
                 <form role="form" asp-controller="RoleAdmin" asp-action="AddUser">
+                    <input name="siteGuid" type="hidden" value="@Model.Role.SiteGuid" />
                     <input name="RoleGuid" type="hidden" value="@Model.Role.RoleGuid" />
                     <input name="roleId" type="hidden" value="@Model.Role.RoleId" />
                     <input name="UserGuid" type="hidden" value="@item.UserGuid" />
                     <input name="UserId" type="hidden" value="@item.UserId" />
-
-
                     <button type="submit"
                             class="btn btn-success"
                             onclick="javascript: return confirm('@Html.FormatValue(item.DisplayName, "Are you sure you want to add {0}?")');">
@@ -77,7 +67,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
-            @if (!useEmailForLogin)
+            @if (!Model.UseEmailForLogin)
             {
                 <td>
                     @Html.DisplayFor(modelItem => item.UserName)
@@ -98,6 +88,7 @@
 <div>
     <cs-pager cs-paging-info="@Model.Paging"
               asp-action="RoleNonMembers" asp-controller="RoleAdmin"
+              asp-route-siteGuid="@Model.Role.SiteGuid"
               asp-route-roleid="@Model.Role.RoleId"
               asp-route-ajaxgrid="true"
               cs-ajax-target="#nonmembersgridcontainer"></cs-pager>

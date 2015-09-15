@@ -2,11 +2,12 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-06
-// Last Modified:			2015-07-09
+// Last Modified:			2015-09-15
 // 
 
 using cloudscribe.Core.Models;
 using cloudscribe.Web.Navigation;
+using System;
 using System.Collections.Generic;
 
 namespace cloudscribe.Core.Web.ViewModels.RoleAdmin
@@ -20,7 +21,10 @@ namespace cloudscribe.Core.Web.ViewModels.RoleAdmin
             Paging = new PaginationSettings();
         }
 
-        public string Heading { get; set; }
+        public Guid SiteGuid { get; set; } = Guid.Empty;
+        public bool UseEmailForLogin { get; set; } = true;
+        public string Heading1 { get; set; }
+        public string Heading2 { get; set; }
         public RoleViewModel Role { get; set; }
         public IList<IUserInfo> Members { get; set; }
         public PaginationSettings Paging { get; set; }
