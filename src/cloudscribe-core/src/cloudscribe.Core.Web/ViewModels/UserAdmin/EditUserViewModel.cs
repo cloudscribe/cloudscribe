@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-31
-// Last Modified:		    2015-06-10
+// Last Modified:		    2015-09-16
 // 
 // TODO: support custom profile properties that are required for registration
 
@@ -15,34 +15,16 @@ namespace cloudscribe.Core.Web.ViewModels.Account
 {
     public class EditUserViewModel
     {
-        private int userId = -1;
-
+        
         [Display(Name = "UserId")]
-        public int UserId
-        {
-            get { return userId; }
-            set { userId = value; }
-        }
-
-        private Guid userGuid = Guid.Empty;
-
+        public int UserId { get; set; } = -1;
+        
         [Display(Name = "UserGuid")]
-        public Guid UserGuid
-        {
-            get { return userGuid; }
-            set { userGuid = value; }
-
-        }
-
-        private Guid siteGuid = Guid.Empty;
-
+        public Guid UserGuid { get; set; } = Guid.Empty;
+        
         [Display(Name = "SiteGuid")]
-        public Guid SiteGuid
-        {
-            get { return siteGuid; }
-            set { siteGuid = value; }
-
-        }
+        public Guid SiteGuid { get; set; } = Guid.Empty;
+        
 
         // strange that when you specify resource parms for EmailAddressAttribute
         // it throws an error unless you explcitely set ErrorMessage to empty string
@@ -71,62 +53,40 @@ namespace cloudscribe.Core.Web.ViewModels.Account
         //[System.ComponentModel.DataAnnotations.Compare("Password", ErrorMessageResourceName = "ConfirmPasswordMatchErrorMessage", ErrorMessageResourceType = typeof(CommonResources))]
         public string ConfirmPassword { get; set; }
 
-
-        // TODO: this should be conditionally hidden or visible and required
-        // if we implement login with username vs email
-        private string loginName = string.Empty;
-
+        
         // //[StringLengthWithConfig(MinimumLength = 3, MaximumLength = 255, MinLengthKey = "SiteNameMinLength", MaxLengthKey = "SiteNameMaxLength", ErrorMessageResourceName = "SiteNameLengthErrorFormat", ErrorMessageResourceType = typeof(CommonResources))]
         //[Remote("LoginNameAvailable", "Account", AdditionalFields = "UserId",
         //    ErrorMessageResourceName = "LoginNameNotAvailable", ErrorMessageResourceType = typeof(CommonResources),
         //    HttpMethod = "Post")]
         //[Display(Name = "LoginName", ResourceType = typeof(CommonResources))]
-        public string LoginName
-        {
-            get { return loginName; }
-            set { loginName = value; }
-        }
-
+        public string LoginName { get; set; } = string.Empty;
+        
         private string displayName = string.Empty;
 
         //  //[StringLengthWithConfig(MinimumLength = 3, MaximumLength = 255, MinLengthKey = "SiteNameMinLength", MaxLengthKey = "SiteNameMaxLength", ErrorMessageResourceName = "SiteNameLengthErrorFormat", ErrorMessageResourceType = typeof(CommonResources))]
         //[Required(ErrorMessageResourceName = "DisplayNameRequired", ErrorMessageResourceType = typeof(CommonResources))]
         //[Display(Name = "DisplayName", ResourceType = typeof(CommonResources))]
-        public string DisplayName
-        {
-            get { return displayName; }
-            set { displayName = value; }
-        }
-
-        private string firstName = string.Empty;
-
+        public string DisplayName { get; set; } = string.Empty;
+        
         //  //[StringLengthWithConfig(MinimumLength = 3, MaximumLength = 255, MinLengthKey = "SiteNameMinLength", MaxLengthKey = "SiteNameMaxLength", ErrorMessageResourceName = "SiteNameLengthErrorFormat", ErrorMessageResourceType = typeof(CommonResources))]
         //[Display(Name = "FirstName", ResourceType = typeof(CommonResources))]
-        public string FirstName
-        {
-            get { return firstName; }
-            set { firstName = value; }
-        }
-
-        private string lastName = string.Empty;
-
+        public string FirstName { get; set; } = string.Empty;
+        
         //  //[StringLengthWithConfig(MinimumLength = 3, MaximumLength = 255, MinLengthKey = "SiteNameMinLength", MaxLengthKey = "SiteNameMaxLength", ErrorMessageResourceName = "SiteNameLengthErrorFormat", ErrorMessageResourceType = typeof(CommonResources))]
         //[Display(Name = "LastName", ResourceType = typeof(CommonResources))]
-        public string LastName
-        {
-            get { return lastName; }
-            set { lastName = value; }
-        }
-
+        public string LastName { get; set; } = string.Empty;
+        
         //[Display(Name = "DateOfBirth", ResourceType = typeof(CommonResources))]
         public DateTime? DateOfBirth { get; set; }
+        
+        public string RecaptchaSiteKey { get; set; } = string.Empty;
+        
 
-        private string recaptchaSiteKey = string.Empty;
+        public string RegistrationPreamble { get; set; } = string.Empty;
 
-        public string RecaptchaSiteKey
-        {
-            get { return recaptchaSiteKey; }
-            set { recaptchaSiteKey = value; }
-        }
+        public string RegistrationAgreement { get; set; } = string.Empty;
+
+        
+        public bool AgreeToTerms { get; set; } = false;
     }
 }

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-10
-// Last Modified:			2015-09-13
+// Last Modified:			2015-09-16
 // 
 
 using Microsoft.AspNet.Http;
@@ -61,6 +61,33 @@ namespace cloudscribe.Web.Navigation
         /// </summary>
         public TreeNode<NavigationNode> TempNode { get; private set; } = null;
 
+        private TreeNode<NavigationNode> startingNode = null;
+
+        public TreeNode<NavigationNode> StartingNode
+        {
+            // lazy load
+            get
+            {
+                if (startingNode == null)
+                {
+                    if (startingNodeKey.Length > 0)
+                    {
+                        startingNode = RootNode.FindByKey(startingNodeKey);
+                        if (startingNode == null)
+                        {
+                            log.LogWarning("could not find navigation node for starting node key "
+                                + startingNodeKey
+                                + " will fallback to RootNode.");
+                        }
+                    }
+
+                    return RootNode;
+                }
+
+                return startingNode;
+            }
+        }
+
         private TreeNode<NavigationNode> currentNode = null;
         /// <summary>
         /// the node corresponding to the current request url
@@ -73,17 +100,7 @@ namespace cloudscribe.Web.Navigation
                 if (currentNode == null)
                 {
                     //log.LogInformation("currentNode was null so lazy loading it");
-                    if(startingNodeKey.Length > 0)
-                    {
-                        currentNode = RootNode.FindByKey(startingNodeKey);
-                        if(currentNode == null)
-                        {
-                            log.LogWarning("could not find navigation node for starting node key " 
-                                + startingNodeKey 
-                                + " will try fallback to current url node if it exists.");
-                        }
-                    }
-
+                    
                     if (currentNode == null)
                     {
                         currentNode = RootNode.FindByUrl(context.Request.Path, nodeSearchUrlPrefix);
@@ -184,10 +201,7 @@ namespace cloudscribe.Web.Navigation
        
             return urlToUse;
         }
-
-
-        //public Func<TreeNode<NavigationNode>, bool> ShouldAllowView { get; private set; } = null;
-
+        
         public bool ShouldAllowView(TreeNode<NavigationNode> node)
         {
             foreach(var filter in removalFilters)

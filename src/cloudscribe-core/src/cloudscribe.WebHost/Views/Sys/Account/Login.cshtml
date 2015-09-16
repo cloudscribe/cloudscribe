@@ -6,14 +6,22 @@
 
 
 @{
-    ViewBag.Title = "Log in";
+    
 }
 @if (Model.RecaptchaSiteKey.Length > 0)
 {
     <script src='https://www.google.com/recaptcha/api.js'></script>
 }
 
-<h2>@ViewBag.Title.</h2>
+<h2>@ViewData["Title"]</h2>
+@if (Model.LoginInfoTop.Length > 0)
+{
+    <div class="row">
+        <div class="col-md-12">
+            @Html.Raw(Model.LoginInfoTop)
+        </div>
+    </div>
+}
 <div class="row">
     <div class="col-md-8">
         <section id="loginForm">
@@ -44,15 +52,15 @@
                     </div>
                 </div>
                 @if (Model.RecaptchaSiteKey.Length > 0)
-                {
-                    <div class="form-group">
-                        <div class="col-md-offset-2 col-md-10">
-                            <div class="g-recaptcha" data-sitekey="@Model.RecaptchaSiteKey"></div>
-                            @Html.ValidationMessage("recaptchaerror", new { @class = "text-danger" })
-                        </div>
-                    </div>
+        {
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <div class="g-recaptcha" data-sitekey="@Model.RecaptchaSiteKey"></div>
+                @Html.ValidationMessage("recaptchaerror", new { @class = "text-danger" })
+            </div>
+        </div>
 
-                }
+        }
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
                         <input type="submit" value="Log in" class="btn btn-default" />
@@ -89,11 +97,19 @@
                         </div>
                     </form>
                 </section>
-            
+
             }
         }
-     </div>
+    </div>
 </div>
+@if (Model.LoginInfoBottom.Length > 0)
+{
+    <div class="row">
+        <div class="col-md-12">
+            @Html.Raw(Model.LoginInfoBottom)
+        </div>
+    </div>
+}
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }

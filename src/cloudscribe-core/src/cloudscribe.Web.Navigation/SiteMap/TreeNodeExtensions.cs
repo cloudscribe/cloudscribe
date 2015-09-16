@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-09
-// Last Modified:			2015-08-02
+// Last Modified:			2015-09-16
 // 
 
 using Newtonsoft.Json;
@@ -112,6 +112,14 @@ namespace cloudscribe.Web.Navigation
         public static bool EqualsNode(this TreeNode<NavigationNode> currentNode, TreeNode<NavigationNode> nodeToMatch)
         {
             if(currentNode.Value.Key == nodeToMatch.Value.Key) { return true; }
+            if (currentNode.Value.Controller == nodeToMatch.Value.Controller && (currentNode.Value.Controller.Length > 0))
+            {
+                if (currentNode.Value.Action == nodeToMatch.Value.Action && (currentNode.Value.Action.Length > 0))
+                {
+                    return true;
+                }
+                    
+            }
             if (currentNode.Value.Url == nodeToMatch.Value.Url) { return true; }
 
             return false;

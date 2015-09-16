@@ -26,14 +26,13 @@ namespace cloudscribe.Core.Web.ViewModels.SiteUser
 
         [Display(Name = "Remember me?")]
         public bool RememberMe { get; set; }
+        
+        public string RecaptchaSiteKey { get; set; } = string.Empty;
 
-        private string recaptchaSiteKey = string.Empty;
+        public string LoginInfoTop { get; set; } = string.Empty;
 
-        public string RecaptchaSiteKey
-        {
-            get { return recaptchaSiteKey; }
-            set { recaptchaSiteKey = value; }
-        }
+        public string LoginInfoBottom { get; set; } = string.Empty;
+
 
         public IEnumerable<AuthenticationDescription> ExternalAuthenticationList {get;set;}
     }

@@ -135,3 +135,6 @@ ul.breadcrumb {margin-bottom:0;}
     }
     .sidebar-nav.navbar-collapse { padding: 0 0 0 0;}
 }
+
+.agreementcontainer { overflow:auto; border:1px solid #CCC; height:300px; }
+

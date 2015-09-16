@@ -7,7 +7,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author: Joe Audette
 // Created 2015-09-10
-// Last Modified: 2015-09-13
+// Last Modified: 2015-09-16
 }
 
 @if ((Model.TempNode != null) && (Model.HasVisibleChildren(Model.TempNode)))
@@ -20,18 +20,42 @@
 
             if (!Model.HasVisibleChildren(childNode))
             {
-                @:
-                <li><a href="@Url.Content(Model.AdjustUrl(childNode))">@childNode.Value.Text</a></li>
+                if (childNode.EqualsNode(Model.CurrentNode))
+                {
+                    @:
+                    <li class="active"><a class="active" href="@Url.Content(Model.AdjustUrl(childNode))">@childNode.Value.Text</a></li>
+                }
+                else
+                {
+                    @:
+                    <li><a href="@Url.Content(Model.AdjustUrl(childNode))">@childNode.Value.Text</a></li>
+                }
+
             }
             else
             {
-                <li>
-                    <a href="@Url.Content(Model.AdjustUrl(childNode))">
-                        @childNode.Value.Text
-                    </a>
-                    @Model.UpdateTempNode(childNode)
-                    @Html.Partial("NavigationNodeSidePartial", Model) @* recursion *@
-                </li>
+                if (childNode.EqualsNode(Model.CurrentNode))
+                {
+                    <li class="active">
+                        <a class="active" href="@Url.Content(Model.AdjustUrl(childNode))">
+                            @childNode.Value.Text
+                        </a>
+                        @Model.UpdateTempNode(childNode)
+                        @Html.Partial("NavigationNodeSidePartial", Model) @* recursion *@
+                    </li>
+                }
+                else
+                {
+                    <li>
+                        <a href="@Url.Content(Model.AdjustUrl(childNode))">
+                            @childNode.Value.Text
+                        </a>
+                        @Model.UpdateTempNode(childNode)
+                        @Html.Partial("NavigationNodeSidePartial", Model) @* recursion *@
+                    </li>
+
+                }
+
             }
         }
 

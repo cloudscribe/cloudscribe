@@ -60,7 +60,7 @@ namespace cloudscribe.Core.Web.Controllers
         [AllowAnonymous]
         public IActionResult Login(string returnUrl)
         {
-
+            ViewData["Title"] = "Log in";
             ViewData["ReturnUrl"] = returnUrl;
             LoginViewModel model = new LoginViewModel();
             model.ExternalAuthenticationList = signInManager.GetExternalAuthenticationSchemes();
@@ -68,6 +68,9 @@ namespace cloudscribe.Core.Web.Controllers
             {
                 model.RecaptchaSiteKey = Site.RecaptchaPublicKey;     
             }
+
+            model.LoginInfoTop = Site.LoginInfoTop;
+            model.LoginInfoBottom = Site.LoginInfoBottom;
 
             return View(model);
         }
@@ -79,10 +82,13 @@ namespace cloudscribe.Core.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model, string returnUrl)
         {
+            ViewData["Title"] = "Log in";
             ViewData["ReturnUrl"] = returnUrl;
             if ((Site.RequireCaptchaOnLogin)&& (Site.RecaptchaPublicKey.Length > 0))
             {
-               model.RecaptchaSiteKey = Site.RecaptchaPublicKey;    
+                model.RecaptchaSiteKey = Site.RecaptchaPublicKey;
+                model.LoginInfoTop = Site.LoginInfoTop;
+                model.LoginInfoBottom = Site.LoginInfoBottom;
             }
 
             if (!ModelState.IsValid)
@@ -149,6 +155,9 @@ namespace cloudscribe.Core.Web.Controllers
                 model.RecaptchaSiteKey = Site.RecaptchaPublicKey;  
             }
 
+            model.RegistrationPreamble = Site.RegistrationPreamble;
+            model.RegistrationAgreement = Site.RegistrationAgreement;
+
 
             return View(model);
         }
@@ -168,6 +177,14 @@ namespace cloudscribe.Core.Web.Controllers
 
             if (ModelState.IsValid)
             {
+                if(Site.RegistrationAgreement.Length > 0)
+                {
+                    if(!model.AgreeToTerms)
+                    {
+                        ModelState.AddModelError("agreementerror", "You must agree to the terms");
+                    }
+                }
+
                 if ((Site.RequireCaptchaOnRegistration)&& (Site.RecaptchaPublicKey.Length > 0))
                 {
                     string recpatchaSecretKey = Site.RecaptchaPrivateKey;
@@ -216,6 +233,7 @@ namespace cloudscribe.Core.Web.Controllers
                     LastName = model.LastName,
                     DisplayName = model.DisplayName
                 };
+
                 if (model.DateOfBirth.HasValue)
                 {
                     user.DateOfBirth = model.DateOfBirth.Value;
@@ -233,9 +251,7 @@ namespace cloudscribe.Core.Web.Controllers
                     //    "Please confirm your account by clicking this link: <a href=\"" + callbackUrl + "\">link</a>");
                     await signInManager.SignInAsync(user, isPersistent: false);
                     return RedirectToAction("Index", "Home");
-
                     
-
                 }
                 AddErrors(result);
             }

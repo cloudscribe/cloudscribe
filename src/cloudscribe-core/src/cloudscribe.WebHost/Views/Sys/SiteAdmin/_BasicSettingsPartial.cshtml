@@ -111,11 +111,6 @@
         <input asp-for="ReturnPageNumber" type="hidden" />
     </form>       
 }
-    <div>
-        <a class="btn btn-default" asp-action="SiteList"
-           asp-controller="SiteAdmin"
-           asp-route-pageNumber="@Model.ReturnPageNumber">BackToSiteList</a>  
-    </div>
     @section Scripts {
         @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
     }
