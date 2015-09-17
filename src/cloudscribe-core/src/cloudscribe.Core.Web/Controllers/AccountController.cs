@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-09-04
+// Last Modified:			2015-09-17
 // 
 
 using cloudscribe.Core.Identity;
@@ -169,22 +169,19 @@ namespace cloudscribe.Core.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(EditUserViewModel model)
         {
-            
+            ViewData["Title"] = "Register";
+
             if ((Site.RequireCaptchaOnRegistration)&& (Site.RecaptchaPublicKey.Length > 0))
             {
                 model.RecaptchaSiteKey = Site.RecaptchaPublicKey;     
             }
 
-            if (ModelState.IsValid)
-            {
-                if(Site.RegistrationAgreement.Length > 0)
-                {
-                    if(!model.AgreeToTerms)
-                    {
-                        ModelState.AddModelError("agreementerror", "You must agree to the terms");
-                    }
-                }
+            model.RegistrationPreamble = Site.RegistrationPreamble;
+            model.RegistrationAgreement = Site.RegistrationAgreement;
 
+            bool isValid = ModelState.IsValid;
+            if (isValid)
+            {
                 if ((Site.RequireCaptchaOnRegistration)&& (Site.RecaptchaPublicKey.Length > 0))
                 {
                     string recpatchaSecretKey = Site.RecaptchaPrivateKey;
@@ -220,9 +217,24 @@ namespace cloudscribe.Core.Web.Controllers
                         //}
 
                         ModelState.AddModelError("recaptchaerror", "reCAPTCHA Error occured. Please try again");
-                        return View(model);
+                        isValid = false;
+                        
                     }
 
+                }
+
+                //if (Site.RegistrationAgreement.Length > 0)
+                //{
+                //    if (!model.AgreeToTerms)
+                //    {
+                //        ModelState.AddModelError("agreementerror", "You must agree to the terms");
+                //        isValid = false;
+                //    }
+                //}
+
+                if (!isValid)
+                {
+                    return View(model);
                 }
 
                 var user = new SiteUser
@@ -255,10 +267,10 @@ namespace cloudscribe.Core.Web.Controllers
                 }
                 AddErrors(result);
             }
-            else
-            {
-                this.AlertDanger("model was invalid", true);
-            }
+            //else
+            //{
+            //    this.AlertDanger("model was invalid", true);
+            //}
 
             // If we got this far, something failed, redisplay form
             return View(model);

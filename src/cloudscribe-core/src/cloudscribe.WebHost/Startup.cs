@@ -86,38 +86,43 @@ namespace cloudscribe.WebHost
             // this is in Startup.CloudscribeCore.DI.MS.cs
             services.ConfigureCloudscribeCore(Configuration);
 
-            //services.Configure<MvcOptions>(options =>
-            //{
-            //    // forces https
-            //    // note that the home or root is still accessible non securely
-            //    // only enable this if you have an ssl certificate installed and working
-            //    //options.Filters.Add(new RequireHttpsAttribute());
+            services.Configure<MvcOptions>(options =>
+            {
+                // forces https
+                // note that the home or root is still accessible non securely
+                // only enable this if you have an ssl certificate installed and working
+                //options.Filters.Add(new RequireHttpsAttribute());
 
+                //options.ModelValidatorProviders.Add()
+
+            });
+
+            //services.Configure<IdentityOptions>(options =>
+            //{
+            //    options.Password.RequiredLength
             //});
 
 
-            
+                // we are adding this from Startup.CloudscribeCore.cs so it is not needed here
+                // Add MVC services to the services container.
+                //services.AddMvc();
 
-            // we are adding this from Startup.CloudscribeCore.cs so it is not needed here
-            // Add MVC services to the services container.
-            //services.AddMvc();
+                // Uncomment the following line to add Web API services which makes it easier to port Web API 2 controllers.
+                // You will also need to add the Microsoft.AspNet.Mvc.WebApiCompatShim package to the 'dependencies' section of project.json.
+                // services.AddWebApiConventions();
 
-            // Uncomment the following line to add Web API services which makes it easier to port Web API 2 controllers.
-            // You will also need to add the Microsoft.AspNet.Mvc.WebApiCompatShim package to the 'dependencies' section of project.json.
-            // services.AddWebApiConventions();
+                //Autofac config
+                // var builder = new ContainerBuilder();
 
-            //Autofac config
-           // var builder = new ContainerBuilder();
+                ////Populate the container with services that were previously registered
+                //// it seems this depends on beta4
+                //builder.Populate(services);
 
-            ////Populate the container with services that were previously registered
-            //// it seems this depends on beta4
-            //builder.Populate(services);
+                //var container = builder.Build();
 
-            //var container = builder.Build();
+                //return container.Resolve<IServiceProvider>();
 
-            //return container.Resolve<IServiceProvider>();
-
-        }
+            }
 
         // Configure is called after ConfigureServices is called.
         // you can change this method signature to include any dependencies that need to be injected into this method
@@ -193,6 +198,7 @@ namespace cloudscribe.WebHost
             // it is very important that all authentication configuration be set before configuring mvc
             // ie if app.UseFacebookAuthentication(); was below app.UseMvc the facebook login button will not be shown
 
+            
             // Add MVC to the request pipeline.
             app.UseMvc(routes =>
             {
@@ -222,7 +228,8 @@ namespace cloudscribe.WebHost
 
                 // Uncomment the following line to add a route for porting Web API 2 controllers.
                 // routes.MapWebApiRoute("DefaultApi", "api/{controller}/{id?}");
-            });
+            })
+            ;
 
             // https://github.com/aspnet/Announcements/issues/54
             // if you want to run the IIS pipeline for requests not handled 

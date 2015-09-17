@@ -2,13 +2,13 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-31
-// Last Modified:		    2015-09-16
+// Last Modified:		    2015-09-17
 // 
 // TODO: support custom profile properties that are required for registration
 
 using System;
 using System.ComponentModel.DataAnnotations;
-//using cloudscribe.Configuration.DataAnnotations;
+using cloudscribe.Core.Models.DataAnnotations;
 //using ExpressiveAnnotations.Attributes;
 
 namespace cloudscribe.Core.Web.ViewModels.Account
@@ -30,6 +30,8 @@ namespace cloudscribe.Core.Web.ViewModels.Account
         // it throws an error unless you explcitely set ErrorMessage to empty string
         // I guess its base class sets a default value that must be cleared
 
+        [Required]
+        [EmailAddress(ErrorMessage = "invalid email format")]
         //[Required(ErrorMessageResourceName = "EmailRequired", ErrorMessageResourceType = typeof(CommonResources))]
         //[EmailAddress(ErrorMessage = "", ErrorMessageResourceName = "EmailNotValid", ErrorMessageResourceType = typeof(CommonResources))]
         //[Display(Name = "Email", ResourceType = typeof(CommonResources))]
@@ -44,13 +46,15 @@ namespace cloudscribe.Core.Web.ViewModels.Account
         //    MinLengthKey = "PasswordMinLength",
         //    MaxLengthKey = "PasswordMaxLength",
         //    ErrorMessageResourceName = "PasswordLengthErrorFormat", ErrorMessageResourceType = typeof(CommonResources))]
+        [RequiredWhen("UserId", -1,AllowEmptyStrings =false, ErrorMessage = "Password is required.")]
         [DataType(DataType.Password)]
         //[Display(Name = "Password", ResourceType = typeof(CommonResources))]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
+        [Compare("Password",ErrorMessage ="passwords must match")]
         //[Display(Name = "ConfirmPassword", ResourceType = typeof(CommonResources))]
-        //[System.ComponentModel.DataAnnotations.Compare("Password", ErrorMessageResourceName = "ConfirmPasswordMatchErrorMessage", ErrorMessageResourceType = typeof(CommonResources))]
+        //[Compare("Password", ErrorMessageResourceName = "ConfirmPasswordMatchErrorMessage", ErrorMessageResourceType = typeof(CommonResources))]
         public string ConfirmPassword { get; set; }
 
         
@@ -86,7 +90,8 @@ namespace cloudscribe.Core.Web.ViewModels.Account
 
         public string RegistrationAgreement { get; set; } = string.Empty;
 
-        
+        [Display(Name = "AgreeToTerms")]
+        [EnforceTrue(ErrorMessage = "You must agree to the terms.")]
         public bool AgreeToTerms { get; set; } = false;
     }
 }

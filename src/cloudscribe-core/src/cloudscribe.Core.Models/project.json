@@ -14,12 +14,14 @@
 
   "dependencies": {
     "Microsoft.AspNet.Identity": "3.0.0-beta7",
+    "Microsoft.AspNet.Mvc": "6.0.0-beta7",
     "Microsoft.Framework.Configuration": "1.0.0-beta7"
   },
 
   "frameworks": {
     "dnx451": {
       "frameworkAssemblies": {
+        "System.ComponentModel": "",
         "System.Data": ""
       }
     },
