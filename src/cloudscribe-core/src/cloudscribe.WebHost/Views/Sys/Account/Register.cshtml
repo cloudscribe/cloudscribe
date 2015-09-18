@@ -16,6 +16,7 @@
     </div>
 }
 <form asp-controller="Account" asp-action="Register" method="post" class="form-horizontal" role="form">
+    <input asp-for="UserId" type="hidden" />
     <h4>Create a new account.</h4>
     <hr />
     <div asp-validation-summary="ValidationSummary.All" class="text-danger"></div>
@@ -36,7 +37,13 @@
     <div class="form-group">
         <label asp-for="ConfirmPassword" class="col-md-2 control-label"></label>
         <div class="col-md-10">
-            <input asp-for="ConfirmPassword" class="form-control" />
+            <input asp-for="ConfirmPassword" class="form-control" 
+                   data-val="true" 
+                   data-val-comparewhen="Must match password" 
+                   data-val-comparewhen-whenproperty="*.UserId"
+                   data-val-comparewhen-whenvalue="-1"
+                   data-val-comparewhen-compareproperty="*.Password"
+                   />
             <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
         </div>
     </div>

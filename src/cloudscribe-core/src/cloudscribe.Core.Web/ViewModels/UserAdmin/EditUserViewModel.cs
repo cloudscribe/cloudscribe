@@ -47,12 +47,13 @@ namespace cloudscribe.Core.Web.ViewModels.Account
         //    MaxLengthKey = "PasswordMaxLength",
         //    ErrorMessageResourceName = "PasswordLengthErrorFormat", ErrorMessageResourceType = typeof(CommonResources))]
         [RequiredWhen("UserId", -1,AllowEmptyStrings =false, ErrorMessage = "Password is required.")]
+        [Required(AllowEmptyStrings = false)]
         [DataType(DataType.Password)]
         //[Display(Name = "Password", ResourceType = typeof(CommonResources))]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
-        [Compare("Password",ErrorMessage ="passwords must match")]
+        [CompareWhen(WhenProperty = "UserId", WhenValue = -1, CompareProperty = "Password")]
         //[Display(Name = "ConfirmPassword", ResourceType = typeof(CommonResources))]
         //[Compare("Password", ErrorMessageResourceName = "ConfirmPasswordMatchErrorMessage", ErrorMessageResourceType = typeof(CommonResources))]
         public string ConfirmPassword { get; set; }
@@ -91,6 +92,7 @@ namespace cloudscribe.Core.Web.ViewModels.Account
         public string RegistrationAgreement { get; set; } = string.Empty;
 
         [Display(Name = "AgreeToTerms")]
+       
         [EnforceTrue(ErrorMessage = "You must agree to the terms.")]
         public bool AgreeToTerms { get; set; } = false;
     }

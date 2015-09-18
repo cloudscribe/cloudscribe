@@ -118,3 +118,18 @@ from inside ChildDropdownPartial.cshtml
 
         }
 
+		
+#Validation
+
+http://www.codeproject.com/Tips/780992/Asp-Net-MVC-Custom-Compare-Data-annotation-with-Cl
+
+https://github.com/ASP-NET-MVC/aspnetwebstack/blob/master/src/System.Web.Mvc/CompareAttribute.cs
+
+
+
+            <input class="form-control valid" 
+			data-val="true" 
+			data-val-equalto="passwords must match" data-val-equalto-other="*.Password" 
+			id="ConfirmPassword" name="ConfirmPassword" type="password">
+            <span class="text-danger field-validation-valid" data-valmsg-for="ConfirmPassword" data-valmsg-replace="true"></span>
+        

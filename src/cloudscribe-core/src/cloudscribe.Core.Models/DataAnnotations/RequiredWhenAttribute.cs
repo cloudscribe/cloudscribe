@@ -15,6 +15,15 @@ namespace cloudscribe.Core.Models.DataAnnotations
 {
     public class RequiredWhenAttribute : ValidationAttribute
     {
+        public RequiredWhenAttribute(string dependentProperty, object targetValue)
+        {
+            _innerAttribute = new RequiredAttribute();
+            DependentProperty = dependentProperty;
+            TargetValue = targetValue;
+        }
+
+        
+
         protected RequiredAttribute _innerAttribute;
 
         public string DependentProperty { get; set; }
@@ -32,18 +41,14 @@ namespace cloudscribe.Core.Models.DataAnnotations
             }
         }
 
-        public RequiredWhenAttribute(string dependentProperty, object targetValue)
-        {
-            _innerAttribute = new RequiredAttribute();
-            DependentProperty = dependentProperty;
-            TargetValue = targetValue;
-        }
+        
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             // get a reference to the property this validation depends upon         
             var containerType = validationContext.ObjectInstance.GetType();
             var field = containerType.GetProperty(DependentProperty);
+            
            
             if (field != null)
             {
