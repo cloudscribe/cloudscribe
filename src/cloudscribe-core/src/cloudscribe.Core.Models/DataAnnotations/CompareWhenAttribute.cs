@@ -127,7 +127,11 @@ namespace cloudscribe.Core.Models.DataAnnotations
 
             
 
-            return new[] { new ModelClientValidationCompareWhenRule(this.Attribute.WhenProperty, this.Attribute.WhenValue, this.Attribute.CompareProperty, errorMessage)  };
+            return new[] { new ModelClientValidationCompareWhenRule(
+                this.Attribute.CompareProperty,
+                this.Attribute.WhenProperty, 
+                this.Attribute.WhenValue, 
+                errorMessage)  };
         }
     }
 
@@ -136,15 +140,16 @@ namespace cloudscribe.Core.Models.DataAnnotations
         private const string CompareWhenValidationType = "comparewhen";
 
         public ModelClientValidationCompareWhenRule(
+            string compareProperty,
             string whenProperty,
             object whenValue,
-            string compareProperty,
             string errorMessage) :
             base(CompareWhenValidationType, errorMessage)
         {
+            this.ValidationParameters.Add("compareproperty", compareProperty);
             this.ValidationParameters.Add("whenproperty", whenProperty);
             this.ValidationParameters.Add("whenvalue", whenValue.ToString());
-            this.ValidationParameters.Add("compareproperty", compareProperty);
+            
         }
     }
 

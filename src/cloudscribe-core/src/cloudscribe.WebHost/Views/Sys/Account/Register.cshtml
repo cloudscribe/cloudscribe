@@ -40,9 +40,9 @@
             <input asp-for="ConfirmPassword" class="form-control" 
                    data-val="true" 
                    data-val-comparewhen="Must match password" 
-                   data-val-comparewhen-whenproperty="*.UserId"
-                   data-val-comparewhen-whenvalue="-1"
-                   data-val-comparewhen-compareproperty="*.Password"
+                   data-val-comparewhen-compareproperty="#Password"
+                   data-val-comparewhen-whenproperty="#UserId"
+                   data-val-comparewhen-whenvalue="-1"  
                    />
             <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
         </div>

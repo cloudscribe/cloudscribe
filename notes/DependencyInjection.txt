@@ -1,4 +1,8 @@
 
+this question is about something else but it shows a cool technique if you nned to inejct something for use in a static extension method
+thoug some would frown at the use of servicelocator pattern
+http://stackoverflow.com/questions/30755827/getting-absolute-urls-using-asp-net-mvc-6
+
 http://www.emadashi.com/2015/06/dependency-injection-in-asp-net-5-one-step-deeper/
 
 http://www.strathweb.com/2014/07/dependency-injection-directly-actions-asp-net-web-api/

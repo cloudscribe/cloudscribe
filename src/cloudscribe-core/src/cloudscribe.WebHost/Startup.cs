@@ -151,6 +151,7 @@ namespace cloudscribe.WebHost
             loggerFactory.AddConsole();
             // Add cloudscribe db logging
             loggerFactory.AddDbLogger(serviceProvider, logRepository);
+           
 
             // Add the following to the request pipeline only in development environment.
             if (env.IsEnvironment("Development"))

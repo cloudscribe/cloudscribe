@@ -15,7 +15,7 @@ namespace cloudscribe.Core.Web.ViewModels.Account
 {
     public class EditUserViewModel
     {
-        
+       
         [Display(Name = "UserId")]
         public int UserId { get; set; } = -1;
         
@@ -25,11 +25,6 @@ namespace cloudscribe.Core.Web.ViewModels.Account
         [Display(Name = "SiteGuid")]
         public Guid SiteGuid { get; set; } = Guid.Empty;
         
-
-        // strange that when you specify resource parms for EmailAddressAttribute
-        // it throws an error unless you explcitely set ErrorMessage to empty string
-        // I guess its base class sets a default value that must be cleared
-
         [Required]
         [EmailAddress(ErrorMessage = "invalid email format")]
         //[Required(ErrorMessageResourceName = "EmailRequired", ErrorMessageResourceType = typeof(CommonResources))]
@@ -53,7 +48,7 @@ namespace cloudscribe.Core.Web.ViewModels.Account
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
-        [CompareWhen(WhenProperty = "UserId", WhenValue = -1, CompareProperty = "Password")]
+        [CompareWhen(WhenProperty = "UserId", WhenValue = -1, CompareProperty = "Password",ErrorMessage = "Confirm Password must match Password.")]
         //[Display(Name = "ConfirmPassword", ResourceType = typeof(CommonResources))]
         //[Compare("Password", ErrorMessageResourceName = "ConfirmPasswordMatchErrorMessage", ErrorMessageResourceType = typeof(CommonResources))]
         public string ConfirmPassword { get; set; }
