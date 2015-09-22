@@ -124,9 +124,7 @@ namespace cloudscribe.Core.Models.DataAnnotations
             if (context == null) { throw new InvalidOperationException("ClientModelValidationContext cannot be null"); }
 
             var errorMessage = GetErrorMessage(context.ModelMetadata);
-
             
-
             return new[] { new ModelClientValidationCompareWhenRule(
                 this.Attribute.CompareProperty,
                 this.Attribute.WhenProperty, 
@@ -148,8 +146,7 @@ namespace cloudscribe.Core.Models.DataAnnotations
         {
             this.ValidationParameters.Add("compareproperty", compareProperty);
             this.ValidationParameters.Add("whenproperty", whenProperty);
-            this.ValidationParameters.Add("whenvalue", whenValue.ToString());
-            
+            this.ValidationParameters.Add("whenvalue", whenValue.ToString());         
         }
     }
 

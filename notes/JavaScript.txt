@@ -1,5 +1,7 @@
 
 
+https://github.com/Eonasdan/bootstrap-datetimepicker
+
 http://www.davepaquette.com/archive/2014/10/08/how-to-use-gulp-in-visual-studio.aspx
 http://www.davepaquette.com/archive/2015/05/05/web-optimization-development-and-production-in-asp-net-mvc6.aspx
 

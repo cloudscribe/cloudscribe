@@ -2,16 +2,4 @@ This is a place to make notes of doubts or questions about how something is impl
 
 When this project is made open source we can ask for other opinions and feedback from code review.
 
-# unsolved problem 1
-For some reason jquery unobtrusive validation is preventing form submission
-in Views/Sys/Account/Register.cshtml
-so I had to comment out the js
-@* @Scripts.Render("~/bundles/jqueryval")  *@  
-
-What I don't understand is
-Views/Sys/UserAdmin/EditUser.cshtml
-is almost identical but there the jquery unobtrusive validation works just fine.
-both views use the same ViewModel and the same partial view for most of the inputs.
-
-the rendered source is almost identical just different form action
 
