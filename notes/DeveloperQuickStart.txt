@@ -3,15 +3,15 @@ To work with the solution use Visual Studio 2015 with the latast beta7 tooling i
 The WebHost project is the web application project, it must be the startup project in the solution.
 
 Copy the file config.json file in the WebHost project and rename it as config.local.overrides.json
-This file is in opur gitexclude so you can put your connection string there without it going into the repo.
+This file is in our gitexclude so you can put your connection string there without it going into the repo.
 
-Create an MS SQL database with sql authentication and set the connection string in the MSSQLConnectionOptions section of your config file
+Create an MS SQL database with sql authentication and set the connection string in the MSSQLConnectionOptions section of your config file.
 
 Rebuild the solution in Visual Studio 2015, that should pull in all the needed packages from NuGet as well as compiling the code.
 
 Right click the WebHost project and choose View > View In Browser
 
-Once the site is open in the Web Browser, it will likely have errors since the db is not yet populated, visit /Setup to create/update the db schema and to create the first site and with admin user account.
+Once the site is open in the Web Browser, it will likely have errors since the db is not yet populated, visit /Setup to create/update the db schema and to create the first site.
 
 It is always safe to visit /Setup, any time you pull updates from the repository and rebuild the solution its a good idea to visit /Setup again to run any upgrade scripts. It will never re-run scripts that it has already run.
 
