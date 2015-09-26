@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-10
-// Last Modified:			2015-09-10
+// Last Modified:			2015-09-26
 // 
 
 using Microsoft.AspNet.Mvc;
@@ -42,19 +42,8 @@ namespace cloudscribe.Web.Navigation
 
         public async Task<IViewComponentResult> InvokeAsync(string viewName, string filterName)
         {
-            TreeNode<NavigationNode> rootNode = await builder.GetTree();
-
-            NavigationViewModel model = new NavigationViewModel(
-                string.Empty,
-                filterName,
-                Request.HttpContext,
-                urlHelper,
-                rootNode,
-                permissionResolver,
-                prefixProvider.GetPrefix(),
-                log);
-           
-            return View(viewName, model);
+            return await InvokeAsync(viewName, filterName, string.Empty);
+            
         }
 
         public async Task<IViewComponentResult> InvokeAsync(string viewName, string filterName, string startingNodeKey)

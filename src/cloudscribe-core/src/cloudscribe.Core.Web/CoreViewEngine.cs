@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //  Author:                     Joe Audette
 //  Created:                    2014-10-13
-//	Last Modified:              2015-07-05
+//	Last Modified:              2015-09-26
 // 
 
 using Microsoft.AspNet.Mvc.Razor;
@@ -46,55 +46,7 @@ namespace cloudscribe.Core.Web
             // {0} represents the name of the view
             // {1} represents the name of the controller
             // {2} represents the name of the area
-
-            //ViewLocationFormats = new string[] {
-            //    "~/Views/{1}/{0}.cshtml",
-            //    "~/Views/Shared/{0}.cshtml",
-            //    "~/Views/Sys/{1}/{0}.cshtml",
-            //    "~/Views/Sys/Shared/{0}.cshtml"
-
-
-            //};
-
-            //MasterLocationFormats = new string[] {
-            //    "~/Views/{1}/{0}.cshtml",
-            //    "~/Views/Shared/{0}.cshtml",
-            //    "~/Views/Sys/{1}/{0}.cshtml",
-            //    "~/ViewsSys/Shared/{0}.cshtml"
-            //};
-
-            //PartialViewLocationFormats = new string[] {
-            //    "~/Views/{1}/{0}.cshtml",
-            //    "~/Views/Shared/{0}.cshtml",
-            //    "~/Views/Sys/{1}/{0}.cshtml",
-            //    "~/Views/Sys/Shared/{0}.cshtml"
-            //};
-
-
-
-            //AreaViewLocationFormats = new string[] {
-            //    "~/Areas/{2}/Views/{1}/{0}.cshtml",
-            //    "~/Areas/{2}/Views/Shared/{0}.cshtml",
-            //    "~/Areas/{2}/Views/Sys/{1}/{0}.cshtml",
-            //    "~/Areas/{2}/Views/Sys/Shared/{0}.cshtml"
-            //};
-
-            //AreaMasterLocationFormats = new string[] {
-            //    "~/Areas/{2}/Views/{1}/{0}.cshtml",
-            //    "~/Areas/{2}/Views/Shared/{0}.cshtml",
-            //    "~/Areas/{2}/Views/Sys/{1}/{0}.cshtml",
-            //    "~/Areas/{2}/Views/Sys/Shared/{0}.cshtml"
-            //};
-
-            //AreaPartialViewLocationFormats = new string[] {
-            //    "~/Areas/{2}/Views/{1}/{0}.cshtml",
-            //    "~/Areas/{2}/Views/Shared/{0}.cshtml",
-            //    "~/Areas/{2}/Views/Sys/{1}/{0}.cshtml",
-            //    "~/Areas/{2}/Views/Sys/Shared/{0}.cshtml"
-            //};
-
-
-
+            
 
         }
 
