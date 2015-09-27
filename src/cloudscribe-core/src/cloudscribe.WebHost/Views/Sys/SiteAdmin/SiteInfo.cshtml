@@ -16,9 +16,22 @@
     </div>
 </div>
 @section scripts {
-<script src="~/js/lib/ckeditor/ckeditor.js"></script>
-<script src="~/js/lib/ckeditor/adapters/jquery.js"></script>
-<script src="~/js/app/cloudscribe-ckeditor-unobtrusive.js"></script>
-<script src="~/js/lib/metisMenu/dist/metisMenu.min.js"></script>
-<script src="~/js/app/cloudscribe-sidemenu.js"></script>
+
+<environment names="Development">
+    <script src="~/lib/ckeditor/ckeditor.js"></script>
+    <script src="~/lib/ckeditor/adapters/jquery.js"></script>
+    <script src="~/jsdev/cloudscribe-ckeditor-unobtrusive.js"></script>
+    <script src="~/lib/metisMenu/dist/metisMenu.min.js"></script>
+    <script src="~/jsdev/cloudscribe-sidemenu.js"></script>
+</environment>
+<environment names="Staging,Production">
+    <script src="~/js/ckeditor/ckeditor.js"></script>
+    <script src="~/js/ckeditor/adapters/jquery.js"></script>
+    <script src="~/js/cloudscribe-ckeditor-unobtrusive.js"></script>
+    <script src="~/js/metisMenu/dist/metisMenu.min.js"></script>
+    <script src="~/js/cloudscribe-sidemenu.js"></script>
+</environment>
+
+
+
 }

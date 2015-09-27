@@ -33,7 +33,7 @@
 	config.toolbar_CKFull =
 	[
 		['Source','-','Save','NewPage','Preview','-','Templates'],
-		['Cut','Copy','Paste','PasteText','PasteFromWord','-','Print', 'SpellChecker', 'Scayt'],
+		['Cut','Copy','Paste','PasteText','PasteFromWord','-','Print'],
 		['Undo','Redo','-','Find','Replace','-','SelectAll','RemoveFormat'],
 		['Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 'HiddenField'],
 		'/',
@@ -52,7 +52,7 @@
 	config.toolbar_Full =
     [
 		['Source','Maximize'],
-		['SelectAll', 'RemoveFormat', 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Print', 'SpellChecker', 'Scayt'],
+		['SelectAll', 'RemoveFormat', 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Print'],
 		['Undo','Redo','-','Find','Replace','Bold','Italic','Underline','-','Strike','Superscript'],
 		'/',
 		['Blockquote','Format','Styles','FontSize'],['NumberedList','BulletedList'],
@@ -64,7 +64,7 @@
 	config.toolbar_Newsletter =
     [
 		['Source'],
-		['SelectAll', 'RemoveFormat', 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Print', 'SpellChecker', 'Scayt'],
+		['SelectAll', 'RemoveFormat', 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Print'],
 		['Undo', 'Redo', '-', 'Find', 'Replace'],
 		'/',
 		['Blockquote', 'Bold', 'Italic', 'Underline', 'Strike', 'Superscript'],
@@ -82,7 +82,7 @@
 	config.toolbar_FullWithTemplates =
     [
 		['Source','Maximize','ShowBlocks'],
-		['SelectAll', 'RemoveFormat', 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Print', 'SpellChecker', 'Scayt'],
+		['SelectAll', 'RemoveFormat', 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Print'],
 		['Undo','Redo'],['Find','Replace'],['Bold','Italic','Underline','Strike','Superscript'],
 		'/',
 		['Blockquote','Format','Styles','FontSize'],['NumberedList','BulletedList','Outdent', 'Indent'],['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
@@ -104,7 +104,7 @@
 	config.toolbar_ForumWithImages =
     [
 		['Cut','Copy','PasteText','-'],
-		['Undo','Redo','-','Find','Replace','SpellChecker', 'Scayt','-','SelectAll','RemoveFormat'],
+		['Undo','Redo','-','Find','Replace','-','SelectAll','RemoveFormat'],
 		['Blockquote','Bold','Italic','Underline','Image'],
 		['NumberedList', 'BulletedList'],
 		['Link','Unlink'],

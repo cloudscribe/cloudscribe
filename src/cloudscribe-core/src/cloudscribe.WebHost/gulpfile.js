@@ -1,4 +1,4 @@
-﻿/// <binding Clean='clean' />
+﻿/// <binding AfterBuild='min:js' Clean='clean' />
 
 var gulp = require("gulp"),
   rimraf = require("rimraf"),
@@ -9,21 +9,36 @@ var gulp = require("gulp"),
 
 
 var paths = {
-    webroot: "./" + project.webroot + "/",
-    appJsSrc: "./Scripts/"
+    webroot: "./" + project.webroot + "/"
 };
 
-paths.js = paths.webroot + "js/site/*.js";
-paths.minJs = paths.webroot + "js/site/*.min.js";
+paths.devJs = paths.webroot + "devjs/**/*.js";
+//paths.js = paths.webroot + "js/*.js";
+//paths.minJs = paths.webroot + "js/*.min.js";
+paths.minJs = paths.webroot + "js/**/*.min.js";
 paths.css = paths.webroot + "css/**/*.css";
 paths.minCss = paths.webroot + "css/**/*.min.css";
-paths.concatJsDest = paths.webroot + "js/site/site.min.js";
+//paths.concatJsDest = paths.webroot + "js/site.min.js";
 paths.concatCssDest = paths.webroot + "css/site.min.css";
-paths.appJsDest = paths.webroot + "js/app/";
+paths.lib = paths.webroot + "lib/";
+paths.productionJs = paths.webroot + "js/";
 
 
 gulp.task("clean:js", function (cb) {
-    rimraf(paths.concatJsDest, cb);
+    //rimraf(paths.concatJsDest, cb);
+    //rimraf(paths.productionJs, cb);
+
+    rimraf(paths.productionJs + "ckeditor/", function (err) {
+        if (err) { throw err; }
+        // done
+    });
+
+    rimraf(paths.productionJs, function (err) {
+        if (err) { throw err; }
+        // done
+    });
+
+
 });
 
 gulp.task("clean:css", function (cb) {
@@ -33,14 +48,45 @@ gulp.task("clean:css", function (cb) {
 gulp.task("clean", ["clean:js", "clean:css"]);
 
 gulp.task("min:js", function () {
-    gulp.src([paths.js, "!" + paths.minJs], { base: "." })
-        .pipe(concat(paths.concatJsDest))
-        .pipe(uglify())
-        .pipe(gulp.dest("."));
-
+    //gulp.src([paths.js, "!" + paths.minJs], { base: "." })
+        //.pipe(concat(paths.concatJsDest))
+     //   .pipe(uglify())
+     //   .pipe(gulp.dest("."));
+    /*
     gulp.src(paths.appJsSrc + '**.js')
         .pipe(uglify())
         .pipe(gulp.dest(paths.appJsDest));
+        */
+    gulp.src(paths.devJs)
+        .pipe(uglify())
+        .pipe(gulp.dest(paths.productionJs));
+
+
+});
+
+gulp.task("copy:jslibs", function (cb) {
+    gulp.src(paths.lib + "ckeditor/**")
+        //.pipe(uglify())
+        .pipe(gulp.dest(paths.productionJs + "ckeditor"));
+
+    // remove some files we don't want
+    // probably there is a better way to only copy the ones we want
+    rimraf(paths.productionJs + "ckeditor/samples", function (err) {
+        if (err) { throw err; }
+        // done
+    });
+
+    rimraf(paths.productionJs + "ckeditor/plugins/scayt", function (err) {
+        if (err) { throw err; }
+        // done
+    });
+
+    rimraf(paths.productionJs + "ckeditor/plugins/wsp", function (err) {
+        if (err) { throw err; }
+        // done
+    });
+
+    
 
 });
 
