@@ -33,6 +33,11 @@ gulp.task("clean:js", function (cb) {
         // done
     });
 
+    rimraf(paths.productionJs + "metisMenu/", function (err) {
+        if (err) { throw err; }
+        // done
+    });
+
     rimraf(paths.productionJs, function (err) {
         if (err) { throw err; }
         // done
@@ -69,22 +74,40 @@ gulp.task("copy:jslibs", function (cb) {
         //.pipe(uglify())
         .pipe(gulp.dest(paths.productionJs + "ckeditor"));
 
+    gulp.src(paths.lib + "metisMenu/**")
+        //.pipe(uglify())
+        .pipe(gulp.dest(paths.productionJs + "metisMenu"));
+
     // remove some files we don't want
     // probably there is a better way to only copy the ones we want
-    rimraf(paths.productionJs + "ckeditor/samples", function (err) {
+    /*
+    rimraf(paths.productionJs + "ckeditor/samples/", function (err) {
         if (err) { throw err; }
-        // done
+       
+    });
+    */
+    /*
+    rimraf(paths.productionJs + "ckeditor/plugins/scayt/dialogs/", function (err) {
+        if (err) { throw err; }
+
     });
 
-    rimraf(paths.productionJs + "ckeditor/plugins/scayt", function (err) {
+    rimraf(paths.productionJs + "ckeditor/plugins/scayt/", function (err) {
         if (err) { throw err; }
-        // done
+        
     });
 
-    rimraf(paths.productionJs + "ckeditor/plugins/wsp", function (err) {
+    rimraf(paths.productionJs + "ckeditor/plugins/wsc/dialogs/", function (err) {
         if (err) { throw err; }
-        // done
+
     });
+
+    rimraf(paths.productionJs + "ckeditor/plugins/wsc/", function (err) {
+        if (err) { throw err; }
+        
+    });
+
+    */
 
     
 

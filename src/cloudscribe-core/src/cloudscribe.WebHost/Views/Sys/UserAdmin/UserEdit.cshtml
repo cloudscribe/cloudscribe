@@ -4,8 +4,8 @@
     var timePickerLocalizationScriptUrl = "~/js/timepicker/i18n/jquery-ui-timepicker-" + System.Globalization.CultureInfo.CurrentUICulture.Name + ".js";
 }
 @section Styles {
-    <link rel="stylesheet" href="~/js/lib/jquery-ui/themes/base/all.css" />
-    <link rel="stylesheet" href="~/js/timepicker/jquery-ui-timepicker-addon.css" />
+    <link rel="stylesheet" href="~/lib/jquery-ui/themes/base/all.css" />
+    <link rel="stylesheet" href="~/devjs/timepicker/jquery-ui-timepicker-addon.css" />
 
 }
 <h2>@ViewBag.Title</h2>
@@ -36,7 +36,7 @@
 
 
 <environment names="Development">
-    <script src="~/js/lib/jquery-ui/jquery-ui.js"></script>
+    <script src="~/lib/jquery-ui/jquery-ui.js"></script>
   
 </environment>
 <environment names="Staging,Production">
@@ -46,7 +46,7 @@
     </script>
     
 </environment>
-        <script src="~/js/timepicker/jquery-ui-timepicker-addon.js"></script>
+        <script src="~/devjs/timepicker/jquery-ui-timepicker-addon.js"></script>
 
         @if (System.Globalization.CultureInfo.CurrentUICulture.Name != "en-US")
         {
@@ -55,5 +55,5 @@
 
         }
 
-        <script src="~/js/app/cloudscribe-datepicker-jqui-unobtrusive.js"></script>
+        <script src="~/devjs/cloudscribe-datepicker-jqui-unobtrusive.js"></script>
     }
