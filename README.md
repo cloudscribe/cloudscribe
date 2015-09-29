@@ -9,15 +9,13 @@ Target Features:
 * Site Definitions - multi-tenant based on first folder segment or host names
 * Site is a conceptual container for users, permissions, and content. 
 * Related sites mode setting allows shared users and roles across sites while still allowing permissions to be segmented/siloed by site.
-* Authentication/Authorization Framework - Implementation of aspnet Identity sans Entity Framework
-* User and Role Management, Claim Management?
-* Extensible User Profile System - plugin key value pairs as in mojoPortal
-* Application Permissions Table (SiteId, key, allowedRoles)
-* Settings Table a place to store key values with a collection guid and site guid
-* Plugable Routing System - only needed if attribute based routing doesn’t work
-* System Logging - file or database error logging options built in
-* System Profiling (via Glimpse) - only works in full trust hosting
-* File Upload and storage file manager for user uploaded files
+* Authentication/Authorization Framework - Mutli-Tenant Implementation of aspnet Identity without Entity Framework
+* Multi-Tenant Social Login middleware
+* Multi-Tenant User and Role Management
+* System Logging - implementation of ILogger that logs to the database
+* System Profiling (via Glimpse) 
 * Core Skinning - Custom RazorViewEngine, view resolver, conventions
 * HtmlHelpers for CKeditor, TinyMce, Markdown, BBCode?
 * Localization Support
+* Currently the project has repository implementations for MSSQL, MySql, PostgreSql, Firebird, SQLCe, and SQLite, however only MSSQL is currently supported under dnxcore50 because current ADO drivers for the other db platofrms are only working in dnx451
+* Possibly later we could implement repositories based on Entity Framework 7 but a goal of the project for me is to not force a specific ORM on anyone.
