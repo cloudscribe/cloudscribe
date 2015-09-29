@@ -15,7 +15,7 @@ Target Features:
 * System Logging - implementation of ILogger that logs to the database
 * System Profiling (via Glimpse) 
 * Core Skinning - Custom RazorViewEngine, view resolver, conventions
-* HtmlHelpers for CKeditor, TinyMce, Markdown, BBCode?
+* TagHelpers/HtmlHelpers for CKeditor, TinyMce, Markdown, BBCode?
 * Localization Support
 * Currently the project has repository implementations for MSSQL, MySql, PostgreSql, Firebird, SQLCe, and SQLite, however only MSSQL is currently supported under dnxcore50 because current ADO drivers for the other db platofrms are only working in dnx451
 * Possibly later we could implement repositories based on Entity Framework 7 but a goal of the project for me is to not force a specific ORM on anyone.
