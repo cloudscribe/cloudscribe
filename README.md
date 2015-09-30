@@ -18,7 +18,7 @@ If you want to give it a test drive see
 * System Logging - implementation of ILogger that logs to the database
 * [Custom RazorViewEngine view resolver, conventions](https://github.com/joeaudette/cloudscribe/wiki/Customizing-Views-and-Display-Templates)
 * TagHelper for bootstrap modal
-* TagHelpers/HtmlHelpers for navigation menus, breadcrumbs and pagination - via cloudscribe.Web.Navigation project
+* TagHelpers/HtmlHelpers for navigation menus, breadcrumbs and pagination - via cloudscribe.Web.Navigation project which will be moved to it's own source code repository soon after aspnet beta8 when we can include views in the nuget built for a class library project
 * Unobtrusive js for CKeditor
 * Currently the project has repository implementations for MSSQL, MySql, PostgreSql, Firebird, SQLCe, and SQLite, however only MSSQL is currently supported under dnxcore50 because current ADO drivers for the other db platofrms are only working in dnx451
 * Possibly later we could implement repositories based on Entity Framework 7 but a goal of the project for me is to not force a specific ORM on anyone.
