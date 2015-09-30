@@ -21,9 +21,9 @@ Every web application or website project tends to need a certain amount of basic
 * Possibly later we could implement repositories based on Entity Framework 7 but a goal of the project for me is to not force a specific ORM on anyone.
 
 ##### Planned Features:
-* Localization Support
+* Localization Support - waiting for runtime and tooling support which may be in beta8 of asp.net 5
 * TagHelpers to do data- annotations in support of our unobtrusive js for ckeditor
-* System Profiling (via Glimpse) 
+* System Profiling (via Glimpse) - pending news from the Glimpse team who are working now at Microsoft
 
 ##### Other things we'd like to see:
 * If this project were to become popular then it woould provide a way for many people to build things on top of it that are compatible with each other, making it easier to assemble various functionality within a site
