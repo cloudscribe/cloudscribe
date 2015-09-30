@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //	Author:                 Joe Audette
 //  Created:			    2011-08-19
-//	Last Modified:		    2015-09-04
+//	Last Modified:		    2015-09-30
 // 
 
 using cloudscribe.Core.Models.Logging;
@@ -88,8 +88,14 @@ namespace cloudscribe.Core.Web.Components.Logging
             string shortUrl = GetShortUrl(url);
             string thread = System.Threading.Thread.CurrentThread.Name + " " + eventId.ToString();
             string logLev = logLevel.ToString();
-            
-            logRepo.AddLogItem(
+            // an exception is expected here if the db has not yet been populated
+            // or if the db is not accessible
+            // we cannot allow logging to raise exceptions
+            // so we must swallow any exception here
+            // would be good if we could only swallow specific exceptions
+            try
+            {
+                logRepo.AddLogItem(
                 DateTime.UtcNow,
                 ipAddress,
                 culture,
@@ -99,6 +105,10 @@ namespace cloudscribe.Core.Web.Components.Logging
                 logLev,
                 logger,
                 message);
+            }
+            catch
+            { }
+            
 
         }
 

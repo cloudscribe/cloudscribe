@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-01-10
-// Last Modified:			2015-08-05
+// Last Modified:			2015-09-30
 // 
 
 using cloudscribe.Core.Models;
@@ -562,7 +562,8 @@ namespace cloudscribe.DbHelpers.MSSQL
                 DataTable table = connection.GetSchema("Tables", restrictions);
                 if (table != null)
                 {
-                    return (table.Rows.Count > 0);
+                    //return (table.Rows.Count > 0);
+                    return true;
                 }
             }
 
@@ -587,6 +588,9 @@ namespace cloudscribe.DbHelpers.MSSQL
                     {
                         return true;
                     }
+                   // need to return true here if no error
+                    // the table may be empty but it does exist if no error
+                    return true;
                 }
             }
             catch { }
