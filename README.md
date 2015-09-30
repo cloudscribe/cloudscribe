@@ -1,4 +1,4 @@
-# Cloudscribe Core 
+# cloudscibe.Core.Web
 
 #### Why Start From Scratch?
 
