@@ -16,7 +16,7 @@ If you want to give it a test drive see
 * Multi-Tenant Social Login middleware
 * Multi-Tenant User and Role Management
 * System Logging - implementation of ILogger that logs to the database
-* Custom RazorViewEngine, view resolver, conventions
+* [Custom RazorViewEngine view resolver, conventions](https://github.com/joeaudette/cloudscribe/wiki/Customizing-Views-and-Display-Templates)
 * TagHelper for bootstrap modal
 * TagHelpers/HtmlHelpers for navigation menus, breadcrumbs and pagination - via cloudscribe.Web.Navigation project
 * Unobtrusive js for CKeditor
