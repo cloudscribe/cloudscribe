@@ -4,6 +4,9 @@
 
 Every web application or website project tends to need a certain amount of basic functionality, why build this over and over. When I start a new web project I want to use this functionality that is already built so I can jump right in on the specific feature I want to implement. 
 
+If you want to give it a test drive see 
+[Working with the source code](https://github.com/joeaudette/cloudscribe/wiki/Working-with-the-source-Code) 
+
 ##### Currently Working Features:
 * Setup/Upgrade System for running versioned install and upgrade sql scripts
 * Site Definitions - multi-tenant based on either first folder segment or host names, default is by folder segment
