@@ -1,1 +1,0 @@
-!function(e){e.timepicker.regional.ja={timeOnlyTitle:"時間を選択",timeText:"時間",hourText:"時",minuteText:"分",secondText:"秒",millisecText:"ミリ秒",microsecText:"マイクロ秒",timezoneText:"タイムゾーン",currentText:"現時刻",closeText:"閉じる",timeFormat:"HH:mm",timeSuffix:"",amNames:["午前","AM","A"],pmNames:["午後","PM","P"],isRTL:!1},e.timepicker.setDefaults(e.timepicker.regional.ja)}(jQuery);

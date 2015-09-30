@@ -1,1 +1,0 @@
-!function(e){e.timepicker.regional["zh-CN"]={timeOnlyTitle:"选择时间",timeText:"时间",hourText:"小时",minuteText:"分钟",secondText:"秒钟",millisecText:"毫秒",microsecText:"微秒",timezoneText:"时区",currentText:"现在时间",closeText:"关闭",timeFormat:"HH:mm",timeSuffix:"",amNames:["AM","A"],pmNames:["PM","P"],isRTL:!1},e.timepicker.setDefaults(e.timepicker.regional["zh-CN"])}(jQuery);
