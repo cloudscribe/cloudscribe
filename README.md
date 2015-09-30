@@ -4,18 +4,27 @@
 
 Every web application or website project tends to need a certain amount of basic functionality, why build this over and over. When I start a new web project I want to use this functionality that is already built so I can jump right in on the specific feature I want to implement. 
 
-Target Features:
-* Setup/Upgrade System for running versioned upgrade scripts and triggering code execution for custom configuration code to plugin
-* Site Definitions - multi-tenant based on first folder segment or host names
+##### Currently Working Features:
+* Setup/Upgrade System for running versioned install and upgrade sql scripts
+* Site Definitions - multi-tenant based on either first folder segment or host names, default is by folder segment
 * Site is a conceptual container for users, permissions, and content. 
 * Related sites mode setting allows shared users and roles across sites while still allowing permissions to be segmented/siloed by site.
 * Authentication/Authorization Framework - Mutli-Tenant Implementation of aspnet Identity without Entity Framework
 * Multi-Tenant Social Login middleware
 * Multi-Tenant User and Role Management
 * System Logging - implementation of ILogger that logs to the database
-* System Profiling (via Glimpse) 
-* Core Skinning - Custom RazorViewEngine, view resolver, conventions
-* TagHelpers/HtmlHelpers for CKeditor, TinyMce, Markdown, BBCode?
-* Localization Support
+* Custom RazorViewEngine, view resolver, conventions
+* TagHelper for bootstrap modal
+* TagHelpers/HtmlHelpers for navigation menus, breadcrumbs and pagination - via cloudscribe.Web.Navigation project
+* Unobtrusive js for CKeditor
 * Currently the project has repository implementations for MSSQL, MySql, PostgreSql, Firebird, SQLCe, and SQLite, however only MSSQL is currently supported under dnxcore50 because current ADO drivers for the other db platofrms are only working in dnx451
 * Possibly later we could implement repositories based on Entity Framework 7 but a goal of the project for me is to not force a specific ORM on anyone.
+
+##### Planned Features:
+* Localization Support
+* TagHelpers to do data- annotations in support of our unobtrusive js for ckeditor
+* System Profiling (via Glimpse) 
+
+##### Other things we'd like to see:
+* If this project were to become popular then it woould provide a way for many people to build things on top of it that are compatible with each other, making it easier to assemble various functionality within a site
+* cloudscribe.Cms? I am giving serious consideration to building such a thing, but at the moment feel I need to work on some proejcts that will generate income for me.
