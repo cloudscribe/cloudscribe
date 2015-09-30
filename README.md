@@ -29,5 +29,5 @@ If you want to give it a test drive see
 * System Profiling (via Glimpse) - pending news from the Glimpse team who are working now at Microsoft
 
 ##### Other things we'd like to see:
-* If this project were to become popular then it woould provide a way for many people to build things on top of it that are compatible with each other, making it easier to assemble various functionality within a site
+* If this project were to become popular then it would provide a way for many people to build things on top of it that are compatible with each other, making it easier to assemble various functionality within a site
 * cloudscribe.Cms? I am giving serious consideration to building such a thing, but at the moment feel I need to work on some proejcts that will generate income for me.
