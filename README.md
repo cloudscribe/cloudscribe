@@ -11,7 +11,7 @@ This project is in early stages, not yet production ready, we are building on a 
 
 ##### Currently Working Features:
 * Setup/Upgrade System for running versioned install and upgrade sql scripts
-* Site Definitions - multi-tenant based on either first folder segment or host names, default is by folder segment for nnow mainly because it is easier to try that without DNS, it is just a config option so it is easy to change
+* Site Definitions - multi-tenant based on either first folder segment or host names, default is by folder segment for now mainly because it is easier to try that without DNS, it is just a config option so it is easy to change
 * Site is a conceptual container for users, permissions, and content. 
 * Related sites mode setting allows shared users and roles across sites while still allowing permissions to be segmented/siloed by site.
 * Authentication/Authorization Framework - Mutli-Tenant Implementation of aspnet Identity without Entity Framework
