@@ -20,13 +20,15 @@ If you want to give it a test drive see
 * TagHelper for bootstrap modal
 * TagHelpers/HtmlHelpers for navigation menus, breadcrumbs and pagination - via cloudscribe.Web.Navigation project which will be moved to it's own source code repository soon after aspnet beta8 when we can include views in the nuget built for a class library project
 * Unobtrusive js for CKeditor
-* Currently the project has repository implementations for MSSQL, MySql, PostgreSql, Firebird, SQLCe, and SQLite, however only MSSQL is currently supported under dnxcore50 because current ADO drivers for the other db platofrms are only working in dnx451
+* Currently the project has repository implementations for MSSQL, MySql, PostgreSql, Firebird, SQLCe, and SQLite, however only MSSQL is currently supported under dnxcore50 because current ADO drivers for the other db platforms are only working in dnx451
 * Possibly later we could implement repositories based on Entity Framework 7 but a goal of the project for me is to not force a specific ORM on anyone.
 
 ##### Planned Features:
 * Localization Support - waiting for runtime and tooling support which may be in beta8 of asp.net 5
+* Caching - memory  cache and distributed cache options
 * TagHelpers to do data- annotations in support of our unobtrusive js for ckeditor
 * System Profiling (via Glimpse) - pending news from the Glimpse team who are working now at Microsoft
+* Lots of miscellaneous smaller stuff
 
 ##### Other things we'd like to see:
 * If this project were to become popular then it would provide a way for many people to build things on top of it that are compatible with each other, making it easier to assemble various functionality within a site
