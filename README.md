@@ -7,6 +7,8 @@ Every web application or website project tends to need a certain amount of basic
 If you want to give it a test drive see 
 [Working with the source code](https://github.com/joeaudette/cloudscribe/wiki/Working-with-the-source-Code) 
 
+This project is in early stages, not yet production ready, we are building on a new framework from  Microsoft that is itself still in beta and changing frequently.
+
 ##### Currently Working Features:
 * Setup/Upgrade System for running versioned install and upgrade sql scripts
 * Site Definitions - multi-tenant based on either first folder segment or host names, default is by folder segment
