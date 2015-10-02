@@ -1,5 +1,0 @@
-This is a place to make notes of doubts or questions about how something is implemented and whether there is a better way it should be done.
-
-When this project is made open source we can ask for other opinions and feedback from code review.
-
-

@@ -32,28 +32,13 @@ http://stackoverflow.com/questions/22628087/calling-async-method-synchronously
 http://blog.stephencleary.com/2012/07/dont-block-on-async-code.html
 
 
-currently we have controller methods marked as async but not really implemented as async
-to do that, we would need async all the way down including async data access
-net 4.5 has async executereader and executenonquery
-so we could implement this, but in general it would not result in any perf gain unless using sqlazure or a db farm/cluster
-still we should probably move in this direction and keep our controller methods marked that way even if it takes a while before they are truly implemented as async.
-
 I think it is not possible to make async data access for sqlite or sqlce
 update it seems async can be used even if the db only supports a single coonection thread at a time but more complex becase you ned to use locking
 http://stackoverflow.com/questions/24186577/what-is-the-correct-usage-for-sqlite-on-locking-or-async
 http://stackoverflow.com/questions/25945223/xamarin-forms-using-sqlite-net-async
 
-one problem encountered:
 async methods cannot have output parameters or ref parameters
-we have output paramteres in a lot of places where we get a page of data from the db and get the totalPages as an output, passing in the pagenumber and page size
 
-another problem encountered. when re-implementing the setupcontroller to be async because it consumes async,
-the page would hang after the first await and never complete
-this turned out to be caused by Glimpse somehow hosing up the sync context
-https://github.com/Glimpse/Glimpse/issues/502
-the above was fixed in a newer version of Glimpse
-
-with glimpse disabled it worked as expected, so be aware if weird async problems come up try disable glimpse for a while
 
 good example here of async data access
 http://codereview.stackexchange.com/questions/63480/simple-sqlhelper-which-wraps-ado-net-methods
@@ -74,8 +59,6 @@ For sequential mode, the decision to use GetFieldValueAsync is a bit more compli
 
 There are advantages to using the stream-based methods when working large files stored in the database. For example, you can hand-off the stream to a WCF or ASP.NET response instead of bringing in the whole file into memory at one time. This is especially important for .NET developers because the large object heap is very susceptible to fragmentation.
 
-
-
 http://www.tugberkugurlu.com/archive/asynchronous-database-calls-with-task-based-asynchronous-programming-model-tap-in-asp-net-mvc-4
 
 
@@ -91,76 +74,4 @@ http://stackoverflow.com/questions/21267580/asynchronous-programming-in-ado-net
 
 
 http://blogs.msdn.com/b/rickandy/archive/2009/11/14/should-my-database-calls-be-asynchronous.aspx
-
-public static class SqlHelper
-{
-    public static async Task<int> ExecuteNonQueryAsync(string connectionString, CommandType cmdType, string cmdText,
-        params SqlParameter[] commandParameters)
-    {
-        using (var connection = new SqlConnection(connectionString))
-        {
-            using (var command = new SqlCommand(cmdText, connection))
-            {
-                try
-                {
-                    command.CommandType = cmdType;
-                    command.Parameters.AddRange(commandParameters);
-                    connection.Open();
-                    return await command.ExecuteNonQueryAsync();
-                }
-                finally
-                {
-                    connection.Close();
-                }
-            }
-        }
-
-    }
-
-
-    public static async Task<SqlDataReader> ExecuteReaderAsync(string connectionString, CommandType cmdType,
-        string cmdText, params SqlParameter[] commandParameters)
-    {
-        using (var connection = new SqlConnection(connectionString))
-        {
-            using (var command = new SqlCommand(cmdText, connection))
-            {
-                try
-                {
-                    command.CommandType = cmdType;
-                    command.Parameters.AddRange(commandParameters);
-                    connection.Open();
-                    return await command.ExecuteReaderAsync();
-                }
-                finally
-                {
-                    connection.Close();
-                }
-            }
-        }
-    }
-
-    public static async Task<object> ExecuteScalarAsync(string connectionString, CommandType cmdType, string cmdText,
-        params SqlParameter[] commandParameters)
-    {
-        using (var connection = new SqlConnection(connectionString))
-        {
-            using (var command = new SqlCommand(cmdText, connection))
-            {
-                try
-                {
-                    command.CommandType = cmdType;
-                    command.Parameters.AddRange(commandParameters);
-                    connection.Open();
-                    return await command.ExecuteScalarAsync();
-                }
-                finally
-                {
-                    connection.Close();
-                }
-            }
-        }
-    }
-
-}
 

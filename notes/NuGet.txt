@@ -1,3 +1,11 @@
+These notes are way out of date and written when I was doing early prototype work in MVC 5
+
+now in ASP.NET 5/MVC 6 nuget packages are creating by simply building the solution.
+coming in beta8 we should be able to include content files such as views in the nuget package for a class library.
+
+---- old information below --------------------------------------------------------
+
+
 The nuget folder has batch files that can build the nuget packages.
 Each batch file can take the package version as a command argument.
 

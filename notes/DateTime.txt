@@ -1,5 +1,7 @@
 # Date/Time picker implementations
 
+notes here are mostly out of date from back when I was doing early prototyping in MVC 5
+
 Will be nice when all browsers support their own date time pickers for html 5 (I think only Opera has it).
 
 For now we still need to implement our own date/time picker solutions.
