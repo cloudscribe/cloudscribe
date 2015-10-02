@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-06-20
-// Last Modified:			2015-08-26
+// Last Modified:			2015-10-06
 // 
 
 using System;
@@ -74,15 +74,9 @@ namespace cloudscribe.WebHost
             ////https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity/BuilderExtensions.cs
             //app.UseIdentity();
             app.UseCloudscribeIdentity();
-
-            //app.UseFacebookAuthentication();
             app.UseMultiTenantFacebookAuthentication();
-
-            //app.UseGoogleAuthentication();
             app.UseMultiTenantGoogleAuthentication();
-            //app.UseMicrosoftAccountAuthentication();
             app.UseMultiTenantMicrosoftAccountAuthentication();
-            //app.UseTwitterAuthentication();
             app.UseMultiTenantTwitterAuthentication();
 
             //app.UseCultureReplacer();

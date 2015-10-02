@@ -1,16 +1,11 @@
 {
-  "AppSettings": {
-    "SiteTitle": "cloudscribe.WebHost"
-  },
   "MultiTenantOptions": {
     "Mode": "FolderName",
     "UseRelatedSitesMode": "false",
     "RelatedSiteId": "1"
   },
+
   "Data": {
-    "DefaultConnection": {
-      "ConnectionString": "Server=(localdb)\\mssqllocaldb;Database=aspnet5-cloudscribe.WebHost-2e617978-2b5e-4a31-8ece-1e957d5503b0;Trusted_Connection=True;MultipleActiveResultSets=true"
-    },
     "MSSQLConnectionOptions": {
       "ConnectionString": "server=yourservername;UID=yourdatabaseusername;PWD=yourdatabaseuserpassword;database=yourdatabasename"
     },
@@ -29,6 +24,6 @@
     "SqlCeConnectionOptions": {
       "DbFileName": "cloudscribe.sdf"
     }
-
   }
+
 }

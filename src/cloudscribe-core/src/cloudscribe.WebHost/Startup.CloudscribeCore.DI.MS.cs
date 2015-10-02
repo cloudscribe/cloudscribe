@@ -138,9 +138,7 @@ namespace cloudscribe.WebHost
             services.TryAddScoped<IVersionProviderFactory, ConfigVersionProviderFactory>();
 
             services.AddCloudscribeIdentity<SiteUser, SiteRole>();
-
-
-
+            
             // you can use either json or xml to maintain your navigation map we provide examples of each navigation.xml and 
             // navigation.json in the root of this project
             // you can override the name of the file used with AppSettings:NavigationXmlFileName or AppSettings:NavigationJsonFileName in config.json
@@ -161,8 +159,6 @@ namespace cloudscribe.WebHost
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
 
-
-            // Add MVC services to the services container.
             services.TryAddSingleton<IRazorViewEngine, CoreViewEngine>();
             // cloudscribe.Core.Web.CoreViewEngine adds /Views/Sys as the last place to search for views
             // cloudscribe views are all under Views/Sys
@@ -172,6 +168,7 @@ namespace cloudscribe.WebHost
             // upgrading to newer versions of cloudscribe could modify or add views below /Views/Sys
             // so you may need to compare your custom views to the originals again after upgrades
 
+            // Add MVC services to the services container.
             services.AddMvc(options =>
             {
                
@@ -358,21 +355,7 @@ namespace cloudscribe.WebHost
             }
             , AuthenticationScheme.TwoFactorUserId);
 
-            //services.ConfigureCookieAuthentication(options =>
-            //{
-            //    options.AuthenticationScheme = "Facebook";
-            //    options.CookieName = AuthenticationScheme.External;
-            //    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
-            //}
-            //, "Facebook");
-
-            //services.ConfigureCookieAuthentication(options =>
-            //{
-            //    options.AuthenticationScheme = "Microsoft";
-            //    options.CookieName = AuthenticationScheme.External;
-            //    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
-            //}
-            //, "Microsoft");
+            
 
             return new IdentityBuilder(typeof(TUser), typeof(TRole), services);
         }
