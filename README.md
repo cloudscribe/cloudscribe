@@ -19,7 +19,7 @@ We are collecting email addresses for a potential newsletter in the future, depe
 * Authentication/Authorization Framework - Mutli-Tenant Implementation of aspnet Identity without Entity Framework
 * Multi-Tenant Social Login middleware
 * Multi-Tenant User and Role Management
-* System Logging - implementation of ILogger that logs to the database
+* System Logging - implementation of ILogger that logs to the database, and a UI for viewing the log
 * [Custom RazorViewEngine view resolver, conventions](https://github.com/joeaudette/cloudscribe/wiki/Customizing-Views-and-Display-Templates)
 * TagHelper for bootstrap modal
 * TagHelpers/HtmlHelpers for navigation menus, breadcrumbs and pagination - via cloudscribe.Web.Navigation project which will be moved to it's own source code repository soon after aspnet beta8 when we can include views in the nuget built for a class library project
