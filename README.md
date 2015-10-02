@@ -9,6 +9,8 @@ If you want to give it a test drive see
 
 This project is in early stages, not yet production ready, we are building on a new framework from  Microsoft that is itself still in beta and changing frequently.
 
+We are collecting email addresses for a potential newsletter in the future, depending on whether this project becomes popular. If you would like to subscribe to this possible future newsletter, please send and email to subscribe [at] cloudscribe.com with the subject line "subscribe"
+
 ##### Currently Working Features:
 * Setup/Upgrade System for running versioned install and upgrade sql scripts
 * Site Definitions - multi-tenant based on either first folder segment or host names, default is by folder segment for now mainly because it is easier to try that without DNS, it is just a config option so it is easy to change
