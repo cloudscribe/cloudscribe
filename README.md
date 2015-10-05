@@ -7,7 +7,7 @@ Every web application or website project tends to need a certain amount of basic
 If you want to give it a test drive see 
 [Working with the source code](https://github.com/joeaudette/cloudscribe/wiki/Working-with-the-source-Code) 
 
-This project is in early stages, not yet production ready, we are building on a new framework from  Microsoft that is itself still in beta and changing frequently.
+This project is in early stages, not yet production ready, we are building on a new framework from  Microsoft that is itself still in beta and changing frequently. Primarily we are targeting the new lightweight cross platform [Core .NET Framework](https://github.com/dotnet/core) aka dnxcore50 so the goal of this project is to work on Windows, Linux, or Mac. We are also targeting dnx451 aka the full desktop framework but we are avoiding taking dependencies on things that only work in dnx451.
 
 We are collecting email addresses for a potential newsletter in the future, depending on whether this project becomes popular. If you would like to subscribe to this possible future newsletter, please send an email to subscribe [at] cloudscribe.com with the subject line "subscribe"
 
