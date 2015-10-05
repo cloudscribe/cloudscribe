@@ -24,6 +24,9 @@
     "SqlCeConnectionOptions": {
       "DbFileName": "cloudscribe.sdf"
     }
+  },
+  "SetupOptions": {
+    "DisableSetup": "false"
   }
 
 }
