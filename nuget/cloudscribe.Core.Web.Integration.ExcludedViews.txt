@@ -1,2 +1,0 @@
-..\src\cloudscribe.WebHost\Views\Sys
-..\src\cloudscribe.WebHost\Views\Web.config
