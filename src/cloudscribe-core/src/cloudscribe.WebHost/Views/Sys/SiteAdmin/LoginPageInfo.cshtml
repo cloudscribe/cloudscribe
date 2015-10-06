@@ -48,15 +48,23 @@
         @await Component.InvokeAsync("Navigation", "SideNav", NamedNavigationFilters.ParentTree, "SiteAdmin")
     </div>
 </div>
-
-
     
     @section Scripts {
-<script src="~/jsdev/cloudscribe-cascade-unobtrusive.js"></script>
-<script src="~/lib/ckeditor/ckeditor.js"></script>
-<script src="~/lib/ckeditor/adapters/jquery.js"></script>
-<script src="~/jsdev/cloudscribe-ckeditor-unobtrusive.js"></script>
-<script src="~/lib/metisMenu/dist/metisMenu.min.js"></script>
-<script src="~/jsdev/cloudscribe-sidemenu.js"></script>
-        @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
-    }
+<environment names="Development">
+    <script src="~/jsdev/cloudscribe-cascade-unobtrusive.js"></script>
+    <script src="~/lib/ckeditor/ckeditor.js"></script>
+    <script src="~/lib/ckeditor/adapters/jquery.js"></script>
+    <script src="~/jsdev/cloudscribe-ckeditor-unobtrusive.js"></script>
+    <script src="~/lib/metisMenu/dist/metisMenu.min.js"></script>
+    <script src="~/jsdev/cloudscribe-sidemenu.js"></script>
+</environment>
+<environment names="Staging,Production">
+    <script src="~/js/cloudscribe-cascade-unobtrusive.js"></script>
+    <script src="~/js/ckeditor/ckeditor.js"></script>
+    <script src="~/js/ckeditor/adapters/jquery.js"></script>
+    <script src="~/js/cloudscribe-ckeditor-unobtrusive.js"></script>
+    <script src="~/js/metisMenu/dist/metisMenu.min.js"></script>
+    <script src="~/js/cloudscribe-sidemenu.js"></script>
+</environment>
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
