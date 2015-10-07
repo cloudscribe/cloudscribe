@@ -6,7 +6,14 @@
 <h2>@ViewBag.Title</h2>
 @{await Html.RenderPartialAsync("_BasicSettingsPartial", Model); }
 @section Scripts {
-<script src="~/lib/ckeditor/ckeditor.js"></script>
-<script src="~/lib/ckeditor/adapters/jquery.js"></script>
-<script src="~/jsdev/cloudscribe-ckeditor-unobtrusive.js"></script>
+<environment names="Development">
+    <script src="~/lib/ckeditor/ckeditor.js"></script>
+    <script src="~/lib/ckeditor/adapters/jquery.js"></script>
+    <script src="~/jsdev/cloudscribe-ckeditor-unobtrusive.js"></script>
+</environment>
+<environment names="Staging,Production">
+    <script src="~/js/ckeditor/ckeditor.js"></script>
+    <script src="~/js/ckeditor/adapters/jquery.js"></script>
+    <script src="~/js/cloudscribe-ckeditor-unobtrusive.js"></script>
+</environment>
 }

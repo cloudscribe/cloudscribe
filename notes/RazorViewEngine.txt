@@ -102,6 +102,9 @@ usage example:
 
 other references:
 
+good insights about taghelpers in the answer here
+http://stackoverflow.com/questions/32922425/multiple-tag-helpers-targetting-the-same-element
+
 http://blog.simontimms.com/2015/06/09/getting-lookup-data-into-you-view/
 
 http://blogs.msdn.com/b/rickandy/archive/2012/01/09/cascasding-dropdownlist-in-asp-net-mvc.aspx

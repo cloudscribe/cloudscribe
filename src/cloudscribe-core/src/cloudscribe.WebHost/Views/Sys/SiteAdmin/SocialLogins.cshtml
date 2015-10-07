@@ -83,8 +83,14 @@
         @await Component.InvokeAsync("Navigation", "SideNav", NamedNavigationFilters.ParentTree, "SiteAdmin")
     </div>
 </div>
-    @section Scripts {
-<script src="~/lib/metisMenu/dist/metisMenu.min.js"></script>
-<script src="~/jsdev/cloudscribe-sidemenu.js"></script>
-        @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
-    }
+@section Scripts {
+<environment names="Development">
+    <script src="~/lib/metisMenu/dist/metisMenu.min.js"></script>
+    <script src="~/jsdev/cloudscribe-sidemenu.js"></script>
+</environment>
+<environment names="Staging,Production">
+    <script src="~/js/metisMenu/dist/metisMenu.min.js"></script>
+    <script src="~/js/cloudscribe-sidemenu.js"></script>
+</environment>
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
