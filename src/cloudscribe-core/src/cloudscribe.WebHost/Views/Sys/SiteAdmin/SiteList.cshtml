@@ -52,7 +52,7 @@
 }
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.SiteName)
+            @Html.DisplayFor(modelItem => item.SiteName) SiteId:@item.SiteId
         </td>
         <td>
             @if (options.Mode == MultiTenantMode.FolderName)

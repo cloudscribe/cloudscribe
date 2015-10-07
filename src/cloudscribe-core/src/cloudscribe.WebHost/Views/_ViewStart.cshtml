@@ -1,4 +1,4 @@
 ﻿@inject ILayoutSelector layoutSelector
-@{
-    Layout = layoutSelector.GetLayoutName();
+@{  
+    Layout = layoutSelector.GetLayoutName(ViewContext);
 }

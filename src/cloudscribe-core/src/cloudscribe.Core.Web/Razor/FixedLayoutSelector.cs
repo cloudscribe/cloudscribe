@@ -7,6 +7,7 @@
 
 using System;
 using Microsoft.Framework.OptionsModel;
+using Microsoft.AspNet.Mvc;
 
 namespace cloudscribe.Core.Web.Razor
 {
@@ -21,7 +22,7 @@ namespace cloudscribe.Core.Web.Razor
 
         private LayoutSelectorOptions options;
 
-        public string GetLayoutName()
+        public string GetLayoutName(ViewContext viewContext)
         {
             return options.DefaultLayout;
         }

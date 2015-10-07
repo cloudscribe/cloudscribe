@@ -5,10 +5,12 @@
 //	Last Modified:              2015-10-07
 //
 
+using Microsoft.AspNet.Mvc;
+
 namespace cloudscribe.Core.Web.Razor
 {
     public interface ILayoutSelector
     {
-        string GetLayoutName();
+        string GetLayoutName(ViewContext viewContext);
     }
 }
