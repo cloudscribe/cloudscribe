@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-06-20
-// Last Modified:			2015-09-07
+// Last Modified:			2015-10-07
 // 
 
 using System;
@@ -38,7 +38,7 @@ using cloudscribe.Core.Models.Geography;
 using cloudscribe.Core.Web;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.Navigation;
-
+using cloudscribe.Core.Web.Razor;
 using cloudscribe.Messaging;
 using cloudscribe.Web.Navigation;
 using cloudscribe.Core.Identity;
@@ -73,7 +73,7 @@ namespace cloudscribe.WebHost
             services.Configure<UIOptions>(configuration.GetSection("CkeditorOptions"));
 
             
-
+            
 
 
 
@@ -158,6 +158,10 @@ namespace cloudscribe.WebHost
 
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
+
+            // TODO: implement TenantLayoutSelector
+            services.Configure<LayoutSelectorOptions>(configuration.GetSection("LayoutSelectorOptions"));
+            services.TryAddSingleton<ILayoutSelector, FixedLayoutSelector>();
 
             services.TryAddSingleton<IRazorViewEngine, CoreViewEngine>();
             // cloudscribe.Core.Web.CoreViewEngine adds /Views/Sys as the last place to search for views

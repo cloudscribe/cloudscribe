@@ -1,3 +1,4 @@
-﻿@{
-    Layout = "_Layout";
+﻿@inject ILayoutSelector layoutSelector
+@{
+    Layout = layoutSelector.GetLayoutName();
 }
