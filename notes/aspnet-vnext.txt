@@ -1,4 +1,10 @@
 
+http://www.jerriepelser.com/blog/using-enum-aspnet-5-select-taghelper
+
+http://wildermuth.com/2015/09/27/A_Look_at_ASP_NET_5_Part_5_-_The_API
+
+ASP.NET - ASP.NET 5 Anywhere with OmniSharp and Yeoman
+https://msdn.microsoft.com/en-us/magazine/mt573713
 
 http://stackoverflow.com/questions/31194352/how-to-run-asp-net-mvc6-on-iis-without-publishing-application
 
