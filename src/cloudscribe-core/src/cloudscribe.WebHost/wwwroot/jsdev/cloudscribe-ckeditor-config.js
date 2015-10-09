@@ -94,7 +94,7 @@
 	config.toolbar_Forum =
     [
 		['Cut','Copy','PasteText','-'],
-		['Undo', 'Redo', '-', 'Find', 'Replace', 'SpellChecker', 'Scayt', '-', 'SelectAll', 'RemoveFormat'],
+		['Undo', 'Redo', '-', 'Find', 'Replace', '-', 'SelectAll', 'RemoveFormat'],
 		['Blockquote','Bold','Italic','Underline'],
 		['NumberedList', 'BulletedList'],
 		['Link','Unlink'],

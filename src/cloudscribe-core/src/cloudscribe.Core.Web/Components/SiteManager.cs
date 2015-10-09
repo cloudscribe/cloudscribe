@@ -142,7 +142,7 @@ namespace cloudscribe.Core.Web.Components
             //SiteSettings newSite = new SiteSettings();
 
 
-            newSite.Skin = setupOptions.DefaultInitialSkin;
+            newSite.Layout = setupOptions.DefaultLayout;
 
             //newSite.Logo = GetMessageTemplate(templateFolder, "InitialSiteLogoContent.config");
 

@@ -10,9 +10,10 @@ namespace cloudscribe.Core.Web.Razor
 {
     public class LayoutSelectorOptions
     {
-        public string DefaultLayout { get; set; } = "_Layout";
-        public LayoutSelectionMode SelectionMode { get; set; } = LayoutSelectionMode.Convention;
+        public string DefaultLayout { get; set; } = "Default_Layout.cshtml";
+        public LayoutSelectionMode SelectionMode { get; set; } = LayoutSelectionMode.Browsing;
         public string ConventionFormat { get; set; } = "Site{0}Layout";
+        public string BrowseFilterFormat { get; set; } = "Site{0}_*_Layout.cshtml";
     }
 
     public enum LayoutSelectionMode

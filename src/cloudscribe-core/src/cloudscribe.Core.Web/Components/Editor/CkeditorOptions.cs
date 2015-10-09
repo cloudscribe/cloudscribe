@@ -11,6 +11,6 @@ namespace cloudscribe.Core.Web.Components.Editor
     public class CkeditorOptions
     {
 
-        public string CustomConfigPath { get; set; } = "~/js/app/cloudscribe-ckeditor-config.js";
+        public string CustomConfigPath { get; set; } = "~/jsdev/cloudscribe-ckeditor-config.js";
     }
 }

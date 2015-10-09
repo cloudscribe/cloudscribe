@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //  Author:                     Joe Audette
 //  Created:                    2015-10-07
-//	Last Modified:              2015-10-07
+//	Last Modified:              2015-10-09
 //
 
 using System;
@@ -24,7 +24,7 @@ namespace cloudscribe.Core.Web.Razor
 
         public string GetLayoutName(ViewContext viewContext)
         {
-            return options.DefaultLayout;
+            return options.DefaultLayout.Replace(".cshtml", string.Empty);
         }
     }
 }

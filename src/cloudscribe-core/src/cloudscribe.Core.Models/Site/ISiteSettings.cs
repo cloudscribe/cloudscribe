@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2015-09-12
+// Last Modified:			2015-10-09
 // 
 
 using System;
@@ -128,7 +128,7 @@ namespace cloudscribe.Core.Models
         string MetaProfile { get; set; }
         string Icon { get; set; }
         string Logo { get; set; }
-        string Skin { get; set; }
+        string Layout { get; set; }
         string MobileSkin { get; set; }
         string SiteMapSkin { get; set; }
         Guid SkinVersion { get; set; }

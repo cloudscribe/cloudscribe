@@ -65,6 +65,17 @@
                 <span asp-validation-for="TimeZoneId" class="text-danger"></span> 
             </div>
         </div>
+        @if (Model.AvailableLayouts.Count > 0)
+        {
+            <div class="form-group">
+                <label asp-for="Layout" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <select id="Layout" asp-for="Layout"
+                            asp-items="Model.AvailableLayouts" class="form-control"></select>
+                    <span asp-validation-for="Layout" class="text-danger"></span>
+                </div>
+            </div>
+        }
         <div class="form-group">
             <label class="col-md-2 control-label">Close Site To Public?</label>
             <div class="col-md-10">

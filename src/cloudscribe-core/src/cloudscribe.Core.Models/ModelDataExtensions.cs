@@ -297,7 +297,7 @@ namespace cloudscribe.Core.Models.DataExtensions
             site.SiteGuid = new Guid(reader["SiteGuid"].ToString());
             //site.SiteAlias = reader["SiteAlias"].ToString();
             site.SiteName = reader["SiteName"].ToString();
-            site.Skin = reader["Skin"].ToString();
+            site.Layout = reader["Skin"].ToString();
             site.Logo = reader["Logo"].ToString();
             site.Icon = reader["Icon"].ToString();
             site.AllowUserSkins = Convert.ToBoolean(reader["AllowUserSkins"]);

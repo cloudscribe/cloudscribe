@@ -41,11 +41,10 @@ namespace cloudscribe.Core.Web.Razor
 
         public string GetLayoutName(ViewContext viewContext)
         {
-            
             ISiteSettings site = siteResolver.Resolve();
             if (site == null) return options.DefaultLayout;
 
-            string layout = options.DefaultLayout; //"_Layout"
+            string layout = options.DefaultLayout.Replace(".cshtml", string.Empty); //"_Layout"
 
             // resolve tenant specific layout file name
             
@@ -53,7 +52,9 @@ namespace cloudscribe.Core.Web.Razor
             {
                 // we could use a convention like Site1Layout.cshtml Site2Layout.cshtml
                 // based on siteid
-                layout = string.Format(CultureInfo.InvariantCulture, options.ConventionFormat, site.SiteId.ToInvariantString());
+                layout = string.Format(CultureInfo.InvariantCulture, 
+                    options.ConventionFormat, 
+                    site.SiteId.ToInvariantString());
             }
             else
             {
@@ -68,9 +69,9 @@ namespace cloudscribe.Core.Web.Razor
 
                 // currently there is no ui for selecting a layout so you would have to set it in the db
                 // in mp_Sites.Skin field
-                if(site.Skin.Length > 0)
+                if(site.Layout.Length > 0)
                 {
-                    layout = site.Skin.Replace(".cshtml", string.Empty);
+                    layout = site.Layout.Replace(".cshtml", string.Empty);
                 }
                 
 
@@ -84,7 +85,7 @@ namespace cloudscribe.Core.Web.Razor
             {
                 log.LogError("could not find the layout " + layout);
 
-                return options.DefaultLayout;
+                return options.DefaultLayout.Replace(".cshtml", string.Empty);
             }
             else
             {

@@ -162,6 +162,11 @@ namespace cloudscribe.WebHost
             // TODO: implement TenantLayoutSelector
             services.Configure<LayoutSelectorOptions>(configuration.GetSection("LayoutSelectorOptions"));
             services.TryAddSingleton<ILayoutSelector, TenantLayoutSelector>();
+            services.TryAddSingleton<ILayoutFileListBuilder, LayoutFileListBuilder>();
+            services.TryAddSingleton<ILayoutFileDisplayNameFilter, TenantLayoutFileDisplayNameFilter>();
+            
+
+
 
             services.TryAddSingleton<IRazorViewEngine, CoreViewEngine>();
             // cloudscribe.Core.Web.CoreViewEngine adds /Views/Sys as the last place to search for views

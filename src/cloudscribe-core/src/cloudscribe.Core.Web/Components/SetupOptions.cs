@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-09-04
-// Last Modified:			2015-09-04
+// Last Modified:			2015-10-09
 // 
 
 namespace cloudscribe.Core.Web.Components
@@ -16,7 +16,7 @@ namespace cloudscribe.Core.Web.Components
         public string UpgradeScriptPathFormat { get; set; } = "/config/applications/{0}/upgrade/{1}";
         public bool TryToCreateMsSqlDatabase { get; set; } = false;
         public bool SslIsRequiredByWebServer { get; set; } = false;
-        public string DefaultInitialSkin { get; set; } = "bootstrap";
+        public string DefaultLayout { get; set; } = "Default_Layout.cshtml";
         public string RolesThatCannotBeDeleted { get; set; } = string.Empty;
         public bool DisableSetup { get; set; } = false;
         public bool ShowConnectionError { get; set; } = false;

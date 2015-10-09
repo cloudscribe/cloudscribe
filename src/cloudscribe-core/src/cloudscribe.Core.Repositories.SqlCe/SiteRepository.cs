@@ -62,7 +62,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
                 site.SiteId = dbSiteSettings.Create(
                     site.SiteGuid,
                     site.SiteName,
-                    site.Skin,
+                    site.Layout,
                     site.Logo,
                     site.Icon,
                     site.AllowNewRegistration,
@@ -115,7 +115,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
                 result = dbSiteSettings.Update(
                     site.SiteId,
                     site.SiteName,
-                    site.Skin,
+                    site.Layout,
                     site.Logo,
                     site.Icon,
                     site.AllowNewRegistration,

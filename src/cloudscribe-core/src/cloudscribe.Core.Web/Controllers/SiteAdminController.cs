@@ -2,13 +2,14 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-09-15
+// Last Modified:			2015-10-09
 // 
 
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.Helpers;
 using cloudscribe.Core.Web.ViewModels.SiteSettings;
+using cloudscribe.Core.Web.Razor;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Localization;
@@ -28,7 +29,9 @@ namespace cloudscribe.Core.Web.Controllers
             SiteManager siteManager,
             GeoDataManager geoDataManager,
             IOptions<MultiTenantOptions> multiTenantOptions,
-            IOptions<UIOptions> uiOptionsAccessor
+            IOptions<UIOptions> uiOptionsAccessor,
+            IOptions<LayoutSelectorOptions> layoutSeletorOptionsAccessor,
+            ILayoutFileListBuilder layoutListBuilder
             //ConfigHelper configuration
             //, ITriggerStartup startupTrigger
             )
@@ -44,6 +47,8 @@ namespace cloudscribe.Core.Web.Controllers
             this.siteManager = siteManager;
             this.geoDataManager = geoDataManager;
             uiOptions = uiOptionsAccessor.Options;
+            this.layoutListBuilder = layoutListBuilder;
+            layoutOptions = layoutSeletorOptionsAccessor.Options;
 
             //startup = startupTrigger;
         }
@@ -53,8 +58,9 @@ namespace cloudscribe.Core.Web.Controllers
         private GeoDataManager geoDataManager;
         //private ConfigHelper config;
         private MultiTenantOptions multiTenantOptions;
-        //private ITriggerStartup startup;
-
+        //private ITriggerStartup startup
+        private LayoutSelectorOptions layoutOptions;
+        private ILayoutFileListBuilder layoutListBuilder;
         private UIOptions uiOptions;
 
         //disable warning about not really being async
@@ -163,6 +169,13 @@ namespace cloudscribe.Core.Web.Controllers
             {
                 model.HostName = selectedSite.PreferredHostName;
             }
+
+            if(layoutOptions.SelectionMode == LayoutSelectionMode.Browsing)
+            {
+                model.Layout = selectedSite.Layout;
+                model.AvailableLayouts = layoutListBuilder.GetAvailableLayouts(selectedSite.SiteId);
+            }
+            
 
             
             // can only delete from server admin site/cannot delete server admin site
@@ -305,6 +318,11 @@ namespace cloudscribe.Core.Web.Controllers
             selectedSite.SiteFolderName = model.SiteFolderName;
             selectedSite.SiteIsClosed = model.IsClosed;
             selectedSite.SiteIsClosedMessage = model.ClosedMessage;
+
+            if (layoutOptions.SelectionMode == LayoutSelectionMode.Browsing)
+            {
+                selectedSite.Layout = model.Layout;
+            }
             
             bool result = await siteManager.Save(selectedSite);
 

@@ -62,7 +62,7 @@ namespace cloudscribe.Core.Repositories.pgsql
                 site.SiteId = await dbSiteSettings.Create(
                     site.SiteGuid,
                     site.SiteName,
-                    site.Skin,
+                    site.Layout,
                     site.Logo,
                     site.Icon,
                     site.AllowNewRegistration,
@@ -115,7 +115,7 @@ namespace cloudscribe.Core.Repositories.pgsql
                 result = await dbSiteSettings.Update(
                     site.SiteId,
                     site.SiteName,
-                    site.Skin,
+                    site.Layout,
                     site.Logo,
                     site.Icon,
                     site.AllowNewRegistration,

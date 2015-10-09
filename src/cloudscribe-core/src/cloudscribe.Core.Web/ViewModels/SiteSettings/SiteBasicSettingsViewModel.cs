@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-09-12
+// Last Modified:			2015-10-09
 // 
 
 //using cloudscribe.Configuration.DataAnnotations;
@@ -19,7 +19,7 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
     {
         public SiteBasicSettingsViewModel()
         {
-            
+            availableLayouts = new List<SelectListItem>();
         }
 
         private int siteID = -1;
@@ -77,6 +77,15 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         {
             get { return timeZoneId; }
             set { timeZoneId = value; }
+        }
+
+        public string Layout { get; set; } = "_Layout.cshtml";
+
+        private List<SelectListItem> availableLayouts = null;
+        public List<SelectListItem> AvailableLayouts
+        {
+            get { return availableLayouts; }
+            set { availableLayouts = value; }
         }
 
         private ReadOnlyCollection<TimeZoneInfo> allTimeZones = null;
