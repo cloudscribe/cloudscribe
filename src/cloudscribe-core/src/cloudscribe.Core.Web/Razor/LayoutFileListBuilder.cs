@@ -2,13 +2,14 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //  Author:                     Joe Audette
 //  Created:                    2015-10-09
-//	Last Modified:              2015-10-09
+//	Last Modified:              2015-10-10
 //
 
 
 using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.Dnx.Runtime;
 using Microsoft.Framework.OptionsModel;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -17,13 +18,17 @@ namespace cloudscribe.Core.Web.Razor
     public class LayoutFileListBuilder : ILayoutFileListBuilder
     {
         public LayoutFileListBuilder(
-            IApplicationEnvironment appEnv,
-            IOptions<LayoutSelectorOptions> layoutOptionsAccesor,
+            IApplicationEnvironment appEnvironment,
+            IOptions<LayoutSelectorOptions> layoutOptionsAccessor,
             ILayoutFileDisplayNameFilter layoutDisplayFilter
             )
         {
-            appBasePath = appEnv.ApplicationBasePath;
-            options = layoutOptionsAccesor.Options;
+            if (appEnvironment == null) { throw new ArgumentNullException(nameof(appEnvironment)); }
+            if (layoutOptionsAccessor == null) { throw new ArgumentNullException(nameof(layoutOptionsAccessor)); }
+            if (layoutDisplayFilter == null) { throw new ArgumentNullException(nameof(layoutDisplayFilter)); }
+
+            appBasePath = appEnvironment.ApplicationBasePath;
+            options = layoutOptionsAccessor.Options;
             this.layoutDisplayFilter = layoutDisplayFilter;
         }
 
@@ -71,6 +76,4 @@ namespace cloudscribe.Core.Web.Razor
             return appBasePath + "/Views/Shared".Replace("/", Path.DirectorySeparatorChar.ToString());
         }
     }
-
-    
 }

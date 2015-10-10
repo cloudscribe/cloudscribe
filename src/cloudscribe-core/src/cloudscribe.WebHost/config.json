@@ -27,6 +27,13 @@
   },
   "SetupOptions": {
     "DisableSetup": "false"
+  },
+  "LayoutSelectorOptions": {
+    "DefaultLayout": "Default_Layout.cshtml",
+    "SelectionMode": "Browsing",
+    "ConventionFormat": "Site{0}Layout",
+    "BrowseFilterFormat" : "Site{0}_*_Layout.cshtml"
   }
+
 
 }

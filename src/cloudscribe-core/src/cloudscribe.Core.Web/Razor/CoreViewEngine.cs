@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //  Author:                     Joe Audette
 //  Created:                    2014-10-13
-//	Last Modified:              2015-09-26
+//	Last Modified:              2015-10-10
 // 
 
 using Microsoft.AspNet.Mvc.Razor;
@@ -56,8 +56,8 @@ namespace cloudscribe.Core.Web
         {
             "/Views/{1}/{0}" + ViewExtension,
             "/Views/Shared/{0}" + ViewExtension,
-            "~/Views/Sys/{1}/{0}" + ViewExtension,
-            "~/Views/Sys/Shared/{0}" + ViewExtension,
+            "/Views/Sys/{1}/{0}" + ViewExtension,
+            "/Views/Sys/Shared/{0}" + ViewExtension,
            
         };
 
@@ -66,8 +66,9 @@ namespace cloudscribe.Core.Web
             "/Areas/{2}/Views/{1}/{0}" + ViewExtension,
             "/Areas/{2}/Views/Shared/{0}" + ViewExtension,
             "/Views/Shared/{0}" + ViewExtension,
-            "~/Areas/{2}/Views/Sys/{1}/{0}" + ViewExtension,
-            "~/Areas/{2}/Views/Sys/Shared/{0}" + ViewExtension,
+            "/Areas/{2}/Views/Sys/{1}/{0}" + ViewExtension,
+            "/Areas/{2}/Views/Sys/Shared/{0}" + ViewExtension,
+            "/Views/Sys/Shared/{0}" + ViewExtension,
         };
 
         public override IEnumerable<string> ViewLocationFormats

@@ -1,4 +1,9 @@
 
+http://stackoverflow.com/questions/29048122/token-based-authentication-in-asp-net-5-vnext/29698502#29698502
+
+Really good article even if not converting something from web api to mvc6
+http://www.dotnetcurry.com/aspnet-mvc/1149/convert-aspnet-webapi2-aspnet5-mvc6
+
 http://www.jerriepelser.com/blog/using-enum-aspnet-5-select-taghelper
 
 http://wildermuth.com/2015/09/27/A_Look_at_ASP_NET_5_Part_5_-_The_API
