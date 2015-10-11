@@ -22,8 +22,8 @@ This project is in early stages, not yet production ready, we are building on a 
 * TagHelper for bootstrap modal
 * TagHelpers/HtmlHelpers for navigation menus, breadcrumbs and pagination - via cloudscribe.Web.Navigation project which will be moved to it's own source code repository soon after aspnet beta8 when we can include views in the nuget built for a class library project
 * Unobtrusive js for CKeditor
-* async all the way down - vast majority of the data access is async except with file based databases such as SQLite and sqlce
-* Currently the project has repository implementations for MSSQL, MySql, PostgreSql, Firebird, SQLCe, and SQLite, however only MSSQL is currently supported under dnxcore50 because current ADO drivers for the other db platforms are only working in dnx451. Most of the database schema and data access code was re-purposed and refactored from the mojoportal project, there is still some refactoring and cleanup to be done. There are some data fields that may be removed or moved to new tables later.
+* async all the way down - vast majority of the data access is async except with file based databases such as Sqlite and sqlce
+* Currently the project has repository implementations for MSSQL, MySql, PostgreSql, Firebird, SQLCe, and Sqlite, however only MSSQL and Sqlite are currently supported under dnxcore50 because current ADO drivers for the other db platforms are only working in dnx451. Most of the database schema and data access code was re-purposed and refactored from the mojoportal project, there is still some refactoring and cleanup to be done. There are some data fields that may be removed or moved to new tables later.
 * Possibly later we could implement repositories based on Entity Framework 7 but a goal of the project for me is to not force a specific ORM on anyone.
 
 ##### Planned Features:
