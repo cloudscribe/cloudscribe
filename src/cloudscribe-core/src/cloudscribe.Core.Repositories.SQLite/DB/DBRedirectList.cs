@@ -5,11 +5,11 @@
 // Last Modified:			2015-06-14
 // 
 
-using cloudscribe.DbHelpers.SQLite;
+using cloudscribe.DbHelpers.Sqlite;
 using System;
 using System.Data;
 using System.Data.Common;
-using Microsoft.Data.SQLite;
+using Microsoft.Data.Sqlite;
 using Microsoft.Framework.Logging;
 using System.Text;
 
@@ -72,27 +72,27 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append(":ExpireUtc )");
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[7];
+            SqliteParameter[] arParams = new SqliteParameter[7];
 
-            arParams[0] = new SQLiteParameter(":RowGuid", DbType.String);
+            arParams[0] = new SqliteParameter(":RowGuid", DbType.String);
             arParams[0].Value = rowGuid.ToString();
 
-            arParams[1] = new SQLiteParameter(":SiteGuid", DbType.String);
+            arParams[1] = new SqliteParameter(":SiteGuid", DbType.String);
             arParams[1].Value = siteGuid.ToString();
 
-            arParams[2] = new SQLiteParameter(":SiteID", DbType.Int32);
+            arParams[2] = new SqliteParameter(":SiteID", DbType.Int32);
             arParams[2].Value = siteID;
 
-            arParams[3] = new SQLiteParameter(":OldUrl", DbType.String);
+            arParams[3] = new SqliteParameter(":OldUrl", DbType.String);
             arParams[3].Value = oldUrl;
 
-            arParams[4] = new SQLiteParameter(":NewUrl", DbType.String);
+            arParams[4] = new SqliteParameter(":NewUrl", DbType.String);
             arParams[4].Value = newUrl;
 
-            arParams[5] = new SQLiteParameter(":CreatedUtc", DbType.DateTime);
+            arParams[5] = new SqliteParameter(":CreatedUtc", DbType.DateTime);
             arParams[5].Value = createdUtc;
 
-            arParams[6] = new SQLiteParameter(":ExpireUtc", DbType.DateTime);
+            arParams[6] = new SqliteParameter(":ExpireUtc", DbType.DateTime);
             arParams[6].Value = expireUtc;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -132,18 +132,18 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("RowGuid = :RowGuid ");
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[4];
+            SqliteParameter[] arParams = new SqliteParameter[4];
 
-            arParams[0] = new SQLiteParameter(":RowGuid", DbType.String);
+            arParams[0] = new SqliteParameter(":RowGuid", DbType.String);
             arParams[0].Value = rowGuid.ToString();
 
-            arParams[1] = new SQLiteParameter(":OldUrl", DbType.String);
+            arParams[1] = new SqliteParameter(":OldUrl", DbType.String);
             arParams[1].Value = oldUrl;
 
-            arParams[2] = new SQLiteParameter(":NewUrl", DbType.String);
+            arParams[2] = new SqliteParameter(":NewUrl", DbType.String);
             arParams[2].Value = newUrl;
 
-            arParams[3] = new SQLiteParameter(":ExpireUtc", DbType.DateTime);
+            arParams[3] = new SqliteParameter(":ExpireUtc", DbType.DateTime);
             arParams[3].Value = expireUtc;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -168,9 +168,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("RowGuid = :RowGuid ");
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":RowGuid", DbType.String);
+            arParams[0] = new SqliteParameter(":RowGuid", DbType.String);
             arParams[0].Value = rowGuid.ToString();
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -195,9 +195,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("RowGuid = :RowGuid ");
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":RowGuid", DbType.String);
+            arParams[0] = new SqliteParameter(":RowGuid", DbType.String);
             arParams[0].Value = rowGuid.ToString();
 
             return AdoHelper.ExecuteReader(
@@ -222,15 +222,15 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("AND ExpireUtc < :CurrentTime ");
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[3];
+            SqliteParameter[] arParams = new SqliteParameter[3];
 
-            arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
+            arParams[0] = new SqliteParameter(":SiteID", DbType.Int32);
             arParams[0].Value = siteId;
 
-            arParams[1] = new SQLiteParameter(":OldUrl", DbType.String);
+            arParams[1] = new SqliteParameter(":OldUrl", DbType.String);
             arParams[1].Value = oldUrl;
 
-            arParams[2] = new SQLiteParameter(":CurrentTime", DbType.DateTime);
+            arParams[2] = new SqliteParameter(":CurrentTime", DbType.DateTime);
             arParams[2].Value = DateTime.UtcNow;
 
             return AdoHelper.ExecuteReader(
@@ -255,12 +255,12 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("AND OldUrl = :OldUrl ");
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[2];
+            SqliteParameter[] arParams = new SqliteParameter[2];
 
-            arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
+            arParams[0] = new SqliteParameter(":SiteID", DbType.Int32);
             arParams[0].Value = siteId;
 
-            arParams[1] = new SQLiteParameter(":OldUrl", DbType.String);
+            arParams[1] = new SqliteParameter(":OldUrl", DbType.String);
             arParams[1].Value = oldUrl;
 
             int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -285,9 +285,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("SiteID = :SiteID ");
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
+            arParams[0] = new SqliteParameter(":SiteID", DbType.Int32);
             arParams[0].Value = siteId;
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -343,15 +343,15 @@ namespace cloudscribe.Core.Repositories.SQLite
             }
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[3];
+            SqliteParameter[] arParams = new SqliteParameter[3];
 
-            arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
+            arParams[0] = new SqliteParameter(":SiteID", DbType.Int32);
             arParams[0].Value = siteId;
 
-            arParams[1] = new SQLiteParameter(":PageSize", DbType.Int32);
+            arParams[1] = new SqliteParameter(":PageSize", DbType.Int32);
             arParams[1].Value = pageSize;
 
-            arParams[2] = new SQLiteParameter(":OffsetRows", DbType.Int32);
+            arParams[2] = new SqliteParameter(":OffsetRows", DbType.Int32);
             arParams[2].Value = pageLowerBound;
 
             return AdoHelper.ExecuteReader(

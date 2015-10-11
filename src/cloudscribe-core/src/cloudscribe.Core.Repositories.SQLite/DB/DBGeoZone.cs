@@ -6,11 +6,11 @@
 // 
 
 
-using cloudscribe.DbHelpers.SQLite;
+using cloudscribe.DbHelpers.Sqlite;
 using System;
 using System.Data;
 using System.Data.Common;
-using Microsoft.Data.SQLite;
+using Microsoft.Data.Sqlite;
 using Microsoft.Framework.Logging;
 using System.Text;
 using System.Threading.Tasks;
@@ -61,18 +61,18 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append(":Code )");
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[4];
+            SqliteParameter[] arParams = new SqliteParameter[4];
 
-            arParams[0] = new SQLiteParameter(":Guid", DbType.String);
+            arParams[0] = new SqliteParameter(":Guid", DbType.String);
             arParams[0].Value = guid.ToString();
 
-            arParams[1] = new SQLiteParameter(":CountryGuid", DbType.String);
+            arParams[1] = new SqliteParameter(":CountryGuid", DbType.String);
             arParams[1].Value = countryGuid.ToString();
 
-            arParams[2] = new SQLiteParameter(":Name", DbType.String);
+            arParams[2] = new SqliteParameter(":Name", DbType.String);
             arParams[2].Value = name;
 
-            arParams[3] = new SQLiteParameter(":Code", DbType.String);
+            arParams[3] = new SqliteParameter(":Code", DbType.String);
             arParams[3].Value = code;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -112,18 +112,18 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("Guid = :Guid ");
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[4];
+            SqliteParameter[] arParams = new SqliteParameter[4];
 
-            arParams[0] = new SQLiteParameter(":Guid", DbType.String);
+            arParams[0] = new SqliteParameter(":Guid", DbType.String);
             arParams[0].Value = guid.ToString();
 
-            arParams[1] = new SQLiteParameter(":CountryGuid", DbType.String);
+            arParams[1] = new SqliteParameter(":CountryGuid", DbType.String);
             arParams[1].Value = countryGuid.ToString();
 
-            arParams[2] = new SQLiteParameter(":Name", DbType.String);
+            arParams[2] = new SqliteParameter(":Name", DbType.String);
             arParams[2].Value = name;
 
-            arParams[3] = new SQLiteParameter(":Code", DbType.String);
+            arParams[3] = new SqliteParameter(":Code", DbType.String);
             arParams[3].Value = code;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -148,9 +148,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("Guid = :Guid ");
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":Guid", DbType.String);
+            arParams[0] = new SqliteParameter(":Guid", DbType.String);
             arParams[0].Value = guid.ToString();
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -170,9 +170,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("CountryGuid = :CountryGuid ");
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":CountryGuid", DbType.String);
+            arParams[0] = new SqliteParameter(":CountryGuid", DbType.String);
             arParams[0].Value = countryGuid.ToString();
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -196,9 +196,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("Guid = :Guid ");
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":Guid", DbType.String);
+            arParams[0] = new SqliteParameter(":Guid", DbType.String);
             arParams[0].Value = guid.ToString();
 
             return AdoHelper.ExecuteReader(
@@ -222,12 +222,12 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("AND Code = :Code ");
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[2];
+            SqliteParameter[] arParams = new SqliteParameter[2];
 
-            arParams[0] = new SQLiteParameter(":CountryGuid", DbType.String);
+            arParams[0] = new SqliteParameter(":CountryGuid", DbType.String);
             arParams[0].Value = countryGuid.ToString();
 
-            arParams[1] = new SQLiteParameter(":Code", DbType.String);
+            arParams[1] = new SqliteParameter(":Code", DbType.String);
             arParams[1].Value = code;
 
             return AdoHelper.ExecuteReader(
@@ -254,12 +254,12 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("LIMIT " + maxRows.ToString());
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[2];
+            SqliteParameter[] arParams = new SqliteParameter[2];
 
-            arParams[0] = new SQLiteParameter(":CountryGuid", DbType.String);
+            arParams[0] = new SqliteParameter(":CountryGuid", DbType.String);
             arParams[0].Value = countryGuid.ToString();
 
-            arParams[1] = new SQLiteParameter(":Query", DbType.String);
+            arParams[1] = new SqliteParameter(":Query", DbType.String);
             arParams[1].Value = query + "%";
 
             return AdoHelper.ExecuteReader(
@@ -281,9 +281,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("ORDER BY Name ");
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":CountryGuid", DbType.String);
+            arParams[0] = new SqliteParameter(":CountryGuid", DbType.String);
             arParams[0].Value = countryGuid.ToString();
 
             return AdoHelper.ExecuteReader(
@@ -304,9 +304,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("CountryGuid = :CountryGuid ");
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":CountryGuid", DbType.String);
+            arParams[0] = new SqliteParameter(":CountryGuid", DbType.String);
             arParams[0].Value = countryGuid.ToString();
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -344,15 +344,15 @@ namespace cloudscribe.Core.Repositories.SQLite
             }
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[3];
+            SqliteParameter[] arParams = new SqliteParameter[3];
 
-            arParams[0] = new SQLiteParameter(":CountryGuid", DbType.String);
+            arParams[0] = new SqliteParameter(":CountryGuid", DbType.String);
             arParams[0].Value = countryGuid.ToString();
 
-            arParams[1] = new SQLiteParameter(":PageSize", DbType.Int32);
+            arParams[1] = new SqliteParameter(":PageSize", DbType.Int32);
             arParams[1].Value = pageSize;
 
-            arParams[2] = new SQLiteParameter(":OffsetRows", DbType.Int32);
+            arParams[2] = new SqliteParameter(":OffsetRows", DbType.Int32);
             arParams[2].Value = pageLowerBound;
 
             return AdoHelper.ExecuteReader(

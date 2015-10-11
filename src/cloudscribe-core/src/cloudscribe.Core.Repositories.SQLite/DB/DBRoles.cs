@@ -5,11 +5,11 @@
 // Last Modified:			2015-06-14
 // 
 
-using cloudscribe.DbHelpers.SQLite;
+using cloudscribe.DbHelpers.Sqlite;
 using System;
 using System.Data;
 using System.Data.Common;
-using Microsoft.Data.SQLite;
+using Microsoft.Data.Sqlite;
 using Microsoft.Framework.Logging;
 using System.Text;
 using System.Threading.Tasks;
@@ -57,18 +57,18 @@ namespace cloudscribe.Core.Repositories.SQLite
 
             sqlCommand.Append("SELECT LAST_INSERT_ROWID();");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[4];
+            SqliteParameter[] arParams = new SqliteParameter[4];
 
-            arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
+            arParams[0] = new SqliteParameter(":SiteID", DbType.Int32);
             arParams[0].Value = siteId;
 
-            arParams[1] = new SQLiteParameter(":RoleName", DbType.String);
+            arParams[1] = new SqliteParameter(":RoleName", DbType.String);
             arParams[1].Value = roleName;
 
-            arParams[2] = new SQLiteParameter(":SiteGuid", DbType.String);
+            arParams[2] = new SqliteParameter(":SiteGuid", DbType.String);
             arParams[2].Value = siteGuid.ToString();
 
-            arParams[3] = new SQLiteParameter(":RoleGuid", DbType.String);
+            arParams[3] = new SqliteParameter(":RoleGuid", DbType.String);
             arParams[3].Value = roleGuid.ToString();
 
             int newID = Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -87,12 +87,12 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("SET DisplayName = :RoleName  ");
             sqlCommand.Append("WHERE RoleID = :RoleID  ;");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[2];
+            SqliteParameter[] arParams = new SqliteParameter[2];
 
-            arParams[0] = new SQLiteParameter(":RoleID", DbType.Int32);
+            arParams[0] = new SqliteParameter(":RoleID", DbType.Int32);
             arParams[0].Value = roleId;
 
-            arParams[1] = new SQLiteParameter(":RoleName", DbType.String);
+            arParams[1] = new SqliteParameter(":RoleName", DbType.String);
             arParams[1].Value = roleName;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -109,9 +109,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("DELETE FROM mp_Roles ");
             sqlCommand.Append("WHERE RoleID = :RoleID AND RoleName <> 'Admins' AND RoleName <> 'Content Administrators' AND RoleName <> 'Authenticated Users' AND RoleName <> 'Role Admins'  ;");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":RoleID", DbType.Int32);
+            arParams[0] = new SqliteParameter(":RoleID", DbType.Int32);
             arParams[0].Value = roleId;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -128,9 +128,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("DELETE FROM mp_UserRoles ");
             sqlCommand.Append("WHERE UserID = :UserID  ;");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":UserID", DbType.Int32);
+            arParams[0] = new SqliteParameter(":UserID", DbType.Int32);
             arParams[0].Value = userId;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -147,9 +147,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("DELETE FROM mp_UserRoles ");
             sqlCommand.Append("WHERE RoleID = :RoleID  ;");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":RoleID", DbType.Int32);
+            arParams[0] = new SqliteParameter(":RoleID", DbType.Int32);
             arParams[0].Value = roleId;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -167,9 +167,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("FROM	mp_Roles ");
             sqlCommand.Append("WHERE RoleID = :RoleID ; ");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":RoleID", DbType.Int32);
+            arParams[0] = new SqliteParameter(":RoleID", DbType.Int32);
             arParams[0].Value = roleId;
 
             return AdoHelper.ExecuteReader(
@@ -186,12 +186,12 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("FROM	mp_Roles ");
             sqlCommand.Append("WHERE SiteID = :SiteID AND RoleName = :RoleName ; ");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[2];
+            SqliteParameter[] arParams = new SqliteParameter[2];
 
-            arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
+            arParams[0] = new SqliteParameter(":SiteID", DbType.Int32);
             arParams[0].Value = siteId;
 
-            arParams[1] = new SQLiteParameter(":RoleName", DbType.String);
+            arParams[1] = new SqliteParameter(":RoleName", DbType.String);
             arParams[1].Value = roleName;
 
             return AdoHelper.ExecuteReader(
@@ -208,12 +208,12 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("FROM	mp_Roles ");
             sqlCommand.Append("WHERE SiteID = :SiteID AND RoleName = :RoleName ; ");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[2];
+            SqliteParameter[] arParams = new SqliteParameter[2];
 
-            arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
+            arParams[0] = new SqliteParameter(":SiteID", DbType.Int32);
             arParams[0].Value = siteId;
 
-            arParams[1] = new SQLiteParameter(":RoleName", DbType.String);
+            arParams[1] = new SqliteParameter(":RoleName", DbType.String);
             arParams[1].Value = roleName;
 
             int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -255,9 +255,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("ORDER BY r.DisplayName ");
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
+            arParams[0] = new SqliteParameter(":SiteID", DbType.Int32);
             arParams[0].Value = siteId;
 
             return AdoHelper.ExecuteReader(
@@ -282,9 +282,9 @@ namespace cloudscribe.Core.Repositories.SQLite
 
             sqlCommand.Append("WHERE mp_UserRoles.RoleID = :RoleID ; ");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":RoleID", DbType.Int32);
+            arParams[0] = new SqliteParameter(":RoleID", DbType.Int32);
             arParams[0].Value = roleId;
 
             return AdoHelper.ExecuteReader(
@@ -325,15 +325,15 @@ namespace cloudscribe.Core.Repositories.SQLite
 
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[3];
+            SqliteParameter[] arParams = new SqliteParameter[3];
 
-            arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
+            arParams[0] = new SqliteParameter(":SiteID", DbType.Int32);
             arParams[0].Value = siteId;
 
-            arParams[1] = new SQLiteParameter(":RoleID", DbType.Int32);
+            arParams[1] = new SqliteParameter(":RoleID", DbType.Int32);
             arParams[1].Value = roleId;
 
-            arParams[2] = new SQLiteParameter(":SearchInput", DbType.String);
+            arParams[2] = new SqliteParameter(":SearchInput", DbType.String);
             arParams[2].Value = "%" + searchInput + "%";
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -392,21 +392,21 @@ namespace cloudscribe.Core.Repositories.SQLite
             }
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[5];
+            SqliteParameter[] arParams = new SqliteParameter[5];
 
-            arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
+            arParams[0] = new SqliteParameter(":SiteID", DbType.Int32);
             arParams[0].Value = siteId;
 
-            arParams[1] = new SQLiteParameter(":RoleID", DbType.Int32);
+            arParams[1] = new SqliteParameter(":RoleID", DbType.Int32);
             arParams[1].Value = roleId;
 
-            arParams[2] = new SQLiteParameter(":SearchInput", DbType.String);
+            arParams[2] = new SqliteParameter(":SearchInput", DbType.String);
             arParams[2].Value = "%" + searchInput + "%";
 
-            arParams[3] = new SQLiteParameter(":PageSize", DbType.Int32);
+            arParams[3] = new SqliteParameter(":PageSize", DbType.Int32);
             arParams[3].Value = pageSize;
 
-            arParams[4] = new SQLiteParameter(":OffsetRows", DbType.Int32);
+            arParams[4] = new SqliteParameter(":OffsetRows", DbType.Int32);
             arParams[4].Value = pageLowerBound;
 
             return AdoHelper.ExecuteReader(
@@ -449,15 +449,15 @@ namespace cloudscribe.Core.Repositories.SQLite
 
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[3];
+            SqliteParameter[] arParams = new SqliteParameter[3];
 
-            arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
+            arParams[0] = new SqliteParameter(":SiteID", DbType.Int32);
             arParams[0].Value = siteId;
 
-            arParams[1] = new SQLiteParameter(":RoleID", DbType.Int32);
+            arParams[1] = new SqliteParameter(":RoleID", DbType.Int32);
             arParams[1].Value = roleId;
 
-            arParams[2] = new SQLiteParameter(":SearchInput", DbType.String);
+            arParams[2] = new SqliteParameter(":SearchInput", DbType.String);
             arParams[2].Value = "%" + searchInput + "%";
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -518,21 +518,21 @@ namespace cloudscribe.Core.Repositories.SQLite
             }
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[5];
+            SqliteParameter[] arParams = new SqliteParameter[5];
 
-            arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
+            arParams[0] = new SqliteParameter(":SiteID", DbType.Int32);
             arParams[0].Value = siteId;
 
-            arParams[1] = new SQLiteParameter(":RoleID", DbType.Int32);
+            arParams[1] = new SqliteParameter(":RoleID", DbType.Int32);
             arParams[1].Value = roleId;
 
-            arParams[2] = new SQLiteParameter(":SearchInput", DbType.String);
+            arParams[2] = new SqliteParameter(":SearchInput", DbType.String);
             arParams[2].Value = "%" + searchInput + "%";
 
-            arParams[3] = new SQLiteParameter(":PageSize", DbType.Int32);
+            arParams[3] = new SqliteParameter(":PageSize", DbType.Int32);
             arParams[3].Value = pageSize;
 
-            arParams[4] = new SQLiteParameter(":OffsetRows", DbType.Int32);
+            arParams[4] = new SqliteParameter(":OffsetRows", DbType.Int32);
             arParams[4].Value = pageLowerBound;
 
             return AdoHelper.ExecuteReader(
@@ -557,12 +557,12 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("AND ur.UserID IS NULL  ");
             sqlCommand.Append("ORDER BY r.DisplayName  ;");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[2];
+            SqliteParameter[] arParams = new SqliteParameter[2];
 
-            arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
+            arParams[0] = new SqliteParameter(":SiteID", DbType.Int32);
             arParams[0].Value = siteId;
 
-            arParams[1] = new SQLiteParameter(":UserID", DbType.Int32);
+            arParams[1] = new SqliteParameter(":UserID", DbType.Int32);
             arParams[1].Value = userId;
 
             return AdoHelper.ExecuteReader(
@@ -585,18 +585,18 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("INSERT INTO mp_UserRoles (UserID, RoleID, UserGuid, RoleGuid) ");
             sqlCommand.Append("VALUES ( :UserID , :RoleID, :UserGuid, :RoleGuid); ");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[4];
+            SqliteParameter[] arParams = new SqliteParameter[4];
 
-            arParams[0] = new SQLiteParameter(":RoleID", DbType.Int32);
+            arParams[0] = new SqliteParameter(":RoleID", DbType.Int32);
             arParams[0].Value = roleId;
 
-            arParams[1] = new SQLiteParameter(":UserID", DbType.Int32);
+            arParams[1] = new SqliteParameter(":UserID", DbType.Int32);
             arParams[1].Value = userId;
 
-            arParams[2] = new SQLiteParameter(":UserGuid", DbType.String);
+            arParams[2] = new SqliteParameter(":UserGuid", DbType.String);
             arParams[2].Value = userGuid.ToString();
 
-            arParams[3] = new SQLiteParameter(":RoleGuid", DbType.String);
+            arParams[3] = new SqliteParameter(":RoleGuid", DbType.String);
             arParams[3].Value = roleGuid.ToString();
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -615,12 +615,12 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("WHERE UserID = :UserID  ");
             sqlCommand.Append("AND RoleID = :RoleID  ;");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[2];
+            SqliteParameter[] arParams = new SqliteParameter[2];
 
-            arParams[0] = new SQLiteParameter(":RoleID", DbType.Int32);
+            arParams[0] = new SqliteParameter(":RoleID", DbType.Int32);
             arParams[0].Value = roleId;
 
-            arParams[1] = new SQLiteParameter(":UserID", DbType.Int32);
+            arParams[1] = new SqliteParameter(":UserID", DbType.Int32);
             arParams[1].Value = userId;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -642,9 +642,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("WHERE SiteID = :SiteID  ");
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
+            arParams[0] = new SqliteParameter(":SiteID", DbType.Int32);
             arParams[0].Value = siteId;
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -672,12 +672,12 @@ namespace cloudscribe.Core.Repositories.SQLite
             }
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[2];
+            SqliteParameter[] arParams = new SqliteParameter[2];
 
-            arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
+            arParams[0] = new SqliteParameter(":SiteID", DbType.Int32);
             arParams[0].Value = siteId;
 
-            arParams[1] = new SQLiteParameter(":SearchInput", DbType.String);
+            arParams[1] = new SqliteParameter(":SearchInput", DbType.String);
             arParams[1].Value = "%" + searchInput + "%";
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -739,18 +739,18 @@ namespace cloudscribe.Core.Repositories.SQLite
             }
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[4];
+            SqliteParameter[] arParams = new SqliteParameter[4];
 
-            arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
+            arParams[0] = new SqliteParameter(":SiteID", DbType.Int32);
             arParams[0].Value = siteId;
 
-            arParams[1] = new SQLiteParameter(":SearchInput", DbType.String);
+            arParams[1] = new SqliteParameter(":SearchInput", DbType.String);
             arParams[1].Value = "%" + searchInput + "%";
 
-            arParams[2] = new SQLiteParameter(":PageSize", DbType.Int32);
+            arParams[2] = new SqliteParameter(":PageSize", DbType.Int32);
             arParams[2].Value = pageSize;
 
-            arParams[3] = new SQLiteParameter(":OffsetRows", DbType.Int32);
+            arParams[3] = new SqliteParameter(":OffsetRows", DbType.Int32);
             arParams[3].Value = pageLowerBound;
 
             return AdoHelper.ExecuteReader(

@@ -15,10 +15,10 @@ using System.Data;
 using System.Data.Common;
 //using System.Threading.Tasks;
 //using System.Data.SQLite;
-using Microsoft.Data.SQLite;
+using Microsoft.Data.Sqlite;
 
 
-namespace cloudscribe.DbHelpers.SQLite
+namespace cloudscribe.DbHelpers.Sqlite
 {
     public static class AdoHelper
     {
@@ -36,7 +36,7 @@ namespace cloudscribe.DbHelpers.SQLite
 
         }
 
-        private static SQLiteConnection GetConnection(string connectionString)
+        private static SqliteConnection GetConnection(string connectionString)
         {
             var factory = GetFactory();
             var connection = factory.CreateConnection();
@@ -49,9 +49,9 @@ namespace cloudscribe.DbHelpers.SQLite
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
         private static void PrepareCommand(
-            SQLiteCommand command,
-            SQLiteConnection connection,
-            SQLiteTransaction transaction,
+            SqliteCommand command,
+            SqliteConnection connection,
+            SqliteTransaction transaction,
             CommandType commandType,
             string commandText,
             DbParameter[] commandParameters)
@@ -72,7 +72,7 @@ namespace cloudscribe.DbHelpers.SQLite
             if (commandParameters != null) { AttachParameters(command, commandParameters); }
         }
 
-        private static void AttachParameters(SQLiteCommand command, DbParameter[] commandParameters)
+        private static void AttachParameters(SqliteCommand command, DbParameter[] commandParameters)
         {
             if (command == null) throw new ArgumentNullException("command");
             if (commandParameters != null)
@@ -128,10 +128,10 @@ namespace cloudscribe.DbHelpers.SQLite
 
             var factory = GetFactory();
 
-            using (SQLiteConnection connection = GetConnection(connectionString))
+            using (SqliteConnection connection = GetConnection(connectionString))
             {
                 connection.Open();
-                using (SQLiteCommand command = factory.CreateCommand())
+                using (SqliteCommand command = factory.CreateCommand())
                 {
                     PrepareCommand(command, connection, null, commandType, commandText, commandParameters);
                     command.CommandTimeout = commandTimeout;
@@ -141,7 +141,7 @@ namespace cloudscribe.DbHelpers.SQLite
         }
 
         public static int ExecuteNonQuery(
-            SQLiteTransaction transaction,
+            SqliteTransaction transaction,
             CommandType commandType,
             string commandText,
             params DbParameter[] commandParameters)
@@ -154,7 +154,7 @@ namespace cloudscribe.DbHelpers.SQLite
         }
 
         public static int ExecuteNonQuery(
-            SQLiteTransaction transaction,
+            SqliteTransaction transaction,
             CommandType commandType,
             string commandText,
             int commandTimeout,
@@ -165,7 +165,7 @@ namespace cloudscribe.DbHelpers.SQLite
 
             var factory = GetFactory();
 
-            using (SQLiteCommand command = factory.CreateCommand())
+            using (SqliteCommand command = factory.CreateCommand())
             {
                 PrepareCommand(
                     command,
@@ -182,9 +182,9 @@ namespace cloudscribe.DbHelpers.SQLite
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
-        public static int ExecuteNonQuery(SQLiteConnection connection, string commandText, params DbParameter[] parameters)
+        public static int ExecuteNonQuery(SqliteConnection connection, string commandText, params DbParameter[] parameters)
         {
-            using (SQLiteCommand cmd = new SQLiteCommand())
+            using (SqliteCommand cmd = new SqliteCommand())
             {
                 cmd.Connection = connection;
                 cmd.CommandText = commandText;
@@ -239,14 +239,14 @@ namespace cloudscribe.DbHelpers.SQLite
             // we cannot wrap this connection in a using
             // we need to let the reader close it at using(IDataReader reader = ...
             // otherwise it gets closed before the reader can use it
-            SQLiteConnection connection = null;
+            SqliteConnection connection = null;
             try
             {
                 //connection = new SqlConnection(connectionString);
                 connection = GetConnection(connectionString);
 
                 connection.Open();
-                using (SQLiteCommand command = factory.CreateCommand())
+                using (SqliteCommand command = factory.CreateCommand())
                 {
                     PrepareCommand(
                         command,
@@ -305,12 +305,12 @@ namespace cloudscribe.DbHelpers.SQLite
 
             var factory = GetFactory();
 
-            using (SQLiteConnection connection = GetConnection(connectionString))
+            using (SqliteConnection connection = GetConnection(connectionString))
             {
                 connection.Open();
-                using (SQLiteCommand command = factory.CreateCommand())
+                using (SqliteCommand command = factory.CreateCommand())
                 {
-                    PrepareCommand(command, connection, (SQLiteTransaction)null, commandType, commandText, commandParameters);
+                    PrepareCommand(command, connection, (SqliteTransaction)null, commandType, commandText, commandParameters);
                     command.CommandTimeout = commandTimeout;
 
                     return command.ExecuteScalar();

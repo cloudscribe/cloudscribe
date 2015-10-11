@@ -5,11 +5,11 @@
 // Last Modified:			2015-06-14
 //
 
-using cloudscribe.DbHelpers.SQLite;
+using cloudscribe.DbHelpers.Sqlite;
 using System;
 using System.Data;
 using System.Data.Common;
-using Microsoft.Data.SQLite;
+using Microsoft.Data.Sqlite;
 using Microsoft.Framework.Logging;
 using System.Text;
 
@@ -114,57 +114,57 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append(":LastCaptureUTC )");
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[17];
+            SqliteParameter[] arParams = new SqliteParameter[17];
 
-            arParams[0] = new SQLiteParameter(":RowID", DbType.String);
+            arParams[0] = new SqliteParameter(":RowID", DbType.String);
             arParams[0].Value = rowID.ToString();
 
-            arParams[1] = new SQLiteParameter(":UserGuid", DbType.String);
+            arParams[1] = new SqliteParameter(":UserGuid", DbType.String);
             arParams[1].Value = userGuid.ToString();
 
-            arParams[2] = new SQLiteParameter(":SiteGuid", DbType.String);
+            arParams[2] = new SqliteParameter(":SiteGuid", DbType.String);
             arParams[2].Value = siteGuid.ToString();
 
-            arParams[3] = new SQLiteParameter(":IPAddress", DbType.String);
+            arParams[3] = new SqliteParameter(":IPAddress", DbType.String);
             arParams[3].Value = iPAddress;
 
-            arParams[4] = new SQLiteParameter(":IPAddressLong", DbType.Int64);
+            arParams[4] = new SqliteParameter(":IPAddressLong", DbType.Int64);
             arParams[4].Value = iPAddressLong;
 
-            arParams[5] = new SQLiteParameter(":Hostname", DbType.String);
+            arParams[5] = new SqliteParameter(":Hostname", DbType.String);
             arParams[5].Value = hostname;
 
-            arParams[6] = new SQLiteParameter(":Longitude", DbType.Double);
+            arParams[6] = new SqliteParameter(":Longitude", DbType.Double);
             arParams[6].Value = longitude;
 
-            arParams[7] = new SQLiteParameter(":Latitude", DbType.Double);
+            arParams[7] = new SqliteParameter(":Latitude", DbType.Double);
             arParams[7].Value = latitude;
 
-            arParams[8] = new SQLiteParameter(":ISP", DbType.String);
+            arParams[8] = new SqliteParameter(":ISP", DbType.String);
             arParams[8].Value = iSP;
 
-            arParams[9] = new SQLiteParameter(":Continent", DbType.String);
+            arParams[9] = new SqliteParameter(":Continent", DbType.String);
             arParams[9].Value = continent;
 
-            arParams[10] = new SQLiteParameter(":Country", DbType.String);
+            arParams[10] = new SqliteParameter(":Country", DbType.String);
             arParams[10].Value = country;
 
-            arParams[11] = new SQLiteParameter(":Region", DbType.String);
+            arParams[11] = new SqliteParameter(":Region", DbType.String);
             arParams[11].Value = region;
 
-            arParams[12] = new SQLiteParameter(":City", DbType.String);
+            arParams[12] = new SqliteParameter(":City", DbType.String);
             arParams[12].Value = city;
 
-            arParams[13] = new SQLiteParameter(":TimeZone", DbType.String);
+            arParams[13] = new SqliteParameter(":TimeZone", DbType.String);
             arParams[13].Value = timeZone;
 
-            arParams[14] = new SQLiteParameter(":CaptureCount", DbType.Int32);
+            arParams[14] = new SqliteParameter(":CaptureCount", DbType.Int32);
             arParams[14].Value = captureCount;
 
-            arParams[15] = new SQLiteParameter(":FirstCaptureUTC", DbType.DateTime);
+            arParams[15] = new SqliteParameter(":FirstCaptureUTC", DbType.DateTime);
             arParams[15].Value = firstCaptureUTC;
 
-            arParams[16] = new SQLiteParameter(":LastCaptureUTC", DbType.DateTime);
+            arParams[16] = new SqliteParameter(":LastCaptureUTC", DbType.DateTime);
             arParams[16].Value = lastCaptureUTC;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -240,54 +240,54 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("RowID = :RowID ");
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[16];
+            SqliteParameter[] arParams = new SqliteParameter[16];
 
-            arParams[0] = new SQLiteParameter(":RowID", DbType.String);
+            arParams[0] = new SqliteParameter(":RowID", DbType.String);
             arParams[0].Value = rowID.ToString();
 
-            arParams[1] = new SQLiteParameter(":UserGuid", DbType.String);
+            arParams[1] = new SqliteParameter(":UserGuid", DbType.String);
             arParams[1].Value = userGuid.ToString();
 
-            arParams[2] = new SQLiteParameter(":SiteGuid", DbType.String);
+            arParams[2] = new SqliteParameter(":SiteGuid", DbType.String);
             arParams[2].Value = siteGuid.ToString();
 
-            arParams[3] = new SQLiteParameter(":IPAddress", DbType.String);
+            arParams[3] = new SqliteParameter(":IPAddress", DbType.String);
             arParams[3].Value = iPAddress;
 
-            arParams[4] = new SQLiteParameter(":IPAddressLong", DbType.Int64);
+            arParams[4] = new SqliteParameter(":IPAddressLong", DbType.Int64);
             arParams[4].Value = iPAddressLong;
 
-            arParams[5] = new SQLiteParameter(":Hostname", DbType.String);
+            arParams[5] = new SqliteParameter(":Hostname", DbType.String);
             arParams[5].Value = hostname;
 
-            arParams[6] = new SQLiteParameter(":Longitude", DbType.Double);
+            arParams[6] = new SqliteParameter(":Longitude", DbType.Double);
             arParams[6].Value = longitude;
 
-            arParams[7] = new SQLiteParameter(":Latitude", DbType.Double);
+            arParams[7] = new SqliteParameter(":Latitude", DbType.Double);
             arParams[7].Value = latitude;
 
-            arParams[8] = new SQLiteParameter(":ISP", DbType.String);
+            arParams[8] = new SqliteParameter(":ISP", DbType.String);
             arParams[8].Value = iSP;
 
-            arParams[9] = new SQLiteParameter(":Continent", DbType.String);
+            arParams[9] = new SqliteParameter(":Continent", DbType.String);
             arParams[9].Value = continent;
 
-            arParams[10] = new SQLiteParameter(":Country", DbType.String);
+            arParams[10] = new SqliteParameter(":Country", DbType.String);
             arParams[10].Value = country;
 
-            arParams[11] = new SQLiteParameter(":Region", DbType.String);
+            arParams[11] = new SqliteParameter(":Region", DbType.String);
             arParams[11].Value = region;
 
-            arParams[12] = new SQLiteParameter(":City", DbType.String);
+            arParams[12] = new SqliteParameter(":City", DbType.String);
             arParams[12].Value = city;
 
-            arParams[13] = new SQLiteParameter(":TimeZone", DbType.String);
+            arParams[13] = new SqliteParameter(":TimeZone", DbType.String);
             arParams[13].Value = timeZone;
 
-            arParams[14] = new SQLiteParameter(":CaptureCount", DbType.Int32);
+            arParams[14] = new SqliteParameter(":CaptureCount", DbType.Int32);
             arParams[14].Value = captureCount;
 
-            arParams[15] = new SQLiteParameter(":LastCaptureUTC", DbType.DateTime);
+            arParams[15] = new SqliteParameter(":LastCaptureUTC", DbType.DateTime);
             arParams[15].Value = lastCaptureUTC;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -312,9 +312,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("RowID = :RowID ");
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":RowID", DbType.String);
+            arParams[0] = new SqliteParameter(":RowID", DbType.String);
             arParams[0].Value = rowID.ToString();
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -334,9 +334,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("UserGuid = :UserGuid ");
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":UserGuid", DbType.String);
+            arParams[0] = new SqliteParameter(":UserGuid", DbType.String);
             arParams[0].Value = userGuid.ToString();
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -361,9 +361,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("RowID = :RowID ");
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":RowID", DbType.String);
+            arParams[0] = new SqliteParameter(":RowID", DbType.String);
             arParams[0].Value = rowID.ToString();
 
             return AdoHelper.ExecuteReader(
@@ -388,12 +388,12 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("AND IPAddressLong = :IPAddressLong ");
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[2];
+            SqliteParameter[] arParams = new SqliteParameter[2];
 
-            arParams[0] = new SQLiteParameter(":UserGuid", DbType.String);
+            arParams[0] = new SqliteParameter(":UserGuid", DbType.String);
             arParams[0].Value = userguid.ToString();
 
-            arParams[1] = new SQLiteParameter(":IPAddressLong", DbType.Int64);
+            arParams[1] = new SqliteParameter(":IPAddressLong", DbType.Int64);
             arParams[1].Value = iPAddressLong;
 
             return AdoHelper.ExecuteReader(
@@ -417,9 +417,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("ORDER BY LastCaptureUTC DESC ");
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":UserGuid", DbType.String);
+            arParams[0] = new SqliteParameter(":UserGuid", DbType.String);
             arParams[0].Value = userguid.ToString();
 
             return AdoHelper.ExecuteReader(
@@ -443,9 +443,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("ORDER BY IPAddressLong ");
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":SiteGuid", DbType.String);
+            arParams[0] = new SqliteParameter(":SiteGuid", DbType.String);
             arParams[0].Value = siteGuid.ToString();
 
             return AdoHelper.ExecuteReader(
@@ -474,12 +474,12 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("ORDER BY ul.LastCaptureUTC DESC ");
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[2];
+            SqliteParameter[] arParams = new SqliteParameter[2];
 
-            arParams[0] = new SQLiteParameter(":SiteGuid", DbType.String);
+            arParams[0] = new SqliteParameter(":SiteGuid", DbType.String);
             arParams[0].Value = siteGuid.ToString();
 
-            arParams[1] = new SQLiteParameter(":IPAddress", DbType.String);
+            arParams[1] = new SqliteParameter(":IPAddress", DbType.String);
             arParams[1].Value = ipv4Address;
 
             return AdoHelper.ExecuteReader(
@@ -502,9 +502,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("UserGuid = :UserGuid ");
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":UserGuid", DbType.String);
+            arParams[0] = new SqliteParameter(":UserGuid", DbType.String);
             arParams[0].Value = userGuid.ToString();
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -527,9 +527,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("SiteGuid = :SiteGuid ");
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":SiteGuid", DbType.String);
+            arParams[0] = new SqliteParameter(":SiteGuid", DbType.String);
             arParams[0].Value = siteGuid.ToString();
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -580,12 +580,12 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("LIMIT " + pageLowerBound.ToString() + ", :PageSize ");
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[2];
+            SqliteParameter[] arParams = new SqliteParameter[2];
 
-            arParams[0] = new SQLiteParameter(":UserGuid", DbType.String);
+            arParams[0] = new SqliteParameter(":UserGuid", DbType.String);
             arParams[0].Value = userGuid.ToString();
 
-            arParams[1] = new SQLiteParameter(":PageSize", DbType.Int32);
+            arParams[1] = new SqliteParameter(":PageSize", DbType.Int32);
             arParams[1].Value = pageSize;
 
             return AdoHelper.ExecuteReader(
@@ -636,12 +636,12 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("LIMIT " + pageLowerBound.ToString() + ", :PageSize ");
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[2];
+            SqliteParameter[] arParams = new SqliteParameter[2];
 
-            arParams[0] = new SQLiteParameter(":SiteGuid", DbType.String);
+            arParams[0] = new SqliteParameter(":SiteGuid", DbType.String);
             arParams[0].Value = siteGuid.ToString();
 
-            arParams[1] = new SQLiteParameter(":PageSize", DbType.Int32);
+            arParams[1] = new SqliteParameter(":PageSize", DbType.Int32);
             arParams[1].Value = pageSize;
 
             return AdoHelper.ExecuteReader(

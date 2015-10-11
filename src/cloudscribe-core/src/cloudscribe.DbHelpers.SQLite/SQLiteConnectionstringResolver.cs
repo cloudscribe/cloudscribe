@@ -10,11 +10,11 @@ using Microsoft.Dnx.Runtime;
 using System;
 using System.IO;
 
-namespace cloudscribe.DbHelpers.SQLite
+namespace cloudscribe.DbHelpers.Sqlite
 {
-    public class SQLiteConnectionstringResolver
+    public class SqliteConnectionstringResolver
     {
-        public SQLiteConnectionstringResolver(
+        public SqliteConnectionstringResolver(
             IApplicationEnvironment appEnv,
             IOptions<SqliteConnectionOptions> configuration)
         {

@@ -8,7 +8,7 @@
 
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.DataExtensions;
-using cloudscribe.DbHelpers.SQLite;
+using cloudscribe.DbHelpers.Sqlite;
 using Microsoft.Framework.OptionsModel;
 using Microsoft.Framework.Logging;
 using System;
@@ -25,7 +25,7 @@ namespace cloudscribe.Core.Repositories.SQLite
     public sealed class UserRepository : IUserRepository
     {
         public UserRepository(
-            SQLiteConnectionstringResolver connectionStringResolver,
+            SqliteConnectionstringResolver connectionStringResolver,
             IOptions<MultiTenantOptions> multiTenantOptions,
             ILoggerFactory loggerFactory)
         {

@@ -5,11 +5,11 @@
 // Last Modified:			2015-06-23
 //
 
-using cloudscribe.DbHelpers.SQLite;
+using cloudscribe.DbHelpers.Sqlite;
 using System;
 using System.Data;
 using System.Data.Common;
-using Microsoft.Data.SQLite;
+using Microsoft.Data.Sqlite;
 using Microsoft.Framework.Logging;
 using System.Text;
 
@@ -47,15 +47,15 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append(":SiteGuid, ");
             sqlCommand.Append(":FolderName );");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[3];
+            SqliteParameter[] arParams = new SqliteParameter[3];
 
-            arParams[0] = new SQLiteParameter(":Guid", DbType.String);
+            arParams[0] = new SqliteParameter(":Guid", DbType.String);
             arParams[0].Value = guid.ToString();
 
-            arParams[1] = new SQLiteParameter(":SiteGuid", DbType.String);
+            arParams[1] = new SqliteParameter(":SiteGuid", DbType.String);
             arParams[1].Value = siteGuid.ToString();
 
-            arParams[2] = new SQLiteParameter(":FolderName", DbType.String);
+            arParams[2] = new SqliteParameter(":FolderName", DbType.String);
             arParams[2].Value = folderName;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -83,15 +83,15 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("WHERE  ");
             sqlCommand.Append("Guid = :Guid ;");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[3];
+            SqliteParameter[] arParams = new SqliteParameter[3];
 
-            arParams[0] = new SQLiteParameter(":Guid", DbType.String);
+            arParams[0] = new SqliteParameter(":Guid", DbType.String);
             arParams[0].Value = guid.ToString();
 
-            arParams[1] = new SQLiteParameter(":SiteGuid", DbType.String);
+            arParams[1] = new SqliteParameter(":SiteGuid", DbType.String);
             arParams[1].Value = siteGuid.ToString();
 
-            arParams[2] = new SQLiteParameter(":FolderName", DbType.String);
+            arParams[2] = new SqliteParameter(":FolderName", DbType.String);
             arParams[2].Value = folderName;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -111,9 +111,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("WHERE ");
             sqlCommand.Append("Guid = :Guid ;");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":Guid", DbType.String);
+            arParams[0] = new SqliteParameter(":Guid", DbType.String);
             arParams[0].Value = guid.ToString();
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -133,9 +133,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("WHERE ");
             sqlCommand.Append("Guid = :Guid ;");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":Guid", DbType.String);
+            arParams[0] = new SqliteParameter(":Guid", DbType.String);
             arParams[0].Value = guid.ToString();
 
             return AdoHelper.ExecuteReader(
@@ -153,9 +153,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("WHERE ");
             sqlCommand.Append("FolderName = :FolderName ;");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":FolderName", DbType.String);
+            arParams[0] = new SqliteParameter(":FolderName", DbType.String);
             arParams[0].Value = folderName;
 
             return AdoHelper.ExecuteReader(
@@ -172,9 +172,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("WHERE ");
             sqlCommand.Append("SiteGuid = :SiteGuid ;");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":SiteGuid", DbType.String);
+            arParams[0] = new SqliteParameter(":SiteGuid", DbType.String);
             arParams[0].Value = siteGuid.ToString();
 
             return AdoHelper.ExecuteReader(
@@ -188,9 +188,9 @@ namespace cloudscribe.Core.Repositories.SQLite
         {
             StringBuilder sqlCommand = new StringBuilder();
 
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":FolderName", DbType.String);
+            arParams[0] = new SqliteParameter(":FolderName", DbType.String);
             arParams[0].Value = folderName;
 
             Guid siteGuid = Guid.Empty;
@@ -243,9 +243,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("FROM	mp_SiteFolders ");
             sqlCommand.Append("WHERE FolderName = :FolderName ; ");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":FolderName", DbType.String);
+            arParams[0] = new SqliteParameter(":FolderName", DbType.String);
             arParams[0].Value = folderName;
 
             int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -340,12 +340,12 @@ namespace cloudscribe.Core.Repositories.SQLite
             }
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[2];
+            SqliteParameter[] arParams = new SqliteParameter[2];
 
-            arParams[0] = new SQLiteParameter(":PageSize", DbType.Int32);
+            arParams[0] = new SqliteParameter(":PageSize", DbType.Int32);
             arParams[0].Value = pageSize;
 
-            arParams[1] = new SQLiteParameter(":OffsetRows", DbType.Int32);
+            arParams[1] = new SqliteParameter(":OffsetRows", DbType.Int32);
             arParams[1].Value = pageLowerBound;
 
             return AdoHelper.ExecuteReader(

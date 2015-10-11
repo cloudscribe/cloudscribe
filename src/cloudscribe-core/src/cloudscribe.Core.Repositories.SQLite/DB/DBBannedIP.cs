@@ -5,8 +5,8 @@
 // Last Modified:			2015-06-14
 // 
 
-using cloudscribe.DbHelpers.SQLite;
-using Microsoft.Data.SQLite;
+using cloudscribe.DbHelpers.Sqlite;
+using Microsoft.Data.Sqlite;
 using Microsoft.Framework.Logging;
 using System;
 using System.Data;
@@ -59,15 +59,15 @@ namespace cloudscribe.Core.Repositories.SQLite
 
             sqlCommand.Append("SELECT LAST_INSERT_ROWID();");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[3];
+            SqliteParameter[] arParams = new SqliteParameter[3];
 
-            arParams[0] = new SQLiteParameter(":BannedIP", DbType.String);
+            arParams[0] = new SqliteParameter(":BannedIP", DbType.String);
             arParams[0].Value = bannedIP;
 
-            arParams[1] = new SQLiteParameter(":BannedUTC", DbType.DateTime);
+            arParams[1] = new SqliteParameter(":BannedUTC", DbType.DateTime);
             arParams[1].Value = bannedUtc;
 
-            arParams[2] = new SQLiteParameter(":BannedReason", DbType.String);
+            arParams[2] = new SqliteParameter(":BannedReason", DbType.String);
             arParams[2].Value = bannedReason;
 
             int newID = Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -106,18 +106,18 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("WHERE  ");
             sqlCommand.Append("RowID = :RowID ;");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[4];
+            SqliteParameter[] arParams = new SqliteParameter[4];
 
-            arParams[0] = new SQLiteParameter(":RowID", DbType.Int32);
+            arParams[0] = new SqliteParameter(":RowID", DbType.Int32);
             arParams[0].Value = rowId;
 
-            arParams[1] = new SQLiteParameter(":BannedIP", DbType.String);
+            arParams[1] = new SqliteParameter(":BannedIP", DbType.String);
             arParams[1].Value = bannedIP;
 
-            arParams[2] = new SQLiteParameter(":BannedUTC", DbType.DateTime);
+            arParams[2] = new SqliteParameter(":BannedUTC", DbType.DateTime);
             arParams[2].Value = bannedUtc;
 
-            arParams[3] = new SQLiteParameter(":BannedReason", DbType.String);
+            arParams[3] = new SqliteParameter(":BannedReason", DbType.String);
             arParams[3].Value = bannedReason;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -141,9 +141,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("WHERE ");
             sqlCommand.Append("RowID = :RowID ;");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":RowID", DbType.Int32);
+            arParams[0] = new SqliteParameter(":RowID", DbType.Int32);
             arParams[0].Value = rowId;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -167,9 +167,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("WHERE ");
             sqlCommand.Append("RowID = :RowID ;");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":RowID", DbType.Int32);
+            arParams[0] = new SqliteParameter(":RowID", DbType.Int32);
             arParams[0].Value = rowId;
 
             return AdoHelper.ExecuteReader(
@@ -191,9 +191,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("WHERE ");
             sqlCommand.Append("BannedIP = :BannedIP ;");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":BannedIP", DbType.String);
+            arParams[0] = new SqliteParameter(":BannedIP", DbType.String);
             arParams[0].Value = ipAddress;
 
             return AdoHelper.ExecuteReader(
@@ -231,9 +231,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("WHERE ");
             sqlCommand.Append("BannedIP = :BannedIP ;");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":BannedIP", DbType.String);
+            arParams[0] = new SqliteParameter(":BannedIP", DbType.String);
             arParams[0].Value = ipAddress;
 
             int foundRows = Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -296,12 +296,12 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("ORDER BY  BannedIP ");
             sqlCommand.Append("LIMIT " + pageLowerBound.ToString() + ", :PageSize  ; ");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[2];
+            SqliteParameter[] arParams = new SqliteParameter[2];
 
-            arParams[0] = new SQLiteParameter(":PageNumber", DbType.Int32);
+            arParams[0] = new SqliteParameter(":PageNumber", DbType.Int32);
             arParams[0].Value = pageNumber;
 
-            arParams[1] = new SQLiteParameter(":PageSize", DbType.Int32);
+            arParams[1] = new SqliteParameter(":PageSize", DbType.Int32);
             arParams[1].Value = pageSize;
 
             return AdoHelper.ExecuteReader(

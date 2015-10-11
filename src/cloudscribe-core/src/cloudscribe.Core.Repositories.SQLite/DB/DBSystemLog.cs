@@ -5,11 +5,11 @@
 //	Last Modified:		    2015-08-18
 // 
 
-using cloudscribe.DbHelpers.SQLite;
+using cloudscribe.DbHelpers.Sqlite;
 using System;
 using System.Data;
 using System.Data.Common;
-using Microsoft.Data.SQLite;
+using Microsoft.Data.Sqlite;
 using Microsoft.Framework.Logging;
 using System.Text;
 
@@ -81,33 +81,33 @@ namespace cloudscribe.Core.Repositories.SQLite
 
             sqlCommand.Append("SELECT LAST_INSERT_ROWID();");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[9];
+            SqliteParameter[] arParams = new SqliteParameter[9];
 
-            arParams[0] = new SQLiteParameter(":LogDate", DbType.DateTime);
+            arParams[0] = new SqliteParameter(":LogDate", DbType.DateTime);
             arParams[0].Value = logDate;
 
-            arParams[1] = new SQLiteParameter(":IpAddress", DbType.String);
+            arParams[1] = new SqliteParameter(":IpAddress", DbType.String);
             arParams[1].Value = ipAddress;
 
-            arParams[2] = new SQLiteParameter(":Culture", DbType.String);
+            arParams[2] = new SqliteParameter(":Culture", DbType.String);
             arParams[2].Value = culture;
 
-            arParams[3] = new SQLiteParameter(":Url", DbType.Object);
+            arParams[3] = new SqliteParameter(":Url", DbType.Object);
             arParams[3].Value = url;
 
-            arParams[4] = new SQLiteParameter(":ShortUrl", DbType.String);
+            arParams[4] = new SqliteParameter(":ShortUrl", DbType.String);
             arParams[4].Value = shortUrl;
 
-            arParams[5] = new SQLiteParameter(":Thread", DbType.String);
+            arParams[5] = new SqliteParameter(":Thread", DbType.String);
             arParams[5].Value = thread;
 
-            arParams[6] = new SQLiteParameter(":LogLevel", DbType.String);
+            arParams[6] = new SqliteParameter(":LogLevel", DbType.String);
             arParams[6].Value = logLevel;
 
-            arParams[7] = new SQLiteParameter(":Logger", DbType.String);
+            arParams[7] = new SqliteParameter(":Logger", DbType.String);
             arParams[7].Value = logger;
 
-            arParams[8] = new SQLiteParameter(":Message", DbType.Object);
+            arParams[8] = new SqliteParameter(":Message", DbType.Object);
             arParams[8].Value = message;
 
             int newID = Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -130,9 +130,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             //sqlCommand.Append("ID = :ID ");
             sqlCommand.Append(";");
 
-            //SQLiteParameter[] arParams = new SQLiteParameter[1];
+            //SqliteParameter[] arParams = new SqliteParameter[1];
 
-            //arParams[0] = new SQLiteParameter(":ID", DbType.Int32);
+            //arParams[0] = new SqliteParameter(":ID", DbType.Int32);
             //arParams[0].Value = id;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -157,9 +157,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("ID = :ID ");
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":ID", DbType.Int32);
+            arParams[0] = new SqliteParameter(":ID", DbType.Int32);
             arParams[0].Value = id;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -184,9 +184,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("LogDate < :CutoffDate ");
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":CutoffDate", DbType.DateTime);
+            arParams[0] = new SqliteParameter(":CutoffDate", DbType.DateTime);
             arParams[0].Value = cutoffDate;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -212,9 +212,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("LogLevel = :LogLevel ");
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":LogLevel", DbType.String);
+            arParams[0] = new SqliteParameter(":LogLevel", DbType.String);
             arParams[0].Value = logLevel;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -285,12 +285,12 @@ namespace cloudscribe.Core.Repositories.SQLite
             }
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[2];
+            SqliteParameter[] arParams = new SqliteParameter[2];
 
-            arParams[0] = new SQLiteParameter(":PageSize", DbType.Int32);
+            arParams[0] = new SqliteParameter(":PageSize", DbType.Int32);
             arParams[0].Value = pageSize;
 
-            arParams[1] = new SQLiteParameter(":OffsetRows", DbType.Int32);
+            arParams[1] = new SqliteParameter(":OffsetRows", DbType.Int32);
             arParams[1].Value = pageLowerBound;
 
             return AdoHelper.ExecuteReader(
@@ -343,12 +343,12 @@ namespace cloudscribe.Core.Repositories.SQLite
             }
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[2];
+            SqliteParameter[] arParams = new SqliteParameter[2];
 
-            arParams[0] = new SQLiteParameter(":PageSize", DbType.Int32);
+            arParams[0] = new SqliteParameter(":PageSize", DbType.Int32);
             arParams[0].Value = pageSize;
 
-            arParams[1] = new SQLiteParameter(":OffsetRows", DbType.Int32);
+            arParams[1] = new SqliteParameter(":OffsetRows", DbType.Int32);
             arParams[1].Value = pageLowerBound;
 
             return AdoHelper.ExecuteReader(

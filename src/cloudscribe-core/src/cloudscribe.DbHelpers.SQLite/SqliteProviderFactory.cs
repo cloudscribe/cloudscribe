@@ -1,7 +1,7 @@
-﻿using Microsoft.Data.SQLite;
+﻿using Microsoft.Data.Sqlite;
 using System.Data.Common;
 
-namespace cloudscribe.DbHelpers.SQLite
+namespace cloudscribe.DbHelpers.Sqlite
 {
     public class SqliteProviderFactory 
     {
@@ -15,9 +15,9 @@ namespace cloudscribe.DbHelpers.SQLite
         //    get { return false; }
         //}
 
-        public SQLiteCommand CreateCommand()
+        public SqliteCommand CreateCommand()
         {
-            return new SQLiteCommand();
+            return new SqliteCommand();
         }
 
         //public  DbCommandBuilder CreateCommandBuilder()
@@ -25,14 +25,14 @@ namespace cloudscribe.DbHelpers.SQLite
         //    return null;
         //}
 
-        public SQLiteConnection CreateConnection()
+        public SqliteConnection CreateConnection()
         {
-            return new SQLiteConnection();
+            return new SqliteConnection();
         }
 
         //public  DbConnectionStringBuilder CreateConnectionStringBuilder()
         //{
-        //    return new SQLiteConnectionStringBuilder();
+        //    return new SqliteConnectionStringBuilder();
         //}
 
         //public  DbDataAdapter CreateDataAdapter()
@@ -45,9 +45,9 @@ namespace cloudscribe.DbHelpers.SQLite
         //    return null;
         //}
 
-        public SQLiteParameter CreateParameter()
+        public SqliteParameter CreateParameter()
         {
-            return new SQLiteParameter();
+            return new SqliteParameter();
         }
     }
 }

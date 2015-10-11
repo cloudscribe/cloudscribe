@@ -6,7 +6,7 @@
 // 
 
 
-namespace cloudscribe.DbHelpers.SQLite
+namespace cloudscribe.DbHelpers.Sqlite
 {
     public class SqliteConnectionOptions
     {

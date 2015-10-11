@@ -5,8 +5,8 @@
 // Last Modified:			2015-09-03
 // 
 
-using cloudscribe.DbHelpers.SQLite;
-using Microsoft.Data.SQLite;
+using cloudscribe.DbHelpers.Sqlite;
+using Microsoft.Data.Sqlite;
 using Microsoft.Framework.Logging;
 using System;
 using System.Data;
@@ -59,21 +59,21 @@ namespace cloudscribe.Core.Repositories.SQLite
 
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[5];
+            SqliteParameter[] arParams = new SqliteParameter[5];
 
-            arParams[0] = new SQLiteParameter(":LoginProvider", DbType.String);
+            arParams[0] = new SqliteParameter(":LoginProvider", DbType.String);
             arParams[0].Value = loginProvider;
 
-            arParams[1] = new SQLiteParameter(":ProviderKey", DbType.String);
+            arParams[1] = new SqliteParameter(":ProviderKey", DbType.String);
             arParams[1].Value = providerKey;
 
-            arParams[2] = new SQLiteParameter(":UserId", DbType.String);
+            arParams[2] = new SqliteParameter(":UserId", DbType.String);
             arParams[2].Value = userId;
 
-            arParams[3] = new SQLiteParameter(":SiteId", DbType.Int32);
+            arParams[3] = new SqliteParameter(":SiteId", DbType.Int32);
             arParams[3].Value = siteId;
 
-            arParams[4] = new SQLiteParameter(":ProviderDisplayName", DbType.String);
+            arParams[4] = new SqliteParameter(":ProviderDisplayName", DbType.String);
             arParams[4].Value = providerDisplayName;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -102,18 +102,18 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("UserId = :UserId ");
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[4];
+            SqliteParameter[] arParams = new SqliteParameter[4];
 
-            arParams[0] = new SQLiteParameter(":LoginProvider", DbType.String);
+            arParams[0] = new SqliteParameter(":LoginProvider", DbType.String);
             arParams[0].Value = loginProvider;
 
-            arParams[1] = new SQLiteParameter(":ProviderKey", DbType.String);
+            arParams[1] = new SqliteParameter(":ProviderKey", DbType.String);
             arParams[1].Value = providerKey;
 
-            arParams[2] = new SQLiteParameter(":UserId", DbType.String);
+            arParams[2] = new SqliteParameter(":UserId", DbType.String);
             arParams[2].Value = userId;
 
-            arParams[3] = new SQLiteParameter(":SiteId", DbType.Int32);
+            arParams[3] = new SqliteParameter(":SiteId", DbType.Int32);
             arParams[3].Value = siteId;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -135,12 +135,12 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("UserId = :UserId ");
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[2];
+            SqliteParameter[] arParams = new SqliteParameter[2];
 
-            arParams[0] = new SQLiteParameter(":UserId", DbType.String);
+            arParams[0] = new SqliteParameter(":UserId", DbType.String);
             arParams[0].Value = userId;
 
-            arParams[1] = new SQLiteParameter(":SiteId", DbType.Int32);
+            arParams[1] = new SqliteParameter(":SiteId", DbType.Int32);
             arParams[1].Value = siteId;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -161,9 +161,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("SiteId = :SiteId ");
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[3];
+            SqliteParameter[] arParams = new SqliteParameter[3];
 
-            arParams[0] = new SQLiteParameter(":SiteId", DbType.Int32);
+            arParams[0] = new SqliteParameter(":SiteId", DbType.Int32);
             arParams[0].Value = siteId;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -191,15 +191,15 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("ProviderKey = :ProviderKey ");
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[3];
+            SqliteParameter[] arParams = new SqliteParameter[3];
 
-            arParams[0] = new SQLiteParameter(":LoginProvider", DbType.String);
+            arParams[0] = new SqliteParameter(":LoginProvider", DbType.String);
             arParams[0].Value = loginProvider;
 
-            arParams[1] = new SQLiteParameter(":ProviderKey", DbType.String);
+            arParams[1] = new SqliteParameter(":ProviderKey", DbType.String);
             arParams[1].Value = providerKey;
 
-            arParams[2] = new SQLiteParameter(":SiteId", DbType.Int32);
+            arParams[2] = new SqliteParameter(":SiteId", DbType.Int32);
             arParams[2].Value = siteId;
 
             return AdoHelper.ExecuteReader(
@@ -222,12 +222,12 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("UserId = :UserId ");
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[2];
+            SqliteParameter[] arParams = new SqliteParameter[2];
 
-            arParams[0] = new SQLiteParameter(":UserId", DbType.String);
+            arParams[0] = new SqliteParameter(":UserId", DbType.String);
             arParams[0].Value = userId;
 
-            arParams[1] = new SQLiteParameter(":SiteId", DbType.Int32);
+            arParams[1] = new SqliteParameter(":SiteId", DbType.Int32);
             arParams[1].Value = siteId;
 
             return AdoHelper.ExecuteReader(

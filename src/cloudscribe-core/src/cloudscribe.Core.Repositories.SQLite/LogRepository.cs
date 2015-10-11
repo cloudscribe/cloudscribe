@@ -7,7 +7,7 @@
 
 using cloudscribe.Core.Models.DataExtensions;
 using cloudscribe.Core.Models.Logging;
-using cloudscribe.DbHelpers.SQLite;
+using cloudscribe.DbHelpers.Sqlite;
 using Microsoft.Framework.Logging;
 using System;
 using System.Collections.Generic;
@@ -23,7 +23,7 @@ namespace cloudscribe.Core.Repositories.SQLite
     public class LogRepository : ILogRepository
     {
         public LogRepository(
-            SQLiteConnectionstringResolver connectionStringResolver,
+            SqliteConnectionstringResolver connectionStringResolver,
             ILoggerFactory loggerFactory)
         {
             if (connectionStringResolver == null) { throw new ArgumentNullException(nameof(connectionStringResolver)); }

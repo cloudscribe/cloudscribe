@@ -5,11 +5,11 @@
 // Last Modified:			2015-06-23
 // 
 
-using cloudscribe.DbHelpers.SQLite;
+using cloudscribe.DbHelpers.Sqlite;
 using System;
 using System.Data;
 using System.Data.Common;
-using Microsoft.Data.SQLite;
+using Microsoft.Data.Sqlite;
 using Microsoft.Framework.Logging;
 using System.Text;
 
@@ -352,144 +352,144 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append(");");
             sqlCommand.Append("SELECT LAST_INSERT_ROWID();");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[46];
+            SqliteParameter[] arParams = new SqliteParameter[46];
 
-            arParams[0] = new SQLiteParameter(":SiteName", DbType.String);
+            arParams[0] = new SqliteParameter(":SiteName", DbType.String);
             arParams[0].Value = siteName;
 
-            arParams[1] = new SQLiteParameter(":IsServerAdminSite", DbType.Int32);
+            arParams[1] = new SqliteParameter(":IsServerAdminSite", DbType.Int32);
             arParams[1].Value = adminSite;
 
-            arParams[2] = new SQLiteParameter(":Skin", DbType.String);
+            arParams[2] = new SqliteParameter(":Skin", DbType.String);
             arParams[2].Value = skin;
 
-            arParams[3] = new SQLiteParameter(":Logo", DbType.String);
+            arParams[3] = new SqliteParameter(":Logo", DbType.String);
             arParams[3].Value = logo;
 
-            arParams[4] = new SQLiteParameter(":Icon", DbType.String);
+            arParams[4] = new SqliteParameter(":Icon", DbType.String);
             arParams[4].Value = icon;
 
-            arParams[5] = new SQLiteParameter(":AllowNewRegistration", DbType.Int32);
+            arParams[5] = new SqliteParameter(":AllowNewRegistration", DbType.Int32);
             arParams[5].Value = allowNew;
 
-            arParams[6] = new SQLiteParameter(":AllowUserSkins", DbType.Int32);
+            arParams[6] = new SqliteParameter(":AllowUserSkins", DbType.Int32);
             arParams[6].Value = allowSkins;
 
-            arParams[7] = new SQLiteParameter(":UseSecureRegistration", DbType.Int32);
+            arParams[7] = new SqliteParameter(":UseSecureRegistration", DbType.Int32);
             arParams[7].Value = secure;
 
-            arParams[8] = new SQLiteParameter(":EnableMyPageFeature", DbType.Int32);
+            arParams[8] = new SqliteParameter(":EnableMyPageFeature", DbType.Int32);
             arParams[8].Value = enableMyPage;
 
-            arParams[9] = new SQLiteParameter(":UseSSLOnAllPages", DbType.Int32);
+            arParams[9] = new SqliteParameter(":UseSSLOnAllPages", DbType.Int32);
             arParams[9].Value = ssl;
 
-            arParams[10] = new SQLiteParameter(":DefaultPageKeywords", DbType.String);
+            arParams[10] = new SqliteParameter(":DefaultPageKeywords", DbType.String);
             arParams[10].Value = defaultPageKeywords;
 
-            arParams[11] = new SQLiteParameter(":DefaultPageDescription", DbType.String);
+            arParams[11] = new SqliteParameter(":DefaultPageDescription", DbType.String);
             arParams[11].Value = defaultPageDescription;
 
-            arParams[12] = new SQLiteParameter(":DefaultPageEncoding", DbType.String);
+            arParams[12] = new SqliteParameter(":DefaultPageEncoding", DbType.String);
             arParams[12].Value = defaultPageEncoding;
 
-            arParams[13] = new SQLiteParameter(":DefaultAdditionalMetaTags", DbType.String);
+            arParams[13] = new SqliteParameter(":DefaultAdditionalMetaTags", DbType.String);
             arParams[13].Value = defaultAdditionalMetaTags;
 
-            arParams[14] = new SQLiteParameter(":AllowPageSkins", DbType.Int32);
+            arParams[14] = new SqliteParameter(":AllowPageSkins", DbType.Int32);
             arParams[14].Value = pageSkins;
 
-            arParams[15] = new SQLiteParameter(":AllowHideMenuOnPages", DbType.Int32);
+            arParams[15] = new SqliteParameter(":AllowHideMenuOnPages", DbType.Int32);
             arParams[15].Value = allowHide;
 
-            arParams[16] = new SQLiteParameter(":UseLdapAuth", DbType.Int32);
+            arParams[16] = new SqliteParameter(":UseLdapAuth", DbType.Int32);
             arParams[16].Value = uldapp;
 
-            arParams[17] = new SQLiteParameter(":AutoCreateLDAPUserOnFirstLogin", DbType.Int32);
+            arParams[17] = new SqliteParameter(":AutoCreateLDAPUserOnFirstLogin", DbType.Int32);
             arParams[17].Value = autoldapp;
 
-            arParams[18] = new SQLiteParameter(":LdapServer", DbType.String);
+            arParams[18] = new SqliteParameter(":LdapServer", DbType.String);
             arParams[18].Value = ldapServer;
 
-            arParams[19] = new SQLiteParameter(":LdapPort", DbType.Int32);
+            arParams[19] = new SqliteParameter(":LdapPort", DbType.Int32);
             arParams[19].Value = ldapPort;
 
-            arParams[20] = new SQLiteParameter(":LdapRootDN", DbType.String);
+            arParams[20] = new SqliteParameter(":LdapRootDN", DbType.String);
             arParams[20].Value = ldapRootDN;
 
-            arParams[21] = new SQLiteParameter(":LdapUserDNKey", DbType.String);
+            arParams[21] = new SqliteParameter(":LdapUserDNKey", DbType.String);
             arParams[21].Value = ldapUserDNKey;
 
-            arParams[22] = new SQLiteParameter(":AllowUserFullNameChange", DbType.Int32);
+            arParams[22] = new SqliteParameter(":AllowUserFullNameChange", DbType.Int32);
             arParams[22].Value = allowNameChange;
 
-            arParams[23] = new SQLiteParameter(":UseEmailForLogin", DbType.Int32);
+            arParams[23] = new SqliteParameter(":UseEmailForLogin", DbType.Int32);
             arParams[23].Value = emailForLogin;
 
-            arParams[24] = new SQLiteParameter(":ReallyDeleteUsers", DbType.Int32);
+            arParams[24] = new SqliteParameter(":ReallyDeleteUsers", DbType.Int32);
             arParams[24].Value = deleteUsers;
 
-            arParams[25] = new SQLiteParameter(":EditorSkin", DbType.String);
+            arParams[25] = new SqliteParameter(":EditorSkin", DbType.String);
             arParams[25].Value = editorSkin;
 
-            arParams[26] = new SQLiteParameter(":DefaultFriendlyUrlPattern", DbType.String);
+            arParams[26] = new SqliteParameter(":DefaultFriendlyUrlPattern", DbType.String);
             arParams[26].Value = defaultFriendlyUrlPattern;
 
-            arParams[27] = new SQLiteParameter(":SiteGuid", DbType.String);
+            arParams[27] = new SqliteParameter(":SiteGuid", DbType.String);
             arParams[27].Value = siteGuid.ToString();
 
-            arParams[28] = new SQLiteParameter(":LdapDomain", DbType.String);
+            arParams[28] = new SqliteParameter(":LdapDomain", DbType.String);
             arParams[28].Value = ldapDomain;
 
-            arParams[29] = new SQLiteParameter(":EditorProvider", DbType.String);
+            arParams[29] = new SqliteParameter(":EditorProvider", DbType.String);
             arParams[29].Value = editorProvider;
 
-            arParams[30] = new SQLiteParameter(":DatePickerProvider", DbType.String);
+            arParams[30] = new SqliteParameter(":DatePickerProvider", DbType.String);
             arParams[30].Value = datePickerProvider;
 
-            arParams[31] = new SQLiteParameter(":CaptchaProvider", DbType.String);
+            arParams[31] = new SqliteParameter(":CaptchaProvider", DbType.String);
             arParams[31].Value = captchaProvider;
 
-            arParams[32] = new SQLiteParameter(":RecaptchaPrivateKey", DbType.String);
+            arParams[32] = new SqliteParameter(":RecaptchaPrivateKey", DbType.String);
             arParams[32].Value = recaptchaPrivateKey;
 
-            arParams[33] = new SQLiteParameter(":RecaptchaPublicKey", DbType.String);
+            arParams[33] = new SqliteParameter(":RecaptchaPublicKey", DbType.String);
             arParams[33].Value = recaptchaPublicKey;
 
-            arParams[34] = new SQLiteParameter(":WordpressAPIKey", DbType.String);
+            arParams[34] = new SqliteParameter(":WordpressAPIKey", DbType.String);
             arParams[34].Value = wordpressApiKey;
 
-            arParams[35] = new SQLiteParameter(":WindowsLiveAppID", DbType.String);
+            arParams[35] = new SqliteParameter(":WindowsLiveAppID", DbType.String);
             arParams[35].Value = windowsLiveAppId;
 
-            arParams[36] = new SQLiteParameter(":WindowsLiveKey", DbType.String);
+            arParams[36] = new SqliteParameter(":WindowsLiveKey", DbType.String);
             arParams[36].Value = windowsLiveKey;
 
-            arParams[37] = new SQLiteParameter(":AllowOpenIDAuth", DbType.Int32);
+            arParams[37] = new SqliteParameter(":AllowOpenIDAuth", DbType.Int32);
             arParams[37].Value = oidauth;
 
-            arParams[38] = new SQLiteParameter(":AllowWindowsLiveAuth", DbType.Int32);
+            arParams[38] = new SqliteParameter(":AllowWindowsLiveAuth", DbType.Int32);
             arParams[38].Value = winliveauth;
 
-            arParams[39] = new SQLiteParameter(":GmapApiKey", DbType.String);
+            arParams[39] = new SqliteParameter(":GmapApiKey", DbType.String);
             arParams[39].Value = gmapApiKey;
 
-            arParams[40] = new SQLiteParameter(":ApiKeyExtra1", DbType.String);
+            arParams[40] = new SqliteParameter(":ApiKeyExtra1", DbType.String);
             arParams[40].Value = apiKeyExtra1;
 
-            arParams[41] = new SQLiteParameter(":ApiKeyExtra2", DbType.String);
+            arParams[41] = new SqliteParameter(":ApiKeyExtra2", DbType.String);
             arParams[41].Value = apiKeyExtra2;
 
-            arParams[42] = new SQLiteParameter(":ApiKeyExtra3", DbType.String);
+            arParams[42] = new SqliteParameter(":ApiKeyExtra3", DbType.String);
             arParams[42].Value = apiKeyExtra3;
 
-            arParams[43] = new SQLiteParameter(":ApiKeyExtra4", DbType.String);
+            arParams[43] = new SqliteParameter(":ApiKeyExtra4", DbType.String);
             arParams[43].Value = apiKeyExtra4;
 
-            arParams[44] = new SQLiteParameter(":ApiKeyExtra5", DbType.String);
+            arParams[44] = new SqliteParameter(":ApiKeyExtra5", DbType.String);
             arParams[44].Value = apiKeyExtra5;
 
-            arParams[45] = new SQLiteParameter(":DisableDbAuth", DbType.Int32);
+            arParams[45] = new SqliteParameter(":DisableDbAuth", DbType.Int32);
             arParams[45].Value = intDisableDbAuth;
 
             int newID = Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -762,144 +762,144 @@ namespace cloudscribe.Core.Repositories.SQLite
 
             sqlCommand.Append(" WHERE SiteID = :SiteID ;");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[46];
+            SqliteParameter[] arParams = new SqliteParameter[46];
 
-            arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
+            arParams[0] = new SqliteParameter(":SiteID", DbType.Int32);
             arParams[0].Value = siteId;
 
-            arParams[1] = new SQLiteParameter(":SiteName", DbType.String);
+            arParams[1] = new SqliteParameter(":SiteName", DbType.String);
             arParams[1].Value = siteName;
 
-            arParams[2] = new SQLiteParameter(":IsServerAdminSite", DbType.Int32);
+            arParams[2] = new SqliteParameter(":IsServerAdminSite", DbType.Int32);
             arParams[2].Value = adminSite;
 
-            arParams[3] = new SQLiteParameter(":Skin", DbType.String);
+            arParams[3] = new SqliteParameter(":Skin", DbType.String);
             arParams[3].Value = skin;
 
-            arParams[4] = new SQLiteParameter(":Logo", DbType.String);
+            arParams[4] = new SqliteParameter(":Logo", DbType.String);
             arParams[4].Value = logo;
 
-            arParams[5] = new SQLiteParameter(":Icon", DbType.String);
+            arParams[5] = new SqliteParameter(":Icon", DbType.String);
             arParams[5].Value = icon;
 
-            arParams[6] = new SQLiteParameter(":AllowNewRegistration", DbType.Int32);
+            arParams[6] = new SqliteParameter(":AllowNewRegistration", DbType.Int32);
             arParams[6].Value = allowNew;
 
-            arParams[7] = new SQLiteParameter(":AllowUserSkins", DbType.Int32);
+            arParams[7] = new SqliteParameter(":AllowUserSkins", DbType.Int32);
             arParams[7].Value = allowSkins;
 
-            arParams[8] = new SQLiteParameter(":UseSecureRegistration", DbType.Int32);
+            arParams[8] = new SqliteParameter(":UseSecureRegistration", DbType.Int32);
             arParams[8].Value = secure;
 
-            arParams[9] = new SQLiteParameter(":EnableMyPageFeature", DbType.Int32);
+            arParams[9] = new SqliteParameter(":EnableMyPageFeature", DbType.Int32);
             arParams[9].Value = enableMy;
 
-            arParams[10] = new SQLiteParameter(":UseSSLOnAllPages", DbType.Int32);
+            arParams[10] = new SqliteParameter(":UseSSLOnAllPages", DbType.Int32);
             arParams[10].Value = ssl;
 
-            arParams[11] = new SQLiteParameter(":DefaultPageKeywords", DbType.String);
+            arParams[11] = new SqliteParameter(":DefaultPageKeywords", DbType.String);
             arParams[11].Value = defaultPageKeywords;
 
-            arParams[12] = new SQLiteParameter(":DefaultPageDescription", DbType.String);
+            arParams[12] = new SqliteParameter(":DefaultPageDescription", DbType.String);
             arParams[12].Value = defaultPageDescription;
 
-            arParams[13] = new SQLiteParameter(":DefaultPageEncoding", DbType.String);
+            arParams[13] = new SqliteParameter(":DefaultPageEncoding", DbType.String);
             arParams[13].Value = defaultPageEncoding;
 
-            arParams[14] = new SQLiteParameter(":DefaultAdditionalMetaTags", DbType.String);
+            arParams[14] = new SqliteParameter(":DefaultAdditionalMetaTags", DbType.String);
             arParams[14].Value = defaultAdditionalMetaTags;
 
-            arParams[15] = new SQLiteParameter(":AllowPageSkins", DbType.Int32);
+            arParams[15] = new SqliteParameter(":AllowPageSkins", DbType.Int32);
             arParams[15].Value = pageSkins;
 
-            arParams[16] = new SQLiteParameter(":AllowHideMenuOnPages", DbType.Int32);
+            arParams[16] = new SqliteParameter(":AllowHideMenuOnPages", DbType.Int32);
             arParams[16].Value = allowHide;
 
-            arParams[17] = new SQLiteParameter(":UseLdapAuth", DbType.Int32);
+            arParams[17] = new SqliteParameter(":UseLdapAuth", DbType.Int32);
             arParams[17].Value = uldapp;
 
-            arParams[18] = new SQLiteParameter(":AutoCreateLDAPUserOnFirstLogin", DbType.Int32);
+            arParams[18] = new SqliteParameter(":AutoCreateLDAPUserOnFirstLogin", DbType.Int32);
             arParams[18].Value = autoldapp;
 
-            arParams[19] = new SQLiteParameter(":LdapServer", DbType.String);
+            arParams[19] = new SqliteParameter(":LdapServer", DbType.String);
             arParams[19].Value = ldapServer;
 
-            arParams[20] = new SQLiteParameter(":LdapPort", DbType.Int32);
+            arParams[20] = new SqliteParameter(":LdapPort", DbType.Int32);
             arParams[20].Value = ldapPort;
 
-            arParams[21] = new SQLiteParameter(":LdapRootDN", DbType.String);
+            arParams[21] = new SqliteParameter(":LdapRootDN", DbType.String);
             arParams[21].Value = ldapRootDN;
 
-            arParams[22] = new SQLiteParameter(":LdapUserDNKey", DbType.String);
+            arParams[22] = new SqliteParameter(":LdapUserDNKey", DbType.String);
             arParams[22].Value = ldapUserDNKey;
 
-            arParams[23] = new SQLiteParameter(":AllowUserFullNameChange", DbType.Int32);
+            arParams[23] = new SqliteParameter(":AllowUserFullNameChange", DbType.Int32);
             arParams[23].Value = allowNameChange;
 
-            arParams[24] = new SQLiteParameter(":UseEmailForLogin", DbType.Int32);
+            arParams[24] = new SqliteParameter(":UseEmailForLogin", DbType.Int32);
             arParams[24].Value = emailForLogin;
 
-            arParams[25] = new SQLiteParameter(":ReallyDeleteUsers", DbType.Int32);
+            arParams[25] = new SqliteParameter(":ReallyDeleteUsers", DbType.Int32);
             arParams[25].Value = deleteUsers;
 
-            arParams[26] = new SQLiteParameter(":EditorSkin", DbType.String);
+            arParams[26] = new SqliteParameter(":EditorSkin", DbType.String);
             arParams[26].Value = editorSkin;
 
-            arParams[27] = new SQLiteParameter(":DefaultFriendlyUrlPattern", DbType.String);
+            arParams[27] = new SqliteParameter(":DefaultFriendlyUrlPattern", DbType.String);
             arParams[27].Value = defaultFriendlyUrlPattern;
 
-            arParams[28] = new SQLiteParameter(":LdapDomain", DbType.String);
+            arParams[28] = new SqliteParameter(":LdapDomain", DbType.String);
             arParams[28].Value = ldapDomain;
 
-            arParams[29] = new SQLiteParameter(":EditorProvider", DbType.String);
+            arParams[29] = new SqliteParameter(":EditorProvider", DbType.String);
             arParams[29].Value = editorProvider;
 
-            arParams[30] = new SQLiteParameter(":DatePickerProvider", DbType.String);
+            arParams[30] = new SqliteParameter(":DatePickerProvider", DbType.String);
             arParams[30].Value = datePickerProvider;
 
-            arParams[31] = new SQLiteParameter(":CaptchaProvider", DbType.String);
+            arParams[31] = new SqliteParameter(":CaptchaProvider", DbType.String);
             arParams[31].Value = captchaProvider;
 
-            arParams[32] = new SQLiteParameter(":RecaptchaPrivateKey", DbType.String);
+            arParams[32] = new SqliteParameter(":RecaptchaPrivateKey", DbType.String);
             arParams[32].Value = recaptchaPrivateKey;
 
-            arParams[33] = new SQLiteParameter(":RecaptchaPublicKey", DbType.String);
+            arParams[33] = new SqliteParameter(":RecaptchaPublicKey", DbType.String);
             arParams[33].Value = recaptchaPublicKey;
 
-            arParams[34] = new SQLiteParameter(":WordpressAPIKey", DbType.String);
+            arParams[34] = new SqliteParameter(":WordpressAPIKey", DbType.String);
             arParams[34].Value = wordpressApiKey;
 
-            arParams[35] = new SQLiteParameter(":WindowsLiveAppID", DbType.String);
+            arParams[35] = new SqliteParameter(":WindowsLiveAppID", DbType.String);
             arParams[35].Value = windowsLiveAppId;
 
-            arParams[36] = new SQLiteParameter(":WindowsLiveKey", DbType.String);
+            arParams[36] = new SqliteParameter(":WindowsLiveKey", DbType.String);
             arParams[36].Value = windowsLiveKey;
 
-            arParams[37] = new SQLiteParameter(":AllowOpenIDAuth", DbType.Int32);
+            arParams[37] = new SqliteParameter(":AllowOpenIDAuth", DbType.Int32);
             arParams[37].Value = oidauth;
 
-            arParams[38] = new SQLiteParameter(":AllowWindowsLiveAuth", DbType.Int32);
+            arParams[38] = new SqliteParameter(":AllowWindowsLiveAuth", DbType.Int32);
             arParams[38].Value = winliveauth;
 
-            arParams[39] = new SQLiteParameter(":GmapApiKey", DbType.String);
+            arParams[39] = new SqliteParameter(":GmapApiKey", DbType.String);
             arParams[39].Value = gmapApiKey;
 
-            arParams[40] = new SQLiteParameter(":ApiKeyExtra1", DbType.String);
+            arParams[40] = new SqliteParameter(":ApiKeyExtra1", DbType.String);
             arParams[40].Value = apiKeyExtra1;
 
-            arParams[41] = new SQLiteParameter(":ApiKeyExtra2", DbType.String);
+            arParams[41] = new SqliteParameter(":ApiKeyExtra2", DbType.String);
             arParams[41].Value = apiKeyExtra2;
 
-            arParams[42] = new SQLiteParameter(":ApiKeyExtra3", DbType.String);
+            arParams[42] = new SqliteParameter(":ApiKeyExtra3", DbType.String);
             arParams[42].Value = apiKeyExtra3;
 
-            arParams[43] = new SQLiteParameter(":ApiKeyExtra4", DbType.String);
+            arParams[43] = new SqliteParameter(":ApiKeyExtra4", DbType.String);
             arParams[43].Value = apiKeyExtra4;
 
-            arParams[44] = new SQLiteParameter(":ApiKeyExtra5", DbType.String);
+            arParams[44] = new SqliteParameter(":ApiKeyExtra5", DbType.String);
             arParams[44].Value = apiKeyExtra5;
 
-            arParams[45] = new SQLiteParameter(":DisableDbAuth", DbType.Int32);
+            arParams[45] = new SqliteParameter(":DisableDbAuth", DbType.Int32);
             arParams[45].Value = intDisableDbAuth;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -1078,78 +1078,78 @@ namespace cloudscribe.Core.Repositories.SQLite
 
             sqlCommand.Append(" WHERE SiteID <> :SiteID ;");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[24];
+            SqliteParameter[] arParams = new SqliteParameter[24];
 
-            arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
+            arParams[0] = new SqliteParameter(":SiteID", DbType.Int32);
             arParams[0].Value = siteId;
 
-            arParams[1] = new SQLiteParameter(":AllowNewRegistration", DbType.Int32);
+            arParams[1] = new SqliteParameter(":AllowNewRegistration", DbType.Int32);
             arParams[1].Value = allowNew;
 
-            arParams[2] = new SQLiteParameter(":UseSecureRegistration", DbType.Int32);
+            arParams[2] = new SqliteParameter(":UseSecureRegistration", DbType.Int32);
             arParams[2].Value = secure;
 
-            arParams[3] = new SQLiteParameter(":UseLdapAuth", DbType.Int32);
+            arParams[3] = new SqliteParameter(":UseLdapAuth", DbType.Int32);
             arParams[3].Value = uldapp;
 
-            arParams[4] = new SQLiteParameter(":AutoCreateLDAPUserOnFirstLogin", DbType.Int32);
+            arParams[4] = new SqliteParameter(":AutoCreateLDAPUserOnFirstLogin", DbType.Int32);
             arParams[4].Value = autoldapp;
 
-            arParams[5] = new SQLiteParameter(":LdapServer", DbType.String);
+            arParams[5] = new SqliteParameter(":LdapServer", DbType.String);
             arParams[5].Value = ldapServer;
 
-            arParams[6] = new SQLiteParameter(":LdapPort", DbType.Int32);
+            arParams[6] = new SqliteParameter(":LdapPort", DbType.Int32);
             arParams[6].Value = ldapPort;
 
-            arParams[7] = new SQLiteParameter(":LdapRootDN", DbType.String);
+            arParams[7] = new SqliteParameter(":LdapRootDN", DbType.String);
             arParams[7].Value = ldapRootDN;
 
-            arParams[8] = new SQLiteParameter(":LdapUserDNKey", DbType.String);
+            arParams[8] = new SqliteParameter(":LdapUserDNKey", DbType.String);
             arParams[8].Value = ldapUserDNKey;
 
-            arParams[9] = new SQLiteParameter(":AllowUserFullNameChange", DbType.Int32);
+            arParams[9] = new SqliteParameter(":AllowUserFullNameChange", DbType.Int32);
             arParams[9].Value = allowNameChange;
 
-            arParams[10] = new SQLiteParameter(":UseEmailForLogin", DbType.Int32);
+            arParams[10] = new SqliteParameter(":UseEmailForLogin", DbType.Int32);
             arParams[10].Value = emailForLogin;
 
-            arParams[11] = new SQLiteParameter(":LdapDomain", DbType.String);
+            arParams[11] = new SqliteParameter(":LdapDomain", DbType.String);
             arParams[11].Value = ldapDomain;
 
-            arParams[12] = new SQLiteParameter(":AllowOpenIDAuth", DbType.Int32);
+            arParams[12] = new SqliteParameter(":AllowOpenIDAuth", DbType.Int32);
             arParams[12].Value = oidauth;
 
-            arParams[13] = new SQLiteParameter(":AllowWindowsLiveAuth", DbType.Int32);
+            arParams[13] = new SqliteParameter(":AllowWindowsLiveAuth", DbType.Int32);
             arParams[13].Value = winliveauth;
 
-            arParams[14] = new SQLiteParameter(":AllowPasswordRetrieval", DbType.Int32);
+            arParams[14] = new SqliteParameter(":AllowPasswordRetrieval", DbType.Int32);
             arParams[14].Value = intAllowPasswordRetrieval;
 
-            arParams[15] = new SQLiteParameter(":AllowPasswordReset", DbType.Int32);
+            arParams[15] = new SqliteParameter(":AllowPasswordReset", DbType.Int32);
             arParams[15].Value = intAllowPasswordReset;
 
-            arParams[16] = new SQLiteParameter(":RequiresQuestionAndAnswer", DbType.Int32);
+            arParams[16] = new SqliteParameter(":RequiresQuestionAndAnswer", DbType.Int32);
             arParams[16].Value = intRequiresQuestionAndAnswer;
 
-            arParams[17] = new SQLiteParameter(":MaxInvalidPasswordAttempts", DbType.Int32);
+            arParams[17] = new SqliteParameter(":MaxInvalidPasswordAttempts", DbType.Int32);
             arParams[17].Value = maxInvalidPasswordAttempts;
 
-            arParams[18] = new SQLiteParameter(":PasswordAttemptWindowMinutes", DbType.Int32);
+            arParams[18] = new SqliteParameter(":PasswordAttemptWindowMinutes", DbType.Int32);
             arParams[18].Value = passwordAttemptWindowMinutes;
 
-            arParams[19] = new SQLiteParameter(":RequiresUniqueEmail", DbType.Int32);
+            arParams[19] = new SqliteParameter(":RequiresUniqueEmail", DbType.Int32);
             arParams[19].Value = intRequiresUniqueEmail;
 
-            arParams[20] = new SQLiteParameter(":PasswordFormat", DbType.Int32);
+            arParams[20] = new SqliteParameter(":PasswordFormat", DbType.Int32);
             arParams[20].Value = passwordFormat;
 
-            arParams[21] = new SQLiteParameter(":MinRequiredPasswordLength", DbType.Int32);
+            arParams[21] = new SqliteParameter(":MinRequiredPasswordLength", DbType.Int32);
             arParams[21].Value = minRequiredPasswordLength;
 
-            arParams[22] = new SQLiteParameter(":MinReqNonAlphaChars", DbType.Int32);
+            arParams[22] = new SqliteParameter(":MinReqNonAlphaChars", DbType.Int32);
             arParams[22].Value = minReqNonAlphaChars;
 
-            arParams[23] = new SQLiteParameter(":PwdStrengthRegex", DbType.Object);
+            arParams[23] = new SqliteParameter(":PwdStrengthRegex", DbType.Object);
             arParams[23].Value = pwdStrengthRegex;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -1175,15 +1175,15 @@ namespace cloudscribe.Core.Repositories.SQLite
 
             sqlCommand.Append(" WHERE SiteID <> :SiteID ;");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[3];
+            SqliteParameter[] arParams = new SqliteParameter[3];
 
-            arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
+            arParams[0] = new SqliteParameter(":SiteID", DbType.Int32);
             arParams[0].Value = siteId;
 
-            arParams[1] = new SQLiteParameter(":WindowsLiveAppID", DbType.String);
+            arParams[1] = new SqliteParameter(":WindowsLiveAppID", DbType.String);
             arParams[1].Value = windowsLiveAppId;
 
-            arParams[2] = new SQLiteParameter(":WindowsLiveKey", DbType.String);
+            arParams[2] = new SqliteParameter(":WindowsLiveKey", DbType.String);
             arParams[2].Value = windowsLiveKey;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -1269,42 +1269,42 @@ namespace cloudscribe.Core.Repositories.SQLite
 
             sqlCommand.Append(" WHERE SiteID = :SiteID ;");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[12];
+            SqliteParameter[] arParams = new SqliteParameter[12];
 
-            arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
+            arParams[0] = new SqliteParameter(":SiteID", DbType.Int32);
             arParams[0].Value = siteId;
 
-            arParams[1] = new SQLiteParameter(":AllowPasswordRetrieval", DbType.Int32);
+            arParams[1] = new SqliteParameter(":AllowPasswordRetrieval", DbType.Int32);
             arParams[1].Value = allowRetrieval;
 
-            arParams[2] = new SQLiteParameter(":AllowPasswordReset", DbType.Int32);
+            arParams[2] = new SqliteParameter(":AllowPasswordReset", DbType.Int32);
             arParams[2].Value = allowReset;
 
-            arParams[3] = new SQLiteParameter(":RequiresQuestionAndAnswer", DbType.Int32);
+            arParams[3] = new SqliteParameter(":RequiresQuestionAndAnswer", DbType.Int32);
             arParams[3].Value = requiresQA;
 
-            arParams[4] = new SQLiteParameter(":MaxInvalidPasswordAttempts", DbType.Int32);
+            arParams[4] = new SqliteParameter(":MaxInvalidPasswordAttempts", DbType.Int32);
             arParams[4].Value = maxInvalidPasswordAttempts;
 
-            arParams[5] = new SQLiteParameter(":PasswordAttemptWindowMinutes", DbType.Int32);
+            arParams[5] = new SqliteParameter(":PasswordAttemptWindowMinutes", DbType.Int32);
             arParams[5].Value = passwordAttemptWindowMinutes;
 
-            arParams[6] = new SQLiteParameter(":RequiresUniqueEmail", DbType.Int32);
+            arParams[6] = new SqliteParameter(":RequiresUniqueEmail", DbType.Int32);
             arParams[6].Value = requiresEmail;
 
-            arParams[7] = new SQLiteParameter(":PasswordFormat", DbType.Int32);
+            arParams[7] = new SqliteParameter(":PasswordFormat", DbType.Int32);
             arParams[7].Value = passwordFormat;
 
-            arParams[8] = new SQLiteParameter(":MinRequiredPasswordLength", DbType.Int32);
+            arParams[8] = new SqliteParameter(":MinRequiredPasswordLength", DbType.Int32);
             arParams[8].Value = minRequiredPasswordLength;
 
-            arParams[9] = new SQLiteParameter(":PasswordStrengthRegularExpression", DbType.Object);
+            arParams[9] = new SqliteParameter(":PasswordStrengthRegularExpression", DbType.Object);
             arParams[9].Value = passwordStrengthRegularExpression;
 
-            arParams[10] = new SQLiteParameter(":DefaultEmailFromAddress", DbType.String);
+            arParams[10] = new SqliteParameter(":DefaultEmailFromAddress", DbType.String);
             arParams[10].Value = defaultEmailFromAddress;
 
-            arParams[11] = new SQLiteParameter(":MinRequiredNonAlphanumericCharacters", DbType.Int32);
+            arParams[11] = new SqliteParameter(":MinRequiredNonAlphanumericCharacters", DbType.Int32);
             arParams[11].Value = minRequiredNonAlphanumericCharacters;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -1341,9 +1341,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("DELETE FROM mp_Sites ");
             sqlCommand.Append("WHERE HostID = :SiteID  ; ");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
+            arParams[0] = new SqliteParameter(":SiteID", DbType.Int32);
             arParams[0].Value = siteId;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -1367,12 +1367,12 @@ namespace cloudscribe.Core.Repositories.SQLite
         //    sqlCommand.Append("ModuleDefID = :ModuleDefID ");
         //    sqlCommand.Append(" ;");
 
-        //    SQLiteParameter[] arParams = new SQLiteParameter[2];
+        //    SqliteParameter[] arParams = new SqliteParameter[2];
 
-        //    arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
+        //    arParams[0] = new SqliteParameter(":SiteID", DbType.Int32);
         //    arParams[0].Value = siteId;
 
-        //    arParams[1] = new SQLiteParameter(":ModuleDefID", DbType.Int32);
+        //    arParams[1] = new SqliteParameter(":ModuleDefID", DbType.Int32);
         //    arParams[1].Value = moduleDefId;
 
         //    int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -1394,12 +1394,12 @@ namespace cloudscribe.Core.Repositories.SQLite
         //    sqlCommand.Append("FeatureGuid = :FeatureGuid ");
         //    sqlCommand.Append(" ;");
 
-        //    SQLiteParameter[] arParams = new SQLiteParameter[2];
+        //    SqliteParameter[] arParams = new SqliteParameter[2];
 
-        //    arParams[0] = new SQLiteParameter(":SiteGuid", DbType.String, 36);
+        //    arParams[0] = new SqliteParameter(":SiteGuid", DbType.String, 36);
         //    arParams[0].Value = siteGuid.ToString();
 
-        //    arParams[1] = new SQLiteParameter(":FeatureGuid", DbType.String, 36);
+        //    arParams[1] = new SqliteParameter(":FeatureGuid", DbType.String, 36);
         //    arParams[1].Value = featureGuid.ToString();
 
         //    int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -1434,12 +1434,12 @@ namespace cloudscribe.Core.Repositories.SQLite
         //    sqlCommand.Append("'All Users' ");
         //    sqlCommand.Append(") ;");
 
-        //    SQLiteParameter[] arParams = new SQLiteParameter[2];
+        //    SqliteParameter[] arParams = new SqliteParameter[2];
 
-        //    arParams[0] = new SQLiteParameter(":SiteGuid", DbType.String, 36);
+        //    arParams[0] = new SqliteParameter(":SiteGuid", DbType.String, 36);
         //    arParams[0].Value = siteGuid.ToString();
 
-        //    arParams[1] = new SQLiteParameter(":FeatureGuid", DbType.String, 36);
+        //    arParams[1] = new SqliteParameter(":FeatureGuid", DbType.String, 36);
         //    arParams[1].Value = featureGuid.ToString();
 
         //    AdoHelper.ExecuteNonQuery(
@@ -1455,12 +1455,12 @@ namespace cloudscribe.Core.Repositories.SQLite
         //    sqlCommand.Append("DELETE FROM mp_SiteModuleDefinitions ");
         //    sqlCommand.Append("WHERE SiteGuid = :SiteGuid AND FeatureGuid = :FeatureGuid ; ");
 
-        //    SQLiteParameter[] arParams = new SQLiteParameter[2];
+        //    SqliteParameter[] arParams = new SqliteParameter[2];
 
-        //    arParams[0] = new SQLiteParameter(":SiteGuid", DbType.String, 36);
+        //    arParams[0] = new SqliteParameter(":SiteGuid", DbType.String, 36);
         //    arParams[0].Value = siteGuid.ToString();
 
-        //    arParams[1] = new SQLiteParameter(":FeatureGuid", DbType.String, 36);
+        //    arParams[1] = new SqliteParameter(":FeatureGuid", DbType.String, 36);
         //    arParams[1].Value = featureGuid.ToString();
 
         //    AdoHelper.ExecuteNonQuery(
@@ -1476,12 +1476,12 @@ namespace cloudscribe.Core.Repositories.SQLite
         //    sqlCommand.Append("DELETE FROM mp_SiteModuleDefinitions ");
         //    sqlCommand.Append("WHERE SiteID = :SiteID AND ModuleDefID = :ModuleDefID ; ");
 
-        //    SQLiteParameter[] arParams = new SQLiteParameter[2];
+        //    SqliteParameter[] arParams = new SqliteParameter[2];
 
-        //    arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
+        //    arParams[0] = new SqliteParameter(":SiteID", DbType.Int32);
         //    arParams[0].Value = siteId;
 
-        //    arParams[1] = new SQLiteParameter(":ModuleDefID", DbType.Int32);
+        //    arParams[1] = new SqliteParameter(":ModuleDefID", DbType.Int32);
         //    arParams[1].Value = moduleDefId;
 
         //    AdoHelper.ExecuteNonQuery(
@@ -1538,12 +1538,12 @@ namespace cloudscribe.Core.Repositories.SQLite
             }
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[2];
+            SqliteParameter[] arParams = new SqliteParameter[2];
 
-            arParams[0] = new SQLiteParameter(":PageSize", DbType.Int32);
+            arParams[0] = new SqliteParameter(":PageSize", DbType.Int32);
             arParams[0].Value = pageSize;
 
-            arParams[1] = new SQLiteParameter(":OffsetRows", DbType.Int32);
+            arParams[1] = new SqliteParameter(":OffsetRows", DbType.Int32);
             arParams[1].Value = pageLowerBound;
 
             return AdoHelper.ExecuteReader(
@@ -1561,9 +1561,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("FROM	mp_SiteHosts ");
             sqlCommand.Append("WHERE SiteID = :SiteID ;");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
+            arParams[0] = new SqliteParameter(":SiteID", DbType.Int32);
             arParams[0].Value = siteId;
 
             return AdoHelper.ExecuteReader(
@@ -1580,9 +1580,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("FROM	mp_SiteHosts ");
             sqlCommand.Append("WHERE HostName = :HostName ;");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":HostName", DbType.String);
+            arParams[0] = new SqliteParameter(":HostName", DbType.String);
             arParams[0].Value = hostName;
 
             return AdoHelper.ExecuteReader(
@@ -1609,15 +1609,15 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append(":HostName ");
             sqlCommand.Append(") ;");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[3];
+            SqliteParameter[] arParams = new SqliteParameter[3];
 
-            arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
+            arParams[0] = new SqliteParameter(":SiteID", DbType.Int32);
             arParams[0].Value = siteId;
 
-            arParams[1] = new SQLiteParameter(":HostName", DbType.String);
+            arParams[1] = new SqliteParameter(":HostName", DbType.String);
             arParams[1].Value = hostName;
 
-            arParams[2] = new SQLiteParameter(":SiteGuid", DbType.String);
+            arParams[2] = new SqliteParameter(":SiteGuid", DbType.String);
             arParams[2].Value = siteGuid.ToString();
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -1634,9 +1634,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("DELETE FROM mp_SiteHosts ");
             sqlCommand.Append("WHERE HostID = :HostID  ; ");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":HostID", DbType.Int32);
+            arParams[0] = new SqliteParameter(":HostID", DbType.Int32);
             arParams[0].Value = hostId;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -1669,9 +1669,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("WHERE SiteID = :SiteID ");
             sqlCommand.Append("ORDER BY	SiteName ;");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
+            arParams[0] = new SqliteParameter(":SiteID", DbType.Int32);
             arParams[0].Value = siteId;
 
             return AdoHelper.ExecuteReader(
@@ -1689,9 +1689,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("WHERE SiteGuid = :SiteGuid ");
             sqlCommand.Append("ORDER BY	SiteName ;");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":SiteGuid", DbType.String);
+            arParams[0] = new SqliteParameter(":SiteGuid", DbType.String);
             arParams[0].Value = siteGuid.ToString();
 
             return AdoHelper.ExecuteReader(
@@ -1703,9 +1703,9 @@ namespace cloudscribe.Core.Repositories.SQLite
         public DbDataReader GetSite(string hostName)
         {
             StringBuilder sqlCommand = new StringBuilder();
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":HostName", DbType.String);
+            arParams[0] = new SqliteParameter(":HostName", DbType.String);
             arParams[0].Value = hostName;
 
             int siteId = -1;
@@ -1732,9 +1732,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("ORDER BY	SiteID ");
             sqlCommand.Append("LIMIT 1 ;");
 
-            arParams = new SQLiteParameter[1];
+            arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
+            arParams[0] = new SqliteParameter(":SiteID", DbType.Int32);
             arParams[0].Value = siteId;
 
             return AdoHelper.ExecuteReader(
@@ -1757,9 +1757,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("WHERE SiteID = :SiteID ");
             sqlCommand.Append("ORDER BY ParentID,  PageName ;");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
+            arParams[0] = new SqliteParameter(":SiteID", DbType.Int32);
             arParams[0].Value = siteId;
 
             return AdoHelper.ExecuteReader(
@@ -1777,9 +1777,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("WHERE SiteID <> :CurrentSiteID ");
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":CurrentSiteID", DbType.Int32);
+            arParams[0] = new SqliteParameter(":CurrentSiteID", DbType.Int32);
             arParams[0].Value = currentSiteId;
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -1809,15 +1809,15 @@ namespace cloudscribe.Core.Repositories.SQLite
             }
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[3];
+            SqliteParameter[] arParams = new SqliteParameter[3];
 
-            arParams[0] = new SQLiteParameter(":CurrentSiteID", DbType.Int32);
+            arParams[0] = new SqliteParameter(":CurrentSiteID", DbType.Int32);
             arParams[0].Value = currentSiteId;
 
-            arParams[1] = new SQLiteParameter(":PageSize", DbType.Int32);
+            arParams[1] = new SqliteParameter(":PageSize", DbType.Int32);
             arParams[1].Value = pageSize;
 
-            arParams[2] = new SQLiteParameter(":OffsetRows", DbType.Int32);
+            arParams[2] = new SqliteParameter(":OffsetRows", DbType.Int32);
             arParams[2].Value = pageLowerBound;
 
             return AdoHelper.ExecuteReader(
@@ -1831,9 +1831,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             int siteId = -1;
 
             StringBuilder sqlCommand = new StringBuilder();
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":HostName", DbType.String);
+            arParams[0] = new SqliteParameter(":HostName", DbType.String);
             arParams[0].Value = hostName;
 
             sqlCommand.Append("SELECT mp_SiteHosts.SiteID As SiteID ");
@@ -1882,9 +1882,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             int siteId = -1;
 
             StringBuilder sqlCommand = new StringBuilder();
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":FolderName", DbType.String);
+            arParams[0] = new SqliteParameter(":FolderName", DbType.String);
             arParams[0].Value = folderName;
 
             sqlCommand.Append("SELECT COALESCE(s.SiteID, -1) As SiteID ");

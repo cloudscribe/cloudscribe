@@ -5,7 +5,7 @@
 // Last Modified:		    2015-08-07
 
 using cloudscribe.Core.Models;
-using Microsoft.Data.SQLite;
+using Microsoft.Data.Sqlite;
 using Microsoft.Framework.Logging;
 using System;
 using System.Data;
@@ -13,14 +13,14 @@ using System.Data.Common;
 using System.IO;
 using System.Text;
 
-namespace cloudscribe.DbHelpers.SQLite
+namespace cloudscribe.DbHelpers.Sqlite
 {
     public class Db : IDb
     {
 
         public Db(
-            SQLiteConnectionstringResolver connectionStringResolver,
-            ILogger<SQLiteConnectionstringResolver> logger,
+            SqliteConnectionstringResolver connectionStringResolver,
+            ILogger<SqliteConnectionstringResolver> logger,
             IVersionProviderFactory versionProviderFactory)
         {
             if (connectionStringResolver == null) { throw new ArgumentNullException(nameof(connectionStringResolver)); }
@@ -51,18 +51,18 @@ namespace cloudscribe.DbHelpers.SQLite
         {
             DbException exception = null;
 
-            SQLiteConnection connection;
+            SqliteConnection connection;
 
             if (
                 (overrideConnectionInfo != null)
                 && (overrideConnectionInfo.Length > 0)
               )
             {
-                connection = new SQLiteConnection(overrideConnectionInfo);
+                connection = new SqliteConnection(overrideConnectionInfo);
             }
             else
             {
-                connection = new SQLiteConnection(connectionString);
+                connection = new SqliteConnection(connectionString);
             }
 
             try
@@ -105,7 +105,7 @@ namespace cloudscribe.DbHelpers.SQLite
             //            {
             //                if (!File.Exists(path))
             //                {
-            //                    SQLiteConnection.CreateFile(path);
+            //                    SqliteConnection.CreateFile(path);
             //                    //using (SqlCeEngine engine = new SqlCeEngine(connectionString))
             //                    //{
             //                    //    engine.CreateDatabase();
@@ -135,18 +135,18 @@ namespace cloudscribe.DbHelpers.SQLite
         {
             bool result = false;
 
-            SQLiteConnection connection;
+            SqliteConnection connection;
 
             if (
                 (overrideConnectionInfo != null)
                 && (overrideConnectionInfo.Length > 0)
               )
             {
-                connection = new SQLiteConnection(overrideConnectionInfo);
+                connection = new SqliteConnection(overrideConnectionInfo);
             }
             else
             {
-                connection = new SQLiteConnection(connectionString);
+                connection = new SqliteConnection(connectionString);
             }
 
             try
@@ -278,23 +278,23 @@ namespace cloudscribe.DbHelpers.SQLite
             if ((script == null) || (script.Length == 0)) return true;
 
             bool result = false;
-            SQLiteConnection connection;
+            SqliteConnection connection;
 
             if (
                 (overrideConnectionInfo != null)
                 && (overrideConnectionInfo.Length > 0)
               )
             {
-                connection = new SQLiteConnection(overrideConnectionInfo);
+                connection = new SqliteConnection(overrideConnectionInfo);
             }
             else
             {
-                connection = new SQLiteConnection(connectionString);
+                connection = new SqliteConnection(connectionString);
             }
 
             connection.Open();
 
-            SQLiteTransaction transaction = (SQLiteTransaction)connection.BeginTransaction();
+            SqliteTransaction transaction = (SqliteTransaction)connection.BeginTransaction();
 
             try
             {
@@ -329,13 +329,13 @@ namespace cloudscribe.DbHelpers.SQLite
             sqlCommand.Append(" " + additionalWhere + " ");
             sqlCommand.Append(" ; ");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":fieldValue", DbType.String);
+            arParams[0] = new SqliteParameter(":fieldValue", DbType.String);
             arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = dataFieldValue;
 
-            SQLiteConnection connection = new SQLiteConnection(connectionString);
+            SqliteConnection connection = new SqliteConnection(connectionString);
             connection.Open();
             try
             {
@@ -368,13 +368,13 @@ namespace cloudscribe.DbHelpers.SQLite
             sqlCommand.Append(" " + additionalWhere + " ");
             sqlCommand.Append(" ; ");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":fieldValue", DbType.String);
+            arParams[0] = new SqliteParameter(":fieldValue", DbType.String);
             arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = dataFieldValue;
 
-            SQLiteConnection connection = new SQLiteConnection(connectionString);
+            SqliteConnection connection = new SqliteConnection(connectionString);
             connection.Open();
             try
             {
@@ -486,7 +486,7 @@ namespace cloudscribe.DbHelpers.SQLite
 
         public bool TableExists(string tableName)
         {
-            //SQLiteConnection connection = new SQLiteConnection(ConnectionString.GetConnectionString());
+            //SqliteConnection connection = new SqliteConnection(ConnectionString.GetConnectionString());
             //string[] restrictions = new string[4];
             //restrictions[2] = tableName;
             //connection.Open();
@@ -624,29 +624,29 @@ namespace cloudscribe.DbHelpers.SQLite
             sqlCommand.Append(":Build, ");
             sqlCommand.Append(":Revision );");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[6];
+            SqliteParameter[] arParams = new SqliteParameter[6];
 
-            arParams[0] = new SQLiteParameter(":ApplicationID", DbType.String);
+            arParams[0] = new SqliteParameter(":ApplicationID", DbType.String);
             arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = applicationId.ToString();
 
-            arParams[1] = new SQLiteParameter(":ApplicationName", DbType.String);
+            arParams[1] = new SqliteParameter(":ApplicationName", DbType.String);
             arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = applicationName;
 
-            arParams[2] = new SQLiteParameter(":Major", DbType.Int32);
+            arParams[2] = new SqliteParameter(":Major", DbType.Int32);
             arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = major;
 
-            arParams[3] = new SQLiteParameter(":Minor", DbType.Int32);
+            arParams[3] = new SqliteParameter(":Minor", DbType.Int32);
             arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = minor;
 
-            arParams[4] = new SQLiteParameter(":Build", DbType.Int32);
+            arParams[4] = new SqliteParameter(":Build", DbType.Int32);
             arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = build;
 
-            arParams[5] = new SQLiteParameter(":Revision", DbType.Int32);
+            arParams[5] = new SqliteParameter(":Revision", DbType.Int32);
             arParams[5].Direction = ParameterDirection.Input;
             arParams[5].Value = revision;
 
@@ -681,29 +681,29 @@ namespace cloudscribe.DbHelpers.SQLite
             sqlCommand.Append("WHERE  ");
             sqlCommand.Append("ApplicationID = :ApplicationID ;");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[6];
+            SqliteParameter[] arParams = new SqliteParameter[6];
 
-            arParams[0] = new SQLiteParameter(":ApplicationID", DbType.String);
+            arParams[0] = new SqliteParameter(":ApplicationID", DbType.String);
             arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = applicationId.ToString();
 
-            arParams[1] = new SQLiteParameter(":ApplicationName", DbType.String);
+            arParams[1] = new SqliteParameter(":ApplicationName", DbType.String);
             arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = applicationName;
 
-            arParams[2] = new SQLiteParameter(":Major", DbType.Int32);
+            arParams[2] = new SqliteParameter(":Major", DbType.Int32);
             arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = major;
 
-            arParams[3] = new SQLiteParameter(":Minor", DbType.Int32);
+            arParams[3] = new SqliteParameter(":Minor", DbType.Int32);
             arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = minor;
 
-            arParams[4] = new SQLiteParameter(":Build", DbType.Int32);
+            arParams[4] = new SqliteParameter(":Build", DbType.Int32);
             arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = build;
 
-            arParams[5] = new SQLiteParameter(":Revision", DbType.Int32);
+            arParams[5] = new SqliteParameter(":Revision", DbType.Int32);
             arParams[5].Direction = ParameterDirection.Input;
             arParams[5].Value = revision;
 
@@ -726,9 +726,9 @@ namespace cloudscribe.DbHelpers.SQLite
         //    sqlCommand.Append("WHERE ");
         //    sqlCommand.Append("ApplicationID = :ApplicationID ;");
 
-        //    SQLiteParameter[] arParams = new SQLiteParameter[1];
+        //    SqliteParameter[] arParams = new SqliteParameter[1];
 
-        //    arParams[0] = new SQLiteParameter(":ApplicationID", DbType.String, 36);
+        //    arParams[0] = new SqliteParameter(":ApplicationID", DbType.String, 36);
         //    arParams[0].Direction = ParameterDirection.Input;
         //    arParams[0].Value = applicationId.ToString();
 
@@ -765,9 +765,9 @@ namespace cloudscribe.DbHelpers.SQLite
             sqlCommand.Append("WHERE ");
             sqlCommand.Append("ApplicationID = :ApplicationID ;");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":ApplicationID", DbType.String);
+            arParams[0] = new SqliteParameter(":ApplicationID", DbType.String);
             arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = applicationId.ToString();
 
@@ -838,29 +838,29 @@ namespace cloudscribe.DbHelpers.SQLite
 
             sqlCommand.Append("SELECT LAST_INSERT_ROWID();");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[6];
+            SqliteParameter[] arParams = new SqliteParameter[6];
 
-            arParams[0] = new SQLiteParameter(":ApplicationID", DbType.String);
+            arParams[0] = new SqliteParameter(":ApplicationID", DbType.String);
             arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = applicationId.ToString();
 
-            arParams[1] = new SQLiteParameter(":ScriptFile", DbType.String);
+            arParams[1] = new SqliteParameter(":ScriptFile", DbType.String);
             arParams[1].Direction = ParameterDirection.Input;
             arParams[1].Value = scriptFile;
 
-            arParams[2] = new SQLiteParameter(":RunTime", DbType.DateTime);
+            arParams[2] = new SqliteParameter(":RunTime", DbType.DateTime);
             arParams[2].Direction = ParameterDirection.Input;
             arParams[2].Value = runTime;
 
-            arParams[3] = new SQLiteParameter(":ErrorOccurred", DbType.Int32);
+            arParams[3] = new SqliteParameter(":ErrorOccurred", DbType.Int32);
             arParams[3].Direction = ParameterDirection.Input;
             arParams[3].Value = intErrorOccurred;
 
-            arParams[4] = new SQLiteParameter(":ErrorMessage", DbType.Object);
+            arParams[4] = new SqliteParameter(":ErrorMessage", DbType.Object);
             arParams[4].Direction = ParameterDirection.Input;
             arParams[4].Value = errorMessage;
 
-            arParams[5] = new SQLiteParameter(":ScriptBody", DbType.Object);
+            arParams[5] = new SqliteParameter(":ScriptBody", DbType.Object);
             arParams[5].Direction = ParameterDirection.Input;
             arParams[5].Value = scriptBody;
 
@@ -883,9 +883,9 @@ namespace cloudscribe.DbHelpers.SQLite
         //    sqlCommand.Append("WHERE ");
         //    sqlCommand.Append("ID = :ID ;");
 
-        //    SQLiteParameter[] arParams = new SQLiteParameter[1];
+        //    SqliteParameter[] arParams = new SqliteParameter[1];
 
-        //    arParams[0] = new SQLiteParameter(":ID", DbType.Int32);
+        //    arParams[0] = new SqliteParameter(":ID", DbType.Int32);
         //    arParams[0].Direction = ParameterDirection.Input;
         //    arParams[0].Value = id;
 
@@ -907,9 +907,9 @@ namespace cloudscribe.DbHelpers.SQLite
         //    sqlCommand.Append("WHERE ");
         //    sqlCommand.Append("ID = :ID ;");
 
-        //    SQLiteParameter[] arParams = new SQLiteParameter[1];
+        //    SqliteParameter[] arParams = new SqliteParameter[1];
 
-        //    arParams[0] = new SQLiteParameter(":ID", DbType.Int32);
+        //    arParams[0] = new SqliteParameter(":ID", DbType.Int32);
         //    arParams[0].Direction = ParameterDirection.Input;
         //    arParams[0].Value = id;
 
@@ -930,9 +930,9 @@ namespace cloudscribe.DbHelpers.SQLite
         //    //sqlCommand.Append("AND ErrorOccurred = 0 ");
         //    sqlCommand.Append(" ;");
 
-        //    SQLiteParameter[] arParams = new SQLiteParameter[1];
+        //    SqliteParameter[] arParams = new SqliteParameter[1];
 
-        //    arParams[0] = new SQLiteParameter(":ApplicationID", DbType.String, 36);
+        //    arParams[0] = new SqliteParameter(":ApplicationID", DbType.String, 36);
         //    arParams[0].Direction = ParameterDirection.Input;
         //    arParams[0].Value = applicationId.ToString();
 
@@ -953,9 +953,9 @@ namespace cloudscribe.DbHelpers.SQLite
         //    sqlCommand.Append("AND ErrorOccurred = 1 ");
         //    sqlCommand.Append(" ;");
 
-        //    SQLiteParameter[] arParams = new SQLiteParameter[1];
+        //    SqliteParameter[] arParams = new SqliteParameter[1];
 
-        //    arParams[0] = new SQLiteParameter(":ApplicationID", DbType.String, 36);
+        //    arParams[0] = new SqliteParameter(":ApplicationID", DbType.String, 36);
         //    arParams[0].Direction = ParameterDirection.Input;
         //    arParams[0].Value = applicationId.ToString();
 
@@ -977,13 +977,13 @@ namespace cloudscribe.DbHelpers.SQLite
 
         //    sqlCommand.Append(" ;");
 
-        //    SQLiteParameter[] arParams = new SQLiteParameter[2];
+        //    SqliteParameter[] arParams = new SqliteParameter[2];
 
-        //    arParams[0] = new SQLiteParameter(":ApplicationID", DbType.String, 36);
+        //    arParams[0] = new SqliteParameter(":ApplicationID", DbType.String, 36);
         //    arParams[0].Direction = ParameterDirection.Input;
         //    arParams[0].Value = applicationId.ToString();
 
-        //    arParams[1] = new SQLiteParameter(":ScriptFile", DbType.String, 255);
+        //    arParams[1] = new SqliteParameter(":ScriptFile", DbType.String, 255);
         //    arParams[1].Direction = ParameterDirection.Input;
         //    arParams[1].Value = scriptFile;
 

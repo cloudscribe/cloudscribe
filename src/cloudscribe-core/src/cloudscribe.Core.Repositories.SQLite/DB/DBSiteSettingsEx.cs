@@ -5,11 +5,11 @@
 // Last Modified:			2015-06-14
 //
 
-using cloudscribe.DbHelpers.SQLite;
+using cloudscribe.DbHelpers.Sqlite;
 using System;
 using System.Data;
 using System.Data.Common;
-using Microsoft.Data.SQLite;
+using Microsoft.Data.Sqlite;
 using Microsoft.Framework.Logging;
 using System.Text;
 
@@ -50,9 +50,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("ORDER BY d.GroupName, d.SortOrder ");
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
+            arParams[0] = new SqliteParameter(":SiteID", DbType.Int32);
             arParams[0].Value = siteId;
 
             return AdoHelper.ExecuteReader(
@@ -148,15 +148,15 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("KeyName = :KeyName ");
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[3];
+            SqliteParameter[] arParams = new SqliteParameter[3];
 
-            arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
+            arParams[0] = new SqliteParameter(":SiteID", DbType.Int32);
             arParams[0].Value = siteId;
 
-            arParams[1] = new SQLiteParameter(":KeyName", DbType.String);
+            arParams[1] = new SqliteParameter(":KeyName", DbType.String);
             arParams[1].Value = keyName;
 
-            arParams[2] = new SQLiteParameter(":KeyValue", DbType.Object);
+            arParams[2] = new SqliteParameter(":KeyValue", DbType.Object);
             arParams[2].Value = keyValue;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -193,21 +193,21 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append(":GroupName )");
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[5];
+            SqliteParameter[] arParams = new SqliteParameter[5];
 
-            arParams[0] = new SQLiteParameter(":SiteId", DbType.Int32);
+            arParams[0] = new SqliteParameter(":SiteId", DbType.Int32);
             arParams[0].Value = siteId;
 
-            arParams[1] = new SQLiteParameter(":SiteGuid", DbType.String);
+            arParams[1] = new SqliteParameter(":SiteGuid", DbType.String);
             arParams[1].Value = siteGuid.ToString();
 
-            arParams[2] = new SQLiteParameter(":KeyName", DbType.String);
+            arParams[2] = new SqliteParameter(":KeyName", DbType.String);
             arParams[2].Value = keyName;
 
-            arParams[3] = new SQLiteParameter(":KeyValue", DbType.Object);
+            arParams[3] = new SqliteParameter(":KeyValue", DbType.Object);
             arParams[3].Value = keyValue;
 
-            arParams[4] = new SQLiteParameter(":GroupName", DbType.String);
+            arParams[4] = new SqliteParameter(":GroupName", DbType.String);
             arParams[4].Value = groupName;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -235,15 +235,15 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("KeyName = :KeyName ");
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[3];
+            SqliteParameter[] arParams = new SqliteParameter[3];
 
-            arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
+            arParams[0] = new SqliteParameter(":SiteID", DbType.Int32);
             arParams[0].Value = siteID;
 
-            arParams[1] = new SQLiteParameter(":KeyName", DbType.String);
+            arParams[1] = new SqliteParameter(":KeyName", DbType.String);
             arParams[1].Value = keyName;
 
-            arParams[2] = new SQLiteParameter(":KeyValue", DbType.Object);
+            arParams[2] = new SqliteParameter(":KeyValue", DbType.Object);
             arParams[2].Value = keyValue;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
@@ -268,12 +268,12 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("KeyName = :KeyName ");
             sqlCommand.Append(";");
 
-            SQLiteParameter[] arParams = new SQLiteParameter[2];
+            SqliteParameter[] arParams = new SqliteParameter[2];
 
-            arParams[0] = new SQLiteParameter(":SiteID", DbType.Int32);
+            arParams[0] = new SqliteParameter(":SiteID", DbType.Int32);
             arParams[0].Value = siteID;
 
-            arParams[1] = new SQLiteParameter(":KeyName", DbType.String);
+            arParams[1] = new SqliteParameter(":KeyName", DbType.String);
             arParams[1].Value = keyName;
 
             return Convert.ToInt32(AdoHelper.ExecuteScalar(

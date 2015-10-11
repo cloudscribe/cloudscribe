@@ -109,11 +109,11 @@ namespace cloudscribe.WebHost
             //services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.Firebird.GeoRepository>();
             //services.TryAddScoped<IDb, cloudscribe.DbHelpers.Firebird.Db>();
 
-            //services.Configure<cloudscribe.DbHelpers.SQLite.SqliteConnectionOptions>(configuration.GetSection("Data:SqliteConnectionOptions"));
+            //services.Configure<cloudscribe.DbHelpers.Sqlite.SqliteConnectionOptions>(configuration.GetSection("Data:SqliteConnectionOptions"));
             //services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.SQLite.SiteRepository>();
             //services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.SQLite.UserRepository>();
             //services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.SQLite.GeoRepository>();
-            //services.TryAddScoped<IDb, cloudscribe.DbHelpers.SQLite.Db>();
+            //services.TryAddScoped<IDb, cloudscribe.DbHelpers.Sqlite.Db>();
 
             //services.Configure<cloudscribe.DbHelpers.SqlCe.SqliteConnectionOptions>(configuration.GetSection("Data:SqlCeConnectionOptions"));
             //services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.SqlCe.SiteRepository>();
