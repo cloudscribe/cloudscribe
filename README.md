@@ -9,8 +9,6 @@ If you want to give it a test drive see
 
 This project is in early stages, not yet production ready, we are building on a new framework from  Microsoft that is itself still in beta and changing frequently. Primarily we are targeting the new lightweight cross platform [Core .NET Framework](https://github.com/dotnet/core) aka dnxcore50 so the goal of this project is to work on Windows, Linux, or Mac. We are also targeting dnx451 aka the full desktop framework but we are avoiding taking dependencies on things that only work in dnx451.
 
-We are collecting email addresses for a potential newsletter in the future, depending on whether this project becomes popular. If you would like to subscribe to this possible future newsletter, please send an email to subscribe [at] cloudscribe.com with the subject line "subscribe"
-
 ##### Currently Working Features:
 * Setup/Upgrade System for running versioned install and upgrade sql scripts
 * Site Definitions - multi-tenant based on either first folder segment or host names, default is by folder segment for now mainly because it is easier to try that without DNS, it is just a config option so it is easy to change
@@ -25,7 +23,7 @@ We are collecting email addresses for a potential newsletter in the future, depe
 * TagHelpers/HtmlHelpers for navigation menus, breadcrumbs and pagination - via cloudscribe.Web.Navigation project which will be moved to it's own source code repository soon after aspnet beta8 when we can include views in the nuget built for a class library project
 * Unobtrusive js for CKeditor
 * async all the way down - vast majority of the data access is async except with file based databases such as SQLite and sqlce
-* Currently the project has repository implementations for MSSQL, MySql, PostgreSql, Firebird, SQLCe, and SQLite, however only MSSQL is currently supported under dnxcore50 because current ADO drivers for the other db platforms are only working in dnx451. Most of the database shcema and data access code was re-purposed and refactored from the mojoportal project, there is still some refactoring and cleanup to be done. There are some data fields that may be removed or moved to new tables later.
+* Currently the project has repository implementations for MSSQL, MySql, PostgreSql, Firebird, SQLCe, and SQLite, however only MSSQL is currently supported under dnxcore50 because current ADO drivers for the other db platforms are only working in dnx451. Most of the database schema and data access code was re-purposed and refactored from the mojoportal project, there is still some refactoring and cleanup to be done. There are some data fields that may be removed or moved to new tables later.
 * Possibly later we could implement repositories based on Entity Framework 7 but a goal of the project for me is to not force a specific ORM on anyone.
 
 ##### Planned Features:
@@ -38,3 +36,5 @@ We are collecting email addresses for a potential newsletter in the future, depe
 ##### Other things we'd like to see:
 * If this project were to become popular then it would provide a way for many people to build things on top of it that are compatible with each other, making it easier to assemble various functionality within a site
 * cloudscribe.Cms? I am giving serious consideration to building such a thing, but at the moment feel I need to work on some projects that will generate income for me, and there is still a lot of work to do in this project.
+
+We are collecting email addresses for a potential newsletter in the future, depending on whether this project becomes popular. If you would like to subscribe to this possible future newsletter, please send an email to subscribe [at] cloudscribe.com with the subject line "subscribe"
