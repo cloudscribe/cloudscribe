@@ -19,6 +19,7 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
     {
         public SiteBasicSettingsViewModel()
         {
+            allTimeZones = new List<SelectListItem>();
             availableLayouts = new List<SelectListItem>();
         }
 
@@ -88,14 +89,21 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
             set { availableLayouts = value; }
         }
 
-        private ReadOnlyCollection<TimeZoneInfo> allTimeZones = null;
-
-        public ReadOnlyCollection<TimeZoneInfo> AllTimeZones
+        private IEnumerable<SelectListItem> allTimeZones = null;
+        public IEnumerable<SelectListItem> AllTimeZones
         {
             get { return allTimeZones; }
             set { allTimeZones = value; }
         }
-        
+
+        //private ReadOnlyCollection<TimeZoneInfo> allTimeZones = null;
+
+        //public ReadOnlyCollection<TimeZoneInfo> AllTimeZones
+        //{
+        //    get { return allTimeZones; }
+        //    set { allTimeZones = value; }
+        //}
+
         private int returnPageNumber = 1;
 
         public int ReturnPageNumber

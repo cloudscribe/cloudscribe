@@ -52,16 +52,8 @@
         <div class="form-group">
             <label asp-for="TimeZoneId" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                @Html.DropDownListFor(model => model.TimeZoneId,
-                           Model.AllTimeZones.Select(x =>
-                                new SelectListItem
-                                {
-                                    Text = x.DisplayName,
-                                    Value = x.Id
-                                    ,
-                                    Selected = Model.TimeZoneId == x.Id
-                                }),
-                                new { @class = "form-control" })
+                <select asp-for="TimeZoneId"
+                        asp-items="Model.AllTimeZones" class="form-control"></select>
                 <span asp-validation-for="TimeZoneId" class="text-danger"></span> 
             </div>
         </div>

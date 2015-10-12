@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-10-09
+// Last Modified:			2015-10-12
 // 
 
 using cloudscribe.Core.Models;
@@ -16,6 +16,7 @@ using Microsoft.AspNet.Mvc.Localization;
 using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.Framework.OptionsModel;
 using System;
+using System.Linq;
 using System.Globalization;
 using System.Threading.Tasks;
 
@@ -150,7 +151,16 @@ namespace cloudscribe.Core.Web.Controllers
             
             SiteBasicSettingsViewModel model = new SiteBasicSettingsViewModel();
             model.ReturnPageNumber = slp; // site list page number to return to
-            model.AllTimeZones = DateTimeHelper.GetTimeZoneList();
+
+            //model.AllTimeZones = DateTimeHelper.GetTimeZoneList();
+            model.AllTimeZones = DateTimeHelper.GetTimeZoneList().Select(x =>
+                               new SelectListItem
+                               {
+                                   Text = x.DisplayName,
+                                   Value = x.Id
+                                   ,
+                                   Selected = model.TimeZoneId == x.Id
+                               });
 
             model.SiteId = selectedSite.SiteId;
             model.SiteGuid = selectedSite.SiteGuid;
@@ -368,9 +378,17 @@ namespace cloudscribe.Core.Web.Controllers
             // model.SiteName = Site.SiteSettings.SiteName;
             
             model.TimeZoneId = siteManager.CurrentSite.TimeZoneId;
-            model.AllTimeZones = DateTimeHelper.GetTimeZoneList();
-            
-            
+            //model.AllTimeZones = DateTimeHelper.GetTimeZoneList();
+            model.AllTimeZones = DateTimeHelper.GetTimeZoneList().Select(x =>
+                               new SelectListItem
+                               {
+                                   Text = x.DisplayName,
+                                   Value = x.Id
+                                   ,
+                                   Selected = model.TimeZoneId == x.Id
+                               });
+
+
 
             return View(model);
         }
