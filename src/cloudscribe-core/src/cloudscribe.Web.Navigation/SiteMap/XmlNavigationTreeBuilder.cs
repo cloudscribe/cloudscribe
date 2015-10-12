@@ -2,17 +2,14 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-14
-// Last Modified:			2015-09-05
+// Last Modified:			2015-10-12
 // 
 
-using cloudscribe.Web.Navigation.Helpers;
-using Microsoft.Framework.Caching.Distributed;
-using Microsoft.Framework.OptionsModel;
-using Microsoft.Framework.Logging;
 using Microsoft.Dnx.Runtime;
+using Microsoft.Framework.Logging;
+using Microsoft.Framework.OptionsModel;
 using System;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -23,60 +20,29 @@ namespace cloudscribe.Web.Navigation
         public XmlNavigationTreeBuilder(
             IApplicationEnvironment appEnv,
             IOptions<NavigationOptions> navigationOptionsAccessor,
-            ILoggerFactory loggerFactory,
-            IDistributedCache cache)
+            ILogger<XmlNavigationTreeBuilder> logger)
         {
             if (appEnv == null) { throw new ArgumentNullException(nameof(appEnv)); }
-            if (loggerFactory == null) { throw new ArgumentNullException(nameof(loggerFactory)); }
+            if (logger == null) { throw new ArgumentNullException(nameof(logger)); }
             if (navigationOptionsAccessor == null) { throw new ArgumentNullException(nameof(navigationOptionsAccessor)); }
 
             this.appEnv = appEnv;
             navOptions = navigationOptionsAccessor.Options;
-            logFactory = loggerFactory;
-            log = loggerFactory.CreateLogger(typeof(XmlNavigationTreeBuilder).FullName);
-            this.cache = cache;
-
+            log = logger;
+            
         }
 
         private IApplicationEnvironment appEnv;
         private NavigationOptions navOptions;
-        private ILoggerFactory logFactory;
         private ILogger log;
         private TreeNode<NavigationNode> rootNode = null;
-        private IDistributedCache cache;
-        private const string cacheKey = "navxmlbuild";
-
+        
         public async Task<TreeNode<NavigationNode>> GetTree()
         {
-            // ultimately we will need to cache sitemap per site
-
+           
             if (rootNode == null)
-            {
-                NavigationTreeXmlConverter converter = new NavigationTreeXmlConverter();
-
-                await cache.ConnectAsync();
-                byte[] bytes = await cache.GetAsync(cacheKey);
-                if (bytes != null)
-                {
-                    string xml = Encoding.UTF8.GetString(bytes);
-                    XDocument doc = XDocument.Parse(xml);
-                    
-                    rootNode = converter.FromXml(doc);
-                }
-                else
-                {
-                    rootNode = await BuildTree();
-                    string xml2 = converter.ToXmlString(rootNode);
-
-                    await cache.SetAsync(
-                                        cacheKey,
-                                        Encoding.UTF8.GetBytes(xml2),
-                                        new DistributedCacheEntryOptions().SetSlidingExpiration(
-                                            TimeSpan.FromSeconds(100))
-                                            );
-                                        }
-
-                
+            { 
+                rootNode = await BuildTree();  
             }
 
             return rootNode;

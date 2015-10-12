@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-10-09
+// Last Modified:			2015-10-12
 // 
 
 //using cloudscribe.Configuration.DataAnnotations;
@@ -95,15 +95,7 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
             get { return allTimeZones; }
             set { allTimeZones = value; }
         }
-
-        //private ReadOnlyCollection<TimeZoneInfo> allTimeZones = null;
-
-        //public ReadOnlyCollection<TimeZoneInfo> AllTimeZones
-        //{
-        //    get { return allTimeZones; }
-        //    set { allTimeZones = value; }
-        //}
-
+        
         private int returnPageNumber = 1;
 
         public int ReturnPageNumber
