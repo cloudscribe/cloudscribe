@@ -8,7 +8,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace cloudscribe.Web.Navigation
+namespace cloudscribe.Web.Pagination
 {
     public interface IBuildPaginationLinks
     {

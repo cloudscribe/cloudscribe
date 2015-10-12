@@ -2,11 +2,11 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-08
-// Last Modified:			2015-07-09
+// Last Modified:			2015-10-12
 //
 
 using cloudscribe.Core.Models;
-using cloudscribe.Web.Navigation;
+using cloudscribe.Web.Pagination;
 using System;
 using System.Collections.Generic;
 

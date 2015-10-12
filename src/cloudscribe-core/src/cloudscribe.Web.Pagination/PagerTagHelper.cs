@@ -13,7 +13,7 @@ using System.Linq;
 using System.Text;
 
 
-namespace cloudscribe.Web.Navigation
+namespace cloudscribe.Web.Pagination
 {
     [TargetElement("cs-pager", Attributes = PagingInfoAttributeName)]
     public class PagerTagHelper : TagHelper

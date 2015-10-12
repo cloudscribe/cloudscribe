@@ -7,7 +7,7 @@
 // trying to replicate some of the tests that Martijn Boland did here
 // https://github.com/martijnboland/MvcPaging/blob/master/src/MvcPaging.Tests/PagerTests.cs
 
-using cloudscribe.Web.Navigation;
+using cloudscribe.Web.Pagination;
 using System.Collections.Generic;
 using Xunit;
 

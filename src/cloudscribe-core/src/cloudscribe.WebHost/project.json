@@ -36,7 +36,8 @@
     "Microsoft.AspNet.Http.Features": "1.0.0-beta7",
     "Microsoft.Framework.DependencyInjection.Abstractions": "1.0.0-beta7",
     "Microsoft.AspNet.Session": "1.0.0-beta7",
-    "Microsoft.Framework.Caching.Memory": "1.0.0-beta7"
+    "Microsoft.Framework.Caching.Memory": "1.0.0-beta7",
+    "cloudscribe.Web.Pagination": "1.0.0-*"
   },
 
   "commands": {

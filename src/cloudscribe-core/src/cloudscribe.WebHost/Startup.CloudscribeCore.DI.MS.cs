@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-06-20
-// Last Modified:			2015-10-07
+// Last Modified:			2015-10-12
 // 
 
 using System;
@@ -41,6 +41,7 @@ using cloudscribe.Core.Web.Navigation;
 using cloudscribe.Core.Web.Razor;
 using cloudscribe.Messaging;
 using cloudscribe.Web.Navigation;
+using cloudscribe.Web.Pagination;
 using cloudscribe.Core.Identity;
 
 namespace cloudscribe.WebHost

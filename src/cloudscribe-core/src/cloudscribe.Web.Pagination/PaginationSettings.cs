@@ -5,7 +5,7 @@
 // Last Modified:			2015-07-15
 //
 
-namespace cloudscribe.Web.Navigation
+namespace cloudscribe.Web.Pagination
 {
     
     public class PaginationSettings

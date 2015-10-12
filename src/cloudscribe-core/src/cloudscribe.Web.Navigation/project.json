@@ -1,10 +1,10 @@
 {
   "version": "1.0.0-*",
   "title": "cloudscribe.Web.Navigation",
-  "description": "an ASP.NET 5 library of navigation components for menus, breadcrumbs, pagination, and bootstrap modal dialogs",
+  "description": "an ASP.NET 5 library of navigation components for menus, breadcrumbs, and bootstrap modal dialogs",
   "authors": [ "Joe Audette" ],
   "owners": [ "Source Tree Solutions" ],
-  "tags": [ "cloudscribe","mvc6","mvcsitemapprovider","pagination","navigation","menus","breadcrumbs" ],
+  "tags": [ "cloudscribe","mvc6","mvcsitemapprovider","navigation","menus","breadcrumbs" ],
   "projectUrl": "https://github.com/joeaudette/cloudscribe",
   "licenseUrl": "http://www.apache.org/licenses/LICENSE-2.0",
   "copyright": "2015 Source Tree Solutions",
