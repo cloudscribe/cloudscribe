@@ -38,8 +38,8 @@ namespace cloudscribe.Core.Models
         Task<List<IUserInfo>> GetUserAdminSearchPage(int siteId, int pageNumber, int pageSize, string searchInput, int sortMode);
         //Task<List<IUserInfo>> GetUserSearchPage(int siteId, int pageNumber, int pageSize, string searchInput, int sortMode);
         Task<bool> Save(ISiteUser user);
-        Task<bool> UpdateTotalRevenue();
-        Task<bool> UpdateTotalRevenue(Guid userGuid);
+        //Task<bool> UpdateTotalRevenue();
+        //Task<bool> UpdateTotalRevenue(Guid userGuid);
         //Task<int> GetNewestUserId(int siteId);
         Task<string> GetUserNameFromEmail(int siteId, string email);
         Task<int> CountUsers(int siteId, string userNameBeginsWith);

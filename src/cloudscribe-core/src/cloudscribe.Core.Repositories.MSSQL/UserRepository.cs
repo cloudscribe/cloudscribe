@@ -244,14 +244,14 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return await dbSiteUser.FlagAsNotDeleted(userId);
         }
 
-        public bool UpdatePasswordAndSalt(
-            int userId,
-            int passwordFormat,
-            string password,
-            string passwordSalt)
-        {
-            return dbSiteUser.UpdatePasswordAndSalt(userId, passwordFormat, password, passwordSalt);
-        }
+        //public bool UpdatePasswordAndSalt(
+        //    int userId,
+        //    int passwordFormat,
+        //    string password,
+        //    string passwordSalt)
+        //{
+        //    return dbSiteUser.UpdatePasswordAndSalt(userId, passwordFormat, password, passwordSalt);
+        //}
 
         public async Task<bool> ConfirmRegistration(Guid registrationGuid)
         {
@@ -288,10 +288,10 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// <summary>
         /// updates the total revenue for all users
         /// </summary>
-        public async Task<bool> UpdateTotalRevenue()
-        {
-            return await dbSiteUser.UpdateTotalRevenue();
-        }
+        //public async Task<bool> UpdateTotalRevenue()
+        //{
+        //    return await dbSiteUser.UpdateTotalRevenue();
+        //}
 
 
         //public DataTable GetUserListForPasswordFormatChange(int siteId)
@@ -438,10 +438,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return null;
         }
 
-
-
-
-
+        
         public async Task<List<IUserInfo>> GetByIPAddress(Guid siteGuid, string ipv4Address)
         {
             List<IUserInfo> userList = new List<IUserInfo>();
@@ -892,22 +889,22 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return await dbRoles.Exists(siteId, roleName);
         }
 
-        public int GetRoleMemberCount(int roleId)
-        {
-            // TODO: implement actual select count from db
-            // this is works but is not ideal
-            int count = 0;
-            using (DbDataReader reader = dbRoles.GetRoleMembers(roleId))
-            {
-                while (reader.Read())
-                {
-                    count += 1;
-                }
-            }
+        //public int GetRoleMemberCount(int roleId)
+        //{
+        //    // TODO: implement actual select count from db
+        //    // this is works but is not ideal
+        //    int count = 0;
+        //    using (DbDataReader reader = dbRoles.GetRoleMembers(roleId))
+        //    {
+        //        while (reader.Read())
+        //        {
+        //            count += 1;
+        //        }
+        //    }
 
-            return count;
+        //    return count;
 
-        }
+        //}
 
         public async Task<ISiteRole> FetchRole(int roleId)
         {
