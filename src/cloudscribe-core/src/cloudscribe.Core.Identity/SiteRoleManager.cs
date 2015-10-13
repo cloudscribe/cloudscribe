@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-17
-// Last Modified:		    2015-09-04
+// Last Modified:		    2015-10-13
 // 
 //
 
@@ -27,6 +27,7 @@ namespace cloudscribe.Core.Identity
         public SiteRoleManager(
             ISiteResolver siteResolver,
             IUserRepository userRepository,
+            IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
             IRoleStore<TRole> roleStore,
             IEnumerable<IRoleValidator<TRole>> roleValidators,
             ILookupNormalizer keyNormalizer,
@@ -48,9 +49,11 @@ namespace cloudscribe.Core.Identity
             this.siteResolver = siteResolver;
             userRepo = userRepository;
             this.logger = logger;
-            
+            multiTenantOptions = multiTenantOptionsAccessor.Options;
+
         }
 
+        private MultiTenantOptions multiTenantOptions;
         private ISiteResolver siteResolver;
         private IUserRepository userRepo;
         private ILogger logger;
@@ -66,6 +69,8 @@ namespace cloudscribe.Core.Identity
 
         public async Task<int> CountOfRoles(int siteId, string searchInput)
         {
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+
             return await userRepo.CountOfRoles(siteId, searchInput);
         }
 
@@ -75,6 +80,8 @@ namespace cloudscribe.Core.Identity
             int pageNumber,
             int pageSize)
         {
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+
             return await userRepo.GetRolesBySite(siteId, searchInput, pageNumber, pageSize);
 
         }
@@ -106,23 +113,38 @@ namespace cloudscribe.Core.Identity
             return await userRepo.DeleteRole(roleId);
         }
 
+        public async Task<bool> RoleExists(int siteId, string roleName)
+        {
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+
+            return await userRepo.RoleExists(siteId, roleName);
+        }
+
         public async Task<IList<IUserInfo>> GetUsersInRole(int siteId, int roleId, string searchInput, int pageNumber, int pageSize)
         {
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+
             return await userRepo.GetUsersInRole(siteId, roleId, searchInput, pageNumber, pageSize);
         }
 
         public async Task<int> CountUsersInRole(int siteId, int roleId, string searchInput)
         {
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+
             return await userRepo.CountUsersInRole(siteId, roleId, searchInput);
         }
 
         public async Task<IList<IUserInfo>> GetUsersNotInRole(int siteId, int roleId, string searchInput, int pageNumber, int pageSize)
         {
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+
             return await userRepo.GetUsersNotInRole(siteId, roleId, searchInput, pageNumber, pageSize);
         }
 
         public async Task<int> CountUsersNotInRole(int siteId, int roleId, string searchInput)
         {
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+
             return await userRepo.CountUsersNotInRole(siteId, roleId, searchInput);
         }
 

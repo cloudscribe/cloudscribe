@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-22
-// Last Modified:		    2015-09-04
+// Last Modified:		    2015-10-13
 // 
 
 using cloudscribe.Core.Models;
@@ -227,7 +227,10 @@ namespace cloudscribe.Core.Identity
 
             Guid userGuid = new Guid(userId);
 
-            ISiteUser siteUser = await repo.Fetch(siteSettings.SiteId, userGuid);
+            int siteId = siteSettings.SiteId;
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+
+            ISiteUser siteUser = await repo.Fetch(siteId, userGuid);
 
             return (TUser)siteUser;
         }
@@ -237,7 +240,11 @@ namespace cloudscribe.Core.Identity
         {
             if (debugLog) { log.LogInformation("FindByNameAsync"); }
             cancellationToken.ThrowIfCancellationRequested();
-            ISiteUser siteUser = await repo.FetchByLoginName(siteSettings.SiteId, userName, true);
+
+            int siteId = siteSettings.SiteId;
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+
+            ISiteUser siteUser = await repo.FetchByLoginName(siteId, userName, true);
             return (TUser)siteUser;
 
         }
@@ -477,7 +484,11 @@ namespace cloudscribe.Core.Identity
         {
             if (debugLog) { log.LogInformation("FindByEmailAsync"); }
             cancellationToken.ThrowIfCancellationRequested();
-            ISiteUser siteUser = await repo.Fetch(siteSettings.SiteId, email);
+
+            int siteId = siteSettings.SiteId;
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+
+            ISiteUser siteUser = await repo.Fetch(siteId, email);
 
             return (TUser)siteUser;
         }
@@ -808,7 +819,11 @@ namespace cloudscribe.Core.Identity
             }
 
             cancellationToken.ThrowIfCancellationRequested();
-            IList<ISiteUser> users = await repo.GetUsersForClaim(siteSettings.SiteId, claim.Type, claim.Value);
+
+            int siteId = siteSettings.SiteId;
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+
+            IList<ISiteUser> users = await repo.GetUsersForClaim(siteId, claim.Type, claim.Value);
 
             return (IList<TUser>)users;
         }
@@ -1049,7 +1064,11 @@ namespace cloudscribe.Core.Identity
             }
 
             cancellationToken.ThrowIfCancellationRequested();
-            ISiteRole siteRole = await repo.FetchRole(siteSettings.SiteId, role);
+
+            int siteId = siteSettings.SiteId;
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+
+            ISiteRole siteRole = await repo.FetchRole(siteId, role);
             bool result = false;
             if (siteRole != null)
             {
@@ -1072,7 +1091,11 @@ namespace cloudscribe.Core.Identity
             IList<string> roles = new List<string>();
 
             cancellationToken.ThrowIfCancellationRequested();
-            roles = await repo.GetUserRoles(siteSettings.SiteId, user.UserId);
+
+            int siteId = siteSettings.SiteId;
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+
+            roles = await repo.GetUserRoles(siteId, user.UserId);
 
             return roles;
         }
@@ -1108,7 +1131,11 @@ namespace cloudscribe.Core.Identity
         {
             if (debugLog) { log.LogInformation("GetRolesAsync"); }
             cancellationToken.ThrowIfCancellationRequested();
-            IList<ISiteUser> users = await repo.GetUsersInRole(siteSettings.SiteId, role);
+
+            int siteId = siteSettings.SiteId;
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+
+            IList<ISiteUser> users = await repo.GetUsersInRole(siteId, role);
 
             return (IList<TUser>)users; 
         }
@@ -1123,7 +1150,11 @@ namespace cloudscribe.Core.Identity
             }
 
             cancellationToken.ThrowIfCancellationRequested();
-            ISiteRole siteRole = await repo.FetchRole(siteSettings.SiteId, role);
+
+            int siteId = siteSettings.SiteId;
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+
+            ISiteRole siteRole = await repo.FetchRole(siteId, role);
             bool result = false;
             if (siteRole != null)
             {
@@ -1139,6 +1170,8 @@ namespace cloudscribe.Core.Identity
 
         public string SuggestLoginNameFromEmail(int siteId, string email)
         {
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+
             string login = email.Substring(0, email.IndexOf("@"));
             int offset = 1;
             // don't think we should make this async inside a loop

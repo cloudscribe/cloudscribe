@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-18
-// Last Modified:			2015-09-03
+// Last Modified:			2015-10-13
 // 
 
 
@@ -22,13 +22,11 @@ namespace cloudscribe.Core.Repositories.Firebird
     {
         public UserRepository(
             IOptions<FirebirdConnectionOptions> configuration,
-            IOptions<MultiTenantOptions> multiTenantOptions,
             ILoggerFactory loggerFactory)
         {
             if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
             if (loggerFactory == null) { throw new ArgumentNullException(nameof(loggerFactory)); }
-
-            this.multiTenantOptions = multiTenantOptions.Options;
+            
             logFactory = loggerFactory;
             log = loggerFactory.CreateLogger(typeof(UserRepository).FullName);
 
@@ -42,8 +40,6 @@ namespace cloudscribe.Core.Repositories.Firebird
             dbRoles = new DBRoles(readConnectionString, writeConnectionString, logFactory);
         }
 
-
-        private MultiTenantOptions multiTenantOptions;
         private ILoggerFactory logFactory;
         private ILogger log;
         private string readConnectionString;
@@ -323,7 +319,6 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         public int GetCount(int siteId)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
             return dbSiteUser.UserCount(siteId);
         }
 
@@ -333,25 +328,23 @@ namespace cloudscribe.Core.Repositories.Firebird
         //    return DBSiteUser.UserCount(siteId, userNameBeginsWith);
         //}
 
-        public int UsersOnlineSinceCount(int siteId, DateTime sinceTime)
-        {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
-            return dbSiteUser.CountOnlineSince(siteId, sinceTime);
-        }
+        //public int UsersOnlineSinceCount(int siteId, DateTime sinceTime)
+        //{
+        //    if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+        //    return dbSiteUser.CountOnlineSince(siteId, sinceTime);
+        //}
 
 
-        public async Task<ISiteUser> FetchNewest(int siteId)
-        {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+        //public async Task<ISiteUser> FetchNewest(int siteId)
+        //{
+        //    if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
-            int newestUserId = await GetNewestUserId(siteId);
-            return await Fetch(siteId, newestUserId);
-        }
+        //    int newestUserId = await GetNewestUserId(siteId);
+        //    return await Fetch(siteId, newestUserId);
+        //}
 
         public async Task<ISiteUser> Fetch(int siteId, int userId)
-        {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
-
+        {  
             using (DbDataReader reader = await dbSiteUser.GetSingleUser(userId))
             {
                 if (reader.Read())
@@ -371,8 +364,6 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         public async Task<ISiteUser> Fetch(int siteId, Guid userGuid)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
-
             using (DbDataReader reader = await dbSiteUser.GetSingleUser(userGuid))
             {
                 if (reader.Read())
@@ -391,8 +382,6 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         public async Task<ISiteUser> FetchByConfirmationGuid(int siteId, Guid confirmGuid)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
-
             using (DbDataReader reader = await dbSiteUser.GetUserByRegistrationGuid(siteId, confirmGuid))
             {
                 if (reader.Read())
@@ -411,9 +400,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
 
         public async Task<ISiteUser> Fetch(int siteId, string email)
-        {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
-
+        {  
             using (DbDataReader reader = await dbSiteUser.GetSingleUser(siteId, email))
             {
                 if (reader.Read())
@@ -431,9 +418,7 @@ namespace cloudscribe.Core.Repositories.Firebird
         }
 
         public async Task<ISiteUser> FetchByLoginName(int siteId, string userName, bool allowEmailFallback)
-        {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
-
+        { 
             using (DbDataReader reader = await dbSiteUser.GetSingleUserByLoginName(siteId, userName, allowEmailFallback))
             {
                 if (reader.Read())
@@ -449,16 +434,10 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             return null;
         }
-
-
-
-
-
+        
         public async Task<List<IUserInfo>> GetByIPAddress(Guid siteGuid, string ipv4Address)
         {
             List<IUserInfo> userList = new List<IUserInfo>();
-
-            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = Guid.Empty; }
 
             using (DbDataReader reader = await dbUserLocation.GetUsersByIPAddress(siteGuid, ipv4Address))
             {
@@ -495,8 +474,7 @@ namespace cloudscribe.Core.Repositories.Firebird
         }
 
         public async Task<int> CountUsers(int siteId, string userNameBeginsWith)
-        {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+        {   
             return await dbSiteUser.CountUsers(siteId, userNameBeginsWith);
         }
 
@@ -510,8 +488,6 @@ namespace cloudscribe.Core.Repositories.Firebird
             //sortMode: 0 = DisplayName asc, 1 = JoinDate desc, 2 = Last, First
             
             List<IUserInfo> userList = new List<IUserInfo>();
-
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             using (DbDataReader reader
                 = await dbSiteUser.GetUserListPage(
@@ -530,50 +506,46 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         }
 
-        public async Task<int> CountUsersForSearch(int siteId, string searchInput)
-        {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
-            return await dbSiteUser.CountUsersForSearch(siteId, searchInput);
-        }
+        //public async Task<int> CountUsersForSearch(int siteId, string searchInput)
+        //{
+        //    return await dbSiteUser.CountUsersForSearch(siteId, searchInput);
+        //}
 
-        public async Task<List<IUserInfo>> GetUserSearchPage(
-            int siteId,
-            int pageNumber,
-            int pageSize,
-            string searchInput,
-            int sortMode)
-        {
-            //sortMode: 0 = DisplayName asc, 1 = JoinDate desc, 2 = Last, First
+        //public async Task<List<IUserInfo>> GetUserSearchPage(
+        //    int siteId,
+        //    int pageNumber,
+        //    int pageSize,
+        //    string searchInput,
+        //    int sortMode)
+        //{
+        //    //sortMode: 0 = DisplayName asc, 1 = JoinDate desc, 2 = Last, First
 
-            List<IUserInfo> userList = new List<IUserInfo>();
+        //    List<IUserInfo> userList = new List<IUserInfo>();
 
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+        //    using (DbDataReader reader = await dbSiteUser.GetUserSearchPage(
+        //        siteId,
+        //        pageNumber,
+        //        pageSize,
+        //        searchInput,
+        //        sortMode))
+        //    {
 
-            using (DbDataReader reader = await dbSiteUser.GetUserSearchPage(
-                siteId,
-                pageNumber,
-                pageSize,
-                searchInput,
-                sortMode))
-            {
+        //        while (reader.Read())
+        //        {
+        //            UserInfo user = new UserInfo();
+        //            user.LoadFromReader(reader);
+        //            userList.Add(user);
 
-                while (reader.Read())
-                {
-                    UserInfo user = new UserInfo();
-                    user.LoadFromReader(reader);
-                    userList.Add(user);
+        //        }
+        //    }
 
-                }
-            }
-
-            return userList;
+        //    return userList;
 
 
-        }
+        //}
 
         public async Task<int> CountUsersForAdminSearch(int siteId, string searchInput)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
             return await dbSiteUser.CountUsersForAdminSearch(siteId, searchInput);
         }
 
@@ -585,8 +557,6 @@ namespace cloudscribe.Core.Repositories.Firebird
             int sortMode)
         {
             List<IUserInfo> userList = new List<IUserInfo>();
-
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             using (DbDataReader reader = await dbSiteUser.GetUserAdminSearchPage(
                 siteId,
@@ -609,7 +579,6 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         public async Task<int> CountLockedOutUsers(int siteId)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
             return await dbSiteUser.CountLockedOutUsers(siteId);
         }
 
@@ -619,8 +588,6 @@ namespace cloudscribe.Core.Repositories.Firebird
             int pageSize)
         {
             List<IUserInfo> userList = new List<IUserInfo>();
-
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             using (DbDataReader reader = await dbSiteUser.GetPageLockedUsers(
                 siteId,
@@ -642,7 +609,6 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         public async Task<int> CountNotApprovedUsers(int siteId)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
             return await dbSiteUser.CountNotApprovedUsers(siteId);
         }
 
@@ -652,8 +618,6 @@ namespace cloudscribe.Core.Repositories.Firebird
             int pageSize)
         {
             List<IUserInfo> userList = new List<IUserInfo>();
-
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             using (DbDataReader reader = await dbSiteUser.GetPageNotApprovedUsers(
                 siteId,
@@ -689,8 +653,6 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         public async Task<bool> EmailExistsInDB(int siteId, string email)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
-
             bool found = false;
 
             using (DbDataReader r = await dbSiteUser.GetSingleUser(siteId, email))
@@ -702,7 +664,6 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         public async Task<bool> EmailExistsInDB(int siteId, int userId, string email)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
             bool found = false;
 
             using (DbDataReader r = await dbSiteUser.GetSingleUser(siteId, email))
@@ -719,7 +680,6 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         public bool LoginExistsInDB(int siteId, string loginName)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
             bool found = false;
 
             using (DbDataReader r = dbSiteUser.GetSingleUserByLoginNameNonAsync(siteId, loginName, false))
@@ -740,7 +700,6 @@ namespace cloudscribe.Core.Repositories.Firebird
         /// <returns></returns>
         public async Task<bool> LoginIsAvailable(int siteId, int userId, string loginName)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
             bool available = true;
 
             using (DbDataReader r = await dbSiteUser.GetSingleUserByLoginName(siteId, loginName, false))
@@ -759,8 +718,6 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         public async Task<string> GetUserNameFromEmail(int siteId, String email)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
-
             String result = String.Empty;
             if ((email != null) && (email.Length > 0) && (siteId > 0))
             {
@@ -782,13 +739,10 @@ namespace cloudscribe.Core.Repositories.Firebird
 
 
 
-        public async Task<int> GetNewestUserId(int siteId)
-        {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
-
-            return await dbSiteUser.GetNewestUserId(siteId);
-
-        }
+        //public async Task<int> GetNewestUserId(int siteId)
+        //{
+        //    return await dbSiteUser.GetNewestUserId(siteId);
+        //}
 
 
         #endregion
@@ -917,7 +871,6 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         public async Task<bool> RoleExists(int siteId, String roleName)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
             return await dbRoles.Exists(siteId, roleName);
         }
 
@@ -955,8 +908,6 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         public async Task<ISiteRole> FetchRole(int siteId, string roleName)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
-
             SiteRole role = null;
             using (DbDataReader reader = await dbRoles.GetByName(siteId, roleName))
             {
@@ -973,8 +924,6 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         public async Task<List<string>> GetUserRoles(int siteId, int userId)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
-
             List<string> userRoles = new List<string>();
             using (DbDataReader reader = await dbSiteUser.GetRolesByUser(siteId, userId))
             {
@@ -994,8 +943,6 @@ namespace cloudscribe.Core.Repositories.Firebird
             int pageNumber,
             int pageSize)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
-
             IList<ISiteRole> roles = new List<ISiteRole>();
             using (DbDataReader reader = await dbRoles.GetPage(siteId, searchInput, pageNumber, pageSize))
             {
@@ -1013,69 +960,63 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         }
 
-        public IList<ISiteRole> GetRolesUserIsNotIn(
-            int siteId,
-            int userId)
-        {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+        //public IList<ISiteRole> GetRolesUserIsNotIn(
+        //    int siteId,
+        //    int userId)
+        //{
+        //   IList<ISiteRole> roles = new List<ISiteRole>();
+        //    using (DbDataReader reader = dbRoles.GetRolesUserIsNotIn(siteId, userId))
+        //    {
+        //        SiteRole role = new SiteRole();
+        //        role.LoadFromReader(reader);
 
-            IList<ISiteRole> roles = new List<ISiteRole>();
-            using (DbDataReader reader = dbRoles.GetRolesUserIsNotIn(siteId, userId))
-            {
-                SiteRole role = new SiteRole();
-                role.LoadFromReader(reader);
+        //        roles.Add(role);
+        //    }
+        //    return roles;
+        //}
 
-                roles.Add(role);
-            }
-            return roles;
-        }
+        //public async Task<List<int>> GetRoleIds(int siteId, string roleNamesSeparatedBySemiColons)
+        //{
+        //    List<int> roleIds = new List<int>();
 
-        public async Task<List<int>> GetRoleIds(int siteId, string roleNamesSeparatedBySemiColons)
-        {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+        //    List<string> roleNames = GetRolesNames(roleNamesSeparatedBySemiColons);
 
-            List<int> roleIds = new List<int>();
+        //    foreach (string roleName in roleNames)
+        //    {
+        //        if (string.IsNullOrEmpty(roleName)) { continue; }
+        //        ISiteRole r = await FetchRole(siteId, roleName);
+        //        if (r == null)
+        //        {
+        //            log.LogDebug("could not get roleid for role named " + roleName);
+        //            continue;
+        //        }
+        //        if (r.RoleId > -1) { roleIds.Add(r.RoleId); }
+        //    }
 
-            List<string> roleNames = GetRolesNames(roleNamesSeparatedBySemiColons);
+        //    return roleIds;
+        //}
 
-            foreach (string roleName in roleNames)
-            {
-                if (string.IsNullOrEmpty(roleName)) { continue; }
-                ISiteRole r = await FetchRole(siteId, roleName);
-                if (r == null)
-                {
-                    log.LogDebug("could not get roleid for role named " + roleName);
-                    continue;
-                }
-                if (r.RoleId > -1) { roleIds.Add(r.RoleId); }
-            }
+        //public static List<string> GetRolesNames(string roleNamesSeparatedBySemiColons)
+        //{
+        //    List<string> roleNames = new List<string>();
+        //    string[] roles = roleNamesSeparatedBySemiColons.Split(';');
+        //    foreach (string r in roles)
+        //    {
+        //        if (!roleNames.Contains(r)) { roleNames.Add(r); }
+        //    }
 
-            return roleIds;
-        }
+        //    return roleNames;
 
-        public static List<string> GetRolesNames(string roleNamesSeparatedBySemiColons)
-        {
-            List<string> roleNames = new List<string>();
-            string[] roles = roleNamesSeparatedBySemiColons.Split(';');
-            foreach (string r in roles)
-            {
-                if (!roleNames.Contains(r)) { roleNames.Add(r); }
-            }
-
-            return roleNames;
-
-        }
+        //}
 
 
         public async Task<int> CountOfRoles(int siteId, string searchInput)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
             return await dbRoles.GetCountOfSiteRoles(siteId, searchInput);
         }
 
         public async Task<int> CountUsersInRole(int siteId, int roleId, string searchInput)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
             return await dbRoles.GetCountOfUsersInRole(siteId, roleId, searchInput);
         }
 
@@ -1084,8 +1025,6 @@ namespace cloudscribe.Core.Repositories.Firebird
             string roleName)
         {
             IList<ISiteUser> users = new List<ISiteUser>();
-
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             ISiteRole role = await FetchRole(siteId, roleName);
             int roleId = -3;
@@ -1118,8 +1057,6 @@ namespace cloudscribe.Core.Repositories.Firebird
         {
             IList<IUserInfo> users = new List<IUserInfo>();
 
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
-
             using (DbDataReader reader = await dbRoles.GetUsersInRole(siteId, roleId, searchInput, pageNumber, pageSize))
             {
                 while (reader.Read())
@@ -1137,7 +1074,6 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         public async Task<int> CountUsersNotInRole(int siteId, int roleId, string searchInput)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
             return await dbRoles.GetCountOfUsersNotInRole(siteId, roleId, searchInput);
         }
 
@@ -1149,8 +1085,6 @@ namespace cloudscribe.Core.Repositories.Firebird
             int pageSize)
         {
             IList<IUserInfo> users = new List<IUserInfo>();
-
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             using (DbDataReader reader = await dbRoles.GetUsersNotInRole(siteId, roleId, searchInput, pageNumber, pageSize))
             {
@@ -1224,8 +1158,6 @@ namespace cloudscribe.Core.Repositories.Firebird
             string claimValue)
         {
             IList<ISiteUser> users = new List<ISiteUser>();
-
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             using (DbDataReader reader = await dbUserClaims.GetUsersByClaim(siteId, claimType, claimValue))
             {

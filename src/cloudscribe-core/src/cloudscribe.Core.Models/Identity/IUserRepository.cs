@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-18
-// Last Modified:			2015-06-08
+// Last Modified:			2015-10-13
 // 
 
 
@@ -23,7 +23,7 @@ namespace cloudscribe.Core.Models
         Task<ISiteUser> Fetch(int siteId, string email);
         Task<ISiteUser> FetchByConfirmationGuid(int siteId, Guid confirmGuid);
         Task<ISiteUser> FetchByLoginName(int siteId, string userName, bool allowEmailFallback);
-        Task<ISiteUser> FetchNewest(int siteId);
+        //Task<ISiteUser> FetchNewest(int siteId);
         Task<bool> Delete(int userId);
         Task<bool> FlagAsDeleted(int userId);
         Task<bool> FlagAsNotDeleted(int userId);
@@ -36,21 +36,21 @@ namespace cloudscribe.Core.Models
         Task<List<IUserInfo>> GetPage(int siteId, int pageNumber, int pageSize, string userNameBeginsWith, int sortMode);
         Task<List<IUserInfo>> GetPageLockedUsers(int siteId, int pageNumber, int pageSize);
         Task<List<IUserInfo>> GetUserAdminSearchPage(int siteId, int pageNumber, int pageSize, string searchInput, int sortMode);
-        Task<List<IUserInfo>> GetUserSearchPage(int siteId, int pageNumber, int pageSize, string searchInput, int sortMode);
+        //Task<List<IUserInfo>> GetUserSearchPage(int siteId, int pageNumber, int pageSize, string searchInput, int sortMode);
         Task<bool> Save(ISiteUser user);
         Task<bool> UpdateTotalRevenue();
         Task<bool> UpdateTotalRevenue(Guid userGuid);
-        Task<int> GetNewestUserId(int siteId);
+        //Task<int> GetNewestUserId(int siteId);
         Task<string> GetUserNameFromEmail(int siteId, string email);
         Task<int> CountUsers(int siteId, string userNameBeginsWith);
-        Task<int> CountUsersForSearch(int siteId, string searchInput);
+        //Task<int> CountUsersForSearch(int siteId, string searchInput);
         Task<int> CountUsersForAdminSearch(int siteId, string searchInput);
         Task<int> CountLockedOutUsers(int siteId);
         Task<int> CountNotApprovedUsers(int siteId);
         bool LoginExistsInDB(int siteId, string loginName);
         Task<bool> LoginIsAvailable(int siteId, int userId, string loginName);
         //int UserCount(int siteId, string userNameBeginsWith);
-        int UsersOnlineSinceCount(int siteId, DateTime sinceTime);
+        //int UsersOnlineSinceCount(int siteId, DateTime sinceTime);
         int GetCount(int siteId);
         //bool UpdatePasswordAndSalt(int userId, int passwordFormat, string password, string passwordSalt);
         //DataTable GetUserListForPasswordFormatChange(int siteId);
@@ -72,8 +72,8 @@ namespace cloudscribe.Core.Models
             int pageNumber,
             int pageSize);
         Task<List<string>> GetUserRoles(int siteId, int userId);
-        Task<List<int>> GetRoleIds(int siteId, string roleNamesSeparatedBySemiColons);
-        IList<ISiteRole> GetRolesUserIsNotIn(int siteId, int userId);
+        //Task<List<int>> GetRoleIds(int siteId, string roleNamesSeparatedBySemiColons);
+        //IList<ISiteRole> GetRolesUserIsNotIn(int siteId, int userId);
         Task<IList<ISiteUser>> GetUsersInRole(int siteId, string roleName);
         Task<IList<IUserInfo>> GetUsersInRole(int siteId, int roleId, string searchInput, int pageNumber, int pageSize);
         Task<IList<IUserInfo>> GetUsersNotInRole(int siteId, int roleId, string searchInput, int pageNumber, int pageSize);

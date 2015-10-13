@@ -2,13 +2,13 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-06-19
-// Last Modified:		    2015-09-08
+// Last Modified:		    2015-10-13
 // 
 
 using cloudscribe.Core.Models;
 using Microsoft.AspNet.Identity;
-using Microsoft.Framework.Configuration;
 using Microsoft.Framework.Logging;
+using Microsoft.Framework.OptionsModel;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,6 +20,7 @@ namespace cloudscribe.Core.Identity
         public RoleStore(
             ILogger<RoleStore<TRole>> logger,
             ISiteResolver siteResolver,
+            IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
             IUserRepository userRepository
             )
         {
@@ -36,16 +37,16 @@ namespace cloudscribe.Core.Identity
             //config = configuration;
             //debugLog = config.UserStoreDebugEnabled();
 
-            
+
             //siteSettings = site;
 
-
+            multiTenantOptions = multiTenantOptionsAccessor.Options;
             userRepo = userRepository;
 
             //if (debugLog) { log.LogInformation("constructor"); }
         }
 
-        
+        private MultiTenantOptions multiTenantOptions;
         private ILogger log;
         //private bool debugLog = false;
         //private IConfiguration config;
@@ -120,7 +121,11 @@ namespace cloudscribe.Core.Identity
         {
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
-            ISiteRole role = await userRepo.FetchRole(Site.SiteId, normalizedRoleName);
+
+            int siteId = Site.SiteId;
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+
+            ISiteRole role = await userRepo.FetchRole(siteId, normalizedRoleName);
 
             return (TRole)role;
         }
