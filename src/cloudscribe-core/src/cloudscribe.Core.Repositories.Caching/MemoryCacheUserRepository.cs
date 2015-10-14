@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-14
-// Last Modified:			2015-10-13
+// Last Modified:			2015-10-14
 // 
 
 
@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 namespace cloudscribe.Core.Repositories.Caching
 {
     
-    public class MemoryCacheUserRepository
+    public class MemoryCacheUserRepository : IUserRepository
     {
         private IUserRepository implementation;
         private IMemoryCache cache;
@@ -38,6 +38,8 @@ namespace cloudscribe.Core.Repositories.Caching
             log = logger;
 
         }
+
+        //TODO: implement caching logic
 
         #region User 
 
@@ -61,20 +63,20 @@ namespace cloudscribe.Core.Repositories.Caching
             return await implementation.FlagAsNotDeleted(userId);
         }
 
-        //public async Task<bool> ConfirmRegistration(Guid registrationGuid)
-        //{    
-        //    return await implementation.ConfirmRegistration(Guid.Empty, registrationGuid);
-        //}
+        public async Task<bool> ConfirmRegistration(Guid registrationGuid)
+        {
+            return await implementation.ConfirmRegistration(registrationGuid);
+        }
 
-        //public async Task<bool> LockoutAccount(Guid userGuid)
-        //{
-        //    return await implementation.AccountLockout(userGuid, DateTime.UtcNow);
-        //}
+        public async Task<bool> LockoutAccount(Guid userGuid)
+        {
+            return await implementation.LockoutAccount(userGuid);
+        }
 
-        //public async Task<bool> UnLockAccount(Guid userGuid)
-        //{
-        //    return await implementation.AccountClearLockout(userGuid);
-        //}
+        public async Task<bool> UnLockAccount(Guid userGuid)
+        {
+            return await implementation.UnLockAccount(userGuid);
+        }
 
         public async Task<bool> UpdateFailedPasswordAttemptCount(Guid userGuid, int failedPasswordAttemptCount)
         {
@@ -335,10 +337,75 @@ namespace cloudscribe.Core.Repositories.Caching
             return await implementation.SaveClaim(userClaim);
         }
 
+        public async Task<bool> DeleteClaim(int id)
+        {
+            return await implementation.DeleteClaim(id);
+        }
+
+        public async Task<bool> DeleteClaimsByUser(int siteId, string userId)
+        {
+            return await implementation.DeleteClaimsByUser(siteId, userId);
+        }
+
+        public async Task<bool> DeleteClaimByUser(int siteId, string userId, string claimType)
+        {
+            return await implementation.DeleteClaimByUser(siteId, userId, claimType);
+        }
+
+        public async Task<bool> DeleteClaimsBySite(int siteId)
+        {
+            return await implementation.DeleteClaimsBySite(siteId);
+        }
+
+        public async Task<IList<IUserClaim>> GetClaimsByUser(int siteId, string userId)
+        {
+            return await implementation.GetClaimsByUser(siteId, userId);
+        }
+
+        public async Task<IList<ISiteUser>> GetUsersForClaim(
+            int siteId,
+            string claimType,
+            string claimValue)
+        {
+            return await implementation.GetUsersForClaim(siteId, claimType, claimValue);
+        }
+
         #endregion
 
 
-            #region Logins
+        #region Logins
+
+        public async Task<bool> CreateLogin(IUserLogin userLogin)
+        {
+            return await implementation.CreateLogin(userLogin);
+        }
+
+        public async Task<IUserLogin> FindLogin(
+            int siteId,
+            string loginProvider,
+            string providerKey)
+        {
+            return await implementation.FindLogin(siteId, loginProvider, providerKey);
+        }
+
+        public async Task<bool> DeleteLogin(
+            int siteId,
+            string loginProvider,
+            string providerKey,
+            string userId)
+        {
+            return await implementation.DeleteLogin(siteId, loginProvider, providerKey, userId);
+        }
+
+        public async Task<bool> DeleteLoginsByUser(int siteId, string userId)
+        {
+            return await implementation.DeleteLoginsByUser(siteId, userId);
+        }
+
+        public async Task<bool> DeleteLoginsBySite(int siteId)
+        {
+            return await implementation.DeleteLoginsBySite(siteId);
+        }
 
         public async Task<IList<IUserLogin>> GetLoginsByUser(
             int siteId,
@@ -350,6 +417,40 @@ namespace cloudscribe.Core.Repositories.Caching
 
         #endregion
 
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+        void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // TODO: dispose managed state (managed objects).
+                }
+
+                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
+                // TODO: set large fields to null.
+
+                disposedValue = true;
+            }
+        }
+
+        // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
+        // ~SiteRoleStore() {
+        //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+        //   Dispose(false);
+        // }
+
+        // This code added to correctly implement the disposable pattern.
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
+            // TODO: uncomment the following line if the finalizer is overridden above.
+            // GC.SuppressFinalize(this);
+        }
+        #endregion
 
 
 

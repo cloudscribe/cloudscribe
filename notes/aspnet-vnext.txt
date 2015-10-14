@@ -8,6 +8,9 @@ Policy based authorization
 cloudscribe should probably change to this approach to give more control over which roles claims or role names are used
 http://stackoverflow.com/questions/33076266/dynamically-add-roles-to-authorize-attribute-for-controller-in-asp-net-5
 
+another good authorization question not yet answered
+http://stackoverflow.com/questions/33076063/resource-specific-authorization-in-asp-net-mvc-6
+
 Really good article even if not converting something from web api to mvc6
 http://www.dotnetcurry.com/aspnet-mvc/1149/convert-aspnet-webapi2-aspnet5-mvc6
 
