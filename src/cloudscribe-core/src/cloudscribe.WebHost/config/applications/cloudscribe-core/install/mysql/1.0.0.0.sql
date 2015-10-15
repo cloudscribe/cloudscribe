@@ -154,16 +154,6 @@ CREATE TABLE `mp_Users` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 
-
-CREATE TABLE `mp_BannedIPAddresses` (
-  `RowID` int(11) NOT NULL auto_increment,
-  `BannedIP` varchar(50) NOT NULL,
-  `BannedUTC` datetime NOT NULL,
-  `BannedReason` varchar(255) default NULL,
-  PRIMARY KEY  (`RowID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
 CREATE TABLE `mp_Currency` (
   `Guid` varchar(36) NOT NULL,
   `Title` varchar(50) NOT NULL,
@@ -201,18 +191,6 @@ CREATE TABLE `mp_GeoZone` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-
-CREATE TABLE `mp_IndexingQueue` (
-  `RowId` bigint(20) NOT NULL auto_increment,
-  `IndexPath` varchar(255) NOT NULL,
-  `SerializedItem` text NOT NULL,
-  `ItemKey` varchar(255) NOT NULL,
-  `RemoveOnly` tinyint(1) unsigned NOT NULL,
-  `SiteID` int(11) NOT NULL,
-  PRIMARY KEY  (`RowId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
 CREATE TABLE `mp_Language` (
   `Guid` varchar(36) NOT NULL,
   `Name` varchar(255) NOT NULL,
@@ -221,20 +199,6 @@ CREATE TABLE `mp_Language` (
   PRIMARY KEY  (`Guid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
-CREATE TABLE `mp_RedirectList` (
-  `RowGuid` varchar(36) NOT NULL,
-  `SiteGuid` varchar(36) NOT NULL,
-  `SiteID` int(11) NOT NULL,
-  `OldUrl` varchar(255) NOT NULL,
-  `NewUrl` varchar(255) NOT NULL,
-  `CreatedUtc` datetime NOT NULL,
-  `ExpireUtc` datetime NOT NULL,
-  PRIMARY KEY  (`RowGuid`),
-  KEY `idxRedirectSGuid` (`SiteGuid`),
-  KEY `idxRedirectSId` (`SiteID`),
-  KEY `idxRedirectUrl` (`OldUrl`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `mp_SchemaVersion` (
   `ApplicationID` varchar(36) NOT NULL,
@@ -294,32 +258,6 @@ CREATE TABLE `mp_SiteSettingsExDef` (
   `DefaultValue` text,
   `SortOrder` int(11) NOT NULL,
   PRIMARY KEY  (`KeyName`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-CREATE TABLE `mp_TaskQueue` (
-  `Guid` varchar(36) NOT NULL,
-  `SiteGuid` varchar(36) NOT NULL,
-  `QueuedBy` varchar(36) NOT NULL,
-  `TaskName` varchar(255) NOT NULL,
-  `NotifyOnCompletion` tinyint(1) unsigned NOT NULL,
-  `NotificationToEmail` varchar(255) default NULL,
-  `NotificationFromEmail` varchar(255) default NULL,
-  `NotificationSubject` varchar(255) default NULL,
-  `TaskCompleteMessage` text,
-  `NotificationSentUTC` datetime default NULL,
-  `CanStop` tinyint(1) unsigned NOT NULL,
-  `CanResume` tinyint(1) unsigned NOT NULL,
-  `UpdateFrequency` int(11) NOT NULL,
-  `QueuedUTC` datetime NOT NULL,
-  `StartUTC` datetime default NULL,
-  `CompleteUTC` datetime default NULL,
-  `LastStatusUpdateUTC` datetime default NULL,
-  `CompleteRatio` float NOT NULL,
-  `Status` varchar(255) default NULL,
-  `SerializedTaskObject` text,
-  `SerializedTaskType` varchar(255) default NULL,
-  PRIMARY KEY  (`Guid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 

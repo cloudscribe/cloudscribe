@@ -1,5 +1,6 @@
 
 http://stackoverflow.com/questions/29048122/token-based-authentication-in-asp-net-5-vnext/29698502#29698502
+http://stackoverflow.com/questions/33140360/getting-access-token
 
 How to get IIS server variables: wonder if this will change in beta8 with thenew hosting model
 http://stackoverflow.com/questions/33088167/asp-5-servervariables
@@ -7,6 +8,8 @@ http://stackoverflow.com/questions/33088167/asp-5-servervariables
 Policy based authorization
 cloudscribe should probably change to this approach to give more control over which roles claims or role names are used
 http://stackoverflow.com/questions/33076266/dynamically-add-roles-to-authorize-attribute-for-controller-in-asp-net-5
+
+http://odetocode.com/blogs/scott/archive/2015/10/06/authorization-policies-and-middleware-in-asp-net-5.aspx
 
 another good authorization question not yet answered
 http://stackoverflow.com/questions/33076063/resource-specific-authorization-in-asp-net-mvc-6

@@ -201,36 +201,7 @@ CREATE TABLE `mp_SiteFolders` (
  `FolderName` varchar(255) NOT NULL
 );
 
-CREATE TABLE `mp_BannedIPAddresses` (
- `RowID` INTEGER NOT NULL PRIMARY KEY, 
- `BannedIP` varchar(50) NOT NULL,
- `BannedUTC` datetime NOT NULL,
- `BannedReason` varchar(255) NULL
-);
 
-CREATE TABLE `mp_TaskQueue` (
- `Guid` varchar(36) NOT NULL PRIMARY KEY, 
- `SiteGuid` varchar(36) NOT NULL,
- `QueuedBy` varchar(36) NOT NULL,
- `TaskName` varchar(255) NOT NULL,
- `NotifyOnCompletion` INTEGER NOT NULL,
- `NotificationToEmail` varchar(255) NULL,
- `NotificationFromEmail` varchar(255) NULL,
- `NotificationSubject` varchar(255) NULL,
- `TaskCompleteMessage` text NULL,
- `NotificationSentUTC` datetime NULL,
- `CanStop` INTEGER NOT NULL,
- `CanResume` INTEGER NOT NULL,
- `UpdateFrequency` INTEGER NOT NULL,
- `QueuedUTC` datetime NOT NULL,
- `StartUTC` datetime NULL,
- `CompleteUTC` datetime NULL,
- `LastStatusUpdateUTC` datetime NULL,
- `CompleteRatio` Float NOT NULL,
- `Status` varchar(255) NULL,
- `SerializedTaskObject` text NULL,
- `SerializedTaskType` varchar(255) NULL
-);
 
 CREATE TABLE `mp_UserLocation` (
  `RowID` varchar(36) NOT NULL PRIMARY KEY, 
@@ -250,17 +221,6 @@ CREATE TABLE `mp_UserLocation` (
  `CaptureCount` INTEGER NOT NULL,
  `FirstCaptureUTC` datetime NOT NULL,
  `LastCaptureUTC` datetime NOT NULL
-);
-
-
-
-CREATE TABLE `mp_IndexingQueue` (
- `RowId` INTEGER NOT NULL PRIMARY KEY, 
- `IndexPath` varchar(255) NOT NULL,
- `SerializedItem` text NOT NULL,
- `ItemKey` varchar(255) NOT NULL,
- `RemoveOnly` INTEGER NOT NULL,
- `SiteID` INTEGER NOT NULL
 );
 
 
@@ -319,23 +279,6 @@ CREATE TABLE `mp_SiteSettingsExDef` (
  `SortOrder` INTEGER NOT NULL
 );
 
-
-CREATE TABLE `mp_RedirectList` (
- `RowGuid` varchar(36) NOT NULL PRIMARY KEY, 
- `SiteGuid` varchar(36) NOT NULL,
- `SiteID` INTEGER NOT NULL,
- `OldUrl` varchar(255) NOT NULL,
- `NewUrl` varchar(255) NOT NULL,
- `CreatedUtc` datetime NOT NULL,
- `ExpireUtc` datetime NOT NULL
-);
-
-
-
-
-CREATE INDEX idxRedirectSGuid ON mp_RedirectList(`SiteGuid`);
-CREATE INDEX idxRedirectSId ON mp_RedirectList(`SiteID`);
-CREATE INDEX idxRedirectUrl ON mp_RedirectList(`OldUrl`);
 
 CREATE TABLE `mp_UserClaims` (
  `Id` INTEGER NOT NULL PRIMARY KEY, 

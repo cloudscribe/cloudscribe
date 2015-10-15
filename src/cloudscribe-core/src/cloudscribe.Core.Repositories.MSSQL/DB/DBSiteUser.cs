@@ -55,19 +55,19 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return sph.ExecuteReader();
         }
 
-        public DbDataReader GetSmartDropDownData(int siteId, string query, int rowsToGet)
-        {
-            SqlParameterHelper sph = new SqlParameterHelper(
-                logFactory,
-                readConnectionString, 
-                "mp_Users_SmartDropDown", 
-                3);
+        //public DbDataReader GetSmartDropDownData(int siteId, string query, int rowsToGet)
+        //{
+        //    SqlParameterHelper sph = new SqlParameterHelper(
+        //        logFactory,
+        //        readConnectionString, 
+        //        "mp_Users_SmartDropDown", 
+        //        3);
 
-            sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
-            sph.DefineSqlParameter("@Query", SqlDbType.NVarChar, 50, ParameterDirection.Input, query);
-            sph.DefineSqlParameter("@RowsToGet", SqlDbType.Int, ParameterDirection.Input, rowsToGet);
-            return sph.ExecuteReader();
-        }
+        //    sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
+        //    sph.DefineSqlParameter("@Query", SqlDbType.NVarChar, 50, ParameterDirection.Input, query);
+        //    sph.DefineSqlParameter("@RowsToGet", SqlDbType.Int, ParameterDirection.Input, rowsToGet);
+        //    return sph.ExecuteReader();
+        //}
 
         public DbDataReader EmailLookup(int siteId, string query, int rowsToGet)
         {
@@ -861,25 +861,25 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return (rowsAffected > -1);
         }
 
-        public bool UpdatePasswordAndSalt(
-            int userId,
-            int pwdFormat,
-            string password,
-            string passwordSalt)
-        {
-            SqlParameterHelper sph = new SqlParameterHelper(
-                logFactory,
-                writeConnectionString, 
-                "mp_Users_UpdatePasswordAndSalt", 
-                4);
+        //public bool UpdatePasswordAndSalt(
+        //    int userId,
+        //    int pwdFormat,
+        //    string password,
+        //    string passwordSalt)
+        //{
+        //    SqlParameterHelper sph = new SqlParameterHelper(
+        //        logFactory,
+        //        writeConnectionString, 
+        //        "mp_Users_UpdatePasswordAndSalt", 
+        //        4);
 
-            sph.DefineSqlParameter("@UserID", SqlDbType.Int, ParameterDirection.Input, userId);
-            sph.DefineSqlParameter("@Password", SqlDbType.NVarChar, 1000, ParameterDirection.Input, password);
-            sph.DefineSqlParameter("@PasswordSalt", SqlDbType.NVarChar, 128, ParameterDirection.Input, passwordSalt);
-            sph.DefineSqlParameter("@PwdFormat", SqlDbType.Int, ParameterDirection.Input, pwdFormat);
-            int rowsAffected = sph.ExecuteNonQuery();
-            return (rowsAffected > -1);
-        }
+        //    sph.DefineSqlParameter("@UserID", SqlDbType.Int, ParameterDirection.Input, userId);
+        //    sph.DefineSqlParameter("@Password", SqlDbType.NVarChar, 1000, ParameterDirection.Input, password);
+        //    sph.DefineSqlParameter("@PasswordSalt", SqlDbType.NVarChar, 128, ParameterDirection.Input, passwordSalt);
+        //    sph.DefineSqlParameter("@PwdFormat", SqlDbType.Int, ParameterDirection.Input, pwdFormat);
+        //    int rowsAffected = sph.ExecuteNonQuery();
+        //    return (rowsAffected > -1);
+        //}
 
         public bool UpdatePasswordQuestionAndAnswer(
             Guid userGuid,
@@ -899,30 +899,30 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return (rowsAffected > -1);
         }
 
-        public async Task<bool> UpdateTotalRevenue(Guid userGuid)
-        {
-            SqlParameterHelper sph = new SqlParameterHelper(
-                logFactory,
-                writeConnectionString, 
-                "mp_Users_UpdateTotalRevenueByUser", 
-                1);
+        //public async Task<bool> UpdateTotalRevenue(Guid userGuid)
+        //{
+        //    SqlParameterHelper sph = new SqlParameterHelper(
+        //        logFactory,
+        //        writeConnectionString, 
+        //        "mp_Users_UpdateTotalRevenueByUser", 
+        //        1);
 
-            sph.DefineSqlParameter("@UserGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, userGuid);
-            int rowsAffected = await sph.ExecuteNonQueryAsync();
-            return rowsAffected > 0;
+        //    sph.DefineSqlParameter("@UserGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, userGuid);
+        //    int rowsAffected = await sph.ExecuteNonQueryAsync();
+        //    return rowsAffected > 0;
 
-        }
+        //}
 
-        public async Task<bool> UpdateTotalRevenue()
-        {
-            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
-                writeConnectionString,
-                CommandType.StoredProcedure,
-                "mp_Users_UpdateTotalRevenue",
-                null);
+        //public async Task<bool> UpdateTotalRevenue()
+        //{
+        //    int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
+        //        writeConnectionString,
+        //        CommandType.StoredProcedure,
+        //        "mp_Users_UpdateTotalRevenue",
+        //        null);
 
-            return rowsAffected > 0;
-        }
+        //    return rowsAffected > 0;
+        //}
 
 
         public async Task<bool> FlagAsDeleted(int userId)

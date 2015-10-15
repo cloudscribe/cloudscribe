@@ -45,21 +45,6 @@ CREATE TABLE [mp_UserClaims] (
 GO
 
 
-
-
-CREATE TABLE [mp_BannedIPAddresses](
-	[RowID] [int] IDENTITY(1,1) NOT NULL,
-	[BannedIP] [nvarchar](50) NOT NULL,
-	[BannedUTC] [datetime] NOT NULL,
-	[BannedReason] [nvarchar](255) NULL,
- CONSTRAINT [PK_mp_BannedIPAddresses] PRIMARY KEY 
-(
-	[RowID] 
-)
-)
-
-GO
-
 CREATE TABLE [mp_Currency](
 	[Guid] [uniqueidentifier] NOT NULL,
 	[Title] [nvarchar](50) NOT NULL,
@@ -108,20 +93,6 @@ CREATE TABLE [mp_GeoZone](
 
 GO
 
-CREATE TABLE [mp_IndexingQueue](
-	[RowId] [bigint] IDENTITY(1,1) NOT NULL,
-	[IndexPath] [nvarchar](255) NOT NULL,
-	[SerializedItem] [ntext] NOT NULL,
-	[ItemKey] [nvarchar](255) NOT NULL,
-	[RemoveOnly] [bit] NOT NULL,
-	[SiteID] [int] NOT NULL,
- CONSTRAINT [PK_mp_IndexingQueue] PRIMARY KEY 
-(
-	[RowId] 
-)
-)
-
-GO
 
 CREATE TABLE [mp_Language](
 	[Guid] [uniqueidentifier] NOT NULL,
@@ -136,42 +107,6 @@ CREATE TABLE [mp_Language](
 
 GO
 
-CREATE TABLE [mp_RedirectList](
-	[RowGuid] [uniqueidentifier] NOT NULL,
-	[SiteGuid] [uniqueidentifier] NOT NULL,
-	[SiteID] [int] NOT NULL,
-	[OldUrl] [nvarchar](255) NOT NULL,
-	[NewUrl] [nvarchar](255) NOT NULL,
-	[CreatedUtc] [datetime] NOT NULL,
-	[ExpireUtc] [datetime] NOT NULL,
- CONSTRAINT [PK_mp_RedirectList] PRIMARY KEY 
-(
-	[RowGuid]
-)
-)
-
-GO
-
-CREATE INDEX [IX_mp_RedirectListOldUrl] ON [mp_RedirectList] 
-(
-	[OldUrl] 
-)
-
-GO
-
-CREATE INDEX [IX_mp_RedirectListSiteGuid] ON [mp_RedirectList] 
-(
-	[SiteGuid] 
-)
-
-GO
-
-CREATE INDEX [IX_mp_RedirectListSiteID] ON [mp_RedirectList] 
-(
-	[SiteID] 
-)
-
-GO
 
 CREATE TABLE [mp_Roles](
 	[RoleID] [int] IDENTITY(1,1) NOT NULL,
@@ -354,35 +289,7 @@ CREATE TABLE [mp_SiteSettingsExDef](
 
 GO
 
-CREATE TABLE [mp_TaskQueue](
-	[Guid] [uniqueidentifier] NOT NULL,
-	[SiteGuid] [uniqueidentifier] NOT NULL,
-	[QueuedBy] [uniqueidentifier] NOT NULL,
-	[TaskName] [nvarchar](255) NOT NULL,
-	[NotifyOnCompletion] [bit] NOT NULL,
-	[NotificationToEmail] [nvarchar](255) NULL,
-	[NotificationFromEmail] [nvarchar](255) NULL,
-	[NotificationSubject] [nvarchar](255) NULL,
-	[TaskCompleteMessage] [ntext] NULL,
-	[NotificationSentUTC] [datetime] NULL,
-	[CanStop] [bit] NOT NULL,
-	[CanResume] [bit] NOT NULL,
-	[UpdateFrequency] [int] NOT NULL,
-	[QueuedUTC] [datetime] NOT NULL,
-	[StartUTC] [datetime] NULL,
-	[CompleteUTC] [datetime] NULL,
-	[LastStatusUpdateUTC] [datetime] NULL,
-	[CompleteRatio] [float] NOT NULL,
-	[Status] [nvarchar](255) NULL,
-	[SerializedTaskObject] [ntext] NULL,
-	[SerializedTaskType] [nvarchar](255) NULL,
- CONSTRAINT [PK_mp_TaskQueue] PRIMARY KEY 
-(
-	[Guid]
-)
-)
 
-GO
 
 CREATE TABLE [mp_UserLocation](
 	[RowID] [uniqueidentifier] NOT NULL,
@@ -571,17 +478,6 @@ REFERENCES [mp_GeoCountry] ([Guid])
 
 GO
 
-ALTER TABLE [mp_IndexingQueue] ADD  CONSTRAINT [DF_mp_IndexingQueue_RemoveOnly]  DEFAULT ((0)) FOR [RemoveOnly]
-
-GO
-
-ALTER TABLE [mp_RedirectList] ADD  CONSTRAINT [DF_mp_RedirectList_RowGuid]  DEFAULT (newid()) FOR [RowGuid]
-
-GO
-
-ALTER TABLE [mp_RedirectList] ADD  CONSTRAINT [DF_mp_RedirectList_CreatedUtc]  DEFAULT (getdate()) FOR [CreatedUtc]
-
-GO
 
 ALTER TABLE [mp_Roles] ADD  CONSTRAINT [FK_Roles_Portals] FOREIGN KEY([SiteID])
 REFERENCES [mp_Sites] ([SiteID])
@@ -734,29 +630,7 @@ ALTER TABLE [mp_Sites] ADD  CONSTRAINT [DF_mp_Sites_AllowWindowsLiveAuth]  DEFAU
 
 GO
 
-ALTER TABLE [mp_TaskQueue] ADD  CONSTRAINT [DF_mp_TaskQueue_Guid]  DEFAULT (newid()) FOR [Guid]
 
-GO
-
-ALTER TABLE [mp_TaskQueue] ADD  CONSTRAINT [DF_mp_TaskQueue_NotifyOnCompletion]  DEFAULT ((0)) FOR [NotifyOnCompletion]
-
-GO
-
-ALTER TABLE [mp_TaskQueue] ADD  CONSTRAINT [DF_mp_TaskQueue_CanStop]  DEFAULT ((0)) FOR [CanStop]
-
-GO
-
-ALTER TABLE [mp_TaskQueue] ADD  CONSTRAINT [DF_mp_TaskQueue_CanResume]  DEFAULT ((0)) FOR [CanResume]
-
-GO
-
-ALTER TABLE [mp_TaskQueue] ADD  CONSTRAINT [DF_mp_TaskQueue_UpdateFrequency]  DEFAULT ((5)) FOR [UpdateFrequency]
-
-GO
-
-ALTER TABLE [mp_TaskQueue] ADD  CONSTRAINT [DF_mp_TaskQueue_CompleteRatio]  DEFAULT ((0)) FOR [CompleteRatio]
-
-GO
 
 ALTER TABLE [mp_UserLocation] ADD  CONSTRAINT [DF_mp_UserLocation_RowID]  DEFAULT (newid()) FOR [RowID]
 

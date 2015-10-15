@@ -279,11 +279,11 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return await dbSiteUser.UpdateFailedPasswordAttemptCount(userGuid, failedPasswordAttemptCount);
         }
 
-        public async Task<bool> UpdateTotalRevenue(Guid userGuid)
-        {
-            return await dbSiteUser.UpdateTotalRevenue(userGuid);
+        //public async Task<bool> UpdateTotalRevenue(Guid userGuid)
+        //{
+        //    return await dbSiteUser.UpdateTotalRevenue(userGuid);
 
-        }
+        //}
 
         /// <summary>
         /// updates the total revenue for all users
