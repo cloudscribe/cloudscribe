@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-09-01
-// Last Modified:		    2015-09-01
+// Last Modified:		    2015-10-17
 // 
 
 
@@ -15,7 +15,7 @@ namespace cloudscribe.Core.Identity.OAuth
     {
 
         public MultiTenantMicrosoftOptionsResolver(
-            MicrosoftAccountAuthenticationOptions originalOptions,
+            MicrosoftAccountOptions originalOptions,
             ISiteResolver siteResolver,
             ISiteRepository siteRepository,
             MultiTenantOptions multiTenantOptions)
@@ -26,7 +26,7 @@ namespace cloudscribe.Core.Identity.OAuth
             siteRepo = siteRepository;
         }
 
-        private MicrosoftAccountAuthenticationOptions originalOptions;
+        private MicrosoftAccountOptions originalOptions;
         private ISiteResolver siteResolver;
         private ISiteRepository siteRepo;
         private MultiTenantOptions multiTenantOptions;

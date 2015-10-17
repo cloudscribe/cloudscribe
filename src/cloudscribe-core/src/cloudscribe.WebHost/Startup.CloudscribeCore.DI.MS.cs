@@ -196,48 +196,49 @@ namespace cloudscribe.WebHost
                  
              });
 
-            
-                
 
+
+
+            //https://github.com/aspnet/Announcements/issues/71
 
             // Configure the options for the authentication middleware.
             // You can add options for Google, Twitter and other middleware as shown below.
             // For more information see http://go.microsoft.com/fwlink/?LinkID=532715
             // establish AppId and AppSecret here https://developers.facebook.com/apps
             // https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.Facebook/FacebookAuthenticationOptions.cs
-            services.Configure<FacebookAuthenticationOptions>(options =>
-            {
-                // options here are only used if not specified in site settings
-                options.AppId = configuration["Authentication:Facebook:AppId"];
-                options.AppSecret = configuration["Authentication:Facebook:AppSecret"];
-                //options.AuthenticationScheme = AuthenticationScheme.External;
+            //services.Configure<FacebookAuthenticationOptions>(options =>
+            //{
+            //    // options here are only used if not specified in site settings
+            //    options.AppId = configuration["Authentication:Facebook:AppId"];
+            //    options.AppSecret = configuration["Authentication:Facebook:AppSecret"];
+            //    //options.AuthenticationScheme = AuthenticationScheme.External;
 
-            });
+            //});
 
-            // get clientid and secret here https://account.live.com/developers/applications/index
-            services.Configure<MicrosoftAccountAuthenticationOptions>(options =>
-            {
-                options.ClientId = configuration["Authentication:MicrosoftAccount:ClientId"];
-                options.ClientSecret = configuration["Authentication:MicrosoftAccount:ClientSecret"];
-            });
+            //// get clientid and secret here https://account.live.com/developers/applications/index
+            //services.Configure<MicrosoftAccountAuthenticationOptions>(options =>
+            //{
+            //    options.ClientId = configuration["Authentication:MicrosoftAccount:ClientId"];
+            //    options.ClientSecret = configuration["Authentication:MicrosoftAccount:ClientSecret"];
+            //});
 
-            //https://auth0.com/docs/connections/social/google
-            // get clientid and secret here https://console.developers.google.com/
-            services.Configure<GoogleAuthenticationOptions>(options =>
-            {
-                options.ClientId = configuration["Authentication:Google:ClientId"];
-                options.ClientSecret = configuration["Authentication:Google:ClientSecret"];
-            });
+            ////https://auth0.com/docs/connections/social/google
+            //// get clientid and secret here https://console.developers.google.com/
+            //services.Configure<GoogleAuthenticationOptions>(options =>
+            //{
+            //    options.ClientId = configuration["Authentication:Google:ClientId"];
+            //    options.ClientSecret = configuration["Authentication:Google:ClientSecret"];
+            //});
 
 
-            // get consumerkey and secret here https://apps.twitter.com/
-            // unlike the other providers twitter does not allow creating localhost apps for testing
-            // but you can use an url shortener to mask the localhost urls
-            services.Configure<TwitterAuthenticationOptions>(options =>
-            {
-                options.ConsumerKey = configuration["Authentication:Twitter:ConsumerKey"];
-                options.ConsumerSecret = configuration["Authentication:Twitter:ConsumerSecret"];
-            });
+            //// get consumerkey and secret here https://apps.twitter.com/
+            //// unlike the other providers twitter does not allow creating localhost apps for testing
+            //// but you can use an url shortener to mask the localhost urls
+            //services.Configure<TwitterAuthenticationOptions>(options =>
+            //{
+            //    options.ConsumerKey = configuration["Authentication:Twitter:ConsumerKey"];
+            //    options.ConsumerSecret = configuration["Authentication:Twitter:ConsumerSecret"];
+            //});
 
             return services;
         }
@@ -278,7 +279,7 @@ namespace cloudscribe.WebHost
             services.TryAddScoped<MultiTenantCookieOptionsResolver, MultiTenantCookieOptionsResolver>();
             services.TryAddScoped<MultiTenantCookieOptionsResolverFactory, MultiTenantCookieOptionsResolverFactory>();
             services.TryAddScoped<MultiTenantAuthCookieValidator, MultiTenantAuthCookieValidator>();
-            services.TryAddScoped<MultiTenantCookieAuthenticationNotifications, MultiTenantCookieAuthenticationNotifications>();
+            services.TryAddScoped<MultiTenantCookieAuthenticationEvents, MultiTenantCookieAuthenticationEvents>();
             //********************************************************************************************************
 
             // most of the below code was borrowed from here:
@@ -331,43 +332,44 @@ namespace cloudscribe.WebHost
             //    };
             //});
 
+            //https://github.com/aspnet/Announcements/issues/71
 
-            services.ConfigureCookieAuthentication(options =>
-            {
-                options.AuthenticationScheme = AuthenticationScheme.Application;
-                options.CookieName = AuthenticationScheme.Application;
-                options.AutomaticAuthentication = true;
-                options.LoginPath = new PathString("/Account/Login");
-                options.Notifications = new CookieAuthenticationNotifications
-                {
-                    OnValidatePrincipal = SecurityStampValidator.ValidatePrincipalAsync
-                };
-            }
-            , AuthenticationScheme.Application
-            );
+            //services.ConfigureCookieAuthentication(options =>
+            //{
+            //    options.AuthenticationScheme = AuthenticationScheme.Application;
+            //    options.CookieName = AuthenticationScheme.Application;
+            //    options.AutomaticAuthentication = true;
+            //    options.LoginPath = new PathString("/Account/Login");
+            //    options.Notifications = new CookieAuthenticationNotifications
+            //    {
+            //        OnValidatePrincipal = SecurityStampValidator.ValidatePrincipalAsync
+            //    };
+            //}
+            //, AuthenticationScheme.Application
+            //);
 
-            services.ConfigureCookieAuthentication(options =>
-            {
-                options.AuthenticationScheme = AuthenticationScheme.External;
-                options.CookieName = AuthenticationScheme.External;
-                options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
-            }
-            , AuthenticationScheme.External);
+            //services.ConfigureCookieAuthentication(options =>
+            //{
+            //    options.AuthenticationScheme = AuthenticationScheme.External;
+            //    options.CookieName = AuthenticationScheme.External;
+            //    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+            //}
+            //, AuthenticationScheme.External);
 
-            services.ConfigureCookieAuthentication(options =>
-            {
-                options.AuthenticationScheme = AuthenticationScheme.TwoFactorRememberMe;
-                options.CookieName = AuthenticationScheme.TwoFactorRememberMe;
-            }
-            , AuthenticationScheme.TwoFactorRememberMe);
+            //services.ConfigureCookieAuthentication(options =>
+            //{
+            //    options.AuthenticationScheme = AuthenticationScheme.TwoFactorRememberMe;
+            //    options.CookieName = AuthenticationScheme.TwoFactorRememberMe;
+            //}
+            //, AuthenticationScheme.TwoFactorRememberMe);
 
-            services.ConfigureCookieAuthentication(options =>
-            {
-                options.AuthenticationScheme = AuthenticationScheme.TwoFactorUserId;
-                options.CookieName = AuthenticationScheme.TwoFactorUserId;
-                options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
-            }
-            , AuthenticationScheme.TwoFactorUserId);
+            //services.ConfigureCookieAuthentication(options =>
+            //{
+            //    options.AuthenticationScheme = AuthenticationScheme.TwoFactorUserId;
+            //    options.CookieName = AuthenticationScheme.TwoFactorUserId;
+            //    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+            //}
+            //, AuthenticationScheme.TwoFactorUserId);
 
             
 

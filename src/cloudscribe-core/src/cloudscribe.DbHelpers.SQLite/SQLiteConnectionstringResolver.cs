@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-06-22
-// Last Modified:			2015-09-05
+// Last Modified:			2015-10-16
 // 
 
 using Microsoft.Framework.OptionsModel;
@@ -22,7 +22,7 @@ namespace cloudscribe.DbHelpers.Sqlite
             if (appEnv == null) { throw new ArgumentNullException(nameof(appEnv)); }
 
             appBasePath = appEnv.ApplicationBasePath;
-            options = configuration.Options;
+            options = configuration.Value;
 
         }
 

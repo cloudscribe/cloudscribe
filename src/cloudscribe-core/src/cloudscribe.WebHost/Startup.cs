@@ -44,7 +44,8 @@ namespace cloudscribe.WebHost
         public Startup(IHostingEnvironment env, IApplicationEnvironment appEnv)
         {
             // Setup configuration sources.
-            var builder = new ConfigurationBuilder(appEnv.ApplicationBasePath)
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(appEnv.ApplicationBasePath)
                 .AddJsonFile("config.json")
                 .AddJsonFile($"config.{env.EnvironmentName}.json", optional: true);
 
@@ -158,8 +159,8 @@ namespace cloudscribe.WebHost
             {
                 //app.UseBrowserLink();
 
-                app.UseErrorPage();
-
+                app.UseDeveloperExceptionPage();
+                
                 //app.UseDatabaseErrorPage(DatabaseErrorPageOptions.ShowAll);
                 //app.UseStatusCodePagesWithReExecute("/error/{0}");
                 app.UseStatusCodePagesWithReExecute("/error/{0}");
@@ -183,6 +184,9 @@ namespace cloudscribe.WebHost
                 //app.UseStatusCodePagesWithReExecute("/error/{0}");
             }
 
+            // Add the platform handler to the request pipeline.
+            app.UseIISPlatformHandler();
+
             //app.UseRuntimeInfoPage("/info");
 
             // Add static files to the request pipeline.
@@ -194,7 +198,7 @@ namespace cloudscribe.WebHost
             
 
             // this is in Startup.CloudscribeCore.cs
-            app.UseCloudscribeCore(multiTenantOptions);
+            app.UseCloudscribeCore(multiTenantOptions,Configuration);
 
             // it is very important that all authentication configuration be set before configuring mvc
             // ie if app.UseFacebookAuthentication(); was below app.UseMvc the facebook login button will not be shown
@@ -208,7 +212,7 @@ namespace cloudscribe.WebHost
 
 
                 // default route for folder sites must be second to last
-                if (multiTenantOptions.Options.Mode == MultiTenantMode.FolderName)
+                if (multiTenantOptions.Value.Mode == MultiTenantMode.FolderName)
                 {
                     routes.MapRoute(
                     name: "folderdefault",

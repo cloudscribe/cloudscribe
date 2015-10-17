@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-07-27
+// Last Modified:			2015-10-17
 // 
 
 using cloudscribe.Core.Models;
@@ -47,7 +47,7 @@ namespace cloudscribe.Core.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var user = await userManager.FindByIdAsync(Context.User.GetUserId());
+            var user = await userManager.FindByIdAsync(HttpContext.User.GetUserId());
             var model = new AccountIndexViewModel
             {
                 HasPassword = (user.PasswordHash.Length > 0),
@@ -65,7 +65,7 @@ namespace cloudscribe.Core.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> RemoveLogin()
         {
-            var user = await userManager.FindByIdAsync(Context.User.GetUserId());
+            var user = await userManager.FindByIdAsync(HttpContext.User.GetUserId());
             var linkedAccounts = await userManager.GetLoginsAsync(user);
             ViewData["ShowRemoveButton"] = await userManager.HasPasswordAsync(user) || linkedAccounts.Count > 1;
             return View(linkedAccounts);
@@ -77,7 +77,7 @@ namespace cloudscribe.Core.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoveLogin(string loginProvider, string providerKey)
         {
-            var user = await userManager.FindByIdAsync(Context.User.GetUserId());
+            var user = await userManager.FindByIdAsync(HttpContext.User.GetUserId());
 
             if (user != null)
             {
@@ -116,7 +116,7 @@ namespace cloudscribe.Core.Web.Controllers
                 return View(model);
             }
             // Generate the token and send it
-            var user = await userManager.FindByIdAsync(Context.User.GetUserId());
+            var user = await userManager.FindByIdAsync(HttpContext.User.GetUserId());
             var code = await userManager.GenerateChangePhoneNumberTokenAsync(user, model.Number);
             await smsSender.SendSmsAsync(model.Number, "Your security code is: " + code);
             return RedirectToAction("VerifyPhoneNumber", new { PhoneNumber = model.Number });
@@ -129,7 +129,7 @@ namespace cloudscribe.Core.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EnableTwoFactorAuthentication()
         {
-            var user = await userManager.FindByIdAsync(Context.User.GetUserId());
+            var user = await userManager.FindByIdAsync(HttpContext.User.GetUserId());
             if (user != null)
             {
                 await userManager.SetTwoFactorEnabledAsync(user, true);
@@ -144,7 +144,7 @@ namespace cloudscribe.Core.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DisableTwoFactorAuthentication()
         {
-            var user = await userManager.FindByIdAsync(Context.User.GetUserId());
+            var user = await userManager.FindByIdAsync(HttpContext.User.GetUserId());
             if (user != null)
             {
                 await userManager.SetTwoFactorEnabledAsync(user, false);
@@ -158,7 +158,7 @@ namespace cloudscribe.Core.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> VerifyPhoneNumber(string phoneNumber)
         {
-            var user = await userManager.FindByIdAsync(Context.User.GetUserId());
+            var user = await userManager.FindByIdAsync(HttpContext.User.GetUserId());
             var code = await userManager.GenerateChangePhoneNumberTokenAsync(user, phoneNumber);
             // Send an SMS to verify the phone number
             return phoneNumber == null ? View("Error") : View(new VerifyPhoneNumberViewModel { PhoneNumber = phoneNumber });
@@ -174,7 +174,7 @@ namespace cloudscribe.Core.Web.Controllers
             {
                 return View(model);
             }
-            var user = await userManager.FindByIdAsync(Context.User.GetUserId());
+            var user = await userManager.FindByIdAsync(HttpContext.User.GetUserId());
             if (user != null)
             {
                 var result = await userManager.ChangePhoneNumberAsync(user, model.PhoneNumber, model.Code);
@@ -198,7 +198,7 @@ namespace cloudscribe.Core.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> RemovePhoneNumber()
         {
-            var user = await userManager.FindByIdAsync(Context.User.GetUserId());
+            var user = await userManager.FindByIdAsync(HttpContext.User.GetUserId());
             if (user != null)
             {
                 var result = await userManager.SetPhoneNumberAsync(user, null);
@@ -233,7 +233,7 @@ namespace cloudscribe.Core.Web.Controllers
             {
                 return View(model);
             }
-            var user = await userManager.FindByIdAsync(Context.User.GetUserId());
+            var user = await userManager.FindByIdAsync(HttpContext.User.GetUserId());
             if (user != null)
             {
                 var result = await userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
@@ -274,7 +274,7 @@ namespace cloudscribe.Core.Web.Controllers
                 return View(model);
             }
 
-            var user = await userManager.FindByIdAsync(Context.User.GetUserId());
+            var user = await userManager.FindByIdAsync(HttpContext.User.GetUserId());
             if (user != null)
             {
                 var result = await userManager.AddPasswordAsync(user, model.NewPassword);
@@ -305,7 +305,7 @@ namespace cloudscribe.Core.Web.Controllers
         public async Task<IActionResult> ManageLogins()
         {
 
-            var user = await userManager.FindByIdAsync(Context.User.GetUserId());
+            var user = await userManager.FindByIdAsync(HttpContext.User.GetUserId());
             if (user == null)
             {
                 return View("Error");
@@ -339,7 +339,7 @@ namespace cloudscribe.Core.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> LinkLoginCallback()
         {
-            var user = await userManager.FindByIdAsync(Context.User.GetUserId());
+            var user = await userManager.FindByIdAsync(HttpContext.User.GetUserId());
             if (user == null)
             {
                 return View("Error");

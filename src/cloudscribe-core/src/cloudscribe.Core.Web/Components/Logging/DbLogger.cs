@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //	Author:                 Joe Audette
 //  Created:			    2011-08-19
-//	Last Modified:		    2015-09-30
+//	Last Modified:		    2015-10-17
 // 
 
 using cloudscribe.Core.Models.Logging;
@@ -135,7 +135,7 @@ namespace cloudscribe.Core.Web.Components.Logging
         {
             if((contextAccessor != null)&&(contextAccessor.HttpContext != null))
             {
-                var connection = contextAccessor.HttpContext.GetFeature<IHttpConnectionFeature>();
+                var connection = contextAccessor.HttpContext.Features.Get<IHttpConnectionFeature>();
                 if(connection != null)
                 {
                     return connection.RemoteIpAddress.ToString();

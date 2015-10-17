@@ -2,12 +2,13 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //  Author:                     Joe Audette
 //  Created:                    2015-10-07
-//	Last Modified:              2015-10-09
+//	Last Modified:              2015-10-17
 //
 
 using System;
 using Microsoft.Framework.OptionsModel;
 using Microsoft.AspNet.Mvc;
+using Microsoft.AspNet.Mvc.Rendering;
 
 namespace cloudscribe.Core.Web.Razor
 {
@@ -17,7 +18,7 @@ namespace cloudscribe.Core.Web.Razor
         {
             if (layoutOptionsAccesor == null) { throw new ArgumentNullException(nameof(layoutOptionsAccesor)); }
 
-            options = layoutOptionsAccesor.Options;
+            options = layoutOptionsAccesor.Value;
         }
 
         private LayoutSelectorOptions options;

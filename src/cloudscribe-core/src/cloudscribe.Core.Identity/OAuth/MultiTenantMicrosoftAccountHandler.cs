@@ -2,8 +2,8 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-29
-// Last Modified:		    2015-09-09
-// based on https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.MicrosoftAccount/MicrosoftAccountAuthenticationHandler.cs
+// Last Modified:		    2015-10-17
+// based on https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.MicrosoftAccount/MicrosoftAccountHandler.cs
 
 
 using Microsoft.AspNet.Authentication;
@@ -23,9 +23,9 @@ using System.Threading.Tasks;
 namespace cloudscribe.Core.Identity.OAuth
 {
 
-    internal class MultiTenantMicrosoftAccountAuthenticationHandler : MultiTenantOAuthAuthenticationHandler<MicrosoftAccountAuthenticationOptions>
+    internal class MultiTenantMicrosoftAccountHandler : MultiTenantOAuthHandler<MicrosoftAccountOptions>
     {
-        public MultiTenantMicrosoftAccountAuthenticationHandler(
+        public MultiTenantMicrosoftAccountHandler(
             HttpClient httpClient,
             ISiteResolver siteResolver,
             ISiteRepository siteRepository,
@@ -37,7 +37,7 @@ namespace cloudscribe.Core.Identity.OAuth
                   new MultiTenantOAuthOptionsResolver(siteResolver, multiTenantOptions)
                   )
         {
-            log = loggerFactory.CreateLogger<MultiTenantMicrosoftAccountAuthenticationHandler>();
+            log = loggerFactory.CreateLogger<MultiTenantMicrosoftAccountHandler>();
             this.siteResolver = siteResolver;
             this.multiTenantOptions = multiTenantOptions;
             siteRepo = siteRepository;
@@ -129,33 +129,33 @@ namespace cloudscribe.Core.Identity.OAuth
 
             var payload = JObject.Parse(await response.Content.ReadAsStringAsync());
 
-            var notification = new OAuthAuthenticatedContext(Context, Options, Backchannel, tokens, payload)
+            var context = new OAuthCreatingTicketContext(Context, Options, Backchannel, tokens, payload)
             {
                 Properties = properties,
                 Principal = new ClaimsPrincipal(identity)
             };
 
-            var identifier = MicrosoftAccountAuthenticationHelper.GetId(payload);
+            var identifier = MicrosoftAccountHelper.GetId(payload);
             if (!string.IsNullOrEmpty(identifier))
             {
                 identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, identifier, ClaimValueTypes.String, Options.ClaimsIssuer));
                 identity.AddClaim(new Claim("urn:microsoftaccount:id", identifier, ClaimValueTypes.String, Options.ClaimsIssuer));
             }
 
-            var name = MicrosoftAccountAuthenticationHelper.GetName(payload);
+            var name = MicrosoftAccountHelper.GetName(payload);
             if (!string.IsNullOrEmpty(name))
             {
                 identity.AddClaim(new Claim(ClaimTypes.Name, name, ClaimValueTypes.String, Options.ClaimsIssuer));
                 identity.AddClaim(new Claim("urn:microsoftaccount:name", name, ClaimValueTypes.String, Options.ClaimsIssuer));
             }
 
-            var email = MicrosoftAccountAuthenticationHelper.GetEmail(payload);
+            var email = MicrosoftAccountHelper.GetEmail(payload);
             if (!string.IsNullOrEmpty(email))
             {
                 identity.AddClaim(new Claim(ClaimTypes.Email, email, ClaimValueTypes.String, Options.ClaimsIssuer));
             }
 
-            await Options.Notifications.Authenticated(notification);
+            await Options.Events.CreatingTicket(context);
 
             ISiteSettings site = siteResolver.Resolve();
 
@@ -170,7 +170,7 @@ namespace cloudscribe.Core.Identity.OAuth
             }
 
             //return new AuthenticationTicket(notification.Principal, notification.Properties, notification.Options.AuthenticationScheme);
-            return new AuthenticationTicket(notification.Principal, notification.Properties, AuthenticationScheme.External);
+            return new AuthenticationTicket(context.Principal, context.Properties, AuthenticationScheme.External);
         }
 
     }

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-08-01
-// Last Modified:			2015-08-10
+// Last Modified:			2015-10-17
 // 
 
 using cloudscribe.Core.Models;
@@ -21,7 +21,7 @@ namespace cloudscribe.Core.Identity
         {
 
             this.siteResolver = siteResolver;
-            this.multiTenantOptions = multiTenantOptions.Options;
+            this.multiTenantOptions = multiTenantOptions.Value;
             log = loggerFactory.CreateLogger<MultiTenantCookieOptionsResolver>();
         }
 

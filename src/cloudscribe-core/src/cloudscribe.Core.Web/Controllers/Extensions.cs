@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-01-02
-// Last Modified:			2015-10-05
+// Last Modified:			2015-10-17
 // 
 
 
@@ -11,6 +11,7 @@ using cloudscribe.Core.Web.ViewModels.Common;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Http.Features;
 using Microsoft.AspNet.Mvc;
+using Microsoft.AspNet.Mvc.ViewFeatures;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -85,7 +86,7 @@ namespace cloudscribe.Core.Web.Controllers
             bool dismissable)
         {
             
-            if (controller.Context.GetFeature<ISessionFeature>() != null)
+            if (controller.HttpContext.Features.Get<ISessionFeature>() != null)
             {
                 // this only works with in memory session state we need to do our own serilaization/deserialization
                 //https://github.com/aspnet/Mvc/issues/2850

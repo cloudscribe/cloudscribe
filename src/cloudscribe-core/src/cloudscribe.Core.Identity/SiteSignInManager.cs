@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-27
-// Last Modified:		    2015-08-28
+// Last Modified:		    2015-10-17
 // 
 
 using cloudscribe.Core.Models;
@@ -45,8 +45,9 @@ namespace cloudscribe.Core.Identity
             this.context = contextAccessor.HttpContext;
             this.tenantResolver = tenantResolver;
             log = logger;
-            multiTenantOptions = multiTenantOptionsAccessor.Options;
+            multiTenantOptions = multiTenantOptionsAccessor.Value;
             siteRepo = siteRepository;
+            Options = optionsAccessor.Value;
 
         }
 
@@ -56,6 +57,7 @@ namespace cloudscribe.Core.Identity
         private ILogger<SignInManager<TUser>> log;
         private MultiTenantOptions multiTenantOptions;
         private ISiteRepository siteRepo;
+        private IdentityOptions Options;
 
 
         //https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity/SignInManager.cs
@@ -130,7 +132,7 @@ namespace cloudscribe.Core.Identity
             //https://github.com/aspnet/HttpAbstractions/blob/dev/src/Microsoft.AspNet.Http.Abstractions/Authentication/AuthenticationManager.cs
             //https://github.com/aspnet/HttpAbstractions/blob/dev/src/Microsoft.AspNet.Http/Authentication/DefaultAuthenticationManager.cs
 
-            IEnumerable<AuthenticationDescription> all = context.Authentication.GetAuthenticationSchemes().Where(d => !string.IsNullOrEmpty(d.Caption));
+            IEnumerable<AuthenticationDescription> all = context.Authentication.GetAuthenticationSchemes().Where(d => !string.IsNullOrEmpty(d.DisplayName));
             
 
             if (multiTenantOptions.Mode != MultiTenantMode.None)
@@ -277,7 +279,7 @@ namespace cloudscribe.Core.Identity
                 return null;
             }
             // REVIEW: fix this wrap
-            return new ExternalLoginInfo(auth.Principal, provider, providerKey, new AuthenticationDescription(auth.Description).Caption);
+            return new ExternalLoginInfo(auth.Principal, provider, providerKey, new AuthenticationDescription(auth.Description).DisplayName);
         }
 
         public override async Task<SignInResult> ExternalLoginSignInAsync(string loginProvider, string providerKey, bool isPersistent)
@@ -336,7 +338,7 @@ namespace cloudscribe.Core.Identity
                 {
                     // Store the userId for use after two factor check
                     var userId = await UserManager.GetUserIdAsync(user);
-                    await context.Authentication.SignInAsync(IdentityOptions.TwoFactorUserIdCookieAuthenticationScheme, StoreTwoFactorInfo(userId, loginProvider));
+                    await context.Authentication.SignInAsync(Options.Cookies.TwoFactorUserIdCookieAuthenticationScheme, StoreTwoFactorInfo(userId, loginProvider));
                     return SignInResult.TwoFactorRequired;
                 }
             }
@@ -350,9 +352,9 @@ namespace cloudscribe.Core.Identity
             return SignInResult.Success;
         }
 
-        internal static ClaimsPrincipal StoreTwoFactorInfo(string userId, string loginProvider)
+        internal ClaimsPrincipal StoreTwoFactorInfo(string userId, string loginProvider)
         {
-            var identity = new ClaimsIdentity(IdentityOptions.TwoFactorUserIdCookieAuthenticationType);
+            var identity = new ClaimsIdentity(Options.Cookies.TwoFactorUserIdCookieAuthenticationScheme);
 
 
             identity.AddClaim(new Claim(ClaimTypes.Name, userId));

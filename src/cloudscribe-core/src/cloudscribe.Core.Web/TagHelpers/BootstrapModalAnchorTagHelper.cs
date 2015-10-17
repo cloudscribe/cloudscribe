@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-02
-// Last Modified:			2015-07-07
+// Last Modified:			2015-10-17
 // 
 
 
@@ -18,7 +18,7 @@ namespace cloudscribe.Core.Web.TagHelpers
     /// it decorates the link with the data-ajax- attributes needed to wire up the bootstrap modal
     /// depends on jquery-ajax-unobtrusive and depends on cloudscribe-modaldialog-bootstrap.js
     /// </summary>
-    [TargetElement("a", Attributes = BootstrapModalLinkAttributeName)]
+    [HtmlTargetElement("a", Attributes = BootstrapModalLinkAttributeName)]
     public class BootstrapModalAnchorTagHelper : TagHelper
     {
         private const string BootstrapModalLinkAttributeName = "bs-modal-link";

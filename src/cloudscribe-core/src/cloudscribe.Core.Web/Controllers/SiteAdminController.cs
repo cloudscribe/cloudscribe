@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-10-12
+// Last Modified:			2015-10-17
 // 
 
 using cloudscribe.Core.Models;
@@ -42,14 +42,14 @@ namespace cloudscribe.Core.Web.Controllers
             //if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
 
             //config = configuration;
-            this.multiTenantOptions = multiTenantOptions.Options;
+            this.multiTenantOptions = multiTenantOptions.Value;
             //Site = siteResolver.Resolve();
 
             this.siteManager = siteManager;
             this.geoDataManager = geoDataManager;
-            uiOptions = uiOptionsAccessor.Options;
+            uiOptions = uiOptionsAccessor.Value;
             this.layoutListBuilder = layoutListBuilder;
-            layoutOptions = layoutSeletorOptionsAccessor.Options;
+            layoutOptions = layoutSeletorOptionsAccessor.Value;
 
             //startup = startupTrigger;
         }

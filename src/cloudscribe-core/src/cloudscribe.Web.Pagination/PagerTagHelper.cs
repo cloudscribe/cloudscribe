@@ -2,9 +2,10 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-02
-// Last Modified:			2015-09-06
+// Last Modified:			2015-10-17
 // 
 
+using Microsoft.AspNet.Mvc.ViewFeatures;
 using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.AspNet.Razor.Runtime.TagHelpers;
 using System;
@@ -15,7 +16,7 @@ using System.Text;
 
 namespace cloudscribe.Web.Pagination
 {
-    [TargetElement("cs-pager", Attributes = PagingInfoAttributeName)]
+    [HtmlTargetElement("cs-pager", Attributes = PagingInfoAttributeName)]
     public class PagerTagHelper : TagHelper
     {
         private const string PagingInfoAttributeName = "cs-paging-info";
@@ -213,18 +214,18 @@ namespace cloudscribe.Web.Pagination
                 if (link.Text == "«")
                 {
                     //a.InnerHtml = "&laquo;";
-                    a.InnerHtml = new HtmlString("&laquo;");
+                    a.InnerHtml.AppendEncoded("&laquo;");
                     
                 }
                 else if (link.Text == "»")
                 {
                     //a.InnerHtml = "&raquo;";
-                    a.InnerHtml = new HtmlString("&raquo;");
+                    a.InnerHtml.AppendEncoded("&raquo;");
 
                 }
                 else
                 {
-                    a.SetInnerText(link.Text);
+                    a.InnerHtml.Append(link.Text);
                 }
 
                 if(link.Title.Length > 0)
@@ -239,7 +240,7 @@ namespace cloudscribe.Web.Pagination
                     a.MergeAttribute("data-ajax-update", AjaxTarget);
                 }
                 
-                li.InnerHtml = a;
+                li.InnerHtml.Append(a);
                 
                 output.Content.Append(li);
             }

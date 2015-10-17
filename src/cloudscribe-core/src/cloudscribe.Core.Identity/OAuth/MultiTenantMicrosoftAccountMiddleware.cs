@@ -2,8 +2,8 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-29
-// Last Modified:		    2015-09-04
-// based on https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.MicrosoftAccount/MicrosoftAccountAuthenticationMiddleware.cs
+// Last Modified:		    2015-10-17
+// based on https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.MicrosoftAccount/MicrosoftAccountMiddleware.cs
 
 
 using cloudscribe.Core.Models;
@@ -17,7 +17,7 @@ using Microsoft.Framework.WebEncoders;
 
 namespace cloudscribe.Core.Identity.OAuth
 {
-    public class MultiTenantMicrosoftAccountAuthenticationMiddleware : MultiTenantOAuthAuthenticationMiddleware<MicrosoftAccountAuthenticationOptions>
+    public class MultiTenantMicrosoftAccountMiddleware : MultiTenantOAuthMiddleware<MicrosoftAccountOptions>
     {
         /// <summary>
         /// Initializes a new <see cref="MicrosoftAccountAuthenticationMiddleware"/>.
@@ -29,7 +29,7 @@ namespace cloudscribe.Core.Identity.OAuth
         /// <param name="sharedOptions"></param>
         /// <param name="options">Configuration options for the middleware.</param>
         /// <param name="configureOptions"></param>
-        public MultiTenantMicrosoftAccountAuthenticationMiddleware(
+        public MultiTenantMicrosoftAccountMiddleware(
             RequestDelegate next,
             IDataProtectionProvider dataProtectionProvider,
             ILoggerFactory loggerFactory,
@@ -38,8 +38,7 @@ namespace cloudscribe.Core.Identity.OAuth
             IOptions<MultiTenantOptions> multiTenantOptionsAccesor,
             IUrlEncoder encoder,
             IOptions<SharedAuthenticationOptions> sharedOptions,
-            IOptions<MicrosoftAccountAuthenticationOptions> options,
-            ConfigureOptions<MicrosoftAccountAuthenticationOptions> configureOptions = null)
+            IOptions<MicrosoftAccountOptions> options)
             : base(
                   next, 
                   dataProtectionProvider, 
@@ -48,8 +47,7 @@ namespace cloudscribe.Core.Identity.OAuth
                   siteResolver,
                   multiTenantOptionsAccesor,
                   sharedOptions, 
-                  options, 
-                  configureOptions)
+                  options.Value)
         {
             if (Options.Scope.Count == 0)
             {
@@ -60,7 +58,7 @@ namespace cloudscribe.Core.Identity.OAuth
 
             this.loggerFactory = loggerFactory;
             this.siteResolver = siteResolver;
-            multiTenantOptions = multiTenantOptionsAccesor.Options;
+            multiTenantOptions = multiTenantOptionsAccesor.Value;
             siteRepo = siteRepository;
         }
 
@@ -72,10 +70,10 @@ namespace cloudscribe.Core.Identity.OAuth
         /// <summary>
         /// Provides the <see cref="AuthenticationHandler"/> object for processing authentication-related requests.
         /// </summary>
-        /// <returns>An <see cref="AuthenticationHandler"/> configured with the <see cref="MicrosoftAccountAuthenticationOptions"/> supplied to the constructor.</returns>
-        protected override AuthenticationHandler<MicrosoftAccountAuthenticationOptions> CreateHandler()
+        /// <returns>An <see cref="AuthenticationHandler"/> configured with the <see cref="MicrosoftAccountOptions"/> supplied to the constructor.</returns>
+        protected override AuthenticationHandler<MicrosoftAccountOptions> CreateHandler()
         {
-            return new MultiTenantMicrosoftAccountAuthenticationHandler(Backchannel, siteResolver, siteRepo, multiTenantOptions, loggerFactory);
+            return new MultiTenantMicrosoftAccountHandler(Backchannel, siteResolver, siteRepo, multiTenantOptions, loggerFactory);
         }
 
     }

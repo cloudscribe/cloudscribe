@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-31
-// Last Modified:			2015-08-01
+// Last Modified:			2015-10-17
 // 
 
 
@@ -10,7 +10,6 @@
 using Microsoft.AspNet.Authentication;
 using Microsoft.AspNet.Authentication.Cookies;
 using Microsoft.AspNet.DataProtection;
-//using Microsoft.AspNet.Authentication.DataHandler;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Http.Authentication;
 using Microsoft.AspNet.Http.Features.Authentication;
@@ -19,6 +18,8 @@ using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNet.Http.Features;
+using Microsoft.Net.Http.Headers;
 
 
 namespace cloudscribe.Core.Identity
@@ -156,7 +157,7 @@ namespace cloudscribe.Core.Identity
                 }
 
                 var context = new CookieValidatePrincipalContext(Context, ticket, Options); // this might ned change
-                await Options.Notifications.ValidatePrincipal(context);
+                await Options.Events.ValidatePrincipal(context);
 
                 if (context.Principal == null)
                 {
@@ -177,7 +178,7 @@ namespace cloudscribe.Core.Identity
                 var exceptionContext = new CookieExceptionContext(Context, Options,
                     CookieExceptionContext.ExceptionLocation.Authenticate, exception, ticket);
 
-                Options.Notifications.Exception(exceptionContext);
+                await Options.Events.Exception(exceptionContext);
 
                 if (exceptionContext.Rethrow)
                 {
@@ -271,13 +272,14 @@ namespace cloudscribe.Core.Identity
                     cookieValue,
                     cookieOptions);
 
-                ApplyHeaders();
+                await ApplyHeaders(shouldRedirectToReturnUrl: false);
             }
             catch (Exception exception)
             {
                 var exceptionContext = new CookieExceptionContext(Context, Options,
                     CookieExceptionContext.ExceptionLocation.FinishResponse, exception, ticket);
-                Options.Notifications.Exception(exceptionContext);
+                await Options.Events.Exception(exceptionContext);
+
                 if (exceptionContext.Rethrow)
                 {
                     throw;
@@ -302,7 +304,7 @@ namespace cloudscribe.Core.Identity
                 //    new AuthenticationProperties(signin.Properties),
                 //    cookieOptions);
 
-                var signInContext = new CookieResponseSignInContext(
+                var signInContext = new CookieSigningInContext(
                     Context,
                     Options,
                     tenantResolver.ResolveAuthScheme(Options.AuthenticationScheme),
@@ -326,7 +328,7 @@ namespace cloudscribe.Core.Identity
                     signInContext.Properties.ExpiresUtc = issuedUtc.Add(Options.ExpireTimeSpan);
                 }
 
-                Options.Notifications.ResponseSignIn(signInContext);
+                await Options.Events.SigningIn(signInContext);
 
                 if (signInContext.Properties.IsPersistent)
                 {
@@ -374,24 +376,24 @@ namespace cloudscribe.Core.Identity
                 //    signInContext.Principal,
                 //    signInContext.Properties);
 
-                var signedInContext = new CookieResponseSignedInContext(
+                var signedInContext = new CookieSignedInContext(
                     Context,
                     Options,
                     tenantResolver.ResolveAuthScheme(Options.AuthenticationScheme),
                     signInContext.Principal,
                     signInContext.Properties);
 
-                Options.Notifications.ResponseSignedIn(signedInContext);
+                await Options.Events.SignedIn(signedInContext);
 
                 var shouldLoginRedirect = Options.LoginPath.HasValue && OriginalPath == Options.LoginPath;
-                ApplyHeaders(shouldLoginRedirect);
+                await ApplyHeaders(shouldLoginRedirect);
             }
             catch (Exception exception)
             {
                 var exceptionContext = new CookieExceptionContext(Context, Options,
                     CookieExceptionContext.ExceptionLocation.SignIn, exception, ticket);
 
-                Options.Notifications.Exception(exceptionContext);
+                await Options.Events.Exception(exceptionContext);
                 if (exceptionContext.Rethrow)
                 {
                     throw;
@@ -412,12 +414,12 @@ namespace cloudscribe.Core.Identity
                     await Options.SessionStore.RemoveAsync(_sessionKey);
                 }
 
-                var context = new CookieResponseSignOutContext(
+                var context = new CookieSigningOutContext(
                     Context,
                     Options,
                     cookieOptions);
 
-                Options.Notifications.ResponseSignOut(context);
+                await Options.Events.SigningOut(context);
 
                 //Options.CookieManager.DeleteCookie(
                 //    Context,
@@ -432,14 +434,14 @@ namespace cloudscribe.Core.Identity
                 var shouldLogoutRedirect = Options.LogoutPath.HasValue && OriginalPath == Options.LogoutPath; //TODO: adjust
 
 
-                ApplyHeaders(shouldLogoutRedirect);
+                await ApplyHeaders(shouldLogoutRedirect);
             }
             catch (Exception exception)
             {
                 var exceptionContext = new CookieExceptionContext(Context, Options,
                     CookieExceptionContext.ExceptionLocation.SignOut, exception, ticket);
 
-                Options.Notifications.Exception(exceptionContext);
+                await Options.Events.Exception(exceptionContext);
                 if (exceptionContext.Rethrow)
                 {
                     throw;
@@ -447,24 +449,24 @@ namespace cloudscribe.Core.Identity
             }
         }
 
-        private void ApplyHeaders(bool shouldRedirectToReturnUrl = false)
+        //private void ApplyHeaders(bool shouldRedirectToReturnUrl = false)
+        private async Task ApplyHeaders(bool shouldRedirectToReturnUrl)
         {
-            Response.Headers.Set(HeaderNameCacheControl, HeaderValueNoCache);
-            Response.Headers.Set(HeaderNamePragma, HeaderValueNoCache);
-            Response.Headers.Set(HeaderNameExpires, HeaderValueMinusOne);
+            Response.Headers[HeaderNames.CacheControl] = HeaderValueNoCache;
+            Response.Headers[HeaderNames.Pragma] = HeaderValueNoCache;
+            Response.Headers[HeaderNames.Expires] = HeaderValueMinusOne;
 
             if (shouldRedirectToReturnUrl && Response.StatusCode == 200)
             {
                 var query = Request.Query;
-                //var redirectUri = query.Get(Options.ReturnUrlParameter);
                 var tenantResolver = tenantResolverFactory.GetResolver();
-                var redirectUri = query.Get(tenantResolver.ResolveReturnUrlParameter(Options.ReturnUrlParameter));
+                var redirectUri = query[tenantResolver.ResolveReturnUrlParameter(Options.ReturnUrlParameter)];
 
                 if (!string.IsNullOrEmpty(redirectUri)
                     && IsHostRelative(redirectUri))
                 {
-                    var redirectContext = new CookieApplyRedirectContext(Context, Options, redirectUri);
-                    Options.Notifications.ApplyRedirect(redirectContext);
+                    var redirectContext = new CookieRedirectContext(Context, Options, redirectUri);
+                    await Options.Events.RedirectToReturnUrl(redirectContext);
                 }
             }
         }
@@ -482,45 +484,27 @@ namespace cloudscribe.Core.Identity
             return path[0] == '/' && path[1] != '/' && path[1] != '\\';
         }
 
-        protected override Task<bool> HandleForbiddenAsync(ChallengeContext context)
+        
+
+        protected override async Task<bool> HandleForbiddenAsync(ChallengeContext context)
         {
-            // HandleForbidden by redirecting to AccessDeniedPath if set
-            if (!Options.AccessDeniedPath.HasValue)
-            {
-                return base.HandleForbiddenAsync(context);
-            }
+            var accessDeniedUri =
+                Request.Scheme +
+                "://" +
+                Request.Host +
+                OriginalPathBase +
+                Options.AccessDeniedPath; //TODO: probably need to resolve this per tenant as well
 
-            try
-            {
-                var accessDeniedUri =
-                    Request.Scheme +
-                    "://" +
-                    Request.Host +
-                    OriginalPathBase +
-                    Options.AccessDeniedPath; //TODO: probably need to resolve this per tenant as well
-
-                var redirectContext = new CookieApplyRedirectContext(Context, Options, accessDeniedUri);
-                Options.Notifications.ApplyRedirect(redirectContext);
-            }
-            catch (Exception exception)
-            {
-                var exceptionContext = new CookieExceptionContext(Context, Options,
-                    CookieExceptionContext.ExceptionLocation.Forbidden, exception, ticket: null);
-
-                Options.Notifications.Exception(exceptionContext);
-                if (exceptionContext.Rethrow)
-                {
-                    throw;
-                }
-            }
-            return Task.FromResult(true);
+            var redirectContext = new CookieRedirectContext(Context, Options, accessDeniedUri);
+            await Options.Events.RedirectToAccessDenied(redirectContext);
+            return true;
         }
 
-        protected override Task<bool> HandleUnauthorizedAsync(ChallengeContext context)
+        protected override async Task<bool> HandleUnauthorizedAsync(ChallengeContext context)
         {
             if (!Options.LoginPath.HasValue)
             {
-                return base.HandleUnauthorizedAsync(context);
+                return await base.HandleUnauthorizedAsync(context);
             }
 
             var redirectUri = new AuthenticationProperties(context.Properties).RedirectUri;
@@ -535,21 +519,23 @@ namespace cloudscribe.Core.Identity
                 var tenantResolver = tenantResolverFactory.GetResolver();
                 var loginUri = Options.LoginPath + QueryString.Create(tenantResolver.ResolveReturnUrlParameter(Options.ReturnUrlParameter), redirectUri);
 
-                var redirectContext = new CookieApplyRedirectContext(Context, Options, BuildRedirectUri(loginUri));
+                //var redirectContext = new CookieApplyRedirectContext(Context, Options, BuildRedirectUri(loginUri));
+                //Options.Notifications.ApplyRedirect(redirectContext);
 
-                Options.Notifications.ApplyRedirect(redirectContext);
+                var redirectContext = new CookieRedirectContext(Context, Options, BuildRedirectUri(loginUri));
+                await Options.Events.RedirectToLogin(redirectContext);
             }
             catch (Exception exception)
             {
                 var exceptionContext = new CookieExceptionContext(Context, Options,
                     CookieExceptionContext.ExceptionLocation.Unauthorized, exception, ticket: null);
-                Options.Notifications.Exception(exceptionContext);
+                await Options.Events.Exception(exceptionContext);
                 if (exceptionContext.Rethrow)
                 {
                     throw;
                 }
             }
-            return Task.FromResult(true);
+            return true;
         }
 
 

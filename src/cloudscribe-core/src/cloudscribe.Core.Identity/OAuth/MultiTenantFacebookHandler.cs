@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-25
-// Last Modified:		    2015-09-09
+// Last Modified:		    2015-10-17
 // 
 
 using System;
@@ -26,13 +26,13 @@ using Newtonsoft.Json.Linq;
 namespace cloudscribe.Core.Identity.OAuth
 {
     /// <summary>
-    /// based on  https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.Facebook/FacebookAuthenticationHandler.cs
-    /// https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.OAuth/OAuthAuthenticationHandler.cs
+    /// based on  https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.Facebook/FacebookHandler.cs
+    /// https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.OAuth/OAuthHandler.cs
     /// https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication/AuthenticationHandler.cs
     /// </summary>
-    internal class MultiTenantFacebookAuthenticationHandler : MultiTenantOAuthAuthenticationHandler<FacebookAuthenticationOptions>
+    internal class MultiTenantFacebookHandler : MultiTenantOAuthHandler<FacebookOptions>
     {
-        public MultiTenantFacebookAuthenticationHandler(
+        public MultiTenantFacebookHandler(
             HttpClient httpClient,
             ISiteResolver siteResolver,
             ISiteRepository siteRepository,
@@ -44,7 +44,7 @@ namespace cloudscribe.Core.Identity.OAuth
                   new MultiTenantOAuthOptionsResolver(siteResolver, multiTenantOptions)
                   )
         {
-            log = loggerFactory.CreateLogger<MultiTenantFacebookAuthenticationHandler>();
+            log = loggerFactory.CreateLogger<MultiTenantFacebookHandler>();
             this.siteResolver = siteResolver;
             this.multiTenantOptions = multiTenantOptions;
             siteRepo = siteRepository;
@@ -86,7 +86,8 @@ namespace cloudscribe.Core.Identity.OAuth
             var payload = new JObject();
             foreach (string key in form.Keys)
             {
-                payload.Add(string.Equals(key, "expires", StringComparison.OrdinalIgnoreCase) ? "expires_in" : key, form[key]);
+                //payload.Add(string.Equals(key, "expires", StringComparison.OrdinalIgnoreCase) ? "expires_in" : key, form[key]);
+                payload.Add(string.Equals(key, "expires", StringComparison.OrdinalIgnoreCase) ? "expires_in" : key, (string)form[key]);
             }
 
             // The refresh token is not available.
@@ -145,13 +146,13 @@ namespace cloudscribe.Core.Identity.OAuth
 
             var payload = JObject.Parse(await response.Content.ReadAsStringAsync());
 
-            var notification = new OAuthAuthenticatedContext(Context, Options, Backchannel, tokens, payload)
+            var context = new OAuthCreatingTicketContext(Context, Options, Backchannel, tokens, payload)
             {
                 Properties = properties,
                 Principal = new ClaimsPrincipal(identity)
             };
 
-            var identifier = FacebookAuthenticationHelper.GetId(payload);
+            var identifier = FacebookHelper.GetId(payload);
             if (!string.IsNullOrEmpty(identifier))
             {
                 log.LogDebug("CreateTicketAsync FacebookAuthenticationHelper.GetId(payload) " + identifier);
@@ -159,7 +160,7 @@ namespace cloudscribe.Core.Identity.OAuth
                 identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, identifier, ClaimValueTypes.String, Options.ClaimsIssuer));
             }
 
-            var userName = FacebookAuthenticationHelper.GetUserName(payload);
+            var userName = FacebookHelper.GetUserName(payload);
             if (!string.IsNullOrEmpty(userName))
             {
                 log.LogDebug("CreateTicketAsync FacebookAuthenticationHelper.GetUserName(payload) " + userName);
@@ -167,7 +168,7 @@ namespace cloudscribe.Core.Identity.OAuth
                 identity.AddClaim(new Claim(ClaimsIdentity.DefaultNameClaimType, userName, ClaimValueTypes.String, Options.ClaimsIssuer));
             }
 
-            var email = FacebookAuthenticationHelper.GetEmail(payload);
+            var email = FacebookHelper.GetEmail(payload);
             if (!string.IsNullOrEmpty(email))
             {
                 log.LogDebug("CreateTicketAsync FacebookAuthenticationHelper.GetEmail(payload) " + email);
@@ -175,7 +176,7 @@ namespace cloudscribe.Core.Identity.OAuth
                 identity.AddClaim(new Claim(ClaimTypes.Email, email, ClaimValueTypes.String, Options.ClaimsIssuer));
             }
 
-            var name = FacebookAuthenticationHelper.GetName(payload);
+            var name = FacebookHelper.GetName(payload);
             if (!string.IsNullOrEmpty(name))
             {
                 log.LogDebug("CreateTicketAsync FacebookAuthenticationHelper.GetName(payload) " + name);
@@ -189,7 +190,7 @@ namespace cloudscribe.Core.Identity.OAuth
                 }
             }
 
-            var link = FacebookAuthenticationHelper.GetLink(payload);
+            var link = FacebookHelper.GetLink(payload);
             if (!string.IsNullOrEmpty(link))
             {
                 log.LogDebug("CreateTicketAsync FacebookAuthenticationHelper.GetLink(payload) " + link);
@@ -197,9 +198,9 @@ namespace cloudscribe.Core.Identity.OAuth
                 identity.AddClaim(new Claim("urn:facebook:link", link, ClaimValueTypes.String, Options.ClaimsIssuer));
             }
 
-            log.LogDebug("CreateTicketAsync notification.Options.AuthenticationScheme " + notification.Options.AuthenticationScheme);
+            log.LogDebug("CreateTicketAsync notification.Options.AuthenticationScheme " + context.Options.AuthenticationScheme);
 
-            await Options.Notifications.Authenticated(notification);
+            await Options.Events.CreatingTicket(context);
 
             ISiteSettings site = siteResolver.Resolve();
 
@@ -214,11 +215,11 @@ namespace cloudscribe.Core.Identity.OAuth
             }
 
 
-            log.LogDebug("CreateTicketAsync notification.Principal " + notification.Principal.Identity.Name.ToString());
+            log.LogDebug("CreateTicketAsync notification.Principal " + context.Principal.Identity.Name.ToString());
 
             //https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication/AuthenticationTicket.cs
             //return new AuthenticationTicket(notification.Principal, notification.Properties, notification.Options.AuthenticationScheme);
-            return new AuthenticationTicket(notification.Principal, notification.Properties, AuthenticationScheme.External);
+            return new AuthenticationTicket(context.Principal, context.Properties, AuthenticationScheme.External);
         }
 
         private string GenerateAppSecretProof(string accessToken)

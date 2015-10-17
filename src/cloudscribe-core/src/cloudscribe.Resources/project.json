@@ -14,7 +14,7 @@
   "releaseNotes": "",
 
     "dependencies": {
-        "System.Resources.ResourceManager": "4.0.1-beta-23225"
+        "System.Resources.ResourceManager": "4.0.1-beta-23409"
     },
 
     "frameworks": {

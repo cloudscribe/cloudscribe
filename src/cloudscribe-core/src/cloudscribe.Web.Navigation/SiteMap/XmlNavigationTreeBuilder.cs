@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-14
-// Last Modified:			2015-10-12
+// Last Modified:			2015-10-17
 // 
 
 using Microsoft.Dnx.Runtime;
@@ -27,7 +27,7 @@ namespace cloudscribe.Web.Navigation
             if (navigationOptionsAccessor == null) { throw new ArgumentNullException(nameof(navigationOptionsAccessor)); }
 
             this.appEnv = appEnv;
-            navOptions = navigationOptionsAccessor.Options;
+            navOptions = navigationOptionsAccessor.Value;
             log = logger;
             
         }

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //  Author:                     Joe Audette
 //  Created:                    2015-10-09
-//	Last Modified:              2015-10-10
+//	Last Modified:              2015-10-17
 //
 
 
@@ -28,7 +28,7 @@ namespace cloudscribe.Core.Web.Razor
             if (layoutDisplayFilter == null) { throw new ArgumentNullException(nameof(layoutDisplayFilter)); }
 
             appBasePath = appEnvironment.ApplicationBasePath;
-            options = layoutOptionsAccessor.Options;
+            options = layoutOptionsAccessor.Value;
             this.layoutDisplayFilter = layoutDisplayFilter;
         }
 

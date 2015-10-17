@@ -1,7 +1,7 @@
 ﻿// Original Author:					Joseph Hill
 // Created:							2005-02-16 
 // Additions and fixes have been added by Joe Audette, Dean Brettle, TJ Fontaine
-// Last Modified:                   2015-08-07
+// Last Modified:                   2015-10-16
 
 
 using cloudscribe.Core.Models;
@@ -32,8 +32,8 @@ namespace cloudscribe.DbHelpers.pgsql
             logFactory = loggerFactory;
             log = loggerFactory.CreateLogger(typeof(Db).FullName);
 
-            writeConnectionString = configuration.Options.WriteConnectionString;
-            readConnectionString = configuration.Options.ReadConnectionString;
+            writeConnectionString = configuration.Value.WriteConnectionString;
+            readConnectionString = configuration.Value.ReadConnectionString;
 
         }
 

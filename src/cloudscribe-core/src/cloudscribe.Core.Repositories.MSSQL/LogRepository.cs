@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //	Author:                 Joe Audette
 //  Created:			    2011-08-18
-//	Last Modified:		    2015-08-19
+//	Last Modified:		    2015-10-16
 // 
 
 using cloudscribe.Core.Models.DataExtensions;
@@ -28,8 +28,8 @@ namespace cloudscribe.Core.Repositories.MSSQL
             //logFactory = loggerFactory;
             //log = loggerFactory.CreateLogger(typeof(GeoRepository).FullName);
 
-            readConnectionString = connectionOptions.Options.ReadConnectionString;
-            writeConnectionString = connectionOptions.Options.WriteConnectionString;
+            readConnectionString = connectionOptions.Value.ReadConnectionString;
+            writeConnectionString = connectionOptions.Value.WriteConnectionString;
 
             // passing in null for loggerFactory because we don't want to allow debug sql logging for log related sql activity
             // it would cause a never ending loop condition if logging events generate more logging events

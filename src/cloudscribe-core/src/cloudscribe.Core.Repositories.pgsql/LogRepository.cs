@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //	Author:                 Joe Audette
 //  Created:			    2011-08-18
-//	Last Modified:		    2015-08-18
+//	Last Modified:		    2015-10-16
 // 
 
 using cloudscribe.Core.Models.DataExtensions;
@@ -29,8 +29,8 @@ namespace cloudscribe.Core.Repositories.pgsql
             logFactory = loggerFactory;
             log = loggerFactory.CreateLogger(typeof(GeoRepository).FullName);
 
-            readConnectionString = configuration.Options.ReadConnectionString;
-            writeConnectionString = configuration.Options.WriteConnectionString;
+            readConnectionString = configuration.Value.ReadConnectionString;
+            writeConnectionString = configuration.Value.WriteConnectionString;
 
             dbSystemLog = new DBSystemLog(readConnectionString, writeConnectionString, logFactory);
         }

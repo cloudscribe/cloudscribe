@@ -2,8 +2,8 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-29
-// Last Modified:		    2015-09-08
-// based on https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.Google/GoogleAuthenticationHandler.cs
+// Last Modified:		    2015-10-17
+// based on https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.Google/GoogleHandler.cs
 
 
 
@@ -24,9 +24,9 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Identity.OAuth
 {
-    internal class MultiTenantGoogleAuthenticationHandler : MultiTenantOAuthAuthenticationHandler<GoogleAuthenticationOptions>
+    internal class MultiTenantGoogleHandler : MultiTenantOAuthHandler<GoogleOptions>
     {
-        public MultiTenantGoogleAuthenticationHandler(
+        public MultiTenantGoogleHandler(
             HttpClient httpClient,
             ISiteResolver siteResolver,
             ISiteRepository siteRepository,
@@ -38,7 +38,7 @@ namespace cloudscribe.Core.Identity.OAuth
                   new MultiTenantOAuthOptionsResolver(siteResolver, multiTenantOptions)
                   )
         {
-            log = loggerFactory.CreateLogger<MultiTenantGoogleAuthenticationHandler>();
+            log = loggerFactory.CreateLogger<MultiTenantGoogleHandler>();
             this.siteResolver = siteResolver;
             this.multiTenantOptions = multiTenantOptions;
             siteRepo = siteRepository;
@@ -68,49 +68,49 @@ namespace cloudscribe.Core.Identity.OAuth
 
             var payload = JObject.Parse(await response.Content.ReadAsStringAsync());
 
-            var notification = new OAuthAuthenticatedContext(Context, Options, Backchannel, tokens, payload)
+            var context = new OAuthCreatingTicketContext(Context, Options, Backchannel, tokens, payload)
             {
                 Properties = properties,
                 Principal = new ClaimsPrincipal(identity)
             };
 
-            var identifier = GoogleAuthenticationHelper.GetId(payload);
+            var identifier = GoogleHelper.GetId(payload);
             if (!string.IsNullOrEmpty(identifier))
             {
                 identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, identifier, ClaimValueTypes.String, Options.ClaimsIssuer));
             }
 
-            var givenName = GoogleAuthenticationHelper.GetGivenName(payload);
+            var givenName = GoogleHelper.GetGivenName(payload);
             if (!string.IsNullOrEmpty(givenName))
             {
                 identity.AddClaim(new Claim(ClaimTypes.GivenName, givenName, ClaimValueTypes.String, Options.ClaimsIssuer));
             }
 
-            var familyName = GoogleAuthenticationHelper.GetFamilyName(payload);
+            var familyName = GoogleHelper.GetFamilyName(payload);
             if (!string.IsNullOrEmpty(familyName))
             {
                 identity.AddClaim(new Claim(ClaimTypes.Surname, familyName, ClaimValueTypes.String, Options.ClaimsIssuer));
             }
 
-            var name = GoogleAuthenticationHelper.GetName(payload);
+            var name = GoogleHelper.GetName(payload);
             if (!string.IsNullOrEmpty(name))
             {
                 identity.AddClaim(new Claim(ClaimTypes.Name, name, ClaimValueTypes.String, Options.ClaimsIssuer));
             }
 
-            var email = GoogleAuthenticationHelper.GetEmail(payload);
+            var email = GoogleHelper.GetEmail(payload);
             if (!string.IsNullOrEmpty(email))
             {
                 identity.AddClaim(new Claim(ClaimTypes.Email, email, ClaimValueTypes.String, Options.ClaimsIssuer));
             }
 
-            var profile = GoogleAuthenticationHelper.GetProfile(payload);
+            var profile = GoogleHelper.GetProfile(payload);
             if (!string.IsNullOrEmpty(profile))
             {
                 identity.AddClaim(new Claim("urn:google:profile", profile, ClaimValueTypes.String, Options.ClaimsIssuer));
             }
 
-            await Options.Notifications.Authenticated(notification);
+            await Options.Events.CreatingTicket(context);
 
             ISiteSettings site = siteResolver.Resolve();
 
@@ -125,7 +125,7 @@ namespace cloudscribe.Core.Identity.OAuth
             }
 
             //return new AuthenticationTicket(notification.Principal, notification.Properties, notification.Options.AuthenticationScheme);
-            return new AuthenticationTicket(notification.Principal, notification.Properties, AuthenticationScheme.External);
+            return new AuthenticationTicket(context.Principal, context.Properties, AuthenticationScheme.External);
         }
 
         // TODO: Abstract this properties override pattern into the base class?

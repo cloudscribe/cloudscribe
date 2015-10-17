@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2015-08-05
+// Last Modified:			2015-10-16
 // 
 
 using cloudscribe.Core.Models;
@@ -31,8 +31,8 @@ namespace cloudscribe.Core.Repositories.MSSQL
             logFactory = loggerFactory;
             log = loggerFactory.CreateLogger(typeof(SiteRepository).FullName);
 
-            readConnectionString = connectionOptions.Options.ReadConnectionString;
-            writeConnectionString = connectionOptions.Options.WriteConnectionString;
+            readConnectionString = connectionOptions.Value.ReadConnectionString;
+            writeConnectionString = connectionOptions.Value.WriteConnectionString;
             
             dbSiteSettings = new DBSiteSettings(readConnectionString, writeConnectionString, logFactory);
             dbSiteSettingsEx = new DBSiteSettingsEx(readConnectionString, writeConnectionString, logFactory);

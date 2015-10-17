@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-22
-// Last Modified:		    2015-10-13
+// Last Modified:		    2015-10-17
 // 
 //
 
@@ -37,7 +37,7 @@ namespace cloudscribe.Core.Identity
             IEnumerable<IPasswordValidator<TUser>> passwordValidators,
             ILookupNormalizer keyNormalizer,
             IdentityErrorDescriber errors,
-            IEnumerable<IUserTokenProvider<TUser>> tokenProviders,
+            IServiceProvider serviceProvider,
             ILogger<UserManager<TUser>> logger,
             IHttpContextAccessor contextAccessor)
             : base(
@@ -48,13 +48,13 @@ namespace cloudscribe.Core.Identity
                   passwordValidators,
                   keyNormalizer,
                   errors,
-                  tokenProviders,
+                  serviceProvider,
                   logger,
                   contextAccessor)
         {
             userRepo = userRepository;
             this.siteResolver = siteResolver;
-            multiTenantOptions = multiTenantOptionsAccessor.Options;
+            multiTenantOptions = multiTenantOptionsAccessor.Value;
 
         }
 

@@ -2,13 +2,14 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-31
-// Last Modified:			2015-08-01
+// Last Modified:			2015-10-17
 // 
 
 
 using Microsoft.AspNet.Authentication.Cookies;
 using Microsoft.AspNet.Builder;
 using Microsoft.Framework.DependencyInjection;
+using Microsoft.AspNet.Identity;
 using Microsoft.Framework.OptionsModel;
 using System;
 
@@ -23,19 +24,29 @@ namespace cloudscribe.Core.Identity
         /// <param name="configureOptions">Used to configure the options for the middleware</param>
         /// <param name="optionsName">The name of the options class that controls the middleware behavior, null will use the default options</param>
         /// <returns>The original app parameter</returns>
-        public static IApplicationBuilder UseMultiTenantCookieAuthentication(
-            this IApplicationBuilder app, 
-            Action<CookieAuthenticationOptions> configureOptions = null, 
-            string optionsName = "")
-        {
-            
+        //public static IApplicationBuilder UseMultiTenantCookieAuthentication(
+        //    this IApplicationBuilder app, 
+        //    Action<CookieAuthenticationOptions> configureOptions = null, 
+        //    string optionsName = "")
+        //{
 
-            return app.UseMiddleware<MultiTenantCookieAuthenticationMiddleware>(
-                new ConfigureOptions<CookieAuthenticationOptions>(configureOptions ?? (o => { }))
-                {
-                    Name = optionsName
-                    
-                });
+
+        //    return app.UseMiddleware<MultiTenantCookieAuthenticationMiddleware>(
+        //        new ConfigureOptions<CookieAuthenticationOptions>(configureOptions ?? (o => { }))
+        //        {
+        //            Name = optionsName
+
+        //        });
+        //}
+
+        public static IApplicationBuilder UseMultiTenantCookieAuthentication(
+            this IApplicationBuilder app,
+            CookieAuthenticationOptions coookieAuthenticationOptions)
+        {
+
+
+            return app.UseMiddleware<MultiTenantCookieAuthenticationMiddleware>(coookieAuthenticationOptions);
+                
         }
 
         public static IApplicationBuilder UseCloudscribeIdentity(this IApplicationBuilder app)
@@ -45,36 +56,54 @@ namespace cloudscribe.Core.Identity
                 throw new ArgumentNullException(nameof(app));
             }
 
-            MultiTenantCookieAuthenticationNotifications cookieNotifications
-                = app.ApplicationServices.GetService<MultiTenantCookieAuthenticationNotifications>();
+            MultiTenantCookieAuthenticationEvents cookieEvents
+                = app.ApplicationServices.GetService<MultiTenantCookieAuthenticationEvents>();
 
-            app.UseMultiTenantCookieAuthentication(options =>
-            {
-                options.Notifications = cookieNotifications;
-            }
-            , 
-            AuthenticationScheme.External);
 
-            app.UseMultiTenantCookieAuthentication(options =>
-            {
-                options.Notifications = cookieNotifications;
-            }
-            , 
-            AuthenticationScheme.TwoFactorRememberMe);
 
-            app.UseMultiTenantCookieAuthentication(options =>
-            {
-                options.Notifications = cookieNotifications;
-            }
-            , 
-            AuthenticationScheme.TwoFactorUserId);
 
-            app.UseMultiTenantCookieAuthentication(options =>
-            {
-                options.Notifications = cookieNotifications;
-            }
-            , 
-            AuthenticationScheme.Application);
+            //app.UseMultiTenantCookieAuthentication(options =>
+            //{
+
+            //    options.Notifications = cookieNotifications;
+            //}
+            // , AuthenticationScheme.External
+            //);
+
+            var options = app.ApplicationServices.GetRequiredService<IOptions<IdentityOptions>>().Value;
+            options.Cookies.ExternalCookie.Events = cookieEvents;
+            options.Cookies.TwoFactorRememberMeCookie.Events = cookieEvents;
+            options.Cookies.TwoFactorUserIdCookie.Events = cookieEvents;
+            options.Cookies.ApplicationCookie.Events = cookieEvents;
+            
+            app.UseMultiTenantCookieAuthentication(options.Cookies.ExternalCookie);
+
+            //app.UseMultiTenantCookieAuthentication(options =>
+            //{
+            //    options.Notifications = cookieNotifications;
+            //}
+            //, 
+            //AuthenticationScheme.TwoFactorRememberMe);
+
+            app.UseMultiTenantCookieAuthentication(options.Cookies.TwoFactorRememberMeCookie);
+
+            //app.UseMultiTenantCookieAuthentication(options =>
+            //{
+            //    options.Notifications = cookieNotifications;
+            //}
+            //, 
+            //AuthenticationScheme.TwoFactorUserId);
+
+            app.UseMultiTenantCookieAuthentication(options.Cookies.TwoFactorUserIdCookie);
+
+            //app.UseMultiTenantCookieAuthentication(options =>
+            //{
+            //    options.Notifications = cookieNotifications;
+            //}
+            //, 
+            //AuthenticationScheme.Application);
+
+            app.UseMultiTenantCookieAuthentication(options.Cookies.ApplicationCookie);
 
             return app;
         }

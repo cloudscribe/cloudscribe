@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-07-17
-// Last Modified:		    2015-08-06
+// Last Modified:		    2015-10-16
 
 
 using cloudscribe.Core.Models;
@@ -33,8 +33,8 @@ namespace cloudscribe.DbHelpers.Firebird
             logFactory = loggerFactory;
             log = loggerFactory.CreateLogger(typeof(Db).FullName);
 
-            writeConnectionString = configuration.Options.WriteConnectionString;
-            readConnectionString = configuration.Options.ReadConnectionString;
+            writeConnectionString = configuration.Value.WriteConnectionString;
+            readConnectionString = configuration.Value.ReadConnectionString;
 
         }
 

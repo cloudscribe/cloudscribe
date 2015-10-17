@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-22
-// Last Modified:			2015-09-04
+// Last Modified:			2015-10-17
 // 
 
 using cloudscribe.Core.Models;
@@ -26,8 +26,8 @@ namespace cloudscribe.Core.Web.Components
             resolver = siteResolver;
             siteRepo = siteRepository;
             userRepo = userRepository;
-            multiTenantOptions = multiTenantOptionsAccessor.Options;
-            setupOptions = setupOptionsAccessor.Options;
+            multiTenantOptions = multiTenantOptionsAccessor.Value;
+            setupOptions = setupOptionsAccessor.Value;
         }
 
         private MultiTenantOptions multiTenantOptions;

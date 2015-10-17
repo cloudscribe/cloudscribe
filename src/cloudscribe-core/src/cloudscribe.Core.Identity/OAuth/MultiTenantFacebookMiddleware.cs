@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-25
-// Last Modified:		    2015-09-04
+// Last Modified:		    2015-10-17
 // 
 
 using cloudscribe.Core.Models;
@@ -17,11 +17,11 @@ using Microsoft.Framework.WebEncoders;
 namespace cloudscribe.Core.Identity.OAuth
 {
     /// <summary>
-    /// based on https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.Facebook/FacebookAuthenticationMiddleware.cs
+    /// based on https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.Facebook/FacebookMiddleware.cs
     /// </summary>
-    public class MultiTenantFacebookAuthenticationMiddleware : MultiTenantOAuthAuthenticationMiddleware<FacebookAuthenticationOptions>
+    public class MultiTenantFacebookMiddleware : MultiTenantOAuthMiddleware<FacebookOptions>
     {
-        public MultiTenantFacebookAuthenticationMiddleware(
+        public MultiTenantFacebookMiddleware(
             RequestDelegate next,
             IDataProtectionProvider dataProtectionProvider,
             ILoggerFactory loggerFactory,
@@ -30,8 +30,7 @@ namespace cloudscribe.Core.Identity.OAuth
             IOptions<MultiTenantOptions> multiTenantOptionsAccesor,
             IUrlEncoder encoder,
             IOptions<SharedAuthenticationOptions> sharedOptions,
-            IOptions<FacebookAuthenticationOptions> options,
-            ConfigureOptions<FacebookAuthenticationOptions> configureOptions = null)
+            IOptions<FacebookOptions> options)
             : base(next, 
                   dataProtectionProvider, 
                   loggerFactory, 
@@ -39,8 +38,7 @@ namespace cloudscribe.Core.Identity.OAuth
                   siteResolver,
                   multiTenantOptionsAccesor,
                   sharedOptions, 
-                  options, 
-                  configureOptions)
+                  options.Value)
         {
             //if (string.IsNullOrEmpty(Options.AppId))
             //{
@@ -52,7 +50,7 @@ namespace cloudscribe.Core.Identity.OAuth
             //}
             this.loggerFactory = loggerFactory;
             this.siteResolver = siteResolver;
-            multiTenantOptions = multiTenantOptionsAccesor.Options;
+            multiTenantOptions = multiTenantOptionsAccesor.Value;
             siteRepo = siteRepository;
         }
 
@@ -61,9 +59,9 @@ namespace cloudscribe.Core.Identity.OAuth
         private ISiteRepository siteRepo;
         private MultiTenantOptions multiTenantOptions;
 
-        protected override AuthenticationHandler<FacebookAuthenticationOptions> CreateHandler()
+        protected override AuthenticationHandler<FacebookOptions> CreateHandler()
         {
-            return new MultiTenantFacebookAuthenticationHandler(Backchannel, siteResolver, siteRepo, multiTenantOptions, loggerFactory);
+            return new MultiTenantFacebookHandler(Backchannel, siteResolver, siteRepo, multiTenantOptions, loggerFactory);
         }
 
     }

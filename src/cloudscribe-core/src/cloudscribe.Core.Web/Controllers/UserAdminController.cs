@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-08
-// Last Modified:			2015-09-15
+// Last Modified:			2015-10-17
 // 
 
 using cloudscribe.Core.Identity;
@@ -34,7 +34,7 @@ namespace cloudscribe.Core.Web.Controllers
            
             UserManager = userManager;
             this.siteManager = siteManager;
-            uiOptions = uiOptionsAccessor.Options;
+            uiOptions = uiOptionsAccessor.Value;
 
         }
 

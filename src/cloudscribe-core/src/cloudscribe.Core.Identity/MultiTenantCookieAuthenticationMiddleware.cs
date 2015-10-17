@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-31
-// Last Modified:			2015-09-04
+// Last Modified:			2015-10-17
 // 
 
 
@@ -39,15 +39,15 @@ namespace cloudscribe.Core.Identity
             ConfigureOptions<CookieAuthenticationOptions> configureOptions,
             MultiTenantCookieOptionsResolverFactory tenantResolverFactory
             )
-            : base(next, options, loggerFactory, urlEncoder, configureOptions)
+            : base(next, options.Value, loggerFactory, urlEncoder)
         {
             this.dataProtectionProvider = dataProtectionProvider;
             this.tenantResolverFactory = tenantResolverFactory;
             //this.loggerFactory = loggerFactory;
 
-            if (Options.Notifications == null)
+            if (Options.Events == null)
             {
-                Options.Notifications = new CookieAuthenticationNotifications();
+                Options.Events = new CookieAuthenticationEvents();
             }
 
             // commented out we are specifying a cookie name so this would not be hit anyway

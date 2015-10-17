@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //	Author:                 Joe Audette
 //  Created:			    2011-08-19
-//	Last Modified:		    2015-09-05
+//	Last Modified:		    2015-10-17
 // 
 
 
@@ -27,7 +27,7 @@ namespace cloudscribe.Core.Web.Controllers
             systemInfo = systemInfoManager;
 
             this.timeZoneResolver = timeZoneResolver;
-            uiOptions = uiOptionsAccessor.Options;
+            uiOptions = uiOptionsAccessor.Value;
 
         }
 
@@ -42,8 +42,8 @@ namespace cloudscribe.Core.Web.Controllers
             ViewData["Heading"] = "System Information";
 
             var serverInfo = new SystemInfoViewModel();
-            serverInfo.Name = this.Context.Request.Host.Value;
-            serverInfo.LocalAddress = this.Context.Connection.LocalIpAddress.ToString();
+            serverInfo.Name = this.HttpContext.Request.Host.Value;
+            serverInfo.LocalAddress = this.HttpContext.Connection.LocalIpAddress.ToString();
             serverInfo.OperatingSystem = systemInfo.OperatingSystem;
             serverInfo.Runtime = systemInfo.Runtime;
             serverInfo.EnvironmentName = systemInfo.EnvironmentName;

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-27
-// Last Modified:		    2015-09-09
+// Last Modified:		    2015-10-17
 // 
 
 
@@ -14,6 +14,7 @@ using Microsoft.AspNet.Http.Authentication;
 using Microsoft.AspNet.Http.Extensions;
 using Microsoft.AspNet.Http.Features.Authentication;
 using Microsoft.AspNet.WebUtilities;
+//using Microsoft.Extensions.Primitives;
 using Microsoft.Framework.Logging;
 using Newtonsoft.Json.Linq;
 using System;
@@ -25,6 +26,8 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 
 
+
+
 namespace cloudscribe.Core.Identity.OAuth
 {
     internal static class Constants
@@ -33,17 +36,17 @@ namespace cloudscribe.Core.Identity.OAuth
         internal const string CorrelationPrefix = ".AspNet.Correlation.";
     }
 
-    public class MultiTenantOAuthAuthenticationHandler<TOptions> : AuthenticationHandler<TOptions> where TOptions : OAuthAuthenticationOptions
+    public class MultiTenantOAuthHandler<TOptions> : AuthenticationHandler<TOptions> where TOptions : OAuthOptions
     {
         private static readonly RandomNumberGenerator CryptoRandom = RandomNumberGenerator.Create();
 
-        public MultiTenantOAuthAuthenticationHandler(
+        public MultiTenantOAuthHandler(
             HttpClient backchannel,
             ILoggerFactory loggerFactory,
             MultiTenantOAuthOptionsResolver tenantOptions)
         {
             Backchannel = backchannel;
-            log = loggerFactory.CreateLogger<MultiTenantOAuthAuthenticationHandler<TOptions>>();
+            log = loggerFactory.CreateLogger<MultiTenantOAuthHandler<TOptions>>();
             this.tenantOptions = tenantOptions;
         }
 
@@ -87,14 +90,14 @@ namespace cloudscribe.Core.Identity.OAuth
                 return true;
             }
 
-            var context = new OAuthReturnEndpointContext(Context, ticket)
+            var context = new SigningInContext(Context, ticket)
             {
                 SignInScheme = Options.SignInScheme,
                 RedirectUri = ticket.Properties.RedirectUri,
             };
             ticket.Properties.RedirectUri = null;
 
-            await Options.Notifications.ReturnEndpoint(context);
+            await Options.Events.SigningIn(context);
 
             if (context.SignInScheme != null && context.Principal != null)
             {
@@ -125,7 +128,7 @@ namespace cloudscribe.Core.Identity.OAuth
                 var query = Request.Query;
 
                 // TODO: Is this a standard error returned by servers?
-                var value = query.Get("error");
+                var value = query["error"];
                 if (!string.IsNullOrEmpty(value))
                 {
                     Logger.LogVerbose("Remote server returned an error: " + Request.QueryString);
@@ -133,8 +136,8 @@ namespace cloudscribe.Core.Identity.OAuth
                     return null;
                 }
 
-                var code = query.Get("code");
-                var state = query.Get("state");
+                var code = query["code"];
+                var state = query["state"];
 
                 properties = Options.StateDataFormat.Unprotect(state);
                 if (properties == null)
@@ -227,27 +230,33 @@ namespace cloudscribe.Core.Identity.OAuth
         {
             log.LogDebug("CreateTicketAsync called");
 
-            var notification = new OAuthAuthenticatedContext(Context, Options, Backchannel, tokens)
+            var context = new OAuthCreatingTicketContext(Context, Options, Backchannel, tokens)
             {
                 Principal = new ClaimsPrincipal(identity),
                 Properties = properties
             };
 
-            await Options.Notifications.Authenticated(notification);
+            await Options.Events.CreatingTicket(context);
 
-            if (notification.Principal?.Identity == null)
+            if (context.Principal?.Identity == null)
             {
                 return null;
             }
 
-            return new AuthenticationTicket(notification.Principal, notification.Properties, Options.AuthenticationScheme);
+            return new AuthenticationTicket(context.Principal, context.Properties, Options.AuthenticationScheme);
         }
 
-        protected override Task<bool> HandleUnauthorizedAsync(ChallengeContext context)
+        protected override async Task<bool> HandleUnauthorizedAsync(ChallengeContext context)
         {
+            if (context == null)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
+
             log.LogDebug("HandleUnauthorizedAsync called");
 
             var properties = new AuthenticationProperties(context.Properties);
+
             if (string.IsNullOrEmpty(properties.RedirectUri))
             {
                 properties.RedirectUri = CurrentUri;
@@ -258,11 +267,13 @@ namespace cloudscribe.Core.Identity.OAuth
 
             var authorizationEndpoint = BuildChallengeUrl(properties, BuildRedirectUri(Options.CallbackPath));
 
-            var redirectContext = new OAuthApplyRedirectContext(
+            var redirectContext = new OAuthRedirectToAuthorizationContext(
                 Context, Options,
                 properties, authorizationEndpoint);
-            Options.Notifications.ApplyRedirect(redirectContext);
-            return Task.FromResult(true);
+
+            //await Options.Events.ApplyRedirect(redirectContext);
+            await Options.Events.RedirectToAuthorizationEndpoint(redirectContext);
+            return true;
         }
 
         protected override Task HandleSignOutAsync(SignOutContext context)
@@ -320,7 +331,7 @@ namespace cloudscribe.Core.Identity.OAuth
 
             var nonceBytes = new byte[32];
             CryptoRandom.GetBytes(nonceBytes);
-            var correlationId = TextEncodings.Base64Url.Encode(nonceBytes);
+            var correlationId = Base64UrlTextEncoder.Encode(nonceBytes);
 
             var cookieOptions = new CookieOptions
             {

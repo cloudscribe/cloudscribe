@@ -2,8 +2,8 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-29
-// Last Modified:		    2015-09-09
-// based on https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.Twitter/TwitterAuthenticationMiddleware.cs
+// Last Modified:		    2015-10-17
+// based on https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.Twitter/TwitterMiddleware.cs
 
 using cloudscribe.Core.Models;
 using Microsoft.AspNet.Authentication;
@@ -23,7 +23,7 @@ namespace cloudscribe.Core.Identity.OAuth
     /// ASP.NET middleware for authenticating users using Twitter
     /// </summary>
     [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable", Justification = "Middleware are not disposable.")]
-    public class MultiTenantTwitterAuthenticationMiddleware : AuthenticationMiddleware<TwitterAuthenticationOptions>
+    public class MultiTenantTwitterMiddleware : AuthenticationMiddleware<TwitterOptions>
     {
         
         private readonly HttpClient _httpClient;
@@ -42,7 +42,7 @@ namespace cloudscribe.Core.Identity.OAuth
         /// <param name="sharedOptions"></param>
         /// <param name="options">Configuration options for the middleware</param>
         /// <param name="configureOptions"></param>
-        public MultiTenantTwitterAuthenticationMiddleware(
+        public MultiTenantTwitterMiddleware(
                 RequestDelegate next,
                 IDataProtectionProvider dataProtectionProvider,
                 ILoggerFactory loggerFactory,
@@ -51,9 +51,8 @@ namespace cloudscribe.Core.Identity.OAuth
                 IOptions<MultiTenantOptions> multiTenantOptionsAccesor,
                 IUrlEncoder encoder,
                 IOptions<SharedAuthenticationOptions> sharedOptions,
-                IOptions<TwitterAuthenticationOptions> options,
-                ConfigureOptions<TwitterAuthenticationOptions> configureOptions = null)
-                : base(next, options, loggerFactory, encoder, configureOptions)
+                IOptions<TwitterOptions> options)
+                : base(next, options.Value, loggerFactory, encoder)
             {
                 //if (string.IsNullOrEmpty(Options.ConsumerSecret))
                 //{
@@ -64,23 +63,22 @@ namespace cloudscribe.Core.Identity.OAuth
                 //    throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, Resources.Exception_OptionMustBeProvided, nameof(Options.ConsumerKey)));
                 //}
 
-                if (Options.Notifications == null)
+                if (Options.Events == null)
                 {
-                    Options.Notifications = new TwitterAuthenticationNotifications();
+                    Options.Events = new TwitterEvents();
                 }
                 if (Options.StateDataFormat == null)
                 {
                     var dataProtector = dataProtectionProvider.CreateProtector(
-                        typeof(TwitterAuthenticationMiddleware).FullName, Options.AuthenticationScheme, "v1");
+                        typeof(TwitterMiddleware).FullName, Options.AuthenticationScheme, "v1");
                     Options.StateDataFormat = new SecureDataFormat<RequestToken>(
-                        Serializers.RequestToken,
-                        dataProtector,
-                        TextEncodings.Base64Url);
+                        new RequestTokenSerializer(),
+                        dataProtector);
                 }
 
                 if (string.IsNullOrEmpty(Options.SignInScheme))
                 {
-                    Options.SignInScheme = sharedOptions.Options.SignInScheme;
+                    Options.SignInScheme = sharedOptions.Value.SignInScheme;
                 }
                 if (string.IsNullOrEmpty(Options.SignInScheme))
                 {
@@ -89,8 +87,8 @@ namespace cloudscribe.Core.Identity.OAuth
 
                 }
 
-                _httpClient = new HttpClient(ResolveHttpMessageHandler(Options));
-                _httpClient.Timeout = Options.BackchannelTimeout;
+            _httpClient = new HttpClient(Options.BackchannelHttpHandler ?? new HttpClientHandler());
+            _httpClient.Timeout = Options.BackchannelTimeout;
                 _httpClient.MaxResponseContentBufferSize = 1024 * 1024 * 10; // 10 MB
                 _httpClient.DefaultRequestHeaders.Accept.ParseAdd("*/*");
                 _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Microsoft ASP.NET Twitter middleware");
@@ -98,7 +96,7 @@ namespace cloudscribe.Core.Identity.OAuth
 
                 this.loggerFactory = loggerFactory;
                 this.siteResolver = siteResolver;
-                multiTenantOptions = multiTenantOptionsAccesor.Options;
+                multiTenantOptions = multiTenantOptionsAccesor.Value;
                 siteRepo = siteRepository;
 
             }
@@ -109,9 +107,9 @@ namespace cloudscribe.Core.Identity.OAuth
             /// Provides the <see cref="AuthenticationHandler"/> object for processing authentication-related requests.
             /// </summary>
             /// <returns>An <see cref="AuthenticationHandler"/> configured with the <see cref="TwitterAuthenticationOptions"/> supplied to the constructor.</returns>
-            protected override AuthenticationHandler<TwitterAuthenticationOptions> CreateHandler()
+            protected override AuthenticationHandler<TwitterOptions> CreateHandler()
             {
-                return new MultiTenantTwitterAuthenticationHandler(
+                return new MultiTenantTwitterHandler(
                     _httpClient,
                     siteResolver,
                     siteRepo,
@@ -119,29 +117,29 @@ namespace cloudscribe.Core.Identity.OAuth
                     loggerFactory);
             }
 
-            [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Managed by caller")]
-            private static HttpMessageHandler ResolveHttpMessageHandler(TwitterAuthenticationOptions options)
-            {
-                var handler = options.BackchannelHttpHandler ??
-#if DNX451
-                new WebRequestHandler();
-                // If they provided a validator, apply it or fail.
-                if (options.BackchannelCertificateValidator != null)
-                {
-                    // Set the cert validate callback
-                    var webRequestHandler = handler as WebRequestHandler;
-                    if (webRequestHandler == null)
-                    {
-                    //throw new InvalidOperationException(Resources.Exception_ValidatorHandlerMismatch);
-                    throw new InvalidOperationException("Resources.Exception_ValidatorHandlerMismatch");
-                }
-                    webRequestHandler.ServerCertificateValidationCallback = options.BackchannelCertificateValidator.Validate;
-                }
-#else
-                new WinHttpHandler();
-#endif
-                return handler;
-            }
+//            [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Managed by caller")]
+//            private static HttpMessageHandler ResolveHttpMessageHandler(TwitterAuthenticationOptions options)
+//            {
+//                var handler = options.BackchannelHttpHandler ??
+//#if DNX451
+//                new WebRequestHandler();
+//                // If they provided a validator, apply it or fail.
+//                if (options.BackchannelCertificateValidator != null)
+//                {
+//                    // Set the cert validate callback
+//                    var webRequestHandler = handler as WebRequestHandler;
+//                    if (webRequestHandler == null)
+//                    {
+//                    //throw new InvalidOperationException(Resources.Exception_ValidatorHandlerMismatch);
+//                    throw new InvalidOperationException("Resources.Exception_ValidatorHandlerMismatch");
+//                }
+//                    webRequestHandler.ServerCertificateValidationCallback = options.BackchannelCertificateValidator.Validate;
+//                }
+//#else
+//                new WinHttpHandler();
+//#endif
+//                return handler;
+//            }
 
         }
 }

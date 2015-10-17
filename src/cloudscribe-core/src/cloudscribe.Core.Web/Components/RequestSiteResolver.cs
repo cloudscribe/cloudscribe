@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-06-19
-// Last Modified:			2015-08-03
+// Last Modified:			2015-10-17
 // 
 
 using cloudscribe.Core.Models;
@@ -22,7 +22,7 @@ namespace cloudscribe.Core.Web.Components
         {
             contextAccessor = httpContextAccessor;
             siteRepo = siteRepository;
-            this.multiTenantOptions = multiTenantOptions.Options;
+            this.multiTenantOptions = multiTenantOptions.Value;
 
         }
 

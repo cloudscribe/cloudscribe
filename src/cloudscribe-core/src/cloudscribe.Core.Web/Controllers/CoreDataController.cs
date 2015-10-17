@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-11-15
-// Last Modified:			2015-09-04
+// Last Modified:			2015-10-17
 // 
 
 using cloudscribe.Core.Web.Components;
@@ -32,7 +32,7 @@ namespace cloudscribe.Core.Web.Controllers
         {
             Site = siteResolver.Resolve();
             dataManager = geoDataManager;
-            uiOptions = uiOptionsAccessor.Options;
+            uiOptions = uiOptionsAccessor.Value;
         }
 
         private ISiteSettings Site;

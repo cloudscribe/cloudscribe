@@ -2,8 +2,8 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-29
-// Last Modified:		    2015-09-09
-// based on https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.Twitter/TwitterAuthenticationHandler.cs
+// Last Modified:		    2015-10-17
+// based on https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.Twitter/TwitterHandler.cs
 
 using cloudscribe.Core.Models;
 using Microsoft.AspNet.Authentication;
@@ -28,7 +28,7 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Identity.OAuth
 {
-    public class MultiTenantTwitterAuthenticationHandler : AuthenticationHandler<TwitterAuthenticationOptions>
+    public class MultiTenantTwitterHandler : AuthenticationHandler<TwitterOptions>
     {
         private static readonly DateTime Epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         private const string StateCookie = "__TwitterState";
@@ -38,7 +38,7 @@ namespace cloudscribe.Core.Identity.OAuth
 
         private readonly HttpClient _httpClient;
 
-        public MultiTenantTwitterAuthenticationHandler(
+        public MultiTenantTwitterHandler(
             HttpClient httpClient,
             ISiteResolver siteResolver,
             ISiteRepository siteRepository,
@@ -47,7 +47,7 @@ namespace cloudscribe.Core.Identity.OAuth
         {
             _httpClient = httpClient;
 
-            log = loggerFactory.CreateLogger<MultiTenantTwitterAuthenticationHandler>();
+            log = loggerFactory.CreateLogger<MultiTenantTwitterHandler>();
             this.siteResolver = siteResolver;
             this.multiTenantOptions = multiTenantOptions;
             siteRepo = siteRepository;
@@ -164,15 +164,15 @@ namespace cloudscribe.Core.Identity.OAuth
         {
             log.LogDebug("CreateTicketAsync called tokens.ScreenName was " + token.ScreenName);
 
-            var notification = new TwitterAuthenticatedContext(Context, token.UserId, token.ScreenName, token.Token, token.TokenSecret)
+            var context = new TwitterCreatingTicketContext(Context, token.UserId, token.ScreenName, token.Token, token.TokenSecret)
             {
                 Principal = new ClaimsPrincipal(identity),
                 Properties = properties
             };
 
-            await Options.Notifications.Authenticated(notification);
+            await Options.Events.CreatingTicket(context);
 
-            if (notification.Principal?.Identity == null)
+            if (context.Principal?.Identity == null)
             {
                 return null;
             }
@@ -190,11 +190,16 @@ namespace cloudscribe.Core.Identity.OAuth
             }
 
             //return new AuthenticationTicket(notification.Principal, notification.Properties, Options.AuthenticationScheme);
-            return new AuthenticationTicket(notification.Principal, notification.Properties, AuthenticationScheme.External);
+            return new AuthenticationTicket(context.Principal, context.Properties, AuthenticationScheme.External);
         }
 
         protected override async Task<bool> HandleUnauthorizedAsync(ChallengeContext context)
         {
+            if (context == null)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
+
             var properties = new AuthenticationProperties(context.Properties);
             if (string.IsNullOrEmpty(properties.RedirectUri))
             {
@@ -230,11 +235,12 @@ namespace cloudscribe.Core.Identity.OAuth
                     Options.StateDataFormat.Protect(requestToken), 
                     cookieOptions);
 
-                var redirectContext = new TwitterApplyRedirectContext(
+                var redirectContext = new TwitterRedirectToAuthorizationEndpointContext(
                     Context, Options,
                     properties, twitterAuthenticationEndpoint);
 
-                Options.Notifications.ApplyRedirect(redirectContext);
+                await Options.Events.RedirectToAuthorizationEndpoint(redirectContext);
+
                 return true;
             }
             else
@@ -254,14 +260,14 @@ namespace cloudscribe.Core.Identity.OAuth
                 return true;
             }
 
-            var context = new TwitterReturnEndpointContext(Context, model)
+            var context = new SigningInContext(Context, model)
             {
                 SignInScheme = Options.SignInScheme,
                 RedirectUri = model.Properties.RedirectUri
             };
             model.Properties.RedirectUri = null;
 
-            await Options.Notifications.ReturnEndpoint(context);
+            await Options.Events.SigningIn(context);
 
             if (context.SignInScheme != null && context.Principal != null)
             {

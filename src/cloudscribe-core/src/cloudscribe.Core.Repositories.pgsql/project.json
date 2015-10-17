@@ -15,7 +15,7 @@
   "dependencies": {
     "cloudscribe.Core.Models": "1.0.0-*",
     "cloudscribe.DbHelpers.pgsql": "1.0.0-*",
-    "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta7",
+    "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta8",
     "Npgsql": "3.0.0-beta0001"
   },
 

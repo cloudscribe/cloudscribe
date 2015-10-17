@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-01-10
-// Last Modified:			2015-09-04
+// Last Modified:			2015-10-17
 // 
 
 using cloudscribe.Core.Models;
@@ -46,7 +46,7 @@ namespace cloudscribe.Setup.Controllers
             appBasePath = appEnv.ApplicationBasePath;
             this.siteManager = siteManager;
             this.setupManager = setupManager;
-            setupOptions = setupOptionsAccessor.Options;
+            setupOptions = setupOptionsAccessor.Value;
 
         }
 
@@ -98,7 +98,7 @@ namespace cloudscribe.Setup.Controllers
            // Server.ScriptTimeout = int.MaxValue;
             startTime = DateTime.UtcNow;
             
-            await WritePageHeader(Context.Response);
+            await WritePageHeader(HttpContext.Response);
 
             if (setupIsDisabled && isAdmin)
             {
