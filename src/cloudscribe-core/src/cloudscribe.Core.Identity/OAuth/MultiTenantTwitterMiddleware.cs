@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-29
-// Last Modified:		    2015-10-17
+// Last Modified:		    2015-10-18
 // based on https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.Twitter/TwitterMiddleware.cs
 
 using cloudscribe.Core.Models;
@@ -41,7 +41,6 @@ namespace cloudscribe.Core.Identity.OAuth
         /// <param name="encoder"></param>
         /// <param name="sharedOptions"></param>
         /// <param name="options">Configuration options for the middleware</param>
-        /// <param name="configureOptions"></param>
         public MultiTenantTwitterMiddleware(
                 RequestDelegate next,
                 IDataProtectionProvider dataProtectionProvider,
@@ -51,8 +50,8 @@ namespace cloudscribe.Core.Identity.OAuth
                 IOptions<MultiTenantOptions> multiTenantOptionsAccesor,
                 IUrlEncoder encoder,
                 IOptions<SharedAuthenticationOptions> sharedOptions,
-                IOptions<TwitterOptions> options)
-                : base(next, options.Value, loggerFactory, encoder)
+                TwitterOptions options)
+                : base(next, options, loggerFactory, encoder)
             {
                 //if (string.IsNullOrEmpty(Options.ConsumerSecret))
                 //{

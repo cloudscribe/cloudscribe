@@ -83,21 +83,31 @@ namespace cloudscribe.Core.Identity
             if(options == null) { throw new ArgumentException("failed to get identity options"); }
             if (options.Cookies.ApplicationCookie == null) { throw new ArgumentException("failed to get identity application cookie options"); }
 
-            //options.Cookies.ExternalCookie.Events = cookieEvents;
-            //options.Cookies.TwoFactorRememberMeCookie.Events = cookieEvents;
-            //options.Cookies.TwoFactorUserIdCookie.Events = cookieEvents;
+            options.Cookies.ExternalCookie.Events = cookieEvents;
+            options.Cookies.ExternalCookie.CookieName = AuthenticationScheme.External;
+            options.Cookies.ExternalCookie.AuthenticationScheme = AuthenticationScheme.External;
+
+            options.Cookies.TwoFactorRememberMeCookie.Events = cookieEvents;
+            options.Cookies.TwoFactorRememberMeCookie.CookieName = AuthenticationScheme.TwoFactorRememberMe;
+            options.Cookies.TwoFactorRememberMeCookie.AuthenticationScheme = AuthenticationScheme.TwoFactorRememberMe;
+
+            options.Cookies.TwoFactorUserIdCookie.Events = cookieEvents;
+            options.Cookies.TwoFactorUserIdCookie.CookieName = AuthenticationScheme.TwoFactorUserId;
+            options.Cookies.TwoFactorUserIdCookie.AuthenticationScheme = AuthenticationScheme.TwoFactorUserId;
+
+
             options.Cookies.ApplicationCookie.CookieName = AuthenticationScheme.Application;
             options.Cookies.ApplicationCookie.AuthenticationScheme = AuthenticationScheme.Application;
             options.Cookies.ApplicationCookie.Events = cookieEvents;
             
-            //app.UseMultiTenantCookieAuthentication(options.Cookies.ExternalCookie);
+            app.UseMultiTenantCookieAuthentication(options.Cookies.ExternalCookie);
 
             
-            //app.UseMultiTenantCookieAuthentication(options.Cookies.TwoFactorRememberMeCookie);
+            app.UseMultiTenantCookieAuthentication(options.Cookies.TwoFactorRememberMeCookie);
 
             
 
-            //app.UseMultiTenantCookieAuthentication(options.Cookies.TwoFactorUserIdCookie);
+            app.UseMultiTenantCookieAuthentication(options.Cookies.TwoFactorUserIdCookie);
 
             
 

@@ -67,39 +67,39 @@ namespace cloudscribe.WebHost
             IConfigurationRoot Configuration)
         {
 
-           
 
-            
 
-            
-
-            //app.UseMultiTenantFacebookAuthentication(options =>
-            //{
-            //    options.AppId = Configuration["Authentication:Facebook:AppId"];
-            //    options.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
-            //});
-
-            //app.UseMultiTenantGoogleAuthentication(options =>
-            //{
-            //    options.ClientId = Configuration["Authentication:Google:ClientId"];
-            //    options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
-            //});
-            //app.UseMultiTenantMicrosoftAccountAuthentication(options =>
-            //{
-            //    options.ClientId = Configuration["Authentication:MicrosoftAccount:ClientId"];
-            //    options.ClientSecret = Configuration["Authentication:MicrosoftAccount:ClientSecret"];
-            //});
-
-            //app.UseMultiTenantTwitterAuthentication(options =>
-            //{
-            //    options.ConsumerKey = Configuration["Authentication:Twitter:ConsumerKey"];
-            //    options.ConsumerSecret = Configuration["Authentication:Twitter:ConsumerSecret"];
-            //});
 
             //// Add cookie-based authentication to the request pipeline.
             ////https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity/BuilderExtensions.cs
             //app.UseIdentity();
             app.UseCloudscribeIdentity();
+
+
+            app.UseMultiTenantFacebookAuthentication(options =>
+            {
+                options.AppId = Configuration["Authentication:Facebook:AppId"];
+                options.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
+            });
+
+            app.UseMultiTenantGoogleAuthentication(options =>
+            {
+                options.ClientId = Configuration["Authentication:Google:ClientId"];
+                options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
+            });
+            app.UseMultiTenantMicrosoftAccountAuthentication(options =>
+            {
+                options.ClientId = Configuration["Authentication:MicrosoftAccount:ClientId"];
+                options.ClientSecret = Configuration["Authentication:MicrosoftAccount:ClientSecret"];
+            });
+
+            app.UseMultiTenantTwitterAuthentication(options =>
+            {
+                options.ConsumerKey = Configuration["Authentication:Twitter:ConsumerKey"];
+                options.ConsumerSecret = Configuration["Authentication:Twitter:ConsumerSecret"];
+            });
+
+
 
             //app.UseCultureReplacer();
 

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-29
-// Last Modified:		    2015-10-17
+// Last Modified:		    2015-10-18
 // based on https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.Google/GoogleMiddleware.cs
 
 
@@ -43,7 +43,7 @@ namespace cloudscribe.Core.Identity.OAuth
             IOptions<MultiTenantOptions> multiTenantOptionsAccesor,
             IUrlEncoder encoder,
             IOptions<SharedAuthenticationOptions> sharedOptions,
-            IOptions<GoogleOptions> options)
+            GoogleOptions options)
             : base(
                   next, 
                   dataProtectionProvider, 
@@ -52,7 +52,7 @@ namespace cloudscribe.Core.Identity.OAuth
                   siteResolver,
                   multiTenantOptionsAccesor,
                   sharedOptions, 
-                  options.Value)
+                  options)
         {
             if (Options.Scope.Count == 0)
             {
