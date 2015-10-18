@@ -12,7 +12,8 @@
       "commandName": "web",
       "environmentVariables": {
         "ASPNET_ENV": "Development"
-      }
+      },
+      "sdkVersion": "dnx-coreclr-win-x64.1.0.0-beta8"
     }
   }
 }

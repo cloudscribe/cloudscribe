@@ -199,3 +199,4 @@ src/cloudscribe-core/src/cloudscribe.WebHost/wwwroot/lib*
 src/cloudscribe-core/src/cloudscribe.WebHost/wwwroot/js/*
 src/cloudscribe-core/src/cloudscribe.WebHost/wwwroot/css/site.min.css
 
+src/cloudscribe-core/src/cloudscribe.WebHost/appsettings.local.overrides.json

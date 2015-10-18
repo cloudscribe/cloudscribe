@@ -46,8 +46,8 @@ namespace cloudscribe.WebHost
             // Setup configuration sources.
             var builder = new ConfigurationBuilder()
                 .SetBasePath(appEnv.ApplicationBasePath)
-                .AddJsonFile("config.json")
-                .AddJsonFile($"config.{env.EnvironmentName}.json", optional: true);
+                .AddJsonFile("appsettings.json")
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
 
             //appEnv.
             //env.EnvironmentName = "Development";
@@ -62,7 +62,7 @@ namespace cloudscribe.WebHost
             // this file name is ignored by gitignore
             // so you can create it and use on your local dev machine
             // remember last config source added wins if it has the same settings
-            builder.AddJsonFile("config.local.overrides.json", optional: true);
+            builder.AddJsonFile("appsettings.local.overrides.json", optional: true);
 
             // most common use of environment variables would be in azure hosting
             // since it is added last anything in env vars would trump the same setting in previous config sources
@@ -86,6 +86,7 @@ namespace cloudscribe.WebHost
             // Setup dependencies for cloudscribe Identity, Roles and and Site Administration
             // this is in Startup.CloudscribeCore.DI.MS.cs
             services.ConfigureCloudscribeCore(Configuration);
+            
 
             services.Configure<MvcOptions>(options =>
             {

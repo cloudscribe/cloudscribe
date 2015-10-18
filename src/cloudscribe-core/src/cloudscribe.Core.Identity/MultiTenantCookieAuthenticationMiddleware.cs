@@ -36,7 +36,7 @@ namespace cloudscribe.Core.Identity
             ILoggerFactory loggerFactory,
             IUrlEncoder urlEncoder,
             IOptions<CookieAuthenticationOptions> options,
-            ConfigureOptions<CookieAuthenticationOptions> configureOptions,
+           // ConfigureOptions<CookieAuthenticationOptions> configureOptions,
             MultiTenantCookieOptionsResolverFactory tenantResolverFactory
             )
             : base(next, options.Value, loggerFactory, urlEncoder)
@@ -50,11 +50,11 @@ namespace cloudscribe.Core.Identity
                 Options.Events = new CookieAuthenticationEvents();
             }
 
-            // commented out we are specifying a cookie name so this would not be hit anyway
-            //if (String.IsNullOrEmpty(Options.CookieName))
-            //{
-            //    Options.CookieName = CookieAuthenticationDefaults.CookiePrefix + Options.AuthenticationScheme;
-            //}
+
+            if (string.IsNullOrEmpty(Options.CookieName))
+            {
+                Options.CookieName = CookieAuthenticationDefaults.CookiePrefix + Options.AuthenticationScheme;
+            }
 
             // we are not actually using this TicketDataFormat
             // we are passing dataProtectionProvider into MultiTenantCookieAuthenticationHandler

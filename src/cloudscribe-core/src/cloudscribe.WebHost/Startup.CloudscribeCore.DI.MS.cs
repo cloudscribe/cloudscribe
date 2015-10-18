@@ -138,7 +138,8 @@ namespace cloudscribe.WebHost
             // VersionProviders are used by the Setup controller to determine what install and upgrade scripts to run
             services.TryAddScoped<IVersionProviderFactory, ConfigVersionProviderFactory>();
 
-            services.AddCloudscribeIdentity<SiteUser, SiteRole>();
+            services.AddCloudscribeIdentity<SiteUser, SiteRole>()
+                .AddDefaultTokenProviders(); 
             
             // you can use either json or xml to maintain your navigation map we provide examples of each navigation.xml and 
             // navigation.json in the root of this project
@@ -249,6 +250,16 @@ namespace cloudscribe.WebHost
             where TUser : class
             where TRole : class
         {
+            // Services used by identity
+            services.AddOptions();
+            services.AddAuthentication(options =>
+            {
+                // This is the Default value for ExternalCookieAuthenticationScheme
+                options.SignInScheme = new IdentityCookieOptions().ExternalCookieAuthenticationScheme;
+            });
+
+            services.TryAddSingleton<IdentityMarkerService>();
+
             //****** cloudscribe implementation of AspNet.Identity****************************************************
             services.TryAddScoped<IUserStore<SiteUser>, UserStore<SiteUser>>();
             services.TryAddScoped<IUserPasswordStore<SiteUser>, UserStore<SiteUser>>();
@@ -286,9 +297,7 @@ namespace cloudscribe.WebHost
             //https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity/IdentityServiceCollectionExtensions.cs
 
 
-            // Services used by identity
-            services.AddOptions();
-            services.AddAuthentication();
+            
 
             // Identity services
             //services.TryAddSingleton<IdentityMarkerService>();
@@ -306,19 +315,19 @@ namespace cloudscribe.WebHost
             
             //http://docs.asp.net/en/latest/security/2fa.html
 
-            services.Configure<IdentityOptions>(options =>
-            {
-                //options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
-                //options.Lockout.MaxFailedAccessAttempts = 10;
-            });
+            //services.Configure<IdentityOptions>(options =>
+            //{
+            //    //options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
+            //    //options.Lockout.MaxFailedAccessAttempts = 10;
+            //});
 
             
-            services.Configure<SharedAuthenticationOptions>(options =>
-            {
-                //options.SignInScheme = IdentityOptions.ExternalCookieAuthenticationScheme;
-                options.SignInScheme = AuthenticationScheme.External;
+            //services.Configure<SharedAuthenticationOptions>(options =>
+            //{
+            //    //options.SignInScheme = IdentityOptions.ExternalCookieAuthenticationScheme;
+            //    options.SignInScheme = AuthenticationScheme.External;
                 
-            });
+            //});
 
             // Configure all of the cookie middlewares
             //services.ConfigureIdentityApplicationCookie(options =>
