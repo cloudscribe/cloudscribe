@@ -13,7 +13,6 @@
     "Microsoft.AspNet.Authentication.Twitter": "1.0.0-beta8",
     "Microsoft.AspNet.IISPlatformHandler": "1.0.0-beta8",
     "Microsoft.AspNet.Server.Kestrel": "1.0.0-beta8",
-    
     "Microsoft.AspNet.StaticFiles": "1.0.0-beta8",
     "Microsoft.AspNet.Diagnostics": "1.0.0-beta8",
     "Microsoft.AspNet.Tooling.Razor": "1.0.0-beta8",
@@ -38,7 +37,8 @@
     "Microsoft.Framework.DependencyInjection.Abstractions": "1.0.0-beta8",
     "Microsoft.AspNet.Session": "1.0.0-beta8",
     "Microsoft.Framework.Caching.Memory": "1.0.0-beta8",
-    "cloudscribe.Web.Pagination": "1.0.0-*"
+    "cloudscribe.Web.Pagination": "1.0.0-*",
+    "cloudscribe.Core.Resources": "1.0.0-*"
   },
 
   "commands": {

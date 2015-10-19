@@ -55,11 +55,11 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "cloudscribe.DbHelpers.SqlCe
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "cloudscribe.Core.Repositories.SqlCe", "src\cloudscribe.Core.Repositories.SqlCe\cloudscribe.Core.Repositories.SqlCe.xproj", "{2A692116-A2D6-4EA2-9D46-8054CB9345A2}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "cloudscribe.Resources", "src\cloudscribe.Resources\cloudscribe.Resources.xproj", "{2EBD544D-E967-4103-A92E-FAF8A7152C69}"
-EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "cloudscribe.Web.Pagination", "src\cloudscribe.Web.Pagination\cloudscribe.Web.Pagination.xproj", "{594C7D07-93AE-4B3E-A513-47F1C4372163}"
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "cloudscribe.Web.Pagination.Test", "test\cloudscribe.Web.Pagination.Test\cloudscribe.Web.Pagination.Test.xproj", "{A61BE893-48A8-4F59-BCEA-4C4996C20924}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "cloudscribe.Core.Resources", "src\cloudscribe.Core.Resources\cloudscribe.Core.Resources.xproj", "{03DB60DC-F869-43A0-A1BD-CF4A5A36DEB5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -151,10 +151,6 @@ Global
 		{2A692116-A2D6-4EA2-9D46-8054CB9345A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A692116-A2D6-4EA2-9D46-8054CB9345A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A692116-A2D6-4EA2-9D46-8054CB9345A2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2EBD544D-E967-4103-A92E-FAF8A7152C69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2EBD544D-E967-4103-A92E-FAF8A7152C69}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2EBD544D-E967-4103-A92E-FAF8A7152C69}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2EBD544D-E967-4103-A92E-FAF8A7152C69}.Release|Any CPU.Build.0 = Release|Any CPU
 		{594C7D07-93AE-4B3E-A513-47F1C4372163}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{594C7D07-93AE-4B3E-A513-47F1C4372163}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{594C7D07-93AE-4B3E-A513-47F1C4372163}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -163,6 +159,10 @@ Global
 		{A61BE893-48A8-4F59-BCEA-4C4996C20924}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A61BE893-48A8-4F59-BCEA-4C4996C20924}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A61BE893-48A8-4F59-BCEA-4C4996C20924}.Release|Any CPU.Build.0 = Release|Any CPU
+		{03DB60DC-F869-43A0-A1BD-CF4A5A36DEB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03DB60DC-F869-43A0-A1BD-CF4A5A36DEB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03DB60DC-F869-43A0-A1BD-CF4A5A36DEB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03DB60DC-F869-43A0-A1BD-CF4A5A36DEB5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -189,8 +189,8 @@ Global
 		{2B2D5513-7BC3-4F24-A0FF-525A49E5D924} = {AB912C2F-8861-48E9-A14A-94709004CB3D}
 		{E59FC2F0-6808-4502-98BC-90E5C16CCFF9} = {AB912C2F-8861-48E9-A14A-94709004CB3D}
 		{2A692116-A2D6-4EA2-9D46-8054CB9345A2} = {AB912C2F-8861-48E9-A14A-94709004CB3D}
-		{2EBD544D-E967-4103-A92E-FAF8A7152C69} = {AB912C2F-8861-48E9-A14A-94709004CB3D}
 		{594C7D07-93AE-4B3E-A513-47F1C4372163} = {AB912C2F-8861-48E9-A14A-94709004CB3D}
 		{A61BE893-48A8-4F59-BCEA-4C4996C20924} = {52D59F18-62D2-4D17-8CF2-BE192445AF8E}
+		{03DB60DC-F869-43A0-A1BD-CF4A5A36DEB5} = {AB912C2F-8861-48E9-A14A-94709004CB3D}
 	EndGlobalSection
 EndGlobal
