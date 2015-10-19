@@ -2,7 +2,7 @@
 @inject IOptions<SetupOptions> setupOptionsAccessor
 
 @{
-    var setupOptions = setupOptionsAccessor.Options;
+    var setupOptions = setupOptionsAccessor.Value;
 }
 <div class="row">
     <div class="col-md-10 col-md-push-2">

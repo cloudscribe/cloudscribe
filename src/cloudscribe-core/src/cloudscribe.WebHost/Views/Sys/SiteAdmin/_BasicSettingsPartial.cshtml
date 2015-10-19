@@ -3,12 +3,12 @@
 @inject IOptions<MultiTenantOptions> multiTenantOptionsAccessor
 
 @{
-    MultiTenantOptions multiTenantOptions = multiTenantOptionsAccessor.Options;
+    MultiTenantOptions multiTenantOptions = multiTenantOptionsAccessor.Value;
     bool useFolderTenants = true;
     if(multiTenantOptions.Mode != MultiTenantMode.FolderName) { useFolderTenants = false; }
     bool useHostTenants = true;
     if (multiTenantOptions.Mode != MultiTenantMode.HostName) { useHostTenants = false; }
-    CkeditorOptions ckOptions = ckOptionsAccessor.Options;
+    CkeditorOptions ckOptions = ckOptionsAccessor.Value;
 }
 <form method="post" class="form-horizontal" role="form" asp-antiforgery="true">
     <div class="form-horizontal">
