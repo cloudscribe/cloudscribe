@@ -239,7 +239,7 @@ namespace cloudscribe.Core.Web.Controllers
 
                 var user = new SiteUser
                 {
-                    UserName = model.LoginName,
+                    UserName = model.LoginName.Length > 0? model.LoginName : model.Email.Replace("@",string.Empty).Replace(".",string.Empty),
                     Email = model.Email,
                     FirstName = model.FirstName,
                     LastName = model.LastName,
