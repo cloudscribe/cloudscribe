@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,9 +9,13 @@ using Microsoft.AspNet.Authentication.Google;
 using Microsoft.AspNet.Authentication.MicrosoftAccount;
 using Microsoft.AspNet.Authentication.Twitter;
 using Microsoft.AspNet.Builder;
+using Microsoft.AspNet.IISPlatformHandler;
+using Microsoft.AspNet.Server.Features;
+using Microsoft.AspNet.Server.Kestrel.Infrastructure;
 using Microsoft.AspNet.Diagnostics;
 //using Microsoft.AspNet.Diagnostics.Entity;
 using Microsoft.AspNet.Hosting;
+using Microsoft.AspNet.Localization;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Identity;
 //using Microsoft.AspNet.Identity.EntityFramework;
@@ -22,6 +27,7 @@ using Microsoft.Framework.Caching;
 using Microsoft.Framework.Caching.Distributed;
 using Microsoft.Framework.Configuration;
 using Microsoft.Framework.DependencyInjection;
+using Microsoft.Framework.DependencyInjection.Extensions;
 using Microsoft.Framework.Logging;
 using Microsoft.Framework.Logging.Console;
 using Microsoft.Framework.OptionsModel;
@@ -79,7 +85,8 @@ namespace cloudscribe.WebHost
         //public IServiceProvider ConfigureServices(IServiceCollection services)
         public void ConfigureServices(IServiceCollection services)
         {
-            
+            services.AddLocalization(options => options.ResourcesPath = "app_resx");
+
             // we may need this on linux/mac as urls are case sensitive by default
             //services.Configure<RouteOptions>(routeOptions => routeOptions.LowercaseUrls = true);
 
@@ -153,7 +160,38 @@ namespace cloudscribe.WebHost
             loggerFactory.AddConsole();
             // Add cloudscribe db logging
             loggerFactory.AddDbLogger(serviceProvider, logRepository);
-           
+
+            //app.UseCultureReplacer();
+
+            // localization from .resx files is not really working in beta8
+            // will have to wait till next release
+
+            var localizationOptions = new RequestLocalizationOptions
+            {
+                // Set options here to change middleware behavior
+                DefaultRequestCulture = new RequestCulture(new CultureInfo("en-US")),
+                SupportedCultures = new List<CultureInfo>
+                {
+                    new CultureInfo("en-US"),
+                    new CultureInfo("it")
+                },
+                SupportedUICultures = new List<CultureInfo>
+                {
+                    new CultureInfo("en-US"),
+                    new CultureInfo("it")
+                }
+            };
+
+            // Optionally create an app-specific provider with just a delegate, e.g. look up user preference from DB.
+            // Inserting it as position 0 ensures it has priority over any of the default providers.
+            //options.RequestCultureProviders.Insert(0, new CustomRequestCultureProvider(async context =>
+            //{
+
+            //}));
+
+            app.UseRequestLocalization(localizationOptions);
+
+
 
             // Add the following to the request pipeline only in development environment.
             if (env.IsEnvironment("Development"))
@@ -208,12 +246,23 @@ namespace cloudscribe.WebHost
             // Add MVC to the request pipeline.
             app.UseMvc(routes =>
             {
-                //if you are adding custom routes you should probably put them first
-                // add your routes here
+                // Understanding ASP.NET Routing:
+
+                // it is very important that routes are registered in the correct order.more specific routes must be registered first and 
+                // less specific routes must be registered later.a request may match more than one route.
+
+                // When a request comes in it is compared to routes in the route table and the first route it matches is used no matter if a 
+                // better match exists.therefore if a less specific route is registered first it will catch requests that would have a better 
+                // match with a more specific route that was registered later.
+
+                // ie the default route is usually the least specific route and must be registered last
+
+                // something like a route for a cms would likely need to be the default route added last especially if you are not going to use 
+                // a controller segment in the route because without a controller segment the route is less specific
 
 
                 // default route for folder sites must be second to last
-                if (multiTenantOptions.Value.Mode == MultiTenantMode.FolderName)
+            if (multiTenantOptions.Value.Mode == MultiTenantMode.FolderName)
                 {
                     routes.MapRoute(
                     name: "folderdefault",

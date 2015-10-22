@@ -189,7 +189,8 @@ namespace cloudscribe.WebHost
                
                 //options.Filters.Add(...);
             })
-            .AddViewLocalization(LanguageViewLocationExpanderFormat.SubFolder)
+            .AddViewLocalization(options => options.ResourcesPath = "Resources")
+            .AddDataAnnotationsLocalization()
             //.AddXmlDataContractSerializerFormatters()
             .AddViewOptions(options =>
              {

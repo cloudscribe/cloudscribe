@@ -13,6 +13,8 @@ using cloudscribe.Core.Web.ViewModels.UserAdmin;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Mvc;
+using Microsoft.AspNet.Localization;
+using Microsoft.Framework.Localization;
 using Microsoft.Framework.OptionsModel;
 using System;
 using System.Collections.Generic;
@@ -28,7 +30,8 @@ namespace cloudscribe.Core.Web.Controllers
         public UserAdminController(
             SiteManager siteManager,
             SiteUserManager<SiteUser> userManager,
-            IOptions<UIOptions> uiOptionsAccessor
+            IOptions<UIOptions> uiOptionsAccessor,
+            IStringLocalizer<UserAdminController> localizer
             )
         {
            

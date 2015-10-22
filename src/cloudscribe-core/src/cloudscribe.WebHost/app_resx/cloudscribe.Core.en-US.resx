@@ -450,7 +450,7 @@
   <data name="RequireCaptchaOnRegistration" xml:space="preserve">
     <value>Require Captcha On Registration?</value>
   </data>
-  <data name="Test" xml:space="preserve">
-    <value>Test</value>
+  <data name="key with some spaces" xml:space="preserve">
+    <value>key me</value>
   </data>
 </root>
