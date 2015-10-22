@@ -34,7 +34,6 @@
     "Microsoft.AspNet.Http": "1.0.0-beta8",
     "Microsoft.AspNet.Mvc.TagHelpers": "6.0.0-beta8",
     "Microsoft.Framework.OptionsModel": "1.0.0-beta8",
-    "cloudscribe.Resources": "1.0.0-*",
     "cloudscribe.Web.Pagination": "1.0.0-*"
   },
 
