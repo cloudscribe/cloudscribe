@@ -1,3 +1,17 @@
+It seems in the latest nuget used with VS 2015 and beta8 tooling, we can now package content files in the .npkg file created by VS 2015 when a project is built.
+However, it seems also that the content files do NOT currently get installed in the consuming web app project.
+This is a problem because we want to package cloudscribe.Web.Navigation with some views that are needed to use it.
+Currently we can package the files but they do not get added to the web project that takes a nuget dependency on the package.
+
+These are related links:
+http://stackoverflow.com/questions/31412210/how-to-include-views-in-asp-net-5-class-library-nuget-package
+
+https://github.com/NuGet/Home/issues/1523
+https://github.com/NuGet/Home/wiki/Bringing-back-content-support,-September-24th,-2015
+https://github.com/NuGet/Home/issues/627
+
+
+
 These notes are way out of date and written when I was doing early prototype work in MVC 5
 
 now in ASP.NET 5/MVC 6 nuget packages are creating by simply building the solution.

@@ -248,11 +248,11 @@ namespace cloudscribe.WebHost
             {
                 // Understanding ASP.NET Routing:
 
-                // it is very important that routes are registered in the correct order.more specific routes must be registered first and 
-                // less specific routes must be registered later.a request may match more than one route.
+                // it is very important that routes are registered in the correct order. more specific routes must be registered first and 
+                // less specific routes must be registered later. a request may match more than one route.
 
                 // When a request comes in it is compared to routes in the route table and the first route it matches is used no matter if a 
-                // better match exists.therefore if a less specific route is registered first it will catch requests that would have a better 
+                // better match exists. therefore if a less specific route is registered first it will catch requests that would have a better 
                 // match with a more specific route that was registered later.
 
                 // ie the default route is usually the least specific route and must be registered last
