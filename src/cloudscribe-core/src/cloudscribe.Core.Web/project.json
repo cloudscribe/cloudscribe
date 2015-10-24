@@ -17,7 +17,8 @@
     "cloudscribe.Core.Identity": "1.0.0-*",
     "cloudscribe.Core.Models": "1.0.0-*",
     "cloudscribe.Messaging": "1.0.0-*",
-    "cloudscribe.Web.Navigation": "1.0.0-*",
+    "cloudscribe.Web.Navigation": "1.0.0-beta1",
+    "cloudscribe.Web.Pagination": "1.0.0-beta1",
     "Newtonsoft.Json": "7.0.1",
     "Microsoft.AspNet.Mvc": "6.0.0-beta8",
     "Microsoft.AspNet.Mvc.ViewFeatures": "6.0.0-beta8",
@@ -33,8 +34,8 @@
     "Microsoft.AspNet.Http.Features": "1.0.0-beta8",
     "Microsoft.AspNet.Http": "1.0.0-beta8",
     "Microsoft.AspNet.Mvc.TagHelpers": "6.0.0-beta8",
-    "Microsoft.Framework.OptionsModel": "1.0.0-beta8",
-    "cloudscribe.Web.Pagination": "1.0.0-beta1"
+    "Microsoft.Framework.OptionsModel": "1.0.0-beta8"
+    
   },
 
   "frameworks": {
