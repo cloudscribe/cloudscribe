@@ -6,10 +6,13 @@ Currently we can package the files but they do not get added to the web project 
 These are related links:
 http://stackoverflow.com/questions/31412210/how-to-include-views-in-asp-net-5-class-library-nuget-package
 
+https://docs.nuget.org/Consume/ProjectJson-Intro
+
 https://github.com/NuGet/Home/issues/1523
 https://github.com/NuGet/Home/wiki/Bringing-back-content-support,-September-24th,-2015
 https://github.com/NuGet/Home/issues/627
 
+https://docs.nuget.org/create/versioning
 
 
 These notes are way out of date and written when I was doing early prototype work in MVC 5
