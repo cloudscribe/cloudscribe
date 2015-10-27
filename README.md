@@ -4,7 +4,7 @@
 
 Every web application or website project tends to need a certain amount of basic functionality, why build this over and over. When I start a new web project I want to use this functionality that is already built so I can jump right in on the specific feature I want to implement. 
 
-If you want to give it a test drive see 
+Eventually you will be able to start with an empty ASP.NET 5 project and pull in nuget packages for cloudscribe, but for now if you want to give it a test drive see 
 [Working with the source code](https://github.com/joeaudette/cloudscribe/wiki/Working-with-the-source-Code) 
 
 This project is in early stages, not yet production ready, we are building on a new framework from  Microsoft that is itself still in beta and changing frequently. Primarily we are targeting the new lightweight cross platform [Core .NET Framework](https://github.com/dotnet/core) aka dnxcore50 so the goal of this project is to work on Windows, Linux, or Mac. We are also targeting dnx451 aka the full desktop framework but we are avoiding taking dependencies on things that only work in dnx451.
