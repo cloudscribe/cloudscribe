@@ -154,12 +154,13 @@ namespace cloudscribe.WebHost
             services.TryAddScoped<INavigationTreeBuilder, XmlNavigationTreeBuilder>();
             services.TryAddScoped<INodeUrlPrefixProvider, FolderTenantNodeUrlPrefixProvider>(); 
             services.TryAddScoped<INavigationNodePermissionResolver, NavigationNodePermissionResolver>();
-            services.TryAddTransient<IBuildPaginationLinks, PaginationLinkBuilder>();
             services.Configure<NavigationOptions>(configuration.GetSection("NavigationOptions"));
             services.Configure<DistributedCacheNavigationTreeBuilderOptions>(configuration.GetSection("DistributedCacheNavigationTreeBuilderOptions"));
             services.Configure<MemoryCacheNavigationTreeBuilderOptions>(configuration.GetSection("MemoryCacheNavigationTreeBuilderOptions"));
             services.TryAddScoped<INavigationCacheKeyResolver, DefaultNavigationCacheKeyResolver>();
-            
+
+            services.TryAddTransient<IBuildPaginationLinks, PaginationLinkBuilder>();
+
 
 
             services.AddTransient<IEmailSender, AuthMessageSender>();

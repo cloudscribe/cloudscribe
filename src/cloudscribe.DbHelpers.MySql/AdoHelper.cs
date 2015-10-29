@@ -1,32 +1,20 @@
-﻿// Forked From Enterprise Library licensed under Ms-Pl http://www.codeplex.com/entlib
-// but implementing a subset of the API from the 2.0 Application Blocks SqlHelper
-// using implementation from the newer Ms-Pl version
-// Modifications by Joe Audette
-// Last Modified 2010-01-28
-// 2014-08-26 modified by Joe Audette to use DBProviderFactory so that we can use Glimpse ADO
-// for profiling http://blog.simontimms.com/2014/04/21/glimpse-for-raw-ado/
-// 2014-08-26 Joe Audette created this version of SqlHelper renamed as AdoHelper and using the more generic
-// Db classes via DbProviderFactory, this allows us to do profileing with Glimpse ADO
-// 2015-01-07 Joe Audette added async methods
-// 2015-06-01 removed ExexcuteDataSet, DataSet and DataTable are not avialble in .net core
-
-
+﻿
 using System;
 using System.Data;
 using System.Data.Common;
-//using System.Data.SqlClient;
 using System.Threading.Tasks;
+//using MySql.Data.MySqlClient;
 
-namespace cloudscribe.DbHelpers.MSSQL
+namespace cloudscribe.DbHelpers.MySql
 {
     public static class AdoHelper
     {
         private static DbProviderFactory GetFactory()
         {
-            //var factory = DbProviderFactories.GetFactory("System.Data.SqlClient");
-            return System.Data.SqlClient.SqlClientFactory.Instance;
+            var factory = DbProviderFactories.GetFactory("MySql.Data.MySqlClient");
 
-           // return factory;
+            return factory;
+            //return MySql.Data.
         }
 
 
@@ -38,8 +26,6 @@ namespace cloudscribe.DbHelpers.MSSQL
 
             return connection;
         }
-
-
 
 
 
@@ -83,10 +69,19 @@ namespace cloudscribe.DbHelpers.MSSQL
                         {
                             p.Value = DBNull.Value;
                         }
+
                         command.Parameters.Add(p);
                     }
                 }
             }
+        }
+
+        public static int ExecuteNonQuery(
+            string connectionString,
+            string commandText,
+            params DbParameter[] commandParameters)
+        {
+            return ExecuteNonQuery(connectionString, CommandType.Text, commandText, commandParameters);
         }
 
         public static int ExecuteNonQuery(
@@ -170,6 +165,14 @@ namespace cloudscribe.DbHelpers.MSSQL
 
         public static async Task<int> ExecuteNonQueryAsync(
             string connectionString,
+            string commandText,
+            params DbParameter[] commandParameters)
+        {
+            return await ExecuteNonQueryAsync(connectionString, CommandType.Text, commandText, commandParameters);
+        }
+
+        public static async Task<int> ExecuteNonQueryAsync(
+            string connectionString,
             CommandType commandType,
             string commandText,
             params DbParameter[] commandParameters)
@@ -204,32 +207,15 @@ namespace cloudscribe.DbHelpers.MSSQL
             }
         }
 
-        public static async Task<int> ExecuteNonQueryAsync(
-            DbTransaction transaction,
-            CommandType commandType,
+        public static DbDataReader ExecuteReader(
+            string connectionString,
             string commandText,
-            int commandTimeout,
             params DbParameter[] commandParameters)
         {
-            if (transaction == null) throw new ArgumentNullException("transaction");
-            if (transaction != null && transaction.Connection == null) throw new ArgumentException("The transaction was rollbacked or commited, please provide an open transaction.", "transaction");
 
-            DbProviderFactory factory = GetFactory();
+            return ExecuteReader(connectionString, CommandType.Text, commandText, commandParameters);
 
-            using (DbCommand command = factory.CreateCommand())
-            {
-                PrepareCommand(
-                    command,
-                    transaction.Connection,
-                    transaction,
-                    commandType,
-                    commandText,
-                    commandParameters);
 
-                command.CommandTimeout = commandTimeout;
-
-                return await command.ExecuteNonQueryAsync();
-            }
         }
 
         public static DbDataReader ExecuteReader(
@@ -289,7 +275,16 @@ namespace cloudscribe.DbHelpers.MSSQL
             }
         }
 
+        public static async Task<DbDataReader> ExecuteReaderAsync(
+            string connectionString,
+            string commandText,
+            params DbParameter[] commandParameters)
+        {
 
+            return await ExecuteReaderAsync(connectionString, CommandType.Text, commandText, commandParameters);
+
+
+        }
 
         public static async Task<DbDataReader> ExecuteReaderAsync(
             string connectionString,
@@ -336,9 +331,7 @@ namespace cloudscribe.DbHelpers.MSSQL
 
                     command.CommandTimeout = commandTimeout;
 
-                    DbDataReader reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection);
-
-                    return reader;
+                    return await command.ExecuteReaderAsync(CommandBehavior.CloseConnection);
                 }
 
 
@@ -350,27 +343,14 @@ namespace cloudscribe.DbHelpers.MSSQL
             }
         }
 
-        //public static async Task<SqlDataReader> ExecuteReaderAsync(string connectionString, CommandType cmdType,
-        //string cmdText, params SqlParameter[] commandParameters)
-        //{
-        //    using (var connection = new SqlConnection(connectionString))
-        //    {
-        //        using (var command = new SqlCommand(cmdText, connection))
-        //        {
-        //            try
-        //            {
-        //                command.CommandType = cmdType;
-        //                command.Parameters.AddRange(commandParameters);
-        //                connection.Open();
-        //                return await command.ExecuteReaderAsync();
-        //            }
-        //            finally
-        //            {
-        //                connection.Close();
-        //            }
-        //        }
-        //    }
-        //}
+        public static object ExecuteScalar(
+            string connectionString,
+            string commandText,
+            params DbParameter[] commandParameters)
+        {
+            return ExecuteScalar(connectionString, CommandType.Text, commandText, commandParameters);
+
+        }
 
         public static object ExecuteScalar(
             string connectionString,
@@ -410,6 +390,15 @@ namespace cloudscribe.DbHelpers.MSSQL
 
         public static async Task<object> ExecuteScalarAsync(
             string connectionString,
+            string commandText,
+            params DbParameter[] commandParameters)
+        {
+            return await ExecuteScalarAsync(connectionString, CommandType.Text, commandText, commandParameters);
+
+        }
+
+        public static async Task<object> ExecuteScalarAsync(
+            string connectionString,
             CommandType commandType,
             string commandText,
             params DbParameter[] commandParameters)
@@ -433,7 +422,7 @@ namespace cloudscribe.DbHelpers.MSSQL
 
             using (DbConnection connection = GetConnection(connectionString))
             {
-                await connection.OpenAsync();
+                connection.Open();
                 using (DbCommand command = factory.CreateCommand())
                 {
                     PrepareCommand(command, connection, (DbTransaction)null, commandType, commandText, commandParameters);
@@ -475,6 +464,7 @@ namespace cloudscribe.DbHelpers.MSSQL
         //        }
         //    }
         //}
+
 
     }
 }

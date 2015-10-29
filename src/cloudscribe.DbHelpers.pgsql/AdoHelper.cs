@@ -1,32 +1,23 @@
-﻿// Forked From Enterprise Library licensed under Ms-Pl http://www.codeplex.com/entlib
-// but implementing a subset of the API from the 2.0 Application Blocks SqlHelper
-// using implementation from the newer Ms-Pl version
-// Modifications by Joe Audette
-// Last Modified 2010-01-28
-// 2014-08-26 modified by Joe Audette to use DBProviderFactory so that we can use Glimpse ADO
-// for profiling http://blog.simontimms.com/2014/04/21/glimpse-for-raw-ado/
-// 2014-08-26 Joe Audette created this version of SqlHelper renamed as AdoHelper and using the more generic
-// Db classes via DbProviderFactory, this allows us to do profileing with Glimpse ADO
-
+﻿
+// 2015-06-03 npgsql doesn't yet support dnxcore50
+// https://github.com/npgsql/npgsql/issues/471
 
 using System;
 using System.Data;
 using System.Data.Common;
-using System.Data.SqlServerCe;
-//using System.Threading.Tasks;
+using System.Threading.Tasks;
+//using MySql.Data.MySqlClient;
 
-
-namespace cloudscribe.DbHelpers.SqlCe
+namespace cloudscribe.DbHelpers.pgsql
 {
     public static class AdoHelper
     {
         private static DbProviderFactory GetFactory()
         {
-            //var factory = DbProviderFactories.GetFactory("System.Data.SqlServerCe.4.0");
+            //var factory = DbProviderFactories.GetFactory("Npgsql");
 
             //return factory;
-
-            return SqlCeProviderFactory.Instance;
+            return Npgsql.NpgsqlFactory.Instance;
         }
 
 
@@ -88,34 +79,6 @@ namespace cloudscribe.DbHelpers.SqlCe
             }
         }
 
-        public static object DoInsertGetIdentitiy(
-            string connectionString,
-            CommandType commandType,
-            string commandText,
-            params DbParameter[] commandParameters)
-        {
-            if (connectionString == null || connectionString.Length == 0) throw new ArgumentNullException("connectionString");
-
-            DbProviderFactory factory = GetFactory();
-
-            using (DbConnection connection = GetConnection(connectionString))
-            {
-                connection.Open();
-                int rowsAffected = 0;
-                using (DbCommand command = factory.CreateCommand())
-                {
-                    PrepareCommand(command, connection, null, commandType, commandText, commandParameters);
-                    rowsAffected = command.ExecuteNonQuery();
-                }
-                if (rowsAffected == 0) { return -1; }
-                using (DbCommand command = factory.CreateCommand())
-                {
-                    PrepareCommand(command, connection, (DbTransaction)null, CommandType.Text, "SELECT @@IDENTITY", null);
-                    return command.ExecuteScalar();
-                }
-            }
-        }
-
         public static int ExecuteNonQuery(
             string connectionString,
             string commandText,
@@ -130,7 +93,7 @@ namespace cloudscribe.DbHelpers.SqlCe
             string commandText,
             params DbParameter[] commandParameters)
         {
-            int commandTimeout = 0;
+            int commandTimeout = 30; //30 seconds default http://msdn.microsoft.com/en-us/library/system.data.sqlclient.sqlcommand.commandtimeout.aspx
 
             return ExecuteNonQuery(connectionString, commandType, commandText, commandTimeout, commandParameters);
 
@@ -156,7 +119,7 @@ namespace cloudscribe.DbHelpers.SqlCe
                 using (DbCommand command = factory.CreateCommand())
                 {
                     PrepareCommand(command, connection, null, commandType, commandText, commandParameters);
-                    //command.CommandTimeout = commandTimeout;
+                    command.CommandTimeout = commandTimeout;
                     return command.ExecuteNonQuery();
                 }
             }
@@ -168,7 +131,7 @@ namespace cloudscribe.DbHelpers.SqlCe
             string commandText,
             params DbParameter[] commandParameters)
         {
-            int commandTimeout = 0;
+            int commandTimeout = 30; //30 seconds default
 
             return ExecuteNonQuery(transaction, commandType, commandText, commandTimeout, commandParameters);
 
@@ -197,9 +160,45 @@ namespace cloudscribe.DbHelpers.SqlCe
                     commandText,
                     commandParameters);
 
-                //command.CommandTimeout = commandTimeout;
+                command.CommandTimeout = commandTimeout;
 
                 return command.ExecuteNonQuery();
+            }
+        }
+
+        public static async Task<int> ExecuteNonQueryAsync(
+            string connectionString,
+            CommandType commandType,
+            string commandText,
+            params DbParameter[] commandParameters)
+        {
+            int commandTimeout = 30; //30 seconds default
+
+            return await ExecuteNonQueryAsync(connectionString, commandType, commandText, commandTimeout, commandParameters);
+
+
+        }
+
+        public static async Task<int> ExecuteNonQueryAsync(
+            string connectionString,
+            CommandType commandType,
+            string commandText,
+            int commandTimeout,
+            params DbParameter[] commandParameters)
+        {
+            if (connectionString == null || connectionString.Length == 0) throw new ArgumentNullException("connectionString");
+
+            DbProviderFactory factory = GetFactory();
+
+            using (DbConnection connection = GetConnection(connectionString))
+            {
+                connection.Open();
+                using (DbCommand command = factory.CreateCommand())
+                {
+                    PrepareCommand(command, connection, null, commandType, commandText, commandParameters);
+                    command.CommandTimeout = commandTimeout;
+                    return await command.ExecuteNonQueryAsync();
+                }
             }
         }
 
@@ -220,7 +219,7 @@ namespace cloudscribe.DbHelpers.SqlCe
             string commandText,
             params DbParameter[] commandParameters)
         {
-            int commandTimeout = 0;
+            int commandTimeout = 30; //30 seconds default
             return ExecuteReader(connectionString, commandType, commandText, commandTimeout, commandParameters);
 
 
@@ -257,7 +256,7 @@ namespace cloudscribe.DbHelpers.SqlCe
                         commandText,
                         commandParameters);
 
-                    //command.CommandTimeout = commandTimeout;
+                    command.CommandTimeout = commandTimeout;
 
                     return command.ExecuteReader(CommandBehavior.CloseConnection);
                 }
@@ -271,6 +270,62 @@ namespace cloudscribe.DbHelpers.SqlCe
             }
         }
 
+        public static async Task<DbDataReader> ExecuteReaderAsync(
+            string connectionString,
+            CommandType commandType,
+            string commandText,
+            params DbParameter[] commandParameters)
+        {
+            int commandTimeout = 30; //30 seconds default
+            return await ExecuteReaderAsync(connectionString, commandType, commandText, commandTimeout, commandParameters);
+
+
+        }
+
+        public static async Task<DbDataReader> ExecuteReaderAsync(
+            string connectionString,
+            CommandType commandType,
+            string commandText,
+            int commandTimeout,
+            params DbParameter[] commandParameters)
+        {
+            if (connectionString == null || connectionString.Length == 0) throw new ArgumentNullException("connectionString");
+
+            DbProviderFactory factory = GetFactory();
+
+            // we cannot wrap this connection in a using
+            // we need to let the reader close it at using(IDataReader reader = ...
+            // otherwise it gets closed before the reader can use it
+            DbConnection connection = null;
+            try
+            {
+                //connection = new SqlConnection(connectionString);
+                connection = GetConnection(connectionString);
+
+                connection.Open();
+                using (DbCommand command = factory.CreateCommand())
+                {
+                    PrepareCommand(
+                        command,
+                        connection,
+                        null,
+                        commandType,
+                        commandText,
+                        commandParameters);
+
+                    command.CommandTimeout = commandTimeout;
+
+                    return await command.ExecuteReaderAsync(CommandBehavior.CloseConnection);
+                }
+
+
+            }
+            catch
+            {
+                if ((connection != null) && (connection.State == ConnectionState.Open)) { connection.Close(); }
+                throw;
+            }
+        }
 
         public static object ExecuteScalar(
             string connectionString,
@@ -310,9 +365,45 @@ namespace cloudscribe.DbHelpers.SqlCe
                 using (DbCommand command = factory.CreateCommand())
                 {
                     PrepareCommand(command, connection, (DbTransaction)null, commandType, commandText, commandParameters);
-                    //command.CommandTimeout = commandTimeout;
+                    command.CommandTimeout = commandTimeout;
 
                     return command.ExecuteScalar();
+                }
+            }
+        }
+
+        public static async Task<object> ExecuteScalarAsync(
+            string connectionString,
+            CommandType commandType,
+            string commandText,
+            params DbParameter[] commandParameters)
+        {
+            int commandTimeout = 30; //30 seconds default
+            return await ExecuteScalarAsync(connectionString, commandType, commandText, commandTimeout, commandParameters);
+
+
+        }
+
+        public static async Task<object> ExecuteScalarAsync(
+            string connectionString,
+            CommandType commandType,
+            string commandText,
+            int commandTimeout,
+            params DbParameter[] commandParameters)
+        {
+            if (connectionString == null || connectionString.Length == 0) throw new ArgumentNullException("connectionString");
+
+            DbProviderFactory factory = GetFactory();
+
+            using (DbConnection connection = GetConnection(connectionString))
+            {
+                connection.Open();
+                using (DbCommand command = factory.CreateCommand())
+                {
+                    PrepareCommand(command, connection, (DbTransaction)null, commandType, commandText, commandParameters);
+                    command.CommandTimeout = commandTimeout;
+
+                    return await command.ExecuteScalarAsync();
                 }
             }
         }

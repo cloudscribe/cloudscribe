@@ -1,14 +1,4 @@
-﻿// Forked From Enterprise Library licensed under Ms-Pl http://www.codeplex.com/entlib
-// but implementing a subset of the API from the 2.0 Application Blocks SqlHelper
-// using implementation from the newer Ms-Pl version
-// Modifications by Joe Audette
-// Last Modified 2010-01-28
-// 2014-08-26 modified by Joe Audette to use DBProviderFactory so that we can use Glimpse ADO
-// for profiling http://blog.simontimms.com/2014/04/21/glimpse-for-raw-ado/
-// 2014-08-26 Joe Audette created this version of SqlHelper renamed as AdoHelper and using the more generic
-// Db classes via DbProviderFactory, this allows us to do profileing with Glimpse ADO
-// Last Modified 2014-09-15
-
+﻿
 
 using System;
 using System.Data;

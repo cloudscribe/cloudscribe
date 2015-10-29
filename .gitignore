@@ -17,11 +17,6 @@ bld/
 [Bb]in/
 [Oo]bj/
 
-*Web.AppSettings.config
-src/cloudscribe.WebHost/files/
-src/cloudscribe.WebHost/App_Data/
-src/cloudscribe.WebHost/Scripts/ckeditor/
-src/cloudscribe.WebHost/Scripts/tinymce/
 _bin*
 *SQLite.Interop.dll
 /nuget/*/lib/net45/*.dll
@@ -190,13 +185,11 @@ UpgradeLog*.htm
 # Microsoft Fakes
 FakesAssemblies/
 
-src/cloudscribe.WebHost/files/currentlog.config
-src/cloudscribe.WebHost/files/currentlog.config
 src/cloudscribe-core/.vs/config/applicationhost.config
 src/cloudscribe-core/src/cloudscribe.WebHost/config.local.overrides.json
 
-src/cloudscribe-core/src/cloudscribe.WebHost/wwwroot/lib*
-src/cloudscribe-core/src/cloudscribe.WebHost/wwwroot/js/*
-src/cloudscribe-core/src/cloudscribe.WebHost/wwwroot/css/site.min.css
+src/cloudscribe.WebHost/wwwroot/lib*
+src/cloudscribe.WebHost/wwwroot/js/*
+src/cloudscribe.WebHost/wwwroot/css/site.min.css
 
-src/cloudscribe-core/src/cloudscribe.WebHost/appsettings.local.overrides.json
+src/cloudscribe.WebHost/appsettings.local.overrides.json
