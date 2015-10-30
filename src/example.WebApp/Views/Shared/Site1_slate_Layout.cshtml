@@ -51,7 +51,7 @@
             @RenderBody()
             <hr />
             <footer>
-                <p>&copy; 2015 - @ViewData["SiteName"]</p>
+                <p>&copy; 2015 - @ViewData["SiteName"] @System.Globalization.CultureInfo.CurrentUICulture.Name</p>
             </footer>
         </div>
 

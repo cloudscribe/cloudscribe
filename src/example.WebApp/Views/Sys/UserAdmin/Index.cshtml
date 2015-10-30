@@ -1,4 +1,5 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.UserAdmin.UserListViewModel
+@inject IHtmlLocalizer<CoreResources> sr
 
 @{
 
@@ -25,7 +26,7 @@
                     <div class="input-group">
                         <input asp-for="IpQuery" name="ipquery" class="form-control" />
                         <span class="input-group-btn">
-                            <button type="submit" value="CommonResources.SearchByIpAddress" class="btn btn-default">CommonResources.SearchByIpAddress</button>
+                            <button type="submit"  class="btn btn-default">@sr["SearchByIPAddress"]</button>
                         </span>
                     </div>
                 </form>

@@ -351,8 +351,8 @@
   <data name="RoleNameRequired" xml:space="preserve">
     <value>Role Name is required</value>
   </data>
-  <data name="UserManagement" xml:space="preserve">
-    <value>User Management</value>
+  <data name="User Management" xml:space="preserve">
+    <value>User Managementez</value>
   </data>
   <data name="All" xml:space="preserve">
     <value>All</value>
@@ -366,8 +366,8 @@
   <data name="Search" xml:space="preserve">
     <value>Search</value>
   </data>
-  <data name="SearchByIpAddress" xml:space="preserve">
-    <value>Search By IP Address</value>
+  <data name="SearchByIPAddress" xml:space="preserve">
+    <value>Search By IP Addressezvoous</value>
   </data>
   <data name="ViewProfile" xml:space="preserve">
     <value>View Profile</value>
@@ -423,7 +423,7 @@
   <data name="PreferredHostName" xml:space="preserve">
     <value>Preferred Host Name</value>
   </data>
-  <data name="AddHostMapping" xml:space="preserve">
+  <data name="Add Host/Domain Mapping" xml:space="preserve">
     <value>Add Host/Domain Mapping</value>
   </data>
   <data name="ConfirmDeleteHostNameFormat" xml:space="preserve">

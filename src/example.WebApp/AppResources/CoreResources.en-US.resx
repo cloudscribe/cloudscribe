@@ -1,0 +1,456 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="BackToAdministrationMenu" xml:space="preserve">
+    <value>Back To Administration Menu</value>
+  </data>
+  <data name="Change" xml:space="preserve">
+    <value>Change</value>
+  </data>
+  <data name="ChangeYourAccountSettings" xml:space="preserve">
+    <value>Change your account settings</value>
+  </data>
+  <data name="ChangeYourPassword" xml:space="preserve">
+    <value>Change your password</value>
+  </data>
+  <data name="CompanyAddress1" xml:space="preserve">
+    <value>Company Address</value>
+  </data>
+  <data name="CompanyAddress2" xml:space="preserve">
+    <value>Company Address 2</value>
+  </data>
+  <data name="CompanyCountry" xml:space="preserve">
+    <value>Company Country</value>
+  </data>
+  <data name="CompanyFax" xml:space="preserve">
+    <value>Company Fax</value>
+  </data>
+  <data name="CompanyLocality" xml:space="preserve">
+    <value>Company City</value>
+  </data>
+  <data name="CompanyName" xml:space="preserve">
+    <value>Company Name</value>
+  </data>
+  <data name="CompanyPhone" xml:space="preserve">
+    <value>Company Phone</value>
+  </data>
+  <data name="CompanyPostalCode" xml:space="preserve">
+    <value>Company Postal Code</value>
+  </data>
+  <data name="CompanyPublicEmail" xml:space="preserve">
+    <value>Company Public Email</value>
+  </data>
+  <data name="CompanyRegion" xml:space="preserve">
+    <value>Company State</value>
+  </data>
+  <data name="ConfirmPassword" xml:space="preserve">
+    <value>Confirm password</value>
+  </data>
+  <data name="ConfirmPasswordMatchErrorMessage" xml:space="preserve">
+    <value>The password and confirmation password do not match.</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="Disabled" xml:space="preserve">
+    <value>Disabled</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="EmailNotValid" xml:space="preserve">
+    <value>Email address is not valid</value>
+  </data>
+  <data name="EmailRequired" xml:space="preserve">
+    <value>Email is required</value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>Enabled</value>
+  </data>
+  <data name="ExternalLogins" xml:space="preserve">
+    <value>External Logins</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Log in</value>
+  </data>
+  <data name="LogOff" xml:space="preserve">
+    <value>Log off</value>
+  </data>
+  <data name="Manage" xml:space="preserve">
+    <value>Manage</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="PasswordLengthErrorFormat" xml:space="preserve">
+    <value>The password must be at least {0} characters long.</value>
+  </data>
+  <data name="PasswordRequired" xml:space="preserve">
+    <value>Password is required</value>
+  </data>
+  <data name="PhoneNumber" xml:space="preserve">
+    <value>Phone Number</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>Register</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="SecurityCode" xml:space="preserve">
+    <value>Security Code</value>
+  </data>
+  <data name="SecurityCodeMessageFormat" xml:space="preserve">
+    <value>Your security code is: {0}</value>
+  </data>
+  <data name="SiteFolderName" xml:space="preserve">
+    <value>Site Folder Name</value>
+  </data>
+  <data name="SiteName" xml:space="preserve">
+    <value>Site Name</value>
+  </data>
+  <data name="SiteNameLengthErrorFormat" xml:space="preserve">
+    <value>Site name must be between {0} and {1} characters</value>
+  </data>
+  <data name="SiteNameRequired" xml:space="preserve">
+    <value>Site name is required</value>
+  </data>
+  <data name="SiteSlogan" xml:space="preserve">
+    <value>Slogan</value>
+  </data>
+  <data name="TimeZone" xml:space="preserve">
+    <value>Time Zone</value>
+  </data>
+  <data name="TwoFactorAuthentication" xml:space="preserve">
+    <value>Two-Factor Authentication</value>
+  </data>
+  <data name="NameRequired" xml:space="preserve">
+    <value>Name is required</value>
+  </data>
+  <data name="ISOCode2" xml:space="preserve">
+    <value>ISOCode2</value>
+  </data>
+  <data name="ISOCode2Required" xml:space="preserve">
+    <value>ISOCode2 is required</value>
+  </data>
+  <data name="ISOCode3" xml:space="preserve">
+    <value>ISOCode3</value>
+  </data>
+  <data name="ISOCode3Required" xml:space="preserve">
+    <value>ISOCode3 is required</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="BackToList" xml:space="preserve">
+    <value>Back To List</value>
+  </data>
+  <data name="CreateNew" xml:space="preserve">
+    <value>Create New</value>
+  </data>
+  <data name="Code" xml:space="preserve">
+    <value>Code</value>
+  </data>
+  <data name="NewState" xml:space="preserve">
+    <value>New State</value>
+  </data>
+  <data name="BackToCountryList" xml:space="preserve">
+    <value>Back To Country List</value>
+  </data>
+  <data name="CodeRequired" xml:space="preserve">
+    <value>Code is required</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="ConfirmDeleteFormat" xml:space="preserve">
+    <value>Are you sure you want to delete {0}?</value>
+  </data>
+  <data name="Administration" xml:space="preserve">
+    <value>Administration</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="CoreData" xml:space="preserve">
+    <value>Core Data</value>
+  </data>
+  <data name="CountryListAdministration" xml:space="preserve">
+    <value>Country/State List Administration</value>
+  </data>
+  <data name="CurrencyAdministration" xml:space="preserve">
+    <value>Currency Administration</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="NewCountry" xml:space="preserve">
+    <value>New Country</value>
+  </data>
+  <data name="Roles" xml:space="preserve">
+    <value>Roles</value>
+  </data>
+  <data name="SiteList" xml:space="preserve">
+    <value>Site List</value>
+  </data>
+  <data name="States" xml:space="preserve">
+    <value>States</value>
+  </data>
+  <data name="NewSite" xml:space="preserve">
+    <value>New Site</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>Title</value>
+  </data>
+  <data name="TitleRequired" xml:space="preserve">
+    <value>Title is required</value>
+  </data>
+  <data name="CurrencyCodeLengthErrorFormat" xml:space="preserve">
+    <value>Code must be between {0} and {1} characters</value>
+  </data>
+  <data name="NewCurrency" xml:space="preserve">
+    <value>New Currency</value>
+  </data>
+  <data name="SiteHostName" xml:space="preserve">
+    <value>Host Name/Domain Name</value>
+  </data>
+  <data name="Members" xml:space="preserve">
+    <value>Members</value>
+  </data>
+  <data name="NewRole" xml:space="preserve">
+    <value>New Role</value>
+  </data>
+  <data name="RoleName" xml:space="preserve">
+    <value>Role Name</value>
+  </data>
+  <data name="RoleNameLengthError" xml:space="preserve">
+    <value>Role Name must be between 3 and 50 characters long</value>
+  </data>
+  <data name="RoleNameRequired" xml:space="preserve">
+    <value>Role Name is required</value>
+  </data>
+  <data name="UserManagement" xml:space="preserve">
+    <value>User Management</value>
+  </data>
+  <data name="All" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="AlphaPagerChars" xml:space="preserve">
+    <value>ABCDEFGHIJKLMNOPQRSTUVWXYZ</value>
+  </data>
+  <data name="NewUser" xml:space="preserve">
+    <value>New User</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="SearchByIPAddress" xml:space="preserve">
+    <value>Search By IP Address</value>
+  </data>
+  <data name="ViewProfile" xml:space="preserve">
+    <value>View Profile</value>
+  </data>
+  <data name="DisplayName" xml:space="preserve">
+    <value>Display Name</value>
+  </data>
+  <data name="DisplayNameRequired" xml:space="preserve">
+    <value>Display Name is required, it can be an alias or nickname</value>
+  </data>
+  <data name="FirstName" xml:space="preserve">
+    <value>First Name</value>
+  </data>
+  <data name="LastName" xml:space="preserve">
+    <value>Last Name</value>
+  </data>
+  <data name="LoginName" xml:space="preserve">
+    <value>Login Name</value>
+  </data>
+  <data name="CreateANewAccount" xml:space="preserve">
+    <value>Create a new account</value>
+  </data>
+  <data name="LoginNameNotAvailable" xml:space="preserve">
+    <value>The entered login name is not available</value>
+  </data>
+  <data name="AddUser" xml:space="preserve">
+    <value>Add User</value>
+  </data>
+  <data name="ConfirmAddFormat" xml:space="preserve">
+    <value>Are you sure you want to add {0}?</value>
+  </data>
+  <data name="ConfirmRemoveFormat" xml:space="preserve">
+    <value>Are you sure you want to remove {0}?</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="BackToStateList" xml:space="preserve">
+    <value>Back To State List</value>
+  </data>
+  <data name="ConfirmDeleteCountryFormat" xml:space="preserve">
+    <value>Are you sure you want to delete the country {0} and all of its states? You cannot undo this action.</value>
+  </data>
+  <data name="BackToSiteList" xml:space="preserve">
+    <value>Back To Site List</value>
+  </data>
+  <data name="ConfirmSiteDeleteFormat" xml:space="preserve">
+    <value>Are you sure you want to delete the site {0} and all related data? You cannot undo this action.</value>
+  </data>
+  <data name="DomainMappings" xml:space="preserve">
+    <value>Domain Mappings</value>
+  </data>
+  <data name="PreferredHostName" xml:space="preserve">
+    <value>Preferred Host Name</value>
+  </data>
+  <data name="Add Host/Domain Mapping" xml:space="preserve">
+    <value>Add Host/Domain Mapping</value>
+  </data>
+  <data name="ConfirmDeleteHostNameFormat" xml:space="preserve">
+    <value>Are you sure you want to delete the host/domain name mapping {0}</value>
+  </data>
+  <data name="DateOfBirth" xml:space="preserve">
+    <value>Date Of Birth</value>
+  </data>
+  <data name="ClosedMessage" xml:space="preserve">
+    <value>Closed Message</value>
+  </data>
+  <data name="IsClosed" xml:space="preserve">
+    <value>Is Closed</value>
+  </data>
+  <data name="RecaptchaPrivateKey" xml:space="preserve">
+    <value>reCAPTCHA Secret Key</value>
+  </data>
+  <data name="RecaptchaPublicKey" xml:space="preserve">
+    <value>reCAPTCHA Site Key</value>
+  </data>
+  <data name="RequireCaptchaOnLogin" xml:space="preserve">
+    <value>Require Captcha On Login?</value>
+  </data>
+  <data name="RequireCaptchaOnRegistration" xml:space="preserve">
+    <value>Require Captcha On Registration?</value>
+  </data>
+  <data name="key with some spaces" xml:space="preserve">
+    <value>key me</value>
+  </data>
+</root>

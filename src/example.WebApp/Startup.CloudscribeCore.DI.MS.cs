@@ -190,8 +190,8 @@ namespace example.WebApp
                
                 //options.Filters.Add(...);
             })
-            .AddViewLocalization(options => options.ResourcesPath = "Resources")
-            .AddDataAnnotationsLocalization()
+            .AddViewLocalization(options => options.ResourcesPath = "AppResources")
+            //.AddDataAnnotationsLocalization()
             //.AddXmlDataContractSerializerFormatters()
             .AddViewOptions(options =>
              {

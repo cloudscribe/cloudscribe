@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-08
-// Last Modified:			2015-10-17
+// Last Modified:			2015-10-30
 // 
 
 using cloudscribe.Core.Identity;
@@ -13,6 +13,7 @@ using cloudscribe.Core.Web.ViewModels.UserAdmin;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Mvc;
+using Microsoft.AspNet.Mvc.Localization;
 using Microsoft.AspNet.Localization;
 using Microsoft.Framework.Localization;
 using Microsoft.Framework.OptionsModel;
@@ -31,19 +32,21 @@ namespace cloudscribe.Core.Web.Controllers
             SiteManager siteManager,
             SiteUserManager<SiteUser> userManager,
             IOptions<UIOptions> uiOptionsAccessor,
-            IStringLocalizer<UserAdminController> localizer
+            IHtmlLocalizer<CoreResources> localizer
             )
         {
            
             UserManager = userManager;
             this.siteManager = siteManager;
             uiOptions = uiOptionsAccessor.Value;
+            this.localizer = localizer;
 
         }
 
         private SiteManager siteManager;
         public SiteUserManager<SiteUser> UserManager { get; private set; }
         private UIOptions uiOptions;
+        private IHtmlLocalizer localizer;
 
         [HttpGet]
         public async Task<IActionResult> Index(
@@ -64,7 +67,7 @@ namespace cloudscribe.Core.Web.Controllers
             else
             {
                 selectedSite = siteManager.CurrentSite;
-                ViewData["Title"] = "User Management";
+                ViewData["Title"] = localizer["User Management"];
             }
 
             

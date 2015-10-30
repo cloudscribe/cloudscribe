@@ -85,7 +85,7 @@ namespace example.WebApp
         //public IServiceProvider ConfigureServices(IServiceCollection services)
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddLocalization(options => options.ResourcesPath = "AppResources");
+            //services.AddLocalization(options => options.ResourcesPath = "AppResources");
 
             // we may need this on linux/mac as urls are case sensitive by default
             //services.Configure<RouteOptions>(routeOptions => routeOptions.LowercaseUrls = true);
@@ -173,14 +173,19 @@ namespace example.WebApp
                 SupportedCultures = new List<CultureInfo>
                 {
                     new CultureInfo("en-US"),
-                    new CultureInfo("it")
+                    new CultureInfo("it"),
+                    new CultureInfo("fr")
                 },
                 SupportedUICultures = new List<CultureInfo>
                 {
                     new CultureInfo("en-US"),
-                    new CultureInfo("it")
+                    new CultureInfo("it"),
+                    new CultureInfo("fr")
                 }
+
             };
+
+
 
             // Optionally create an app-specific provider with just a delegate, e.g. look up user preference from DB.
             // Inserting it as position 0 ensures it has priority over any of the default providers.
@@ -189,8 +194,8 @@ namespace example.WebApp
 
             //}));
 
-            app.UseRequestLocalization(localizationOptions);
-
+            //app.UseRequestLocalization(localizationOptions);
+            app.UseRequestLocalization();
 
 
             // Add the following to the request pipeline only in development environment.
