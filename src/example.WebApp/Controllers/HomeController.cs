@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
 
 
-namespace cloudscribe.WebHost.Controllers
+namespace example.WebApp.Controllers
 {
     public class HomeController : Controller
     {

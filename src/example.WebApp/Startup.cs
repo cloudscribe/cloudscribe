@@ -41,7 +41,7 @@ using cloudscribe.Core.Web.Components.Logging;
 //using Autofac;
 //using Autofac.Framework.DependencyInjection;
 
-namespace cloudscribe.WebHost
+namespace example.WebApp
 {
     public class Startup
     {
@@ -85,7 +85,7 @@ namespace cloudscribe.WebHost
         //public IServiceProvider ConfigureServices(IServiceCollection services)
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddLocalization(options => options.ResourcesPath = "app_resx");
+            services.AddLocalization(options => options.ResourcesPath = "AppResources");
 
             // we may need this on linux/mac as urls are case sensitive by default
             //services.Configure<RouteOptions>(routeOptions => routeOptions.LowercaseUrls = true);

@@ -38,7 +38,7 @@ using cloudscribe.Web.Navigation;
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Identity.OAuth;
 
-namespace cloudscribe.WebHost
+namespace example.WebApp
 {
     /// <summary>
     /// Setup application configuration for cloudscribe core

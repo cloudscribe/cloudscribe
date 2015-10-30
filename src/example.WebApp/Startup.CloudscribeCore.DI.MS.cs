@@ -44,7 +44,7 @@ using cloudscribe.Web.Navigation;
 using cloudscribe.Web.Pagination;
 using cloudscribe.Core.Identity;
 
-namespace cloudscribe.WebHost
+namespace example.WebApp
 {
     public static class CloudscribeCoreServiceCollectionExtensions
     {
