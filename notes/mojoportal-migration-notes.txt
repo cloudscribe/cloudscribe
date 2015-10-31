@@ -24,7 +24,7 @@ A separate but related issue is that there are some existing fields that came wi
 * mp_Language
 * mp_GeoCountry
 * mp_GeoZone
-* might be a few other mp_* tables such as mp_RedirectList, mp_TaskQueue, mp_BannedIpAddresses, some of those will likely be removed and not included in cloudscribe.Core but may be used in other future components.
+
 
 Theoretically you can think of the schema for those tables existing in cloudscribe.Core version 1.0.0 as being equivalent to mojoportal version 2.4.0.9.
 

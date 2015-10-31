@@ -1,47 +1,182 @@
 
-review existing rows in mp_SiteSettingExDef
-some need to be removed
-
-#fields to add
-
-#fields currently in expando settings
-
-FacebookAppId
-
-# legacyfields that could be dropped from mp_Sites
-
-DefaultPageKeywords
-DefaultPageDescription
-DefaultPageEncoding
-DefaultAdditionalMetaTag
-DefaultFriendlyUrlPatternEnum
-EnableMyPageFeature
-DatePickerProvider
-AllowOpenIdAuth
-
-EditorSkin
+http://stackoverflow.com/questions/3184478/how-many-columns-is-too-many-columns
 
 
 
+# legacyfields that should be dropped from mp_Sites
+# some of these could be useful in the future but do not belong in this table
+# 
 
-#fields to ideally rename currently mapped
- 
-ApiKeyExtra1 > AddThisDotComUsername
-ApiKeyExtra2 > GoogleAnalyticsAccountCode
-ApiKeyExtra4 > SiteFolderName
-ApiKeyExtra5 > PreferredHostName
-WordpressApiKey
-ApiKeyExtra3
-WindowsLiveAppId > MicrosoftClientId
-WindowsLiveKey > MicrosoftClientSecret
-
-
-#fields not used and maybe also to be dropped
+SiteAlias
 Logo
 Icon
-
 AllowUserSkins
 AllowPageSkins
 AllowHideMenuOnPages
 CaptchaProvider
 EditorProviderName
+EditorSkin
+DefaultPageKeywords
+DefaultPageDescription
+DefaultPageEncoding
+DefaultAdditionalMetaTag
+DefaultFriendlyUrlPatternEnum
+AllowPasswordRetrieval
+AllowPasswordReset
+RequiresUniqueEmail
+PasswordFormat
+PwdStrengthRegex
+EnableMyPageFeature
+DatePickerProvider
+AllowOpenIdAuth
+WordpressAPIKey
+WindowsLiveAppId
+WindowsLiveKey
+GmapApiKey
+
+
+#fields to add
+ 
+AddThisDotComUsername
+SiteFolderName
+PreferredHostName
+MicrosoftClientId
+MicrosoftClientSecret
+
+
+#fields currently in mp_SiteSettingsEx that should be added to mp_Sites
+
+TimeZoneId Eastern Standard Time
+AllowDbFallbackWithLdap false
+AllowEmailLoginWithLdapDbFallback false  rename shorter as EmailLdapDbFallback
+AllowPersistentLogin true
+CompanyName
+CompanyStreetAddress
+CompanyStreetAddress2
+CompanyRegion
+CompanyLocality
+CompanyCountry
+CompanyPostalCode 
+CompanyPublicEmail
+GoogleAnalyticsProfileId
+
+CompanyPhone
+CompanyFax
+CurrencyGuid ff2dde1b-e7d7-4c3a-9ab4-6474345e0f31
+DefaultCountryGuid a71d6727-61e7-4282-9fcb-526d1e7bc24f
+DefaultStateGuid 00000000-0000-0000-0000-000000000000
+FacebookAppId
+FacebookAppSecret
+GoogleClientId
+GoogleClientSecret
+TwitterConsumerKey
+TwitterConsumerSecret
+LoginInfoTop
+LoginInfoBottom
+RegistrationAgreement - TermsOfUse
+RegistrationPreamble
+RequireCaptchaOnLogin false rename as CaptchaOnLogin
+RequireCaptchaOnRegistration rename as CaptchaOnRegistration
+SiteIsClosed false
+SiteIsClosedMessage
+PrivacyPolicy
+
+SMTPPassword
+SMTPPort
+SMTPPreferredEncoding
+SMTPRequiresAuthentication renamed as SMTPRequiresAuth
+SMTPServer
+SMTPUser
+SMTPUseSsl
+
+# rows/keys to be deleted from mp_SiteSettingsEx and ExDef
+
+WebSnaprKey 
+Slogan
+SiteMapSkin
+ShowAlternateSearchIfConfigured
+RpxNowAdminUrl 
+RpxNowApiKey 
+RpxNowApplicationName 
+PrivacyPolicyUrl
+PrimarySearchEngine
+PrimaryPaymentGateway
+PayPalUsePayPalStandard
+PayPalStandardSandboxPDTId
+PayPalStandardSandboxEmail
+PayPalStandardProductionPDTId
+PayPalStandardProductionEmail
+PayPalSandboxAPIUsername
+PayPalSandboxAPISignature
+PayPalSandboxAPIPassword
+PayPalProductionAPIUsername
+PayPalProductionAPISignature
+PayPalProductionAPIPassword
+PaymentGatewayUseTestMode
+OpenSearchName
+NewsletterEditor
+MetaProfile
+Is503TaxExempt
+IntenseDebateAccountId
+GoogleSandboxMerchantKey
+GoogleSandboxMerchantID
+GoogleProductionMerchantKey
+GoogleProductionMerchantID
+GoogleCustomSearchId
+GoogleAnalyticsSettings
+GoogleAnalyticsPassword
+GoogleAnalyticsEmail
+ForceContentVersioning
+EnableWoopra
+EnableContentWorkflow
+DisqusSiteShortName
+CommentProvider
+BingAPIId
+AvatarSystem
+AuthorizeNetSandboxAPITransactionKey
+AuthorizeNetSandboxAPILogin
+AuthorizeNetProductionAPITransactionKey
+AuthorizeNetProductionAPILogin
+AppLogoForWindowsLive
+AllowWindowsLiveMessengerForMembers
+AllowUserEditorPreference
+
+CommerceReportViewRoles 
+GeneralBrowseAndUploadRoles
+RolesNotAllowedToEditModuleSettings
+RolesThatCanCreateRootPages
+RolesThatCanDeleteFilesInEditor
+RolesThatCanEditContentTemplates
+RolesThatCanEditSkins
+RolesThatCanLookupUsers
+RolesThatCanManageUsers
+RolesThatCanViewGoogleAnalytics
+RolesThatCanViewMemberList
+SiteRootEditRoles
+SiteRootDraftEditRoles
+UserFilesBrowseAndUploadRoles
+
+
+mp_Users table columns to remove
+
+ApprovedForForums default 1 could rename to AccountApproved but maybe that is the same as profileapproved
+ProfileApproved
+Occupation
+Interests
+MSN
+Yahoo
+AIM
+ICQ
+TotalPosts
+TimeOffsetHours
+Skin
+PasswordSalt
+OpenIDURI
+WindowsLiveID
+Pwd
+EditorPreference
+PwdFormat
+MobilePIN
+
+
+
