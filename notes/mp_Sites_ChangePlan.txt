@@ -160,7 +160,7 @@ UserFilesBrowseAndUploadRoles
 mp_Users table columns to remove
 
 ApprovedForForums default 1 could rename to AccountApproved but maybe that is the same as profileapproved
-ProfileApproved
+ProfileApproved or rename to AccountApproved
 Occupation
 Interests
 MSN
@@ -177,6 +177,13 @@ Pwd
 EditorPreference
 PwdFormat
 MobilePIN
+TotalRevenue
+-- if we are going to support security questions/answers, it should be plural questions in a separate table
+PasswordQuestion
+PasswordAnswer
+
+mp_Users columns to add
+AccountApproved
 
 
 

@@ -1,3 +1,8 @@
+DROP PROCEDURE [dbo].[mp_Sites_SyncRelatedSitesWinLive]
+GO
+
+DROP PROCEDURE [dbo].[mp_Sites_UpdateExtendedProperties] 
+GO
 
 ALTER TABLE [dbo].mp_Sites DROP COLUMN SiteAlias
 GO
@@ -132,28 +137,28 @@ GO
 ALTER TABLE [dbo].mp_Sites ADD CompanyFax nvarchar(20) NULL 
 GO
 
-ALTER TABLE [dbo].mp_Sites ADD FacebookAppId nvarchar(50) NULL 
+ALTER TABLE [dbo].mp_Sites ADD FacebookAppId nvarchar(100) NULL 
 GO
 
-ALTER TABLE [dbo].mp_Sites ADD FacebookAppSecret nvarchar(50) NULL 
+ALTER TABLE [dbo].mp_Sites ADD FacebookAppSecret nvarchar(100) NULL 
 GO
 
-ALTER TABLE [dbo].mp_Sites ADD GoogleClientId nvarchar(50) NULL 
+ALTER TABLE [dbo].mp_Sites ADD GoogleClientId nvarchar(100) NULL 
 GO
 
-ALTER TABLE [dbo].mp_Sites ADD GoogleClientSecret nvarchar(50) NULL 
+ALTER TABLE [dbo].mp_Sites ADD GoogleClientSecret nvarchar(100) NULL 
 GO
 
-ALTER TABLE [dbo].mp_Sites ADD TwitterConsumerKey nvarchar(50) NULL 
+ALTER TABLE [dbo].mp_Sites ADD TwitterConsumerKey nvarchar(100) NULL 
 GO
 
-ALTER TABLE [dbo].mp_Sites ADD TwitterConsumerSecret nvarchar(50) NULL 
+ALTER TABLE [dbo].mp_Sites ADD TwitterConsumerSecret nvarchar(100) NULL 
 GO
 
-ALTER TABLE [dbo].mp_Sites ADD MicrosoftClientId nvarchar(50) NULL 
+ALTER TABLE [dbo].mp_Sites ADD MicrosoftClientId nvarchar(100) NULL 
 GO
 
-ALTER TABLE [dbo].mp_Sites ADD MicrosoftClientSecret nvarchar(50) NULL 
+ALTER TABLE [dbo].mp_Sites ADD MicrosoftClientSecret nvarchar(100) NULL 
 GO
 
 ALTER TABLE [dbo].mp_Sites ADD PreferredHostName nvarchar(250) NULL 
@@ -261,12 +266,12 @@ Last Modified: 		2015-10-31
 @CompanyFax nvarchar(20),
 @FacebookAppId nvarchar(50),
 @FacebookAppSecret nvarchar(50),
-@GoogleClientId nvarchar(50),
-@GoogleClientSecret nvarchar(50),
-@TwitterConsumerKey nvarchar(50),
-@TwitterConsumerSecret nvarchar(50),
-@MicrosoftClientId nvarchar(50),
-@MicrosoftClientSecret nvarchar(50),
+@GoogleClientId nvarchar(100),
+@GoogleClientSecret nvarchar(100),
+@TwitterConsumerKey nvarchar(100),
+@TwitterConsumerSecret nvarchar(100),
+@MicrosoftClientId nvarchar(100),
+@MicrosoftClientSecret nvarchar(100),
 @PreferredHostName nvarchar(250),
 @SiteFolderName nvarchar(50),
 @AddThisDotComUsername nvarchar(50),
@@ -506,14 +511,14 @@ Last Modified:	2009-10-16
 @CompanyPublicEmail nvarchar(100),
 @CompanyPhone nvarchar(20),
 @CompanyFax nvarchar(20),
-@FacebookAppId nvarchar(50),
-@FacebookAppSecret nvarchar(50),
-@GoogleClientId nvarchar(50),
-@GoogleClientSecret nvarchar(50),
-@TwitterConsumerKey nvarchar(50),
-@TwitterConsumerSecret nvarchar(50),
-@MicrosoftClientId nvarchar(50),
-@MicrosoftClientSecret nvarchar(50),
+@FacebookAppId nvarchar(100),
+@FacebookAppSecret nvarchar(100),
+@GoogleClientId nvarchar(100),
+@GoogleClientSecret nvarchar(100),
+@TwitterConsumerKey nvarchar(100),
+@TwitterConsumerSecret nvarchar(100),
+@MicrosoftClientId nvarchar(100),
+@MicrosoftClientSecret nvarchar(100),
 @PreferredHostName nvarchar(250),
 @SiteFolderName nvarchar(50),
 @AddThisDotComUsername nvarchar(50),
@@ -608,6 +613,315 @@ SET
 
 WHERE
     	SiteID = @SiteID
+
+GO
+
+ALTER PROCEDURE [dbo].[mp_Sites_UpdateRelatedSiteSecurity]
+
+/*
+Author:			Joe Audette
+Created			2009-09-16
+Last Modified:	2015-11-01
+
+*/
+
+@SiteID           			int,
+@AllowNewRegistration bit,
+@UseSecureRegistration bit,
+@UseLdapAuth				bit,
+@AutoCreateLdapUserOnFirstLogin	bit,
+@LdapServer				nvarchar(255),
+@LdapDomain				nvarchar(255),
+@LdapPort				int,
+@LdapRootDN				nvarchar(255),
+@LdapUserDNKey			nvarchar(10),
+@AllowUserFullNameChange		bit,
+@UseEmailForLogin			bit,
+@RequiresQuestionAndAnswer	bit,
+@MaxInvalidPasswordAttempts	int,
+@PasswordAttemptWindowMinutes int,
+@MinRequiredPasswordLength	int,
+@MinReqNonAlphaChars	int
+
+	
+AS
+UPDATE	mp_Sites
+
+SET
+    
+	AllowNewRegistration = @AllowNewRegistration,
+	UseSecureRegistration = @UseSecureRegistration,
+	UseLdapAuth = @UseLdapAuth,
+	AutoCreateLdapUserOnFirstLogin = @AutoCreateLdapUserOnFirstLogin,
+	LdapServer = @LdapServer,
+	LdapPort = @LdapPort,
+    LdapDomain = @LdapDomain,
+	LdapRootDN = @LdapRootDN,
+	LdapUserDNKey = @LdapUserDNKey,
+	AllowUserFullNameChange = @AllowUserFullNameChange,
+	UseEmailForLogin = @UseEmailForLogin,
+	
+	RequiresQuestionAndAnswer = @RequiresQuestionAndAnswer,
+	MaxInvalidPasswordAttempts = @MaxInvalidPasswordAttempts,
+	PasswordAttemptWindowMinutes = @PasswordAttemptWindowMinutes,
+	
+	MinRequiredPasswordLength = @MinRequiredPasswordLength,
+	MinReqNonAlphaChars = @MinReqNonAlphaChars
+	
+
+WHERE
+    	SiteID <> @SiteID
+
+GO
+
+
+
+
+
+
+
+
+
+EXEC sp_RENAME '[dbo].mp_Users.[ProfileApproved]' , '[AccountApproved]', 'COLUMN'
+
+ALTER TABLE [dbo].mp_Users DROP COLUMN ApprovedForForums
+GO
+
+ALTER TABLE [dbo].mp_Users DROP COLUMN Occupation
+GO
+
+ALTER TABLE [dbo].mp_Users DROP COLUMN Interests
+GO
+
+ALTER TABLE [dbo].mp_Users DROP COLUMN MSN
+GO
+
+ALTER TABLE [dbo].mp_Users DROP COLUMN Yahoo
+GO
+
+ALTER TABLE [dbo].mp_Users DROP COLUMN AIM
+GO
+
+ALTER TABLE [dbo].mp_Users DROP COLUMN ICQ
+GO
+
+ALTER TABLE [dbo].mp_Users DROP COLUMN TotalPosts
+GO
+
+ALTER TABLE [dbo].mp_Users DROP COLUMN TimeOffsetHours
+GO
+
+ALTER TABLE [dbo].mp_Users DROP COLUMN Skin
+GO
+
+ALTER TABLE [dbo].mp_Users DROP COLUMN PasswordSalt
+GO
+
+ALTER TABLE [dbo].mp_Users DROP COLUMN OpenIDURI
+GO
+
+ALTER TABLE [dbo].mp_Users DROP COLUMN WindowsLiveID
+GO
+
+ALTER TABLE [dbo].mp_Users DROP COLUMN Pwd
+GO
+
+ALTER TABLE [dbo].mp_Users DROP COLUMN EditorPreference
+GO
+
+ALTER TABLE [dbo].mp_Users DROP COLUMN PwdFormat
+GO
+
+ALTER TABLE [dbo].mp_Users DROP COLUMN MobilePIN
+GO
+
+ALTER TABLE [dbo].mp_Users DROP COLUMN TotalRevenue
+GO
+
+ALTER TABLE [dbo].mp_Users DROP COLUMN PasswordQuestion
+GO
+
+ALTER TABLE [dbo].mp_Users DROP COLUMN PasswordAnswer
+GO
+
+DROP PROCEDURE [dbo].[mp_Users_UpdatePasswordQuestionAndAnswer]
+GO
+
+
+ALTER Procedure [dbo].[mp_Users_Insert]
+
+/*
+Author:			Joe Audette
+Created:		2004-09-30
+Last Modified:	2015-11-01
+
+*/
+
+@SiteGuid	uniqueidentifier,
+@SiteID	int,
+@Name     	nvarchar(100),
+@LoginName	nvarchar(50),
+@Email    	nvarchar(100),
+@UserGuid	uniqueidentifier,
+@DateCreated datetime,
+@MustChangePwd bit,
+@FirstName     	nvarchar(100),
+@LastName     	nvarchar(100),
+@TimeZoneId     	nvarchar(32),
+@EmailChangeGuid	uniqueidentifier,
+@DateOfBirth	datetime,
+@EmailConfirmed bit,
+@PasswordHash nvarchar(max),
+@SecurityStamp nvarchar(max),
+@PhoneNumber nvarchar(50),
+@PhoneNumberConfirmed bit,
+@TwoFactorEnabled bit,
+@LockoutEndDateUtc datetime,
+@AccountApproved bit
+
+
+AS
+INSERT INTO mp_Users
+(
+			SiteGuid,
+			SiteID,
+    		[Name],
+			LoginName,
+    		Email,	
+			UserGuid,
+			DateCreated,
+			MustChangePwd,
+			RolesChanged,
+			FirstName,
+			LastName,
+			TimeZoneId,
+			EmailChangeGuid,
+			PasswordResetGuid,
+			DateOfBirth,
+			EmailConfirmed,
+			PasswordHash,
+			SecurityStamp,
+			PhoneNumber,
+			PhoneNumberConfirmed,
+			TwoFactorEnabled,
+			LockoutEndDateUtc,
+			AccountApproved
+	
+
+)
+
+VALUES
+(
+			@SiteGuid,
+			@SiteID,
+    		@Name,
+			@LoginName,
+    		@Email,
+			@UserGuid,
+			@DateCreated,
+			@MustChangePwd,
+			0,
+			@FirstName,
+			@LastName,
+			@TimeZoneId,
+			@EmailChangeGuid,
+			'00000000-0000-0000-0000-000000000000',
+			@DateOfBirth,
+			@EmailConfirmed,
+			@PasswordHash,
+			@SecurityStamp,
+			@PhoneNumber,
+			@PhoneNumberConfirmed,
+			@TwoFactorEnabled,
+			@LockoutEndDateUtc,
+			@AccountApproved
+)
+
+SELECT		@@Identity As UserID
+
+GO
+
+ALTER PROCEDURE [dbo].[mp_Users_Update]
+
+/*
+Author:			Joe Audette
+Created:		2004-09-30
+Last Modified:	2015-11-01
+
+*/
+
+    
+@UserID int,   
+@Name nvarchar(100),
+@LoginName nvarchar(50),
+@Email  nvarchar(100),   
+@Gender	nchar(1),
+@AccountApproved bit,
+@Trusted bit,
+@DisplayInMemberList bit,
+@WebSiteURL	nvarchar(100),
+@Country nvarchar(100),
+@State nvarchar(100),
+@AvatarUrl nvarchar(255),
+@Signature nvarchar(max),
+@LoweredEmail nvarchar(100),
+@Comment nvarchar(max),
+@MustChangePwd bit,
+@FirstName nvarchar(100),
+@LastName nvarchar(100),
+@TimeZoneId nvarchar(32),
+@NewEmail nvarchar(100),
+@EmailChangeGuid uniqueidentifier,
+@PasswordResetGuid uniqueidentifier,
+@RolesChanged bit,
+@AuthorBio nvarchar(max),
+@DateOfBirth datetime,
+@EmailConfirmed bit,
+@PasswordHash nvarchar(max),
+@SecurityStamp nvarchar(max),
+@PhoneNumber nvarchar(50),
+@PhoneNumberConfirmed bit,
+@TwoFactorEnabled bit,
+@LockoutEndDateUtc datetime
+
+
+AS
+UPDATE		mp_Users
+
+SET			[Name] = @Name,
+			LoginName = @LoginName,
+			Email = @Email,
+    		MustChangePwd = @MustChangePwd,
+			Gender = @Gender,
+			AccountApproved = @AccountApproved,
+			ApprovedForForums = @ApprovedForForums,
+			Trusted = @Trusted,
+			DisplayInMemberList = @DisplayInMemberList,
+			WebSiteURL = @WebSiteURL,
+			Country = @Country,
+			[State] = @State,
+			AvatarUrl = @AvatarUrl,
+			[Signature] = @Signature,
+			LoweredEmail = @LoweredEmail,
+			Comment = @Comment,
+			FirstName = @FirstName,
+			LastName = @LastName,
+			TimeZoneId = @TimeZoneId,
+			NewEmail = @NewEmail,
+			EmailChangeGuid = @EmailChangeGuid,
+			PasswordResetGuid = @PasswordResetGuid,
+			RolesChanged = @RolesChanged,
+			AuthorBio = @AuthorBio,
+			DateOfBirth = @DateOfBirth,
+			EmailConfirmed = @EmailConfirmed,
+			PasswordHash = @PasswordHash,
+			SecurityStamp = @SecurityStamp,
+			PhoneNumber = @PhoneNumber,
+			PhoneNumberConfirmed = @PhoneNumberConfirmed,
+			TwoFactorEnabled = @TwoFactorEnabled,
+			LockoutEndDateUtc = @LockoutEndDateUtc
+			
+WHERE		UserID = @UserID
 
 GO
 

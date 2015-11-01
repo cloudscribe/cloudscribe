@@ -10,6 +10,13 @@ EXEC sp_RENAME 'TableName.[OldColumnName]' , '[NewColumnName]', 'COLUMN'
 EXEC sp_RENAME '[OldTableName]' , '[NewTableName]'
 GO
 
+CREATE NONCLUSTERED INDEX [IX_mp_UserClaimsSite] ON [dbo].[mp_UserClaims] 
+(
+	[SiteId] ASC
+)WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
+GO
+
+
 
 ## Firebird Syntax
 
@@ -20,12 +27,21 @@ http://www.firebirdfaq.org/faq363/
 you have to create a new table to rename a column
 or maybe add column, do update, drop old colum in separate batch transactions
 
+CREATE INDEX IX_mp_UserClaimsSite ON mp_UserClaims(SiteId);
+
+
+
 ## pgsql syntax
 
 ALTER TABLE mp_sites DROP COLUMN logo;
 ALTER TABLE mp_userlogins ADD COLUMN siteid integer not null default -1;
 
 ALTER TABLE table_name RENAME COLUMN old_name TO new_name;
+
+CREATE INDEX ixmp_userclaimssite ON mp_userclaims(siteid);
+
+
+
 
 ## mysql syntax
 
@@ -37,6 +53,10 @@ ALTER TABLE mp_UserLogins ADD COLUMN `SiteId` INT NOT NULL DEFAULT -1;
 
 ALTER TABLE xyz CHANGE manufacurerid manufacturerid datatype(length)
 ALTER TABLE xyz CHANGE manufacurerid manufacturerid INT
+
+CREATE INDEX IX_mp_UserClaimsSite ON mp_UserClaims(`SiteId`);
+
+
 
 
 ## Sqlite syntax
@@ -59,6 +79,9 @@ create table points_tmp as select id, lon as lat, lat as lon from points;
 drop table points;
 alter table points_tmp rename to points;
 
+CREATE INDEX IX_mp_UserClaimsSite ON mp_UserClaims(`SiteId`);
+
+
 ## SqlServerCompact
 
 ALTER TABLE mp_UserLogins ADD SiteId int NOT NULL default -1
@@ -79,4 +102,13 @@ alter table myTable drop column myIDcol;
 alter table myTable add myIDcol nvarchar(10);
 update myTable set myIDcol = tempCol;
 alter table myTable drop column tempCol;
+
+
+CREATE INDEX [IX_mp_UserClaimsSite] ON [mp_UserClaims] 
+(
+	[SiteId] 
+) 
+
+GO
+
 

@@ -43,29 +43,73 @@ namespace cloudscribe.Core.Repositories.pgsql
             int siteId,
             string roleName)
         {
-            NpgsqlParameter[] arParams = new NpgsqlParameter[4];
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("INSERT INTO mp_roles (");
+            sqlCommand.Append("siteid, ");
+            sqlCommand.Append("rolename, ");
+            sqlCommand.Append("displayname, ");
+            sqlCommand.Append("siteguid, ");
+            sqlCommand.Append("roleguid )");
 
+            sqlCommand.Append(" VALUES (");
+            sqlCommand.Append(":siteid, ");
+            sqlCommand.Append(":rolename, ");
+            sqlCommand.Append(":displayname, ");
+            sqlCommand.Append(":siteguid, ");
+            sqlCommand.Append(":roleguid )");
+            sqlCommand.Append(";");
+            sqlCommand.Append(" SELECT CURRVAL('mp_roles_roleid_seq');");
+
+            NpgsqlParameter[] arParams = new NpgsqlParameter[5];
             arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
             arParams[0].Value = siteId;
 
-            arParams[1] = new NpgsqlParameter("rolename", NpgsqlTypes.NpgsqlDbType.Text, 50);
+            arParams[1] = new NpgsqlParameter("rolename", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
             arParams[1].Value = roleName;
 
-            arParams[2] = new NpgsqlParameter("siteguid", NpgsqlTypes.NpgsqlDbType.Char, 36);
-            arParams[2].Value = siteGuid.ToString();
+            arParams[2] = new NpgsqlParameter("displayname", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
+            arParams[2].Value = roleName;
 
-            arParams[3] = new NpgsqlParameter("roleguid", NpgsqlTypes.NpgsqlDbType.Char, 36);
-            arParams[3].Value = roleGuid.ToString();
+            arParams[3] = new NpgsqlParameter("siteguid", NpgsqlTypes.NpgsqlDbType.Char, 36);
+            arParams[3].Value = siteGuid.ToString();
+
+            arParams[4] = new NpgsqlParameter("roleguid", NpgsqlTypes.NpgsqlDbType.Char, 36);
+            arParams[4].Value = roleGuid.ToString();
+
 
             object result = await AdoHelper.ExecuteScalarAsync(
                 writeConnectionString,
-                    CommandType.StoredProcedure,
-                    "mp_roles_insert(:siteid,:rolename,:siteguid,:roleguid)",
+                    CommandType.Text,
+                    sqlCommand.ToString(),
                     arParams);
 
             int newID = Convert.ToInt32(result);
 
             return newID;
+            
+            //NpgsqlParameter[] arParams = new NpgsqlParameter[4];
+
+            //arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
+            //arParams[0].Value = siteId;
+
+            //arParams[1] = new NpgsqlParameter("rolename", NpgsqlTypes.NpgsqlDbType.Text, 50);
+            //arParams[1].Value = roleName;
+
+            //arParams[2] = new NpgsqlParameter("siteguid", NpgsqlTypes.NpgsqlDbType.Char, 36);
+            //arParams[2].Value = siteGuid.ToString();
+
+            //arParams[3] = new NpgsqlParameter("roleguid", NpgsqlTypes.NpgsqlDbType.Char, 36);
+            //arParams[3].Value = roleGuid.ToString();
+
+            //object result = await AdoHelper.ExecuteScalarAsync(
+            //    writeConnectionString,
+            //        CommandType.StoredProcedure,
+            //        "mp_roles_insert(:siteid,:rolename,:siteguid,:roleguid)",
+            //        arParams);
+
+            //int newID = Convert.ToInt32(result);
+
+            //return newID;
 
         }
 
@@ -79,10 +123,20 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[1] = new NpgsqlParameter("rolename", NpgsqlTypes.NpgsqlDbType.Text, 50);
             arParams[1].Value = roleName;
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("UPDATE mp_roles ");
+            sqlCommand.Append("SET  ");
+           
+            sqlCommand.Append("displayname = :rolename ");
+            
+            sqlCommand.Append("WHERE  ");
+            sqlCommand.Append("roleid = :roleid ");
+            sqlCommand.Append(";");
+
             object result = await AdoHelper.ExecuteScalarAsync(
                 writeConnectionString,
-                CommandType.StoredProcedure,
-                "mp_roles_update(:roleid,:rolename)",
+                CommandType.Text,
+                sqlCommand.ToString(),
                 arParams);
 
             int rowsAffected = Convert.ToInt32(result);
@@ -97,10 +151,26 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[0] = new NpgsqlParameter("roleid", NpgsqlTypes.NpgsqlDbType.Integer);
             arParams[0].Value = roleId;
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("DELETE FROM mp_roles ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("roleid = :roleid ");
+            sqlCommand.Append("AND rolename <> 'Admins' ");
+            sqlCommand.Append("AND rolename <> 'Content Administrators' ");
+            sqlCommand.Append("AND rolename <> 'Authenticated Users' ");
+            sqlCommand.Append("AND rolename <> 'Role Admins' ");
+            sqlCommand.Append(";");
+
+            //object result = await AdoHelper.ExecuteScalarAsync(
+            //    writeConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_roles_delete(:roleid)",
+            //    arParams);
+
             object result = await AdoHelper.ExecuteScalarAsync(
                 writeConnectionString,
-                CommandType.StoredProcedure,
-                "mp_roles_delete(:roleid)",
+                CommandType.Text,
+                sqlCommand.ToString(),
                 arParams);
 
             int rowsAffected = Convert.ToInt32(result);
@@ -116,10 +186,22 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[0] = new NpgsqlParameter("userid", NpgsqlTypes.NpgsqlDbType.Integer);
             arParams[0].Value = userId;
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("DELETE FROM mp_userroles ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("userid = :userid ");
+            sqlCommand.Append(";");
+
+            //object result = await AdoHelper.ExecuteScalarAsync(
+            //    writeConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_userroles_deleteuserroles(:userid)",
+            //    arParams);
+
             object result = await AdoHelper.ExecuteScalarAsync(
                 writeConnectionString,
-                CommandType.StoredProcedure,
-                "mp_userroles_deleteuserroles(:userid)",
+                CommandType.Text,
+                sqlCommand.ToString(),
                 arParams);
 
             int rowsAffected = Convert.ToInt32(result);
@@ -156,10 +238,23 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[0] = new NpgsqlParameter("roleid", NpgsqlTypes.NpgsqlDbType.Integer);
             arParams[0].Value = roleId;
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  * ");
+            sqlCommand.Append("FROM	mp_roles ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("roleid = :roleid ");
+            sqlCommand.Append(";");
+
+            //return await AdoHelper.ExecuteReaderAsync(
+            //    readConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_roles_selectone(:roleid)",
+            //    arParams);
+
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
-                CommandType.StoredProcedure,
-                "mp_roles_selectone(:roleid)",
+                CommandType.Text,
+                sqlCommand.ToString(),
                 arParams);
         }
 
@@ -173,11 +268,27 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[1] = new NpgsqlParameter("rolename", NpgsqlTypes.NpgsqlDbType.Text, 50);
             arParams[1].Value = roleName;
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  * ");
+            sqlCommand.Append("FROM	mp_roles ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("siteid = :siteid ");
+            sqlCommand.Append("AND rolename = :rolename ");
+            sqlCommand.Append(";");
+
+            //return await AdoHelper.ExecuteReaderAsync(
+            //    readConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_roles_selectbyname(:siteid,:rolename)",
+            //    arParams);
+
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
-                CommandType.StoredProcedure,
-                "mp_roles_selectbyname(:siteid,:rolename)",
+                CommandType.Text,
+                sqlCommand.ToString(),
                 arParams);
+
+
         }
 
         public async Task<bool> Exists(int siteId, string roleName)
@@ -190,10 +301,24 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[1] = new NpgsqlParameter("rolename", NpgsqlTypes.NpgsqlDbType.Text, 50);
             arParams[1].Value = roleName;
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  Count(*) ");
+            sqlCommand.Append("FROM	mp_roles ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("siteid = :siteid ");
+            sqlCommand.Append("AND rolename = :rolename ");
+            sqlCommand.Append(";");
+
+            //object result = await AdoHelper.ExecuteScalarAsync(
+            //    readConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_roles_roleexists(:siteid,:rolename)",
+            //    arParams);
+
             object result = await AdoHelper.ExecuteScalarAsync(
                 readConnectionString,
-                CommandType.StoredProcedure,
-                "mp_roles_roleexists(:siteid,:rolename)",
+                CommandType.Text,
+                sqlCommand.ToString(),
                 arParams);
 
             int count = Convert.ToInt32(result);
@@ -531,11 +656,31 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[1] = new NpgsqlParameter("userid", NpgsqlTypes.NpgsqlDbType.Integer);
             arParams[1].Value = userId;
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  r.* ");
+            sqlCommand.Append("FROM	mp_roles r ");
+            sqlCommand.Append("left outer join mp_userroles  ur ");
+            sqlCommand.Append("ON ur.roleid = r.roleid ");
+            sqlCommand.Append("AND ur.userid = :userid ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("r.siteid = :siteid ");
+            sqlCommand.Append("AND ur.userid is null ");
+            sqlCommand.Append("ORDER BY r.displayname ");
+            sqlCommand.Append(";");
+
+            //return AdoHelper.ExecuteReader(
+            //    readConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_roles_selectrolesuserisnotin(:siteid,:userid)",
+            //    arParams);
+
             return AdoHelper.ExecuteReader(
                 readConnectionString,
-                CommandType.StoredProcedure,
-                "mp_roles_selectrolesuserisnotin(:siteid,:userid)",
+                CommandType.Text,
+                sqlCommand.ToString(),
                 arParams);
+
+
         }
 
         public async Task<bool> AddUser(
@@ -559,13 +704,36 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[3] = new NpgsqlParameter("userguid", NpgsqlTypes.NpgsqlDbType.Char, 36);
             arParams[3].Value = userGuid.ToString();
 
-            object result = await AdoHelper.ExecuteScalarAsync(
-                writeConnectionString,
-                CommandType.StoredProcedure,
-                "mp_userroles_insert(:roleid,:userid,:roleguid,:userguid)",
-                arParams);
+            //MS SQL proc checks that no matching record exists, may need to check that
+            //here 
 
-            int rowsAffected = Convert.ToInt32(result);
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("INSERT INTO mp_userroles (");
+            sqlCommand.Append("userid, ");
+            sqlCommand.Append("roleid, ");
+            sqlCommand.Append("userguid, ");
+            sqlCommand.Append("roleguid )");
+
+            sqlCommand.Append(" VALUES (");
+            sqlCommand.Append(":userid, ");
+            sqlCommand.Append(":roleid, ");
+            sqlCommand.Append(":userguid, ");
+            sqlCommand.Append(":roleguid ");
+            sqlCommand.Append(")");
+            sqlCommand.Append(";");
+
+            //object result = await AdoHelper.ExecuteScalarAsync(
+            //    writeConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_userroles_insert(:roleid,:userid,:roleguid,:userguid)",
+            //    arParams);
+            //int rowsAffected = Convert.ToInt32(result);
+
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
+                writeConnectionString,
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams);
 
             return (rowsAffected > -1);
 
