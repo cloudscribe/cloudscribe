@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2008-01-04
-// Last Modified:			2015-06-13
+// Last Modified:			2015-11-02
 // 
 
 using cloudscribe.DbHelpers.pgsql;
@@ -127,10 +127,57 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[16] = new NpgsqlParameter("lastcaptureutc", NpgsqlTypes.NpgsqlDbType.Timestamp);
             arParams[16].Value = lastCaptureUTC;
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("INSERT INTO mp_userlocation (");
+            sqlCommand.Append("rowid, ");
+            sqlCommand.Append("userguid, ");
+            sqlCommand.Append("siteguid, ");
+            sqlCommand.Append("ipaddress, ");
+            sqlCommand.Append("ipaddresslong, ");
+            sqlCommand.Append("hostname, ");
+            sqlCommand.Append("longitude, ");
+            sqlCommand.Append("latitude, ");
+            sqlCommand.Append("isp, ");
+            sqlCommand.Append("continent, ");
+            sqlCommand.Append("country, ");
+            sqlCommand.Append("region, ");
+            sqlCommand.Append("city, ");
+            sqlCommand.Append("timezone, ");
+            sqlCommand.Append("capturecount, ");
+            sqlCommand.Append("firstcaptureutc, ");
+            sqlCommand.Append("lastcaptureutc )");
+
+            sqlCommand.Append(" VALUES (");
+            sqlCommand.Append(":rowid, ");
+            sqlCommand.Append(":userguid, ");
+            sqlCommand.Append(":siteguid, ");
+            sqlCommand.Append(":ipaddress, ");
+            sqlCommand.Append(":ipaddresslong, ");
+            sqlCommand.Append(":hostname, ");
+            sqlCommand.Append(":longitude, ");
+            sqlCommand.Append(":latitude, ");
+            sqlCommand.Append(":isp, ");
+            sqlCommand.Append(":continent, ");
+            sqlCommand.Append(":country, ");
+            sqlCommand.Append(":region, ");
+            sqlCommand.Append(":city, ");
+            sqlCommand.Append(":timezone, ");
+            sqlCommand.Append(":capturecount, ");
+            sqlCommand.Append(":firstcaptureutc, ");
+            sqlCommand.Append(":lastcaptureutc ");
+            sqlCommand.Append(")");
+            sqlCommand.Append(";");
+
+            //int rowsAffected = AdoHelper.ExecuteNonQuery(
+            //    writeConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_userlocation_insert(:rowid,:userguid,:siteguid,:ipaddress,:ipaddresslong,:hostname,:longitude,:latitude,:isp,:continent,:country,:region,:city,:timezone,:capturecount,:firstcaptureutc,:lastcaptureutc)",
+            //    arParams);
+
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 writeConnectionString,
-                CommandType.StoredProcedure,
-                "mp_userlocation_insert(:rowid,:userguid,:siteguid,:ipaddress,:ipaddresslong,:hostname,:longitude,:latitude,:isp,:continent,:country,:region,:city,:timezone,:capturecount,:firstcaptureutc,:lastcaptureutc)",
+                CommandType.Text,
+                sqlCommand.ToString(),
                 arParams);
 
             return rowsAffected;
@@ -226,10 +273,39 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[15] = new NpgsqlParameter("lastcaptureutc", NpgsqlTypes.NpgsqlDbType.Timestamp);
             arParams[15].Value = lastCaptureUTC;
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("UPDATE mp_userlocation ");
+            sqlCommand.Append("SET  ");
+            sqlCommand.Append("userguid = :userguid, ");
+            sqlCommand.Append("siteguid = :siteguid, ");
+            sqlCommand.Append("ipaddress = :ipaddress, ");
+            sqlCommand.Append("ipaddresslong = :ipaddresslong, ");
+            sqlCommand.Append("hostname = :hostname, ");
+            sqlCommand.Append("longitude = :longitude, ");
+            sqlCommand.Append("latitude = :latitude, ");
+            sqlCommand.Append("isp = :isp, ");
+            sqlCommand.Append("continent = :continent, ");
+            sqlCommand.Append("country = :country, ");
+            sqlCommand.Append("region = :region, ");
+            sqlCommand.Append("city = :city, ");
+            sqlCommand.Append("timezone = :timezone, ");
+            sqlCommand.Append("capturecount = :capturecount, ");
+            sqlCommand.Append("lastcaptureutc = :lastcaptureutc ");
+
+            sqlCommand.Append("WHERE  ");
+            sqlCommand.Append("rowid = :rowid ");
+            sqlCommand.Append(";");
+
+            //int rowsAffected = AdoHelper.ExecuteNonQuery(
+            //    writeConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_userlocation_update(:rowid,:userguid,:siteguid,:ipaddress,:ipaddresslong,:hostname,:longitude,:latitude,:isp,:continent,:country,:region,:city,:timezone,:capturecount,:lastcaptureutc)",
+            //    arParams);
+
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 writeConnectionString,
-                CommandType.StoredProcedure,
-                "mp_userlocation_update(:rowid,:userguid,:siteguid,:ipaddress,:ipaddresslong,:hostname,:longitude,:latitude,:isp,:continent,:country,:region,:city,:timezone,:capturecount,:lastcaptureutc)",
+                CommandType.Text,
+                sqlCommand.ToString(),
                 arParams);
 
             return (rowsAffected > -1);
@@ -248,10 +324,22 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[0] = new NpgsqlParameter("rowid", NpgsqlTypes.NpgsqlDbType.Char, 36);
             arParams[0].Value = rowID.ToString();
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("DELETE FROM mp_userlocation ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("rowid = :rowid ");
+            sqlCommand.Append(";");
+
+            //int rowsAffected = AdoHelper.ExecuteNonQuery(
+            //    writeConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_userlocation_delete(:rowid)",
+            //    arParams);
+
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 writeConnectionString,
-                CommandType.StoredProcedure,
-                "mp_userlocation_delete(:rowid)",
+                CommandType.Text,
+                sqlCommand.ToString(),
                 arParams);
 
             return (rowsAffected > -1);
@@ -292,10 +380,23 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[0] = new NpgsqlParameter("rowid", NpgsqlTypes.NpgsqlDbType.Char, 36);
             arParams[0].Value = rowID.ToString();
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  * ");
+            sqlCommand.Append("FROM	mp_userlocation ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("rowid = :rowid ");
+            sqlCommand.Append(";");
+
+            //return AdoHelper.ExecuteReader(
+            //    readConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_userlocation_select_one(:rowid)",
+            //    arParams);
+
             return AdoHelper.ExecuteReader(
                 readConnectionString,
-                CommandType.StoredProcedure,
-                "mp_userlocation_select_one(:rowid)",
+                CommandType.Text,
+                sqlCommand.ToString(),
                 arParams);
 
         }
@@ -315,10 +416,25 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[1] = new NpgsqlParameter("ipaddresslong", NpgsqlTypes.NpgsqlDbType.Bigint);
             arParams[1].Value = iPAddressLong;
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  * ");
+            sqlCommand.Append("FROM	mp_userlocation ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("userguid = :userguid ");
+            sqlCommand.Append("AND ");
+            sqlCommand.Append("ipaddresslong = :ipaddresslong ");
+            sqlCommand.Append(";");
+
+            //return AdoHelper.ExecuteReader(
+            //    readConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_userlocation_select_onebyuserandip(:userguid,:ipaddresslong)",
+            //    arParams);
+
             return AdoHelper.ExecuteReader(
                 readConnectionString,
-                CommandType.StoredProcedure,
-                "mp_userlocation_select_onebyuserandip(:userguid,:ipaddresslong)",
+                CommandType.Text,
+                sqlCommand.ToString(),
                 arParams);
 
         }
@@ -334,32 +450,53 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[0] = new NpgsqlParameter("userguid", NpgsqlTypes.NpgsqlDbType.Char, 36);
             arParams[0].Value = userGuid.ToString();
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  * ");
+            sqlCommand.Append("FROM	mp_userlocation ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("userguid = :userguid ");
+            sqlCommand.Append("ORDER BY lastcaptureutc DESC ");
+            sqlCommand.Append(";");
+
+            //return AdoHelper.ExecuteReader(
+            //    readConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_userlocation_select_byuser(:userguid)",
+            //    arParams);
+
             return AdoHelper.ExecuteReader(
                 readConnectionString,
-                CommandType.StoredProcedure,
-                "mp_userlocation_select_byuser(:userguid)",
+                CommandType.Text,
+                sqlCommand.ToString(),
                 arParams);
 
         }
 
-        /// <summary>
-        /// Gets an IDataReader with one row from the mp_UserLocation table.
-        /// </summary>
-        /// <param name="siteGuid"> siteGuid </param>
-        public DbDataReader GetBySite(Guid siteGuid)
-        {
-            NpgsqlParameter[] arParams = new NpgsqlParameter[1];
+        ///// <summary>
+        ///// Gets an IDataReader with one row from the mp_UserLocation table.
+        ///// </summary>
+        ///// <param name="siteGuid"> siteGuid </param>
+        //public DbDataReader GetBySite(Guid siteGuid)
+        //{
+        //    NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
-            arParams[0] = new NpgsqlParameter("siteguid", NpgsqlTypes.NpgsqlDbType.Char, 36);
-            arParams[0].Value = siteGuid.ToString();
+        //    arParams[0] = new NpgsqlParameter("siteguid", NpgsqlTypes.NpgsqlDbType.Char, 36);
+        //    arParams[0].Value = siteGuid.ToString();
 
-            return AdoHelper.ExecuteReader(
-                readConnectionString,
-                CommandType.StoredProcedure,
-                "mp_userlocation_select_bysite(:siteguid)",
-                arParams);
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("SELECT  * ");
+        //    sqlCommand.Append("FROM	mp_userlocation ");
+        //    sqlCommand.Append("WHERE ");
+        //    sqlCommand.Append("siteguid = :siteguid ");
+        //    sqlCommand.Append(";");
 
-        }
+        //    return AdoHelper.ExecuteReader(
+        //        readConnectionString,
+        //        CommandType.Text,
+        //        sqlCommand.ToString(),
+        //        arParams);
+
+        //}
 
         /// <summary>
         /// Gets an IDataReader with rows from the mp_Users table which have the passed in IP Address
@@ -408,32 +545,56 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[0] = new NpgsqlParameter("userguid", NpgsqlTypes.NpgsqlDbType.Char, 36);
             arParams[0].Value = userGuid.ToString();
 
-            return Convert.ToInt32(AdoHelper.ExecuteScalar(
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  Count(*) ");
+            sqlCommand.Append("FROM	mp_userlocation ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("userguid = :userguid ");
+            sqlCommand.Append(";");
+
+            //return Convert.ToInt32(AdoHelper.ExecuteScalar(
+            //    readConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_userlocation_countbyuser(:userguid)",
+            //    arParams));
+
+            object obj = AdoHelper.ExecuteScalar(
                 readConnectionString,
-                CommandType.StoredProcedure,
-                "mp_userlocation_countbyuser(:userguid)",
-                arParams));
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams);
+
+            return Convert.ToInt32(obj);
 
         }
 
-        /// <summary>
-        /// Gets a count of rows in the mp_UserLocation table.
-        /// </summary>
-        /// <param name="siteGuid"> siteGuid </param>
-        public int GetCountBySite(Guid siteGuid)
-        {
-            NpgsqlParameter[] arParams = new NpgsqlParameter[1];
+        ///// <summary>
+        ///// Gets a count of rows in the mp_UserLocation table.
+        ///// </summary>
+        ///// <param name="siteGuid"> siteGuid </param>
+        //public int GetCountBySite(Guid siteGuid)
+        //{
+        //    NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
-            arParams[0] = new NpgsqlParameter("siteguid", NpgsqlTypes.NpgsqlDbType.Char, 36);
-            arParams[0].Value = siteGuid.ToString();
+        //    arParams[0] = new NpgsqlParameter("siteguid", NpgsqlTypes.NpgsqlDbType.Char, 36);
+        //    arParams[0].Value = siteGuid.ToString();
 
-            return Convert.ToInt32(AdoHelper.ExecuteScalar(
-                readConnectionString,
-                CommandType.StoredProcedure,
-                "mp_userlocation_countbysite(:siteguid)",
-                arParams));
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("SELECT  Count(*) ");
+        //    sqlCommand.Append("FROM	mp_userlocation ");
+        //    sqlCommand.Append("WHERE ");
+        //    sqlCommand.Append("siteguid = :siteguid ");
+        //    sqlCommand.Append(";");
 
-        }
+        //    object obj = AdoHelper.ExecuteScalar(
+        //        readConnectionString,
+        //        CommandType.Text,
+        //        sqlCommand.ToString(),
+        //        arParams);
+
+        //    return Convert.ToInt32(obj);
+
+        //}
 
         /// <summary>
         /// Gets a page of data from the mp_UserLocation table.
@@ -478,65 +639,85 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[2] = new NpgsqlParameter("pagesize", NpgsqlTypes.NpgsqlDbType.Integer);
             arParams[2].Value = pageSize;
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT	* ");
+            sqlCommand.Append("FROM	mp_userlocation  ");
+            sqlCommand.Append("WHERE  ");
+            sqlCommand.Append("userguid = :userguid ");
+            sqlCommand.Append("ORDER BY  ");
+            sqlCommand.Append("ipaddresslong  ");
+            sqlCommand.Append("LIMIT  :pagesize");
+
+            if (pageNumber > 1)
+                sqlCommand.Append(" OFFSET :pageoffset ");
+
+            sqlCommand.Append(";");
+
             return AdoHelper.ExecuteReader(
                 readConnectionString,
-                CommandType.StoredProcedure,
-                "mp_userlocation_selectpagebyuser(:userguid,:pagenumber,:pagesize)",
+                CommandType.Text,
+                sqlCommand.ToString(),
                 arParams);
+
+            //return AdoHelper.ExecuteReader(
+            //    readConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_userlocation_selectpagebyuser(:userguid,:pagenumber,:pagesize)",
+            //    arParams);
 
         }
 
 
-        /// <summary>
-        /// Gets a page of data from the mp_UserLocation table.
-        /// </summary>
-        /// <param name="siteGuid"> siteGuid </param>
-        /// <param name="pageNumber">The page number.</param>
-        /// <param name="pageSize">Size of the page.</param>
-        /// <param name="totalPages">total pages</param>
-        public DbDataReader GetPageBySite(
-            Guid siteGuid,
-            int pageNumber,
-            int pageSize)
-        {
-            //totalPages = 1;
-            //int totalRows
-            //    = GetCountBySite(siteGuid);
+        ///// <summary>
+        ///// Gets a page of data from the mp_UserLocation table.
+        ///// </summary>
+        ///// <param name="siteGuid"> siteGuid </param>
+        ///// <param name="pageNumber">The page number.</param>
+        ///// <param name="pageSize">Size of the page.</param>
+        ///// <param name="totalPages">total pages</param>
+        //public DbDataReader GetPageBySite(
+        //    Guid siteGuid,
+        //    int pageNumber,
+        //    int pageSize)
+        //{
+        //    //totalPages = 1;
+        //    //int totalRows
+        //    //    = GetCountBySite(siteGuid);
 
-            //if (pageSize > 0) totalPages = totalRows / pageSize;
+        //    //if (pageSize > 0) totalPages = totalRows / pageSize;
 
-            //if (totalRows <= pageSize)
-            //{
-            //    totalPages = 1;
-            //}
-            //else
-            //{
-            //    int remainder;
-            //    Math.DivRem(totalRows, pageSize, out remainder);
-            //    if (remainder > 0)
-            //    {
-            //        totalPages += 1;
-            //    }
-            //}
+        //    //if (totalRows <= pageSize)
+        //    //{
+        //    //    totalPages = 1;
+        //    //}
+        //    //else
+        //    //{
+        //    //    int remainder;
+        //    //    Math.DivRem(totalRows, pageSize, out remainder);
+        //    //    if (remainder > 0)
+        //    //    {
+        //    //        totalPages += 1;
+        //    //    }
+        //    //}
 
-            NpgsqlParameter[] arParams = new NpgsqlParameter[3];
+        //    NpgsqlParameter[] arParams = new NpgsqlParameter[3];
 
-            arParams[0] = new NpgsqlParameter("siteguid", NpgsqlTypes.NpgsqlDbType.Char, 36);
-            arParams[0].Value = siteGuid.ToString();
+        //    arParams[0] = new NpgsqlParameter("siteguid", NpgsqlTypes.NpgsqlDbType.Char, 36);
+        //    arParams[0].Value = siteGuid.ToString();
 
-            arParams[1] = new NpgsqlParameter("pagenumber", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[1].Value = pageNumber;
+        //    arParams[1] = new NpgsqlParameter("pagenumber", NpgsqlTypes.NpgsqlDbType.Integer);
+        //    arParams[1].Value = pageNumber;
 
-            arParams[2] = new NpgsqlParameter("pagesize", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[2].Value = pageSize;
+        //    arParams[2] = new NpgsqlParameter("pagesize", NpgsqlTypes.NpgsqlDbType.Integer);
+        //    arParams[2].Value = pageSize;
 
-            return AdoHelper.ExecuteReader(
-                readConnectionString,
-                CommandType.StoredProcedure,
-                "mp_userlocation_selectpagebyite(:siteguid,:pagenumber,:pagesize)",
-                arParams);
+        //    return AdoHelper.ExecuteReader(
+        //        readConnectionString,
+        //        CommandType.StoredProcedure,
+        //        "mp_userlocation_selectpagebyite(:siteguid,:pagenumber,:pagesize)",
+        //        arParams);
 
-        }
+        //}
 
 
     }

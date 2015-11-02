@@ -243,14 +243,14 @@ namespace cloudscribe.Core.Repositories.pgsql
             return await dbSiteUser.FlagAsNotDeleted(userId);
         }
 
-        public bool UpdatePasswordAndSalt(
-            int userId,
-            int passwordFormat,
-            string password,
-            string passwordSalt)
-        {
-            return dbSiteUser.UpdatePasswordAndSalt(userId, passwordFormat, password, passwordSalt);
-        }
+        //public bool UpdatePasswordAndSalt(
+        //    int userId,
+        //    int passwordFormat,
+        //    string password,
+        //    string passwordSalt)
+        //{
+        //    return dbSiteUser.UpdatePasswordAndSalt(userId, passwordFormat, password, passwordSalt);
+        //}
 
         public async Task<bool> ConfirmRegistration(Guid registrationGuid)
         {
@@ -278,19 +278,19 @@ namespace cloudscribe.Core.Repositories.pgsql
             return await dbSiteUser.UpdateFailedPasswordAttemptCount(userGuid, failedPasswordAttemptCount);
         }
 
-        public async Task<bool> UpdateTotalRevenue(Guid userGuid)
-        {
-            return await dbSiteUser.UpdateTotalRevenue(userGuid);
+        //public async Task<bool> UpdateTotalRevenue(Guid userGuid)
+        //{
+        //    return await dbSiteUser.UpdateTotalRevenue(userGuid);
 
-        }
+        //}
 
-        /// <summary>
-        /// updates the total revenue for all users
-        /// </summary>
-        public async Task<bool> UpdateTotalRevenue()
-        {
-            return await dbSiteUser.UpdateTotalRevenue();
-        }
+        ///// <summary>
+        ///// updates the total revenue for all users
+        ///// </summary>
+        //public async Task<bool> UpdateTotalRevenue()
+        //{
+        //    return await dbSiteUser.UpdateTotalRevenue();
+        //}
 
 
         //public DataTable GetUserListForPasswordFormatChange(int siteId)

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-08-07
+// Last Modified:			2015-11-02
 //
 
 using cloudscribe.DbHelpers.pgsql;
@@ -775,68 +775,68 @@ namespace cloudscribe.Core.Repositories.pgsql
 
         }
 
-        public bool UpdateExtendedProperties(
-            int siteId,
-            bool allowPasswordRetrieval,
-            bool allowPasswordReset,
-            bool requiresQuestionAndAnswer,
-            int maxInvalidPasswordAttempts,
-            int passwordAttemptWindowMinutes,
-            bool requiresUniqueEmail,
-            int passwordFormat,
-            int minRequiredPasswordLength,
-            int minRequiredNonAlphanumericCharacters,
-            String passwordStrengthRegularExpression,
-            String defaultEmailFromAddress
-            )
-        {
-            NpgsqlParameter[] arParams = new NpgsqlParameter[12];
+        //public bool UpdateExtendedProperties(
+        //    int siteId,
+        //    bool allowPasswordRetrieval,
+        //    bool allowPasswordReset,
+        //    bool requiresQuestionAndAnswer,
+        //    int maxInvalidPasswordAttempts,
+        //    int passwordAttemptWindowMinutes,
+        //    bool requiresUniqueEmail,
+        //    int passwordFormat,
+        //    int minRequiredPasswordLength,
+        //    int minRequiredNonAlphanumericCharacters,
+        //    String passwordStrengthRegularExpression,
+        //    String defaultEmailFromAddress
+        //    )
+        //{
+        //    NpgsqlParameter[] arParams = new NpgsqlParameter[12];
 
-            arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[0].Value = siteId;
+        //    arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
+        //    arParams[0].Value = siteId;
 
-            arParams[1] = new NpgsqlParameter("allowpasswordretrieval", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[1].Value = allowPasswordRetrieval;
+        //    arParams[1] = new NpgsqlParameter("allowpasswordretrieval", NpgsqlTypes.NpgsqlDbType.Boolean);
+        //    arParams[1].Value = allowPasswordRetrieval;
 
-            arParams[2] = new NpgsqlParameter("allowpasswordreset", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[2].Value = allowPasswordReset;
+        //    arParams[2] = new NpgsqlParameter("allowpasswordreset", NpgsqlTypes.NpgsqlDbType.Boolean);
+        //    arParams[2].Value = allowPasswordReset;
 
-            arParams[3] = new NpgsqlParameter("requiresquestionandanswer", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[3].Value = requiresQuestionAndAnswer;
+        //    arParams[3] = new NpgsqlParameter("requiresquestionandanswer", NpgsqlTypes.NpgsqlDbType.Boolean);
+        //    arParams[3].Value = requiresQuestionAndAnswer;
 
-            arParams[4] = new NpgsqlParameter("maxinvalidpasswordattempts", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[4].Value = maxInvalidPasswordAttempts;
+        //    arParams[4] = new NpgsqlParameter("maxinvalidpasswordattempts", NpgsqlTypes.NpgsqlDbType.Integer);
+        //    arParams[4].Value = maxInvalidPasswordAttempts;
 
-            arParams[5] = new NpgsqlParameter("passwordattemptwindowminutes", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[5].Value = passwordAttemptWindowMinutes;
+        //    arParams[5] = new NpgsqlParameter("passwordattemptwindowminutes", NpgsqlTypes.NpgsqlDbType.Integer);
+        //    arParams[5].Value = passwordAttemptWindowMinutes;
 
-            arParams[6] = new NpgsqlParameter("requiresuniqueemail", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[6].Value = requiresUniqueEmail;
+        //    arParams[6] = new NpgsqlParameter("requiresuniqueemail", NpgsqlTypes.NpgsqlDbType.Boolean);
+        //    arParams[6].Value = requiresUniqueEmail;
 
-            arParams[7] = new NpgsqlParameter("passwordformat", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[7].Value = passwordFormat;
+        //    arParams[7] = new NpgsqlParameter("passwordformat", NpgsqlTypes.NpgsqlDbType.Integer);
+        //    arParams[7].Value = passwordFormat;
 
-            arParams[8] = new NpgsqlParameter("minrequiredpasswordlength", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[8].Value = minRequiredPasswordLength;
+        //    arParams[8] = new NpgsqlParameter("minrequiredpasswordlength", NpgsqlTypes.NpgsqlDbType.Integer);
+        //    arParams[8].Value = minRequiredPasswordLength;
 
-            arParams[9] = new NpgsqlParameter("minrequirednonalphanumericcharacters", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[9].Value = minRequiredNonAlphanumericCharacters;
+        //    arParams[9] = new NpgsqlParameter("minrequirednonalphanumericcharacters", NpgsqlTypes.NpgsqlDbType.Integer);
+        //    arParams[9].Value = minRequiredNonAlphanumericCharacters;
 
-            arParams[10] = new NpgsqlParameter("passwordstrengthregularexpression", NpgsqlTypes.NpgsqlDbType.Text);
-            arParams[10].Value = passwordStrengthRegularExpression;
+        //    arParams[10] = new NpgsqlParameter("passwordstrengthregularexpression", NpgsqlTypes.NpgsqlDbType.Text);
+        //    arParams[10].Value = passwordStrengthRegularExpression;
 
-            arParams[11] = new NpgsqlParameter("defaultemailfromaddress", NpgsqlTypes.NpgsqlDbType.Text, 100);
-            arParams[11].Value = defaultEmailFromAddress;
+        //    arParams[11] = new NpgsqlParameter("defaultemailfromaddress", NpgsqlTypes.NpgsqlDbType.Text, 100);
+        //    arParams[11].Value = defaultEmailFromAddress;
 
-            int rowsAffected = Convert.ToInt32(AdoHelper.ExecuteScalar(
-                writeConnectionString,
-                CommandType.StoredProcedure,
-                "mp_sites_updateextendedproperties(:siteid,:allowpasswordretrieval,:allowpasswordreset,:requiresquestionandanswer,:maxinvalidpasswordattempts,:passwordattemptwindowminutes,:requiresuniqueemail,:passwordformat,:minrequiredpasswordlength,:minrequirednonalphanumericcharacters,:passwordstrengthregularexpression,:defaultemailfromaddress)",
-                arParams));
+        //    int rowsAffected = Convert.ToInt32(AdoHelper.ExecuteScalar(
+        //        writeConnectionString,
+        //        CommandType.StoredProcedure,
+        //        "mp_sites_updateextendedproperties(:siteid,:allowpasswordretrieval,:allowpasswordreset,:requiresquestionandanswer,:maxinvalidpasswordattempts,:passwordattemptwindowminutes,:requiresuniqueemail,:passwordformat,:minrequiredpasswordlength,:minrequirednonalphanumericcharacters,:passwordstrengthregularexpression,:defaultemailfromaddress)",
+        //        arParams));
 
-            return (rowsAffected > -1);
+        //    return (rowsAffected > -1);
 
-        }
+        //}
 
 
 
@@ -864,9 +864,7 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             sqlCommand.Append("DELETE FROM mp_sitesettingsex WHERE siteid = :siteid; ");
 
-            sqlCommand.Append("DELETE FROM mp_redirectlist WHERE siteguid IN (SELECT siteguid FROM mp_sites WHERE siteid = :siteid);");
-            sqlCommand.Append("DELETE FROM mp_taskqueue WHERE siteguid IN (SELECT siteguid FROM mp_sites WHERE siteid = :siteid);");
-
+            
             sqlCommand.Append("DELETE FROM mp_sites ");
             sqlCommand.Append("WHERE ");
             sqlCommand.Append("siteid = :siteid ");
@@ -906,11 +904,28 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[0] = new NpgsqlParameter("hostname", NpgsqlTypes.NpgsqlDbType.Text, 50);
             arParams[0].Value = hostName;
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  * ");
+            sqlCommand.Append("FROM	mp_sites ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("siteid = COALESCE( ");
+            sqlCommand.Append("(select siteid from mp_sitehosts where hostname = :hostname limit 1), ");
+            sqlCommand.Append("(select siteid from mp_sites order by siteid limit 1) ");
+            sqlCommand.Append(") ");
+            sqlCommand.Append(";");
+
+            //return await AdoHelper.ExecuteReaderAsync(
+            //    readConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_sites_selectonebyhostv2(:hostname)",
+            //    arParams);
+
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
-                CommandType.StoredProcedure,
-                "mp_sites_selectonebyhostv2(:hostname)",
+                CommandType.Text,
+                sqlCommand.ToString(),
                 arParams);
+
         }
 
         public DbDataReader GetSiteNonAsync(string hostName)
@@ -920,10 +935,26 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[0] = new NpgsqlParameter("hostname", NpgsqlTypes.NpgsqlDbType.Text, 50);
             arParams[0].Value = hostName;
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  * ");
+            sqlCommand.Append("FROM	mp_sites ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("siteid = COALESCE( ");
+            sqlCommand.Append("(select siteid from mp_sitehosts where hostname = :hostname limit 1), ");
+            sqlCommand.Append("(select siteid from mp_sites order by siteid limit 1) ");
+            sqlCommand.Append(") ");
+            sqlCommand.Append(";");
+
+            //return AdoHelper.ExecuteReader(
+            //    readConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_sites_selectonebyhostv2(:hostname)",
+            //    arParams);
+
             return AdoHelper.ExecuteReader(
                 readConnectionString,
-                CommandType.StoredProcedure,
-                "mp_sites_selectonebyhostv2(:hostname)",
+                CommandType.Text,
+                sqlCommand.ToString(),
                 arParams);
         }
 
@@ -935,10 +966,23 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
             arParams[0].Value = siteId;
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  * ");
+            sqlCommand.Append("FROM	mp_sites ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("siteid = :siteid ");
+            sqlCommand.Append(";");
+
+            //return await AdoHelper.ExecuteReaderAsync(
+            //    readConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_sites_selectonev2(:siteid)",
+            //    arParams);
+
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
-                CommandType.StoredProcedure,
-                "mp_sites_selectonev2(:siteid)",
+                CommandType.Text,
+                sqlCommand.ToString(),
                 arParams);
         }
 
@@ -949,10 +993,23 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
             arParams[0].Value = siteId;
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  * ");
+            sqlCommand.Append("FROM	mp_sites ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("siteid = :siteid ");
+            sqlCommand.Append(";");
+
+            //return AdoHelper.ExecuteReader(
+            //    readConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_sites_selectonev2(:siteid)",
+            //    arParams);
+
             return AdoHelper.ExecuteReader(
                 readConnectionString,
-                CommandType.StoredProcedure,
-                "mp_sites_selectonev2(:siteid)",
+                CommandType.Text,
+                sqlCommand.ToString(),
                 arParams);
         }
 
@@ -963,10 +1020,23 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[0] = new NpgsqlParameter("siteguid", NpgsqlTypes.NpgsqlDbType.Varchar, 36);
             arParams[0].Value = siteGuid.ToString();
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  * ");
+            sqlCommand.Append("FROM	mp_sites ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("siteguid = :siteguid ");
+            sqlCommand.Append(";");
+
+            //return await AdoHelper.ExecuteReaderAsync(
+            //    readConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_sites_selectonebyguidv2(:siteguid)",
+            //    arParams);
+
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
-                CommandType.StoredProcedure,
-                "mp_sites_selectonebyguidv2(:siteguid)",
+                CommandType.Text,
+                sqlCommand.ToString(),
                 arParams);
         }
 
@@ -977,10 +1047,23 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[0] = new NpgsqlParameter("siteguid", NpgsqlTypes.NpgsqlDbType.Varchar, 36);
             arParams[0].Value = siteGuid.ToString();
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  * ");
+            sqlCommand.Append("FROM	mp_sites ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("siteguid = :siteguid ");
+            sqlCommand.Append(";");
+
+            //return AdoHelper.ExecuteReader(
+            //    readConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_sites_selectonebyguidv2(:siteguid)",
+            //    arParams);
+
             return AdoHelper.ExecuteReader(
                 readConnectionString,
-                CommandType.StoredProcedure,
-                "mp_sites_selectonebyguidv2(:siteguid)",
+                CommandType.Text,
+                sqlCommand.ToString(),
                 arParams);
         }
 
@@ -1115,10 +1198,23 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
             arParams[0].Value = siteId;
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  * ");
+            sqlCommand.Append("FROM	mp_sitehosts ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("siteid = :siteid ");
+            sqlCommand.Append(";");
+
+            //return await AdoHelper.ExecuteReaderAsync(
+            //    readConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_sitehosts_select(:siteid)",
+            //    arParams);
+
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
-                CommandType.StoredProcedure,
-                "mp_sitehosts_select(:siteid)",
+                CommandType.Text,
+                sqlCommand.ToString(),
                 arParams);
         }
 
@@ -1135,10 +1231,30 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[2] = new NpgsqlParameter("siteguid", NpgsqlTypes.NpgsqlDbType.Char, 36);
             arParams[2].Value = siteGuid.ToString();
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("INSERT INTO mp_sitehosts (");
+            sqlCommand.Append("siteid, ");
+            sqlCommand.Append("hostname, ");
+            sqlCommand.Append("siteguid ");
+            sqlCommand.Append(")");
+
+            sqlCommand.Append(" VALUES (");
+            sqlCommand.Append(":siteid, ");
+            sqlCommand.Append(":hostname, ");
+            sqlCommand.Append(":siteguid ");
+            sqlCommand.Append(")");
+            sqlCommand.Append(";");
+
+            //int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
+            //    writeConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_sitehosts_insert(:siteid,:hostname,:siteguid)",
+            //    arParams);
+
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
-                CommandType.StoredProcedure,
-                "mp_sitehosts_insert(:siteid,:hostname,:siteguid)",
+                CommandType.Text,
+                sqlCommand.ToString(),
                 arParams);
 
             return rowsAffected > 0;
@@ -1151,10 +1267,22 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[0] = new NpgsqlParameter("hostid", NpgsqlTypes.NpgsqlDbType.Integer);
             arParams[0].Value = hostId;
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("DELETE FROM mp_sitehosts ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("hostid = :hostid ");
+            sqlCommand.Append(";");
+
+            //int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
+            //    writeConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_sitehosts_delete(:hostid)",
+            //    arParams);
+
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
-                CommandType.StoredProcedure,
-                "mp_sitehosts_delete(:hostid)",
+                CommandType.Text,
+                sqlCommand.ToString(),
                 arParams);
 
             return rowsAffected > 0;

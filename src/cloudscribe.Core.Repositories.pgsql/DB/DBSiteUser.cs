@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-06-13
+// Last Modified:			2015-11-02
 // 
 
 using cloudscribe.DbHelpers.pgsql;
@@ -215,10 +215,24 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
             arParams[0].Value = siteId;
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  Count(*) ");
+            sqlCommand.Append("FROM	mp_users ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("siteid = :siteid ");
+            sqlCommand.Append(";");
+
+            //int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
+            //    readConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_users_count(:siteid)", 
+            //    arParams));
+
             int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
                 readConnectionString,
-                CommandType.StoredProcedure,
-                "mp_users_count(:siteid)", arParams));
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams));
 
             return count;
 
@@ -234,10 +248,26 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[1] = new NpgsqlParameter("usernamebeginswith", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
             arParams[1].Value = userNameBeginsWith + "%";
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  Count(*) ");
+            sqlCommand.Append("FROM	mp_users ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("siteid = :siteid ");
+            sqlCommand.Append("AND ");
+            sqlCommand.Append("name like :usernamebeginswith ");
+            sqlCommand.Append(";");
+
+            //object result = await AdoHelper.ExecuteScalarAsync(
+            //    readConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_users_countbyfirstletter(:siteid,:usernamebeginswith)", 
+            //    arParams);
+
             object result = await AdoHelper.ExecuteScalarAsync(
                 readConnectionString,
-                CommandType.StoredProcedure,
-                "mp_users_countbyfirstletter(:siteid,:usernamebeginswith)", arParams);
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams);
 
             int count = Convert.ToInt32(result);
 
@@ -262,10 +292,28 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[2] = new NpgsqlParameter("enddate", NpgsqlTypes.NpgsqlDbType.Timestamp);
             arParams[2].Value = endDate;
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  Count(*) ");
+            sqlCommand.Append("FROM	mp_users ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("siteid = :siteid ");
+            sqlCommand.Append("AND ");
+            sqlCommand.Append("datecreated >= :begindate ");
+            sqlCommand.Append("AND ");
+            sqlCommand.Append("datecreated < :enddate ");
+            sqlCommand.Append(";");
+
+            //int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
+            //    readConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_users_countbyregistrationdaterange(:siteid,:begindate,:enddate)", 
+            //    arParams));
+
             int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
                 readConnectionString,
-                CommandType.StoredProcedure,
-                "mp_users_countbyregistrationdaterange(:siteid,:begindate,:enddate)", arParams));
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams));
 
             return count;
 
@@ -282,10 +330,26 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[1] = new NpgsqlParameter("sincetime", NpgsqlTypes.NpgsqlDbType.Timestamp);
             arParams[1].Value = sinceTime;
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  Count(*) ");
+            sqlCommand.Append("FROM	mp_users ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("siteid = :siteid ");
+            sqlCommand.Append("AND ");
+            sqlCommand.Append("lastactivitydate > :sincetime ");
+            sqlCommand.Append(";");
+
+            //int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
+            //    readConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_users_countonlinesince(:siteid,:sincetime)", 
+            //    arParams));
+
             int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
                 readConnectionString,
-                CommandType.StoredProcedure,
-                "mp_users_countonlinesince(:siteid,:sincetime)", arParams));
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams));
 
             return count;
 
@@ -301,10 +365,25 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[1] = new NpgsqlParameter("sincetime", NpgsqlTypes.NpgsqlDbType.Timestamp);
             arParams[1].Value = sinceTime;
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  * ");
+            sqlCommand.Append("FROM	mp_users ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("siteid = :siteid ");
+            sqlCommand.Append("AND ");
+            sqlCommand.Append("lastactivitydate > :sincetime ");
+            sqlCommand.Append(";");
+
+            //return AdoHelper.ExecuteReader(
+            //    readConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_users_getusersonlinesince(:siteid,:sincetime)",
+            //    arParams);
+
             return AdoHelper.ExecuteReader(
                 readConnectionString,
-                CommandType.StoredProcedure,
-                "mp_users_getusersonlinesince(:siteid,:sincetime)",
+                CommandType.Text,
+                sqlCommand.ToString(),
                 arParams);
 
         }
@@ -319,10 +398,26 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[1] = new NpgsqlParameter("sincetime", NpgsqlTypes.NpgsqlDbType.Timestamp);
             arParams[1].Value = sinceTime;
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  * ");
+            sqlCommand.Append("FROM	mp_users ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("siteid = :siteid ");
+            sqlCommand.Append("AND ");
+            sqlCommand.Append("lastactivitydate > :sincetime ");
+            sqlCommand.Append("LIMIT 50");
+            sqlCommand.Append(";");
+
+            //return AdoHelper.ExecuteReader(
+            //    readConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_users_gettopusersonlinesince(:siteid,:sincetime)",
+            //    arParams);
+
             return AdoHelper.ExecuteReader(
                 readConnectionString,
-                CommandType.StoredProcedure,
-                "mp_users_gettopusersonlinesince(:siteid,:sincetime)",
+                CommandType.Text,
+                sqlCommand.ToString(),
                 arParams);
 
 
@@ -336,10 +431,24 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
             arParams[0].Value = siteId;
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  cast(max(userid) as int4) ");
+            sqlCommand.Append("FROM	mp_users ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("siteid = :siteid ");
+            sqlCommand.Append(";");
+
+            //object result = await AdoHelper.ExecuteScalarAsync(
+            //    readConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_users_getnewestid(:siteid)", 
+            //    arParams);
+
             object result = await AdoHelper.ExecuteScalarAsync(
                 readConnectionString,
-                CommandType.StoredProcedure,
-                "mp_users_getnewestid(:siteid)", arParams);
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams);
 
             int count = Convert.ToInt32(result);
 
@@ -1267,45 +1376,45 @@ namespace cloudscribe.Core.Repositories.pgsql
 
         }
 
-        public bool UpdatePasswordAndSalt(
-            int userId,
-            int pwdFormat,
-            string password,
-            string passwordSalt)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("UPDATE mp_users ");
-            sqlCommand.Append("SET    ");
+        //public bool UpdatePasswordAndSalt(
+        //    int userId,
+        //    int pwdFormat,
+        //    string password,
+        //    string passwordSalt)
+        //{
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("UPDATE mp_users ");
+        //    sqlCommand.Append("SET    ");
 
-            sqlCommand.Append("pwd = :password,    ");
-            sqlCommand.Append("passwordsalt = :passwordsalt,    ");
-            sqlCommand.Append("pwdformat = :pwdformat    ");
+        //    sqlCommand.Append("pwd = :password,    ");
+        //    sqlCommand.Append("passwordsalt = :passwordsalt,    ");
+        //    sqlCommand.Append("pwdformat = :pwdformat    ");
 
-            sqlCommand.Append("WHERE userid = :userid ;");
+        //    sqlCommand.Append("WHERE userid = :userid ;");
 
-            NpgsqlParameter[] arParams = new NpgsqlParameter[4];
+        //    NpgsqlParameter[] arParams = new NpgsqlParameter[4];
 
-            arParams[0] = new NpgsqlParameter("userid", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[0].Value = userId;
+        //    arParams[0] = new NpgsqlParameter("userid", NpgsqlTypes.NpgsqlDbType.Integer);
+        //    arParams[0].Value = userId;
 
-            arParams[1] = new NpgsqlParameter("password", NpgsqlTypes.NpgsqlDbType.Text);
-            arParams[1].Value = password;
+        //    arParams[1] = new NpgsqlParameter("password", NpgsqlTypes.NpgsqlDbType.Text);
+        //    arParams[1].Value = password;
 
-            arParams[2] = new NpgsqlParameter("passwordsalt", NpgsqlTypes.NpgsqlDbType.Varchar, 128);
-            arParams[2].Value = passwordSalt;
+        //    arParams[2] = new NpgsqlParameter("passwordsalt", NpgsqlTypes.NpgsqlDbType.Varchar, 128);
+        //    arParams[2].Value = passwordSalt;
 
-            arParams[3] = new NpgsqlParameter("pwdformat", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[3].Value = pwdFormat;
+        //    arParams[3] = new NpgsqlParameter("pwdformat", NpgsqlTypes.NpgsqlDbType.Integer);
+        //    arParams[3].Value = pwdFormat;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
-                writeConnectionString,
-                CommandType.Text,
-                sqlCommand.ToString(),
-                arParams);
+        //    int rowsAffected = AdoHelper.ExecuteNonQuery(
+        //        writeConnectionString,
+        //        CommandType.Text,
+        //        sqlCommand.ToString(),
+        //        arParams);
 
-            return (rowsAffected > -1);
+        //    return (rowsAffected > -1);
 
-        }
+        //}
 
 
         public async Task<bool> DeleteUser(int userId)
@@ -1315,10 +1424,22 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[0] = new NpgsqlParameter("userid", NpgsqlTypes.NpgsqlDbType.Integer);
             arParams[0].Value = userId;
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("DELETE FROM mp_users ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("userid = :userid ");
+            sqlCommand.Append(";");
+
+            //object result = await AdoHelper.ExecuteScalarAsync(
+            //    writeConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_users_delete(:userid)",
+            //    arParams);
+
             object result = await AdoHelper.ExecuteScalarAsync(
                 writeConnectionString,
-                CommandType.StoredProcedure,
-                "mp_users_delete(:userid)",
+                CommandType.Text,
+                sqlCommand.ToString(),
                 arParams);
 
             int rowsAffected = Convert.ToInt32(result);
@@ -1337,10 +1458,23 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[1] = new NpgsqlParameter("lastactivitydate", NpgsqlTypes.NpgsqlDbType.Timestamp);
             arParams[1].Value = lastUpdate;
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("UPDATE mp_users ");
+            sqlCommand.Append("set lastactivitydate = :lastactivitydate ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("userguid = :userguid ");
+            sqlCommand.Append(";");
+
+            //int rowsAffected = Convert.ToInt32(AdoHelper.ExecuteScalar(
+            //    writeConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_users_updatelastactivitytime(:userguid,:lastactivitydate)",
+            //    arParams));
+
             int rowsAffected = Convert.ToInt32(AdoHelper.ExecuteScalar(
                 writeConnectionString,
-                CommandType.StoredProcedure,
-                "mp_users_updatelastactivitytime(:userguid,:lastactivitydate)",
+                CommandType.Text,
+                sqlCommand.ToString(),
                 arParams));
 
             return (rowsAffected > -1);
@@ -1386,10 +1520,22 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[1] = new NpgsqlParameter("lastlockoutdate", NpgsqlTypes.NpgsqlDbType.Timestamp);
             arParams[1].Value = lockoutTime;
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("UPDATE mp_users ");
+            sqlCommand.Append("SET islockedout = true,  ");
+            sqlCommand.Append("lastlockoutdate = :lastlockoutdate ");
+            sqlCommand.Append("WHERE userguid = :userguid  ;");
+
+            //object result = await AdoHelper.ExecuteScalarAsync(
+            //    writeConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_users_accountlockout(:userguid,:lastlockoutdate)",
+            //    arParams);
+
             object result = await AdoHelper.ExecuteScalarAsync(
                 writeConnectionString,
-                CommandType.StoredProcedure,
-                "mp_users_accountlockout(:userguid,:lastlockoutdate)",
+                CommandType.Text,
+                sqlCommand.ToString(),
                 arParams);
 
             int rowsAffected = Convert.ToInt32(result);
@@ -1408,10 +1554,22 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[1] = new NpgsqlParameter("lastpasswordchangeddate", NpgsqlTypes.NpgsqlDbType.Timestamp);
             arParams[1].Value = lastPasswordChangeTime;
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("UPDATE mp_users ");
+            sqlCommand.Append("SET ");
+            sqlCommand.Append("lastpasswordchangeddate = :lastpasswordchangeddate ");
+            sqlCommand.Append("WHERE userguid = :userguid  ;");
+
+            //int rowsAffected = Convert.ToInt32(AdoHelper.ExecuteScalar(
+            //    writeConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_users_updatelastpasswordchangedate(:userguid,:lastpasswordchangeddate)",
+            //    arParams));
+
             int rowsAffected = Convert.ToInt32(AdoHelper.ExecuteScalar(
                 writeConnectionString,
-                CommandType.StoredProcedure,
-                "mp_users_updatelastpasswordchangedate(:userguid,:lastpasswordchangeddate)",
+                CommandType.Text,
+                sqlCommand.ToString(),
                 arParams));
 
             return (rowsAffected > -1);
@@ -1431,12 +1589,22 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[1] = new NpgsqlParameter("windowstarttime", NpgsqlTypes.NpgsqlDbType.Timestamp);
             arParams[1].Value = windowStartTime;
 
-            int rowsAffected = -1;
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("UPDATE mp_users ");
+            sqlCommand.Append("SET ");
+            sqlCommand.Append("failedpwdattemptwindowstart = :windowstarttime ");
+            sqlCommand.Append("WHERE userguid = :userguid  ;");
 
-            rowsAffected = Convert.ToInt32(AdoHelper.ExecuteScalar(
+            //int rowsAffected = Convert.ToInt32(AdoHelper.ExecuteScalar(
+            //    writeConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_users_setfailedpasswordattemptstartwindow(:userguid,:windowstarttime)",
+            //    arParams));
+
+            int rowsAffected = Convert.ToInt32(AdoHelper.ExecuteScalar(
                 writeConnectionString,
-                CommandType.StoredProcedure,
-                "mp_users_setfailedpasswordattemptstartwindow(:userguid,:windowstarttime)",
+                CommandType.Text,
+                sqlCommand.ToString(),
                 arParams));
 
             return (rowsAffected > -1);
@@ -1456,10 +1624,22 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[1] = new NpgsqlParameter("attemptcount", NpgsqlTypes.NpgsqlDbType.Integer);
             arParams[1].Value = attemptCount;
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("UPDATE mp_users ");
+            sqlCommand.Append("SET ");
+            sqlCommand.Append("failedpasswordattemptcount = :attemptcount ");
+            sqlCommand.Append("WHERE userguid = :userguid  ;");
+
+            //object result = await AdoHelper.ExecuteScalarAsync(
+            //    writeConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_users_setfailedpasswordattemptcount(:userguid,:attemptcount)",
+            //    arParams);
+
             object result = await AdoHelper.ExecuteScalarAsync(
                 writeConnectionString,
-                CommandType.StoredProcedure,
-                "mp_users_setfailedpasswordattemptcount(:userguid,:attemptcount)",
+                CommandType.Text,
+                sqlCommand.ToString(),
                 arParams);
 
             int rowsAffected = Convert.ToInt32(result);
@@ -1480,12 +1660,22 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[1] = new NpgsqlParameter("windowstarttime", NpgsqlTypes.NpgsqlDbType.Timestamp);
             arParams[1].Value = windowStartTime;
 
-            int rowsAffected = -1;
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("UPDATE mp_users ");
+            sqlCommand.Append("SET ");
+            sqlCommand.Append("failedpwdanswerwindowstart = :windowstarttime ");
+            sqlCommand.Append("WHERE userguid = :userguid  ;");
 
-            rowsAffected = Convert.ToInt32(AdoHelper.ExecuteScalar(
+            //int rowsAffected = Convert.ToInt32(AdoHelper.ExecuteScalar(
+            //    writeConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_users_setfailedpasswordanswerattemptstartwindow(:userguid,:windowstarttime)",
+            //    arParams));
+
+            int rowsAffected = Convert.ToInt32(AdoHelper.ExecuteScalar(
                 writeConnectionString,
-                CommandType.StoredProcedure,
-                "mp_users_setfailedpasswordanswerattemptstartwindow(:userguid,:windowstarttime)",
+                CommandType.Text,
+                sqlCommand.ToString(),
                 arParams));
 
             return (rowsAffected > -1);
@@ -1504,10 +1694,22 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[1] = new NpgsqlParameter("attemptcount", NpgsqlTypes.NpgsqlDbType.Integer);
             arParams[1].Value = attemptCount;
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("UPDATE mp_users ");
+            sqlCommand.Append("SET ");
+            sqlCommand.Append("failedpwdanswerattemptcount = :attemptcount ");
+            sqlCommand.Append("WHERE userguid = :userguid  ;");
+
+            //int rowsAffected = Convert.ToInt32(AdoHelper.ExecuteScalar(
+            //    writeConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_users_setfailedpasswordanswerattemptcount(:userguid,:attemptcount)",
+            //    arParams));
+
             int rowsAffected = Convert.ToInt32(AdoHelper.ExecuteScalar(
                 writeConnectionString,
-                CommandType.StoredProcedure,
-                "mp_users_setfailedpasswordanswerattemptcount(:userguid,:attemptcount)",
+                CommandType.Text,
+                sqlCommand.ToString(),
                 arParams));
 
             return (rowsAffected > -1);
@@ -1524,10 +1726,23 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[1] = new NpgsqlParameter("registerconfirmguid", NpgsqlTypes.NpgsqlDbType.Varchar, 36);
             arParams[1].Value = registrationConfirmationGuid.ToString();
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("UPDATE mp_users ");
+            sqlCommand.Append("SET ");
+            sqlCommand.Append("islockedout = true, ");
+            sqlCommand.Append("registerconfirmguid = :registerconfirmguid ");
+            sqlCommand.Append("WHERE userguid = :userguid  ;");
+
+            //int rowsAffected = Convert.ToInt32(AdoHelper.ExecuteScalar(
+            //    writeConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_users_setregistrationguid(:userguid,:registerconfirmguid)",
+            //    arParams));
+
             int rowsAffected = Convert.ToInt32(AdoHelper.ExecuteScalar(
                 writeConnectionString,
-                CommandType.StoredProcedure,
-                "mp_users_setregistrationguid(:userguid,:registerconfirmguid)",
+                CommandType.Text,
+                sqlCommand.ToString(),
                 arParams));
 
             return (rowsAffected > -1);
@@ -1544,10 +1759,23 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[1] = new NpgsqlParameter("registerconfirmguid", NpgsqlTypes.NpgsqlDbType.Varchar, 36);
             arParams[1].Value = registrationConfirmationGuid.ToString();
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("UPDATE mp_users ");
+            sqlCommand.Append("SET ");
+            sqlCommand.Append("islockedout = false, ");
+            sqlCommand.Append("registerconfirmguid = :emptyguid ");
+            sqlCommand.Append("WHERE registerconfirmguid = :registerconfirmguid  ;");
+
+            //object result = await AdoHelper.ExecuteScalarAsync(
+            //    writeConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_users_confirmregistration(:emptyguid,:registerconfirmguid)",
+            //    arParams);
+
             object result = await AdoHelper.ExecuteScalarAsync(
                 writeConnectionString,
-                CommandType.StoredProcedure,
-                "mp_users_confirmregistration(:emptyguid,:registerconfirmguid)",
+                CommandType.Text,
+                sqlCommand.ToString(),
                 arParams);
 
             int rowsAffected = Convert.ToInt32(result);
@@ -1585,58 +1813,58 @@ namespace cloudscribe.Core.Repositories.pgsql
 
 
 
-        public bool UpdatePasswordQuestionAndAnswer(
-            Guid userGuid,
-            String passwordQuestion,
-            String passwordAnswer)
-        {
-            NpgsqlParameter[] arParams = new NpgsqlParameter[3];
+        //public bool UpdatePasswordQuestionAndAnswer(
+        //    Guid userGuid,
+        //    String passwordQuestion,
+        //    String passwordAnswer)
+        //{
+        //    NpgsqlParameter[] arParams = new NpgsqlParameter[3];
 
-            arParams[0] = new NpgsqlParameter("userguid", NpgsqlTypes.NpgsqlDbType.Varchar, 36);
-            arParams[0].Value = userGuid.ToString();
+        //    arParams[0] = new NpgsqlParameter("userguid", NpgsqlTypes.NpgsqlDbType.Varchar, 36);
+        //    arParams[0].Value = userGuid.ToString();
 
-            arParams[1] = new NpgsqlParameter("passwordquestion", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[1].Value = passwordQuestion;
+        //    arParams[1] = new NpgsqlParameter("passwordquestion", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
+        //    arParams[1].Value = passwordQuestion;
 
-            arParams[2] = new NpgsqlParameter("passwordanswer", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[2].Value = passwordAnswer;
+        //    arParams[2] = new NpgsqlParameter("passwordanswer", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
+        //    arParams[2].Value = passwordAnswer;
 
-            int rowsAffected = Convert.ToInt32(AdoHelper.ExecuteScalar(
-                writeConnectionString,
-                CommandType.StoredProcedure,
-                "mp_users_updatepasswordquestionandanswer(:userguid,:passwordquestion,:passwordanswer)",
-                arParams));
+        //    int rowsAffected = Convert.ToInt32(AdoHelper.ExecuteScalar(
+        //        writeConnectionString,
+        //        CommandType.StoredProcedure,
+        //        "mp_users_updatepasswordquestionandanswer(:userguid,:passwordquestion,:passwordanswer)",
+        //        arParams));
 
-            return (rowsAffected > -1);
+        //    return (rowsAffected > -1);
 
-        }
+        //}
 
-        public async Task<bool> UpdateTotalRevenue(Guid userGuid)
-        {
-            NpgsqlParameter[] arParams = new NpgsqlParameter[1];
+        //public async Task<bool> UpdateTotalRevenue(Guid userGuid)
+        //{
+        //    NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
-            arParams[0] = new NpgsqlParameter("userguid", NpgsqlTypes.NpgsqlDbType.Varchar, 36);
-            arParams[0].Value = userGuid.ToString();
+        //    arParams[0] = new NpgsqlParameter("userguid", NpgsqlTypes.NpgsqlDbType.Varchar, 36);
+        //    arParams[0].Value = userGuid.ToString();
 
-            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
-                writeConnectionString,
-                CommandType.StoredProcedure,
-                "mp_users_updatetotalarevenuebyuser(:userguid)",
-                arParams);
+        //    int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
+        //        writeConnectionString,
+        //        CommandType.StoredProcedure,
+        //        "mp_users_updatetotalarevenuebyuser(:userguid)",
+        //        arParams);
 
-            return rowsAffected > 0;
-        }
+        //    return rowsAffected > 0;
+        //}
 
-        public async Task<bool> UpdateTotalRevenue()
-        {
-            int rowsAfffected = await AdoHelper.ExecuteNonQueryAsync(
-                writeConnectionString,
-                CommandType.StoredProcedure,
-                "mp_users_updatetotalarevenue()",
-                null);
+        //public async Task<bool> UpdateTotalRevenue()
+        //{
+        //    int rowsAfffected = await AdoHelper.ExecuteNonQueryAsync(
+        //        writeConnectionString,
+        //        CommandType.StoredProcedure,
+        //        "mp_users_updatetotalarevenue()",
+        //        null);
 
-            return rowsAfffected > 0;
-        }
+        //    return rowsAfffected > 0;
+        //}
 
 
         public async Task<bool> FlagAsDeleted(int userId)
@@ -1646,10 +1874,23 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[0] = new NpgsqlParameter("userid", NpgsqlTypes.NpgsqlDbType.Integer);
             arParams[0].Value = userId;
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("UPDATE mp_users ");
+            sqlCommand.Append("SET ");
+            sqlCommand.Append("isdeleted = true ");
+            
+            sqlCommand.Append("WHERE userid = :userid  ;");
+
+            //object result = await AdoHelper.ExecuteScalarAsync(
+            //    writeConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_users_flagasdeleted(:userid)",
+            //    arParams);
+
             object result = await AdoHelper.ExecuteScalarAsync(
                 writeConnectionString,
-                CommandType.StoredProcedure,
-                "mp_users_flagasdeleted(:userid)",
+                CommandType.Text,
+                sqlCommand.ToString(),
                 arParams);
 
             int rowsAffected = Convert.ToInt32(result);
@@ -1680,39 +1921,39 @@ namespace cloudscribe.Core.Repositories.pgsql
             return (rowsAffected > -1);
         }
 
-        public bool IncrementTotalPosts(int userId)
-        {
-            NpgsqlParameter[] arParams = new NpgsqlParameter[1];
+        //public bool IncrementTotalPosts(int userId)
+        //{
+        //    NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
-            arParams[0] = new NpgsqlParameter("userid", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[0].Value = userId;
+        //    arParams[0] = new NpgsqlParameter("userid", NpgsqlTypes.NpgsqlDbType.Integer);
+        //    arParams[0].Value = userId;
 
-            int rowsAffected = Convert.ToInt32(AdoHelper.ExecuteScalar(
-                writeConnectionString,
-                CommandType.StoredProcedure,
-                "mp_users_incrementtotalposts(:userid)",
-                arParams));
+        //    int rowsAffected = Convert.ToInt32(AdoHelper.ExecuteScalar(
+        //        writeConnectionString,
+        //        CommandType.StoredProcedure,
+        //        "mp_users_incrementtotalposts(:userid)",
+        //        arParams));
 
-            return (rowsAffected > -1);
+        //    return (rowsAffected > -1);
 
-        }
+        //}
 
-        public bool DecrementTotalPosts(int userId)
-        {
-            NpgsqlParameter[] arParams = new NpgsqlParameter[1];
+        //public bool DecrementTotalPosts(int userId)
+        //{
+        //    NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
-            arParams[0] = new NpgsqlParameter("userid", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[0].Value = userId;
+        //    arParams[0] = new NpgsqlParameter("userid", NpgsqlTypes.NpgsqlDbType.Integer);
+        //    arParams[0].Value = userId;
 
-            int rowsAffected = Convert.ToInt32(AdoHelper.ExecuteScalar(
-                writeConnectionString,
-                CommandType.StoredProcedure,
-                "mp_users_decrementtotalposts(:userid)",
-                arParams));
+        //    int rowsAffected = Convert.ToInt32(AdoHelper.ExecuteScalar(
+        //        writeConnectionString,
+        //        CommandType.StoredProcedure,
+        //        "mp_users_decrementtotalposts(:userid)",
+        //        arParams));
 
-            return (rowsAffected > -1);
+        //    return (rowsAffected > -1);
 
-        }
+        //}
 
         public async Task<DbDataReader> GetRolesByUser(int siteId, int userId)
         {
@@ -1917,10 +2158,23 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[0] = new NpgsqlParameter("userid", NpgsqlTypes.NpgsqlDbType.Integer);
             arParams[0].Value = userId;
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  * ");
+            sqlCommand.Append("FROM	mp_users ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("userid = :userid ");
+            sqlCommand.Append(";");
+
+            //return await AdoHelper.ExecuteReaderAsync(
+            //    readConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_users_selectone(:userid)",
+            //    arParams);
+
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
-                CommandType.StoredProcedure,
-                "mp_users_selectone(:userid)",
+                CommandType.Text,
+                sqlCommand.ToString(),
                 arParams);
 
         }
@@ -1932,82 +2186,95 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[0] = new NpgsqlParameter("userguid", NpgsqlTypes.NpgsqlDbType.Varchar, 36);
             arParams[0].Value = userGuid.ToString();
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  * ");
+            sqlCommand.Append("FROM	mp_users ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("userguid = :userguid ");
+            sqlCommand.Append(";");
+
+            //return await AdoHelper.ExecuteReaderAsync(
+            //    readConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_users_selectonebyguid(:userguid)",
+            //    arParams);
+
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
-                CommandType.StoredProcedure,
-                "mp_users_selectonebyguid(:userguid)",
+                CommandType.Text,
+                sqlCommand.ToString(),
                 arParams);
 
         }
 
-        public Guid GetUserGuidFromOpenId(
-            int siteId,
-            string openIdUri)
-        {
-            NpgsqlParameter[] arParams = new NpgsqlParameter[2];
+        //public Guid GetUserGuidFromOpenId(
+        //    int siteId,
+        //    string openIdUri)
+        //{
+        //    NpgsqlParameter[] arParams = new NpgsqlParameter[2];
 
-            arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[0].Value = siteId;
+        //    arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
+        //    arParams[0].Value = siteId;
 
-            arParams[1] = new NpgsqlParameter("openiduri", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[1].Value = openIdUri;
+        //    arParams[1] = new NpgsqlParameter("openiduri", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
+        //    arParams[1].Value = openIdUri;
 
-            Guid userGuid = Guid.Empty;
+        //    Guid userGuid = Guid.Empty;
 
 
-            using (DbDataReader reader = AdoHelper.ExecuteReader(
-                readConnectionString,
-                CommandType.StoredProcedure,
-                "mp_users_selectguidbyopeniduri(:siteid,:openiduri)",
-                arParams))
-            {
-                if (reader.Read())
-                {
-                    userGuid = new Guid(reader["UserGuid"].ToString());
-                }
-            }
+        //    using (DbDataReader reader = AdoHelper.ExecuteReader(
+        //        readConnectionString,
+        //        CommandType.StoredProcedure,
+        //        "mp_users_selectguidbyopeniduri(:siteid,:openiduri)",
+        //        arParams))
+        //    {
+        //        if (reader.Read())
+        //        {
+        //            userGuid = new Guid(reader["UserGuid"].ToString());
+        //        }
+        //    }
 
-            return userGuid;
+        //    return userGuid;
 
-        }
+        //}
 
-        public Guid GetUserGuidFromWindowsLiveId(
-            int siteId,
-            string windowsLiveId)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("SELECT  userguid ");
-            sqlCommand.Append("FROM	mp_users ");
-            sqlCommand.Append("WHERE ");
-            sqlCommand.Append(" siteid = :siteid  ");
-            sqlCommand.Append("AND windowsliveid = :windowsliveid ;  ");
-            sqlCommand.Append(";");
+        //public Guid GetUserGuidFromWindowsLiveId(
+        //    int siteId,
+        //    string windowsLiveId)
+        //{
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("SELECT  userguid ");
+        //    sqlCommand.Append("FROM	mp_users ");
+        //    sqlCommand.Append("WHERE ");
+        //    sqlCommand.Append(" siteid = :siteid  ");
+        //    sqlCommand.Append("AND windowsliveid = :windowsliveid ;  ");
+        //    sqlCommand.Append(";");
 
-            NpgsqlParameter[] arParams = new NpgsqlParameter[2];
+        //    NpgsqlParameter[] arParams = new NpgsqlParameter[2];
 
-            arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[0].Value = siteId;
+        //    arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
+        //    arParams[0].Value = siteId;
 
-            arParams[1] = new NpgsqlParameter("windowsliveid", NpgsqlTypes.NpgsqlDbType.Varchar, 36);
-            arParams[1].Value = windowsLiveId;
+        //    arParams[1] = new NpgsqlParameter("windowsliveid", NpgsqlTypes.NpgsqlDbType.Varchar, 36);
+        //    arParams[1].Value = windowsLiveId;
 
-            Guid userGuid = Guid.Empty;
+        //    Guid userGuid = Guid.Empty;
 
-            using (DbDataReader reader = AdoHelper.ExecuteReader(
-                readConnectionString,
-                CommandType.Text,
-                sqlCommand.ToString(),
-                arParams))
-            {
-                if (reader.Read())
-                {
-                    userGuid = new Guid(reader["UserGuid"].ToString());
-                }
-            }
+        //    using (DbDataReader reader = AdoHelper.ExecuteReader(
+        //        readConnectionString,
+        //        CommandType.Text,
+        //        sqlCommand.ToString(),
+        //        arParams))
+        //    {
+        //        if (reader.Read())
+        //        {
+        //            userGuid = new Guid(reader["UserGuid"].ToString());
+        //        }
+        //    }
 
-            return userGuid;
+        //    return userGuid;
 
-        }
+        //}
 
         public string LoginByEmail(int siteId, string email, string password)
         {
@@ -2139,10 +2406,26 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[1] = new NpgsqlParameter("propertyname", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
             arParams[1].Value = propertyName;
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  * ");
+            sqlCommand.Append("FROM	mp_userproperties ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("userguid = :userguid ");
+            sqlCommand.Append("AND ");
+            sqlCommand.Append("propertyname = :propertyname ");
+            sqlCommand.Append("LIMIT 1 ");
+            sqlCommand.Append(";");
+
+            //return AdoHelper.ExecuteReader(
+            //    readConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_userproperties_select_one(:userguid,:propertyname",
+            //    arParams);
+
             return AdoHelper.ExecuteReader(
                 readConnectionString,
-                CommandType.StoredProcedure,
-                "mp_userproperties_select_one(:userguid,:propertyname",
+                CommandType.Text,
+                sqlCommand.ToString(),
                 arParams);
 
         }
@@ -2158,11 +2441,28 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[1] = new NpgsqlParameter("propertyname", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
             arParams[1].Value = propertyName;
 
-            int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  Count(*) ");
+            sqlCommand.Append("FROM	mp_userproperties ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("userguid = :userguid ");
+            sqlCommand.Append("AND ");
+            sqlCommand.Append("propertyname = :propertyname ");
+            sqlCommand.Append(";");
+
+            //int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
+            //    readConnectionString,
+            //        CommandType.StoredProcedure,
+            //        "mp_userproperties_propertyexists(:userguid,:propertyname)",
+            //        arParams));
+
+            object obj = AdoHelper.ExecuteScalar(
                 readConnectionString,
-                    CommandType.StoredProcedure,
-                    "mp_userproperties_propertyexists(:userguid,:propertyname)",
-                    arParams));
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams);
+
+            int count = Convert.ToInt32(obj);
 
             return (count > 0);
         }
@@ -2199,10 +2499,37 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[6] = new NpgsqlParameter("islazyloaded", NpgsqlTypes.NpgsqlDbType.Boolean);
             arParams[6].Value = isLazyLoaded;
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("INSERT INTO mp_userproperties (");
+            sqlCommand.Append("propertyid, ");
+            sqlCommand.Append("userguid, ");
+            sqlCommand.Append("propertyname, ");
+            sqlCommand.Append("propertyvaluestring, ");
+            sqlCommand.Append("propertyvaluebinary, ");
+            sqlCommand.Append("lastupdateddate, ");
+            sqlCommand.Append("islazyloaded )");
+
+            sqlCommand.Append(" VALUES (");
+            sqlCommand.Append(":propertyid, ");
+            sqlCommand.Append(":userguid, ");
+            sqlCommand.Append(":propertyname, ");
+            sqlCommand.Append(":propertyvaluestring, ");
+            sqlCommand.Append(":propertyvaluebinary, ");
+            sqlCommand.Append(":lastupdateddate, ");
+            sqlCommand.Append(":islazyloaded ");
+            sqlCommand.Append(")");
+            sqlCommand.Append(";");
+
+            //AdoHelper.ExecuteNonQuery(
+            //    writeConnectionString,
+            //        CommandType.StoredProcedure,
+            //        "mp_userproperties_insert(:propertyid,:userguid,:propertyname,:propertyvaluestring,:propertyvaluebinary,:lastupdateddate,:islazyloaded)",
+            //        arParams);
+
             AdoHelper.ExecuteNonQuery(
                 writeConnectionString,
-                    CommandType.StoredProcedure,
-                    "mp_userproperties_insert(:propertyid,:userguid,:propertyname,:propertyvaluestring,:propertyvaluebinary,:lastupdateddate,:islazyloaded)",
+                    CommandType.Text,
+                    sqlCommand.ToString(),
                     arParams);
 
 
@@ -2236,11 +2563,32 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[5] = new NpgsqlParameter("islazyloaded", NpgsqlTypes.NpgsqlDbType.Boolean);
             arParams[5].Value = isLazyLoaded;
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("UPDATE mp_userproperties ");
+            sqlCommand.Append("SET ");
+            sqlCommand.Append("propertyvaluestring = :propertyvaluestring, ");
+            sqlCommand.Append("propertyvaluebinary = :propertyvaluebinary, ");
+            sqlCommand.Append("lastupdateddate = :lastupdateddate, ");
+            sqlCommand.Append("islazyloaded = :islazyloaded ");
+
+            sqlCommand.Append("WHERE  ");
+            sqlCommand.Append("userguid = :userguid ");
+            sqlCommand.Append("AND ");
+            sqlCommand.Append("propertyname = :propertyname ");
+            sqlCommand.Append(";");
+
+            //AdoHelper.ExecuteNonQuery(
+            //    writeConnectionString,
+            //        CommandType.StoredProcedure,
+            //        "mp_userproperties_update(:userguid,:propertyname,:propertyvaluestring,:propertyvaluebinary,:lastupdateddate,:islazyloaded)",
+            //        arParams);
+
             AdoHelper.ExecuteNonQuery(
                 writeConnectionString,
-                    CommandType.StoredProcedure,
-                    "mp_userproperties_update(:userguid,:propertyname,:propertyvaluestring,:propertyvaluebinary,:lastupdateddate,:islazyloaded)",
+                    CommandType.Text,
+                    sqlCommand.ToString(),
                     arParams);
+
 
         }
 
