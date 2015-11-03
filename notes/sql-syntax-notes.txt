@@ -22,6 +22,7 @@ GO
 
 ALTER TABLE mp_Sites DROP Logo;
 ALTER TABLE mp_UserLogins ADD ProviderDisplayName varchar(100);
+ALTER TABLE mp_Sites ADD CaptchaOnRegistration integer default 0;
 
 http://www.firebirdfaq.org/faq363/
 you have to create a new table to rename a column
