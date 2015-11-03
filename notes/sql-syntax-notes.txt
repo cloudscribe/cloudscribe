@@ -61,6 +61,8 @@ CREATE INDEX IX_mp_UserClaimsSite ON mp_UserClaims(`SiteId`);
 
 ## Sqlite syntax
 
+https://sqlcetoolbox.codeplex.com/
+
 SQLite supports a limited subset of ALTER TABLE. The ALTER TABLE command in SQLite allows the user to rename a table or to add a new column to an existing table. It is not possible to rename a colum, remove a column, or add or remove constraints from a table.
 
 BEGIN TRANSACTION;
@@ -83,6 +85,8 @@ CREATE INDEX IX_mp_UserClaimsSite ON mp_UserClaims(`SiteId`);
 
 
 ## SqlServerCompact
+
+https://sqlcetoolbox.codeplex.com/
 
 ALTER TABLE mp_UserLogins ADD SiteId int NOT NULL default -1
 GO
