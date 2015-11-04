@@ -16,13 +16,23 @@
     "cloudscribe.Core.Models": "1.0.0-*",
     "cloudscribe.DbHelpers.pgsql": "1.0.0-*",
     "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta8",
-    "Npgsql": "3.0.0-beta0001"
+    "npgsql": "3.1.0-*"
   },
 
   "frameworks": {
     "dnx451": {
       "frameworkAssemblies": {
         "System.Data": ""
+      }
+    },
+    "dnxcore50": {
+      "dependencies": {
+        "System.Collections": "4.0.11-beta-23409",
+        "System.Linq": "4.0.1-beta-23409",
+        "System.Runtime": "4.0.21-beta-23409",
+        "System.Data.SqlClient": "4.0.0-beta-23409",
+        "System.Data.Common": "4.0.1-beta-23409",
+        "Microsoft.CSharp": "4.0.1-beta-23409"
       }
     }
 
