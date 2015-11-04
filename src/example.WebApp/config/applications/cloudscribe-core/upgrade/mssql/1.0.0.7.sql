@@ -753,7 +753,7 @@ ALTER Procedure [dbo].[mp_Users_Insert]
 /*
 Author:			Joe Audette
 Created:		2004-09-30
-Last Modified:	2015-11-01
+Last Modified:	2015-11-04
 
 */
 
@@ -777,7 +777,16 @@ Last Modified:	2015-11-01
 @PhoneNumberConfirmed bit,
 @TwoFactorEnabled bit,
 @LockoutEndDateUtc datetime,
-@AccountApproved bit
+@AccountApproved bit,
+@IsLockedOut bit,
+@DisplayInMemberList bit,
+@WebSiteURL nvarchar(100),
+@Country nvarchar(100),
+@State nvarchar(100),
+@AvatarUrl nvarchar(250),
+@Signature nvarchar(max),
+@AuthorBio nvarchar(max),
+@Comment nvarchar(max)
 
 
 AS
@@ -805,7 +814,20 @@ INSERT INTO mp_Users
 			PhoneNumberConfirmed,
 			TwoFactorEnabled,
 			LockoutEndDateUtc,
-			AccountApproved
+			AccountApproved,
+			IsLockedOut,
+			DisplayInMemberList,
+			WebSiteURL,
+			Country,
+			State,
+			AvatarUrl,
+			Signature,
+			IsDeleted,
+			FailedPasswordAttemptCount,
+			FailedPwdAnswerAttemptCount,
+			AuthorBio,
+			[Comment]
+		
 	
 
 )
@@ -834,7 +856,19 @@ VALUES
 			@PhoneNumberConfirmed,
 			@TwoFactorEnabled,
 			@LockoutEndDateUtc,
-			@AccountApproved
+			@AccountApproved,
+			@IsLockedOut,
+			@DisplayInMemberList,
+			@WebSiteURL,
+			@Country,
+			@State,
+			@AvatarUrl,
+			@Signature,
+			0,
+			0,
+			0,
+			@AuthorBio,
+			@Comment
 )
 
 SELECT		@@Identity As UserID
@@ -846,7 +880,7 @@ ALTER PROCEDURE [dbo].[mp_Users_Update]
 /*
 Author:			Joe Audette
 Created:		2004-09-30
-Last Modified:	2015-11-01
+Last Modified:	2015-11-05
 
 */
 
@@ -882,7 +916,8 @@ Last Modified:	2015-11-01
 @PhoneNumber nvarchar(50),
 @PhoneNumberConfirmed bit,
 @TwoFactorEnabled bit,
-@LockoutEndDateUtc datetime
+@LockoutEndDateUtc datetime,
+@IsLockedOut bit
 
 
 AS
@@ -894,7 +929,6 @@ SET			[Name] = @Name,
     		MustChangePwd = @MustChangePwd,
 			Gender = @Gender,
 			AccountApproved = @AccountApproved,
-			ApprovedForForums = @ApprovedForForums,
 			Trusted = @Trusted,
 			DisplayInMemberList = @DisplayInMemberList,
 			WebSiteURL = @WebSiteURL,
@@ -919,6 +953,7 @@ SET			[Name] = @Name,
 			PhoneNumber = @PhoneNumber,
 			PhoneNumberConfirmed = @PhoneNumberConfirmed,
 			TwoFactorEnabled = @TwoFactorEnabled,
+			IsLockedOut = @IsLockedOut,
 			LockoutEndDateUtc = @LockoutEndDateUtc
 			
 WHERE		UserID = @UserID
