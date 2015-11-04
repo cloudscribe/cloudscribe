@@ -182,25 +182,25 @@ GO
 ALTER TABLE [dbo].mp_Sites ADD RegistrationPreamble nvarchar(max) NULL 
 GO
 
-ALTER TABLE [dbo].mp_Sites ADD SMTPServer nvarchar(200) NULL 
+ALTER TABLE [dbo].mp_Sites ADD SmtpServer nvarchar(200) NULL 
 GO
 
-ALTER TABLE [dbo].mp_Sites ADD SMTPPort int NOT NULL default 25
+ALTER TABLE [dbo].mp_Sites ADD SmtpPort int NOT NULL default 25
 GO
 
-ALTER TABLE [dbo].mp_Sites ADD SMTPUser nvarchar(500) NULL 
+ALTER TABLE [dbo].mp_Sites ADD SmtpUser nvarchar(500) NULL 
 GO
 
-ALTER TABLE [dbo].mp_Sites ADD SMTPPassword nvarchar(500) NULL 
+ALTER TABLE [dbo].mp_Sites ADD SmtpPassword nvarchar(500) NULL 
 GO
 
-ALTER TABLE [dbo].mp_Sites ADD SMTPPreferredEncoding nvarchar(20) NULL 
+ALTER TABLE [dbo].mp_Sites ADD SmtpPreferredEncoding nvarchar(20) NULL 
 GO
 
-ALTER TABLE [dbo].mp_Sites ADD SMTPRequiresAuth bit NOT NULL default 0
+ALTER TABLE [dbo].mp_Sites ADD SmtpRequiresAuth bit NOT NULL default 0
 GO
 
-ALTER TABLE [dbo].mp_Sites ADD SMTPUseSsl bit NOT NULL default 0
+ALTER TABLE [dbo].mp_Sites ADD SmtpUseSsl bit NOT NULL default 0
 GO
 
 ALTER PROCEDURE [dbo].[mp_Sites_Insert]
@@ -279,13 +279,13 @@ Last Modified: 		2015-10-31
 @LoginInfoBottom nvarchar(max),
 @RegistrationAgreement nvarchar(max),
 @RegistrationPreamble nvarchar(max),
-@SMTPServer nvarchar(200),
-@SMTPPort int,
-@SMTPUser nvarchar(500),
-@SMTPPassword nvarchar(500),
-@SMTPPreferredEncoding nvarchar(20),
-@SMTPRequiresAuth bit,
-@SMTPUseSsl bit
+@SmtpServer nvarchar(200),
+@SmtpPort int,
+@SmtpUser nvarchar(500),
+@SmtpPassword nvarchar(500),
+@SmtpPreferredEncoding nvarchar(20),
+@SmtpRequiresAuth bit,
+@SmtpUseSsl bit
 
 AS
 INSERT INTO 	[dbo].[mp_Sites] 
@@ -357,13 +357,13 @@ INSERT INTO 	[dbo].[mp_Sites]
 				LoginInfoBottom,
 				RegistrationAgreement,
 				RegistrationPreamble,
-				SMTPServer,
-				SMTPPort,
-				SMTPUser,
-				SMTPPassword,
-				SMTPPreferredEncoding,
-				SMTPRequiresAuth,
-				SMTPUseSsl
+				SmtpServer,
+				SmtpPort,
+				SmtpUser,
+				SmtpPassword,
+				SmtpPreferredEncoding,
+				SmtpRequiresAuth,
+				SmtpUseSsl
 ) 
 
 VALUES 
@@ -437,13 +437,13 @@ VALUES
 				@LoginInfoBottom,
 				@RegistrationAgreement,
 				@RegistrationPreamble,
-				@SMTPServer,
-				@SMTPPort,
-				@SMTPUser,
-				@SMTPPassword,
-				@SMTPPreferredEncoding,
-				@SMTPRequiresAuth,
-				@SMTPUseSsl
+				@SmtpServer,
+				@SmtpPort,
+				@SmtpUser,
+				@SmtpPassword,
+				@SmtpPreferredEncoding,
+				@SmtpRequiresAuth,
+				@SmtpUseSsl
 				
 )
 SELECT @@IDENTITY
@@ -526,13 +526,13 @@ Last Modified:	2009-10-16
 @LoginInfoBottom nvarchar(max),
 @RegistrationAgreement nvarchar(max),
 @RegistrationPreamble nvarchar(max),
-@SMTPServer nvarchar(200),
-@SMTPPort int,
-@SMTPUser nvarchar(500),
-@SMTPPassword nvarchar(500),
-@SMTPPreferredEncoding nvarchar(20),
-@SMTPRequiresAuth bit,
-@SMTPUseSsl bit
+@SmtpServer nvarchar(200),
+@SmtpPort int,
+@SmtpUser nvarchar(500),
+@SmtpPassword nvarchar(500),
+@SmtpPreferredEncoding nvarchar(20),
+@SmtpRequiresAuth bit,
+@SmtpUseSsl bit
 	
 AS
 UPDATE	mp_Sites
@@ -603,13 +603,13 @@ SET
 	LoginInfoBottom = @LoginInfoBottom,
 	RegistrationAgreement = @RegistrationAgreement,
 	RegistrationPreamble = @RegistrationPreamble,
-	SMTPServer = @SMTPServer,
-	SMTPPort = @SMTPPort,
-	SMTPUser = @SMTPUser,
-	SMTPPassword = @SMTPPassword,
-	SMTPPreferredEncoding = @SMTPPreferredEncoding,
-	SMTPRequiresAuth = @SMTPRequiresAuth,
-	SMTPUseSsl = @SMTPUseSsl
+	SmtpServer = @SmtpServer,
+	SmtpPort = @SmtpPort,
+	SmtpUser = @SmtpUser,
+	SmtpPassword = @SmtpPassword,
+	SmtpPreferredEncoding = @SmtpPreferredEncoding,
+	SmtpRequiresAuth = @SmtpRequiresAuth,
+	SmtpUseSsl = @SmtpUseSsl
 
 WHERE
     	SiteID = @SiteID

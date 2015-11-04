@@ -177,25 +177,25 @@ GO
 ALTER TABLE mp_Sites ADD RegistrationPreamble ntext NULL 
 GO
 
-ALTER TABLE mp_Sites ADD SMTPServer nvarchar(200) NULL 
+ALTER TABLE mp_Sites ADD SmtpServer nvarchar(200) NULL 
 GO
 
-ALTER TABLE mp_Sites ADD SMTPPort int NOT NULL default 25
+ALTER TABLE mp_Sites ADD SmtpPort int NOT NULL default 25
 GO
 
-ALTER TABLE mp_Sites ADD SMTPUser nvarchar(500) NULL 
+ALTER TABLE mp_Sites ADD SmtpUser nvarchar(500) NULL 
 GO
 
-ALTER TABLE mp_Sites ADD SMTPPassword nvarchar(500) NULL 
+ALTER TABLE mp_Sites ADD SmtpPassword nvarchar(500) NULL 
 GO
 
-ALTER TABLE mp_Sites ADD SMTPPreferredEncoding nvarchar(20) NULL 
+ALTER TABLE mp_Sites ADD SmtpPreferredEncoding nvarchar(20) NULL 
 GO
 
-ALTER TABLE mp_Sites ADD SMTPRequiresAuth bit NOT NULL default 0
+ALTER TABLE mp_Sites ADD SmtpRequiresAuth bit NOT NULL default 0
 GO
 
-ALTER TABLE mp_Sites ADD SMTPUseSsl bit NOT NULL default 0
+ALTER TABLE mp_Sites ADD SmtpUseSsl bit NOT NULL default 0
 GO
 
 

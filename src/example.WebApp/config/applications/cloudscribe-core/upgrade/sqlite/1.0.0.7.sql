@@ -40,13 +40,13 @@ ALTER TABLE `mp_Sites` ADD COLUMN `LoginInfoTop` text;
 ALTER TABLE `mp_Sites` ADD COLUMN `LoginInfoBottom` text;
 ALTER TABLE `mp_Sites` ADD COLUMN `RegistrationAgreement` text;
 ALTER TABLE `mp_Sites` ADD COLUMN `RegistrationPreamble` text;
-ALTER TABLE `mp_Sites` ADD COLUMN `SMTPServer` varchar(200);
-ALTER TABLE `mp_Sites` ADD COLUMN `SMTPPort` INTEGER NOT NULL default 25;
-ALTER TABLE `mp_Sites` ADD COLUMN `SMTPUser` varchar(500);
-ALTER TABLE `mp_Sites` ADD COLUMN `SMTPPassword` varchar(500);
-ALTER TABLE `mp_Sites` ADD COLUMN `SMTPPreferredEncoding` varchar(20);
-ALTER TABLE `mp_Sites` ADD COLUMN `SMTPRequiresAuth` INTEGER NOT NULL default 0;
-ALTER TABLE `mp_Sites` ADD COLUMN `SMTPUseSsl` INTEGER NOT NULL default 0;
+ALTER TABLE `mp_Sites` ADD COLUMN `SmtpServer` varchar(200);
+ALTER TABLE `mp_Sites` ADD COLUMN `SmtpPort` INTEGER NOT NULL default 25;
+ALTER TABLE `mp_Sites` ADD COLUMN `SmtpUser` varchar(500);
+ALTER TABLE `mp_Sites` ADD COLUMN `SmtpPassword` varchar(500);
+ALTER TABLE `mp_Sites` ADD COLUMN `SmtpPreferredEncoding` varchar(20);
+ALTER TABLE `mp_Sites` ADD COLUMN `SmtpRequiresAuth` INTEGER NOT NULL default 0;
+ALTER TABLE `mp_Sites` ADD COLUMN `SmtpUseSsl` INTEGER NOT NULL default 0;
 
 ALTER TABLE `mp_Users` ADD COLUMN `ProfileApproved` INTEGER NOT NULL default 1;
 

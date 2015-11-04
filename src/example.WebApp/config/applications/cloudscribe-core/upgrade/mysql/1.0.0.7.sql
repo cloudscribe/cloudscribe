@@ -62,13 +62,13 @@ ALTER TABLE mp_Sites ADD COLUMN `LoginInfoBottom` text;
 ALTER TABLE mp_Sites ADD COLUMN `RegistrationAgreement` text;
 ALTER TABLE mp_Sites ADD COLUMN `RegistrationPreamble` text;
 
-ALTER TABLE mp_Sites ADD COLUMN `SMTPServer` varchar(250);
-ALTER TABLE mp_Sites ADD COLUMN `SMTPPort` INT NOT NULL DEFAULT 25;
-ALTER TABLE mp_Sites ADD COLUMN `SMTPUser` varchar(500);
-ALTER TABLE mp_Sites ADD COLUMN `SMTPPassword` varchar(500);
-ALTER TABLE mp_Sites ADD COLUMN `SMTPPreferredEncoding` varchar(20);
-ALTER TABLE mp_Sites ADD COLUMN `SMTPRequiresAuth` INT NOT NULL DEFAULT 0;
-ALTER TABLE mp_Sites ADD COLUMN `SMTPUseSsl` INT NOT NULL DEFAULT 0;
+ALTER TABLE mp_Sites ADD COLUMN `SmtpServer` varchar(250);
+ALTER TABLE mp_Sites ADD COLUMN `SmtpPort` INT NOT NULL DEFAULT 25;
+ALTER TABLE mp_Sites ADD COLUMN `SmtpUser` varchar(500);
+ALTER TABLE mp_Sites ADD COLUMN `SmtpPassword` varchar(500);
+ALTER TABLE mp_Sites ADD COLUMN `SmtpPreferredEncoding` varchar(20);
+ALTER TABLE mp_Sites ADD COLUMN `SmtpRequiresAuth` INT NOT NULL DEFAULT 0;
+ALTER TABLE mp_Sites ADD COLUMN `SmtpUseSsl` INT NOT NULL DEFAULT 0;
 
 
 ALTER TABLE mp_Users DROP COLUMN ProfileApproved;

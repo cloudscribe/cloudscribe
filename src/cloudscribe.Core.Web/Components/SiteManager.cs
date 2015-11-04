@@ -175,7 +175,7 @@ namespace cloudscribe.Core.Web.Components
             newSite.MaxInvalidPasswordAttempts = 10;
             newSite.PasswordAttemptWindowMinutes = 5;
             //newSite.RequiresUniqueEmail = true;
-            newSite.MinRequiredNonAlphanumericCharacters = 0;
+            newSite.MinReqNonAlphaChars = 0;
             newSite.MinRequiredPasswordLength = 7;
             newSite.PasswordStrengthRegularExpression = String.Empty;
             //newSite.DefaultEmailFromAddress = GetMessageTemplate(templateFolder, "InitialEmailFromContent.config");

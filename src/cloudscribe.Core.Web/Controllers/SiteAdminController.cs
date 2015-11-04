@@ -679,8 +679,8 @@ namespace cloudscribe.Core.Web.Controllers
             model.SiteId = selectedSite.SiteId;
             model.RecaptchaPrivateKey = selectedSite.RecaptchaPrivateKey;
             model.RecaptchaPublicKey = selectedSite.RecaptchaPublicKey;
-            model.RequireCaptchaOnLogin = selectedSite.RequireCaptchaOnLogin;
-            model.RequireCaptchaOnRegistration = selectedSite.RequireCaptchaOnRegistration;
+            model.RequireCaptchaOnLogin = selectedSite.CaptchaOnLogin;
+            model.RequireCaptchaOnRegistration = selectedSite.CaptchaOnRegistration;
 
             return View("CaptchaSettings", model);
             
@@ -730,8 +730,8 @@ namespace cloudscribe.Core.Web.Controllers
 
             selectedSite.RecaptchaPublicKey = model.RecaptchaPublicKey;
             selectedSite.RecaptchaPrivateKey = model.RecaptchaPrivateKey;
-            selectedSite.RequireCaptchaOnRegistration = model.RequireCaptchaOnRegistration;
-            selectedSite.RequireCaptchaOnLogin = model.RequireCaptchaOnLogin;
+            selectedSite.CaptchaOnRegistration = model.RequireCaptchaOnRegistration;
+            selectedSite.CaptchaOnLogin = model.RequireCaptchaOnLogin;
 
             bool result = await siteManager.Save(selectedSite);
 
