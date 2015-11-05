@@ -3,6 +3,8 @@
 ALTER TABLE `mp_Sites` ADD COLUMN `AllowDbFallbackWithLdap` INTEGER NOT NULL default 0;
 ALTER TABLE `mp_Sites` ADD COLUMN `EmailLdapDbFallback` INTEGER NOT NULL default 0;
 
+
+ALTER TABLE `mp_Sites` ADD COLUMN `RequireApprovalBeforeLogin` INTEGER NOT NULL default 0;
 ALTER TABLE `mp_Sites` ADD COLUMN `AllowPersistentLogin` INTEGER NOT NULL default 1;
 ALTER TABLE `mp_Sites` ADD COLUMN `CaptchaOnLogin` INTEGER NOT NULL default 0;
 ALTER TABLE `mp_Sites` ADD COLUMN `CaptchaOnRegistration` INTEGER NOT NULL default 0;

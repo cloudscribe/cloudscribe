@@ -59,7 +59,7 @@ namespace cloudscribe.Core.Models
         //string PasswordRegexWarning { get; set; }
        // string PasswordStrengthRegularExpression { get; set; }
         //bool RequireEnterEmailTwiceOnRegistration { get; set; }
-        bool RequirePasswordChangeOnResetRecover { get; set; }
+        //bool RequirePasswordChangeOnResetRecover { get; set; }
         bool RequiresQuestionAndAnswer { get; set; }
         bool ReallyDeleteUsers { get; set; }
         bool AllowNewRegistration { get; set; }
@@ -137,8 +137,8 @@ namespace cloudscribe.Core.Models
         //string Logo { get; set; }
         string Layout { get; set; }
         //string MobileSkin { get; set; }
-        string SiteMapSkin { get; set; }
-        Guid SkinVersion { get; set; }
+        //string SiteMapSkin { get; set; }
+        //Guid SkinVersion { get; set; }
         //bool AllowUserSkins { get; set; }
 
 

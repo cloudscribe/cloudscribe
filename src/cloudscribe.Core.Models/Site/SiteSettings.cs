@@ -302,7 +302,7 @@ namespace cloudscribe.Core.Models
         //public string DefaultRootPageEditRoles { get; set; } = string.Empty;
         //public string DefaultRootPageCreateChildPageRoles { get; set; } = string.Empty;
         //public Guid SkinVersion { get; set; } = Guid.Empty;
-        public string AvatarSystem { get; set; } = "gravatar";
+        //public string AvatarSystem { get; set; } = "gravatar";
         //public string CommentProvider { get; set; } = "intensedebate";
         
         //public string IntenseDebateAccountId { get; set; } = string.Empty;
@@ -321,7 +321,7 @@ namespace cloudscribe.Core.Models
         //public string NewsletterEditor { get; set; } = "TinyMCEProvider";
         //public Guid DefaultCountryGuid { get; set; } = new Guid("a71d6727-61e7-4282-9fcb-526d1e7bc24f"); //US
         //public Guid DefaultStateGuid { get; set; } = Guid.Empty;
-        public Guid CurrencyGuid { get; set; } = new Guid("ff2dde1b-e7d7-4c3a-9ab4-6474345e0f31"); //USD
+        //public Guid CurrencyGuid { get; set; } = new Guid("ff2dde1b-e7d7-4c3a-9ab4-6474345e0f31"); //USD
         
         //public bool ForceContentVersioning { get; set; } = false;
         //public bool EnableContentWorkflow { get; set; } = false;

@@ -76,6 +76,8 @@ GO
 ALTER TABLE [dbo].mp_Sites DROP COLUMN GmapApiKey
 GO
 
+ALTER TABLE [dbo].mp_Sites ADD RequireApprovalBeforeLogin bit NOT NULL default 0
+GO
 
 ALTER TABLE [dbo].mp_Sites ADD AllowDbFallbackWithLdap bit NOT NULL default 0
 GO
@@ -285,7 +287,8 @@ Last Modified: 		2015-10-31
 @SmtpPassword nvarchar(500),
 @SmtpPreferredEncoding nvarchar(20),
 @SmtpRequiresAuth bit,
-@SmtpUseSsl bit
+@SmtpUseSsl bit,
+@RequireApprovalBeforeLogin bit
 
 AS
 INSERT INTO 	[dbo].[mp_Sites] 
@@ -363,7 +366,8 @@ INSERT INTO 	[dbo].[mp_Sites]
 				SmtpPassword,
 				SmtpPreferredEncoding,
 				SmtpRequiresAuth,
-				SmtpUseSsl
+				SmtpUseSsl,
+				RequireApprovalBeforeLogin
 ) 
 
 VALUES 
@@ -443,7 +447,8 @@ VALUES
 				@SmtpPassword,
 				@SmtpPreferredEncoding,
 				@SmtpRequiresAuth,
-				@SmtpUseSsl
+				@SmtpUseSsl,
+				@RequireApprovalBeforeLogin
 				
 )
 SELECT @@IDENTITY
@@ -470,12 +475,12 @@ Last Modified:	2009-10-16
 @AutoCreateLdapUserOnFirstLogin	bit,
 @LdapServer				nvarchar(255),
 @LdapPort				int,
+@LdapDomain				nvarchar(255),
 @LdapRootDN				nvarchar(255),
 @LdapUserDNKey			nvarchar(10),
 @AllowUserFullNameChange		bit,
 @UseEmailForLogin			bit,
 @ReallyDeleteUsers			bit,
-@LdapDomain				nvarchar(255),
 @RecaptchaPrivateKey				nvarchar(255),
 @RecaptchaPublicKey				nvarchar(255),
 @ApiKeyExtra1 				nvarchar(255),
@@ -532,7 +537,8 @@ Last Modified:	2009-10-16
 @SmtpPassword nvarchar(500),
 @SmtpPreferredEncoding nvarchar(20),
 @SmtpRequiresAuth bit,
-@SmtpUseSsl bit
+@SmtpUseSsl bit,
+@RequireApprovalBeforeLogin bit
 	
 AS
 UPDATE	mp_Sites
@@ -609,7 +615,8 @@ SET
 	SmtpPassword = @SmtpPassword,
 	SmtpPreferredEncoding = @SmtpPreferredEncoding,
 	SmtpRequiresAuth = @SmtpRequiresAuth,
-	SmtpUseSsl = @SmtpUseSsl
+	SmtpUseSsl = @SmtpUseSsl,
+	RequireApprovalBeforeLogin = @RequireApprovalBeforeLogin
 
 WHERE
     	SiteID = @SiteID

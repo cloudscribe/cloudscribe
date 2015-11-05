@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-06-09
+// Last Modified:			2015-11-05
 // 
 
 
@@ -35,19 +35,19 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         public async Task<int> Create(
             Guid siteGuid,
-            String siteName,
-            String skin,
+            string siteName,
+            string skin,
             bool allowNewRegistration, 
             bool useSecureRegistration,
             bool useSslOnAllPages,
             bool isServerAdminSite,
             bool useLdapAuth,
             bool autoCreateLdapUserOnFirstLogin,
-            String ldapServer,
+            string ldapServer,
             int ldapPort,
-            String ldapDomain,
-            String ldapRootDN,
-            String ldapUserDNKey,
+            string ldapDomain,
+            string ldapRootDN,
+            string ldapUserDNKey,
             bool allowUserFullNameChange,
             bool useEmailForLogin,
             bool reallyDeleteUsers,
@@ -107,7 +107,8 @@ namespace cloudscribe.Core.Repositories.MSSQL
             string smtpPassword,
             string smtpPreferredEncoding,
             bool smtpRequiresAuth,
-            bool smtpUseSsl
+            bool smtpUseSsl,
+            bool requireApprovalBeforeLogin
             )
         {
 
@@ -115,7 +116,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 logFactory,
                 writeConnectionString, 
                 "mp_Sites_Insert", 
-                73);
+                74);
 
             sph.DefineSqlParameter("@SiteName", SqlDbType.NVarChar, 128, ParameterDirection.Input, siteName);
             sph.DefineSqlParameter("@Skin", SqlDbType.NVarChar, 100, ParameterDirection.Input, skin); 
@@ -190,6 +191,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@SmtpPreferredEncoding", SqlDbType.NVarChar, 20, ParameterDirection.Input, smtpPreferredEncoding);
             sph.DefineSqlParameter("@SmtpRequiresAuth", SqlDbType.Bit, ParameterDirection.Input, smtpRequiresAuth);
             sph.DefineSqlParameter("@SmtpUseSsl", SqlDbType.Bit, ParameterDirection.Input, smtpUseSsl);
+            sph.DefineSqlParameter("@RequireApprovalBeforeLogin", SqlDbType.Bit, ParameterDirection.Input, requireApprovalBeforeLogin);
 
 
             object result = await sph.ExecuteScalarAsync();
@@ -271,8 +273,8 @@ namespace cloudscribe.Core.Repositories.MSSQL
             string smtpPassword,
             string smtpPreferredEncoding,
             bool smtpRequiresAuth,
-            bool smtpUseSsl
-
+            bool smtpUseSsl,
+            bool requireApprovalBeforeLogin
             )
         {
 
@@ -280,7 +282,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 logFactory,
                 writeConnectionString, 
                 "mp_Sites_Update", 
-                73);
+                74);
 
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
             sph.DefineSqlParameter("@SiteName", SqlDbType.NVarChar, 128, ParameterDirection.Input, siteName);
@@ -355,6 +357,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@SmtpPreferredEncoding", SqlDbType.NVarChar, 20, ParameterDirection.Input, smtpPreferredEncoding);
             sph.DefineSqlParameter("@SmtpRequiresAuth", SqlDbType.Bit, ParameterDirection.Input, smtpRequiresAuth);
             sph.DefineSqlParameter("@SmtpUseSsl", SqlDbType.Bit, ParameterDirection.Input, smtpUseSsl);
+            sph.DefineSqlParameter("@RequireApprovalBeforeLogin", SqlDbType.Bit, ParameterDirection.Input, requireApprovalBeforeLogin);
 
             int rowsAffected = await sph.ExecuteNonQueryAsync();
             return (rowsAffected > -1);

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2015-10-16
+// Last Modified:			2015-11-05
 // 
 
 using cloudscribe.Core.Models;
@@ -132,7 +132,8 @@ namespace cloudscribe.Core.Repositories.MSSQL
                     site.SmtpPassword,
                     site.SmtpPreferredEncoding,
                     site.SmtpRequiresAuth,
-                    site.SmtpUseSsl
+                    site.SmtpUseSsl,
+                    site.RequireApprovalBeforeLogin
                     );
 
                 result = site.SiteId > -1;
@@ -160,7 +161,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
                     site.ReallyDeleteUsers,
                     site.RecaptchaPrivateKey,
                     site.RecaptchaPublicKey,
-                     site.ApiKeyExtra1,
+                    site.ApiKeyExtra1,
                     site.ApiKeyExtra2,
                     site.ApiKeyExtra3,
                     site.ApiKeyExtra4,
@@ -214,7 +215,8 @@ namespace cloudscribe.Core.Repositories.MSSQL
                     site.SmtpPassword,
                     site.SmtpPreferredEncoding,
                     site.SmtpRequiresAuth,
-                    site.SmtpUseSsl
+                    site.SmtpUseSsl,
+                    site.RequireApprovalBeforeLogin
                     );
 
             }
@@ -224,14 +226,14 @@ namespace cloudscribe.Core.Repositories.MSSQL
             // settings below stored as key value pairs in mp_SiteSettingsEx
 
 
-            bool nextResult = await dbSiteSettingsEx.EnsureSettings();
+            //bool nextResult = await dbSiteSettingsEx.EnsureSettings();
 
-            List<ExpandoSetting> expandoProperties = GetExpandoProperties(passedInSiteId); //-1 on new sites to get the default values
+            //List<ExpandoSetting> expandoProperties = GetExpandoProperties(passedInSiteId); //-1 on new sites to get the default values
 
             // update a local data table of expando properties if the value changed and mark the row dirty
-            site.SetExpandoSettings(expandoProperties);
+            //site.SetExpandoSettings(expandoProperties);
             // finally update the database only with properties in the table marked as dirty
-            SaveExpandoProperties(site.SiteId, site.SiteGuid, expandoProperties);
+            //SaveExpandoProperties(site.SiteId, site.SiteGuid, expandoProperties);
 
             return result;
         }
@@ -251,8 +253,8 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
             if (site.SiteGuid == Guid.Empty) { return null; }//not found 
 
-            List<ExpandoSetting> expandoProperties = GetExpandoProperties(site.SiteId);
-            site.LoadExpandoSettings(expandoProperties);
+            //List<ExpandoSetting> expandoProperties = GetExpandoProperties(site.SiteId);
+            //site.LoadExpandoSettings(expandoProperties);
 
             return site;
 
@@ -272,8 +274,8 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
             if (site.SiteGuid == Guid.Empty) { return null; }//not found 
 
-            List<ExpandoSetting> expandoProperties = GetExpandoProperties(site.SiteId);
-            site.LoadExpandoSettings(expandoProperties);
+            //List<ExpandoSetting> expandoProperties = GetExpandoProperties(site.SiteId);
+            //site.LoadExpandoSettings(expandoProperties);
 
             return site;
 
@@ -294,8 +296,8 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
             if (site.SiteGuid == Guid.Empty) { return null; }//not found 
 
-            List<ExpandoSetting> expandoProperties = GetExpandoProperties(site.SiteId);
-            site.LoadExpandoSettings(expandoProperties);
+            //List<ExpandoSetting> expandoProperties = GetExpandoProperties(site.SiteId);
+            //site.LoadExpandoSettings(expandoProperties);
 
             return site;
 
@@ -317,8 +319,8 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
             if (site.SiteGuid == Guid.Empty) { return null; }//not found 
 
-            List<ExpandoSetting> expandoProperties = GetExpandoProperties(site.SiteId);
-            site.LoadExpandoSettings(expandoProperties);
+            //List<ExpandoSetting> expandoProperties = GetExpandoProperties(site.SiteId);
+            //site.LoadExpandoSettings(expandoProperties);
 
             return site;
 
@@ -340,8 +342,8 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
             if (site.SiteGuid == Guid.Empty) { return null; }//not found 
 
-            List<ExpandoSetting> expandoProperties = GetExpandoProperties(site.SiteId);
-            site.LoadExpandoSettings(expandoProperties);
+            //List<ExpandoSetting> expandoProperties = GetExpandoProperties(site.SiteId);
+            //site.LoadExpandoSettings(expandoProperties);
 
             return site;
 
@@ -362,8 +364,8 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
             if (site.SiteGuid == Guid.Empty) { return null; }//not found 
 
-            List<ExpandoSetting> expandoProperties = GetExpandoProperties(site.SiteId);
-            site.LoadExpandoSettings(expandoProperties);
+            //List<ExpandoSetting> expandoProperties = GetExpandoProperties(site.SiteId);
+            //site.LoadExpandoSettings(expandoProperties);
 
             return site;
 

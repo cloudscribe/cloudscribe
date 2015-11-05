@@ -24,6 +24,7 @@ ALTER TABLE mp_sites DROP COLUMN allowopenidauth;
 ALTER TABLE mp_sites DROP COLUMN wordpressapikey;
 ALTER TABLE mp_sites DROP COLUMN gmapapikey;
 
+ALTER TABLE mp_sites ADD COLUMN requireapprovalbeforelogin bool not null default false;
 ALTER TABLE mp_sites ADD COLUMN allowdbfallbackwithldap bool not null default false;
 ALTER TABLE mp_sites ADD COLUMN emailldapdbfallback bool not null default false;
 ALTER TABLE mp_sites ADD COLUMN allowpersistentlogin bool not null default true;

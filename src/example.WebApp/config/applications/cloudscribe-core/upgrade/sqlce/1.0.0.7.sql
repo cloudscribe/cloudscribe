@@ -71,6 +71,9 @@ GO
 ALTER TABLE mp_Sites DROP COLUMN GmapApiKey
 GO
 
+ALTER TABLE mp_Sites ADD RequireApprovalBeforeLogin bit NOT NULL default 0
+GO
+
 
 ALTER TABLE mp_Sites ADD AllowDbFallbackWithLdap bit NOT NULL default 0
 GO
