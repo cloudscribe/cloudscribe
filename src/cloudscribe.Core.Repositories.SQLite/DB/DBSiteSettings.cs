@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-11-05
+// Last Modified:			2015-11-06
 // 
 
 using cloudscribe.DbHelpers.Sqlite;
@@ -59,8 +59,58 @@ namespace cloudscribe.Core.Repositories.SQLite
             string apiKeyExtra3,
             string apiKeyExtra4,
             string apiKeyExtra5,
-            bool disableDbAuth
-            
+            bool disableDbAuth,
+
+            bool requiresQuestionAndAnswer,
+            int maxInvalidPasswordAttempts,
+            int passwordAttemptWindowMinutes,
+            int minRequiredPasswordLength,
+            int minReqNonAlphaChars,
+            string defaultEmailFromAddress,
+            bool allowDbFallbackWithLdap,
+            bool emailLdapDbFallback,
+            bool allowPersistentLogin,
+            bool captchaOnLogin,
+            bool captchaOnRegistration,
+            bool siteIsClosed,
+            string siteIsClosedMessage,
+            string privacyPolicy,
+            string timeZoneId,
+            string googleAnalyticsProfileId,
+            string companyName,
+            string companyStreetAddress,
+            string companyStreetAddress2,
+            string companyRegion,
+            string companyLocality,
+            string companyCountry,
+            string companyPostalCode,
+            string companyPublicEmail,
+            string companyPhone,
+            string companyFax,
+            string facebookAppId,
+            string facebookAppSecret,
+            string googleClientId,
+            string googleClientSecret,
+            string twitterConsumerKey,
+            string twitterConsumerSecret,
+            string microsoftClientId,
+            string microsoftClientSecret,
+            string preferredHostName,
+            string siteFolderName,
+            string addThisDotComUsername,
+            string loginInfoTop,
+            string loginInfoBottom,
+            string registrationAgreement,
+            string registrationPreamble,
+            string smtpServer,
+            int smtpPort,
+            string smtpUser,
+            string smtpPassword,
+            string smtpPreferredEncoding,
+            bool smtpRequiresAuth,
+            bool smtpUseSsl,
+            bool requireApprovalBeforeLogin
+
             )
         {
 
@@ -90,6 +140,56 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("ApiKeyExtra4, ");
             sqlCommand.Append("ApiKeyExtra5, ");
             sqlCommand.Append("DisableDbAuth, ");
+
+            sqlCommand.Append("RequiresQuestionAndAnswer, ");
+            sqlCommand.Append("MaxInvalidPasswordAttempts, ");
+            sqlCommand.Append("PasswordAttemptWindowMinutes, ");
+            sqlCommand.Append("MinRequiredPasswordLength, ");
+            sqlCommand.Append("MinReqNonAlphaChars, ");
+            sqlCommand.Append("DefaultEmailFromAddress, ");
+            sqlCommand.Append("AllowDbFallbackWithLdap, ");
+            sqlCommand.Append("EmailLdapDbFallback, ");
+            sqlCommand.Append("AllowPersistentLogin, ");
+            sqlCommand.Append("CaptchaOnLogin, ");
+            sqlCommand.Append("CaptchaOnRegistration, ");
+            sqlCommand.Append("SiteIsClosed, ");
+            sqlCommand.Append("SiteIsClosedMessage, ");
+            sqlCommand.Append("PrivacyPolicy, ");
+            sqlCommand.Append("TimeZoneId, ");
+            sqlCommand.Append("GoogleAnalyticsProfileId, ");
+            sqlCommand.Append("CompanyName, ");
+            sqlCommand.Append("CompanyStreetAddress, ");
+            sqlCommand.Append("CompanyStreetAddress2, ");
+            sqlCommand.Append("CompanyRegion, ");
+            sqlCommand.Append("CompanyLocality, ");
+            sqlCommand.Append("CompanyCountry, ");
+            sqlCommand.Append("CompanyPostalCode, ");
+            sqlCommand.Append("CompanyPublicEmail, ");
+            sqlCommand.Append("CompanyPhone, ");
+            sqlCommand.Append("CompanyFax, ");
+            sqlCommand.Append("FacebookAppId, ");
+            sqlCommand.Append("FacebookAppSecret, ");
+            sqlCommand.Append("GoogleClientId, ");
+            sqlCommand.Append("GoogleClientSecret, ");
+            sqlCommand.Append("TwitterConsumerKey, ");
+            sqlCommand.Append("TwitterConsumerSecret, ");
+            sqlCommand.Append("MicrosoftClientId, ");
+            sqlCommand.Append("MicrosoftClientSecret, ");
+            sqlCommand.Append("PreferredHostName, ");
+            sqlCommand.Append("SiteFolderName, ");
+            sqlCommand.Append("AddThisDotComUsername, ");
+            sqlCommand.Append("LoginInfoTop, ");
+            sqlCommand.Append("LoginInfoBottom, ");
+            sqlCommand.Append("RegistrationAgreement, ");
+            sqlCommand.Append("RegistrationPreamble, ");
+            sqlCommand.Append("SmtpServer, ");
+            sqlCommand.Append("SmtpPort, ");
+            sqlCommand.Append("SmtpUser, ");
+            sqlCommand.Append("SmtpPassword, ");
+            sqlCommand.Append("SmtpPreferredEncoding, ");
+            sqlCommand.Append("SmtpRequiresAuth, ");
+            sqlCommand.Append("SmtpUseSsl, ");
+            sqlCommand.Append("RequireApprovalBeforeLogin, ");
 
             sqlCommand.Append("SiteGuid ");
 
@@ -124,12 +224,62 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append(":ApiKeyExtra5, ");
             sqlCommand.Append(":DisableDbAuth, ");
 
+            sqlCommand.Append(":RequiresQuestionAndAnswer, ");
+            sqlCommand.Append(":MaxInvalidPasswordAttempts, ");
+            sqlCommand.Append(":PasswordAttemptWindowMinutes, ");
+            sqlCommand.Append(":MinRequiredPasswordLength, ");
+            sqlCommand.Append(":MinReqNonAlphaChars, ");
+            sqlCommand.Append(":DefaultEmailFromAddress, ");
+            sqlCommand.Append(":AllowDbFallbackWithLdap, ");
+            sqlCommand.Append(":EmailLdapDbFallback, ");
+            sqlCommand.Append(":AllowPersistentLogin, ");
+            sqlCommand.Append(":CaptchaOnLogin, ");
+            sqlCommand.Append(":CaptchaOnRegistration, ");
+            sqlCommand.Append(":SiteIsClosed, ");
+            sqlCommand.Append(":SiteIsClosedMessage, ");
+            sqlCommand.Append(":PrivacyPolicy, ");
+            sqlCommand.Append(":TimeZoneId, ");
+            sqlCommand.Append(":GoogleAnalyticsProfileId, ");
+            sqlCommand.Append(":CompanyName, ");
+            sqlCommand.Append(":CompanyStreetAddress, ");
+            sqlCommand.Append(":CompanyStreetAddress2, ");
+            sqlCommand.Append(":CompanyRegion, ");
+            sqlCommand.Append(":CompanyLocality, ");
+            sqlCommand.Append(":CompanyCountry, ");
+            sqlCommand.Append(":CompanyPostalCode, ");
+            sqlCommand.Append(":CompanyPublicEmail, ");
+            sqlCommand.Append(":CompanyPhone, ");
+            sqlCommand.Append(":CompanyFax, ");
+            sqlCommand.Append(":FacebookAppId, ");
+            sqlCommand.Append(":FacebookAppSecret, ");
+            sqlCommand.Append(":GoogleClientId, ");
+            sqlCommand.Append(":GoogleClientSecret, ");
+            sqlCommand.Append(":TwitterConsumerKey, ");
+            sqlCommand.Append(":TwitterConsumerSecret, ");
+            sqlCommand.Append(":MicrosoftClientId, ");
+            sqlCommand.Append(":MicrosoftClientSecret, ");
+            sqlCommand.Append(":PreferredHostName, ");
+            sqlCommand.Append(":SiteFolderName, ");
+            sqlCommand.Append(":AddThisDotComUsername, ");
+            sqlCommand.Append(":LoginInfoTop, ");
+            sqlCommand.Append(":LoginInfoBottom, ");
+            sqlCommand.Append(":RegistrationAgreement, ");
+            sqlCommand.Append(":RegistrationPreamble, ");
+            sqlCommand.Append(":SmtpServer, ");
+            sqlCommand.Append(":SmtpPort, ");
+            sqlCommand.Append(":SmtpUser, ");
+            sqlCommand.Append(":SmtpPassword, ");
+            sqlCommand.Append(":SmtpPreferredEncoding, ");
+            sqlCommand.Append(":SmtpRequiresAuth, ");
+            sqlCommand.Append(":SmtpUseSsl, ");
+            sqlCommand.Append(":RequireApprovalBeforeLogin, ");
+
             sqlCommand.Append(" :SiteGuid ");
 
             sqlCommand.Append(");");
             sqlCommand.Append("SELECT LAST_INSERT_ROWID();");
 
-            SqliteParameter[] arParams = new SqliteParameter[46];
+            SqliteParameter[] arParams = new SqliteParameter[74];
 
             arParams[0] = new SqliteParameter(":SiteName", DbType.String);
             arParams[0].Value = siteName;
@@ -206,6 +356,155 @@ namespace cloudscribe.Core.Repositories.SQLite
             arParams[24] = new SqliteParameter(":DisableDbAuth", DbType.Int32);
             arParams[24].Value = disableDbAuth ? 1 : 0;
 
+            arParams[25] = new SqliteParameter(":RequiresQuestionAndAnswer", DbType.Int32);
+            arParams[25].Value = requiresQuestionAndAnswer ? 1 : 0;
+
+            arParams[26] = new SqliteParameter(":MaxInvalidPasswordAttempts", DbType.Int32);
+            arParams[26].Value = maxInvalidPasswordAttempts;
+
+            arParams[27] = new SqliteParameter(":PasswordAttemptWindowMinutes", DbType.Int32);
+            arParams[27].Value = passwordAttemptWindowMinutes;
+
+            arParams[28] = new SqliteParameter(":MinRequiredPasswordLength", DbType.Int32);
+            arParams[28].Value = minRequiredPasswordLength;
+
+            arParams[29] = new SqliteParameter(":MinReqNonAlphaChars", DbType.Int32);
+            arParams[29].Value = minReqNonAlphaChars;
+
+            arParams[30] = new SqliteParameter(":DefaultEmailFromAddress", DbType.String);
+            arParams[30].Value = defaultEmailFromAddress;
+
+            arParams[31] = new SqliteParameter(":AllowDbFallbackWithLdap", DbType.Int32);
+            arParams[31].Value = allowDbFallbackWithLdap ? 1 : 0;
+
+            arParams[32] = new SqliteParameter(":EmailLdapDbFallback", DbType.Int32);
+            arParams[32].Value = emailLdapDbFallback ? 1 : 0;
+
+            arParams[33] = new SqliteParameter(":AllowPersistentLogin", DbType.Int32);
+            arParams[33].Value = allowPersistentLogin ? 1 : 0;
+
+            arParams[34] = new SqliteParameter(":CaptchaOnLogin", DbType.Int32);
+            arParams[34].Value = captchaOnLogin ? 1 : 0;
+
+            arParams[35] = new SqliteParameter(":CaptchaOnRegistration", DbType.Int32);
+            arParams[35].Value = captchaOnRegistration ? 1 : 0;
+
+            arParams[36] = new SqliteParameter(":SiteIsClosed", DbType.Int32);
+            arParams[36].Value = siteIsClosed ? 1 : 0;
+
+            arParams[37] = new SqliteParameter(":SiteIsClosedMessage", DbType.Object);
+            arParams[37].Value = siteIsClosedMessage;
+
+            arParams[38] = new SqliteParameter(":PrivacyPolicy", DbType.Object);
+            arParams[38].Value = privacyPolicy;
+
+            arParams[39] = new SqliteParameter(":TimeZoneId", DbType.String);
+            arParams[39].Value = timeZoneId;
+
+            arParams[40] = new SqliteParameter(":GoogleAnalyticsProfileId", DbType.String);
+            arParams[40].Value = googleAnalyticsProfileId;
+
+            arParams[41] = new SqliteParameter(":CompanyName", DbType.String);
+            arParams[41].Value = companyName;
+
+            arParams[42] = new SqliteParameter(":CompanyStreetAddress", DbType.String);
+            arParams[42].Value = companyStreetAddress;
+
+            arParams[43] = new SqliteParameter(":CompanyStreetAddress2", DbType.String);
+            arParams[43].Value = companyStreetAddress2;
+
+            arParams[44] = new SqliteParameter(":CompanyRegion", DbType.String);
+            arParams[44].Value = companyRegion;
+
+            arParams[45] = new SqliteParameter(":CompanyLocality", DbType.String);
+            arParams[45].Value = companyLocality;
+
+            arParams[46] = new SqliteParameter(":CompanyCountry", DbType.String);
+            arParams[46].Value = companyCountry;
+
+            arParams[47] = new SqliteParameter(":CompanyPostalCode", DbType.String);
+            arParams[47].Value = companyPostalCode;
+
+            arParams[48] = new SqliteParameter(":CompanyPublicEmail", DbType.String);
+            arParams[48].Value = companyPublicEmail;
+
+            arParams[49] = new SqliteParameter(":CompanyPhone", DbType.String);
+            arParams[49].Value = companyPhone;
+
+            arParams[50] = new SqliteParameter(":CompanyFax", DbType.String);
+            arParams[50].Value = companyFax;
+
+            arParams[51] = new SqliteParameter(":FacebookAppId", DbType.String);
+            arParams[51].Value = facebookAppId;
+
+            arParams[52] = new SqliteParameter(":FacebookAppSecret", DbType.String);
+            arParams[52].Value = facebookAppSecret;
+
+            arParams[53] = new SqliteParameter(":GoogleClientId", DbType.String);
+            arParams[53].Value = googleClientId;
+
+            arParams[54] = new SqliteParameter(":GoogleClientSecret", DbType.String);
+            arParams[54].Value = googleClientSecret;
+
+            arParams[55] = new SqliteParameter(":TwitterConsumerKey", DbType.String);
+            arParams[55].Value = twitterConsumerKey;
+
+            arParams[56] = new SqliteParameter(":TwitterConsumerSecret", DbType.String);
+            arParams[56].Value = twitterConsumerSecret;
+
+            arParams[57] = new SqliteParameter(":MicrosoftClientId", DbType.String);
+            arParams[57].Value = microsoftClientId;
+
+            arParams[58] = new SqliteParameter(":MicrosoftClientSecret", DbType.String);
+            arParams[58].Value = microsoftClientSecret;
+
+            arParams[59] = new SqliteParameter(":PreferredHostName", DbType.String);
+            arParams[59].Value = preferredHostName;
+
+            arParams[60] = new SqliteParameter(":SiteFolderName", DbType.String);
+            arParams[60].Value = siteFolderName;
+
+            arParams[61] = new SqliteParameter(":AddThisDotComUsername", DbType.String);
+            arParams[61].Value = addThisDotComUsername;
+
+            arParams[62] = new SqliteParameter(":LoginInfoTop", DbType.Object);
+            arParams[62].Value = loginInfoTop;
+
+            arParams[63] = new SqliteParameter(":LoginInfoBottom", DbType.Object);
+            arParams[63].Value = loginInfoBottom;
+
+            arParams[64] = new SqliteParameter(":RegistrationAgreement", DbType.Object);
+            arParams[64].Value = registrationAgreement;
+
+            arParams[65] = new SqliteParameter(":RegistrationPreamble", DbType.Object);
+            arParams[65].Value =registrationPreamble;
+
+            arParams[66] = new SqliteParameter(":SmtpServer", DbType.String);
+            arParams[66].Value = smtpServer;
+
+            arParams[67] = new SqliteParameter(":SmtpPort", DbType.Int32);
+            arParams[67].Value = smtpPort;
+
+            arParams[68] = new SqliteParameter(":SmtpUser", DbType.String);
+            arParams[68].Value = smtpUser;
+
+            arParams[69] = new SqliteParameter(":SmtpPassword", DbType.String);
+            arParams[69].Value = smtpPassword;
+
+            arParams[70] = new SqliteParameter(":SmtpPreferredEncoding", DbType.String);
+            arParams[70].Value = smtpPreferredEncoding;
+
+            arParams[71] = new SqliteParameter(":SmtpRequiresAuth", DbType.Int32);
+            arParams[71].Value = smtpRequiresAuth ? 1 : 0;
+
+            arParams[72] = new SqliteParameter(":SmtpUseSsl", DbType.Int32);
+            arParams[72].Value = smtpUseSsl ? 1 : 0;
+
+            arParams[73] = new SqliteParameter(":RequireApprovalBeforeLogin", DbType.Int32);
+            arParams[73].Value = requireApprovalBeforeLogin ? 1 : 0;
+
+
+
             int newID = Convert.ToInt32(AdoHelper.ExecuteScalar(
                 connectionString,
                 sqlCommand.ToString(),
@@ -240,7 +539,58 @@ namespace cloudscribe.Core.Repositories.SQLite
             string apiKeyExtra3,
             string apiKeyExtra4,
             string apiKeyExtra5,
-            bool disableDbAuth)
+            bool disableDbAuth,
+
+            bool requiresQuestionAndAnswer,
+            int maxInvalidPasswordAttempts,
+            int passwordAttemptWindowMinutes,
+            int minRequiredPasswordLength,
+            int minReqNonAlphaChars,
+            string defaultEmailFromAddress,
+            bool allowDbFallbackWithLdap,
+            bool emailLdapDbFallback,
+            bool allowPersistentLogin,
+            bool captchaOnLogin,
+            bool captchaOnRegistration,
+            bool siteIsClosed,
+            string siteIsClosedMessage,
+            string privacyPolicy,
+            string timeZoneId,
+            string googleAnalyticsProfileId,
+            string companyName,
+            string companyStreetAddress,
+            string companyStreetAddress2,
+            string companyRegion,
+            string companyLocality,
+            string companyCountry,
+            string companyPostalCode,
+            string companyPublicEmail,
+            string companyPhone,
+            string companyFax,
+            string facebookAppId,
+            string facebookAppSecret,
+            string googleClientId,
+            string googleClientSecret,
+            string twitterConsumerKey,
+            string twitterConsumerSecret,
+            string microsoftClientId,
+            string microsoftClientSecret,
+            string preferredHostName,
+            string siteFolderName,
+            string addThisDotComUsername,
+            string loginInfoTop,
+            string loginInfoBottom,
+            string registrationAgreement,
+            string registrationPreamble,
+            string smtpServer,
+            int smtpPort,
+            string smtpUser,
+            string smtpPassword,
+            string smtpPreferredEncoding,
+            bool smtpRequiresAuth,
+            bool smtpUseSsl,
+            bool requireApprovalBeforeLogin
+            )
         {
             
             StringBuilder sqlCommand = new StringBuilder();
@@ -268,11 +618,61 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("ApiKeyExtra2 = :ApiKeyExtra2, ");
             sqlCommand.Append("ApiKeyExtra3 = :ApiKeyExtra3, ");
             sqlCommand.Append("ApiKeyExtra4 = :ApiKeyExtra4, ");
-            sqlCommand.Append("ApiKeyExtra5 = :ApiKeyExtra5 ");
+            sqlCommand.Append("ApiKeyExtra5 = :ApiKeyExtra5, ");
+
+            sqlCommand.Append("RequiresQuestionAndAnswer = :RequiresQuestionAndAnswer, ");
+            sqlCommand.Append("MaxInvalidPasswordAttempts = :MaxInvalidPasswordAttempts, ");
+            sqlCommand.Append("PasswordAttemptWindowMinutes = :PasswordAttemptWindowMinutes, ");
+            sqlCommand.Append("MinRequiredPasswordLength = :MinRequiredPasswordLength, ");
+            sqlCommand.Append("MinReqNonAlphaChars = :MinReqNonAlphaChars, ");
+            sqlCommand.Append("DefaultEmailFromAddress = :DefaultEmailFromAddress, ");
+            sqlCommand.Append("AllowDbFallbackWithLdap = :AllowDbFallbackWithLdap, ");
+            sqlCommand.Append("EmailLdapDbFallback = :EmailLdapDbFallback, ");
+            sqlCommand.Append("AllowPersistentLogin = :AllowPersistentLogin, ");
+            sqlCommand.Append("CaptchaOnLogin = :CaptchaOnLogin, ");
+            sqlCommand.Append("CaptchaOnRegistration = :CaptchaOnRegistration,");
+            sqlCommand.Append("SiteIsClosed = :SiteIsClosed, ");
+            sqlCommand.Append("SiteIsClosedMessage = :SiteIsClosedMessage, ");
+            sqlCommand.Append("PrivacyPolicy = :PrivacyPolicy, ");
+            sqlCommand.Append("TimeZoneId = :TimeZoneId, ");
+            sqlCommand.Append("GoogleAnalyticsProfileId = :GoogleAnalyticsProfileId, ");
+            sqlCommand.Append("CompanyName = :CompanyName, ");
+            sqlCommand.Append("CompanyStreetAddress = :CompanyStreetAddress, ");
+            sqlCommand.Append("CompanyStreetAddress2 = :CompanyStreetAddress2, ");
+            sqlCommand.Append("CompanyRegion = :CompanyRegion, ");
+            sqlCommand.Append("CompanyLocality = :CompanyLocality, ");
+            sqlCommand.Append("CompanyCountry = :CompanyCountry, ");
+            sqlCommand.Append("CompanyPostalCode = :CompanyPostalCode, ");
+            sqlCommand.Append("CompanyPublicEmail = :CompanyPublicEmail, ");
+            sqlCommand.Append("CompanyPhone = :CompanyPhone, ");
+            sqlCommand.Append("CompanyFax = :CompanyFax, ");
+            sqlCommand.Append("FacebookAppId = :FacebookAppId, ");
+            sqlCommand.Append("FacebookAppSecret = :FacebookAppSecret, ");
+            sqlCommand.Append("GoogleClientId = :GoogleClientId, ");
+            sqlCommand.Append("GoogleClientSecret = :GoogleClientSecret, ");
+            sqlCommand.Append("TwitterConsumerKey = :TwitterConsumerKey, ");
+            sqlCommand.Append("TwitterConsumerSecret = :TwitterConsumerSecret, ");
+            sqlCommand.Append("MicrosoftClientId = :MicrosoftClientId, ");
+            sqlCommand.Append("MicrosoftClientSecret = :MicrosoftClientSecret, ");
+            sqlCommand.Append("PreferredHostName = :PreferredHostName, ");
+            sqlCommand.Append("SiteFolderName = :SiteFolderName, ");
+            sqlCommand.Append("AddThisDotComUsername = :AddThisDotComUsername, ");
+            sqlCommand.Append("LoginInfoTop = :LoginInfoTop, ");
+            sqlCommand.Append("LoginInfoBottom = :LoginInfoBottom, ");
+            sqlCommand.Append("RegistrationAgreement = :RegistrationAgreement, ");
+            sqlCommand.Append("RegistrationPreamble = :RegistrationPreamble, ");
+            sqlCommand.Append("SmtpServer = :SmtpServer, ");
+            sqlCommand.Append("SmtpPort = :SmtpPort, ");
+            sqlCommand.Append("SmtpUser = :SmtpUser, ");
+            sqlCommand.Append("SmtpPassword = :SmtpPassword, ");
+            sqlCommand.Append("SmtpPreferredEncoding = :SmtpPreferredEncoding, ");
+            sqlCommand.Append("SmtpRequiresAuth = :SmtpRequiresAuth, ");
+            sqlCommand.Append("SmtpUseSsl = :SmtpUseSsl, ");
+            sqlCommand.Append("RequireApprovalBeforeLogin = :RequireApprovalBeforeLogin ");
 
             sqlCommand.Append(" WHERE SiteID = :SiteID ;");
 
-            SqliteParameter[] arParams = new SqliteParameter[46];
+            SqliteParameter[] arParams = new SqliteParameter[74];
 
             arParams[0] = new SqliteParameter(":SiteID", DbType.Int32);
             arParams[0].Value = siteId;
@@ -348,6 +748,153 @@ namespace cloudscribe.Core.Repositories.SQLite
 
             arParams[24] = new SqliteParameter(":DisableDbAuth", DbType.Int32);
             arParams[24].Value = disableDbAuth ? 1 : 0;
+
+            arParams[25] = new SqliteParameter(":RequiresQuestionAndAnswer", DbType.Int32);
+            arParams[25].Value = requiresQuestionAndAnswer ? 1 : 0;
+
+            arParams[26] = new SqliteParameter(":MaxInvalidPasswordAttempts", DbType.Int32);
+            arParams[26].Value = maxInvalidPasswordAttempts;
+
+            arParams[27] = new SqliteParameter(":PasswordAttemptWindowMinutes", DbType.Int32);
+            arParams[27].Value = passwordAttemptWindowMinutes;
+
+            arParams[28] = new SqliteParameter(":MinRequiredPasswordLength", DbType.Int32);
+            arParams[28].Value = minRequiredPasswordLength;
+
+            arParams[29] = new SqliteParameter(":MinReqNonAlphaChars", DbType.Int32);
+            arParams[29].Value = minReqNonAlphaChars;
+
+            arParams[30] = new SqliteParameter(":DefaultEmailFromAddress", DbType.String);
+            arParams[30].Value = defaultEmailFromAddress;
+
+            arParams[31] = new SqliteParameter(":AllowDbFallbackWithLdap", DbType.Int32);
+            arParams[31].Value = allowDbFallbackWithLdap ? 1 : 0;
+
+            arParams[32] = new SqliteParameter(":EmailLdapDbFallback", DbType.Int32);
+            arParams[32].Value = emailLdapDbFallback ? 1 : 0;
+
+            arParams[33] = new SqliteParameter(":AllowPersistentLogin", DbType.Int32);
+            arParams[33].Value = allowPersistentLogin ? 1 : 0;
+
+            arParams[34] = new SqliteParameter(":CaptchaOnLogin", DbType.Int32);
+            arParams[34].Value = captchaOnLogin ? 1 : 0;
+
+            arParams[35] = new SqliteParameter(":CaptchaOnRegistration", DbType.Int32);
+            arParams[35].Value = captchaOnRegistration ? 1 : 0;
+
+            arParams[36] = new SqliteParameter(":SiteIsClosed", DbType.Int32);
+            arParams[36].Value = siteIsClosed ? 1 : 0;
+
+            arParams[37] = new SqliteParameter(":SiteIsClosedMessage", DbType.Object);
+            arParams[37].Value = siteIsClosedMessage;
+
+            arParams[38] = new SqliteParameter(":PrivacyPolicy", DbType.Object);
+            arParams[38].Value = privacyPolicy;
+
+            arParams[39] = new SqliteParameter(":TimeZoneId", DbType.String);
+            arParams[39].Value = timeZoneId;
+
+            arParams[40] = new SqliteParameter(":GoogleAnalyticsProfileId", DbType.String);
+            arParams[40].Value = googleAnalyticsProfileId;
+
+            arParams[41] = new SqliteParameter(":CompanyName", DbType.String);
+            arParams[41].Value = companyName;
+
+            arParams[42] = new SqliteParameter(":CompanyStreetAddress", DbType.String);
+            arParams[42].Value = companyStreetAddress;
+
+            arParams[43] = new SqliteParameter(":CompanyStreetAddress2", DbType.String);
+            arParams[43].Value = companyStreetAddress2;
+
+            arParams[44] = new SqliteParameter(":CompanyRegion", DbType.String);
+            arParams[44].Value = companyRegion;
+
+            arParams[45] = new SqliteParameter(":CompanyLocality", DbType.String);
+            arParams[45].Value = companyLocality;
+
+            arParams[46] = new SqliteParameter(":CompanyCountry", DbType.String);
+            arParams[46].Value = companyCountry;
+
+            arParams[47] = new SqliteParameter(":CompanyPostalCode", DbType.String);
+            arParams[47].Value = companyPostalCode;
+
+            arParams[48] = new SqliteParameter(":CompanyPublicEmail", DbType.String);
+            arParams[48].Value = companyPublicEmail;
+
+            arParams[49] = new SqliteParameter(":CompanyPhone", DbType.String);
+            arParams[49].Value = companyPhone;
+
+            arParams[50] = new SqliteParameter(":CompanyFax", DbType.String);
+            arParams[50].Value = companyFax;
+
+            arParams[51] = new SqliteParameter(":FacebookAppId", DbType.String);
+            arParams[51].Value = facebookAppId;
+
+            arParams[52] = new SqliteParameter(":FacebookAppSecret", DbType.String);
+            arParams[52].Value = facebookAppSecret;
+
+            arParams[53] = new SqliteParameter(":GoogleClientId", DbType.String);
+            arParams[53].Value = googleClientId;
+
+            arParams[54] = new SqliteParameter(":GoogleClientSecret", DbType.String);
+            arParams[54].Value = googleClientSecret;
+
+            arParams[55] = new SqliteParameter(":TwitterConsumerKey", DbType.String);
+            arParams[55].Value = twitterConsumerKey;
+
+            arParams[56] = new SqliteParameter(":TwitterConsumerSecret", DbType.String);
+            arParams[56].Value = twitterConsumerSecret;
+
+            arParams[57] = new SqliteParameter(":MicrosoftClientId", DbType.String);
+            arParams[57].Value = microsoftClientId;
+
+            arParams[58] = new SqliteParameter(":MicrosoftClientSecret", DbType.String);
+            arParams[58].Value = microsoftClientSecret;
+
+            arParams[59] = new SqliteParameter(":PreferredHostName", DbType.String);
+            arParams[59].Value = preferredHostName;
+
+            arParams[60] = new SqliteParameter(":SiteFolderName", DbType.String);
+            arParams[60].Value = siteFolderName;
+
+            arParams[61] = new SqliteParameter(":AddThisDotComUsername", DbType.String);
+            arParams[61].Value = addThisDotComUsername;
+
+            arParams[62] = new SqliteParameter(":LoginInfoTop", DbType.Object);
+            arParams[62].Value = loginInfoTop;
+
+            arParams[63] = new SqliteParameter(":LoginInfoBottom", DbType.Object);
+            arParams[63].Value = loginInfoBottom;
+
+            arParams[64] = new SqliteParameter(":RegistrationAgreement", DbType.Object);
+            arParams[64].Value = registrationAgreement;
+
+            arParams[65] = new SqliteParameter(":RegistrationPreamble", DbType.Object);
+            arParams[65].Value = registrationPreamble;
+
+            arParams[66] = new SqliteParameter(":SmtpServer", DbType.String);
+            arParams[66].Value = smtpServer;
+
+            arParams[67] = new SqliteParameter(":SmtpPort", DbType.Int32);
+            arParams[67].Value = smtpPort;
+
+            arParams[68] = new SqliteParameter(":SmtpUser", DbType.String);
+            arParams[68].Value = smtpUser;
+
+            arParams[69] = new SqliteParameter(":SmtpPassword", DbType.String);
+            arParams[69].Value = smtpPassword;
+
+            arParams[70] = new SqliteParameter(":SmtpPreferredEncoding", DbType.String);
+            arParams[70].Value = smtpPreferredEncoding;
+
+            arParams[71] = new SqliteParameter(":SmtpRequiresAuth", DbType.Int32);
+            arParams[71].Value = smtpRequiresAuth ? 1 : 0;
+
+            arParams[72] = new SqliteParameter(":SmtpUseSsl", DbType.Int32);
+            arParams[72].Value = smtpUseSsl ? 1 : 0;
+
+            arParams[73] = new SqliteParameter(":RequireApprovalBeforeLogin", DbType.Int32);
+            arParams[73].Value = requireApprovalBeforeLogin ? 1 : 0;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 connectionString,
