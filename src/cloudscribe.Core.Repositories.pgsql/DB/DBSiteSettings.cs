@@ -35,51 +35,32 @@ namespace cloudscribe.Core.Repositories.pgsql
 
         public async Task<int> Create(
             Guid siteGuid,
-            String siteName,
-            String skin,
-            String logo,
-            String icon,
+            string siteName,
+            string skin,
             bool allowNewRegistration,
-            bool allowUserSkins,
-            bool allowPageSkins,
-            bool allowHideMenuOnPages,
             bool useSecureRegistration,
             bool useSslOnAllPages,
-            String defaultPageKeywords,
-            String defaultPageDescription,
-            String defaultPageEncoding,
-            String defaultAdditionalMetaTags,
             bool isServerAdminSite,
             bool useLdapAuth,
             bool autoCreateLdapUserOnFirstLogin,
-            String ldapServer,
+            string ldapServer,
             int ldapPort,
-            String ldapDomain,
-            String ldapRootDN,
-            String ldapUserDNKey,
+            string ldapDomain,
+            string ldapRootDN,
+            string ldapUserDNKey,
             bool allowUserFullNameChange,
             bool useEmailForLogin,
             bool reallyDeleteUsers,
-            String editorSkin,
-            String defaultFriendlyUrlPattern,
-            bool enableMyPageFeature,
-            string editorProvider,
-            string datePickerProvider,
-            string captchaProvider,
             string recaptchaPrivateKey,
             string recaptchaPublicKey,
-            string wordpressApiKey,
-            string windowsLiveAppId,
-            string windowsLiveKey,
-            bool allowOpenIdAuth,
-            bool allowWindowsLiveAuth,
-            string gmapApiKey,
             string apiKeyExtra1,
             string apiKeyExtra2,
             string apiKeyExtra3,
             string apiKeyExtra4,
             string apiKeyExtra5,
-            bool disableDbAuth)
+            bool disableDbAuth
+            
+            )
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("INSERT INTO mp_sites (");
@@ -87,18 +68,9 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             sqlCommand.Append("sitename, ");
             sqlCommand.Append("skin, ");
-            sqlCommand.Append("logo, ");
-            sqlCommand.Append("icon, ");
-            sqlCommand.Append("allowuserskins, ");
-            sqlCommand.Append("allowpageskins, ");
-            sqlCommand.Append("allowhidemenuonpages, ");
             sqlCommand.Append("allownewregistration, ");
             sqlCommand.Append("usesecureregistration, ");
             sqlCommand.Append("usesslonallpages, ");
-            sqlCommand.Append("defaultpagekeywords, ");
-            sqlCommand.Append("defaultpagedescription, ");
-            sqlCommand.Append("defaultpageencoding, ");
-            sqlCommand.Append("defaultadditionalmetatags, ");
             sqlCommand.Append("isserveradminsite, ");
             sqlCommand.Append("useldapauth, ");
             sqlCommand.Append("autocreateldapuseronfirstlogin, ");
@@ -110,45 +82,25 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append("reallydeleteusers, ");
             sqlCommand.Append("useemailforlogin, ");
             sqlCommand.Append("allowuserfullnamechange, ");
-            sqlCommand.Append("editorskin, ");
-            sqlCommand.Append("defaultfriendlyurlpatternenum, ");
             sqlCommand.Append("disabledbauth, ");
-
-            sqlCommand.Append("enablemypagefeature, ");
-            sqlCommand.Append("editorprovider, ");
-            sqlCommand.Append("captchaprovider, ");
-            sqlCommand.Append("datepickerprovider, ");
             sqlCommand.Append("recaptchaprivatekey, ");
             sqlCommand.Append("recaptchapublickey, ");
-            sqlCommand.Append("wordpressapikey, ");
-            sqlCommand.Append("windowsliveappid, ");
-            sqlCommand.Append("windowslivekey, ");
-            sqlCommand.Append("allowopenidauth, ");
-            sqlCommand.Append("allowwindowsliveauth, ");
-            sqlCommand.Append("gmapapikey, ");
             sqlCommand.Append("apikeyextra1, ");
             sqlCommand.Append("apikeyextra2, ");
             sqlCommand.Append("apikeyextra3, ");
             sqlCommand.Append("apikeyextra4, ");
-            sqlCommand.Append("apikeyextra5 )");
+            sqlCommand.Append("apikeyextra5 ");
+
+            sqlCommand.Append(") ");
 
             sqlCommand.Append(" VALUES (");
             sqlCommand.Append(":siteguid, ");
 
             sqlCommand.Append(":sitename, ");
             sqlCommand.Append(":skin, ");
-            sqlCommand.Append(":logo, ");
-            sqlCommand.Append(":icon, ");
-            sqlCommand.Append(":allowuserskins, ");
-            sqlCommand.Append(":allowpageskins, ");
-            sqlCommand.Append(":allowhidemenuonpages, ");
             sqlCommand.Append(":allownewregistration, ");
             sqlCommand.Append(":usesecureregistration, ");
             sqlCommand.Append(":usesslonallpages, ");
-            sqlCommand.Append(":defaultpagekeywords, ");
-            sqlCommand.Append(":defaultpagedescription, ");
-            sqlCommand.Append(":defaultpageencoding, ");
-            sqlCommand.Append(":defaultadditionalmetatags, ");
             sqlCommand.Append(":isserveradminsite, ");
             sqlCommand.Append(":useldapauth, ");
             sqlCommand.Append(":autocreateldapuseronfirstlogin, ");
@@ -160,27 +112,16 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append(":reallydeleteusers, ");
             sqlCommand.Append(":useemailforlogin, ");
             sqlCommand.Append(":allowuserfullnamechange, ");
-            sqlCommand.Append(":editorskin, ");
-            sqlCommand.Append(":defaultfriendlyurlpatternenum, ");
             sqlCommand.Append(":disabledbauth, ");
-
-            sqlCommand.Append(":enablemypagefeature, ");
-            sqlCommand.Append(":editorprovider, ");
-            sqlCommand.Append(":captchaprovider, ");
-            sqlCommand.Append(":datepickerprovider, ");
             sqlCommand.Append(":recaptchaprivatekey, ");
             sqlCommand.Append(":recaptchapublickey, ");
-            sqlCommand.Append(":wordpressapikey, ");
-            sqlCommand.Append(":windowsliveappid, ");
-            sqlCommand.Append(":windowslivekey, ");
-            sqlCommand.Append(":allowopenidauth, ");
-            sqlCommand.Append(":allowwindowsliveauth, ");
-            sqlCommand.Append(":gmapapikey, ");
             sqlCommand.Append(":apikeyextra1, ");
             sqlCommand.Append(":apikeyextra2, ");
             sqlCommand.Append(":apikeyextra3, ");
             sqlCommand.Append(":apikeyextra4, ");
-            sqlCommand.Append(":apikeyextra5 )");
+            sqlCommand.Append(":apikeyextra5 ");
+
+            sqlCommand.Append(") ");
             sqlCommand.Append(";");
             sqlCommand.Append(" SELECT CURRVAL('mp_sites_siteid_seq');");
 
@@ -194,22 +135,7 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             arParams[2] = new NpgsqlParameter("skin", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
             arParams[2].Value = skin;
-
-            arParams[3] = new NpgsqlParameter("logo", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
-            arParams[3].Value = logo;
-
-            arParams[4] = new NpgsqlParameter("icon", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
-            arParams[4].Value = icon;
-
-            arParams[5] = new NpgsqlParameter("allowuserskins", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[5].Value = allowUserSkins;
-
-            arParams[6] = new NpgsqlParameter("allowpageskins", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[6].Value = allowPageSkins;
-
-            arParams[7] = new NpgsqlParameter("allowhidemenuonpages", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[7].Value = allowHideMenuOnPages;
-
+            
             arParams[8] = new NpgsqlParameter("allownewregistration", NpgsqlTypes.NpgsqlDbType.Boolean);
             arParams[8].Value = allowNewRegistration;
 
@@ -218,19 +144,7 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             arParams[10] = new NpgsqlParameter("usesslonallpages", NpgsqlTypes.NpgsqlDbType.Boolean);
             arParams[10].Value = useSslOnAllPages;
-
-            arParams[11] = new NpgsqlParameter("defaultpagekeywords", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[11].Value = defaultPageKeywords;
-
-            arParams[12] = new NpgsqlParameter("defaultpagedescription", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[12].Value = defaultPageDescription;
-
-            arParams[13] = new NpgsqlParameter("defaultpageencoding", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[13].Value = defaultPageEncoding;
-
-            arParams[14] = new NpgsqlParameter("defaultadditionalmetatags", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[14].Value = defaultAdditionalMetaTags;
-
+            
             arParams[15] = new NpgsqlParameter("isserveradminsite", NpgsqlTypes.NpgsqlDbType.Boolean);
             arParams[15].Value = isServerAdminSite;
 
@@ -263,49 +177,13 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             arParams[25] = new NpgsqlParameter("allowuserfullnamechange", NpgsqlTypes.NpgsqlDbType.Boolean);
             arParams[25].Value = allowUserFullNameChange;
-
-            arParams[26] = new NpgsqlParameter("editorskin", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
-            arParams[26].Value = editorSkin;
-
-            arParams[27] = new NpgsqlParameter("defaultfriendlyurlpatternenum", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
-            arParams[27].Value = defaultFriendlyUrlPattern;
-
-            arParams[28] = new NpgsqlParameter("enablemypagefeature", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[28].Value = enableMyPageFeature;
-
-            arParams[29] = new NpgsqlParameter("editorprovider", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[29].Value = editorProvider;
-
-            arParams[30] = new NpgsqlParameter("captchaprovider", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[30].Value = captchaProvider;
-
-            arParams[31] = new NpgsqlParameter("datepickerprovider", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[31].Value = datePickerProvider;
-
+            
             arParams[32] = new NpgsqlParameter("recaptchaprivatekey", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
             arParams[32].Value = recaptchaPrivateKey;
 
             arParams[33] = new NpgsqlParameter("recaptchapublickey", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
             arParams[33].Value = recaptchaPublicKey;
-
-            arParams[34] = new NpgsqlParameter("wordpressapikey", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[34].Value = wordpressApiKey;
-
-            arParams[35] = new NpgsqlParameter("windowsliveappid", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[35].Value = windowsLiveAppId;
-
-            arParams[36] = new NpgsqlParameter("windowslivekey", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[36].Value = windowsLiveKey;
-
-            arParams[37] = new NpgsqlParameter("allowopenidauth", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[37].Value = allowOpenIdAuth;
-
-            arParams[38] = new NpgsqlParameter("allowwindowsliveauth", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[38].Value = allowWindowsLiveAuth;
-
-            arParams[39] = new NpgsqlParameter("gmapapikey", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[39].Value = gmapApiKey;
-
+            
             arParams[40] = new NpgsqlParameter("apikeyextra1", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
             arParams[40].Value = apiKeyExtra1;
 
@@ -323,6 +201,8 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             arParams[45] = new NpgsqlParameter("disabledbauth", NpgsqlTypes.NpgsqlDbType.Boolean);
             arParams[45].Value = disableDbAuth;
+
+
 
             object result = await AdoHelper.ExecuteScalarAsync(
                 writeConnectionString,
@@ -340,49 +220,30 @@ namespace cloudscribe.Core.Repositories.pgsql
             int siteId,
             string siteName,
             string skin,
-            string logo,
-            string icon,
             bool allowNewRegistration,
-            bool allowUserSkins,
-            bool allowPageSkins,
-            bool allowHideMenuOnPages,
             bool useSecureRegistration,
             bool useSslOnAllPages,
-            string defaultPageKeywords,
-            string defaultPageDescription,
-            string defaultPageEncoding,
-            string defaultAdditionalMetaTags,
             bool isServerAdminSite,
             bool useLdapAuth,
             bool autoCreateLdapUserOnFirstLogin,
             string ldapServer,
             int ldapPort,
-            String ldapDomain,
+            string ldapDomain,
             string ldapRootDN,
             string ldapUserDNKey,
             bool allowUserFullNameChange,
             bool useEmailForLogin,
             bool reallyDeleteUsers,
-            String editorSkin,
-            String defaultFriendlyUrlPattern,
-            bool enableMyPageFeature,
-            string editorProvider,
-            string datePickerProvider,
-            string captchaProvider,
             string recaptchaPrivateKey,
             string recaptchaPublicKey,
-            string wordpressApiKey,
-            string windowsLiveAppId,
-            string windowsLiveKey,
-            bool allowOpenIdAuth,
-            bool allowWindowsLiveAuth,
-            string gmapApiKey,
             string apiKeyExtra1,
             string apiKeyExtra2,
             string apiKeyExtra3,
             string apiKeyExtra4,
             string apiKeyExtra5,
-            bool disableDbAuth)
+            bool disableDbAuth
+            
+            )
         {
 
             StringBuilder sqlCommand = new StringBuilder();
@@ -391,18 +252,10 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             sqlCommand.Append("sitename = :sitename, ");
             sqlCommand.Append("skin = :skin, ");
-            sqlCommand.Append("logo = :logo, ");
-            sqlCommand.Append("icon = :icon, ");
-            sqlCommand.Append("allowuserskins = :allowuserskins, ");
-            sqlCommand.Append("allowpageskins = :allowpageskins, ");
             sqlCommand.Append("allowhidemenuonpages = :allowhidemenuonpages, ");
             sqlCommand.Append("allownewregistration = :allownewregistration, ");
             sqlCommand.Append("usesecureregistration = :usesecureregistration, ");
             sqlCommand.Append("usesslonallpages = :usesslonallpages, ");
-            sqlCommand.Append("defaultpagekeywords = :defaultpagekeywords, ");
-            sqlCommand.Append("defaultpagedescription = :defaultpagedescription, ");
-            sqlCommand.Append("defaultpageencoding = :defaultpageencoding, ");
-            sqlCommand.Append("defaultadditionalmetatags = :defaultadditionalmetatags, ");
             sqlCommand.Append("isserveradminsite = :isserveradminsite, ");
             sqlCommand.Append("useldapauth = :useldapauth, ");
             sqlCommand.Append("autocreateldapuseronfirstlogin = :autocreateldapuseronfirstlogin, ");
@@ -414,26 +267,16 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append("reallydeleteusers = :reallydeleteusers, ");
             sqlCommand.Append("useemailforlogin = :useemailforlogin, ");
             sqlCommand.Append("allowuserfullnamechange = :allowuserfullnamechange, ");
-            sqlCommand.Append("editorskin = :editorskin, ");
-            sqlCommand.Append("defaultfriendlyurlpatternenum = :defaultfriendlyurlpatternenum, ");
             sqlCommand.Append("disabledbauth = :disabledbauth, ");
-            sqlCommand.Append("enablemypagefeature = :enablemypagefeature, ");
-            sqlCommand.Append("editorprovider = :editorprovider, ");
-            sqlCommand.Append("captchaprovider = :captchaprovider, ");
-            sqlCommand.Append("datepickerprovider = :datepickerprovider, ");
             sqlCommand.Append("recaptchaprivatekey = :recaptchaprivatekey, ");
             sqlCommand.Append("recaptchapublickey = :recaptchapublickey, ");
-            sqlCommand.Append("wordpressapikey = :wordpressapikey, ");
-            sqlCommand.Append("windowsliveappid = :windowsliveappid, ");
-            sqlCommand.Append("windowslivekey = :windowslivekey, ");
-            sqlCommand.Append("allowopenidauth = :allowopenidauth, ");
-            sqlCommand.Append("allowwindowsliveauth = :allowwindowsliveauth, ");
-            sqlCommand.Append("gmapapikey = :gmapapikey, ");
             sqlCommand.Append("apikeyextra1 = :apikeyextra1, ");
             sqlCommand.Append("apikeyextra2 = :apikeyextra2, ");
             sqlCommand.Append("apikeyextra3 = :apikeyextra3, ");
             sqlCommand.Append("apikeyextra4 = :apikeyextra4, ");
             sqlCommand.Append("apikeyextra5 = :apikeyextra5 ");
+
+
 
             sqlCommand.Append("WHERE  ");
             sqlCommand.Append("siteid = :siteid ");
@@ -449,22 +292,7 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             arParams[2] = new NpgsqlParameter("skin", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
             arParams[2].Value = skin;
-
-            arParams[3] = new NpgsqlParameter("logo", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
-            arParams[3].Value = logo;
-
-            arParams[4] = new NpgsqlParameter("icon", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
-            arParams[4].Value = icon;
-
-            arParams[5] = new NpgsqlParameter("allowuserskins", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[5].Value = allowUserSkins;
-
-            arParams[6] = new NpgsqlParameter("allowpageskins", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[6].Value = allowPageSkins;
-
-            arParams[7] = new NpgsqlParameter("allowhidemenuonpages", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[7].Value = allowHideMenuOnPages;
-
+            
             arParams[8] = new NpgsqlParameter("allownewregistration", NpgsqlTypes.NpgsqlDbType.Boolean);
             arParams[8].Value = allowNewRegistration;
 
@@ -473,19 +301,7 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             arParams[10] = new NpgsqlParameter("usesslonallpages", NpgsqlTypes.NpgsqlDbType.Boolean);
             arParams[10].Value = useSslOnAllPages;
-
-            arParams[11] = new NpgsqlParameter("defaultpagekeywords", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[11].Value = defaultPageKeywords;
-
-            arParams[12] = new NpgsqlParameter("defaultpagedescription", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[12].Value = defaultPageDescription;
-
-            arParams[13] = new NpgsqlParameter("defaultpageencoding", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[13].Value = defaultPageEncoding;
-
-            arParams[14] = new NpgsqlParameter("defaultadditionalmetatags", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[14].Value = defaultAdditionalMetaTags;
-
+            
             arParams[15] = new NpgsqlParameter("isserveradminsite", NpgsqlTypes.NpgsqlDbType.Boolean);
             arParams[15].Value = isServerAdminSite;
 
@@ -518,49 +334,13 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             arParams[25] = new NpgsqlParameter("allowuserfullnamechange", NpgsqlTypes.NpgsqlDbType.Boolean);
             arParams[25].Value = allowUserFullNameChange;
-
-            arParams[26] = new NpgsqlParameter("editorskin", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
-            arParams[26].Value = editorSkin;
-
-            arParams[27] = new NpgsqlParameter("defaultfriendlyurlpatternenum", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
-            arParams[27].Value = defaultFriendlyUrlPattern;
-
-            arParams[28] = new NpgsqlParameter("enablemypagefeature", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[28].Value = enableMyPageFeature;
-
-            arParams[29] = new NpgsqlParameter("editorprovider", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[29].Value = editorProvider;
-
-            arParams[30] = new NpgsqlParameter("captchaprovider", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[30].Value = captchaProvider;
-
-            arParams[31] = new NpgsqlParameter("datepickerprovider", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[31].Value = datePickerProvider;
-
+            
             arParams[32] = new NpgsqlParameter("recaptchaprivatekey", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
             arParams[32].Value = recaptchaPrivateKey;
 
             arParams[33] = new NpgsqlParameter("recaptchapublickey", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
             arParams[33].Value = recaptchaPublicKey;
-
-            arParams[34] = new NpgsqlParameter("wordpressapikey", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[34].Value = wordpressApiKey;
-
-            arParams[35] = new NpgsqlParameter("windowsliveappid", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[35].Value = windowsLiveAppId;
-
-            arParams[36] = new NpgsqlParameter("windowslivekey", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[36].Value = windowsLiveKey;
-
-            arParams[37] = new NpgsqlParameter("allowopenidauth", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[37].Value = allowOpenIdAuth;
-
-            arParams[38] = new NpgsqlParameter("allowwindowsliveauth", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[38].Value = allowWindowsLiveAuth;
-
-            arParams[39] = new NpgsqlParameter("gmapapikey", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[39].Value = gmapApiKey;
-
+            
             arParams[40] = new NpgsqlParameter("apikeyextra1", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
             arParams[40].Value = apiKeyExtra1;
 
@@ -578,6 +358,8 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             arParams[45] = new NpgsqlParameter("disabledbauth", NpgsqlTypes.NpgsqlDbType.Boolean);
             arParams[45].Value = disableDbAuth;
+
+
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
