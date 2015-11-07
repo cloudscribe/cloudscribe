@@ -1,3 +1,9 @@
+DELETE FROM mp_SiteSettingsEx
+GO
+
+DELETE FROM mp_SiteSettingsExDef
+GO
+
 
 ALTER TABLE mp_Sites DROP COLUMN SiteAlias
 GO

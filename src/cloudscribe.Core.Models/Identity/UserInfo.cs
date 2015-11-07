@@ -30,7 +30,7 @@ namespace cloudscribe.Core.Models
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
         public bool IsDeleted { get; set; } = false;
-        public bool ApprovedForLogin { get; set; } = true;
+        public bool Trusted { get; set; } = false;
         public string AvatarUrl { get; set; } = string.Empty;
         public DateTime DateOfBirth { get; set; } = DateTime.MinValue;
         public DateTime CreatedUtc { get; set; } = DateTime.UtcNow;
@@ -43,11 +43,8 @@ namespace cloudscribe.Core.Models
         public DateTime LastLoginDate { get; set; } = DateTime.MinValue;
         public string PhoneNumber { get; set; } = string.Empty;
         public bool PhoneNumberConfirmed { get; set; } = false;
-        public bool ProfileApproved { get; set; } = true;
+        public bool AccountApproved { get; set; } = true;
         public string TimeZoneId { get; set; } = "Eastern Standard Time";
-        public int TotalPosts { get; set; } = 0;
-        public decimal TotalRevenue { get; set; } = 0;
-        public bool Trusted { get; set; } = false;
         public string WebSiteUrl { get; set; } = string.Empty;
 
     }

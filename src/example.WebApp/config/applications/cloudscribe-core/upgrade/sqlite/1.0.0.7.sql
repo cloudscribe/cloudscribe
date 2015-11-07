@@ -1,3 +1,5 @@
+DELETE FROM mp_SiteSettingsEx;
+DELETE FROM mp_SiteSettingsExDef;
 
 
 ALTER TABLE `mp_Sites` ADD COLUMN `AllowDbFallbackWithLdap` INTEGER NOT NULL default 0;

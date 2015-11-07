@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Authentication;
 using Microsoft.AspNet.Authentication.Cookies;
 using Microsoft.AspNet.Authentication.Facebook;
@@ -73,8 +74,15 @@ namespace example.WebApp
             services.Configure<UIOptions>(configuration.GetSection("UIOptions"));
             services.Configure<UIOptions>(configuration.GetSection("CkeditorOptions"));
 
-            
-            
+            //services.AddAuthorization(options =>
+            //{
+            //    options.AddPolicy("MustBeGroot", policy => 
+            //    policy.AddRequirements(
+            //    policy.RequireClaim("IAmGroot")
+                
+            //    );
+            //});
+
 
 
 

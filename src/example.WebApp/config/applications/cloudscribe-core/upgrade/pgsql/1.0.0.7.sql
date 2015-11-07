@@ -1,3 +1,5 @@
+TRUNCATE TABLE mp_sitesettingsex, mp_sitesettingsexdef;
+
 
 ALTER TABLE mp_sites DROP COLUMN sitealias;
 ALTER TABLE mp_sites DROP COLUMN logo;

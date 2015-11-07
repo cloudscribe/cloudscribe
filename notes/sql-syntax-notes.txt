@@ -16,7 +16,8 @@ CREATE NONCLUSTERED INDEX [IX_mp_UserClaimsSite] ON [dbo].[mp_UserClaims]
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
 GO
 
-
+TRUNCATE TABLE HumanResources.JobCandidate;
+GO
 
 ## Firebird Syntax
 
@@ -41,7 +42,7 @@ ALTER TABLE table_name RENAME COLUMN old_name TO new_name;
 
 CREATE INDEX ixmp_userclaimssite ON mp_userclaims(siteid);
 
-
+TRUNCATE TABLE mp_sitesettingsex, mp_sitesettingsexdef;
 
 
 ## mysql syntax
@@ -57,7 +58,7 @@ ALTER TABLE xyz CHANGE manufacurerid manufacturerid INT
 
 CREATE INDEX IX_mp_UserClaimsSite ON mp_UserClaims(`SiteId`);
 
-
+TRUNCATE TABLE table_name;
 
 
 ## Sqlite syntax
@@ -84,6 +85,7 @@ alter table points_tmp rename to points;
 
 CREATE INDEX IX_mp_UserClaimsSite ON mp_UserClaims(`SiteId`);
 
+DELETE FROM table_name;
 
 ## SqlServerCompact
 

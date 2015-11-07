@@ -1,3 +1,10 @@
+TRUNCATE TABLE [dbo].mp_SiteSettingsEx
+GO
+
+TRUNCATE TABLE [dbo].mp_SiteSettingsExDef
+GO
+
+
 DROP PROCEDURE [dbo].[mp_Sites_SyncRelatedSitesWinLive]
 GO
 

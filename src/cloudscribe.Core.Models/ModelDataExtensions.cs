@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-09
-// Last Modified:			2015-09-13
+// Last Modified:			2015-11-07
 // 
 
 using System;
@@ -62,15 +62,12 @@ namespace cloudscribe.Core.Models.DataExtensions
 
             user.Gender = reader["Gender"].ToString();
 
-            if (reader["ProfileApproved"] != DBNull.Value)
+            if (reader["AccountApproved"] != DBNull.Value)
             {
-                user.ProfileApproved = Convert.ToBoolean(reader["ProfileApproved"]);
+                user.AccountApproved = Convert.ToBoolean(reader["AccountApproved"]);
             }
 
-            if (reader["ApprovedForForums"] != DBNull.Value)
-            {
-                user.ApprovedForLogin = Convert.ToBoolean(reader["ApprovedForForums"]);
-            }
+           
             if (reader["Trusted"] != DBNull.Value)
             {
                 user.Trusted = Convert.ToBoolean(reader["Trusted"]);
@@ -82,7 +79,7 @@ namespace cloudscribe.Core.Models.DataExtensions
             user.WebSiteUrl = reader["WebSiteURL"].ToString();
             user.Country = reader["Country"].ToString();
             user.State = reader["State"].ToString();
-            user.TotalPosts = Convert.ToInt32(reader["TotalPosts"], CultureInfo.InvariantCulture);
+           
             user.AvatarUrl = reader["AvatarUrl"].ToString();
 
             if (reader["DateCreated"] != DBNull.Value)
@@ -107,12 +104,7 @@ namespace cloudscribe.Core.Models.DataExtensions
             {
                 user.IsLockedOut = Convert.ToBoolean(reader["IsLockedOut"]);
             }
-
-            if (reader["TotalRevenue"] != DBNull.Value)
-            {
-                user.TotalRevenue = Convert.ToDecimal(reader["TotalRevenue"]);
-            }
-
+            
             user.TimeZoneId = reader["TimeZoneId"].ToString();
 
             if (reader["DateOfBirth"] != DBNull.Value)
@@ -133,23 +125,19 @@ namespace cloudscribe.Core.Models.DataExtensions
 
             user.Email = reader["Email"].ToString();
             user.LoweredEmail = reader["LoweredEmail"].ToString();
-            user.PasswordQuestion = reader["PasswordQuestion"].ToString();
-            user.PasswordAnswer = reader["PasswordAnswer"].ToString();
+            
             user.Gender = reader["Gender"].ToString();
 
-            if (reader["ProfileApproved"] != DBNull.Value)
+            if (reader["AccountApproved"] != DBNull.Value)
             {
-                user.ProfileApproved = Convert.ToBoolean(reader["ProfileApproved"]);
+                user.AccountApproved = Convert.ToBoolean(reader["AccountApproved"]);
             }
 
             if (reader["RegisterConfirmGuid"] != DBNull.Value)
             {
                 user.RegisterConfirmGuid = new Guid(reader["RegisterConfirmGuid"].ToString());
             }
-            if (reader["ApprovedForForums"] != DBNull.Value)
-            {
-                user.ApprovedForLogin = Convert.ToBoolean(reader["ApprovedForForums"]);
-            }
+            
             if (reader["Trusted"] != DBNull.Value)
             {
                 user.Trusted = Convert.ToBoolean(reader["Trusted"]);
@@ -161,17 +149,7 @@ namespace cloudscribe.Core.Models.DataExtensions
             user.WebSiteUrl = reader["WebSiteURL"].ToString();
             user.Country = reader["Country"].ToString();
             user.State = reader["State"].ToString();
-
-            //legacy fields
-            //user.Occupation = reader["Occupation"].ToString();
-            //user.Interests = reader["Interests"].ToString();
-            //user.MSN = reader["MSN"].ToString();
-            //user.Yahoo = reader["Yahoo"].ToString();
-            //user.AIM = reader["AIM"].ToString();
-            //user.ICQ = reader["ICQ"].ToString();
-            //user.TimeOffsetHours = Convert.ToInt32(reader["TimeOffsetHours"]);
-
-            user.TotalPosts = Convert.ToInt32(reader["TotalPosts"], CultureInfo.InvariantCulture);
+            
             user.AvatarUrl = reader["AvatarUrl"].ToString();
 
             user.Signature = reader["Signature"].ToString();
@@ -183,7 +161,7 @@ namespace cloudscribe.Core.Models.DataExtensions
             {
                 user.UserGuid = new Guid(reader["UserGuid"].ToString());
             }
-            user.Skin = reader["Skin"].ToString();
+            
             if (reader["IsDeleted"] != DBNull.Value)
             {
                 user.IsDeleted = Convert.ToBoolean(reader["IsDeleted"]);
@@ -224,24 +202,19 @@ namespace cloudscribe.Core.Models.DataExtensions
             {
                 user.IsLockedOut = Convert.ToBoolean(reader["IsLockedOut"]);
             }
-            user.MobilePin = reader["MobilePIN"].ToString();
-
+            
             user.Comment = reader["Comment"].ToString();
-            user.OpenIdUri = reader["OpenIDURI"].ToString();
-            user.WindowsLiveId = reader["WindowsLiveID"].ToString();
+           
             user.SiteGuid = new Guid(reader["SiteGuid"].ToString());
 
-            if (reader["TotalRevenue"] != DBNull.Value)
-            {
-                user.TotalRevenue = Convert.ToDecimal(reader["TotalRevenue"]);
-            }
+            
 
             user.FirstName = reader["FirstName"].ToString();
             user.LastName = reader["LastName"].ToString();
 
             user.MustChangePwd = Convert.ToBoolean(reader["MustChangePwd"]);
             user.NewEmail = reader["NewEmail"].ToString();
-            user.EditorPreference = reader["EditorPreference"].ToString();
+            
             user.EmailChangeGuid = new Guid(reader["EmailChangeGuid"].ToString());
             user.TimeZoneId = reader["TimeZoneId"].ToString();
             user.PasswordResetGuid = new Guid(reader["PasswordResetGuid"].ToString());
@@ -263,22 +236,8 @@ namespace cloudscribe.Core.Models.DataExtensions
                 user.LockoutEndDateUtc = Convert.ToDateTime(reader["LockoutEndDateUtc"]);
             }
 
-            user.Password = reader["Pwd"].ToString();
-            user.PasswordFormat = Convert.ToInt32(reader["PwdFormat"]);
             user.PasswordHash = reader["PasswordHash"].ToString();
-            user.PasswordSalt = reader["PasswordSalt"].ToString();
-
-            if (user.PasswordHash.Length == 0)
-            {
-
-                user.PasswordHash =
-                    user.Password + "|"
-                    + user.PasswordSalt + "|"
-                    + user.PasswordFormat.ToString(CultureInfo.InvariantCulture)
-                    ;
-
-            }
-
+            
         }
 
         public static void LoadFromReader(this ISiteInfo site, DbDataReader reader)

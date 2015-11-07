@@ -1,3 +1,6 @@
+TRUNCATE TABLE mp_SiteSettingsEx;
+TRUNCATE TABLE mp_SiteSettingsExDef;
+
 
 ALTER TABLE mp_Sites DROP COLUMN SiteAlias;
 ALTER TABLE mp_Sites DROP COLUMN Logo;
