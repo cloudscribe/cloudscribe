@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2010-04-06
-// Last Modified:			2015-06-23
+// Last Modified:			2015-11-08
 // 
 
 using cloudscribe.DbHelpers.SqlCe;
@@ -881,10 +881,8 @@ namespace cloudscribe.Core.Repositories.SqlCe
             Guid siteGuid,
             int siteId,
             string fullName,
-            String loginName,
+            string loginName,
             string email,
-            string password,
-            string passwordSalt,
             Guid userGuid,
             DateTime dateCreated,
             bool mustChangePwd,
@@ -893,13 +891,25 @@ namespace cloudscribe.Core.Repositories.SqlCe
             string timeZoneId,
             DateTime dateOfBirth,
             bool emailConfirmed,
-            int pwdFormat,
             string passwordHash,
             string securityStamp,
             string phoneNumber,
             bool phoneNumberConfirmed,
             bool twoFactorEnabled,
-            DateTime? lockoutEndDateUtc)
+            DateTime? lockoutEndDateUtc,
+
+            bool accountApproved,
+            bool isLockedOut,
+            bool displayInMemberList,
+            string webSiteUrl,
+            string country,
+            string state,
+            string avatarUrl,
+            string signature,
+            string authorBio,
+            string comment
+
+            )
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("INSERT INTO mp_Users ");
@@ -909,11 +919,9 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("LoginName, ");
             sqlCommand.Append("Email, ");
             sqlCommand.Append("LoweredEmail, ");
-            sqlCommand.Append("ProfileApproved, ");
-            sqlCommand.Append("ApprovedForForums, ");
+            sqlCommand.Append("AccountApproved, ");
             sqlCommand.Append("Trusted, ");
             sqlCommand.Append("DisplayInMemberList, ");
-            sqlCommand.Append("TotalPosts, ");
             sqlCommand.Append("DateCreated, ");
             sqlCommand.Append("UserGuid, ");
             sqlCommand.Append("IsDeleted, ");
@@ -921,25 +929,29 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("FailedPwdAnswerAttemptCount, ");
             sqlCommand.Append("IsLockedOut, ");
             sqlCommand.Append("SiteGuid, ");
-            sqlCommand.Append("TotalRevenue, ");
             sqlCommand.Append("FirstName, ");
             sqlCommand.Append("LastName, ");
-            sqlCommand.Append("Pwd, ");
-            sqlCommand.Append("PasswordSalt, ");
             sqlCommand.Append("RolesChanged, ");
             sqlCommand.Append("MustChangePwd, ");
             sqlCommand.Append("EmailChangeGuid, ");
             sqlCommand.Append("PasswordResetGuid, ");
             sqlCommand.Append("DateOfBirth, ");
-
             sqlCommand.Append("EmailConfirmed, ");
-            sqlCommand.Append("PwdFormat, ");
             sqlCommand.Append("PasswordHash, ");
             sqlCommand.Append("SecurityStamp, ");
             sqlCommand.Append("PhoneNumber, ");
             sqlCommand.Append("PhoneNumberConfirmed, ");
             sqlCommand.Append("TwoFactorEnabled, ");
             sqlCommand.Append("LockoutEndDateUtc, ");
+            
+            sqlCommand.Append("WebSiteURL, ");
+            sqlCommand.Append("Country, ");
+            sqlCommand.Append("State, ");
+            sqlCommand.Append("AvatarUrl, ");
+            sqlCommand.Append("Signature, ");
+            sqlCommand.Append("AuthorBio, ");
+            sqlCommand.Append("Comment, ");
+
 
             sqlCommand.Append("TimeZoneId ");
             sqlCommand.Append(")");
@@ -951,11 +963,9 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("@LoginName, ");
             sqlCommand.Append("@Email, ");
             sqlCommand.Append("@LoweredEmail, ");
-            sqlCommand.Append("@ProfileApproved, ");
-            sqlCommand.Append("@ApprovedForForums, ");
+            sqlCommand.Append("@AccountApproved, ");
             sqlCommand.Append("@Trusted, ");
             sqlCommand.Append("@DisplayInMemberList, ");
-            sqlCommand.Append("@TotalPosts, ");
             sqlCommand.Append("@DateCreated, ");
             sqlCommand.Append("@UserGuid, ");
             sqlCommand.Append("@IsDeleted, ");
@@ -963,19 +973,14 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("@FailedPwdAnswerAttemptCount, ");
             sqlCommand.Append("@IsLockedOut, ");
             sqlCommand.Append("@SiteGuid, ");
-            sqlCommand.Append("@TotalRevenue, ");
             sqlCommand.Append("@FirstName, ");
             sqlCommand.Append("@LastName, ");
-            sqlCommand.Append("@Pwd, ");
-            sqlCommand.Append("@PasswordSalt, ");
-            sqlCommand.Append("0, ");
+            sqlCommand.Append("0, "); //RolesChanged
             sqlCommand.Append("@MustChangePwd, ");
-            sqlCommand.Append("'00000000-0000-0000-0000-000000000000', ");
-            sqlCommand.Append("'00000000-0000-0000-0000-000000000000', ");
+            sqlCommand.Append("'00000000-0000-0000-0000-000000000000', "); //EmailChangeGuid
+            sqlCommand.Append("'00000000-0000-0000-0000-000000000000', "); //PasswordResetGuid
             sqlCommand.Append("@DateOfBirth, ");
-
             sqlCommand.Append("@EmailConfirmed, ");
-            sqlCommand.Append("@PwdFormat, ");
             sqlCommand.Append("@PasswordHash, ");
             sqlCommand.Append("@SecurityStamp, ");
             sqlCommand.Append("@PhoneNumber, ");
@@ -983,11 +988,19 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("@TwoFactorEnabled, ");
             sqlCommand.Append("@LockoutEndDateUtc, ");
 
+            sqlCommand.Append("@WebSiteURL, ");
+            sqlCommand.Append("@Country, ");
+            sqlCommand.Append("@State, ");
+            sqlCommand.Append("@AvatarUrl, ");
+            sqlCommand.Append("@Signature, ");
+            sqlCommand.Append("@AuthorBio, ");
+            sqlCommand.Append("@Comment, ");
+
             sqlCommand.Append("@TimeZoneId ");
             sqlCommand.Append(")");
             sqlCommand.Append(";");
 
-            SqlCeParameter[] arParams = new SqlCeParameter[33];
+            SqlCeParameter[] arParams = new SqlCeParameter[34];
 
             arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
             arParams[0].Value = siteId;
@@ -1004,103 +1017,106 @@ namespace cloudscribe.Core.Repositories.SqlCe
             arParams[4] = new SqlCeParameter("@LoweredEmail", SqlDbType.NVarChar, 100);
             arParams[4].Value = email.ToLower();
 
-            arParams[5] = new SqlCeParameter("@ProfileApproved", SqlDbType.Bit);
-            arParams[5].Value = true;
+            arParams[5] = new SqlCeParameter("@AccountApproved", SqlDbType.Bit);
+            arParams[5].Value = accountApproved;
+            
+            arParams[6] = new SqlCeParameter("@Trusted", SqlDbType.Bit);
+            arParams[6].Value = false;
 
-            arParams[6] = new SqlCeParameter("@ApprovedForForums", SqlDbType.Bit);
-            arParams[6].Value = true;
+            arParams[7] = new SqlCeParameter("@DisplayInMemberList", SqlDbType.Bit);
+            arParams[7].Value = displayInMemberList;
+            
+            arParams[8] = new SqlCeParameter("@DateCreated", SqlDbType.DateTime);
+            arParams[8].Value = dateCreated;
 
-            arParams[7] = new SqlCeParameter("@Trusted", SqlDbType.Bit);
-            arParams[7].Value = false;
+            arParams[9] = new SqlCeParameter("@UserGuid", SqlDbType.UniqueIdentifier);
+            arParams[9].Value = userGuid;
 
-            arParams[8] = new SqlCeParameter("@DisplayInMemberList", SqlDbType.Bit);
-            arParams[8].Value = true;
+            arParams[10] = new SqlCeParameter("@IsDeleted", SqlDbType.Bit);
+            arParams[10].Value = false;
 
-            arParams[9] = new SqlCeParameter("@TotalPosts", SqlDbType.Int);
-            arParams[9].Value = 0;
+            arParams[11] = new SqlCeParameter("@FailedPasswordAttemptCount", SqlDbType.Int);
+            arParams[11].Value = 0;
 
-            arParams[10] = new SqlCeParameter("@DateCreated", SqlDbType.DateTime);
-            arParams[10].Value = dateCreated;
+            arParams[12] = new SqlCeParameter("@FailedPwdAnswerAttemptCount", SqlDbType.Int);
+            arParams[12].Value = 0;
 
-            arParams[11] = new SqlCeParameter("@UserGuid", SqlDbType.UniqueIdentifier);
-            arParams[11].Value = userGuid;
+            arParams[13] = new SqlCeParameter("@IsLockedOut", SqlDbType.Bit);
+            arParams[13].Value = isLockedOut;
 
-            arParams[12] = new SqlCeParameter("@IsDeleted", SqlDbType.Bit);
-            arParams[12].Value = false;
+            arParams[14] = new SqlCeParameter("@SiteGuid", SqlDbType.UniqueIdentifier);
+            arParams[14].Value = siteGuid;
+            
+            arParams[15] = new SqlCeParameter("@FirstName", SqlDbType.NVarChar, 100);
+            arParams[15].Value = firstName;
 
-            arParams[13] = new SqlCeParameter("@FailedPasswordAttemptCount", SqlDbType.Int);
-            arParams[13].Value = 0;
+            arParams[16] = new SqlCeParameter("@LastName", SqlDbType.NVarChar, 100);
+            arParams[16].Value = lastName;
+            
+            arParams[17] = new SqlCeParameter("@MustChangePwd", SqlDbType.Bit);
+            arParams[17].Value = mustChangePwd;
 
-            arParams[14] = new SqlCeParameter("@FailedPwdAnswerAttemptCount", SqlDbType.Int);
-            arParams[14].Value = 0;
-
-            arParams[15] = new SqlCeParameter("@IsLockedOut", SqlDbType.Bit);
-            arParams[15].Value = false;
-
-            arParams[16] = new SqlCeParameter("@SiteGuid", SqlDbType.UniqueIdentifier);
-            arParams[16].Value = siteGuid;
-
-            arParams[17] = new SqlCeParameter("@TotalRevenue", SqlDbType.Decimal);
-            arParams[17].Value = 0;
-
-            arParams[18] = new SqlCeParameter("@FirstName", SqlDbType.NVarChar, 100);
-            arParams[18].Value = firstName;
-
-            arParams[19] = new SqlCeParameter("@LastName", SqlDbType.NVarChar, 100);
-            arParams[19].Value = lastName;
-
-            arParams[20] = new SqlCeParameter("@Pwd", SqlDbType.NVarChar, 1000);
-            arParams[20].Value = password;
-
-            arParams[21] = new SqlCeParameter("@MustChangePwd", SqlDbType.Bit);
-            arParams[21].Value = mustChangePwd;
-
-            arParams[22] = new SqlCeParameter("@TimeZoneId", SqlDbType.NVarChar, 32);
-            arParams[22].Value = timeZoneId;
-
-            arParams[23] = new SqlCeParameter("@PasswordSalt", SqlDbType.NVarChar, 128);
-            arParams[23].Value = passwordSalt;
-
-            arParams[24] = new SqlCeParameter("@DateOfBirth", SqlDbType.DateTime);
+            arParams[18] = new SqlCeParameter("@TimeZoneId", SqlDbType.NVarChar, 32);
+            arParams[18].Value = timeZoneId;
+            
+            arParams[19] = new SqlCeParameter("@DateOfBirth", SqlDbType.DateTime);
             if (dateOfBirth == DateTime.MinValue)
             {
-                arParams[24].Value = DBNull.Value;
+                arParams[19].Value = DBNull.Value;
             }
             else
             {
-                arParams[24].Value = dateOfBirth;
+                arParams[19].Value = dateOfBirth;
             }
 
-            arParams[25] = new SqlCeParameter("@EmailConfirmed", SqlDbType.Bit);
-            arParams[25].Value = emailConfirmed;
+            arParams[20] = new SqlCeParameter("@EmailConfirmed", SqlDbType.Bit);
+            arParams[20].Value = emailConfirmed;
+            
+            arParams[21] = new SqlCeParameter("@PasswordHash", SqlDbType.NText);
+            arParams[21].Value = passwordHash;
 
-            arParams[26] = new SqlCeParameter("@PwdFormat", SqlDbType.Int);
-            arParams[26].Value = pwdFormat;
+            arParams[22] = new SqlCeParameter("@SecurityStamp", SqlDbType.NText);
+            arParams[22].Value = securityStamp;
 
-            arParams[27] = new SqlCeParameter("@PasswordHash", SqlDbType.NText);
-            arParams[27].Value = passwordHash;
+            arParams[23] = new SqlCeParameter("@PhoneNumber", SqlDbType.NVarChar, 50);
+            arParams[23].Value = phoneNumber;
 
-            arParams[28] = new SqlCeParameter("@SecurityStamp", SqlDbType.NText);
-            arParams[28].Value = securityStamp;
+            arParams[24] = new SqlCeParameter("@PhoneNumberConfirmed", SqlDbType.Bit);
+            arParams[24].Value = phoneNumberConfirmed;
 
-            arParams[29] = new SqlCeParameter("@PhoneNumber", SqlDbType.NVarChar, 50);
-            arParams[29].Value = phoneNumber;
+            arParams[25] = new SqlCeParameter("@TwoFactorEnabled", SqlDbType.Bit);
+            arParams[25].Value = twoFactorEnabled;
 
-            arParams[30] = new SqlCeParameter("@PhoneNumberConfirmed", SqlDbType.Bit);
-            arParams[30].Value = phoneNumberConfirmed;
-
-            arParams[31] = new SqlCeParameter("@TwoFactorEnabled", SqlDbType.Bit);
-            arParams[31].Value = twoFactorEnabled;
-
-            arParams[32] = new SqlCeParameter("@LockoutEndDateUtc", SqlDbType.DateTime);
+            arParams[26] = new SqlCeParameter("@LockoutEndDateUtc", SqlDbType.DateTime);
             if (lockoutEndDateUtc == null)
             {
-                arParams[32].Value = DBNull.Value;
+                arParams[26].Value = DBNull.Value;
             }
             else
             {
-                arParams[32].Value = lockoutEndDateUtc;
+                arParams[26].Value = lockoutEndDateUtc;
             }
+
+            arParams[27] = new SqlCeParameter("@WebSiteURL", SqlDbType.NVarChar, 100);
+            arParams[27].Value = webSiteUrl;
+
+            arParams[28] = new SqlCeParameter("@Country", SqlDbType.NVarChar, 100);
+            arParams[28].Value = country;
+
+            arParams[29] = new SqlCeParameter("@State", SqlDbType.NVarChar, 100);
+            arParams[29].Value = state;
+
+            arParams[30] = new SqlCeParameter("@AvatarUrl", SqlDbType.NVarChar, 250);
+            arParams[30].Value = avatarUrl;
+
+            arParams[31] = new SqlCeParameter("@Signature", SqlDbType.NText);
+            arParams[31].Value = signature;
+
+            arParams[32] = new SqlCeParameter("@AuthorBio", SqlDbType.NText);
+            arParams[32].Value = authorBio;
+
+            arParams[33] = new SqlCeParameter("@Comment", SqlDbType.NText);
+            arParams[33].Value = comment;
 
 
             int newId = Convert.ToInt32(AdoHelper.DoInsertGetIdentitiy(
@@ -1119,37 +1135,21 @@ namespace cloudscribe.Core.Repositories.SqlCe
             string name,
             string loginName,
             string email,
-            string password,
-            string passwordSalt,
             string gender,
-            bool profileApproved,
-            bool approvedForForums,
+            bool accountApproved,
             bool trusted,
             bool displayInMemberList,
             string webSiteUrl,
             string country,
             string state,
-            string occupation,
-            string interests,
-            string msn,
-            string yahoo,
-            string aim,
-            string icq,
             string avatarUrl,
             string signature,
-            string skin,
             string loweredEmail,
-            string passwordQuestion,
-            string passwordAnswer,
             string comment,
-            int timeOffsetHours,
-            string openIdUri,
-            string windowsLiveId,
             bool mustChangePwd,
             string firstName,
             string lastName,
             string timeZoneId,
-            string editorPreference,
             string newEmail,
             Guid emailChangeGuid,
             Guid passwordResetGuid,
@@ -1157,13 +1157,13 @@ namespace cloudscribe.Core.Repositories.SqlCe
             string authorBio,
             DateTime dateOfBirth,
             bool emailConfirmed,
-            int pwdFormat,
             string passwordHash,
             string securityStamp,
             string phoneNumber,
             bool phoneNumberConfirmed,
             bool twoFactorEnabled,
-            DateTime? lockoutEndDateUtc
+            DateTime? lockoutEndDateUtc,
+            bool isLockedOut
             )
         {
             StringBuilder sqlCommand = new StringBuilder();
@@ -1174,50 +1174,33 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("LoginName = @LoginName, ");
             sqlCommand.Append("Email = @Email, ");
             sqlCommand.Append("LoweredEmail = @LoweredEmail, ");
-            sqlCommand.Append("PasswordQuestion = @PasswordQuestion, ");
-            sqlCommand.Append("PasswordAnswer = @PasswordAnswer, ");
             sqlCommand.Append("Gender = @Gender, ");
-            sqlCommand.Append("ProfileApproved = @ProfileApproved, ");
-            sqlCommand.Append("ApprovedForForums = @ApprovedForForums, ");
+            sqlCommand.Append("AccountApproved = @AccountApproved, ");
             sqlCommand.Append("Trusted = @Trusted, ");
             sqlCommand.Append("DisplayInMemberList = @DisplayInMemberList, ");
             sqlCommand.Append("WebSiteURL = @WebSiteURL, ");
             sqlCommand.Append("Country = @Country, ");
             sqlCommand.Append("State = @State, ");
-            sqlCommand.Append("Occupation = @Occupation, ");
-            sqlCommand.Append("Interests = @Interests, ");
-            sqlCommand.Append("MSN = @MSN, ");
-            sqlCommand.Append("Yahoo = @Yahoo, ");
-            sqlCommand.Append("AIM = @AIM, ");
-            sqlCommand.Append("ICQ = @ICQ, ");
             sqlCommand.Append("AvatarUrl = @AvatarUrl, ");
-            sqlCommand.Append("TimeOffsetHours = @TimeOffsetHours, ");
             sqlCommand.Append("Signature = @Signature, ");
-            sqlCommand.Append("Skin = @Skin, ");
             sqlCommand.Append("Comment = @Comment, ");
-            sqlCommand.Append("OpenIDURI = @OpenIDURI, ");
-            sqlCommand.Append("WindowsLiveID = @WindowsLiveID, ");
             sqlCommand.Append("FirstName = @FirstName, ");
             sqlCommand.Append("LastName = @LastName, ");
-            sqlCommand.Append("Pwd = @Pwd, ");
-            sqlCommand.Append("PasswordSalt = @PasswordSalt, ");
             sqlCommand.Append("RolesChanged = @RolesChanged, ");
             sqlCommand.Append("MustChangePwd = @MustChangePwd, ");
             sqlCommand.Append("NewEmail = @NewEmail, ");
-            sqlCommand.Append("EditorPreference = @EditorPreference, ");
             sqlCommand.Append("EmailChangeGuid = @EmailChangeGuid, ");
             sqlCommand.Append("PasswordResetGuid = @PasswordResetGuid, ");
             sqlCommand.Append("AuthorBio = @AuthorBio, ");
             sqlCommand.Append("DateOfBirth = @DateOfBirth, ");
-
             sqlCommand.Append("EmailConfirmed = @EmailConfirmed, ");
-            sqlCommand.Append("PwdFormat = @PwdFormat, ");
             sqlCommand.Append("PasswordHash = @PasswordHash, ");
             sqlCommand.Append("SecurityStamp = @SecurityStamp, ");
             sqlCommand.Append("PhoneNumber = @PhoneNumber, ");
             sqlCommand.Append("PhoneNumberConfirmed = @PhoneNumberConfirmed, ");
             sqlCommand.Append("TwoFactorEnabled = @TwoFactorEnabled, ");
             sqlCommand.Append("LockoutEndDateUtc = @LockoutEndDateUtc, ");
+            sqlCommand.Append("IsLockedOut = @IsLockedOut, ");
 
             sqlCommand.Append("TimeZoneId = @TimeZoneId ");
 
@@ -1225,7 +1208,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("UserID = @UserID ");
             sqlCommand.Append(";");
 
-            SqlCeParameter[] arParams = new SqlCeParameter[49];
+            SqlCeParameter[] arParams = new SqlCeParameter[32];
 
             arParams[0] = new SqlCeParameter("@UserID", SqlDbType.Int);
             arParams[0].Value = userId;
@@ -1241,194 +1224,104 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
             arParams[4] = new SqlCeParameter("@LoweredEmail", SqlDbType.NVarChar, 100);
             arParams[4].Value = loweredEmail.ToLower();
+            
+            arParams[5] = new SqlCeParameter("@Gender", SqlDbType.NChar, 10);
+            arParams[5].Value = gender;
 
-            arParams[5] = new SqlCeParameter("@PasswordQuestion", SqlDbType.NVarChar, 255);
-            arParams[5].Value = passwordQuestion;
+            arParams[6] = new SqlCeParameter("@AccountApproved", SqlDbType.Bit);
+            arParams[6].Value = accountApproved;
+            
+            arParams[7] = new SqlCeParameter("@Trusted", SqlDbType.Bit);
+            arParams[7].Value = trusted;
 
-            arParams[6] = new SqlCeParameter("@PasswordAnswer", SqlDbType.NVarChar, 255);
-            arParams[6].Value = passwordAnswer;
+            arParams[8] = new SqlCeParameter("@DisplayInMemberList", SqlDbType.Bit);
+            arParams[8].Value = displayInMemberList;
 
-            arParams[7] = new SqlCeParameter("@Gender", SqlDbType.NChar, 10);
-            arParams[7].Value = gender;
+            arParams[9] = new SqlCeParameter("@WebSiteURL", SqlDbType.NVarChar, 100);
+            arParams[9].Value = webSiteUrl;
 
-            arParams[8] = new SqlCeParameter("@ProfileApproved", SqlDbType.Bit);
-            arParams[8].Value = profileApproved;
+            arParams[10] = new SqlCeParameter("@Country", SqlDbType.NVarChar, 100);
+            arParams[10].Value = country;
 
-            arParams[9] = new SqlCeParameter("@ApprovedForForums", SqlDbType.Bit);
-            arParams[9].Value = approvedForForums;
+            arParams[11] = new SqlCeParameter("@State", SqlDbType.NVarChar, 100);
+            arParams[11].Value = state;
+            
+            arParams[12] = new SqlCeParameter("@AvatarUrl", SqlDbType.NVarChar, 255);
+            arParams[12].Value = avatarUrl;
+            
+            arParams[13] = new SqlCeParameter("@Signature", SqlDbType.NText);
+            arParams[13].Value = signature;
+            
+            arParams[14] = new SqlCeParameter("@Comment", SqlDbType.NText);
+            arParams[14].Value = comment;
+            
+            arParams[15] = new SqlCeParameter("@FirstName", SqlDbType.NVarChar, 100);
+            arParams[15].Value = firstName;
 
-            arParams[10] = new SqlCeParameter("@Trusted", SqlDbType.Bit);
-            arParams[10].Value = trusted;
+            arParams[16] = new SqlCeParameter("@LastName", SqlDbType.NVarChar, 100);
+            arParams[16].Value = lastName;
+            
+            arParams[17] = new SqlCeParameter("@MustChangePwd", SqlDbType.Bit);
+            arParams[17].Value = mustChangePwd;
 
-            arParams[11] = new SqlCeParameter("@DisplayInMemberList", SqlDbType.Bit);
-            arParams[11].Value = displayInMemberList;
+            arParams[18] = new SqlCeParameter("@NewEmail", SqlDbType.NVarChar, 100);
+            arParams[18].Value = newEmail;
+            
+            arParams[19] = new SqlCeParameter("@EmailChangeGuid", SqlDbType.UniqueIdentifier);
+            arParams[19].Value = emailChangeGuid;
 
-            arParams[12] = new SqlCeParameter("@WebSiteURL", SqlDbType.NVarChar, 100);
-            arParams[12].Value = webSiteUrl;
+            arParams[20] = new SqlCeParameter("@TimeZoneId", SqlDbType.NVarChar, 32);
+            arParams[20].Value = timeZoneId;
 
-            arParams[13] = new SqlCeParameter("@Country", SqlDbType.NVarChar, 100);
-            arParams[13].Value = country;
+            arParams[21] = new SqlCeParameter("@PasswordResetGuid", SqlDbType.UniqueIdentifier);
+            arParams[21].Value = passwordResetGuid;
+            
+            arParams[22] = new SqlCeParameter("@RolesChanged", SqlDbType.Bit);
+            arParams[22].Value = rolesChanged;
 
-            arParams[14] = new SqlCeParameter("@State", SqlDbType.NVarChar, 100);
-            arParams[14].Value = state;
+            arParams[23] = new SqlCeParameter("@AuthorBio", SqlDbType.NText);
+            arParams[23].Value = authorBio;
 
-            arParams[15] = new SqlCeParameter("@Occupation", SqlDbType.NVarChar, 100);
-            arParams[15].Value = occupation;
-
-            arParams[16] = new SqlCeParameter("@Interests", SqlDbType.NVarChar, 100);
-            arParams[16].Value = interests;
-
-            arParams[17] = new SqlCeParameter("@MSN", SqlDbType.NVarChar, 50);
-            arParams[17].Value = msn;
-
-            arParams[18] = new SqlCeParameter("@Yahoo", SqlDbType.NVarChar, 50);
-            arParams[18].Value = yahoo;
-
-            arParams[19] = new SqlCeParameter("@AIM", SqlDbType.NVarChar, 50);
-            arParams[19].Value = aim;
-
-            arParams[20] = new SqlCeParameter("@ICQ", SqlDbType.NVarChar, 50);
-            arParams[20].Value = icq;
-
-            arParams[21] = new SqlCeParameter("@AvatarUrl", SqlDbType.NVarChar, 255);
-            arParams[21].Value = avatarUrl;
-
-            arParams[22] = new SqlCeParameter("@TimeOffsetHours", SqlDbType.Int);
-            arParams[22].Value = timeOffsetHours;
-
-            arParams[23] = new SqlCeParameter("@Signature", SqlDbType.NText);
-            arParams[23].Value = signature;
-
-            arParams[24] = new SqlCeParameter("@Skin", SqlDbType.NVarChar, 100);
-            arParams[24].Value = skin;
-
-            arParams[25] = new SqlCeParameter("@Comment", SqlDbType.NText);
-            arParams[25].Value = comment;
-
-            arParams[26] = new SqlCeParameter("@OpenIDURI", SqlDbType.NVarChar, 255);
-            arParams[26].Value = openIdUri;
-
-            arParams[27] = new SqlCeParameter("@WindowsLiveID", SqlDbType.NVarChar, 36);
-            arParams[27].Value = windowsLiveId;
-
-            arParams[28] = new SqlCeParameter("@FirstName", SqlDbType.NVarChar, 100);
-            arParams[28].Value = firstName;
-
-            arParams[29] = new SqlCeParameter("@LastName", SqlDbType.NVarChar, 100);
-            arParams[29].Value = lastName;
-
-            arParams[30] = new SqlCeParameter("@Pwd", SqlDbType.NVarChar, 1000);
-            arParams[30].Value = password;
-
-            arParams[31] = new SqlCeParameter("@MustChangePwd", SqlDbType.Bit);
-            arParams[31].Value = mustChangePwd;
-
-            arParams[32] = new SqlCeParameter("@NewEmail", SqlDbType.NVarChar, 100);
-            arParams[32].Value = newEmail;
-
-            arParams[33] = new SqlCeParameter("@EditorPreference", SqlDbType.NVarChar, 100);
-            arParams[33].Value = editorPreference;
-
-            arParams[34] = new SqlCeParameter("@EmailChangeGuid", SqlDbType.UniqueIdentifier);
-            arParams[34].Value = emailChangeGuid;
-
-            arParams[35] = new SqlCeParameter("@TimeZoneId", SqlDbType.NVarChar, 32);
-            arParams[35].Value = timeZoneId;
-
-            arParams[36] = new SqlCeParameter("@PasswordResetGuid", SqlDbType.UniqueIdentifier);
-            arParams[36].Value = passwordResetGuid;
-
-            arParams[37] = new SqlCeParameter("@PasswordSalt", SqlDbType.NVarChar, 128);
-            arParams[37].Value = passwordSalt;
-
-            arParams[38] = new SqlCeParameter("@RolesChanged", SqlDbType.Bit);
-            arParams[38].Value = rolesChanged;
-
-            arParams[39] = new SqlCeParameter("@AuthorBio", SqlDbType.NText);
-            arParams[39].Value = authorBio;
-
-            arParams[40] = new SqlCeParameter("@DateOfBirth", SqlDbType.DateTime);
+            arParams[24] = new SqlCeParameter("@DateOfBirth", SqlDbType.DateTime);
             if (dateOfBirth == DateTime.MinValue)
             {
-                arParams[40].Value = DBNull.Value;
+                arParams[24].Value = DBNull.Value;
             }
             else
             {
-                arParams[40].Value = dateOfBirth;
+                arParams[24].Value = dateOfBirth;
             }
 
-            arParams[41] = new SqlCeParameter("@EmailConfirmed", SqlDbType.Bit);
-            arParams[41].Value = emailConfirmed;
+            arParams[25] = new SqlCeParameter("@EmailConfirmed", SqlDbType.Bit);
+            arParams[25].Value = emailConfirmed;
+            
+            arParams[26] = new SqlCeParameter("@PasswordHash", SqlDbType.NText);
+            arParams[26].Value = passwordHash;
 
-            arParams[42] = new SqlCeParameter("@PwdFormat", SqlDbType.Int);
-            arParams[42].Value = pwdFormat;
+            arParams[27] = new SqlCeParameter("@SecurityStamp", SqlDbType.NText);
+            arParams[27].Value = securityStamp;
 
-            arParams[43] = new SqlCeParameter("@PasswordHash", SqlDbType.NText);
-            arParams[43].Value = passwordHash;
+            arParams[28] = new SqlCeParameter("@PhoneNumber", SqlDbType.NVarChar, 50);
+            arParams[28].Value = phoneNumber;
 
-            arParams[44] = new SqlCeParameter("@SecurityStamp", SqlDbType.NText);
-            arParams[44].Value = securityStamp;
+            arParams[29] = new SqlCeParameter("@PhoneNumberConfirmed", SqlDbType.Bit);
+            arParams[29].Value = phoneNumberConfirmed;
 
-            arParams[45] = new SqlCeParameter("@PhoneNumber", SqlDbType.NVarChar, 50);
-            arParams[45].Value = phoneNumber;
+            arParams[30] = new SqlCeParameter("@TwoFactorEnabled", SqlDbType.Bit);
+            arParams[30].Value = twoFactorEnabled;
 
-            arParams[46] = new SqlCeParameter("@PhoneNumberConfirmed", SqlDbType.Bit);
-            arParams[46].Value = phoneNumberConfirmed;
-
-            arParams[47] = new SqlCeParameter("@TwoFactorEnabled", SqlDbType.Bit);
-            arParams[47].Value = twoFactorEnabled;
-
-            arParams[48] = new SqlCeParameter("@LockoutEndDateUtc", SqlDbType.DateTime);
+            arParams[31] = new SqlCeParameter("@LockoutEndDateUtc", SqlDbType.DateTime);
             if (lockoutEndDateUtc == null)
             {
-                arParams[48].Value = DBNull.Value;
+                arParams[31].Value = DBNull.Value;
             }
             else
             {
-                arParams[48].Value = lockoutEndDateUtc;
+                arParams[31].Value = lockoutEndDateUtc;
             }
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
-                connectionString,
-                CommandType.Text,
-                sqlCommand.ToString(),
-                arParams);
-
-            return (rowsAffected > -1);
-
-        }
-
-        public bool UpdatePasswordAndSalt(
-            int userId,
-            int pwdFormat,
-            string password,
-            string passwordSalt)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("UPDATE mp_Users ");
-            sqlCommand.Append("SET  ");
-
-            sqlCommand.Append("Pwd = @Pwd, ");
-            sqlCommand.Append("PasswordSalt = @PasswordSalt, ");
-            sqlCommand.Append("PwdFormat = @PwdFormat ");
-
-            sqlCommand.Append("WHERE  ");
-            sqlCommand.Append("UserID = @UserID ");
-            sqlCommand.Append(";");
-
-            SqlCeParameter[] arParams = new SqlCeParameter[4];
-
-            arParams[0] = new SqlCeParameter("@UserID", SqlDbType.Int);
-            arParams[0].Value = userId;
-
-            arParams[1] = new SqlCeParameter("@Pwd", SqlDbType.NVarChar, 1000);
-            arParams[1].Value = password;
-
-            arParams[2] = new SqlCeParameter("@PasswordSalt", SqlDbType.NVarChar, 128);
-            arParams[2].Value = passwordSalt;
-
-            arParams[3] = new SqlCeParameter("@PwdFormat", SqlDbType.Int);
-            arParams[3].Value = pwdFormat;
+            arParams[31] = new SqlCeParameter("@IsLockedOut", SqlDbType.Bit);
+            arParams[31].Value = isLockedOut;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 connectionString,
@@ -1439,6 +1332,8 @@ namespace cloudscribe.Core.Repositories.SqlCe
             return (rowsAffected > -1);
 
         }
+
+        
 
         public bool DeleteUser(int userId)
         {
@@ -1797,134 +1692,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
         }
 
-
-        public bool UpdatePasswordQuestionAndAnswer(
-            Guid userGuid,
-            String passwordQuestion,
-            String passwordAnswer)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("UPDATE mp_Users ");
-            sqlCommand.Append("SET  ");
-            sqlCommand.Append("PasswordQuestion = @PasswordQuestion, ");
-            sqlCommand.Append("PasswordAnswer = @PasswordAnswer ");
-
-            sqlCommand.Append("WHERE  ");
-            sqlCommand.Append("UserGuid = @UserGuid ");
-            sqlCommand.Append(";");
-
-            SqlCeParameter[] arParams = new SqlCeParameter[3];
-
-            arParams[0] = new SqlCeParameter("@UserGuid", SqlDbType.UniqueIdentifier);
-            arParams[0].Value = userGuid;
-
-            arParams[1] = new SqlCeParameter("@PasswordQuestion", SqlDbType.NVarChar, 255);
-            arParams[1].Value = passwordQuestion;
-
-            arParams[2] = new SqlCeParameter("@PasswordAnswer", SqlDbType.NVarChar, 255);
-            arParams[2].Value = passwordAnswer;
-
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
-                connectionString,
-                CommandType.Text,
-                sqlCommand.ToString(),
-                arParams);
-
-            return (rowsAffected > -1);
-
-        }
-
-
-        public void UpdateTotalRevenue(Guid userGuid)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("SELECT COALESCE(SUM(SubTotal),0) FROM mp_CommerceReport WHERE UserGuid = @UserGuid; ");
-
-            SqlCeParameter[] arParams = new SqlCeParameter[1];
-
-            arParams[0] = new SqlCeParameter("@UserGuid", SqlDbType.UniqueIdentifier);
-            arParams[0].Value = userGuid;
-
-            decimal totalRevenue = Convert.ToDecimal(AdoHelper.ExecuteScalar(
-                connectionString,
-                CommandType.Text,
-                sqlCommand.ToString(),
-                arParams));
-
-            UpdateTotalRevenue(userGuid, totalRevenue);
-
-        }
-
-        private void UpdateTotalRevenue(Guid userGuid, decimal totalRevenue)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("UPDATE mp_Users ");
-            sqlCommand.Append("SET  ");
-            sqlCommand.Append("TotalRevenue =@TotalRevenue ");
-
-            sqlCommand.Append("WHERE  ");
-            sqlCommand.Append("UserGuid = @UserGuid ");
-            sqlCommand.Append(";");
-
-            SqlCeParameter[] arParams = new SqlCeParameter[2];
-
-            arParams[0] = new SqlCeParameter("@UserGuid", SqlDbType.UniqueIdentifier);
-            arParams[0].Value = userGuid;
-
-            arParams[1] = new SqlCeParameter("@TotalRevenue", SqlDbType.Decimal);
-            arParams[1].Value = totalRevenue;
-
-            AdoHelper.ExecuteNonQuery(
-                connectionString,
-                CommandType.Text,
-                sqlCommand.ToString(),
-                arParams);
-
-        }
-
-
-        public void UpdateTotalRevenue()
-        {
-            // this is a workaround to pretty ugly limitation of SQL CE
-            // where we can't do a scalar update with a SET statement and a sub query
-            // so we have to update each row one at a time
-
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("SELECT COALESCE(SUM(SubTotal),0) As Revenue, UserGuid FROM mp_CommerceReport ; ");
-
-            DataTable dataTable = new DataTable();
-
-            dataTable.Columns.Add("UserGuid", typeof(Guid));
-            dataTable.Columns.Add("Revenue", typeof(decimal));
-
-
-            using (DbDataReader reader = AdoHelper.ExecuteReader(
-                connectionString,
-                CommandType.Text,
-                sqlCommand.ToString(),
-                null))
-            {
-                while (reader.Read())
-                {
-                    DataRow row = dataTable.NewRow();
-
-                    row["UserGuid"] = new Guid(reader["UserGuid"].ToString());
-                    row["Revenue"] = Convert.ToDecimal(reader["Revenue"]);
-                    dataTable.Rows.Add(row);
-                }
-
-
-            }
-
-            foreach (DataRow row in dataTable.Rows)
-            {
-                Guid userGuid = new Guid(row["UserGuid"].ToString());
-                decimal revenue = Convert.ToDecimal(row["Revenue"]);
-                UpdateTotalRevenue(userGuid, revenue);
-            }
-
-
-        }
+        
 
         public bool FlagAsDeleted(int userId)
         {

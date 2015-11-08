@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-06-14
+// Last Modified:			2015-11-08
 // 
 
 using cloudscribe.DbHelpers.Sqlite;
@@ -711,10 +711,8 @@ namespace cloudscribe.Core.Repositories.SQLite
             Guid siteGuid,
             int siteId,
             string fullName,
-            String loginName,
+            string loginName,
             string email,
-            string password,
-            string passwordSalt,
             Guid userGuid,
             DateTime dateCreated,
             bool mustChangePwd,
@@ -723,28 +721,26 @@ namespace cloudscribe.Core.Repositories.SQLite
             string timeZoneId,
             DateTime dateOfBirth,
             bool emailConfirmed,
-            int pwdFormat,
             string passwordHash,
             string securityStamp,
             string phoneNumber,
             bool phoneNumberConfirmed,
             bool twoFactorEnabled,
-            DateTime? lockoutEndDateUtc)
+            DateTime? lockoutEndDateUtc,
+
+            bool accountApproved,
+            bool isLockedOut,
+            bool displayInMemberList,
+            string webSiteUrl,
+            string country,
+            string state,
+            string avatarUrl,
+            string signature,
+            string authorBio,
+            string comment
+            )
         {
-
-            #region bit conversion
-
-            int intmustChangePwd = 0;
-            if (mustChangePwd) { intmustChangePwd = 1; }
-            int intEmailConfirmed = 0;
-            if (emailConfirmed) { intEmailConfirmed = 1; }
-            int intPhoneNumberConfirmed = 0;
-            if (phoneNumberConfirmed) { intPhoneNumberConfirmed = 1; }
-            int intTwoFactorEnabled = 0;
-            if (twoFactorEnabled) { intTwoFactorEnabled = 1; }
-
-            #endregion
-
+            
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("INSERT INTO mp_Users (");
             sqlCommand.Append("SiteID, ");
@@ -752,30 +748,33 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("Name, ");
             sqlCommand.Append("LoginName, ");
             sqlCommand.Append("Email, ");
-
             sqlCommand.Append("FirstName, ");
             sqlCommand.Append("LastName, ");
             sqlCommand.Append("TimeZoneId, ");
             sqlCommand.Append("EmailChangeGuid, ");
             sqlCommand.Append("PasswordResetGuid, ");
-
-            sqlCommand.Append("Pwd, ");
-            sqlCommand.Append("PasswordSalt, ");
             sqlCommand.Append("RolesChanged, ");
             sqlCommand.Append("MustChangePwd, ");
             sqlCommand.Append("DateCreated, ");
-            sqlCommand.Append("TotalPosts, ");
-            sqlCommand.Append("TotalRevenue, ");
             sqlCommand.Append("DateOfBirth, ");
-
             sqlCommand.Append("EmailConfirmed, ");
-            sqlCommand.Append("PwdFormat, ");
             sqlCommand.Append("PasswordHash, ");
             sqlCommand.Append("SecurityStamp, ");
             sqlCommand.Append("PhoneNumber, ");
             sqlCommand.Append("PhoneNumberConfirmed, ");
             sqlCommand.Append("TwoFactorEnabled, ");
             sqlCommand.Append("LockoutEndDateUtc, ");
+
+            sqlCommand.Append("AccountApproved, ");
+            sqlCommand.Append("IsLockedOut, ");
+            sqlCommand.Append("DisplayInMemberList, ");
+            sqlCommand.Append("WebSiteURL, ");
+            sqlCommand.Append("Country, ");
+            sqlCommand.Append("State, ");
+            sqlCommand.Append("AvatarUrl, ");
+            sqlCommand.Append("Signature, ");
+            sqlCommand.Append("AuthorBio, ");
+            sqlCommand.Append("Comment, ");
 
             sqlCommand.Append("UserGuid");
             sqlCommand.Append(")");
@@ -787,24 +786,16 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append(" :FullName , ");
             sqlCommand.Append(" :LoginName , ");
             sqlCommand.Append(" :Email , ");
-
             sqlCommand.Append(":FirstName, ");
             sqlCommand.Append(":LastName, ");
             sqlCommand.Append(":TimeZoneId, ");
             sqlCommand.Append(":EmailChangeGuid, ");
-            sqlCommand.Append("'00000000-0000-0000-0000-000000000000', ");
-
-            sqlCommand.Append(" :Password, ");
-            sqlCommand.Append(":PasswordSalt, ");
-            sqlCommand.Append("0, ");
+            sqlCommand.Append("'00000000-0000-0000-0000-000000000000', "); //PasswordResetGui
+            sqlCommand.Append("0, "); //RolesChanged
             sqlCommand.Append(":MustChangePwd, ");
             sqlCommand.Append(" :DateCreated, ");
-            sqlCommand.Append(" 0, ");
-            sqlCommand.Append(" 0.0, ");
             sqlCommand.Append(":DateOfBirth, ");
-
             sqlCommand.Append(":EmailConfirmed, ");
-            sqlCommand.Append(":PwdFormat, ");
             sqlCommand.Append(":PasswordHash, ");
             sqlCommand.Append(":SecurityStamp, ");
             sqlCommand.Append(":PhoneNumber, ");
@@ -812,12 +803,23 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append(":TwoFactorEnabled, ");
             sqlCommand.Append(":LockoutEndDateUtc, ");
 
+            sqlCommand.Append(":AccountApproved, ");
+            sqlCommand.Append(":IsLockedOut, ");
+            sqlCommand.Append(":DisplayInMemberList, ");
+            sqlCommand.Append(":WebSiteURL, ");
+            sqlCommand.Append(":Country, ");
+            sqlCommand.Append(":State, ");
+            sqlCommand.Append(":AvatarUrl, ");
+            sqlCommand.Append(":Signature, ");
+            sqlCommand.Append(":AuthorBio, ");
+            sqlCommand.Append(":Comment, ");
+
             sqlCommand.Append(" :UserGuid ");
 
             sqlCommand.Append(");");
             sqlCommand.Append("SELECT LAST_INSERT_ROWID();");
 
-            SqliteParameter[] arParams = new SqliteParameter[23];
+            SqliteParameter[] arParams = new SqliteParameter[30];
 
             arParams[0] = new SqliteParameter(":FullName", DbType.String);
             arParams[0].Value = fullName;
@@ -827,82 +829,104 @@ namespace cloudscribe.Core.Repositories.SQLite
 
             arParams[2] = new SqliteParameter(":Email", DbType.String);
             arParams[2].Value = email;
+            
+            arParams[3] = new SqliteParameter(":SiteID", DbType.Int32);
+            arParams[3].Value = siteId;
 
-            arParams[3] = new SqliteParameter(":Password", DbType.String);
-            arParams[3].Value = password;
+            arParams[4] = new SqliteParameter(":UserGuid", DbType.String);
+            arParams[4].Value = userGuid.ToString();
 
-            arParams[4] = new SqliteParameter(":SiteID", DbType.Int32);
-            arParams[4].Value = siteId;
+            arParams[5] = new SqliteParameter(":DateCreated", DbType.DateTime); ;
+            arParams[5].Value = dateCreated;
 
-            arParams[5] = new SqliteParameter(":UserGuid", DbType.String);
-            arParams[5].Value = userGuid.ToString();
+            arParams[6] = new SqliteParameter(":SiteGuid", DbType.String);
+            arParams[6].Value = siteGuid.ToString();
 
-            arParams[6] = new SqliteParameter(":DateCreated", DbType.DateTime); ;
-            arParams[6].Value = dateCreated;
+            arParams[7] = new SqliteParameter(":MustChangePwd", DbType.Int32);
+            arParams[7].Value = mustChangePwd ? 1 : 0;
 
-            arParams[7] = new SqliteParameter(":SiteGuid", DbType.String);
-            arParams[7].Value = siteGuid.ToString();
+            arParams[8] = new SqliteParameter(":FirstName", DbType.String);
+            arParams[8].Value = firstName;
 
-            arParams[8] = new SqliteParameter(":MustChangePwd", DbType.Int32);
-            arParams[8].Value = intmustChangePwd;
+            arParams[9] = new SqliteParameter(":LastName", DbType.String);
+            arParams[9].Value = lastName;
 
-            arParams[9] = new SqliteParameter(":FirstName", DbType.String);
-            arParams[9].Value = firstName;
+            arParams[10] = new SqliteParameter(":TimeZoneId", DbType.String);
+            arParams[10].Value = timeZoneId;
 
-            arParams[10] = new SqliteParameter(":LastName", DbType.String);
-            arParams[10].Value = lastName;
-
-            arParams[11] = new SqliteParameter(":TimeZoneId", DbType.String);
-            arParams[11].Value = timeZoneId;
-
-            arParams[12] = new SqliteParameter(":EmailChangeGuid", DbType.String);
-            arParams[12].Value = Guid.Empty.ToString();
-
-            arParams[13] = new SqliteParameter(":PasswordSalt", DbType.String);
-            arParams[13].Value = passwordSalt;
-
-            arParams[14] = new SqliteParameter(":DateOfBirth", DbType.DateTime);
+            arParams[11] = new SqliteParameter(":EmailChangeGuid", DbType.String);
+            arParams[11].Value = Guid.Empty.ToString();
+            
+            arParams[12] = new SqliteParameter(":DateOfBirth", DbType.DateTime);
 
             if (dateOfBirth == DateTime.MinValue)
             {
-                arParams[14].Value = DBNull.Value;
+                arParams[12].Value = DBNull.Value;
             }
             else
             {
-                arParams[14].Value = dateOfBirth;
+                arParams[12].Value = dateOfBirth;
             }
 
-            arParams[15] = new SqliteParameter(":EmailConfirmed", DbType.Int32);
-            arParams[15].Value = intEmailConfirmed;
+            arParams[13] = new SqliteParameter(":EmailConfirmed", DbType.Int32);
+            arParams[13].Value = emailConfirmed ? 1 : 0;
+            
+            arParams[14] = new SqliteParameter(":PasswordHash", DbType.Object);
+            arParams[14].Value = passwordHash;
 
-            arParams[16] = new SqliteParameter(":PwdFormat", DbType.Int32);
-            arParams[16].Value = pwdFormat;
+            arParams[15] = new SqliteParameter(":SecurityStamp", DbType.Object);
+            arParams[15].Value = securityStamp;
 
-            arParams[17] = new SqliteParameter(":PasswordHash", DbType.Object);
-            arParams[17].Value = passwordHash;
+            arParams[16] = new SqliteParameter(":PhoneNumber", DbType.String);
+            arParams[16].Value = phoneNumber;
 
-            arParams[18] = new SqliteParameter(":SecurityStamp", DbType.Object);
-            arParams[18].Value = securityStamp;
+            arParams[17] = new SqliteParameter(":PhoneNumberConfirmed", DbType.Int32);
+            arParams[17].Value = phoneNumberConfirmed ? 1 : 0;
 
-            arParams[19] = new SqliteParameter(":PhoneNumber", DbType.String);
-            arParams[19].Value = phoneNumber;
+            arParams[18] = new SqliteParameter(":TwoFactorEnabled", DbType.Int32);
+            arParams[18].Value = twoFactorEnabled ? 1 : 0;
 
-            arParams[20] = new SqliteParameter(":PhoneNumberConfirmed", DbType.Int32);
-            arParams[20].Value = intPhoneNumberConfirmed;
-
-            arParams[21] = new SqliteParameter(":TwoFactorEnabled", DbType.Int32);
-            arParams[21].Value = intTwoFactorEnabled;
-
-            arParams[22] = new SqliteParameter(":LockoutEndDateUtc", DbType.DateTime);
+            arParams[19] = new SqliteParameter(":LockoutEndDateUtc", DbType.DateTime);
 
             if (lockoutEndDateUtc == null)
             {
-                arParams[22].Value = DBNull.Value;
+                arParams[19].Value = DBNull.Value;
             }
             else
             {
-                arParams[22].Value = lockoutEndDateUtc;
+                arParams[19].Value = lockoutEndDateUtc;
             }
+
+            arParams[20] = new SqliteParameter(":AccountApproved", DbType.Int32);
+            arParams[20].Value = accountApproved ? 1 : 0;
+
+            arParams[21] = new SqliteParameter(":IsLockedOut", DbType.Int32);
+            arParams[21].Value = isLockedOut ? 1 : 0;
+
+            arParams[22] = new SqliteParameter(":DisplayInMemberList", DbType.Int32);
+            arParams[22].Value = displayInMemberList ? 1 : 0;
+
+            arParams[23] = new SqliteParameter(":WebSiteURL", DbType.String);
+            arParams[23].Value = webSiteUrl;
+
+            arParams[24] = new SqliteParameter(":Country", DbType.String);
+            arParams[24].Value = country;
+
+            arParams[25] = new SqliteParameter(":State", DbType.String);
+            arParams[25].Value = state;
+
+            arParams[26] = new SqliteParameter(":AvatarUrl", DbType.String);
+            arParams[26].Value = avatarUrl;
+
+            arParams[27] = new SqliteParameter(":Signature", DbType.Object);
+            arParams[27].Value = signature;
+
+            arParams[28] = new SqliteParameter(":AuthorBio", DbType.Object);
+            arParams[28].Value = authorBio;
+
+            arParams[29] = new SqliteParameter(":Comment", DbType.Object);
+            arParams[29].Value = comment;
+
 
             int newID = Convert.ToInt32(AdoHelper.ExecuteScalar(
                    connectionString,
@@ -915,40 +939,24 @@ namespace cloudscribe.Core.Repositories.SQLite
 
         public bool UpdateUser(
             int userId,
-            string fullName,
+            string name,
             string loginName,
             string email,
-            string password,
-            string passwordSalt,
             string gender,
-            bool profileApproved,
-            bool approvedForForums,
+            bool accountApproved,
             bool trusted,
             bool displayInMemberList,
             string webSiteUrl,
             string country,
             string state,
-            string occupation,
-            string interests,
-            string msn,
-            string yahoo,
-            string aim,
-            string icq,
             string avatarUrl,
             string signature,
-            string skin,
             string loweredEmail,
-            string passwordQuestion,
-            string passwordAnswer,
             string comment,
-            int timeOffsetHours,
-            string openIdUri,
-            string windowsLiveId,
             bool mustChangePwd,
             string firstName,
             string lastName,
             string timeZoneId,
-            string editorPreference,
             string newEmail,
             Guid emailChangeGuid,
             Guid passwordResetGuid,
@@ -956,105 +964,43 @@ namespace cloudscribe.Core.Repositories.SQLite
             string authorBio,
             DateTime dateOfBirth,
             bool emailConfirmed,
-            int pwdFormat,
             string passwordHash,
             string securityStamp,
             string phoneNumber,
             bool phoneNumberConfirmed,
             bool twoFactorEnabled,
-            DateTime? lockoutEndDateUtc)
+            DateTime? lockoutEndDateUtc,
+            bool isLockedOut
+            )
         {
-            #region bit conversion
-
-            byte approved = 1;
-            if (!profileApproved)
-            {
-                approved = 0;
-            }
-
-            byte canPost = 1;
-            if (!approvedForForums)
-            {
-                canPost = 0;
-            }
-
-            byte trust = 1;
-            if (!trusted)
-            {
-                trust = 0;
-            }
-
-            byte displayInList = 1;
-            if (!displayInMemberList)
-            {
-                displayInList = 0;
-            }
-
-            int intmustChangePwd = 0;
-            if (mustChangePwd) { intmustChangePwd = 1; }
-
-            int introlesChanged = 0;
-            if (rolesChanged) { introlesChanged = 1; }
-
-            int intEmailConfirmed = 0;
-            if (emailConfirmed) { intEmailConfirmed = 1; }
-
-            int intPhoneNumberConfirmed = 0;
-            if (phoneNumberConfirmed) { intPhoneNumberConfirmed = 1; }
-
-            int intTwoFactorEnabled = 0;
-            if (twoFactorEnabled) { intTwoFactorEnabled = 1; }
-
-            #endregion
-
-
+            
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("UPDATE mp_Users ");
-            sqlCommand.Append("SET Email = :Email ,   ");
-            sqlCommand.Append("Name = :FullName,    ");
-            sqlCommand.Append("LoginName = :LoginName,    ");
-
-            sqlCommand.Append("FirstName = :FirstName,    ");
-            sqlCommand.Append("LastName = :LastName,    ");
-            sqlCommand.Append("TimeZoneId = :TimeZoneId,    ");
-            sqlCommand.Append("EditorPreference = :EditorPreference,    ");
-            sqlCommand.Append("NewEmail = :NewEmail,    ");
-            sqlCommand.Append("EmailChangeGuid = :EmailChangeGuid,    ");
-            sqlCommand.Append("PasswordResetGuid = :PasswordResetGuid,    ");
-
-            sqlCommand.Append("Pwd = :Password,    ");
-            sqlCommand.Append("PasswordSalt = :PasswordSalt,    ");
-            sqlCommand.Append("RolesChanged = :RolesChanged,    ");
-            sqlCommand.Append("MustChangePwd = :MustChangePwd,    ");
-            sqlCommand.Append("Gender = :Gender,    ");
-            sqlCommand.Append("ProfileApproved = :ProfileApproved,    ");
-            sqlCommand.Append("ApprovedForForums = :ApprovedForForums,    ");
-            sqlCommand.Append("Trusted = :Trusted,    ");
-            sqlCommand.Append("DisplayInMemberList = :DisplayInMemberList,    ");
-            sqlCommand.Append("WebSiteURL = :WebSiteURL,    ");
-            sqlCommand.Append("Country = :Country,    ");
-            sqlCommand.Append("State = :State,    ");
-            sqlCommand.Append("Occupation = :Occupation,    ");
-            sqlCommand.Append("Interests = :Interests,    ");
-            sqlCommand.Append("MSN = :MSN,    ");
-            sqlCommand.Append("Yahoo = :Yahoo,   ");
-            sqlCommand.Append("AIM = :AIM,   ");
-            sqlCommand.Append("ICQ = :ICQ,    ");
-            sqlCommand.Append("AvatarUrl = :AvatarUrl,    ");
-            sqlCommand.Append("Signature = :Signature,    ");
-            sqlCommand.Append("Skin = :Skin,    ");
-            sqlCommand.Append("AuthorBio = :AuthorBio,    ");
-
-            sqlCommand.Append("LoweredEmail = :LoweredEmail,    ");
-            sqlCommand.Append("PasswordQuestion = :PasswordQuestion,    ");
-            sqlCommand.Append("PasswordAnswer = :PasswordAnswer,    ");
-            sqlCommand.Append("Comment = :Comment,    ");
-            sqlCommand.Append("OpenIDURI = :OpenIDURI,    ");
-            sqlCommand.Append("WindowsLiveID = :WindowsLiveID,    ");
-            sqlCommand.Append("DateOfBirth = :DateOfBirth,    ");
-
+            sqlCommand.Append("SET Email = :Email ,");
+            sqlCommand.Append("Name = :FullName,");
+            sqlCommand.Append("LoginName = :LoginName,");
+            sqlCommand.Append("FirstName = :FirstName,");
+            sqlCommand.Append("LastName = :LastName,");
+            sqlCommand.Append("TimeZoneId = :TimeZoneId,");
+            sqlCommand.Append("NewEmail = :NewEmail,");
+            sqlCommand.Append("EmailChangeGuid = :EmailChangeGuid,");
+            sqlCommand.Append("PasswordResetGuid = :PasswordResetGuid,");
+            sqlCommand.Append("RolesChanged = :RolesChanged,");
+            sqlCommand.Append("MustChangePwd = :MustChangePwd,");
+            sqlCommand.Append("Gender = :Gender,");
+            sqlCommand.Append("AccountApproved = :AccountApproved,");
+            sqlCommand.Append("Trusted = :Trusted,");
+            sqlCommand.Append("DisplayInMemberList = :DisplayInMemberList,");
+            sqlCommand.Append("WebSiteURL = :WebSiteURL,");
+            sqlCommand.Append("Country = :Country,");
+            sqlCommand.Append("State = :State,");
+            sqlCommand.Append("AvatarUrl = :AvatarUrl,");
+            sqlCommand.Append("Signature = :Signature,");
+            sqlCommand.Append("AuthorBio = :AuthorBio,");
+            sqlCommand.Append("LoweredEmail = :LoweredEmail,");
+            sqlCommand.Append("Comment = :Comment,");
+            sqlCommand.Append("DateOfBirth = :DateOfBirth,");
             sqlCommand.Append("EmailConfirmed = :EmailConfirmed, ");
-            sqlCommand.Append("PwdFormat = :PwdFormat, ");
             sqlCommand.Append("PasswordHash = :PasswordHash, ");
             sqlCommand.Append("SecurityStamp = :SecurityStamp, ");
             sqlCommand.Append("PhoneNumber = :PhoneNumber, ");
@@ -1062,213 +1008,126 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("TwoFactorEnabled = :TwoFactorEnabled, ");
             sqlCommand.Append("LockoutEndDateUtc = :LockoutEndDateUtc, ");
 
-            sqlCommand.Append("TimeOffsetHours = :TimeOffsetHours    ");
+            sqlCommand.Append("IsLockedOut = :IsLockedOut ");
 
             sqlCommand.Append("WHERE UserID = :UserID ;");
 
-            SqliteParameter[] arParams = new SqliteParameter[49];
+            SqliteParameter[] arParams = new SqliteParameter[33];
 
             arParams[0] = new SqliteParameter(":UserID", DbType.Int32);
             arParams[0].Value = userId;
 
             arParams[1] = new SqliteParameter(":Email", DbType.String);
             arParams[1].Value = email;
+            
+            arParams[2] = new SqliteParameter(":Gender", DbType.String);
+            arParams[2].Value = gender;
 
-            arParams[2] = new SqliteParameter(":Password", DbType.String);
-            arParams[2].Value = password;
+            arParams[3] = new SqliteParameter(":AccountApproved", DbType.Int32);
+            arParams[3].Value = accountApproved ? 1 : 0;
+            
+            arParams[4] = new SqliteParameter(":Trusted", DbType.Int32);
+            arParams[4].Value = trusted ? 1 : 0;
 
-            arParams[3] = new SqliteParameter(":Gender", DbType.String);
-            arParams[3].Value = gender;
+            arParams[5] = new SqliteParameter(":DisplayInMemberList", DbType.Int32);
+            arParams[5].Value = displayInMemberList ? 1 : 0;
 
-            arParams[4] = new SqliteParameter(":ProfileApproved", DbType.Int32);
-            arParams[4].Value = approved;
+            arParams[6] = new SqliteParameter(":WebSiteURL", DbType.String);
+            arParams[6].Value = webSiteUrl;
 
-            arParams[5] = new SqliteParameter(":ApprovedForForums", DbType.Int32);
-            arParams[5].Value = canPost;
+            arParams[7] = new SqliteParameter(":Country", DbType.String);
+            arParams[7].Value = country;
 
-            arParams[6] = new SqliteParameter(":Trusted", DbType.Int32);
-            arParams[6].Value = trust;
+            arParams[8] = new SqliteParameter(":State", DbType.String);
+            arParams[8].Value = state;
+            
+            arParams[9] = new SqliteParameter(":AvatarUrl", DbType.String);
+            arParams[9].Value = avatarUrl;
 
-            arParams[7] = new SqliteParameter(":DisplayInMemberList", DbType.Int32);
-            arParams[7].Value = displayInList;
+            arParams[10] = new SqliteParameter(":Signature", DbType.Object);
+            arParams[10].Value = signature;
+            
+            arParams[11] = new SqliteParameter(":FullName", DbType.String);
+            arParams[11].Value = name;
 
-            arParams[8] = new SqliteParameter(":WebSiteURL", DbType.String);
-            arParams[8].Value = webSiteUrl;
+            arParams[12] = new SqliteParameter(":LoginName", DbType.String);
+            arParams[12].Value = loginName;
 
-            arParams[9] = new SqliteParameter(":Country", DbType.String);
-            arParams[9].Value = country;
+            arParams[13] = new SqliteParameter(":LoweredEmail", DbType.String);
+            arParams[13].Value = loweredEmail;
+            
+            arParams[14] = new SqliteParameter(":Comment", DbType.Object);
+            arParams[14].Value = comment;
+            
+            arParams[15] = new SqliteParameter(":MustChangePwd", DbType.Int32);
+            arParams[15].Value = mustChangePwd ? 1 : 0;
 
-            arParams[10] = new SqliteParameter(":State", DbType.String);
-            arParams[10].Value = state;
+            arParams[16] = new SqliteParameter(":FirstName", DbType.String);
+            arParams[16].Value = firstName;
 
-            arParams[11] = new SqliteParameter(":Occupation", DbType.String);
-            arParams[11].Value = occupation;
+            arParams[17] = new SqliteParameter(":LastName", DbType.String);
+            arParams[17].Value = lastName;
 
-            arParams[12] = new SqliteParameter(":Interests", DbType.String);
-            arParams[12].Value = interests;
+            arParams[18] = new SqliteParameter(":TimeZoneId", DbType.String);
+            arParams[18].Value = timeZoneId;
+            
+            arParams[19] = new SqliteParameter(":NewEmail", DbType.String);
+            arParams[19].Value = newEmail;
 
-            arParams[13] = new SqliteParameter(":MSN", DbType.String);
-            arParams[13].Value = msn;
+            arParams[20] = new SqliteParameter(":EmailChangeGuid", DbType.String);
+            arParams[20].Value = emailChangeGuid.ToString();
 
-            arParams[14] = new SqliteParameter(":Yahoo", DbType.String);
-            arParams[14].Value = yahoo;
+            arParams[21] = new SqliteParameter(":PasswordResetGuid", DbType.String);
+            arParams[21].Value = passwordResetGuid.ToString();
+            
+            arParams[22] = new SqliteParameter(":RolesChanged", DbType.Int32);
+            arParams[22].Value = rolesChanged ? 1 : 0;
 
-            arParams[15] = new SqliteParameter(":AIM", DbType.String);
-            arParams[15].Value = aim;
+            arParams[23] = new SqliteParameter(":AuthorBio", DbType.Object);
+            arParams[23].Value = authorBio;
 
-            arParams[16] = new SqliteParameter(":ICQ", DbType.String);
-            arParams[16].Value = icq;
-
-            arParams[17] = new SqliteParameter(":AvatarUrl", DbType.String);
-            arParams[17].Value = avatarUrl;
-
-            arParams[18] = new SqliteParameter(":Signature", DbType.Object);
-            arParams[18].Value = signature;
-
-            arParams[19] = new SqliteParameter(":Skin", DbType.String);
-            arParams[19].Value = skin;
-
-            arParams[20] = new SqliteParameter(":FullName", DbType.String);
-            arParams[20].Value = fullName;
-
-            arParams[21] = new SqliteParameter(":LoginName", DbType.String);
-            arParams[21].Value = loginName;
-
-            arParams[22] = new SqliteParameter(":LoweredEmail", DbType.String);
-            arParams[22].Value = loweredEmail;
-
-            arParams[23] = new SqliteParameter(":PasswordQuestion", DbType.String);
-            arParams[23].Value = passwordQuestion;
-
-            arParams[24] = new SqliteParameter(":PasswordAnswer", DbType.String);
-            arParams[24].Value = passwordAnswer;
-
-            arParams[25] = new SqliteParameter(":Comment", DbType.Object);
-            arParams[25].Value = comment;
-
-            arParams[26] = new SqliteParameter(":TimeOffsetHours", DbType.Int32);
-            arParams[26].Value = timeOffsetHours;
-
-            arParams[27] = new SqliteParameter(":OpenIDURI", DbType.String);
-            arParams[27].Value = openIdUri;
-
-            arParams[28] = new SqliteParameter(":WindowsLiveID", DbType.String);
-            arParams[28].Value = windowsLiveId;
-
-            arParams[29] = new SqliteParameter(":MustChangePwd", DbType.Int32);
-            arParams[29].Value = intmustChangePwd;
-
-            arParams[30] = new SqliteParameter(":FirstName", DbType.String);
-            arParams[30].Value = firstName;
-
-            arParams[31] = new SqliteParameter(":LastName", DbType.String);
-            arParams[31].Value = lastName;
-
-            arParams[32] = new SqliteParameter(":TimeZoneId", DbType.String);
-            arParams[32].Value = timeZoneId;
-
-            arParams[33] = new SqliteParameter(":EditorPreference", DbType.String);
-            arParams[33].Value = editorPreference;
-
-            arParams[34] = new SqliteParameter(":NewEmail", DbType.String);
-            arParams[34].Value = newEmail;
-
-            arParams[35] = new SqliteParameter(":EmailChangeGuid", DbType.String);
-            arParams[35].Value = emailChangeGuid.ToString();
-
-            arParams[36] = new SqliteParameter(":PasswordResetGuid", DbType.String);
-            arParams[36].Value = passwordResetGuid.ToString();
-
-            arParams[37] = new SqliteParameter(":PasswordSalt", DbType.String);
-            arParams[37].Value = passwordSalt;
-
-            arParams[38] = new SqliteParameter(":RolesChanged", DbType.Int32);
-            arParams[38].Value = introlesChanged;
-
-            arParams[39] = new SqliteParameter(":AuthorBio", DbType.Object);
-            arParams[39].Value = authorBio;
-
-            arParams[40] = new SqliteParameter(":DateOfBirth", DbType.DateTime);
+            arParams[24] = new SqliteParameter(":DateOfBirth", DbType.DateTime);
 
             if (dateOfBirth == DateTime.MinValue)
             {
-                arParams[40].Value = DBNull.Value;
+                arParams[24].Value = DBNull.Value;
             }
             else
             {
-                arParams[40].Value = dateOfBirth;
+                arParams[24].Value = dateOfBirth;
             }
 
-            arParams[41] = new SqliteParameter(":EmailConfirmed", DbType.Int32);
-            arParams[41].Value = intEmailConfirmed;
+            arParams[25] = new SqliteParameter(":EmailConfirmed", DbType.Int32);
+            arParams[25].Value = emailConfirmed ? 1 : 0;
+            
+            arParams[26] = new SqliteParameter(":PasswordHash", DbType.Object);
+            arParams[26].Value = passwordHash;
 
-            arParams[42] = new SqliteParameter(":PwdFormat", DbType.Int32);
-            arParams[42].Value = pwdFormat;
+            arParams[27] = new SqliteParameter(":SecurityStamp", DbType.Object);
+            arParams[27].Value = securityStamp;
 
-            arParams[43] = new SqliteParameter(":PasswordHash", DbType.Object);
-            arParams[43].Value = passwordHash;
+            arParams[28] = new SqliteParameter(":PhoneNumber", DbType.String);
+            arParams[28].Value = phoneNumber;
 
-            arParams[44] = new SqliteParameter(":SecurityStamp", DbType.Object);
-            arParams[44].Value = securityStamp;
+            arParams[29] = new SqliteParameter(":PhoneNumberConfirmed", DbType.Int32);
+            arParams[29].Value = phoneNumberConfirmed ? 1 :0;
 
-            arParams[45] = new SqliteParameter(":PhoneNumber", DbType.String);
-            arParams[45].Value = phoneNumber;
+            arParams[30] = new SqliteParameter(":TwoFactorEnabled", DbType.Int32);
+            arParams[30].Value = twoFactorEnabled ? 1 : 0;
 
-            arParams[46] = new SqliteParameter(":PhoneNumberConfirmed", DbType.Int32);
-            arParams[46].Value = intPhoneNumberConfirmed;
-
-            arParams[47] = new SqliteParameter(":TwoFactorEnabled", DbType.Int32);
-            arParams[47].Value = intTwoFactorEnabled;
-
-            arParams[48] = new SqliteParameter(":LockoutEndDateUtc", DbType.DateTime);
+            arParams[31] = new SqliteParameter(":LockoutEndDateUtc", DbType.DateTime);
 
             if (lockoutEndDateUtc == null)
             {
-                arParams[48].Value = DBNull.Value;
+                arParams[31].Value = DBNull.Value;
             }
             else
             {
-                arParams[48].Value = lockoutEndDateUtc;
+                arParams[31].Value = lockoutEndDateUtc;
             }
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
-                connectionString,
-                sqlCommand.ToString(),
-                arParams);
-
-            return (rowsAffected > 0);
-
-        }
-
-        public bool UpdatePasswordAndSalt(
-            int userId,
-            int pwdFormat,
-            string password,
-            string passwordSalt)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("UPDATE mp_Users ");
-            sqlCommand.Append("SET  ");
-
-            sqlCommand.Append("Pwd = :Password,    ");
-            sqlCommand.Append("PasswordSalt = :PasswordSalt, ");
-            sqlCommand.Append("PwdFormat = :PwdFormat ");
-
-            sqlCommand.Append("WHERE UserID = :UserID ;");
-
-            SqliteParameter[] arParams = new SqliteParameter[4];
-
-            arParams[0] = new SqliteParameter(":UserID", DbType.Int32);
-            arParams[0].Value = userId;
-
-            arParams[1] = new SqliteParameter(":Password", DbType.String);
-            arParams[1].Value = password;
-
-            arParams[2] = new SqliteParameter(":PasswordSalt", DbType.String);
-            arParams[2].Value = passwordSalt;
-
-            arParams[3] = new SqliteParameter(":PwdFormat", DbType.Int32);
-            arParams[3].Value = pwdFormat;
+            arParams[32] = new SqliteParameter(":IsLockedOut", DbType.Int32);
+            arParams[32].Value = isLockedOut ? 1 : 0;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 connectionString,
@@ -1278,6 +1137,8 @@ namespace cloudscribe.Core.Repositories.SQLite
             return (rowsAffected > 0);
 
         }
+
+        
 
 
         public bool DeleteUser(int userId)
@@ -1650,79 +1511,7 @@ namespace cloudscribe.Core.Repositories.SQLite
             return (rowsAffected > 0);
         }
 
-        public bool UpdatePasswordQuestionAndAnswer(
-            Guid userGuid,
-            String passwordQuestion,
-            String passwordAnswer)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("UPDATE mp_Users ");
-            sqlCommand.Append("SET PasswordQuestion = :PasswordQuestion,  ");
-            sqlCommand.Append("PasswordAnswer = :PasswordAnswer  ");
-
-            sqlCommand.Append("WHERE UserGuid = :UserGuid  ;");
-
-            SqliteParameter[] arParams = new SqliteParameter[3];
-
-            arParams[0] = new SqliteParameter(":UserGuid", DbType.String);
-            arParams[0].Value = userGuid.ToString();
-
-            arParams[1] = new SqliteParameter(":PasswordQuestion", DbType.String);
-            arParams[1].Value = passwordQuestion;
-
-            arParams[2] = new SqliteParameter(":PasswordAnswer", DbType.String);
-            arParams[2].Value = passwordAnswer;
-
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
-                connectionString,
-                sqlCommand.ToString(),
-                arParams);
-
-            return (rowsAffected > 0);
-
-        }
-
-        public void UpdateTotalRevenue(Guid userGuid)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("UPDATE mp_Users ");
-            sqlCommand.Append("SET TotalRevenue = COALESCE((  ");
-            sqlCommand.Append("SELECT SUM(SubTotal) FROM mp_CommerceReport WHERE UserGuid = :UserGuid)  ");
-            sqlCommand.Append(", 0) ");
-
-            sqlCommand.Append("WHERE UserGuid = :UserGuid  ;");
-
-            SqliteParameter[] arParams = new SqliteParameter[1];
-
-            arParams[0] = new SqliteParameter(":UserGuid", DbType.String);
-            arParams[0].Value = userGuid.ToString();
-
-            AdoHelper.ExecuteNonQuery(
-                connectionString,
-                sqlCommand.ToString(),
-                arParams);
-        }
-
-        public void UpdateTotalRevenue()
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("UPDATE mp_Users ");
-            sqlCommand.Append("SET TotalRevenue = COALESCE((  ");
-            sqlCommand.Append("SELECT SUM(SubTotal) FROM mp_CommerceReport WHERE UserGuid = mp_Users.UserGuid)  ");
-            sqlCommand.Append(", 0) ");
-
-            sqlCommand.Append("  ;");
-
-            AdoHelper.ExecuteNonQuery(
-                connectionString,
-                sqlCommand.ToString(),
-                null);
-
-        }
-
-
-
-
+        
         public bool FlagAsDeleted(int userId)
         {
             StringBuilder sqlCommand = new StringBuilder();
@@ -1763,48 +1552,7 @@ namespace cloudscribe.Core.Repositories.SQLite
             return (rowsAffected > 0);
         }
 
-        public bool IncrementTotalPosts(int userId)
-        {
-
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("UPDATE mp_Users ");
-            sqlCommand.Append("SET	TotalPosts = TotalPosts + 1 ");
-            sqlCommand.Append("WHERE UserID = :UserID  ;");
-
-            SqliteParameter[] arParams = new SqliteParameter[1];
-
-            arParams[0] = new SqliteParameter(":UserID", DbType.Int32);
-            arParams[0].Value = userId;
-
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
-                connectionString,
-                sqlCommand.ToString(),
-                arParams);
-
-            return (rowsAffected > 0);
-        }
-
-        public bool DecrementTotalPosts(int userId)
-        {
-
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("UPDATE mp_Users ");
-            sqlCommand.Append("SET	TotalPosts = TotalPosts - 1 ");
-            sqlCommand.Append("WHERE UserID = :UserID  ;");
-
-            SqliteParameter[] arParams = new SqliteParameter[1];
-
-            arParams[0] = new SqliteParameter(":UserID", DbType.Int32);
-            arParams[0].Value = userId;
-
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
-                connectionString,
-                sqlCommand.ToString(),
-                arParams);
-
-            return (rowsAffected > 0);
-        }
-
+        
         public DbDataReader GetRolesByUser(int siteId, int userId)
         {
             StringBuilder sqlCommand = new StringBuilder();
