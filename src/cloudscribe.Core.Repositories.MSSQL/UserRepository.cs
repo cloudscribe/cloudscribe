@@ -95,9 +95,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
                     user.AuthorBio,
                     user.Comment
                     );
-
-
-                
+ 
             }
 
             
