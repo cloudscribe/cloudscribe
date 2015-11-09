@@ -485,7 +485,7 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             sqlCommand.Append("FROM	mp_users u ");
 
-            sqlCommand.Append("WHERE u.profileapproved = true   ");
+            sqlCommand.Append("WHERE u.accountapproved = true   ");
             sqlCommand.Append("AND u.siteid = :siteid   ");
 
             if (userNameBeginsWith.Length > 0)
@@ -530,7 +530,7 @@ namespace cloudscribe.Core.Repositories.pgsql
             StringBuilder sqlCommand = new StringBuilder();
 
             sqlCommand.Append("SELECT Count(*) FROM mp_users WHERE siteid = :siteid ");
-            sqlCommand.Append("AND profileapproved = true ");
+            sqlCommand.Append("AND accountapproved = true ");
             sqlCommand.Append("AND displayinmemberlist = true ");
             sqlCommand.Append("AND isdeleted = false ");
 
@@ -600,7 +600,7 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append("WHERE  ");
             sqlCommand.Append("siteid = :siteid  ");
 
-            sqlCommand.Append("AND profileapproved = true ");
+            sqlCommand.Append("AND accountapproved = true ");
             sqlCommand.Append("AND displayinmemberlist = true ");
             sqlCommand.Append("AND isdeleted = false ");
 
@@ -840,7 +840,7 @@ namespace cloudscribe.Core.Repositories.pgsql
         {
             StringBuilder sqlCommand = new StringBuilder();
 
-            sqlCommand.Append("SELECT Count(*) FROM mp_users WHERE siteid = :siteid AND approvedforforums = false; ");
+            sqlCommand.Append("SELECT Count(*) FROM mp_users WHERE siteid = :siteid AND accountapproved = false; ");
 
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
@@ -881,7 +881,7 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append("WHERE  ");
             sqlCommand.Append("siteid = :siteid  ");
             sqlCommand.Append("AND ");
-            sqlCommand.Append("approvedforforums = false ");
+            sqlCommand.Append("accountapproved = false ");
 
             sqlCommand.Append("ORDER BY  ");
             sqlCommand.Append("name  ");

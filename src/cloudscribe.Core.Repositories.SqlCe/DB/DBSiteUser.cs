@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2010-04-06
-// Last Modified:			2015-11-08
+// Last Modified:			2015-11-09
 // 
 
 using cloudscribe.DbHelpers.SqlCe;
@@ -210,7 +210,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("WHERE ");
             sqlCommand.Append("SiteID = @SiteID ");
             sqlCommand.Append("AND IsDeleted = 0 ");
-            sqlCommand.Append("AND ProfileApproved = 1 ");
+            sqlCommand.Append("AND AccountApproved = 1 ");
             sqlCommand.Append(";");
 
             SqlCeParameter[] arParams = new SqlCeParameter[1];
@@ -257,7 +257,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("WHERE ");
             sqlCommand.Append("SiteID = @SiteID ");
             sqlCommand.Append("AND ");
-            sqlCommand.Append("ApprovedForForums = 0 ");
+            sqlCommand.Append("AccountApproved = 0 ");
             sqlCommand.Append(";");
 
             SqlCeParameter[] arParams = new SqlCeParameter[1];
@@ -411,7 +411,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("FROM	mp_Users ");
             sqlCommand.Append("WHERE ");
             sqlCommand.Append("SiteID = @SiteID ");
-            sqlCommand.Append("AND ProfileApproved = 1 ");
+            sqlCommand.Append("AND AccountApproved = 1 ");
             sqlCommand.Append("AND DisplayInMemberList = 1 ");
             sqlCommand.Append("AND IsDeleted = 0 ");
             if (!string.IsNullOrEmpty(userNameBeginsWith))
@@ -457,7 +457,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("FROM	mp_Users u  ");
             sqlCommand.Append("WHERE ");
             sqlCommand.Append("SiteID = @SiteID ");
-            sqlCommand.Append("AND ProfileApproved = 1 ");
+            sqlCommand.Append("AND AccountApproved = 1 ");
             sqlCommand.Append("AND DisplayInMemberList = 1 ");
             sqlCommand.Append("AND IsDeleted = 0 ");
             if (!string.IsNullOrEmpty(userNameBeginsWith))
@@ -533,7 +533,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("FROM	mp_Users ");
             sqlCommand.Append("WHERE ");
             sqlCommand.Append("SiteID = @SiteID ");
-            sqlCommand.Append("AND ProfileApproved = 1 ");
+            sqlCommand.Append("AND AccountApproved = 1 ");
             sqlCommand.Append("AND DisplayInMemberList = 1 ");
             sqlCommand.Append("AND IsDeleted = 0 ");
             if (!string.IsNullOrEmpty(searchInput))
@@ -583,7 +583,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("FROM	mp_Users u  ");
             sqlCommand.Append("WHERE ");
             sqlCommand.Append("SiteID = @SiteID ");
-            sqlCommand.Append("AND ProfileApproved = 1 ");
+            sqlCommand.Append("AND AccountApproved = 1 ");
             sqlCommand.Append("AND DisplayInMemberList = 1 ");
             sqlCommand.Append("AND IsDeleted = 0 ");
             if (!string.IsNullOrEmpty(searchInput))
@@ -848,7 +848,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("WHERE ");
             sqlCommand.Append("u.SiteID = @SiteID ");
             sqlCommand.Append("AND ");
-            sqlCommand.Append("u.ApprovedForForums = 0 ");
+            sqlCommand.Append("u.AccountApproved = 0 ");
 
             sqlCommand.Append("ORDER BY  ");
             sqlCommand.Append("[Name]  ");

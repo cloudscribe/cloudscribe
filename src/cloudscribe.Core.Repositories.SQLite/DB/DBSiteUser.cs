@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-11-08
+// Last Modified:			2015-11-09
 // 
 
 using cloudscribe.DbHelpers.Sqlite;
@@ -175,7 +175,7 @@ namespace cloudscribe.Core.Repositories.SQLite
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT COUNT(*) FROM mp_Users WHERE SiteID = :SiteID ");
             sqlCommand.Append("AND IsDeleted = 0 ");
-            sqlCommand.Append("AND ProfileApproved = 1 ");
+            sqlCommand.Append("AND AccountApproved = 1 ");
             sqlCommand.Append(";");
 
             SqliteParameter[] arParams = new SqliteParameter[1];
@@ -216,7 +216,7 @@ namespace cloudscribe.Core.Repositories.SQLite
         public int CountNotApprovedUsers(int siteId)
         {
             StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("SELECT COUNT(*) FROM mp_Users WHERE SiteID = :SiteID AND ApprovedForForums = 0;");
+            sqlCommand.Append("SELECT COUNT(*) FROM mp_Users WHERE SiteID = :SiteID AND AccountApproved = 0;");
 
             SqliteParameter[] arParams = new SqliteParameter[1];
 
@@ -238,7 +238,7 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("SELECT COUNT(*) FROM mp_Users ");
             sqlCommand.Append("WHERE SiteID = :SiteID ");
             sqlCommand.Append("AND IsDeleted = 0 ");
-            sqlCommand.Append("AND ProfileApproved = 1 ");
+            sqlCommand.Append("AND AccountApproved = 1 ");
 
             if (userNameBeginsWith.Length == 1)
             {
@@ -319,7 +319,7 @@ namespace cloudscribe.Core.Repositories.SQLite
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT Count(*) FROM mp_Users WHERE SiteID = :SiteID ");
             sqlCommand.Append("AND IsDeleted = 0 ");
-            sqlCommand.Append("AND ProfileApproved = 1 ");
+            sqlCommand.Append("AND AccountApproved = 1 ");
 
             if (userNameBeginsWith.Length > 0)
             {
@@ -358,7 +358,7 @@ namespace cloudscribe.Core.Repositories.SQLite
             //sqlCommand.Append(" " + totalPages.ToString() + " As TotalPages  ");
             sqlCommand.Append("FROM	mp_Users u  ");
 
-            sqlCommand.Append("WHERE u.ProfileApproved = 1   ");
+            sqlCommand.Append("WHERE u.AccountApproved = 1   ");
             sqlCommand.Append("AND u.SiteID = :SiteID   ");
 
             if (userNameBeginsWith.Length > 0)
@@ -410,7 +410,7 @@ namespace cloudscribe.Core.Repositories.SQLite
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT Count(*) FROM mp_Users WHERE SiteID = :SiteID ");
-            sqlCommand.Append("AND ProfileApproved = 1 ");
+            sqlCommand.Append("AND AccountApproved = 1 ");
             sqlCommand.Append("AND DisplayInMemberList = 1 ");
             sqlCommand.Append("AND IsDeleted = 0 ");
 
@@ -464,7 +464,7 @@ namespace cloudscribe.Core.Repositories.SQLite
 
             sqlCommand.Append("WHERE  ");
             sqlCommand.Append("SiteID = :SiteID  ");
-            sqlCommand.Append("AND ProfileApproved = 1 ");
+            sqlCommand.Append("AND AccountApproved = 1 ");
             sqlCommand.Append("AND DisplayInMemberList = 1 ");
             sqlCommand.Append("AND IsDeleted = 0 ");
 
@@ -684,7 +684,7 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("WHERE  ");
             sqlCommand.Append("SiteID = :SiteID  ");
             sqlCommand.Append("AND ");
-            sqlCommand.Append("ApprovedForForums = 0 ");
+            sqlCommand.Append("AccountApproved = 0 ");
 
             sqlCommand.Append(" ORDER BY Name ");
             sqlCommand.Append("LIMIT " + pageLowerBound.ToString() + ", :PageSize  ; ");

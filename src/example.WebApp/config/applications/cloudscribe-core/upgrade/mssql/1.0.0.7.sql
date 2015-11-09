@@ -20,10 +20,21 @@ GO
 ALTER TABLE [dbo].mp_Sites DROP COLUMN Icon
 GO
 
+
+ALTER TABLE [dbo].mp_Sites DROP CONSTRAINT DF_mp_Sites_AllowUserSkins
+GO
+
+
 ALTER TABLE [dbo].mp_Sites DROP COLUMN AllowUserSkins
 GO
 
+ALTER TABLE [dbo].mp_Sites DROP CONSTRAINT DF_mp_Sites_AllowPageSkins
+GO
+
 ALTER TABLE [dbo].mp_Sites DROP COLUMN AllowPageSkins
+GO
+
+ALTER TABLE [dbo].mp_Sites DROP CONSTRAINT DF_mp_Sites_AllowHideMenuOnPages
 GO
 
 ALTER TABLE [dbo].mp_Sites DROP COLUMN AllowHideMenuOnPages
@@ -32,7 +43,10 @@ GO
 ALTER TABLE [dbo].mp_Sites DROP COLUMN CaptchaProvider
 GO
 
-ALTER TABLE [dbo].mp_Sites DROP COLUMN EditorProviderName
+ALTER TABLE [dbo].mp_Sites DROP COLUMN EditorProvider
+GO
+
+ALTER TABLE [dbo].mp_Sites DROP CONSTRAINT DF_mp_Sites_EditorSkin
 GO
 
 ALTER TABLE [dbo].mp_Sites DROP COLUMN EditorSkin
@@ -47,19 +61,34 @@ GO
 ALTER TABLE [dbo].mp_Sites DROP COLUMN DefaultPageEncoding
 GO
 
-ALTER TABLE [dbo].mp_Sites DROP COLUMN DefaultAdditionalMetaTag
+ALTER TABLE [dbo].mp_Sites DROP COLUMN DefaultAdditionalMetaTags
+GO
+
+ALTER TABLE [dbo].mp_Sites DROP CONSTRAINT DF_mp_Sites_DefaultFriendlyUrlPatternEnum
 GO
 
 ALTER TABLE [dbo].mp_Sites DROP COLUMN DefaultFriendlyUrlPatternEnum
 GO
 
+ALTER TABLE [dbo].mp_Sites DROP CONSTRAINT DF_mp_Sites_AllowPasswordRetrieval
+GO
+
 ALTER TABLE [dbo].mp_Sites DROP COLUMN AllowPasswordRetrieval
+GO
+
+ALTER TABLE [dbo].mp_Sites DROP CONSTRAINT DF_mp_Sites_AllowPasswordReset
 GO
 
 ALTER TABLE [dbo].mp_Sites DROP COLUMN AllowPasswordReset
 GO
 
+ALTER TABLE [dbo].mp_Sites DROP CONSTRAINT DF_mp_Sites_RequiresUniqueEmail
+GO
+
 ALTER TABLE [dbo].mp_Sites DROP COLUMN RequiresUniqueEmail
+GO
+
+ALTER TABLE [dbo].mp_Sites DROP CONSTRAINT DF_mp_Sites_PasswordFormat
 GO
 
 ALTER TABLE [dbo].mp_Sites DROP COLUMN PasswordFormat
@@ -68,10 +97,16 @@ GO
 ALTER TABLE [dbo].mp_Sites DROP COLUMN PwdStrengthRegex
 GO
 
+ALTER TABLE [dbo].mp_Sites DROP CONSTRAINT DF_mp_Sites_EnableMyPageFeature
+GO
+
 ALTER TABLE [dbo].mp_Sites DROP COLUMN EnableMyPageFeature
 GO
 
 ALTER TABLE [dbo].mp_Sites DROP COLUMN DatePickerProvider
+GO
+
+ALTER TABLE [dbo].mp_Sites DROP CONSTRAINT DF_mp_Sites_AllowOpenIdAuth
 GO
 
 ALTER TABLE [dbo].mp_Sites DROP COLUMN AllowOpenIdAuth
@@ -411,8 +446,6 @@ VALUES
 				@MinRequiredPasswordLength,
 				@MinReqNonAlphaChars,
 				@DefaultEmailFromAddress,
-				@RecaptchaPrivateKey,
-				@RecaptchaPublicKey,
 				@AllowDbFallbackWithLdap,
 				@EmailLdapDbFallback,
 				@AllowPersistentLogin,
@@ -696,7 +729,20 @@ GO
 
 
 
-EXEC sp_RENAME '[dbo].mp_Users.[ProfileApproved]' , '[AccountApproved]', 'COLUMN'
+-- EXEC sp_RENAME '[dbo].mp_Users.[ProfileApproved]' , '[AccountApproved]', 'COLUMN'
+
+ALTER TABLE [dbo].mp_Users ADD AccountApproved bit NOT NULL default 1
+GO
+
+ALTER TABLE [dbo].mp_Users DROP CONSTRAINT DF_Users_ProfileApproved
+GO
+
+
+ALTER TABLE [dbo].mp_Users DROP COLUMN ProfileApproved
+GO
+
+ALTER TABLE [dbo].mp_Users DROP CONSTRAINT DF_Users_Approved
+GO
 
 ALTER TABLE [dbo].mp_Users DROP COLUMN ApprovedForForums
 GO
@@ -719,7 +765,13 @@ GO
 ALTER TABLE [dbo].mp_Users DROP COLUMN ICQ
 GO
 
+ALTER TABLE [dbo].mp_Users DROP CONSTRAINT DF_Users_TotalPosts
+GO
+
 ALTER TABLE [dbo].mp_Users DROP COLUMN TotalPosts
+GO
+
+ALTER TABLE [dbo].mp_Users DROP CONSTRAINT DF_mp_Users_TimeOffSetHours
 GO
 
 ALTER TABLE [dbo].mp_Users DROP COLUMN TimeOffsetHours
@@ -731,7 +783,15 @@ GO
 ALTER TABLE [dbo].mp_Users DROP COLUMN PasswordSalt
 GO
 
+DROP INDEX IX_mp_Users_1
+ON mp_Users
+GO
+
 ALTER TABLE [dbo].mp_Users DROP COLUMN OpenIDURI
+GO
+
+DROP INDEX IX_mp_Users_2
+ON mp_Users
 GO
 
 ALTER TABLE [dbo].mp_Users DROP COLUMN WindowsLiveID
@@ -741,6 +801,9 @@ ALTER TABLE [dbo].mp_Users DROP COLUMN Pwd
 GO
 
 ALTER TABLE [dbo].mp_Users DROP COLUMN EditorPreference
+GO
+
+ALTER TABLE [dbo].mp_Users DROP CONSTRAINT DF__mp_Users__PwdFor__14E61A24
 GO
 
 ALTER TABLE [dbo].mp_Users DROP COLUMN PwdFormat
@@ -971,6 +1034,648 @@ SET			[Name] = @Name,
 			LockoutEndDateUtc = @LockoutEndDateUtc
 			
 WHERE		UserID = @UserID
+
+GO
+
+ALTER PROCEDURE [dbo].[mp_Users_SelectPage]
+
+/*
+Author:			Joe Audette
+Created:		2004-10-3
+Last Modified:	2015-11-09
+
+*/
+
+@PageNumber 			int,
+@PageSize 			int,
+@UserNameBeginsWith 		nvarchar(50),
+@SiteID			int
+
+
+AS
+DECLARE @PageLowerBound int
+DECLARE @PageUpperBound int
+
+
+SET @PageLowerBound = (@PageSize * @PageNumber) - @PageSize
+SET @PageUpperBound = @PageLowerBound + @PageSize + 1
+
+
+CREATE TABLE #PageIndexForUsers 
+(
+	IndexID int IDENTITY (1, 1) NOT NULL,
+	UserID int
+	
+)	
+
+
+ IF @UserNameBeginsWith IS NULL OR @UserNameBeginsWith = ''
+	BEGIN
+	    	INSERT INTO 	#PageIndexForUsers (UserID)
+
+	    	SELECT 	UserID
+		FROM 		mp_Users 
+		WHERE 	AccountApproved = 1
+				 AND DisplayInMemberList = 1  
+				AND SiteID = @SiteID
+				AND IsDeleted = 0
+		ORDER BY 	[Name]
+	END
+ELSE
+	BEGIN
+	    	INSERT INTO 	#PageIndexForUsers (UserID)
+
+	    	SELECT 	UserID
+		FROM 		mp_Users 
+		WHERE 	AccountApproved = 1 
+				AND DisplayInMemberList = 1  
+				AND SiteID = @SiteID
+				AND IsDeleted = 0
+				AND [Name]  LIKE @UserNameBeginsWith + '%' 
+		ORDER BY 	[Name]
+
+	END
+
+
+
+SELECT		*
+
+FROM			mp_Users u
+
+JOIN			#PageIndexForUsers p
+ON			u.UserID = p.UserID
+
+WHERE 		u.AccountApproved = 1 
+			AND u.SiteID = @SiteID
+			AND u.IsDeleted = 0
+			AND p.IndexID > @PageLowerBound 
+			AND p.IndexID < @PageUpperBound
+
+ORDER BY		p.IndexID
+
+DROP TABLE #PageIndexForUsers
+
+GO
+
+ALTER PROCEDURE [dbo].[mp_Users_SelectPageByDateDesc]
+
+/*
+Author:			Joe Audette
+Created:		2012-05-25
+Last Modified:	2015-11-09
+
+*/
+
+@PageNumber 			int,
+@PageSize 			int,
+@UserNameBeginsWith 		nvarchar(50),
+@SiteID			int
+
+
+AS
+DECLARE @PageLowerBound int
+DECLARE @PageUpperBound int
+
+
+SET @PageLowerBound = (@PageSize * @PageNumber) - @PageSize
+SET @PageUpperBound = @PageLowerBound + @PageSize + 1
+
+
+CREATE TABLE #PageIndexForUsers 
+(
+	IndexID int IDENTITY (1, 1) NOT NULL,
+	UserID int
+	
+)	
+
+
+ IF @UserNameBeginsWith IS NULL OR @UserNameBeginsWith = ''
+	BEGIN
+	    	INSERT INTO 	#PageIndexForUsers (UserID)
+
+	    	SELECT 	UserID
+		FROM 		mp_Users 
+		WHERE 	AccountApproved = 1
+				 AND DisplayInMemberList = 1  
+				AND SiteID = @SiteID
+				AND IsDeleted = 0
+		ORDER BY 	DateCreated DESC
+	END
+ELSE
+	BEGIN
+	    	INSERT INTO 	#PageIndexForUsers (UserID)
+
+	    	SELECT 	UserID
+		FROM 		mp_Users 
+		WHERE 	AccountApproved = 1 
+				AND DisplayInMemberList = 1  
+				AND SiteID = @SiteID
+				AND IsDeleted = 0
+				AND [Name]  LIKE @UserNameBeginsWith + '%' 
+		ORDER BY 	DateCreated DESC
+
+	END
+
+
+
+SELECT		*
+
+FROM			mp_Users u
+
+JOIN			#PageIndexForUsers p
+ON			u.UserID = p.UserID
+
+WHERE 		u.AccountApproved = 1 
+			AND u.SiteID = @SiteID
+			AND u.IsDeleted = 0
+			AND p.IndexID > @PageLowerBound 
+			AND p.IndexID < @PageUpperBound
+
+ORDER BY		p.IndexID
+
+DROP TABLE #PageIndexForUsers
+
+GO
+
+ALTER PROCEDURE [dbo].[mp_Users_SelectPageSortLF]
+
+/*
+Author:			Joe Audette
+Created:		2012-05-30
+Last Modified:	2015-11-09
+
+*/
+
+@PageNumber 			int,
+@PageSize 			int,
+@UserNameBeginsWith 		nvarchar(50),
+@SiteID			int
+
+
+AS
+DECLARE @PageLowerBound int
+DECLARE @PageUpperBound int
+
+
+SET @PageLowerBound = (@PageSize * @PageNumber) - @PageSize
+SET @PageUpperBound = @PageLowerBound + @PageSize + 1
+
+
+CREATE TABLE #PageIndexForUsers 
+(
+	IndexID int IDENTITY (1, 1) NOT NULL,
+	UserID int
+	
+)	
+
+
+ IF @UserNameBeginsWith IS NULL OR @UserNameBeginsWith = ''
+	BEGIN
+	    	INSERT INTO 	#PageIndexForUsers (UserID)
+
+	    	SELECT 	UserID
+		FROM 		mp_Users 
+		WHERE 	AccountApproved = 1
+				 AND DisplayInMemberList = 1  
+				AND SiteID = @SiteID
+				AND IsDeleted = 0
+		ORDER BY 	[LastName], FirstName, [Name]
+	END
+ELSE
+	BEGIN
+	    	INSERT INTO 	#PageIndexForUsers (UserID)
+
+	    	SELECT 	UserID
+		FROM 		mp_Users 
+		WHERE 	AccountApproved = 1 
+				AND DisplayInMemberList = 1  
+				AND SiteID = @SiteID
+				AND IsDeleted = 0
+				AND [Name]  LIKE @UserNameBeginsWith + '%' 
+		ORDER BY 	[LastName], FirstName, [Name]
+
+	END
+
+
+
+SELECT		*
+
+FROM			mp_Users u
+
+JOIN			#PageIndexForUsers p
+ON			u.UserID = p.UserID
+
+WHERE 		u.AccountApproved = 1 
+			AND u.SiteID = @SiteID
+			AND u.IsDeleted = 0
+			AND p.IndexID > @PageLowerBound 
+			AND p.IndexID < @PageUpperBound
+
+ORDER BY		p.IndexID
+
+DROP TABLE #PageIndexForUsers
+
+GO
+
+ALTER PROCEDURE [dbo].[mp_Users_SelectSearchPage]
+
+/*
+Author:			Joe Audette
+Created:		2009-05-03
+Last Modified:	2015-11-09
+
+*/
+
+@SiteID			int,
+@SearchInput 		nvarchar(50),
+@PageNumber 			int,
+@PageSize 			int
+
+
+AS
+DECLARE @PageLowerBound int
+DECLARE @PageUpperBound int
+
+
+SET @PageLowerBound = (@PageSize * @PageNumber) - @PageSize
+SET @PageUpperBound = @PageLowerBound + @PageSize + 1
+
+
+
+CREATE TABLE #PageIndexForUsers 
+(
+	IndexID int IDENTITY (1, 1) NOT NULL,
+	UserID int
+)	
+
+
+ IF @SearchInput IS NULL OR @SearchInput = ''
+	BEGIN
+	    	INSERT INTO 	#PageIndexForUsers (UserID)
+
+	    	SELECT 	UserID
+		FROM 		mp_Users 
+		WHERE 	
+				SiteID = @SiteID
+				AND AccountApproved = 1
+				AND DisplayInMemberList = 1  
+				AND IsDeleted = 0
+				
+		ORDER BY 	[Name]
+	END
+ELSE
+	BEGIN
+	    	INSERT INTO 	#PageIndexForUsers (UserID)
+
+	    	SELECT 	UserID
+		FROM 		mp_Users 
+		WHERE 	
+				SiteID = @SiteID
+				AND AccountApproved = 1
+				AND DisplayInMemberList = 1  
+				AND IsDeleted = 0
+				
+				AND (
+				 ([Name]  LIKE '%' + @SearchInput + '%')
+				OR ([LoginName]  LIKE '%' + @SearchInput + '%')
+				)
+				
+				
+		ORDER BY 	[Name]
+
+	END
+
+
+
+SELECT		*
+
+FROM			mp_Users u
+
+JOIN			#PageIndexForUsers p
+ON			u.UserID = p.UserID
+
+WHERE 		
+			p.IndexID > @PageLowerBound 
+			AND p.IndexID < @PageUpperBound
+
+ORDER BY		p.IndexID
+
+DROP TABLE #PageIndexForUsers
+
+GO
+
+ALTER PROCEDURE [dbo].[mp_Users_SelectSearchPageByDateDesc]
+
+/*
+Author:			Joe Audette
+Created:		2012-05-25
+Last Modified:	2015-11-09
+
+*/
+
+@SiteID			int,
+@SearchInput 		nvarchar(50),
+@PageNumber 			int,
+@PageSize 			int
+
+
+AS
+DECLARE @PageLowerBound int
+DECLARE @PageUpperBound int
+
+
+SET @PageLowerBound = (@PageSize * @PageNumber) - @PageSize
+SET @PageUpperBound = @PageLowerBound + @PageSize + 1
+
+
+
+CREATE TABLE #PageIndexForUsers 
+(
+	IndexID int IDENTITY (1, 1) NOT NULL,
+	UserID int
+)	
+
+
+ IF @SearchInput IS NULL OR @SearchInput = ''
+	BEGIN
+	    	INSERT INTO 	#PageIndexForUsers (UserID)
+
+	    	SELECT 	UserID
+		FROM 		mp_Users 
+		WHERE 	
+				SiteID = @SiteID
+				AND AccountApproved = 1
+				AND DisplayInMemberList = 1  
+				AND IsDeleted = 0
+				
+		ORDER BY 	DateCreated DESC
+	END
+ELSE
+	BEGIN
+	    	INSERT INTO 	#PageIndexForUsers (UserID)
+
+	    	SELECT 	UserID
+		FROM 		mp_Users 
+		WHERE 	
+				SiteID = @SiteID
+				AND AccountApproved = 1
+				AND DisplayInMemberList = 1  
+				AND IsDeleted = 0
+				
+				AND (
+				 ([Name]  LIKE '%' + @SearchInput + '%')
+				OR ([LoginName]  LIKE '%' + @SearchInput + '%')
+				)
+				
+				
+		ORDER BY 	DateCreated DESC
+
+	END
+
+
+
+SELECT		*
+
+FROM			mp_Users u
+
+JOIN			#PageIndexForUsers p
+ON			u.UserID = p.UserID
+
+WHERE 		
+			p.IndexID > @PageLowerBound 
+			AND p.IndexID < @PageUpperBound
+
+ORDER BY		p.IndexID
+
+DROP TABLE #PageIndexForUsers
+
+GO
+
+ALTER PROCEDURE [dbo].[mp_Users_SelectSearchPageByLF]
+
+/*
+Author:			Joe Audette
+Created:		2012-05-30
+Last Modified:	2015-11-09
+
+*/
+
+@SiteID			int,
+@SearchInput 		nvarchar(50),
+@PageNumber 			int,
+@PageSize 			int
+
+
+AS
+DECLARE @PageLowerBound int
+DECLARE @PageUpperBound int
+
+
+SET @PageLowerBound = (@PageSize * @PageNumber) - @PageSize
+SET @PageUpperBound = @PageLowerBound + @PageSize + 1
+
+
+
+CREATE TABLE #PageIndexForUsers 
+(
+	IndexID int IDENTITY (1, 1) NOT NULL,
+	UserID int
+)	
+
+
+ IF @SearchInput IS NULL OR @SearchInput = ''
+	BEGIN
+	    	INSERT INTO 	#PageIndexForUsers (UserID)
+
+	    	SELECT 	UserID
+		FROM 		mp_Users 
+		WHERE 	
+				SiteID = @SiteID
+				AND AccountApproved = 1
+				AND DisplayInMemberList = 1  
+				AND IsDeleted = 0
+				
+		ORDER BY 	LastName, FirstName, [Name]
+	END
+ELSE
+	BEGIN
+	    	INSERT INTO 	#PageIndexForUsers (UserID)
+
+	    	SELECT 	UserID
+		FROM 		mp_Users 
+		WHERE 	
+				SiteID = @SiteID
+				AND AccountApproved = 1
+				AND DisplayInMemberList = 1  
+				AND IsDeleted = 0
+				
+				AND (
+				 ([Name]  LIKE '%' + @SearchInput + '%')
+				OR ([LoginName]  LIKE '%' + @SearchInput + '%')
+				)
+				
+				
+		ORDER BY 	LastName, FirstName, [Name]
+
+	END
+
+
+
+SELECT		*
+
+FROM			mp_Users u
+
+JOIN			#PageIndexForUsers p
+ON			u.UserID = p.UserID
+
+WHERE 		
+			p.IndexID > @PageLowerBound 
+			AND p.IndexID < @PageUpperBound
+
+ORDER BY		p.IndexID
+
+DROP TABLE #PageIndexForUsers
+
+GO
+
+ALTER PROCEDURE [dbo].[mp_Users_CountByFirstLetter]
+
+/*
+Author:			Joe Audette
+Created:		2006-12-07
+Last Modified:	2015-11-09
+
+*/
+
+@SiteID		int,
+@UserNameBeginsWith 		nvarchar(1)
+
+AS
+SELECT  	COUNT(*)
+
+FROM		mp_Users
+
+WHERE	SiteID = @SiteID
+AND IsDeleted = 0
+AND AccountApproved = 1
+AND (
+	(LEFT([Name], 1) = @UserNameBeginsWith)
+	OR @UserNameBeginsWith = ''
+	)
+
+GO
+
+ALTER PROCEDURE [dbo].[mp_Users_CountForSearch]
+
+/*
+Author:			Joe Audette
+Created:		2009-05-03
+Last Modified:	2015-11-09
+
+*/
+
+@SiteID		int,
+@SearchInput 		nvarchar(50)
+
+AS
+
+SELECT  	COUNT(*)
+
+FROM		mp_Users
+
+WHERE	SiteID = @SiteID
+AND AccountApproved = 1
+AND DisplayInMemberList = 1  
+AND IsDeleted = 0
+AND (
+		([Name]  LIKE '%' + @SearchInput + '%')
+		OR ([LoginName]  LIKE '%' + @SearchInput + '%')
+	)
+
+GO
+
+ALTER PROCEDURE [dbo].[mp_Users_CountNotApproved]
+
+/*
+Author:			Joe Audette
+Created:		2011-01-17
+Last Modified:	2015-11-09
+
+*/
+
+@SiteID		int
+
+AS
+
+SELECT  	COUNT(*)
+
+FROM		mp_Users
+
+WHERE	SiteID = @SiteID
+AND		AccountApproved = 0
+
+GO
+
+ALTER PROCEDURE [dbo].[mp_Users_SelectNotApprovedPage]
+
+/*
+Author:			Joe Audette
+Created:		2011-01-17
+Last Modified:	2015-11-09
+
+*/
+
+@SiteID			int,
+@PageNumber 			int,
+@PageSize 			int
+
+
+
+AS
+DECLARE @PageLowerBound int
+DECLARE @PageUpperBound int
+
+
+SET @PageLowerBound = (@PageSize * @PageNumber) - @PageSize
+SET @PageUpperBound = @PageLowerBound + @PageSize + 1
+
+
+CREATE TABLE #PageIndexForUsers 
+(
+	IndexID int IDENTITY (1, 1) NOT NULL,
+	UserID int
+)	
+
+
+ BEGIN
+	    INSERT INTO 	#PageIndexForUsers (UserID)
+
+	    SELECT 	UserID
+		FROM 		[dbo].mp_Users 
+		WHERE 	
+				SiteID = @SiteID
+				AND AccountApproved = 0
+				
+		ORDER BY 	[Name]
+
+END
+
+
+SELECT		u.*
+
+FROM			[dbo].mp_Users u
+
+JOIN			#PageIndexForUsers p
+ON			u.UserID = p.UserID
+
+WHERE 		
+			u.SiteID = 1
+			AND p.IndexID > @PageLowerBound 
+			AND p.IndexID < @PageUpperBound
+
+ORDER BY		p.IndexID
+
+DROP TABLE #PageIndexForUsers
 
 GO
 

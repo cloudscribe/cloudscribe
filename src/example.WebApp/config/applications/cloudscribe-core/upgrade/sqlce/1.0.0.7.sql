@@ -26,7 +26,7 @@ GO
 ALTER TABLE mp_Sites DROP COLUMN CaptchaProvider
 GO
 
-ALTER TABLE mp_Sites DROP COLUMN EditorProviderName
+ALTER TABLE mp_Sites DROP COLUMN EditorProvider
 GO
 
 ALTER TABLE mp_Sites DROP COLUMN EditorSkin
@@ -41,7 +41,7 @@ GO
 ALTER TABLE mp_Sites DROP COLUMN DefaultPageEncoding
 GO
 
-ALTER TABLE mp_Sites DROP COLUMN DefaultAdditionalMetaTag
+ALTER TABLE mp_Sites DROP COLUMN DefaultAdditionalMetaTags
 GO
 
 ALTER TABLE mp_Sites DROP COLUMN DefaultFriendlyUrlPatternEnum
