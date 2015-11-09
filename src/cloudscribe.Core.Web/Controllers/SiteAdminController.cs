@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-10-17
+// Last Modified:			2015-11-09
 // 
 
 using cloudscribe.Core.Models;
@@ -532,7 +532,6 @@ namespace cloudscribe.Core.Web.Controllers
             CompanyInfoViewModel model = new CompanyInfoViewModel();
             model.SiteGuid = selectedSite.SiteGuid;
             model.SiteId = selectedSite.SiteId;
-            model.Slogan = selectedSite.Slogan;
             model.CompanyName = selectedSite.CompanyName;
             model.CompanyStreetAddress = selectedSite.CompanyStreetAddress;
             model.CompanyStreetAddress2 = selectedSite.CompanyStreetAddress2;
@@ -620,8 +619,6 @@ namespace cloudscribe.Core.Web.Controllers
             //model.SiteId = Site.SiteSettings.SiteId;
             //model.SiteGuid = Site.SiteSettings.SiteGuid;
             
-
-            selectedSite.Slogan = model.Slogan;
             selectedSite.CompanyName = model.CompanyName;
             selectedSite.CompanyStreetAddress = model.CompanyStreetAddress;
             selectedSite.CompanyStreetAddress2 = model.CompanyStreetAddress2;

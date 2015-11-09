@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-22
-// Last Modified:			2015-10-17
+// Last Modified:			2015-11-09
 // 
 
 using cloudscribe.Core.Models;
@@ -143,43 +143,30 @@ namespace cloudscribe.Core.Web.Components
 
 
             newSite.Layout = setupOptions.DefaultLayout;
-
-            //newSite.Logo = GetMessageTemplate(templateFolder, "InitialSiteLogoContent.config");
-
-            newSite.AllowHideMenuOnPages = false;
+            
             newSite.AllowNewRegistration = true;
-            newSite.AllowPageSkins = false;
             newSite.AllowUserFullNameChange = false;
-            newSite.AllowUserSkins = false;
             newSite.AutoCreateLdapUserOnFirstLogin = true;
-            //newSite.DefaultFriendlyUrlPattern = SiteSettings.FriendlyUrlPattern.PageNameWithDotASPX;
-            //newSite.EditorSkin = SiteSettings.ContentEditorSkin.normal;
-            //newSite.EncryptPasswords = false;
-            newSite.Icon = String.Empty;
             newSite.ReallyDeleteUsers = true;
-            newSite.SiteLdapSettings.Port = 389;
-            newSite.SiteLdapSettings.RootDN = String.Empty;
-            newSite.SiteLdapSettings.Server = String.Empty;
+            newSite.LdapPort = 389;
+            newSite.LdapRootDN = String.Empty;
+            newSite.LdapServer = String.Empty;
             newSite.UseEmailForLogin = true;
             newSite.UseLdapAuth = false;
             newSite.UseSecureRegistration = false;
             newSite.UseSslOnAllPages = setupOptions.SslIsRequiredByWebServer;
-            //newSite.CreateInitialDataOnCreate = false;
-
-            newSite.AllowPasswordReset = true;
-            newSite.AllowPasswordRetrieval = true;
+           
+            
             //0 = clear, 1= hashed, 2= encrypted
-            newSite.PasswordFormat = 1;
+            //newSite.PasswordFormat = 1;
 
             newSite.RequiresQuestionAndAnswer = true;
             newSite.MaxInvalidPasswordAttempts = 10;
             newSite.PasswordAttemptWindowMinutes = 5;
-            //newSite.RequiresUniqueEmail = true;
             newSite.MinReqNonAlphaChars = 0;
             newSite.MinRequiredPasswordLength = 7;
-            newSite.PasswordStrengthRegularExpression = String.Empty;
-            //newSite.DefaultEmailFromAddress = GetMessageTemplate(templateFolder, "InitialEmailFromContent.config");
-
+            
+            
             bool result = await siteRepo.Save(newSite);
 
 
@@ -246,8 +233,7 @@ namespace cloudscribe.Core.Web.Components
                 }
             }
 
-            //mojoMembershipProvider membership = Membership.Provider as mojoMembershipProvider;
-            //bool overridRelatedSiteMode = true;
+            
             SiteUser adminUser = new SiteUser();
             adminUser.SiteId = site.SiteId;
             adminUser.SiteGuid = site.SiteGuid;
@@ -256,27 +242,15 @@ namespace cloudscribe.Core.Web.Components
             adminUser.UserName = "admin" + siteDifferentiator;
 
             adminUser.EmailConfirmed = true;
-            adminUser.ApprovedForLogin = true;
-            adminUser.Password = "admin";
-            adminUser.PasswordFormat = 0;
+            adminUser.AccountApproved = true;
 
-            //if (membership != null)
-            //{
-            //    adminUser.Password = membership.EncodePassword(site, adminUser, "admin");
-            //}
-
-            adminUser.PasswordQuestion = "What is your user name?";
-            adminUser.PasswordAnswer = "admin";
-
+            // clear text password will be hashed upon login
+            // this format allows migrating from mojoportal
+            adminUser.PasswordHash = "admin||0"; //pwd/salt/format 
+           
             result = await userRepo.Save(adminUser);
 
-            //siteUserManager.AddPassword(adminUser.UserGuid.ToString(), "admin");
-
-            //siteUserManager.Create(adminUser, "admin");
-            //var result = siteUserManager.CreateAsync(adminUser, "admin");
-            //if (result.Succeeded)
-            //{
-            //}
+            
             result = await userRepo.AddUserToRole(
                 adminRole.RoleId,
                 adminRole.RoleGuid,
