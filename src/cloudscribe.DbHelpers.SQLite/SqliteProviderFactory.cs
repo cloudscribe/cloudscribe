@@ -1,7 +1,7 @@
 ﻿using Microsoft.Data.Sqlite;
 using System.Data.Common;
 
-namespace cloudscribe.DbHelpers.Sqlite
+namespace cloudscribe.DbHelpers.SQLite
 {
     public class SqliteProviderFactory 
     {

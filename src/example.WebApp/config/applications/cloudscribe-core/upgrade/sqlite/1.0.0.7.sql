@@ -52,7 +52,7 @@ ALTER TABLE `mp_Sites` ADD COLUMN `SmtpPreferredEncoding` varchar(20);
 ALTER TABLE `mp_Sites` ADD COLUMN `SmtpRequiresAuth` INTEGER NOT NULL default 0;
 ALTER TABLE `mp_Sites` ADD COLUMN `SmtpUseSsl` INTEGER NOT NULL default 0;
 
-ALTER TABLE `mp_Users` ADD COLUMN `ProfileApproved` INTEGER NOT NULL default 1;
+
 
 
 

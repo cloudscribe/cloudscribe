@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-06-22
-// Last Modified:			2015-10-16
+// Last Modified:			2015-11-10
 // 
 
 using Microsoft.Framework.OptionsModel;
@@ -10,7 +10,7 @@ using Microsoft.Dnx.Runtime;
 using System;
 using System.IO;
 
-namespace cloudscribe.DbHelpers.Sqlite
+namespace cloudscribe.DbHelpers.SQLite
 {
     public class SqliteConnectionstringResolver
     {
@@ -29,12 +29,26 @@ namespace cloudscribe.DbHelpers.Sqlite
         private SqliteConnectionOptions options;
         private string appBasePath;
 
+        private string pathToDbFile()
+        {
+            return appBasePath + "/config/sqlitedb/".Replace("/", Path.DirectorySeparatorChar.ToString()) + options.DbFileName;
+        }
+
+        public string SqliteFilePath
+        {
+            get
+            {
+                if (options.ConnectionString.Length > 0) { return string.Empty; }
+                return pathToDbFile();
+            }
+        }
+
         public string Resolve()
         {
             if(options.ConnectionString.Length > 0) { return options.ConnectionString; }
 
-            string pathToDbFile = appBasePath + "/config/sqlitedb/".Replace("/", Path.DirectorySeparatorChar.ToString()) + options.DbFileName;
-            string connectionString = "data source=" + pathToDbFile + ";version=3;";
+            //string pathToDbFile = appBasePath + "/config/sqlitedb/".Replace("/", Path.DirectorySeparatorChar.ToString()) + options.DbFileName;
+            string connectionString = "data source=" + pathToDbFile() + ";";
             return connectionString;
         }
     }

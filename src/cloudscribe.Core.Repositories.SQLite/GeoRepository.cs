@@ -7,7 +7,7 @@
 
 
 using cloudscribe.Core.Models.Geography;
-using cloudscribe.DbHelpers.Sqlite;
+using cloudscribe.DbHelpers.SQLite;
 using Microsoft.Framework.Logging;
 using System;
 using System.Collections.Generic;

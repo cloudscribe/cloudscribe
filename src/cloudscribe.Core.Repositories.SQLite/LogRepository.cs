@@ -7,7 +7,7 @@
 
 using cloudscribe.Core.Models.DataExtensions;
 using cloudscribe.Core.Models.Logging;
-using cloudscribe.DbHelpers.Sqlite;
+using cloudscribe.DbHelpers.SQLite;
 using Microsoft.Framework.Logging;
 using System;
 using System.Collections.Generic;
@@ -23,17 +23,16 @@ namespace cloudscribe.Core.Repositories.SQLite
     public class LogRepository : ILogRepository
     {
         public LogRepository(
-            SqliteConnectionstringResolver connectionStringResolver,
-            ILoggerFactory loggerFactory)
+            SqliteConnectionstringResolver connectionStringResolver)
         {
             if (connectionStringResolver == null) { throw new ArgumentNullException(nameof(connectionStringResolver)); }
-            if (loggerFactory == null) { throw new ArgumentNullException(nameof(loggerFactory)); }
+            //if (loggerFactory == null) { throw new ArgumentNullException(nameof(loggerFactory)); }
 
-            logFactory = loggerFactory;
-            log = loggerFactory.CreateLogger(typeof(GeoRepository).FullName);
+            //logFactory = loggerFactory;
+            //log = loggerFactory.CreateLogger(typeof(GeoRepository).FullName);
             connectionString = connectionStringResolver.Resolve();
 
-            dbSystemLog = new DBSystemLog(connectionString, logFactory);
+            dbSystemLog = new DBSystemLog(connectionString);
 
         }
 

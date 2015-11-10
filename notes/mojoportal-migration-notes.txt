@@ -7,15 +7,15 @@ A separate but related issue is that there are some existing fields that came wi
 
 ##### Specific tables that came from mojoPortal:
 * mp_Sites
-* mp_SiteSettingsEx
-* mp_SiteSettingsExDef
+* mp_SiteSettingsEx - not currently used butmightbe later
+* mp_SiteSettingsExDef - not currently used butmightbe later
 * mp_SiteHosts
 * mp_SiteFolders
 * mp_Users
 * mp_UserRoles
 * mp_UserClaims
 * mp_UserLogins
-* mp_UserProperties
+* mp_UserProperties - not currently used butmightbe later
 * mp_Roles
 * mp_SystemLog
 * mp_SchemaVersion

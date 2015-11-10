@@ -99,10 +99,10 @@ GO
 ALTER TABLE mp_Sites ADD SiteIsClosed bit NOT NULL default 0
 GO
 
-ALTER TABLE mp_Sites ADD SiteIsClosedMessage nvarchar(max) NULL 
+ALTER TABLE mp_Sites ADD SiteIsClosedMessage ntext NULL 
 GO
 
-ALTER TABLE mp_Sites ADD PrivacyPolicy nvarchar(max) NULL 
+ALTER TABLE mp_Sites ADD PrivacyPolicy ntext NULL 
 GO
 
 ALTER TABLE mp_Sites ADD TimeZoneId nvarchar(50) NOT NULL default 'Eastern Standard Time' 
@@ -249,6 +249,13 @@ ALTER TABLE mp_Users DROP COLUMN Skin
 GO
 
 ALTER TABLE mp_Users DROP COLUMN PasswordSalt
+GO
+
+
+DROP INDEX mp_Users.IX_mp_Users_1
+GO
+
+DROP INDEX mp_Users.IX_mp_Users_2
 GO
 
 ALTER TABLE mp_Users DROP COLUMN OpenIDURI

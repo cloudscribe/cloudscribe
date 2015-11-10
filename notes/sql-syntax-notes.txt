@@ -87,7 +87,10 @@ CREATE INDEX IX_mp_UserClaimsSite ON mp_UserClaims(`SiteId`);
 
 DELETE FROM table_name;
 
+
+
 ## SqlServerCompact
+
 
 https://sqlcetoolbox.codeplex.com/
 
@@ -118,4 +121,6 @@ CREATE INDEX [IX_mp_UserClaimsSite] ON [mp_UserClaims]
 
 GO
 
+DROP INDEX mp_Users.IX_mp_Users_1
+GO
 

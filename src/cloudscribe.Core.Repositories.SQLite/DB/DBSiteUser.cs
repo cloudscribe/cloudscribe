@@ -5,7 +5,7 @@
 // Last Modified:			2015-11-09
 // 
 
-using cloudscribe.DbHelpers.Sqlite;
+using cloudscribe.DbHelpers.SQLite;
 using System;
 using System.Data;
 using System.Data.Common;

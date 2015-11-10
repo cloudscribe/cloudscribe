@@ -5,7 +5,7 @@
 //	Last Modified:		    2015-08-18
 // 
 
-using cloudscribe.DbHelpers.Sqlite;
+using cloudscribe.DbHelpers.SQLite;
 using System;
 using System.Data;
 using System.Data.Common;
@@ -18,16 +18,15 @@ namespace cloudscribe.Core.Repositories.SQLite
     internal class DBSystemLog
     {
         internal DBSystemLog(
-            string dbConnectionString,
-            ILoggerFactory loggerFactory)
+            string dbConnectionString)
         {
-            logFactory = loggerFactory;
+            //logFactory = loggerFactory;
             connectionString = dbConnectionString;
 
 
         }
 
-        private ILoggerFactory logFactory;
+        //private ILoggerFactory logFactory;
         //private ILogger log;
         private string connectionString;
 

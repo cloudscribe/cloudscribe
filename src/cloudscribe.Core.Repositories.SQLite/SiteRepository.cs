@@ -8,7 +8,7 @@
 
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.DataExtensions;
-using cloudscribe.DbHelpers.Sqlite;
+using cloudscribe.DbHelpers.SQLite;
 using Microsoft.Framework.Logging;
 using System;
 using System.Collections.Generic;

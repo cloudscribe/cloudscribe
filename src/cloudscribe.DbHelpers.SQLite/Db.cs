@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2004-08-03
-// Last Modified:		    2015-08-07
+// Last Modified:		    2015-11-10
 
 using cloudscribe.Core.Models;
 using Microsoft.Data.Sqlite;
@@ -13,7 +13,7 @@ using System.Data.Common;
 using System.IO;
 using System.Text;
 
-namespace cloudscribe.DbHelpers.Sqlite
+namespace cloudscribe.DbHelpers.SQLite
 {
     public class Db : IDb
     {
@@ -30,12 +30,14 @@ namespace cloudscribe.DbHelpers.Sqlite
             versionProviders = versionProviderFactory;
             log = logger;
             connectionString = connectionStringResolver.Resolve();
+            sqliteFilePath = connectionStringResolver.SqliteFilePath;
 
         }
 
         private IVersionProviderFactory versionProviders;
         private ILogger log;
         private string connectionString;
+        private string sqliteFilePath = string.Empty;
 
         public IVersionProviderFactory VersionProviders
         {
@@ -90,39 +92,48 @@ namespace cloudscribe.DbHelpers.Sqlite
 
         public void EnsureDatabase()
         {
-            //try
-            //{
-            //    if (AppSettings.SqliteApp_Data_FileName.Length > 0)
-            //    {
-            //        string path
-            //            = System.Web.Hosting.HostingEnvironment.MapPath("~/App_Data/" + AppSettings.SqliteApp_Data_FileName);
+            try
+            {
+                if (sqliteFilePath.Length > 0)
+                {
 
-            //        string connectionString = "Data Source=" + path + ";Persist Security Info=False;";
+                    //string connectionString = "Data Source=" + path + ";Persist Security Info=False;";
 
-            //        if (!File.Exists(path))
-            //        {
-            //            lock (theLock)
-            //            {
-            //                if (!File.Exists(path))
-            //                {
-            //                    SqliteConnection.CreateFile(path);
-            //                    //using (SqlCeEngine engine = new SqlCeEngine(connectionString))
-            //                    //{
-            //                    //    engine.CreateDatabase();
-            //                    //}
-            //                }
+                    string folderPath = Path.GetDirectoryName(sqliteFilePath);
+                    if (!Directory.Exists(folderPath))
+                    {
+                        Directory.CreateDirectory(folderPath);
+                    }
 
-            //            }
+                    //sqlite will automatically create the db but the folder must exist
 
-            //        }
 
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    log.Error("SqlCe database file is not present, tried to create it but this error occurred.", ex);
+                    //if (!File.Exists(sqliteFilePath))
+                    //{
+                    //    lock (theLock)
+                    //    {
+                    //        if (!File.Exists(sqliteFilePath))
+                    //        {
+                    //            //SqliteConnection.CreateFile(path);
+                    //            SqliteConnection conn = new SqliteConnection(connectionString);
+                    //            //conn.
+                    //            //using (SqlCeEngine engine = new SqlCeEngine(connectionString))
+                    //            //{
+                    //            //    engine.CreateDatabase();
+                    //            //}
+                    //        }
 
-            //}
+                    //    }
+
+                    //}
+
+                }
+            }
+            catch (Exception ex)
+            {
+                log.LogError("SqlCe database file is not present, tried to create it but this error occurred.", ex);
+
+            }
 
         }
 
@@ -195,10 +206,14 @@ namespace cloudscribe.DbHelpers.Sqlite
             {
                 result = false;
             }
-            //catch (SqliteExecutionException)
-            //{
-            //    result = false;
-            //}
+            catch (Exception ex)
+            {
+                if(ex is DbException)
+                {
+                    string foo = "foo";
+                }
+                result = false;
+            }
 
 
             sqlCommand = new StringBuilder();
@@ -298,7 +313,12 @@ namespace cloudscribe.DbHelpers.Sqlite
 
             try
             {
-                AdoHelper.ExecuteNonQuery(connection, script, null);
+                // 2015/11/10 was throwing exception here
+                //{"Execute requires the command to have a transaction object when the connection assigned 
+                // to the command is in a pending local transaction.  The Transaction property of the command has not been initialized."}
+
+                //AdoHelper.ExecuteNonQuery(connection, script, null);
+                AdoHelper.ExecuteNonQuery(transaction, CommandType.Text, script, null);
                 transaction.Commit();
                 result = true;
             }
