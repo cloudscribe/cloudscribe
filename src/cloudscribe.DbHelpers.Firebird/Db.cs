@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-07-17
-// Last Modified:		    2015-10-16
+// Last Modified:		    2015-11-11
 
 
 using cloudscribe.Core.Models;
@@ -221,16 +221,16 @@ namespace cloudscribe.DbHelpers.Firebird
                 overrideConnectionInfo = writeConnectionString;
             }
 
-            if (scriptFile.FullName.EndsWith(".config"))
+            if (scriptFile.FullName.EndsWith(".sql"))
             {
-                string pathToScripts = scriptFile.FullName.Replace(".config", string.Empty);
+                string pathToScripts = scriptFile.FullName.Replace(".sql", string.Empty);
                 if (Directory.Exists(pathToScripts))
                 {
                     DirectoryInfo scriptDirectory
                         = new DirectoryInfo(pathToScripts);
 
                     FileInfo[] scriptFiles
-                        = scriptDirectory.GetFiles("*.config");
+                        = scriptDirectory.GetFiles("*.sql");
 
                     Array.Sort(scriptFiles, CompareFileNames);
 
@@ -321,7 +321,7 @@ namespace cloudscribe.DbHelpers.Firebird
             bool result = false;
 
 
-            FileInfo[] scriptFiles = scriptDirectory.GetFiles("*.config");
+            FileInfo[] scriptFiles = scriptDirectory.GetFiles("*.sql");
 
             Array.Sort(scriptFiles, CompareFileNames);
 
@@ -529,6 +529,9 @@ namespace cloudscribe.DbHelpers.Firebird
                     {
                         return true;
                     }
+
+                    // if we didn'tget anerror it exists
+                    return true;
                 }
             }
             catch { }

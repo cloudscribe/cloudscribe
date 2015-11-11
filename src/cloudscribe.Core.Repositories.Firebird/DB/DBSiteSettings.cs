@@ -508,7 +508,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             sqlCommand.Append(" WHERE SiteID = @SiteID ;");
 
-            FbParameter[] arParams = new FbParameter[68];
+            FbParameter[] arParams = new FbParameter[74];
 
             arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
             arParams[0].Value = siteId;
@@ -713,6 +713,25 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             arParams[67] = new FbParameter("@RequireApprovalBeforeLogin", FbDbType.SmallInt);
             arParams[67].Value = requireApprovalBeforeLogin ? 1 : 0;
+
+            arParams[68] = new FbParameter("@RequiresQuestionAndAnswer", FbDbType.SmallInt);
+            arParams[68].Value = requiresQuestionAndAnswer ? 1 : 0;
+
+            arParams[69] = new FbParameter("@MaxInvalidPasswordAttempts", FbDbType.Integer);
+            arParams[69].Value = maxInvalidPasswordAttempts;
+
+            arParams[70] = new FbParameter("@PasswordAttemptWindowMinutes", FbDbType.Integer);
+            arParams[70].Value = passwordAttemptWindowMinutes;
+
+            arParams[71] = new FbParameter("@MinRequiredPasswordLength", FbDbType.Integer);
+            arParams[71].Value = minRequiredPasswordLength;
+
+            arParams[72] = new FbParameter("@MinReqNonAlphaChars", FbDbType.Integer);
+            arParams[72].Value = minReqNonAlphaChars;
+
+            arParams[73] = new FbParameter("@DefaultEmailFromAddress", FbDbType.VarChar, 100);
+            arParams[73].Value = defaultEmailFromAddress;
+
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,

@@ -114,20 +114,20 @@ namespace example.WebApp
             //services.TryAddScoped<IDb, cloudscribe.DbHelpers.pgsql.Db>();
             //services.TryAddScoped<ILogRepository, cloudscribe.Core.Repositories.pgsql.LogRepository>();
 
-            //services.Configure<cloudscribe.DbHelpers.Firebird.FirebirdConnectionOptions>(configuration.GetSection("Data:FirebirdConnectionOptions"));
-            //services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.Firebird.SiteRepository>();
-            //services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.Firebird.UserRepository>();
-            //services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.Firebird.GeoRepository>();
-            //services.TryAddScoped<IDb, cloudscribe.DbHelpers.Firebird.Db>();
-            //services.TryAddScoped<ILogRepository, cloudscribe.Core.Repositories.Firebird.LogRepository>();
+            services.Configure<cloudscribe.DbHelpers.Firebird.FirebirdConnectionOptions>(configuration.GetSection("Data:FirebirdConnectionOptions"));
+            services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.Firebird.SiteRepository>();
+            services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.Firebird.UserRepository>();
+            services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.Firebird.GeoRepository>();
+            services.TryAddScoped<IDb, cloudscribe.DbHelpers.Firebird.Db>();
+            services.TryAddScoped<ILogRepository, cloudscribe.Core.Repositories.Firebird.LogRepository>();
 
-            services.Configure<cloudscribe.DbHelpers.SQLite.SqliteConnectionOptions>(configuration.GetSection("Data:SqliteConnectionOptions"));
-            services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.SQLite.SiteRepository>();
-            services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.SQLite.UserRepository>();
-            services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.SQLite.GeoRepository>();
-            services.TryAddScoped<IDb, cloudscribe.DbHelpers.SQLite.Db>();
-            services.TryAddScoped<ILogRepository, cloudscribe.Core.Repositories.SQLite.LogRepository>();
-            services.TryAddScoped<cloudscribe.DbHelpers.SQLite.SqliteConnectionstringResolver, cloudscribe.DbHelpers.SQLite.SqliteConnectionstringResolver>();
+            //services.Configure<cloudscribe.DbHelpers.SQLite.SqliteConnectionOptions>(configuration.GetSection("Data:SqliteConnectionOptions"));
+            //services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.SQLite.SiteRepository>();
+            //services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.SQLite.UserRepository>();
+            //services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.SQLite.GeoRepository>();
+            //services.TryAddScoped<IDb, cloudscribe.DbHelpers.SQLite.Db>();
+            //services.TryAddScoped<ILogRepository, cloudscribe.Core.Repositories.SQLite.LogRepository>();
+            //services.TryAddScoped<cloudscribe.DbHelpers.SQLite.SqliteConnectionstringResolver, cloudscribe.DbHelpers.SQLite.SqliteConnectionstringResolver>();
 
             //services.Configure<cloudscribe.DbHelpers.SqlCe.SqlCeConnectionOptions>(configuration.GetSection("Data:SqlCeConnectionOptions"));
             //services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.SqlCe.SiteRepository>();

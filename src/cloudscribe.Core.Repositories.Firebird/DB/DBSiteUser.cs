@@ -79,70 +79,70 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         }
 
-        public DbDataReader GetSmartDropDownData(int siteId, string query, int rowsToGet)
-        {
+        //public DbDataReader GetSmartDropDownData(int siteId, string query, int rowsToGet)
+        //{
 
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("SELECT First " + rowsToGet.ToString());
-            sqlCommand.Append(" UserID, ");
-            sqlCommand.Append("UserGuid, ");
-            sqlCommand.Append("Email, ");
-            sqlCommand.Append("FirstName, ");
-            sqlCommand.Append("LastName, ");
-            sqlCommand.Append("SiteUser ");
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("SELECT First " + rowsToGet.ToString());
+        //    sqlCommand.Append(" UserID, ");
+        //    sqlCommand.Append("UserGuid, ");
+        //    sqlCommand.Append("Email, ");
+        //    sqlCommand.Append("FirstName, ");
+        //    sqlCommand.Append("LastName, ");
+        //    sqlCommand.Append("SiteUser ");
 
-            sqlCommand.Append("FROM (");
+        //    sqlCommand.Append("FROM (");
 
-            sqlCommand.Append("SELECT ");
-            sqlCommand.Append("UserID, ");
-            sqlCommand.Append("UserGuid, ");
-            sqlCommand.Append("Email, ");
-            sqlCommand.Append("FirstName, ");
-            sqlCommand.Append("LastName, ");
-            sqlCommand.Append("Name As SiteUser ");
+        //    sqlCommand.Append("SELECT ");
+        //    sqlCommand.Append("UserID, ");
+        //    sqlCommand.Append("UserGuid, ");
+        //    sqlCommand.Append("Email, ");
+        //    sqlCommand.Append("FirstName, ");
+        //    sqlCommand.Append("LastName, ");
+        //    sqlCommand.Append("Name As SiteUser ");
 
-            sqlCommand.Append("FROM mp_Users ");
-            sqlCommand.Append("WHERE SiteID = @SiteID ");
-            sqlCommand.Append("AND IsDeleted = 0 ");
-            sqlCommand.Append("AND (");
-            sqlCommand.Append("(Name LIKE @Query) ");
-            sqlCommand.Append("OR (FirstName LIKE @Query) ");
-            sqlCommand.Append("OR (LastName LIKE @Query) ");
-            sqlCommand.Append(") ");
+        //    sqlCommand.Append("FROM mp_Users ");
+        //    sqlCommand.Append("WHERE SiteID = @SiteID ");
+        //    sqlCommand.Append("AND IsDeleted = 0 ");
+        //    sqlCommand.Append("AND (");
+        //    sqlCommand.Append("(Name LIKE @Query) ");
+        //    sqlCommand.Append("OR (FirstName LIKE @Query) ");
+        //    sqlCommand.Append("OR (LastName LIKE @Query) ");
+        //    sqlCommand.Append(") ");
 
-            sqlCommand.Append("UNION ");
+        //    sqlCommand.Append("UNION ");
 
-            sqlCommand.Append("SELECT ");
-            sqlCommand.Append("UserID, ");
-            sqlCommand.Append("UserGuid, ");
-            sqlCommand.Append("Email, ");
-            sqlCommand.Append("FirstName, ");
-            sqlCommand.Append("LastName, ");
-            sqlCommand.Append("Email As SiteUser ");
+        //    sqlCommand.Append("SELECT ");
+        //    sqlCommand.Append("UserID, ");
+        //    sqlCommand.Append("UserGuid, ");
+        //    sqlCommand.Append("Email, ");
+        //    sqlCommand.Append("FirstName, ");
+        //    sqlCommand.Append("LastName, ");
+        //    sqlCommand.Append("Email As SiteUser ");
 
-            sqlCommand.Append("FROM mp_Users ");
-            sqlCommand.Append("WHERE SiteID = @SiteID ");
-            sqlCommand.Append("AND IsDeleted = 0 ");
-            sqlCommand.Append("AND Email LIKE @Query  ");
+        //    sqlCommand.Append("FROM mp_Users ");
+        //    sqlCommand.Append("WHERE SiteID = @SiteID ");
+        //    sqlCommand.Append("AND IsDeleted = 0 ");
+        //    sqlCommand.Append("AND Email LIKE @Query  ");
 
-            sqlCommand.Append(")");
+        //    sqlCommand.Append(")");
 
-            sqlCommand.Append("ORDER BY SiteUser; ");
+        //    sqlCommand.Append("ORDER BY SiteUser; ");
 
-            FbParameter[] arParams = new FbParameter[2];
+        //    FbParameter[] arParams = new FbParameter[2];
 
-            arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
-            arParams[0].Value = siteId;
+        //    arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
+        //    arParams[0].Value = siteId;
 
-            arParams[1] = new FbParameter("@Query", FbDbType.VarChar, 50);
-            arParams[1].Value = query + "%";
+        //    arParams[1] = new FbParameter("@Query", FbDbType.VarChar, 50);
+        //    arParams[1].Value = query + "%";
 
-            return AdoHelper.ExecuteReader(
-                readConnectionString,
-                sqlCommand.ToString(),
-                arParams);
+        //    return AdoHelper.ExecuteReader(
+        //        readConnectionString,
+        //        sqlCommand.ToString(),
+        //        arParams);
 
-        }
+        //}
 
         public DbDataReader EmailLookup(int siteId, string query, int rowsToGet)
         {
@@ -837,13 +837,13 @@ namespace cloudscribe.Core.Repositories.Firebird
             )
         {
             
-            FbParameter[] arParams = new FbParameter[36];
+            FbParameter[] arParams = new FbParameter[37];
 
             arParams[0] = new FbParameter(":SiteID", FbDbType.Integer);
             arParams[0].Value = siteId;
 
             arParams[1] = new FbParameter(":Name", FbDbType.VarChar, 100);
-            arParams[1].Value = loginName;
+            arParams[1].Value = fullName;
 
             arParams[2] = new FbParameter(":LoginName", FbDbType.VarChar, 50);
             arParams[2].Value = loginName;
@@ -858,7 +858,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             arParams[5].Value = string.Empty;
 
             arParams[6] = new FbParameter(":AccountApproved", FbDbType.SmallInt);
-            arParams[6].Value = accountApproved;
+            arParams[6].Value = accountApproved ? 1 : 0;
 
             arParams[7] = new FbParameter(":RegisterConfirmGuid", FbDbType.Char, 36);
             arParams[7].Value = Guid.Empty.ToString();
@@ -900,7 +900,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             arParams[19].Value = 0;
 
             arParams[20] = new FbParameter(":IsLockedOut", FbDbType.SmallInt);
-            arParams[20].Value = isLockedOut;
+            arParams[20].Value = isLockedOut ? 1 : 0;
             
             arParams[21] = new FbParameter(":Comment", FbDbType.VarChar);
             arParams[21].Value = comment;
@@ -937,33 +937,33 @@ namespace cloudscribe.Core.Repositories.Firebird
             arParams[29] = new FbParameter(":EmailConfirmed", FbDbType.Integer);
             arParams[29].Value = emailConfirmed ? 1 : 0;
 
-            arParams[29] = new FbParameter(":PasswordHash", FbDbType.VarChar);
-            arParams[29].Value = passwordHash;
+            arParams[30] = new FbParameter(":PasswordHash", FbDbType.VarChar);
+            arParams[30].Value = passwordHash;
 
-            arParams[30] = new FbParameter(":SecurityStamp", FbDbType.VarChar);
-            arParams[30].Value = securityStamp;
+            arParams[31] = new FbParameter(":SecurityStamp", FbDbType.VarChar);
+            arParams[31].Value = securityStamp;
 
-            arParams[31] = new FbParameter(":PhoneNumber", FbDbType.VarChar, 50);
-            arParams[31].Value = phoneNumber;
+            arParams[32] = new FbParameter(":PhoneNumber", FbDbType.VarChar, 50);
+            arParams[32].Value = phoneNumber;
 
-            arParams[32] = new FbParameter(":PhoneNumberConfirmed", FbDbType.Integer);
-            arParams[32].Value = phoneNumberConfirmed ? 1 : 0;
+            arParams[33] = new FbParameter(":PhoneNumberConfirmed", FbDbType.Integer);
+            arParams[33].Value = phoneNumberConfirmed ? 1 : 0;
 
-            arParams[33] = new FbParameter(":TwoFactorEnabled", FbDbType.Integer);
-            arParams[33].Value = twoFactorEnabled ? 1 : 0;
+            arParams[34] = new FbParameter(":TwoFactorEnabled", FbDbType.Integer);
+            arParams[34].Value = twoFactorEnabled ? 1 : 0;
 
-            arParams[34] = new FbParameter(":LockoutEndDateUtc", FbDbType.TimeStamp);
+            arParams[35] = new FbParameter(":LockoutEndDateUtc", FbDbType.TimeStamp);
             if (lockoutEndDateUtc == null)
             {
-                arParams[34].Value = DBNull.Value;
+                arParams[35].Value = DBNull.Value;
             }
             else
             {
-                arParams[34].Value = lockoutEndDateUtc;
+                arParams[35].Value = lockoutEndDateUtc;
             }
 
-            arParams[35] = new FbParameter(":AuthorBio", FbDbType.VarChar);
-            arParams[35].Value = authorBio;
+            arParams[36] = new FbParameter(":AuthorBio", FbDbType.VarChar);
+            arParams[36].Value = authorBio;
 
             string statement = "EXECUTE PROCEDURE MP_USERS_INSERT ("
                 + AdoHelper.GetParamString(arParams.Length) + ")";
@@ -1496,115 +1496,115 @@ namespace cloudscribe.Core.Repositories.Firebird
             return (rowsAffected > 0);
         }
 
-        public bool UpdatePasswordAndSalt(
-            int userId,
-            int pwdFormat,
-            string password,
-            string passwordSalt)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("UPDATE mp_Users ");
-            sqlCommand.Append("SET Pwd = @Password,  ");
-            sqlCommand.Append("PasswordSalt = @PasswordSalt,  ");
-            sqlCommand.Append("PwdFormat = @PwdFormat  ");
+        //public bool UpdatePasswordAndSalt(
+        //    int userId,
+        //    int pwdFormat,
+        //    string password,
+        //    string passwordSalt)
+        //{
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("UPDATE mp_Users ");
+        //    sqlCommand.Append("SET Pwd = @Password,  ");
+        //    sqlCommand.Append("PasswordSalt = @PasswordSalt,  ");
+        //    sqlCommand.Append("PwdFormat = @PwdFormat  ");
 
-            sqlCommand.Append("WHERE UserID = @UserID  ;");
+        //    sqlCommand.Append("WHERE UserID = @UserID  ;");
 
-            FbParameter[] arParams = new FbParameter[4];
+        //    FbParameter[] arParams = new FbParameter[4];
 
-            arParams[0] = new FbParameter("@UserID", FbDbType.Integer);
-            arParams[0].Value = userId;
+        //    arParams[0] = new FbParameter("@UserID", FbDbType.Integer);
+        //    arParams[0].Value = userId;
 
-            arParams[1] = new FbParameter("@Password", FbDbType.VarChar, 1000);
-            arParams[1].Value = password;
+        //    arParams[1] = new FbParameter("@Password", FbDbType.VarChar, 1000);
+        //    arParams[1].Value = password;
 
-            arParams[2] = new FbParameter("@PasswordSalt", FbDbType.VarChar, 128);
-            arParams[2].Value = passwordSalt;
+        //    arParams[2] = new FbParameter("@PasswordSalt", FbDbType.VarChar, 128);
+        //    arParams[2].Value = passwordSalt;
 
-            arParams[3] = new FbParameter("@PwdFormat", FbDbType.Integer);
-            arParams[3].Value = pwdFormat;
+        //    arParams[3] = new FbParameter("@PwdFormat", FbDbType.Integer);
+        //    arParams[3].Value = pwdFormat;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
-                writeConnectionString,
-                sqlCommand.ToString(),
-                arParams);
+        //    int rowsAffected = AdoHelper.ExecuteNonQuery(
+        //        writeConnectionString,
+        //        sqlCommand.ToString(),
+        //        arParams);
 
-            return (rowsAffected > 0);
+        //    return (rowsAffected > 0);
 
-        }
+        //}
 
-        public bool UpdatePasswordQuestionAndAnswer(
-            Guid userGuid,
-            String passwordQuestion,
-            String passwordAnswer)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("UPDATE mp_Users ");
-            sqlCommand.Append("SET PasswordQuestion = @PasswordQuestion,  ");
-            sqlCommand.Append("PasswordAnswer = @PasswordAnswer  ");
+        //public bool UpdatePasswordQuestionAndAnswer(
+        //    Guid userGuid,
+        //    String passwordQuestion,
+        //    String passwordAnswer)
+        //{
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("UPDATE mp_Users ");
+        //    sqlCommand.Append("SET PasswordQuestion = @PasswordQuestion,  ");
+        //    sqlCommand.Append("PasswordAnswer = @PasswordAnswer  ");
 
-            sqlCommand.Append("WHERE UserGuid = @UserGuid  ;");
+        //    sqlCommand.Append("WHERE UserGuid = @UserGuid  ;");
 
-            FbParameter[] arParams = new FbParameter[3];
+        //    FbParameter[] arParams = new FbParameter[3];
 
-            arParams[0] = new FbParameter("@UserGuid", FbDbType.VarChar, 36);
-            arParams[0].Value = userGuid.ToString();
+        //    arParams[0] = new FbParameter("@UserGuid", FbDbType.VarChar, 36);
+        //    arParams[0].Value = userGuid.ToString();
 
-            arParams[1] = new FbParameter("@PasswordQuestion", FbDbType.VarChar, 255);
-            arParams[1].Value = passwordQuestion;
+        //    arParams[1] = new FbParameter("@PasswordQuestion", FbDbType.VarChar, 255);
+        //    arParams[1].Value = passwordQuestion;
 
-            arParams[2] = new FbParameter("@PasswordAnswer", FbDbType.VarChar, 255);
-            arParams[2].Value = passwordAnswer;
+        //    arParams[2] = new FbParameter("@PasswordAnswer", FbDbType.VarChar, 255);
+        //    arParams[2].Value = passwordAnswer;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
-                writeConnectionString,
-                sqlCommand.ToString(),
-                arParams);
+        //    int rowsAffected = AdoHelper.ExecuteNonQuery(
+        //        writeConnectionString,
+        //        sqlCommand.ToString(),
+        //        arParams);
 
-            return (rowsAffected > 0);
-        }
+        //    return (rowsAffected > 0);
+        //}
 
-        public async Task<bool> UpdateTotalRevenue(Guid userGuid)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("UPDATE mp_Users ");
-            sqlCommand.Append("SET TotalRevenue = COALESCE((  ");
-            sqlCommand.Append("SELECT SUM(SubTotal) FROM mp_CommerceReport WHERE UserGuid = @UserGuid)  ");
-            sqlCommand.Append(", 0) ");
+        //public async Task<bool> UpdateTotalRevenue(Guid userGuid)
+        //{
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("UPDATE mp_Users ");
+        //    sqlCommand.Append("SET TotalRevenue = COALESCE((  ");
+        //    sqlCommand.Append("SELECT SUM(SubTotal) FROM mp_CommerceReport WHERE UserGuid = @UserGuid)  ");
+        //    sqlCommand.Append(", 0) ");
 
-            sqlCommand.Append("WHERE UserGuid = @UserGuid  ;");
+        //    sqlCommand.Append("WHERE UserGuid = @UserGuid  ;");
 
-            FbParameter[] arParams = new FbParameter[1];
+        //    FbParameter[] arParams = new FbParameter[1];
 
-            arParams[0] = new FbParameter("@UserGuid", FbDbType.VarChar, 36);
-            arParams[0].Value = userGuid.ToString();
+        //    arParams[0] = new FbParameter("@UserGuid", FbDbType.VarChar, 36);
+        //    arParams[0].Value = userGuid.ToString();
 
-            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
-                writeConnectionString,
-                sqlCommand.ToString(),
-                arParams);
+        //    int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
+        //        writeConnectionString,
+        //        sqlCommand.ToString(),
+        //        arParams);
 
-            return rowsAffected > 0;
+        //    return rowsAffected > 0;
 
-        }
+        //}
 
-        public async Task<bool> UpdateTotalRevenue()
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("UPDATE mp_Users ");
-            sqlCommand.Append("SET TotalRevenue = COALESCE((  ");
-            sqlCommand.Append("SELECT SUM(SubTotal) FROM mp_CommerceReport WHERE UserGuid = mp_Users.UserGuid)  ");
-            sqlCommand.Append(", 0) ");
+        //public async Task<bool> UpdateTotalRevenue()
+        //{
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("UPDATE mp_Users ");
+        //    sqlCommand.Append("SET TotalRevenue = COALESCE((  ");
+        //    sqlCommand.Append("SELECT SUM(SubTotal) FROM mp_CommerceReport WHERE UserGuid = mp_Users.UserGuid)  ");
+        //    sqlCommand.Append(", 0) ");
 
-            sqlCommand.Append("  ;");
+        //    sqlCommand.Append("  ;");
 
-            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
-                writeConnectionString,
-                sqlCommand.ToString(),
-                null);
+        //    int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
+        //        writeConnectionString,
+        //        sqlCommand.ToString(),
+        //        null);
 
-            return rowsAffected > 0;
-        }
+        //    return rowsAffected > 0;
+        //}
 
 
 
@@ -1648,47 +1648,47 @@ namespace cloudscribe.Core.Repositories.Firebird
             return (rowsAffected > 0);
         }
 
-        public bool IncrementTotalPosts(int userId)
-        {
+        //public bool IncrementTotalPosts(int userId)
+        //{
 
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("UPDATE mp_Users ");
-            sqlCommand.Append("SET	TotalPosts = TotalPosts + 1 ");
-            sqlCommand.Append("WHERE UserID = @UserID  ;");
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("UPDATE mp_Users ");
+        //    sqlCommand.Append("SET	TotalPosts = TotalPosts + 1 ");
+        //    sqlCommand.Append("WHERE UserID = @UserID  ;");
 
-            FbParameter[] arParams = new FbParameter[1];
+        //    FbParameter[] arParams = new FbParameter[1];
 
-            arParams[0] = new FbParameter("@UserID", FbDbType.Integer);
-            arParams[0].Value = userId;
+        //    arParams[0] = new FbParameter("@UserID", FbDbType.Integer);
+        //    arParams[0].Value = userId;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
-                writeConnectionString,
-                sqlCommand.ToString(),
-                arParams);
+        //    int rowsAffected = AdoHelper.ExecuteNonQuery(
+        //        writeConnectionString,
+        //        sqlCommand.ToString(),
+        //        arParams);
 
-            return (rowsAffected > 0);
-        }
+        //    return (rowsAffected > 0);
+        //}
 
-        public bool DecrementTotalPosts(int userId)
-        {
+        //public bool DecrementTotalPosts(int userId)
+        //{
 
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("UPDATE mp_Users ");
-            sqlCommand.Append("SET	TotalPosts = TotalPosts - 1 ");
-            sqlCommand.Append("WHERE UserID = @UserID  ;");
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("UPDATE mp_Users ");
+        //    sqlCommand.Append("SET	TotalPosts = TotalPosts - 1 ");
+        //    sqlCommand.Append("WHERE UserID = @UserID  ;");
 
-            FbParameter[] arParams = new FbParameter[1];
+        //    FbParameter[] arParams = new FbParameter[1];
 
-            arParams[0] = new FbParameter("@UserID", FbDbType.Integer);
-            arParams[0].Value = userId;
+        //    arParams[0] = new FbParameter("@UserID", FbDbType.Integer);
+        //    arParams[0].Value = userId;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
-                writeConnectionString,
-                sqlCommand.ToString(),
-                arParams);
+        //    int rowsAffected = AdoHelper.ExecuteNonQuery(
+        //        writeConnectionString,
+        //        sqlCommand.ToString(),
+        //        arParams);
 
-            return (rowsAffected > 0);
-        }
+        //    return (rowsAffected > 0);
+        //}
 
         public async Task<DbDataReader> GetRolesByUser(int siteId, int userId)
         {
@@ -1809,6 +1809,7 @@ namespace cloudscribe.Core.Repositories.Firebird
                 sqlCommand.Append("(");
                 sqlCommand.Append("LoginName = @LoginName ");
                 sqlCommand.Append("OR Email = @LoginName ");
+                sqlCommand.Append("OR LoweredEmail = @LoweredLoginName ");
                 sqlCommand.Append(")");
             }
             else
@@ -1819,13 +1820,16 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             sqlCommand.Append(";");
 
-            FbParameter[] arParams = new FbParameter[2];
+            FbParameter[] arParams = new FbParameter[3];
 
             arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
             arParams[0].Value = siteId;
 
             arParams[1] = new FbParameter("@LoginName", FbDbType.VarChar, 50);
             arParams[1].Value = loginName;
+
+            arParams[2] = new FbParameter("@LoweredLoginName", FbDbType.VarChar, 50);
+            arParams[2].Value = loginName.ToLowerInvariant();
 
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,

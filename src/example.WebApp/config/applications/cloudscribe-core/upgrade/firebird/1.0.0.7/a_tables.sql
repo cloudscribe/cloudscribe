@@ -1,29 +1,4 @@
 
-ALTER TABLE mp_Sites DROP SiteAlias;
-ALTER TABLE mp_Sites DROP Logo;
-ALTER TABLE mp_Sites DROP Icon;
-ALTER TABLE mp_Sites DROP AllowUserSkins;
-ALTER TABLE mp_Sites DROP AllowPageSkins;
-ALTER TABLE mp_Sites DROP AllowHideMenuOnPages;
-ALTER TABLE mp_Sites DROP CaptchaProvider;
-ALTER TABLE mp_Sites DROP EditorProvider;
-ALTER TABLE mp_Sites DROP EditorSkin;
-ALTER TABLE mp_Sites DROP DefaultPageKeywords;
-ALTER TABLE mp_Sites DROP DefaultPageDescription;
-ALTER TABLE mp_Sites DROP DefaultPageEncoding;
-ALTER TABLE mp_Sites DROP DefaultAdditionalMetaTags;
-ALTER TABLE mp_Sites DROP DefaultFriendlyUrlPatternEnum;
-ALTER TABLE mp_Sites DROP AllowPasswordRetrieval;
-ALTER TABLE mp_Sites DROP AllowPasswordReset;
-ALTER TABLE mp_Sites DROP RequiresUniqueEmail;
-ALTER TABLE mp_Sites DROP PasswordFormat;
-ALTER TABLE mp_Sites DROP PwdStrengthRegex;
-
-ALTER TABLE mp_Sites DROP EnableMyPageFeature;
-ALTER TABLE mp_Sites DROP DatePickerProvider;
-ALTER TABLE mp_Sites DROP AllowOpenIdAuth;
-ALTER TABLE mp_Sites DROP WordpressAPIKey;
-ALTER TABLE mp_Sites DROP GmapApiKey;
 
 ALTER TABLE mp_Sites ADD RequireApprovalBeforeLogin smallint default 0;
 ALTER TABLE mp_Sites ADD AllowDbFallbackWithLdap smallint default 0;
@@ -73,28 +48,4 @@ ALTER TABLE mp_Sites ADD SMTPUseSsl smallint default 0;
 
 
 
-
-ALTER TABLE mp_Users DROP ProfileApproved;
-ALTER TABLE mp_Users ADD AccountApproved smallint default 1;
-
-ALTER TABLE mp_Users DROP ApprovedForForums;
-ALTER TABLE mp_Users DROP Occupation;
-ALTER TABLE mp_Users DROP Interests;
-ALTER TABLE mp_Users DROP MSN;
-ALTER TABLE mp_Users DROP Yahoo;
-ALTER TABLE mp_Users DROP AIM;
-ALTER TABLE mp_Users DROP ICQ;
-ALTER TABLE mp_Users DROP TotalPosts;
-ALTER TABLE mp_Users DROP TimeOffsetHours;
-ALTER TABLE mp_Users DROP Skin;
-ALTER TABLE mp_Users DROP PasswordSalt;
-ALTER TABLE mp_Users DROP OpenIDURI;
-ALTER TABLE mp_Users DROP WindowsLiveID;
-ALTER TABLE mp_Users DROP Pwd;
-ALTER TABLE mp_Users DROP EditorPreference;
-ALTER TABLE mp_Users DROP PwdFormat;
-ALTER TABLE mp_Users DROP MobilePIN;
-ALTER TABLE mp_Users DROP TotalRevenue;
-ALTER TABLE mp_Users DROP PasswordQuestion;
-ALTER TABLE mp_Users DROP PasswordAnswer;
 
