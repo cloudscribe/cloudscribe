@@ -245,7 +245,18 @@ CREATE TABLE `mp_UserLogins` (
  PRIMARY KEY ( LoginProvider, ProviderKey, UserId)
 );
 
-
+CREATE TABLE `mp_SystemLog` (
+ `ID` INTEGER NOT NULL PRIMARY KEY, 
+ `LogDate` datetime NOT NULL,
+ `IpAddress` varchar(50) NULL,
+ `Culture` varchar(10) NULL,
+ `Url` text NULL,
+ `ShortUrl` varchar(255) NULL,
+ `Thread` varchar(255) NOT NULL,
+ `LogLevel` varchar(20) NOT NULL,
+ `Logger` varchar(255) NOT NULL,
+ `Message` text NOT NULL
+);
 
 
 INSERT INTO "mp_Currency" VALUES('6a5ef486-ee65-441f-9c63-c003e30981fe','Euro','EUR','','EUR','.',',','2',1,'2008-06-19 09:38:00','2008-06-19 09:38:00');

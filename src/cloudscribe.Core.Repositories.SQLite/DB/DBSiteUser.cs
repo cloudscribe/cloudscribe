@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-11-09
+// Last Modified:			2015-11-11
 // 
 
 using cloudscribe.DbHelpers.SQLite;
@@ -748,6 +748,7 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("Name, ");
             sqlCommand.Append("LoginName, ");
             sqlCommand.Append("Email, ");
+            sqlCommand.Append("LoweredEmail, ");
             sqlCommand.Append("FirstName, ");
             sqlCommand.Append("LastName, ");
             sqlCommand.Append("TimeZoneId, ");
@@ -786,6 +787,7 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append(" :FullName , ");
             sqlCommand.Append(" :LoginName , ");
             sqlCommand.Append(" :Email , ");
+            sqlCommand.Append(":LoweredEmail, ");
             sqlCommand.Append(":FirstName, ");
             sqlCommand.Append(":LastName, ");
             sqlCommand.Append(":TimeZoneId, ");
@@ -819,7 +821,7 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append(");");
             sqlCommand.Append("SELECT LAST_INSERT_ROWID();");
 
-            SqliteParameter[] arParams = new SqliteParameter[30];
+            SqliteParameter[] arParams = new SqliteParameter[31];
 
             arParams[0] = new SqliteParameter(":FullName", DbType.String);
             arParams[0].Value = fullName;
@@ -926,6 +928,9 @@ namespace cloudscribe.Core.Repositories.SQLite
 
             arParams[29] = new SqliteParameter(":Comment", DbType.Object);
             arParams[29].Value = comment;
+
+            arParams[30] = new SqliteParameter(":LoweredEmail", DbType.String);
+            arParams[30].Value = email.ToLowerInvariant();
 
 
             int newID = Convert.ToInt32(AdoHelper.ExecuteScalar(
@@ -1671,6 +1676,7 @@ namespace cloudscribe.Core.Repositories.SQLite
                 sqlCommand.Append("(");
                 sqlCommand.Append("LoginName = :LoginName ");
                 sqlCommand.Append("OR Email = :LoginName ");
+                sqlCommand.Append("OR LoweredEmail = :LoweredLoginName ");
                 sqlCommand.Append(")");
             }
             else
@@ -1680,13 +1686,16 @@ namespace cloudscribe.Core.Repositories.SQLite
 
             sqlCommand.Append(";");
 
-            SqliteParameter[] arParams = new SqliteParameter[2];
+            SqliteParameter[] arParams = new SqliteParameter[3];
 
             arParams[0] = new SqliteParameter(":SiteID", DbType.Int32);
             arParams[0].Value = siteId;
 
             arParams[1] = new SqliteParameter(":LoginName", DbType.String);
             arParams[1].Value = loginName;
+
+            arParams[2] = new SqliteParameter(":LoweredLoginName", DbType.String);
+            arParams[2].Value = loginName.ToLowerInvariant();
 
             return AdoHelper.ExecuteReader(
                 connectionString,

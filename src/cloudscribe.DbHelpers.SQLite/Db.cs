@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2004-08-03
-// Last Modified:		    2015-11-10
+// Last Modified:		    2015-11-11
 
 using cloudscribe.Core.Models;
 using Microsoft.Data.Sqlite;
@@ -97,35 +97,26 @@ namespace cloudscribe.DbHelpers.SQLite
                 if (sqliteFilePath.Length > 0)
                 {
 
-                    //string connectionString = "Data Source=" + path + ";Persist Security Info=False;";
+                    
+                    //sqlite will automatically create the db when it tries to connect but the folder must exist
 
                     string folderPath = Path.GetDirectoryName(sqliteFilePath);
                     if (!Directory.Exists(folderPath))
                     {
                         Directory.CreateDirectory(folderPath);
                     }
+                    
+                    if (!File.Exists(sqliteFilePath))
+                    {
+                        using (SqliteConnection conn = new SqliteConnection(connectionString))
+                        {
+                            conn.Open();
+                        } //this closes it
+                           
+                        
+                    }
 
-                    //sqlite will automatically create the db but the folder must exist
-
-
-                    //if (!File.Exists(sqliteFilePath))
-                    //{
-                    //    lock (theLock)
-                    //    {
-                    //        if (!File.Exists(sqliteFilePath))
-                    //        {
-                    //            //SqliteConnection.CreateFile(path);
-                    //            SqliteConnection conn = new SqliteConnection(connectionString);
-                    //            //conn.
-                    //            //using (SqlCeEngine engine = new SqlCeEngine(connectionString))
-                    //            //{
-                    //            //    engine.CreateDatabase();
-                    //            //}
-                    //        }
-
-                    //    }
-
-                    //}
+                       
 
                 }
             }
@@ -522,20 +513,32 @@ namespace cloudscribe.DbHelpers.SQLite
             try
             {
                 StringBuilder sqlCommand = new StringBuilder();
-                sqlCommand.Append("SELECT * ");
-                sqlCommand.Append("FROM " + tableName + "; ");
+                sqlCommand.Append("SELECT count(*) FROM sqlite_master WHERE type = 'table' AND name = :TableName; ");
 
-                using (DbDataReader reader = AdoHelper.ExecuteReader(
-                    connectionString,
-                    CommandType.Text,
-                    sqlCommand.ToString(),
-                    null))
-                {
-                    if (reader.Read())
-                    {
-                        return true;
-                    }
-                }
+                SqliteParameter[] arParams = new SqliteParameter[1];
+
+                arParams[0] = new SqliteParameter(":TableName", DbType.String);
+                arParams[0].Value = tableName;
+
+                object result = AdoHelper.ExecuteScalar(connectionString,
+                    sqlCommand.ToString(), 
+                    arParams);
+
+                int count = Convert.ToInt32(result);
+
+                return count > 0;
+
+                //using (DbDataReader reader = AdoHelper.ExecuteReader(
+                //    connectionString,
+                //    CommandType.Text,
+                //    sqlCommand.ToString(),
+                //    null))
+                //{
+                //    if (reader.Read())
+                //    {
+                //        return true;
+                //    }
+                //}
             }
             catch { }
 
