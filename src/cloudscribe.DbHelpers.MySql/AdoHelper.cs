@@ -3,7 +3,7 @@ using System;
 using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
-//using MySql.Data.MySqlClient;
+using MySql.Data.MySqlClient;
 
 namespace cloudscribe.DbHelpers.MySql
 {
@@ -11,10 +11,10 @@ namespace cloudscribe.DbHelpers.MySql
     {
         private static DbProviderFactory GetFactory()
         {
-            var factory = DbProviderFactories.GetFactory("MySql.Data.MySqlClient");
+            //var factory = DbProviderFactories.GetFactory("MySql.Data.MySqlClient");
 
-            return factory;
-            //return MySql.Data.
+            //return factory;
+            return MySqlClientFactory.Instance;
         }
 
 

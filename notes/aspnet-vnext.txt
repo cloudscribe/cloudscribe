@@ -17,6 +17,10 @@ http://stackoverflow.com/questions/33076063/resource-specific-authorization-in-a
 Really good article even if not converting something from web api to mvc6
 http://www.dotnetcurry.com/aspnet-mvc/1149/convert-aspnet-webapi2-aspnet5-mvc6
 
+We should follow the same engineering guidelines as Microsoft
+https://github.com/aspnet/Home/wiki/Engineering-guidelines#cross-platform-coding
+
+
 Routing deep dive
 http://stephenwalther.com/archive/2015/02/07/asp-net-5-deep-dive-routing
 

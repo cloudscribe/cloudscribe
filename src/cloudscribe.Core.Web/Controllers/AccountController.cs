@@ -64,7 +64,7 @@ namespace cloudscribe.Core.Web.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             LoginViewModel model = new LoginViewModel();
             model.ExternalAuthenticationList = signInManager.GetExternalAuthenticationSchemes();
-            if ((Site.RequireCaptchaOnLogin)&& (Site.RecaptchaPublicKey.Length > 0))
+            if ((Site.CaptchaOnLogin)&& (Site.RecaptchaPublicKey.Length > 0))
             {
                 model.RecaptchaSiteKey = Site.RecaptchaPublicKey;     
             }
@@ -84,7 +84,7 @@ namespace cloudscribe.Core.Web.Controllers
         {
             ViewData["Title"] = "Log in";
             ViewData["ReturnUrl"] = returnUrl;
-            if ((Site.RequireCaptchaOnLogin)&& (Site.RecaptchaPublicKey.Length > 0))
+            if ((Site.CaptchaOnLogin)&& (Site.RecaptchaPublicKey.Length > 0))
             {
                 model.RecaptchaSiteKey = Site.RecaptchaPublicKey;
                 model.LoginInfoTop = Site.LoginInfoTop;
@@ -96,7 +96,7 @@ namespace cloudscribe.Core.Web.Controllers
                 return View(model);
             }
 
-            if ((Site.RequireCaptchaOnLogin) && (Site.RecaptchaPublicKey.Length > 0))
+            if ((Site.CaptchaOnLogin) && (Site.RecaptchaPublicKey.Length > 0))
             {
                 string recpatchaSecretKey = Site.RecaptchaPrivateKey;
                 
@@ -150,7 +150,7 @@ namespace cloudscribe.Core.Web.Controllers
             
             EditUserViewModel model = new EditUserViewModel();
             model.SiteGuid = Site.SiteGuid;
-            if ((Site.RequireCaptchaOnRegistration)&& (Site.RecaptchaPublicKey.Length > 0))
+            if ((Site.CaptchaOnRegistration)&& (Site.RecaptchaPublicKey.Length > 0))
             {
                 model.RecaptchaSiteKey = Site.RecaptchaPublicKey;  
             }
@@ -171,7 +171,7 @@ namespace cloudscribe.Core.Web.Controllers
         {
             ViewData["Title"] = "Register";
 
-            if ((Site.RequireCaptchaOnRegistration)&& (Site.RecaptchaPublicKey.Length > 0))
+            if ((Site.CaptchaOnRegistration)&& (Site.RecaptchaPublicKey.Length > 0))
             {
                 model.RecaptchaSiteKey = Site.RecaptchaPublicKey;     
             }
@@ -182,7 +182,7 @@ namespace cloudscribe.Core.Web.Controllers
             bool isValid = ModelState.IsValid;
             if (isValid)
             {
-                if ((Site.RequireCaptchaOnRegistration)&& (Site.RecaptchaPublicKey.Length > 0))
+                if ((Site.CaptchaOnRegistration)&& (Site.RecaptchaPublicKey.Length > 0))
                 {
                     string recpatchaSecretKey = Site.RecaptchaPrivateKey;
                     

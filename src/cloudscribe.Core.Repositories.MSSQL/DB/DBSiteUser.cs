@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-06-09
+// Last Modified:			2015-11-07
 // 
 
 using cloudscribe.DbHelpers.MSSQL;
@@ -480,14 +480,12 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         //}
 
-        public int AddUser(
+        public async Task<int> AddUser(
             Guid siteGuid,
             int siteId,
             string fullName,
-            String loginName,
+            string loginName,
             string email,
-            string password,
-            string passwordSalt,
             Guid userGuid,
             DateTime dateCreated,
             bool mustChangePwd,
@@ -496,13 +494,23 @@ namespace cloudscribe.Core.Repositories.MSSQL
             string timeZoneId,
             DateTime dateOfBirth,
             bool emailConfirmed,
-            int pwdFormat,
             string passwordHash,
             string securityStamp,
             string phoneNumber,
             bool phoneNumberConfirmed,
             bool twoFactorEnabled,
-            DateTime? lockoutEndDateUtc
+            DateTime? lockoutEndDateUtc,
+            
+            bool accountApproved,
+            bool isLockedOut,
+            bool displayInMemberList,
+            string webSiteUrl,
+            string country,
+            string state,
+            string avatarUrl,
+            string signature,
+            string authorBio,
+            string comment
             )
         {
 
@@ -510,19 +518,16 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 logFactory,
                 writeConnectionString, 
                 "mp_Users_Insert", 
-                23);
+                30);
 
             sph.DefineSqlParameter("@SiteGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, siteGuid);
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
             sph.DefineSqlParameter("@Name", SqlDbType.NVarChar, 100, ParameterDirection.Input, fullName);
             sph.DefineSqlParameter("@LoginName", SqlDbType.NVarChar, 50, ParameterDirection.Input, loginName);
             sph.DefineSqlParameter("@Email", SqlDbType.NVarChar, 100, ParameterDirection.Input, email);
-            sph.DefineSqlParameter("@Password", SqlDbType.NVarChar, 1000, ParameterDirection.Input, password);
-            sph.DefineSqlParameter("@PasswordSalt", SqlDbType.NVarChar, 128, ParameterDirection.Input, passwordSalt);
             sph.DefineSqlParameter("@UserGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, userGuid);
             sph.DefineSqlParameter("@DateCreated", SqlDbType.DateTime, ParameterDirection.Input, dateCreated);
             sph.DefineSqlParameter("@MustChangePwd", SqlDbType.Bit, ParameterDirection.Input, mustChangePwd);
-
             sph.DefineSqlParameter("@FirstName", SqlDbType.NVarChar, 100, ParameterDirection.Input, firstName);
             sph.DefineSqlParameter("@LastName", SqlDbType.NVarChar, 100, ParameterDirection.Input, lastName);
             sph.DefineSqlParameter("@TimeZoneId", SqlDbType.NVarChar, 32, ParameterDirection.Input, timeZoneId);
@@ -538,7 +543,6 @@ namespace cloudscribe.Core.Repositories.MSSQL
             }
 
             sph.DefineSqlParameter("@EmailConfirmed", SqlDbType.Bit, ParameterDirection.Input, emailConfirmed);
-            sph.DefineSqlParameter("@PwdFormat", SqlDbType.Int, ParameterDirection.Input, pwdFormat);
             sph.DefineSqlParameter("@PasswordHash", SqlDbType.NVarChar, -1, ParameterDirection.Input, passwordHash);
             sph.DefineSqlParameter("@SecurityStamp", SqlDbType.NVarChar, -1, ParameterDirection.Input, securityStamp);
             sph.DefineSqlParameter("@PhoneNumber", SqlDbType.NVarChar, 50, ParameterDirection.Input, phoneNumber);
@@ -553,8 +557,20 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 sph.DefineSqlParameter("@LockoutEndDateUtc", SqlDbType.DateTime, ParameterDirection.Input, lockoutEndDateUtc);
             }
 
+            sph.DefineSqlParameter("@AccountApproved", SqlDbType.Bit, ParameterDirection.Input, accountApproved);
+            sph.DefineSqlParameter("@IsLockedOut", SqlDbType.Bit, ParameterDirection.Input, isLockedOut);
+            sph.DefineSqlParameter("@DisplayInMemberList", SqlDbType.Bit, ParameterDirection.Input, displayInMemberList);
+            sph.DefineSqlParameter("@WebSiteURL", SqlDbType.NVarChar, 100, ParameterDirection.Input, webSiteUrl);
+            sph.DefineSqlParameter("@Country", SqlDbType.NVarChar, 100, ParameterDirection.Input, country);
+            sph.DefineSqlParameter("@State", SqlDbType.NVarChar, 100, ParameterDirection.Input, state);
+            sph.DefineSqlParameter("@AvatarUrl", SqlDbType.NVarChar, 250, ParameterDirection.Input, avatarUrl);
+            sph.DefineSqlParameter("@Signature", SqlDbType.NVarChar, -1, ParameterDirection.Input, signature);
+            sph.DefineSqlParameter("@AuthorBio", SqlDbType.NVarChar, -1, ParameterDirection.Input, authorBio);
+            sph.DefineSqlParameter("@Comment", SqlDbType.NVarChar, -1, ParameterDirection.Input, comment);
 
-            int newID = Convert.ToInt32(sph.ExecuteScalar());
+            object result = await sph.ExecuteScalarAsync();
+
+            int newID = Convert.ToInt32(result);
             return newID;
         }
 
@@ -563,37 +579,21 @@ namespace cloudscribe.Core.Repositories.MSSQL
             string name,
             string loginName,
             string email,
-            string password,
-            string passwordSalt,
             string gender,
-            bool profileApproved,
-            bool approvedForForums,
+            bool accountApproved,
             bool trusted,
             bool displayInMemberList,
             string webSiteUrl,
             string country,
             string state,
-            string occupation,
-            string interests,
-            string msn,
-            string yahoo,
-            string aim,
-            string icq,
             string avatarUrl,
             string signature,
-            string skin,
             string loweredEmail,
-            string passwordQuestion,
-            string passwordAnswer,
             string comment,
-            int timeOffsetHours,
-            string openIdUri,
-            string windowsLiveId,
             bool mustChangePwd,
             string firstName,
             string lastName,
-            string timeZoneId,
-            string editorPreference,
+            string timeZoneId, 
             string newEmail,
             Guid emailChangeGuid,
             Guid passwordResetGuid,
@@ -601,56 +601,40 @@ namespace cloudscribe.Core.Repositories.MSSQL
             string authorBio,
             DateTime dateOfBirth,
             bool emailConfirmed,
-            int pwdFormat,
             string passwordHash,
             string securityStamp,
             string phoneNumber,
             bool phoneNumberConfirmed,
             bool twoFactorEnabled,
-            DateTime? lockoutEndDateUtc
+            DateTime? lockoutEndDateUtc,
+            bool isLockedOut
             )
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
                 writeConnectionString, 
                 "mp_Users_Update", 
-                49);
+                33);
 
             sph.DefineSqlParameter("@UserID", SqlDbType.Int, ParameterDirection.Input, userId);
             sph.DefineSqlParameter("@Name", SqlDbType.NVarChar, 100, ParameterDirection.Input, name);
             sph.DefineSqlParameter("@LoginName", SqlDbType.NVarChar, 50, ParameterDirection.Input, loginName);
             sph.DefineSqlParameter("@Email", SqlDbType.NVarChar, 100, ParameterDirection.Input, email);
-            sph.DefineSqlParameter("@Password", SqlDbType.NVarChar, 1000, ParameterDirection.Input, password);
-            sph.DefineSqlParameter("@PasswordSalt", SqlDbType.NVarChar, 128, ParameterDirection.Input, passwordSalt);
             sph.DefineSqlParameter("@Gender", SqlDbType.NChar, 1, ParameterDirection.Input, gender);
-            sph.DefineSqlParameter("@ProfileApproved", SqlDbType.Bit, ParameterDirection.Input, profileApproved);
-            sph.DefineSqlParameter("@ApprovedForForums", SqlDbType.Bit, ParameterDirection.Input, approvedForForums);
+            sph.DefineSqlParameter("@AccountApproved", SqlDbType.Bit, ParameterDirection.Input, accountApproved);
             sph.DefineSqlParameter("@Trusted", SqlDbType.Bit, ParameterDirection.Input, trusted);
             sph.DefineSqlParameter("@DisplayInMemberList", SqlDbType.Bit, ParameterDirection.Input, displayInMemberList);
             sph.DefineSqlParameter("@WebSiteUrl", SqlDbType.NVarChar, 100, ParameterDirection.Input, webSiteUrl);
             sph.DefineSqlParameter("@Country", SqlDbType.NVarChar, 100, ParameterDirection.Input, country);
             sph.DefineSqlParameter("@State", SqlDbType.NVarChar, 100, ParameterDirection.Input, state);
-            sph.DefineSqlParameter("@Occupation", SqlDbType.NVarChar, 100, ParameterDirection.Input, occupation);
-            sph.DefineSqlParameter("@Interests", SqlDbType.NVarChar, 100, ParameterDirection.Input, interests);
-            sph.DefineSqlParameter("@MSN", SqlDbType.NVarChar, 50, ParameterDirection.Input, msn);
-            sph.DefineSqlParameter("@Yahoo", SqlDbType.NVarChar, 50, ParameterDirection.Input, yahoo);
-            sph.DefineSqlParameter("@AIM", SqlDbType.NVarChar, 50, ParameterDirection.Input, aim);
-            sph.DefineSqlParameter("@ICQ", SqlDbType.NVarChar, 50, ParameterDirection.Input, icq);
             sph.DefineSqlParameter("@AvatarUrl", SqlDbType.NVarChar, 255, ParameterDirection.Input, avatarUrl);
             sph.DefineSqlParameter("@Signature", SqlDbType.NVarChar, -1, ParameterDirection.Input, signature);
-            sph.DefineSqlParameter("@Skin", SqlDbType.NVarChar, 100, ParameterDirection.Input, skin);
             sph.DefineSqlParameter("@LoweredEmail", SqlDbType.NVarChar, 100, ParameterDirection.Input, loweredEmail);
-            sph.DefineSqlParameter("@PasswordQuestion", SqlDbType.NVarChar, 255, ParameterDirection.Input, passwordQuestion);
-            sph.DefineSqlParameter("@PasswordAnswer", SqlDbType.NVarChar, 255, ParameterDirection.Input, passwordAnswer);
             sph.DefineSqlParameter("@Comment", SqlDbType.NVarChar, -1, ParameterDirection.Input, comment);
-            sph.DefineSqlParameter("@TimeOffsetHours", SqlDbType.Int, ParameterDirection.Input, timeOffsetHours);
-            sph.DefineSqlParameter("@OpenIDURI", SqlDbType.NVarChar, 255, ParameterDirection.Input, openIdUri);
-            sph.DefineSqlParameter("@WindowsLiveID", SqlDbType.NVarChar, 255, ParameterDirection.Input, windowsLiveId);
             sph.DefineSqlParameter("@MustChangePwd", SqlDbType.Bit, ParameterDirection.Input, mustChangePwd);
             sph.DefineSqlParameter("@FirstName", SqlDbType.NVarChar, 100, ParameterDirection.Input, firstName);
             sph.DefineSqlParameter("@LastName", SqlDbType.NVarChar, 100, ParameterDirection.Input, lastName);
             sph.DefineSqlParameter("@TimeZoneId", SqlDbType.NVarChar, 32, ParameterDirection.Input, timeZoneId);
-            sph.DefineSqlParameter("@EditorPreference", SqlDbType.NVarChar, 100, ParameterDirection.Input, editorPreference);
             sph.DefineSqlParameter("@NewEmail", SqlDbType.NVarChar, 100, ParameterDirection.Input, newEmail);
             sph.DefineSqlParameter("@EmailChangeGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, emailChangeGuid);
             sph.DefineSqlParameter("@PasswordResetGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, passwordResetGuid);
@@ -666,7 +650,6 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 sph.DefineSqlParameter("@DateOfBirth", SqlDbType.DateTime, ParameterDirection.Input, dateOfBirth);
             }
 
-            sph.DefineSqlParameter("@PwdFormat", SqlDbType.Int, ParameterDirection.Input, pwdFormat);
             sph.DefineSqlParameter("@EmailConfirmed", SqlDbType.Bit, ParameterDirection.Input, emailConfirmed);
             sph.DefineSqlParameter("@PasswordHash", SqlDbType.NVarChar, -1, ParameterDirection.Input, passwordHash);
             sph.DefineSqlParameter("@SecurityStamp", SqlDbType.NVarChar, -1, ParameterDirection.Input, securityStamp);
@@ -681,6 +664,8 @@ namespace cloudscribe.Core.Repositories.MSSQL
             {
                 sph.DefineSqlParameter("@LockoutEndDateUtc", SqlDbType.DateTime, ParameterDirection.Input, lockoutEndDateUtc);
             }
+
+            sph.DefineSqlParameter("@IsLockedOut", SqlDbType.Bit, ParameterDirection.Input, isLockedOut);
 
             int rowsAffected = await sph.ExecuteNonQueryAsync();
             return (rowsAffected > -1);

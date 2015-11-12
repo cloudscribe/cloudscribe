@@ -8,7 +8,7 @@ using System.Data.Common;
 using Microsoft.Data.Sqlite;
 
 
-namespace cloudscribe.DbHelpers.Sqlite
+namespace cloudscribe.DbHelpers.SQLite
 {
     public static class AdoHelper
     {
@@ -248,7 +248,13 @@ namespace cloudscribe.DbHelpers.Sqlite
 
                     command.CommandTimeout = commandTimeout;
 
-                    return command.ExecuteReader(CommandBehavior.CloseConnection);
+                    // 2015-11-10 CommandBehavior.CloseConnection throws exception
+                    // should be fixed either in rc1 rc2 or 1.0.0
+                    //https://github.com/aspnet/Microsoft.Data.Sqlite/pull/169
+
+                    //return command.ExecuteReader(CommandBehavior.CloseConnection);
+
+                    return command.ExecuteReader(CommandBehavior.Default);
                 }
 
 

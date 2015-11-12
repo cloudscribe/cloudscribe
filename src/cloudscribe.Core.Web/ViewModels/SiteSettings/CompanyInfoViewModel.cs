@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-09-11
+// Last Modified:			2015-11-09
 // 
 
 //using cloudscribe.Configuration.DataAnnotations;
@@ -30,12 +30,7 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         public Guid SiteGuid { get; set; } = Guid.Empty;
         
         
-        //[RequiredWithConfig(RequiredKey = "SloganRequired", ErrorMessageResourceName = "SiteNameRequired", ErrorMessageResourceType = typeof(CommonResources))]
-        [StringLength(255, MinimumLength = 3, ErrorMessage = "Slogan Length Error")]
-        //[Display(Name = "SiteSlogan", ResourceType = typeof(CommonResources))]
-        public string Slogan { get; set; } = string.Empty;
         
-
         //[Display(Name = "CompanyName", ResourceType = typeof(CommonResources))]
         public string CompanyName { get; set; } = string.Empty;
         

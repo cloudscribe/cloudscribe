@@ -21,21 +21,20 @@ namespace cloudscribe.Core.Repositories.SqlCe
     public class LogRepository : ILogRepository
     {
         public LogRepository(
-            SqlCeConnectionStringResolver connectionStringResolver,
-            ILoggerFactory loggerFactory)
+            SqlCeConnectionStringResolver connectionStringResolver)
         {
             if (connectionStringResolver == null) { throw new ArgumentNullException(nameof(connectionStringResolver)); }
-            if (loggerFactory == null) { throw new ArgumentNullException(nameof(loggerFactory)); }
+            //if (loggerFactory == null) { throw new ArgumentNullException(nameof(loggerFactory)); }
 
-            logFactory = loggerFactory;
-            log = loggerFactory.CreateLogger(typeof(GeoRepository).FullName);
+            //logFactory = loggerFactory;
+            //log = loggerFactory.CreateLogger(typeof(LogRepository).FullName);
             connectionString = connectionStringResolver.Resolve();
 
-            dbSystemLog = new DBSystemLog(connectionString, logFactory);
+            dbSystemLog = new DBSystemLog(connectionString);
         }
 
-        private ILoggerFactory logFactory;
-        private ILogger log;
+        //private ILoggerFactory logFactory;
+        //private ILogger log;
         private string connectionString;
         private DBSystemLog dbSystemLog;
 

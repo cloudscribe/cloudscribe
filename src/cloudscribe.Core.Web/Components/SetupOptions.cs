@@ -19,6 +19,7 @@ namespace cloudscribe.Core.Web.Components
         public string DefaultLayout { get; set; } = "Default_Layout.cshtml";
         public string RolesThatCannotBeDeleted { get; set; } = string.Empty;
         public bool DisableSetup { get; set; } = false;
+        public bool ShowErrors { get; set; } = true;
         public bool ShowConnectionError { get; set; } = false;
         public bool TryAnywayIfFailedAlterSchemaTest { get; set; } = false;
         public string SetupHeaderConfigPath { get; set; } = "/config/setup/SetupHeader.config";

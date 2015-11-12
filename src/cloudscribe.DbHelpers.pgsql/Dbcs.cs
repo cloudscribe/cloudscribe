@@ -167,18 +167,21 @@ namespace cloudscribe.DbHelpers.pgsql
             }
 
             sqlCommand = new StringBuilder();
-            sqlCommand.Append("BEGIN; LOCK mp_testdb; ALTER TABLE mp_testdb ADD COLUMN morefoo character varying(255);  COMMIT;");
+            //sqlCommand.Append("BEGIN; LOCK mp_testdb; ALTER TABLE mp_testdb ADD COLUMN morefoo character varying(255);  COMMIT;");
+            sqlCommand.Append("ALTER TABLE mp_testdb ADD COLUMN morefoo character varying(255);");
 
             try
             {
                 RunScript(sqlCommand.ToString(), overrideConnectionInfo);
             }
-            catch (DbException)
+            catch (DbException dbx)
             {
+                log.LogError("error in can alter shcema", dbx);
                 result = false;
             }
-            catch (ArgumentException)
+            catch (ArgumentException agx)
             {
+                log.LogError("error in can alter shcema", agx);
                 result = false;
             }
 
@@ -501,6 +504,8 @@ namespace cloudscribe.DbHelpers.pgsql
                         return true;
                     }
                 }
+                // if no error table exists
+                return true;
             }
             catch { }
 
@@ -619,10 +624,36 @@ namespace cloudscribe.DbHelpers.pgsql
             arParams[5].Direction = ParameterDirection.Input;
             arParams[5].Value = revision;
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("INSERT INTO mp_schemaversion (");
+            sqlCommand.Append("applicationid, ");
+            sqlCommand.Append("applicationname, ");
+            sqlCommand.Append("major, ");
+            sqlCommand.Append("minor, ");
+            sqlCommand.Append("build, ");
+            sqlCommand.Append("revision )");
+
+            sqlCommand.Append(" VALUES (");
+            sqlCommand.Append(":applicationid, ");
+            sqlCommand.Append(":applicationname, ");
+            sqlCommand.Append(":major, ");
+            sqlCommand.Append(":minor, ");
+            sqlCommand.Append(":build, ");
+            sqlCommand.Append(":revision ");
+            sqlCommand.Append(")");
+            sqlCommand.Append(";");
+            //select cast(currval('mp_schemascripthistoryid_seq') as int4);$_$
+
+            //int rowsAffected = AdoHelper.ExecuteNonQuery(
+            //    writeConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_schemaversion_insert(:applicationid,:applicationname,:major,:minor,:build,:revision)",
+            //    arParams);
+
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 writeConnectionString,
-                CommandType.StoredProcedure,
-                "mp_schemaversion_insert(:applicationid,:applicationname,:major,:minor,:build,:revision)",
+                CommandType.Text,
+                sqlCommand.ToString(),
                 arParams);
 
             return (rowsAffected > 0);
@@ -666,10 +697,29 @@ namespace cloudscribe.DbHelpers.pgsql
             arParams[5].Direction = ParameterDirection.Input;
             arParams[5].Value = revision;
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("UPDATE mp_schemaversion ");
+            sqlCommand.Append("SET  ");
+            sqlCommand.Append("applicationname = :applicationname, ");
+            sqlCommand.Append("major = :major, ");
+            sqlCommand.Append("minor = :minor, ");
+            sqlCommand.Append("build = :build, ");
+            sqlCommand.Append("revision = :revision ");
+
+            sqlCommand.Append("WHERE  ");
+            sqlCommand.Append("applicationid = :applicationid ");
+            sqlCommand.Append(";");
+
+            //int rowsAffected = AdoHelper.ExecuteNonQuery(
+            //    writeConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_schemaversion_update(:applicationid,:applicationname,:major,:minor,:build,:revision)",
+            //    arParams);
+
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 writeConnectionString,
-                CommandType.StoredProcedure,
-                "mp_schemaversion_update(:applicationid,:applicationname,:major,:minor,:build,:revision)",
+                CommandType.Text,
+                sqlCommand.ToString(),
                 arParams);
 
             return (rowsAffected > 0);
@@ -684,10 +734,22 @@ namespace cloudscribe.DbHelpers.pgsql
             arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = applicationId.ToString();
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("DELETE FROM mp_schemaversion ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("applicationid = :applicationid ");
+            sqlCommand.Append(";");
+
+            //int rowsAffected = AdoHelper.ExecuteNonQuery(
+            //    writeConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_schemaversion_delete(:applicationid)",
+            //    arParams);
+
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 writeConnectionString,
-                CommandType.StoredProcedure,
-                "mp_schemaversion_delete(:applicationid)",
+                CommandType.Text,
+                sqlCommand.ToString(),
                 arParams);
 
             return (rowsAffected > -1);
@@ -718,10 +780,23 @@ namespace cloudscribe.DbHelpers.pgsql
             arParams[0].Direction = ParameterDirection.Input;
             arParams[0].Value = applicationId.ToString();
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  * ");
+            sqlCommand.Append("FROM	mp_schemaversion ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("applicationid = :applicationid ");
+            sqlCommand.Append(";");
+
+            //return AdoHelper.ExecuteReader(
+            //    readConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_schemaversion_select_one(:applicationid)",
+            //    arParams);
+
             return AdoHelper.ExecuteReader(
                 readConnectionString,
-                CommandType.StoredProcedure,
-                "mp_schemaversion_select_one(:applicationid)",
+                CommandType.Text,
+                sqlCommand.ToString(),
                 arParams);
 
         }
@@ -780,11 +855,38 @@ namespace cloudscribe.DbHelpers.pgsql
             arParams[5].Direction = ParameterDirection.Input;
             arParams[5].Value = scriptBody;
 
-            int newID = Convert.ToInt32(AdoHelper.ExecuteScalar(
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("INSERT INTO mp_schemascripthistory (");
+            sqlCommand.Append("applicationid, ");
+            sqlCommand.Append("scriptfile, ");
+            sqlCommand.Append("runtime, ");
+            sqlCommand.Append("erroroccurred, ");
+            sqlCommand.Append("errormessage, ");
+            sqlCommand.Append("scriptbody )");
+
+            sqlCommand.Append(" VALUES (");
+            sqlCommand.Append(":applicationid, ");
+            sqlCommand.Append(":scriptfile, ");
+            sqlCommand.Append(":runtime, ");
+            sqlCommand.Append(":erroroccurred, ");
+            sqlCommand.Append(":errormessage, ");
+            sqlCommand.Append(":scriptbody )");
+            sqlCommand.Append(";");
+            sqlCommand.Append(" SELECT CURRVAL('mp_schemascripthistoryid_seq');");
+
+            object obj = AdoHelper.ExecuteScalar(
                 writeConnectionString,
-                CommandType.StoredProcedure,
-                "mp_schemascripthistory_insert(:applicationid,:scriptfile,:runtime,:erroroccurred,:errormessage,:scriptbody)",
-                arParams));
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams);
+
+            int newID = Convert.ToInt32(obj);
+
+            //int newID = Convert.ToInt32(AdoHelper.ExecuteScalar(
+            //    writeConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_schemascripthistory_insert(:applicationid,:scriptfile,:runtime,:erroroccurred,:errormessage,:scriptbody)",
+            //    arParams));
 
             return newID;
 

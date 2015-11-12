@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-08-06
+// Last Modified:			2015-11-05
 // 
  
 using cloudscribe.DbHelpers.MySql;
@@ -35,229 +35,91 @@ namespace cloudscribe.Core.Repositories.MySql
 
         public async Task<int> Create(
             Guid siteGuid,
-            String siteName,
-            String skin,
-            String logo,
-            String icon,
+            string siteName,
+            string skin,
             bool allowNewRegistration,
-            bool allowUserSkins,
-            bool allowPageSkins,
-            bool allowHideMenuOnPages,
             bool useSecureRegistration,
             bool useSslOnAllPages,
-            String defaultPageKeywords,
-            String defaultPageDescription,
-            String defaultPageEncoding,
-            String defaultAdditionalMetaTags,
             bool isServerAdminSite,
             bool useLdapAuth,
             bool autoCreateLdapUserOnFirstLogin,
-            String ldapServer,
+            string ldapServer,
             int ldapPort,
-            String ldapDomain,
-            String ldapRootDN,
-            String ldapUserDNKey,
+            string ldapDomain,
+            string ldapRootDN,
+            string ldapUserDNKey,
             bool allowUserFullNameChange,
             bool useEmailForLogin,
             bool reallyDeleteUsers,
-            String editorSkin,
-            String defaultFriendlyUrlPattern,
-            bool enableMyPageFeature,
-            string editorProvider,
-            string datePickerProvider,
-            string captchaProvider,
             string recaptchaPrivateKey,
             string recaptchaPublicKey,
-            string wordpressApiKey,
-            string windowsLiveAppId,
-            string windowsLiveKey,
-            bool allowOpenIdAuth,
-            bool allowWindowsLiveAuth,
-            string gmapApiKey,
             string apiKeyExtra1,
             string apiKeyExtra2,
             string apiKeyExtra3,
             string apiKeyExtra4,
             string apiKeyExtra5,
-            bool disableDbAuth)
+            bool disableDbAuth,
+
+            bool requiresQuestionAndAnswer,
+            int maxInvalidPasswordAttempts,
+            int passwordAttemptWindowMinutes,
+            int minRequiredPasswordLength,
+            int minReqNonAlphaChars,
+            string defaultEmailFromAddress,
+            bool allowDbFallbackWithLdap,
+            bool emailLdapDbFallback,
+            bool allowPersistentLogin,
+            bool captchaOnLogin,
+            bool captchaOnRegistration,
+            bool siteIsClosed,
+            string siteIsClosedMessage,
+            string privacyPolicy,
+            string timeZoneId,
+            string googleAnalyticsProfileId,
+            string companyName,
+            string companyStreetAddress,
+            string companyStreetAddress2,
+            string companyRegion,
+            string companyLocality,
+            string companyCountry,
+            string companyPostalCode,
+            string companyPublicEmail,
+            string companyPhone,
+            string companyFax,
+            string facebookAppId,
+            string facebookAppSecret,
+            string googleClientId,
+            string googleClientSecret,
+            string twitterConsumerKey,
+            string twitterConsumerSecret,
+            string microsoftClientId,
+            string microsoftClientSecret,
+            string preferredHostName,
+            string siteFolderName,
+            string addThisDotComUsername,
+            string loginInfoTop,
+            string loginInfoBottom,
+            string registrationAgreement,
+            string registrationPreamble,
+            string smtpServer,
+            int smtpPort,
+            string smtpUser,
+            string smtpPassword,
+            string smtpPreferredEncoding,
+            bool smtpRequiresAuth,
+            bool smtpUseSsl,
+            bool requireApprovalBeforeLogin
+            )
         {
-
-            #region bool conversion
-
-            byte intDisableDbAuth = 0;
-            if (disableDbAuth) { intDisableDbAuth = 1; }
-
-            byte oidauth;
-            if (allowOpenIdAuth)
-            {
-                oidauth = 1;
-            }
-            else
-            {
-                oidauth = 0;
-            }
-
-            byte winliveauth;
-            if (allowWindowsLiveAuth)
-            {
-                winliveauth = 1;
-            }
-            else
-            {
-                winliveauth = 0;
-            }
-
-            byte uldapp;
-            if (useLdapAuth)
-            {
-                uldapp = 1;
-            }
-            else
-            {
-                uldapp = 0;
-            }
-
-            byte autoldapp;
-            if (autoCreateLdapUserOnFirstLogin)
-            {
-                autoldapp = 1;
-            }
-            else
-            {
-                autoldapp = 0;
-            }
-
-            byte allowNameChange;
-            if (allowUserFullNameChange)
-            {
-                allowNameChange = 1;
-            }
-            else
-            {
-                allowNameChange = 0;
-            }
-
-            byte emailForLogin;
-            if (useEmailForLogin)
-            {
-                emailForLogin = 1;
-            }
-            else
-            {
-                emailForLogin = 0;
-            }
-
-            byte deleteUsers;
-            if (reallyDeleteUsers)
-            {
-                deleteUsers = 1;
-            }
-            else
-            {
-                deleteUsers = 0;
-            }
-
-            byte allowNew;
-            if (allowNewRegistration)
-            {
-                allowNew = 1;
-            }
-            else
-            {
-                allowNew = 0;
-            }
-
-            byte allowSkins;
-            if (allowUserSkins)
-            {
-                allowSkins = 1;
-            }
-            else
-            {
-                allowSkins = 0;
-            }
-
-            byte secure;
-            if (useSecureRegistration)
-            {
-                secure = 1;
-            }
-            else
-            {
-                secure = 0;
-            }
-
-            byte ssl;
-            if (useSslOnAllPages)
-            {
-                ssl = 1;
-            }
-            else
-            {
-                ssl = 0;
-            }
-
-            byte adminSite;
-            if (isServerAdminSite)
-            {
-                adminSite = 1;
-            }
-            else
-            {
-                adminSite = 0;
-            }
-
-            byte pageSkins;
-            if (allowPageSkins)
-            {
-                pageSkins = 1;
-            }
-            else
-            {
-                pageSkins = 0;
-            }
-
-            byte allowHide;
-            if (allowHideMenuOnPages)
-            {
-                allowHide = 1;
-            }
-            else
-            {
-                allowHide = 0;
-            }
-
-            byte enableMy;
-            if (enableMyPageFeature)
-            {
-                enableMy = 1;
-            }
-            else
-            {
-                enableMy = 0;
-            }
-
-            #endregion
 
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("INSERT INTO mp_Sites ( ");
             sqlCommand.Append("SiteName, ");
             sqlCommand.Append("Skin, ");
-            sqlCommand.Append("Logo, ");
-            sqlCommand.Append("Icon, ");
             sqlCommand.Append("AllowNewRegistration, ");
-            sqlCommand.Append("AllowUserSkins, ");
             sqlCommand.Append("UseSecureRegistration, ");
-            sqlCommand.Append("EnableMyPageFeature, ");
             sqlCommand.Append("UseSSLOnAllPages, ");
-            sqlCommand.Append("DefaultPageKeywords, ");
-            sqlCommand.Append("DefaultPageDescription, ");
-            sqlCommand.Append("DefaultPageEncoding, ");
-            sqlCommand.Append("DefaultAdditionalMetaTags, ");
             sqlCommand.Append("IsServerAdminSite, ");
-            sqlCommand.Append("AllowPageSkins, ");
-            sqlCommand.Append("AllowHideMenuOnPages, ");
-
             sqlCommand.Append("UseLdapAuth, ");
             sqlCommand.Append("AutoCreateLDAPUserOnFirstLogin, ");
             sqlCommand.Append("LdapServer, ");
@@ -268,19 +130,8 @@ namespace cloudscribe.Core.Repositories.MySql
             sqlCommand.Append("AllowUserFullNameChange, ");
             sqlCommand.Append("UseEmailForLogin, ");
             sqlCommand.Append("ReallyDeleteUsers, ");
-            sqlCommand.Append("EditorProvider, ");
-            sqlCommand.Append("EditorSkin, ");
-
-            sqlCommand.Append("DatePickerProvider, ");
-            sqlCommand.Append("CaptchaProvider, ");
             sqlCommand.Append("RecaptchaPrivateKey, ");
-            sqlCommand.Append("RecaptchaPublicKey, ");
-            sqlCommand.Append("WordpressAPIKey, ");
-            sqlCommand.Append("WindowsLiveAppID, ");
-            sqlCommand.Append("WindowsLiveKey, ");
-            sqlCommand.Append("AllowOpenIDAuth, ");
-            sqlCommand.Append("AllowWindowsLiveAuth, ");
-            sqlCommand.Append("GmapApiKey, ");
+            sqlCommand.Append("RecaptchaPublicKey, ");   
             sqlCommand.Append("ApiKeyExtra1, ");
             sqlCommand.Append("ApiKeyExtra2, ");
             sqlCommand.Append("ApiKeyExtra3, ");
@@ -288,28 +139,66 @@ namespace cloudscribe.Core.Repositories.MySql
             sqlCommand.Append("ApiKeyExtra5, ");
             sqlCommand.Append("DisableDbAuth, ");
 
-            sqlCommand.Append("DefaultFriendlyUrlPatternEnum, ");
+            sqlCommand.Append("RequiresQuestionAndAnswer, ");
+            sqlCommand.Append("MaxInvalidPasswordAttempts, ");
+            sqlCommand.Append("PasswordAttemptWindowMinutes, ");
+            sqlCommand.Append("MinRequiredPasswordLength, ");
+            sqlCommand.Append("MinReqNonAlphaChars, ");
+            sqlCommand.Append("DefaultEmailFromAddress, ");
+            sqlCommand.Append("AllowDbFallbackWithLdap, ");
+            sqlCommand.Append("EmailLdapDbFallback, ");
+            sqlCommand.Append("AllowPersistentLogin, ");
+            sqlCommand.Append("CaptchaOnLogin, ");
+            sqlCommand.Append("CaptchaOnRegistration, ");
+            sqlCommand.Append("SiteIsClosed, ");
+            sqlCommand.Append("SiteIsClosedMessage, ");
+            sqlCommand.Append("PrivacyPolicy, ");
+            sqlCommand.Append("TimeZoneId, ");
+            sqlCommand.Append("GoogleAnalyticsProfileId, ");
+            sqlCommand.Append("CompanyName, ");
+            sqlCommand.Append("CompanyStreetAddress, ");
+            sqlCommand.Append("CompanyStreetAddress2, ");
+            sqlCommand.Append("CompanyRegion, ");
+            sqlCommand.Append("CompanyLocality, ");
+            sqlCommand.Append("CompanyCountry, ");
+            sqlCommand.Append("CompanyPostalCode, ");
+            sqlCommand.Append("CompanyPublicEmail, ");
+            sqlCommand.Append("CompanyPhone, ");
+            sqlCommand.Append("CompanyFax, ");
+            sqlCommand.Append("FacebookAppId, ");
+            sqlCommand.Append("FacebookAppSecret, ");
+            sqlCommand.Append("GoogleClientId, ");
+            sqlCommand.Append("GoogleClientSecret, ");
+            sqlCommand.Append("TwitterConsumerKey, ");
+            sqlCommand.Append("TwitterConsumerSecret, ");
+            sqlCommand.Append("MicrosoftClientId, ");
+            sqlCommand.Append("MicrosoftClientSecret, ");
+            sqlCommand.Append("PreferredHostName, ");
+            sqlCommand.Append("SiteFolderName, ");
+            sqlCommand.Append("AddThisDotComUsername, ");
+            sqlCommand.Append("LoginInfoTop, ");
+            sqlCommand.Append("LoginInfoBottom, ");
+            sqlCommand.Append("RegistrationAgreement, ");
+            sqlCommand.Append("RegistrationPreamble, ");
+            sqlCommand.Append("SmtpServer, ");
+            sqlCommand.Append("SmtpPort, ");
+            sqlCommand.Append("SmtpUser, ");
+            sqlCommand.Append("SmtpPassword, ");
+            sqlCommand.Append("SmtpPreferredEncoding, ");
+            sqlCommand.Append("SmtpRequiresAuth, ");
+            sqlCommand.Append("SmtpUseSsl, ");
+            sqlCommand.Append("RequireApprovalBeforeLogin, ");
+            
             sqlCommand.Append("SiteGuid ");
             sqlCommand.Append("  )");
 
             sqlCommand.Append("VALUES (");
             sqlCommand.Append(" ?SiteName , ");
             sqlCommand.Append(" ?Skin , ");
-            sqlCommand.Append(" ?Logo, ");
-            sqlCommand.Append(" ?Icon, ");
             sqlCommand.Append(" ?AllowNewRegistration, ");
-            sqlCommand.Append(" ?AllowUserSkins, ");
-            sqlCommand.Append(" ?UseSecureRegistration, ");
-            sqlCommand.Append(" ?EnableMyPageFeature, ");
-            sqlCommand.Append(" ?UseSSLOnAllPages, ");
-            sqlCommand.Append(" ?DefaultPageKeywords, ");
-            sqlCommand.Append(" ?DefaultPageDescription, ");
-            sqlCommand.Append(" ?DefaultPageEncoding, ");
-            sqlCommand.Append(" ?DefaultAdditionalMetaTags, ");
-            sqlCommand.Append(" ?IsServerAdminSite, ");
-            sqlCommand.Append(" ?AllowPageSkins, ");
-            sqlCommand.Append(" ?AllowHideMenuOnPages, ");
-
+            sqlCommand.Append(" ?UseSecureRegistration, ");  
+            sqlCommand.Append(" ?UseSSLOnAllPages, ");   
+            sqlCommand.Append(" ?IsServerAdminSite, ");    
             sqlCommand.Append(" ?UseLdapAuth, ");
             sqlCommand.Append(" ?AutoCreateLDAPUserOnFirstLogin, ");
             sqlCommand.Append(" ?LdapServer, ");
@@ -319,20 +208,9 @@ namespace cloudscribe.Core.Repositories.MySql
             sqlCommand.Append(" ?LdapUserDNKey, ");
             sqlCommand.Append(" ?AllowUserFullNameChange, ");
             sqlCommand.Append(" ?UseEmailForLogin, ");
-            sqlCommand.Append(" ?ReallyDeleteUsers, ");
-            sqlCommand.Append(" ?EditorProvider, ");
-            sqlCommand.Append(" ?EditorSkin, ");
-
-            sqlCommand.Append(" ?DatePickerProvider, ");
-            sqlCommand.Append(" ?CaptchaProvider, ");
+            sqlCommand.Append(" ?ReallyDeleteUsers, ");      
             sqlCommand.Append(" ?RecaptchaPrivateKey, ");
-            sqlCommand.Append(" ?RecaptchaPublicKey, ");
-            sqlCommand.Append(" ?WordpressAPIKey, ");
-            sqlCommand.Append(" ?WindowsLiveAppID, ");
-            sqlCommand.Append(" ?WindowsLiveKey, ");
-            sqlCommand.Append(" ?AllowOpenIDAuth, ");
-            sqlCommand.Append("?AllowWindowsLiveAuth, ");
-            sqlCommand.Append("?GmapApiKey, ");
+            sqlCommand.Append(" ?RecaptchaPublicKey, ");   
             sqlCommand.Append("?ApiKeyExtra1, ");
             sqlCommand.Append("?ApiKeyExtra2, ");
             sqlCommand.Append("?ApiKeyExtra3, ");
@@ -340,151 +218,284 @@ namespace cloudscribe.Core.Repositories.MySql
             sqlCommand.Append("?ApiKeyExtra5, ");
             sqlCommand.Append("?DisableDbAuth, ");
 
-            sqlCommand.Append(" ?DefaultFriendlyUrlPattern, ");
+            sqlCommand.Append("?RequiresQuestionAndAnswer, ");
+            sqlCommand.Append("?MaxInvalidPasswordAttempts, ");
+            sqlCommand.Append("?PasswordAttemptWindowMinutes, ");
+            sqlCommand.Append("?MinRequiredPasswordLength, ");
+            sqlCommand.Append("?MinReqNonAlphaChars, ");
+            sqlCommand.Append("?DefaultEmailFromAddress, ");
+            sqlCommand.Append("?AllowDbFallbackWithLdap, ");
+            sqlCommand.Append("?EmailLdapDbFallback, ");
+            sqlCommand.Append("?AllowPersistentLogin, ");
+            sqlCommand.Append("?CaptchaOnLogin, ");
+            sqlCommand.Append("?CaptchaOnRegistration, ");
+            sqlCommand.Append("?SiteIsClosed, ");
+            sqlCommand.Append("?SiteIsClosedMessage, ");
+            sqlCommand.Append("?PrivacyPolicy, ");
+            sqlCommand.Append("?TimeZoneId, ");
+            sqlCommand.Append("?GoogleAnalyticsProfileId, ");
+            sqlCommand.Append("?CompanyName, ");
+            sqlCommand.Append("?CompanyStreetAddress, ");
+            sqlCommand.Append("?CompanyStreetAddress2, ");
+            sqlCommand.Append("?CompanyRegion, ");
+            sqlCommand.Append("?CompanyLocality, ");
+            sqlCommand.Append("?CompanyCountry, ");
+            sqlCommand.Append("?CompanyPostalCode, ");
+            sqlCommand.Append("?CompanyPublicEmail, ");
+            sqlCommand.Append("?CompanyPhone, ");
+            sqlCommand.Append("?CompanyFax, ");
+            sqlCommand.Append("?FacebookAppId, ");
+            sqlCommand.Append("?FacebookAppSecret, ");
+            sqlCommand.Append("?GoogleClientId, ");
+            sqlCommand.Append("?GoogleClientSecret, ");
+            sqlCommand.Append("?TwitterConsumerKey, ");
+            sqlCommand.Append("?TwitterConsumerSecret, ");
+            sqlCommand.Append("?MicrosoftClientId, ");
+            sqlCommand.Append("?MicrosoftClientSecret, ");
+            sqlCommand.Append("?PreferredHostName, ");
+            sqlCommand.Append("?SiteFolderName, ");
+            sqlCommand.Append("?AddThisDotComUsername, ");
+            sqlCommand.Append("?LoginInfoTop, ");
+            sqlCommand.Append("?LoginInfoBottom, ");
+            sqlCommand.Append("?RegistrationAgreement, ");
+            sqlCommand.Append("?RegistrationPreamble, ");
+            sqlCommand.Append("?SmtpServer, ");
+            sqlCommand.Append("?SmtpPort, ");
+            sqlCommand.Append("?SmtpUser, ");
+            sqlCommand.Append("?SmtpPassword, ");
+            sqlCommand.Append("?SmtpPreferredEncoding, ");
+            sqlCommand.Append("?SmtpRequiresAuth, ");
+            sqlCommand.Append("?SmtpUseSsl, ");
+            sqlCommand.Append("?RequireApprovalBeforeLogin, ");
+
             sqlCommand.Append(" ?SiteGuid ");
 
             sqlCommand.Append(");");
             sqlCommand.Append("SELECT LAST_INSERT_ID();");
 
-            MySqlParameter[] arParams = new MySqlParameter[46];
+            MySqlParameter[] arParams = new MySqlParameter[74];
 
             arParams[0] = new MySqlParameter("?SiteName", MySqlDbType.VarChar, 255);
             arParams[0].Value = siteName;
 
             arParams[1] = new MySqlParameter("?IsServerAdminSite", MySqlDbType.Int32);
-            arParams[1].Value = adminSite;
+            arParams[1].Value = isServerAdminSite ? 1 : 0;
 
             arParams[2] = new MySqlParameter("?Skin", MySqlDbType.VarChar, 100);
             arParams[2].Value = skin;
+            
+            arParams[3] = new MySqlParameter("?AllowNewRegistration", MySqlDbType.Int32);
+            arParams[3].Value = allowNewRegistration ? 1 : 0;
+            
+            arParams[4] = new MySqlParameter("?UseSecureRegistration", MySqlDbType.Int32);
+            arParams[4].Value = useSecureRegistration ? 1 : 0;
+            
+            arParams[5] = new MySqlParameter("?UseSSLOnAllPages", MySqlDbType.Int32);
+            arParams[5].Value = useSslOnAllPages ? 1 : 0;
+            
+            arParams[6] = new MySqlParameter("?UseLdapAuth", MySqlDbType.Int32);
+            arParams[6].Value = useLdapAuth ? 1 : 0;
 
-            arParams[3] = new MySqlParameter("?Logo", MySqlDbType.VarChar, 50);
-            arParams[3].Value = logo;
+            arParams[7] = new MySqlParameter("?AutoCreateLDAPUserOnFirstLogin", MySqlDbType.Int32);
+            arParams[7].Value = autoCreateLdapUserOnFirstLogin ? 1 : 0;
 
-            arParams[4] = new MySqlParameter("?Icon", MySqlDbType.VarChar, 50);
-            arParams[4].Value = icon;
+            arParams[8] = new MySqlParameter("?LdapServer", MySqlDbType.VarChar, 255);
+            arParams[8].Value = ldapServer;
 
-            arParams[5] = new MySqlParameter("?AllowNewRegistration", MySqlDbType.Int32);
-            arParams[5].Value = allowNew;
+            arParams[9] = new MySqlParameter("?LdapPort", MySqlDbType.Int32);
+            arParams[9].Value = ldapPort;
 
-            arParams[6] = new MySqlParameter("?AllowUserSkins", MySqlDbType.Int32);
-            arParams[6].Value = allowSkins;
+            arParams[10] = new MySqlParameter("?LdapRootDN", MySqlDbType.VarChar, 255);
+            arParams[10].Value = ldapRootDN;
 
-            arParams[7] = new MySqlParameter("?UseSecureRegistration", MySqlDbType.Int32);
-            arParams[7].Value = secure;
+            arParams[11] = new MySqlParameter("?LdapUserDNKey", MySqlDbType.VarChar, 255);
+            arParams[11].Value = ldapUserDNKey;
 
-            arParams[8] = new MySqlParameter("?EnableMyPageFeature", MySqlDbType.Int32);
-            arParams[8].Value = enableMy;
+            arParams[12] = new MySqlParameter("?AllowUserFullNameChange", MySqlDbType.Int32);
+            arParams[12].Value = allowUserFullNameChange ? 1 : 0;
 
-            arParams[9] = new MySqlParameter("?UseSSLOnAllPages", MySqlDbType.Int32);
-            arParams[9].Value = ssl;
+            arParams[13] = new MySqlParameter("?UseEmailForLogin", MySqlDbType.Int32);
+            arParams[13].Value = useEmailForLogin ? 1 : 0;
 
-            arParams[10] = new MySqlParameter("?DefaultPageKeywords", MySqlDbType.VarChar, 255);
-            arParams[10].Value = defaultPageKeywords;
+            arParams[14] = new MySqlParameter("?ReallyDeleteUsers", MySqlDbType.Int32);
+            arParams[14].Value = reallyDeleteUsers ? 0 : 1;
+            
+            arParams[15] = new MySqlParameter("?SiteGuid", MySqlDbType.VarChar, 36);
+            arParams[15].Value = siteGuid.ToString();
 
-            arParams[11] = new MySqlParameter("?DefaultPageDescription", MySqlDbType.VarChar, 255);
-            arParams[11].Value = defaultPageDescription;
+            arParams[16] = new MySqlParameter("?LdapDomain", MySqlDbType.VarChar, 255);
+            arParams[16].Value = ldapDomain;
+            
+            arParams[17] = new MySqlParameter("?RecaptchaPrivateKey", MySqlDbType.VarChar, 255);
+            arParams[17].Value = recaptchaPrivateKey;
 
-            arParams[12] = new MySqlParameter("?DefaultPageEncoding", MySqlDbType.VarChar, 255);
-            arParams[12].Value = defaultPageEncoding;
+            arParams[18] = new MySqlParameter("?RecaptchaPublicKey", MySqlDbType.VarChar, 255);
+            arParams[18].Value = recaptchaPublicKey;
+            
+            arParams[19] = new MySqlParameter("?ApiKeyExtra1", MySqlDbType.VarChar, 255);
+            arParams[19].Value = apiKeyExtra1;
 
-            arParams[13] = new MySqlParameter("?DefaultAdditionalMetaTags", MySqlDbType.VarChar, 255);
-            arParams[13].Value = defaultAdditionalMetaTags;
+            arParams[20] = new MySqlParameter("?ApiKeyExtra2", MySqlDbType.VarChar, 255);
+            arParams[20].Value = apiKeyExtra2;
 
-            arParams[14] = new MySqlParameter("?AllowPageSkins", MySqlDbType.Int32);
-            arParams[14].Value = pageSkins;
+            arParams[21] = new MySqlParameter("?ApiKeyExtra3", MySqlDbType.VarChar, 255);
+            arParams[21].Value = apiKeyExtra3;
 
-            arParams[15] = new MySqlParameter("?AllowHideMenuOnPages", MySqlDbType.Int32);
-            arParams[15].Value = allowHide;
+            arParams[22] = new MySqlParameter("?ApiKeyExtra4", MySqlDbType.VarChar, 255);
+            arParams[22].Value = apiKeyExtra4;
 
-            arParams[16] = new MySqlParameter("?UseLdapAuth", MySqlDbType.Int32);
-            arParams[16].Value = uldapp;
+            arParams[23] = new MySqlParameter("?ApiKeyExtra5", MySqlDbType.VarChar, 255);
+            arParams[23].Value = apiKeyExtra5;
 
-            arParams[17] = new MySqlParameter("?AutoCreateLDAPUserOnFirstLogin", MySqlDbType.Int32);
-            arParams[17].Value = autoldapp;
+            arParams[24] = new MySqlParameter("?DisableDbAuth", MySqlDbType.Int32);
+            arParams[24].Value = disableDbAuth ? 1 : 0;
 
-            arParams[18] = new MySqlParameter("?LdapServer", MySqlDbType.VarChar, 255);
-            arParams[18].Value = ldapServer;
+            arParams[25] = new MySqlParameter("?RequiresQuestionAndAnswer", MySqlDbType.Int16);
+            arParams[25].Value = requiresQuestionAndAnswer ? 1 : 0;
 
-            arParams[19] = new MySqlParameter("?LdapPort", MySqlDbType.Int32);
-            arParams[19].Value = ldapPort;
+            arParams[26] = new MySqlParameter("?MaxInvalidPasswordAttempts", MySqlDbType.Int32);
+            arParams[26].Value = maxInvalidPasswordAttempts;
 
-            arParams[20] = new MySqlParameter("?LdapRootDN", MySqlDbType.VarChar, 255);
-            arParams[20].Value = ldapRootDN;
+            arParams[27] = new MySqlParameter("?PasswordAttemptWindowMinutes", MySqlDbType.Int32);
+            arParams[27].Value = passwordAttemptWindowMinutes;
 
-            arParams[21] = new MySqlParameter("?LdapUserDNKey", MySqlDbType.VarChar, 255);
-            arParams[21].Value = ldapUserDNKey;
+            arParams[28] = new MySqlParameter("?MinRequiredPasswordLength", MySqlDbType.Int32);
+            arParams[28].Value = minRequiredPasswordLength;
 
-            arParams[22] = new MySqlParameter("?AllowUserFullNameChange", MySqlDbType.Int32);
-            arParams[22].Value = allowNameChange;
+            arParams[29] = new MySqlParameter("?MinReqNonAlphaChars", MySqlDbType.Int32);
+            arParams[29].Value = minReqNonAlphaChars;
 
-            arParams[23] = new MySqlParameter("?UseEmailForLogin", MySqlDbType.Int32);
-            arParams[23].Value = emailForLogin;
+            arParams[30] = new MySqlParameter("?DefaultEmailFromAddress", MySqlDbType.VarChar, 100);
+            arParams[30].Value = defaultEmailFromAddress;
 
-            arParams[24] = new MySqlParameter("?ReallyDeleteUsers", MySqlDbType.Int32);
-            arParams[24].Value = deleteUsers;
+            arParams[31] = new MySqlParameter("?AllowDbFallbackWithLdap", MySqlDbType.Int16);
+            arParams[31].Value = allowDbFallbackWithLdap ? 1 : 0;
 
-            arParams[25] = new MySqlParameter("?EditorSkin", MySqlDbType.VarChar, 50);
-            arParams[25].Value = editorSkin;
+            arParams[32] = new MySqlParameter("?EmailLdapDbFallback", MySqlDbType.Int16);
+            arParams[32].Value = emailLdapDbFallback ? 1 : 0;
 
-            arParams[26] = new MySqlParameter("?DefaultFriendlyUrlPattern", MySqlDbType.VarChar, 50);
-            arParams[26].Value = defaultFriendlyUrlPattern;
+            arParams[33] = new MySqlParameter("?AllowPersistentLogin", MySqlDbType.Int16);
+            arParams[33].Value = allowPersistentLogin ? 1 : 0;
 
-            arParams[27] = new MySqlParameter("?SiteGuid", MySqlDbType.VarChar, 36);
-            arParams[27].Value = siteGuid.ToString();
+            arParams[34] = new MySqlParameter("?CaptchaOnLogin", MySqlDbType.Int16);
+            arParams[34].Value = captchaOnLogin ? 1 : 0;
 
-            arParams[28] = new MySqlParameter("?LdapDomain", MySqlDbType.VarChar, 255);
-            arParams[28].Value = ldapDomain;
+            arParams[35] = new MySqlParameter("?CaptchaOnRegistration", MySqlDbType.Int16);
+            arParams[35].Value = captchaOnRegistration ? 1 : 0;
 
-            arParams[29] = new MySqlParameter("?EditorProvider", MySqlDbType.VarChar, 255);
-            arParams[29].Value = editorProvider;
+            arParams[36] = new MySqlParameter("?SiteIsClosed", MySqlDbType.Int16);
+            arParams[36].Value = siteIsClosed ? 1 : 0;
 
-            arParams[30] = new MySqlParameter("?DatePickerProvider", MySqlDbType.VarChar, 255);
-            arParams[30].Value = datePickerProvider;
+            arParams[37] = new MySqlParameter("?SiteIsClosedMessage", MySqlDbType.Text);
+            arParams[37].Value = siteIsClosedMessage;
 
-            arParams[31] = new MySqlParameter("?CaptchaProvider", MySqlDbType.VarChar, 255);
-            arParams[31].Value = captchaProvider;
+            arParams[38] = new MySqlParameter("?PrivacyPolicy", MySqlDbType.Text);
+            arParams[38].Value = privacyPolicy;
 
-            arParams[32] = new MySqlParameter("?RecaptchaPrivateKey", MySqlDbType.VarChar, 255);
-            arParams[32].Value = recaptchaPrivateKey;
+            arParams[39] = new MySqlParameter("?TimeZoneId", MySqlDbType.VarChar, 50);
+            arParams[39].Value = timeZoneId;
 
-            arParams[33] = new MySqlParameter("?RecaptchaPublicKey", MySqlDbType.VarChar, 255);
-            arParams[33].Value = recaptchaPublicKey;
+            arParams[40] = new MySqlParameter("?GoogleAnalyticsProfileId", MySqlDbType.VarChar, 50);
+            arParams[40].Value = googleAnalyticsProfileId;
 
-            arParams[34] = new MySqlParameter("?WordpressAPIKey", MySqlDbType.VarChar, 255);
-            arParams[34].Value = wordpressApiKey;
+            arParams[41] = new MySqlParameter("?CompanyName", MySqlDbType.VarChar, 255);
+            arParams[41].Value = companyName;
 
-            arParams[35] = new MySqlParameter("?WindowsLiveAppID", MySqlDbType.VarChar, 255);
-            arParams[35].Value = windowsLiveAppId;
+            arParams[42] = new MySqlParameter("?CompanyStreetAddress", MySqlDbType.VarChar, 250);
+            arParams[42].Value = companyStreetAddress;
 
-            arParams[36] = new MySqlParameter("?WindowsLiveKey", MySqlDbType.VarChar, 255);
-            arParams[36].Value = windowsLiveKey;
+            arParams[43] = new MySqlParameter("?CompanyStreetAddress2", MySqlDbType.VarChar, 250);
+            arParams[43].Value = companyStreetAddress2;
 
-            arParams[37] = new MySqlParameter("?AllowOpenIDAuth", MySqlDbType.Int32);
-            arParams[37].Value = oidauth;
+            arParams[44] = new MySqlParameter("?CompanyRegion", MySqlDbType.VarChar, 200);
+            arParams[44].Value = companyRegion;
 
-            arParams[38] = new MySqlParameter("?AllowWindowsLiveAuth", MySqlDbType.Int32);
-            arParams[38].Value = winliveauth;
+            arParams[45] = new MySqlParameter("?CompanyLocality", MySqlDbType.VarChar, 200);
+            arParams[45].Value = companyLocality;
 
-            arParams[39] = new MySqlParameter("?GmapApiKey", MySqlDbType.VarChar, 255);
-            arParams[39].Value = gmapApiKey;
+            arParams[46] = new MySqlParameter("?CompanyCountry", MySqlDbType.VarChar, 10);
+            arParams[46].Value = companyCountry;
 
-            arParams[40] = new MySqlParameter("?ApiKeyExtra1", MySqlDbType.VarChar, 255);
-            arParams[40].Value = apiKeyExtra1;
+            arParams[47] = new MySqlParameter("?CompanyPostalCode", MySqlDbType.VarChar, 20);
+            arParams[47].Value = companyPostalCode;
 
-            arParams[41] = new MySqlParameter("?ApiKeyExtra2", MySqlDbType.VarChar, 255);
-            arParams[41].Value = apiKeyExtra2;
+            arParams[48] = new MySqlParameter("?CompanyPublicEmail", MySqlDbType.VarChar, 100);
+            arParams[48].Value = companyPublicEmail;
 
-            arParams[42] = new MySqlParameter("?ApiKeyExtra3", MySqlDbType.VarChar, 255);
-            arParams[42].Value = apiKeyExtra3;
+            arParams[49] = new MySqlParameter("?CompanyPhone", MySqlDbType.VarChar, 20);
+            arParams[49].Value = companyPhone;
 
-            arParams[43] = new MySqlParameter("?ApiKeyExtra4", MySqlDbType.VarChar, 255);
-            arParams[43].Value = apiKeyExtra4;
+            arParams[50] = new MySqlParameter("?CompanyFax", MySqlDbType.VarChar, 20);
+            arParams[50].Value = companyFax;
 
-            arParams[44] = new MySqlParameter("?ApiKeyExtra5", MySqlDbType.VarChar, 255);
-            arParams[44].Value = apiKeyExtra5;
+            arParams[51] = new MySqlParameter("?FacebookAppId", MySqlDbType.VarChar, 100);
+            arParams[51].Value = facebookAppId;
 
-            arParams[45] = new MySqlParameter("?DisableDbAuth", MySqlDbType.Int32);
-            arParams[45].Value = intDisableDbAuth;
+            arParams[52] = new MySqlParameter("?FacebookAppSecret", MySqlDbType.VarChar, 100);
+            arParams[52].Value = facebookAppSecret;
+
+            arParams[53] = new MySqlParameter("?GoogleClientId", MySqlDbType.VarChar, 100);
+            arParams[53].Value = googleClientId;
+
+            arParams[54] = new MySqlParameter("?GoogleClientSecret", MySqlDbType.VarChar, 100);
+            arParams[54].Value = googleClientSecret;
+
+            arParams[55] = new MySqlParameter("?TwitterConsumerKey", MySqlDbType.VarChar, 100);
+            arParams[55].Value = twitterConsumerKey;
+
+            arParams[56] = new MySqlParameter("?TwitterConsumerSecret", MySqlDbType.VarChar, 100);
+            arParams[56].Value = twitterConsumerSecret;
+
+            arParams[57] = new MySqlParameter("?MicrosoftClientId", MySqlDbType.VarChar, 100);
+            arParams[57].Value = microsoftClientId;
+
+            arParams[58] = new MySqlParameter("?MicrosoftClientSecret", MySqlDbType.VarChar, 100);
+            arParams[58].Value = microsoftClientSecret;
+
+            arParams[59] = new MySqlParameter("?PreferredHostName", MySqlDbType.VarChar, 250);
+            arParams[59].Value = preferredHostName;
+
+            arParams[60] = new MySqlParameter("?SiteFolderName", MySqlDbType.VarChar, 50);
+            arParams[60].Value = siteFolderName;
+
+            arParams[61] = new MySqlParameter("?AddThisDotComUsername", MySqlDbType.VarChar, 50);
+            arParams[61].Value = addThisDotComUsername;
+
+            arParams[62] = new MySqlParameter("?LoginInfoTop", MySqlDbType.Text);
+            arParams[62].Value = loginInfoTop;
+
+            arParams[63] = new MySqlParameter("?LoginInfoBottom", MySqlDbType.Text);
+            arParams[63].Value = loginInfoBottom;
+
+            arParams[64] = new MySqlParameter("?RegistrationAgreement", MySqlDbType.Text);
+            arParams[64].Value = registrationAgreement;
+
+            arParams[65] = new MySqlParameter("?RegistrationPreamble", MySqlDbType.Text);
+            arParams[65].Value = registrationPreamble;
+
+            arParams[66] = new MySqlParameter("?SmtpServer", MySqlDbType.VarChar, 200);
+            arParams[66].Value = smtpServer;
+
+            arParams[67] = new MySqlParameter("?SmtpPort", MySqlDbType.Int32);
+            arParams[67].Value = smtpPort;
+
+            arParams[68] = new MySqlParameter("?SmtpUser", MySqlDbType.VarChar, 500);
+            arParams[68].Value = smtpUser;
+
+            arParams[69] = new MySqlParameter("?SmtpPassword", MySqlDbType.VarChar, 500);
+            arParams[69].Value = smtpPassword;
+
+            arParams[70] = new MySqlParameter("?SmtpPreferredEncoding", MySqlDbType.VarChar, 20);
+            arParams[70].Value = smtpPreferredEncoding;
+
+            arParams[71] = new MySqlParameter("?SmtpRequiresAuth", MySqlDbType.Int16);
+            arParams[71].Value = smtpRequiresAuth ? 1 : 0;
+
+            arParams[72] = new MySqlParameter("?SmtpUseSsl", MySqlDbType.Int16);
+            arParams[72].Value = smtpUseSsl ? 1 : 0;
+
+            arParams[73] = new MySqlParameter("?RequireApprovalBeforeLogin", MySqlDbType.Int16);
+            arParams[73].Value = requireApprovalBeforeLogin ? 1 : 0;
 
             object result = await AdoHelper.ExecuteScalarAsync(
                 writeConnectionString,
@@ -502,179 +513,89 @@ namespace cloudscribe.Core.Repositories.MySql
             int siteId,
             string siteName,
             string skin,
-            string logo,
-            string icon,
             bool allowNewRegistration,
-            bool allowUserSkins,
-            bool allowPageSkins,
-            bool allowHideMenuOnPages,
             bool useSecureRegistration,
             bool useSslOnAllPages,
-            string defaultPageKeywords,
-            string defaultPageDescription,
-            string defaultPageEncoding,
-            string defaultAdditionalMetaTags,
             bool isServerAdminSite,
             bool useLdapAuth,
             bool autoCreateLdapUserOnFirstLogin,
             string ldapServer,
             int ldapPort,
-            String ldapDomain,
+            string ldapDomain,
             string ldapRootDN,
             string ldapUserDNKey,
             bool allowUserFullNameChange,
             bool useEmailForLogin,
             bool reallyDeleteUsers,
-            String editorSkin,
-            String defaultFriendlyUrlPattern,
-            bool enableMyPageFeature,
-            string editorProvider,
-            string datePickerProvider,
-            string captchaProvider,
             string recaptchaPrivateKey,
             string recaptchaPublicKey,
-            string wordpressApiKey,
-            string windowsLiveAppId,
-            string windowsLiveKey,
-            bool allowOpenIdAuth,
-            bool allowWindowsLiveAuth,
-            string gmapApiKey,
             string apiKeyExtra1,
             string apiKeyExtra2,
             string apiKeyExtra3,
             string apiKeyExtra4,
             string apiKeyExtra5,
-            bool disableDbAuth)
+            bool disableDbAuth,
+
+            bool requiresQuestionAndAnswer,
+            int maxInvalidPasswordAttempts,
+            int passwordAttemptWindowMinutes,
+            int minRequiredPasswordLength,
+            int minReqNonAlphaChars,
+            string defaultEmailFromAddress,
+            bool allowDbFallbackWithLdap,
+            bool emailLdapDbFallback,
+            bool allowPersistentLogin,
+            bool captchaOnLogin,
+            bool captchaOnRegistration,
+            bool siteIsClosed,
+            string siteIsClosedMessage,
+            string privacyPolicy,
+            string timeZoneId,
+            string googleAnalyticsProfileId,
+            string companyName,
+            string companyStreetAddress,
+            string companyStreetAddress2,
+            string companyRegion,
+            string companyLocality,
+            string companyCountry,
+            string companyPostalCode,
+            string companyPublicEmail,
+            string companyPhone,
+            string companyFax,
+            string facebookAppId,
+            string facebookAppSecret,
+            string googleClientId,
+            string googleClientSecret,
+            string twitterConsumerKey,
+            string twitterConsumerSecret,
+            string microsoftClientId,
+            string microsoftClientSecret,
+            string preferredHostName,
+            string siteFolderName,
+            string addThisDotComUsername,
+            string loginInfoTop,
+            string loginInfoBottom,
+            string registrationAgreement,
+            string registrationPreamble,
+            string smtpServer,
+            int smtpPort,
+            string smtpUser,
+            string smtpPassword,
+            string smtpPreferredEncoding,
+            bool smtpRequiresAuth,
+            bool smtpUseSsl,
+            bool requireApprovalBeforeLogin
+            )
         {
-
-            #region bool conversion
-
-            byte intDisableDbAuth = 0;
-            if (disableDbAuth) { intDisableDbAuth = 1; }
-
-            byte oidauth = 0;
-            if (allowOpenIdAuth) { oidauth = 1; }
-
-
-            byte winliveauth = 0;
-            if (allowWindowsLiveAuth)
-            {
-                winliveauth = 1;
-            }
-
-
-            byte uldapp = 0;
-            if (useLdapAuth)
-            {
-                uldapp = 1;
-            }
-
-
-            byte autoldapp = 0;
-            if (autoCreateLdapUserOnFirstLogin)
-            {
-                autoldapp = 1;
-            }
-
-
-            byte allowNameChange = 0;
-            if (allowUserFullNameChange)
-            {
-                allowNameChange = 1;
-            }
-
-
-            byte emailForLogin = 0;
-            if (useEmailForLogin)
-            {
-                emailForLogin = 1;
-            }
-
-
-            byte deleteUsers = 0;
-            if (reallyDeleteUsers)
-            {
-                deleteUsers = 1;
-            }
-
-
-            byte allowNew = 0;
-            if (allowNewRegistration)
-            {
-                allowNew = 1;
-            }
-
-
-            byte allowSkins = 0;
-            if (allowUserSkins)
-            {
-                allowSkins = 1;
-            }
-
-
-            byte secure = 0;
-            if (useSecureRegistration)
-            {
-                secure = 1;
-            }
-
-
-            byte ssl = 0;
-            if (useSslOnAllPages)
-            {
-                ssl = 1;
-            }
-
-
-            byte adminSite = 0;
-            if (isServerAdminSite)
-            {
-                adminSite = 1;
-            }
-
-
-            byte pageSkins = 0;
-            if (allowPageSkins)
-            {
-                pageSkins = 1;
-            }
-
-            byte allowHide = 0;
-            if (allowHideMenuOnPages)
-            {
-                allowHide = 1;
-            }
-
-
-            byte enableMy = 0;
-            if (enableMyPageFeature)
-            {
-                enableMy = 1;
-            }
-
-
-            #endregion
-
+            
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("UPDATE mp_Sites ");
             sqlCommand.Append("SET SiteName = ?SiteName, ");
             sqlCommand.Append("IsServerAdminSite = ?IsServerAdminSite, ");
             sqlCommand.Append("Skin = ?Skin, ");
-            sqlCommand.Append("Logo = ?Logo, ");
-            sqlCommand.Append("Icon = ?Icon, ");
-
             sqlCommand.Append("AllowNewRegistration = ?AllowNewRegistration, ");
-            sqlCommand.Append("AllowUserSkins = ?AllowUserSkins, ");
-
-            sqlCommand.Append("AllowPageSkins = ?AllowPageSkins, ");
-            sqlCommand.Append("AllowHideMenuOnPages = ?AllowHideMenuOnPages, ");
-
-
             sqlCommand.Append("UseSecureRegistration = ?UseSecureRegistration, ");
-            sqlCommand.Append("EnableMyPageFeature = ?EnableMyPageFeature, ");
             sqlCommand.Append("UseSSLOnAllPages = ?UseSSLOnAllPages, ");
-
-
             sqlCommand.Append("UseLdapAuth = ?UseLdapAuth, ");
             sqlCommand.Append("AutoCreateLDAPUserOnFirstLogin = ?AutoCreateLDAPUserOnFirstLogin, ");
             sqlCommand.Append("LdapServer = ?LdapServer, ");
@@ -685,20 +606,8 @@ namespace cloudscribe.Core.Repositories.MySql
             sqlCommand.Append("AllowUserFullNameChange = ?AllowUserFullNameChange, ");
             sqlCommand.Append("UseEmailForLogin = ?UseEmailForLogin, ");
             sqlCommand.Append("ReallyDeleteUsers = ?ReallyDeleteUsers, ");
-            sqlCommand.Append("EditorSkin = ?EditorSkin, ");
-            sqlCommand.Append("EditorProvider = ?EditorProvider, ");
-            sqlCommand.Append("DefaultFriendlyUrlPatternEnum = ?DefaultFriendlyUrlPattern, ");
-
-            sqlCommand.Append("DatePickerProvider = ?DatePickerProvider, ");
-            sqlCommand.Append("CaptchaProvider = ?CaptchaProvider, ");
             sqlCommand.Append("RecaptchaPrivateKey = ?RecaptchaPrivateKey, ");
             sqlCommand.Append("RecaptchaPublicKey = ?RecaptchaPublicKey, ");
-            sqlCommand.Append("WordpressAPIKey = ?WordpressAPIKey, ");
-            sqlCommand.Append("WindowsLiveAppID = ?WindowsLiveAppID, ");
-            sqlCommand.Append("WindowsLiveKey = ?WindowsLiveKey, ");
-            sqlCommand.Append("AllowOpenIDAuth = ?AllowOpenIDAuth, ");
-            sqlCommand.Append("AllowWindowsLiveAuth = ?AllowWindowsLiveAuth, ");
-            sqlCommand.Append("GmapApiKey = ?GmapApiKey, ");
             sqlCommand.Append("ApiKeyExtra1 = ?ApiKeyExtra1, ");
             sqlCommand.Append("ApiKeyExtra2 = ?ApiKeyExtra2, ");
             sqlCommand.Append("ApiKeyExtra3 = ?ApiKeyExtra3, ");
@@ -706,14 +615,59 @@ namespace cloudscribe.Core.Repositories.MySql
             sqlCommand.Append("ApiKeyExtra5 = ?ApiKeyExtra5, ");
             sqlCommand.Append("DisableDbAuth = ?DisableDbAuth, ");
 
-            sqlCommand.Append("DefaultPageKeywords = ?DefaultPageKeywords, ");
-            sqlCommand.Append("DefaultPageDescription = ?DefaultPageDescription, ");
-            sqlCommand.Append("DefaultPageEncoding = ?DefaultPageEncoding, ");
-            sqlCommand.Append("DefaultAdditionalMetaTags = ?DefaultAdditionalMetaTags ");
-
+            sqlCommand.Append("RequiresQuestionAndAnswer = ?RequiresQuestionAndAnswer, ");
+            sqlCommand.Append("MaxInvalidPasswordAttempts = ?MaxInvalidPasswordAttempts, ");
+            sqlCommand.Append("PasswordAttemptWindowMinutes = ?PasswordAttemptWindowMinutes, ");
+            sqlCommand.Append("MinRequiredPasswordLength = ?MinRequiredPasswordLength, ");
+            sqlCommand.Append("MinReqNonAlphaChars = ?MinReqNonAlphaChars, ");
+            sqlCommand.Append("DefaultEmailFromAddress = ?DefaultEmailFromAddress, ");
+            sqlCommand.Append("AllowDbFallbackWithLdap = ?AllowDbFallbackWithLdap, ");
+            sqlCommand.Append("EmailLdapDbFallback = ?EmailLdapDbFallback, ");
+            sqlCommand.Append("AllowPersistentLogin = ?AllowPersistentLogin, ");
+            sqlCommand.Append("CaptchaOnLogin = ?CaptchaOnLogin, ");
+            sqlCommand.Append("CaptchaOnRegistration = ?CaptchaOnRegistration,");
+            sqlCommand.Append("SiteIsClosed = ?SiteIsClosed, ");
+            sqlCommand.Append("SiteIsClosedMessage = ?SiteIsClosedMessage, ");
+            sqlCommand.Append("PrivacyPolicy = ?PrivacyPolicy, ");
+            sqlCommand.Append("TimeZoneId = ?TimeZoneId, ");
+            sqlCommand.Append("GoogleAnalyticsProfileId = ?GoogleAnalyticsProfileId, ");
+            sqlCommand.Append("CompanyName = ?CompanyName, ");
+            sqlCommand.Append("CompanyStreetAddress = ?CompanyStreetAddress, ");
+            sqlCommand.Append("CompanyStreetAddress2 = ?CompanyStreetAddress2, ");
+            sqlCommand.Append("CompanyRegion = ?CompanyRegion, ");
+            sqlCommand.Append("CompanyLocality = ?CompanyLocality, ");
+            sqlCommand.Append("CompanyCountry = ?CompanyCountry, ");
+            sqlCommand.Append("CompanyPostalCode = ?CompanyPostalCode, ");
+            sqlCommand.Append("CompanyPublicEmail = ?CompanyPublicEmail, ");
+            sqlCommand.Append("CompanyPhone = ?CompanyPhone, ");
+            sqlCommand.Append("CompanyFax = ?CompanyFax, ");
+            sqlCommand.Append("FacebookAppId = ?FacebookAppId, ");
+            sqlCommand.Append("FacebookAppSecret = ?FacebookAppSecret, ");
+            sqlCommand.Append("GoogleClientId = ?GoogleClientId, ");
+            sqlCommand.Append("GoogleClientSecret = ?GoogleClientSecret, ");
+            sqlCommand.Append("TwitterConsumerKey = ?TwitterConsumerKey, ");
+            sqlCommand.Append("TwitterConsumerSecret = ?TwitterConsumerSecret, ");
+            sqlCommand.Append("MicrosoftClientId = ?MicrosoftClientId, ");
+            sqlCommand.Append("MicrosoftClientSecret = ?MicrosoftClientSecret, ");
+            sqlCommand.Append("PreferredHostName = ?PreferredHostName, ");
+            sqlCommand.Append("SiteFolderName = ?SiteFolderName, ");
+            sqlCommand.Append("AddThisDotComUsername = ?AddThisDotComUsername, ");
+            sqlCommand.Append("LoginInfoTop = ?LoginInfoTop, ");
+            sqlCommand.Append("LoginInfoBottom = ?LoginInfoBottom, ");
+            sqlCommand.Append("RegistrationAgreement = ?RegistrationAgreement, ");
+            sqlCommand.Append("RegistrationPreamble = ?RegistrationPreamble, ");
+            sqlCommand.Append("SmtpServer = ?SmtpServer, ");
+            sqlCommand.Append("SmtpPort = ?SmtpPort, ");
+            sqlCommand.Append("SmtpUser = ?SmtpUser, ");
+            sqlCommand.Append("SmtpPassword = ?SmtpPassword, ");
+            sqlCommand.Append("SmtpPreferredEncoding = ?SmtpPreferredEncoding, ");
+            sqlCommand.Append("SmtpRequiresAuth = ?SmtpRequiresAuth, ");
+            sqlCommand.Append("SmtpUseSsl = ?SmtpUseSsl, ");
+            sqlCommand.Append("RequireApprovalBeforeLogin = ?RequireApprovalBeforeLogin ");
+            
             sqlCommand.Append(" WHERE SiteID = ?SiteID ;");
 
-            MySqlParameter[] arParams = new MySqlParameter[46];
+            MySqlParameter[] arParams = new MySqlParameter[74];
 
             arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
             arParams[0].Value = siteId;
@@ -722,137 +676,221 @@ namespace cloudscribe.Core.Repositories.MySql
             arParams[1].Value = siteName;
 
             arParams[2] = new MySqlParameter("?IsServerAdminSite", MySqlDbType.Int32);
-            arParams[2].Value = adminSite;
+            arParams[2].Value = isServerAdminSite ? 1 : 0;
 
             arParams[3] = new MySqlParameter("?Skin", MySqlDbType.VarChar, 100);
             arParams[3].Value = skin;
+            
+            arParams[4] = new MySqlParameter("?AllowNewRegistration", MySqlDbType.Int32);
+            arParams[4].Value = allowNewRegistration ? 1 : 0;
+            
+            arParams[5] = new MySqlParameter("?UseSecureRegistration", MySqlDbType.Int32);
+            arParams[5].Value = useSecureRegistration ? 1 : 0;
+            
+            arParams[6] = new MySqlParameter("?UseSSLOnAllPages", MySqlDbType.Int32);
+            arParams[6].Value = useSslOnAllPages ? 1 : 0;
+            
+            arParams[7] = new MySqlParameter("?UseLdapAuth", MySqlDbType.Int32);
+            arParams[7].Value = useLdapAuth ? 1 : 0;
 
-            arParams[4] = new MySqlParameter("?Logo", MySqlDbType.VarChar, 50);
-            arParams[4].Value = logo;
+            arParams[8] = new MySqlParameter("?AutoCreateLDAPUserOnFirstLogin", MySqlDbType.Int32);
+            arParams[8].Value = autoCreateLdapUserOnFirstLogin ? 1 : 0;
 
-            arParams[5] = new MySqlParameter("?Icon", MySqlDbType.VarChar, 50);
-            arParams[5].Value = icon;
+            arParams[9] = new MySqlParameter("?LdapServer", MySqlDbType.VarChar, 255);
+            arParams[9].Value = ldapServer;
 
-            arParams[6] = new MySqlParameter("?AllowNewRegistration", MySqlDbType.Int32);
-            arParams[6].Value = allowNew;
+            arParams[10] = new MySqlParameter("?LdapPort", MySqlDbType.Int32);
+            arParams[10].Value = ldapPort;
 
-            arParams[7] = new MySqlParameter("?AllowUserSkins", MySqlDbType.Int32);
-            arParams[7].Value = allowSkins;
+            arParams[11] = new MySqlParameter("?LdapRootDN", MySqlDbType.VarChar, 255);
+            arParams[11].Value = ldapRootDN;
 
-            arParams[8] = new MySqlParameter("?UseSecureRegistration", MySqlDbType.Int32);
-            arParams[8].Value = secure;
+            arParams[12] = new MySqlParameter("?LdapUserDNKey", MySqlDbType.VarChar, 10);
+            arParams[12].Value = ldapUserDNKey;
 
-            arParams[9] = new MySqlParameter("?EnableMyPageFeature", MySqlDbType.Int32);
-            arParams[9].Value = enableMy;
+            arParams[13] = new MySqlParameter("?AllowUserFullNameChange", MySqlDbType.Int32);
+            arParams[13].Value = allowUserFullNameChange ? 1 : 0;
 
-            arParams[10] = new MySqlParameter("?UseSSLOnAllPages", MySqlDbType.Int32);
-            arParams[10].Value = ssl;
+            arParams[14] = new MySqlParameter("?UseEmailForLogin", MySqlDbType.Int32);
+            arParams[14].Value = useEmailForLogin ? 1 :0;
 
-            arParams[11] = new MySqlParameter("?DefaultPageKeywords", MySqlDbType.VarChar, 255);
-            arParams[11].Value = defaultPageKeywords;
+            arParams[15] = new MySqlParameter("?ReallyDeleteUsers", MySqlDbType.Int32);
+            arParams[15].Value = reallyDeleteUsers ? 1 : 0;
+            
+            arParams[16] = new MySqlParameter("?LdapDomain", MySqlDbType.VarChar, 255);
+            arParams[16].Value = ldapDomain;
+            
+            arParams[17] = new MySqlParameter("?RecaptchaPrivateKey", MySqlDbType.VarChar, 255);
+            arParams[17].Value = recaptchaPrivateKey;
 
-            arParams[12] = new MySqlParameter("?DefaultPageDescription", MySqlDbType.VarChar, 255);
-            arParams[12].Value = defaultPageDescription;
+            arParams[18] = new MySqlParameter("?RecaptchaPublicKey", MySqlDbType.VarChar, 255);
+            arParams[18].Value = recaptchaPublicKey;
+            
+            arParams[19] = new MySqlParameter("?ApiKeyExtra1", MySqlDbType.VarChar, 255);
+            arParams[19].Value = apiKeyExtra1;
 
-            arParams[13] = new MySqlParameter("?DefaultPageEncoding", MySqlDbType.VarChar, 255);
-            arParams[13].Value = defaultPageEncoding;
+            arParams[20] = new MySqlParameter("?ApiKeyExtra2", MySqlDbType.VarChar, 255);
+            arParams[20].Value = apiKeyExtra2;
 
-            arParams[14] = new MySqlParameter("?DefaultAdditionalMetaTags", MySqlDbType.VarChar, 255);
-            arParams[14].Value = defaultAdditionalMetaTags;
+            arParams[21] = new MySqlParameter("?ApiKeyExtra3", MySqlDbType.VarChar, 255);
+            arParams[21].Value = apiKeyExtra3;
 
-            arParams[15] = new MySqlParameter("?AllowPageSkins", MySqlDbType.Int32);
-            arParams[15].Value = pageSkins;
+            arParams[22] = new MySqlParameter("?ApiKeyExtra4", MySqlDbType.VarChar, 255);
+            arParams[22].Value = apiKeyExtra4;
 
-            arParams[16] = new MySqlParameter("?AllowHideMenuOnPages", MySqlDbType.Int32);
-            arParams[16].Value = allowHide;
+            arParams[23] = new MySqlParameter("?ApiKeyExtra5", MySqlDbType.VarChar, 255);
+            arParams[23].Value = apiKeyExtra5;
 
-            arParams[17] = new MySqlParameter("?UseLdapAuth", MySqlDbType.Int32);
-            arParams[17].Value = uldapp;
+            arParams[24] = new MySqlParameter("?DisableDbAuth", MySqlDbType.Int32);
+            arParams[24].Value = disableDbAuth ? 1 : 0;
 
-            arParams[18] = new MySqlParameter("?AutoCreateLDAPUserOnFirstLogin", MySqlDbType.Int32);
-            arParams[18].Value = autoldapp;
+            arParams[25] = new MySqlParameter("?RequiresQuestionAndAnswer", MySqlDbType.Int16);
+            arParams[25].Value = requiresQuestionAndAnswer ? 1 : 0;
 
-            arParams[19] = new MySqlParameter("?LdapServer", MySqlDbType.VarChar, 255);
-            arParams[19].Value = ldapServer;
+            arParams[26] = new MySqlParameter("?MaxInvalidPasswordAttempts", MySqlDbType.Int32);
+            arParams[26].Value = maxInvalidPasswordAttempts;
 
-            arParams[20] = new MySqlParameter("?LdapPort", MySqlDbType.Int32);
-            arParams[20].Value = ldapPort;
+            arParams[27] = new MySqlParameter("?PasswordAttemptWindowMinutes", MySqlDbType.Int32);
+            arParams[27].Value = passwordAttemptWindowMinutes;
 
-            arParams[21] = new MySqlParameter("?LdapRootDN", MySqlDbType.VarChar, 255);
-            arParams[21].Value = ldapRootDN;
+            arParams[28] = new MySqlParameter("?MinRequiredPasswordLength", MySqlDbType.Int32);
+            arParams[28].Value = minRequiredPasswordLength;
 
-            arParams[22] = new MySqlParameter("?LdapUserDNKey", MySqlDbType.VarChar, 10);
-            arParams[22].Value = ldapUserDNKey;
+            arParams[29] = new MySqlParameter("?MinReqNonAlphaChars", MySqlDbType.Int32);
+            arParams[29].Value = minReqNonAlphaChars;
 
-            arParams[23] = new MySqlParameter("?AllowUserFullNameChange", MySqlDbType.Int32);
-            arParams[23].Value = allowNameChange;
+            arParams[30] = new MySqlParameter("?DefaultEmailFromAddress", MySqlDbType.VarChar, 100);
+            arParams[30].Value = defaultEmailFromAddress;
 
-            arParams[24] = new MySqlParameter("?UseEmailForLogin", MySqlDbType.Int32);
-            arParams[24].Value = emailForLogin;
+            arParams[31] = new MySqlParameter("?AllowDbFallbackWithLdap", MySqlDbType.Int16);
+            arParams[31].Value = allowDbFallbackWithLdap ? 1 : 0;
 
-            arParams[25] = new MySqlParameter("?ReallyDeleteUsers", MySqlDbType.Int32);
-            arParams[25].Value = deleteUsers;
+            arParams[32] = new MySqlParameter("?EmailLdapDbFallback", MySqlDbType.Int16);
+            arParams[32].Value = emailLdapDbFallback ? 1 : 0;
 
-            arParams[26] = new MySqlParameter("?EditorSkin", MySqlDbType.VarChar, 50);
-            arParams[26].Value = editorSkin;
+            arParams[33] = new MySqlParameter("?AllowPersistentLogin", MySqlDbType.Int16);
+            arParams[33].Value = allowPersistentLogin ? 1 : 0;
 
-            arParams[27] = new MySqlParameter("?DefaultFriendlyUrlPattern", MySqlDbType.VarChar, 50);
-            arParams[27].Value = defaultFriendlyUrlPattern;
+            arParams[34] = new MySqlParameter("?CaptchaOnLogin", MySqlDbType.Int16);
+            arParams[34].Value = captchaOnLogin ? 1 : 0;
 
-            arParams[28] = new MySqlParameter("?LdapDomain", MySqlDbType.VarChar, 255);
-            arParams[28].Value = ldapDomain;
+            arParams[35] = new MySqlParameter("?CaptchaOnRegistration", MySqlDbType.Int16);
+            arParams[35].Value = captchaOnRegistration ? 1 : 0;
 
-            arParams[29] = new MySqlParameter("?EditorProvider", MySqlDbType.VarChar, 255);
-            arParams[29].Value = editorProvider;
+            arParams[36] = new MySqlParameter("?SiteIsClosed", MySqlDbType.Int16);
+            arParams[36].Value = siteIsClosed ? 1 : 0;
 
-            arParams[30] = new MySqlParameter("?DatePickerProvider", MySqlDbType.VarChar, 255);
-            arParams[30].Value = datePickerProvider;
+            arParams[37] = new MySqlParameter("?SiteIsClosedMessage", MySqlDbType.Text);
+            arParams[37].Value = siteIsClosedMessage;
 
-            arParams[31] = new MySqlParameter("?CaptchaProvider", MySqlDbType.VarChar, 255);
-            arParams[31].Value = captchaProvider;
+            arParams[38] = new MySqlParameter("?PrivacyPolicy", MySqlDbType.Text);
+            arParams[38].Value = privacyPolicy;
 
-            arParams[32] = new MySqlParameter("?RecaptchaPrivateKey", MySqlDbType.VarChar, 255);
-            arParams[32].Value = recaptchaPrivateKey;
+            arParams[39] = new MySqlParameter("?TimeZoneId", MySqlDbType.VarChar, 50);
+            arParams[39].Value = timeZoneId;
 
-            arParams[33] = new MySqlParameter("?RecaptchaPublicKey", MySqlDbType.VarChar, 255);
-            arParams[33].Value = recaptchaPublicKey;
+            arParams[40] = new MySqlParameter("?GoogleAnalyticsProfileId", MySqlDbType.VarChar, 50);
+            arParams[40].Value = googleAnalyticsProfileId;
 
-            arParams[34] = new MySqlParameter("?WordpressAPIKey", MySqlDbType.VarChar, 255);
-            arParams[34].Value = wordpressApiKey;
+            arParams[41] = new MySqlParameter("?CompanyName", MySqlDbType.VarChar, 255);
+            arParams[41].Value = companyName;
 
-            arParams[35] = new MySqlParameter("?WindowsLiveAppID", MySqlDbType.VarChar, 255);
-            arParams[35].Value = windowsLiveAppId;
+            arParams[42] = new MySqlParameter("?CompanyStreetAddress", MySqlDbType.VarChar, 250);
+            arParams[42].Value = companyStreetAddress;
 
-            arParams[36] = new MySqlParameter("?WindowsLiveKey", MySqlDbType.VarChar, 255);
-            arParams[36].Value = windowsLiveKey;
+            arParams[43] = new MySqlParameter("?CompanyStreetAddress2", MySqlDbType.VarChar, 250);
+            arParams[43].Value = companyStreetAddress2;
 
-            arParams[37] = new MySqlParameter("?AllowOpenIDAuth", MySqlDbType.Int32);
-            arParams[37].Value = oidauth;
+            arParams[44] = new MySqlParameter("?CompanyRegion", MySqlDbType.VarChar, 200);
+            arParams[44].Value = companyRegion;
 
-            arParams[38] = new MySqlParameter("?AllowWindowsLiveAuth", MySqlDbType.Int32);
-            arParams[38].Value = winliveauth;
+            arParams[45] = new MySqlParameter("?CompanyLocality", MySqlDbType.VarChar, 200);
+            arParams[45].Value = companyLocality;
 
-            arParams[39] = new MySqlParameter("?GmapApiKey", MySqlDbType.VarChar, 255);
-            arParams[39].Value = gmapApiKey;
+            arParams[46] = new MySqlParameter("?CompanyCountry", MySqlDbType.VarChar, 10);
+            arParams[46].Value = companyCountry;
 
-            arParams[40] = new MySqlParameter("?ApiKeyExtra1", MySqlDbType.VarChar, 255);
-            arParams[40].Value = apiKeyExtra1;
+            arParams[47] = new MySqlParameter("?CompanyPostalCode", MySqlDbType.VarChar, 20);
+            arParams[47].Value = companyPostalCode;
 
-            arParams[41] = new MySqlParameter("?ApiKeyExtra2", MySqlDbType.VarChar, 255);
-            arParams[41].Value = apiKeyExtra2;
+            arParams[48] = new MySqlParameter("?CompanyPublicEmail", MySqlDbType.VarChar, 100);
+            arParams[48].Value = companyPublicEmail;
 
-            arParams[42] = new MySqlParameter("?ApiKeyExtra3", MySqlDbType.VarChar, 255);
-            arParams[42].Value = apiKeyExtra3;
+            arParams[49] = new MySqlParameter("?CompanyPhone", MySqlDbType.VarChar, 20);
+            arParams[49].Value = companyPhone;
 
-            arParams[43] = new MySqlParameter("?ApiKeyExtra4", MySqlDbType.VarChar, 255);
-            arParams[43].Value = apiKeyExtra4;
+            arParams[50] = new MySqlParameter("?CompanyFax", MySqlDbType.VarChar, 20);
+            arParams[50].Value = companyFax;
 
-            arParams[44] = new MySqlParameter("?ApiKeyExtra5", MySqlDbType.VarChar, 255);
-            arParams[44].Value = apiKeyExtra5;
+            arParams[51] = new MySqlParameter("?FacebookAppId", MySqlDbType.VarChar, 100);
+            arParams[51].Value = facebookAppId;
 
-            arParams[45] = new MySqlParameter("?DisableDbAuth", MySqlDbType.Int32);
-            arParams[45].Value = intDisableDbAuth;
+            arParams[52] = new MySqlParameter("?FacebookAppSecret", MySqlDbType.VarChar, 100);
+            arParams[52].Value = facebookAppSecret;
 
+            arParams[53] = new MySqlParameter("?GoogleClientId", MySqlDbType.VarChar, 100);
+            arParams[53].Value = googleClientId;
+
+            arParams[54] = new MySqlParameter("?GoogleClientSecret", MySqlDbType.VarChar, 100);
+            arParams[54].Value = googleClientSecret;
+
+            arParams[55] = new MySqlParameter("?TwitterConsumerKey", MySqlDbType.VarChar, 100);
+            arParams[55].Value = twitterConsumerKey;
+
+            arParams[56] = new MySqlParameter("?TwitterConsumerSecret", MySqlDbType.VarChar, 100);
+            arParams[56].Value = twitterConsumerSecret;
+
+            arParams[57] = new MySqlParameter("?MicrosoftClientId", MySqlDbType.VarChar, 100);
+            arParams[57].Value = microsoftClientId;
+
+            arParams[58] = new MySqlParameter("?MicrosoftClientSecret", MySqlDbType.VarChar, 100);
+            arParams[58].Value = microsoftClientSecret;
+
+            arParams[59] = new MySqlParameter("?PreferredHostName", MySqlDbType.VarChar, 250);
+            arParams[59].Value = preferredHostName;
+
+            arParams[60] = new MySqlParameter("?SiteFolderName", MySqlDbType.VarChar, 50);
+            arParams[60].Value = siteFolderName;
+
+            arParams[61] = new MySqlParameter("?AddThisDotComUsername", MySqlDbType.VarChar, 50);
+            arParams[61].Value = addThisDotComUsername;
+
+            arParams[62] = new MySqlParameter("?LoginInfoTop", MySqlDbType.Text);
+            arParams[62].Value = loginInfoTop;
+
+            arParams[63] = new MySqlParameter("?LoginInfoBottom", MySqlDbType.Text);
+            arParams[63].Value = loginInfoBottom;
+
+            arParams[64] = new MySqlParameter("?RegistrationAgreement", MySqlDbType.Text);
+            arParams[64].Value = registrationAgreement;
+
+            arParams[65] = new MySqlParameter("?RegistrationPreamble", MySqlDbType.Text);
+            arParams[65].Value = registrationPreamble;
+
+            arParams[66] = new MySqlParameter("?SmtpServer", MySqlDbType.VarChar, 200);
+            arParams[66].Value = smtpServer;
+
+            arParams[67] = new MySqlParameter("?SmtpPort", MySqlDbType.Int32);
+            arParams[67].Value = smtpPort;
+
+            arParams[68] = new MySqlParameter("?SmtpUser", MySqlDbType.VarChar, 500);
+            arParams[68].Value = smtpUser;
+
+            arParams[69] = new MySqlParameter("?SmtpPassword", MySqlDbType.VarChar, 500);
+            arParams[69].Value = smtpPassword;
+
+            arParams[70] = new MySqlParameter("?SmtpPreferredEncoding", MySqlDbType.VarChar, 20);
+            arParams[70].Value = smtpPreferredEncoding;
+
+            arParams[71] = new MySqlParameter("?SmtpRequiresAuth", MySqlDbType.Int16);
+            arParams[71].Value = smtpRequiresAuth ? 1 : 0;
+
+            arParams[72] = new MySqlParameter("?SmtpUseSsl", MySqlDbType.Int16);
+            arParams[72].Value = smtpUseSsl ? 1 : 0;
+
+            arParams[73] = new MySqlParameter("?RequireApprovalBeforeLogin", MySqlDbType.Int16);
+            arParams[73].Value = requireApprovalBeforeLogin ? 1 : 0;
+            
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 sqlCommand.ToString(),

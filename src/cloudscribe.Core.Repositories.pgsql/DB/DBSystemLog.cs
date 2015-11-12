@@ -20,16 +20,14 @@ namespace cloudscribe.Core.Repositories.pgsql
     {
         internal DBSystemLog(
             string dbReadConnectionString,
-            string dbWriteConnectionString,
-            ILoggerFactory loggerFactory)
+            string dbWriteConnectionString)
         {
-            logFactory = loggerFactory;
+            
             readConnectionString = dbReadConnectionString;
             writeConnectionString = dbWriteConnectionString;
         }
 
-        private ILoggerFactory logFactory;
-        //private ILogger log;
+        
         private string readConnectionString;
         private string writeConnectionString;
 

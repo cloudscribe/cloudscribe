@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-08-06
+// Last Modified:			2015-11-05
 //
 
 using cloudscribe.DbHelpers.Firebird;
@@ -35,212 +35,84 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         public async Task<int> Create(
             Guid siteGuid,
-            String siteName,
-            String skin,
-            String logo,
-            String icon,
-            bool allowNewRegistration,
-            bool allowUserSkins,
-            bool allowPageSkins,
-            bool allowHideMenuOnPages,
+            string siteName,
+            string skin,
+            bool allowNewRegistration,  
             bool useSecureRegistration,
             bool useSslOnAllPages,
-            String defaultPageKeywords,
-            String defaultPageDescription,
-            String defaultPageEncoding,
-            String defaultAdditionalMetaTags,
             bool isServerAdminSite,
             bool useLdapAuth,
             bool autoCreateLdapUserOnFirstLogin,
-            String ldapServer,
+            string ldapServer,
             int ldapPort,
-            String ldapDomain,
-            String ldapRootDN,
-            String ldapUserDNKey,
+            string ldapDomain,
+            string ldapRootDN,
+            string ldapUserDNKey,
             bool allowUserFullNameChange,
             bool useEmailForLogin,
             bool reallyDeleteUsers,
-            String editorSkin,
-            String defaultFriendlyUrlPattern,
-            bool enableMyPageFeature,
-            string editorProvider,
-            string datePickerProvider,
-            string captchaProvider,
             string recaptchaPrivateKey,
             string recaptchaPublicKey,
-            string wordpressApiKey,
-            string windowsLiveAppId,
-            string windowsLiveKey,
-            bool allowOpenIdAuth,
-            bool allowWindowsLiveAuth,
-            string gmapApiKey,
             string apiKeyExtra1,
             string apiKeyExtra2,
             string apiKeyExtra3,
             string apiKeyExtra4,
             string apiKeyExtra5,
-            bool disableDbAuth)
+            bool disableDbAuth,
+
+            bool requiresQuestionAndAnswer,
+            int maxInvalidPasswordAttempts,
+            int passwordAttemptWindowMinutes,
+            int minRequiredPasswordLength,
+            int minReqNonAlphaChars,
+            string defaultEmailFromAddress,
+            bool allowDbFallbackWithLdap,
+            bool emailLdapDbFallback,
+            bool allowPersistentLogin,
+            bool captchaOnLogin,
+            bool captchaOnRegistration,
+            bool siteIsClosed,
+            string siteIsClosedMessage,
+            string privacyPolicy,
+            string timeZoneId,
+            string googleAnalyticsProfileId,
+            string companyName,
+            string companyStreetAddress,
+            string companyStreetAddress2,
+            string companyRegion,
+            string companyLocality,
+            string companyCountry,
+            string companyPostalCode,
+            string companyPublicEmail,
+            string companyPhone,
+            string companyFax,
+            string facebookAppId,
+            string facebookAppSecret,
+            string googleClientId,
+            string googleClientSecret,
+            string twitterConsumerKey,
+            string twitterConsumerSecret,
+            string microsoftClientId,
+            string microsoftClientSecret,
+            string preferredHostName,
+            string siteFolderName,
+            string addThisDotComUsername,
+            string loginInfoTop,
+            string loginInfoBottom,
+            string registrationAgreement,
+            string registrationPreamble,
+            string smtpServer,
+            int smtpPort,
+            string smtpUser,
+            string smtpPassword,
+            string smtpPreferredEncoding,
+            bool smtpRequiresAuth,
+            bool smtpUseSsl,
+            bool requireApprovalBeforeLogin
+            )
         {
-
-            #region bit conversion
-
-            byte intDisableDbAuth = 0;
-            if (disableDbAuth) { intDisableDbAuth = 1; }
-
-            byte oidauth;
-            if (allowOpenIdAuth)
-            {
-                oidauth = 1;
-            }
-            else
-            {
-                oidauth = 0;
-            }
-
-            byte winliveauth;
-            if (allowWindowsLiveAuth)
-            {
-                winliveauth = 1;
-            }
-            else
-            {
-                winliveauth = 0;
-            }
-
-
-            byte uldapp;
-            if (useLdapAuth)
-            {
-                uldapp = 1;
-            }
-            else
-            {
-                uldapp = 0;
-            }
-
-            byte autoldapp;
-            if (autoCreateLdapUserOnFirstLogin)
-            {
-                autoldapp = 1;
-            }
-            else
-            {
-                autoldapp = 0;
-            }
-
-            byte allowNameChange;
-            if (allowUserFullNameChange)
-            {
-                allowNameChange = 1;
-            }
-            else
-            {
-                allowNameChange = 0;
-            }
-
-            byte emailForLogin;
-            if (useEmailForLogin)
-            {
-                emailForLogin = 1;
-            }
-            else
-            {
-                emailForLogin = 0;
-            }
-
-            byte deleteUsers;
-            if (reallyDeleteUsers)
-            {
-                deleteUsers = 1;
-            }
-            else
-            {
-                deleteUsers = 0;
-            }
-
-            byte allowNew;
-            if (allowNewRegistration)
-            {
-                allowNew = 1;
-            }
-            else
-            {
-                allowNew = 0;
-            }
-
-            byte allowSkins;
-            if (allowUserSkins)
-            {
-                allowSkins = 1;
-            }
-            else
-            {
-                allowSkins = 0;
-            }
-
-            byte secure;
-            if (useSecureRegistration)
-            {
-                secure = 1;
-            }
-            else
-            {
-                secure = 0;
-            }
-
-            byte ssl;
-            if (useSslOnAllPages)
-            {
-                ssl = 1;
-            }
-            else
-            {
-                ssl = 0;
-            }
-
-            byte adminSite;
-            if (isServerAdminSite)
-            {
-                adminSite = 1;
-            }
-            else
-            {
-                adminSite = 0;
-            }
-
-            byte pageSkins;
-            if (allowPageSkins)
-            {
-                pageSkins = 1;
-            }
-            else
-            {
-                pageSkins = 0;
-            }
-
-            byte allowHide;
-            if (allowHideMenuOnPages)
-            {
-                allowHide = 1;
-            }
-            else
-            {
-                allowHide = 0;
-            }
-
-            byte enableMy;
-            if (enableMyPageFeature)
-            {
-                enableMy = 1;
-            }
-            else
-            {
-                enableMy = 0;
-            }
-
-            #endregion
-
-            FbParameter[] arParams = new FbParameter[57];
+            
+            FbParameter[] arParams = new FbParameter[74];
 
             arParams[0] = new FbParameter(":SiteGuid", FbDbType.VarChar, 36);
             arParams[0].Value = siteGuid.ToString();
@@ -250,169 +122,220 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             arParams[2] = new FbParameter(":Skin", FbDbType.VarChar, 100);
             arParams[2].Value = skin;
+            
+            arParams[3] = new FbParameter(":AllowNewRegistration", FbDbType.Integer);
+            arParams[3].Value = allowNewRegistration ? 1 : 0;
 
-            arParams[3] = new FbParameter(":Logo", FbDbType.VarChar, 50);
-            arParams[3].Value = logo;
+            arParams[4] = new FbParameter(":UseSecureRegistration", FbDbType.Integer);
+            arParams[4].Value = useSecureRegistration ? 1 : 0;
 
-            arParams[4] = new FbParameter(":Icon", FbDbType.VarChar, 50);
-            arParams[4].Value = icon;
+            arParams[5] = new FbParameter(":UseSSLOnAllPages", FbDbType.Integer);
+            arParams[5].Value = useSslOnAllPages ? 1 : 0;
 
-            arParams[5] = new FbParameter(":AllowUserSkins", FbDbType.Integer);
-            arParams[5].Value = allowSkins;
+            arParams[6] = new FbParameter(":IsServerAdminSite", FbDbType.Integer);
+            arParams[6].Value = isServerAdminSite ? 1 : 0;
 
-            arParams[6] = new FbParameter(":AllowPageSkins", FbDbType.Integer);
-            arParams[6].Value = pageSkins;
+            arParams[7] = new FbParameter(":UseLdapAuth", FbDbType.Integer);
+            arParams[7].Value = useLdapAuth ? 1 : 0;
 
-            arParams[7] = new FbParameter(":AllowHideMenuOnPages", FbDbType.Integer);
-            arParams[7].Value = allowHide;
+            arParams[8] = new FbParameter(":AutoCreateLDAPUserOnFirstLogin", FbDbType.Integer);
+            arParams[8].Value = autoCreateLdapUserOnFirstLogin ? 1 : 0;
 
-            arParams[8] = new FbParameter(":AllowNewRegistration", FbDbType.Integer);
-            arParams[8].Value = allowNew;
+            arParams[9] = new FbParameter(":LdapServer", FbDbType.VarChar, 255);
+            arParams[9].Value = ldapServer;
 
-            arParams[9] = new FbParameter(":UseSecureRegistration", FbDbType.Integer);
-            arParams[9].Value = secure;
+            arParams[10] = new FbParameter(":LdapPort", FbDbType.Integer);
+            arParams[10].Value = ldapPort;
 
-            arParams[10] = new FbParameter(":UseSSLOnAllPages", FbDbType.Integer);
-            arParams[10].Value = ssl;
+            arParams[11] = new FbParameter(":LdapDomain", FbDbType.VarChar, 255);
+            arParams[11].Value = ldapDomain;
 
-            arParams[11] = new FbParameter(":DefaultPageKeywords", FbDbType.VarChar, 255);
-            arParams[11].Value = defaultPageKeywords;
+            arParams[12] = new FbParameter(":LdapRootDN", FbDbType.VarChar, 255);
+            arParams[12].Value = ldapRootDN;
 
-            arParams[12] = new FbParameter(":DefaultPageDescription", FbDbType.VarChar, 255);
-            arParams[12].Value = defaultPageDescription;
+            arParams[13] = new FbParameter(":LdapUserDNKey", FbDbType.VarChar, 255);
+            arParams[13].Value = ldapUserDNKey;
 
-            arParams[13] = new FbParameter(":DefaultPageEncoding", FbDbType.VarChar, 255);
-            arParams[13].Value = defaultPageEncoding;
+            arParams[14] = new FbParameter(":ReallyDeleteUsers", FbDbType.SmallInt);
+            arParams[14].Value = reallyDeleteUsers ? 1 : 0;
 
-            arParams[14] = new FbParameter(":DefaultAdditionalMetaTags", FbDbType.VarChar, 255);
-            arParams[14].Value = defaultAdditionalMetaTags;
+            arParams[15] = new FbParameter(":UseEmailForLogin", FbDbType.SmallInt);
+            arParams[15].Value = useEmailForLogin ? 1 : 0;
 
-            arParams[15] = new FbParameter(":IsServerAdminSite", FbDbType.Integer);
-            arParams[15].Value = adminSite;
+            arParams[16] = new FbParameter(":AllowUserFullNameChange", FbDbType.SmallInt);
+            arParams[16].Value = allowUserFullNameChange ? 1 : 0;
 
-            arParams[16] = new FbParameter(":UseLdapAuth", FbDbType.Integer);
-            arParams[16].Value = uldapp;
+            arParams[17] = new FbParameter(":RequiresQuestionAndAnswer", FbDbType.Integer);
+            arParams[17].Value = requiresQuestionAndAnswer;
 
-            arParams[17] = new FbParameter(":AutoCreateLDAPUserOnFirstLogin", FbDbType.Integer);
-            arParams[17].Value = autoldapp;
+            arParams[18] = new FbParameter(":MaxInvalidPasswordAttempts", FbDbType.Integer);
+            arParams[18].Value = maxInvalidPasswordAttempts;
 
-            arParams[18] = new FbParameter(":LdapServer", FbDbType.VarChar, 255);
-            arParams[18].Value = ldapServer;
+            arParams[19] = new FbParameter(":PASSWORDATTEMPTWINDOWMINUTES", FbDbType.Integer);
+            arParams[19].Value = passwordAttemptWindowMinutes;
+            
+            arParams[20] = new FbParameter(":MINREQUIREDPASSWORDLENGTH", FbDbType.Integer);
+            arParams[20].Value = minRequiredPasswordLength;
 
-            arParams[19] = new FbParameter(":LdapPort", FbDbType.Integer);
-            arParams[19].Value = ldapPort;
+            arParams[21] = new FbParameter(":MINREQNONALPHACHARS", FbDbType.Integer);
+            arParams[21].Value = minReqNonAlphaChars;
+            
+            arParams[22] = new FbParameter(":DEFAULTEMAILFROMADDRESS", FbDbType.VarChar, 100);
+            arParams[22].Value = "noreply@yoursite.com";
+            
+            arParams[23] = new FbParameter(":RecaptchaPrivateKey", FbDbType.VarChar, 255);
+            arParams[23].Value = recaptchaPrivateKey;
 
-            arParams[20] = new FbParameter(":LdapDomain", FbDbType.VarChar, 255);
-            arParams[20].Value = ldapDomain;
+            arParams[24] = new FbParameter(":RecaptchaPublicKey", FbDbType.VarChar, 255);
+            arParams[24].Value = recaptchaPublicKey;
 
-            arParams[21] = new FbParameter(":LdapRootDN", FbDbType.VarChar, 255);
-            arParams[21].Value = ldapRootDN;
+            arParams[25] = new FbParameter(":ApiKeyExtra1", FbDbType.VarChar, 255);
+            arParams[25].Value = apiKeyExtra1;
 
-            arParams[22] = new FbParameter(":LdapUserDNKey", FbDbType.VarChar, 255);
-            arParams[22].Value = ldapUserDNKey;
+            arParams[26] = new FbParameter(":ApiKeyExtra2", FbDbType.VarChar, 255);
+            arParams[26].Value = apiKeyExtra2;
 
-            arParams[23] = new FbParameter(":ReallyDeleteUsers", FbDbType.Integer);
-            arParams[23].Value = deleteUsers;
+            arParams[27] = new FbParameter(":ApiKeyExtra3", FbDbType.VarChar, 255);
+            arParams[27].Value = apiKeyExtra3;
 
-            arParams[24] = new FbParameter(":UseEmailForLogin", FbDbType.Integer);
-            arParams[24].Value = emailForLogin;
+            arParams[28] = new FbParameter(":ApiKeyExtra4", FbDbType.VarChar, 255);
+            arParams[28].Value = apiKeyExtra4;
 
-            arParams[25] = new FbParameter(":AllowUserFullNameChange", FbDbType.Integer);
-            arParams[25].Value = allowNameChange;
+            arParams[29] = new FbParameter(":ApiKeyExtra5", FbDbType.VarChar, 255);
+            arParams[29].Value = apiKeyExtra5;
 
-            arParams[26] = new FbParameter(":EditorSkin", FbDbType.VarChar, 50);
-            arParams[26].Value = editorSkin;
+            arParams[30] = new FbParameter(":DisableDbAuth", FbDbType.SmallInt);
+            arParams[30].Value = disableDbAuth ? 1 : 0; 
 
-            arParams[27] = new FbParameter(":DefaultFriendlyUrlPattern", FbDbType.VarChar, 50);
-            arParams[27].Value = defaultFriendlyUrlPattern;
+            arParams[31] = new FbParameter(":AllowDbFallbackWithLdap", FbDbType.SmallInt);
+            arParams[31].Value = allowDbFallbackWithLdap ? 1 : 0;
 
-            arParams[28] = new FbParameter(":AllowPasswordRetieval", FbDbType.Integer);
-            arParams[28].Value = 1;
+            arParams[32] = new FbParameter(":EmailLdapDbFallback", FbDbType.SmallInt);
+            arParams[32].Value = emailLdapDbFallback ? 1 : 0;
 
-            arParams[29] = new FbParameter(":AllowPasswordReset", FbDbType.Integer);
-            arParams[29].Value = 1;
+            arParams[33] = new FbParameter(":AllowPersistentLogin", FbDbType.SmallInt);
+            arParams[33].Value = allowPersistentLogin ? 1 : 0;
 
-            arParams[30] = new FbParameter(":RequiresQuestionAndAnswer", FbDbType.Integer);
-            arParams[30].Value = 1;
+            arParams[34] = new FbParameter(":CaptchaOnLogin", FbDbType.SmallInt);
+            arParams[34].Value = captchaOnLogin ? 1 : 0;
 
-            arParams[31] = new FbParameter(":MaxInvalidPasswordAttempts", FbDbType.Integer);
-            arParams[31].Value = 5;
+            arParams[35] = new FbParameter(":CaptchaOnRegistration", FbDbType.SmallInt);
+            arParams[35].Value = captchaOnRegistration ? 1 : 0;
 
-            arParams[32] = new FbParameter(":PASSWORDATTEMPTWINDOWMINUTES", FbDbType.Integer);
-            arParams[32].Value = 5;
+            arParams[36] = new FbParameter(":SiteIsClosed", FbDbType.SmallInt);
+            arParams[36].Value = siteIsClosed ? 1 : 0;
 
-            arParams[33] = new FbParameter(":REQUIRESUNIQUEEMAIL", FbDbType.Integer);
-            arParams[33].Value = 1;
+            arParams[37] = new FbParameter(":SiteIsClosedMessage", FbDbType.VarChar);
+            arParams[37].Value = siteIsClosedMessage;
 
-            arParams[34] = new FbParameter(":PASSWORDFORMAT", FbDbType.Integer);
-            arParams[34].Value = 0;
+            arParams[38] = new FbParameter(":PrivacyPolicy", FbDbType.VarChar);
+            arParams[38].Value = privacyPolicy;
 
-            arParams[35] = new FbParameter(":MINREQUIREDPASSWORDLENGTH", FbDbType.Integer);
-            arParams[35].Value = 4;
+            arParams[39] = new FbParameter(":TimeZoneId", FbDbType.VarChar, 50);
+            arParams[39].Value = timeZoneId;
 
-            arParams[36] = new FbParameter(":MINREQNONALPHACHARS", FbDbType.Integer);
-            arParams[36].Value = 0;
+            arParams[40] = new FbParameter(":GoogleAnalyticsProfileId", FbDbType.VarChar, 25);
+            arParams[40].Value = timeZoneId;
 
-            arParams[37] = new FbParameter(":PWDSTRENGTHREGEX", FbDbType.VarChar);
-            arParams[37].Value = "";
+            arParams[41] = new FbParameter(":CompanyName", FbDbType.VarChar, 255);
+            arParams[41].Value = companyName;
 
-            arParams[38] = new FbParameter(":DEFAULTEMAILFROMADDRESS", FbDbType.VarChar, 100);
-            arParams[38].Value = "noreply@yoursite.com";
+            arParams[42] = new FbParameter(":CompanyStreetAddress", FbDbType.VarChar, 250);
+            arParams[42].Value = companyStreetAddress;
 
-            arParams[39] = new FbParameter(":EnableMyPageFeature", FbDbType.Integer);
-            arParams[39].Value = enableMy;
+            arParams[43] = new FbParameter(":CompanyStreetAddress2", FbDbType.VarChar, 250);
+            arParams[43].Value = companyStreetAddress2;
 
-            arParams[40] = new FbParameter(":EditorProvider", FbDbType.VarChar, 255);
-            arParams[40].Value = editorProvider;
+            arParams[44] = new FbParameter(":CompanyRegion", FbDbType.VarChar, 200);
+            arParams[44].Value = companyRegion;
 
-            arParams[41] = new FbParameter(":DatePickerProvider", FbDbType.VarChar, 255);
-            arParams[41].Value = datePickerProvider;
+            arParams[45] = new FbParameter(":CompanyLocality", FbDbType.VarChar, 200);
+            arParams[45].Value = companyLocality;
 
-            arParams[42] = new FbParameter(":CaptchaProvider", FbDbType.VarChar, 255);
-            arParams[42].Value = captchaProvider;
+            arParams[46] = new FbParameter(":CompanyCountry", FbDbType.VarChar, 10);
+            arParams[46].Value = companyCountry;
 
-            arParams[43] = new FbParameter(":RecaptchaPrivateKey", FbDbType.VarChar, 255);
-            arParams[43].Value = recaptchaPrivateKey;
+            arParams[47] = new FbParameter(":CompanyPostalCode", FbDbType.VarChar, 20);
+            arParams[47].Value = companyPostalCode;
 
-            arParams[44] = new FbParameter(":RecaptchaPublicKey", FbDbType.VarChar, 255);
-            arParams[44].Value = recaptchaPublicKey;
+            arParams[48] = new FbParameter(":CompanyPublicEmail", FbDbType.VarChar, 100);
+            arParams[48].Value = companyPublicEmail;
 
-            arParams[45] = new FbParameter(":WordpressAPIKey", FbDbType.VarChar, 255);
-            arParams[45].Value = wordpressApiKey;
+            arParams[49] = new FbParameter(":CompanyPhone", FbDbType.VarChar, 20);
+            arParams[49].Value = companyPhone;
 
-            arParams[46] = new FbParameter(":WindowsLiveAppID", FbDbType.VarChar, 255);
-            arParams[46].Value = windowsLiveAppId;
+            arParams[50] = new FbParameter(":CompanyFax", FbDbType.VarChar, 20);
+            arParams[50].Value = companyFax;
 
-            arParams[47] = new FbParameter(":WindowsLiveKey", FbDbType.VarChar, 255);
-            arParams[47].Value = windowsLiveKey;
+            arParams[51] = new FbParameter(":FacebookAppId", FbDbType.VarChar, 100);
+            arParams[51].Value = facebookAppId;
 
-            arParams[48] = new FbParameter(":AllowOpenIDAuth", FbDbType.SmallInt);
-            arParams[48].Value = oidauth;
+            arParams[52] = new FbParameter(":FacebookAppSecret", FbDbType.VarChar, 100);
+            arParams[52].Value = facebookAppSecret;
 
-            arParams[49] = new FbParameter(":AllowWindowsLiveAuth", FbDbType.SmallInt);
-            arParams[49].Value = winliveauth;
+            arParams[53] = new FbParameter(":GoogleClientId", FbDbType.VarChar, 100);
+            arParams[53].Value = googleClientId;
 
-            arParams[50] = new FbParameter(":GmapApiKey", FbDbType.VarChar, 255);
-            arParams[50].Value = gmapApiKey;
+            arParams[54] = new FbParameter(":GoogleClientSecret", FbDbType.VarChar, 100);
+            arParams[54].Value = googleClientSecret;
 
-            arParams[51] = new FbParameter(":ApiKeyExtra1", FbDbType.VarChar, 255);
-            arParams[51].Value = apiKeyExtra1;
+            arParams[55] = new FbParameter(":TwitterConsumerKey", FbDbType.VarChar, 100);
+            arParams[55].Value = twitterConsumerKey;
 
-            arParams[52] = new FbParameter(":ApiKeyExtra2", FbDbType.VarChar, 255);
-            arParams[52].Value = apiKeyExtra2;
+            arParams[56] = new FbParameter(":TwitterConsumerSecret", FbDbType.VarChar, 100);
+            arParams[56].Value = twitterConsumerSecret;
 
-            arParams[53] = new FbParameter(":ApiKeyExtra3", FbDbType.VarChar, 255);
-            arParams[53].Value = apiKeyExtra3;
+            arParams[57] = new FbParameter(":MicrosoftClientId", FbDbType.VarChar, 100);
+            arParams[57].Value = microsoftClientId;
 
-            arParams[54] = new FbParameter(":ApiKeyExtra4", FbDbType.VarChar, 255);
-            arParams[54].Value = apiKeyExtra4;
+            arParams[58] = new FbParameter(":MicrosoftClientSecret", FbDbType.VarChar, 100);
+            arParams[58].Value = microsoftClientSecret;
 
-            arParams[55] = new FbParameter(":ApiKeyExtra5", FbDbType.VarChar, 255);
-            arParams[55].Value = apiKeyExtra5;
+            arParams[59] = new FbParameter(":PreferredHostName", FbDbType.VarChar, 250);
+            arParams[59].Value = preferredHostName;
 
-            arParams[56] = new FbParameter(":DisableDbAuth", FbDbType.SmallInt);
-            arParams[56].Value = intDisableDbAuth;
+            arParams[60] = new FbParameter(":SiteFolderName", FbDbType.VarChar, 50);
+            arParams[60].Value = siteFolderName;
 
+            arParams[61] = new FbParameter(":AddThisDotComUsername", FbDbType.VarChar, 50);
+            arParams[61].Value = addThisDotComUsername;
+
+            arParams[62] = new FbParameter(":LoginInfoTop", FbDbType.VarChar);
+            arParams[62].Value = loginInfoTop;
+
+            arParams[63] = new FbParameter(":LoginInfoBottom", FbDbType.VarChar);
+            arParams[63].Value = loginInfoBottom;
+
+            arParams[64] = new FbParameter(":RegistrationAgreement", FbDbType.VarChar);
+            arParams[64].Value = registrationAgreement;
+
+            arParams[65] = new FbParameter(":RegistrationPreamble", FbDbType.VarChar);
+            arParams[65].Value = registrationPreamble;
+
+            arParams[66] = new FbParameter(":SMTPServer", FbDbType.VarChar, 200);
+            arParams[66].Value = smtpServer;
+
+            arParams[67] = new FbParameter(":SMTPPort", FbDbType.Integer);
+            arParams[67].Value = smtpPort;
+
+            arParams[68] = new FbParameter(":SMTPUser", FbDbType.VarChar, 500);
+            arParams[68].Value = smtpUser;
+
+            arParams[69] = new FbParameter(":SMTPPassword", FbDbType.VarChar, 500);
+            arParams[69].Value = smtpPassword;
+
+            arParams[70] = new FbParameter(":SMTPPreferredEncoding", FbDbType.VarChar, 500);
+            arParams[70].Value = smtpPreferredEncoding;
+
+            arParams[71] = new FbParameter(":SMTPRequiresAuth", FbDbType.SmallInt);
+            arParams[71].Value = smtpRequiresAuth ? 1 : 0;
+
+            arParams[72] = new FbParameter(":SMTPUseSsl", FbDbType.SmallInt);
+            arParams[72].Value = smtpUseSsl ? 1 : 0;
+
+            arParams[73] = new FbParameter(":RequireApprovalBeforeLogin", FbDbType.SmallInt);
+            arParams[73].Value = requireApprovalBeforeLogin ? 1 : 0;
+            
             object result = await AdoHelper.ExecuteScalarAsync(
                 writeConnectionString,
                 CommandType.StoredProcedure,
@@ -431,214 +354,88 @@ namespace cloudscribe.Core.Repositories.Firebird
             int siteId,
             string siteName,
             string skin,
-            string logo,
-            string icon,
-            bool allowNewRegistration,
-            bool allowUserSkins,
-            bool allowPageSkins,
-            bool allowHideMenuOnPages,
+            bool allowNewRegistration,  
             bool useSecureRegistration,
             bool useSslOnAllPages,
-            string defaultPageKeywords,
-            string defaultPageDescription,
-            string defaultPageEncoding,
-            string defaultAdditionalMetaTags,
             bool isServerAdminSite,
             bool useLdapAuth,
             bool autoCreateLdapUserOnFirstLogin,
             string ldapServer,
             int ldapPort,
-            String ldapDomain,
+            string ldapDomain,
             string ldapRootDN,
             string ldapUserDNKey,
             bool allowUserFullNameChange,
             bool useEmailForLogin,
             bool reallyDeleteUsers,
-            String editorSkin,
-            String defaultFriendlyUrlPattern,
-            bool enableMyPageFeature,
-            string editorProvider,
-            string datePickerProvider,
-            string captchaProvider,
             string recaptchaPrivateKey,
             string recaptchaPublicKey,
-            string wordpressApiKey,
-            string windowsLiveAppId,
-            string windowsLiveKey,
-            bool allowOpenIdAuth,
-            bool allowWindowsLiveAuth,
-            string gmapApiKey,
             string apiKeyExtra1,
             string apiKeyExtra2,
             string apiKeyExtra3,
             string apiKeyExtra4,
             string apiKeyExtra5,
-            bool disableDbAuth)
+            bool disableDbAuth,
+
+            bool requiresQuestionAndAnswer,
+            int maxInvalidPasswordAttempts,
+            int passwordAttemptWindowMinutes,
+            int minRequiredPasswordLength,
+            int minReqNonAlphaChars,
+            string defaultEmailFromAddress,
+            bool allowDbFallbackWithLdap,
+            bool emailLdapDbFallback,
+            bool allowPersistentLogin,
+            bool captchaOnLogin,
+            bool captchaOnRegistration,
+            bool siteIsClosed,
+            string siteIsClosedMessage,
+            string privacyPolicy,
+            string timeZoneId,
+            string googleAnalyticsProfileId,
+            string companyName,
+            string companyStreetAddress,
+            string companyStreetAddress2,
+            string companyRegion,
+            string companyLocality,
+            string companyCountry,
+            string companyPostalCode,
+            string companyPublicEmail,
+            string companyPhone,
+            string companyFax,
+            string facebookAppId,
+            string facebookAppSecret,
+            string googleClientId,
+            string googleClientSecret,
+            string twitterConsumerKey,
+            string twitterConsumerSecret,
+            string microsoftClientId,
+            string microsoftClientSecret,
+            string preferredHostName,
+            string siteFolderName,
+            string addThisDotComUsername,
+            string loginInfoTop,
+            string loginInfoBottom,
+            string registrationAgreement,
+            string registrationPreamble,
+            string smtpServer,
+            int smtpPort,
+            string smtpUser,
+            string smtpPassword,
+            string smtpPreferredEncoding,
+            bool smtpRequiresAuth,
+            bool smtpUseSsl,
+            bool requireApprovalBeforeLogin
+            )
         {
-
-            #region bit conversion
-
-            byte intDisableDbAuth = 0;
-            if (disableDbAuth) { intDisableDbAuth = 1; }
-
-            byte oidauth = 0;
-            if (allowOpenIdAuth) { oidauth = 1; }
-
-            byte winliveauth;
-            if (allowWindowsLiveAuth)
-            {
-                winliveauth = 1;
-            }
-            else
-            {
-                winliveauth = 0;
-            }
-
-            byte uldapp;
-            if (useLdapAuth)
-            {
-                uldapp = 1;
-            }
-            else
-            {
-                uldapp = 0;
-            }
-
-            byte autoldapp;
-            if (autoCreateLdapUserOnFirstLogin)
-            {
-                autoldapp = 1;
-            }
-            else
-            {
-                autoldapp = 0;
-            }
-
-            byte allowNameChange;
-            if (allowUserFullNameChange)
-            {
-                allowNameChange = 1;
-            }
-            else
-            {
-                allowNameChange = 0;
-            }
-
-            byte emailForLogin;
-            if (useEmailForLogin)
-            {
-                emailForLogin = 1;
-            }
-            else
-            {
-                emailForLogin = 0;
-            }
-
-            byte deleteUsers;
-            if (reallyDeleteUsers)
-            {
-                deleteUsers = 1;
-            }
-            else
-            {
-                deleteUsers = 0;
-            }
-
-            byte allowNew;
-            if (allowNewRegistration)
-            {
-                allowNew = 1;
-            }
-            else
-            {
-                allowNew = 0;
-            }
-
-            byte allowSkins;
-            if (allowUserSkins)
-            {
-                allowSkins = 1;
-            }
-            else
-            {
-                allowSkins = 0;
-            }
-
-            byte secure;
-            if (useSecureRegistration)
-            {
-                secure = 1;
-            }
-            else
-            {
-                secure = 0;
-            }
-
-            byte ssl;
-            if (useSslOnAllPages)
-            {
-                ssl = 1;
-            }
-            else
-            {
-                ssl = 0;
-            }
-
-            byte adminSite;
-            if (isServerAdminSite)
-            {
-                adminSite = 1;
-            }
-            else
-            {
-                adminSite = 0;
-            }
-
-            byte pageSkins;
-            if (allowPageSkins)
-            {
-                pageSkins = 1;
-            }
-            else
-            {
-                pageSkins = 0;
-            }
-
-            byte allowHide;
-            if (allowHideMenuOnPages)
-            {
-                allowHide = 1;
-            }
-            else
-            {
-                allowHide = 0;
-            }
-
-            byte enableMy;
-            if (enableMyPageFeature)
-            {
-                enableMy = 1;
-            }
-            else
-            {
-                enableMy = 0;
-            }
-
-            #endregion
-
+            
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("UPDATE mp_Sites ");
             sqlCommand.Append("SET SiteName = @SiteName, ");
             sqlCommand.Append("IsServerAdminSite = @IsServerAdminSite, ");
             sqlCommand.Append("Skin = @Skin, ");
-            sqlCommand.Append("Logo = @Logo, ");
-            sqlCommand.Append("Icon = @Icon, ");
-            sqlCommand.Append("AllowNewRegistration = @AllowNewRegistration, ");
-            sqlCommand.Append("AllowUserSkins = @AllowUserSkins, ");
-            sqlCommand.Append("AllowPageSkins = @AllowPageSkins, ");
-            sqlCommand.Append("AllowHideMenuOnPages = @AllowHideMenuOnPages, ");
+            sqlCommand.Append("AllowNewRegistration = @AllowNewRegistration, ");  
             sqlCommand.Append("UseSecureRegistration = @UseSecureRegistration, ");
-            sqlCommand.Append("EnableMyPageFeature = @EnableMyPageFeature, ");
             sqlCommand.Append("UseSSLOnAllPages = @UseSSLOnAllPages, ");
             sqlCommand.Append("UseLdapAuth = @UseLdapAuth, ");
             sqlCommand.Append("AutoCreateLDAPUserOnFirstLogin = @autoCreateLDAPUserOnFirstLogin, ");
@@ -650,19 +447,8 @@ namespace cloudscribe.Core.Repositories.Firebird
             sqlCommand.Append("AllowUserFullNameChange = @AllowUserFullNameChange, ");
             sqlCommand.Append("UseEmailForLogin = @UseEmailForLogin, ");
             sqlCommand.Append("ReallyDeleteUsers = @ReallyDeleteUsers, ");
-            sqlCommand.Append("EditorSkin = @EditorSkin, ");
-            sqlCommand.Append("EditorProvider = @EditorProvider, ");
-
-            sqlCommand.Append("DatePickerProvider = @DatePickerProvider, ");
-            sqlCommand.Append("CaptchaProvider = @CaptchaProvider, ");
             sqlCommand.Append("RecaptchaPrivateKey = @RecaptchaPrivateKey, ");
             sqlCommand.Append("RecaptchaPublicKey = @RecaptchaPublicKey, ");
-            sqlCommand.Append("WordpressAPIKey = @WordpressAPIKey, ");
-            sqlCommand.Append("WindowsLiveAppID = @WindowsLiveAppID, ");
-            sqlCommand.Append("WindowsLiveKey = @WindowsLiveKey, ");
-            sqlCommand.Append("AllowOpenIDAuth = @AllowOpenIDAuth, ");
-            sqlCommand.Append("AllowWindowsLiveAuth = @AllowWindowsLiveAuth, ");
-            sqlCommand.Append("GmapApiKey = @GmapApiKey, ");
             sqlCommand.Append("ApiKeyExtra1 = @ApiKeyExtra1, ");
             sqlCommand.Append("ApiKeyExtra2 = @ApiKeyExtra2, ");
             sqlCommand.Append("ApiKeyExtra3 = @ApiKeyExtra3, ");
@@ -670,15 +456,59 @@ namespace cloudscribe.Core.Repositories.Firebird
             sqlCommand.Append("ApiKeyExtra5 = @ApiKeyExtra5, ");
             sqlCommand.Append("DisableDbAuth = @DisableDbAuth, ");
 
-            sqlCommand.Append("DefaultFriendlyUrlPatternEnum = @DefaultFriendlyUrlPattern, ");
-            sqlCommand.Append("DefaultPageKeywords = @DefaultPageKeywords, ");
-            sqlCommand.Append("DefaultPageDescription = @DefaultPageDescription, ");
-            sqlCommand.Append("DefaultPageEncoding = @DefaultPageEncoding, ");
-            sqlCommand.Append("DefaultAdditionalMetaTags = @DefaultAdditionalMetaTags ");
+            sqlCommand.Append("RequiresQuestionAndAnswer = @RequiresQuestionAndAnswer, ");
+            sqlCommand.Append("MaxInvalidPasswordAttempts = @MaxInvalidPasswordAttempts, ");
+            sqlCommand.Append("PasswordAttemptWindowMinutes = @PasswordAttemptWindowMinutes, ");
+            sqlCommand.Append("MinRequiredPasswordLength = @MinRequiredPasswordLength, ");
+            sqlCommand.Append("MinReqNonAlphaChars = @MinReqNonAlphaChars, ");
+            sqlCommand.Append("DefaultEmailFromAddress = @DefaultEmailFromAddress, ");
+            sqlCommand.Append("AllowDbFallbackWithLdap = @AllowDbFallbackWithLdap, ");
+            sqlCommand.Append("EmailLdapDbFallback = @EmailLdapDbFallback, ");
+            sqlCommand.Append("AllowPersistentLogin = @AllowPersistentLogin, ");
+            sqlCommand.Append("CaptchaOnLogin = @CaptchaOnLogin, ");
+            sqlCommand.Append("CaptchaOnRegistration = @CaptchaOnRegistration,");
+            sqlCommand.Append("SiteIsClosed = @SiteIsClosed, ");
+            sqlCommand.Append("SiteIsClosedMessage = @SiteIsClosedMessage, ");
+            sqlCommand.Append("PrivacyPolicy = @PrivacyPolicy, ");
+            sqlCommand.Append("TimeZoneId = @TimeZoneId, ");
+            sqlCommand.Append("GoogleAnalyticsProfileId = @GoogleAnalyticsProfileId, ");
+            sqlCommand.Append("CompanyName = @CompanyName, ");
+            sqlCommand.Append("CompanyStreetAddress = @CompanyStreetAddress, ");
+            sqlCommand.Append("CompanyStreetAddress2 = @CompanyStreetAddress2, ");
+            sqlCommand.Append("CompanyRegion = @CompanyRegion, ");
+            sqlCommand.Append("CompanyLocality = @CompanyLocality, ");
+            sqlCommand.Append("CompanyCountry = @CompanyCountry, ");
+            sqlCommand.Append("CompanyPostalCode = @CompanyPostalCode, ");
+            sqlCommand.Append("CompanyPublicEmail = @CompanyPublicEmail, ");
+            sqlCommand.Append("CompanyPhone = @CompanyPhone, ");
+            sqlCommand.Append("CompanyFax = @CompanyFax, ");
+            sqlCommand.Append("FacebookAppId = @FacebookAppId, ");
+            sqlCommand.Append("FacebookAppSecret = @FacebookAppSecret, ");
+            sqlCommand.Append("GoogleClientId = @GoogleClientId, ");
+            sqlCommand.Append("GoogleClientSecret = @GoogleClientSecret, ");
+            sqlCommand.Append("TwitterConsumerKey = @TwitterConsumerKey, ");
+            sqlCommand.Append("TwitterConsumerSecret = @TwitterConsumerSecret, ");
+            sqlCommand.Append("MicrosoftClientId = @MicrosoftClientId, ");
+            sqlCommand.Append("MicrosoftClientSecret = @MicrosoftClientSecret, ");
+            sqlCommand.Append("PreferredHostName = @PreferredHostName, ");
+            sqlCommand.Append("SiteFolderName = @SiteFolderName, ");
+            sqlCommand.Append("AddThisDotComUsername = @AddThisDotComUsername, ");
+            sqlCommand.Append("LoginInfoTop = @LoginInfoTop, ");
+            sqlCommand.Append("LoginInfoBottom = @LoginInfoBottom, ");
+            sqlCommand.Append("RegistrationAgreement = @RegistrationAgreement, ");
+            sqlCommand.Append("RegistrationPreamble = @RegistrationPreamble, ");
+            sqlCommand.Append("SmtpServer = @SmtpServer, ");
+            sqlCommand.Append("SmtpPort = @SmtpPort, ");
+            sqlCommand.Append("SmtpUser = @SmtpUser, ");
+            sqlCommand.Append("SmtpPassword = @SmtpPassword, ");
+            sqlCommand.Append("SmtpPreferredEncoding = @SmtpPreferredEncoding, ");
+            sqlCommand.Append("SmtpRequiresAuth = @SmtpRequiresAuth, ");
+            sqlCommand.Append("SmtpUseSsl = @SmtpUseSsl, ");
+            sqlCommand.Append("RequireApprovalBeforeLogin = @RequireApprovalBeforeLogin ");
 
             sqlCommand.Append(" WHERE SiteID = @SiteID ;");
 
-            FbParameter[] arParams = new FbParameter[46];
+            FbParameter[] arParams = new FbParameter[74];
 
             arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
             arParams[0].Value = siteId;
@@ -686,137 +516,222 @@ namespace cloudscribe.Core.Repositories.Firebird
             arParams[1] = new FbParameter("@SiteName", FbDbType.VarChar, 128);
             arParams[1].Value = siteName;
 
-            arParams[2] = new FbParameter("@IsServerAdminSite", FbDbType.Integer);
-            arParams[2].Value = adminSite;
+            arParams[2] = new FbParameter("@IsServerAdminSite", FbDbType.SmallInt);
+            arParams[2].Value = isServerAdminSite ? 1 : 0;
 
             arParams[3] = new FbParameter("@Skin", FbDbType.VarChar, 100);
             arParams[3].Value = skin;
+            
+            arParams[4] = new FbParameter("@AllowNewRegistration", FbDbType.SmallInt);
+            arParams[4].Value = allowNewRegistration ? 1 : 0;
+            
+            arParams[5] = new FbParameter("@UseSecureRegistration", FbDbType.SmallInt);
+            arParams[5].Value = useSecureRegistration ? 1 : 0;
 
-            arParams[4] = new FbParameter("@Logo", FbDbType.VarChar, 50);
-            arParams[4].Value = logo;
+            arParams[6] = new FbParameter("@UseSSLOnAllPages", FbDbType.SmallInt);
+            arParams[6].Value = useSslOnAllPages ? 1 : 0;
+            
+            arParams[7] = new FbParameter("@UseLdapAuth", FbDbType.SmallInt);
+            arParams[7].Value = useLdapAuth ? 1 : 0;
 
-            arParams[5] = new FbParameter("@Icon", FbDbType.VarChar, 50);
-            arParams[5].Value = icon;
+            arParams[8] = new FbParameter("@AutoCreateLDAPUserOnFirstLogin", FbDbType.SmallInt);
+            arParams[8].Value = autoCreateLdapUserOnFirstLogin ? 1 : 0;
 
-            arParams[6] = new FbParameter("@AllowNewRegistration", FbDbType.Integer);
-            arParams[6].Value = allowNew;
+            arParams[9] = new FbParameter("@LdapServer", FbDbType.VarChar, 255);
+            arParams[9].Value = ldapServer;
 
-            arParams[7] = new FbParameter("@AllowUserSkins", FbDbType.Integer);
-            arParams[7].Value = allowSkins;
+            arParams[10] = new FbParameter("@LdapPort", FbDbType.Integer);
+            arParams[10].Value = ldapPort;
 
-            arParams[8] = new FbParameter("@UseSecureRegistration", FbDbType.Integer);
-            arParams[8].Value = secure;
+            arParams[11] = new FbParameter("@LdapRootDN", FbDbType.VarChar, 255);
+            arParams[11].Value = ldapRootDN;
 
-            arParams[9] = new FbParameter("@EnableMyPageFeature", FbDbType.Integer);
-            arParams[9].Value = enableMy;
+            arParams[12] = new FbParameter("@LdapUserDNKey", FbDbType.VarChar, 10);
+            arParams[12].Value = ldapUserDNKey;
 
-            arParams[10] = new FbParameter("@UseSSLOnAllPages", FbDbType.Integer);
-            arParams[10].Value = ssl;
+            arParams[13] = new FbParameter("@AllowUserFullNameChange", FbDbType.SmallInt);
+            arParams[13].Value = allowUserFullNameChange ? 1 : 0;
 
-            arParams[11] = new FbParameter("@DefaultPageKeywords", FbDbType.VarChar, 255);
-            arParams[11].Value = defaultPageKeywords;
+            arParams[14] = new FbParameter("@UseEmailForLogin", FbDbType.SmallInt);
+            arParams[14].Value = useEmailForLogin ? 1 : 0;
 
-            arParams[12] = new FbParameter("@DefaultPageDescription", FbDbType.VarChar, 255);
-            arParams[12].Value = defaultPageDescription;
+            arParams[15] = new FbParameter("@ReallyDeleteUsers", FbDbType.SmallInt);
+            arParams[15].Value = reallyDeleteUsers ? 1 : 0;
+            
+            arParams[16] = new FbParameter("@LdapDomain", FbDbType.VarChar, 255);
+            arParams[16].Value = ldapDomain;
+            
+            arParams[17] = new FbParameter("@RecaptchaPrivateKey", FbDbType.VarChar, 255);
+            arParams[17].Value = recaptchaPrivateKey;
 
-            arParams[13] = new FbParameter("@DefaultPageEncoding", FbDbType.VarChar, 255);
-            arParams[13].Value = defaultPageEncoding;
+            arParams[18] = new FbParameter("@RecaptchaPublicKey", FbDbType.VarChar, 255);
+            arParams[18].Value = recaptchaPublicKey;
+            
+            arParams[19] = new FbParameter("@ApiKeyExtra1", FbDbType.VarChar, 255);
+            arParams[19].Value = apiKeyExtra1;
 
-            arParams[14] = new FbParameter("@DefaultAdditionalMetaTags", FbDbType.VarChar, 255);
-            arParams[14].Value = defaultAdditionalMetaTags;
+            arParams[20] = new FbParameter("@ApiKeyExtra2", FbDbType.VarChar, 255);
+            arParams[20].Value = apiKeyExtra2;
 
-            arParams[15] = new FbParameter("@AllowPageSkins", FbDbType.Integer);
-            arParams[15].Value = pageSkins;
+            arParams[21] = new FbParameter("@ApiKeyExtra3", FbDbType.VarChar, 255);
+            arParams[21].Value = apiKeyExtra3;
 
-            arParams[16] = new FbParameter("@AllowHideMenuOnPages", FbDbType.Integer);
-            arParams[16].Value = allowHide;
+            arParams[22] = new FbParameter("@ApiKeyExtra4", FbDbType.VarChar, 255);
+            arParams[22].Value = apiKeyExtra4;
 
-            arParams[17] = new FbParameter("@UseLdapAuth", FbDbType.Integer);
-            arParams[17].Value = uldapp;
+            arParams[23] = new FbParameter("@ApiKeyExtra5", FbDbType.VarChar, 255);
+            arParams[23].Value = apiKeyExtra5;
 
-            arParams[18] = new FbParameter("@AutoCreateLDAPUserOnFirstLogin", FbDbType.Integer);
-            arParams[18].Value = autoldapp;
+            arParams[24] = new FbParameter("@DisableDbAuth", FbDbType.SmallInt);
+            arParams[24].Value = disableDbAuth ? 1 : 0;
 
-            arParams[19] = new FbParameter("@LdapServer", FbDbType.VarChar, 255);
-            arParams[19].Value = ldapServer;
+            arParams[25] = new FbParameter("@AllowDbFallbackWithLdap", FbDbType.SmallInt);
+            arParams[25].Value = allowDbFallbackWithLdap ? 1 : 0;
 
-            arParams[20] = new FbParameter("@LdapPort", FbDbType.Integer);
-            arParams[20].Value = ldapPort;
+            arParams[26] = new FbParameter("@EmailLdapDbFallback", FbDbType.SmallInt);
+            arParams[26].Value = emailLdapDbFallback ? 1 : 0;
 
-            arParams[21] = new FbParameter("@LdapRootDN", FbDbType.VarChar, 255);
-            arParams[21].Value = ldapRootDN;
+            arParams[27] = new FbParameter("@AllowPersistentLogin", FbDbType.SmallInt);
+            arParams[27].Value = allowPersistentLogin ? 1 : 0;
 
-            arParams[22] = new FbParameter("@LdapUserDNKey", FbDbType.VarChar, 10);
-            arParams[22].Value = ldapUserDNKey;
+            arParams[28] = new FbParameter("@CaptchaOnLogin", FbDbType.SmallInt);
+            arParams[28].Value = captchaOnLogin ? 1 : 0;
 
-            arParams[23] = new FbParameter("@AllowUserFullNameChange", FbDbType.Integer);
-            arParams[23].Value = allowNameChange;
+            arParams[29] = new FbParameter("@CaptchaOnRegistration", FbDbType.SmallInt);
+            arParams[29].Value = captchaOnRegistration ? 1 : 0;
 
-            arParams[24] = new FbParameter("@UseEmailForLogin", FbDbType.Integer);
-            arParams[24].Value = emailForLogin;
+            arParams[30] = new FbParameter("@SiteIsClosed", FbDbType.SmallInt);
+            arParams[30].Value = siteIsClosed ? 1 : 0;
 
-            arParams[25] = new FbParameter("@ReallyDeleteUsers", FbDbType.Integer);
-            arParams[25].Value = deleteUsers;
+            arParams[31] = new FbParameter("@SiteIsClosedMessage", FbDbType.VarChar);
+            arParams[31].Value = siteIsClosedMessage;
 
-            arParams[26] = new FbParameter("@EditorSkin", FbDbType.VarChar, 50);
-            arParams[26].Value = editorSkin;
+            arParams[32] = new FbParameter("@PrivacyPolicy", FbDbType.VarChar);
+            arParams[32].Value = privacyPolicy;
 
-            arParams[27] = new FbParameter("@DefaultFriendlyUrlPattern", FbDbType.VarChar, 50);
-            arParams[27].Value = defaultFriendlyUrlPattern;
+            arParams[33] = new FbParameter("@TimeZoneId", FbDbType.VarChar, 50);
+            arParams[33].Value = timeZoneId;
 
-            arParams[28] = new FbParameter("@LdapDomain", FbDbType.VarChar, 255);
-            arParams[28].Value = ldapDomain;
+            arParams[34] = new FbParameter("@GoogleAnalyticsProfileId", FbDbType.VarChar, 25);
+            arParams[34].Value = timeZoneId;
 
-            arParams[29] = new FbParameter("@EditorProvider", FbDbType.VarChar, 255);
-            arParams[29].Value = editorProvider;
+            arParams[35] = new FbParameter("@CompanyName", FbDbType.VarChar, 255);
+            arParams[35].Value = companyName;
 
-            arParams[30] = new FbParameter("@DatePickerProvider", FbDbType.VarChar, 255);
-            arParams[30].Value = datePickerProvider;
+            arParams[36] = new FbParameter("@CompanyStreetAddress", FbDbType.VarChar, 250);
+            arParams[36].Value = companyStreetAddress;
 
-            arParams[31] = new FbParameter("@CaptchaProvider", FbDbType.VarChar, 255);
-            arParams[31].Value = captchaProvider;
+            arParams[37] = new FbParameter("@CompanyStreetAddress2", FbDbType.VarChar, 250);
+            arParams[37].Value = companyStreetAddress2;
 
-            arParams[32] = new FbParameter("@RecaptchaPrivateKey", FbDbType.VarChar, 255);
-            arParams[32].Value = recaptchaPrivateKey;
+            arParams[38] = new FbParameter("@CompanyRegion", FbDbType.VarChar, 200);
+            arParams[38].Value = companyRegion;
 
-            arParams[33] = new FbParameter("@RecaptchaPublicKey", FbDbType.VarChar, 255);
-            arParams[33].Value = recaptchaPublicKey;
+            arParams[39] = new FbParameter("@CompanyLocality", FbDbType.VarChar, 200);
+            arParams[39].Value = companyLocality;
 
-            arParams[34] = new FbParameter("@WordpressAPIKey", FbDbType.VarChar, 255);
-            arParams[34].Value = wordpressApiKey;
+            arParams[40] = new FbParameter("@CompanyCountry", FbDbType.VarChar, 10);
+            arParams[40].Value = companyCountry;
 
-            arParams[35] = new FbParameter("@WindowsLiveAppID", FbDbType.VarChar, 255);
-            arParams[35].Value = windowsLiveAppId;
+            arParams[41] = new FbParameter("@CompanyPostalCode", FbDbType.VarChar, 20);
+            arParams[41].Value = companyPostalCode;
 
-            arParams[36] = new FbParameter("@WindowsLiveKey", FbDbType.VarChar, 255);
-            arParams[36].Value = windowsLiveKey;
+            arParams[42] = new FbParameter("@CompanyPublicEmail", FbDbType.VarChar, 100);
+            arParams[42].Value = companyPublicEmail;
 
-            arParams[37] = new FbParameter("@AllowOpenIDAuth", FbDbType.SmallInt);
-            arParams[37].Value = oidauth;
+            arParams[43] = new FbParameter("@CompanyPhone", FbDbType.VarChar, 20);
+            arParams[43].Value = companyPhone;
 
-            arParams[38] = new FbParameter("@AllowWindowsLiveAuth", FbDbType.SmallInt);
-            arParams[38].Value = winliveauth;
+            arParams[44] = new FbParameter("@CompanyFax", FbDbType.VarChar, 20);
+            arParams[44].Value = companyFax;
 
-            arParams[39] = new FbParameter("@GmapApiKey", FbDbType.VarChar, 255);
-            arParams[39].Value = gmapApiKey;
+            arParams[45] = new FbParameter("@FacebookAppId", FbDbType.VarChar, 100);
+            arParams[45].Value = facebookAppId;
 
-            arParams[40] = new FbParameter("@ApiKeyExtra1", FbDbType.VarChar, 255);
-            arParams[40].Value = apiKeyExtra1;
+            arParams[46] = new FbParameter("@FacebookAppSecret", FbDbType.VarChar, 100);
+            arParams[46].Value = facebookAppSecret;
 
-            arParams[41] = new FbParameter("@ApiKeyExtra2", FbDbType.VarChar, 255);
-            arParams[41].Value = apiKeyExtra2;
+            arParams[47] = new FbParameter("@GoogleClientId", FbDbType.VarChar, 100);
+            arParams[47].Value = googleClientId;
 
-            arParams[42] = new FbParameter("@ApiKeyExtra3", FbDbType.VarChar, 255);
-            arParams[42].Value = apiKeyExtra3;
+            arParams[48] = new FbParameter("@GoogleClientSecret", FbDbType.VarChar, 100);
+            arParams[48].Value = googleClientSecret;
 
-            arParams[43] = new FbParameter("@ApiKeyExtra4", FbDbType.VarChar, 255);
-            arParams[43].Value = apiKeyExtra4;
+            arParams[49] = new FbParameter("@TwitterConsumerKey", FbDbType.VarChar, 100);
+            arParams[49].Value = twitterConsumerKey;
 
-            arParams[44] = new FbParameter("@ApiKeyExtra5", FbDbType.VarChar, 255);
-            arParams[44].Value = apiKeyExtra5;
+            arParams[50] = new FbParameter("@TwitterConsumerSecret", FbDbType.VarChar, 100);
+            arParams[50].Value = twitterConsumerSecret;
 
-            arParams[45] = new FbParameter("@DisableDbAuth", FbDbType.SmallInt);
-            arParams[45].Value = intDisableDbAuth;
+            arParams[51] = new FbParameter("@MicrosoftClientId", FbDbType.VarChar, 100);
+            arParams[51].Value = microsoftClientId;
+
+            arParams[52] = new FbParameter("@MicrosoftClientSecret", FbDbType.VarChar, 100);
+            arParams[52].Value = microsoftClientSecret;
+
+            arParams[53] = new FbParameter("@PreferredHostName", FbDbType.VarChar, 250);
+            arParams[53].Value = preferredHostName;
+
+            arParams[54] = new FbParameter("@SiteFolderName", FbDbType.VarChar, 50);
+            arParams[54].Value = siteFolderName;
+
+            arParams[55] = new FbParameter("@AddThisDotComUsername", FbDbType.VarChar, 50);
+            arParams[55].Value = addThisDotComUsername;
+
+            arParams[56] = new FbParameter("@LoginInfoTop", FbDbType.VarChar);
+            arParams[56].Value = loginInfoTop;
+
+            arParams[57] = new FbParameter("@LoginInfoBottom", FbDbType.VarChar);
+            arParams[57].Value = loginInfoBottom;
+
+            arParams[58] = new FbParameter("@RegistrationAgreement", FbDbType.VarChar);
+            arParams[58].Value = registrationAgreement;
+
+            arParams[59] = new FbParameter("@RegistrationPreamble", FbDbType.VarChar);
+            arParams[59].Value = registrationPreamble;
+
+            arParams[60] = new FbParameter("@SMTPServer", FbDbType.VarChar, 200);
+            arParams[60].Value = smtpServer;
+
+            arParams[61] = new FbParameter("@SMTPPort", FbDbType.Integer);
+            arParams[61].Value = smtpPort;
+
+            arParams[62] = new FbParameter("@SMTPUser", FbDbType.VarChar, 500);
+            arParams[62].Value = smtpUser;
+
+            arParams[63] = new FbParameter("@SMTPPassword", FbDbType.VarChar, 500);
+            arParams[63].Value = smtpPassword;
+
+            arParams[64] = new FbParameter("@SMTPPreferredEncoding", FbDbType.VarChar, 500);
+            arParams[64].Value = smtpPreferredEncoding;
+
+            arParams[65] = new FbParameter("@SMTPRequiresAuth", FbDbType.SmallInt);
+            arParams[65].Value = smtpRequiresAuth ? 1 : 0;
+
+            arParams[66] = new FbParameter("@SMTPUseSsl", FbDbType.SmallInt);
+            arParams[66].Value = smtpUseSsl ? 1 : 0;
+
+            arParams[67] = new FbParameter("@RequireApprovalBeforeLogin", FbDbType.SmallInt);
+            arParams[67].Value = requireApprovalBeforeLogin ? 1 : 0;
+
+            arParams[68] = new FbParameter("@RequiresQuestionAndAnswer", FbDbType.SmallInt);
+            arParams[68].Value = requiresQuestionAndAnswer ? 1 : 0;
+
+            arParams[69] = new FbParameter("@MaxInvalidPasswordAttempts", FbDbType.Integer);
+            arParams[69].Value = maxInvalidPasswordAttempts;
+
+            arParams[70] = new FbParameter("@PasswordAttemptWindowMinutes", FbDbType.Integer);
+            arParams[70].Value = passwordAttemptWindowMinutes;
+
+            arParams[71] = new FbParameter("@MinRequiredPasswordLength", FbDbType.Integer);
+            arParams[71].Value = minRequiredPasswordLength;
+
+            arParams[72] = new FbParameter("@MinReqNonAlphaChars", FbDbType.Integer);
+            arParams[72].Value = minReqNonAlphaChars;
+
+            arParams[73] = new FbParameter("@DefaultEmailFromAddress", FbDbType.VarChar, 100);
+            arParams[73].Value = defaultEmailFromAddress;
+
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,

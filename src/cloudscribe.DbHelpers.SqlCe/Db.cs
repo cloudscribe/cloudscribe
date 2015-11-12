@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:         Joe Audette
 // Created:        2010-03-09
-// Last Modified   2015-08-07
+// Last Modified   2015-11-10
 
 
 using cloudscribe.Core.Models;
@@ -59,8 +59,14 @@ namespace cloudscribe.DbHelpers.SqlCe
             {
                 if (sqlCeFilePath.Length > 0)
                 {
-                    
+
                     //string connectionString = "Data Source=" + sqlCeFilePath + ";Persist Security Info=False;";
+
+                    string folderPath = Path.GetDirectoryName(sqlCeFilePath);
+                    if(!Directory.Exists(folderPath))
+                    {
+                        Directory.CreateDirectory(folderPath);
+                    }
 
                     if (!File.Exists(sqlCeFilePath))
                     {

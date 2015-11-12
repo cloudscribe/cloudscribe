@@ -5,7 +5,7 @@
 // Last Modified:			2015-09-03
 // 
 
-using cloudscribe.DbHelpers.Sqlite;
+using cloudscribe.DbHelpers.SQLite;
 using Microsoft.Data.Sqlite;
 using Microsoft.Framework.Logging;
 using System;

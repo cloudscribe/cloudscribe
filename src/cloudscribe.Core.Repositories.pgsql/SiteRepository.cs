@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2015-10-16
+// Last Modified:			2015-11-07
 // 
 
 
@@ -63,49 +63,80 @@ namespace cloudscribe.Core.Repositories.pgsql
                     site.SiteGuid,
                     site.SiteName,
                     site.Layout,
-                    site.Logo,
-                    site.Icon,
                     site.AllowNewRegistration,
-                    site.AllowUserSkins,
-                    site.AllowPageSkins,
-                    site.AllowHideMenuOnPages,
                     site.UseSecureRegistration,
                     site.UseSslOnAllPages,
-                    string.Empty, // legacy defaultPageKeywords
-                    string.Empty, // legacy defaultPageDescription
-                    string.Empty, // legacy defaultPageEncoding
-                    string.Empty, // legacy defaultAdditionalMetaTag
                     site.IsServerAdminSite,
                     site.UseLdapAuth,
                     site.AutoCreateLdapUserOnFirstLogin,
-                    site.SiteLdapSettings.Server,
-                    site.SiteLdapSettings.Port,
-                    site.SiteLdapSettings.Domain,
-                    site.SiteLdapSettings.RootDN,
-                    site.SiteLdapSettings.UserDNKey,
+                    site.LdapServer,
+                    site.LdapPort,
+                    site.LdapDomain,
+                    site.LdapRootDN,
+                    site.LdapUserDNKey,
                     site.AllowUserFullNameChange,
                     site.UseEmailForLogin,
                     site.ReallyDeleteUsers,
-                    string.Empty, // legacy site.EditorSkin,
-                    string.Empty, // legacy site.DefaultFriendlyUrlPatternEnum,
-                    false, // legacy site.EnableMyPageFeature,
-                    site.EditorProviderName,
-                    string.Empty, // legacy site.DatePickerProvider,
-                    site.CaptchaProvider,
                     site.RecaptchaPrivateKey,
                     site.RecaptchaPublicKey,
-                    site.WordpressApiKey,
+                    site.ApiKeyExtra1,
+                    site.ApiKeyExtra2,
+                    site.ApiKeyExtra3,
+                    site.ApiKeyExtra4,
+                    site.ApiKeyExtra5,
+                    site.DisableDbAuth,
+
+                    site.RequiresQuestionAndAnswer,
+                    site.MaxInvalidPasswordAttempts,
+                    site.PasswordAttemptWindowMinutes,
+                    site.MinRequiredPasswordLength,
+                    site.MinReqNonAlphaChars,
+                    site.DefaultEmailFromAddress,
+                    site.AllowDbFallbackWithLdap,
+                    site.EmailLdapDbFallback,
+                    site.AllowPersistentLogin,
+                    site.CaptchaOnLogin,
+                    site.CaptchaOnRegistration,
+                    site.SiteIsClosed,
+                    site.SiteIsClosedMessage,
+                    site.PrivacyPolicy,
+                    site.TimeZoneId,
+                    site.GoogleAnalyticsProfileId,
+                    site.CompanyName,
+                    site.CompanyStreetAddress,
+                    site.CompanyStreetAddress2,
+                    site.CompanyRegion,
+                    site.CompanyLocality,
+                    site.CompanyCountry,
+                    site.CompanyPostalCode,
+                    site.CompanyPublicEmail,
+                    site.CompanyPhone,
+                    site.CompanyFax,
+                    site.FacebookAppId,
+                    site.FacebookAppSecret,
+                    site.GoogleClientId,
+                    site.GoogleClientSecret,
+                    site.TwitterConsumerKey,
+                    site.TwitterConsumerSecret,
                     site.MicrosoftClientId,
                     site.MicrosoftClientSecret,
-                    site.AllowOpenIdAuth,
-                    false, //legacy site.AllowWindowsLiveAuth,
-                    site.GmapApiKey,
-                    site.AddThisDotComUsername, //apiKeyExtra2
-                    site.GoogleAnalyticsAccountCode, //apiKeyExtra2
-                    string.Empty, //legacy apiKeyExtra3
-                    site.SiteFolderName, // legacy apiKeyExtra4
-                    site.PreferredHostName, // legacy apiKeyExtra5
-                    site.DisableDbAuth);
+                    site.PreferredHostName,
+                    site.SiteFolderName,
+                    site.AddThisDotComUsername,
+                    site.LoginInfoTop,
+                    site.LoginInfoBottom,
+                    site.RegistrationAgreement,
+                    site.RegistrationPreamble,
+                    site.SmtpServer,
+                    site.SmtpPort,
+                    site.SmtpUser,
+                    site.SmtpPassword,
+                    site.SmtpPreferredEncoding,
+                    site.SmtpRequiresAuth,
+                    site.SmtpUseSsl,
+                    site.RequireApprovalBeforeLogin
+
+                    );
 
                 result = site.SiteId > -1;
 
@@ -115,50 +146,82 @@ namespace cloudscribe.Core.Repositories.pgsql
                 result = await dbSiteSettings.Update(
                     site.SiteId,
                     site.SiteName,
-                    site.Layout,
-                    site.Logo,
-                    site.Icon,
+                    site.Layout,  
                     site.AllowNewRegistration,
-                    site.AllowUserSkins,
-                    site.AllowPageSkins,
-                    site.AllowHideMenuOnPages,
                     site.UseSecureRegistration,
                     site.UseSslOnAllPages,
-                    string.Empty, // legacy defaultPageKeywords
-                    string.Empty, // legacy defaultPageDescription
-                    string.Empty, // legacy defaultPageEncoding
-                    string.Empty, // legacy defaultAdditionalMetaTag
                     site.IsServerAdminSite,
                     site.UseLdapAuth,
                     site.AutoCreateLdapUserOnFirstLogin,
-                    site.SiteLdapSettings.Server,
-                    site.SiteLdapSettings.Port,
-                    site.SiteLdapSettings.Domain,
-                    site.SiteLdapSettings.RootDN,
-                    site.SiteLdapSettings.UserDNKey,
+                    site.LdapServer,
+                    site.LdapPort,
+                    site.LdapDomain,
+                    site.LdapRootDN,
+                    site.LdapUserDNKey,
                     site.AllowUserFullNameChange,
                     site.UseEmailForLogin,
                     site.ReallyDeleteUsers,
-                    string.Empty, // legacy site.EditorSkin,
-                    string.Empty, // legacy site.DefaultFriendlyUrlPatternEnum,
-                    false, // legacy site.EnableMyPageFeature,
-                    site.EditorProviderName,
-                    string.Empty, // legacy site.DatePickerProvider,
-                    site.CaptchaProvider,
                     site.RecaptchaPrivateKey,
                     site.RecaptchaPublicKey,
-                    site.WordpressApiKey,
+                    site.ApiKeyExtra1,
+                    site.ApiKeyExtra2,
+                    site.ApiKeyExtra3,
+                    site.ApiKeyExtra4,
+                    site.ApiKeyExtra5,
+                    site.DisableDbAuth,
+
+                    site.RequiresQuestionAndAnswer,
+                    site.MaxInvalidPasswordAttempts,
+                    site.PasswordAttemptWindowMinutes,
+                    site.MinRequiredPasswordLength,
+                    site.MinReqNonAlphaChars,
+                    site.DefaultEmailFromAddress,
+                    site.AllowDbFallbackWithLdap,
+                    site.EmailLdapDbFallback,
+                    site.AllowPersistentLogin,
+                    site.CaptchaOnLogin,
+                    site.CaptchaOnRegistration,
+                    site.SiteIsClosed,
+                    site.SiteIsClosedMessage,
+                    site.PrivacyPolicy,
+                    site.TimeZoneId,
+                    site.GoogleAnalyticsProfileId,
+                    site.CompanyName,
+                    site.CompanyStreetAddress,
+                    site.CompanyStreetAddress2,
+                    site.CompanyRegion,
+                    site.CompanyLocality,
+                    site.CompanyCountry,
+                    site.CompanyPostalCode,
+                    site.CompanyPublicEmail,
+                    site.CompanyPhone,
+                    site.CompanyFax,
+                    site.FacebookAppId,
+                    site.FacebookAppSecret,
+                    site.GoogleClientId,
+                    site.GoogleClientSecret,
+                    site.TwitterConsumerKey,
+                    site.TwitterConsumerSecret,
                     site.MicrosoftClientId,
                     site.MicrosoftClientSecret,
-                    site.AllowOpenIdAuth,
-                    false, //legacy site.AllowWindowsLiveAuth,
-                    site.GmapApiKey,
-                    site.AddThisDotComUsername, //apiKeyExtra2
-                    site.GoogleAnalyticsAccountCode, //apiKeyExtra2
-                    string.Empty, //legacy apiKeyExtra3
-                    site.SiteFolderName, // legacy apiKeyExtra4
-                    site.PreferredHostName, // legacy apiKeyExtra5
-                    site.DisableDbAuth);
+                    site.PreferredHostName,
+                    site.SiteFolderName,
+                    site.AddThisDotComUsername,
+                    site.LoginInfoTop,
+                    site.LoginInfoBottom,
+                    site.RegistrationAgreement,
+                    site.RegistrationPreamble,
+                    site.SmtpServer,
+                    site.SmtpPort,
+                    site.SmtpUser,
+                    site.SmtpPassword,
+                    site.SmtpPreferredEncoding,
+                    site.SmtpRequiresAuth,
+                    site.SmtpUseSsl,
+                    site.RequireApprovalBeforeLogin
+
+
+                    );
 
             }
 
@@ -167,14 +230,14 @@ namespace cloudscribe.Core.Repositories.pgsql
             // settings below stored as key value pairs in mp_SiteSettingsEx
 
 
-            bool nextResult = await dbSiteSettingsEx.EnsureSettings();
+            //bool nextResult = await dbSiteSettingsEx.EnsureSettings();
 
-            List<ExpandoSetting> expandoProperties = GetExpandoProperties(passedInSiteId); //-1 on new sites to get the default values
+           // List<ExpandoSetting> expandoProperties = GetExpandoProperties(passedInSiteId); //-1 on new sites to get the default values
 
             // update a local data table of expando properties if the value changed and mark the row dirty
-            site.SetExpandoSettings(expandoProperties);
+            //site.SetExpandoSettings(expandoProperties);
             // finally update the database only with properties in the table marked as dirty
-            SaveExpandoProperties(site.SiteId, site.SiteGuid, expandoProperties);
+            //SaveExpandoProperties(site.SiteId, site.SiteGuid, expandoProperties);
 
             return result;
 
@@ -195,8 +258,8 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             if (site.SiteGuid == Guid.Empty) { return null; }//not found 
 
-            List<ExpandoSetting> expandoProperties = GetExpandoProperties(site.SiteId);
-            site.LoadExpandoSettings(expandoProperties);
+            //List<ExpandoSetting> expandoProperties = GetExpandoProperties(site.SiteId);
+            //site.LoadExpandoSettings(expandoProperties);
 
             return site;
 
@@ -216,8 +279,8 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             if (site.SiteGuid == Guid.Empty) { return null; }//not found 
 
-            List<ExpandoSetting> expandoProperties = GetExpandoProperties(site.SiteId);
-            site.LoadExpandoSettings(expandoProperties);
+            //List<ExpandoSetting> expandoProperties = GetExpandoProperties(site.SiteId);
+            //site.LoadExpandoSettings(expandoProperties);
 
             return site;
 
@@ -238,8 +301,8 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             if (site.SiteGuid == Guid.Empty) { return null; }//not found 
 
-            List<ExpandoSetting> expandoProperties = GetExpandoProperties(site.SiteId);
-            site.LoadExpandoSettings(expandoProperties);
+            //List<ExpandoSetting> expandoProperties = GetExpandoProperties(site.SiteId);
+            //site.LoadExpandoSettings(expandoProperties);
 
             return site;
 
@@ -261,8 +324,8 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             if (site.SiteGuid == Guid.Empty) { return null; }//not found 
 
-            List<ExpandoSetting> expandoProperties = GetExpandoProperties(site.SiteId);
-            site.LoadExpandoSettings(expandoProperties);
+            //List<ExpandoSetting> expandoProperties = GetExpandoProperties(site.SiteId);
+            //site.LoadExpandoSettings(expandoProperties);
 
             return site;
 
@@ -283,8 +346,8 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             if (site.SiteGuid == Guid.Empty) { return null; }//not found 
 
-            List<ExpandoSetting> expandoProperties = GetExpandoProperties(site.SiteId);
-            site.LoadExpandoSettings(expandoProperties);
+            //List<ExpandoSetting> expandoProperties = GetExpandoProperties(site.SiteId);
+            //site.LoadExpandoSettings(expandoProperties);
 
             return site;
         }
@@ -303,8 +366,8 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             if (site.SiteGuid == Guid.Empty) { return null; }//not found 
 
-            List<ExpandoSetting> expandoProperties = GetExpandoProperties(site.SiteId);
-            site.LoadExpandoSettings(expandoProperties);
+            //List<ExpandoSetting> expandoProperties = GetExpandoProperties(site.SiteId);
+            //site.LoadExpandoSettings(expandoProperties);
 
             return site;
         }

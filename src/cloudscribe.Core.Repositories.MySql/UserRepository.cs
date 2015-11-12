@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-18
-// Last Modified:			2015-10-16
+// Last Modified:			2015-11-08
 // 
 
 
@@ -22,7 +22,7 @@ namespace cloudscribe.Core.Repositories.MySql
     public sealed class UserRepository : IUserRepository
     {
         public UserRepository(
-            IOptions<MySqlConnectionOptionscs> configuration,
+            IOptions<MySqlConnectionOptions> configuration,
             ILoggerFactory loggerFactory)
         {
             if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
@@ -63,14 +63,12 @@ namespace cloudscribe.Core.Repositories.MySql
                 user.UserGuid = Guid.NewGuid();
                 user.CreatedUtc = DateTime.UtcNow;
 
-                user.UserId = dbSiteUser.AddUser(
+                user.UserId = await dbSiteUser.AddUser(
                     user.SiteGuid,
                     user.SiteId,
                     user.DisplayName,
                     user.UserName,
                     user.Email,
-                    user.Password,
-                    user.PasswordSalt,
                     user.UserGuid,
                     user.CreatedUtc,
                     user.MustChangePwd,
@@ -79,72 +77,30 @@ namespace cloudscribe.Core.Repositories.MySql
                     user.TimeZoneId,
                     user.DateOfBirth,
                     user.EmailConfirmed,
-                    user.PasswordFormat,
                     user.PasswordHash,
                     user.SecurityStamp,
                     user.PhoneNumber,
                     user.PhoneNumberConfirmed,
                     user.TwoFactorEnabled,
-                    user.LockoutEndDateUtc);
+                    user.LockoutEndDateUtc,
 
+                    user.AccountApproved,
+                    user.IsLockedOut,
+                    user.DisplayInMemberList,
+                    user.WebSiteUrl,
+                    user.Country,
+                    user.State,
+                    user.AvatarUrl,
+                    user.Signature,
+                    user.AuthorBio,
+                    user.Comment
 
+                    );
 
-                //Role.AddUserToDefaultRoles(this);
-
-
-
-                //user.LoweredEmail,
-                //user.PasswordQuestion,
-                //user.PasswordAnswer,
-                //user.Gender,
-                //user.ProfileApproved,
-                //user.RegisterConfirmGuid,
-                //user.ApprovedForForums,
-                //user.Trusted,
-                //user.DisplayInMemberList,
-                //user.WebSiteURL,
-                //user.Country,
-                //user.State,
-                //user.Occupation,
-                //user.Interests,
-                //user.MSN,
-                //user.Yahoo,
-                //user.AIM,
-                //user.ICQ,
-                //user.TotalPosts,
-                //user.AvatarUrl,
-                //user.TimeOffsetHours,
-                //user.Signature,
-                //user.Skin,
-                //user.IsDeleted,
-                //user.LastActivityDate,
-                //user.LastLoginDate,
-                //user.LastPasswordChangedDate,
-                //user.LastLockoutDate,
-                //user.FailedPasswordAttemptCount,
-                //user.FailedPwdAttemptWindowStart,
-                //user.FailedPwdAnswerAttemptCount,
-                //user.FailedPwdAnswerWindowStart,
-                //user.IsLockedOut,
-                //user.MobilePIN,    
-                //user.Comment,
-                //user.OpenIDURI,
-                //user.WindowsLiveID,    
-                //user.TotalRevenue,
-                //user.NewEmail,
-                //user.EditorPreference,
-                //user.EmailChangeGuid,
-                //user.PasswordResetGuid,
-                //user.RolesChanged,
-                //user.AuthorBio 
-                //);
-
-                // user.UserID = newId;
+               
             }
 
-            // not all properties are added on insert so update even if we just inserted
-
-            return await Update(user);
+            return user.UserId > -1;
 
         }
 
@@ -157,37 +113,21 @@ namespace cloudscribe.Core.Repositories.MySql
                     user.DisplayName,
                     user.UserName,
                     user.Email,
-                    user.Password,
-                    user.PasswordSalt,
                     user.Gender,
-                    user.ProfileApproved,
-                    user.ApprovedForLogin,
+                    user.AccountApproved,
                     user.Trusted,
                     user.DisplayInMemberList,
                     user.WebSiteUrl,
                     user.Country,
                     user.State,
-                    string.Empty, // legacy user.Occupation,
-                    string.Empty, // legacy user.Interests,
-                    string.Empty, // legacy user.MSN,
-                    string.Empty, // legacy user.Yahoo,
-                    string.Empty, // legacyuser.AIM,
-                    string.Empty, // legacy user.ICQ,
                     user.AvatarUrl,
                     user.Signature,
-                    user.Skin,
-                    user.LoweredEmail,
-                    user.PasswordQuestion,
-                    user.PasswordAnswer,
+                    user.LoweredEmail, 
                     user.Comment,
-                    0, // legacy timeOffsetHours
-                    user.OpenIdUri,
-                    string.Empty, // legacy user.WindowsLiveId,
                     user.MustChangePwd,
                     user.FirstName,
                     user.LastName,
                     user.TimeZoneId,
-                    user.EditorPreference,
                     user.NewEmail,
                     user.EmailChangeGuid,
                     user.PasswordResetGuid,
@@ -195,34 +135,14 @@ namespace cloudscribe.Core.Repositories.MySql
                     user.AuthorBio,
                     user.DateOfBirth,
                     user.EmailConfirmed,
-                    user.PasswordFormat,
                     user.PasswordHash,
                     user.SecurityStamp,
                     user.PhoneNumber,
                     user.PhoneNumberConfirmed,
                     user.TwoFactorEnabled,
-                    user.LockoutEndDateUtc);
-
-
-            //user.RegisterConfirmGuid,
-            //user.TotalPosts,
-            //user.TimeOffsetHours,
-            //user.DateCreated,
-            //user.UserGuid,
-            //user.IsDeleted,
-            //user.LastActivityDate,
-            //user.LastLoginDate,
-            //user.LastPasswordChangedDate,
-            //user.LastLockoutDate,
-            //user.FailedPasswordAttemptCount,
-            //user.FailedPwdAttemptWindowStart,
-            //user.FailedPwdAnswerAttemptCount,
-            //user.FailedPwdAnswerWindowStart,
-            //user.IsLockedOut,
-            //user.MobilePIN,
-            //user.SiteGuid,
-            //user.TotalRevenue,
-
+                    user.LockoutEndDateUtc,
+                    user.IsLockedOut);
+            
         }
 
 
@@ -248,14 +168,14 @@ namespace cloudscribe.Core.Repositories.MySql
             return await dbSiteUser.FlagAsNotDeleted(userId);
         }
 
-        public bool UpdatePasswordAndSalt(
-            int userId,
-            int passwordFormat,
-            string password,
-            string passwordSalt)
-        {
-            return dbSiteUser.UpdatePasswordAndSalt(userId, passwordFormat, password, passwordSalt);
-        }
+        //public bool UpdatePasswordAndSalt(
+        //    int userId,
+        //    int passwordFormat,
+        //    string password,
+        //    string passwordSalt)
+        //{
+        //    return dbSiteUser.UpdatePasswordAndSalt(userId, passwordFormat, password, passwordSalt);
+        //}
 
         public async Task<bool> ConfirmRegistration(Guid registrationGuid)
         {
@@ -283,19 +203,19 @@ namespace cloudscribe.Core.Repositories.MySql
             return await dbSiteUser.UpdateFailedPasswordAttemptCount(userGuid, failedPasswordAttemptCount);
         }
 
-        public async Task<bool> UpdateTotalRevenue(Guid userGuid)
-        {
-            return await dbSiteUser.UpdateTotalRevenue(userGuid);
+        //public async Task<bool> UpdateTotalRevenue(Guid userGuid)
+        //{
+        //    return await dbSiteUser.UpdateTotalRevenue(userGuid);
 
-        }
+        //}
 
-        /// <summary>
-        /// updates the total revenue for all users
-        /// </summary>
-        public async Task<bool> UpdateTotalRevenue()
-        {
-            return await dbSiteUser.UpdateTotalRevenue();
-        }
+        ///// <summary>
+        ///// updates the total revenue for all users
+        ///// </summary>
+        //public async Task<bool> UpdateTotalRevenue()
+        //{
+        //    return await dbSiteUser.UpdateTotalRevenue();
+        //}
 
 
         //public DataTable GetUserListForPasswordFormatChange(int siteId)

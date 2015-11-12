@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-06-13
+// Last Modified:			2015-11-02
 // 
 
 using cloudscribe.DbHelpers.pgsql;
@@ -749,10 +749,24 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[1] = new NpgsqlParameter("userid", NpgsqlTypes.NpgsqlDbType.Integer);
             arParams[1].Value = userId;
 
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("DELETE FROM mp_userroles ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("roleid = :roleid ");
+            sqlCommand.Append("AND ");
+            sqlCommand.Append("userid = :userid ");
+            sqlCommand.Append(";");
+
+            //object result = await AdoHelper.ExecuteScalarAsync(
+            //    writeConnectionString,
+            //    CommandType.StoredProcedure,
+            //    "mp_userroles_delete(:roleid,:userid)",
+            //    arParams);
+
             object result = await AdoHelper.ExecuteScalarAsync(
                 writeConnectionString,
-                CommandType.StoredProcedure,
-                "mp_userroles_delete(:roleid,:userid)",
+                CommandType.Text,
+                sqlCommand.ToString(),
                 arParams);
 
             int rowsAffected = Convert.ToInt32(result);

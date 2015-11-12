@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //	Author:                 Joe Audette
 //  Created:			    2011-07-23
-//	Last Modified:		    2015-08-18
+//	Last Modified:		    2015-11-11
 // 
 
 using cloudscribe.DbHelpers.Firebird;
@@ -21,16 +21,14 @@ namespace cloudscribe.Core.Repositories.Firebird
     {
         internal DBSystemLog(
             string dbReadConnectionString,
-            string dbWriteConnectionString,
-            ILoggerFactory loggerFactory)
+            string dbWriteConnectionString)
         {
-            logFactory = loggerFactory;
+            
             readConnectionString = dbReadConnectionString;
             writeConnectionString = dbWriteConnectionString;
         }
 
-        private ILoggerFactory logFactory;
-        //private ILogger log;
+       
         private string readConnectionString;
         private string writeConnectionString;
 

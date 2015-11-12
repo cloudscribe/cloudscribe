@@ -43,7 +43,11 @@ namespace cloudscribe.Core.Web.Controllers
 
             var serverInfo = new SystemInfoViewModel();
             serverInfo.Name = this.HttpContext.Request.Host.Value;
-            serverInfo.LocalAddress = this.HttpContext.Connection.LocalIpAddress.ToString();
+            if(this.HttpContext.Connection.LocalIpAddress != null)
+            {
+                serverInfo.LocalAddress = this.HttpContext.Connection.LocalIpAddress.ToString();
+            }
+            
             serverInfo.OperatingSystem = systemInfo.OperatingSystem;
             serverInfo.Runtime = systemInfo.Runtime;
             serverInfo.EnvironmentName = systemInfo.EnvironmentName;

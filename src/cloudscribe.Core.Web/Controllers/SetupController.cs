@@ -68,6 +68,7 @@ namespace cloudscribe.Setup.Controllers
         private Version cloudscribeCoreDbSchemaVersion = new Version(0,0);
         // private int scriptTimeout;
         private DateTime startTime;
+        private bool exceptionsRendered = false;
 
 
         private static object Lock = new object();
@@ -121,30 +122,43 @@ namespace cloudscribe.Setup.Controllers
             //}
             //else
             //{
-                try
+            try
+            {
+                await ProbeSystem(Response);
+
+
+                result = await SetupCloudscribeCore(Response);
+
+                if(result)
                 {
-                    await ProbeSystem(Response);
-
-
-                    result = await SetupCloudscribeCore(Response);
-
-                    if(result)
-                    {
-                        result = await SetupOtherApplications(Response);
-                    }
+                    result = await SetupOtherApplications(Response);
+                }
 
                 
-                    await ShowSetupStatus(Response);
-                    
-                }
-                finally
-                {
-                    //ClearSetupLock();
-                    //Monitor.Exit(Lock);
-                }
+            }
+            catch(Exception ex)
+            {
+                
+                await WriteException(Response, ex);
+                
+            }
+            finally
+            {
+                //ClearSetupLock();
+                //Monitor.Exit(Lock);
+            }
 
-            //}
+            try
+            {
+                await ShowSetupStatus(Response);
+            }
+            catch(Exception ex)
+            {
+                await WriteException(Response, ex);
+            }
             
+            
+
 
             //await WritePageContent(Response,
             //    "SetupEnabled" //SetupResources.SetupEnabledMessage
@@ -205,6 +219,41 @@ namespace cloudscribe.Setup.Controllers
 
                 result = await siteManager.CreateRequiredRolesAndAdminUser(newSite);
             }
+            else
+            {
+                // check here if count of users is 0
+                // if something went wrong with creating admin user
+                // setup page should try to correct it on subsequent runs
+                // ie create an admin user if no users exist
+                if(response.HttpContext.Request.Host.HasValue)
+                {
+                    ISiteSettings site = await siteManager.Fetch(response.HttpContext.Request.Host.Value);
+                    if(site != null)
+                    {
+                        int roleCount = await siteManager.GetRoleCount(site.SiteId);
+                        bool roleResult = true;
+                        if(roleCount == 0)
+                        {
+                            roleResult = await siteManager.EnsureRequiredRoles(site);
+                        }
+
+                        if(roleResult)
+                        {
+                            int userCount = await siteManager.GetUserCount(site.SiteId);
+                            if(userCount == 0)
+                            {
+                                await siteManager.CreateAdminUser(site);
+                            }
+                        }
+                    }
+                    
+
+                }
+                
+
+            }
+
+
 
             //TODO dbSiteSettingsEx.EnsureSettings(); add to ISiteRepository
 
@@ -694,7 +743,7 @@ namespace cloudscribe.Setup.Controllers
 
                     await WritePageContent(response,
                         string.Format(
-                        "ExistingSiteCount", //SetupResources.ExistingSiteCountMessage,
+                        "ExistingSiteCount {0}", //SetupResources.ExistingSiteCountMessage,
                         existingSiteCount.ToString()),
                         false);
 
@@ -741,9 +790,19 @@ namespace cloudscribe.Setup.Controllers
 
             if(CoreSystemIsReady())
             {
-                statusMessage.Append("<hr /><div>"
-                + "SetupSuccess" // SetupResources.SetupSuccessMessage 
-                + "</div>");
+                if(exceptionsRendered)
+                {
+                    statusMessage.Append("<hr /><div>"
+                        + "SchemaIsUpToDateButExceptionsOccured" // SetupResources.SetupSuccessMessage 
+                        + "</div>");
+                }
+                else
+                {
+                    statusMessage.Append("<hr /><div>"
+                        + "SetupSuccess" // SetupResources.SetupSuccessMessage 
+                        + "</div>");
+                }
+                
             }
             else
             {
@@ -814,6 +873,12 @@ namespace cloudscribe.Setup.Controllers
 
         }
 
+        private async Task WriteException(HttpResponse response, Exception ex)
+        {
+            exceptionsRendered = true; // this is true if this method was called so we can at least say error happened
+            if(!setupOptions.ShowErrors) { return; }
+            await WritePageContent(response, "<hr />" + ex.Message + " -- " + ex.StackTrace, false);
+        }
 
         private async Task WritePageContent(HttpResponse response, string message)
         {

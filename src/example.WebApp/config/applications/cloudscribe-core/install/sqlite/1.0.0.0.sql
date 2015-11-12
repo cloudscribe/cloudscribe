@@ -89,14 +89,14 @@ CREATE TABLE `mp_Users` (
   `LoginName` varchar(50) default NULL,
   `IsDeleted` INTEGER default '0',
   `LoweredEmail` varchar(100) default NULL,
-  `RegisterConfirmGuid` varchar(36) default '00000000-0000-0000-0000-000000000000',
+  `RegisterConfirmGuid` varchar(36) NOT NULL default '00000000-0000-0000-0000-000000000000',
   `LastActivityDate` datetime default NULL,
   `LastLoginDate` datetime default NULL,
   `LastPasswordChangedDate` datetime default NULL,
   `LastLockoutDate` datetime default NULL,
-  `FailedPasswordAttemptCount` INTEGER default '0',
+  `FailedPasswordAttemptCount` INTEGER NOT NULL default '0',
   `FailedPwdAttemptWindowStart` datetime default NULL,
-  `FailedPwdAnswerAttemptCount` INTEGER default '0',
+  `FailedPwdAnswerAttemptCount` INTEGER NOT NULL default '0',
   `FailedPwdAnswerWindowStart` datetime default NULL,
   `IsLockedOut` INTEGER default '0',
   `Comment` text, 
@@ -111,12 +111,12 @@ SiteGuid VARCHAR(36),
  `RolesChanged` INTEGER NULL,
  `AuthorBio` text NULL,
  `DateOfBirth` datetime NULL,
- `EmailConfirmed` INTEGER NOT NULL,
+ `EmailConfirmed` INTEGER NOT NULL default '0',
  `PasswordHash` text NULL,
  `SecurityStamp` text NULL,
  `PhoneNumber` varchar(50) NULL,
- `PhoneNumberConfirmed` INTEGER NOT NULL,
- `TwoFactorEnabled` INTEGER NOT NULL,
+ `PhoneNumberConfirmed` INTEGER NOT NULL default '0',
+ `TwoFactorEnabled` INTEGER NOT NULL default '0',
  `LockoutEndDateUtc` datetime NULL
 );
 
@@ -245,7 +245,18 @@ CREATE TABLE `mp_UserLogins` (
  PRIMARY KEY ( LoginProvider, ProviderKey, UserId)
 );
 
-
+CREATE TABLE `mp_SystemLog` (
+ `ID` INTEGER NOT NULL PRIMARY KEY, 
+ `LogDate` datetime NOT NULL,
+ `IpAddress` varchar(50) NULL,
+ `Culture` varchar(10) NULL,
+ `Url` text NULL,
+ `ShortUrl` varchar(255) NULL,
+ `Thread` varchar(255) NOT NULL,
+ `LogLevel` varchar(20) NOT NULL,
+ `Logger` varchar(255) NOT NULL,
+ `Message` text NOT NULL
+);
 
 
 INSERT INTO "mp_Currency" VALUES('6a5ef486-ee65-441f-9c63-c003e30981fe','Euro','EUR','','EUR','.',',','2',1,'2008-06-19 09:38:00','2008-06-19 09:38:00');

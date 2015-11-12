@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-22
-// Last Modified:			2015-10-17
+// Last Modified:			2015-11-09
 // 
 
 using cloudscribe.Core.Models;
@@ -76,6 +76,11 @@ namespace cloudscribe.Core.Web.Components
             return await siteRepo.Fetch(siteId);
         }
 
+        public async Task<ISiteSettings> Fetch(string hostname)
+        {
+            return await siteRepo.Fetch(hostname);
+        }
+
         public async Task<bool> Save(ISiteSettings site)
         {
             return await siteRepo.Save(site);
@@ -143,43 +148,30 @@ namespace cloudscribe.Core.Web.Components
 
 
             newSite.Layout = setupOptions.DefaultLayout;
-
-            //newSite.Logo = GetMessageTemplate(templateFolder, "InitialSiteLogoContent.config");
-
-            newSite.AllowHideMenuOnPages = false;
+            
             newSite.AllowNewRegistration = true;
-            newSite.AllowPageSkins = false;
             newSite.AllowUserFullNameChange = false;
-            newSite.AllowUserSkins = false;
             newSite.AutoCreateLdapUserOnFirstLogin = true;
-            //newSite.DefaultFriendlyUrlPattern = SiteSettings.FriendlyUrlPattern.PageNameWithDotASPX;
-            //newSite.EditorSkin = SiteSettings.ContentEditorSkin.normal;
-            //newSite.EncryptPasswords = false;
-            newSite.Icon = String.Empty;
             newSite.ReallyDeleteUsers = true;
-            newSite.SiteLdapSettings.Port = 389;
-            newSite.SiteLdapSettings.RootDN = String.Empty;
-            newSite.SiteLdapSettings.Server = String.Empty;
+            newSite.LdapPort = 389;
+            newSite.LdapRootDN = String.Empty;
+            newSite.LdapServer = String.Empty;
             newSite.UseEmailForLogin = true;
             newSite.UseLdapAuth = false;
             newSite.UseSecureRegistration = false;
             newSite.UseSslOnAllPages = setupOptions.SslIsRequiredByWebServer;
-            //newSite.CreateInitialDataOnCreate = false;
-
-            newSite.AllowPasswordReset = true;
-            newSite.AllowPasswordRetrieval = true;
+           
+            
             //0 = clear, 1= hashed, 2= encrypted
-            newSite.PasswordFormat = 1;
+            //newSite.PasswordFormat = 1;
 
             newSite.RequiresQuestionAndAnswer = true;
             newSite.MaxInvalidPasswordAttempts = 10;
             newSite.PasswordAttemptWindowMinutes = 5;
-            //newSite.RequiresUniqueEmail = true;
-            newSite.MinRequiredNonAlphanumericCharacters = 0;
+            newSite.MinReqNonAlphaChars = 0;
             newSite.MinRequiredPasswordLength = 7;
-            newSite.PasswordStrengthRegularExpression = String.Empty;
-            //newSite.DefaultEmailFromAddress = GetMessageTemplate(templateFolder, "InitialEmailFromContent.config");
-
+            
+            
             bool result = await siteRepo.Save(newSite);
 
 
@@ -192,41 +184,100 @@ namespace cloudscribe.Core.Web.Components
             SiteSettings site)
         {
 
-            SiteRole adminRole = new SiteRole();
-            adminRole.DisplayName = "Admins";
+
+
+            //SiteRole adminRole = new SiteRole();
+            //adminRole.DisplayName = "Admins";
+            ////adminRole.DisplayName = "Administrators";
+            //adminRole.SiteId = site.SiteId;
+            //adminRole.SiteGuid = site.SiteGuid;
+            //bool result = await userRepo.SaveRole(adminRole);
             //adminRole.DisplayName = "Administrators";
-            adminRole.SiteId = site.SiteId;
-            adminRole.SiteGuid = site.SiteGuid;
-            bool result = await userRepo.SaveRole(adminRole);
-            adminRole.DisplayName = "Administrators";
-            result = await userRepo.SaveRole(adminRole);
+            //result = await userRepo.SaveRole(adminRole);
 
-            SiteRole roleAdminRole = new SiteRole();
-            roleAdminRole.DisplayName = "Role Admins";
-            roleAdminRole.SiteId = site.SiteId;
-            roleAdminRole.SiteGuid = site.SiteGuid;
-            result = await userRepo.SaveRole(roleAdminRole);
+            //SiteRole roleAdminRole = new SiteRole();
+            //roleAdminRole.DisplayName = "Role Admins";
+            //roleAdminRole.SiteId = site.SiteId;
+            //roleAdminRole.SiteGuid = site.SiteGuid;
+            //result = await userRepo.SaveRole(roleAdminRole);
 
-            roleAdminRole.DisplayName = "Role Administrators";
-            result = await userRepo.SaveRole(roleAdminRole);
+            //roleAdminRole.DisplayName = "Role Administrators";
+            //result = await userRepo.SaveRole(roleAdminRole);
 
-            SiteRole contentAdminRole = new SiteRole();
-            contentAdminRole.DisplayName = "Content Administrators";
-            contentAdminRole.SiteId = site.SiteId;
-            contentAdminRole.SiteGuid = site.SiteGuid;
-            result = await userRepo.SaveRole(contentAdminRole);
+            //SiteRole contentAdminRole = new SiteRole();
+            //contentAdminRole.DisplayName = "Content Administrators";
+            //contentAdminRole.SiteId = site.SiteId;
+            //contentAdminRole.SiteGuid = site.SiteGuid;
+            //result = await userRepo.SaveRole(contentAdminRole);
 
-            SiteRole authenticatedUserRole = new SiteRole();
-            authenticatedUserRole.DisplayName = "Authenticated Users";
-            authenticatedUserRole.SiteId = site.SiteId;
-            authenticatedUserRole.SiteGuid = site.SiteGuid;
-            result = await userRepo.SaveRole(authenticatedUserRole);
+            //SiteRole authenticatedUserRole = new SiteRole();
+            //authenticatedUserRole.DisplayName = "Authenticated Users";
+            //authenticatedUserRole.SiteId = site.SiteId;
+            //authenticatedUserRole.SiteGuid = site.SiteGuid;
+            //result = await userRepo.SaveRole(authenticatedUserRole);
 
-            //SiteRole newsletterAdminRole = new SiteRole();
-            //newsletterAdminRole.DisplayName = "Newsletter Administrators";
-            //newsletterAdminRole.SiteId = site.SiteId;
-            //newsletterAdminRole.SiteGuid = site.SiteGuid;
-            //userRepository.SaveRole(newsletterAdminRole);
+            //// if using related sites mode there is a problem if we already have user admin@admin.com
+            //// and we create another one in the child site with the same email and login so we need to make it different
+            //// we could just skip creating this user since in related sites mode all users come from the first site
+            //// but then if the config were changed to not related sites mode there would be no admin user
+            //// so in related sites mode we create one only as a backup in case settings are changed later
+            //int countOfSites = await siteRepo.GetCount();
+            //string siteDifferentiator = string.Empty;
+            //if (
+            //    (countOfSites >= 1)
+            //    && (multiTenantOptions.UseRelatedSitesMode)
+            //    )
+            //{
+            //    if (site.SiteId > 1)
+            //    {
+            //        siteDifferentiator = site.SiteId.ToInvariantString();
+            //    }
+            //}
+
+
+            //SiteUser adminUser = new SiteUser();
+            //adminUser.SiteId = site.SiteId;
+            //adminUser.SiteGuid = site.SiteGuid;
+            //adminUser.Email = "admin" + siteDifferentiator + "@admin.com";
+            //adminUser.DisplayName = "Admin";
+            //adminUser.UserName = "admin" + siteDifferentiator;
+
+            //adminUser.EmailConfirmed = true;
+            //adminUser.AccountApproved = true;
+
+            //// clear text password will be hashed upon login
+            //// this format allows migrating from mojoportal
+            //adminUser.PasswordHash = "admin||0"; //pwd/salt/format 
+
+
+            //result = await userRepo.Save(adminUser);
+
+
+
+
+            //result = await userRepo.AddUserToRole(
+            //    adminRole.RoleId,
+            //    adminRole.RoleGuid,
+            //    adminUser.UserId,
+            //    adminUser.UserGuid);
+
+            bool result = await EnsureRequiredRoles(site);
+            result = await CreateAdminUser(site);
+
+            return result;
+
+        }
+
+        public async Task<bool> CreateAdminUser(ISiteSettings site)
+        {
+
+            ISiteRole adminRole = await userRepo.FetchRole(site.SiteId, "Admins");
+
+            if(adminRole == null)
+            {
+                throw new InvalidOperationException("Admins role could nto be found so cannot create admin user");
+            }
+            
 
             // if using related sites mode there is a problem if we already have user admin@admin.com
             // and we create another one in the child site with the same email and login so we need to make it different
@@ -246,8 +297,7 @@ namespace cloudscribe.Core.Web.Components
                 }
             }
 
-            //mojoMembershipProvider membership = Membership.Provider as mojoMembershipProvider;
-            //bool overridRelatedSiteMode = true;
+
             SiteUser adminUser = new SiteUser();
             adminUser.SiteId = site.SiteId;
             adminUser.SiteGuid = site.SiteGuid;
@@ -256,27 +306,15 @@ namespace cloudscribe.Core.Web.Components
             adminUser.UserName = "admin" + siteDifferentiator;
 
             adminUser.EmailConfirmed = true;
-            adminUser.ApprovedForLogin = true;
-            adminUser.Password = "admin";
-            adminUser.PasswordFormat = 0;
+            adminUser.AccountApproved = true;
 
-            //if (membership != null)
-            //{
-            //    adminUser.Password = membership.EncodePassword(site, adminUser, "admin");
-            //}
+            // clear text password will be hashed upon login
+            // this format allows migrating from mojoportal
+            adminUser.PasswordHash = "admin||0"; //pwd/salt/format 
 
-            adminUser.PasswordQuestion = "What is your user name?";
-            adminUser.PasswordAnswer = "admin";
 
-            result = await userRepo.Save(adminUser);
-
-            //siteUserManager.AddPassword(adminUser.UserGuid.ToString(), "admin");
-
-            //siteUserManager.Create(adminUser, "admin");
-            //var result = siteUserManager.CreateAsync(adminUser, "admin");
-            //if (result.Succeeded)
-            //{
-            //}
+            bool result = await userRepo.Save(adminUser);
+            
             result = await userRepo.AddUserToRole(
                 adminRole.RoleId,
                 adminRole.RoleGuid,
@@ -286,6 +324,68 @@ namespace cloudscribe.Core.Web.Components
             return result;
 
         }
+
+        public async Task<bool> EnsureRequiredRoles(ISiteSettings site)
+        {
+            bool result = true;
+
+            bool exists = await userRepo.RoleExists(site.SiteId, "Admins");
+
+            if(!exists)
+            {
+                SiteRole adminRole = new SiteRole();
+                adminRole.DisplayName = "Admins";
+                //adminRole.DisplayName = "Administrators";
+                adminRole.SiteId = site.SiteId;
+                adminRole.SiteGuid = site.SiteGuid;
+                result = await userRepo.SaveRole(adminRole);
+                adminRole.DisplayName = "Administrators";
+                result = await userRepo.SaveRole(adminRole);
+            }
+
+            exists = await userRepo.RoleExists(site.SiteId, "Role Admins");
+
+            if (!exists)
+            {
+                SiteRole roleAdminRole = new SiteRole();
+                roleAdminRole.DisplayName = "Role Admins";
+                roleAdminRole.SiteId = site.SiteId;
+                roleAdminRole.SiteGuid = site.SiteGuid;
+                result = await userRepo.SaveRole(roleAdminRole);
+
+                roleAdminRole.DisplayName = "Role Administrators";
+                result = await userRepo.SaveRole(roleAdminRole);
+            }
+
+            exists = await userRepo.RoleExists(site.SiteId, "Content Administrators");
+
+            if (!exists)
+            {
+                SiteRole contentAdminRole = new SiteRole();
+                contentAdminRole.DisplayName = "Content Administrators";
+                contentAdminRole.SiteId = site.SiteId;
+                contentAdminRole.SiteGuid = site.SiteGuid;
+                result = await userRepo.SaveRole(contentAdminRole);
+            }
+
+            exists = await userRepo.RoleExists(site.SiteId, "Authenticated Users");
+
+            if (!exists)
+            {
+                SiteRole authenticatedUserRole = new SiteRole();
+                authenticatedUserRole.DisplayName = "Authenticated Users";
+                authenticatedUserRole.SiteId = site.SiteId;
+                authenticatedUserRole.SiteGuid = site.SiteGuid;
+                result = await userRepo.SaveRole(authenticatedUserRole);
+            }
+
+            
+
+            return result;
+
+        }
+
+
 
 
         public async Task<SiteFolder> GetSiteFolder(string folderName)
@@ -335,6 +435,20 @@ namespace cloudscribe.Core.Web.Components
         {
             
             return await siteRepo.DeleteHost(hostId);
+        }
+
+        public async Task<int> GetUserCount(int siteId)
+        {
+            // this is only used on setup controller
+            // to make sure admin user was created
+            return await userRepo.CountUsers(siteId, string.Empty);
+        }
+
+        public async Task<int> GetRoleCount(int siteId)
+        {
+            // this is only used on setup controller
+            // to make sure admin user and role was created
+            return await userRepo.CountOfRoles(siteId, string.Empty);
         }
 
     }

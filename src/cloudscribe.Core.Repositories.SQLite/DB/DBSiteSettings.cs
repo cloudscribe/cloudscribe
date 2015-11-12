@@ -2,10 +2,10 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-06-23
+// Last Modified:			2015-11-06
 // 
 
-using cloudscribe.DbHelpers.Sqlite;
+using cloudscribe.DbHelpers.SQLite;
 using System;
 using System.Data;
 using System.Data.Common;
@@ -36,229 +36,92 @@ namespace cloudscribe.Core.Repositories.SQLite
 
         public int Create(
             Guid siteGuid,
-            String siteName,
-            String skin,
-            String logo,
-            String icon,
+            string siteName,
+            string skin,
             bool allowNewRegistration,
-            bool allowUserSkins,
-            bool allowPageSkins,
-            bool allowHideMenuOnPages,
             bool useSecureRegistration,
             bool useSslOnAllPages,
-            String defaultPageKeywords,
-            String defaultPageDescription,
-            String defaultPageEncoding,
-            String defaultAdditionalMetaTags,
             bool isServerAdminSite,
             bool useLdapAuth,
             bool autoCreateLdapUserOnFirstLogin,
-            String ldapServer,
+            string ldapServer,
             int ldapPort,
-            String ldapDomain,
-            String ldapRootDN,
-            String ldapUserDNKey,
+            string ldapDomain,
+            string ldapRootDN,
+            string ldapUserDNKey,
             bool allowUserFullNameChange,
             bool useEmailForLogin,
             bool reallyDeleteUsers,
-            String editorSkin,
-            String defaultFriendlyUrlPattern,
-            bool enableMyPageFeature,
-            string editorProvider,
-            string datePickerProvider,
-            string captchaProvider,
             string recaptchaPrivateKey,
             string recaptchaPublicKey,
-            string wordpressApiKey,
-            string windowsLiveAppId,
-            string windowsLiveKey,
-            bool allowOpenIdAuth,
-            bool allowWindowsLiveAuth,
-            string gmapApiKey,
             string apiKeyExtra1,
             string apiKeyExtra2,
             string apiKeyExtra3,
             string apiKeyExtra4,
             string apiKeyExtra5,
-            bool disableDbAuth)
+            bool disableDbAuth,
+
+            bool requiresQuestionAndAnswer,
+            int maxInvalidPasswordAttempts,
+            int passwordAttemptWindowMinutes,
+            int minRequiredPasswordLength,
+            int minReqNonAlphaChars,
+            string defaultEmailFromAddress,
+            bool allowDbFallbackWithLdap,
+            bool emailLdapDbFallback,
+            bool allowPersistentLogin,
+            bool captchaOnLogin,
+            bool captchaOnRegistration,
+            bool siteIsClosed,
+            string siteIsClosedMessage,
+            string privacyPolicy,
+            string timeZoneId,
+            string googleAnalyticsProfileId,
+            string companyName,
+            string companyStreetAddress,
+            string companyStreetAddress2,
+            string companyRegion,
+            string companyLocality,
+            string companyCountry,
+            string companyPostalCode,
+            string companyPublicEmail,
+            string companyPhone,
+            string companyFax,
+            string facebookAppId,
+            string facebookAppSecret,
+            string googleClientId,
+            string googleClientSecret,
+            string twitterConsumerKey,
+            string twitterConsumerSecret,
+            string microsoftClientId,
+            string microsoftClientSecret,
+            string preferredHostName,
+            string siteFolderName,
+            string addThisDotComUsername,
+            string loginInfoTop,
+            string loginInfoBottom,
+            string registrationAgreement,
+            string registrationPreamble,
+            string smtpServer,
+            int smtpPort,
+            string smtpUser,
+            string smtpPassword,
+            string smtpPreferredEncoding,
+            bool smtpRequiresAuth,
+            bool smtpUseSsl,
+            bool requireApprovalBeforeLogin
+
+            )
         {
-
-            #region bool conversion
-
-            byte intDisableDbAuth = 0;
-            if (disableDbAuth) { intDisableDbAuth = 1; }
-
-            byte oidauth;
-            if (allowOpenIdAuth)
-            {
-                oidauth = 1;
-            }
-            else
-            {
-                oidauth = 0;
-            }
-
-            byte winliveauth;
-            if (allowWindowsLiveAuth)
-            {
-                winliveauth = 1;
-            }
-            else
-            {
-                winliveauth = 0;
-            }
-
-            byte uldapp;
-            if (useLdapAuth)
-            {
-                uldapp = 1;
-            }
-            else
-            {
-                uldapp = 0;
-            }
-
-            byte autoldapp;
-            if (autoCreateLdapUserOnFirstLogin)
-            {
-                autoldapp = 1;
-            }
-            else
-            {
-                autoldapp = 0;
-            }
-
-            byte allowNameChange;
-            if (allowUserFullNameChange)
-            {
-                allowNameChange = 1;
-            }
-            else
-            {
-                allowNameChange = 0;
-            }
-
-            byte emailForLogin;
-            if (useEmailForLogin)
-            {
-                emailForLogin = 1;
-            }
-            else
-            {
-                emailForLogin = 0;
-            }
-
-            byte deleteUsers;
-            if (reallyDeleteUsers)
-            {
-                deleteUsers = 1;
-            }
-            else
-            {
-                deleteUsers = 0;
-            }
-
-            byte allowNew;
-            if (allowNewRegistration)
-            {
-                allowNew = 1;
-            }
-            else
-            {
-                allowNew = 0;
-            }
-
-            byte allowSkins;
-            if (allowUserSkins)
-            {
-                allowSkins = 1;
-            }
-            else
-            {
-                allowSkins = 0;
-            }
-
-            byte secure;
-            if (useSecureRegistration)
-            {
-                secure = 1;
-            }
-            else
-            {
-                secure = 0;
-            }
-
-            byte enableMyPage;
-            if (enableMyPageFeature)
-            {
-                enableMyPage = 1;
-            }
-            else
-            {
-                enableMyPage = 0;
-            }
-
-            byte ssl;
-            if (useSslOnAllPages)
-            {
-                ssl = 1;
-            }
-            else
-            {
-                ssl = 0;
-            }
-
-            byte adminSite;
-            if (isServerAdminSite)
-            {
-                adminSite = 1;
-            }
-            else
-            {
-                adminSite = 0;
-            }
-
-            byte pageSkins;
-            if (allowPageSkins)
-            {
-                pageSkins = 1;
-            }
-            else
-            {
-                pageSkins = 0;
-            }
-
-            byte allowHide;
-            if (allowHideMenuOnPages)
-            {
-                allowHide = 1;
-            }
-            else
-            {
-                allowHide = 0;
-            }
-
-            #endregion
 
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("INSERT INTO mp_Sites ( ");
             sqlCommand.Append("SiteName, ");
-            sqlCommand.Append("Skin, ");
-            sqlCommand.Append("Logo, ");
-            sqlCommand.Append("Icon, ");
+            sqlCommand.Append("Skin, "); 
             sqlCommand.Append("AllowNewRegistration, ");
-            sqlCommand.Append("AllowUserSkins, ");
             sqlCommand.Append("UseSecureRegistration, ");
-            sqlCommand.Append("EnableMyPageFeature, ");
             sqlCommand.Append("UseSSLOnAllPages, ");
-            sqlCommand.Append("DefaultPageKeywords, ");
-            sqlCommand.Append("DefaultPageDescription, ");
-            sqlCommand.Append("DefaultPageEncoding, ");
-            sqlCommand.Append("DefaultAdditionalMetaTags, ");
             sqlCommand.Append("IsServerAdminSite, ");
-            sqlCommand.Append("AllowPageSkins, ");
-            sqlCommand.Append("AllowHideMenuOnPages, ");
-
             sqlCommand.Append("UseLdapAuth, ");
             sqlCommand.Append("AutoCreateLDAPUserOnFirstLogin, ");
             sqlCommand.Append("LdapServer, ");
@@ -269,19 +132,8 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("AllowUserFullNameChange, ");
             sqlCommand.Append("UseEmailForLogin, ");
             sqlCommand.Append("ReallyDeleteUsers, ");
-            sqlCommand.Append("EditorProvider, ");
-            sqlCommand.Append("EditorSkin, ");
-
-            sqlCommand.Append("DatePickerProvider, ");
-            sqlCommand.Append("CaptchaProvider, ");
             sqlCommand.Append("RecaptchaPrivateKey, ");
             sqlCommand.Append("RecaptchaPublicKey, ");
-            sqlCommand.Append("WordpressAPIKey, ");
-            sqlCommand.Append("WindowsLiveAppID, ");
-            sqlCommand.Append("WindowsLiveKey, ");
-            sqlCommand.Append("AllowOpenIDAuth, ");
-            sqlCommand.Append("AllowWindowsLiveAuth, ");
-            sqlCommand.Append("GmapApiKey, ");
             sqlCommand.Append("ApiKeyExtra1, ");
             sqlCommand.Append("ApiKeyExtra2, ");
             sqlCommand.Append("ApiKeyExtra3, ");
@@ -289,7 +141,56 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("ApiKeyExtra5, ");
             sqlCommand.Append("DisableDbAuth, ");
 
-            sqlCommand.Append("DefaultFriendlyUrlPatternEnum, ");
+            sqlCommand.Append("RequiresQuestionAndAnswer, ");
+            sqlCommand.Append("MaxInvalidPasswordAttempts, ");
+            sqlCommand.Append("PasswordAttemptWindowMinutes, ");
+            sqlCommand.Append("MinRequiredPasswordLength, ");
+            sqlCommand.Append("MinReqNonAlphaChars, ");
+            sqlCommand.Append("DefaultEmailFromAddress, ");
+            sqlCommand.Append("AllowDbFallbackWithLdap, ");
+            sqlCommand.Append("EmailLdapDbFallback, ");
+            sqlCommand.Append("AllowPersistentLogin, ");
+            sqlCommand.Append("CaptchaOnLogin, ");
+            sqlCommand.Append("CaptchaOnRegistration, ");
+            sqlCommand.Append("SiteIsClosed, ");
+            sqlCommand.Append("SiteIsClosedMessage, ");
+            sqlCommand.Append("PrivacyPolicy, ");
+            sqlCommand.Append("TimeZoneId, ");
+            sqlCommand.Append("GoogleAnalyticsProfileId, ");
+            sqlCommand.Append("CompanyName, ");
+            sqlCommand.Append("CompanyStreetAddress, ");
+            sqlCommand.Append("CompanyStreetAddress2, ");
+            sqlCommand.Append("CompanyRegion, ");
+            sqlCommand.Append("CompanyLocality, ");
+            sqlCommand.Append("CompanyCountry, ");
+            sqlCommand.Append("CompanyPostalCode, ");
+            sqlCommand.Append("CompanyPublicEmail, ");
+            sqlCommand.Append("CompanyPhone, ");
+            sqlCommand.Append("CompanyFax, ");
+            sqlCommand.Append("FacebookAppId, ");
+            sqlCommand.Append("FacebookAppSecret, ");
+            sqlCommand.Append("GoogleClientId, ");
+            sqlCommand.Append("GoogleClientSecret, ");
+            sqlCommand.Append("TwitterConsumerKey, ");
+            sqlCommand.Append("TwitterConsumerSecret, ");
+            sqlCommand.Append("MicrosoftClientId, ");
+            sqlCommand.Append("MicrosoftClientSecret, ");
+            sqlCommand.Append("PreferredHostName, ");
+            sqlCommand.Append("SiteFolderName, ");
+            sqlCommand.Append("AddThisDotComUsername, ");
+            sqlCommand.Append("LoginInfoTop, ");
+            sqlCommand.Append("LoginInfoBottom, ");
+            sqlCommand.Append("RegistrationAgreement, ");
+            sqlCommand.Append("RegistrationPreamble, ");
+            sqlCommand.Append("SmtpServer, ");
+            sqlCommand.Append("SmtpPort, ");
+            sqlCommand.Append("SmtpUser, ");
+            sqlCommand.Append("SmtpPassword, ");
+            sqlCommand.Append("SmtpPreferredEncoding, ");
+            sqlCommand.Append("SmtpRequiresAuth, ");
+            sqlCommand.Append("SmtpUseSsl, ");
+            sqlCommand.Append("RequireApprovalBeforeLogin, ");
+
             sqlCommand.Append("SiteGuid ");
 
 
@@ -300,21 +201,10 @@ namespace cloudscribe.Core.Repositories.SQLite
 
             sqlCommand.Append(" :SiteName , ");
             sqlCommand.Append(" :Skin , ");
-            sqlCommand.Append(" :Logo, ");
-            sqlCommand.Append(" :Icon, ");
             sqlCommand.Append(" :AllowNewRegistration, ");
-            sqlCommand.Append(" :AllowUserSkins, ");
             sqlCommand.Append(" :UseSecureRegistration, ");
-            sqlCommand.Append(" :EnableMyPageFeature, ");
             sqlCommand.Append(" :UseSSLOnAllPages, ");
-            sqlCommand.Append(" :DefaultPageKeywords, ");
-            sqlCommand.Append(" :DefaultPageDescription, ");
-            sqlCommand.Append(" :DefaultPageEncoding, ");
-            sqlCommand.Append(" :DefaultAdditionalMetaTags, ");
             sqlCommand.Append(" :IsServerAdminSite, ");
-            sqlCommand.Append(" :AllowPageSkins, ");
-            sqlCommand.Append(" :AllowHideMenuOnPages, ");
-
             sqlCommand.Append(" :UseLdapAuth, ");
             sqlCommand.Append(" :AutoCreateLDAPUserOnFirstLogin, ");
             sqlCommand.Append(" :LdapServer, ");
@@ -325,20 +215,8 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append(" :AllowUserFullNameChange, ");
             sqlCommand.Append(" :UseEmailForLogin, ");
             sqlCommand.Append(" :ReallyDeleteUsers, ");
-            sqlCommand.Append(" :EditorProvider, ");
-            sqlCommand.Append(" :EditorSkin, ");
-
-            sqlCommand.Append(" :DatePickerProvider, ");
-            sqlCommand.Append(" :CaptchaProvider, ");
             sqlCommand.Append(" :RecaptchaPrivateKey, ");
             sqlCommand.Append(" :RecaptchaPublicKey, ");
-            sqlCommand.Append(" :WordpressAPIKey, ");
-            sqlCommand.Append(" :WindowsLiveAppID, ");
-            sqlCommand.Append(" :WindowsLiveKey, ");
-            sqlCommand.Append(" :AllowOpenIDAuth, ");
-            sqlCommand.Append(" :AllowWindowsLiveAuth, ");
-
-            sqlCommand.Append(":GmapApiKey, ");
             sqlCommand.Append(":ApiKeyExtra1, ");
             sqlCommand.Append(":ApiKeyExtra2, ");
             sqlCommand.Append(":ApiKeyExtra3, ");
@@ -346,151 +224,286 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append(":ApiKeyExtra5, ");
             sqlCommand.Append(":DisableDbAuth, ");
 
-            sqlCommand.Append(" :DefaultFriendlyUrlPattern, ");
+            sqlCommand.Append(":RequiresQuestionAndAnswer, ");
+            sqlCommand.Append(":MaxInvalidPasswordAttempts, ");
+            sqlCommand.Append(":PasswordAttemptWindowMinutes, ");
+            sqlCommand.Append(":MinRequiredPasswordLength, ");
+            sqlCommand.Append(":MinReqNonAlphaChars, ");
+            sqlCommand.Append(":DefaultEmailFromAddress, ");
+            sqlCommand.Append(":AllowDbFallbackWithLdap, ");
+            sqlCommand.Append(":EmailLdapDbFallback, ");
+            sqlCommand.Append(":AllowPersistentLogin, ");
+            sqlCommand.Append(":CaptchaOnLogin, ");
+            sqlCommand.Append(":CaptchaOnRegistration, ");
+            sqlCommand.Append(":SiteIsClosed, ");
+            sqlCommand.Append(":SiteIsClosedMessage, ");
+            sqlCommand.Append(":PrivacyPolicy, ");
+            sqlCommand.Append(":TimeZoneId, ");
+            sqlCommand.Append(":GoogleAnalyticsProfileId, ");
+            sqlCommand.Append(":CompanyName, ");
+            sqlCommand.Append(":CompanyStreetAddress, ");
+            sqlCommand.Append(":CompanyStreetAddress2, ");
+            sqlCommand.Append(":CompanyRegion, ");
+            sqlCommand.Append(":CompanyLocality, ");
+            sqlCommand.Append(":CompanyCountry, ");
+            sqlCommand.Append(":CompanyPostalCode, ");
+            sqlCommand.Append(":CompanyPublicEmail, ");
+            sqlCommand.Append(":CompanyPhone, ");
+            sqlCommand.Append(":CompanyFax, ");
+            sqlCommand.Append(":FacebookAppId, ");
+            sqlCommand.Append(":FacebookAppSecret, ");
+            sqlCommand.Append(":GoogleClientId, ");
+            sqlCommand.Append(":GoogleClientSecret, ");
+            sqlCommand.Append(":TwitterConsumerKey, ");
+            sqlCommand.Append(":TwitterConsumerSecret, ");
+            sqlCommand.Append(":MicrosoftClientId, ");
+            sqlCommand.Append(":MicrosoftClientSecret, ");
+            sqlCommand.Append(":PreferredHostName, ");
+            sqlCommand.Append(":SiteFolderName, ");
+            sqlCommand.Append(":AddThisDotComUsername, ");
+            sqlCommand.Append(":LoginInfoTop, ");
+            sqlCommand.Append(":LoginInfoBottom, ");
+            sqlCommand.Append(":RegistrationAgreement, ");
+            sqlCommand.Append(":RegistrationPreamble, ");
+            sqlCommand.Append(":SmtpServer, ");
+            sqlCommand.Append(":SmtpPort, ");
+            sqlCommand.Append(":SmtpUser, ");
+            sqlCommand.Append(":SmtpPassword, ");
+            sqlCommand.Append(":SmtpPreferredEncoding, ");
+            sqlCommand.Append(":SmtpRequiresAuth, ");
+            sqlCommand.Append(":SmtpUseSsl, ");
+            sqlCommand.Append(":RequireApprovalBeforeLogin, ");
+
             sqlCommand.Append(" :SiteGuid ");
 
             sqlCommand.Append(");");
             sqlCommand.Append("SELECT LAST_INSERT_ROWID();");
 
-            SqliteParameter[] arParams = new SqliteParameter[46];
+            SqliteParameter[] arParams = new SqliteParameter[74];
 
             arParams[0] = new SqliteParameter(":SiteName", DbType.String);
             arParams[0].Value = siteName;
 
             arParams[1] = new SqliteParameter(":IsServerAdminSite", DbType.Int32);
-            arParams[1].Value = adminSite;
+            arParams[1].Value = isServerAdminSite ? 1 : 0;
 
             arParams[2] = new SqliteParameter(":Skin", DbType.String);
             arParams[2].Value = skin;
+            
+            arParams[3] = new SqliteParameter(":AllowNewRegistration", DbType.Int32);
+            arParams[3].Value = allowNewRegistration ? 1 : 0;
+            
+            arParams[4] = new SqliteParameter(":UseSecureRegistration", DbType.Int32);
+            arParams[4].Value = useSecureRegistration ? 1 : 0;
+            
+            arParams[5] = new SqliteParameter(":UseSSLOnAllPages", DbType.Int32);
+            arParams[5].Value = useSslOnAllPages ? 1 : 0;
+            
+            arParams[6] = new SqliteParameter(":UseLdapAuth", DbType.Int32);
+            arParams[6].Value = useLdapAuth ? 1 : 0;
 
-            arParams[3] = new SqliteParameter(":Logo", DbType.String);
-            arParams[3].Value = logo;
+            arParams[7] = new SqliteParameter(":AutoCreateLDAPUserOnFirstLogin", DbType.Int32);
+            arParams[7].Value = autoCreateLdapUserOnFirstLogin ? 1 : 0;
 
-            arParams[4] = new SqliteParameter(":Icon", DbType.String);
-            arParams[4].Value = icon;
+            arParams[8] = new SqliteParameter(":LdapServer", DbType.String);
+            arParams[8].Value = ldapServer;
 
-            arParams[5] = new SqliteParameter(":AllowNewRegistration", DbType.Int32);
-            arParams[5].Value = allowNew;
+            arParams[9] = new SqliteParameter(":LdapPort", DbType.Int32);
+            arParams[9].Value = ldapPort;
 
-            arParams[6] = new SqliteParameter(":AllowUserSkins", DbType.Int32);
-            arParams[6].Value = allowSkins;
+            arParams[10] = new SqliteParameter(":LdapRootDN", DbType.String);
+            arParams[10].Value = ldapRootDN;
 
-            arParams[7] = new SqliteParameter(":UseSecureRegistration", DbType.Int32);
-            arParams[7].Value = secure;
+            arParams[11] = new SqliteParameter(":LdapUserDNKey", DbType.String);
+            arParams[11].Value = ldapUserDNKey;
 
-            arParams[8] = new SqliteParameter(":EnableMyPageFeature", DbType.Int32);
-            arParams[8].Value = enableMyPage;
+            arParams[12] = new SqliteParameter(":AllowUserFullNameChange", DbType.Int32);
+            arParams[12].Value = allowUserFullNameChange ? 1 : 0;
 
-            arParams[9] = new SqliteParameter(":UseSSLOnAllPages", DbType.Int32);
-            arParams[9].Value = ssl;
+            arParams[13] = new SqliteParameter(":UseEmailForLogin", DbType.Int32);
+            arParams[13].Value = useEmailForLogin ? 1 : 0;
 
-            arParams[10] = new SqliteParameter(":DefaultPageKeywords", DbType.String);
-            arParams[10].Value = defaultPageKeywords;
+            arParams[14] = new SqliteParameter(":ReallyDeleteUsers", DbType.Int32);
+            arParams[14].Value = reallyDeleteUsers ? 1 : 0;
+            
+            arParams[15] = new SqliteParameter(":SiteGuid", DbType.String);
+            arParams[15].Value = siteGuid.ToString();
 
-            arParams[11] = new SqliteParameter(":DefaultPageDescription", DbType.String);
-            arParams[11].Value = defaultPageDescription;
+            arParams[16] = new SqliteParameter(":LdapDomain", DbType.String);
+            arParams[16].Value = ldapDomain;
+            
+            arParams[17] = new SqliteParameter(":RecaptchaPrivateKey", DbType.String);
+            arParams[17].Value = recaptchaPrivateKey;
 
-            arParams[12] = new SqliteParameter(":DefaultPageEncoding", DbType.String);
-            arParams[12].Value = defaultPageEncoding;
+            arParams[18] = new SqliteParameter(":RecaptchaPublicKey", DbType.String);
+            arParams[18].Value = recaptchaPublicKey;
+            
+            arParams[19] = new SqliteParameter(":ApiKeyExtra1", DbType.String);
+            arParams[19].Value = apiKeyExtra1;
 
-            arParams[13] = new SqliteParameter(":DefaultAdditionalMetaTags", DbType.String);
-            arParams[13].Value = defaultAdditionalMetaTags;
+            arParams[20] = new SqliteParameter(":ApiKeyExtra2", DbType.String);
+            arParams[20].Value = apiKeyExtra2;
 
-            arParams[14] = new SqliteParameter(":AllowPageSkins", DbType.Int32);
-            arParams[14].Value = pageSkins;
+            arParams[21] = new SqliteParameter(":ApiKeyExtra3", DbType.String);
+            arParams[21].Value = apiKeyExtra3;
 
-            arParams[15] = new SqliteParameter(":AllowHideMenuOnPages", DbType.Int32);
-            arParams[15].Value = allowHide;
+            arParams[22] = new SqliteParameter(":ApiKeyExtra4", DbType.String);
+            arParams[22].Value = apiKeyExtra4;
 
-            arParams[16] = new SqliteParameter(":UseLdapAuth", DbType.Int32);
-            arParams[16].Value = uldapp;
+            arParams[23] = new SqliteParameter(":ApiKeyExtra5", DbType.String);
+            arParams[23].Value = apiKeyExtra5;
 
-            arParams[17] = new SqliteParameter(":AutoCreateLDAPUserOnFirstLogin", DbType.Int32);
-            arParams[17].Value = autoldapp;
+            arParams[24] = new SqliteParameter(":DisableDbAuth", DbType.Int32);
+            arParams[24].Value = disableDbAuth ? 1 : 0;
 
-            arParams[18] = new SqliteParameter(":LdapServer", DbType.String);
-            arParams[18].Value = ldapServer;
+            arParams[25] = new SqliteParameter(":RequiresQuestionAndAnswer", DbType.Int32);
+            arParams[25].Value = requiresQuestionAndAnswer ? 1 : 0;
 
-            arParams[19] = new SqliteParameter(":LdapPort", DbType.Int32);
-            arParams[19].Value = ldapPort;
+            arParams[26] = new SqliteParameter(":MaxInvalidPasswordAttempts", DbType.Int32);
+            arParams[26].Value = maxInvalidPasswordAttempts;
 
-            arParams[20] = new SqliteParameter(":LdapRootDN", DbType.String);
-            arParams[20].Value = ldapRootDN;
+            arParams[27] = new SqliteParameter(":PasswordAttemptWindowMinutes", DbType.Int32);
+            arParams[27].Value = passwordAttemptWindowMinutes;
 
-            arParams[21] = new SqliteParameter(":LdapUserDNKey", DbType.String);
-            arParams[21].Value = ldapUserDNKey;
+            arParams[28] = new SqliteParameter(":MinRequiredPasswordLength", DbType.Int32);
+            arParams[28].Value = minRequiredPasswordLength;
 
-            arParams[22] = new SqliteParameter(":AllowUserFullNameChange", DbType.Int32);
-            arParams[22].Value = allowNameChange;
+            arParams[29] = new SqliteParameter(":MinReqNonAlphaChars", DbType.Int32);
+            arParams[29].Value = minReqNonAlphaChars;
 
-            arParams[23] = new SqliteParameter(":UseEmailForLogin", DbType.Int32);
-            arParams[23].Value = emailForLogin;
+            arParams[30] = new SqliteParameter(":DefaultEmailFromAddress", DbType.String);
+            arParams[30].Value = defaultEmailFromAddress;
 
-            arParams[24] = new SqliteParameter(":ReallyDeleteUsers", DbType.Int32);
-            arParams[24].Value = deleteUsers;
+            arParams[31] = new SqliteParameter(":AllowDbFallbackWithLdap", DbType.Int32);
+            arParams[31].Value = allowDbFallbackWithLdap ? 1 : 0;
 
-            arParams[25] = new SqliteParameter(":EditorSkin", DbType.String);
-            arParams[25].Value = editorSkin;
+            arParams[32] = new SqliteParameter(":EmailLdapDbFallback", DbType.Int32);
+            arParams[32].Value = emailLdapDbFallback ? 1 : 0;
 
-            arParams[26] = new SqliteParameter(":DefaultFriendlyUrlPattern", DbType.String);
-            arParams[26].Value = defaultFriendlyUrlPattern;
+            arParams[33] = new SqliteParameter(":AllowPersistentLogin", DbType.Int32);
+            arParams[33].Value = allowPersistentLogin ? 1 : 0;
 
-            arParams[27] = new SqliteParameter(":SiteGuid", DbType.String);
-            arParams[27].Value = siteGuid.ToString();
+            arParams[34] = new SqliteParameter(":CaptchaOnLogin", DbType.Int32);
+            arParams[34].Value = captchaOnLogin ? 1 : 0;
 
-            arParams[28] = new SqliteParameter(":LdapDomain", DbType.String);
-            arParams[28].Value = ldapDomain;
+            arParams[35] = new SqliteParameter(":CaptchaOnRegistration", DbType.Int32);
+            arParams[35].Value = captchaOnRegistration ? 1 : 0;
 
-            arParams[29] = new SqliteParameter(":EditorProvider", DbType.String);
-            arParams[29].Value = editorProvider;
+            arParams[36] = new SqliteParameter(":SiteIsClosed", DbType.Int32);
+            arParams[36].Value = siteIsClosed ? 1 : 0;
 
-            arParams[30] = new SqliteParameter(":DatePickerProvider", DbType.String);
-            arParams[30].Value = datePickerProvider;
+            arParams[37] = new SqliteParameter(":SiteIsClosedMessage", DbType.Object);
+            arParams[37].Value = siteIsClosedMessage;
 
-            arParams[31] = new SqliteParameter(":CaptchaProvider", DbType.String);
-            arParams[31].Value = captchaProvider;
+            arParams[38] = new SqliteParameter(":PrivacyPolicy", DbType.Object);
+            arParams[38].Value = privacyPolicy;
 
-            arParams[32] = new SqliteParameter(":RecaptchaPrivateKey", DbType.String);
-            arParams[32].Value = recaptchaPrivateKey;
+            arParams[39] = new SqliteParameter(":TimeZoneId", DbType.String);
+            arParams[39].Value = timeZoneId;
 
-            arParams[33] = new SqliteParameter(":RecaptchaPublicKey", DbType.String);
-            arParams[33].Value = recaptchaPublicKey;
+            arParams[40] = new SqliteParameter(":GoogleAnalyticsProfileId", DbType.String);
+            arParams[40].Value = googleAnalyticsProfileId;
 
-            arParams[34] = new SqliteParameter(":WordpressAPIKey", DbType.String);
-            arParams[34].Value = wordpressApiKey;
+            arParams[41] = new SqliteParameter(":CompanyName", DbType.String);
+            arParams[41].Value = companyName;
 
-            arParams[35] = new SqliteParameter(":WindowsLiveAppID", DbType.String);
-            arParams[35].Value = windowsLiveAppId;
+            arParams[42] = new SqliteParameter(":CompanyStreetAddress", DbType.String);
+            arParams[42].Value = companyStreetAddress;
 
-            arParams[36] = new SqliteParameter(":WindowsLiveKey", DbType.String);
-            arParams[36].Value = windowsLiveKey;
+            arParams[43] = new SqliteParameter(":CompanyStreetAddress2", DbType.String);
+            arParams[43].Value = companyStreetAddress2;
 
-            arParams[37] = new SqliteParameter(":AllowOpenIDAuth", DbType.Int32);
-            arParams[37].Value = oidauth;
+            arParams[44] = new SqliteParameter(":CompanyRegion", DbType.String);
+            arParams[44].Value = companyRegion;
 
-            arParams[38] = new SqliteParameter(":AllowWindowsLiveAuth", DbType.Int32);
-            arParams[38].Value = winliveauth;
+            arParams[45] = new SqliteParameter(":CompanyLocality", DbType.String);
+            arParams[45].Value = companyLocality;
 
-            arParams[39] = new SqliteParameter(":GmapApiKey", DbType.String);
-            arParams[39].Value = gmapApiKey;
+            arParams[46] = new SqliteParameter(":CompanyCountry", DbType.String);
+            arParams[46].Value = companyCountry;
 
-            arParams[40] = new SqliteParameter(":ApiKeyExtra1", DbType.String);
-            arParams[40].Value = apiKeyExtra1;
+            arParams[47] = new SqliteParameter(":CompanyPostalCode", DbType.String);
+            arParams[47].Value = companyPostalCode;
 
-            arParams[41] = new SqliteParameter(":ApiKeyExtra2", DbType.String);
-            arParams[41].Value = apiKeyExtra2;
+            arParams[48] = new SqliteParameter(":CompanyPublicEmail", DbType.String);
+            arParams[48].Value = companyPublicEmail;
 
-            arParams[42] = new SqliteParameter(":ApiKeyExtra3", DbType.String);
-            arParams[42].Value = apiKeyExtra3;
+            arParams[49] = new SqliteParameter(":CompanyPhone", DbType.String);
+            arParams[49].Value = companyPhone;
 
-            arParams[43] = new SqliteParameter(":ApiKeyExtra4", DbType.String);
-            arParams[43].Value = apiKeyExtra4;
+            arParams[50] = new SqliteParameter(":CompanyFax", DbType.String);
+            arParams[50].Value = companyFax;
 
-            arParams[44] = new SqliteParameter(":ApiKeyExtra5", DbType.String);
-            arParams[44].Value = apiKeyExtra5;
+            arParams[51] = new SqliteParameter(":FacebookAppId", DbType.String);
+            arParams[51].Value = facebookAppId;
 
-            arParams[45] = new SqliteParameter(":DisableDbAuth", DbType.Int32);
-            arParams[45].Value = intDisableDbAuth;
+            arParams[52] = new SqliteParameter(":FacebookAppSecret", DbType.String);
+            arParams[52].Value = facebookAppSecret;
+
+            arParams[53] = new SqliteParameter(":GoogleClientId", DbType.String);
+            arParams[53].Value = googleClientId;
+
+            arParams[54] = new SqliteParameter(":GoogleClientSecret", DbType.String);
+            arParams[54].Value = googleClientSecret;
+
+            arParams[55] = new SqliteParameter(":TwitterConsumerKey", DbType.String);
+            arParams[55].Value = twitterConsumerKey;
+
+            arParams[56] = new SqliteParameter(":TwitterConsumerSecret", DbType.String);
+            arParams[56].Value = twitterConsumerSecret;
+
+            arParams[57] = new SqliteParameter(":MicrosoftClientId", DbType.String);
+            arParams[57].Value = microsoftClientId;
+
+            arParams[58] = new SqliteParameter(":MicrosoftClientSecret", DbType.String);
+            arParams[58].Value = microsoftClientSecret;
+
+            arParams[59] = new SqliteParameter(":PreferredHostName", DbType.String);
+            arParams[59].Value = preferredHostName;
+
+            arParams[60] = new SqliteParameter(":SiteFolderName", DbType.String);
+            arParams[60].Value = siteFolderName;
+
+            arParams[61] = new SqliteParameter(":AddThisDotComUsername", DbType.String);
+            arParams[61].Value = addThisDotComUsername;
+
+            arParams[62] = new SqliteParameter(":LoginInfoTop", DbType.Object);
+            arParams[62].Value = loginInfoTop;
+
+            arParams[63] = new SqliteParameter(":LoginInfoBottom", DbType.Object);
+            arParams[63].Value = loginInfoBottom;
+
+            arParams[64] = new SqliteParameter(":RegistrationAgreement", DbType.Object);
+            arParams[64].Value = registrationAgreement;
+
+            arParams[65] = new SqliteParameter(":RegistrationPreamble", DbType.Object);
+            arParams[65].Value =registrationPreamble;
+
+            arParams[66] = new SqliteParameter(":SmtpServer", DbType.String);
+            arParams[66].Value = smtpServer;
+
+            arParams[67] = new SqliteParameter(":SmtpPort", DbType.Int32);
+            arParams[67].Value = smtpPort;
+
+            arParams[68] = new SqliteParameter(":SmtpUser", DbType.String);
+            arParams[68].Value = smtpUser;
+
+            arParams[69] = new SqliteParameter(":SmtpPassword", DbType.String);
+            arParams[69].Value = smtpPassword;
+
+            arParams[70] = new SqliteParameter(":SmtpPreferredEncoding", DbType.String);
+            arParams[70].Value = smtpPreferredEncoding;
+
+            arParams[71] = new SqliteParameter(":SmtpRequiresAuth", DbType.Int32);
+            arParams[71].Value = smtpRequiresAuth ? 1 : 0;
+
+            arParams[72] = new SqliteParameter(":SmtpUseSsl", DbType.Int32);
+            arParams[72].Value = smtpUseSsl ? 1 : 0;
+
+            arParams[73] = new SqliteParameter(":RequireApprovalBeforeLogin", DbType.Int32);
+            arParams[73].Value = requireApprovalBeforeLogin ? 1 : 0;
+
+
 
             int newID = Convert.ToInt32(AdoHelper.ExecuteScalar(
                 connectionString,
@@ -505,225 +518,89 @@ namespace cloudscribe.Core.Repositories.SQLite
             int siteId,
             string siteName,
             string skin,
-            string logo,
-            string icon,
             bool allowNewRegistration,
-            bool allowUserSkins,
-            bool allowPageSkins,
-            bool allowHideMenuOnPages,
             bool useSecureRegistration,
             bool useSslOnAllPages,
-            string defaultPageKeywords,
-            string defaultPageDescription,
-            string defaultPageEncoding,
-            string defaultAdditionalMetaTags,
             bool isServerAdminSite,
             bool useLdapAuth,
             bool autoCreateLdapUserOnFirstLogin,
             string ldapServer,
             int ldapPort,
-            String ldapDomain,
+            string ldapDomain,
             string ldapRootDN,
             string ldapUserDNKey,
             bool allowUserFullNameChange,
             bool useEmailForLogin,
             bool reallyDeleteUsers,
-            String editorSkin,
-            String defaultFriendlyUrlPattern,
-            bool enableMyPageFeature,
-            string editorProvider,
-            string datePickerProvider,
-            string captchaProvider,
             string recaptchaPrivateKey,
             string recaptchaPublicKey,
-            string wordpressApiKey,
-            string windowsLiveAppId,
-            string windowsLiveKey,
-            bool allowOpenIdAuth,
-            bool allowWindowsLiveAuth,
-            string gmapApiKey,
             string apiKeyExtra1,
             string apiKeyExtra2,
             string apiKeyExtra3,
             string apiKeyExtra4,
             string apiKeyExtra5,
-            bool disableDbAuth)
+            bool disableDbAuth,
+
+            bool requiresQuestionAndAnswer,
+            int maxInvalidPasswordAttempts,
+            int passwordAttemptWindowMinutes,
+            int minRequiredPasswordLength,
+            int minReqNonAlphaChars,
+            string defaultEmailFromAddress,
+            bool allowDbFallbackWithLdap,
+            bool emailLdapDbFallback,
+            bool allowPersistentLogin,
+            bool captchaOnLogin,
+            bool captchaOnRegistration,
+            bool siteIsClosed,
+            string siteIsClosedMessage,
+            string privacyPolicy,
+            string timeZoneId,
+            string googleAnalyticsProfileId,
+            string companyName,
+            string companyStreetAddress,
+            string companyStreetAddress2,
+            string companyRegion,
+            string companyLocality,
+            string companyCountry,
+            string companyPostalCode,
+            string companyPublicEmail,
+            string companyPhone,
+            string companyFax,
+            string facebookAppId,
+            string facebookAppSecret,
+            string googleClientId,
+            string googleClientSecret,
+            string twitterConsumerKey,
+            string twitterConsumerSecret,
+            string microsoftClientId,
+            string microsoftClientSecret,
+            string preferredHostName,
+            string siteFolderName,
+            string addThisDotComUsername,
+            string loginInfoTop,
+            string loginInfoBottom,
+            string registrationAgreement,
+            string registrationPreamble,
+            string smtpServer,
+            int smtpPort,
+            string smtpUser,
+            string smtpPassword,
+            string smtpPreferredEncoding,
+            bool smtpRequiresAuth,
+            bool smtpUseSsl,
+            bool requireApprovalBeforeLogin
+            )
         {
-            #region bool conversion
-
-            byte intDisableDbAuth = 0;
-            if (disableDbAuth) { intDisableDbAuth = 1; }
-
-            byte oidauth;
-            if (allowOpenIdAuth)
-            {
-                oidauth = 1;
-            }
-            else
-            {
-                oidauth = 0;
-            }
-
-            byte winliveauth;
-            if (allowWindowsLiveAuth)
-            {
-                winliveauth = 1;
-            }
-            else
-            {
-                winliveauth = 0;
-            }
-
-            byte uldapp;
-            if (useLdapAuth)
-            {
-                uldapp = 1;
-            }
-            else
-            {
-                uldapp = 0;
-            }
-
-            byte autoldapp;
-            if (autoCreateLdapUserOnFirstLogin)
-            {
-                autoldapp = 1;
-            }
-            else
-            {
-                autoldapp = 0;
-            }
-
-            byte allowNameChange;
-            if (allowUserFullNameChange)
-            {
-                allowNameChange = 1;
-            }
-            else
-            {
-                allowNameChange = 0;
-            }
-
-            byte emailForLogin;
-            if (useEmailForLogin)
-            {
-                emailForLogin = 1;
-            }
-            else
-            {
-                emailForLogin = 0;
-            }
-
-            byte deleteUsers;
-            if (reallyDeleteUsers)
-            {
-                deleteUsers = 1;
-            }
-            else
-            {
-                deleteUsers = 0;
-            }
-
-            byte allowNew;
-            if (allowNewRegistration)
-            {
-                allowNew = 1;
-            }
-            else
-            {
-                allowNew = 0;
-            }
-
-            byte allowSkins;
-            if (allowUserSkins)
-            {
-                allowSkins = 1;
-            }
-            else
-            {
-                allowSkins = 0;
-            }
-
-            byte secure;
-            if (useSecureRegistration)
-            {
-                secure = 1;
-            }
-            else
-            {
-                secure = 0;
-            }
-
-            byte enableMy;
-            if (enableMyPageFeature)
-            {
-                enableMy = 1;
-            }
-            else
-            {
-                enableMy = 0;
-            }
-
-            byte ssl;
-            if (useSslOnAllPages)
-            {
-                ssl = 1;
-            }
-            else
-            {
-                ssl = 0;
-            }
-
-            byte adminSite;
-            if (isServerAdminSite)
-            {
-                adminSite = 1;
-            }
-            else
-            {
-                adminSite = 0;
-            }
-
-            byte pageSkins;
-            if (allowPageSkins)
-            {
-                pageSkins = 1;
-            }
-            else
-            {
-                pageSkins = 0;
-            }
-
-            byte allowHide;
-            if (allowHideMenuOnPages)
-            {
-                allowHide = 1;
-            }
-            else
-            {
-                allowHide = 0;
-            }
-
-            #endregion
-
+            
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("UPDATE mp_Sites ");
             sqlCommand.Append("SET SiteName = :SiteName, ");
             sqlCommand.Append("IsServerAdminSite = :IsServerAdminSite, ");
             sqlCommand.Append("Skin = :Skin, ");
-            sqlCommand.Append("Logo = :Logo, ");
-            sqlCommand.Append("Icon = :Icon, ");
-
             sqlCommand.Append("AllowNewRegistration = :AllowNewRegistration, ");
-            sqlCommand.Append("AllowUserSkins = :AllowUserSkins, ");
-
-            sqlCommand.Append("AllowPageSkins = :AllowPageSkins, ");
-            sqlCommand.Append("AllowHideMenuOnPages = :AllowHideMenuOnPages, ");
-
             sqlCommand.Append("UseSecureRegistration = :UseSecureRegistration, ");
-            sqlCommand.Append("EnableMyPageFeature = :EnableMyPageFeature, ");
             sqlCommand.Append("UseSSLOnAllPages = :UseSSLOnAllPages, ");
-
             sqlCommand.Append("UseLdapAuth = :UseLdapAuth, ");
             sqlCommand.Append("AutoCreateLDAPUserOnFirstLogin = :AutoCreateLDAPUserOnFirstLogin, ");
             sqlCommand.Append("LdapServer = :LdapServer, ");
@@ -734,35 +611,68 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("AllowUserFullNameChange = :AllowUserFullNameChange, ");
             sqlCommand.Append("UseEmailForLogin = :UseEmailForLogin, ");
             sqlCommand.Append("ReallyDeleteUsers = :ReallyDeleteUsers, ");
-            sqlCommand.Append("EditorProvider = :EditorProvider, ");
-            sqlCommand.Append("EditorSkin = :EditorSkin, ");
-            sqlCommand.Append("DefaultFriendlyUrlPatternEnum = :DefaultFriendlyUrlPattern, ");
-
-            sqlCommand.Append("DatePickerProvider = :DatePickerProvider, ");
-            sqlCommand.Append("CaptchaProvider = :CaptchaProvider, ");
             sqlCommand.Append("RecaptchaPrivateKey = :RecaptchaPrivateKey, ");
-            sqlCommand.Append("RecaptchaPublicKey = :RecaptchaPublicKey, ");
-            sqlCommand.Append("WordpressAPIKey = :WordpressAPIKey, ");
-            sqlCommand.Append("WindowsLiveAppID = :WindowsLiveAppID, ");
-            sqlCommand.Append("WindowsLiveKey = :WindowsLiveKey, ");
-            sqlCommand.Append("AllowOpenIDAuth = :AllowOpenIDAuth, ");
-            sqlCommand.Append("AllowWindowsLiveAuth = :AllowWindowsLiveAuth, ");
+            sqlCommand.Append("RecaptchaPublicKey = :RecaptchaPublicKey, "); 
             sqlCommand.Append("DisableDbAuth = :DisableDbAuth, ");
-
-            sqlCommand.Append("DefaultPageKeywords = :DefaultPageKeywords, ");
-            sqlCommand.Append("DefaultPageDescription = :DefaultPageDescription, ");
-            sqlCommand.Append("DefaultPageEncoding = :DefaultPageEncoding, ");
-            sqlCommand.Append("DefaultAdditionalMetaTags = :DefaultAdditionalMetaTags, ");
-            sqlCommand.Append("GmapApiKey = :GmapApiKey, ");
             sqlCommand.Append("ApiKeyExtra1 = :ApiKeyExtra1, ");
             sqlCommand.Append("ApiKeyExtra2 = :ApiKeyExtra2, ");
             sqlCommand.Append("ApiKeyExtra3 = :ApiKeyExtra3, ");
             sqlCommand.Append("ApiKeyExtra4 = :ApiKeyExtra4, ");
-            sqlCommand.Append("ApiKeyExtra5 = :ApiKeyExtra5 ");
+            sqlCommand.Append("ApiKeyExtra5 = :ApiKeyExtra5, ");
+
+            sqlCommand.Append("RequiresQuestionAndAnswer = :RequiresQuestionAndAnswer, ");
+            sqlCommand.Append("MaxInvalidPasswordAttempts = :MaxInvalidPasswordAttempts, ");
+            sqlCommand.Append("PasswordAttemptWindowMinutes = :PasswordAttemptWindowMinutes, ");
+            sqlCommand.Append("MinRequiredPasswordLength = :MinRequiredPasswordLength, ");
+            sqlCommand.Append("MinReqNonAlphaChars = :MinReqNonAlphaChars, ");
+            sqlCommand.Append("DefaultEmailFromAddress = :DefaultEmailFromAddress, ");
+            sqlCommand.Append("AllowDbFallbackWithLdap = :AllowDbFallbackWithLdap, ");
+            sqlCommand.Append("EmailLdapDbFallback = :EmailLdapDbFallback, ");
+            sqlCommand.Append("AllowPersistentLogin = :AllowPersistentLogin, ");
+            sqlCommand.Append("CaptchaOnLogin = :CaptchaOnLogin, ");
+            sqlCommand.Append("CaptchaOnRegistration = :CaptchaOnRegistration,");
+            sqlCommand.Append("SiteIsClosed = :SiteIsClosed, ");
+            sqlCommand.Append("SiteIsClosedMessage = :SiteIsClosedMessage, ");
+            sqlCommand.Append("PrivacyPolicy = :PrivacyPolicy, ");
+            sqlCommand.Append("TimeZoneId = :TimeZoneId, ");
+            sqlCommand.Append("GoogleAnalyticsProfileId = :GoogleAnalyticsProfileId, ");
+            sqlCommand.Append("CompanyName = :CompanyName, ");
+            sqlCommand.Append("CompanyStreetAddress = :CompanyStreetAddress, ");
+            sqlCommand.Append("CompanyStreetAddress2 = :CompanyStreetAddress2, ");
+            sqlCommand.Append("CompanyRegion = :CompanyRegion, ");
+            sqlCommand.Append("CompanyLocality = :CompanyLocality, ");
+            sqlCommand.Append("CompanyCountry = :CompanyCountry, ");
+            sqlCommand.Append("CompanyPostalCode = :CompanyPostalCode, ");
+            sqlCommand.Append("CompanyPublicEmail = :CompanyPublicEmail, ");
+            sqlCommand.Append("CompanyPhone = :CompanyPhone, ");
+            sqlCommand.Append("CompanyFax = :CompanyFax, ");
+            sqlCommand.Append("FacebookAppId = :FacebookAppId, ");
+            sqlCommand.Append("FacebookAppSecret = :FacebookAppSecret, ");
+            sqlCommand.Append("GoogleClientId = :GoogleClientId, ");
+            sqlCommand.Append("GoogleClientSecret = :GoogleClientSecret, ");
+            sqlCommand.Append("TwitterConsumerKey = :TwitterConsumerKey, ");
+            sqlCommand.Append("TwitterConsumerSecret = :TwitterConsumerSecret, ");
+            sqlCommand.Append("MicrosoftClientId = :MicrosoftClientId, ");
+            sqlCommand.Append("MicrosoftClientSecret = :MicrosoftClientSecret, ");
+            sqlCommand.Append("PreferredHostName = :PreferredHostName, ");
+            sqlCommand.Append("SiteFolderName = :SiteFolderName, ");
+            sqlCommand.Append("AddThisDotComUsername = :AddThisDotComUsername, ");
+            sqlCommand.Append("LoginInfoTop = :LoginInfoTop, ");
+            sqlCommand.Append("LoginInfoBottom = :LoginInfoBottom, ");
+            sqlCommand.Append("RegistrationAgreement = :RegistrationAgreement, ");
+            sqlCommand.Append("RegistrationPreamble = :RegistrationPreamble, ");
+            sqlCommand.Append("SmtpServer = :SmtpServer, ");
+            sqlCommand.Append("SmtpPort = :SmtpPort, ");
+            sqlCommand.Append("SmtpUser = :SmtpUser, ");
+            sqlCommand.Append("SmtpPassword = :SmtpPassword, ");
+            sqlCommand.Append("SmtpPreferredEncoding = :SmtpPreferredEncoding, ");
+            sqlCommand.Append("SmtpRequiresAuth = :SmtpRequiresAuth, ");
+            sqlCommand.Append("SmtpUseSsl = :SmtpUseSsl, ");
+            sqlCommand.Append("RequireApprovalBeforeLogin = :RequireApprovalBeforeLogin ");
 
             sqlCommand.Append(" WHERE SiteID = :SiteID ;");
 
-            SqliteParameter[] arParams = new SqliteParameter[46];
+            SqliteParameter[] arParams = new SqliteParameter[74];
 
             arParams[0] = new SqliteParameter(":SiteID", DbType.Int32);
             arParams[0].Value = siteId;
@@ -771,136 +681,220 @@ namespace cloudscribe.Core.Repositories.SQLite
             arParams[1].Value = siteName;
 
             arParams[2] = new SqliteParameter(":IsServerAdminSite", DbType.Int32);
-            arParams[2].Value = adminSite;
+            arParams[2].Value = isServerAdminSite ? 1 : 0;
 
             arParams[3] = new SqliteParameter(":Skin", DbType.String);
             arParams[3].Value = skin;
+            
+            arParams[4] = new SqliteParameter(":AllowNewRegistration", DbType.Int32);
+            arParams[4].Value = allowNewRegistration ? 1 : 0;
+            
+            arParams[5] = new SqliteParameter(":UseSecureRegistration", DbType.Int32);
+            arParams[5].Value = useSecureRegistration ? 1 : 0;
+            
+            arParams[6] = new SqliteParameter(":UseSSLOnAllPages", DbType.Int32);
+            arParams[6].Value = useSslOnAllPages ? 1 : 0;
+            
+            arParams[7] = new SqliteParameter(":UseLdapAuth", DbType.Int32);
+            arParams[7].Value = useLdapAuth ? 1 : 0;
 
-            arParams[4] = new SqliteParameter(":Logo", DbType.String);
-            arParams[4].Value = logo;
+            arParams[8] = new SqliteParameter(":AutoCreateLDAPUserOnFirstLogin", DbType.Int32);
+            arParams[8].Value = autoCreateLdapUserOnFirstLogin ? 1 : 0;
 
-            arParams[5] = new SqliteParameter(":Icon", DbType.String);
-            arParams[5].Value = icon;
+            arParams[9] = new SqliteParameter(":LdapServer", DbType.String);
+            arParams[9].Value = ldapServer;
 
-            arParams[6] = new SqliteParameter(":AllowNewRegistration", DbType.Int32);
-            arParams[6].Value = allowNew;
+            arParams[10] = new SqliteParameter(":LdapPort", DbType.Int32);
+            arParams[10].Value = ldapPort;
 
-            arParams[7] = new SqliteParameter(":AllowUserSkins", DbType.Int32);
-            arParams[7].Value = allowSkins;
+            arParams[11] = new SqliteParameter(":LdapRootDN", DbType.String);
+            arParams[11].Value = ldapRootDN;
 
-            arParams[8] = new SqliteParameter(":UseSecureRegistration", DbType.Int32);
-            arParams[8].Value = secure;
+            arParams[12] = new SqliteParameter(":LdapUserDNKey", DbType.String);
+            arParams[12].Value = ldapUserDNKey;
 
-            arParams[9] = new SqliteParameter(":EnableMyPageFeature", DbType.Int32);
-            arParams[9].Value = enableMy;
+            arParams[13] = new SqliteParameter(":AllowUserFullNameChange", DbType.Int32);
+            arParams[13].Value = allowUserFullNameChange ? 1 : 0;
 
-            arParams[10] = new SqliteParameter(":UseSSLOnAllPages", DbType.Int32);
-            arParams[10].Value = ssl;
+            arParams[14] = new SqliteParameter(":UseEmailForLogin", DbType.Int32);
+            arParams[14].Value = useEmailForLogin ? 1 : 0;
 
-            arParams[11] = new SqliteParameter(":DefaultPageKeywords", DbType.String);
-            arParams[11].Value = defaultPageKeywords;
+            arParams[15] = new SqliteParameter(":ReallyDeleteUsers", DbType.Int32);
+            arParams[15].Value = reallyDeleteUsers ? 1 : 0;
+            
+            arParams[16] = new SqliteParameter(":LdapDomain", DbType.String);
+            arParams[16].Value = ldapDomain;
+            
+            arParams[17] = new SqliteParameter(":RecaptchaPrivateKey", DbType.String);
+            arParams[17].Value = recaptchaPrivateKey;
 
-            arParams[12] = new SqliteParameter(":DefaultPageDescription", DbType.String);
-            arParams[12].Value = defaultPageDescription;
+            arParams[18] = new SqliteParameter(":RecaptchaPublicKey", DbType.String);
+            arParams[18].Value = recaptchaPublicKey;
+            
+            arParams[19] = new SqliteParameter(":ApiKeyExtra1", DbType.String);
+            arParams[19].Value = apiKeyExtra1;
 
-            arParams[13] = new SqliteParameter(":DefaultPageEncoding", DbType.String);
-            arParams[13].Value = defaultPageEncoding;
+            arParams[20] = new SqliteParameter(":ApiKeyExtra2", DbType.String);
+            arParams[20].Value = apiKeyExtra2;
 
-            arParams[14] = new SqliteParameter(":DefaultAdditionalMetaTags", DbType.String);
-            arParams[14].Value = defaultAdditionalMetaTags;
+            arParams[21] = new SqliteParameter(":ApiKeyExtra3", DbType.String);
+            arParams[21].Value = apiKeyExtra3;
 
-            arParams[15] = new SqliteParameter(":AllowPageSkins", DbType.Int32);
-            arParams[15].Value = pageSkins;
+            arParams[22] = new SqliteParameter(":ApiKeyExtra4", DbType.String);
+            arParams[22].Value = apiKeyExtra4;
 
-            arParams[16] = new SqliteParameter(":AllowHideMenuOnPages", DbType.Int32);
-            arParams[16].Value = allowHide;
+            arParams[23] = new SqliteParameter(":ApiKeyExtra5", DbType.String);
+            arParams[23].Value = apiKeyExtra5;
 
-            arParams[17] = new SqliteParameter(":UseLdapAuth", DbType.Int32);
-            arParams[17].Value = uldapp;
+            arParams[24] = new SqliteParameter(":DisableDbAuth", DbType.Int32);
+            arParams[24].Value = disableDbAuth ? 1 : 0;
 
-            arParams[18] = new SqliteParameter(":AutoCreateLDAPUserOnFirstLogin", DbType.Int32);
-            arParams[18].Value = autoldapp;
+            arParams[25] = new SqliteParameter(":RequiresQuestionAndAnswer", DbType.Int32);
+            arParams[25].Value = requiresQuestionAndAnswer ? 1 : 0;
 
-            arParams[19] = new SqliteParameter(":LdapServer", DbType.String);
-            arParams[19].Value = ldapServer;
+            arParams[26] = new SqliteParameter(":MaxInvalidPasswordAttempts", DbType.Int32);
+            arParams[26].Value = maxInvalidPasswordAttempts;
 
-            arParams[20] = new SqliteParameter(":LdapPort", DbType.Int32);
-            arParams[20].Value = ldapPort;
+            arParams[27] = new SqliteParameter(":PasswordAttemptWindowMinutes", DbType.Int32);
+            arParams[27].Value = passwordAttemptWindowMinutes;
 
-            arParams[21] = new SqliteParameter(":LdapRootDN", DbType.String);
-            arParams[21].Value = ldapRootDN;
+            arParams[28] = new SqliteParameter(":MinRequiredPasswordLength", DbType.Int32);
+            arParams[28].Value = minRequiredPasswordLength;
 
-            arParams[22] = new SqliteParameter(":LdapUserDNKey", DbType.String);
-            arParams[22].Value = ldapUserDNKey;
+            arParams[29] = new SqliteParameter(":MinReqNonAlphaChars", DbType.Int32);
+            arParams[29].Value = minReqNonAlphaChars;
 
-            arParams[23] = new SqliteParameter(":AllowUserFullNameChange", DbType.Int32);
-            arParams[23].Value = allowNameChange;
+            arParams[30] = new SqliteParameter(":DefaultEmailFromAddress", DbType.String);
+            arParams[30].Value = defaultEmailFromAddress;
 
-            arParams[24] = new SqliteParameter(":UseEmailForLogin", DbType.Int32);
-            arParams[24].Value = emailForLogin;
+            arParams[31] = new SqliteParameter(":AllowDbFallbackWithLdap", DbType.Int32);
+            arParams[31].Value = allowDbFallbackWithLdap ? 1 : 0;
 
-            arParams[25] = new SqliteParameter(":ReallyDeleteUsers", DbType.Int32);
-            arParams[25].Value = deleteUsers;
+            arParams[32] = new SqliteParameter(":EmailLdapDbFallback", DbType.Int32);
+            arParams[32].Value = emailLdapDbFallback ? 1 : 0;
 
-            arParams[26] = new SqliteParameter(":EditorSkin", DbType.String);
-            arParams[26].Value = editorSkin;
+            arParams[33] = new SqliteParameter(":AllowPersistentLogin", DbType.Int32);
+            arParams[33].Value = allowPersistentLogin ? 1 : 0;
 
-            arParams[27] = new SqliteParameter(":DefaultFriendlyUrlPattern", DbType.String);
-            arParams[27].Value = defaultFriendlyUrlPattern;
+            arParams[34] = new SqliteParameter(":CaptchaOnLogin", DbType.Int32);
+            arParams[34].Value = captchaOnLogin ? 1 : 0;
 
-            arParams[28] = new SqliteParameter(":LdapDomain", DbType.String);
-            arParams[28].Value = ldapDomain;
+            arParams[35] = new SqliteParameter(":CaptchaOnRegistration", DbType.Int32);
+            arParams[35].Value = captchaOnRegistration ? 1 : 0;
 
-            arParams[29] = new SqliteParameter(":EditorProvider", DbType.String);
-            arParams[29].Value = editorProvider;
+            arParams[36] = new SqliteParameter(":SiteIsClosed", DbType.Int32);
+            arParams[36].Value = siteIsClosed ? 1 : 0;
 
-            arParams[30] = new SqliteParameter(":DatePickerProvider", DbType.String);
-            arParams[30].Value = datePickerProvider;
+            arParams[37] = new SqliteParameter(":SiteIsClosedMessage", DbType.Object);
+            arParams[37].Value = siteIsClosedMessage;
 
-            arParams[31] = new SqliteParameter(":CaptchaProvider", DbType.String);
-            arParams[31].Value = captchaProvider;
+            arParams[38] = new SqliteParameter(":PrivacyPolicy", DbType.Object);
+            arParams[38].Value = privacyPolicy;
 
-            arParams[32] = new SqliteParameter(":RecaptchaPrivateKey", DbType.String);
-            arParams[32].Value = recaptchaPrivateKey;
+            arParams[39] = new SqliteParameter(":TimeZoneId", DbType.String);
+            arParams[39].Value = timeZoneId;
 
-            arParams[33] = new SqliteParameter(":RecaptchaPublicKey", DbType.String);
-            arParams[33].Value = recaptchaPublicKey;
+            arParams[40] = new SqliteParameter(":GoogleAnalyticsProfileId", DbType.String);
+            arParams[40].Value = googleAnalyticsProfileId;
 
-            arParams[34] = new SqliteParameter(":WordpressAPIKey", DbType.String);
-            arParams[34].Value = wordpressApiKey;
+            arParams[41] = new SqliteParameter(":CompanyName", DbType.String);
+            arParams[41].Value = companyName;
 
-            arParams[35] = new SqliteParameter(":WindowsLiveAppID", DbType.String);
-            arParams[35].Value = windowsLiveAppId;
+            arParams[42] = new SqliteParameter(":CompanyStreetAddress", DbType.String);
+            arParams[42].Value = companyStreetAddress;
 
-            arParams[36] = new SqliteParameter(":WindowsLiveKey", DbType.String);
-            arParams[36].Value = windowsLiveKey;
+            arParams[43] = new SqliteParameter(":CompanyStreetAddress2", DbType.String);
+            arParams[43].Value = companyStreetAddress2;
 
-            arParams[37] = new SqliteParameter(":AllowOpenIDAuth", DbType.Int32);
-            arParams[37].Value = oidauth;
+            arParams[44] = new SqliteParameter(":CompanyRegion", DbType.String);
+            arParams[44].Value = companyRegion;
 
-            arParams[38] = new SqliteParameter(":AllowWindowsLiveAuth", DbType.Int32);
-            arParams[38].Value = winliveauth;
+            arParams[45] = new SqliteParameter(":CompanyLocality", DbType.String);
+            arParams[45].Value = companyLocality;
 
-            arParams[39] = new SqliteParameter(":GmapApiKey", DbType.String);
-            arParams[39].Value = gmapApiKey;
+            arParams[46] = new SqliteParameter(":CompanyCountry", DbType.String);
+            arParams[46].Value = companyCountry;
 
-            arParams[40] = new SqliteParameter(":ApiKeyExtra1", DbType.String);
-            arParams[40].Value = apiKeyExtra1;
+            arParams[47] = new SqliteParameter(":CompanyPostalCode", DbType.String);
+            arParams[47].Value = companyPostalCode;
 
-            arParams[41] = new SqliteParameter(":ApiKeyExtra2", DbType.String);
-            arParams[41].Value = apiKeyExtra2;
+            arParams[48] = new SqliteParameter(":CompanyPublicEmail", DbType.String);
+            arParams[48].Value = companyPublicEmail;
 
-            arParams[42] = new SqliteParameter(":ApiKeyExtra3", DbType.String);
-            arParams[42].Value = apiKeyExtra3;
+            arParams[49] = new SqliteParameter(":CompanyPhone", DbType.String);
+            arParams[49].Value = companyPhone;
 
-            arParams[43] = new SqliteParameter(":ApiKeyExtra4", DbType.String);
-            arParams[43].Value = apiKeyExtra4;
+            arParams[50] = new SqliteParameter(":CompanyFax", DbType.String);
+            arParams[50].Value = companyFax;
 
-            arParams[44] = new SqliteParameter(":ApiKeyExtra5", DbType.String);
-            arParams[44].Value = apiKeyExtra5;
+            arParams[51] = new SqliteParameter(":FacebookAppId", DbType.String);
+            arParams[51].Value = facebookAppId;
 
-            arParams[45] = new SqliteParameter(":DisableDbAuth", DbType.Int32);
-            arParams[45].Value = intDisableDbAuth;
+            arParams[52] = new SqliteParameter(":FacebookAppSecret", DbType.String);
+            arParams[52].Value = facebookAppSecret;
+
+            arParams[53] = new SqliteParameter(":GoogleClientId", DbType.String);
+            arParams[53].Value = googleClientId;
+
+            arParams[54] = new SqliteParameter(":GoogleClientSecret", DbType.String);
+            arParams[54].Value = googleClientSecret;
+
+            arParams[55] = new SqliteParameter(":TwitterConsumerKey", DbType.String);
+            arParams[55].Value = twitterConsumerKey;
+
+            arParams[56] = new SqliteParameter(":TwitterConsumerSecret", DbType.String);
+            arParams[56].Value = twitterConsumerSecret;
+
+            arParams[57] = new SqliteParameter(":MicrosoftClientId", DbType.String);
+            arParams[57].Value = microsoftClientId;
+
+            arParams[58] = new SqliteParameter(":MicrosoftClientSecret", DbType.String);
+            arParams[58].Value = microsoftClientSecret;
+
+            arParams[59] = new SqliteParameter(":PreferredHostName", DbType.String);
+            arParams[59].Value = preferredHostName;
+
+            arParams[60] = new SqliteParameter(":SiteFolderName", DbType.String);
+            arParams[60].Value = siteFolderName;
+
+            arParams[61] = new SqliteParameter(":AddThisDotComUsername", DbType.String);
+            arParams[61].Value = addThisDotComUsername;
+
+            arParams[62] = new SqliteParameter(":LoginInfoTop", DbType.Object);
+            arParams[62].Value = loginInfoTop;
+
+            arParams[63] = new SqliteParameter(":LoginInfoBottom", DbType.Object);
+            arParams[63].Value = loginInfoBottom;
+
+            arParams[64] = new SqliteParameter(":RegistrationAgreement", DbType.Object);
+            arParams[64].Value = registrationAgreement;
+
+            arParams[65] = new SqliteParameter(":RegistrationPreamble", DbType.Object);
+            arParams[65].Value = registrationPreamble;
+
+            arParams[66] = new SqliteParameter(":SmtpServer", DbType.String);
+            arParams[66].Value = smtpServer;
+
+            arParams[67] = new SqliteParameter(":SmtpPort", DbType.Int32);
+            arParams[67].Value = smtpPort;
+
+            arParams[68] = new SqliteParameter(":SmtpUser", DbType.String);
+            arParams[68].Value = smtpUser;
+
+            arParams[69] = new SqliteParameter(":SmtpPassword", DbType.String);
+            arParams[69].Value = smtpPassword;
+
+            arParams[70] = new SqliteParameter(":SmtpPreferredEncoding", DbType.String);
+            arParams[70].Value = smtpPreferredEncoding;
+
+            arParams[71] = new SqliteParameter(":SmtpRequiresAuth", DbType.Int32);
+            arParams[71].Value = smtpRequiresAuth ? 1 : 0;
+
+            arParams[72] = new SqliteParameter(":SmtpUseSsl", DbType.Int32);
+            arParams[72].Value = smtpUseSsl ? 1 : 0;
+
+            arParams[73] = new SqliteParameter(":RequireApprovalBeforeLogin", DbType.Int32);
+            arParams[73].Value = requireApprovalBeforeLogin ? 1 : 0;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 connectionString,

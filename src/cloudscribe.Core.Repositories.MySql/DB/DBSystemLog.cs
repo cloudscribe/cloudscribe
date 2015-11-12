@@ -19,15 +19,14 @@ namespace cloudscribe.Core.Repositories.MySql
     {
         internal DBSystemLog(
             string dbReadConnectionString,
-            string dbWriteConnectionString,
-            ILoggerFactory loggerFactory)
+            string dbWriteConnectionString)
         {
-            logFactory = loggerFactory;
+            //logFactory = loggerFactory;
             readConnectionString = dbReadConnectionString;
             writeConnectionString = dbWriteConnectionString;
         }
 
-        private ILoggerFactory logFactory;
+        //private ILoggerFactory logFactory;
         //private ILogger log;
         private string readConnectionString;
         private string writeConnectionString;

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-10-17
+// Last Modified:			2015-11-09
 // 
 
 using cloudscribe.Core.Models;
@@ -532,7 +532,6 @@ namespace cloudscribe.Core.Web.Controllers
             CompanyInfoViewModel model = new CompanyInfoViewModel();
             model.SiteGuid = selectedSite.SiteGuid;
             model.SiteId = selectedSite.SiteId;
-            model.Slogan = selectedSite.Slogan;
             model.CompanyName = selectedSite.CompanyName;
             model.CompanyStreetAddress = selectedSite.CompanyStreetAddress;
             model.CompanyStreetAddress2 = selectedSite.CompanyStreetAddress2;
@@ -620,8 +619,6 @@ namespace cloudscribe.Core.Web.Controllers
             //model.SiteId = Site.SiteSettings.SiteId;
             //model.SiteGuid = Site.SiteSettings.SiteGuid;
             
-
-            selectedSite.Slogan = model.Slogan;
             selectedSite.CompanyName = model.CompanyName;
             selectedSite.CompanyStreetAddress = model.CompanyStreetAddress;
             selectedSite.CompanyStreetAddress2 = model.CompanyStreetAddress2;
@@ -679,8 +676,8 @@ namespace cloudscribe.Core.Web.Controllers
             model.SiteId = selectedSite.SiteId;
             model.RecaptchaPrivateKey = selectedSite.RecaptchaPrivateKey;
             model.RecaptchaPublicKey = selectedSite.RecaptchaPublicKey;
-            model.RequireCaptchaOnLogin = selectedSite.RequireCaptchaOnLogin;
-            model.RequireCaptchaOnRegistration = selectedSite.RequireCaptchaOnRegistration;
+            model.RequireCaptchaOnLogin = selectedSite.CaptchaOnLogin;
+            model.RequireCaptchaOnRegistration = selectedSite.CaptchaOnRegistration;
 
             return View("CaptchaSettings", model);
             
@@ -730,8 +727,8 @@ namespace cloudscribe.Core.Web.Controllers
 
             selectedSite.RecaptchaPublicKey = model.RecaptchaPublicKey;
             selectedSite.RecaptchaPrivateKey = model.RecaptchaPrivateKey;
-            selectedSite.RequireCaptchaOnRegistration = model.RequireCaptchaOnRegistration;
-            selectedSite.RequireCaptchaOnLogin = model.RequireCaptchaOnLogin;
+            selectedSite.CaptchaOnRegistration = model.RequireCaptchaOnRegistration;
+            selectedSite.CaptchaOnLogin = model.RequireCaptchaOnLogin;
 
             bool result = await siteManager.Save(selectedSite);
 

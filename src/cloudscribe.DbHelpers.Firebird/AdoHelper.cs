@@ -15,9 +15,10 @@ namespace cloudscribe.DbHelpers.Firebird
         
         private static DbProviderFactory GetFactory()
         {
-            var factory = DbProviderFactories.GetFactory("FirebirdSql.Data.FirebirdClient");
+            //var factory = DbProviderFactories.GetFactory("FirebirdSql.Data.FirebirdClient");
 
-            return factory;
+            //return factory;
+            return FirebirdSql.Data.FirebirdClient.FirebirdClientFactory.Instance;
         }
 
 
@@ -99,6 +100,7 @@ namespace cloudscribe.DbHelpers.Firebird
                 script = new FbScript(sr.ReadToEnd());
             }
 
+            FbBatchExecution batch;
 
             if (script.Parse() > 0)
             {
@@ -107,13 +109,15 @@ namespace cloudscribe.DbHelpers.Firebird
                     connection.Open();
                     try
                     {
-                        FbBatchExecution batch = new FbBatchExecution(connection, script);
+                        batch = new FbBatchExecution(connection, script);
                         batch.Execute(true);
+                        
 
 
                     }
                     catch (FbException ex)
                     {
+                   
                         //log.Error(ex);
                         throw new Exception(pathToScriptFile, ex);
                     }

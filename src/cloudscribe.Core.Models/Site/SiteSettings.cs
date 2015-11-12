@@ -40,8 +40,8 @@ namespace cloudscribe.Core.Models
         public string DefaultEmailFromAddress { get; set; } = string.Empty;
         public string DefaultFromEmailAlias { get; set; } = string.Empty;
         public string Layout { get; set; } = string.Empty;
-        public string MobileSkin { get; set; } = string.Empty;
-        public string EditorProviderName { get; set; } = "CKEditorProvider";
+        //public string MobileSkin { get; set; } = string.Empty;
+        //public string EditorProviderName { get; set; } = "CKEditorProvider";
 
 
         //public ContentEditorSkin EditorSkin
@@ -51,11 +51,11 @@ namespace cloudscribe.Core.Models
         //}
 
        
-        public string Logo { get; set; } = string.Empty;
-        public string Icon { get; set; } = string.Empty;
-        public bool AllowUserSkins { get; set; } = false;
-        public bool AllowPageSkins { get; set; } = false;
-        public bool AllowHideMenuOnPages { get; set; } = false;
+        //public string Logo { get; set; } = string.Empty;
+        //public string Icon { get; set; } = string.Empty;
+        //public bool AllowUserSkins { get; set; } = false;
+        //public bool AllowPageSkins { get; set; } = false;
+        //public bool AllowHideMenuOnPages { get; set; } = false;
         public bool AllowNewRegistration { get; set; } = true;
         public bool UseSecureRegistration { get; set; } = false;
         public bool UseSslOnAllPages { get; set; } = false;
@@ -73,27 +73,32 @@ namespace cloudscribe.Core.Models
         
         public bool UseLdapAuth { get; set; } = false;
         public bool AllowDbFallbackWithLdap { get; set; } = false;
-        public bool AllowEmailLoginWithLdapDbFallback { get; set; } = false;
+        public bool EmailLdapDbFallback { get; set; } = false;
         public bool AutoCreateLdapUserOnFirstLogin { get; set; } = true;
-        
+
+        public string LdapServer { get; set; } = string.Empty;
+        public string LdapDomain { get; set; } = string.Empty;
+        public int LdapPort { get; set; } = 389;
+        public string LdapRootDN { get; set; } = string.Empty;
+        public string LdapUserDNKey { get; set; } = "CN";
 
         //[NonSerialized]
-        private LdapSettings ldapSettings = new LdapSettings();
+        //private LdapSettings ldapSettings = new LdapSettings();
 
-        public LdapSettings SiteLdapSettings
-        {
-            get { return ldapSettings; }
-            set { ldapSettings = value; }
-        }
+        //public LdapSettings SiteLdapSettings
+        //{
+        //    get { return ldapSettings; }
+        //    set { ldapSettings = value; }
+        //}
 
         
         public bool AllowUserFullNameChange { get; set; } = true;
         public bool ReallyDeleteUsers { get; set; } = true;
         public bool UseEmailForLogin { get; set; } = true;
         public bool DisableDbAuth { get; set; } = false;
-        public bool AllowPasswordRetrieval { get; set; } = true;
-        public bool AllowPasswordReset { get; set; } = false;
-        public bool RequirePasswordChangeOnResetRecover { get; set; } = false;
+       // public bool AllowPasswordRetrieval { get; set; } = true;
+        //public bool AllowPasswordReset { get; set; } = false;
+        //public bool RequirePasswordChangeOnResetRecover { get; set; } = false;
         public bool RequiresQuestionAndAnswer { get; set; } = false;
         
 
@@ -119,15 +124,15 @@ namespace cloudscribe.Core.Models
         /// 
         /// Clear = 0, Hashed = 1, Encrypted = 2, corresponding to MembershipPasswordFormat Enum
         /// </summary>
-        public int PasswordFormat { get; set; } = 0;
+        //public int PasswordFormat { get; set; } = 0;
 
         public int MinRequiredPasswordLength { get; set; } = 7;    
-        public int MinRequiredNonAlphanumericCharacters { get; set; } = 0;
-        public string PasswordStrengthRegularExpression { get; set; } = string.Empty;
+        public int MinReqNonAlphaChars { get; set; } = 0;
+        //public string PasswordStrengthRegularExpression { get; set; } = string.Empty;
         public bool AllowPersistentLogin { get; set; } = true;
-        public bool RequireCaptchaOnRegistration { get; set; } = false;
-        public bool RequireCaptchaOnLogin { get; set; } = false;
-        public bool RequireEnterEmailTwiceOnRegistration { get; set; } = false;
+        public bool CaptchaOnRegistration { get; set; } = false;
+        public bool CaptchaOnLogin { get; set; } = false;
+        //public bool RequireEnterEmailTwiceOnRegistration { get; set; } = false;
          
 
         // moved to siteinfo base class
@@ -146,11 +151,11 @@ namespace cloudscribe.Core.Models
         //}
 
         
-        public string CaptchaProvider { get; set; } = "recaptcha";
+        //public string CaptchaProvider { get; set; } = "recaptcha";
         public string RecaptchaPrivateKey { get; set; } = string.Empty;
         public string RecaptchaPublicKey { get; set; } = string.Empty;
         
-        public string WordpressApiKey { get; set; } = string.Empty;
+        //public string WordpressApiKey { get; set; } = string.Empty;
 
 
         public string FacebookAppId { get; set; } = string.Empty;
@@ -165,35 +170,38 @@ namespace cloudscribe.Core.Models
         public string TwitterConsumerKey { get; set; } = string.Empty;
         public string TwitterConsumerSecret { get; set; } = string.Empty;
 
-        public bool AllowOpenIdAuth { get; set; } = false;
+        //public bool AllowOpenIdAuth { get; set; } = false;
         
-        public bool AllowWindowsLiveAuth { get; set; } = false;
+       // public bool AllowWindowsLiveAuth { get; set; } = false;
         
-        public string GmapApiKey { get; set; } = string.Empty;
+        //public string GmapApiKey { get; set; } = string.Empty;
 
 
         // AddThisDotComUsername maps to apiKeyExtra1
-        private string apiKeyExtra1 = string.Empty;
+        //private string apiKeyExtra1 = string.Empty;
 
-        public string AddThisDotComUsername
-        {
-            get { return apiKeyExtra1; }
-            set { apiKeyExtra1 = value; }
-        }
+        public string AddThisDotComUsername { get; set; } = string.Empty;
+
+        public string ApiKeyExtra1 { get; set; } = string.Empty;
+        public string ApiKeyExtra2 { get; set; } = string.Empty;
+        public string ApiKeyExtra3 { get; set; } = string.Empty;
+        public string ApiKeyExtra4 { get; set; } = string.Empty;
+        public string ApiKeyExtra5 { get; set; } = string.Empty;
+
 
         //GoogleAnalyticsAccountCode
-        private string apiKeyExtra2 = string.Empty;
+        //private string apiKeyExtra2 = string.Empty;
 
-        public string GoogleAnalyticsAccountCode
-        {
-            get { return apiKeyExtra2; }
-            set { apiKeyExtra2 = value; }
-        }
+        //public string GoogleAnalyticsAccountCode
+        //{
+        //    get { return apiKeyExtra2; }
+        //    set { apiKeyExtra2 = value; }
+        //}
 
 
         public string TimeZoneId { get; set; } = "Eastern Standard Time";
         
-        public string SiteMapSkin { get; set; } = string.Empty;
+        //public string SiteMapSkin { get; set; } = string.Empty;
 
 
 
@@ -210,28 +218,28 @@ namespace cloudscribe.Core.Models
 
             
 
-        public string RpxNowApiKey { get; set; } = string.Empty;
-        public string RpxNowApplicationName { get; set; } = string.Empty;
-        public string RpxNowAdminUrl { get; set; } = string.Empty;
+        //public string RpxNowApiKey { get; set; } = string.Empty;
+        //public string RpxNowApplicationName { get; set; } = string.Empty;
+        //public string RpxNowAdminUrl { get; set; } = string.Empty;
         
-        public string OpenSearchName { get; set; } = string.Empty;
+        //public string OpenSearchName { get; set; } = string.Empty;
         
-        public string BingAPIId { get; set; } = string.Empty;
-        public string GoogleCustomSearchId { get; set; } = string.Empty;
+        //public string BingAPIId { get; set; } = string.Empty;
+        //public string GoogleCustomSearchId { get; set; } = string.Empty;
 
 
-        private string primarySearchEngine = "internal";
+        //private string primarySearchEngine = "internal";
 
-        public string PrimarySearchEngine
-        {
-            get { return primarySearchEngine; }
-            set { primarySearchEngine = value; }
-        }
+        //public string PrimarySearchEngine
+        //{
+        //    get { return primarySearchEngine; }
+        //    set { primarySearchEngine = value; }
+        //}
 
         
-        public bool ShowAlternateSearchIfConfigured { get; set; } = false;
+        //public bool ShowAlternateSearchIfConfigured { get; set; } = false;
         
-        public string Slogan { get; set; } = string.Empty;
+        //public string Slogan { get; set; } = string.Empty;
         public string CompanyName { get; set; } = string.Empty;
         public string CompanyStreetAddress { get; set; } = string.Empty;
         public string CompanyStreetAddress2 { get; set; } = string.Empty;
@@ -264,41 +272,41 @@ namespace cloudscribe.Core.Models
 
         
 
-        public string PrivacyPolicyUrl { get; set; } = string.Empty;
-        public string SMTPUser { get; set; } = string.Empty;
-        public string SMTPPassword { get; set; } = string.Empty;
-        public int SMTPPort { get; set; } = 25;  
-        public string SMTPPreferredEncoding { get; set; } = string.Empty;
-        public string SMTPServer { get; set; } = string.Empty;
-        public bool SMTPRequiresAuthentication { get; set; } = false;
-        public bool SMTPUseSsl { get; set; } = false;
+        public string PrivacyPolicy { get; set; } = string.Empty;
+        public string SmtpUser { get; set; } = string.Empty;
+        public string SmtpPassword { get; set; } = string.Empty;
+        public int SmtpPort { get; set; } = 25;  
+        public string SmtpPreferredEncoding { get; set; } = string.Empty;
+        public string SmtpServer { get; set; } = string.Empty;
+        public bool SmtpRequiresAuth { get; set; } = false;
+        public bool SmtpUseSsl { get; set; } = false;
         
-        public bool AllowUserEditorPreference { get; set; } = false;
-        public string SiteRootEditRoles { get; set; } = string.Empty;
-        public string SiteRootDraftEditRoles { get; set; } = string.Empty;
-        public string SiteRootDraftApprovalRoles { get; set; } = string.Empty;
-        public string CommerceReportViewRoles { get; set; } = string.Empty;
-        public string RolesThatCanCreateRootPages { get; set; } = "Content Administrators;";
-        public string RolesThatCanViewMemberList { get; set; } = "Authenticated Users;";
-        public string RolesThatCanCreateUsers { get; set; } = string.Empty; //RolesThatCanManageUsers
-        public string RolesThatCanManageUsers { get; set; } = string.Empty; //RolesThatCanFullyManageUsers
-        public string RolesThatCanLookupUsers { get; set; } = string.Empty;
-        public string RolesNotAllowedToEditModuleSettings { get; set; } = string.Empty; 
-        public string RolesThatCanEditContentTemplates { get; set; } = string.Empty; 
-        public string GeneralBrowseAndUploadRoles { get; set; } = string.Empty;
-        public string UserFilesBrowseAndUploadRoles { get; set; } = string.Empty;
-        public string RolesThatCanDeleteFilesInEditor { get; set; } = string.Empty;
-        public string RolesThatCanAssignSkinsToPages { get; set; } = string.Empty;
-        public string RolesThatCanManageSkins { get; set; } = string.Empty;
-        public string DefaultRootPageViewRoles { get; set; } = "All Users;";
-        public string DefaultRootPageEditRoles { get; set; } = string.Empty;
-        public string DefaultRootPageCreateChildPageRoles { get; set; } = string.Empty;
-        public Guid SkinVersion { get; set; } = Guid.Empty;
-        public string AvatarSystem { get; set; } = "gravatar";
-        public string CommentProvider { get; set; } = "intensedebate";
+        //public bool AllowUserEditorPreference { get; set; } = false;
+        //public string SiteRootEditRoles { get; set; } = string.Empty;
+        //public string SiteRootDraftEditRoles { get; set; } = string.Empty;
+        //public string SiteRootDraftApprovalRoles { get; set; } = string.Empty;
+        //public string CommerceReportViewRoles { get; set; } = string.Empty;
+       // public string RolesThatCanCreateRootPages { get; set; } = "Content Administrators;";
+        //public string RolesThatCanViewMemberList { get; set; } = "Authenticated Users;";
+        //public string RolesThatCanCreateUsers { get; set; } = string.Empty; //RolesThatCanManageUsers
+        //public string RolesThatCanManageUsers { get; set; } = string.Empty; //RolesThatCanFullyManageUsers
+        //public string RolesThatCanLookupUsers { get; set; } = string.Empty;
+        //public string RolesNotAllowedToEditModuleSettings { get; set; } = string.Empty; 
+        //public string RolesThatCanEditContentTemplates { get; set; } = string.Empty; 
+        //public string GeneralBrowseAndUploadRoles { get; set; } = string.Empty;
+        //public string UserFilesBrowseAndUploadRoles { get; set; } = string.Empty;
+        //public string RolesThatCanDeleteFilesInEditor { get; set; } = string.Empty;
+        //public string RolesThatCanAssignSkinsToPages { get; set; } = string.Empty;
+        //public string RolesThatCanManageSkins { get; set; } = string.Empty;
+        //public string DefaultRootPageViewRoles { get; set; } = "All Users;";
+        //public string DefaultRootPageEditRoles { get; set; } = string.Empty;
+        //public string DefaultRootPageCreateChildPageRoles { get; set; } = string.Empty;
+        //public Guid SkinVersion { get; set; } = Guid.Empty;
+        //public string AvatarSystem { get; set; } = "gravatar";
+        //public string CommentProvider { get; set; } = "intensedebate";
         
-        public string IntenseDebateAccountId { get; set; } = string.Empty;
-        public string DisqusSiteShortName { get; set; } = string.Empty;
+        //public string IntenseDebateAccountId { get; set; } = string.Empty;
+        //public string DisqusSiteShortName { get; set; } = string.Empty;
 
 
 
@@ -309,14 +317,14 @@ namespace cloudscribe.Core.Models
         /// ie for Dublin Core you would put http://dublincore.org/documents/dcq-html/ 
         /// if using multiple vocabularies you can separe the urls by white space
         /// </summary>
-        public string MetaProfile { get; set; } = string.Empty;
-        public string NewsletterEditor { get; set; } = "TinyMCEProvider";
-        public Guid DefaultCountryGuid { get; set; } = new Guid("a71d6727-61e7-4282-9fcb-526d1e7bc24f"); //US
-        public Guid DefaultStateGuid { get; set; } = Guid.Empty;
-        public Guid CurrencyGuid { get; set; } = new Guid("ff2dde1b-e7d7-4c3a-9ab4-6474345e0f31"); //USD
+        //public string MetaProfile { get; set; } = string.Empty;
+        //public string NewsletterEditor { get; set; } = "TinyMCEProvider";
+        //public Guid DefaultCountryGuid { get; set; } = new Guid("a71d6727-61e7-4282-9fcb-526d1e7bc24f"); //US
+        //public Guid DefaultStateGuid { get; set; } = Guid.Empty;
+        //public Guid CurrencyGuid { get; set; } = new Guid("ff2dde1b-e7d7-4c3a-9ab4-6474345e0f31"); //USD
         
-        public bool ForceContentVersioning { get; set; } = false;
-        public bool EnableContentWorkflow { get; set; } = false;
+        //public bool ForceContentVersioning { get; set; } = false;
+        //public bool EnableContentWorkflow { get; set; } = false;
 
 
 
@@ -345,7 +353,7 @@ namespace cloudscribe.Core.Models
 
 
         public string GoogleAnalyticsProfileId { get; set; } = string.Empty;
-        public string GoogleAnalyticsSettings { get; set; } = string.Empty;
+        //public string GoogleAnalyticsSettings { get; set; } = string.Empty;
 
 
         //public string RolesThatCanViewGoogleAnalytics
@@ -372,9 +380,9 @@ namespace cloudscribe.Core.Models
 
         
         public bool RequireApprovalBeforeLogin { get; set; } = false;
-        public string EmailAdressesForUserApprovalNotification { get; set; } = string.Empty;
-        public string RolesThatCanApproveNewUsers { get; set; } = string.Empty;
-        public string PasswordRegexWarning { get; set; } = string.Empty;
+        //public string EmailAdressesForUserApprovalNotification { get; set; } = string.Empty;
+        //public string RolesThatCanApproveNewUsers { get; set; } = string.Empty;
+        //public string PasswordRegexWarning { get; set; } = string.Empty;
         public string RegistrationAgreement { get; set; } = string.Empty; 
         public string RegistrationPreamble { get; set; } = string.Empty;
         public string LoginInfoTop { get; set; } = string.Empty;

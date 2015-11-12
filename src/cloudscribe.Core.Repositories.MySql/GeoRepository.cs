@@ -19,7 +19,7 @@ namespace cloudscribe.Core.Repositories.MySql
     public sealed class GeoRepository : IGeoRepository
     {
         public GeoRepository(
-            IOptions<MySqlConnectionOptionscs> configuration,
+            IOptions<MySqlConnectionOptions> configuration,
             ILoggerFactory loggerFactory)
         {
             if(configuration == null) { throw new ArgumentNullException(nameof(configuration)); }

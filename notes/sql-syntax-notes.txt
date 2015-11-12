@@ -16,12 +16,14 @@ CREATE NONCLUSTERED INDEX [IX_mp_UserClaimsSite] ON [dbo].[mp_UserClaims]
 )WITH (STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
 GO
 
-
+TRUNCATE TABLE HumanResources.JobCandidate;
+GO
 
 ## Firebird Syntax
 
 ALTER TABLE mp_Sites DROP Logo;
 ALTER TABLE mp_UserLogins ADD ProviderDisplayName varchar(100);
+ALTER TABLE mp_Sites ADD CaptchaOnRegistration integer default 0;
 
 http://www.firebirdfaq.org/faq363/
 you have to create a new table to rename a column
@@ -40,7 +42,7 @@ ALTER TABLE table_name RENAME COLUMN old_name TO new_name;
 
 CREATE INDEX ixmp_userclaimssite ON mp_userclaims(siteid);
 
-
+TRUNCATE TABLE mp_sitesettingsex, mp_sitesettingsexdef;
 
 
 ## mysql syntax
@@ -56,10 +58,12 @@ ALTER TABLE xyz CHANGE manufacurerid manufacturerid INT
 
 CREATE INDEX IX_mp_UserClaimsSite ON mp_UserClaims(`SiteId`);
 
-
+TRUNCATE TABLE table_name;
 
 
 ## Sqlite syntax
+
+https://sqlcetoolbox.codeplex.com/
 
 SQLite supports a limited subset of ALTER TABLE. The ALTER TABLE command in SQLite allows the user to rename a table or to add a new column to an existing table. It is not possible to rename a colum, remove a column, or add or remove constraints from a table.
 
@@ -81,8 +85,14 @@ alter table points_tmp rename to points;
 
 CREATE INDEX IX_mp_UserClaimsSite ON mp_UserClaims(`SiteId`);
 
+DELETE FROM table_name;
+
+
 
 ## SqlServerCompact
+
+
+https://sqlcetoolbox.codeplex.com/
 
 ALTER TABLE mp_UserLogins ADD SiteId int NOT NULL default -1
 GO
@@ -111,4 +121,6 @@ CREATE INDEX [IX_mp_UserClaimsSite] ON [mp_UserClaims]
 
 GO
 
+DROP INDEX mp_Users.IX_mp_Users_1
+GO
 
