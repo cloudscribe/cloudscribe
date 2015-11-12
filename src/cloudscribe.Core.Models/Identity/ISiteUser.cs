@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-17
-// Last Modified:			2014-11-07
+// Last Modified:			2014-11-12
 // 
 
 using System;
@@ -47,10 +47,7 @@ namespace cloudscribe.Core.Models
 
     public interface ISiteUser : IUserInfo
     {
-
-        string AuthorBio { get; set; }
-
-        string Comment { get; set; }
+        string Id { get; }
         
         Guid EmailChangeGuid { get; set; }
         bool EmailConfirmed { get; set; }
@@ -59,30 +56,27 @@ namespace cloudscribe.Core.Models
         DateTime FailedPasswordAnswerAttemptWindowStart { get; set; }
         int FailedPasswordAttemptCount { get; set; }
         DateTime FailedPasswordAttemptWindowStart { get; set; }
-        
-        DateTime LastLockoutDate { get; set; }
-        
+
+        string PasswordHash { get; set; }
+        Guid PasswordResetGuid { get; set; }
+
+        bool MustChangePwd { get; set; }
         DateTime LastPasswordChangedDate { get; set; }
-       
+
+        DateTime LastLockoutDate { get; set; }
         DateTime? LockoutEndDateUtc { get; set; }
 
-        string LoweredEmail { get; set; }
-        bool MustChangePwd { get; set; }
-
-        string NewEmail { get; set; }
-        
-        string PasswordHash { get; set; }
-        
-        Guid PasswordResetGuid { get; set; }
-        
+        bool TwoFactorEnabled { get; set; }
         Guid RegisterConfirmGuid { get; }
         bool RolesChanged { get; set; }
         string SecurityStamp { get; set; }
-        string Signature { get; set; }
         
-        bool TwoFactorEnabled { get; set; }
-        string Id { get; }
-
-
+        string LoweredEmail { get; set; }
+        string NewEmail { get; set; }
+        
+        string Signature { get; set; }
+        string AuthorBio { get; set; }
+        string Comment { get; set; }
+        
     }
 }

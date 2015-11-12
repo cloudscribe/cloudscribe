@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-09
-// Last Modified:			2015-11-07
+// Last Modified:			2015-11-12
 // 
 
 using System;
@@ -15,8 +15,6 @@ namespace cloudscribe.Core.Models.DataExtensions
 {
     public static class ModelDataExtensions
     {
-
-
         public static void LoadFromReader(this ISiteRole role, DbDataReader reader)
         {
             role.RoleId = Convert.ToInt32(reader["RoleID"]);
@@ -206,9 +204,7 @@ namespace cloudscribe.Core.Models.DataExtensions
             user.Comment = reader["Comment"].ToString();
            
             user.SiteGuid = new Guid(reader["SiteGuid"].ToString());
-
             
-
             user.FirstName = reader["FirstName"].ToString();
             user.LastName = reader["LastName"].ToString();
 
@@ -359,138 +355,14 @@ namespace cloudscribe.Core.Models.DataExtensions
 
         public static void LoadExpandoSettings(this ISiteSettings site, List<ExpandoSetting> expandoProperties)
         {
+            // this may go away
+
             //string b = GetExpandoProperty(expandoProperties, "AllowPersistentLogin");
             //if (!string.IsNullOrEmpty(b)) { site.AllowPersistentLogin = Convert.ToBoolean(b); }
 
             //site.AvatarSystem = GetExpandoProperty(expandoProperties, "AvatarSystem");
             //site.CommentProvider = GetExpandoProperty(expandoProperties, "CommentProvider");
-            //site.CompanyPublicEmail = GetExpandoProperty(expandoProperties, "CompanyPublicEmail");
-            //site.CompanyFax = GetExpandoProperty(expandoProperties, "CompanyFax");
-            //site.CompanyPhone = GetExpandoProperty(expandoProperties, "CompanyPhone");
-            //site.CompanyCountry = GetExpandoProperty(expandoProperties, "CompanyCountry");
-            //site.CompanyPostalCode = GetExpandoProperty(expandoProperties, "CompanyPostalCode");
-            //site.CompanyRegion = GetExpandoProperty(expandoProperties, "CompanyRegion");
-            //site.CompanyLocality = GetExpandoProperty(expandoProperties, "CompanyLocality");
-            //site.CompanyStreetAddress = GetExpandoProperty(expandoProperties, "CompanyStreetAddress");
-            //site.CompanyStreetAddress2 = GetExpandoProperty(expandoProperties, "CompanyStreetAddress2");
-            //site.CompanyName = GetExpandoProperty(expandoProperties, "CompanyName");
-
-            //string g = GetExpandoProperty(expandoProperties, "CurrencyGuid");
-            //if ((g != null) && (g.Length == 36)) { site.CurrencyGuid = new Guid(g); }
-
-            //g = GetExpandoProperty(expandoProperties, "DefaultStateGuid");
-            //if ((g != null) && (g.Length == 36)) { site.DefaultStateGuid = new Guid(g); }
-
-            //g = GetExpandoProperty(expandoProperties, "DefaultCountryGuid");
-            //if ((g != null) && (g.Length == 36)) { site.DefaultCountryGuid = new Guid(g); }
-
-            //site.DefaultRootPageCreateChildPageRoles = GetExpandoProperty(expandoProperties, "DefaultRootPageCreateChildPageRoles");
-
-            //site.DefaultRootPageEditRoles = GetExpandoProperty(expandoProperties, "DefaultRootPageEditRoles");
-            //site.DefaultRootPageViewRoles = GetExpandoProperty(expandoProperties, "DefaultRootPageViewRoles");
-            //site.DisqusSiteShortName = GetExpandoProperty(expandoProperties, "DisqusSiteShortName");
-            //site.EmailAdressesForUserApprovalNotification = GetExpandoProperty(expandoProperties, "EmailAdressesForUserApprovalNotification");
-            //b = GetExpandoProperty(expandoProperties, "EnableContentWorkflow");
-            //if (!string.IsNullOrEmpty(b)) { site.EnableContentWorkflow = Convert.ToBoolean(b); }
             
-            //b = GetExpandoProperty(expandoProperties, "ForceContentVersioning");
-            //if (!string.IsNullOrEmpty(b)) { site.ForceContentVersioning = Convert.ToBoolean(b); }
-            //site.GoogleAnalyticsSettings = GetExpandoProperty(expandoProperties, "GoogleAnalyticsSettings");
-            //site.GoogleAnalyticsProfileId = GetExpandoProperty(expandoProperties, "GoogleAnalyticsProfileId");
-            ////SetExpandoProperty(expandoProperties, "GoogleAnalyticsPassword", site.GoogleAnalyticsPassword);
-            ////SetExpandoProperty(expandoProperties, "GoogleAnalyticsEmail", site.GoogleAnalyticsEmail);
-            //site.IntenseDebateAccountId = GetExpandoProperty(expandoProperties, "IntenseDebateAccountId");
-            //site.LoginInfoBottom = GetExpandoProperty(expandoProperties, "LoginInfoBottom");
-            //site.LoginInfoTop = GetExpandoProperty(expandoProperties, "LoginInfoTop");
-            //site.MetaProfile = GetExpandoProperty(expandoProperties, "MetaProfile");
-            //site.NewsletterEditor = GetExpandoProperty(expandoProperties, "NewsletterEditor");
-            //site.PasswordRegexWarning = GetExpandoProperty(expandoProperties, "PasswordRegexWarning");
-            //site.PrivacyPolicy = GetExpandoProperty(expandoProperties, "PrivacyPolicyUrl");
-            //site.RegistrationAgreement = GetExpandoProperty(expandoProperties, "RegistrationAgreement");
-            //site.RegistrationPreamble = GetExpandoProperty(expandoProperties, "RegistrationPreamble");
-
-            //b = GetExpandoProperty(expandoProperties, "RequireApprovalBeforeLogin");
-            //if (!string.IsNullOrEmpty(b)) { site.RequireApprovalBeforeLogin = Convert.ToBoolean(b); }
-
-            //// permission roles
-            //site.RolesThatCanApproveNewUsers = GetExpandoProperty(expandoProperties, "RolesThatCanApproveNewUsers");
-            //site.RolesThatCanManageSkins = GetExpandoProperty(expandoProperties, "RolesThatCanManageSkins");
-            //site.RolesThatCanAssignSkinsToPages = GetExpandoProperty(expandoProperties, "RolesThatCanAssignSkinsToPages");
-            //site.RolesThatCanDeleteFilesInEditor = GetExpandoProperty(expandoProperties, "RolesThatCanDeleteFilesInEditor");
-            //site.UserFilesBrowseAndUploadRoles = GetExpandoProperty(expandoProperties, "UserFilesBrowseAndUploadRoles");
-            //site.GeneralBrowseAndUploadRoles = GetExpandoProperty(expandoProperties, "GeneralBrowseAndUploadRoles");
-            //site.RolesThatCanEditContentTemplates = GetExpandoProperty(expandoProperties, "RolesThatCanEditContentTemplates");
-            //site.RolesNotAllowedToEditModuleSettings = GetExpandoProperty(expandoProperties, "RolesNotAllowedToEditModuleSettings");
-            //site.RolesThatCanLookupUsers = GetExpandoProperty(expandoProperties, "RolesThatCanLookupUsers");
-            //site.RolesThatCanManageUsers = GetExpandoProperty(expandoProperties, "RolesThatCanFullyManageUsers");
-            //site.RolesThatCanCreateUsers = GetExpandoProperty(expandoProperties, "RolesThatCanManageUsers");
-            //site.RolesThatCanViewMemberList = GetExpandoProperty(expandoProperties, "RolesThatCanViewMemberList");
-            //site.RolesThatCanCreateRootPages = GetExpandoProperty(expandoProperties, "RolesThatCanCreateRootPages");
-            //site.CommerceReportViewRoles = GetExpandoProperty(expandoProperties, "CommerceReportViewRoles");
-            //site.SiteRootDraftApprovalRoles = GetExpandoProperty(expandoProperties, "SiteRootDraftApprovalRoles");
-            //site.SiteRootDraftEditRoles = GetExpandoProperty(expandoProperties, "SiteRootDraftEditRoles");
-            //site.SiteRootEditRoles = GetExpandoProperty(expandoProperties, "SiteRootEditRoles");
-
-            //// end roles
-
-            //b = GetExpandoProperty(expandoProperties, "SiteIsClosed");
-            //if (!string.IsNullOrEmpty(b)) { site.SiteIsClosed = Convert.ToBoolean(b); }
-
-            //site.SiteIsClosedMessage = GetExpandoProperty(expandoProperties, "SiteIsClosedMessage");
-
-            //g = GetExpandoProperty(expandoProperties, "SkinVersion");
-            //if (!string.IsNullOrEmpty(g))
-            //{
-            //    if (g.Length == 36) { site.SkinVersion = new Guid(g); }
-            //}
-
-            //b = GetExpandoProperty(expandoProperties, "SMTPUseSsl");
-            //if (!string.IsNullOrEmpty(b)) { site.SmtpUseSsl = Convert.ToBoolean(b); }
-
-            //b = GetExpandoProperty(expandoProperties, "SMTPRequiresAuthentication");
-            //if (!string.IsNullOrEmpty(b)) { site.SmtpRequiresAuth = Convert.ToBoolean(b); }
-
-
-            //site.SmtpServer = GetExpandoProperty(expandoProperties, "SMTPServer");
-            //site.SmtpPreferredEncoding = GetExpandoProperty(expandoProperties, "SMTPPreferredEncoding");
-            //string i = GetExpandoProperty(expandoProperties, "SMTPPort");
-            //if (!string.IsNullOrEmpty(i)) { site.SmtpPort = Convert.ToInt32(i); }
-            //site.SmtpPassword = GetExpandoProperty(expandoProperties, "SMTPPassword");
-            //site.SmtpUser = GetExpandoProperty(expandoProperties, "SMTPUser");
-            //site.Slogan = GetExpandoProperty(expandoProperties, "Slogan");
-
-            //b = GetExpandoProperty(expandoProperties, "ShowAlternateSearchIfConfigured");
-            //if (!string.IsNullOrEmpty(b)) { site.ShowAlternateSearchIfConfigured = Convert.ToBoolean(b); }
-
-            //site.PrimarySearchEngine = GetExpandoProperty(expandoProperties, "PrimarySearchEngine");
-            //site.GoogleCustomSearchId = GetExpandoProperty(expandoProperties, "GoogleCustomSearchId");
-            //site.BingAPIId = GetExpandoProperty(expandoProperties, "BingAPIId");
-            //site.OpenSearchName = GetExpandoProperty(expandoProperties, "OpenSearchName");
-            //site.RpxNowAdminUrl = GetExpandoProperty(expandoProperties, "RpxNowAdminUrl");
-            //site.RpxNowApplicationName = GetExpandoProperty(expandoProperties, "RpxNowApplicationName");
-            //site.RpxNowApiKey = GetExpandoProperty(expandoProperties, "RpxNowApiKey");
-            ////site.AppLogoForWindowsLive = GetExpandoProperty(expandoProperties, "AppLogoForWindowsLive");
-
-            //site.SiteMapSkin = GetExpandoProperty(expandoProperties, "SiteMapSkin");
-            //site.TimeZoneId = GetExpandoProperty(expandoProperties, "TimeZoneId");
-            ////SetExpandoProperty(expandoProperties, "ShowPasswordStrengthOnRegistration", site.ShowPasswordStrengthOnRegistration);
-            ////SetExpandoProperty(expandoProperties, "RequireEnterEmailTwiceOnRegistration", site.RequireEnterEmailTwiceOnRegistration);
-
-            //b = GetExpandoProperty(expandoProperties, "RequireCaptchaOnLogin");
-            //if (!string.IsNullOrEmpty(b)) { site.CaptchaOnLogin = Convert.ToBoolean(b); }
-
-            //b = GetExpandoProperty(expandoProperties, "RequireCaptchaOnRegistration");
-            //if (!string.IsNullOrEmpty(b)) { site.CaptchaOnRegistration = Convert.ToBoolean(b); }
-
-            //site.FacebookAppId = GetExpandoProperty(expandoProperties, "FacebookAppId");
-            //site.FacebookAppSecret = GetExpandoProperty(expandoProperties, "FacebookAppSecret");
-
-            //site.TwitterConsumerKey = GetExpandoProperty(expandoProperties, "TwitterConsumerKey");
-            //site.TwitterConsumerSecret = GetExpandoProperty(expandoProperties, "TwitterConsumerSecret");
-
-            //site.GoogleClientId = GetExpandoProperty(expandoProperties, "GoogleClientId");
-            //site.GoogleClientSecret = GetExpandoProperty(expandoProperties, "GoogleClientSecret");
-
 
         }
 
@@ -498,102 +370,7 @@ namespace cloudscribe.Core.Models.DataExtensions
         {
             //SetExpandoProperty(expandoProperties, "AvatarSystem", site.AvatarSystem);
             //SetExpandoProperty(expandoProperties, "AllowUserEditorPreference", site.AllowUserEditorPreference);
-            //SetExpandoProperty(expandoProperties, "CommentProvider", site.CommentProvider);
-            //SetExpandoProperty(expandoProperties, "CompanyPublicEmail", site.CompanyPublicEmail);
-            //SetExpandoProperty(expandoProperties, "CompanyFax", site.CompanyFax);
-            //SetExpandoProperty(expandoProperties, "CompanyPhone", site.CompanyPhone);
-            //SetExpandoProperty(expandoProperties, "CompanyCountry", site.CompanyCountry);
-            //SetExpandoProperty(expandoProperties, "CompanyPostalCode", site.CompanyPostalCode);
-            //SetExpandoProperty(expandoProperties, "CompanyRegion", site.CompanyRegion);
-            //SetExpandoProperty(expandoProperties, "CompanyLocality", site.CompanyLocality);
-            //SetExpandoProperty(expandoProperties, "CompanyStreetAddress", site.CompanyStreetAddress);
-            //SetExpandoProperty(expandoProperties, "CompanyStreetAddress2", site.CompanyStreetAddress2);
-            //SetExpandoProperty(expandoProperties, "CompanyName", site.CompanyName);
-            //SetExpandoProperty(expandoProperties, "CurrencyGuid", site.CurrencyGuid.ToString());
-            //SetExpandoProperty(expandoProperties, "DefaultStateGuid", site.DefaultStateGuid.ToString());
-            //SetExpandoProperty(expandoProperties, "DefaultCountryGuid", site.DefaultCountryGuid.ToString());
-            //SetExpandoProperty(expandoProperties, "DefaultRootPageCreateChildPageRoles", site.DefaultRootPageCreateChildPageRoles);
-            //SetExpandoProperty(expandoProperties, "DefaultRootPageEditRoles", site.DefaultRootPageEditRoles);
-            //SetExpandoProperty(expandoProperties, "DefaultRootPageViewRoles", site.DefaultRootPageViewRoles);
-            //SetExpandoProperty(expandoProperties, "DisqusSiteShortName", site.DisqusSiteShortName);
-            //SetExpandoProperty(expandoProperties, "EmailAdressesForUserApprovalNotification", site.EmailAdressesForUserApprovalNotification);
-            //SetExpandoProperty(expandoProperties, "EnableContentWorkflow", site.EnableContentWorkflow.ToString());
             
-            //SetExpandoProperty(expandoProperties, "ForceContentVersioning", site.ForceContentVersioning.ToString());
-            //SetExpandoProperty(expandoProperties, "GoogleAnalyticsSettings", site.GoogleAnalyticsSettings);
-            //SetExpandoProperty(expandoProperties, "GoogleAnalyticsProfileId", site.GoogleAnalyticsProfileId);
-            //SetExpandoProperty(expandoProperties, "GoogleAnalyticsPassword", site.GoogleAnalyticsPassword);
-            //SetExpandoProperty(expandoProperties, "GoogleAnalyticsEmail", site.GoogleAnalyticsEmail);
-            //SetExpandoProperty(expandoProperties, "IntenseDebateAccountId", site.IntenseDebateAccountId);
-            //SetExpandoProperty(expandoProperties, "LoginInfoBottom", site.LoginInfoBottom);
-            //SetExpandoProperty(expandoProperties, "LoginInfoTop", site.LoginInfoTop);
-            //SetExpandoProperty(expandoProperties, "MetaProfile", site.MetaProfile);
-            //SetExpandoProperty(expandoProperties, "NewsletterEditor", site.NewsletterEditor);
-            //SetExpandoProperty(expandoProperties, "PasswordRegexWarning", site.PasswordRegexWarning);
-            //SetExpandoProperty(expandoProperties, "PrivacyPolicyUrl", site.PrivacyPolicy);
-            //SetExpandoProperty(expandoProperties, "RegistrationAgreement", site.RegistrationAgreement);
-            //SetExpandoProperty(expandoProperties, "RegistrationPreamble", site.RegistrationPreamble);
-            //SetExpandoProperty(expandoProperties, "RequireApprovalBeforeLogin", site.RequireApprovalBeforeLogin.ToString());
-
-            // permission roles
-            //SetExpandoProperty(expandoProperties, "RolesThatCanApproveNewUsers", site.RolesThatCanApproveNewUsers);
-           // SetExpandoProperty(expandoProperties, "RolesThatCanManageSkins", site.RolesThatCanManageSkins);
-            //SetExpandoProperty(expandoProperties, "RolesThatCanAssignSkinsToPages", site.RolesThatCanAssignSkinsToPages);
-            //SetExpandoProperty(expandoProperties, "RolesThatCanDeleteFilesInEditor", site.RolesThatCanDeleteFilesInEditor);
-            //SetExpandoProperty(expandoProperties, "UserFilesBrowseAndUploadRoles", site.UserFilesBrowseAndUploadRoles);
-            //SetExpandoProperty(expandoProperties, "GeneralBrowseAndUploadRoles", site.GeneralBrowseAndUploadRoles);
-            //SetExpandoProperty(expandoProperties, "RolesThatCanEditContentTemplates", site.RolesThatCanEditContentTemplates);
-            //SetExpandoProperty(expandoProperties, "RolesNotAllowedToEditModuleSettings", site.RolesNotAllowedToEditModuleSettings);
-            //SetExpandoProperty(expandoProperties, "RolesThatCanLookupUsers", site.RolesThatCanLookupUsers);
-            //SetExpandoProperty(expandoProperties, "RolesThatCanFullyManageUsers", site.RolesThatCanManageUsers);
-            //SetExpandoProperty(expandoProperties, "RolesThatCanManageUsers", site.RolesThatCanCreateUsers);
-            //SetExpandoProperty(expandoProperties, "RolesThatCanViewMemberList", site.RolesThatCanViewMemberList);
-            //SetExpandoProperty(expandoProperties, "RolesThatCanCreateRootPages", site.RolesThatCanCreateRootPages);
-            //SetExpandoProperty(expandoProperties, "CommerceReportViewRoles", site.CommerceReportViewRoles);
-            //SetExpandoProperty(expandoProperties, "SiteRootDraftApprovalRoles", site.SiteRootDraftApprovalRoles);
-            //SetExpandoProperty(expandoProperties, "SiteRootDraftEditRoles", site.SiteRootDraftEditRoles);
-            //SetExpandoProperty(expandoProperties, "SiteRootEditRoles", site.SiteRootEditRoles);
-
-            // end roles
-
-            //SetExpandoProperty(expandoProperties, "SiteIsClosed", site.SiteIsClosed.ToString());
-            //SetExpandoProperty(expandoProperties, "SiteIsClosedMessage", site.SiteIsClosedMessage);
-            //SetExpandoProperty(expandoProperties, "SkinVersion", site.SkinVersion.ToString());
-            //SetExpandoProperty(expandoProperties, "SMTPUseSsl", site.SmtpUseSsl.ToString());
-            //SetExpandoProperty(expandoProperties, "SMTPRequiresAuthentication", site.SmtpRequiresAuth.ToString());
-            //SetExpandoProperty(expandoProperties, "SMTPServer", site.SmtpServer);
-            //SetExpandoProperty(expandoProperties, "SMTPPreferredEncoding", site.SmtpPreferredEncoding);
-            //SetExpandoProperty(expandoProperties, "SMTPPort", site.SmtpPort.ToString(CultureInfo.InvariantCulture));
-            //SetExpandoProperty(expandoProperties, "SMTPPassword", site.SmtpPassword);
-            //SetExpandoProperty(expandoProperties, "SMTPUser", site.SmtpUser);
-            //SetExpandoProperty(expandoProperties, "Slogan", site.Slogan);
-            //SetExpandoProperty(expandoProperties, "ShowAlternateSearchIfConfigured", site.ShowAlternateSearchIfConfigured.ToString());
-            //SetExpandoProperty(expandoProperties, "PrimarySearchEngine", site.PrimarySearchEngine);
-            //SetExpandoProperty(expandoProperties, "GoogleCustomSearchId", site.GoogleCustomSearchId);
-            //SetExpandoProperty(expandoProperties, "BingAPIId", site.BingAPIId);
-            //SetExpandoProperty(expandoProperties, "OpenSearchName", site.OpenSearchName);
-            //SetExpandoProperty(expandoProperties, "RpxNowAdminUrl", site.RpxNowAdminUrl);
-            //SetExpandoProperty(expandoProperties, "RpxNowApplicationName", site.RpxNowApplicationName);
-            //SetExpandoProperty(expandoProperties, "RpxNowApiKey", site.RpxNowApiKey);
-            //SetExpandoProperty(expandoProperties, "AppLogoForWindowsLive", site.AppLogoForWindowsLive);
-
-            //SetExpandoProperty(expandoProperties, "SiteMapSkin", site.SiteMapSkin);
-            //SetExpandoProperty(expandoProperties, "TimeZoneId", site.TimeZoneId);
-            //SetExpandoProperty(expandoProperties, "ShowPasswordStrengthOnRegistration", site.ShowPasswordStrengthOnRegistration);
-            //SetExpandoProperty(expandoProperties, "RequireEnterEmailTwiceOnRegistration", site.RequireEnterEmailTwiceOnRegistration);
-            //SetExpandoProperty(expandoProperties, "RequireCaptchaOnLogin", site.CaptchaOnLogin.ToString());
-            //SetExpandoProperty(expandoProperties, "RequireCaptchaOnRegistration", site.CaptchaOnRegistration.ToString());
-            //SetExpandoProperty(expandoProperties, "AllowPersistentLogin", site.AllowPersistentLogin.ToString());
-
-            //SetExpandoProperty(expandoProperties, "FacebookAppId", site.FacebookAppId);
-            //SetExpandoProperty(expandoProperties, "FacebookAppSecret", site.FacebookAppSecret);
-
-            //SetExpandoProperty(expandoProperties, "TwitterConsumerKey", site.TwitterConsumerKey);
-            //SetExpandoProperty(expandoProperties, "TwitterConsumerSecret", site.TwitterConsumerSecret);
-
-            //SetExpandoProperty(expandoProperties, "GoogleClientId", site.GoogleClientId);
-            //SetExpandoProperty(expandoProperties, "GoogleClientSecret", site.GoogleClientSecret);
-
         }
 
         private static string GetExpandoProperty(List<ExpandoSetting> exapandoProperties, string keyName)
@@ -614,8 +391,7 @@ namespace cloudscribe.Core.Models.DataExtensions
         }
 
         private static void SetExpandoProperty(List<ExpandoSetting> exapandoProperties, string keyName, string keyValue)
-        {
-            
+        {  
             foreach (ExpandoSetting s in exapandoProperties)
             {
                 if (s.KeyName.Trim().Equals(keyName, StringComparison.CurrentCulture))
@@ -627,11 +403,7 @@ namespace cloudscribe.Core.Models.DataExtensions
                     };
                     break;
                 }
-
             }
-
-
-
         }
 
         public static void LoadFromReader(this ILogItem logItem, DbDataReader reader)
@@ -649,18 +421,6 @@ namespace cloudscribe.Core.Models.DataExtensions
 
         }
 
-        //public static DataTable CreateExpandoTable()
-        //{
-        //    DataTable dataTable = new DataTable();
-        //    dataTable.TableName = "expandoProperties";
-        //    dataTable.Columns.Add("SiteID", typeof(int));
-        //    dataTable.Columns.Add("KeyName", typeof(string));
-        //    dataTable.Columns.Add("KeyValue", typeof(string));
-        //    dataTable.Columns.Add("GroupName", typeof(string));
-        //    dataTable.Columns.Add("IsDirty", typeof(bool));
-
-        //    return dataTable;
-
-        //}
+        
     }
 }

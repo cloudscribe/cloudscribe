@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-06-20
-// Last Modified:			2015-10-12
+// Last Modified:			2015-11-12
 // 
 
 using System;
@@ -65,7 +65,7 @@ namespace example.WebApp
             //{
             //    o.IdleTimeout = TimeSpan.FromSeconds(10);
             //});
-
+            
 
             //services.AddInstance<IConfiguration>(configuration);
             //services.TryAddScoped<ConfigHelper, ConfigHelper>();
@@ -88,56 +88,95 @@ namespace example.WebApp
 
             //*** Database platform ****************************************************************
             // here is where you could change to use one of the other db platforms
-            // we have support for MySql, PostgreSql, Firebird, SQLite, and SqlCe
-            // as of 2015-06-24 those can only be used in the full desktop framework (there are not yet ado.net drivers that support dnxcore50 but they should be available at some point)
-            // so you would have to remove the dnxcore50 from the project.json in this project
-            // add a nuget for one of the other cloudscribe.Core.Repositories.dbplatform 
+            // we have support for MSSQL MySql, PostgreSql, Firebird, SQLite, and SqlCe
+            // as of 2015-11-12 mssql, sqlite, pgsql work in dnxcore50 
+            // to use one of the others you would have to remove the dnxcore50 from the project.json in this project
+            // add a reference for one of the other cloudscribe.Core.Repositories.dbplatform 
             // and cloudscribe.DbHelpers.dbplatform packages
-            services.Configure<cloudscribe.DbHelpers.MSSQL.MSSQLConnectionOptions>(configuration.GetSection("Data:MSSQLConnectionOptions"));
-            services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.MSSQL.SiteRepository>();
-            services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.MSSQL.UserRepository>();
-            services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.MSSQL.GeoRepository>();
-            services.TryAddScoped<IDb, cloudscribe.DbHelpers.MSSQL.Db>();
-            services.TryAddScoped<ILogRepository, cloudscribe.Core.Repositories.MSSQL.LogRepository>();
 
-            //services.Configure<cloudscribe.DbHelpers.MySql.MySqlConnectionOptions>(configuration.GetSection("Data:MySqlConnectionOptions"));
-            //services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.MySql.SiteRepository>();
-            //services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.MySql.UserRepository>();
-            //services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.MySql.GeoRepository>();
-            //services.TryAddScoped<IDb, cloudscribe.DbHelpers.MySql.Db>();
-            //services.TryAddScoped<ILogRepository, cloudscribe.Core.Repositories.MySql.LogRepository>();
+            // this DevOptions can override from appsettings.localoverides.json
+            // making it easy to change the db platform you are working with
+            DevOptions devOptions = configuration.Get<DevOptions>();
 
-            //services.Configure<cloudscribe.DbHelpers.pgsql.PostgreSqlConnectionOptions>(configuration.GetSection("Data:PostgreSqlConnectionOptions"));
-            //services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.pgsql.SiteRepository>();
-            //services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.pgsql.UserRepository>();
-            //services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.pgsql.GeoRepository>();
-            //services.TryAddScoped<IDb, cloudscribe.DbHelpers.pgsql.Db>();
-            //services.TryAddScoped<ILogRepository, cloudscribe.Core.Repositories.pgsql.LogRepository>();
+            switch (devOptions.DbPlatform)
+            {
+                // the commented ones don't work yet in dnxcore50 so we can't add them to project.json
+                // without dropping dnxcore50
 
-            //services.Configure<cloudscribe.DbHelpers.Firebird.FirebirdConnectionOptions>(configuration.GetSection("Data:FirebirdConnectionOptions"));
-            //services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.Firebird.SiteRepository>();
-            //services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.Firebird.UserRepository>();
-            //services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.Firebird.GeoRepository>();
-            //services.TryAddScoped<IDb, cloudscribe.DbHelpers.Firebird.Db>();
-            //services.TryAddScoped<ILogRepository, cloudscribe.Core.Repositories.Firebird.LogRepository>();
+                //case "sqlce":
 
-            //services.Configure<cloudscribe.DbHelpers.SQLite.SqliteConnectionOptions>(configuration.GetSection("Data:SqliteConnectionOptions"));
-            //services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.SQLite.SiteRepository>();
-            //services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.SQLite.UserRepository>();
-            //services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.SQLite.GeoRepository>();
-            //services.TryAddScoped<IDb, cloudscribe.DbHelpers.SQLite.Db>();
-            //services.TryAddScoped<ILogRepository, cloudscribe.Core.Repositories.SQLite.LogRepository>();
-            //services.TryAddScoped<cloudscribe.DbHelpers.SQLite.SqliteConnectionstringResolver, cloudscribe.DbHelpers.SQLite.SqliteConnectionstringResolver>();
-
-            //services.Configure<cloudscribe.DbHelpers.SqlCe.SqlCeConnectionOptions>(configuration.GetSection("Data:SqlCeConnectionOptions"));
-            //services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.SqlCe.SiteRepository>();
-            //services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.SqlCe.UserRepository>();
-            //services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.SqlCe.GeoRepository>();
-            //services.TryAddScoped<IDb, cloudscribe.DbHelpers.SqlCe.Db>();
-            //services.TryAddScoped<ILogRepository, cloudscribe.Core.Repositories.SqlCe.LogRepository>();
-            //services.TryAddScoped<cloudscribe.DbHelpers.SqlCe.SqlCeConnectionStringResolver, cloudscribe.DbHelpers.SqlCe.SqlCeConnectionStringResolver>();
+                    //services.Configure<cloudscribe.DbHelpers.SqlCe.SqlCeConnectionOptions>(configuration.GetSection("Data:SqlCeConnectionOptions"));
+                    //services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.SqlCe.SiteRepository>();
+                    //services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.SqlCe.UserRepository>();
+                    //services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.SqlCe.GeoRepository>();
+                    //services.TryAddScoped<IDb, cloudscribe.DbHelpers.SqlCe.Db>();
+                    //services.TryAddScoped<ILogRepository, cloudscribe.Core.Repositories.SqlCe.LogRepository>();
+                    //services.TryAddScoped<cloudscribe.DbHelpers.SqlCe.SqlCeConnectionStringResolver, cloudscribe.DbHelpers.SqlCe.SqlCeConnectionStringResolver>();
 
 
+                    //break;
+
+                //case "firebird":
+
+                    //services.Configure<cloudscribe.DbHelpers.Firebird.FirebirdConnectionOptions>(configuration.GetSection("Data:FirebirdConnectionOptions"));
+                    //services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.Firebird.SiteRepository>();
+                    //services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.Firebird.UserRepository>();
+                    //services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.Firebird.GeoRepository>();
+                    //services.TryAddScoped<IDb, cloudscribe.DbHelpers.Firebird.Db>();
+                    //services.TryAddScoped<ILogRepository, cloudscribe.Core.Repositories.Firebird.LogRepository>();
+
+                    //break;
+
+
+                //case "mysql":
+
+                    //services.Configure<cloudscribe.DbHelpers.MySql.MySqlConnectionOptions>(configuration.GetSection("Data:MySqlConnectionOptions"));
+                    //services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.MySql.SiteRepository>();
+                    //services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.MySql.UserRepository>();
+                    //services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.MySql.GeoRepository>();
+                    //services.TryAddScoped<IDb, cloudscribe.DbHelpers.MySql.Db>();
+                    //services.TryAddScoped<ILogRepository, cloudscribe.Core.Repositories.MySql.LogRepository>();
+
+                   // break;
+
+                case "sqlite":
+
+                    services.Configure<cloudscribe.DbHelpers.SQLite.SqliteConnectionOptions>(configuration.GetSection("Data:SqliteConnectionOptions"));
+                    services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.SQLite.SiteRepository>();
+                    services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.SQLite.UserRepository>();
+                    services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.SQLite.GeoRepository>();
+                    services.TryAddScoped<IDb, cloudscribe.DbHelpers.SQLite.Db>();
+                    services.TryAddScoped<ILogRepository, cloudscribe.Core.Repositories.SQLite.LogRepository>();
+                    services.TryAddScoped<cloudscribe.DbHelpers.SQLite.SqliteConnectionstringResolver, cloudscribe.DbHelpers.SQLite.SqliteConnectionstringResolver>();
+                    
+                    break;
+
+                    
+                case "pgsql":
+
+                    services.Configure<cloudscribe.DbHelpers.pgsql.PostgreSqlConnectionOptions>(configuration.GetSection("Data:PostgreSqlConnectionOptions"));
+                    services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.pgsql.SiteRepository>();
+                    services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.pgsql.UserRepository>();
+                    services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.pgsql.GeoRepository>();
+                    services.TryAddScoped<IDb, cloudscribe.DbHelpers.pgsql.Db>();
+                    services.TryAddScoped<ILogRepository, cloudscribe.Core.Repositories.pgsql.LogRepository>();
+
+                    break;
+
+                case "mssql":
+                default:
+
+                    services.Configure<cloudscribe.DbHelpers.MSSQL.MSSQLConnectionOptions>(configuration.GetSection("Data:MSSQLConnectionOptions"));
+                    services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.MSSQL.SiteRepository>();
+                    services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.MSSQL.UserRepository>();
+                    services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.MSSQL.GeoRepository>();
+                    services.TryAddScoped<IDb, cloudscribe.DbHelpers.MSSQL.Db>();
+                    services.TryAddScoped<ILogRepository, cloudscribe.Core.Repositories.MSSQL.LogRepository>();
+
+                    break;
+            }
+
+            
             //**************************************************************************************
 
             // RequestSiteResolver resolves ISiteSettings based on the request to support multi tenancy based on either host name or first folder depending on configuration

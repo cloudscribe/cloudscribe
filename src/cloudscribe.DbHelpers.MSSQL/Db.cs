@@ -394,13 +394,13 @@ namespace cloudscribe.DbHelpers.MSSQL
         }
 
         public bool UpdateTableField(
-            String connectionString,
-            String tableName,
-            String keyFieldName,
-            String keyFieldValue,
-            String dataFieldName,
-            String dataFieldValue,
-            String additionalWhere)
+            string connectionString,
+            string tableName,
+            string keyFieldName,
+            string keyFieldValue,
+            string dataFieldName,
+            string dataFieldValue,
+            string additionalWhere)
         {
             bool result = false;
 
@@ -439,12 +439,12 @@ namespace cloudscribe.DbHelpers.MSSQL
         }
 
         public bool UpdateTableField(
-            String tableName,
-            String keyFieldName,
-            String keyFieldValue,
-            String dataFieldName,
-            String dataFieldValue,
-            String additionalWhere)
+            string tableName,
+            string keyFieldName,
+            string keyFieldValue,
+            string dataFieldName,
+            string dataFieldValue,
+            string additionalWhere)
         {
             bool result = false;
 
@@ -483,9 +483,9 @@ namespace cloudscribe.DbHelpers.MSSQL
         }
 
         public DbDataReader GetReader(
-            String connectionString,
-            String tableName,
-            String whereClause)
+            string connectionString,
+            string tableName,
+            string whereClause)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT * ");
@@ -530,46 +530,7 @@ namespace cloudscribe.DbHelpers.MSSQL
 
         }
 
-        //public DataTable GetTable(
-        //    String connectionString,
-        //    String tableName,
-        //    String whereClause)
-        //{
-        //    StringBuilder sqlCommand = new StringBuilder();
-        //    sqlCommand.Append("SELECT * ");
-        //    sqlCommand.Append("FROM " + tableName + " ");
-        //    sqlCommand.Append(whereClause);
-        //    sqlCommand.Append("  ");
-
-        //    DataSet ds = AdoHelper.ExecuteDataset(
-        //        connectionString,
-        //        CommandType.Text,
-        //        sqlCommand.ToString());
-
-        //    return ds.Tables[0];
-
-        //}
-//#if DNX451
-//        public bool TableExists(string tableName)
-//        {
-//            //return mojoPortal.Data.Common.DBPortal.DatabaseHelperTableExists(tableName);
-
-//            using (SqlConnection connection = new SqlConnection(writeConnectionString))
-//            {
-//                string[] restrictions = new string[4];
-//                restrictions[2] = tableName;
-//                connection.Open();
-//                DataTable table = connection.GetSchema("Tables", restrictions);
-//                if (table != null)
-//                {
-//                    //return (table.Rows.Count > 0);
-//                    return true;
-//                }
-//            }
-
-//            return false;
-//        }
-//#else
+       
         public bool TableExists(string tableName)
         {
             try
@@ -598,7 +559,6 @@ namespace cloudscribe.DbHelpers.MSSQL
             return false;
         }
 
-//#endif
 
         public bool SitesTableExists()
         {
@@ -627,7 +587,6 @@ namespace cloudscribe.DbHelpers.MSSQL
         }
 
 
-        
         public Guid GetOrGenerateSchemaApplicationId(string applicationName)
         {
             IVersionProvider versionProvider = versionProviders.Get(applicationName);
@@ -651,7 +610,6 @@ namespace cloudscribe.DbHelpers.MSSQL
                 log.LogError("error", ex);
             }
 
-
             return appID;
 
         }
@@ -674,12 +632,12 @@ namespace cloudscribe.DbHelpers.MSSQL
           int build,
           int revision)
         {
-
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
                 writeConnectionString, 
                 "mp_SchemaVersion_Insert", 
                 6);
+
             sph.DefineSqlParameter("@ApplicationID", SqlDbType.UniqueIdentifier, ParameterDirection.Input, applicationId);
             sph.DefineSqlParameter("@ApplicationName", SqlDbType.NVarChar, ParameterDirection.Input, applicationName);
             sph.DefineSqlParameter("@Major", SqlDbType.Int, ParameterDirection.Input, major);
