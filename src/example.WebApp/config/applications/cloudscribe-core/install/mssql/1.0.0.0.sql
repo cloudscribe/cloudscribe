@@ -165,7 +165,6 @@ CREATE TABLE [dbo].[mp_Users](
 	[RolesChanged] [bit] NULL,
 	[AuthorBio] [nvarchar](max) NULL,
 	[DateOfBirth] [datetime] NULL,
-	[PwdFormat] [int] NOT NULL,
 	[EmailConfirmed] [bit] NOT NULL,
 	[PasswordHash] [nvarchar](max) NULL,
 	[SecurityStamp] [nvarchar](max) NULL,
@@ -4975,7 +4974,6 @@ Last Modified:	2014-07-23
 @RolesChanged bit,
 @AuthorBio nvarchar(max),
 @DateOfBirth	datetime,
-@PwdFormat int,
 @EmailConfirmed bit,
 @PasswordHash nvarchar(max),
 @SecurityStamp nvarchar(max),
@@ -5028,7 +5026,6 @@ SET			[Name] = @Name,
 			RolesChanged = @RolesChanged,
 			AuthorBio = @AuthorBio,
 			DateOfBirth = @DateOfBirth,
-			PwdFormat = @PwdFormat,
 			EmailConfirmed = @EmailConfirmed,
 			PasswordHash = @PasswordHash,
 			SecurityStamp = @SecurityStamp,
@@ -6375,7 +6372,6 @@ Last Modified:	2014-07-23
 @EmailChangeGuid	uniqueidentifier,
 @DateOfBirth	datetime,
 @EmailConfirmed bit,
-@PwdFormat int,
 @PasswordHash nvarchar(max),
 @SecurityStamp nvarchar(max),
 @PhoneNumber nvarchar(50),
@@ -6405,7 +6401,6 @@ INSERT INTO 		mp_Users
 			PasswordResetGuid,
 			PasswordSalt,
 			DateOfBirth,
-			PwdFormat,
 			EmailConfirmed,
 			PasswordHash,
 			SecurityStamp,
@@ -6437,7 +6432,6 @@ VALUES
 			'00000000-0000-0000-0000-000000000000',
 			@PasswordSalt,
 			@DateOfBirth,
-			@PwdFormat,
 			@EmailConfirmed,
 			@PasswordHash,
 			@SecurityStamp,
@@ -7425,8 +7419,7 @@ ALTER TABLE [dbo].[mp_Users] ADD  CONSTRAINT [DF_mp_Users_IsDeleted]  DEFAULT ((
 GO
 ALTER TABLE [dbo].[mp_Users] ADD  CONSTRAINT [DF_mp_Users_IsLockedOut]  DEFAULT ((0)) FOR [IsLockedOut]
 GO
-ALTER TABLE [dbo].[mp_Users] ADD  DEFAULT ((0)) FOR [PwdFormat]
-GO
+
 ALTER TABLE [dbo].[mp_Users] ADD  DEFAULT ((1)) FOR [EmailConfirmed]
 GO
 ALTER TABLE [dbo].[mp_Users] ADD  DEFAULT ((0)) FOR [PhoneNumberConfirmed]

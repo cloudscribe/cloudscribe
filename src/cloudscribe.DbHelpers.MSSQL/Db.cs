@@ -549,27 +549,27 @@ namespace cloudscribe.DbHelpers.MSSQL
         //    return ds.Tables[0];
 
         //}
-#if DNX451
-        public bool TableExists(string tableName)
-        {
-            //return mojoPortal.Data.Common.DBPortal.DatabaseHelperTableExists(tableName);
+//#if DNX451
+//        public bool TableExists(string tableName)
+//        {
+//            //return mojoPortal.Data.Common.DBPortal.DatabaseHelperTableExists(tableName);
 
-            using (SqlConnection connection = new SqlConnection(writeConnectionString))
-            {
-                string[] restrictions = new string[4];
-                restrictions[2] = tableName;
-                connection.Open();
-                DataTable table = connection.GetSchema("Tables", restrictions);
-                if (table != null)
-                {
-                    //return (table.Rows.Count > 0);
-                    return true;
-                }
-            }
+//            using (SqlConnection connection = new SqlConnection(writeConnectionString))
+//            {
+//                string[] restrictions = new string[4];
+//                restrictions[2] = tableName;
+//                connection.Open();
+//                DataTable table = connection.GetSchema("Tables", restrictions);
+//                if (table != null)
+//                {
+//                    //return (table.Rows.Count > 0);
+//                    return true;
+//                }
+//            }
 
-            return false;
-        }
-#else
+//            return false;
+//        }
+//#else
         public bool TableExists(string tableName)
         {
             try
@@ -598,7 +598,7 @@ namespace cloudscribe.DbHelpers.MSSQL
             return false;
         }
 
-#endif
+//#endif
 
         public bool SitesTableExists()
         {

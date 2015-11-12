@@ -803,11 +803,9 @@ GO
 ALTER TABLE [dbo].mp_Users DROP COLUMN EditorPreference
 GO
 
-ALTER TABLE [dbo].mp_Users DROP CONSTRAINT DF__mp_Users__PwdFor__14E61A24
-GO
 
-ALTER TABLE [dbo].mp_Users DROP COLUMN PwdFormat
-GO
+-- ALTER TABLE [dbo].mp_Users DROP COLUMN PwdFormat
+-- GO
 
 ALTER TABLE [dbo].mp_Users DROP COLUMN MobilePIN
 GO
