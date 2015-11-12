@@ -189,7 +189,7 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append("smtppreferredencoding, ");
             sqlCommand.Append("smtprequiresauth, ");
             sqlCommand.Append("smtpusessl, ");
-            sqlCommand.Append("requireapprovalbeforelogin, ");
+            sqlCommand.Append("requireapprovalbeforelogin ");
 
 
             sqlCommand.Append(") ");
@@ -270,7 +270,7 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append(":smtppreferredencoding, ");
             sqlCommand.Append(":smtprequiresauth, ");
             sqlCommand.Append(":smtpusessl, ");
-            sqlCommand.Append(":requireapprovalbeforelogin, ");
+            sqlCommand.Append(":requireapprovalbeforelogin ");
 
             sqlCommand.Append(") ");
             sqlCommand.Append(";");
@@ -600,7 +600,6 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             sqlCommand.Append("sitename = :sitename, ");
             sqlCommand.Append("skin = :skin, ");
-            sqlCommand.Append("allowhidemenuonpages = :allowhidemenuonpages, ");
             sqlCommand.Append("allownewregistration = :allownewregistration, ");
             sqlCommand.Append("usesecureregistration = :usesecureregistration, ");
             sqlCommand.Append("usesslonallpages = :usesslonallpages, ");

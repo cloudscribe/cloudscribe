@@ -248,7 +248,15 @@ namespace cloudscribe.Core.Web.Components
             // this format allows migrating from mojoportal
             adminUser.PasswordHash = "admin||0"; //pwd/salt/format 
            
-            result = await userRepo.Save(adminUser);
+            try
+            {
+                result = await userRepo.Save(adminUser);
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+            
 
             
             result = await userRepo.AddUserToRole(

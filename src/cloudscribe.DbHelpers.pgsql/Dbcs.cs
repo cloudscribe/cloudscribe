@@ -167,18 +167,21 @@ namespace cloudscribe.DbHelpers.pgsql
             }
 
             sqlCommand = new StringBuilder();
-            sqlCommand.Append("BEGIN; LOCK mp_testdb; ALTER TABLE mp_testdb ADD COLUMN morefoo character varying(255);  COMMIT;");
+            //sqlCommand.Append("BEGIN; LOCK mp_testdb; ALTER TABLE mp_testdb ADD COLUMN morefoo character varying(255);  COMMIT;");
+            sqlCommand.Append("ALTER TABLE mp_testdb ADD COLUMN morefoo character varying(255);");
 
             try
             {
                 RunScript(sqlCommand.ToString(), overrideConnectionInfo);
             }
-            catch (DbException)
+            catch (DbException dbx)
             {
+                log.LogError("error in can alter shcema", dbx);
                 result = false;
             }
-            catch (ArgumentException)
+            catch (ArgumentException agx)
             {
+                log.LogError("error in can alter shcema", agx);
                 result = false;
             }
 
@@ -501,6 +504,8 @@ namespace cloudscribe.DbHelpers.pgsql
                         return true;
                     }
                 }
+                // if no error table exists
+                return true;
             }
             catch { }
 

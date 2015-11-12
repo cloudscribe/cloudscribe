@@ -21,7 +21,7 @@ namespace cloudscribe.DbHelpers.MySql
     {
         public Db(
             ILoggerFactory loggerFactory,
-            IOptions<MySqlConnectionOptionscs> configuration,
+            IOptions<MySqlConnectionOptions> configuration,
             IVersionProviderFactory versionProviderFactory)
         {
             if (loggerFactory == null) { throw new ArgumentNullException(nameof(loggerFactory)); }

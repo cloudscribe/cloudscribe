@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //	Author:                 Joe Audette
 //  Created:			    2011-08-18
-//	Last Modified:		    2015-10-16
+//	Last Modified:		    2015-11-11
 // 
 
 using cloudscribe.Core.Models.DataExtensions;
@@ -20,24 +20,23 @@ namespace cloudscribe.Core.Repositories.MySql
     public class LogRepository : ILogRepository
     {
         public LogRepository(
-            IOptions<MySqlConnectionOptionscs> configuration,
-            ILoggerFactory loggerFactory)
+            IOptions<MySqlConnectionOptions> configuration)
         {
             if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
-            if (loggerFactory == null) { throw new ArgumentNullException(nameof(loggerFactory)); }
+            //if (loggerFactory == null) { throw new ArgumentNullException(nameof(loggerFactory)); }
 
-            logFactory = loggerFactory;
-            log = loggerFactory.CreateLogger(typeof(GeoRepository).FullName);
+            //logFactory = loggerFactory;
+            //log = loggerFactory.CreateLogger(typeof(GeoRepository).FullName);
 
             readConnectionString = configuration.Value.ReadConnectionString;
             writeConnectionString = configuration.Value.WriteConnectionString;
 
-            dbSystemLog = new DBSystemLog(readConnectionString, writeConnectionString, logFactory);
+            dbSystemLog = new DBSystemLog(readConnectionString, writeConnectionString);
         }
 
 
-        private ILoggerFactory logFactory;
-        private ILogger log;
+        //private ILoggerFactory logFactory;
+        //private ILogger log;
         private string readConnectionString;
         private string writeConnectionString;
         private DBSystemLog dbSystemLog;

@@ -81,7 +81,7 @@ ALTER TABLE mp_users DROP COLUMN icq;
 ALTER TABLE mp_users DROP COLUMN totalposts;
 ALTER TABLE mp_users DROP COLUMN timeoffsethours;
 ALTER TABLE mp_users DROP COLUMN skin;
-
+ALTER TABLE mp_users DROP COLUMN password;
 ALTER TABLE mp_users DROP COLUMN passwordsalt;
 ALTER TABLE mp_users DROP COLUMN openiduri;
 ALTER TABLE mp_users DROP COLUMN windowsliveid;

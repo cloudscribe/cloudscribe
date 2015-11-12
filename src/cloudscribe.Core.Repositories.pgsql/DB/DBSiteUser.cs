@@ -1916,6 +1916,7 @@ namespace cloudscribe.Core.Repositories.pgsql
                 sqlCommand.Append("(");
                 sqlCommand.Append("loginname = :loginname ");
                 sqlCommand.Append("OR email = :loginname ");
+                sqlCommand.Append("OR loweredemail = :loweredloginname ");
                 sqlCommand.Append(")");
             }
             else
@@ -1925,13 +1926,16 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             sqlCommand.Append(";");
 
-            NpgsqlParameter[] arParams = new NpgsqlParameter[2];
+            NpgsqlParameter[] arParams = new NpgsqlParameter[3];
 
             arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
             arParams[0].Value = siteId;
 
             arParams[1] = new NpgsqlParameter("loginname", NpgsqlTypes.NpgsqlDbType.Text, 50);
             arParams[1].Value = loginName;
+
+            arParams[2] = new NpgsqlParameter("loweredloginname", NpgsqlTypes.NpgsqlDbType.Text, 50);
+            arParams[2].Value = loginName.ToLowerInvariant();
 
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
@@ -1956,6 +1960,7 @@ namespace cloudscribe.Core.Repositories.pgsql
                 sqlCommand.Append("(");
                 sqlCommand.Append("loginname = :loginname ");
                 sqlCommand.Append("OR email = :loginname ");
+                sqlCommand.Append("OR loweredemail = :loweredloginname ");
                 sqlCommand.Append(")");
             }
             else
@@ -1965,13 +1970,16 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             sqlCommand.Append(";");
 
-            NpgsqlParameter[] arParams = new NpgsqlParameter[2];
+            NpgsqlParameter[] arParams = new NpgsqlParameter[3];
 
             arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
             arParams[0].Value = siteId;
 
             arParams[1] = new NpgsqlParameter("loginname", NpgsqlTypes.NpgsqlDbType.Text, 50);
             arParams[1].Value = loginName;
+
+            arParams[2] = new NpgsqlParameter("loweredloginname", NpgsqlTypes.NpgsqlDbType.Text, 50);
+            arParams[2].Value = loginName.ToLowerInvariant();
 
             return AdoHelper.ExecuteReader(
                 readConnectionString,

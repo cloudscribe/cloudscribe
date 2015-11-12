@@ -7,10 +7,10 @@
     "cloudscribe.Core.Identity": "1.0.0-*",
     "cloudscribe.Core.Models": "1.0.0-*",
     "cloudscribe.Core.Repositories.MSSQL": "1.0.0-*",
-    "cloudscribe.Core.Repositories.Firebird": "1.0.0-*",
+    "cloudscribe.Core.Repositories.pgsql": "1.0.0-*",
     "cloudscribe.Core.Web": "1.0.0-*",
     "cloudscribe.DbHelpers.MSSQL": "1.0.0-*",
-    "cloudscribe.DbHelpers.Firebird": "1.0.0-*",
+    "cloudscribe.DbHelpers.pgsql": "1.0.0-*",
     "cloudscribe.Messaging": "1.0.0-*",
     "cloudscribe.Web.Navigation": "1.0.0-*",
 	"cloudscribe.Web.Pagination": "1.0.0-beta1",
@@ -51,7 +51,8 @@
   },
 
     "frameworks": {
-      "dnx451": { }
+      "dnx451": { },
+      "dnxcore50": { }
     },
 
     "exclude": [

@@ -2,14 +2,14 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-08-06
-// Last Modified:			2015-08-06
+// Last Modified:			2015-11-11
 // 
 
 
 
 namespace cloudscribe.DbHelpers.MySql
 {
-    public class MySqlConnectionOptionscs
+    public class MySqlConnectionOptions
     {
         private string connectionString = string.Empty;
 

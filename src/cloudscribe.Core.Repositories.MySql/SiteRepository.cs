@@ -22,7 +22,7 @@ namespace cloudscribe.Core.Repositories.MySql
     public sealed class SiteRepository : ISiteRepository
     {
         public SiteRepository(
-            IOptions<MySqlConnectionOptionscs> configuration,
+            IOptions<MySqlConnectionOptions> configuration,
             ILoggerFactory loggerFactory)
         {
             if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
