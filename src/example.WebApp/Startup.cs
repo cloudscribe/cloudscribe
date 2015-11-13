@@ -90,8 +90,6 @@ namespace example.WebApp
             // we may need this on linux/mac as urls are case sensitive by default
             //services.Configure<RouteOptions>(routeOptions => routeOptions.LowercaseUrls = true);
 
-            services.Configure<DevOptions>(Configuration.GetSection("DevOptions"));
-
             // Setup dependencies for cloudscribe Identity, Roles and and Site Administration
             // this is in Startup.CloudscribeCore.DI.MS.cs
             services.ConfigureCloudscribeCore(Configuration);

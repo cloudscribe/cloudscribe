@@ -96,7 +96,7 @@ namespace example.WebApp
 
             // this DevOptions can override from appsettings.localoverides.json
             // making it easy to change the db platform you are working with
-            DevOptions devOptions = configuration.Get<DevOptions>();
+            DevOptions devOptions = configuration.Get<DevOptions>("DevOptions");
 
             switch (devOptions.DbPlatform)
             {
