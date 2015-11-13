@@ -24,10 +24,11 @@ This project is in early stages, not yet production ready, we are building on a 
 * TagHelpers for navigation menus, breadcrumbs - via [cloudscribe.Web.Navigation project](https://github.com/joeaudette/cloudscribe.Web.Navigation)
 * Unobtrusive js for CKeditor
 * async all the way down - vast majority of the data access is async except with file based databases such as Sqlite and sqlce
-* Currently the project has repository implementations for MSSQL, MySql, PostgreSql, Firebird, SQLCe, and Sqlite, however only MSSQL, pgsql, and Sqlite are currently supported under dnxcore50 because current ADO drivers for the other db platforms are only working in dnx451. Most of the database schema and data access code was re-purposed and refactored from the mojoportal project, there is still some refactoring and cleanup to be done. There are some data fields that may be removed or moved to new tables later.
-* Possibly later we could implement repositories based on Entity Framework 7 but a goal of the project for me is to not force a specific ORM on anyone.
+* Currently the project has repository implementations for MSSQL, MySql, PostgreSql, Firebird, SQLCe, and Sqlite, however only MSSQL, pgsql, and Sqlite are currently supported under dnxcore50 because current ADO drivers for the other db platforms are only working in dnx451. Most of the database schema and data access code was re-purposed and refactored from the mojoportal project, and therefore provide a possibility to migrate from mojoPortal.
+* A goal of the project for me is to not force a specific ORM on anyone, but, I do want to try to also provide support for using EF7.
 
 ##### Planned Features:
+* EF7 Support - I am interested in trying to implement the data repositories with EF7 as a way for me to learn EF7. I expect that many or most people who build on top of cloudscribe will want to use EF7. Things could be built on top of cloudscribe using EF7 regardless of whether using EF for the core repositories, but I think it would be good to also have an implementation of the core repositories that does use EF7.
 * Localization Support - waiting for runtime and tooling support which may be in beta8 of asp.net 5
 * Caching - memory  cache and distributed cache options
 * TagHelpers to do data- annotations in support of our unobtrusive js for ckeditor
