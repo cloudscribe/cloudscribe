@@ -24,14 +24,13 @@ This project is in early stages, not yet production ready, we are building on a 
 * TagHelpers for navigation menus, breadcrumbs - via [cloudscribe.Web.Navigation project](https://github.com/joeaudette/cloudscribe.Web.Navigation)
 * Unobtrusive js for CKeditor
 * async all the way down - vast majority of the data access is async except with file based databases such as Sqlite and sqlce
-* Currently the project has repository implementations for MSSQL, MySql, PostgreSql, Firebird, SQLCe, and Sqlite, however only MSSQL and Sqlite are currently supported under dnxcore50 because current ADO drivers for the other db platforms are only working in dnx451. Most of the database schema and data access code was re-purposed and refactored from the mojoportal project, there is still some refactoring and cleanup to be done. There are some data fields that may be removed or moved to new tables later.
+* Currently the project has repository implementations for MSSQL, MySql, PostgreSql, Firebird, SQLCe, and Sqlite, however only MSSQL, pgsql, and Sqlite are currently supported under dnxcore50 because current ADO drivers for the other db platforms are only working in dnx451. Most of the database schema and data access code was re-purposed and refactored from the mojoportal project, there is still some refactoring and cleanup to be done. There are some data fields that may be removed or moved to new tables later.
 * Possibly later we could implement repositories based on Entity Framework 7 but a goal of the project for me is to not force a specific ORM on anyone.
 
 ##### Planned Features:
 * Localization Support - waiting for runtime and tooling support which may be in beta8 of asp.net 5
 * Caching - memory  cache and distributed cache options
 * TagHelpers to do data- annotations in support of our unobtrusive js for ckeditor
-* System Profiling (via Glimpse) - pending news from the Glimpse team who are working now at Microsoft
 * Lots of miscellaneous smaller stuff
 
 ##### Other things we'd like to see:
