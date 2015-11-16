@@ -66,9 +66,6 @@ namespace example.WebApp
             //    o.IdleTimeout = TimeSpan.FromSeconds(10);
             //});
             
-
-            //services.AddInstance<IConfiguration>(configuration);
-            //services.TryAddScoped<ConfigHelper, ConfigHelper>();
             services.Configure<MultiTenantOptions>(configuration.GetSection("MultiTenantOptions"));
             services.Configure<SetupOptions>(configuration.GetSection("SetupOptions"));
             services.Configure<UIOptions>(configuration.GetSection("UIOptions"));

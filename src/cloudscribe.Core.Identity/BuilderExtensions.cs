@@ -99,6 +99,20 @@ namespace cloudscribe.Core.Identity
             options.Cookies.ApplicationCookie.CookieName = AuthenticationScheme.Application;
             options.Cookies.ApplicationCookie.AuthenticationScheme = AuthenticationScheme.Application;
             options.Cookies.ApplicationCookie.Events = cookieEvents;
+
+            // these need to be resolved from site settings
+            //options.Lockout.DefaultLockoutTimeSpan
+            //options.Lockout.MaxFailedAccessAttempts
+            //options.SecurityStampValidationInterval
+            //options.SignIn.RequireConfirmedEmail
+            //options.SignIn.RequireConfirmedPhoneNumber
+            //options.Password.RequireDigit
+            //options.Password.RequiredLength
+            //options.Password.RequireLowercase
+            //options.Password.RequireNonLetterOrDigit
+            //options.Password.RequireUppercase
+            //options.User.AllowedUserNameCharacters
+            //options.User.RequireUniqueEmail
             
             app.UseMultiTenantCookieAuthentication(options.Cookies.ExternalCookie);
 
