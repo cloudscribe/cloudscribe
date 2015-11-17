@@ -9,6 +9,7 @@
     "cloudscribe.Core.Repositories.MSSQL": "1.0.0-*",
     "cloudscribe.Core.Repositories.pgsql": "1.0.0-*",
     "cloudscribe.Core.Repositories.SQLite": "1.0.0-*",
+    "cloudscribe.Core.Repositories.EF": "1.0.0-*",
     "cloudscribe.Core.Web": "1.0.0-*",
     "cloudscribe.DbHelpers.MSSQL": "1.0.0-*",
     "cloudscribe.DbHelpers.pgsql": "1.0.0-*",
@@ -43,7 +44,11 @@
     "Microsoft.Framework.Localization": "1.0.0-beta8",
     "Microsoft.Framework.Logging": "1.0.0-beta8",
     "Microsoft.Framework.Logging.Console": "1.0.0-beta8",
-    "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.0.0-beta8"
+    "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.0.0-beta8",
+    "EntityFramework.Core": "7.0.0-beta8",
+    "EntityFramework.Commands": "7.0.0-beta8",
+    "EntityFramework.SqlServer": "7.0.0-beta8",
+    "Microsoft.AspNet.Diagnostics.Entity": "7.0.0-beta8"
   },
 
   "commands": {

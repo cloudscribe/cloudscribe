@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-06-20
-// Last Modified:			2015-11-12
+// Last Modified:			2015-11-17
 // 
 
 using System;
@@ -18,6 +18,7 @@ using Microsoft.AspNet.Authentication.Google;
 using Microsoft.AspNet.Authentication.MicrosoftAccount;
 using Microsoft.AspNet.Authentication.Twitter;
 using Microsoft.AspNet.Session;
+using Microsoft.Data.Entity;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.DependencyInjection.Extensions;
 using Microsoft.Framework.Caching;
@@ -44,6 +45,8 @@ using cloudscribe.Messaging;
 using cloudscribe.Web.Navigation;
 using cloudscribe.Web.Pagination;
 using cloudscribe.Core.Identity;
+using cloudscribe.Core.Repositories.EF;
+
 
 namespace example.WebApp
 {
@@ -97,6 +100,22 @@ namespace example.WebApp
 
             switch (devOptions.DbPlatform)
             {
+                case "EF7":
+
+                    services.TryAddScoped<ICoreModelMapper, SqlServerCoreModelMapper>();
+
+                    services.AddEntityFramework()
+                    .AddSqlServer()
+                    .AddDbContext<CoreDbContext>(options => 
+                        options.UseSqlServer(configuration["Data:EF7ConnectionOptions:ConnectionString"])
+              
+                    )  
+                    ;
+
+
+                    break;
+
+
                 // the commented ones don't work yet in dnxcore50 so we can't add them to project.json
                 // without dropping dnxcore50
 
