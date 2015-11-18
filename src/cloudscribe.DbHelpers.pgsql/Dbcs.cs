@@ -1,12 +1,12 @@
 ﻿// Original Author:					Joseph Hill
 // Created:							2005-02-16 
 // Additions and fixes have been added by Joe Audette, Dean Brettle, TJ Fontaine
-// Last Modified:                   2015-10-16
+// Last Modified:                   2015-11-18
 
 
 using cloudscribe.Core.Models;
-using Microsoft.Framework.OptionsModel;
-using Microsoft.Framework.Logging;
+using Microsoft.Extensions.OptionsModel;
+using Microsoft.Extensions.Logging;
 using Npgsql;
 using NpgsqlTypes;
 using System;

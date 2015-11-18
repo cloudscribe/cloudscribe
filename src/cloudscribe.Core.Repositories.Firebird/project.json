@@ -12,16 +12,17 @@
   "requireLicenseAcceptance": false,
   "releaseNotes": "",
 
-    "dependencies": {
-        "cloudscribe.Core.Models": "1.0.0-*",
-        "cloudscribe.DbHelpers.Firebird": "1.0.0-*",
-        "FirebirdSql.Data.FirebirdClient": "4.6.2",
-        "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta8",
-        "Microsoft.Framework.Configuration.Abstractions": "1.0.0-beta8"
-    },
+  "dependencies": {
+    "cloudscribe.Core.Models": "1.0.0-*",
+    "cloudscribe.DbHelpers.Firebird": "1.0.0-*",
+    "FirebirdSql.Data.FirebirdClient": "4.6.2",
+    "Microsoft.Extensions.Logging.Abstractions": "1.0.0-rc1-final",
+    "Microsoft.Extensions.Configuration.Abstractions": "1.0.0-rc1-final",
+    "Microsoft.Extensions.OptionsModel" : "1.0.0-rc1-final"
+  },
 
     "frameworks": {
-        "dnx451": { }
+        "net451": { }
 
     }
 }

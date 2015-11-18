@@ -2,11 +2,11 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2004-08-03
-// Last Modified:		    2015-11-11
+// Last Modified:		    2015-11-18
 
 using cloudscribe.Core.Models;
 using Microsoft.Data.Sqlite;
-using Microsoft.Framework.Logging;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Data;
 using System.Data.Common;
@@ -201,7 +201,7 @@ namespace cloudscribe.DbHelpers.SQLite
             {
                 if(ex is DbException)
                 {
-                    string foo = "foo";
+                    //string foo = "foo";
                 }
                 result = false;
             }

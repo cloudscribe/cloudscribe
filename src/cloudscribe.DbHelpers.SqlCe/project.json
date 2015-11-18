@@ -15,13 +15,14 @@
   "dependencies": {
     "cloudscribe.Core.Models": "1.0.0-*",
     "Microsoft.SqlServer.Compact": "4.0.8876.1",
-    "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta8",
-    "Microsoft.Framework.OptionsModel": "1.0.0-beta8"
+    "Microsoft.Extensions.Logging": "1.0.0-rc1-final",
+    "Microsoft.Extensions.OptionsModel": "1.0.0-rc1-final",
+    "Microsoft.Extensions.PlatformAbstractions": "1.0.0-rc1-final"
 
   },
 
   "frameworks": {
-    "dnx451": {
+    "net451": {
       "frameworkAssemblies": {
         "System.Data": "",
         "System.Web": "4.0.0.0"

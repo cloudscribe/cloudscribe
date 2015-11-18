@@ -2,11 +2,11 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-11-02
+// Last Modified:			2015-11-18
 // 
 
 using cloudscribe.DbHelpers.pgsql;
-using Microsoft.Framework.Logging;
+using Microsoft.Extensions.Logging;
 using Npgsql;
 using System;
 using System.Data;

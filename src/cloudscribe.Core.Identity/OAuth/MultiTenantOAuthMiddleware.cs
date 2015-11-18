@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-27
-// Last Modified:		    2015-09-04
+// Last Modified:		    2015-11-18
 // 
 
 
@@ -12,9 +12,9 @@ using Microsoft.AspNet.Authentication;
 using Microsoft.AspNet.Authentication.OAuth;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.DataProtection;
-using Microsoft.Framework.Logging;
-using Microsoft.Framework.OptionsModel;
-using Microsoft.Framework.WebEncoders;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.OptionsModel;
+using Microsoft.Extensions.WebEncoders;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;

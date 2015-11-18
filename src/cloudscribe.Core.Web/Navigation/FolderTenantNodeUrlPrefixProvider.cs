@@ -2,13 +2,13 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-08-02
-// Last Modified:			2015-10-17
+// Last Modified:			2015-11-18
 // 
 
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Models;
 using cloudscribe.Web.Navigation;
-using Microsoft.Framework.OptionsModel;
+using Microsoft.Extensions.OptionsModel;
 
 namespace cloudscribe.Core.Web.Navigation
 {

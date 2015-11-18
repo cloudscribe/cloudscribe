@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-11-05
+// Last Modified:			2015-11-18
 //
 
 using cloudscribe.DbHelpers.Firebird;
@@ -13,7 +13,7 @@ using System.Data.Common;
 using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Framework.Logging;
+using Microsoft.Extensions.Logging;
 
 namespace cloudscribe.Core.Repositories.Firebird
 {

@@ -2,11 +2,11 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2010-04-06
-// Last Modified:			2015-11-09
+// Last Modified:			2015-11-18
 // 
 
 using cloudscribe.DbHelpers.SqlCe;
-using Microsoft.Framework.Logging;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Data;
 using System.Data.Common;

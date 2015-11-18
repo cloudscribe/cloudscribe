@@ -25,7 +25,7 @@ using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Threading.Tasks;
 //using log4net;
-using Microsoft.Framework.Logging;
+using Microsoft.Extensions.Logging;
 
 
 namespace cloudscribe.DbHelpers.MSSQL

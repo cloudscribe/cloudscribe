@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-25
-// Last Modified:		    2015-10-17
+// Last Modified:		    2015-11-18
 // 
 
 using System;
@@ -20,7 +20,7 @@ using Microsoft.AspNet.Http.Authentication;
 using Microsoft.AspNet.Http.Extensions;
 using Microsoft.AspNet.Http.Internal;
 using Microsoft.AspNet.WebUtilities;
-using Microsoft.Framework.Logging;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 
 namespace cloudscribe.Core.Identity.OAuth
