@@ -38,7 +38,7 @@ namespace cloudscribe.Core.Models
 
         
         public string DefaultEmailFromAddress { get; set; } = string.Empty;
-        public string DefaultFromEmailAlias { get; set; } = string.Empty;
+        //public string DefaultFromEmailAlias { get; set; } = string.Empty;
         public string Layout { get; set; } = string.Empty;
         //public string MobileSkin { get; set; } = string.Empty;
         //public string EditorProviderName { get; set; } = "CKEditorProvider";

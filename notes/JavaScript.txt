@@ -1,4 +1,7 @@
 
+http://tattoocoder.azurewebsites.net/angular2-aspnet5-spa-template/
+
+
 http://damienbod.com/2015/03/28/asp-net-5-angularjs-application-using-angular-ui-router/
 
 

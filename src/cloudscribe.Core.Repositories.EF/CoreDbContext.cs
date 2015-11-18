@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2015-11-17
+// Last Modified:			2015-11-18
 // 
 
 using System;
@@ -14,6 +14,7 @@ using Microsoft.Data.Entity.Infrastructure;
 using Microsoft.Data.Entity.Metadata;
 //using Microsoft.Extensions.DependencyInjection;
 using cloudscribe.Core.Models;
+using cloudscribe.Core.Models.Geography;
 
 //http://ef.readthedocs.org/en/latest/modeling/configuring.html
 // "If you are targeting more than one relational provider with the same model then you 
@@ -60,8 +61,62 @@ namespace cloudscribe.Core.Repositories.EF
                 mapper = new SqlServerCoreModelMapper();
             }
 
-            mapper.DoMapping(modelBuilder);
+
+            modelBuilder.Entity<SiteSettings>(entity =>
+            {
+                mapper.Map(entity);
+            });
+
+            modelBuilder.Entity<SiteHost>(entity =>
+            {
+                mapper.Map(entity);
+            });
+
+            modelBuilder.Entity<SiteFolder>(entity =>
+            {
+                mapper.Map(entity);
+            });
             
+            modelBuilder.Entity<SiteUser>(entity =>
+            {
+                mapper.Map(entity);
+            });
+
+            modelBuilder.Entity<SiteRole>(entity =>
+            {
+                mapper.Map(entity);
+            });
+
+            modelBuilder.Entity<UserClaim>(entity =>
+            {
+                mapper.Map(entity);
+            });
+
+            modelBuilder.Entity<UserLogin>(entity =>
+            {
+                mapper.Map(entity);
+            });
+
+            modelBuilder.Entity<GeoCountry>(entity =>
+            {
+                mapper.Map(entity);
+            });
+
+            modelBuilder.Entity<GeoZone>(entity =>
+            {
+                mapper.Map(entity);
+            });
+
+            modelBuilder.Entity<Currency>(entity =>
+            {
+                mapper.Map(entity);
+            });
+
+            modelBuilder.Entity<Language>(entity =>
+            {
+                mapper.Map(entity);
+            });
+
             // should this be called before or after we do our thing?
 
             base.OnModelCreating(modelBuilder);

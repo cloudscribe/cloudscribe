@@ -1,4 +1,7 @@
 
+http://blogs.msdn.com/b/webdev/archive/2015/11/18/announcing-asp-net-5-release-candidate-1.aspx
+
+
 http://stackoverflow.com/questions/29048122/token-based-authentication-in-asp-net-5-vnext/29698502#29698502
 http://stackoverflow.com/questions/33140360/getting-access-token
 
