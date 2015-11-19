@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-08
-// Last Modified:			2015-10-30
+// Last Modified:			2015-11-18
 // 
 
 using cloudscribe.Core.Identity;
@@ -15,8 +15,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Localization;
 using Microsoft.AspNet.Localization;
-using Microsoft.Framework.Localization;
-using Microsoft.Framework.OptionsModel;
+using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.OptionsModel;
 using System;
 using System.Collections.Generic;
 using System.Globalization;

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-31
-// Last Modified:			2015-10-17
+// Last Modified:			2015-11-19
 // 
 
 
@@ -13,7 +13,7 @@ using Microsoft.AspNet.DataProtection;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Http.Authentication;
 using Microsoft.AspNet.Http.Features.Authentication;
-using Microsoft.Framework.Logging;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Security.Claims;
@@ -145,47 +145,75 @@ namespace cloudscribe.Core.Identity
             return ticket;
         }
 
-        protected override async Task<AuthenticationTicket> HandleAuthenticateAsync()
+        protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
-            AuthenticationTicket ticket = null;
-            try
+            var ticket = await EnsureCookieTicket();
+            if (ticket == null)
             {
-                ticket = await EnsureCookieTicket();
-                if (ticket == null)
-                {
-                    return null;
-                }
-
-                var context = new CookieValidatePrincipalContext(Context, ticket, Options); // this might ned change
-                await Options.Events.ValidatePrincipal(context);
-
-                if (context.Principal == null)
-                {
-                    return null;
-                }
-
-                if (context.ShouldRenew)
-                {
-                    _shouldRenew = true;
-                }
-
-                //return new AuthenticationTicket(context.Principal, context.Properties, Options.AuthenticationScheme);
-                var tenantResolver = tenantResolverFactory.GetResolver();
-                return new AuthenticationTicket(context.Principal, context.Properties, tenantResolver.ResolveAuthScheme(Options.AuthenticationScheme));
+                return AuthenticateResult.Failed("No ticket.");
             }
-            catch (Exception exception)
+
+            var context = new CookieValidatePrincipalContext(Context, ticket, Options);
+            await Options.Events.ValidatePrincipal(context);
+
+            if (context.Principal == null)
             {
-                var exceptionContext = new CookieExceptionContext(Context, Options,
-                    CookieExceptionContext.ExceptionLocation.Authenticate, exception, ticket);
-
-                await Options.Events.Exception(exceptionContext);
-
-                if (exceptionContext.Rethrow)
-                {
-                    throw;
-                }
-                return exceptionContext.Ticket;
+                return AuthenticateResult.Failed("No principal.");
             }
+
+            if (context.ShouldRenew)
+            {
+                _shouldRenew = true;
+            }
+
+            var tenantResolver = tenantResolverFactory.GetResolver();
+
+            return AuthenticateResult.Success(
+                new AuthenticationTicket(context.Principal, 
+                context.Properties,
+                tenantResolver.ResolveAuthScheme(Options.AuthenticationScheme)
+                )
+                );
+
+            //AuthenticationTicket ticket = null;
+            //try
+            //{
+            //    ticket = await EnsureCookieTicket();
+            //    if (ticket == null)
+            //    {
+            //        return null;
+            //    }
+
+            //    var context = new CookieValidatePrincipalContext(Context, ticket, Options); // this might ned change
+            //    await Options.Events.ValidatePrincipal(context);
+
+            //    if (context.Principal == null)
+            //    {
+            //        return null;
+            //    }
+
+            //    if (context.ShouldRenew)
+            //    {
+            //        _shouldRenew = true;
+            //    }
+
+            //    //return new AuthenticationTicket(context.Principal, context.Properties, Options.AuthenticationScheme);
+            //    var tenantResolver = tenantResolverFactory.GetResolver();
+            //    return new AuthenticationTicket(context.Principal, context.Properties, tenantResolver.ResolveAuthScheme(Options.AuthenticationScheme));
+            //}
+            //catch (Exception exception)
+            //{
+            //    var exceptionContext = new CookieExceptionContext(Context, Options,
+            //        CookieExceptionContext.ExceptionLocation.Authenticate, exception, ticket);
+
+            //    await Options.Events.Exception(exceptionContext);
+
+            //    if (exceptionContext.Rethrow)
+            //    {
+            //        throw;
+            //    }
+            //    return exceptionContext.Ticket;
+            //}
         }
 
         private CookieOptions BuildCookieOptions()
@@ -212,14 +240,17 @@ namespace cloudscribe.Core.Identity
 
         protected override async Task FinishResponseAsync()
         {
+
             // Only renew if requested, and neither sign in or sign out was called
             if (!_shouldRenew || SignInAccepted || SignOutAccepted)
             {
                 return;
             }
 
-            var ticket = await HandleAuthenticateOnceAsync();
-            try
+            // REVIEW: Should this check if there was an error, and then if that error was already handled??
+            var ticket = (await HandleAuthenticateOnceAsync())?.Ticket;
+            var tenantResolver = tenantResolverFactory.GetResolver();
+            if (ticket != null)
             {
                 if (_renewIssuedUtc.HasValue)
                 {
@@ -230,29 +261,23 @@ namespace cloudscribe.Core.Identity
                     ticket.Properties.ExpiresUtc = _renewExpiresUtc;
                 }
 
-                var tenantResolver = tenantResolverFactory.GetResolver();
-
                 if (Options.SessionStore != null && _sessionKey != null)
                 {
                     await Options.SessionStore.RenewAsync(_sessionKey, ticket);
-
-                    //var principal = new ClaimsPrincipal(
-                    //    new ClaimsIdentity(
-                    //        new[] { new Claim(SessionIdClaim, _sessionKey, ClaimValueTypes.String, Options.ClaimsIssuer) },
-                    //        Options.AuthenticationScheme));
-                    
                     var principal = new ClaimsPrincipal(
                         new ClaimsIdentity(
-                            new[] { new Claim(SessionIdClaim, _sessionKey, ClaimValueTypes.String, Options.ClaimsIssuer) },
-                            tenantResolver.ResolveAuthScheme(Options.AuthenticationScheme)));
+                            new[] { new Claim(SessionIdClaim, _sessionKey, 
+                            ClaimValueTypes.String, 
+                            Options.ClaimsIssuer) },
+                            tenantResolver.ResolveAuthScheme(Options.AuthenticationScheme)
+                            ));
 
-                    //ticket = new AuthenticationTicket(principal, null, Options.AuthenticationScheme);
-                    ticket = new AuthenticationTicket(principal, null, tenantResolver.ResolveAuthScheme(Options.AuthenticationScheme));
+                    ticket = new AuthenticationTicket(principal, null,
+                        tenantResolver.ResolveAuthScheme(Options.AuthenticationScheme)
+                        );
                 }
 
-                //var cookieValue = Options.TicketDataFormat.Protect(ticket);
-                var ticketDataFormat = GetTicketDataFormat(tenantResolver);
-                var cookieValue = ticketDataFormat.Protect(ticket);
+                var cookieValue = Options.TicketDataFormat.Protect(ticket, GetTlsTokenBinding());
 
                 var cookieOptions = BuildCookieOptions();
                 if (ticket.Properties.IsPersistent && _renewExpiresUtc.HasValue)
@@ -260,38 +285,90 @@ namespace cloudscribe.Core.Identity
                     cookieOptions.Expires = _renewExpiresUtc.Value.ToUniversalTime().DateTime;
                 }
 
-                //Options.CookieManager.AppendResponseCookie(
-                //    Context,
-                //    Options.CookieName,
-                //    cookieValue,
-                //    cookieOptions);
-
                 Options.CookieManager.AppendResponseCookie(
                     Context,
-                    tenantResolver.ResolveCookieName(Options.CookieName),
+                    Options.CookieName,
                     cookieValue,
                     cookieOptions);
 
                 await ApplyHeaders(shouldRedirectToReturnUrl: false);
             }
-            catch (Exception exception)
-            {
-                var exceptionContext = new CookieExceptionContext(Context, Options,
-                    CookieExceptionContext.ExceptionLocation.FinishResponse, exception, ticket);
-                await Options.Events.Exception(exceptionContext);
 
-                if (exceptionContext.Rethrow)
-                {
-                    throw;
-                }
-            }
+
+            //// Only renew if requested, and neither sign in or sign out was called
+            //if (!_shouldRenew || SignInAccepted || SignOutAccepted)
+            //{
+            //    return;
+            //}
+
+            //var ticket = await HandleAuthenticateOnceAsync();
+            //try
+            //{
+            //    if (_renewIssuedUtc.HasValue)
+            //    {
+            //        ticket.Properties.IssuedUtc = _renewIssuedUtc;
+            //    }
+            //    if (_renewExpiresUtc.HasValue)
+            //    {
+            //        ticket.Properties.ExpiresUtc = _renewExpiresUtc;
+            //    }
+
+            //    var tenantResolver = tenantResolverFactory.GetResolver();
+
+            //    if (Options.SessionStore != null && _sessionKey != null)
+            //    {
+            //        await Options.SessionStore.RenewAsync(_sessionKey, ticket);
+
+            //        //var principal = new ClaimsPrincipal(
+            //        //    new ClaimsIdentity(
+            //        //        new[] { new Claim(SessionIdClaim, _sessionKey, ClaimValueTypes.String, Options.ClaimsIssuer) },
+            //        //        Options.AuthenticationScheme));
+
+            //        var principal = new ClaimsPrincipal(
+            //            new ClaimsIdentity(
+            //                new[] { new Claim(SessionIdClaim, _sessionKey, ClaimValueTypes.String, Options.ClaimsIssuer) },
+            //                tenantResolver.ResolveAuthScheme(Options.AuthenticationScheme)));
+
+            //        //ticket = new AuthenticationTicket(principal, null, Options.AuthenticationScheme);
+            //        ticket = new AuthenticationTicket(principal, null, tenantResolver.ResolveAuthScheme(Options.AuthenticationScheme));
+            //    }
+
+            //    //var cookieValue = Options.TicketDataFormat.Protect(ticket);
+            //    var ticketDataFormat = GetTicketDataFormat(tenantResolver);
+            //    var cookieValue = ticketDataFormat.Protect(ticket);
+
+            //    var cookieOptions = BuildCookieOptions();
+            //    if (ticket.Properties.IsPersistent && _renewExpiresUtc.HasValue)
+            //    {
+            //        cookieOptions.Expires = _renewExpiresUtc.Value.ToUniversalTime().DateTime;
+            //    }
+
+            //    Options.CookieManager.AppendResponseCookie(
+            //        Context,
+            //        tenantResolver.ResolveCookieName(Options.CookieName),
+            //        cookieValue,
+            //        cookieOptions);
+
+            //    await ApplyHeaders(shouldRedirectToReturnUrl: false);
+            //}
+            //catch (Exception exception)
+            //{
+            //    var exceptionContext = new CookieExceptionContext(Context, Options,
+            //        CookieExceptionContext.ExceptionLocation.FinishResponse, exception, ticket);
+            //    await Options.Events.Exception(exceptionContext);
+
+            //    if (exceptionContext.Rethrow)
+            //    {
+            //        throw;
+            //    }
+            //}
         }
 
         protected override async Task HandleSignInAsync(SignInContext signin)
         {
             var ticket = await EnsureCookieTicket();
-            try
-            {
+            //try
+            //{
                 var tenantResolver = tenantResolverFactory.GetResolver();
 
                 var cookieOptions = BuildCookieOptions();
@@ -387,25 +464,25 @@ namespace cloudscribe.Core.Identity
 
                 var shouldLoginRedirect = Options.LoginPath.HasValue && OriginalPath == Options.LoginPath;
                 await ApplyHeaders(shouldLoginRedirect);
-            }
-            catch (Exception exception)
-            {
-                var exceptionContext = new CookieExceptionContext(Context, Options,
-                    CookieExceptionContext.ExceptionLocation.SignIn, exception, ticket);
+            //}
+            //catch (Exception exception)
+            //{
+            //    var exceptionContext = new CookieExceptionContext(Context, Options,
+            //        CookieExceptionContext.ExceptionLocation.SignIn, exception, ticket);
 
-                await Options.Events.Exception(exceptionContext);
-                if (exceptionContext.Rethrow)
-                {
-                    throw;
-                }
-            }
+            //    await Options.Events.Exception(exceptionContext);
+            //    if (exceptionContext.Rethrow)
+            //    {
+            //        throw;
+            //    }
+            //}
         }
 
         protected override async Task HandleSignOutAsync(SignOutContext signOutContext)
         {
             var ticket = await EnsureCookieTicket();
-            try
-            {
+            //try
+            //{
                 var tenantResolver = tenantResolverFactory.GetResolver();
 
                 var cookieOptions = BuildCookieOptions();
@@ -435,18 +512,18 @@ namespace cloudscribe.Core.Identity
 
 
                 await ApplyHeaders(shouldLogoutRedirect);
-            }
-            catch (Exception exception)
-            {
-                var exceptionContext = new CookieExceptionContext(Context, Options,
-                    CookieExceptionContext.ExceptionLocation.SignOut, exception, ticket);
+            //}
+            //catch (Exception exception)
+            //{
+            //    var exceptionContext = new CookieExceptionContext(Context, Options,
+            //        CookieExceptionContext.ExceptionLocation.SignOut, exception, ticket);
 
-                await Options.Events.Exception(exceptionContext);
-                if (exceptionContext.Rethrow)
-                {
-                    throw;
-                }
-            }
+            //    await Options.Events.Exception(exceptionContext);
+            //    if (exceptionContext.Rethrow)
+            //    {
+            //        throw;
+            //    }
+            //}
         }
 
         //private void ApplyHeaders(bool shouldRedirectToReturnUrl = false)
@@ -508,8 +585,8 @@ namespace cloudscribe.Core.Identity
             }
 
             var redirectUri = new AuthenticationProperties(context.Properties).RedirectUri;
-            try
-            {
+            //try
+            //{
                 if (string.IsNullOrEmpty(redirectUri))
                 {
                     redirectUri = OriginalPathBase + Request.Path + Request.QueryString;
@@ -524,20 +601,25 @@ namespace cloudscribe.Core.Identity
 
                 var redirectContext = new CookieRedirectContext(Context, Options, BuildRedirectUri(loginUri));
                 await Options.Events.RedirectToLogin(redirectContext);
-            }
-            catch (Exception exception)
-            {
-                var exceptionContext = new CookieExceptionContext(Context, Options,
-                    CookieExceptionContext.ExceptionLocation.Unauthorized, exception, ticket: null);
-                await Options.Events.Exception(exceptionContext);
-                if (exceptionContext.Rethrow)
-                {
-                    throw;
-                }
-            }
+            //}
+            //catch (Exception exception)
+            //{
+            //    var exceptionContext = new CookieExceptionContext(Context, Options,
+            //        CookieExceptionContext.ExceptionLocation.Unauthorized, exception, ticket: null);
+            //    await Options.Events.Exception(exceptionContext);
+            //    if (exceptionContext.Rethrow)
+            //    {
+            //        throw;
+            //    }
+            //}
             return true;
         }
 
+        private string GetTlsTokenBinding()
+        {
+            var binding = Context.Features.Get<ITlsTokenBindingFeature>()?.GetProvidedTokenBindingId();
+            return binding == null ? null : Convert.ToBase64String(binding);
+        }
 
     }
 }

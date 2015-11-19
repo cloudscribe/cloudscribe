@@ -1,29 +1,34 @@
 {
   "version": "1.0.0-*",
   "title": "cloudscribe.DbHelpers.Firebird",
-  "description": "cloudscribe database helpers for Firebird.  normally you would not need to install this separately, if you install cloudscribe.Core.Repositories.Firebird this will be installed as a dependency.",
   "authors": [ "Joe Audette" ],
-  "owners": [ "Source Tree Solutions" ],
-  "tags": [ "cloudscribe","firebird","firebirdsql" ],
-  "projectUrl": "https://github.com/joeaudette/cloudscribe",
-  "licenseUrl": "http://www.apache.org/licenses/LICENSE-2.0",
   "copyright": "2015 Source Tree Solutions",
+  "description": "cloudscribe database helpers for Firebird.  normally you would not need to install this separately, if you install cloudscribe.Core.Repositories.Firebird this will be installed as a dependency.",
   "iconUrl": "https://raw.githubusercontent.com/joeaudette/cloudscribe/master/cloudscribe-icon-32.png",
-  "requireLicenseAcceptance": false,
+  "licenseUrl": "http://www.apache.org/licenses/LICENSE-2.0",
+  "owners": [ "Source Tree Solutions" ],
+  "projectUrl": "https://github.com/joeaudette/cloudscribe",
   "releaseNotes": "",
+  "requireLicenseAcceptance": false,
+  "tags": [ "cloudscribe", "firebird", "firebirdsql" ],
+
+
 
   "dependencies": {
     "cloudscribe.Core.Models": "1.0.0-*",
-    "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta8",
     "FirebirdSql.Data.FirebirdClient": "4.6.2",
-    "Microsoft.Framework.Configuration.Abstractions": "1.0.0-beta8"
+    "Microsoft.Extensions.Configuration.Abstractions": "1.0.0-rc1-final",
+    "Microsoft.Extensions.Logging": "1.0.0-rc1-final",
+    "Microsoft.Extensions.Logging.Abstractions": "1.0.0-rc1-final",
+    "Microsoft.Extensions.OptionsModel": "1.0.0-rc1-final"
   },
 
   "frameworks": {
-    "dnx451": {
+    "net451": {
       "frameworkAssemblies": {
         "System.Data": ""
       }
     }
   }
+
 }

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-31
-// Last Modified:			2015-10-17
+// Last Modified:			2015-11-18
 // 
 
 
@@ -13,9 +13,9 @@ using Microsoft.AspNet.Authentication.Cookies;
 //using Microsoft.AspNet.Authentication.DataHandler;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.DataProtection;
-using Microsoft.Framework.Logging;
-using Microsoft.Framework.OptionsModel;
-using Microsoft.Framework.WebEncoders;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.OptionsModel;
+using Microsoft.Extensions.WebEncoders;
 
 
 namespace cloudscribe.Core.Identity

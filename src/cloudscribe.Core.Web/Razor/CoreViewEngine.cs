@@ -2,12 +2,12 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //  Author:                     Joe Audette
 //  Created:                    2014-10-13
-//	Last Modified:              2015-10-10
+//	Last Modified:              2015-11-18
 // 
 
 using Microsoft.AspNet.Mvc.Razor;
 using Microsoft.AspNet.Razor.Runtime;
-using Microsoft.Framework.OptionsModel;
+using Microsoft.Extensions.OptionsModel;
 //using Microsoft.AspNet.Mvc.Razor.OptionDescriptors;
 using System.Collections.Generic;
 

@@ -2,12 +2,12 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-01-10
-// Last Modified:			2015-10-16
+// Last Modified:			2015-11-18
 // 
 
 using cloudscribe.Core.Models;
-using Microsoft.Framework.OptionsModel;
-using Microsoft.Framework.Logging;
+using Microsoft.Extensions.OptionsModel;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Data;
 using System.Data.Common;

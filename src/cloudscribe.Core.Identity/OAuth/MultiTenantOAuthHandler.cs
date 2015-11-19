@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-27
-// Last Modified:		    2015-10-17
+// Last Modified:		    2015-11-19
 // 
 
 
@@ -15,7 +15,7 @@ using Microsoft.AspNet.Http.Extensions;
 using Microsoft.AspNet.Http.Features.Authentication;
 using Microsoft.AspNet.WebUtilities;
 //using Microsoft.Extensions.Primitives;
-using Microsoft.Framework.Logging;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -36,7 +36,7 @@ namespace cloudscribe.Core.Identity.OAuth
         internal const string CorrelationPrefix = ".AspNet.Correlation.";
     }
 
-    public class MultiTenantOAuthHandler<TOptions> : AuthenticationHandler<TOptions> where TOptions : OAuthOptions
+    public class MultiTenantOAuthHandler<TOptions> : RemoteAuthenticationHandler<TOptions> where TOptions : OAuthOptions
     {
         private static readonly RandomNumberGenerator CryptoRandom = RandomNumberGenerator.Create();
 
@@ -63,7 +63,7 @@ namespace cloudscribe.Core.Identity.OAuth
         /// <returns>Returning false will cause the common code to call the next middleware in line. Returning true will
         /// cause the common code to begin the async completion journey without calling the rest of the middleware
         /// pipeline.</returns>
-        public override async Task<bool> InvokeAsync()
+        public override async Task<bool> HandleRequestAsync()
         {
             // this is called on every request
             log.LogDebug("InvokeAsync called");
@@ -73,52 +73,56 @@ namespace cloudscribe.Core.Identity.OAuth
             // for example so changed to check contains instead of exact match
             if (Options.CallbackPath.HasValue &&  Request.Path.Value.Contains(Options.CallbackPath.Value))
             {
-                return await InvokeReturnPathAsync();
+                //return await InvokeReturnPathAsync();
+                return await HandleRemoteCallbackAsync();
             }
             return false;
         }
 
-        public async Task<bool> InvokeReturnPathAsync()
-        {
-            log.LogDebug("InvokeReturnPathAsync called");
+        // I think this was renamed as HandleRemoteCallbackAsync
+        // since we were not modifying this code jus commented it out to
+        // let the base class handle it, may need to override it though needs testing
+        //public async Task<bool> InvokeReturnPathAsync()
+        //{
+        //    log.LogDebug("InvokeReturnPathAsync called");
 
-            var ticket = await HandleAuthenticateOnceAsync();
-            if (ticket == null)
-            {
-                Logger.LogWarning("Invalid return state, unable to redirect.");
-                Response.StatusCode = 500;
-                return true;
-            }
+        //    var ticket = await HandleAuthenticateOnceAsync();
+        //    if (ticket == null)
+        //    {
+        //        Logger.LogWarning("Invalid return state, unable to redirect.");
+        //        Response.StatusCode = 500;
+        //        return true;
+        //    }
 
-            var context = new SigningInContext(Context, ticket)
-            {
-                SignInScheme = Options.SignInScheme,
-                RedirectUri = ticket.Properties.RedirectUri,
-            };
-            ticket.Properties.RedirectUri = null;
+        //    var context = new SigningInContext(Context, ticket)
+        //    {
+        //        SignInScheme = Options.SignInScheme,
+        //        RedirectUri = ticket.Properties.RedirectUri,
+        //    };
+        //    ticket.Properties.RedirectUri = null;
 
-            await Options.Events.SigningIn(context);
+        //    await Options.Events.SigningIn(context);
 
-            if (context.SignInScheme != null && context.Principal != null)
-            {
-                await Context.Authentication.SignInAsync(context.SignInScheme, context.Principal, context.Properties);
-            }
+        //    if (context.SignInScheme != null && context.Principal != null)
+        //    {
+        //        await Context.Authentication.SignInAsync(context.SignInScheme, context.Principal, context.Properties);
+        //    }
 
-            if (!context.IsRequestCompleted && context.RedirectUri != null)
-            {
-                if (context.Principal == null)
-                {
-                    // add a redirect hint that sign-in failed in some way
-                    context.RedirectUri = QueryHelpers.AddQueryString(context.RedirectUri, "error", "access_denied");
-                }
-                Response.Redirect(context.RedirectUri);
-                context.RequestCompleted();
-            }
+        //    if (!context.IsRequestCompleted && context.RedirectUri != null)
+        //    {
+        //        if (context.Principal == null)
+        //        {
+        //            // add a redirect hint that sign-in failed in some way
+        //            context.RedirectUri = QueryHelpers.AddQueryString(context.RedirectUri, "error", "access_denied");
+        //        }
+        //        Response.Redirect(context.RedirectUri);
+        //        context.RequestCompleted();
+        //    }
 
-            return context.IsRequestCompleted;
-        }
+        //    return context.IsRequestCompleted;
+        //}
 
-        protected override async Task<AuthenticationTicket> HandleAuthenticateAsync()
+        protected override async Task<AuthenticateResult> HandleRemoteAuthenticateAsync()
         {
             log.LogDebug("HandleAuthenticateAsync called");
 
@@ -148,21 +152,32 @@ namespace cloudscribe.Core.Identity.OAuth
                 // OAuth2 10.12 CSRF
                 if (!ValidateCorrelationId(properties))
                 {
-                    return new AuthenticationTicket(properties, Options.AuthenticationScheme);
+                    //return new AuthenticationTicket(properties, Options.AuthenticationScheme);
+                    return AuthenticateResult.Failed("Correlation failed.");
                 }
 
                 if (string.IsNullOrEmpty(code))
                 {
                     // Null if the remote server returns an error.
-                    return new AuthenticationTicket(properties, Options.AuthenticationScheme);
+                    //return new AuthenticationTicket(properties, Options.AuthenticationScheme);
+                    return AuthenticateResult.Failed("Code was not found.");
                 }
 
                 var tokens = await ExchangeCodeAsync(code, BuildRedirectUri(Options.CallbackPath));
 
+                // must be after rc1
+                //if (tokens.Error != null)
+                //{
+                //    return AuthenticateResult.Failed(tokens.Error);
+                //}
+
+
                 if (string.IsNullOrEmpty(tokens.AccessToken))
                 {
                     Logger.LogWarning("Access token was not found");
-                    return new AuthenticationTicket(properties, Options.AuthenticationScheme);
+                    //return new AuthenticationTicket(properties, Options.AuthenticationScheme);
+                    return AuthenticateResult.Failed("Failed to retrieve access token.");
+
                 }
 
                 var identity = new ClaimsIdentity(Options.ClaimsIssuer);
@@ -191,19 +206,20 @@ namespace cloudscribe.Core.Identity.OAuth
                     }
                 }
 
-                return await CreateTicketAsync(identity, properties, tokens);
+                //return await CreateTicketAsync(identity, properties, tokens);
+                return AuthenticateResult.Success(await CreateTicketAsync(identity, properties, tokens));
             }
             catch (Exception ex)
             {
                 Logger.LogError("Authentication failed", ex);
-                return new AuthenticationTicket(properties, Options.AuthenticationScheme);
+                //return new AuthenticationTicket(properties, Options.AuthenticationScheme);
+                return AuthenticateResult.Failed("Authentication failed, exception logged.");
             }
         }
 
         protected virtual async Task<OAuthTokenResponse> ExchangeCodeAsync(string code, string redirectUri)
         {
             log.LogDebug("ExchangeCodeAsync called with code " + code + " redirectUri " + redirectUri);
-            
 
             var tokenRequestParameters = new Dictionary<string, string>()
             {
@@ -224,6 +240,7 @@ namespace cloudscribe.Core.Identity.OAuth
             var payload = JObject.Parse(await response.Content.ReadAsStringAsync());
 
             return new OAuthTokenResponse(payload);
+
         }
 
         protected virtual async Task<AuthenticationTicket> CreateTicketAsync(ClaimsIdentity identity, AuthenticationProperties properties, OAuthTokenResponse tokens)

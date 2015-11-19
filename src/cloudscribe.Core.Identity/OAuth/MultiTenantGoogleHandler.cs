@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-29
-// Last Modified:		    2015-10-17
+// Last Modified:		    2015-11-18
 // based on https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.Google/GoogleHandler.cs
 
 
@@ -13,7 +13,7 @@ using Microsoft.AspNet.Authentication.Google;
 using Microsoft.AspNet.Authentication.OAuth;
 using Microsoft.AspNet.Http.Authentication;
 using Microsoft.AspNet.WebUtilities;
-using Microsoft.Framework.Logging;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;

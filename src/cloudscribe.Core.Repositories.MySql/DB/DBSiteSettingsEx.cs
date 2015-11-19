@@ -2,11 +2,11 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2008-09-12
-// Last Modified:			2015-06-13
+// Last Modified:			2015-11-18
 // 
 
 using cloudscribe.DbHelpers.MySql;
-using Microsoft.Framework.Logging;
+using Microsoft.Extensions.Logging;
 using MySql.Data.MySqlClient;
 using System;
 using System.Data.Common;

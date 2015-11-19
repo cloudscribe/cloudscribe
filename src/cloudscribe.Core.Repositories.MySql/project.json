@@ -12,15 +12,16 @@
   "requireLicenseAcceptance": false,
   "releaseNotes": "",
 
-    "dependencies": {
-        "cloudscribe.DbHelpers.MySql": "1.0.0-*",
-        "cloudscribe.Core.Models": "1.0.0-*",
-        "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta8",
-        "MySql.Data": "6.9.6"
-    },
+  "dependencies": {
+    "cloudscribe.DbHelpers.MySql": "1.0.0-*",
+    "cloudscribe.Core.Models": "1.0.0-*",
+    "Microsoft.Extensions.Logging.Abstractions": "1.0.0-rc1-final",
+    "Microsoft.Extensions.OptionsModel": "1.0.0-rc1-final",
+    "MySql.Data": "6.9.6"
+  },
 
     "frameworks": {
-        "dnx451": { }
+        "net451": { }
 
     }
 }

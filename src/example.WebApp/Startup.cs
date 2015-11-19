@@ -23,15 +23,15 @@ using Microsoft.AspNet.Routing;
 using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Core;
 //using Microsoft.Data.Entity;
-using Microsoft.Framework.Caching;
-using Microsoft.Framework.Caching.Distributed;
-using Microsoft.Framework.Configuration;
-using Microsoft.Framework.DependencyInjection;
-using Microsoft.Framework.DependencyInjection.Extensions;
-using Microsoft.Framework.Logging;
-using Microsoft.Framework.Logging.Console;
-using Microsoft.Framework.OptionsModel;
-using Microsoft.Dnx.Runtime;
+using Microsoft.Extensions.Caching;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
+using Microsoft.Extensions.OptionsModel;
+using Microsoft.Extensions.PlatformAbstractions;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Logging;
 using cloudscribe.Core.Identity;
@@ -51,7 +51,7 @@ namespace example.WebApp
         {
             // Setup configuration sources.
             var builder = new ConfigurationBuilder()
-                .SetBasePath(appEnv.ApplicationBasePath)
+                //.SetBasePath(appEnv.ApplicationBasePath)
                 .AddJsonFile("appsettings.json")
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
 
@@ -95,16 +95,16 @@ namespace example.WebApp
             services.ConfigureCloudscribeCore(Configuration);
             
 
-            services.Configure<MvcOptions>(options =>
-            {
-                // forces https
-                // note that the home or root is still accessible non securely
-                // only enable this if you have an ssl certificate installed and working
-                //options.Filters.Add(new RequireHttpsAttribute());
+            //services.Configure<MvcOptions>(options =>
+            //{
+            //    // forces https
+            //    // note that the home or root is still accessible non securely
+            //    // only enable this if you have an ssl certificate installed and working
+            //    //options.Filters.Add(new RequireHttpsAttribute());
 
-                //options.ModelValidatorProviders.Add()
+            //    //options.ModelValidatorProviders.Add()
 
-            });
+            //});
 
             //services.Configure<IdentityOptions>(options =>
             //{
@@ -169,7 +169,8 @@ namespace example.WebApp
             var localizationOptions = new RequestLocalizationOptions
             {
                 // Set options here to change middleware behavior
-                DefaultRequestCulture = new RequestCulture(new CultureInfo("en-US")),
+                
+                //DefaultRequestCulture = new RequestCulture(new CultureInfo("en-US")),
                 SupportedCultures = new List<CultureInfo>
                 {
                     new CultureInfo("en-US"),
@@ -182,6 +183,7 @@ namespace example.WebApp
                     new CultureInfo("it"),
                     new CultureInfo("fr")
                 }
+                
 
             };
 
@@ -195,7 +197,8 @@ namespace example.WebApp
             //}));
 
             //app.UseRequestLocalization(localizationOptions);
-            app.UseRequestLocalization();
+            var defaultCulture = new RequestCulture(new CultureInfo("en-US"));
+            //app.UseRequestLocalization(localizationOptions, defaultCulture);
 
 
             // Add the following to the request pipeline only in development environment.
@@ -207,7 +210,7 @@ namespace example.WebApp
                 
                 //app.UseDatabaseErrorPage(DatabaseErrorPageOptions.ShowAll);
                 //app.UseStatusCodePagesWithReExecute("/error/{0}");
-                app.UseStatusCodePagesWithReExecute("/error/{0}");
+                //app.UseStatusCodePagesWithReExecute("/error/{0}");
             }
             else
             {
@@ -229,7 +232,8 @@ namespace example.WebApp
             }
 
             // Add the platform handler to the request pipeline.
-            app.UseIISPlatformHandler();
+            //app.UseIISPlatformHandler();
+            app.UseIISPlatformHandler(options => options.AuthenticationDescriptions.Clear());
 
             //app.UseRuntimeInfoPage("/info");
 
@@ -267,7 +271,7 @@ namespace example.WebApp
 
 
                 // default route for folder sites must be second to last
-            if (multiTenantOptions.Value.Mode == MultiTenantMode.FolderName)
+                if (multiTenantOptions.Value.Mode == MultiTenantMode.FolderName)
                 {
                     routes.MapRoute(
                     name: "folderdefault",
@@ -283,7 +287,6 @@ namespace example.WebApp
                     name: "default",
                     template: "{controller}/{action}/{id?}",
                     defaults: new { controller = "Home", action = "Index" }
-
                     );
 
                 // Uncomment the following line to add a route for porting Web API 2 controllers.
@@ -306,5 +309,9 @@ namespace example.WebApp
 
 
         }
+
+        // Entry point for the application.
+        public static void Main(string[] args) => WebApplication.Run<Startup>(args);
+
     }
 }
