@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-27
-// Last Modified:		    2015-11-18
+// Last Modified:		    2015-11-19
 // 
 
 using cloudscribe.Core.Models;
@@ -42,6 +42,7 @@ namespace cloudscribe.Core.Identity
         {
 
             UserManager = userManager;
+            SiteUserManager = userManager;
             this.context = contextAccessor.HttpContext;
             this.tenantResolver = tenantResolver;
             log = logger;
@@ -51,7 +52,7 @@ namespace cloudscribe.Core.Identity
 
         }
 
-        private SiteUserManager<TUser> UserManager { get; set; }
+        private SiteUserManager<TUser> SiteUserManager { get; set; }
         private HttpContext context;
         private MultiTenantCookieOptionsResolver tenantResolver;
         private ILogger<SignInManager<TUser>> log;
@@ -149,7 +150,7 @@ namespace cloudscribe.Core.Identity
 
                 }
 
-                return BuildFilteredAuthList(UserManager.Site, all);
+                return BuildFilteredAuthList(SiteUserManager.Site, all);
 
             }
 

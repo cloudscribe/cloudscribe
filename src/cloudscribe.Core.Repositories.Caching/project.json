@@ -14,6 +14,7 @@
 
   "dependencies": {
     "Microsoft.Extensions.Caching.Abstractions": "1.0.0-rc1-final",
+    "Microsoft.Extensions.Logging": "1.0.0-rc1-final",
     "cloudscribe.Core.Models": "1.0.0-*"
 
   },

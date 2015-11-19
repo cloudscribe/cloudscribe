@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-06-20
-// Last Modified:			2015-11-07
+// Last Modified:			2015-11-19
 // 
 
 using System;
@@ -17,13 +17,13 @@ using Microsoft.AspNet.Authentication.Twitter;
 
 using Microsoft.AspNet.Authentication.Cookies;
 using Microsoft.AspNet.Session;
-using Microsoft.Framework.DependencyInjection;
-using Microsoft.Framework.Caching;
-using Microsoft.Framework.Caching.Distributed;
-using Microsoft.Framework.Localization;
-using Microsoft.Framework.OptionsModel;
-using Microsoft.Framework.Internal;
-using Microsoft.Framework.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Caching;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.OptionsModel;
+using Microsoft.Extensions.Internal;
+using Microsoft.Extensions.Configuration;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Localization;

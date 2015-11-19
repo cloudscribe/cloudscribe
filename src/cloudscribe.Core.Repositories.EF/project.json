@@ -1,6 +1,7 @@
 ﻿{
   "version": "1.0.0-*",
-  "description": "cloudscribe.Core.Repositories.EF Class Library",
+  "title": "cloudscribe.Core.Repositories.EF",
+  "description": "Entity Framework 7 implementation of cloudscribe core repositories",
   "authors": [ "Joe" ],
   "tags": [ "" ],
   "projectUrl": "",
@@ -15,7 +16,7 @@
   },
 
   "frameworks": {
-    "dnx451": { },
+    "net451": { },
     "dnxcore50": {
       "dependencies": {
         "Microsoft.CSharp": "4.0.1-beta-23516",

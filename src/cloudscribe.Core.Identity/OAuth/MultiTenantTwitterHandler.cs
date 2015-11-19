@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-29
-// Last Modified:		    2015-11-18
+// Last Modified:		    2015-11-19
 // based on https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.Twitter/TwitterHandler.cs
 
 using cloudscribe.Core.Models;
@@ -28,7 +28,7 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Identity.OAuth
 {
-    public class MultiTenantTwitterHandler : AuthenticationHandler<TwitterOptions>
+    public class MultiTenantTwitterHandler : RemoteAuthenticationHandler<TwitterOptions>
     {
         private static readonly DateTime Epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         private const string StateCookie = "__TwitterState";
@@ -58,19 +58,58 @@ namespace cloudscribe.Core.Identity.OAuth
         private ISiteRepository siteRepo;
         private MultiTenantOptions multiTenantOptions;
 
-        public override async Task<bool> InvokeAsync()
+        public override async Task<bool> HandleRequestAsync()
         {
             //if (Options.CallbackPath.HasValue && Options.CallbackPath == Request.Path)
             // we need to respond not just to /signin-twitter but also folder sites /foldername/signin-twitter
             // for example so changed to check contains instead of exact match
             if (Options.CallbackPath.HasValue && Request.Path.Value.Contains(Options.CallbackPath.Value))
             {
-                return await InvokeReturnPathAsync();
+                //return await InvokeReturnPathAsync();
+                return await HandleRemoteCallbackAsync();
             }
             return false;
         }
 
-        protected override async Task<AuthenticationTicket> HandleAuthenticateAsync()
+        //public async Task<bool> InvokeReturnPathAsync()
+        //{
+        //    var model = await HandleAuthenticateOnceAsync();
+        //    if (model == null)
+        //    {
+        //        Logger.LogWarning("Invalid return state, unable to redirect.");
+        //        Response.StatusCode = 500;
+        //        return true;
+        //    }
+
+        //    var context = new SigningInContext(Context, model)
+        //    {
+        //        SignInScheme = Options.SignInScheme,
+        //        RedirectUri = model.Properties.RedirectUri
+        //    };
+        //    model.Properties.RedirectUri = null;
+
+        //    await Options.Events.SigningIn(context);
+
+        //    if (context.SignInScheme != null && context.Principal != null)
+        //    {
+        //        await Context.Authentication.SignInAsync(context.SignInScheme, context.Principal, context.Properties);
+        //    }
+
+        //    if (!context.IsRequestCompleted && context.RedirectUri != null)
+        //    {
+        //        if (context.Principal == null)
+        //        {
+        //            // add a redirect hint that sign-in failed in some way
+        //            context.RedirectUri = QueryHelpers.AddQueryString(context.RedirectUri, "error", "access_denied");
+        //        }
+        //        Response.Redirect(context.RedirectUri);
+        //        context.RequestCompleted();
+        //    }
+
+        //    return context.IsRequestCompleted;
+        //}
+
+        protected override async Task<AuthenticateResult> HandleRemoteAuthenticateAsync()
         {
             AuthenticationProperties properties = null;
             try
@@ -85,7 +124,7 @@ namespace cloudscribe.Core.Identity.OAuth
                 if (requestToken == null)
                 {
                     Logger.LogWarning("Invalid state");
-                    return null;
+                    return AuthenticateResult.Failed("Invalid state cookie.");
                 }
 
                 properties = requestToken.Properties;
@@ -95,13 +134,15 @@ namespace cloudscribe.Core.Identity.OAuth
                 if (string.IsNullOrEmpty(returnedToken))
                 {
                     Logger.LogWarning("Missing oauth_token");
-                    return new AuthenticationTicket(properties, Options.AuthenticationScheme);
+                    //return new AuthenticationTicket(properties, Options.AuthenticationScheme);
+                    return AuthenticateResult.Failed("Missing oauth_token");
                 }
 
                 if (!string.Equals(returnedToken, requestToken.Token, StringComparison.Ordinal))
                 {
                     Logger.LogWarning("Unmatched token");
-                    return new AuthenticationTicket(properties, Options.AuthenticationScheme);
+                    //return new AuthenticationTicket(properties, Options.AuthenticationScheme);
+                    return AuthenticateResult.Failed("Unmatched token");
                 }
 
                 var oauthVerifier = query["oauth_verifier"];
@@ -109,7 +150,8 @@ namespace cloudscribe.Core.Identity.OAuth
                 if (string.IsNullOrEmpty(oauthVerifier))
                 {
                     Logger.LogWarning("Missing or blank oauth_verifier");
-                    return new AuthenticationTicket(properties, Options.AuthenticationScheme);
+                    //return new AuthenticationTicket(properties, Options.AuthenticationScheme);
+                    return AuthenticateResult.Failed("Missing or blank oauth_verifier");
                 }
 
                 var cookieOptions = new CookieOptions
@@ -148,12 +190,14 @@ namespace cloudscribe.Core.Identity.OAuth
                     identity.AddClaim(new Claim("access_token", accessToken.Token, ClaimValueTypes.String, Options.ClaimsIssuer));
                 }
 
-                return await CreateTicketAsync(identity, properties, accessToken);
+                //return await CreateTicketAsync(identity, properties, accessToken);
+                return AuthenticateResult.Success(await CreateTicketAsync(identity, properties, accessToken));
             }
             catch (Exception ex)
             {
                 Logger.LogError("Authentication failed", ex);
-                return new AuthenticationTicket(properties, Options.AuthenticationScheme);
+                //return new AuthenticationTicket(properties, Options.AuthenticationScheme);
+                return AuthenticateResult.Failed("Authentication failed, exception logged");
             }
         }
 
@@ -164,7 +208,12 @@ namespace cloudscribe.Core.Identity.OAuth
         {
             log.LogDebug("CreateTicketAsync called tokens.ScreenName was " + token.ScreenName);
 
-            var context = new TwitterCreatingTicketContext(Context, token.UserId, token.ScreenName, token.Token, token.TokenSecret)
+            //var context = new TwitterCreatingTicketContext(Context, token.UserId, token.ScreenName, token.Token, token.TokenSecret)
+            //{
+            //    Principal = new ClaimsPrincipal(identity),
+            //    Properties = properties
+            //};
+            var context = new TwitterCreatingTicketContext(Context, Options, token.UserId, token.ScreenName, token.Token, token.TokenSecret)
             {
                 Principal = new ClaimsPrincipal(identity),
                 Properties = properties
@@ -250,43 +299,7 @@ namespace cloudscribe.Core.Identity.OAuth
             return false; // REVIEW: Make sure this should not stop other handlers
         }
 
-        public async Task<bool> InvokeReturnPathAsync()
-        {
-            var model = await HandleAuthenticateOnceAsync();
-            if (model == null)
-            {
-                Logger.LogWarning("Invalid return state, unable to redirect.");
-                Response.StatusCode = 500;
-                return true;
-            }
-
-            var context = new SigningInContext(Context, model)
-            {
-                SignInScheme = Options.SignInScheme,
-                RedirectUri = model.Properties.RedirectUri
-            };
-            model.Properties.RedirectUri = null;
-
-            await Options.Events.SigningIn(context);
-
-            if (context.SignInScheme != null && context.Principal != null)
-            {
-                await Context.Authentication.SignInAsync(context.SignInScheme, context.Principal, context.Properties);
-            }
-
-            if (!context.IsRequestCompleted && context.RedirectUri != null)
-            {
-                if (context.Principal == null)
-                {
-                    // add a redirect hint that sign-in failed in some way
-                    context.RedirectUri = QueryHelpers.AddQueryString(context.RedirectUri, "error", "access_denied");
-                }
-                Response.Redirect(context.RedirectUri);
-                context.RequestCompleted();
-            }
-
-            return context.IsRequestCompleted;
-        }
+        
 
         protected override Task HandleSignOutAsync(SignOutContext context)
         {

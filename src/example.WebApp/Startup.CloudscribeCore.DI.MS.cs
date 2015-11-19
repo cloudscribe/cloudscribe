@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-06-20
-// Last Modified:			2015-11-17
+// Last Modified:			2015-11-19
 // 
 
 using System;
@@ -19,11 +19,11 @@ using Microsoft.AspNet.Authentication.MicrosoftAccount;
 using Microsoft.AspNet.Authentication.Twitter;
 using Microsoft.AspNet.Session;
 using Microsoft.Data.Entity;
-using Microsoft.Framework.DependencyInjection;
-using Microsoft.Framework.DependencyInjection.Extensions;
-using Microsoft.Framework.Caching;
-using Microsoft.Framework.Caching.Distributed;
-using Microsoft.Framework.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Caching;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Configuration;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Razor;
@@ -100,7 +100,7 @@ namespace example.WebApp
 
             switch (devOptions.DbPlatform)
             {
-                case "EF7":
+                case "EF7": // this case is not implemented yet
 
                     services.TryAddScoped<ICoreModelMapper, SqlServerCoreModelMapper>();
 

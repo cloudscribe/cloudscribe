@@ -1,7 +1,9 @@
 {
-    "webroot": "wwwroot",
-    "userSecretsId": "aspnet5-example.WebApp-2e617978-2b5e-4a31-8ece-1e957d5503b0",
-    "version": "1.0.0-*",
+  "userSecretsId": "aspnet5-example.WebApp-2e617978-2b5e-4a31-8ece-1e957d5503b0",
+  "version": "1.0.0-*",
+  "compilationOptions": {
+    "emitEntryPoint": true
+  },
 
   "dependencies": {
     "cloudscribe.Core.Identity": "1.0.0-*",
@@ -16,7 +18,7 @@
     "cloudscribe.DbHelpers.SQLite": "1.0.0-*",
     "cloudscribe.Messaging": "1.0.0-*",
     "cloudscribe.Web.Navigation": "1.0.0-*",
-    "cloudscribe.Web.Pagination": "1.0.0-beta1",
+    "cloudscribe.Web.Pagination": "1.0.0-*",
     "EntityFramework.Commands": "7.0.0-rc1-final",
     "EntityFramework.Core": "7.0.0-rc1-final",
     "EntityFramework.MicrosoftSqlServer": "7.0.0-rc1-final",
@@ -57,24 +59,24 @@
     "ef": "EntityFramework.Commands"
   },
 
-    "frameworks": {
-      "dnx451": { },
-      "dnxcore50": { }
-    },
+  "frameworks": {
+    "dnx451": { },
+    "dnxcore50": { }
+  },
 
-    "exclude": [
-        "wwwroot",
-        "node_modules"
-    ],
-    "publishExclude": [
-        "node_modules",
-        "**.xproj",
-        "**.user",
-      "**.vspscc",
-      "wwwroot/js/lib/ckeditor/samples",
-      "config.local.overrides.json"
-    ],
-    "scripts": {
+  "exclude": [
+    "wwwroot",
+    "node_modules"
+  ],
+  "publishExclude": [
+    "node_modules",
+    "**.xproj",
+    "**.user",
+    "**.vspscc",
+    "wwwroot/js/lib/ckeditor/samples",
+    "config.local.overrides.json"
+  ],
+  "scripts": {
     "prepublish": [ "npm install", "bower install", "gulp clean", "gulp min" ]
   }
 }
