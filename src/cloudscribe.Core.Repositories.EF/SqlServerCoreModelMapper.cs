@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-17
-// Last Modified:			2015-11-18
+// Last Modified:			2015-11-20
 // 
 
 using System;
@@ -14,6 +14,7 @@ using Microsoft.Data.Entity.Metadata.Builders;
 using Microsoft.Data.Entity.Scaffolding.Metadata;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Geography;
+using cloudscribe.Core.Models.Logging;
 
 //http://ef.readthedocs.org/en/latest/modeling/configuring.html
 // "If you are targeting more than one relational provider with the same model then you 
@@ -506,38 +507,341 @@ namespace cloudscribe.Core.Repositories.EF
 
         public void Map(EntityTypeBuilder<SiteRole> entity)
         {
+            entity.ToTable("mp_Roles");
+            entity.HasKey(p => p.RoleId);
+
+            entity.Property(p => p.RoleId)
+            .UseSqlServerIdentityColumn()
+            .ForSqlServerHasColumnName("RoleID")
+            // .Metadata.SentinelValue = -1
+            ;
+
+            entity.Property(p => p.RoleGuid)
+               .ForSqlServerHasColumnType("uniqueidentifier")
+               .ForSqlServerHasDefaultValueSql("newid()")
+               .IsRequired()
+               ;
+
+            entity.HasIndex(p => p.RoleGuid)
+            .IsUnique();
+
+            entity.Property(p => p.SiteId)
+            .HasColumnName("SiteID")
+            .ForSqlServerHasColumnType("int")
+            .IsRequired()
+            ;
+
+            entity.HasIndex(p => p.SiteId);
+
+            entity.Property(p => p.SiteGuid)
+               .ForSqlServerHasColumnType("uniqueidentifier")
+               .IsRequired()
+               ;
+
+            entity.HasIndex(p => p.SiteGuid);
+
+            entity.Property(p => p.RoleName)
+            .IsRequired()
+            .HasMaxLength(50);
+            ;
+
+            entity.HasIndex(p => p.RoleName);
+
+            entity.Property(p => p.DisplayName)
+            .IsRequired()
+            .HasMaxLength(50);
+            ;
 
         }
 
         public void Map(EntityTypeBuilder<UserClaim> entity)
         {
+            entity.ToTable("mp_UserClaims");
+            entity.HasKey(p => p.Id);
+
+            entity.Property(p => p.Id)
+            .UseSqlServerIdentityColumn()
+            // .Metadata.SentinelValue = -1
+            ;
+
+            entity.Property(p => p.UserId)
+            .HasMaxLength(128)
+            .IsRequired()
+            ;
+
+            entity.Property(p => p.SiteId)
+            .HasColumnName("SiteId")
+            .ForSqlServerHasColumnType("int")
+            .IsRequired()
+            ;
+
+            entity.HasIndex(p => p.SiteId);
+
+            // not mapped will result in nvarchar(max) I think
+            //ClaimType
+            //ClaimValue
 
         }
 
         public void Map(EntityTypeBuilder<UserLogin> entity)
         {
+            entity.ToTable("mp_UserLogins");
+            entity.HasKey(p => new { p.LoginProvider, p.ProviderKey, p.UserId });
+
+            entity.Property(p => p.LoginProvider)
+            .HasMaxLength(128)
+            ;
+
+            entity.Property(p => p.ProviderKey)
+            .HasMaxLength(128)
+            ;
+
+            entity.Property(p => p.UserId)
+            .HasMaxLength(128)
+            ;
+
+            entity.Property(p => p.SiteId)
+            .HasColumnName("SiteId")
+            .ForSqlServerHasColumnType("int")
+            .IsRequired()
+            ;
+
+            entity.HasIndex(p => p.SiteId);
+
+            entity.Property(p => p.ProviderDisplayName)
+            .HasMaxLength(100)
+            ;
 
         }
 
         public void Map(EntityTypeBuilder<GeoCountry> entity)
         {
+            entity.ToTable("mp_GeoCountry");
+            entity.HasKey(p => p.Guid);
+
+            entity.Property(p => p.Guid)
+               .ForSqlServerHasColumnType("uniqueidentifier")
+               .ForSqlServerHasDefaultValueSql("newid()")
+               .IsRequired()
+               ;
+
+            entity.Property(p => p.Name)
+            .HasMaxLength(255)
+            .IsRequired()
+            ;
+
+            entity.Property(p => p.ISOCode2)
+            .HasMaxLength(2)
+            .IsRequired()
+            ;
+
+            entity.HasIndex(p => p.ISOCode2);
+
+            entity.Property(p => p.ISOCode3)
+            .HasMaxLength(3)
+            .IsRequired()
+            ;
 
         }
 
         public void Map(EntityTypeBuilder<GeoZone> entity)
         {
+            entity.ToTable("mp_GeoZone");
+            entity.HasKey(p => p.Guid);
 
+            entity.Property(p => p.Guid)
+               .ForSqlServerHasColumnType("uniqueidentifier")
+               .ForSqlServerHasDefaultValueSql("newid()")
+               .IsRequired()
+               ;
+
+            entity.Property(p => p.CountryGuid)
+               .ForSqlServerHasColumnType("uniqueidentifier")
+               .IsRequired()
+               ;
+
+            entity.HasIndex(p => p.CountryGuid);
+
+            entity.Property(p => p.Name)
+            .HasMaxLength(255)
+            .IsRequired()
+            ;
+
+            entity.Property(p => p.Code)
+            .HasMaxLength(255)
+            .IsRequired()
+            ;
+
+            
         }
 
         public void Map(EntityTypeBuilder<Currency> entity)
         {
+            entity.ToTable("mp_Currency");
+            entity.HasKey(p => p.Guid);
+
+            entity.Property(p => p.Guid)
+               .ForSqlServerHasColumnType("uniqueidentifier")
+               .ForSqlServerHasDefaultValueSql("newid()")
+               .IsRequired()
+               ;
+
+            entity.Property(p => p.Title)
+            .HasMaxLength(50)
+            .IsRequired()
+            ;
+
+            entity.Property(p => p.Code)
+            .HasMaxLength(3)
+            .IsRequired()
+            ;
+
+            entity.Property(p => p.SymbolLeft)
+            .HasMaxLength(15)
+            ;
+
+            entity.Property(p => p.SymbolRight)
+            .HasMaxLength(15)
+            ;
+
+            entity.Property(p => p.DecimalPointChar)
+            .HasMaxLength(1)
+            ;
+
+            entity.Property(p => p.ThousandsPointChar)
+            .HasMaxLength(1)
+            ;
+
+            entity.Property(p => p.DecimalPlaces)
+            .HasMaxLength(1)
+            ;
+
+            entity.Property(p => p.LastModified)
+            .ForSqlServerHasColumnType("datetime")
+            .ForSqlServerHasDefaultValueSql("getutcdate()")
+            ;
+
+            entity.Property(p => p.Created)
+            .ForSqlServerHasColumnType("datetime")
+            .ForSqlServerHasDefaultValueSql("getutcdate()")
+            ;
 
         }
 
         public void Map(EntityTypeBuilder<Language> entity)
         {
+            entity.ToTable("mp_Language");
+            entity.HasKey(p => p.Guid);
+
+            entity.Property(p => p.Guid)
+               .ForSqlServerHasColumnType("uniqueidentifier")
+               .ForSqlServerHasDefaultValueSql("newid()")
+               .IsRequired()
+               ;
+
+            entity.Property(p => p.Name)
+            .HasMaxLength(255)
+            .IsRequired()
+            ;
+
+            entity.Property(p => p.Code)
+            .HasMaxLength(2)
+            .IsRequired()
+            ;
+
+            entity.Property(p => p.Sort)
+            .ForSqlServerHasColumnType("int")
+            .ForSqlServerHasDefaultValue(1)
+            .IsRequired()
+            ;
+
+        }
 
 
+        public void Map(EntityTypeBuilder<LogItem> entity)
+        {
+            entity.ToTable("mp_SystemLog");
+            entity.HasKey(p => p.Id);
+
+            entity.Property(p => p.Id)
+            //.HasSqlServerColumnType("int")
+            .UseSqlServerIdentityColumn()
+            .HasColumnName("ID")
+            //.Metadata.SentinelValue = -1
+            ;
+
+            entity.Property(p => p.LogDateUtc)
+            .HasColumnName("LogDate")
+            .ForSqlServerHasColumnType("datetime")
+            .ForSqlServerHasDefaultValueSql("getutcdate()")
+            ;
+
+            entity.Property(p => p.IpAddress)
+            .HasMaxLength(50)
+            ;
+
+            entity.Property(p => p.Culture)
+            .HasMaxLength(10)
+            ;
+
+            entity.Property(p => p.ShortUrl)
+            .HasMaxLength(255)
+            ;
+
+            entity.Property(p => p.Thread)
+            .HasMaxLength(255)
+            ;
+
+            entity.Property(p => p.LogLevel)
+            .HasMaxLength(20)
+            ;
+
+            entity.Property(p => p.Logger)
+            .HasMaxLength(255)
+            ;
+
+            //Url
+            //Message
+
+        }
+
+
+
+        // this entity is not partofmodels is just needed for a join table
+
+        public void Map(EntityTypeBuilder<UserRole> entity)
+        {
+            entity.ToTable("mp_UserRoles");
+            entity.HasKey(p => p.Id);
+
+            entity.Property(p => p.Id)
+            //.HasSqlServerColumnType("int")
+            .UseSqlServerIdentityColumn()
+            .HasColumnName("ID")
+            //.Metadata.SentinelValue = -1
+            ;
+
+            entity.Property(p => p.UserId)
+            .ForSqlServerHasColumnType("int")
+            .HasColumnName("UserID")
+            .IsRequired()
+            ;
+
+            entity.Property(p => p.UserGuid)
+            .ForSqlServerHasColumnType("uniqueidentifier")
+            //.Metadata.SentinelValue = Guid.Empty
+            ;
+
+            entity.Property(p => p.RoleId)
+            .ForSqlServerHasColumnType("int")
+            .HasColumnName("RoleID")
+            .IsRequired()
+            ;
+
+            entity.Property(p => p.RoleGuid)
+            .ForSqlServerHasColumnType("uniqueidentifier")
+            //.Metadata.SentinelValue = Guid.Empty
+            ;
         }
 
     }

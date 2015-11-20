@@ -118,6 +118,20 @@ GO
 ALTER TABLE [dbo].mp_Sites DROP COLUMN GmapApiKey
 GO
 
+ALTER TABLE [dbo].mp_Sites DROP COLUMN WindowsLiveAppID
+GO
+
+ALTER TABLE [dbo].mp_Sites DROP COLUMN WindowsLiveKey
+GO
+
+ALTER TABLE [dbo].mp_Sites DROP CONSTRAINT DF_mp_Sites_AllowWindowsLiveAuth
+GO
+
+ALTER TABLE [dbo].mp_Sites DROP COLUMN AllowWindowsLiveAuth
+GO
+
+
+
 ALTER TABLE [dbo].mp_Sites ADD RequireApprovalBeforeLogin bit NOT NULL default 0
 GO
 

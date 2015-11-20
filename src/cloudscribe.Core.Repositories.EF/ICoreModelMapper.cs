@@ -9,6 +9,7 @@ using Microsoft.Data.Entity;
 using Microsoft.Data.Entity.Metadata.Builders;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Geography;
+using cloudscribe.Core.Models.Logging;
 
 namespace cloudscribe.Core.Repositories.EF
 {
@@ -27,6 +28,10 @@ namespace cloudscribe.Core.Repositories.EF
         void Map(EntityTypeBuilder<GeoZone> entity);
         void Map(EntityTypeBuilder<Currency> entity);
         void Map(EntityTypeBuilder<Language> entity);
+
+        void Map(EntityTypeBuilder<LogItem> entity);
+
+        void Map(EntityTypeBuilder<UserRole> entity);
 
 
     }
