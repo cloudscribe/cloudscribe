@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2015-11-18
+// Last Modified:			2015-11-20
 // 
 
 using System;
@@ -15,6 +15,7 @@ using Microsoft.Data.Entity.Metadata;
 //using Microsoft.Extensions.DependencyInjection;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Geography;
+using cloudscribe.Core.Models.Logging;
 
 //http://ef.readthedocs.org/en/latest/modeling/configuring.html
 // "If you are targeting more than one relational provider with the same model then you 
@@ -44,9 +45,24 @@ namespace cloudscribe.Core.Repositories.EF
 {
     public class CoreDbContext : DbContext
     {
+        public DbSet<GeoCountry> Countries { get; set; }
+        public DbSet<GeoZone> States { get; set; }
+        public DbSet<Language> Languages { get; set; }
+        public DbSet<Currency> Currencies { get; set; }
 
+        public DbSet<LogItem> LogItems { get; set; }
 
         public DbSet<SiteSettings> Sites { get; set; }
+        public DbSet<SiteHost> SiteHosts { get; set; }
+        public DbSet<SiteFolder> SiteFolders { get; set; }
+
+        public DbSet<SiteUser> Users { get; set; }
+        public DbSet<UserClaim> UserClaims { get; set; }
+        public DbSet<UserLogin> UserLogins { get; set; }
+
+        public DbSet<SiteRole> Roles { get; set; }
+        
+        public DbSet<UserRole> UserRoles { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -113,6 +129,16 @@ namespace cloudscribe.Core.Repositories.EF
             });
 
             modelBuilder.Entity<Language>(entity =>
+            {
+                mapper.Map(entity);
+            });
+
+            modelBuilder.Entity<LogItem>(entity =>
+            {
+                mapper.Map(entity);
+            });
+
+            modelBuilder.Entity<UserRole>(entity =>
             {
                 mapper.Map(entity);
             });

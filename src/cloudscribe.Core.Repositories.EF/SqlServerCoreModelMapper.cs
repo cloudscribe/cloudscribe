@@ -807,7 +807,7 @@ namespace cloudscribe.Core.Repositories.EF
 
 
 
-        // this entity is not partofmodels is just needed for a join table
+        // this entity is not part of models is just needed for a join table
 
         public void Map(EntityTypeBuilder<UserRole> entity)
         {
