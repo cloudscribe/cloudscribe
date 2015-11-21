@@ -1,4 +1,6 @@
 
+http://jeremybytes.blogspot.com/2014/02/demystifying-var-keyword-in-c.html
+
 http://ef.readthedocs.org/en/latest/modeling/configuring.html
 
 https://github.com/aspnet/EntityFramework/wiki/Configuring-a-DbContext

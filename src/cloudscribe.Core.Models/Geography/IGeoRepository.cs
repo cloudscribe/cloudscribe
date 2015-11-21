@@ -5,6 +5,8 @@
 // Last Modified:			2015-05-09
 // 
 
+// TODO: we should update all the async signatures to take a cancellationtoken
+
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2015-11-18
+// Last Modified:			2015-11-21
 // 
 
 using cloudscribe.Core.Models;
@@ -13,6 +13,7 @@ using Microsoft.Extensions.OptionsModel;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.MSSQL
@@ -241,6 +242,8 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         public async Task<ISiteSettings> Fetch(int siteId)
         {
+            //cancellationToken.ThrowIfCancellationRequested();
+
             SiteSettings site = new SiteSettings();
 
             using (DbDataReader reader = await dbSiteSettings.GetSite(siteId))

@@ -2,19 +2,19 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2015-11-20
+// Last Modified:			2015-11-21
 // 
 
+using cloudscribe.Core.Models.Logging;
+using Microsoft.Data.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using cloudscribe.Core.Models;
-using cloudscribe.Core.Models.Logging;
 
 namespace cloudscribe.Core.Repositories.EF
 {
-    public class LogRepository
+    public class LogRepository : ILogRepository
     {
         public LogRepository(CoreDbContext dbContext)
         {
@@ -54,10 +54,7 @@ namespace cloudscribe.Core.Repositories.EF
 
         public async Task<int> GetCount()
         {
-            //var count = (from l in dbContext.LogItems ).
-            //TODO:make this async how?
-
-            return dbContext.LogItems.Count<LogItem>();
+            return await dbContext.LogItems.CountAsync<LogItem>();
         }
 
         
@@ -65,22 +62,87 @@ namespace cloudscribe.Core.Repositories.EF
             int pageNumber,
             int pageSize)
         {
-            int offset = pageNumber == 1 ? 0 : (pageSize * (pageNumber - 1));
+            int offset = (pageSize * pageNumber) - pageSize;
 
             var query = from l in dbContext.LogItems
                         .Skip(offset)
                         .Take(pageSize)
+                        orderby l.Id ascending
                         select l ;
 
-            List<LogItem> items = await query.ToAsyncEnumerable<LogItem>().ToList<LogItem>();
-            // this is supposed to return List<ILogItem>
+            var items = await query.ToAsyncEnumerable<LogItem>().ToList<LogItem>();
+            
+            // this is supposed to return List<ILogItem> not List<LogItem>
             // how to convert it?
-
-            List<ILogItem> result = new List<ILogItem>(items);
-            //result.AddRange(items); // will this work?
-
+            List<ILogItem> result = new List<ILogItem>(items); // will this work?
+          
             return result;
 
+        }
+
+        public async Task<List<ILogItem>> GetPageDescending(
+            int pageNumber,
+            int pageSize)
+        {
+            int offset = (pageSize * pageNumber) - pageSize;
+
+            var query = from l in dbContext.LogItems
+                        .Skip(offset)
+                        .Take(pageSize)
+                        orderby l.Id descending
+                        select l;
+
+            var items = await query.ToAsyncEnumerable<LogItem>().ToList<LogItem>();
+
+            // this is supposed to return List<ILogItem> not List<LogItem>
+            // how to convert it?
+            List<ILogItem> result = new List<ILogItem>(items); // will this work?
+
+            return result;
+        }
+
+        public async Task<bool> DeleteAll()
+        {
+            dbContext.LogItems.RemoveAll();
+            int rowsAffected = await dbContext.SaveChangesAsync();
+            return rowsAffected > 0;
+        }
+
+        public async Task<bool> Delete(int logItemId)
+        {
+            var result = false;
+            var itemToRemove = await dbContext.LogItems.FirstOrDefaultAsync(x => x.Id == logItemId);
+            if(itemToRemove != null)
+            {
+                dbContext.LogItems.Remove(itemToRemove);
+                int rowsAffected = await dbContext.SaveChangesAsync();
+                result = rowsAffected > 0;
+            }
+
+            return result;
+        }
+
+        public async Task<bool> DeleteOlderThan(DateTime cutoffDateUtc)
+        {
+            var query = from l in dbContext.LogItems
+                       where l.LogDateUtc < cutoffDateUtc
+                        select l;
+
+            dbContext.LogItems.RemoveRange(query);
+            int rowsAffected = await dbContext.SaveChangesAsync();
+            return rowsAffected > 0;
+            
+        }
+
+        public async Task<bool> DeleteByLevel(string logLevel)
+        {
+            var query = from l in dbContext.LogItems
+                        where l.LogLevel == logLevel
+                        select l;
+
+            dbContext.LogItems.RemoveRange(query);
+            int rowsAffected = await dbContext.SaveChangesAsync();
+            return rowsAffected > 0;
         }
 
 

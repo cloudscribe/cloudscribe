@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-06-27
-// Last Modified:			2015-11-18
+// Last Modified:			2015-11-21
 // 
 
 
@@ -11,6 +11,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.Extensions.OptionsModel;
 using System;
 using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Identity
@@ -94,10 +95,11 @@ namespace cloudscribe.Core.Identity
                 {
                     identity.AddClaim(displayNameClaim);
                 }
-                
+                // this seems pointless to pass in CancellationToken.None
+                //ISiteSettings site = await siteRepo.Fetch(user.SiteId, CancellationToken.None);
                 ISiteSettings site = await siteRepo.Fetch(user.SiteId);
 
-                if(site != null)
+                if (site != null)
                 {
                     Claim siteGuidClaim = new Claim("SiteGuid", site.SiteGuid.ToString());
                     if (!identity.HasClaim(siteGuidClaim.Type, siteGuidClaim.Value))

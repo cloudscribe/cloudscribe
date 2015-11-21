@@ -5,8 +5,11 @@
 // Last Modified:			2015-07-25
 // 
 
+// TODO: we should update all the async signatures to take a cancellationtoken
+
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Models
