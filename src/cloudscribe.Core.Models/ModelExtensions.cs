@@ -38,26 +38,8 @@ namespace cloudscribe.Core.Models
             return true;
         }
 
-        public static GeoCountry ToGeoCountry(this IGeoCountry igeo)
-        {
-            GeoCountry country = new GeoCountry();
-            country.Guid = igeo.Guid;
-            country.ISOCode2 = igeo.ISOCode2;
-            country.ISOCode3 = igeo.ISOCode3;
-            country.Name = igeo.Name;
+        
 
-            return country;
-        }
-
-        public static GeoZone ToGeoZone(this IGeoZone igeo)
-        {
-            GeoZone state = new GeoZone();
-            state.Guid = igeo.Guid;
-            state.CountryGuid = igeo.CountryGuid;
-            state.Code = igeo.Code;
-            state.Name = igeo.Name;
-
-            return state;
-        }
+        
     }
 }

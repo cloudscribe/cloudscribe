@@ -2,22 +2,19 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2015-11-21
+// Last Modified:			2015-11-22
 // 
 
+using cloudscribe.Core.Models.Geography;
+using Microsoft.Data.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using Microsoft.Data.Entity;
-using Microsoft.Data.Entity.Query;
 using System.Threading.Tasks;
-using cloudscribe.Core.Models;
-using cloudscribe.Core.Models.Geography;
 
 namespace cloudscribe.Core.Repositories.EF
 {
-    public class GeoRepository
+    public class GeoRepository : IGeoRepository
     {
 
         public GeoRepository(CoreDbContext dbContext)
@@ -32,7 +29,7 @@ namespace cloudscribe.Core.Repositories.EF
         {
             if (geoCountry == null) { return false; }
             
-            GeoCountry country = geoCountry.ToGeoCountry(); // convert from IGeoCountry
+            GeoCountry country = GeoCountry.FromIGeoCountry(geoCountry); // convert from IGeoCountry
             dbContext.Countries.Add(country);
             int rowsAffected = await dbContext.SaveChangesAsync();
 
@@ -107,7 +104,7 @@ namespace cloudscribe.Core.Repositories.EF
         {
             if (geoZone == null) { return false; }
 
-            GeoZone state = geoZone.ToGeoZone(); // convert from IGeoZone
+            GeoZone state = GeoZone.FromIGeoZone(geoZone); // convert from IGeoZone
             dbContext.States.Add(state);
             int rowsAffected = await dbContext.SaveChangesAsync();
 
@@ -224,6 +221,128 @@ namespace cloudscribe.Core.Repositories.EF
 
         }
 
+        public async Task<bool> Save(ILanguage language)
+        {
+            if (language == null) { return false; }
+
+            Language lang = Language.FromILanguage(language); 
+            dbContext.Languages.Add(lang);
+            int rowsAffected = await dbContext.SaveChangesAsync();
+
+            return rowsAffected > 0;
+
+        }
+
+        public async Task<ILanguage> FetchLanguage(Guid guid)
+        {
+            Language item
+                = await dbContext.Languages.FirstOrDefaultAsync(x => x.Guid == guid);
+
+            return item;
+        }
+
+        public async Task<bool> DeleteLanguage(Guid guid)
+        {
+            var result = false;
+            var itemToRemove = await dbContext.Languages.FirstOrDefaultAsync(x => x.Guid == guid);
+            if (itemToRemove != null)
+            {
+                dbContext.Languages.Remove(itemToRemove);
+                int rowsAffected = await dbContext.SaveChangesAsync();
+                result = rowsAffected > 0;
+            }
+
+            return result;
+        }
+
+        public async Task<int> GetLanguageCount()
+        {
+            return await dbContext.Languages.CountAsync<Language>();
+
+        }
+
+        public async Task<List<ILanguage>> GetAllLanguages()
+        {
+            var query = from c in dbContext.Languages
+                        orderby c.Name ascending
+                        select c;
+
+            var items = await query.ToAsyncEnumerable<Language>().ToList<Language>();
+
+            List<ILanguage> result = new List<ILanguage>(items); 
+
+            return result;
+
+        }
+
+        public async Task<List<ILanguage>> GetLanguagePage(int pageNumber, int pageSize)
+        {
+            int offset = (pageSize * pageNumber) - pageSize;
+
+            var query = from l in dbContext.Languages
+                        .Skip(offset)
+                        .Take(pageSize)
+                        orderby l.Name ascending
+                        select l;
+
+            var items = await query.ToAsyncEnumerable<Language>().ToList<Language>();
+
+            List<ILanguage> result = new List<ILanguage>(items); 
+
+            return result;
+
+        }
+
+
+        public async Task<bool> Save(ICurrency currency)
+        {
+            if (currency == null) { return false; }
+
+            Currency c = Currency.FromICurrency(currency);
+            dbContext.Currencies.Add(c);
+            int rowsAffected = await dbContext.SaveChangesAsync();
+
+            return rowsAffected > 0;
+
+        }
+
+
+        public async Task<ICurrency> FetchCurrency(Guid guid)
+        {
+            Currency item
+                = await dbContext.Currencies.FirstOrDefaultAsync(x => x.Guid == guid);
+
+            return item;
+        }
+
+        public async Task<bool> DeleteCurrency(Guid guid)
+        {
+            var result = false;
+            var itemToRemove = await dbContext.Currencies.FirstOrDefaultAsync(x => x.Guid == guid);
+            if (itemToRemove != null)
+            {
+                dbContext.Currencies.Remove(itemToRemove);
+                int rowsAffected = await dbContext.SaveChangesAsync();
+                result = rowsAffected > 0;
+            }
+
+            return result;
+
+        }
+
+        public async Task<List<ICurrency>> GetAllCurrencies()
+        {
+            var query = from c in dbContext.Currencies
+                        orderby c.Title ascending
+                        select c;
+
+            var items = await query.ToAsyncEnumerable<Currency>().ToList<Currency>();
+
+            List<ICurrency> result = new List<ICurrency>(items);
+
+            return result;
+
+        }
 
 
     }

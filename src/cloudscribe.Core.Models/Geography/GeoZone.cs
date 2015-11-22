@@ -19,5 +19,16 @@ namespace cloudscribe.Core.Models.Geography
         public string Name { get; set; } = string.Empty;
         public string Code { get; set; } = string.Empty;
 
+        public static GeoZone FromIGeoZone(IGeoZone igeo)
+        {
+            GeoZone state = new GeoZone();
+            state.Guid = igeo.Guid;
+            state.CountryGuid = igeo.CountryGuid;
+            state.Code = igeo.Code;
+            state.Name = igeo.Name;
+
+            return state;
+        }
+
     }
 }
