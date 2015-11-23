@@ -32,6 +32,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using Microsoft.Extensions.OptionsModel;
 using Microsoft.Extensions.PlatformAbstractions;
+using Glimpse;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Logging;
 using cloudscribe.Core.Identity;
@@ -85,6 +86,13 @@ namespace example.WebApp
         //public IServiceProvider ConfigureServices(IServiceCollection services)
         public void ConfigureServices(IServiceCollection services)
         {
+            //http://blog.getglimpse.com/2015/11/19/installing-glimpse-v2-beta1/
+            bool enableGlimpse = Configuration.Get<bool>("DiagnosticOptions:EnableGlimpse", false);
+            if (enableGlimpse)
+            {
+                services.AddGlimpse();
+            }
+            
             //services.AddLocalization(options => options.ResourcesPath = "AppResources");
 
             // we may need this on linux/mac as urls are case sensitive by default
@@ -147,6 +155,14 @@ namespace example.WebApp
             ILogRepository logRepository)
         {
             // Configure the HTTP request pipeline.
+
+            //http://blog.getglimpse.com/2015/11/19/installing-glimpse-v2-beta1/
+            bool enableGlimpse = Configuration.Get<bool>("DiagnosticOptions:EnableGlimpse", false);
+            if(enableGlimpse)
+            {
+                app.UseGlimpse();
+            }
+            
 
             // LogLevels
             //Debug = 1,
