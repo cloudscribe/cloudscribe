@@ -1,6 +1,21 @@
 
 http://jeremybytes.blogspot.com/2014/02/demystifying-var-keyword-in-c.html
 
+http://stackoverflow.com/questions/3485317/entity-framework-4-single-vs-first-vs-firstordefault
+
+Find() - when you want to get an item by primary key. This will return null if it can't find an item. It will look in the context before going to the database (as pointed out by Yaron in the comments) which can be an important efficiency factor if you need to get the same entity multiple times while the same context is alive.
+
+Single() - when you expect exactly one item to be returned by a query. This will throw an exception if the query does not return exactly one item.
+
+SingleOrDefault() - when you expect zero or one items to be returned by a query (i.e. you are not sure if an item with a given key exists). This will throw an exception if the query does not return zero or one items.
+
+First() - when you expect one or more items to be returned by a query but you only want to access the first item in your code (ordering could be important in the query here). This will throw an exception if the query does not return at least one item.
+
+FirstOrDefault() - when you expect zero or more items to be returned by a query but you only want to access the first item in your code (i.e. you are not sure if an item with a given key exists)
+
+http://stackoverflow.com/questions/818642/singleordefault-how-to-change-the-default-values
+
+
 http://ef.readthedocs.org/en/latest/modeling/configuring.html
 
 https://github.com/aspnet/EntityFramework/wiki/Configuring-a-DbContext

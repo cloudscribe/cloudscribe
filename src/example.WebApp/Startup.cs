@@ -50,6 +50,8 @@ namespace example.WebApp
 
         public Startup(IHostingEnvironment env, IApplicationEnvironment appEnv)
         {
+           // var a = PlatformServices.Default.Application.ApplicationBasePath;
+
             // Setup configuration sources.
             var builder = new ConfigurationBuilder()
                 //.SetBasePath(appEnv.ApplicationBasePath)

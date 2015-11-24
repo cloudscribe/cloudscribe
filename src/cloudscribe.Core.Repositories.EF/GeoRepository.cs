@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2015-11-22
+// Last Modified:			2015-11-24
 // 
 
 using cloudscribe.Core.Models.Geography;
@@ -39,20 +39,20 @@ namespace cloudscribe.Core.Repositories.EF
         public async Task<IGeoCountry> FetchCountry(Guid guid)
         {
             GeoCountry item 
-                = await dbContext.Countries.FirstOrDefaultAsync(x => x.Guid == guid);
+                = await dbContext.Countries.SingleOrDefaultAsync(x => x.Guid == guid);
 
             return item;
         }
 
         public async Task<IGeoCountry> FetchCountry(string isoCode2)
         {
-            return await dbContext.Countries.FirstOrDefaultAsync(x => x.ISOCode2 == isoCode2);
+            return await dbContext.Countries.SingleOrDefaultAsync(x => x.ISOCode2 == isoCode2);
         }
 
         public async Task<bool> DeleteCountry(Guid guid)
         {
             var result = false;
-            var itemToRemove = await dbContext.Countries.FirstOrDefaultAsync(x => x.Guid == guid);
+            var itemToRemove = await dbContext.Countries.SingleOrDefaultAsync(x => x.Guid == guid);
             if (itemToRemove != null)
             {
                 dbContext.Countries.Remove(itemToRemove);
@@ -75,11 +75,11 @@ namespace cloudscribe.Core.Repositories.EF
                         orderby c.Name ascending
                         select c;
 
-            var items = await query.ToAsyncEnumerable<GeoCountry>().ToList<GeoCountry>();
+            var items = await query.ToListAsync<IGeoCountry>();
             
-            List<IGeoCountry> result = new List<IGeoCountry>(items); // will this work?
+            //List<IGeoCountry> result = new List<IGeoCountry>(items); // will this work?
 
-            return result;
+            return items;
 
         }
 
@@ -93,7 +93,7 @@ namespace cloudscribe.Core.Repositories.EF
                         orderby l.Name ascending
                         select l;
 
-            var items = await query.ToAsyncEnumerable<GeoCountry>().ToList<GeoCountry>();
+            var items = await query.ToListAsync<GeoCountry>();
             
             List<IGeoCountry> result = new List<IGeoCountry>(items); // will this work?
 
@@ -115,7 +115,7 @@ namespace cloudscribe.Core.Repositories.EF
         public async Task<IGeoZone> FetchGeoZone(Guid guid)
         {
             GeoZone item
-                = await dbContext.States.FirstOrDefaultAsync(x => x.Guid == guid);
+                = await dbContext.States.SingleOrDefaultAsync(x => x.Guid == guid);
 
             return item;
         }
@@ -123,7 +123,7 @@ namespace cloudscribe.Core.Repositories.EF
         public async Task<bool> DeleteGeoZone(Guid guid)
         {
             var result = false;
-            var itemToRemove = await dbContext.States.FirstOrDefaultAsync(x => x.Guid == guid);
+            var itemToRemove = await dbContext.States.SingleOrDefaultAsync(x => x.Guid == guid);
             if (itemToRemove != null)
             {
                 dbContext.States.Remove(itemToRemove);
@@ -158,7 +158,7 @@ namespace cloudscribe.Core.Repositories.EF
                         orderby l.Name descending
                         select l;
 
-            var items = await query.ToAsyncEnumerable<GeoZone>().ToList<GeoZone>();
+            var items = await query.ToListAsync<GeoZone>();
             
             List<IGeoZone> result = new List<IGeoZone>(items); // will this work?
 
@@ -177,7 +177,7 @@ namespace cloudscribe.Core.Repositories.EF
                             orderby l.Name ascending
                             select l;
 
-            var items = await listQuery.ToAsyncEnumerable<GeoCountry>().ToList<GeoCountry>();
+            var items = await listQuery.ToListAsync<GeoCountry>();
 
             List<IGeoCountry> result = new List<IGeoCountry>(items); // will this work?
 
@@ -195,7 +195,7 @@ namespace cloudscribe.Core.Repositories.EF
                             orderby l.Code ascending
                             select l;
 
-            var items = await listQuery.ToAsyncEnumerable<GeoZone>().ToList<GeoZone>();
+            var items = await listQuery.ToListAsync<GeoZone>();
 
             List<IGeoZone> result = new List<IGeoZone>(items); // will this work?
 
@@ -213,7 +213,7 @@ namespace cloudscribe.Core.Repositories.EF
                         orderby l.Name ascending
                         select l;
 
-            var items = await query.ToAsyncEnumerable<GeoZone>().ToList<GeoZone>();
+            var items = await query.ToListAsync<GeoZone>();
 
             List<IGeoZone> result = new List<IGeoZone>(items); // will this work?
 
@@ -236,7 +236,7 @@ namespace cloudscribe.Core.Repositories.EF
         public async Task<ILanguage> FetchLanguage(Guid guid)
         {
             Language item
-                = await dbContext.Languages.FirstOrDefaultAsync(x => x.Guid == guid);
+                = await dbContext.Languages.SingleOrDefaultAsync(x => x.Guid == guid);
 
             return item;
         }
@@ -244,7 +244,7 @@ namespace cloudscribe.Core.Repositories.EF
         public async Task<bool> DeleteLanguage(Guid guid)
         {
             var result = false;
-            var itemToRemove = await dbContext.Languages.FirstOrDefaultAsync(x => x.Guid == guid);
+            var itemToRemove = await dbContext.Languages.SingleOrDefaultAsync(x => x.Guid == guid);
             if (itemToRemove != null)
             {
                 dbContext.Languages.Remove(itemToRemove);
@@ -267,7 +267,7 @@ namespace cloudscribe.Core.Repositories.EF
                         orderby c.Name ascending
                         select c;
 
-            var items = await query.ToAsyncEnumerable<Language>().ToList<Language>();
+            var items = await query.ToListAsync<Language>();
 
             List<ILanguage> result = new List<ILanguage>(items); 
 
@@ -285,7 +285,7 @@ namespace cloudscribe.Core.Repositories.EF
                         orderby l.Name ascending
                         select l;
 
-            var items = await query.ToAsyncEnumerable<Language>().ToList<Language>();
+            var items = await query.ToListAsync<Language>();
 
             List<ILanguage> result = new List<ILanguage>(items); 
 
@@ -310,7 +310,7 @@ namespace cloudscribe.Core.Repositories.EF
         public async Task<ICurrency> FetchCurrency(Guid guid)
         {
             Currency item
-                = await dbContext.Currencies.FirstOrDefaultAsync(x => x.Guid == guid);
+                = await dbContext.Currencies.SingleOrDefaultAsync(x => x.Guid == guid);
 
             return item;
         }
@@ -318,7 +318,7 @@ namespace cloudscribe.Core.Repositories.EF
         public async Task<bool> DeleteCurrency(Guid guid)
         {
             var result = false;
-            var itemToRemove = await dbContext.Currencies.FirstOrDefaultAsync(x => x.Guid == guid);
+            var itemToRemove = await dbContext.Currencies.SingleOrDefaultAsync(x => x.Guid == guid);
             if (itemToRemove != null)
             {
                 dbContext.Currencies.Remove(itemToRemove);
@@ -336,7 +336,7 @@ namespace cloudscribe.Core.Repositories.EF
                         orderby c.Title ascending
                         select c;
 
-            var items = await query.ToAsyncEnumerable<Currency>().ToList<Currency>();
+            var items = await query.ToListAsync<Currency>();
 
             List<ICurrency> result = new List<ICurrency>(items);
 

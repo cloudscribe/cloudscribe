@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2015-11-21
+// Last Modified:			2015-11-24
 // 
 
 using cloudscribe.Core.Models.Logging;
@@ -70,7 +70,7 @@ namespace cloudscribe.Core.Repositories.EF
                         orderby l.Id ascending
                         select l ;
 
-            var items = await query.ToAsyncEnumerable<LogItem>().ToList<LogItem>();
+            var items = await query.ToListAsync<LogItem>();
             
             // this is supposed to return List<ILogItem> not List<LogItem>
             // how to convert it?
@@ -92,7 +92,7 @@ namespace cloudscribe.Core.Repositories.EF
                         orderby l.Id descending
                         select l;
 
-            var items = await query.ToAsyncEnumerable<LogItem>().ToList<LogItem>();
+            var items = await query.ToListAsync<LogItem>();
 
             // this is supposed to return List<ILogItem> not List<LogItem>
             // how to convert it?
@@ -111,7 +111,7 @@ namespace cloudscribe.Core.Repositories.EF
         public async Task<bool> Delete(int logItemId)
         {
             var result = false;
-            var itemToRemove = await dbContext.LogItems.FirstOrDefaultAsync(x => x.Id == logItemId);
+            var itemToRemove = await dbContext.LogItems.SingleOrDefaultAsync(x => x.Id == logItemId);
             if(itemToRemove != null)
             {
                 dbContext.LogItems.Remove(itemToRemove);

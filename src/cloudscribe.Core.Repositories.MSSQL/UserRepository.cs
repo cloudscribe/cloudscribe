@@ -95,11 +95,16 @@ namespace cloudscribe.Core.Repositories.MSSQL
                     user.AuthorBio,
                     user.Comment
                     );
- 
+
+                return user.UserId > -1;
+            }
+            else
+            {
+                return await Update(user);
             }
 
             
-            return user.UserId > -1;
+            
 
         }
 
@@ -168,15 +173,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return await dbSiteUser.FlagAsNotDeleted(userId);
         }
 
-        //public bool UpdatePasswordAndSalt(
-        //    int userId,
-        //    int passwordFormat,
-        //    string password,
-        //    string passwordSalt)
-        //{
-        //    return dbSiteUser.UpdatePasswordAndSalt(userId, passwordFormat, password, passwordSalt);
-        //}
-
+        
         public async Task<bool> ConfirmRegistration(Guid registrationGuid)
         {
             if (registrationGuid == Guid.Empty)
@@ -203,45 +200,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return await dbSiteUser.UpdateFailedPasswordAttemptCount(userGuid, failedPasswordAttemptCount);
         }
 
-        //public async Task<bool> UpdateTotalRevenue(Guid userGuid)
-        //{
-        //    return await dbSiteUser.UpdateTotalRevenue(userGuid);
-
-        //}
-
-        /// <summary>
-        /// updates the total revenue for all users
-        /// </summary>
-        //public async Task<bool> UpdateTotalRevenue()
-        //{
-        //    return await dbSiteUser.UpdateTotalRevenue();
-        //}
-
-
-        //public DataTable GetUserListForPasswordFormatChange(int siteId)
-        //{
-        //    if (AppSettings.UseRelatedSiteMode) { siteId = AppSettings.RelatedSiteId; }
-
-        //    DataTable dt = new DataTable();
-        //    dt.Columns.Add("UserID", typeof(int));
-        //    dt.Columns.Add("PasswordSalt", typeof(String));
-        //    dt.Columns.Add("Pwd", typeof(String));
-
-        //    using (DbDataReader reader = dbSiteUser.GetUserList(siteId))
-        //    {
-        //        while (reader.Read())
-        //        {
-        //            DataRow row = dt.NewRow();
-        //            row["UserID"] = reader["UserID"];
-        //            row["PasswordSalt"] = reader["PasswordSalt"];
-        //            row["Pwd"] = reader["Pwd"];
-        //            dt.Rows.Add(row);
-
-        //        }
-        //    }
-
-        //    return dt;
-        //}
+        
 
         public int GetCount(int siteId)
         {

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-17
-// Last Modified:			2015-11-07
+// Last Modified:			2015-11-24
 // 
 
 //using Microsoft.AspNet.Identity;
@@ -49,6 +49,61 @@ namespace cloudscribe.Core.Models
         public bool TwoFactorEnabled { get; set; } = false;
         
         
+        public static SiteUser FromISiteUser(ISiteUser user)
+        {
+            SiteUser u = new SiteUser();
+            u.AccountApproved = user.AccountApproved;
+            u.AuthorBio = user.AuthorBio;
+            u.AvatarUrl = user.AvatarUrl;
+            u.Comment = user.Comment;
+            u.Country = user.Country;
+            u.CreatedUtc = user.CreatedUtc;
+            u.DateOfBirth = user.DateOfBirth;
+            u.DisplayInMemberList = user.DisplayInMemberList;
+            u.DisplayName = user.DisplayName;
+            u.Email = user.Email;
+            u.EmailChangeGuid = user.EmailChangeGuid;
+            u.EmailConfirmed = user.EmailConfirmed;
+            u.FailedPasswordAnswerAttemptCount = user.FailedPasswordAnswerAttemptCount;
+            u.FailedPasswordAnswerAttemptWindowStart = user.FailedPasswordAnswerAttemptWindowStart;
+            u.FailedPasswordAttemptCount = user.FailedPasswordAttemptCount;
+            u.FailedPasswordAttemptWindowStart = user.FailedPasswordAttemptWindowStart;
+            u.FirstName = user.FirstName;
+            u.Gender = user.Gender;
+            //u.Id = user.Id;
+            u.IsDeleted = user.IsDeleted;
+            u.IsLockedOut = user.IsLockedOut;
+            u.LastActivityDate = user.LastActivityDate;
+            u.LastLockoutDate = user.LastLockoutDate;
+            u.LastLoginDate = user.LastLoginDate;
+            u.LastName = user.LastName;
+            u.LastPasswordChangedDate = user.LastPasswordChangedDate;
+            u.LockoutEndDateUtc = user.LockoutEndDateUtc;
+            u.LoweredEmail = user.LoweredEmail;
+            u.MustChangePwd = user.MustChangePwd;
+            u.NewEmail = user.NewEmail;
+            u.PasswordHash = user.PasswordHash;
+            u.PasswordResetGuid = user.PasswordResetGuid;
+            u.PhoneNumber = user.PhoneNumber;
+            u.PhoneNumberConfirmed = user.PhoneNumberConfirmed;
+            u.RegisterConfirmGuid = user.RegisterConfirmGuid;
+            u.RolesChanged = user.RolesChanged;
+            u.SecurityStamp = user.SecurityStamp;
+            u.Signature = user.Signature;
+            u.SiteGuid = user.SiteGuid;
+            u.SiteId = user.SiteId;
+            u.State = user.State;
+            u.TimeZoneId = user.TimeZoneId;
+            u.Trusted = user.Trusted;
+            u.TwoFactorEnabled = user.TwoFactorEnabled;
+            u.UserGuid = user.UserGuid;
+            u.UserId = user.UserId;
+            u.UserName = user.UserName;
+            u.WebSiteUrl = user.WebSiteUrl;
+           
+
+            return u;
+        }
 
     }
 }

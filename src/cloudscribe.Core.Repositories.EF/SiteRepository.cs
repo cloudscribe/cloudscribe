@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2015-11-22
+// Last Modified:			2015-11-24
 // 
 
 
@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 namespace cloudscribe.Core.Repositories.EF
 {
 
-    public class SiteRepository
+    public class SiteRepository : ISiteRepository
     {
         public SiteRepository(CoreDbContext dbContext)
         {
@@ -40,7 +40,7 @@ namespace cloudscribe.Core.Repositories.EF
         public async Task<ISiteSettings> Fetch(int siteId)
         {
             SiteSettings item
-                = await dbContext.Sites.FirstOrDefaultAsync(x => x.SiteId == siteId);
+                = await dbContext.Sites.SingleOrDefaultAsync(x => x.SiteId == siteId);
 
             return item;
         }
@@ -48,7 +48,7 @@ namespace cloudscribe.Core.Repositories.EF
         public ISiteSettings FetchNonAsync(int siteId)
         {
             SiteSettings item
-                = dbContext.Sites.FirstOrDefault(x => x.SiteId == siteId);
+                = dbContext.Sites.SingleOrDefault(x => x.SiteId == siteId);
 
             return item;
         }
@@ -56,7 +56,7 @@ namespace cloudscribe.Core.Repositories.EF
         public async Task<ISiteSettings> Fetch(Guid siteGuid)
         {
             SiteSettings item
-                = await dbContext.Sites.FirstOrDefaultAsync(x => x.SiteGuid == siteGuid);
+                = await dbContext.Sites.SingleOrDefaultAsync(x => x.SiteGuid == siteGuid);
 
             return item;
         }
@@ -64,7 +64,7 @@ namespace cloudscribe.Core.Repositories.EF
         public ISiteSettings FetchNonAsync(Guid siteGuid)
         {
             SiteSettings item
-                = dbContext.Sites.FirstOrDefault(x => x.SiteGuid == siteGuid);
+                = dbContext.Sites.SingleOrDefault(x => x.SiteGuid == siteGuid);
 
             return item;
         }
@@ -107,7 +107,7 @@ namespace cloudscribe.Core.Repositories.EF
         public async Task<bool> Delete(int siteId)
         {
             var result = false;
-            var itemToRemove = await dbContext.Sites.FirstOrDefaultAsync(x => x.SiteId == siteId);
+            var itemToRemove = await dbContext.Sites.SingleOrDefaultAsync(x => x.SiteId == siteId);
             if (itemToRemove != null)
             {
                 dbContext.Sites.Remove(itemToRemove);
@@ -139,7 +139,7 @@ namespace cloudscribe.Core.Repositories.EF
                         }
                         ;
 
-            var items = await query.ToAsyncEnumerable<ISiteInfo>().ToList<ISiteInfo>();
+            var items = await query.ToListAsync<ISiteInfo>();
 
             //List<ISiteInfo> result = new List<ISiteInfo>(items); // will this work?
 
@@ -174,7 +174,7 @@ namespace cloudscribe.Core.Repositories.EF
                         }
                         ;
 
-            var items = await query.ToAsyncEnumerable<ISiteInfo>().ToList<ISiteInfo>();
+            var items = await query.ToListAsync<ISiteInfo>();
 
             return items;
         }
@@ -185,7 +185,7 @@ namespace cloudscribe.Core.Repositories.EF
                         orderby x.HostName ascending
                         select x;
 
-            var items = await query.ToAsyncEnumerable<ISiteHost>().ToList<ISiteHost>();
+            var items = await query.ToListAsync<ISiteHost>();
 
             //List<ISiteHost> result = new List<ISiteHost>(items); // will this work?
 
@@ -223,7 +223,7 @@ namespace cloudscribe.Core.Repositories.EF
                         select x
                         ;
 
-            var items = await query.ToAsyncEnumerable<ISiteHost>().ToList<ISiteHost>();
+            var items = await query.ToListAsync<ISiteHost>();
 
             return items;
         }
@@ -236,7 +236,7 @@ namespace cloudscribe.Core.Repositories.EF
                         select x
                         ;
 
-            var items = await query.ToAsyncEnumerable<ISiteHost>().ToList<ISiteHost>();
+            var items = await query.ToListAsync<ISiteHost>();
 
             return items;
         }
@@ -270,7 +270,7 @@ namespace cloudscribe.Core.Repositories.EF
         public async Task<bool> DeleteHost(int hostId)
         {
             var result = false;
-            var itemToRemove = await dbContext.SiteHosts.FirstAsync(x => x.HostId == hostId);
+            var itemToRemove = await dbContext.SiteHosts.FirstOrDefaultAsync(x => x.HostId == hostId);
             if (itemToRemove != null)
             {
                 dbContext.SiteHosts.Remove(itemToRemove);
@@ -290,15 +290,166 @@ namespace cloudscribe.Core.Repositories.EF
                         select x
                         ;
 
-            var host = await query.FirstAsync<SiteHost>();
+            var host = await query.FirstOrDefaultAsync<SiteHost>();
 
             if(host != null) { return host.SiteId; }
 
             return -1; // not found
         }
 
+        public async Task<List<SiteFolder>> GetSiteFoldersBySite(Guid siteGuid)
+        {
+            var query = from x in dbContext.SiteFolders
+                        where x.SiteGuid == siteGuid
+                        orderby x.FolderName ascending
+                        select x
+                        ;
+
+            var items = await query.ToListAsync<SiteFolder>();
+
+            return items;
+
+        }
+
+        public async Task<List<SiteFolder>> GetAllSiteFolders()
+        {
+            var query = from x in dbContext.SiteFolders
+                        orderby x.FolderName ascending
+                        select x;
+
+            var items = await query.ToListAsync<SiteFolder>();
+            
+            return items;
+
+        }
+
+        public List<SiteFolder> GetAllSiteFoldersNonAsync()
+        {
+            var query = from x in dbContext.SiteFolders
+                        orderby x.FolderName ascending
+                        select x;
+
+            var items = query.ToList<SiteFolder>();
+
+            return items;
+        }
+
+        public async Task<int> GetFolderCount()
+        {
+            return await dbContext.SiteFolders.CountAsync<SiteFolder>();
+        }
+
+        public async Task<List<SiteFolder>> GetPageSiteFolders(
+            int pageNumber,
+            int pageSize)
+        {
+            int offset = (pageSize * pageNumber) - pageSize;
+
+            var query = from x in dbContext.SiteFolders
+                        .Skip(offset)
+                        .Take(pageSize)
+                        orderby x.FolderName ascending
+                        select x
+                        ;
+
+            var items = await query.ToListAsync<SiteFolder>();
+
+            return items;
+
+        }
+
+        public async Task<SiteFolder> GetSiteFolder(string folderName)
+        {
+            var query = from x in dbContext.SiteFolders
+                        where x.FolderName == folderName
+                        orderby x.FolderName ascending
+                        select x
+                        ;
+
+            return await query.SingleOrDefaultAsync<SiteFolder>();
+
+        }
+
+        public async Task<bool> Save(SiteFolder siteFolder)
+        {
+            if (siteFolder == null) { return false; }
+
+            dbContext.SiteFolders.Add(siteFolder);
+            int rowsAffected = await dbContext.SaveChangesAsync();
+
+            return rowsAffected > 0;
+
+        }
+
+        public async Task<bool> DeleteFolder(Guid guid)
+        {
+            var result = false;
+            var itemToRemove = await dbContext.SiteFolders.FirstOrDefaultAsync(x => x.Guid == guid);
+            if (itemToRemove != null)
+            {
+                dbContext.SiteFolders.Remove(itemToRemove);
+                int rowsAffected = await dbContext.SaveChangesAsync();
+                result = rowsAffected > 0;
+            }
+
+            return result;
+        }
+
+        public async Task<int> GetSiteIdByFolder(string folderName)
+        {
+            var query = from x in dbContext.Sites
+                        join y in dbContext.SiteFolders
+                        on x.SiteGuid equals y.SiteGuid
+                        where y.FolderName == folderName
+                        select x.SiteId
+                        ;
+
+            return await query.DefaultIfEmpty(-1).FirstOrDefaultAsync<int>();
+            
+            //return -1; // not found
+
+        }
+
+        public int GetSiteIdByFolderNonAsync(string folderName)
+        {
+            var query = from x in dbContext.Sites
+                        join y in dbContext.SiteFolders
+                        on x.SiteGuid equals y.SiteGuid
+                        where y.FolderName == folderName
+                        select x.SiteId
+                        ;
+
+            return query.DefaultIfEmpty(-1).FirstOrDefault<int>();
+        }
+
+        public async Task<Guid> GetSiteGuidByFolder(string folderName)
+        {
+            var query = from x in dbContext.SiteFolders
+                        where x.FolderName == folderName 
+                        select x
+                        ;
+
+            SiteFolder folder = await query.SingleOrDefaultAsync<SiteFolder>();
+            if(folder == null) { return Guid.Empty; }
+            return folder.SiteGuid;
+        }
+
+        public async Task<bool> FolderExists(string folderName)
+        {
+            Guid found = await GetSiteGuidByFolder(folderName);
+            if(found == Guid.Empty) { return false; }
+            return true;
+        }
 
 
+        #region IDisposable
+
+        public void Dispose()
+        {
+            //TODO: ?
+        }
+
+        #endregion
 
     }
 }
