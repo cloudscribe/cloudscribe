@@ -31,7 +31,9 @@ namespace cloudscribe.Core.Models
         Task<bool> LockoutAccount(Guid userGuid);
         Task<bool> UnLockAccount(Guid userGuid);
         Task<bool> UpdateFailedPasswordAttemptCount(Guid userGuid, int failedPasswordAttemptCount);
+
         Task<List<IUserInfo>> GetByIPAddress(Guid siteGuid, string ipv4Address);
+
         Task<List<IUserInfo>> GetCrossSiteUserListByEmail(string email);
         Task<List<IUserInfo>> GetNotApprovedUsers(int siteId, int pageNumber, int pageSize);
         Task<List<IUserInfo>> GetPage(int siteId, int pageNumber, int pageSize, string userNameBeginsWith, int sortMode);
