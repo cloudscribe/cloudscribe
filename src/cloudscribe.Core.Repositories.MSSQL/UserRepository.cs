@@ -601,7 +601,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return available;
         }
 
-        public async Task<string> GetUserNameFromEmail(int siteId, String email)
+        public async Task<string> GetUserNameFromEmail(int siteId, string email)
         {
             string result = String.Empty;
             if ((email != null) && (email.Length > 0) && (siteId > 0))

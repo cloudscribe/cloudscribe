@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-20
-// Last Modified:			2015-08-04
+// Last Modified:			2015-11-30
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -31,6 +31,20 @@ namespace cloudscribe.Core.Models
         /// </summary>
         public int MemberCount { get; set; } = -1;
         
+        public static SiteRole FromISiteRole(ISiteRole i)
+        {
+            SiteRole r = new SiteRole();
+            r.DisplayName = i.DisplayName;
+            r.MemberCount = i.MemberCount;
+            r.RoleGuid = i.RoleGuid;
+            r.RoleId = i.RoleId;
+            r.RoleName = i.RoleName;
+            r.SiteGuid = i.SiteGuid;
+            r.SiteId = i.SiteId;
+
+
+            return r;
+        }
         
     }
 
