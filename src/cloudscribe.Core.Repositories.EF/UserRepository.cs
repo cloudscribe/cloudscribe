@@ -775,7 +775,7 @@ namespace cloudscribe.Core.Repositories.EF
                             .Take(pageSize)
                             where (
                             x.SiteId == siteId &&
-                            (x.DisplayName.Contains(searchInput) || x.RoleName.Contains(searchInput))
+                            ( searchInput == string.Empty || x.DisplayName.Contains(searchInput) || x.RoleName.Contains(searchInput))
                             )
                             orderby x.RoleName ascending
                             select x;
@@ -783,6 +783,112 @@ namespace cloudscribe.Core.Repositories.EF
             var items = await listQuery.ToListAsync<ISiteRole>();
             return items;
         }
+
+
+        public async Task<int> CountUsersInRole(int siteId, int roleId, string searchInput)
+        {
+            var query = from x in dbContext.Users
+                        join y in dbContext.UserRoles
+                        on x.UserId equals y.UserId
+                        where (
+                            (x.SiteId == siteId && y.RoleId == roleId)
+                            && (
+                                searchInput == string.Empty
+                                || x.Email.Contains(searchInput)
+                                || x.DisplayName.Contains(searchInput)
+                                || x.UserName.Contains(searchInput)
+                                || x.FirstName.Contains(searchInput)
+                                || x.LastName.Contains(searchInput)
+                            )
+                            )
+                        select x.UserId
+                        ;
+
+            return await query.CountAsync<int>();
+
+        }
+
+
+        public async Task<IList<IUserInfo>> GetUsersInRole(
+            int siteId,
+            int roleId,
+            string searchInput,
+            int pageNumber,
+            int pageSize)
+        {
+            int offset = (pageSize * pageNumber) - pageSize;
+
+            var query = from x in dbContext.Users
+                        .Skip(offset)
+                        .Take(pageSize)
+                        join y in dbContext.UserRoles
+                        on x.UserId equals y.UserId
+                        orderby x.DisplayName 
+                        where (
+                            (x.SiteId == siteId && y.RoleId == roleId)
+                            && (
+                                searchInput == string.Empty
+                                || x.Email.Contains(searchInput)
+                                || x.DisplayName.Contains(searchInput)
+                                || x.UserName.Contains(searchInput)
+                                || x.FirstName.Contains(searchInput)
+                                || x.LastName.Contains(searchInput)
+                            )
+                            )
+                        select x
+                        ;
+
+            var items = await query.ToListAsync<IUserInfo>(); // will this work converting from SiteUser to IUserInfo automagically?
+
+            return items;
+
+        }
+
+        public async Task<IList<ISiteUser>> GetUsersInRole(
+            int siteId,
+            string roleName)
+        {
+            var query = from x in dbContext.Users
+                        join y in dbContext.UserRoles
+                        on x.UserId equals y.UserId
+                        join z in dbContext.Roles
+                        on y.RoleId equals z.RoleId
+                        orderby x.DisplayName
+                        where 
+                            (x.SiteId == siteId && z.RoleName == roleName)
+                            
+                        select x
+                        ;
+
+            var items = await query.ToListAsync<ISiteUser>(); // will this work converting from SiteUser to IUserInfo automagically?
+
+            return items;
+        }
+
+        public async Task<int> CountUsersNotInRole(int siteId, int roleId, string searchInput)
+        {
+            var query = from x in dbContext.Users
+                        join y in dbContext.UserRoles 
+                        on x.UserId equals y.UserId into temp
+                        from z in temp.DefaultIfEmpty()
+                        where (
+                            (x.SiteId == siteId && z == null)
+                            && (
+                                searchInput == string.Empty
+                                || x.Email.Contains(searchInput)
+                                || x.DisplayName.Contains(searchInput)
+                                || x.UserName.Contains(searchInput)
+                                || x.FirstName.Contains(searchInput)
+                                || x.LastName.Contains(searchInput)
+                            )
+                            )
+                        select x.UserId
+                        ;
+
+            return await query.CountAsync<int>();
+
+        }
+
 
         #endregion
 
