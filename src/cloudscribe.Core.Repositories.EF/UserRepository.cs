@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2015-11-30
+// Last Modified:			2015-12-01
 // 
 
 
@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.EF
 {
-    public class UserRepository
+    public class UserRepository : IUserRepository
     {
         public UserRepository(CoreDbContext dbContext)
         {
@@ -33,7 +33,15 @@ namespace cloudscribe.Core.Repositories.EF
             if (user.SiteGuid == Guid.Empty) { throw new ArgumentException("user must have a siteguid"); }
 
             SiteUser siteUser = SiteUser.FromISiteUser(user);
-            dbContext.Users.Add(siteUser);
+            if(siteUser.UserId == -1)
+            {
+                dbContext.Users.Add(siteUser);
+            }
+            else
+            {
+                dbContext.Users.Update(siteUser);
+            }
+            
             int rowsAffected = await dbContext.SaveChangesAsync();
 
             return rowsAffected > 0;
@@ -212,15 +220,16 @@ namespace cloudscribe.Core.Repositories.EF
 
         public async Task<List<IUserInfo>> GetByIPAddress(Guid siteGuid, string ipv4Address)
         {
-            //var query = from x in dbContext.Users
-            //            join y in dbContext.UserLocations  // we don't have a model class for UserLocation yet
-            //            on x.SiteGuid equals y.SiteGuid
-            //            where y.FolderName == folderName
-            //            select x.SiteId
-            //            ;
+            var query = from x in dbContext.Users
+                        join y in dbContext.UserLocations  
+                        on x.SiteGuid equals y.SiteGuid
+                        where x.UserGuid == y.UserGuid && y.IpAddress == ipv4Address
+                        select x
+                        ;
 
-            throw new NotImplementedException("need to implement model class for UserLocation to make this work");
+            var items = await query.ToListAsync<IUserInfo>(); // not sure this will work IUserInfo from SiteUser may need to map it in select
 
+            return items;
 
         }
 
@@ -860,7 +869,7 @@ namespace cloudscribe.Core.Repositories.EF
                         select x
                         ;
 
-            var items = await query.ToListAsync<ISiteUser>(); // will this work converting from SiteUser to IUserInfo automagically?
+            var items = await query.ToListAsync<ISiteUser>(); // will this work converting from SiteUser to ISiteUser automagically?
 
             return items;
         }
@@ -889,6 +898,290 @@ namespace cloudscribe.Core.Repositories.EF
 
         }
 
+        public async Task<IList<IUserInfo>> GetUsersNotInRole(
+            int siteId,
+            int roleId,
+            string searchInput,
+            int pageNumber,
+            int pageSize)
+        {
+            int offset = (pageSize * pageNumber) - pageSize;
+
+            var query = from x in dbContext.Users
+                        join y in dbContext.UserRoles
+                        on x.UserId equals y.UserId into temp
+                        from z in temp.DefaultIfEmpty()
+                        where (
+                            (x.SiteId == siteId && z == null)
+                            && (
+                                searchInput == string.Empty
+                                || x.Email.Contains(searchInput)
+                                || x.DisplayName.Contains(searchInput)
+                                || x.UserName.Contains(searchInput)
+                                || x.FirstName.Contains(searchInput)
+                                || x.LastName.Contains(searchInput)
+                            )
+                            )
+                        select x
+                        ;
+
+            var items = await query.ToListAsync<IUserInfo>(); // will this work converting from SiteUser to IUserInfo automagically?
+
+            return items;
+
+        }
+
+
+        #endregion
+
+        #region Claims
+
+        public async Task<bool> SaveClaim(IUserClaim userClaim)
+        {
+            if (userClaim == null) { return false; }
+
+            UserClaim claim = UserClaim.FromIUserClaim(userClaim);
+            if(claim.Id == -1)
+            {
+                dbContext.UserClaims.Add(claim);
+            }
+            else
+            {
+                dbContext.UserClaims.Update(claim);
+            }
+
+            int rowsAffected = await dbContext.SaveChangesAsync();
+
+            return rowsAffected > 0;
+
+        }
+
+        public async Task<bool> DeleteClaim(int id)
+        {
+            var result = false;
+            var itemToRemove = await dbContext.UserClaims.SingleOrDefaultAsync(x => x.Id == id);
+            if (itemToRemove != null)
+            {
+                dbContext.UserClaims.Remove(itemToRemove);
+                int rowsAffected = await dbContext.SaveChangesAsync();
+                result = rowsAffected > 0;
+            }
+
+            return result;
+
+        }
+
+        public async Task<bool> DeleteClaimsByUser(int siteId, string userId)
+        {
+            var query = from x in dbContext.UserClaims
+                        where (
+                        (siteId == -1 || x.SiteId == siteId)
+                        && x.UserId == userId
+                        )
+                        select x;
+
+            dbContext.UserClaims.RemoveRange(query);
+            int rowsAffected = await dbContext.SaveChangesAsync();
+            return rowsAffected > 0;
+
+        }
+
+        public async Task<bool> DeleteClaimByUser(int siteId, string userId, string claimType)
+        {
+            var query = from x in dbContext.UserClaims
+                        where (
+                        (siteId == -1 || x.SiteId == siteId)
+                        && (x.UserId == userId && x.ClaimType == claimType)
+                        )
+                        select x;
+
+            dbContext.UserClaims.RemoveRange(query);
+            int rowsAffected = await dbContext.SaveChangesAsync();
+            return rowsAffected > 0;
+
+        }
+
+        public async Task<bool> DeleteClaimsBySite(int siteId)
+        {
+            var query = from x in dbContext.UserClaims
+                        where x.SiteId == siteId
+                        select x;
+
+            dbContext.UserClaims.RemoveRange(query);
+            int rowsAffected = await dbContext.SaveChangesAsync();
+            return rowsAffected > 0;
+
+        }
+
+        public async Task<IList<IUserClaim>> GetClaimsByUser(int siteId, string userId)
+        {
+            var query = from l in dbContext.UserClaims
+                        where l.SiteId == siteId && l.UserId == userId
+                        
+                        select l;
+            var items = await query.ToListAsync<IUserClaim>();
+            return items;
+
+        }
+
+        public async Task<IList<ISiteUser>> GetUsersForClaim(
+            int siteId,
+            string claimType,
+            string claimValue)
+        {
+            var query = from x in dbContext.Users
+                        join y in dbContext.UserClaims
+                        on x.UserGuid.ToString() equals y.UserId
+                        where x.SiteId == siteId 
+                        orderby x.DisplayName
+                        select x
+                        ;
+
+            var items = await query.ToListAsync<ISiteUser>(); // will this work converting from SiteUser to ISiteUser automagically?
+
+            return items;
+        }
+
+
+        #endregion
+
+        #region Logins
+
+        public async Task<bool> CreateLogin(IUserLogin userLogin)
+        {
+            if (userLogin == null) { return false; }
+            if (userLogin.LoginProvider.Length == -1) { return false; }
+            if (userLogin.ProviderKey.Length == -1) { return false; }
+            if (userLogin.UserId.Length == -1) { return false; }
+
+            UserLogin login = UserLogin.FromIUserLogin(userLogin);
+            
+            dbContext.UserLogins.Add(login);
+            
+            int rowsAffected = await dbContext.SaveChangesAsync();
+
+            return rowsAffected > 0;
+
+        }
+
+        public async Task<IUserLogin> FindLogin(
+            int siteId,
+            string loginProvider,
+            string providerKey)
+        {
+            var query = from l in dbContext.UserLogins
+                        where (
+                        l.SiteId == siteId
+                        && l.LoginProvider == loginProvider
+                        && l.ProviderKey == providerKey
+                        )
+                        select l;
+
+            var items = await query.SingleOrDefaultAsync<IUserLogin>();
+
+            return items;
+        }
+
+        public async Task<bool> DeleteLogin(
+            int siteId,
+            string loginProvider,
+            string providerKey,
+            string userId)
+        {
+            var query = from l in dbContext.UserLogins
+                        where (
+                        l.SiteId == siteId
+                        && l.LoginProvider == loginProvider
+                        && l.ProviderKey == providerKey
+                        )
+                        select l;
+
+            dbContext.UserLogins.RemoveRange(query);
+            int rowsAffected = await dbContext.SaveChangesAsync();
+            return rowsAffected > 0;
+
+        }
+
+        public async Task<bool> DeleteLoginsByUser(int siteId, string userId)
+        {
+            var query = from l in dbContext.UserLogins
+                        where (
+                        l.SiteId == siteId
+                        && l.UserId == userId
+                        )
+                        select l;
+
+            dbContext.UserLogins.RemoveRange(query);
+            int rowsAffected = await dbContext.SaveChangesAsync();
+            return rowsAffected > 0;
+
+        }
+
+        public async Task<bool> DeleteLoginsBySite(int siteId)
+        {
+            var query = from l in dbContext.UserLogins
+                        where (l.SiteId == siteId)
+                        select l;
+
+            dbContext.UserLogins.RemoveRange(query);
+            int rowsAffected = await dbContext.SaveChangesAsync();
+            return rowsAffected > 0;
+
+        }
+
+        public async Task<IList<IUserLogin>> GetLoginsByUser(
+            int siteId,
+            string userId)
+        {
+            var query = from l in dbContext.UserLogins
+                        where (
+                        l.SiteId == siteId
+                        && l.UserId == userId
+                        )
+                        select l;
+
+            var items = await query.ToListAsync<IUserLogin>();
+
+            return items;
+
+        }
+
+        #endregion
+
+        #region IDisposable Support
+
+        private bool disposedValue = false; // To detect redundant calls
+
+        void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // TODO: dispose managed state (managed objects).
+                }
+
+                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
+                // TODO: set large fields to null.
+
+                disposedValue = true;
+            }
+        }
+
+        // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
+        // ~SiteRoleStore() {
+        //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+        //   Dispose(false);
+        // }
+
+        // This code added to correctly implement the disposable pattern.
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
+            // TODO: uncomment the following line if the finalizer is overridden above.
+            // GC.SuppressFinalize(this);
+        }
 
         #endregion
 

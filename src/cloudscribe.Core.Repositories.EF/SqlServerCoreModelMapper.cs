@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-17
-// Last Modified:			2015-11-20
+// Last Modified:			2015-12-01
 // 
 
 using System;
@@ -805,6 +805,68 @@ namespace cloudscribe.Core.Repositories.EF
 
         }
 
+        public void Map(EntityTypeBuilder<UserLocation> entity)
+        {
+            entity.ToTable("mp_UserLocation");
+            entity.HasKey(p => p.RowId);
+
+            entity.Property(p => p.RowId)
+            .ForSqlServerHasColumnType("uniqueidentifier")
+            .ForSqlServerHasDefaultValueSql("newid()")
+            .HasColumnName("RowID")  
+           ;
+
+            entity.Property(p => p.UserGuid)
+            .ForSqlServerHasColumnType("uniqueidentifier")
+            ;
+
+            entity.Property(p => p.SiteGuid)
+            .ForSqlServerHasColumnType("uniqueidentifier")
+            ;
+
+            entity.Property(p => p.IpAddress)
+                .HasColumnName("IPAddress")
+                .HasMaxLength(50)
+             ;
+
+            entity.Property(p => p.IpAddressLong)
+                .HasColumnName("IPAddressLong")
+             ;
+
+            entity.Property(p => p.Isp)
+                .HasColumnName("ISP")
+                .HasMaxLength(255)
+             ;
+
+            entity.Property(p => p.Continent)
+                .HasMaxLength(255)
+             ;
+
+            entity.Property(p => p.Country)
+                .HasMaxLength(255)
+             ;
+
+            entity.Property(p => p.Region)
+                .HasMaxLength(255)
+             ;
+
+            entity.Property(p => p.City)
+                .HasMaxLength(255)
+             ;
+
+            entity.Property(p => p.TimeZone)
+                .HasMaxLength(255)
+             ;
+
+            entity.Property(p => p.FirstCaptureUtc)
+               .HasColumnName("FirstCaptureUTC")
+            ;
+
+            entity.Property(p => p.LastCaptureUtc)
+               .HasColumnName("LastCaptureUTC")
+            ;
+
+        }
 
 
         // this entity is not part of models is just needed for a join table

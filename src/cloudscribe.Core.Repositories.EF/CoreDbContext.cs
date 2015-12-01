@@ -61,7 +61,9 @@ namespace cloudscribe.Core.Repositories.EF
         public DbSet<UserLogin> UserLogins { get; set; }
 
         public DbSet<SiteRole> Roles { get; set; }
-        
+
+        public DbSet<UserLocation> UserLocations { get; set; }
+
         public DbSet<UserRole> UserRoles { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -139,6 +141,11 @@ namespace cloudscribe.Core.Repositories.EF
             });
 
             modelBuilder.Entity<UserRole>(entity =>
+            {
+                mapper.Map(entity);
+            });
+
+            modelBuilder.Entity<UserLocation>(entity =>
             {
                 mapper.Map(entity);
             });

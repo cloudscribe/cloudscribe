@@ -32,6 +32,7 @@ namespace cloudscribe.Core.Repositories.EF
         void Map(EntityTypeBuilder<LogItem> entity);
 
         void Map(EntityTypeBuilder<UserRole> entity);
+        void Map(EntityTypeBuilder<UserLocation> entity);
 
 
     }
