@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-18
-// Last Modified:			2015-11-18
+// Last Modified:			2015-12-02
 // 
 
 
@@ -95,9 +95,15 @@ namespace cloudscribe.Core.Repositories.pgsql
 
                     );
 
+                return user.UserId > -1;
+
+            }
+            else
+            {
+                return await Update(user);
             }
 
-            return user.UserId > -1;
+            
 
         }
 
