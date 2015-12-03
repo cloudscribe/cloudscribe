@@ -9,6 +9,15 @@ namespace cloudscribe.Core.Models
 {
     public interface IDb
     {
+        //TODO split any of these methods that could/should also be implemented in EF
+        // into a different interface ie CanAccessDatabase, ExistingSiteCount, etc
+        // then what remains can be used from a non ef implementation while still using ef for some repositories
+        // ie I want to decouple the setup system in a way that it can still be used for additional feature installation even if 
+        // the core features are using ef
+        // probably also should add a model class for SchemaVersion so EF can populate it to avoid
+        // a clash if the sql core scripts exist on disk - we don't want to run them if using EF for core repos
+        // but we still want to be able to let other scripts run if they are not related to core
+
         void EnsureDatabase();
         bool CanAccessDatabase();
         bool CanAccessDatabase(string overrideConnectionInfo);
@@ -18,29 +27,29 @@ namespace cloudscribe.Core.Models
         IVersionProviderFactory VersionProviders { get; }
         int ExecteNonQuery(string connectionString, string query);
         DbException GetConnectionError(string overrideConnectionInfo);
-        DbDataReader GetReader(string connectionString, string query);
-        DbDataReader GetReader(string connectionString, string tableName, string whereClause);
+        //DbDataReader GetReader(string connectionString, string query);
+        //DbDataReader GetReader(string connectionString, string tableName, string whereClause);
         //http://stackoverflow.com/questions/27900493/asp-vnext-core-5-0-datatable
         //DataTable GetTable(string connectionString, string tableName, string whereClause);
         bool RunScript(FileInfo scriptFile, string overrideConnectionInfo);
         bool RunScript(string script, string overrideConnectionInfo);
         bool TableExists(string tableName);
-        bool UpdateTableField(
-            string connectionString,
-            string tableName,
-            string keyFieldName,
-            string keyFieldValue,
-            string dataFieldName,
-            string dataFieldValue,
-            string additionalWhere);
+        //bool UpdateTableField(
+        //    string connectionString,
+        //    string tableName,
+        //    string keyFieldName,
+        //    string keyFieldValue,
+        //    string dataFieldName,
+        //    string dataFieldValue,
+        //    string additionalWhere);
 
-        bool UpdateTableField(
-            string tableName,
-            string keyFieldName,
-            string keyFieldValue,
-            string dataFieldName,
-            string dataFieldValue,
-            string additionalWhere);
+        //bool UpdateTableField(
+        //    string tableName,
+        //    string keyFieldName,
+        //    string keyFieldValue,
+        //    string dataFieldName,
+        //    string dataFieldValue,
+        //    string additionalWhere);
 
         bool SitesTableExists();
         int ExistingSiteCount();

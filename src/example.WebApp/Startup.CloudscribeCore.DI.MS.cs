@@ -100,7 +100,7 @@ namespace example.WebApp
 
             switch (devOptions.DbPlatform)
             {
-                case "EF7": // this case is not implemented yet
+                case "EF7": // this case is not fully implemented yet
 
                     services.TryAddScoped<ICoreModelMapper, SqlServerCoreModelMapper>();
 
@@ -112,6 +112,10 @@ namespace example.WebApp
                     )  
                     ;
 
+                    services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.EF.SiteRepository>();
+                    services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.EF.UserRepository>();
+                    services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.EF.GeoRepository>();
+                    services.TryAddScoped<ILogRepository, cloudscribe.Core.Repositories.EF.LogRepository>();
 
                     break;
 

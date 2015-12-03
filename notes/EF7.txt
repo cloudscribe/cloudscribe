@@ -30,6 +30,14 @@ https://github.com/aspnet/EntityFramework/wiki/Writing-an-EF7-Provider
 
 http://blogs.msdn.com/b/adonet/archive/2014/10/27/ef7-v1-or-v7.aspx
 
+http://wildermuth.com/2015/3/17/A_Look_at_ASP_NET_5_Part_3_-_EF7
+
+https://channel9.msdn.com/Blogs/Seth-Juarez/Migrations-in-Entity-Framework-7-with-Brice-Lambson
+
+http://www.jerriepelser.com/blog/moving-entity-framework-7-models-to-external-project
+
 http://www.jerriepelser.com/blog/resolve-dbcontext-as-interface-in-aspnet5-ioc-container
 
 http://stackoverflow.com/questions/27220714/ramifications-of-using-dbcontext-with-dependency-injection
+
+http://davidzych.com/unit-testing-entity-framework-7-with-the-in-memory-data-store/

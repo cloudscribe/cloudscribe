@@ -94,8 +94,17 @@ namespace example.WebApp
             {
                 services.AddGlimpse();
             }
-            
+
             //services.AddLocalization(options => options.ResourcesPath = "AppResources");
+
+            //services.AddAuthorization(options =>
+            //{
+            //    options.AddPolicy(
+            //        "ManageStore",
+            //        authBuilder => {
+            //            authBuilder.RequireRole("ManageStore", "Allowed");
+            //        });
+            //});
 
             // we may need this on linux/mac as urls are case sensitive by default
             //services.Configure<RouteOptions>(routeOptions => routeOptions.LowercaseUrls = true);
@@ -164,7 +173,7 @@ namespace example.WebApp
             {
                 app.UseGlimpse();
             }
-            
+
 
             // LogLevels
             //Debug = 1,
@@ -173,11 +182,11 @@ namespace example.WebApp
             //Warning = 4,
             //Error = 5,
             //Critical = 6,
-            loggerFactory.MinimumLevel = LogLevel.Information;
+            
             // Add the console logger.
-            loggerFactory.AddConsole();
+            loggerFactory.AddConsole(minLevel: LogLevel.Warning);
             // Add cloudscribe db logging
-            loggerFactory.AddDbLogger(serviceProvider, logRepository);
+            loggerFactory.AddDbLogger(serviceProvider, logRepository, LogLevel.Information);
 
             //app.UseCultureReplacer();
 
@@ -323,6 +332,12 @@ namespace example.WebApp
             //    context.Response.StatusCode = 404;
             //    return Task.FromResult(0);
             //});
+
+            DevOptions devOptions = Configuration.Get<DevOptions>("DevOptions");
+            if(devOptions.DbPlatform == "EF7")
+            {
+                cloudscribe.Core.Repositories.EF.InitialData.InitializeDatabaseAsync(app.ApplicationServices).Wait();
+            }
 
 
 

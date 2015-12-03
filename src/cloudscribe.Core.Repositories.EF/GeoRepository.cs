@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2015-11-24
+// Last Modified:			2015-12-03
 // 
 
 using cloudscribe.Core.Models.Geography;
@@ -30,7 +30,16 @@ namespace cloudscribe.Core.Repositories.EF
             if (geoCountry == null) { return false; }
             
             GeoCountry country = GeoCountry.FromIGeoCountry(geoCountry); // convert from IGeoCountry
-            dbContext.Countries.Add(country);
+            if(country.Guid == Guid.Empty)
+            {
+                country.Guid = Guid.NewGuid();
+                dbContext.Countries.Add(country);
+            }
+            else
+            {
+                dbContext.Countries.Update(country);
+            }
+            
             int rowsAffected = await dbContext.SaveChangesAsync();
 
             return rowsAffected > 0;
@@ -105,7 +114,16 @@ namespace cloudscribe.Core.Repositories.EF
             if (geoZone == null) { return false; }
 
             GeoZone state = GeoZone.FromIGeoZone(geoZone); // convert from IGeoZone
-            dbContext.States.Add(state);
+            if(state.Guid == Guid.Empty)
+            {
+                state.Guid = Guid.NewGuid();
+                dbContext.States.Add(state);
+            }
+            else
+            {
+                dbContext.States.Update(state);
+            }
+            
             int rowsAffected = await dbContext.SaveChangesAsync();
 
             return rowsAffected > 0;
@@ -226,7 +244,16 @@ namespace cloudscribe.Core.Repositories.EF
             if (language == null) { return false; }
 
             Language lang = Language.FromILanguage(language); 
-            dbContext.Languages.Add(lang);
+            if(lang.Guid == Guid.Empty)
+            {
+                lang.Guid = Guid.NewGuid();
+                dbContext.Languages.Add(lang);
+            }
+            else
+            {
+                dbContext.Languages.Update(lang);
+            }
+            
             int rowsAffected = await dbContext.SaveChangesAsync();
 
             return rowsAffected > 0;
@@ -299,7 +326,16 @@ namespace cloudscribe.Core.Repositories.EF
             if (currency == null) { return false; }
 
             Currency c = Currency.FromICurrency(currency);
-            dbContext.Currencies.Add(c);
+            if(c.Guid == Guid.Empty)
+            {
+                c.Guid = Guid.NewGuid();
+                dbContext.Currencies.Add(c);
+            }
+            else
+            {
+                dbContext.Currencies.Update(c);
+            }
+            
             int rowsAffected = await dbContext.SaveChangesAsync();
 
             return rowsAffected > 0;

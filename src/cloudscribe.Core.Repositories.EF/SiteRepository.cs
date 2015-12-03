@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2015-11-24
+// Last Modified:			2015-12-03
 // 
 
 
@@ -31,7 +31,16 @@ namespace cloudscribe.Core.Repositories.EF
             if(site == null) { return false; }
 
             SiteSettings siteSettings = SiteSettings.FromISiteSettings(site); 
-            dbContext.Sites.Add(siteSettings);
+            if(siteSettings.SiteId == -1)
+            {
+                if(siteSettings.SiteGuid == Guid.Empty) { siteSettings.SiteGuid = Guid.NewGuid(); }
+                dbContext.Sites.Add(siteSettings);
+            }
+            else
+            {
+                dbContext.Sites.Update(siteSettings);
+            }
+            
             int rowsAffected = await dbContext.SaveChangesAsync();
 
             return rowsAffected > 0;
@@ -79,10 +88,10 @@ namespace cloudscribe.Core.Repositories.EF
                             orderby s.SiteId ascending
                             select s;
 
-                return await query.FirstAsync<SiteSettings>();
+                return await query.SingleOrDefaultAsync<SiteSettings>();
             }
             
-            return await dbContext.Sites.FirstOrDefaultAsync(x => x.SiteId == host.SiteId);
+            return await dbContext.Sites.SingleOrDefaultAsync(x => x.SiteId == host.SiteId);
 
 
         }
@@ -97,10 +106,10 @@ namespace cloudscribe.Core.Repositories.EF
                             orderby s.SiteId ascending
                             select s;
 
-                return query.First<SiteSettings>();
+                return query.SingleOrDefault<SiteSettings>();
             }
 
-            return dbContext.Sites.FirstOrDefault(x => x.SiteId == host.SiteId);
+            return dbContext.Sites.SingleOrDefault(x => x.SiteId == host.SiteId);
 
         }
 
@@ -249,7 +258,7 @@ namespace cloudscribe.Core.Repositories.EF
                         select x
                         ;
 
-            return await query.FirstOrDefaultAsync<SiteHost>();
+            return await query.SingleOrDefaultAsync<SiteHost>();
             
         }
 
@@ -270,7 +279,7 @@ namespace cloudscribe.Core.Repositories.EF
         public async Task<bool> DeleteHost(int hostId)
         {
             var result = false;
-            var itemToRemove = await dbContext.SiteHosts.FirstOrDefaultAsync(x => x.HostId == hostId);
+            var itemToRemove = await dbContext.SiteHosts.SingleOrDefaultAsync(x => x.HostId == hostId);
             if (itemToRemove != null)
             {
                 dbContext.SiteHosts.Remove(itemToRemove);
@@ -290,7 +299,7 @@ namespace cloudscribe.Core.Repositories.EF
                         select x
                         ;
 
-            var host = await query.FirstOrDefaultAsync<SiteHost>();
+            var host = await query.SingleOrDefaultAsync<SiteHost>();
 
             if(host != null) { return host.SiteId; }
 
@@ -374,7 +383,16 @@ namespace cloudscribe.Core.Repositories.EF
         {
             if (siteFolder == null) { return false; }
 
-            dbContext.SiteFolders.Add(siteFolder);
+            if(siteFolder.Guid == Guid.Empty)
+            {
+                siteFolder.Guid = Guid.NewGuid();
+                dbContext.SiteFolders.Add(siteFolder);
+            }
+            else
+            {
+                dbContext.SiteFolders.Update(siteFolder);
+            }
+            
             int rowsAffected = await dbContext.SaveChangesAsync();
 
             return rowsAffected > 0;
@@ -384,7 +402,7 @@ namespace cloudscribe.Core.Repositories.EF
         public async Task<bool> DeleteFolder(Guid guid)
         {
             var result = false;
-            var itemToRemove = await dbContext.SiteFolders.FirstOrDefaultAsync(x => x.Guid == guid);
+            var itemToRemove = await dbContext.SiteFolders.SingleOrDefaultAsync(x => x.Guid == guid);
             if (itemToRemove != null)
             {
                 dbContext.SiteFolders.Remove(itemToRemove);
@@ -404,7 +422,7 @@ namespace cloudscribe.Core.Repositories.EF
                         select x.SiteId
                         ;
 
-            return await query.DefaultIfEmpty(-1).FirstOrDefaultAsync<int>();
+            return await query.DefaultIfEmpty(-1).SingleOrDefaultAsync<int>();
             
             //return -1; // not found
 
@@ -419,7 +437,7 @@ namespace cloudscribe.Core.Repositories.EF
                         select x.SiteId
                         ;
 
-            return query.DefaultIfEmpty(-1).FirstOrDefault<int>();
+            return query.DefaultIfEmpty(-1).SingleOrDefault<int>();
         }
 
         public async Task<Guid> GetSiteGuidByFolder(string folderName)
