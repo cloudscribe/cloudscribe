@@ -165,7 +165,7 @@ namespace cloudscribe.Core.Web.Components
             //0 = clear, 1= hashed, 2= encrypted
             //newSite.PasswordFormat = 1;
 
-            newSite.RequiresQuestionAndAnswer = true;
+            newSite.RequiresQuestionAndAnswer = false;
             newSite.MaxInvalidPasswordAttempts = 10;
             newSite.PasswordAttemptWindowMinutes = 5;
             newSite.MinReqNonAlphaChars = 0;

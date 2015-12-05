@@ -88,6 +88,8 @@ namespace example.WebApp
         //public IServiceProvider ConfigureServices(IServiceCollection services)
         public void ConfigureServices(IServiceCollection services)
         {
+            //services.TryAddScoped<IConfigurationRoot, Configuration>();
+
             //http://blog.getglimpse.com/2015/11/19/installing-glimpse-v2-beta1/
             bool enableGlimpse = Configuration.Get<bool>("DiagnosticOptions:EnableGlimpse", false);
             if (enableGlimpse)
@@ -334,7 +336,7 @@ namespace example.WebApp
             //});
 
             DevOptions devOptions = Configuration.Get<DevOptions>("DevOptions");
-            if(devOptions.DbPlatform == "EF7")
+            if(devOptions.DbPlatform == "ef7")
             {
                 cloudscribe.Core.Repositories.EF.InitialData.InitializeDatabaseAsync(app.ApplicationServices).Wait();
             }

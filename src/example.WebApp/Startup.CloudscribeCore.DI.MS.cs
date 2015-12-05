@@ -100,7 +100,7 @@ namespace example.WebApp
 
             switch (devOptions.DbPlatform)
             {
-                case "EF7": // this case is not fully implemented yet
+                case "ef7": // this case is not fully implemented yet
 
                     services.TryAddScoped<ICoreModelMapper, SqlServerCoreModelMapper>();
 

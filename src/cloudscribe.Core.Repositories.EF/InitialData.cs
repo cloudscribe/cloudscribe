@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-12-03
-// Last Modified:			2015-12-03
+// Last Modified:			2015-12-05
 // 
 
 
@@ -29,20 +29,20 @@ namespace cloudscribe.Core.Repositories.EF
             using (var serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
                 var db = serviceScope.ServiceProvider.GetService<CoreDbContext>();
-
+                
                 if (await db.Database.EnsureCreatedAsync())
                 {
-                    await EnsureData(serviceProvider);
+                    await EnsureData(db);
  
                 }
             }
         }
 
-        private static async Task EnsureData(IServiceProvider serviceProvider)
+        private static async Task EnsureData(
+            CoreDbContext db
+            )
         {
-            using (var serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
-            {
-                var db = serviceScope.ServiceProvider.GetService<CoreDbContext>();
+           
                 int count = await db.Countries.CountAsync<GeoCountry>();
                 if(count == 0)
                 {
@@ -85,15 +85,149 @@ namespace cloudscribe.Core.Repositories.EF
                 count = await db.Sites.CountAsync<SiteSettings>();
                 if (count == 0)
                 {
-                    // TODO: create first site
+                    // create first site
+                    SiteSettings newSite = new SiteSettings();
+                    newSite.SiteGuid = Guid.NewGuid();
+                    newSite.SiteName = "Sample Site";
+                    newSite.IsServerAdminSite = true;
 
-                    // TODO: ensure roles
+                    newSite.Layout = "Default_Layout.cshtml";
 
-                    // TODO: ensure admin user
+                    newSite.AllowNewRegistration = true;
+                    newSite.AllowUserFullNameChange = false;
+                    newSite.AutoCreateLdapUserOnFirstLogin = true;
+                    newSite.ReallyDeleteUsers = true;
+                    newSite.LdapPort = 389;
+                    newSite.LdapRootDN = String.Empty;
+                    newSite.LdapServer = String.Empty;
+                    newSite.UseEmailForLogin = true;
+                    newSite.UseLdapAuth = false;
+                    newSite.UseSecureRegistration = false;
+                    newSite.UseSslOnAllPages = false;
+
+
+                    //0 = clear, 1= hashed, 2= encrypted
+                    //newSite.PasswordFormat = 1;
+
+                    newSite.RequiresQuestionAndAnswer = false;
+                    newSite.MaxInvalidPasswordAttempts = 10;
+                    newSite.PasswordAttemptWindowMinutes = 5;
+                    newSite.MinReqNonAlphaChars = 0;
+                    newSite.MinRequiredPasswordLength = 7;
+
+                    db.Sites.Add(newSite);
+
+                    rowsAffected = await db.SaveChangesAsync();
+
+                    
                 }
-            }
 
-           
+                // ensure roles
+                count = await db.Roles.CountAsync<SiteRole>();
+                if (count == 0)
+                {
+                    SiteSettings site = await db.Sites.SingleOrDefaultAsync<SiteSettings>(
+                        s => s.SiteId > -1);
+
+                    if(site != null)
+                    {
+                        SiteRole adminRole = new SiteRole();
+                        adminRole.DisplayName = "Admins";
+                        //adminRole.DisplayName = "Administrators";
+                        adminRole.SiteId = site.SiteId;
+                        adminRole.SiteGuid = site.SiteGuid;
+                        db.Roles.Add(adminRole);
+                        rowsAffected = await db.SaveChangesAsync();
+                        
+                        adminRole.DisplayName = "Administrators";
+                        db.Roles.Update(adminRole);
+                        rowsAffected = await db.SaveChangesAsync();
+
+                        SiteRole roleAdminRole = new SiteRole();
+                        roleAdminRole.DisplayName = "Role Admins";
+                        roleAdminRole.SiteId = site.SiteId;
+                        roleAdminRole.SiteGuid = site.SiteGuid;
+                        db.Roles.Add(roleAdminRole);
+                        rowsAffected = await db.SaveChangesAsync();
+
+                        roleAdminRole.DisplayName = "Role Administrators";
+                        db.Roles.Update(roleAdminRole);
+                        rowsAffected = await db.SaveChangesAsync();
+
+                        SiteRole contentAdminRole = new SiteRole();
+                        contentAdminRole.DisplayName = "Content Administrators";
+                        contentAdminRole.SiteId = site.SiteId;
+                        contentAdminRole.SiteGuid = site.SiteGuid;
+                        db.Roles.Add(contentAdminRole);
+
+                        SiteRole authenticatedUserRole = new SiteRole();
+                        authenticatedUserRole.DisplayName = "Authenticated Users";
+                        authenticatedUserRole.SiteId = site.SiteId;
+                        authenticatedUserRole.SiteGuid = site.SiteGuid;
+                        db.Roles.Add(authenticatedUserRole);
+
+                        rowsAffected = await db.SaveChangesAsync();
+
+                    }
+
+                }
+
+                // ensure admin user
+                count = await db.Users.CountAsync<SiteUser>();
+                if (count == 0)
+                {
+                    SiteSettings site = await db.Sites.SingleOrDefaultAsync<SiteSettings>(
+                        s => s.SiteId > -1);
+                    
+                    if (site != null)
+                    {
+                        SiteRole role
+                            = await db.Roles.SingleOrDefaultAsync(
+                                x => x.SiteId == site.SiteId && x.RoleName == "Admins");
+
+                        if(role != null)
+                        {
+                            SiteUser adminUser = new SiteUser();
+                            adminUser.SiteId = site.SiteId;
+                            adminUser.SiteGuid = site.SiteGuid;
+                            adminUser.Email = "admin@admin.com";
+                            adminUser.DisplayName = "Admin";
+                            adminUser.UserName = "admin";
+                            adminUser.UserGuid = Guid.NewGuid();
+
+                            adminUser.EmailConfirmed = true;
+                            adminUser.AccountApproved = true;
+
+                            // clear text password will be hashed upon login
+                            // this format allows migrating from mojoportal
+                            adminUser.PasswordHash = "admin||0"; //pwd/salt/format 
+
+                            db.Users.Add(adminUser);
+                            rowsAffected = await db.SaveChangesAsync();
+                            if(rowsAffected > 0 && adminUser.UserId > -1)
+                            {
+                                UserRole ur = new UserRole();
+                                ur.RoleGuid = role.RoleGuid;
+                                ur.RoleId = role.RoleId;
+                                ur.UserGuid = adminUser.UserGuid;
+                                ur.UserId = adminUser.UserId;
+
+                                db.UserRoles.Add(ur);
+                                rowsAffected = await db.SaveChangesAsync();
+
+                            }
+                        }
+
+                    }
+
+                }
+
+
+
+
+            
+
+
         }
 
         
