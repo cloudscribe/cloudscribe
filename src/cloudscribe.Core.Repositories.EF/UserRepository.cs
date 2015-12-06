@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2015-12-01
+// Last Modified:			2015-12-06
 // 
 
 
@@ -35,13 +35,26 @@ namespace cloudscribe.Core.Repositories.EF
             SiteUser siteUser = SiteUser.FromISiteUser(user);
             if(siteUser.UserId == -1)
             {
+                siteUser.UserId = 0; //EF needs it to be zero in order to generate
                 dbContext.Users.Add(siteUser);
             }
-            else
-            {
-                dbContext.Users.Update(siteUser);
-            }
-            
+            // apparently we don't need to call update before saving
+            // because tracking is automatic if the entity was fetched
+            // calling update causes an error because it tries to initiate tracking
+            // on an entity that is already being tracked
+            //else
+            //{
+            //    try
+            //    {
+            //        dbContext.Users.Update(siteUser);
+            //    }
+            //    catch (InvalidOperationException ex)
+            //    {
+            //        need to figure out why we keep geting this exception
+            //    }
+
+            //}
+
             int rowsAffected = await dbContext.SaveChangesAsync();
 
             return rowsAffected > 0;
@@ -72,7 +85,7 @@ namespace cloudscribe.Core.Repositories.EF
 
             item.IsDeleted = true;
 
-            dbContext.Users.Update(item);
+            //dbContext.Users.Update(item);
             int rowsAffected = await dbContext.SaveChangesAsync();
 
             return rowsAffected > 0;
@@ -88,7 +101,7 @@ namespace cloudscribe.Core.Repositories.EF
 
             item.IsDeleted = false;
 
-            dbContext.Users.Update(item);
+            //dbContext.Users.Update(item);
             int rowsAffected = await dbContext.SaveChangesAsync();
 
             return rowsAffected > 0;
@@ -110,7 +123,7 @@ namespace cloudscribe.Core.Repositories.EF
             item.IsLockedOut = false;
             item.RegisterConfirmGuid = Guid.Empty;
 
-            dbContext.Users.Update(item);
+            //dbContext.Users.Update(item);
             int rowsAffected = await dbContext.SaveChangesAsync();
 
             return rowsAffected > 0;
@@ -127,7 +140,7 @@ namespace cloudscribe.Core.Repositories.EF
             item.IsLockedOut = true;
             item.LastLockoutDate = DateTime.UtcNow;
 
-            dbContext.Users.Update(item);
+            //dbContext.Users.Update(item);
             int rowsAffected = await dbContext.SaveChangesAsync();
 
             return rowsAffected > 0;
@@ -145,7 +158,7 @@ namespace cloudscribe.Core.Repositories.EF
             item.FailedPasswordAttemptCount = 0;
             item.FailedPasswordAnswerAttemptCount = 0;
 
-            dbContext.Users.Update(item);
+            //dbContext.Users.Update(item);
             int rowsAffected = await dbContext.SaveChangesAsync();
 
             return rowsAffected > 0;
@@ -160,7 +173,7 @@ namespace cloudscribe.Core.Repositories.EF
             
             item.FailedPasswordAttemptCount = failedPasswordAttemptCount;
            
-            dbContext.Users.Update(item);
+            //dbContext.Users.Update(item);
             int rowsAffected = await dbContext.SaveChangesAsync();
 
             return rowsAffected > 0;
@@ -636,12 +649,13 @@ namespace cloudscribe.Core.Repositories.EF
             SiteRole siteRole = SiteRole.FromISiteRole(role); 
             if(siteRole.RoleId == -1)
             {
+                siteRole.RoleId = 0;
                 dbContext.Roles.Add(siteRole);
             }
-            else
-            {
-                dbContext.Roles.Update(siteRole);
-            }
+            //else
+            //{
+            //    dbContext.Roles.Update(siteRole);
+            //}
             
             int rowsAffected = await dbContext.SaveChangesAsync();
 
@@ -671,6 +685,7 @@ namespace cloudscribe.Core.Repositories.EF
             )
         {
             UserRole ur = new UserRole();
+            ur.Id = 0;
             ur.RoleGuid = roleGuid;
             ur.RoleId = roleId;
             ur.UserGuid = userGuid;
@@ -943,12 +958,13 @@ namespace cloudscribe.Core.Repositories.EF
             UserClaim claim = UserClaim.FromIUserClaim(userClaim);
             if(claim.Id == -1)
             {
+                claim.Id = 0;
                 dbContext.UserClaims.Add(claim);
             }
-            else
-            {
-                dbContext.UserClaims.Update(claim);
-            }
+            //else
+            //{
+            //    dbContext.UserClaims.Update(claim);
+            //}
 
             int rowsAffected = await dbContext.SaveChangesAsync();
 

@@ -275,9 +275,9 @@ namespace cloudscribe.Core.Identity
 
         }
 
-        public async Task SetNormalizedUserNameAsync(TUser user, string userName, CancellationToken cancellationToken)
+        public Task SetNormalizedUserNameAsync(TUser user, string userName, CancellationToken cancellationToken)
         {
-            if (debugLog) { log.LogInformation("SetEmailAsync"); }
+            if (debugLog) { log.LogInformation("SetNormalizedUserNameAsync"); }
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
             if (user == null)
@@ -295,8 +295,10 @@ namespace cloudscribe.Core.Identity
             }
 
             user.UserName = userName;
-            cancellationToken.ThrowIfCancellationRequested();
-            bool result = await repo.Save(user);
+            //cancellationToken.ThrowIfCancellationRequested();
+            //bool result = await repo.Save(user);
+
+            return Task.FromResult(0);
 
         }
 
@@ -424,7 +426,7 @@ namespace cloudscribe.Core.Identity
 
         }
 
-        public async Task SetNormalizedEmailAsync(TUser user, string email, CancellationToken cancellationToken)
+        public Task SetNormalizedEmailAsync(TUser user, string email, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("SetEmailAsync"); }
 
@@ -446,13 +448,14 @@ namespace cloudscribe.Core.Identity
             //user.Email = email;
             user.LoweredEmail = email.ToLower();
 
-            cancellationToken.ThrowIfCancellationRequested();
+            //cancellationToken.ThrowIfCancellationRequested();
 
-            bool result = await repo.Save(user);
+            //bool result = await repo.Save(user);
+            return Task.FromResult(0);
 
         }
 
-        public async Task SetEmailConfirmedAsync(TUser user, bool confirmed, CancellationToken cancellationToken)
+        public Task SetEmailConfirmedAsync(TUser user, bool confirmed, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("SetEmailConfirmedAsync"); }
 
@@ -470,13 +473,15 @@ namespace cloudscribe.Core.Identity
             {
                 user.SiteId = siteSettings.SiteId;
             }
+            cancellationToken.ThrowIfCancellationRequested();
 
             user.EmailConfirmed = confirmed;
 
-            cancellationToken.ThrowIfCancellationRequested();
+           
             // I don't not sure this method is expected to
             // persist this change to the db
-            bool result = await repo.Save(user);
+            //bool result = await repo.Save(user);
+            return Task.FromResult(0);
 
         }
 

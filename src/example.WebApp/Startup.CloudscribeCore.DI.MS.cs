@@ -337,15 +337,21 @@ namespace example.WebApp
             services.TryAddSingleton<IdentityMarkerService>();
 
             //****** cloudscribe implementation of AspNet.Identity****************************************************
+
+            // I think this is creating multiple instances of UserStore when we only want 1
+            //services.TryAddScoped<IUserStore<SiteUser>, UserStore<SiteUser>>();
+            //services.TryAddScoped<IUserPasswordStore<SiteUser>, UserStore<SiteUser>>();
+            //services.TryAddScoped<IUserEmailStore<SiteUser>, UserStore<SiteUser>>();
+            //services.TryAddScoped<IUserLoginStore<SiteUser>, UserStore<SiteUser>>();
+            //services.TryAddScoped<IUserRoleStore<SiteUser>, UserStore<SiteUser>>();
+            //services.TryAddScoped<IUserClaimStore<SiteUser>, UserStore<SiteUser>>();
+            //services.TryAddScoped<IUserPhoneNumberStore<SiteUser>, UserStore<SiteUser>>();
+            //services.TryAddScoped<IUserLockoutStore<SiteUser>, UserStore<SiteUser>>();
+            //services.TryAddScoped<IUserTwoFactorStore<SiteUser>, UserStore<SiteUser>>();
+
             services.TryAddScoped<IUserStore<SiteUser>, UserStore<SiteUser>>();
-            services.TryAddScoped<IUserPasswordStore<SiteUser>, UserStore<SiteUser>>();
-            services.TryAddScoped<IUserEmailStore<SiteUser>, UserStore<SiteUser>>();
-            services.TryAddScoped<IUserLoginStore<SiteUser>, UserStore<SiteUser>>();
-            services.TryAddScoped<IUserRoleStore<SiteUser>, UserStore<SiteUser>>();
-            services.TryAddScoped<IUserClaimStore<SiteUser>, UserStore<SiteUser>>();
-            services.TryAddScoped<IUserPhoneNumberStore<SiteUser>, UserStore<SiteUser>>();
-            services.TryAddScoped<IUserLockoutStore<SiteUser>, UserStore<SiteUser>>();
-            services.TryAddScoped<IUserTwoFactorStore<SiteUser>, UserStore<SiteUser>>();
+
+
             services.TryAddScoped<IRoleStore<SiteRole>, RoleStore<SiteRole>>();
             services.TryAddScoped<IUserClaimsPrincipalFactory<SiteUser>, SiteUserClaimsPrincipalFactory<SiteUser, SiteRole>>();
             // the DNX451 desktop version of SitePasswordHasher can validate against existing hashed or encrypted passwords from mojoportal users
@@ -388,7 +394,7 @@ namespace example.WebApp
             services.TryAddScoped<UserManager<TUser>, UserManager<TUser>>();
             services.TryAddScoped<SignInManager<TUser>, SignInManager<TUser>>();
             services.TryAddScoped<RoleManager<TRole>, RoleManager<TRole>>();
-            
+
             //http://docs.asp.net/en/latest/security/2fa.html
 
             //services.Configure<IdentityOptions>(options =>
@@ -397,12 +403,12 @@ namespace example.WebApp
             //    //options.Lockout.MaxFailedAccessAttempts = 10;
             //});
 
-            
+
             //services.Configure<SharedAuthenticationOptions>(options =>
             //{
             //    //options.SignInScheme = IdentityOptions.ExternalCookieAuthenticationScheme;
             //    options.SignInScheme = AuthenticationScheme.External;
-                
+
             //});
 
             // Configure all of the cookie middlewares
@@ -458,7 +464,11 @@ namespace example.WebApp
 
             
 
-            return new IdentityBuilder(typeof(TUser), typeof(TRole), services);
+            IdentityBuilder builder = new IdentityBuilder(typeof(TUser), typeof(TRole), services);
+            //builder.AddUserStore(UserStore<SiteUser>>();
+
+
+            return builder;
         }
 
     }

@@ -33,13 +33,14 @@ namespace cloudscribe.Core.Repositories.EF
             SiteSettings siteSettings = SiteSettings.FromISiteSettings(site); 
             if(siteSettings.SiteId == -1)
             {
+                siteSettings.SiteId = 0;
                 if(siteSettings.SiteGuid == Guid.Empty) { siteSettings.SiteGuid = Guid.NewGuid(); }
                 dbContext.Sites.Add(siteSettings);
             }
-            else
-            {
-                dbContext.Sites.Update(siteSettings);
-            }
+            //else
+            //{
+            //    dbContext.Sites.Update(siteSettings);
+            //}
             
             int rowsAffected = await dbContext.SaveChangesAsync();
 
@@ -149,9 +150,7 @@ namespace cloudscribe.Core.Repositories.EF
                         ;
 
             var items = await query.ToListAsync<ISiteInfo>();
-
-            //List<ISiteInfo> result = new List<ISiteInfo>(items); // will this work?
-
+            
             return items;
         }
 
@@ -167,11 +166,15 @@ namespace cloudscribe.Core.Repositories.EF
         {
             int offset = (pageSize * pageNumber) - pageSize;
 
-            var query = from x in dbContext.Sites 
+            IQueryable<ISiteInfo> query;
+            if(offset > 0)
+            {
+                query = from x in dbContext.Sites
                         .Skip(offset)
                         .Take(pageSize)
                         where (x.SiteId != currentSiteId)
                         orderby x.SiteName ascending
+                        //select x;
                         select new SiteInfo
                         {
                             SiteId = x.SiteId,
@@ -180,8 +183,26 @@ namespace cloudscribe.Core.Repositories.EF
                             PreferredHostName = x.PreferredHostName,
                             SiteFolderName = x.SiteFolderName,
                             SiteName = x.SiteName
-                        }
-                        ;
+                        };
+            }
+            else
+            {
+                query = from x in dbContext.Sites
+                        .Take(pageSize)
+                        where (x.SiteId != currentSiteId)
+                        orderby x.SiteName ascending
+                        //select x;
+                        select new SiteInfo
+                        {
+                            SiteId = x.SiteId,
+                            SiteGuid = x.SiteGuid,
+                            IsServerAdminSite = x.IsServerAdminSite,
+                            PreferredHostName = x.PreferredHostName,
+                            SiteFolderName = x.SiteFolderName,
+                            SiteName = x.SiteName
+                        };
+            }
+            
 
             var items = await query.ToListAsync<ISiteInfo>();
 
@@ -388,10 +409,10 @@ namespace cloudscribe.Core.Repositories.EF
                 siteFolder.Guid = Guid.NewGuid();
                 dbContext.SiteFolders.Add(siteFolder);
             }
-            else
-            {
-                dbContext.SiteFolders.Update(siteFolder);
-            }
+            //else
+            //{
+            //    dbContext.SiteFolders.Update(siteFolder);
+            //}
             
             int rowsAffected = await dbContext.SaveChangesAsync();
 

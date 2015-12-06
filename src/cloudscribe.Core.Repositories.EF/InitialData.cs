@@ -125,21 +125,9 @@ namespace cloudscribe.Core.Repositories.EF
                 newSite.MinRequiredPasswordLength = 7;
 
                 db.Sites.Add(newSite);
-
-                try
-                {
-                    rowsAffected = await db.SaveChangesAsync();
-                }
-                catch(Exception ex)
-                {
-                    if(ex is InvalidOperationException)
-                    {
-                        bool foo = true;
-                    }
-                }
                 
-
-                    
+                rowsAffected = await db.SaveChangesAsync();
+                   
             }
 
             // ensure roles
@@ -189,31 +177,17 @@ namespace cloudscribe.Core.Repositories.EF
                     authenticatedUserRole.SiteGuid = site.SiteGuid;
                     db.Roles.Add(authenticatedUserRole);
 
-                    try
-                    {
-                        rowsAffected = await db.SaveChangesAsync();
-                    }
-                    catch(Exception ex)
-                    {
-                        bool foo = true;
-                    }
                     
-
+                    rowsAffected = await db.SaveChangesAsync();
+                    
+                   
                 }
 
             }
 
             // ensure admin user
-            try
-            {
-                count = await db.Users.CountAsync<SiteUser>();
-            }
-            catch(Exception ex)
-            {
-                bool foo = true;
-            }
+            count = await db.Users.CountAsync<SiteUser>();
             
-
             if (count == 0)
             {
                 SiteSettings site = await db.Sites.SingleOrDefaultAsync<SiteSettings>(
@@ -245,16 +219,9 @@ namespace cloudscribe.Core.Repositories.EF
                         adminUser.PasswordHash = "admin||0"; //pwd/salt/format 
 
                         db.Users.Add(adminUser);
-                        try
-                        {
-                            rowsAffected = await db.SaveChangesAsync();
-                        }
-                        catch(Exception ex)
-                        {
-                            bool foo = true;
-                        }
                         
-
+                        rowsAffected = await db.SaveChangesAsync();
+                        
                         if(rowsAffected > 0 && adminUser.UserId > -1)
                         {
                             UserRole ur = new UserRole();

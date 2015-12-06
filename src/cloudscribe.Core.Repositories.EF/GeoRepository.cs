@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2015-12-03
+// Last Modified:			2015-12-06
 // 
 
 using cloudscribe.Core.Models.Geography;
@@ -35,10 +35,10 @@ namespace cloudscribe.Core.Repositories.EF
                 country.Guid = Guid.NewGuid();
                 dbContext.Countries.Add(country);
             }
-            else
-            {
-                dbContext.Countries.Update(country);
-            }
+            //else
+            //{
+            //    dbContext.Countries.Update(country);
+            //}
             
             int rowsAffected = await dbContext.SaveChangesAsync();
 
@@ -102,11 +102,11 @@ namespace cloudscribe.Core.Repositories.EF
                         orderby l.Name ascending
                         select l;
 
-            var items = await query.ToListAsync<GeoCountry>();
-            
-            List<IGeoCountry> result = new List<IGeoCountry>(items); // will this work?
+            var items = await query.ToListAsync<IGeoCountry>();
+            return items;
+            //List<IGeoCountry> result = new List<IGeoCountry>(items); // will this work?
 
-            return result;
+            //return result;
         }
 
         public async Task<bool> Save(IGeoZone geoZone)
@@ -119,10 +119,10 @@ namespace cloudscribe.Core.Repositories.EF
                 state.Guid = Guid.NewGuid();
                 dbContext.States.Add(state);
             }
-            else
-            {
-                dbContext.States.Update(state);
-            }
+            //else
+            //{
+            //    dbContext.States.Update(state);
+            //}
             
             int rowsAffected = await dbContext.SaveChangesAsync();
 
@@ -176,11 +176,11 @@ namespace cloudscribe.Core.Repositories.EF
                         orderby l.Name descending
                         select l;
 
-            var items = await query.ToListAsync<GeoZone>();
-            
-            List<IGeoZone> result = new List<IGeoZone>(items); // will this work?
+            var items = await query.ToListAsync<IGeoZone>();
+            return items;
+            //List<IGeoZone> result = new List<IGeoZone>(items); // will this work?
 
-            return result;
+            //return result;
 
         }
 
@@ -195,11 +195,11 @@ namespace cloudscribe.Core.Repositories.EF
                             orderby l.Name ascending
                             select l;
 
-            var items = await listQuery.ToListAsync<GeoCountry>();
+            var items = await listQuery.ToListAsync<IGeoCountry>();
+            return items;
+            //List<IGeoCountry> result = new List<IGeoCountry>(items); // will this work?
 
-            List<IGeoCountry> result = new List<IGeoCountry>(items); // will this work?
-
-            return result;
+            //return result;
         }
 
         public async Task<List<IGeoZone>> StateAutoComplete(Guid countryGuid, string query, int maxRows)
@@ -213,11 +213,11 @@ namespace cloudscribe.Core.Repositories.EF
                             orderby l.Code ascending
                             select l;
 
-            var items = await listQuery.ToListAsync<GeoZone>();
+            var items = await listQuery.ToListAsync<IGeoZone>();
+            return items;
+            //List<IGeoZone> result = new List<IGeoZone>(items); // will this work?
 
-            List<IGeoZone> result = new List<IGeoZone>(items); // will this work?
-
-            return result;
+            //return result;
         }
 
         public async Task<List<IGeoZone>> GetGeoZonePage(Guid countryGuid, int pageNumber, int pageSize)
@@ -231,11 +231,11 @@ namespace cloudscribe.Core.Repositories.EF
                         orderby l.Name ascending
                         select l;
 
-            var items = await query.ToListAsync<GeoZone>();
+            var items = await query.ToListAsync<IGeoZone>();
+            return items;
+            //List<IGeoZone> result = new List<IGeoZone>(items); // will this work?
 
-            List<IGeoZone> result = new List<IGeoZone>(items); // will this work?
-
-            return result;
+            //return result;
 
         }
 
@@ -249,10 +249,10 @@ namespace cloudscribe.Core.Repositories.EF
                 lang.Guid = Guid.NewGuid();
                 dbContext.Languages.Add(lang);
             }
-            else
-            {
-                dbContext.Languages.Update(lang);
-            }
+            //else
+            //{
+            //    dbContext.Languages.Update(lang);
+            //}
             
             int rowsAffected = await dbContext.SaveChangesAsync();
 
@@ -294,11 +294,11 @@ namespace cloudscribe.Core.Repositories.EF
                         orderby c.Name ascending
                         select c;
 
-            var items = await query.ToListAsync<Language>();
+            var items = await query.ToListAsync<ILanguage>();
+            return items;
+            //List<ILanguage> result = new List<ILanguage>(items); 
 
-            List<ILanguage> result = new List<ILanguage>(items); 
-
-            return result;
+            //return result;
 
         }
 
@@ -312,11 +312,11 @@ namespace cloudscribe.Core.Repositories.EF
                         orderby l.Name ascending
                         select l;
 
-            var items = await query.ToListAsync<Language>();
+            var items = await query.ToListAsync<ILanguage>();
+            return items;
+            //List<ILanguage> result = new List<ILanguage>(items); 
 
-            List<ILanguage> result = new List<ILanguage>(items); 
-
-            return result;
+            //return result;
 
         }
 
@@ -331,10 +331,10 @@ namespace cloudscribe.Core.Repositories.EF
                 c.Guid = Guid.NewGuid();
                 dbContext.Currencies.Add(c);
             }
-            else
-            {
-                dbContext.Currencies.Update(c);
-            }
+            //else
+            //{
+            //    dbContext.Currencies.Update(c);
+            //}
             
             int rowsAffected = await dbContext.SaveChangesAsync();
 
@@ -372,11 +372,11 @@ namespace cloudscribe.Core.Repositories.EF
                         orderby c.Title ascending
                         select c;
 
-            var items = await query.ToListAsync<Currency>();
+            var items = await query.ToListAsync<ICurrency>();
+            return items;
+            //List<ICurrency> result = new List<ICurrency>(items);
 
-            List<ICurrency> result = new List<ICurrency>(items);
-
-            return result;
+            //return result;
 
         }
 

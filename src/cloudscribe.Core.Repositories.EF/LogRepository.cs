@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2015-11-24
+// Last Modified:			2015-12-06
 // 
 
 using cloudscribe.Core.Models.Logging;
@@ -70,13 +70,13 @@ namespace cloudscribe.Core.Repositories.EF
                         orderby l.Id ascending
                         select l ;
 
-            var items = await query.ToListAsync<LogItem>();
-            
+            var items = await query.ToListAsync<ILogItem>();
+            return items;
             // this is supposed to return List<ILogItem> not List<LogItem>
             // how to convert it?
-            List<ILogItem> result = new List<ILogItem>(items); // will this work?
+            //List<ILogItem> result = new List<ILogItem>(items); // will this work?
           
-            return result;
+            //return result;
 
         }
 
@@ -92,13 +92,13 @@ namespace cloudscribe.Core.Repositories.EF
                         orderby l.Id descending
                         select l;
 
-            var items = await query.ToListAsync<LogItem>();
-
+            var items = await query.ToListAsync<ILogItem>();
+            return items;
             // this is supposed to return List<ILogItem> not List<LogItem>
             // how to convert it?
-            List<ILogItem> result = new List<ILogItem>(items); // will this work?
+            //List<ILogItem> result = new List<ILogItem>(items); // will this work?
 
-            return result;
+            //return result;
         }
 
         public async Task<bool> DeleteAll()
