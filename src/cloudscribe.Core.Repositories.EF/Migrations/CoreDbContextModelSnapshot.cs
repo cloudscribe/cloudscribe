@@ -234,8 +234,6 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                         .IsRequired()
                         .HasAnnotation("MaxLength", 50);
 
-                    b.Property<int>("MemberCount");
-
                     b.Property<Guid>("RoleGuid")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier")
@@ -596,8 +594,6 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                     b.Property<string>("FirstName");
 
                     b.Property<string>("Gender");
-
-                    b.Property<string>("Id");
 
                     b.Property<bool>("IsDeleted");
 

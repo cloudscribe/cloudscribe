@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2015-12-03
+// Last Modified:			2015-12-06
 // 
 
 
@@ -421,8 +421,23 @@ namespace cloudscribe.Core.Repositories.EF
                         where y.FolderName == folderName
                         select x.SiteId
                         ;
+            //TODO: this does not seem optimal
+            // how can we reduce this to one db hit?
 
-            return await query.DefaultIfEmpty(-1).SingleOrDefaultAsync<int>();
+            bool found = await query.AnyAsync<int>();
+            if(found)
+            {
+                return await query.SingleOrDefaultAsync<int>();
+            }
+            else
+            {
+                query = from x in dbContext.Sites
+                        orderby x.SiteId
+                        select x.SiteId
+                        ;
+                return await query.SingleOrDefaultAsync<int>();
+            }
+            
             
             //return -1; // not found
 
@@ -437,7 +452,22 @@ namespace cloudscribe.Core.Repositories.EF
                         select x.SiteId
                         ;
 
-            return query.DefaultIfEmpty(-1).SingleOrDefault<int>();
+            //TODO: this does not seem optimal
+            // how can we reduce this to one db hit?
+
+            bool found = query.Any<int>();
+            if (found)
+            {
+                return query.SingleOrDefault<int>();
+            }
+            else
+            {
+                query = from x in dbContext.Sites
+                        orderby x.SiteId
+                        select x.SiteId
+                        ;
+                return query.SingleOrDefault<int>();
+            }
         }
 
         public async Task<Guid> GetSiteGuidByFolder(string folderName)

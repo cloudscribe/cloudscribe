@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-17
-// Last Modified:			2015-12-01
+// Last Modified:			2015-12-06
 // 
 
 using System;
@@ -60,8 +60,9 @@ namespace cloudscribe.Core.Repositories.EF
 
             entity.Property(p => p.SiteId)
             //.HasSqlServerColumnType("int")
-            .UseSqlServerIdentityColumn()
+            .UseSqlServerIdentityColumn<int>()
             .HasColumnName("SiteID")
+            .ValueGeneratedOnAdd()
             //.Metadata.SentinelValue = -1
             ;
 
@@ -472,7 +473,8 @@ namespace cloudscribe.Core.Repositories.EF
             entity.HasKey(p => p.UserId);
 
             entity.Property(p => p.UserId)
-            .UseSqlServerIdentityColumn()
+            .UseSqlServerIdentityColumn<int>()
+            .ValueGeneratedOnAdd()
             .HasColumnName("UserID")
            // .Metadata.SentinelValue = -1
             ;
@@ -511,7 +513,8 @@ namespace cloudscribe.Core.Repositories.EF
             entity.HasKey(p => p.RoleId);
 
             entity.Property(p => p.RoleId)
-            .UseSqlServerIdentityColumn()
+            .UseSqlServerIdentityColumn<int>()
+            .ValueGeneratedOnAdd()
             .ForSqlServerHasColumnName("RoleID")
             // .Metadata.SentinelValue = -1
             ;
@@ -560,7 +563,8 @@ namespace cloudscribe.Core.Repositories.EF
             entity.HasKey(p => p.Id);
 
             entity.Property(p => p.Id)
-            .UseSqlServerIdentityColumn()
+            .UseSqlServerIdentityColumn<int>()
+            .ValueGeneratedOnAdd()
             // .Metadata.SentinelValue = -1
             ;
 
@@ -765,7 +769,8 @@ namespace cloudscribe.Core.Repositories.EF
 
             entity.Property(p => p.Id)
             //.HasSqlServerColumnType("int")
-            .UseSqlServerIdentityColumn()
+            .UseSqlServerIdentityColumn<int>()
+            .ValueGeneratedOnAdd()
             .HasColumnName("ID")
             //.Metadata.SentinelValue = -1
             ;

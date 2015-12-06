@@ -97,11 +97,14 @@ namespace cloudscribe.Core.Repositories.EF
             
             modelBuilder.Entity<SiteUser>(entity =>
             {
+                entity.Ignore(x => x.Id);
                 mapper.Map(entity);
             });
 
             modelBuilder.Entity<SiteRole>(entity =>
             {
+                entity.Ignore(x => x.MemberCount);
+
                 mapper.Map(entity);
             });
 

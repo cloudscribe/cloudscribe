@@ -33,7 +33,7 @@ namespace cloudscribe.Core.Models
 
             list.Add(new Currency
             {
-                Guid = new Guid("ff2dde1b-e7d7-4c3a-9ab4-6474345e0f31"),
+                Guid = new Guid("6a5ef486-ee65-441f-9c63-c003e30981fe"),
                 Title = "Euro",
                 Code = "EUR",
                 SymbolLeft = "€",

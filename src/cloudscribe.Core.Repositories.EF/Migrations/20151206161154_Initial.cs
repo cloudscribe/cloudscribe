@@ -121,7 +121,6 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                     RoleID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     DisplayName = table.Column<string>(nullable: false),
-                    MemberCount = table.Column<int>(nullable: false),
                     RoleGuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
                     RoleName = table.Column<string>(nullable: false),
                     SiteGuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -240,7 +239,6 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                     FailedPasswordAttemptWindowStart = table.Column<DateTime>(nullable: false),
                     FirstName = table.Column<string>(nullable: true),
                     Gender = table.Column<string>(nullable: true),
-                    Id = table.Column<string>(nullable: true),
                     IsDeleted = table.Column<bool>(nullable: false),
                     IsLockedOut = table.Column<bool>(nullable: false),
                     LastActivityDate = table.Column<DateTime>(nullable: false),

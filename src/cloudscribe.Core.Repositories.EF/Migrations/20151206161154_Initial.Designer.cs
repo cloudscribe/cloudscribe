@@ -8,7 +8,7 @@ using cloudscribe.Core.Repositories.EF;
 namespace cloudscribe.Core.Repositories.EF.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    [Migration("20151203164840_Initial")]
+    [Migration("20151206161154_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -234,8 +234,6 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                     b.Property<string>("DisplayName")
                         .IsRequired()
                         .HasAnnotation("MaxLength", 50);
-
-                    b.Property<int>("MemberCount");
 
                     b.Property<Guid>("RoleGuid")
                         .ValueGeneratedOnAdd()
@@ -597,8 +595,6 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                     b.Property<string>("FirstName");
 
                     b.Property<string>("Gender");
-
-                    b.Property<string>("Id");
 
                     b.Property<bool>("IsDeleted");
 
