@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2015-12-06
+// Last Modified:			2015-12-07
 // 
 
 using cloudscribe.Core.Models.Geography;
@@ -96,17 +96,15 @@ namespace cloudscribe.Core.Repositories.EF
         {
             int offset = (pageSize * pageNumber) - pageSize;
 
-            var query = from l in dbContext.Countries
+            var query = from l in dbContext.Countries.OrderBy(x => x.Name)
                         .Skip(offset)
-                        .Take(pageSize)
-                        orderby l.Name ascending
+                        .Take(pageSize) 
                         select l;
 
-            var items = await query.ToListAsync<IGeoCountry>();
-            return items;
-            //List<IGeoCountry> result = new List<IGeoCountry>(items); // will this work?
+           // if (offset > 0) { return await query.Skip(offset).ToListAsync<IGeoCountry>();  }
 
-            //return result;
+            return await query.ToListAsync<IGeoCountry>();
+            
         }
 
         public async Task<bool> Save(IGeoZone geoZone)
@@ -213,11 +211,8 @@ namespace cloudscribe.Core.Repositories.EF
                             orderby l.Code ascending
                             select l;
 
-            var items = await listQuery.ToListAsync<IGeoZone>();
-            return items;
-            //List<IGeoZone> result = new List<IGeoZone>(items); // will this work?
-
-            //return result;
+            return await listQuery.ToListAsync<IGeoZone>();
+           
         }
 
         public async Task<List<IGeoZone>> GetGeoZonePage(Guid countryGuid, int pageNumber, int pageSize)
@@ -225,18 +220,15 @@ namespace cloudscribe.Core.Repositories.EF
             int offset = (pageSize * pageNumber) - pageSize;
 
             var query = from l in dbContext.States
-                        .Skip(offset)
                         .Take(pageSize)
                         where l.CountryGuid == countryGuid
                         orderby l.Name ascending
                         select l;
 
-            var items = await query.ToListAsync<IGeoZone>();
-            return items;
-            //List<IGeoZone> result = new List<IGeoZone>(items); // will this work?
+            if (offset > 0) { return await query.Skip(offset).ToListAsync<IGeoZone>(); }
 
-            //return result;
-
+            return await query.ToListAsync<IGeoZone>();
+           
         }
 
         public async Task<bool> Save(ILanguage language)
@@ -296,10 +288,7 @@ namespace cloudscribe.Core.Repositories.EF
 
             var items = await query.ToListAsync<ILanguage>();
             return items;
-            //List<ILanguage> result = new List<ILanguage>(items); 
-
-            //return result;
-
+        
         }
 
         public async Task<List<ILanguage>> GetLanguagePage(int pageNumber, int pageSize)
@@ -307,17 +296,14 @@ namespace cloudscribe.Core.Repositories.EF
             int offset = (pageSize * pageNumber) - pageSize;
 
             var query = from l in dbContext.Languages
-                        .Skip(offset)
                         .Take(pageSize)
                         orderby l.Name ascending
                         select l;
 
-            var items = await query.ToListAsync<ILanguage>();
-            return items;
-            //List<ILanguage> result = new List<ILanguage>(items); 
+            if(offset > 0) { return await query.Skip(offset).ToListAsync<ILanguage>(); }
 
-            //return result;
-
+            return await query.ToListAsync<ILanguage>();
+           
         }
 
 
@@ -374,9 +360,7 @@ namespace cloudscribe.Core.Repositories.EF
 
             var items = await query.ToListAsync<ICurrency>();
             return items;
-            //List<ICurrency> result = new List<ICurrency>(items);
-
-            //return result;
+           
 
         }
 

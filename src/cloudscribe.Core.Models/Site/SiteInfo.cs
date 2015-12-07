@@ -6,6 +6,7 @@
 // 
 
 using System;
+using System.Data;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,7 +21,16 @@ namespace cloudscribe.Core.Models
         public int SiteId { get; set; } = -1;
         public Guid SiteGuid { get; set; } = Guid.Empty;
         public string SiteName { get; set; } = string.Empty;
-        public string SiteFolderName { get; set; } = string.Empty;
+
+        private string siteFolderName = string.Empty;
+        public string SiteFolderName
+        {
+            get { return siteFolderName ?? string.Empty; }
+            set { siteFolderName = value; }
+        } 
+
+
+
         public string PreferredHostName { get; set; } = string.Empty;
         public bool IsServerAdminSite { get; set; } = false;
         

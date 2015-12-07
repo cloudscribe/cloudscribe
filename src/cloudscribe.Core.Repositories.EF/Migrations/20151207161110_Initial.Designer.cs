@@ -8,7 +8,7 @@ using cloudscribe.Core.Repositories.EF;
 namespace cloudscribe.Core.Repositories.EF.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    [Migration("20151206161154_Initial")]
+    [Migration("20151207161110_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -470,7 +470,9 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                         .HasAnnotation("SqlServer:DefaultValueType", "System.Int32");
 
                     b.Property<string>("SiteFolderName")
-                        .HasAnnotation("MaxLength", 50);
+                        .HasAnnotation("MaxLength", 50)
+                        .HasAnnotation("Relational:DefaultValue", "")
+                        .HasAnnotation("Relational:DefaultValueType", "System.String");
 
                     b.Property<Guid>("SiteGuid")
                         .ValueGeneratedOnAdd()

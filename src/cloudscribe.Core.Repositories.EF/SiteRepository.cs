@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2015-12-06
+// Last Modified:			2015-12-07
 // 
 
 
@@ -166,11 +166,7 @@ namespace cloudscribe.Core.Repositories.EF
         {
             int offset = (pageSize * pageNumber) - pageSize;
 
-            IQueryable<ISiteInfo> query;
-            if(offset > 0)
-            {
-                query = from x in dbContext.Sites
-                        .Skip(offset)
+            var query = from x in dbContext.Sites
                         .Take(pageSize)
                         where (x.SiteId != currentSiteId)
                         orderby x.SiteName ascending
@@ -184,29 +180,12 @@ namespace cloudscribe.Core.Repositories.EF
                             SiteFolderName = x.SiteFolderName,
                             SiteName = x.SiteName
                         };
-            }
-            else
-            {
-                query = from x in dbContext.Sites
-                        .Take(pageSize)
-                        where (x.SiteId != currentSiteId)
-                        orderby x.SiteName ascending
-                        //select x;
-                        select new SiteInfo
-                        {
-                            SiteId = x.SiteId,
-                            SiteGuid = x.SiteGuid,
-                            IsServerAdminSite = x.IsServerAdminSite,
-                            PreferredHostName = x.PreferredHostName,
-                            SiteFolderName = x.SiteFolderName,
-                            SiteName = x.SiteName
-                        };
-            }
-            
 
-            var items = await query.ToListAsync<ISiteInfo>();
+            if (offset > 0) { return await query.Skip(offset).ToListAsync<ISiteInfo>(); }
 
-            return items;
+            return await query.ToListAsync<ISiteInfo>();
+
+           
         }
 
         public async Task<List<ISiteHost>> GetAllHosts()
@@ -247,15 +226,16 @@ namespace cloudscribe.Core.Repositories.EF
             int offset = (pageSize * pageNumber) - pageSize;
 
             var query = from x in dbContext.SiteHosts
-                        .Skip(offset)
                         .Take(pageSize)
                         orderby x.HostName ascending
                         select x
                         ;
 
-            var items = await query.ToListAsync<ISiteHost>();
+            if (offset > 0) { return await query.Skip(offset).ToListAsync<ISiteHost>(); }
 
-            return items;
+            return await query.ToListAsync<ISiteHost>();
+
+            
         }
 
         public async Task<List<ISiteHost>> GetSiteHosts(int siteId)
@@ -376,16 +356,15 @@ namespace cloudscribe.Core.Repositories.EF
             int offset = (pageSize * pageNumber) - pageSize;
 
             var query = from x in dbContext.SiteFolders
-                        .Skip(offset)
                         .Take(pageSize)
                         orderby x.FolderName ascending
                         select x
                         ;
 
-            var items = await query.ToListAsync<SiteFolder>();
+            if (offset > 0) { return await query.Skip(offset).ToListAsync<SiteFolder>(); }
 
-            return items;
-
+            return await query.ToListAsync<SiteFolder>();
+            
         }
 
         public async Task<SiteFolder> GetSiteFolder(string folderName)

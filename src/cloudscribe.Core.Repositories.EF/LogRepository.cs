@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2015-12-06
+// Last Modified:			2015-12-07
 // 
 
 using cloudscribe.Core.Models.Logging;
@@ -65,19 +65,14 @@ namespace cloudscribe.Core.Repositories.EF
             int offset = (pageSize * pageNumber) - pageSize;
 
             var query = from l in dbContext.LogItems
-                        .Skip(offset)
                         .Take(pageSize)
                         orderby l.Id ascending
                         select l ;
 
-            var items = await query.ToListAsync<ILogItem>();
-            return items;
-            // this is supposed to return List<ILogItem> not List<LogItem>
-            // how to convert it?
-            //List<ILogItem> result = new List<ILogItem>(items); // will this work?
-          
-            //return result;
+            if (offset > 0) { return await query.Skip(offset).ToListAsync<ILogItem>(); }
 
+            return await query.ToListAsync<ILogItem>();
+            
         }
 
         public async Task<List<ILogItem>> GetPageDescending(
@@ -87,18 +82,14 @@ namespace cloudscribe.Core.Repositories.EF
             int offset = (pageSize * pageNumber) - pageSize;
 
             var query = from l in dbContext.LogItems
-                        .Skip(offset)
                         .Take(pageSize)
                         orderby l.Id descending
                         select l;
 
-            var items = await query.ToListAsync<ILogItem>();
-            return items;
-            // this is supposed to return List<ILogItem> not List<LogItem>
-            // how to convert it?
-            //List<ILogItem> result = new List<ILogItem>(items); // will this work?
+            if (offset > 0) { return await query.Skip(offset).ToListAsync<ILogItem>(); }
 
-            //return result;
+            return await query.ToListAsync<ILogItem>();
+            
         }
 
         public async Task<bool> DeleteAll()

@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 using Microsoft.Data.Entity;
 using Microsoft.Data.Entity.Infrastructure;
 using Microsoft.Data.Entity.Metadata;
+using Microsoft.Data.Entity.Metadata.Conventions;
+using Microsoft.Data.Entity.Metadata.Builders;
 //using Microsoft.Extensions.DependencyInjection;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Geography;
@@ -68,11 +70,13 @@ namespace cloudscribe.Core.Repositories.EF
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            
+            base.OnConfiguring(optionsBuilder);
+            //optionsBuilder.Options.
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+           
             ICoreModelMapper mapper = this.GetService<ICoreModelMapper>();
             if(mapper == null)
             {

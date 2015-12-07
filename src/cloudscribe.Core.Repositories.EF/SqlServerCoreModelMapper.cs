@@ -362,8 +362,14 @@ namespace cloudscribe.Core.Repositories.EF
             .HasMaxLength(250);
             ;
 
+            //entity.Metadata.Model.
+            //entity.
+
             entity.Property(p => p.SiteFolderName)
-            .HasMaxLength(50);
+            .HasMaxLength(50)
+            .HasDefaultValue(string.Empty)
+     
+            
             ;
 
             entity.Property(p => p.AddThisDotComUsername)

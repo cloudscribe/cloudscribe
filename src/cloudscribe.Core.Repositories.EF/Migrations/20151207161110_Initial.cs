@@ -191,7 +191,7 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                     RegistrationPreamble = table.Column<string>(nullable: true),
                     RequireApprovalBeforeLogin = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
                     RequiresQuestionAndAnswer = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
-                    SiteFolderName = table.Column<string>(nullable: true),
+                    SiteFolderName = table.Column<string>(nullable: true, defaultValue: ""),
                     SiteGuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
                     SiteIsClosed = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
                     SiteIsClosedMessage = table.Column<string>(nullable: true),

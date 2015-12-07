@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2015-12-06
+// Last Modified:			2015-12-07
 // 
 
 
@@ -289,7 +289,6 @@ namespace cloudscribe.Core.Repositories.EF
 
             IQueryable<IUserInfo> query 
                 = from x in dbContext.Users
-                        .Skip(offset)
                         .Take(pageSize)
                         where 
                         (
@@ -347,10 +346,12 @@ namespace cloudscribe.Core.Repositories.EF
                     query = query.OrderBy(sl => sl.DisplayName).AsQueryable();
                     break;
             }
-      
-            var items = await query.ToListAsync<IUserInfo>(); 
+
+            if (offset > 0) { return await query.Skip(offset).ToListAsync<IUserInfo>(); }
+
+            return await query.ToListAsync<IUserInfo>(); 
             
-            return items;
+            
         }
 
         public async Task<int> CountUsersForAdminSearch(int siteId, string searchInput)
@@ -384,7 +385,6 @@ namespace cloudscribe.Core.Repositories.EF
 
             IQueryable<IUserInfo> query
                 = from x in dbContext.Users
-                        .Skip(offset)
                         .Take(pageSize)
                   where
                   (
@@ -445,9 +445,11 @@ namespace cloudscribe.Core.Repositories.EF
                     break;
             }
 
-            var items = await query.ToListAsync<IUserInfo>();
+            if (offset > 0) { return await query.Skip(offset).ToListAsync<IUserInfo>(); }
 
-            return items;
+            return await query.ToListAsync<IUserInfo>();
+
+            
         }
 
         public async Task<int> CountLockedOutUsers(int siteId)
@@ -464,7 +466,6 @@ namespace cloudscribe.Core.Repositories.EF
 
             IQueryable<IUserInfo> query
                 = from x in dbContext.Users
-                        .Skip(offset)
                         .Take(pageSize)
                   where
                   (
@@ -503,9 +504,10 @@ namespace cloudscribe.Core.Repositories.EF
 
                   };
 
-            var items = await query.ToListAsync<IUserInfo>();
+            if (offset > 0) { return await query.Skip(offset).ToListAsync<IUserInfo>(); }
 
-            return items;
+            return await query.ToListAsync<IUserInfo>();
+            
         }
 
         public async Task<int> CountNotApprovedUsers(int siteId)
@@ -523,7 +525,6 @@ namespace cloudscribe.Core.Repositories.EF
 
             IQueryable<IUserInfo> query
                 = from x in dbContext.Users
-                        .Skip(offset)
                         .Take(pageSize)
                   where
                   (
@@ -562,9 +563,10 @@ namespace cloudscribe.Core.Repositories.EF
 
                   };
 
-            var items = await query.ToListAsync<IUserInfo>();
+            if (offset > 0) { return await query.Skip(offset).ToListAsync<IUserInfo>(); }
 
-            return items;
+            return await query.ToListAsync<IUserInfo>();
+            
         }
 
         public async Task<bool> EmailExistsInDB(int siteId, string email)
@@ -795,17 +797,26 @@ namespace cloudscribe.Core.Repositories.EF
             int offset = (pageSize * pageNumber) - pageSize;
 
             var listQuery = from x in dbContext.Roles
-                            .Skip(offset)
                             .Take(pageSize)
                             where (
                             x.SiteId == siteId &&
                             ( searchInput == string.Empty || x.DisplayName.Contains(searchInput) || x.RoleName.Contains(searchInput))
                             )
                             orderby x.RoleName ascending
-                            select x;
+                            select new SiteRole {
+                                RoleId = x.RoleId,
+                                RoleGuid = x.RoleGuid,
+                                SiteId = x.SiteId,
+                                SiteGuid = x.SiteGuid,
+                                RoleName = x.RoleName,
+                                DisplayName = x.DisplayName,
+                                MemberCount = dbContext.UserRoles.Count<UserRole>(u => u.RoleId == x.RoleId)
+                            };
 
-            var items = await listQuery.ToListAsync<ISiteRole>();
-            return items;
+            if (offset > 0) return await listQuery.Skip(offset).ToListAsync<ISiteRole>();
+
+            return await listQuery.ToListAsync<ISiteRole>();
+            
         }
 
 
@@ -843,7 +854,6 @@ namespace cloudscribe.Core.Repositories.EF
             int offset = (pageSize * pageNumber) - pageSize;
 
             var query = from x in dbContext.Users
-                        .Skip(offset)
                         .Take(pageSize)
                         join y in dbContext.UserRoles
                         on x.UserId equals y.UserId
@@ -862,9 +872,11 @@ namespace cloudscribe.Core.Repositories.EF
                         select x
                         ;
 
-            var items = await query.ToListAsync<IUserInfo>(); // will this work converting from SiteUser to IUserInfo automagically?
+            if(offset > 0) {  return await query.Skip(offset).ToListAsync<IUserInfo>(); }
 
-            return items;
+            return await query.ToListAsync<IUserInfo>(); // will this work converting from SiteUser to IUserInfo automagically?
+
+           
 
         }
 
@@ -923,9 +935,11 @@ namespace cloudscribe.Core.Repositories.EF
             int offset = (pageSize * pageNumber) - pageSize;
 
             var query = from x in dbContext.Users
+                        .Take(pageSize)
                         join y in dbContext.UserRoles
                         on x.UserId equals y.UserId into temp
                         from z in temp.DefaultIfEmpty()
+                       
                         where (
                             (x.SiteId == siteId && z == null)
                             && (
@@ -940,10 +954,10 @@ namespace cloudscribe.Core.Repositories.EF
                         select x
                         ;
 
-            var items = await query.ToListAsync<IUserInfo>(); // will this work converting from SiteUser to IUserInfo automagically?
+            if (offset > 0) { return await query.Skip(offset).ToListAsync<IUserInfo>(); }
 
-            return items;
-
+            return await query.ToListAsync<IUserInfo>(); 
+            
         }
 
 

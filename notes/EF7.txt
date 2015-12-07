@@ -1,6 +1,10 @@
 
 http://jeremybytes.blogspot.com/2014/02/demystifying-var-keyword-in-c.html
 
+C# Reference:
+https://msdn.microsoft.com/en-us/library/ms173224.aspx
+
+
 http://stackoverflow.com/questions/3485317/entity-framework-4-single-vs-first-vs-firstordefault
 
 Find() - when you want to get an item by primary key. This will return null if it can't find an item. It will look in the context before going to the database (as pointed out by Yaron in the comments) which can be an important efficiency factor if you need to get the same entity multiple times while the same context is alive.
@@ -35,6 +39,8 @@ http://wildermuth.com/2015/3/17/A_Look_at_ASP_NET_5_Part_3_-_EF7
 https://channel9.msdn.com/Blogs/Seth-Juarez/Migrations-in-Entity-Framework-7-with-Brice-Lambson
 
 http://www.jerriepelser.com/blog/moving-entity-framework-7-models-to-external-project
+
+dnx ef migrations add Initial
 
 http://www.jerriepelser.com/blog/resolve-dbcontext-as-interface-in-aspnet5-ioc-container
 
