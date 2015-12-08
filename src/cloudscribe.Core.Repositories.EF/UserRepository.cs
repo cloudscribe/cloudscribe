@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2015-12-07
+// Last Modified:			2015-12-08
 // 
 
 
@@ -38,24 +38,14 @@ namespace cloudscribe.Core.Repositories.EF
                 siteUser.UserId = 0; //EF needs it to be zero in order to generate
                 dbContext.Users.Add(siteUser);
             }
-            // apparently we don't need to call update before saving
-            // because tracking is automatic if the entity was fetched
-            // calling update causes an error because it tries to initiate tracking
-            // on an entity that is already being tracked
-            //else
-            //{
-            //    try
-            //    {
-            //        dbContext.Users.Update(siteUser);
-            //    }
-            //    catch (InvalidOperationException ex)
-            //    {
-            //        need to figure out why we keep geting this exception
-            //    }
-
-            //}
-
+            
             int rowsAffected = await dbContext.SaveChangesAsync();
+
+            if(user.UserId == -1)
+            {
+                user.UserId = siteUser.UserId;
+                user.UserGuid = siteUser.UserGuid;
+            }
 
             return rowsAffected > 0;
 
@@ -85,7 +75,6 @@ namespace cloudscribe.Core.Repositories.EF
 
             item.IsDeleted = true;
 
-            //dbContext.Users.Update(item);
             int rowsAffected = await dbContext.SaveChangesAsync();
 
             return rowsAffected > 0;
@@ -101,7 +90,6 @@ namespace cloudscribe.Core.Repositories.EF
 
             item.IsDeleted = false;
 
-            //dbContext.Users.Update(item);
             int rowsAffected = await dbContext.SaveChangesAsync();
 
             return rowsAffected > 0;
@@ -123,7 +111,6 @@ namespace cloudscribe.Core.Repositories.EF
             item.IsLockedOut = false;
             item.RegisterConfirmGuid = Guid.Empty;
 
-            //dbContext.Users.Update(item);
             int rowsAffected = await dbContext.SaveChangesAsync();
 
             return rowsAffected > 0;
@@ -140,7 +127,6 @@ namespace cloudscribe.Core.Repositories.EF
             item.IsLockedOut = true;
             item.LastLockoutDate = DateTime.UtcNow;
 
-            //dbContext.Users.Update(item);
             int rowsAffected = await dbContext.SaveChangesAsync();
 
             return rowsAffected > 0;
@@ -158,7 +144,6 @@ namespace cloudscribe.Core.Repositories.EF
             item.FailedPasswordAttemptCount = 0;
             item.FailedPasswordAnswerAttemptCount = 0;
 
-            //dbContext.Users.Update(item);
             int rowsAffected = await dbContext.SaveChangesAsync();
 
             return rowsAffected > 0;
@@ -173,7 +158,6 @@ namespace cloudscribe.Core.Repositories.EF
             
             item.FailedPasswordAttemptCount = failedPasswordAttemptCount;
            
-            //dbContext.Users.Update(item);
             int rowsAffected = await dbContext.SaveChangesAsync();
 
             return rowsAffected > 0;
@@ -240,7 +224,7 @@ namespace cloudscribe.Core.Repositories.EF
                         select x
                         ;
 
-            var items = await query.ToListAsync<IUserInfo>(); // not sure this will work IUserInfo from SiteUser may need to map it in select
+            var items = await query.ToListAsync<IUserInfo>(); 
 
             return items;
 
@@ -253,7 +237,7 @@ namespace cloudscribe.Core.Repositories.EF
                         orderby c.DisplayName ascending
                         select c;
 
-            var items = await query.ToListAsync<IUserInfo>(); // not sure this will work IUserInfo from SiteUser may need to map it in select
+            var items = await query.ToListAsync<IUserInfo>(); 
 
             return items;
 
@@ -645,21 +629,26 @@ namespace cloudscribe.Core.Repositories.EF
             if (role == null) { return false; }
             if (role.SiteId == -1) { throw new ArgumentException("SiteId must be provided"); }
             if (role.SiteGuid == Guid.Empty) { throw new ArgumentException("SiteGuid must be provided"); }
-
             
-
             SiteRole siteRole = SiteRole.FromISiteRole(role); 
             if(siteRole.RoleId == -1)
             {
                 siteRole.RoleId = 0;
+                if(siteRole.RoleName.Length == 0)
+                {
+                    siteRole.RoleName = siteRole.DisplayName;
+                }
                 dbContext.Roles.Add(siteRole);
             }
-            //else
-            //{
-            //    dbContext.Roles.Update(siteRole);
-            //}
-            
+           
             int rowsAffected = await dbContext.SaveChangesAsync();
+
+            if(role.RoleId == -1)
+            {
+                //update the original with the new keys on insert
+                role.RoleId = siteRole.RoleId;
+                role.RoleGuid = siteRole.RoleGuid;
+            }
 
             return rowsAffected > 0;
 
@@ -740,7 +729,7 @@ namespace cloudscribe.Core.Repositories.EF
 
         public async Task<bool> RoleExists(int siteId, string roleName)
         {
-            int count = await dbContext.Roles.CountAsync<SiteRole>(r => r.RoleName == roleName);
+            int count = await dbContext.Roles.CountAsync<SiteRole>(r => r.SiteId == siteId && r.RoleName == roleName);
             return count > 0;
         }
 
@@ -874,7 +863,7 @@ namespace cloudscribe.Core.Repositories.EF
 
             if(offset > 0) {  return await query.Skip(offset).ToListAsync<IUserInfo>(); }
 
-            return await query.ToListAsync<IUserInfo>(); // will this work converting from SiteUser to IUserInfo automagically?
+            return await query.ToListAsync<IUserInfo>(); 
 
            
 
@@ -896,7 +885,7 @@ namespace cloudscribe.Core.Repositories.EF
                         select x
                         ;
 
-            var items = await query.ToListAsync<ISiteUser>(); // will this work converting from SiteUser to ISiteUser automagically?
+            var items = await query.ToListAsync<ISiteUser>(); 
 
             return items;
         }
@@ -975,12 +964,13 @@ namespace cloudscribe.Core.Repositories.EF
                 claim.Id = 0;
                 dbContext.UserClaims.Add(claim);
             }
-            //else
-            //{
-            //    dbContext.UserClaims.Update(claim);
-            //}
 
             int rowsAffected = await dbContext.SaveChangesAsync();
+            if(userClaim.Id == -1)
+            {
+                //update the original on insert
+                userClaim.Id = claim.Id;
+            }
 
             return rowsAffected > 0;
 
@@ -1067,7 +1057,7 @@ namespace cloudscribe.Core.Repositories.EF
                         select x
                         ;
 
-            var items = await query.ToListAsync<ISiteUser>(); // will this work converting from SiteUser to ISiteUser automagically?
+            var items = await query.ToListAsync<ISiteUser>(); 
 
             return items;
         }

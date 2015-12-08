@@ -302,6 +302,7 @@ namespace cloudscribe.Core.Web.Components
             adminUser.SiteId = site.SiteId;
             adminUser.SiteGuid = site.SiteGuid;
             adminUser.Email = "admin" + siteDifferentiator + "@admin.com";
+            adminUser.LoweredEmail = adminUser.Email;
             adminUser.DisplayName = "Admin";
             adminUser.UserName = "admin" + siteDifferentiator;
 

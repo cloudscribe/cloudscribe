@@ -188,7 +188,7 @@ namespace example.WebApp
             // Add the console logger.
             loggerFactory.AddConsole(minLevel: LogLevel.Warning);
             // Add cloudscribe db logging
-            loggerFactory.AddDbLogger(serviceProvider, logRepository, LogLevel.Information);
+            //loggerFactory.AddDbLogger(serviceProvider, logRepository, LogLevel.Information);
 
             //app.UseCultureReplacer();
 

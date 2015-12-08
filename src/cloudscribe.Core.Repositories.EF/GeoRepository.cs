@@ -96,14 +96,14 @@ namespace cloudscribe.Core.Repositories.EF
         {
             int offset = (pageSize * pageNumber) - pageSize;
 
-            var query = from l in dbContext.Countries.OrderBy(x => x.Name)
-                        .Skip(offset)
-                        .Take(pageSize) 
-                        select l;
+            var query = dbContext.Countries.OrderBy(x => x.Name) 
+                .Select(p => p)
+                .Take(pageSize)
+                ;
 
-           // if (offset > 0) { return await query.Skip(offset).ToListAsync<IGeoCountry>();  }
-
-            return await query.ToListAsync<IGeoCountry>();
+           if (offset > 0) { query = query.Skip(offset); }
+           
+           return await query.ToListAsync<IGeoCountry>();
             
         }
 

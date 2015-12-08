@@ -71,7 +71,7 @@ namespace cloudscribe.Core.Repositories.EF
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
-            //optionsBuilder.Options.
+            
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

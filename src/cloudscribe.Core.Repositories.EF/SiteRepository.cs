@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2015-12-07
+// Last Modified:			2015-12-08
 // 
 
 
@@ -43,6 +43,14 @@ namespace cloudscribe.Core.Repositories.EF
             //}
             
             int rowsAffected = await dbContext.SaveChangesAsync();
+
+            // update the original with the new keys after insert
+            if(site.SiteId == -1)
+            {
+                site.SiteId = siteSettings.SiteId;
+                site.SiteGuid = siteSettings.SiteGuid;
+            }
+            
 
             return rowsAffected > 0;
         }
@@ -458,7 +466,7 @@ namespace cloudscribe.Core.Repositories.EF
             bool found = query.Any<int>();
             if (found)
             {
-                return query.SingleOrDefault<int>();
+                return query.Take(1).SingleOrDefault<int>();
             }
             else
             {
@@ -466,7 +474,7 @@ namespace cloudscribe.Core.Repositories.EF
                         orderby x.SiteId
                         select x.SiteId
                         ;
-                return query.SingleOrDefault<int>();
+                return query.Take(1).SingleOrDefault<int>();
             }
         }
 

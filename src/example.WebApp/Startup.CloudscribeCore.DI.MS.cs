@@ -106,11 +106,12 @@ namespace example.WebApp
 
                     services.AddEntityFramework()
                     .AddSqlServer()
-                    .AddDbContext<CoreDbContext>(options => 
+                    .AddDbContext<CoreDbContext>(options =>
                         options.UseSqlServer(configuration["Data:EF7ConnectionOptions:ConnectionString"])
-              
-                    )  
-                    ;
+                        // this is needed unless you are on mssql 2012 or higher
+                        .UseRowNumberForPaging()
+
+                    );
 
                     services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.EF.SiteRepository>();
                     services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.EF.UserRepository>();
