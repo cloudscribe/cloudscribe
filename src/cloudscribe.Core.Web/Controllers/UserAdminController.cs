@@ -308,7 +308,7 @@ namespace cloudscribe.Core.Web.Controllers
                         }
 
 
-                        return RedirectToAction("Index", "UserAdmin");
+                        return RedirectToAction("Index", "UserAdmin", new { siteGuid = selectedSite.SiteGuid });
                     }
                 }
                 else
@@ -335,7 +335,7 @@ namespace cloudscribe.Core.Web.Controllers
                         this.AlertSuccess(string.Format("user account for <b>{0}</b> was successfully created.",
                             user.DisplayName), true);
 
-                        return RedirectToAction("Index", "UserAdmin");
+                        return RedirectToAction("Index", "UserAdmin", new { siteGuid = selectedSite.SiteGuid });
                     }
                     AddErrors(result);
                 }

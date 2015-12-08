@@ -39,6 +39,7 @@ namespace cloudscribe.Core.Web.Components.Logging
         private LogLevel minimumLevel;
 
         #region ILogger
+
         public void Log(
             LogLevel logLevel, 
             int eventId, 

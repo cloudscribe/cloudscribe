@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-06-10
-// Last Modified:			2015-08-05
+// Last Modified:			2015-12-08
 // 
 
 
@@ -19,9 +19,29 @@ namespace cloudscribe.Core.Models
         { }
         
         public int SiteId { get; set; } = -1;
-        public string KeyName { get; set; } = string.Empty; 
-        public string KeyValue { get; set; } = string.Empty;
-        public string GroupName { get; set; } = string.Empty;
+
+        private string keyName = string.Empty;
+        public string KeyName
+        {
+            get { return keyName ?? string.Empty; }
+            set { keyName = value; }
+        }
+
+        private string keyValue = string.Empty;
+        public string KeyValue
+        {
+            get { return keyValue ?? string.Empty; }
+            set { keyValue = value; }
+        }
+
+        private string groupName = string.Empty;
+        public string GroupName
+        {
+            get { return groupName ?? string.Empty; }
+            set { groupName = value; }
+        }
+
+        
         public bool IsDirty { get; set; } = false;
        
     }

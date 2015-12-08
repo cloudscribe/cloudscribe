@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-17
-// Last Modified:			2015-11-24
+// Last Modified:			2015-12-08
 // 
 
 //using Microsoft.AspNet.Identity;
@@ -21,20 +21,52 @@ namespace cloudscribe.Core.Models
         {
             get { return UserGuid.ToString(); }
         }
+
+        private string authorBio = string.Empty;
+        public string AuthorBio
+        {
+            get { return authorBio ?? string.Empty; }
+            set { authorBio = value; }
+        }
+
+        private string comment = string.Empty;
+        public string Comment
+        {
+            get { return comment ?? string.Empty; }
+            set { comment = value; }
+        }
+
+        private string loweredEmail = string.Empty;
+        public string LoweredEmail
+        {
+            get { return loweredEmail ?? string.Empty; }
+            set { loweredEmail = value; }
+        }
         
-        public string AuthorBio { get; set; } = string.Empty;
-        public string Comment { get; set; } = string.Empty;
-        public string LoweredEmail { get; set; } = string.Empty;
         public bool EmailConfirmed { get; set; } = false;
         public Guid EmailChangeGuid { get; set; } = Guid.Empty;
         public DateTime? LockoutEndDateUtc { get; set; } = null;
-        public string NewEmail { get; set; } = string.Empty;
+
+        private string newEmail = string.Empty;
+        public string NewEmail
+        {
+            get { return newEmail ?? string.Empty; }
+            set { newEmail = value; }
+        }
+
+       
         public DateTime LastPasswordChangedDate { get; set; } = DateTime.MinValue;
         public DateTime LastLockoutDate { get; set; } = DateTime.MinValue;
         
         public bool MustChangePwd { get; set; } = false;
 
-        public string PasswordHash { get; set; } = string.Empty;
+        private string passwordHash = string.Empty;
+        public string PasswordHash
+        {
+            get { return passwordHash ?? string.Empty; }
+            set { passwordHash = value; }
+        }
+
         
         public int FailedPasswordAttemptCount { get; set; } = 0;
         public DateTime FailedPasswordAttemptWindowStart { get; set; } = DateTime.MinValue;
@@ -43,8 +75,20 @@ namespace cloudscribe.Core.Models
         public Guid PasswordResetGuid { get; set; } = Guid.Empty;
         public Guid RegisterConfirmGuid { get; set; } = Guid.Empty;
         public bool RolesChanged { get; set; } = false;
-        public string SecurityStamp { get; set; } = string.Empty;
-        public string Signature { get; set; } = string.Empty; 
+
+        private string securityStamp = string.Empty;
+        public string SecurityStamp
+        {
+            get { return securityStamp ?? string.Empty; }
+            set { securityStamp = value; }
+        }
+
+        private string signature = string.Empty;
+        public string Signature
+        {
+            get { return signature ?? string.Empty; }
+            set { signature = value; }
+        }
         
         public bool TwoFactorEnabled { get; set; } = false;
         

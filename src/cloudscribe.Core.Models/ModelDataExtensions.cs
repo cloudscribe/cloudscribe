@@ -241,8 +241,8 @@ namespace cloudscribe.Core.Models.DataExtensions
             site.SiteId = Convert.ToInt32(reader["SiteID"]);
             site.SiteGuid = new Guid(reader["SiteGuid"].ToString());
             site.SiteName = reader["SiteName"].ToString();
-            site.SiteFolderName = reader["ApiKeyExtra4"].ToString();
-            site.PreferredHostName = reader["ApiKeyExtra5"].ToString();
+            site.SiteFolderName = reader["SiteFolderName"].ToString();
+            site.PreferredHostName = reader["PreferredHostName"].ToString();
             site.IsServerAdminSite = Convert.ToBoolean(reader["IsServerAdminSite"]);
         }
 

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-20
-// Last Modified:			2015-11-30
+// Last Modified:			2015-12-08
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -22,8 +22,21 @@ namespace cloudscribe.Core.Models
         public Guid RoleGuid { get; set; } = Guid.Empty;
         public int SiteId { get; set; } = -1;
         public Guid SiteGuid { get; set; } = Guid.Empty;
-        public string RoleName { get; set; } = string.Empty;
-        public string DisplayName { get; set; } = string.Empty;
+
+        private string roleName = string.Empty;
+        public string RoleName
+        {
+            get { return roleName ?? string.Empty; }
+            set { roleName = value; }
+        }
+
+        private string displayName = string.Empty;
+        public string DisplayName
+        {
+            get { return displayName ?? string.Empty; }
+            set { displayName = value; }
+        }
+
         
         /// <summary>
         /// note that MemberCount is only populated in some role list retrieval scenarios

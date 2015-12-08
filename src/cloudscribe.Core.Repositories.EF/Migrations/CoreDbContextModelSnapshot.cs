@@ -471,8 +471,7 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                     b.Property<string>("SiteFolderName")
                         .HasAnnotation("MaxLength", 50)
                         .HasAnnotation("Relational:DefaultValue", "")
-                        .HasAnnotation("Relational:DefaultValueType", "System.String")
-                        ;
+                        .HasAnnotation("Relational:DefaultValueType", "System.String");
 
                     b.Property<Guid>("SiteGuid")
                         .ValueGeneratedOnAdd()

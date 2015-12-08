@@ -5,7 +5,7 @@
 }
 
 <h2>@ViewBag.Title</h2>
-<form role="form">
+<form role="form" asp-controller="CoreData" asp-action="CountryEdit">
     <div asp-validation-summary="ValidationSummary.All" class="text-danger"></div>
     <input asp-for="Guid" type="hidden" />
     <div class="form-group">

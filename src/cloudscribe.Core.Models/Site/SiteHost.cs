@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-17
-// Last Modified:			2014-08-17
+// Last Modified:			2015-12-08
 // 
 
 using System;
@@ -27,9 +27,17 @@ namespace cloudscribe.Core.Models
     public class SiteHost : ISiteHost
     {
         public int HostId { get; set; }
-        public string HostName { get; set; }
-        public int SiteId { get; set; }
-        public Guid SiteGuid { get; set; }
+
+        private string hostName = string.Empty;
+        public string HostName
+        {
+            get { return hostName ?? string.Empty; }
+            set { hostName = value; }
+        }
+
+
+        public int SiteId { get; set; } = -1;
+        public Guid SiteGuid { get; set; } = Guid.Empty;
         //public bool IsDomain(IOwinContext context)
         //{
         //    return (context.Request.Host.Value == HostName);
