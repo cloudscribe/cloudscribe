@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2015-07-25
+// Last Modified:			2015-12-09
 // 
 
 // TODO: we should update all the async signatures to take a cancellationtoken
@@ -45,16 +45,16 @@ namespace cloudscribe.Core.Models
         Task<bool> DeleteHost(int hostId);
         Task<int> GetSiteIdByHostName(string hostName);
 
-        // TODO: for consistency should use ISiteFolder here instead of SiteFolder
-        Task<List<SiteFolder>> GetSiteFoldersBySite(Guid siteGuid);
-        Task<List<SiteFolder>> GetAllSiteFolders();
-        List<SiteFolder> GetAllSiteFoldersNonAsync();
+        
+        Task<List<ISiteFolder>> GetSiteFoldersBySite(Guid siteGuid);
+        Task<List<ISiteFolder>> GetAllSiteFolders();
+        List<ISiteFolder> GetAllSiteFoldersNonAsync();
         Task<int> GetFolderCount();
-        Task<SiteFolder> GetSiteFolder(string folderName);
-        Task<List<SiteFolder>> GetPageSiteFolders(
+        Task<ISiteFolder> GetSiteFolder(string folderName);
+        Task<List<ISiteFolder>> GetPageSiteFolders(
             int pageNumber,
             int pageSize);
-        Task<bool> Save(SiteFolder siteFolder);
+        Task<bool> Save(ISiteFolder siteFolder);
         Task<bool> DeleteFolder(Guid guid);
         Task<int> GetSiteIdByFolder(string folderName);
         int GetSiteIdByFolderNonAsync(string folderName);

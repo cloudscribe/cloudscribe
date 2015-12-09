@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-22
-// Last Modified:			2015-11-18
+// Last Modified:			2015-12-09
 // 
 
 using cloudscribe.Core.Models;
@@ -183,84 +183,6 @@ namespace cloudscribe.Core.Web.Components
         public async Task<bool> CreateRequiredRolesAndAdminUser(
             SiteSettings site)
         {
-
-
-
-            //SiteRole adminRole = new SiteRole();
-            //adminRole.DisplayName = "Admins";
-            ////adminRole.DisplayName = "Administrators";
-            //adminRole.SiteId = site.SiteId;
-            //adminRole.SiteGuid = site.SiteGuid;
-            //bool result = await userRepo.SaveRole(adminRole);
-            //adminRole.DisplayName = "Administrators";
-            //result = await userRepo.SaveRole(adminRole);
-
-            //SiteRole roleAdminRole = new SiteRole();
-            //roleAdminRole.DisplayName = "Role Admins";
-            //roleAdminRole.SiteId = site.SiteId;
-            //roleAdminRole.SiteGuid = site.SiteGuid;
-            //result = await userRepo.SaveRole(roleAdminRole);
-
-            //roleAdminRole.DisplayName = "Role Administrators";
-            //result = await userRepo.SaveRole(roleAdminRole);
-
-            //SiteRole contentAdminRole = new SiteRole();
-            //contentAdminRole.DisplayName = "Content Administrators";
-            //contentAdminRole.SiteId = site.SiteId;
-            //contentAdminRole.SiteGuid = site.SiteGuid;
-            //result = await userRepo.SaveRole(contentAdminRole);
-
-            //SiteRole authenticatedUserRole = new SiteRole();
-            //authenticatedUserRole.DisplayName = "Authenticated Users";
-            //authenticatedUserRole.SiteId = site.SiteId;
-            //authenticatedUserRole.SiteGuid = site.SiteGuid;
-            //result = await userRepo.SaveRole(authenticatedUserRole);
-
-            //// if using related sites mode there is a problem if we already have user admin@admin.com
-            //// and we create another one in the child site with the same email and login so we need to make it different
-            //// we could just skip creating this user since in related sites mode all users come from the first site
-            //// but then if the config were changed to not related sites mode there would be no admin user
-            //// so in related sites mode we create one only as a backup in case settings are changed later
-            //int countOfSites = await siteRepo.GetCount();
-            //string siteDifferentiator = string.Empty;
-            //if (
-            //    (countOfSites >= 1)
-            //    && (multiTenantOptions.UseRelatedSitesMode)
-            //    )
-            //{
-            //    if (site.SiteId > 1)
-            //    {
-            //        siteDifferentiator = site.SiteId.ToInvariantString();
-            //    }
-            //}
-
-
-            //SiteUser adminUser = new SiteUser();
-            //adminUser.SiteId = site.SiteId;
-            //adminUser.SiteGuid = site.SiteGuid;
-            //adminUser.Email = "admin" + siteDifferentiator + "@admin.com";
-            //adminUser.DisplayName = "Admin";
-            //adminUser.UserName = "admin" + siteDifferentiator;
-
-            //adminUser.EmailConfirmed = true;
-            //adminUser.AccountApproved = true;
-
-            //// clear text password will be hashed upon login
-            //// this format allows migrating from mojoportal
-            //adminUser.PasswordHash = "admin||0"; //pwd/salt/format 
-
-
-            //result = await userRepo.Save(adminUser);
-
-
-
-
-            //result = await userRepo.AddUserToRole(
-            //    adminRole.RoleId,
-            //    adminRole.RoleGuid,
-            //    adminUser.UserId,
-            //    adminUser.UserGuid);
-
             bool result = await EnsureRequiredRoles(site);
             result = await CreateAdminUser(site);
 
@@ -389,7 +311,7 @@ namespace cloudscribe.Core.Web.Components
 
 
 
-        public async Task<SiteFolder> GetSiteFolder(string folderName)
+        public async Task<ISiteFolder> GetSiteFolder(string folderName)
         {
             return await siteRepo.GetSiteFolder(folderName);
         }
@@ -400,9 +322,9 @@ namespace cloudscribe.Core.Web.Components
 
             if (!folderExists)
             {
-                List<SiteFolder> siteFolders = await siteRepo.GetSiteFoldersBySite(site.SiteGuid);
+                List<ISiteFolder> siteFolders = await siteRepo.GetSiteFoldersBySite(site.SiteGuid);
                 //delete any existing folders before creating a new one
-                foreach (SiteFolder f in siteFolders)
+                foreach (ISiteFolder f in siteFolders)
                 {
                     bool deleted = await siteRepo.DeleteFolder(f.Guid);
                 }

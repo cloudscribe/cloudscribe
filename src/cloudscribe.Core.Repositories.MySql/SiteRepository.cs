@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2015-11-18
+// Last Modified:			2015-12-09
 // 
 
 
@@ -532,10 +532,10 @@ namespace cloudscribe.Core.Repositories.MySql
             return await dbSiteSettings.GetSiteIdByHostName(hostName);
         }
 
-        public async Task<List<SiteFolder>> GetSiteFoldersBySite(Guid siteGuid)
+        public async Task<List<ISiteFolder>> GetSiteFoldersBySite(Guid siteGuid)
         {
-            List<SiteFolder> siteFolderList
-                = new List<SiteFolder>();
+            List<ISiteFolder> siteFolderList
+                = new List<ISiteFolder>();
 
             using (DbDataReader reader = await dbSiteFolder.GetBySite(siteGuid))
             {
@@ -551,7 +551,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
         }
 
-        public async Task<SiteFolder> GetSiteFolder(string folderName)
+        public async Task<ISiteFolder> GetSiteFolder(string folderName)
         {
             using (DbDataReader reader = await dbSiteFolder.GetOne(folderName))
             {
@@ -566,10 +566,10 @@ namespace cloudscribe.Core.Repositories.MySql
             return null;
         }
 
-        public async Task<List<SiteFolder>> GetAllSiteFolders()
+        public async Task<List<ISiteFolder>> GetAllSiteFolders()
         {
-            List<SiteFolder> siteFolderList
-                = new List<SiteFolder>();
+            List<ISiteFolder> siteFolderList
+                = new List<ISiteFolder>();
 
             using (DbDataReader reader = await dbSiteFolder.GetAll())
             {
@@ -585,10 +585,10 @@ namespace cloudscribe.Core.Repositories.MySql
 
         }
 
-        public List<SiteFolder> GetAllSiteFoldersNonAsync()
+        public List<ISiteFolder> GetAllSiteFoldersNonAsync()
         {
-            List<SiteFolder> siteFolderList
-                = new List<SiteFolder>();
+            List<ISiteFolder> siteFolderList
+                = new List<ISiteFolder>();
 
             using (DbDataReader reader = dbSiteFolder.GetAllNonAsync())
             {
@@ -609,12 +609,12 @@ namespace cloudscribe.Core.Repositories.MySql
             return await dbSiteFolder.GetFolderCount();
         }
 
-        public async Task<List<SiteFolder>> GetPageSiteFolders(
+        public async Task<List<ISiteFolder>> GetPageSiteFolders(
             int pageNumber,
             int pageSize)
         {
-            List<SiteFolder> siteFolderList
-                = new List<SiteFolder>();
+            List<ISiteFolder> siteFolderList
+                = new List<ISiteFolder>();
 
             using (DbDataReader reader = await dbSiteFolder.GetPage(pageNumber, pageSize))
             {
@@ -630,7 +630,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
         }
 
-        public async Task<bool> Save(SiteFolder siteFolder)
+        public async Task<bool> Save(ISiteFolder siteFolder)
         {
             if (siteFolder == null) { return false; }
 

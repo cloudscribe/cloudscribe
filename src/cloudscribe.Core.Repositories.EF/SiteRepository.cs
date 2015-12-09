@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2015-12-08
+// Last Modified:			2015-12-09
 // 
 
 
@@ -30,22 +30,22 @@ namespace cloudscribe.Core.Repositories.EF
         {
             if(site == null) { return false; }
 
-            SiteSettings siteSettings = SiteSettings.FromISiteSettings(site); 
-            if(siteSettings.SiteId == -1)
+            SiteSettings siteSettings = null; 
+            if(site.SiteId == -1)  // a newly created item
             {
-                siteSettings.SiteId = 0;
+                siteSettings = SiteSettings.FromISiteSettings(site);
+                siteSettings.SiteId = 0; //EF needs this to be 0 in order to generate it from the db identity 
                 if(siteSettings.SiteGuid == Guid.Empty) { siteSettings.SiteGuid = Guid.NewGuid(); }
                 dbContext.Sites.Add(siteSettings);
             }
-            //else
-            //{
-            //    dbContext.Sites.Update(siteSettings);
-            //}
+            // in the case of an update the ISiteSettings being passed in
+            // is a SiteSettings instance that is already being tracked
+            // so all we have to do is save changes on the context
             
             int rowsAffected = await dbContext.SaveChangesAsync();
 
             // update the original with the new keys after insert
-            if(site.SiteId == -1)
+            if((site.SiteId == -1)&&(siteSettings != null))
             {
                 site.SiteId = siteSettings.SiteId;
                 site.SiteGuid = siteSettings.SiteGuid;
@@ -203,9 +203,7 @@ namespace cloudscribe.Core.Repositories.EF
                         select x;
 
             var items = await query.ToListAsync<ISiteHost>();
-
-            //List<ISiteHost> result = new List<ISiteHost>(items); // will this work?
-
+            
             return items;
         }
 
@@ -216,8 +214,6 @@ namespace cloudscribe.Core.Repositories.EF
                         select x;
 
             var items = query.ToList<ISiteHost>();
-
-            //List<ISiteHost> result = new List<ISiteHost>(items); 
 
             return items;
         }
@@ -315,7 +311,7 @@ namespace cloudscribe.Core.Repositories.EF
             return -1; // not found
         }
 
-        public async Task<List<SiteFolder>> GetSiteFoldersBySite(Guid siteGuid)
+        public async Task<List<ISiteFolder>> GetSiteFoldersBySite(Guid siteGuid)
         {
             var query = from x in dbContext.SiteFolders
                         where x.SiteGuid == siteGuid
@@ -323,31 +319,31 @@ namespace cloudscribe.Core.Repositories.EF
                         select x
                         ;
 
-            var items = await query.ToListAsync<SiteFolder>();
+            var items = await query.ToListAsync<ISiteFolder>();
 
             return items;
 
         }
 
-        public async Task<List<SiteFolder>> GetAllSiteFolders()
+        public async Task<List<ISiteFolder>> GetAllSiteFolders()
         {
             var query = from x in dbContext.SiteFolders
                         orderby x.FolderName ascending
                         select x;
 
-            var items = await query.ToListAsync<SiteFolder>();
+            var items = await query.ToListAsync<ISiteFolder>();
             
             return items;
 
         }
 
-        public List<SiteFolder> GetAllSiteFoldersNonAsync()
+        public List<ISiteFolder> GetAllSiteFoldersNonAsync()
         {
             var query = from x in dbContext.SiteFolders
                         orderby x.FolderName ascending
                         select x;
 
-            var items = query.ToList<SiteFolder>();
+            var items = query.ToList<ISiteFolder>();
 
             return items;
         }
@@ -357,7 +353,7 @@ namespace cloudscribe.Core.Repositories.EF
             return await dbContext.SiteFolders.CountAsync<SiteFolder>();
         }
 
-        public async Task<List<SiteFolder>> GetPageSiteFolders(
+        public async Task<List<ISiteFolder>> GetPageSiteFolders(
             int pageNumber,
             int pageSize)
         {
@@ -369,13 +365,13 @@ namespace cloudscribe.Core.Repositories.EF
                         select x
                         ;
 
-            if (offset > 0) { return await query.Skip(offset).ToListAsync<SiteFolder>(); }
+            if (offset > 0) { return await query.Skip(offset).ToListAsync<ISiteFolder>(); }
 
-            return await query.ToListAsync<SiteFolder>();
+            return await query.ToListAsync<ISiteFolder>();
             
         }
 
-        public async Task<SiteFolder> GetSiteFolder(string folderName)
+        public async Task<ISiteFolder> GetSiteFolder(string folderName)
         {
             var query = from x in dbContext.SiteFolders
                         where x.FolderName == folderName
@@ -387,19 +383,16 @@ namespace cloudscribe.Core.Repositories.EF
 
         }
 
-        public async Task<bool> Save(SiteFolder siteFolder)
+        public async Task<bool> Save(ISiteFolder siteFolder)
         {
             if (siteFolder == null) { return false; }
 
             if(siteFolder.Guid == Guid.Empty)
             {
-                siteFolder.Guid = Guid.NewGuid();
-                dbContext.SiteFolders.Add(siteFolder);
+                SiteFolder folder = SiteFolder.FromISiteFolder(siteFolder);
+                folder.Guid = Guid.NewGuid();
+                dbContext.SiteFolders.Add(folder);
             }
-            //else
-            //{
-            //    dbContext.SiteFolders.Update(siteFolder);
-            //}
             
             int rowsAffected = await dbContext.SaveChangesAsync();
 

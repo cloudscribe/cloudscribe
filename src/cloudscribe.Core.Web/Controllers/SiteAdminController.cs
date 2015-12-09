@@ -280,7 +280,7 @@ namespace cloudscribe.Core.Web.Controllers
                     return View(model);
                 }
 
-                SiteFolder folder = await siteManager.GetSiteFolder(model.SiteFolderName);
+                ISiteFolder folder = await siteManager.GetSiteFolder(model.SiteFolderName);
                 if ((folder != null) && (folder.SiteGuid != selectedSite.SiteGuid))
                 {
                     ModelState.AddModelError("foldererror", "The selected folder name is already in use on another site.");
@@ -416,7 +416,7 @@ namespace cloudscribe.Core.Web.Controllers
                     return View(model);
                 }
 
-                SiteFolder folder = await siteManager.GetSiteFolder(model.SiteFolderName);
+                ISiteFolder folder = await siteManager.GetSiteFolder(model.SiteFolderName);
                 if (folder != null)
                 {
                     ModelState.AddModelError("foldererror", "The selected folder name is already in use on another site.");

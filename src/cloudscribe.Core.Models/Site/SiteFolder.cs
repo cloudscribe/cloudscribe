@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-17
-// Last Modified:			2015-12-08
+// Last Modified:			2015-12-09
 // 
 
 using System;
@@ -34,6 +34,16 @@ namespace cloudscribe.Core.Models
             set { folderName = value; }
         }
 
-        
+        public static SiteFolder FromISiteFolder(ISiteFolder i)
+        {
+            SiteFolder f = new SiteFolder();
+            f.FolderName = i.FolderName;
+            f.Guid = i.Guid;
+            f.SiteGuid = i.SiteGuid;
+
+            return f;
+        }
+
+
     }
 }
