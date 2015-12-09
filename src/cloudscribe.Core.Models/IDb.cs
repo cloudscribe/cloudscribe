@@ -7,7 +7,12 @@ using System.IO;
 
 namespace cloudscribe.Core.Models
 {
-    public interface IDb
+    public interface IDataPlatformInfo
+    {
+        string DBPlatform { get; }
+    }
+
+    public interface IDb : IDataPlatformInfo
     {
         //TODO split any of these methods that could/should also be implemented in EF
         // into a different interface ie CanAccessDatabase, ExistingSiteCount, etc
@@ -23,7 +28,7 @@ namespace cloudscribe.Core.Models
         bool CanAccessDatabase(string overrideConnectionInfo);
         bool CanAlterSchema(string overrideConnectionInfo);
         bool CanCreateTemporaryTables();
-        string DBPlatform { get; }
+        
         IVersionProviderFactory VersionProviders { get; }
         int ExecteNonQuery(string connectionString, string query);
         DbException GetConnectionError(string overrideConnectionInfo);

@@ -22,13 +22,13 @@ namespace cloudscribe.Core.Web.Components
             IHostingEnvironment hostingEnvironment,
             IApplicationEnvironment appEnvironment,
             IVersionProviderFactory versionProviderFactory,
-            IDb database,
+            IDataPlatformInfo databaseInfo,
             ILogRepository logRepository)
         {
             runtimeInfo = runtimeEnvironment;
             appInfo = appEnvironment;
             hostingInfo = hostingEnvironment;
-            db = database;
+            dbInfo = databaseInfo;
             logRepo = logRepository;
             versionProviders = versionProviderFactory;
             cloudscribeVersionProvider = versionProviders.Get("cloudscribe-core");
@@ -41,7 +41,7 @@ namespace cloudscribe.Core.Web.Components
         private IHostingEnvironment hostingInfo;
         private IVersionProviderFactory versionProviders;
         IVersionProvider cloudscribeVersionProvider = null;
-        private IDb db;
+        private IDataPlatformInfo dbInfo;
         private ILogRepository logRepo;
 
         public string OperatingSystem
@@ -61,7 +61,7 @@ namespace cloudscribe.Core.Web.Components
 
         public string DatabasePlatform
         {
-            get { return db.DBPlatform; }
+            get { return dbInfo.DBPlatform; }
         }
 
         public string CloudscribeCoreVersion

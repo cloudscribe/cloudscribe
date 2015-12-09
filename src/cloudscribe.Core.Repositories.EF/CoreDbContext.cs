@@ -40,6 +40,9 @@ using cloudscribe.Core.Models.Logging;
 // then we need to abstract the platform specific model mapping so the default one is for mssql
 // but a different one can be injected
 // that is why we are using ICoreModelMapper
+// however it seems that the migrations must be generated in a platform specific way
+// and since generated migration code becomes part of the project
+// it seems like we would need a separate project for each platform
 
 // https://github.com/aspnet/EntityFramework/wiki/Configuring-a-DbContext
 

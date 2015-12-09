@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2015-12-07
+// Last Modified:			2015-12-09
 // 
 
 using cloudscribe.Core.Models.Logging;
@@ -36,6 +36,7 @@ namespace cloudscribe.Core.Repositories.EF
             string message)
         {
             LogItem logItem = new LogItem();
+            logItem.Id = 0;
             logItem.LogDateUtc = logDate;
             logItem.IpAddress = ipAddress;
             logItem.Culture = culture;
@@ -47,6 +48,9 @@ namespace cloudscribe.Core.Repositories.EF
             logItem.Message = message;
 
             dbContext.Add(logItem);
+
+            //dbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll
+
             dbContext.SaveChanges();
 
             return logItem.Id;
@@ -64,14 +68,21 @@ namespace cloudscribe.Core.Repositories.EF
         {
             int offset = (pageSize * pageNumber) - pageSize;
 
-            var query = from l in dbContext.LogItems
-                        .Take(pageSize)
-                        orderby l.Id ascending
-                        select l ;
+            var query = dbContext.LogItems.OrderBy(x => x.LogDateUtc)
+                .Select(p => p)
+                .Take(pageSize)
+                ;
 
-            if (offset > 0) { return await query.Skip(offset).ToListAsync<ILogItem>(); }
+            if (offset > 0) { query = query.Skip(offset); }
 
-            return await query.ToListAsync<ILogItem>();
+            //var query = from l in dbContext.LogItems
+            //            .Take(pageSize)
+            //            orderby l.Id ascending
+            //            select l ;
+
+            //if (offset > 0) { return await query.Skip(offset).ToListAsync<ILogItem>(); }
+
+            return await query.AsNoTracking().ToListAsync<ILogItem>();
             
         }
 
@@ -81,15 +92,22 @@ namespace cloudscribe.Core.Repositories.EF
         {
             int offset = (pageSize * pageNumber) - pageSize;
 
-            var query = from l in dbContext.LogItems
-                        .Take(pageSize)
-                        orderby l.Id descending
-                        select l;
+            var query = dbContext.LogItems.OrderByDescending(x => x.LogDateUtc)
+                .Select(p => p)
+                .Take(pageSize)
+                ;
 
-            if (offset > 0) { return await query.Skip(offset).ToListAsync<ILogItem>(); }
+            if (offset > 0) { query = query.Skip(offset); }
 
-            return await query.ToListAsync<ILogItem>();
-            
+            //var query = from l in dbContext.LogItems
+            //            .Take(pageSize)
+            //            orderby l.Id descending
+            //            select l;
+
+            //if (offset > 0) { return await query.Skip(offset).ToListAsync<ILogItem>(); }
+
+            return await query.AsNoTracking().ToListAsync<ILogItem>();
+
         }
 
         public async Task<bool> DeleteAll()

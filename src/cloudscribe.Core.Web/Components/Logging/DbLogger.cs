@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //	Author:                 Joe Audette
 //  Created:			    2011-08-19
-//	Last Modified:		    2015-11-18
+//	Last Modified:		    2015-12-09
 // 
 
 using cloudscribe.Core.Models.Logging;
@@ -21,14 +21,15 @@ namespace cloudscribe.Core.Web.Components.Logging
     {
         public DbLogger(
             string loggerName,
-            LogLevel minimumLevel,
+            Func<string, LogLevel, bool> filter,
             IServiceProvider serviceProvider,
             ILogRepository logRepository)
         {
             logger = loggerName;
             logRepo = logRepository;
             services = serviceProvider;
-            this.minimumLevel = minimumLevel;
+            //this.minimumLevel = minimumLevel;
+            Filter = filter ?? ((category, logLevel) => true);
         }
 
         private ILogRepository logRepo;
@@ -36,7 +37,23 @@ namespace cloudscribe.Core.Web.Components.Logging
         private IServiceProvider services;
         private const int _indentation = 2;
         private string logger = string.Empty;
-        private LogLevel minimumLevel;
+        private Func<string, LogLevel, bool> _filter;
+
+        public Func<string, LogLevel, bool> Filter
+        {
+            get { return _filter; }
+            set
+            {
+                if (value == null)
+                {
+                    throw new ArgumentNullException(nameof(value));
+                }
+
+                _filter = value;
+            }
+        }
+
+        
 
         #region ILogger
 
@@ -107,22 +124,25 @@ namespace cloudscribe.Core.Web.Components.Logging
                 logger,
                 message);
             }
-            catch
-            { }
-            
+            catch(Exception ex)
+            {
+                bool foo = true; // just a line to set a breakpoint so I can see the error when debugging
+            }
+
 
         }
 
         public bool IsEnabled(LogLevel logLevel)
         {
             //Debug = 1,
-            //Verbose = 2,
+            //Trace = 2,
             //Information = 3,
             //Warning = 4,
             //Error = 5,
             //Critical = 6,
-            
-            return (logLevel >= minimumLevel);
+
+            //return (logLevel >= minimumLevel);
+            return Filter(logger, logLevel);
         }
 
         public IDisposable BeginScopeImpl(object state)

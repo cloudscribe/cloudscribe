@@ -188,7 +188,35 @@ namespace example.WebApp
             // Add the console logger.
             loggerFactory.AddConsole(minLevel: LogLevel.Warning);
             // Add cloudscribe db logging
-            //loggerFactory.AddDbLogger(serviceProvider, logRepository, LogLevel.Information);
+
+            // a customizable filter for logging
+            LogLevel minimumLevel = LogLevel.Information;
+            List<string> excludedLoggers = new List<string>();
+            // add exclusions to remove noise in the logs
+
+            // we need to filter out EF otherwise each time we persist a log item to the db more logs are generated
+            // so it can become an infinite loop
+            excludedLoggers.Add("Microsoft.Data.Entity.Storage.Internal.RelationalCommandBuilderFactory");
+            excludedLoggers.Add("Microsoft.Data.Entity.Query.Internal.QueryCompiler");
+            excludedLoggers.Add("Microsoft.Data.Entity.DbContext");
+
+            Func<string, LogLevel, bool> logFilter = delegate (string loggerName, LogLevel logLevel)
+            {
+                if (logLevel < minimumLevel) { return false; }
+                if(excludedLoggers.Contains(loggerName)) { return false; }
+
+                return true;
+            };
+
+            DevOptions devOptions = Configuration.Get<DevOptions>("DevOptions");
+
+            if(devOptions.DbPlatform != "ef7")
+            {
+                // logging with ef7 at the moment causes major troubles/errors
+                // so disabling it until I can resolve the problems
+                loggerFactory.AddDbLogger(serviceProvider, logRepository, logFilter);
+            }
+            
 
             //app.UseCultureReplacer();
 
@@ -335,7 +363,7 @@ namespace example.WebApp
             //    return Task.FromResult(0);
             //});
 
-            DevOptions devOptions = Configuration.Get<DevOptions>("DevOptions");
+            
             if(devOptions.DbPlatform == "ef7")
             {
                 cloudscribe.Core.Repositories.EF.InitialData.InitializeDatabaseAsync(app.ApplicationServices).Wait();
