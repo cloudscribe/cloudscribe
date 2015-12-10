@@ -210,7 +210,7 @@ namespace example.WebApp
 
             DevOptions devOptions = Configuration.Get<DevOptions>("DevOptions");
 
-            if(devOptions.DbPlatform != "ef7")
+            if (devOptions.DbPlatform != "ef7")
             {
                 // logging with ef7 at the moment causes major troubles/errors
                 // so disabling it until I can resolve the problems

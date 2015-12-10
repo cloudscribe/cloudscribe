@@ -2,22 +2,16 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-12-03
-// Last Modified:			2015-12-06
+// Last Modified:			2015-12-10
 // 
 
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-//using Microsoft.AspNet.Identity;
-using Microsoft.Data.Entity;
-using Microsoft.Extensions.PlatformAbstractions;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Geography;
+using Microsoft.Data.Entity;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.EF
 {
@@ -33,6 +27,18 @@ namespace cloudscribe.Core.Repositories.EF
                 bool didCreatedDb = await db.Database.EnsureCreatedAsync();
                 
                 await EnsureData(db);
+
+                var db2 = serviceScope.ServiceProvider.GetService<LoggingDbContext>();
+
+                didCreatedDb = await db2.Database.EnsureCreatedAsync();
+            }
+
+            using (var serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                var db2 = serviceScope.ServiceProvider.GetService<LoggingDbContext>();
+
+                bool didCreatedDb = await db2.Database.EnsureCreatedAsync();
+                await db2.Database.MigrateAsync();
             }
         }
 

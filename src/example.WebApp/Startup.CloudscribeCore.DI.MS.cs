@@ -111,6 +111,9 @@ namespace example.WebApp
                         // this is needed if you use sqlserver 2008
                        // .UseRowNumberForPaging()
 
+                    )
+                    .AddDbContext<LoggingDbContext>(options =>
+                    options.UseSqlServer(configuration["Data:EF7ConnectionOptions:ConnectionString"])
                     );
 
                     services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.EF.SiteRepository>();

@@ -50,3 +50,73 @@ http://www.jerriepelser.com/blog/resolve-dbcontext-as-interface-in-aspnet5-ioc-c
 http://stackoverflow.com/questions/27220714/ramifications-of-using-dbcontext-with-dependency-injection
 
 http://davidzych.com/unit-testing-entity-framework-7-with-the-in-memory-data-store/
+
+
+
+
+dnx ef --help
+Entity Framework Commands 7.0.0-rc1-16348
+
+Usage: dnx ef [options] [command]
+
+Options:
+  --version     Show version information
+  -?|-h|--help  Show help information
+
+Commands:
+  database    Commands to manage your database
+  dbcontext   Commands to manage your DbContext types
+  migrations  Commands to manage your migrations
+
+Use "dnx ef [command] --help" for more information about a command.
+
+dnx ef --help migrations
+Entity Framework Commands 7.0.0-rc1-16348
+
+Usage: dnx ef [options] [command]
+
+Options:
+  --version     Show version information
+  -?|-h|--help  Show help information
+
+Commands:
+  database    Commands to manage your database
+  dbcontext   Commands to manage your DbContext types
+  migrations  Commands to manage your migrations
+
+Use "dnx ef [command] --help" for more information about a command.
+
+dnx ef migrations --help
+
+
+Usage: dnx ef migrations [options] [command]
+
+Options:
+  -?|-h|--help  Show help information
+
+Commands:
+  add     Add a new migration
+  list    List the migrations
+  remove  Remove the last migration
+  script  Generate a SQL script from migrations
+
+Use "migrations [command] --help" for more information about a command.
+
+dnx ef migrations add --help
+
+Usage: dnx ef migrations add [arguments] [options]
+
+Arguments:
+  [name]  The name of the migration
+
+Options:
+  -o|--outputDir                  The directory (and sub-namespace) to use. If omitted, "Migrations" is used.
+  -c|--context <context>          The DbContext to use. If omitted, the default DbContext is used
+  -p|--targetProject <project>    The project to add the migration to. If omitted, the current project is used.
+  -e|--environment <environment>  The environment to use. If omitted, "Development" is used.
+  -v|--verbose                    Show verbose output
+  -?|-h|--help                    Show help information
+
+dnx ef migrations add InitialLog -c cloudscribe.Core.Repositories.EF.LoggingDbContext
+
+

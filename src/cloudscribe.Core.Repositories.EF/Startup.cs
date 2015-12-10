@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-12-03
-// Last Modified:			2015-12-03
+// Last Modified:			2015-12-10
 // 
 
 //http://www.jerriepelser.com/blog/moving-entity-framework-7-models-to-external-project
@@ -46,6 +46,8 @@ namespace cloudscribe.Core.Repositories.EF
             services.AddEntityFramework()
                 .AddSqlServer()
                 .AddDbContext<CoreDbContext>(options =>
+                    options.UseSqlServer(Configuration["Data:EF7ConnectionOptions:ConnectionString"]))
+                .AddDbContext<LoggingDbContext>(options =>
                     options.UseSqlServer(Configuration["Data:EF7ConnectionOptions:ConnectionString"]));
         }
 

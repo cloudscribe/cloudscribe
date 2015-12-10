@@ -16,13 +16,15 @@ namespace cloudscribe.Core.Repositories.EF
 {
     public class LogRepository : ILogRepository
     {
-        public LogRepository(CoreDbContext dbContext)
+        public LogRepository(LoggingDbContext dbContext)
         {
 
             this.dbContext = dbContext;
         }
 
-        private CoreDbContext dbContext;
+        private LoggingDbContext dbContext;
+        // TODO: make configurable
+        private int bufferCount = 10;
 
         public int AddLogItem(
             DateTime logDate,
@@ -47,11 +49,16 @@ namespace cloudscribe.Core.Repositories.EF
             logItem.Logger = logger;
             logItem.Message = message;
 
+            
             dbContext.Add(logItem);
 
-            //dbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll
-
-            dbContext.SaveChanges();
+            int pendingItemCount = dbContext.ChangeTracker.Entries<LogItem>().Count();
+            if(pendingItemCount > bufferCount)
+            {
+                //dbContext.ChangeTracker.DetectChanges();
+                dbContext.SaveChanges();
+            }
+            
 
             return logItem.Id;
         }

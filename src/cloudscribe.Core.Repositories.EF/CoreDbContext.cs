@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2015-12-06
+// Last Modified:			2015-12-10
 // 
 
 using System;
@@ -14,7 +14,6 @@ using Microsoft.Data.Entity.Infrastructure;
 using Microsoft.Data.Entity.Metadata;
 using Microsoft.Data.Entity.Metadata.Conventions;
 using Microsoft.Data.Entity.Metadata.Builders;
-//using Microsoft.Extensions.DependencyInjection;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Geography;
 using cloudscribe.Core.Models.Logging;
@@ -54,9 +53,7 @@ namespace cloudscribe.Core.Repositories.EF
         public DbSet<GeoZone> States { get; set; }
         public DbSet<Language> Languages { get; set; }
         public DbSet<Currency> Currencies { get; set; }
-
-        public DbSet<LogItem> LogItems { get; set; }
-
+        
         public DbSet<SiteSettings> Sites { get; set; }
         public DbSet<SiteHost> SiteHosts { get; set; }
         public DbSet<SiteFolder> SiteFolders { get; set; }
@@ -73,6 +70,7 @@ namespace cloudscribe.Core.Repositories.EF
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            
             base.OnConfiguring(optionsBuilder);
             
         }
@@ -145,10 +143,7 @@ namespace cloudscribe.Core.Repositories.EF
                 mapper.Map(entity);
             });
 
-            modelBuilder.Entity<LogItem>(entity =>
-            {
-                mapper.Map(entity);
-            });
+            
 
             modelBuilder.Entity<UserRole>(entity =>
             {

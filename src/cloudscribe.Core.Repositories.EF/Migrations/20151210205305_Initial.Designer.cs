@@ -8,7 +8,7 @@ using cloudscribe.Core.Repositories.EF;
 namespace cloudscribe.Core.Repositories.EF.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    [Migration("20151208143436_Initial")]
+    [Migration("20151210205305_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -138,46 +138,6 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                     b.HasKey("Guid");
 
                     b.HasAnnotation("Relational:TableName", "mp_Language");
-                });
-
-            modelBuilder.Entity("cloudscribe.Core.Models.Logging.LogItem", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("Relational:ColumnName", "ID")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Culture")
-                        .HasAnnotation("MaxLength", 10);
-
-                    b.Property<string>("IpAddress")
-                        .HasAnnotation("MaxLength", 50);
-
-                    b.Property<DateTime>("LogDateUtc")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("Relational:ColumnName", "LogDate")
-                        .HasAnnotation("SqlServer:ColumnType", "datetime")
-                        .HasAnnotation("SqlServer:GeneratedValueSql", "getutcdate()");
-
-                    b.Property<string>("LogLevel")
-                        .HasAnnotation("MaxLength", 20);
-
-                    b.Property<string>("Logger")
-                        .HasAnnotation("MaxLength", 255);
-
-                    b.Property<string>("Message");
-
-                    b.Property<string>("ShortUrl")
-                        .HasAnnotation("MaxLength", 255);
-
-                    b.Property<string>("Thread")
-                        .HasAnnotation("MaxLength", 255);
-
-                    b.Property<string>("Url");
-
-                    b.HasKey("Id");
-
-                    b.HasAnnotation("Relational:TableName", "mp_SystemLog");
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.SiteFolder", b =>

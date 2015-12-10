@@ -69,26 +69,6 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                     table.PrimaryKey("PK_Language", x => x.Guid);
                 });
             migrationBuilder.CreateTable(
-                name: "mp_SystemLog",
-                columns: table => new
-                {
-                    ID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Culture = table.Column<string>(nullable: true),
-                    IpAddress = table.Column<string>(nullable: true),
-                    LogDate = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "getutcdate()"),
-                    LogLevel = table.Column<string>(nullable: true),
-                    Logger = table.Column<string>(nullable: true),
-                    Message = table.Column<string>(nullable: true),
-                    ShortUrl = table.Column<string>(nullable: true),
-                    Thread = table.Column<string>(nullable: true),
-                    Url = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_LogItem", x => x.ID);
-                });
-            migrationBuilder.CreateTable(
                 name: "mp_SiteFolders",
                 columns: table => new
                 {
@@ -401,7 +381,6 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
             migrationBuilder.DropTable("mp_GeoCountry");
             migrationBuilder.DropTable("mp_GeoZone");
             migrationBuilder.DropTable("mp_Language");
-            migrationBuilder.DropTable("mp_SystemLog");
             migrationBuilder.DropTable("mp_SiteFolders");
             migrationBuilder.DropTable("mp_SiteHosts");
             migrationBuilder.DropTable("mp_Roles");
