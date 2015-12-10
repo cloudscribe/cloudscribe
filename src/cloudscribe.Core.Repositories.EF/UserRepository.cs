@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2015-12-08
+// Last Modified:			2015-12-10
 // 
 
 
@@ -38,7 +38,16 @@ namespace cloudscribe.Core.Repositories.EF
                 siteUser.UserId = 0; //EF needs it to be zero in order to generate
                 dbContext.Users.Add(siteUser);
             }
-            
+            else
+            {
+                bool tracking = dbContext.ChangeTracker.Entries<SiteUser>().Any(x => x.Entity.UserId == siteUser.UserId);
+                if (!tracking)
+                {
+                    dbContext.Users.Update(siteUser);
+                }
+
+            }
+
             int rowsAffected = await dbContext.SaveChangesAsync();
 
             if(user.UserId == -1)
@@ -224,7 +233,7 @@ namespace cloudscribe.Core.Repositories.EF
                         select x
                         ;
 
-            var items = await query.ToListAsync<IUserInfo>(); 
+            var items = await query.AsNoTracking().ToListAsync<IUserInfo>(); 
 
             return items;
 
@@ -237,7 +246,7 @@ namespace cloudscribe.Core.Repositories.EF
                         orderby c.DisplayName ascending
                         select c;
 
-            var items = await query.ToListAsync<IUserInfo>(); 
+            var items = await query.AsNoTracking().ToListAsync<IUserInfo>(); 
 
             return items;
 
@@ -333,7 +342,7 @@ namespace cloudscribe.Core.Repositories.EF
 
             if (offset > 0) { return await query.Skip(offset).ToListAsync<IUserInfo>(); }
 
-            return await query.ToListAsync<IUserInfo>(); 
+            return await query.AsNoTracking().ToListAsync<IUserInfo>(); 
             
             
         }
@@ -431,7 +440,7 @@ namespace cloudscribe.Core.Repositories.EF
 
             if (offset > 0) { return await query.Skip(offset).ToListAsync<IUserInfo>(); }
 
-            return await query.ToListAsync<IUserInfo>();
+            return await query.AsNoTracking().ToListAsync<IUserInfo>();
 
             
         }
@@ -490,7 +499,7 @@ namespace cloudscribe.Core.Repositories.EF
 
             if (offset > 0) { return await query.Skip(offset).ToListAsync<IUserInfo>(); }
 
-            return await query.ToListAsync<IUserInfo>();
+            return await query.AsNoTracking().ToListAsync<IUserInfo>();
             
         }
 
@@ -549,7 +558,7 @@ namespace cloudscribe.Core.Repositories.EF
 
             if (offset > 0) { return await query.Skip(offset).ToListAsync<IUserInfo>(); }
 
-            return await query.ToListAsync<IUserInfo>();
+            return await query.AsNoTracking().ToListAsync<IUserInfo>();
             
         }
 
@@ -640,7 +649,16 @@ namespace cloudscribe.Core.Repositories.EF
                 }
                 dbContext.Roles.Add(siteRole);
             }
-           
+            else
+            {
+                bool tracking = dbContext.ChangeTracker.Entries<SiteRole>().Any(x => x.Entity.RoleId == siteRole.RoleId);
+                if (!tracking)
+                {
+                    dbContext.Roles.Update(siteRole);
+                }
+
+            }
+
             int rowsAffected = await dbContext.SaveChangesAsync();
 
             if(role.RoleId == -1)
@@ -760,7 +778,7 @@ namespace cloudscribe.Core.Repositories.EF
                         orderby x.RoleName
                         select x.RoleName
                         ;
-            return await query.ToListAsync<string>();
+            return await query.AsNoTracking().ToListAsync<string>();
 
         }
 
@@ -804,7 +822,7 @@ namespace cloudscribe.Core.Repositories.EF
 
             if (offset > 0) return await listQuery.Skip(offset).ToListAsync<ISiteRole>();
 
-            return await listQuery.ToListAsync<ISiteRole>();
+            return await listQuery.AsNoTracking().ToListAsync<ISiteRole>();
             
         }
 
@@ -863,7 +881,7 @@ namespace cloudscribe.Core.Repositories.EF
 
             if(offset > 0) {  return await query.Skip(offset).ToListAsync<IUserInfo>(); }
 
-            return await query.ToListAsync<IUserInfo>(); 
+            return await query.AsNoTracking().ToListAsync<IUserInfo>(); 
 
            
 
@@ -885,7 +903,7 @@ namespace cloudscribe.Core.Repositories.EF
                         select x
                         ;
 
-            var items = await query.ToListAsync<ISiteUser>(); 
+            var items = await query.AsNoTracking().ToListAsync<ISiteUser>(); 
 
             return items;
         }
@@ -945,7 +963,7 @@ namespace cloudscribe.Core.Repositories.EF
 
             if (offset > 0) { return await query.Skip(offset).ToListAsync<IUserInfo>(); }
 
-            return await query.ToListAsync<IUserInfo>(); 
+            return await query.AsNoTracking().ToListAsync<IUserInfo>(); 
             
         }
 
@@ -963,6 +981,15 @@ namespace cloudscribe.Core.Repositories.EF
             {
                 claim.Id = 0;
                 dbContext.UserClaims.Add(claim);
+            }
+            else
+            {
+                bool tracking = dbContext.ChangeTracker.Entries<UserClaim>().Any(x => x.Entity.Id == claim.Id);
+                if (!tracking)
+                {
+                    dbContext.UserClaims.Update(claim);
+                }
+
             }
 
             int rowsAffected = await dbContext.SaveChangesAsync();
@@ -1039,7 +1066,7 @@ namespace cloudscribe.Core.Repositories.EF
                         where l.SiteId == siteId && l.UserId == userId
                         
                         select l;
-            var items = await query.ToListAsync<IUserClaim>();
+            var items = await query.AsNoTracking().ToListAsync<IUserClaim>();
             return items;
 
         }
@@ -1057,7 +1084,7 @@ namespace cloudscribe.Core.Repositories.EF
                         select x
                         ;
 
-            var items = await query.ToListAsync<ISiteUser>(); 
+            var items = await query.AsNoTracking().ToListAsync<ISiteUser>(); 
 
             return items;
         }
@@ -1160,7 +1187,7 @@ namespace cloudscribe.Core.Repositories.EF
                         )
                         select l;
 
-            var items = await query.ToListAsync<IUserLogin>();
+            var items = await query.AsNoTracking().ToListAsync<IUserLogin>();
 
             return items;
 

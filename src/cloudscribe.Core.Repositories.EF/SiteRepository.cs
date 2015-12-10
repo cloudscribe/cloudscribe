@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2015-12-09
+// Last Modified:			2015-12-10
 // 
 
 
@@ -31,17 +31,25 @@ namespace cloudscribe.Core.Repositories.EF
             if(site == null) { return false; }
 
             SiteSettings siteSettings = null; 
-            if(site.SiteId == -1)  // a newly created item
+            if(siteSettings.SiteId == -1)  // a newly created item
             {
                 siteSettings = SiteSettings.FromISiteSettings(site);
                 siteSettings.SiteId = 0; //EF needs this to be 0 in order to generate it from the db identity 
                 if(siteSettings.SiteGuid == Guid.Empty) { siteSettings.SiteGuid = Guid.NewGuid(); }
                 dbContext.Sites.Add(siteSettings);
             }
-            // in the case of an update the ISiteSettings being passed in
-            // is a SiteSettings instance that is already being tracked
-            // so all we have to do is save changes on the context
-            
+            else
+            {
+                bool tracking = dbContext.ChangeTracker.Entries<SiteSettings>().Any(x => x.Entity.SiteId == siteSettings.SiteId);
+                if (!tracking)
+                {
+                    dbContext.Sites.Update(siteSettings);
+                }
+
+            }
+
+
+
             int rowsAffected = await dbContext.SaveChangesAsync();
 
             // update the original with the new keys after insert
@@ -157,7 +165,7 @@ namespace cloudscribe.Core.Repositories.EF
                         }
                         ;
 
-            var items = await query.ToListAsync<ISiteInfo>();
+            var items = await query.AsNoTracking().ToListAsync<ISiteInfo>();
             
             return items;
         }
@@ -191,7 +199,7 @@ namespace cloudscribe.Core.Repositories.EF
 
             if (offset > 0) { return await query.Skip(offset).ToListAsync<ISiteInfo>(); }
 
-            return await query.ToListAsync<ISiteInfo>();
+            return await query.AsNoTracking().ToListAsync<ISiteInfo>();
 
            
         }
@@ -202,7 +210,7 @@ namespace cloudscribe.Core.Repositories.EF
                         orderby x.HostName ascending
                         select x;
 
-            var items = await query.ToListAsync<ISiteHost>();
+            var items = await query.AsNoTracking().ToListAsync<ISiteHost>();
             
             return items;
         }
@@ -213,7 +221,7 @@ namespace cloudscribe.Core.Repositories.EF
                         orderby x.HostName ascending
                         select x;
 
-            var items = query.ToList<ISiteHost>();
+            var items = query.AsNoTracking().ToList<ISiteHost>();
 
             return items;
         }
@@ -237,7 +245,7 @@ namespace cloudscribe.Core.Repositories.EF
 
             if (offset > 0) { return await query.Skip(offset).ToListAsync<ISiteHost>(); }
 
-            return await query.ToListAsync<ISiteHost>();
+            return await query.AsNoTracking().ToListAsync<ISiteHost>();
 
             
         }
@@ -250,7 +258,7 @@ namespace cloudscribe.Core.Repositories.EF
                         select x
                         ;
 
-            var items = await query.ToListAsync<ISiteHost>();
+            var items = await query.AsNoTracking().ToListAsync<ISiteHost>();
 
             return items;
         }
@@ -319,7 +327,7 @@ namespace cloudscribe.Core.Repositories.EF
                         select x
                         ;
 
-            var items = await query.ToListAsync<ISiteFolder>();
+            var items = await query.AsNoTracking().ToListAsync<ISiteFolder>();
 
             return items;
 
@@ -331,7 +339,7 @@ namespace cloudscribe.Core.Repositories.EF
                         orderby x.FolderName ascending
                         select x;
 
-            var items = await query.ToListAsync<ISiteFolder>();
+            var items = await query.AsNoTracking().ToListAsync<ISiteFolder>();
             
             return items;
 
@@ -343,7 +351,7 @@ namespace cloudscribe.Core.Repositories.EF
                         orderby x.FolderName ascending
                         select x;
 
-            var items = query.ToList<ISiteFolder>();
+            var items = query.AsNoTracking().ToList<ISiteFolder>();
 
             return items;
         }
@@ -367,7 +375,7 @@ namespace cloudscribe.Core.Repositories.EF
 
             if (offset > 0) { return await query.Skip(offset).ToListAsync<ISiteFolder>(); }
 
-            return await query.ToListAsync<ISiteFolder>();
+            return await query.AsNoTracking().ToListAsync<ISiteFolder>();
             
         }
 
@@ -387,13 +395,22 @@ namespace cloudscribe.Core.Repositories.EF
         {
             if (siteFolder == null) { return false; }
 
-            if(siteFolder.Guid == Guid.Empty)
+            SiteFolder folder = SiteFolder.FromISiteFolder(siteFolder);
+            if (folder.Guid == Guid.Empty)
             {
-                SiteFolder folder = SiteFolder.FromISiteFolder(siteFolder);
                 folder.Guid = Guid.NewGuid();
                 dbContext.SiteFolders.Add(folder);
             }
-            
+            else
+            {
+                bool tracking = dbContext.ChangeTracker.Entries<SiteFolder>().Any(x => x.Entity.Guid == folder.Guid);
+                if (!tracking)
+                {
+                    dbContext.SiteFolders.Update(folder);
+                }
+
+            }
+
             int rowsAffected = await dbContext.SaveChangesAsync();
 
             return rowsAffected > 0;

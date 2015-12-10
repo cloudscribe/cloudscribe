@@ -19,6 +19,9 @@ FirstOrDefault() - when you expect zero or more items to be returned by a query 
 
 http://stackoverflow.com/questions/818642/singleordefault-how-to-change-the-default-values
 
+http://stackoverflow.com/questions/6033390/what-is-the-most-reasonable-way-to-find-out-if-entity-is-attached-to-dbcontext-o/6037277#6037277
+http://stackoverflow.com/questions/10027493/entityframework-code-first-check-if-entity-is-attached
+
 
 http://ef.readthedocs.org/en/latest/modeling/configuring.html
 

@@ -109,7 +109,7 @@ namespace example.WebApp
                     .AddDbContext<CoreDbContext>(options =>
                         options.UseSqlServer(configuration["Data:EF7ConnectionOptions:ConnectionString"])
                         // this is needed if you use sqlserver 2008
-                        //.UseRowNumberForPaging()
+                       // .UseRowNumberForPaging()
 
                     );
 

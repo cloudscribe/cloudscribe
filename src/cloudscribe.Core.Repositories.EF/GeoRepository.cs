@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2015-12-07
+// Last Modified:			2015-12-10
 // 
 
 using cloudscribe.Core.Models.Geography;
@@ -19,7 +19,6 @@ namespace cloudscribe.Core.Repositories.EF
 
         public GeoRepository(CoreDbContext dbContext)
         {
-       
             this.dbContext = dbContext;
         }
 
@@ -28,17 +27,22 @@ namespace cloudscribe.Core.Repositories.EF
         public async Task<bool> Save(IGeoCountry geoCountry)
         {
             if (geoCountry == null) { return false; }
-            
+
             GeoCountry country = GeoCountry.FromIGeoCountry(geoCountry); // convert from IGeoCountry
-            if(country.Guid == Guid.Empty)
-            {
+            if (country.Guid == Guid.Empty)
+            { 
                 country.Guid = Guid.NewGuid();
                 dbContext.Countries.Add(country);
             }
-            //else
-            //{
-            //    dbContext.Countries.Update(country);
-            //}
+            else
+            {
+                bool tracking = dbContext.ChangeTracker.Entries<GeoCountry>().Any(x => x.Entity.Guid == country.Guid);
+                if (!tracking)
+                {
+                    dbContext.Countries.Update(country);
+                }
+
+            }
             
             int rowsAffected = await dbContext.SaveChangesAsync();
 
@@ -84,10 +88,8 @@ namespace cloudscribe.Core.Repositories.EF
                         orderby c.Name ascending
                         select c;
 
-            var items = await query.ToListAsync<IGeoCountry>();
+            var items = await query.AsNoTracking().ToListAsync<IGeoCountry>();
             
-            //List<IGeoCountry> result = new List<IGeoCountry>(items); // will this work?
-
             return items;
 
         }
@@ -98,12 +100,12 @@ namespace cloudscribe.Core.Repositories.EF
 
             var query = dbContext.Countries.OrderBy(x => x.Name) 
                 .Select(p => p)
+                .Skip(offset)
                 .Take(pageSize)
                 ;
 
-           if (offset > 0) { query = query.Skip(offset); }
-           
-           return await query.ToListAsync<IGeoCountry>();
+         
+           return await query.AsNoTracking().ToListAsync<IGeoCountry>();
             
         }
 
@@ -112,15 +114,20 @@ namespace cloudscribe.Core.Repositories.EF
             if (geoZone == null) { return false; }
 
             GeoZone state = GeoZone.FromIGeoZone(geoZone); // convert from IGeoZone
-            if(state.Guid == Guid.Empty)
+
+            if (geoZone.Guid == Guid.Empty)
             {
                 state.Guid = Guid.NewGuid();
                 dbContext.States.Add(state);
             }
-            //else
-            //{
-            //    dbContext.States.Update(state);
-            //}
+            else
+            {
+                bool tracking = dbContext.ChangeTracker.Entries<GeoZone>().Any(x => x.Entity.Guid == state.Guid);
+                if(!tracking)
+                {
+                    dbContext.States.Update(state);
+                }
+            }
             
             int rowsAffected = await dbContext.SaveChangesAsync();
 
@@ -169,16 +176,19 @@ namespace cloudscribe.Core.Repositories.EF
 
         public async Task<List<IGeoZone>> GetGeoZonesByCountry(Guid countryGuid)
         {
-            var query = from l in dbContext.States
-                        where l.CountryGuid == countryGuid
-                        orderby l.Name descending
-                        select l;
+            //var query = from l in dbContext.States
+            //            where l.CountryGuid == countryGuid
+            //            orderby l.Name descending
+            //            select l;
 
-            var items = await query.ToListAsync<IGeoZone>();
+            var query = dbContext.States
+                        .Where(x => x.CountryGuid == countryGuid)
+                        .OrderByDescending(x => x.Name)
+                        .Select(x => x);
+            
+            var items = await query.AsNoTracking().ToListAsync<IGeoZone>();
             return items;
-            //List<IGeoZone> result = new List<IGeoZone>(items); // will this work?
-
-            //return result;
+            
 
         }
 
@@ -187,47 +197,60 @@ namespace cloudscribe.Core.Repositories.EF
             // approximation of a LIKE operator query
             //http://stackoverflow.com/questions/17097764/linq-to-entities-using-the-sql-like-operator
 
-            var listQuery = from l in dbContext.Countries
+            //var listQuery = from l in dbContext.Countries
+            //                .Take(maxRows)
+            //                where l.Name.Contains(query) || l.ISOCode2.Contains(query)
+            //                orderby l.Name ascending
+            //                select l;
+
+            var listQuery = dbContext.Countries  
+                            .Where(x =>  x.Name.Contains(query) || x.ISOCode2.Contains(query))
+                            .OrderBy(x =>  x.Name)
                             .Take(maxRows)
-                            where l.Name.Contains(query) || l.ISOCode2.Contains(query)
-                            orderby l.Name ascending
-                            select l;
+                            .Select(x => x);
 
-            var items = await listQuery.ToListAsync<IGeoCountry>();
+            var items = await listQuery.AsNoTracking().ToListAsync<IGeoCountry>();
             return items;
-            //List<IGeoCountry> result = new List<IGeoCountry>(items); // will this work?
-
-            //return result;
+            
         }
 
         public async Task<List<IGeoZone>> StateAutoComplete(Guid countryGuid, string query, int maxRows)
         {
-            var listQuery = from l in dbContext.States
-                            .Take(maxRows)
-                            where (
-                            l.CountryGuid == countryGuid &&
-                            (l.Name.Contains(query) || l.Code.Contains(query))
-                            )
-                            orderby l.Code ascending
-                            select l;
+            //var listQuery = from l in dbContext.States
+            //                .Take(maxRows)
+            //                where (
+            //                l.CountryGuid == countryGuid &&
+            //                (l.Name.Contains(query) || l.Code.Contains(query))
+            //                )
+            //                orderby l.Code ascending
+            //                select l;
 
-            return await listQuery.ToListAsync<IGeoZone>();
+            var listQuery = dbContext.States
+                            .Where (x => 
+                            x.CountryGuid == countryGuid &&
+                            (x.Name.Contains(query) || x.Code.Contains(query))
+                            )
+                            .OrderBy(x => x.Code)
+                            .Take(maxRows)
+                            .Select(x => x);
+
+            return await listQuery.AsNoTracking().ToListAsync<IGeoZone>();
            
         }
 
         public async Task<List<IGeoZone>> GetGeoZonePage(Guid countryGuid, int pageNumber, int pageSize)
         {
             int offset = (pageSize * pageNumber) - pageSize;
-
-            var query = from l in dbContext.States
-                        .Take(pageSize)
-                        where l.CountryGuid == countryGuid
-                        orderby l.Name ascending
-                        select l;
-
-            if (offset > 0) { return await query.Skip(offset).ToListAsync<IGeoZone>(); }
-
-            return await query.ToListAsync<IGeoZone>();
+            
+            var query = dbContext.States
+               .Where(x => x.CountryGuid == countryGuid)
+               .OrderBy(x => x.Name)
+               .Skip(offset)
+               .Take(pageSize)
+               .Select(p => p)
+               ;
+            
+            return await query.AsNoTracking().ToListAsync<IGeoZone>();
            
         }
 
@@ -235,16 +258,21 @@ namespace cloudscribe.Core.Repositories.EF
         {
             if (language == null) { return false; }
 
-            Language lang = Language.FromILanguage(language); 
-            if(lang.Guid == Guid.Empty)
-            {
+            Language lang = Language.FromILanguage(language);
+
+            if (lang.Guid == Guid.Empty)
+            { 
                 lang.Guid = Guid.NewGuid();
                 dbContext.Languages.Add(lang);
             }
-            //else
-            //{
-            //    dbContext.Languages.Update(lang);
-            //}
+            else
+            {
+                bool tracking = dbContext.ChangeTracker.Entries<Language>().Any(x => x.Entity.Guid == lang.Guid);
+                if (!tracking)
+                {
+                    dbContext.Languages.Update(lang);
+                }
+            }
             
             int rowsAffected = await dbContext.SaveChangesAsync();
 
@@ -282,11 +310,11 @@ namespace cloudscribe.Core.Repositories.EF
 
         public async Task<List<ILanguage>> GetAllLanguages()
         {
-            var query = from c in dbContext.Languages
-                        orderby c.Name ascending
-                        select c;
+            var query = dbContext.Languages
+                        .OrderBy(x => x.Name)
+                        .Select(x => x);
 
-            var items = await query.ToListAsync<ILanguage>();
+            var items = await query.AsNoTracking().ToListAsync<ILanguage>();
             return items;
         
         }
@@ -294,15 +322,14 @@ namespace cloudscribe.Core.Repositories.EF
         public async Task<List<ILanguage>> GetLanguagePage(int pageNumber, int pageSize)
         {
             int offset = (pageSize * pageNumber) - pageSize;
-
-            var query = from l in dbContext.Languages
+            
+            var query = dbContext.Languages
+                        .OrderBy(x => x.Name)
+                        .Skip(offset)
                         .Take(pageSize)
-                        orderby l.Name ascending
-                        select l;
-
-            if(offset > 0) { return await query.Skip(offset).ToListAsync<ILanguage>(); }
-
-            return await query.ToListAsync<ILanguage>();
+                        .Select(x => x);
+            
+            return await query.AsNoTracking().ToListAsync<ILanguage>();
            
         }
 
@@ -312,15 +339,19 @@ namespace cloudscribe.Core.Repositories.EF
             if (currency == null) { return false; }
 
             Currency c = Currency.FromICurrency(currency);
-            if(c.Guid == Guid.Empty)
-            {
+            if (c.Guid == Guid.Empty)
+            { 
                 c.Guid = Guid.NewGuid();
                 dbContext.Currencies.Add(c);
             }
-            //else
-            //{
-            //    dbContext.Currencies.Update(c);
-            //}
+            else
+            {
+                bool tracking = dbContext.ChangeTracker.Entries<Currency>().Any(x => x.Entity.Guid == c.Guid);
+                if (!tracking)
+                {
+                    dbContext.Currencies.Update(c);
+                }
+            }
             
             int rowsAffected = await dbContext.SaveChangesAsync();
 
@@ -354,14 +385,14 @@ namespace cloudscribe.Core.Repositories.EF
 
         public async Task<List<ICurrency>> GetAllCurrencies()
         {
-            var query = from c in dbContext.Currencies
-                        orderby c.Title ascending
-                        select c;
+            
+            var query = dbContext.Currencies
+                        .OrderBy(x => x.Title)
+                        .Select(x => x);
 
-            var items = await query.ToListAsync<ICurrency>();
+            var items = await query.AsNoTracking().ToListAsync<ICurrency>();
             return items;
            
-
         }
 
 
