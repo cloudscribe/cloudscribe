@@ -5,6 +5,7 @@
 // Last Modified:			2015-12-10
 // 
 
+using System;
 using cloudscribe.Core.Models.Logging;
 using Microsoft.Data.Entity;
 using Microsoft.Data.Entity.Infrastructure;
@@ -13,16 +14,20 @@ namespace cloudscribe.Core.Repositories.EF
 {
     public class LoggingDbContext : DbContext
     {
-        public LoggingDbContext(DbContextOptions options) : base(options)
+        public LoggingDbContext(
+            IServiceProvider serviceProvider,
+            DbContextOptions options) : base(serviceProvider, options)
         {
             // we don't want to track any logitems because we dont edit them
             // we add them delete them and view them
             //ChangeTracker.AutoDetectChangesEnabled = false;
             ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+              
         }
 
         public DbSet<LogItem> LogItems { get; set; }
 
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
@@ -31,6 +36,10 @@ namespace cloudscribe.Core.Repositories.EF
             {
                 mapper = new SqlServerCoreModelMapper();
             }
+
+            modelBuilder.HasSequence<int>("LogIds")
+                .StartsAt(1)
+                .IncrementsBy(1);
 
             modelBuilder.Entity<LogItem>(entity =>
             {

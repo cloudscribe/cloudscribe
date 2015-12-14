@@ -14,6 +14,7 @@ namespace cloudscribe.Core.Repositories.EF.Migrations.LoggingDb
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "7.0.0-rc1-16348")
+                .HasAnnotation("Relational:Sequence:.LogIds", "'LogIds', '', '1', '1', '', '', 'Int32', 'False'")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("cloudscribe.Core.Models.Logging.LogItem", b =>
@@ -21,7 +22,8 @@ namespace cloudscribe.Core.Repositories.EF.Migrations.LoggingDb
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("Relational:ColumnName", "ID")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasAnnotation("Relational:GeneratedValueSql", "NEXT VALUE FOR LogIds")
+                        .HasAnnotation("SqlServer:ColumnType", "int");
 
                     b.Property<string>("Culture")
                         .HasAnnotation("MaxLength", 10);

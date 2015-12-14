@@ -195,7 +195,7 @@ namespace example.WebApp
             // add exclusions to remove noise in the logs
 
             // we need to filter out EF otherwise each time we persist a log item to the db more logs are generated
-            // so it can become an infinite loop
+            // so it can become an infinite loop that keeps creating data
             excludedLoggers.Add("Microsoft.Data.Entity.Storage.Internal.RelationalCommandBuilderFactory");
             excludedLoggers.Add("Microsoft.Data.Entity.Query.Internal.QueryCompiler");
             excludedLoggers.Add("Microsoft.Data.Entity.DbContext");
@@ -207,57 +207,47 @@ namespace example.WebApp
 
                 return true;
             };
-
-            DevOptions devOptions = Configuration.Get<DevOptions>("DevOptions");
-
-            if (devOptions.DbPlatform != "ef7")
-            {
-                // logging with ef7 at the moment causes major troubles/errors
-                // so disabling it until I can resolve the problems
-                loggerFactory.AddDbLogger(serviceProvider, logRepository, logFilter);
-            }
             
+            loggerFactory.AddDbLogger(serviceProvider, logRepository, logFilter);
+            
+
 
             //app.UseCultureReplacer();
 
             // localization from .resx files is not really working in beta8
             // will have to wait till next release
 
-            var localizationOptions = new RequestLocalizationOptions
+            var supportedCultures = new[]
             {
-                // Set options here to change middleware behavior
-                
-                //DefaultRequestCulture = new RequestCulture(new CultureInfo("en-US")),
-                SupportedCultures = new List<CultureInfo>
-                {
-                    new CultureInfo("en-US"),
-                    new CultureInfo("it"),
-                    new CultureInfo("fr")
-                },
-                SupportedUICultures = new List<CultureInfo>
-                {
-                    new CultureInfo("en-US"),
-                    new CultureInfo("it"),
-                    new CultureInfo("fr")
-                }
-                
-
+                new CultureInfo("en-US"),
+                new CultureInfo("it"),
+                new CultureInfo("fr-FR")
             };
 
+            var locOptions = new RequestLocalizationOptions
+            {
+                // You must explicitly state which cultures your application supports.
+                // These are the cultures the app supports for formatting numbers, dates, etc.
+                SupportedCultures = supportedCultures,
+                SupportedUICultures = supportedCultures
 
-
-            // Optionally create an app-specific provider with just a delegate, e.g. look up user preference from DB.
-            // Inserting it as position 0 ensures it has priority over any of the default providers.
-            //options.RequestCultureProviders.Insert(0, new CustomRequestCultureProvider(async context =>
+            };
+            // You can change which providers are configured to determine the culture for requests, or even add a custom
+            // provider with your own logic. The providers will be asked in order to provide a culture for each request,
+            // and the first to provide a non-null result that is in the configured supported cultures list will be used.
+            // By default, the following built-in providers are configured:
+            // - QueryStringRequestCultureProvider, sets culture via "culture" and "ui-culture" query string values, useful for testing
+            // - CookieRequestCultureProvider, sets culture via "ASPNET_CULTURE" cookie
+            // - AcceptLanguageHeaderRequestCultureProvider, sets culture via the "Accept-Language" request header
+            //locOptions.RequestCultureProviders.Insert(0, new CustomRequestCultureProvider(async context =>
             //{
-
+            //  // My custom request culture logic
+            //  return new ProviderCultureResult("en");
             //}));
+            //app.UseRequestLocalization(locOptions, 
+            //    defaultRequestCulture: new RequestCulture(culture: "en-US", uiCulture: "en-US"));
 
-            //app.UseRequestLocalization(localizationOptions);
-            var defaultCulture = new RequestCulture(new CultureInfo("en-US"));
-            //app.UseRequestLocalization(localizationOptions, defaultCulture);
-
-
+            
             // Add the following to the request pipeline only in development environment.
             if (env.IsEnvironment("Development"))
             {
@@ -271,10 +261,8 @@ namespace example.WebApp
             }
             else
             {
-                // Add Error handling middleware which catches all application specific errors and
-                // sends the request to the following path or controller action.
-                //app.UseErrorHandler("/Home/Error");
-                //app.UseErrorPage(ErrorPageOptions.ShowAll);
+                
+                app.UseExceptionHandler("/Home/Error");
 
                 // handle 404 and other non success
                 //app.UseStatusCodePages();
@@ -363,8 +351,8 @@ namespace example.WebApp
             //    return Task.FromResult(0);
             //});
 
-            
-            if(devOptions.DbPlatform == "ef7")
+            DevOptions devOptions = Configuration.Get<DevOptions>("DevOptions");
+            if (devOptions.DbPlatform == "ef7")
             {
                 cloudscribe.Core.Repositories.EF.InitialData.InitializeDatabaseAsync(app.ApplicationServices).Wait();
             }

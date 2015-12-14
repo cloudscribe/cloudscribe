@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-17
-// Last Modified:			2015-12-06
+// Last Modified:			2015-12-14
 // 
 
 using System;
@@ -773,10 +773,12 @@ namespace cloudscribe.Core.Repositories.EF
             entity.HasKey(p => p.Id);
 
             entity.Property(p => p.Id)
-            //.HasSqlServerColumnType("int")
-            .UseSqlServerIdentityColumn<int>()
+            .ForSqlServerHasColumnType("int")
+            
+            //.UseSqlServerIdentityColumn<int>()
             .ValueGeneratedOnAdd()
             .HasColumnName("ID")
+            .HasDefaultValueSql("NEXT VALUE FOR LogIds")
             //.Metadata.SentinelValue = -1
             ;
 

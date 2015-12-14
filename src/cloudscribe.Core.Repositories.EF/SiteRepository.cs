@@ -30,10 +30,9 @@ namespace cloudscribe.Core.Repositories.EF
         {
             if(site == null) { return false; }
 
-            SiteSettings siteSettings = null; 
-            if(siteSettings.SiteId == -1)  // a newly created item
-            {
-                siteSettings = SiteSettings.FromISiteSettings(site);
+            SiteSettings siteSettings = SiteSettings.FromISiteSettings(site);
+            if (siteSettings.SiteId == -1)  // a newly created item
+            { 
                 siteSettings.SiteId = 0; //EF needs this to be 0 in order to generate it from the db identity 
                 if(siteSettings.SiteGuid == Guid.Empty) { siteSettings.SiteGuid = Guid.NewGuid(); }
                 dbContext.Sites.Add(siteSettings);
@@ -66,7 +65,7 @@ namespace cloudscribe.Core.Repositories.EF
         public async Task<ISiteSettings> Fetch(int siteId)
         {
             SiteSettings item
-                = await dbContext.Sites.SingleOrDefaultAsync(x => x.SiteId == siteId);
+                = await dbContext.Sites.SingleOrDefaultAsync(x => x.SiteId.Equals(siteId));
 
             return item;
         }
@@ -74,7 +73,7 @@ namespace cloudscribe.Core.Repositories.EF
         public ISiteSettings FetchNonAsync(int siteId)
         {
             SiteSettings item
-                = dbContext.Sites.SingleOrDefault(x => x.SiteId == siteId);
+                = dbContext.Sites.SingleOrDefault(x => x.SiteId.Equals(siteId));
 
             return item;
         }
@@ -82,7 +81,7 @@ namespace cloudscribe.Core.Repositories.EF
         public async Task<ISiteSettings> Fetch(Guid siteGuid)
         {
             SiteSettings item
-                = await dbContext.Sites.SingleOrDefaultAsync(x => x.SiteGuid == siteGuid);
+                = await dbContext.Sites.SingleOrDefaultAsync(x => x.SiteGuid.Equals(siteGuid));
 
             return item;
         }
@@ -90,14 +89,14 @@ namespace cloudscribe.Core.Repositories.EF
         public ISiteSettings FetchNonAsync(Guid siteGuid)
         {
             SiteSettings item
-                = dbContext.Sites.SingleOrDefault(x => x.SiteGuid == siteGuid);
+                = dbContext.Sites.SingleOrDefault(x => x.SiteGuid.Equals(siteGuid));
 
             return item;
         }
 
         public async Task<ISiteSettings> Fetch(string hostName)
         {
-            SiteHost host = await dbContext.SiteHosts.FirstOrDefaultAsync(x => x.HostName == hostName);
+            SiteHost host = await dbContext.SiteHosts.FirstOrDefaultAsync(x => x.HostName.Equals(hostName));
             if(host == null)
             {
                 var query = from s in dbContext.Sites
@@ -108,7 +107,7 @@ namespace cloudscribe.Core.Repositories.EF
                 return await query.SingleOrDefaultAsync<SiteSettings>();
             }
             
-            return await dbContext.Sites.SingleOrDefaultAsync(x => x.SiteId == host.SiteId);
+            return await dbContext.Sites.SingleOrDefaultAsync(x => x.SiteId.Equals(host.SiteId));
 
 
         }

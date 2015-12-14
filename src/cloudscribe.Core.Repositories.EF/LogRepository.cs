@@ -2,11 +2,12 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2015-12-09
+// Last Modified:			2015-12-14
 // 
 
 using cloudscribe.Core.Models.Logging;
 using Microsoft.Data.Entity;
+using Microsoft.Data.Entity.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,16 +17,24 @@ namespace cloudscribe.Core.Repositories.EF
 {
     public class LogRepository : ILogRepository
     {
-        public LogRepository(LoggingDbContext dbContext)
+        public LogRepository(
+            LoggingDbContext dbContext,
+            IServiceProvider serviceProvider,
+            DbContextOptions<LoggingDbContext> options
+            )
         {
 
             this.dbContext = dbContext;
+            dbContextOptions = options;
+            this.serviceProvider = serviceProvider;
+            
         }
 
         private LoggingDbContext dbContext;
-        // TODO: make configurable
-        private int bufferCount = 10;
 
+        private DbContextOptions dbContextOptions;
+        private IServiceProvider serviceProvider;
+        
         public int AddLogItem(
             DateTime logDate,
             string ipAddress,
@@ -49,17 +58,20 @@ namespace cloudscribe.Core.Repositories.EF
             logItem.Logger = logger;
             logItem.Message = message;
 
-            
-            dbContext.Add(logItem);
-
-            int pendingItemCount = dbContext.ChangeTracker.Entries<LogItem>().Count();
-            if(pendingItemCount > bufferCount)
+            using (var context = new LoggingDbContext(serviceProvider, dbContextOptions))
             {
-                //dbContext.ChangeTracker.DetectChanges();
-                dbContext.SaveChanges();
+                context.Add(logItem);
+                context.SaveChanges();
             }
-            
 
+            // learned by experience for this situation we need to create transient instance of the dbcontext
+            // for logging because the dbContext we have passed in is scoped to the request
+            // and it causes problems to save changes on the context multiple times during a request
+            // since we may log mutliple log items in a given request we need to create the dbcontext as needed
+            // we can still use the normal dbContext for querying
+            //dbContext.Add(logItem);
+            //dbContext.SaveChanges();
+           
             return logItem.Id;
         }
 
@@ -76,18 +88,10 @@ namespace cloudscribe.Core.Repositories.EF
             int offset = (pageSize * pageNumber) - pageSize;
 
             var query = dbContext.LogItems.OrderBy(x => x.LogDateUtc)
-                .Select(p => p)
+                .Skip(offset)
                 .Take(pageSize)
+                .Select(p => p)
                 ;
-
-            if (offset > 0) { query = query.Skip(offset); }
-
-            //var query = from l in dbContext.LogItems
-            //            .Take(pageSize)
-            //            orderby l.Id ascending
-            //            select l ;
-
-            //if (offset > 0) { return await query.Skip(offset).ToListAsync<ILogItem>(); }
 
             return await query.AsNoTracking().ToListAsync<ILogItem>();
             
@@ -100,19 +104,11 @@ namespace cloudscribe.Core.Repositories.EF
             int offset = (pageSize * pageNumber) - pageSize;
 
             var query = dbContext.LogItems.OrderByDescending(x => x.LogDateUtc)
-                .Select(p => p)
+                .Skip(offset)
                 .Take(pageSize)
+                .Select(p => p)
                 ;
-
-            if (offset > 0) { query = query.Skip(offset); }
-
-            //var query = from l in dbContext.LogItems
-            //            .Take(pageSize)
-            //            orderby l.Id descending
-            //            select l;
-
-            //if (offset > 0) { return await query.Skip(offset).ToListAsync<ILogItem>(); }
-
+            
             return await query.AsNoTracking().ToListAsync<ILogItem>();
 
         }
@@ -127,7 +123,7 @@ namespace cloudscribe.Core.Repositories.EF
         public async Task<bool> Delete(int logItemId)
         {
             var result = false;
-            var itemToRemove = await dbContext.LogItems.SingleOrDefaultAsync(x => x.Id == logItemId);
+            var itemToRemove = await dbContext.LogItems.SingleOrDefaultAsync(x => x.Id.Equals(logItemId));
             if(itemToRemove != null)
             {
                 dbContext.LogItems.Remove(itemToRemove);

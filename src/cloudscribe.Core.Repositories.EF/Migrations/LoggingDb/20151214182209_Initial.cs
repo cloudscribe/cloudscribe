@@ -1,20 +1,20 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Data.Entity.Migrations;
-using Microsoft.Data.Entity.Metadata;
 
 namespace cloudscribe.Core.Repositories.EF.Migrations.LoggingDb
 {
-    public partial class InitialLog : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateSequence<int>(
+                name: "LogIds");
             migrationBuilder.CreateTable(
                 name: "mp_SystemLog",
                 columns: table => new
                 {
-                    ID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    ID = table.Column<int>(type: "int", nullable: false, defaultValueSql: "NEXT VALUE FOR LogIds"),
                     Culture = table.Column<string>(nullable: true),
                     IpAddress = table.Column<string>(nullable: true),
                     LogDate = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "getutcdate()"),
@@ -33,6 +33,7 @@ namespace cloudscribe.Core.Repositories.EF.Migrations.LoggingDb
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropSequence("LogIds");
             migrationBuilder.DropTable("mp_SystemLog");
         }
     }

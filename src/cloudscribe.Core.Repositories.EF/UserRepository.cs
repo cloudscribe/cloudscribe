@@ -941,29 +941,35 @@ namespace cloudscribe.Core.Repositories.EF
         {
             int offset = (pageSize * pageNumber) - pageSize;
 
+            //var query = dbContext.Users
+            //    .GroupJoin(dbContext.UserRoles,)
+
             var query = from x in dbContext.Users
-                        .Take(pageSize)
-                        join y in dbContext.UserRoles
-                        on x.UserId equals y.UserId into temp
-                        from z in temp.DefaultIfEmpty()
-                       
+                        
+                        //join y in dbContext.UserRoles
+                        //on x.UserId equals y.UserId into temp
+                        //from z in temp.DefaultIfEmpty()
+
                         where (
-                            (x.SiteId == siteId && z == null)
-                            && (
-                                searchInput == string.Empty
-                                || x.Email.Contains(searchInput)
-                                || x.DisplayName.Contains(searchInput)
-                                || x.UserName.Contains(searchInput)
-                                || x.FirstName.Contains(searchInput)
-                                || x.LastName.Contains(searchInput)
+                            (x.SiteId.Equals(siteId) )
+                            && (dbContext.UserRoles.Count(ur => ur.UserId.Equals(x.UserId)) == 0)
+                            //&& (
+                            //    string.IsNullOrEmpty(searchInput)
+                            //    || x.Email.Contains(searchInput)
+                            //    || x.DisplayName.Contains(searchInput)
+                            //    || x.UserName.Contains(searchInput)
+                            //    || x.FirstName.Contains(searchInput)
+                            //    || x.LastName.Contains(searchInput)
+                            //)
                             )
-                            )
+                            
+                        
                         select x
                         ;
 
-            if (offset > 0) { return await query.Skip(offset).ToListAsync<IUserInfo>(); }
+            //if (offset > 0) { return await query.Skip(offset).ToListAsync<IUserInfo>(); }
 
-            return await query.AsNoTracking().ToListAsync<IUserInfo>(); 
+            return await query.Skip(offset).Take(pageSize).AsNoTracking().ToListAsync<IUserInfo>(); 
             
         }
 

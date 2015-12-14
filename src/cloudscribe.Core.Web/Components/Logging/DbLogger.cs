@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //	Author:                 Joe Audette
 //  Created:			    2011-08-19
-//	Last Modified:		    2015-12-09
+//	Last Modified:		    2015-12-14
 // 
 
 using cloudscribe.Core.Models.Logging;
@@ -28,7 +28,6 @@ namespace cloudscribe.Core.Web.Components.Logging
             logger = loggerName;
             logRepo = logRepository;
             services = serviceProvider;
-            //this.minimumLevel = minimumLevel;
             Filter = filter ?? ((category, logLevel) => true);
         }
 
@@ -126,7 +125,7 @@ namespace cloudscribe.Core.Web.Components.Logging
             }
             catch(Exception ex)
             {
-                bool foo = true; // just a line to set a breakpoint so I can see the error when debugging
+                //bool foo = true; // just a line to set a breakpoint so I can see the error when debugging
             }
 
 

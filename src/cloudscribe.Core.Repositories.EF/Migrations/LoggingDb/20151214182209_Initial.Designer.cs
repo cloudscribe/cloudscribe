@@ -8,13 +8,14 @@ using cloudscribe.Core.Repositories.EF;
 namespace cloudscribe.Core.Repositories.EF.Migrations.LoggingDb
 {
     [DbContext(typeof(LoggingDbContext))]
-    [Migration("20151210210443_InitialLog")]
-    partial class InitialLog
+    [Migration("20151214182209_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "7.0.0-rc1-16348")
+                .HasAnnotation("Relational:Sequence:.LogIds", "'LogIds', '', '1', '1', '', '', 'Int32', 'False'")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("cloudscribe.Core.Models.Logging.LogItem", b =>
@@ -22,7 +23,8 @@ namespace cloudscribe.Core.Repositories.EF.Migrations.LoggingDb
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("Relational:ColumnName", "ID")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasAnnotation("Relational:GeneratedValueSql", "NEXT VALUE FOR LogIds")
+                        .HasAnnotation("SqlServer:ColumnType", "int");
 
                     b.Property<string>("Culture")
                         .HasAnnotation("MaxLength", 10);

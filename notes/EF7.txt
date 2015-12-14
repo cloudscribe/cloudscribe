@@ -117,6 +117,7 @@ Options:
   -v|--verbose                    Show verbose output
   -?|-h|--help                    Show help information
 
-dnx ef migrations add InitialLog -c cloudscribe.Core.Repositories.EF.LoggingDbContext
+dnx ef migrations add Initial -c CoreDbContext
+dnx ef migrations add Initial -c LoggingDbContext
 
 
