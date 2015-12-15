@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2015-12-14
+// Last Modified:			2015-12-15
 // 
 
 using cloudscribe.Core.Models.Logging;
@@ -18,19 +18,31 @@ namespace cloudscribe.Core.Repositories.EF
     public class LogRepository : ILogRepository
     {
         public LogRepository(
-            LoggingDbContext dbContext,
             IServiceProvider serviceProvider,
             DbContextOptions<LoggingDbContext> options
             )
         {
 
-            this.dbContext = dbContext;
             dbContextOptions = options;
             this.serviceProvider = serviceProvider;
             
         }
 
-        private LoggingDbContext dbContext;
+        // since most of the time this repo will be invoked for adding to the log 
+        // we don't need this dbcontext most of the time
+        // we do need it for querying the log but we can just create it lazily if it is needed
+        private LoggingDbContext dbc = null;
+        private LoggingDbContext dbContext
+        {
+            get
+            {
+                if(dbc == null)
+                {
+                    dbc = new LoggingDbContext(serviceProvider, dbContextOptions);
+                }
+                return dbc;
+            }
+        }
 
         private DbContextOptions dbContextOptions;
         private IServiceProvider serviceProvider;

@@ -1,4 +1,7 @@
 
+http://damienbod.com/2015/11/08/oauth2-implicit-flow-with-angular-and-asp-net-5-identity-server/
+
+
 http://leastprivilege.com/2015/10/12/the-state-of-security-in-asp-net-5-and-mvc-6-authorization/
 
 http://docs.asp.net/projects/mvc/en/latest/security/cors-policy.html

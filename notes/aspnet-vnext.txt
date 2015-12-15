@@ -1,6 +1,10 @@
 
 http://rion.io/2015/11/13/understanding-routing-precedence-in-asp-net-mvc/
 
+http://odetocode.com/blogs/scott/archive/2015/11/30/working-with-typed-headers-in-asp-net.aspx
+
+http://dotnetliberty.com/index.php/2015/12/07/asp-net-5-web-api-faking-it-while-making-it/
+
 
 http://blogs.msdn.com/b/webdev/archive/2015/11/18/announcing-asp-net-5-release-candidate-1.aspx
 
