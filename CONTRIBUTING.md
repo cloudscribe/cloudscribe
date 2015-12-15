@@ -16,7 +16,7 @@ This document is just a first draft put together quickly because people are begi
 
 ### Code of Conduct
 
-This project adheres to the Contributor Covenant [code of conduct](CODE_OF_CONDUCT.md).
+This project adheres to the Contributor Covenant [code of conduct](code_of_conduct.md).
 By participating, you are expected to uphold this code.
 Please report unacceptable behavior to [abuse@cloudscribe.com](mailto:abuse@cloudscribe.com).
 
