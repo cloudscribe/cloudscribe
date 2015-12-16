@@ -28,8 +28,7 @@ For any contributions of more than a few lines of code, we will need a signed [c
 
 Please do not do any work that you plan to submit as a pull request before discussing it first. Before you do any significant work you should first open an issue indicating what you specifically are interested in working on. We can then have a discussion about whether what you propose is in line with our plans and direction for the project as well as whether the timing is right for the specifc changes you have in mind or whether there may be other planned things that should be done first. Later this issue can be referenced by a pull request.
 
-Until we get to know each other, it is especially important for new contributors to pick something relatively focused and small that they would like to work on. 
-
+Until we get to know each other, it is probably a good idea for new contributors to pick something relatively focused and small that they would like to work on. 
 Try to follow [good open source contribution etiquette](http://tirania.org/blog/archive/2010/Dec-31.html), and try not to be a [code wanderer](http://weblogs.asp.net/gunnarpeipman/who-is-code-wanderer).
 
 At the moment this set of projects has very little unit test code. That is something we would like to change and I can tell you that starting out by contributing some unit test code would be a very good way to to make a first positive impact on this project and begin to earn recognition and trust from the project maintainers.
