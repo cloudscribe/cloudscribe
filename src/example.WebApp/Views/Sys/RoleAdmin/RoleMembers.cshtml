@@ -56,7 +56,7 @@
                 <tr>
                     <td>
                         <form asp-controller="RoleAdmin" asp-action="RemoveUser">
-                            <input asp-for="Role.SiteGuid" type="hidden" />
+                            <input name="SiteGuid" value="@Model.SiteGuid" type="hidden" />
                             <input name="roleId" value="@Model.Role.RoleId" type="hidden" />
                             <input name="userId" value="@item.UserId" type="hidden" />
                             <button type="submit"

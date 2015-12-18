@@ -909,6 +909,7 @@ namespace cloudscribe.Core.Repositories.EF
             entity.Property(p => p.RoleId)
             .ForSqlServerHasColumnType("int")
             .HasColumnName("RoleID")
+           
             .IsRequired()
             ;
 
@@ -916,6 +917,10 @@ namespace cloudscribe.Core.Repositories.EF
             .ForSqlServerHasColumnType("uniqueidentifier")
             //.Metadata.SentinelValue = Guid.Empty
             ;
+
+           
+                
+            
         }
 
     }

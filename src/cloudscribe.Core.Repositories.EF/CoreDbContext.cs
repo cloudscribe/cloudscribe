@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Data.Entity;
@@ -14,6 +15,7 @@ using Microsoft.Data.Entity.Infrastructure;
 using Microsoft.Data.Entity.Metadata;
 using Microsoft.Data.Entity.Metadata.Conventions;
 using Microsoft.Data.Entity.Metadata.Builders;
+using Microsoft.Data.Entity.Migrations;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Geography;
 using cloudscribe.Core.Models.Logging;
@@ -72,6 +74,7 @@ namespace cloudscribe.Core.Repositories.EF
         {
             
             base.OnConfiguring(optionsBuilder);
+            //optionsBuilder.Options.
             
         }
 
@@ -148,7 +151,18 @@ namespace cloudscribe.Core.Repositories.EF
             modelBuilder.Entity<UserRole>(entity =>
             {
                 mapper.Map(entity);
+                
+
+               // entity.Property(p => p.RoleId).HasAnnotation()
             });
+
+            //ForeignKeyAttribute fkr = new ForeignKeyAttribute("RoleId");
+            //ForeignKeyAttribute fku = new ForeignKeyAttribute("UserId");
+
+            //modelBuilder.Entity<UserRole>()
+            //    .HasAnnotation()
+            //    ;
+                
 
             modelBuilder.Entity<UserLocation>(entity =>
             {

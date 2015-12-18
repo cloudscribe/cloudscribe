@@ -2,8 +2,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.Data.Entity.Design;
 using System.Linq;
 using System.Threading.Tasks;
+using cloudscribe.Core.Models;
 
 namespace cloudscribe.Core.Repositories.EF
 {
@@ -15,11 +19,17 @@ namespace cloudscribe.Core.Repositories.EF
     /// </summary>
     public class UserRole
     {
-        public int Id { get; set; } = -1;
-        public int UserId { get; set; } = -1;
+        public int Id { get; set; } = 0;
+        public int UserId { get; set; } = 0;
         public Guid UserGuid { get; set; } = Guid.Empty;
 
-        public int RoleId { get; set; } = -1;
+       // [ForeignKey("UserId")]
+      //  public SiteUser User { get; set; }
+
+        public int RoleId { get; set; } = 0;
         public Guid RoleGuid { get; set; } = Guid.Empty;
+
+      //  [ForeignKey("RoleId")]
+       // public SiteRole Role { get; set; }
     }
 }

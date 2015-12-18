@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2015-12-10
+// Last Modified:			2015-12-18
 // 
 
 
@@ -282,7 +282,7 @@ namespace cloudscribe.Core.Repositories.EF
 
             IQueryable<IUserInfo> query 
                 = from x in dbContext.Users
-                        .Take(pageSize)
+                        
                         where 
                         (
                             x.SiteId == siteId
@@ -340,9 +340,9 @@ namespace cloudscribe.Core.Repositories.EF
                     break;
             }
 
-            if (offset > 0) { return await query.Skip(offset).ToListAsync<IUserInfo>(); }
+           
 
-            return await query.AsNoTracking().ToListAsync<IUserInfo>(); 
+            return await query.AsNoTracking().Skip(offset).Take(pageSize).ToListAsync<IUserInfo>(); 
             
             
         }
@@ -378,7 +378,7 @@ namespace cloudscribe.Core.Repositories.EF
 
             IQueryable<IUserInfo> query
                 = from x in dbContext.Users
-                        .Take(pageSize)
+                        
                   where
                   (
                       x.SiteId == siteId
@@ -437,10 +437,8 @@ namespace cloudscribe.Core.Repositories.EF
                     query = query.OrderBy(sl => sl.DisplayName).AsQueryable();
                     break;
             }
-
-            if (offset > 0) { return await query.Skip(offset).ToListAsync<IUserInfo>(); }
-
-            return await query.AsNoTracking().ToListAsync<IUserInfo>();
+            
+            return await query.AsNoTracking().Skip(offset).Take(pageSize).ToListAsync<IUserInfo>();
 
             
         }
@@ -459,7 +457,7 @@ namespace cloudscribe.Core.Repositories.EF
 
             IQueryable<IUserInfo> query
                 = from x in dbContext.Users
-                        .Take(pageSize)
+                        
                   where
                   (
                       x.SiteId == siteId
@@ -497,9 +495,8 @@ namespace cloudscribe.Core.Repositories.EF
 
                   };
 
-            if (offset > 0) { return await query.Skip(offset).ToListAsync<IUserInfo>(); }
-
-            return await query.AsNoTracking().ToListAsync<IUserInfo>();
+           
+            return await query.AsNoTracking().Skip(offset).Take(pageSize).ToListAsync<IUserInfo>();
             
         }
 
@@ -517,8 +514,7 @@ namespace cloudscribe.Core.Repositories.EF
             int offset = (pageSize * pageNumber) - pageSize;
 
             IQueryable<IUserInfo> query
-                = from x in dbContext.Users
-                        .Take(pageSize)
+                = from x in dbContext.Users     
                   where
                   (
                       x.SiteId == siteId
@@ -556,9 +552,8 @@ namespace cloudscribe.Core.Repositories.EF
 
                   };
 
-            if (offset > 0) { return await query.Skip(offset).ToListAsync<IUserInfo>(); }
-
-            return await query.AsNoTracking().ToListAsync<IUserInfo>();
+           
+            return await query.AsNoTracking().Skip(offset).Take(pageSize).ToListAsync<IUserInfo>();
             
         }
 
@@ -785,9 +780,9 @@ namespace cloudscribe.Core.Repositories.EF
         public async Task<int> CountOfRoles(int siteId, string searchInput)
         {
             return await dbContext.Roles.CountAsync<SiteRole>(
-                x => x.SiteId == siteId
+                x => x.SiteId.Equals(siteId)
                 && (
-                 searchInput == string.Empty
+                 string.IsNullOrEmpty(searchInput)
                         || x.DisplayName.Contains(searchInput)
                         || x.RoleName.Contains(searchInput)
                 )
@@ -804,10 +799,9 @@ namespace cloudscribe.Core.Repositories.EF
             int offset = (pageSize * pageNumber) - pageSize;
 
             var listQuery = from x in dbContext.Roles
-                            .Take(pageSize)
                             where (
-                            x.SiteId == siteId &&
-                            ( searchInput == string.Empty || x.DisplayName.Contains(searchInput) || x.RoleName.Contains(searchInput))
+                            x.SiteId.Equals(siteId) &&
+                            (string.IsNullOrEmpty(searchInput) || x.DisplayName.Contains(searchInput) || x.RoleName.Contains(searchInput))
                             )
                             orderby x.RoleName ascending
                             select new SiteRole {
@@ -820,9 +814,7 @@ namespace cloudscribe.Core.Repositories.EF
                                 MemberCount = dbContext.UserRoles.Count<UserRole>(u => u.RoleId == x.RoleId)
                             };
 
-            if (offset > 0) return await listQuery.Skip(offset).ToListAsync<ISiteRole>();
-
-            return await listQuery.AsNoTracking().ToListAsync<ISiteRole>();
+            return await listQuery.AsNoTracking().Skip(offset).Take(pageSize).ToListAsync<ISiteRole>();
             
         }
 
@@ -833,9 +825,9 @@ namespace cloudscribe.Core.Repositories.EF
                         join y in dbContext.UserRoles
                         on x.UserId equals y.UserId
                         where (
-                            (x.SiteId == siteId && y.RoleId == roleId)
+                            (x.SiteId.Equals(siteId) && y.RoleId.Equals(roleId))
                             && (
-                                searchInput == string.Empty
+                                string.IsNullOrEmpty(searchInput)
                                 || x.Email.Contains(searchInput)
                                 || x.DisplayName.Contains(searchInput)
                                 || x.UserName.Contains(searchInput)
@@ -861,14 +853,13 @@ namespace cloudscribe.Core.Repositories.EF
             int offset = (pageSize * pageNumber) - pageSize;
 
             var query = from x in dbContext.Users
-                        .Take(pageSize)
                         join y in dbContext.UserRoles
                         on x.UserId equals y.UserId
                         orderby x.DisplayName 
                         where (
-                            (x.SiteId == siteId && y.RoleId == roleId)
+                            (x.SiteId.Equals(siteId) && y.RoleId.Equals(roleId))
                             && (
-                                searchInput == string.Empty
+                                string.IsNullOrEmpty(searchInput)
                                 || x.Email.Contains(searchInput)
                                 || x.DisplayName.Contains(searchInput)
                                 || x.UserName.Contains(searchInput)
@@ -879,9 +870,8 @@ namespace cloudscribe.Core.Repositories.EF
                         select x
                         ;
 
-            if(offset > 0) {  return await query.Skip(offset).ToListAsync<IUserInfo>(); }
-
-            return await query.AsNoTracking().ToListAsync<IUserInfo>(); 
+          
+            return await query.AsNoTracking().Skip(offset).Take(pageSize).ToListAsync<IUserInfo>(); 
 
            
 
@@ -898,7 +888,7 @@ namespace cloudscribe.Core.Repositories.EF
                         on y.RoleId equals z.RoleId
                         orderby x.DisplayName
                         where 
-                            (x.SiteId == siteId && z.RoleName == roleName)
+                            (x.SiteId.Equals(siteId) && z.RoleName.Equals(roleName))
                             
                         select x
                         ;
@@ -910,23 +900,27 @@ namespace cloudscribe.Core.Repositories.EF
 
         public async Task<int> CountUsersNotInRole(int siteId, int roleId, string searchInput)
         {
-            var query = from x in dbContext.Users
-                        join y in dbContext.UserRoles 
-                        on x.UserId equals y.UserId into temp
-                        from z in temp.DefaultIfEmpty()
+            var query = from u in dbContext.Users
+                        from r in dbContext.Roles
+                        join ur in dbContext.UserRoles
+                        on new { r.RoleId, u.UserId } equals new { ur.RoleId, ur.UserId } into t
+                        from t2 in t.DefaultIfEmpty()
                         where (
-                            (x.SiteId == siteId && z == null)
-                            && (
-                                searchInput == string.Empty
-                                || x.Email.Contains(searchInput)
-                                || x.DisplayName.Contains(searchInput)
-                                || x.UserName.Contains(searchInput)
-                                || x.FirstName.Contains(searchInput)
-                                || x.LastName.Contains(searchInput)
+                        u.SiteId.Equals(siteId)
+                        && (
+                                string.IsNullOrEmpty(searchInput)
+                                || u.Email.Contains(searchInput)
+                                || u.DisplayName.Contains(searchInput)
+                                || u.UserName.Contains(searchInput)
+                                || u.FirstName.Contains(searchInput)
+                                || u.LastName.Contains(searchInput)
                             )
-                            )
-                        select x.UserId
-                        ;
+                        && r.SiteId.Equals(siteId)
+                        && r.RoleId.Equals(roleId)
+                        && t2 == null
+                        )
+   
+                        select u.UserId;
 
             return await query.CountAsync<int>();
 
@@ -940,36 +934,30 @@ namespace cloudscribe.Core.Repositories.EF
             int pageSize)
         {
             int offset = (pageSize * pageNumber) - pageSize;
-
-            //var query = dbContext.Users
-            //    .GroupJoin(dbContext.UserRoles,)
-
-            var query = from x in dbContext.Users
-                        
-                        //join y in dbContext.UserRoles
-                        //on x.UserId equals y.UserId into temp
-                        //from z in temp.DefaultIfEmpty()
-
+            // it took me a lot of tries to figure out how to do this query
+            var query = from u in dbContext.Users
+                        from r in dbContext.Roles
+                        join ur in dbContext.UserRoles
+                        on new { r.RoleId, u.UserId } equals new { ur.RoleId, ur.UserId } into t
+                        from t2 in t.DefaultIfEmpty()
                         where (
-                            (x.SiteId.Equals(siteId) )
-                            && (dbContext.UserRoles.Count(ur => ur.UserId.Equals(x.UserId)) == 0)
-                            //&& (
-                            //    string.IsNullOrEmpty(searchInput)
-                            //    || x.Email.Contains(searchInput)
-                            //    || x.DisplayName.Contains(searchInput)
-                            //    || x.UserName.Contains(searchInput)
-                            //    || x.FirstName.Contains(searchInput)
-                            //    || x.LastName.Contains(searchInput)
-                            //)
+                        u.SiteId.Equals(siteId)
+                        && (
+                                string.IsNullOrEmpty(searchInput)
+                                || u.Email.Contains(searchInput)
+                                || u.DisplayName.Contains(searchInput)
+                                || u.UserName.Contains(searchInput)
+                                || u.FirstName.Contains(searchInput)
+                                || u.LastName.Contains(searchInput)
                             )
-                            
+                        && r.SiteId.Equals(siteId)
+                        && r.RoleId.Equals(roleId)
+                        && t2 == null
+                        )
+                        orderby u.DisplayName
+                        select u;
                         
-                        select x
-                        ;
-
-            //if (offset > 0) { return await query.Skip(offset).ToListAsync<IUserInfo>(); }
-
-            return await query.Skip(offset).Take(pageSize).AsNoTracking().ToListAsync<IUserInfo>(); 
+            return await query.AsNoTracking().Skip(offset).Take(pageSize).ToListAsync<IUserInfo>(); 
             
         }
 

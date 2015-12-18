@@ -46,6 +46,7 @@ namespace cloudscribe.Core.Web.Controllers
             if(this.HttpContext.Connection.LocalIpAddress != null)
             {
                 serverInfo.LocalAddress = this.HttpContext.Connection.LocalIpAddress.ToString();
+                
             }
             
             serverInfo.OperatingSystem = systemInfo.OperatingSystem;

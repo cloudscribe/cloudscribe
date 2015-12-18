@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2015-12-10
+// Last Modified:			2015-12-18
 // 
 
 
@@ -171,7 +171,7 @@ namespace cloudscribe.Core.Repositories.EF
 
         public async Task<int> CountOtherSites(int currentSiteId)
         {
-            return await dbContext.Sites.CountAsync<SiteSettings>(x => x.SiteId != currentSiteId);
+            return await dbContext.Sites.CountAsync<SiteSettings>(x =>  x.SiteId != currentSiteId);
         }
 
         public async Task<List<ISiteInfo>> GetPageOtherSites(
@@ -182,7 +182,7 @@ namespace cloudscribe.Core.Repositories.EF
             int offset = (pageSize * pageNumber) - pageSize;
 
             var query = from x in dbContext.Sites
-                        .Take(pageSize)
+                        
                         where (x.SiteId != currentSiteId)
                         orderby x.SiteName ascending
                         //select x;
@@ -196,9 +196,8 @@ namespace cloudscribe.Core.Repositories.EF
                             SiteName = x.SiteName
                         };
 
-            if (offset > 0) { return await query.Skip(offset).ToListAsync<ISiteInfo>(); }
-
-            return await query.AsNoTracking().ToListAsync<ISiteInfo>();
+            
+            return await query.AsNoTracking().Skip(offset).Take(pageSize).ToListAsync<ISiteInfo>();
 
            
         }
@@ -237,16 +236,13 @@ namespace cloudscribe.Core.Repositories.EF
             int offset = (pageSize * pageNumber) - pageSize;
 
             var query = from x in dbContext.SiteHosts
-                        .Take(pageSize)
+                        
                         orderby x.HostName ascending
                         select x
                         ;
 
-            if (offset > 0) { return await query.Skip(offset).ToListAsync<ISiteHost>(); }
-
-            return await query.AsNoTracking().ToListAsync<ISiteHost>();
-
-            
+            return await query.AsNoTracking().Skip(offset).Take(pageSize).ToListAsync<ISiteHost>();
+      
         }
 
         public async Task<List<ISiteHost>> GetSiteHosts(int siteId)
@@ -444,7 +440,7 @@ namespace cloudscribe.Core.Repositories.EF
             bool found = await query.AnyAsync<int>();
             if(found)
             {
-                return await query.SingleOrDefaultAsync<int>();
+                return await query.FirstOrDefaultAsync<int>();
             }
             else
             {
@@ -452,7 +448,7 @@ namespace cloudscribe.Core.Repositories.EF
                         orderby x.SiteId
                         select x.SiteId
                         ;
-                return await query.SingleOrDefaultAsync<int>();
+                return await query.FirstOrDefaultAsync<int>();
             }
             
             
@@ -475,7 +471,7 @@ namespace cloudscribe.Core.Repositories.EF
             bool found = query.Any<int>();
             if (found)
             {
-                return query.Take(1).SingleOrDefault<int>();
+                return query.FirstOrDefault<int>();
             }
             else
             {
@@ -483,7 +479,7 @@ namespace cloudscribe.Core.Repositories.EF
                         orderby x.SiteId
                         select x.SiteId
                         ;
-                return query.Take(1).SingleOrDefault<int>();
+                return query.FirstOrDefault<int>();
             }
         }
 
