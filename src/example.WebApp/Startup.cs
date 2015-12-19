@@ -99,14 +99,44 @@ namespace example.WebApp
 
             //services.AddLocalization(options => options.ResourcesPath = "AppResources");
 
-            //services.AddAuthorization(options =>
-            //{
-            //    options.AddPolicy(
-            //        "ManageStore",
-            //        authBuilder => {
-            //            authBuilder.RequireRole("ManageStore", "Allowed");
-            //        });
-            //});
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(
+                    "ServerAdminPolicy",
+                    authBuilder =>
+                    {
+                        authBuilder.RequireRole("ServerAdmins");
+                    });
+
+                options.AddPolicy(
+                    "CoreDataPolicy",
+                    authBuilder =>
+                    {
+                        authBuilder.RequireRole("ServerAdmins");
+                    });
+
+                options.AddPolicy(
+                    "AdminPolicy",
+                    authBuilder =>
+                    {
+                        authBuilder.RequireRole("ServerAdmins", "Admins");
+                    });
+
+                options.AddPolicy(
+                    "UserManagementPolicy",
+                    authBuilder =>
+                    {
+                        authBuilder.RequireRole("ServerAdmins", "Admins");
+                    });
+
+                options.AddPolicy(
+                    "RoleAdminPolicy",
+                    authBuilder =>
+                    {
+                        authBuilder.RequireRole("Role Admins", "Admins");
+                    });
+
+            });
 
             // we may need this on linux/mac as urls are case sensitive by default
             //services.Configure<RouteOptions>(routeOptions => routeOptions.LowercaseUrls = true);

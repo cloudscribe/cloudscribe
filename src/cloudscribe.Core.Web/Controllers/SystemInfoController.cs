@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //	Author:                 Joe Audette
 //  Created:			    2011-08-19
-//	Last Modified:		    2015-11-18
+//	Last Modified:		    2015-12-19
 // 
 
 
@@ -35,7 +35,7 @@ namespace cloudscribe.Core.Web.Controllers
         private ITimeZoneResolver timeZoneResolver;
         private UIOptions uiOptions;
 
-        [Authorize(Roles = "Admins")]
+        [Authorize(Policy = "AdminPolicy")]
         public IActionResult Index()
         {
             ViewData["Title"] = "System Information";
@@ -59,7 +59,7 @@ namespace cloudscribe.Core.Web.Controllers
             return View(serverInfo);
         }
 
-        [Authorize(Roles = "ServerAdmins")]
+        [Authorize(Policy = "ServerAdminPolicy")]
         public async Task<IActionResult> ViewLog(
             int pageNumber = 1,
             int pageSize = -1,
@@ -96,7 +96,7 @@ namespace cloudscribe.Core.Web.Controllers
 
         }
 
-        [Authorize(Roles = "ServerAdmins")]
+        [Authorize(Policy = "ServerAdminPolicy")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> LogItemDelete(int id)
@@ -106,7 +106,7 @@ namespace cloudscribe.Core.Web.Controllers
             return RedirectToAction("ViewLog");
         }
 
-        [Authorize(Roles = "ServerAdmins")]
+        [Authorize(Policy = "ServerAdminPolicy")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> LogDeleteAll()

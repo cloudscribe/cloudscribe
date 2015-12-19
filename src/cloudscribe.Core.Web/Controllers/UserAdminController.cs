@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-08
-// Last Modified:			2015-11-18
+// Last Modified:			2015-12-19
 // 
 
 using cloudscribe.Core.Identity;
@@ -25,7 +25,7 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Controllers
 {
-    [Authorize(Roles = "Admins")]
+    [Authorize(Policy = "UserManagementPolicy")]
     public class UserAdminController : CloudscribeBaseController
     {
         public UserAdminController(

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-06
-// Last Modified:			2015-11-18
+// Last Modified:			2015-12-19
 // 
 
 using cloudscribe.Core.Identity;
@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Controllers
 {
-    [Authorize(Roles = "Admins,Role Admins")]
+    [Authorize(Policy = "RoleAdminPolicy")]
     public class RoleAdminController : CloudscribeBaseController
     {
 
@@ -44,7 +44,7 @@ namespace cloudscribe.Core.Web.Controllers
         public SiteRoleManager<SiteRole> RoleManager { get; private set; }
 
         [HttpGet]
-        [Authorize(Roles = "Admins,Role Admins")]
+        [Authorize(Policy = "RoleAdminPolicy")]
         public async Task<IActionResult> Index(
             Guid? siteGuid,
             string searchInput = "", 
@@ -98,7 +98,7 @@ namespace cloudscribe.Core.Web.Controllers
 
 
         [HttpGet]
-        [Authorize(Roles = "Admins,Role Admins")]
+        [Authorize(Policy = "RoleAdminPolicy")]
         //[MvcSiteMapNode(Title = "New Role", ParentKey = "Roles", Key = "RoleEdit")]
         public async Task<IActionResult> RoleEdit(
             Guid? siteGuid,
@@ -154,7 +154,7 @@ namespace cloudscribe.Core.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admins,Role Admins")]
+        [Authorize(Policy = "RoleAdminPolicy")]
         public async Task<IActionResult> RoleEdit(RoleViewModel model, int returnPageNumber = 1)
         {
             ISiteSettings selectedSite;
@@ -203,7 +203,7 @@ namespace cloudscribe.Core.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admins,Role Admins")]
+        [Authorize(Policy = "RoleAdminPolicy")]
         public async Task<IActionResult> RoleDelete(
             Guid? siteGuid,
             int roleId, 
@@ -247,7 +247,7 @@ namespace cloudscribe.Core.Web.Controllers
 
 
         [HttpGet]
-        [Authorize(Roles = "Admins,Role Admins")]
+        [Authorize(Policy = "RoleAdminPolicy")]
         public async Task<IActionResult> RoleMembers(
             Guid? siteGuid,
             int roleId,
@@ -324,7 +324,7 @@ namespace cloudscribe.Core.Web.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admins,Role Admins")]
+        [Authorize(Policy = "RoleAdminPolicy")]
         public async Task<IActionResult> RoleNonMembers(
             Guid? siteGuid,
             int roleId,
@@ -399,7 +399,7 @@ namespace cloudscribe.Core.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admins,Role Admins")]
+        [Authorize(Policy = "RoleAdminPolicy")]
         public async Task<IActionResult> AddUser(
             Guid? siteGuid,
             int roleId, 
@@ -443,7 +443,7 @@ namespace cloudscribe.Core.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admins,Role Admins")]
+        [Authorize(Policy = "RoleAdminPolicy")]
         public async Task<IActionResult> RemoveUser(
             Guid? siteGuid,
             int roleId, 

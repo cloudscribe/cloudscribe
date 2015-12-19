@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-11-15
-// Last Modified:			2015-11-18
+// Last Modified:			2015-12-19
 // 
 
 using cloudscribe.Core.Web.Components;
@@ -21,7 +21,7 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Controllers
 {
-    [Authorize(Roles = "ServerAdmins")]
+    [Authorize(Policy = "CoreDataPolicy")]
     public class CoreDataController : CloudscribeBaseController
     {
         public CoreDataController(
@@ -247,6 +247,7 @@ namespace cloudscribe.Core.Web.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> CountryAutoSuggestJson(
            string query)
         {
@@ -261,6 +262,7 @@ namespace cloudscribe.Core.Web.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> StateAutoSuggestJson(
            string countryCode,
            string query)
@@ -284,6 +286,7 @@ namespace cloudscribe.Core.Web.Controllers
 
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> GetStatesJson(
            string countryCode)
         {

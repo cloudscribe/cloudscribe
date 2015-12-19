@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-11-18
+// Last Modified:			2015-12-19
 // 
 
 using cloudscribe.Core.Models;
@@ -23,7 +23,7 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Controllers
 {
-    [Authorize(Roles = "Admins,Content Administrators")]
+    [Authorize(Policy = "AdminPolicy")]
     public class SiteAdminController : CloudscribeBaseController
     {
         public SiteAdminController(
@@ -95,7 +95,7 @@ namespace cloudscribe.Core.Web.Controllers
 #pragma warning restore 1998
 
         [HttpGet]
-        [Authorize(Roles = "ServerAdmins")]
+        [Authorize(Policy = "ServerAdminPolicy")]
         public async Task<IActionResult> SiteList(int pageNumber = 1, int pageSize = -1)
         {
             ViewData["Title"] = "Site List";
@@ -130,7 +130,7 @@ namespace cloudscribe.Core.Web.Controllers
 
         // GET: /SiteAdmin/SiteInfo
         [HttpGet]
-        [Authorize(Roles = "Admins")]
+        [Authorize(Policy = "AdminPolicy")]
         public async Task<IActionResult> SiteInfo(
             Guid? siteGuid,
             int slp = 1)
@@ -222,7 +222,7 @@ namespace cloudscribe.Core.Web.Controllers
         // Post: /SiteAdmin/SiteInfo
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admins")]
+        [Authorize(Policy = "AdminPolicy")]
         public async Task<ActionResult> SiteInfo(SiteBasicSettingsViewModel model)
         {
             // can only delete from server admin site/cannot delete server admin site
@@ -366,7 +366,7 @@ namespace cloudscribe.Core.Web.Controllers
 
         // GET: /SiteAdmin/NewSite
         [HttpGet]
-        [Authorize(Roles = "ServerAdmins")]
+        [Authorize(Policy = "ServerAdminPolicy")]
         public ActionResult NewSite(int slp = 1)
         {
             ViewData["Title"] = "Create New Site";
@@ -395,7 +395,7 @@ namespace cloudscribe.Core.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "ServerAdmins")]
+        [Authorize(Policy = "ServerAdminPolicy")]
         public async Task<ActionResult> NewSite(SiteBasicSettingsViewModel model)
         {
             ViewData["Title"] = "Create New Site";
@@ -511,7 +511,7 @@ namespace cloudscribe.Core.Web.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admins")]
+        [Authorize(Policy = "AdminPolicy")]
         public async Task<IActionResult> CompanyInfo(
             Guid? siteGuid,
             int slp = 1)
@@ -582,7 +582,7 @@ namespace cloudscribe.Core.Web.Controllers
         // Post: /SiteAdmin/CompanyInfo
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admins")]
+        [Authorize(Policy = "AdminPolicy")]
         public async Task<ActionResult> CompanyInfo(CompanyInfoViewModel model)
         {
             ISiteSettings selectedSite = null;
@@ -652,7 +652,7 @@ namespace cloudscribe.Core.Web.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admins")]
+        [Authorize(Policy = "AdminPolicy")]
         public async Task<IActionResult> Captcha(
             Guid? siteGuid,
             int slp = 1)
@@ -687,7 +687,7 @@ namespace cloudscribe.Core.Web.Controllers
         // Post: /SiteAdmin/Captcha
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admins")]
+        [Authorize(Policy = "AdminPolicy")]
         public async Task<ActionResult> Captcha(CaptchaSettingsViewModel model)
         {
             ISiteSettings selectedSite = null;
@@ -753,7 +753,7 @@ namespace cloudscribe.Core.Web.Controllers
 
         // GET: /SiteAdmin/SocialLogins
         [HttpGet]
-        [Authorize(Roles = "Admins")]
+        [Authorize(Policy = "AdminPolicy")]
         public async Task<IActionResult> SocialLogins(
             Guid? siteGuid,
             int slp = 1)
@@ -790,7 +790,7 @@ namespace cloudscribe.Core.Web.Controllers
         // Post: /SiteAdmin/SocialLogins
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admins")]
+        [Authorize(Policy = "AdminPolicy")]
         public async Task<ActionResult> SocialLogins(SocialLoginSettingsViewModel model)
         {
             ISiteSettings selectedSite = null;
@@ -861,7 +861,7 @@ namespace cloudscribe.Core.Web.Controllers
 
         // GET: /SiteAdmin/LoginPageInfo
         [HttpGet]
-        [Authorize(Roles = "Admins")]
+        [Authorize(Policy = "AdminPolicy")]
         public async Task<IActionResult> LoginPageInfo(
             Guid? siteGuid,
             int slp = 1)
@@ -893,7 +893,7 @@ namespace cloudscribe.Core.Web.Controllers
         // Post: /SiteAdmin/LoginPageInfo
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admins")]
+        [Authorize(Policy = "AdminPolicy")]
         public async Task<ActionResult> LoginPageInfo(LoginInfoViewModel model)
         {
             ISiteSettings selectedSite = null;
@@ -957,7 +957,7 @@ namespace cloudscribe.Core.Web.Controllers
 
         // GET: /SiteAdmin/RegisterPageInfo
         [HttpGet]
-        [Authorize(Roles = "Admins")]
+        [Authorize(Policy = "AdminPolicy")]
         public async Task<IActionResult> RegisterPageInfo(
             Guid? siteGuid,
             int slp = 1)
@@ -990,7 +990,7 @@ namespace cloudscribe.Core.Web.Controllers
         // Post: /SiteAdmin/RegisterPageInfo
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admins")]
+        [Authorize(Policy = "AdminPolicy")]
         public async Task<ActionResult> RegisterPageInfo(RegisterInfoViewModel model)
         {
             ISiteSettings selectedSite = null;
@@ -1057,7 +1057,7 @@ namespace cloudscribe.Core.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "ServerAdmins")]
+        [Authorize(Policy = "ServerAdminPolicy")]
         public async Task<ActionResult> SiteDelete(Guid siteGuid, int siteId, int returnPageNumber = 1)
         {
             bool result = false;
@@ -1096,7 +1096,7 @@ namespace cloudscribe.Core.Web.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admins")]
+        [Authorize(Policy = "AdminPolicy")]
         public async Task<ActionResult> SiteHostMappings(
             Guid? siteGuid,
             int slp = -1)
@@ -1131,7 +1131,7 @@ namespace cloudscribe.Core.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "ServerAdmins")]
+        [Authorize(Policy = "ServerAdminPolicy")]
         public async Task<ActionResult> HostAdd(
             Guid siteGuid,
             int siteId,
@@ -1190,7 +1190,7 @@ namespace cloudscribe.Core.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "ServerAdmins")]
+        [Authorize(Policy = "ServerAdminPolicy")]
         public async Task<ActionResult> HostDelete(
             Guid siteGuid,
             string hostName,
