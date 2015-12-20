@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2015-12-15
+// Last Modified:			2015-12-20
 // 
 
 using cloudscribe.Core.Models.Logging;
@@ -58,6 +58,17 @@ namespace cloudscribe.Core.Repositories.EF
             string logger,
             string message)
         {
+            // since we are using EF to add to the log we need ot avoid
+            // logging EF related things, otherwise every time we log we generate more log events
+            // continuously
+            // might be better to use the normal mssql ado log repository instead
+            // need to decouple logging repos from core repos
+
+            if(logger == "Microsoft.Data.Entity.Storage.Internal.RelationalCommandBuilderFactory") { return -1; }
+            if(logger == "Microsoft.Data.Entity.Query.Internal.QueryCompiler") { return -1; }
+            if(logger == "Microsoft.Data.Entity.DbContext") { return -1; }
+            // maybe should be even more aggresive here to filter out anything with "Entity"
+
             LogItem logItem = new LogItem();
             logItem.Id = 0;
             logItem.LogDateUtc = logDate;

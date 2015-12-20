@@ -225,6 +225,7 @@ namespace cloudscribe.Core.Web.Controllers
                 if (user != null)
                 {
                     model.UserId = user.UserId;
+                    model.UserGuid = user.UserGuid;
                     model.Email = user.Email;
                     model.FirstName = user.FirstName;
                     model.LastName = user.LastName;
@@ -346,6 +347,34 @@ namespace cloudscribe.Core.Web.Controllers
             // If we got this far, something failed, redisplay form
             return View(model);
 
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Policy = "AdminPolicy")]
+        public async Task<ActionResult> UserDelete(Guid siteGuid, int userId, int returnPageNumber = 1)
+        {
+            ISiteSettings selectedSite = await siteManager.Fetch(siteGuid);
+
+            if (
+                (selectedSite != null)
+                && (selectedSite.SiteId == siteManager.CurrentSite.SiteId || siteManager.CurrentSite.IsServerAdminSite)
+                )
+            {
+
+                ISiteUser user = await UserManager.Fetch(selectedSite.SiteId, userId);
+
+                var result = await UserManager.DeleteAsync((SiteUser)user);
+                if (result.Succeeded)
+                {
+                    this.AlertSuccess(string.Format("user account for <b>{0}</b> was successfully deleted.",
+                        user.DisplayName), true);
+ 
+                }
+                   
+            }
+
+            return RedirectToAction("Index", "UserAdmin", new { siteGuid = selectedSite.SiteGuid, pageNumber = returnPageNumber });
         }
 
 

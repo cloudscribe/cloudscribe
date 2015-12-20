@@ -209,7 +209,7 @@ namespace example.WebApp
 
             // LogLevels
             //Debug = 1,
-            //Verbose = 2,
+            //Trace = 2,
             //Information = 3,
             //Warning = 4,
             //Error = 5,
@@ -217,8 +217,7 @@ namespace example.WebApp
             
             // Add the console logger.
             loggerFactory.AddConsole(minLevel: LogLevel.Warning);
-            // Add cloudscribe db logging
-
+            
             // a customizable filter for logging
             LogLevel minimumLevel = LogLevel.Information;
             List<string> excludedLoggers = new List<string>();
@@ -226,6 +225,7 @@ namespace example.WebApp
 
             // we need to filter out EF otherwise each time we persist a log item to the db more logs are generated
             // so it can become an infinite loop that keeps creating data
+            // you can add any loggers that you want to exclude to reduce noise in the log
             excludedLoggers.Add("Microsoft.Data.Entity.Storage.Internal.RelationalCommandBuilderFactory");
             excludedLoggers.Add("Microsoft.Data.Entity.Query.Internal.QueryCompiler");
             excludedLoggers.Add("Microsoft.Data.Entity.DbContext");
@@ -237,7 +237,7 @@ namespace example.WebApp
 
                 return true;
             };
-            
+            // Add cloudscribe db logging
             loggerFactory.AddDbLogger(serviceProvider, logRepository, logFilter);
             
 

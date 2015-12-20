@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2015-12-18
+// Last Modified:			2015-12-20
 // 
 
 
@@ -60,12 +60,34 @@ namespace cloudscribe.Core.Repositories.EF
 
         }
 
-        public async Task<bool> Delete(int userId)
+        public async Task<bool> Delete(ISiteUser user)
+        {
+
+            return await Delete(user.SiteId, user.UserId);
+            //bool result = await DeleteLoginsByUser(user.SiteId, user.Id, false);
+            //result = await DeleteClaimsByUser(user.SiteId, user.Id, false);
+            //result = await DeleteUserRoles(user.UserId, false);
+            
+            //SiteUser itemToRemove = SiteUser.FromISiteUser(user);
+            //dbContext.Users.
+            //dbContext.Users.Remove(itemToRemove);
+            //int rowsAffected = await dbContext.SaveChangesAsync();
+            //result = rowsAffected > 0;
+
+            //return result;
+        }
+
+        public async Task<bool> Delete(int siteId, int userId)
         {
             var result = false;
-            var itemToRemove = await dbContext.Users.SingleOrDefaultAsync(x => x.UserId == userId);
+            var itemToRemove = await dbContext.Users.AsNoTracking().SingleOrDefaultAsync(x => x.UserId == userId && x.SiteId == siteId);
             if (itemToRemove != null)
             {
+                result = await DeleteLoginsByUser(itemToRemove.SiteId, itemToRemove.Id, false);
+                result = await DeleteClaimsByUser(itemToRemove.SiteId, itemToRemove.Id, false);
+                result = await DeleteUserRoles(itemToRemove.UserId, false);
+
+                
                 dbContext.Users.Remove(itemToRemove);
                 int rowsAffected = await dbContext.SaveChangesAsync();
                 result = rowsAffected > 0;
@@ -181,7 +203,7 @@ namespace cloudscribe.Core.Repositories.EF
         public async Task<ISiteUser> Fetch(int siteId, int userId)
         {
             SiteUser item
-                = await dbContext.Users.SingleOrDefaultAsync(x => x.SiteId == siteId && x.UserId == userId);
+                = await dbContext.Users.AsNoTracking().SingleOrDefaultAsync(x => x.SiteId == siteId && x.UserId == userId);
 
             return item;
         }
@@ -189,7 +211,7 @@ namespace cloudscribe.Core.Repositories.EF
         public async Task<ISiteUser> Fetch(int siteId, Guid userGuid)
         {
             SiteUser item
-                = await dbContext.Users.SingleOrDefaultAsync(x => x.SiteId == siteId && x.UserGuid == userGuid);
+                = await dbContext.Users.AsNoTracking().SingleOrDefaultAsync(x => x.SiteId == siteId && x.UserGuid == userGuid);
 
             return item;
         }
@@ -197,27 +219,30 @@ namespace cloudscribe.Core.Repositories.EF
         public async Task<ISiteUser> FetchByConfirmationGuid(int siteId, Guid confirmGuid)
         {
             SiteUser item
-                = await dbContext.Users.SingleOrDefaultAsync(x => x.SiteId == siteId && x.RegisterConfirmGuid == confirmGuid);
+                = await dbContext.Users.AsNoTracking().SingleOrDefaultAsync(x => x.SiteId == siteId && x.RegisterConfirmGuid == confirmGuid);
 
             return item;
         }
 
         public async Task<ISiteUser> Fetch(int siteId, string email)
         {
+            string loweredEmail = email.ToLowerInvariant();
             SiteUser item
-                = await dbContext.Users.SingleOrDefaultAsync(x => x.SiteId == siteId && x.LoweredEmail == email.ToLowerInvariant());
+                = await dbContext.Users.AsNoTracking().SingleOrDefaultAsync(x => x.SiteId == siteId && x.LoweredEmail == loweredEmail);
 
             return item;
         }
 
         public async Task<ISiteUser> FetchByLoginName(int siteId, string userName, bool allowEmailFallback)
         {
+            string loweredUserName = userName.ToLowerInvariant();
+
             SiteUser item
-                = await dbContext.Users.SingleOrDefaultAsync(
+                = await dbContext.Users.AsNoTracking().SingleOrDefaultAsync(
                     x => x.SiteId == siteId 
                     && (
                     (x.UserName == userName) 
-                    || (allowEmailFallback && x.LoweredEmail == userName.ToLowerInvariant())
+                    || (allowEmailFallback && x.LoweredEmail == loweredUserName)
                     )
                     );
 
@@ -241,8 +266,10 @@ namespace cloudscribe.Core.Repositories.EF
 
         public async Task<List<IUserInfo>> GetCrossSiteUserListByEmail(string email)
         {
+            string loweredEmail = email.ToLowerInvariant();
+
             var query = from c in dbContext.Users
-                        where c.LoweredEmail == email.ToLowerInvariant()
+                        where c.LoweredEmail == loweredEmail
                         orderby c.DisplayName ascending
                         select c;
 
@@ -719,13 +746,22 @@ namespace cloudscribe.Core.Repositories.EF
 
         public async Task<bool> DeleteUserRoles(int userId)
         {
+            return await DeleteUserRoles(userId, true);
+        }
+
+        public async Task<bool> DeleteUserRoles(int userId, bool saveChanges)
+        {
             var query = from x in dbContext.UserRoles
                         where x.UserId == userId
                         select x;
 
             dbContext.UserRoles.RemoveRange(query);
-            int rowsAffected = await dbContext.SaveChangesAsync();
-            return rowsAffected > 0;
+            if(saveChanges)
+            {
+                int rowsAffected = await dbContext.SaveChangesAsync();
+                return rowsAffected > 0;
+            }
+            return true;
         }
 
         public async Task<bool> DeleteUserRolesByRole(int roleId)
@@ -1014,6 +1050,12 @@ namespace cloudscribe.Core.Repositories.EF
 
         public async Task<bool> DeleteClaimsByUser(int siteId, string userId)
         {
+            return await DeleteClaimsByUser(siteId, userId, true);
+
+        }
+
+        public async Task<bool> DeleteClaimsByUser(int siteId, string userId, bool saveChanges)
+        {
             var query = from x in dbContext.UserClaims
                         where (
                         (siteId == -1 || x.SiteId == siteId)
@@ -1022,8 +1064,12 @@ namespace cloudscribe.Core.Repositories.EF
                         select x;
 
             dbContext.UserClaims.RemoveRange(query);
-            int rowsAffected = await dbContext.SaveChangesAsync();
-            return rowsAffected > 0;
+            if(saveChanges)
+            {
+                int rowsAffected = await dbContext.SaveChangesAsync();
+                return rowsAffected > 0;
+            }
+            return true;
 
         }
 
@@ -1145,6 +1191,12 @@ namespace cloudscribe.Core.Repositories.EF
 
         public async Task<bool> DeleteLoginsByUser(int siteId, string userId)
         {
+            return await DeleteLoginsByUser(siteId, userId, true);
+
+        }
+
+        public async Task<bool> DeleteLoginsByUser(int siteId, string userId, bool saveChanges)
+        {
             var query = from l in dbContext.UserLogins
                         where (
                         l.SiteId == siteId
@@ -1153,8 +1205,12 @@ namespace cloudscribe.Core.Repositories.EF
                         select l;
 
             dbContext.UserLogins.RemoveRange(query);
-            int rowsAffected = await dbContext.SaveChangesAsync();
-            return rowsAffected > 0;
+            if(saveChanges)
+            {
+                int rowsAffected = await dbContext.SaveChangesAsync();
+                return rowsAffected > 0;
+            }
+            return true;
 
         }
 

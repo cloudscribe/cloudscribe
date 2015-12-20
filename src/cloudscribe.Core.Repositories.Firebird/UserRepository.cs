@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-18
-// Last Modified:			2015-12-02
+// Last Modified:			2015-12-20
 // 
 
 
@@ -149,7 +149,15 @@ namespace cloudscribe.Core.Repositories.Firebird
             
         }
 
+        public async Task<bool> Delete(ISiteUser user)
+        {
+            bool result = await DeleteLoginsByUser(user.SiteId, user.Id);
+            result = await DeleteClaimsByUser(user.SiteId, user.Id);
+            result = await DeleteUserRoles(user.UserId);
+            result = await dbSiteUser.DeleteUser(user.UserId);
 
+            return result;
+        }
 
 
         /// <summary>
@@ -157,8 +165,15 @@ namespace cloudscribe.Core.Repositories.Firebird
         /// </summary>
         /// <param name="userID"> userID </param>
         /// <returns>bool</returns>
-        public async Task<bool> Delete(int userId)
+        public async Task<bool> Delete(int siteId, int userId)
         {
+            ISiteUser user = await Fetch(siteId, userId);
+            if(user != null)
+            {
+                bool result = await DeleteLoginsByUser(user.SiteId, user.Id);
+                result = await DeleteClaimsByUser(user.SiteId, user.Id);
+                result = await DeleteUserRoles(user.UserId);
+            }
             return await dbSiteUser.DeleteUser(userId);
         }
 

@@ -48,9 +48,14 @@ namespace cloudscribe.Core.Repositories.Caching
             return await implementation.Save(user);
         }
 
-        public async Task<bool> Delete(int userId)
+        public async Task<bool> Delete(ISiteUser user)
         {
-            return await implementation.Delete(userId);
+            return await implementation.Delete(user);
+        }
+
+        public async Task<bool> Delete(int siteId, int userId)
+        {
+            return await implementation.Delete(siteId, userId);
         }
 
         public async Task<bool> FlagAsDeleted(int userId)

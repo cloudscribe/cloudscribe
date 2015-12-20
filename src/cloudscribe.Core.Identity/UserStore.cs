@@ -198,18 +198,19 @@ namespace cloudscribe.Core.Identity
 
             if (siteSettings.ReallyDeleteUsers)
             {
-                Task[] tasks = new Task[4];
-                cancellationToken.ThrowIfCancellationRequested();
-                tasks[0] = repo.DeleteLoginsByUser(-1, user.Id);
-                cancellationToken.ThrowIfCancellationRequested();
-                tasks[1] = repo.DeleteClaimsByUser(-1, user.Id);
-                cancellationToken.ThrowIfCancellationRequested();
-                tasks[2] = repo.DeleteUserRoles(user.UserId);
-                cancellationToken.ThrowIfCancellationRequested();
-                tasks[3] = repo.Delete(user.UserId);
-                cancellationToken.ThrowIfCancellationRequested();
+                //Task[] tasks = new Task[4];
+                //cancellationToken.ThrowIfCancellationRequested();
+                //tasks[0] = repo.DeleteLoginsByUser(-1, user.Id);
+                //cancellationToken.ThrowIfCancellationRequested();
+                //tasks[1] = repo.DeleteClaimsByUser(-1, user.Id);
+                //cancellationToken.ThrowIfCancellationRequested();
+                //tasks[2] = repo.DeleteUserRoles(user.UserId);
+                //cancellationToken.ThrowIfCancellationRequested();
+                //tasks[3] = repo.Delete(user.UserId);
+                //cancellationToken.ThrowIfCancellationRequested();
 
-                Task.WaitAll(tasks);
+                //Task.WaitAll(tasks);
+                await repo.Delete(user);
             }
             else
             {

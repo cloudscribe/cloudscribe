@@ -25,7 +25,8 @@ namespace cloudscribe.Core.Models
         Task<ISiteUser> FetchByConfirmationGuid(int siteId, Guid confirmGuid);
         Task<ISiteUser> FetchByLoginName(int siteId, string userName, bool allowEmailFallback);
         //Task<ISiteUser> FetchNewest(int siteId);
-        Task<bool> Delete(int userId);
+        Task<bool> Delete(int siteId, int userId);
+        Task<bool> Delete(ISiteUser user);
         Task<bool> FlagAsDeleted(int userId);
         Task<bool> FlagAsNotDeleted(int userId);
         Task<bool> LockoutAccount(Guid userGuid);
