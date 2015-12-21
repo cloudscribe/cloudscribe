@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-11-18
+// Last Modified:			2015-12-21
 // 
 
 using cloudscribe.DbHelpers.Firebird;
@@ -117,6 +117,27 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             arParams[0] = new FbParameter("@Guid", FbDbType.VarChar, 36);
             arParams[0].Value = guid.ToString();
+
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
+                writeConnectionString,
+                sqlCommand.ToString(),
+                arParams);
+
+            return (rowsAffected > 0);
+
+        }
+
+        public async Task<bool> DeleteBySite(Guid siteGuid)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("DELETE FROM mp_SiteFolders ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("SiteGuid = @SiteGuid ;");
+
+            FbParameter[] arParams = new FbParameter[1];
+
+            arParams[0] = new FbParameter("@SiteGuid", FbDbType.VarChar, 36);
+            arParams[0].Value = siteGuid.ToString();
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,

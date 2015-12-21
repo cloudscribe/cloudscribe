@@ -55,7 +55,7 @@
 <div class="form-group">
     <label asp-for="DateOfBirth" class="col-md-2 control-label"></label>
     <div class="col-md-10">
-        <input value="@(Model.DateOfBirth.HasValue ? Model.DateOfBirth.Value.ToString("d") : string.Empty)" 
+        <input name="DateOfBirth" value="@(Model.DateOfBirth.HasValue ? Model.DateOfBirth.Value.ToString("d") : string.Empty)" 
                class="form-control" 
                data-cs-datepicker="true"
                data-cs-datepicker-show-time="false"

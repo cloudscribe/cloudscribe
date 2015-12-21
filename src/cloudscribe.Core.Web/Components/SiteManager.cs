@@ -96,8 +96,10 @@ namespace cloudscribe.Core.Web.Components
             // a way to use dependency injection?
 
             // delete users
-            bool resultStep = await userRepo.DeleteClaimsBySite(site.SiteId);
-            resultStep = await userRepo.DeleteLoginsBySite(site.SiteId);
+            bool resultStep = await userRepo.DeleteUsersBySite(site.SiteId);
+            
+            resultStep = await siteRepo.DeleteHostsBySite(site.SiteId);
+            resultStep = await siteRepo.DeleteFoldersBySite(site.SiteGuid);
 
 
             // the below method deletes a lot of things by siteid including the following tables

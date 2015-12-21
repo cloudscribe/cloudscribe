@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2015-12-09
+// Last Modified:			2015-12-21
 // 
 
 using cloudscribe.Core.Models;
@@ -544,6 +544,11 @@ namespace cloudscribe.Core.Repositories.Firebird
             return await dbSiteSettings.DeleteHost(hostId);
         }
 
+        public async Task<bool> DeleteHostsBySite(int siteId)
+        {
+            return await dbSiteSettings.DeleteHostsBySite(siteId);
+        }
+
         public async Task<int> GetSiteIdByHostName(string hostName)
         {
             return await dbSiteSettings.GetSiteIdByHostName(hostName);
@@ -673,6 +678,11 @@ namespace cloudscribe.Core.Repositories.Firebird
         public async Task<bool> DeleteFolder(Guid guid)
         {
             return await dbSiteFolder.Delete(guid);
+        }
+
+        public async Task<bool> DeleteFoldersBySite(Guid siteGuid)
+        {
+            return await dbSiteFolder.DeleteBySite(siteGuid);
         }
 
         public async Task<int> GetSiteIdByFolder(string folderName)

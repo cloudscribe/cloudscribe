@@ -1,6 +1,7 @@
 
-http://damienbod.com/2015/11/08/oauth2-implicit-flow-with-angular-and-asp-net-5-identity-server/
+https://letsencrypt.org/
 
+https://docs.asp.net/en/latest/security/authorization/resourcebased.html
 
 http://leastprivilege.com/2015/10/12/the-state-of-security-in-asp-net-5-and-mvc-6-authorization/
 

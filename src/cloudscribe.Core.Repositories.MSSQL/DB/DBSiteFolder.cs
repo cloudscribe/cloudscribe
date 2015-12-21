@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-11-18
+// Last Modified:			2015-12-21
 // 
 
 using cloudscribe.DbHelpers.MSSQL;
@@ -78,6 +78,19 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 1);
 
             sph.DefineSqlParameter("@Guid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, guid);
+            int rowsAffected = await sph.ExecuteNonQueryAsync();
+            return (rowsAffected > -1);
+        }
+
+        public async Task<bool> DeleteFoldersBySite(Guid siteGuid)
+        {
+            SqlParameterHelper sph = new SqlParameterHelper(
+                logFactory,
+                writeConnectionString,
+                "mp_SiteFolders_DeleteBySite",
+                1);
+
+            sph.DefineSqlParameter("@SiteGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, siteGuid);
             int rowsAffected = await sph.ExecuteNonQueryAsync();
             return (rowsAffected > -1);
         }

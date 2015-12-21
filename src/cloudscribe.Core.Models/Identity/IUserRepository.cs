@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-18
-// Last Modified:			2015-10-13
+// Last Modified:			2015-12-21
 // 
 
 // TODO: we should update all the async signatures to take a cancellationtoken
@@ -26,7 +26,8 @@ namespace cloudscribe.Core.Models
         Task<ISiteUser> FetchByLoginName(int siteId, string userName, bool allowEmailFallback);
         //Task<ISiteUser> FetchNewest(int siteId);
         Task<bool> Delete(int siteId, int userId);
-        Task<bool> Delete(ISiteUser user);
+        Task<bool> DeleteUsersBySite(int siteId);
+        //Task<bool> Delete(ISiteUser user);
         Task<bool> FlagAsDeleted(int userId);
         Task<bool> FlagAsNotDeleted(int userId);
         Task<bool> LockoutAccount(Guid userGuid);
@@ -65,8 +66,10 @@ namespace cloudscribe.Core.Models
         Task<int> CountOfRoles(int siteId, string searchInput);
         //int GetRoleMemberCount(int roleId);
         Task<bool> DeleteRole(int roleID);
+        Task<bool> DeleteRolesBySite(int siteId);
         Task<bool> DeleteUserRoles(int userId);
         Task<bool> DeleteUserRolesByRole(int roleId);
+        Task<bool> DeleteUserRolesBySite(int siteId);
         Task<bool> RoleExists(int siteId, string roleName);
         Task<ISiteRole> FetchRole(int roleId);
         Task<ISiteRole> FetchRole(int siteId, string roleName);

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-11-18
+// Last Modified:			2015-12-21
 // 
 
 using cloudscribe.DbHelpers.MySql;
@@ -131,6 +131,26 @@ namespace cloudscribe.Core.Repositories.MySql
             return (rowsAffected > 0);
         }
 
+        public async Task<bool> DeleteRolesBySite(int siteId)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("DELETE FROM mp_Roles ");
+            sqlCommand.Append("WHERE SiteID = ?SiteID;");
+
+            MySqlParameter[] arParams = new MySqlParameter[1];
+
+            arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
+            arParams[0].Value = siteId;
+
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
+                writeConnectionString,
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams);
+
+            return (rowsAffected > 0);
+        }
+
         public async Task<bool> DeleteUserRoles(int userId)
         {
             StringBuilder sqlCommand = new StringBuilder();
@@ -160,6 +180,25 @@ namespace cloudscribe.Core.Repositories.MySql
 
             arParams[0] = new MySqlParameter("?RoleID", MySqlDbType.Int32);
             arParams[0].Value = roleId;
+
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
+                writeConnectionString,
+                sqlCommand.ToString(),
+                arParams);
+
+            return (rowsAffected > 0);
+        }
+
+        public async Task<bool> DeleteUserRolesBySite(int siteId)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("DELETE FROM mp_UserRoles ");
+            sqlCommand.Append("WHERE RoleID IN (SELECT RoleID FROM mp_Roles WHERE SiteID = ?SiteID) ;");
+
+            MySqlParameter[] arParams = new MySqlParameter[1];
+
+            arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
+            arParams[0].Value = siteId;
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,

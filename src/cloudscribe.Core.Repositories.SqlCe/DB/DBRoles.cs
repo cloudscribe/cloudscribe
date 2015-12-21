@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2010-04-06
-// Last Modified:			2015-11-18
+// Last Modified:			2015-12-21
 // 
 
 using cloudscribe.DbHelpers.SqlCe;
@@ -142,6 +142,30 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
         }
 
+        public bool DeleteRolesBySite(int siteId)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("DELETE FROM mp_Roles ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("SiteID = @SiteID ");
+            
+            sqlCommand.Append(";");
+
+            SqlCeParameter[] arParams = new SqlCeParameter[1];
+
+            arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
+            arParams[0].Value = siteId;
+
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
+                connectionString,
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams);
+
+            return (rowsAffected > -1);
+
+        }
+
         public bool DeleteUserRoles(int userId)
         {
             StringBuilder sqlCommand = new StringBuilder();
@@ -179,6 +203,30 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
             arParams[0] = new SqlCeParameter("@RoleID", SqlDbType.Int);
             arParams[0].Value = roleId;
+
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
+                connectionString,
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams);
+
+            return (rowsAffected > -1);
+
+        }
+
+        public bool DeleteUserRolesBySite(int siteId)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("DELETE FROM mp_UserRoles ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("RoleID IN (SELECT RoleID FROM mp_Roles WHERE SiteID = @SiteID) ");
+
+            sqlCommand.Append(";");
+
+            SqlCeParameter[] arParams = new SqlCeParameter[1];
+
+            arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
+            arParams[0].Value = siteId;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 connectionString,

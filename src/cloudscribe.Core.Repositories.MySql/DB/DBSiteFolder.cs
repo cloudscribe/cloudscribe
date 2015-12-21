@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-11-18
+// Last Modified:			2015-12-21
 // 
 
 using cloudscribe.DbHelpers.MySql;
@@ -119,6 +119,27 @@ namespace cloudscribe.Core.Repositories.MySql
 
             arParams[0] = new MySqlParameter("?Guid", MySqlDbType.VarChar, 36);
             arParams[0].Value = guid.ToString();
+
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
+                writeConnectionString,
+                sqlCommand.ToString(),
+                arParams);
+
+            return (rowsAffected > 0);
+
+        }
+
+        public async Task<bool> DeleteFoldersBySite(Guid siteGuid)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("DELETE FROM mp_SiteFolders ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("SiteGuid = ?SiteGuid ;");
+
+            MySqlParameter[] arParams = new MySqlParameter[1];
+
+            arParams[0] = new MySqlParameter("?SiteGuid", MySqlDbType.VarChar, 36);
+            arParams[0].Value = siteGuid.ToString();
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,

@@ -1201,6 +1201,25 @@ namespace cloudscribe.Core.Repositories.Firebird
             return (rowsAffected > 0);
         }
 
+        public async Task<bool> DeleteUsersBySite(int siteId)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("DELETE FROM mp_Users ");
+            sqlCommand.Append("WHERE SiteID = @SiteID  ;");
+
+            FbParameter[] arParams = new FbParameter[1];
+
+            arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
+            arParams[0].Value = siteId;
+
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
+                writeConnectionString,
+                sqlCommand.ToString(),
+                arParams);
+
+            return (rowsAffected > 0);
+        }
+
         public bool UpdateLastActivityTime(Guid userGuid, DateTime lastUpdate)
         {
             StringBuilder sqlCommand = new StringBuilder();

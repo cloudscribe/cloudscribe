@@ -685,6 +685,19 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return (rowsAffected > -1);
         }
 
+        public async Task<bool> DeleteUsersBySite(int siteId)
+        {
+            SqlParameterHelper sph = new SqlParameterHelper(
+                logFactory,
+                writeConnectionString,
+                "mp_Users_DeleteBySite",
+                1);
+
+            sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
+            int rowsAffected = await sph.ExecuteNonQueryAsync();
+            return (rowsAffected > -1);
+        }
+
         public bool UpdateLastActivityTime(Guid userGuid, DateTime lastUpdate)
         {
             SqlParameterHelper sph = new SqlParameterHelper(

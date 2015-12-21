@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-18
-// Last Modified:			2015-12-20
+// Last Modified:			2015-12-21
 // 
 
 
@@ -150,15 +150,15 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         }
 
-        public async Task<bool> Delete(ISiteUser user)
-        {
-            bool result = await DeleteLoginsByUser(user.SiteId, user.Id);
-            result = await DeleteClaimsByUser(user.SiteId, user.Id);
-            result = await DeleteUserRoles(user.UserId);
-            result = await dbSiteUser.DeleteUser(user.UserId);
+        //public async Task<bool> Delete(ISiteUser user)
+        //{
+        //    bool result = await DeleteLoginsByUser(user.SiteId, user.Id);
+        //    result = await DeleteClaimsByUser(user.SiteId, user.Id);
+        //    result = await DeleteUserRoles(user.UserId);
+        //    result = await dbSiteUser.DeleteUser(user.UserId);
 
-            return result;
-        }
+        //    return result;
+        //}
 
 
         public async Task<bool> Delete(int siteId, int userId)
@@ -172,6 +172,16 @@ namespace cloudscribe.Core.Repositories.MSSQL
             }
 
             return await dbSiteUser.DeleteUser(userId);
+        }
+
+        public async Task<bool> DeleteUsersBySite(int siteId)
+        {
+
+            bool result = await DeleteLoginsBySite(siteId);
+            result = await DeleteClaimsBySite(siteId);
+            result = await DeleteUserRolesBySite(siteId);
+
+            return await dbSiteUser.DeleteUsersBySite(siteId);
         }
 
         public async Task<bool> FlagAsDeleted(int userId)
@@ -705,6 +715,11 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return await dbRoles.Delete(roleId);
         }
 
+        public async Task<bool> DeleteRolesBySite(int siteId)
+        {
+            return await dbRoles.DeleteRolesBySite(siteId);
+        }
+
         public async Task<bool> AddUserToRole(
             int roleId,
             Guid roleGuid,
@@ -775,6 +790,11 @@ namespace cloudscribe.Core.Repositories.MSSQL
         public async Task<bool> DeleteUserRolesByRole(int roleId)
         {
             return await dbRoles.DeleteUserRolesByRole(roleId);
+        }
+
+        public async Task<bool> DeleteUserRolesBySite(int siteId)
+        {
+            return await dbRoles.DeleteUserRolesBySite(siteId);
         }
 
 

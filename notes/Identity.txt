@@ -1,4 +1,50 @@
 
+
+http://www.simplecloud.info/
+System for Cross-domain Identity Management
+SCIM 2, the open API for managing identities is now complete and published under the IETF.
+
+http://damienbod.com/2015/11/08/oauth2-implicit-flow-with-angular-and-asp-net-5-identity-server/
+
+
+http://bitoftech.net/2015/03/31/asp-net-web-api-claims-authorization-with-asp-net-identity-2-1/
+
+http://www.asp.net/identity/overview/migrations/migrating-an-existing-website-from-sql-membership-to-aspnet-identity
+
+https://aspnetidentity.codeplex.com/workitem/2333
+
+
+http://odetocode.com/blogs/scott/archive/2014/01/20/implementing-asp-net-identity.aspx
+
+http://msdn.microsoft.com/en-us/library/microsoft.aspnet.identity%28v=vs.108%29.aspx
+
+http://stackoverflow.com/questions/19487322/what-is-asp-net-identitys-iusersecuritystampstoretuser-interface
+
+http://blogs.msdn.com/b/webdev/archive/2014/02/12/per-request-lifetime-management-for-usermanager-class-in-asp-net-identity.aspx
+
+http://odetocode.com/blogs/scott/archive/2014/01/20/implementing-asp-net-identity.aspx
+
+http://msdn.microsoft.com/en-us/library/microsoft.aspnet.identity%28v=vs.108%29.aspx
+
+http://stackoverflow.com/questions/19487322/what-is-asp-net-identitys-iusersecuritystampstoretuser-interface
+
+http://brockallen.com/2013/10/20/the-good-the-bad-and-the-ugly-of-asp-net-identity/
+
+http://brockallen.com/2014/02/11/introducing-identityreboot/
+https://github.com/brockallen/BrockAllen.IdentityReboot
+
+http://brockallen.com/2014/02/09/how-membershipreboot-stores-passwords-properly/
+
+http://brockallen.com/2014/02/10/how-membershipreboot-mitigates-login-and-two-factor-authentication-brute-force-attacks/
+
+http://brockallen.com/2014/02/11/concerns-with-two-factor-authentication-in-asp-net-identity-v2/
+
+https://github.com/IdentityServer/Thinktecture.IdentityServer3
+
+http://identityserver.github.io/Documentation/docs/
+
+### Old Notes
+
 MS does not show much interest in helping us with multi tenancy
 https://github.com/aspnet/Security/issues/35
 
@@ -58,42 +104,3 @@ internally we could ignore the options or use them depending on context
 
 public abstract class AuthenticationMiddleware<TOptions> where TOptions : AuthenticationOptions, new()
 https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication/AuthenticationMiddleware.cs
-
-
-
-
-http://bitoftech.net/2015/03/31/asp-net-web-api-claims-authorization-with-asp-net-identity-2-1/
-
-http://www.asp.net/identity/overview/migrations/migrating-an-existing-website-from-sql-membership-to-aspnet-identity
-
-https://aspnetidentity.codeplex.com/workitem/2333
-
-
-http://odetocode.com/blogs/scott/archive/2014/01/20/implementing-asp-net-identity.aspx
-
-http://msdn.microsoft.com/en-us/library/microsoft.aspnet.identity%28v=vs.108%29.aspx
-
-http://stackoverflow.com/questions/19487322/what-is-asp-net-identitys-iusersecuritystampstoretuser-interface
-
-http://blogs.msdn.com/b/webdev/archive/2014/02/12/per-request-lifetime-management-for-usermanager-class-in-asp-net-identity.aspx
-
-http://odetocode.com/blogs/scott/archive/2014/01/20/implementing-asp-net-identity.aspx
-
-http://msdn.microsoft.com/en-us/library/microsoft.aspnet.identity%28v=vs.108%29.aspx
-
-http://stackoverflow.com/questions/19487322/what-is-asp-net-identitys-iusersecuritystampstoretuser-interface
-
-http://brockallen.com/2013/10/20/the-good-the-bad-and-the-ugly-of-asp-net-identity/
-
-http://brockallen.com/2014/02/11/introducing-identityreboot/
-https://github.com/brockallen/BrockAllen.IdentityReboot
-
-http://brockallen.com/2014/02/09/how-membershipreboot-stores-passwords-properly/
-
-http://brockallen.com/2014/02/10/how-membershipreboot-mitigates-login-and-two-factor-authentication-brute-force-attacks/
-
-http://brockallen.com/2014/02/11/concerns-with-two-factor-authentication-in-asp-net-identity-v2/
-
-https://github.com/IdentityServer/Thinktecture.IdentityServer3
-
-http://identityserver.github.io/Documentation/docs/

@@ -1366,6 +1366,31 @@ namespace cloudscribe.Core.Repositories.pgsql
 
         }
 
+        public async Task<bool> DeleteUsersBySite(int siteId)
+        {
+            NpgsqlParameter[] arParams = new NpgsqlParameter[1];
+
+            arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
+            arParams[0].Value = siteId;
+
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("DELETE FROM mp_users ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("siteid = :siteid ");
+            sqlCommand.Append(";");
+            
+            object result = await AdoHelper.ExecuteScalarAsync(
+                writeConnectionString,
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams);
+
+            int rowsAffected = Convert.ToInt32(result);
+
+            return (rowsAffected > -1);
+
+        }
+
         public bool UpdateLastActivityTime(Guid userGuid, DateTime lastUpdate)
         {
             NpgsqlParameter[] arParams = new NpgsqlParameter[2];

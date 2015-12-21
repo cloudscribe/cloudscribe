@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2015-12-18
+// Last Modified:			2015-12-21
 // 
 
 
@@ -299,6 +299,21 @@ namespace cloudscribe.Core.Repositories.EF
 
         }
 
+        public async Task<bool> DeleteHostsBySite(int siteId)
+        {
+            var result = false;
+            var query = from x in  dbContext.SiteHosts.Where(x => x.SiteId == siteId)
+                select x;
+           
+            dbContext.SiteHosts.RemoveRange(query);
+            int rowsAffected = await dbContext.SaveChangesAsync();
+            result = rowsAffected > 0;
+            
+
+            return result;
+
+        }
+
         public async Task<int> GetSiteIdByHostName(string hostName)
         {
             var query = from x in dbContext.SiteHosts
@@ -422,6 +437,20 @@ namespace cloudscribe.Core.Repositories.EF
                 int rowsAffected = await dbContext.SaveChangesAsync();
                 result = rowsAffected > 0;
             }
+
+            return result;
+        }
+
+        public async Task<bool> DeleteFoldersBySite(Guid siteGuid)
+        {
+            var result = false;
+            var query = from x in dbContext.SiteFolders.Where(x => x.SiteGuid == siteGuid)
+                        select x;
+            
+            dbContext.SiteFolders.RemoveRange(query);
+            int rowsAffected = await dbContext.SaveChangesAsync();
+            result = rowsAffected > 0;
+            
 
             return result;
         }

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2015-12-09
+// Last Modified:			2015-12-21
 // 
 
 
@@ -542,6 +542,11 @@ namespace cloudscribe.Core.Repositories.SQLite
             return dbSiteSettings.DeleteHost(hostId);
         }
 
+        public async Task<bool> DeleteHostsBySite(int siteId)
+        {
+            return dbSiteSettings.DeleteHostsBySite(siteId);
+        }
+
         public async Task<int> GetSiteIdByHostName(string hostName)
         {
             return dbSiteSettings.GetSiteIdByHostName(hostName);
@@ -672,6 +677,11 @@ namespace cloudscribe.Core.Repositories.SQLite
         public async Task<bool> DeleteFolder(Guid guid)
         {
             return dbSiteFolder.Delete(guid);
+        }
+
+        public async Task<bool> DeleteFoldersBySite(Guid siteGuid)
+        {
+            return dbSiteFolder.DeleteFoldersBySite(siteGuid);
         }
 
         public async Task<int> GetSiteIdByFolder(string folderName)

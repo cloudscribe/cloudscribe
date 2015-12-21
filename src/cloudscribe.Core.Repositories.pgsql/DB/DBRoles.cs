@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-11-18
+// Last Modified:			2015-12-21
 // 
 
 using cloudscribe.DbHelpers.pgsql;
@@ -179,6 +179,31 @@ namespace cloudscribe.Core.Repositories.pgsql
 
         }
 
+        public async Task<bool> DeleteRolesBySite(int siteId)
+        {
+            NpgsqlParameter[] arParams = new NpgsqlParameter[1];
+
+            arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
+            arParams[0].Value = siteId;
+
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("DELETE FROM mp_roles ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("siteid = :siteid ");
+            sqlCommand.Append(";");
+            
+            object result = await AdoHelper.ExecuteScalarAsync(
+                writeConnectionString,
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams);
+
+            int rowsAffected = Convert.ToInt32(result);
+
+            return (rowsAffected > -1);
+
+        }
+
         public async Task<bool> DeleteUserRoles(int userId)
         {
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
@@ -221,6 +246,28 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             arParams[0] = new NpgsqlParameter("roleid", NpgsqlTypes.NpgsqlDbType.Integer);
             arParams[0].Value = roleId;
+
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
+                writeConnectionString,
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams);
+
+            return (rowsAffected > -1);
+        }
+
+        public async Task<bool> DeleteUserRolesBySite(int siteId)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("DELETE FROM mp_userroles ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("roleid IN (SELECT roleid FROM mp_roles where siteid = :siteid) ");
+            sqlCommand.Append(";");
+
+            NpgsqlParameter[] arParams = new NpgsqlParameter[1];
+
+            arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
+            arParams[0].Value = siteId;
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,

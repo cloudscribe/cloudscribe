@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2010-03-10
-// Last Modified:			2015-11-18
+// Last Modified:			2015-12-21
 // 
 
 
@@ -1676,6 +1676,26 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
             arParams[0] = new SqlCeParameter("@HostID", SqlDbType.Int);
             arParams[0].Value = hostId;
+
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
+                connectionString,
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams);
+
+            return rowsAffected > 0;
+        }
+
+        public bool DeleteHostsBySite(int siteId)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("DELETE FROM mp_SiteHosts ");
+            sqlCommand.Append("WHERE SiteID = @SiteID  ; ");
+
+            SqlCeParameter[] arParams = new SqlCeParameter[1];
+
+            arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
+            arParams[0].Value = siteId;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 connectionString,

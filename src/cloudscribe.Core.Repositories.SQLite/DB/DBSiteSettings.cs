@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-11-18
+// Last Modified:			2015-12-21
 // 
 
 using cloudscribe.DbHelpers.SQLite;
@@ -1632,6 +1632,25 @@ namespace cloudscribe.Core.Repositories.SQLite
 
             arParams[0] = new SqliteParameter(":HostID", DbType.Int32);
             arParams[0].Value = hostId;
+
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
+                connectionString,
+                sqlCommand.ToString(),
+                arParams);
+
+            return rowsAffected > 0;
+        }
+
+        public bool DeleteHostsBySite(int siteId)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("DELETE FROM mp_SiteHosts ");
+            sqlCommand.Append("WHERE SiteID = :SiteID  ; ");
+
+            SqliteParameter[] arParams = new SqliteParameter[1];
+
+            arParams[0] = new SqliteParameter(":SiteID", DbType.Int32);
+            arParams[0].Value = siteId;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 connectionString,

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-11-18
+// Last Modified:			2015-12-21
 // 
 
 using cloudscribe.DbHelpers.MSSQL;
@@ -81,6 +81,19 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return (rowsAffected > -1);
         }
 
+        public async Task<bool> DeleteRolesBySite(int siteId)
+        {
+            SqlParameterHelper sph = new SqlParameterHelper(
+                logFactory,
+                writeConnectionString,
+                "mp_Roles_DeleteBySite",
+                1);
+
+            sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
+            int rowsAffected = await sph.ExecuteNonQueryAsync();
+            return (rowsAffected > -1);
+        }
+
         public async Task<bool> DeleteUserRoles(int userId)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
@@ -103,6 +116,19 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 1);
 
             sph.DefineSqlParameter("@RoleID", SqlDbType.Int, ParameterDirection.Input, roleId);
+            int rowsAffected = await sph.ExecuteNonQueryAsync();
+            return (rowsAffected > -1);
+        }
+
+        public async Task<bool> DeleteUserRolesBySite(int siteId)
+        {
+            SqlParameterHelper sph = new SqlParameterHelper(
+                logFactory,
+                writeConnectionString,
+                "mp_UserRoles_DeleteUserRolesBySite",
+                1);
+
+            sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
             int rowsAffected = await sph.ExecuteNonQueryAsync();
             return (rowsAffected > -1);
         }

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2015-12-20
+// Last Modified:			2015-12-21
 // 
 
 
@@ -60,22 +60,22 @@ namespace cloudscribe.Core.Repositories.EF
 
         }
 
-        public async Task<bool> Delete(ISiteUser user)
-        {
+        //public async Task<bool> Delete(ISiteUser user)
+        //{
 
-            return await Delete(user.SiteId, user.UserId);
-            //bool result = await DeleteLoginsByUser(user.SiteId, user.Id, false);
-            //result = await DeleteClaimsByUser(user.SiteId, user.Id, false);
-            //result = await DeleteUserRoles(user.UserId, false);
+        //    return await Delete(user.SiteId, user.UserId);
+        //    //bool result = await DeleteLoginsByUser(user.SiteId, user.Id, false);
+        //    //result = await DeleteClaimsByUser(user.SiteId, user.Id, false);
+        //    //result = await DeleteUserRoles(user.UserId, false);
             
-            //SiteUser itemToRemove = SiteUser.FromISiteUser(user);
-            //dbContext.Users.
-            //dbContext.Users.Remove(itemToRemove);
-            //int rowsAffected = await dbContext.SaveChangesAsync();
-            //result = rowsAffected > 0;
+        //    //SiteUser itemToRemove = SiteUser.FromISiteUser(user);
+        //    //dbContext.Users.
+        //    //dbContext.Users.Remove(itemToRemove);
+        //    //int rowsAffected = await dbContext.SaveChangesAsync();
+        //    //result = rowsAffected > 0;
 
-            //return result;
-        }
+        //    //return result;
+        //}
 
         public async Task<bool> Delete(int siteId, int userId)
         {
@@ -95,6 +95,22 @@ namespace cloudscribe.Core.Repositories.EF
 
             return result;
 
+        }
+
+        public async Task<bool> DeleteUsersBySite(int siteId)
+        {
+            bool result = await DeleteLoginsBySite(siteId);
+            result = await DeleteClaimsBySite(siteId);
+            result = await DeleteUserRolesBySite(siteId);
+
+            var query = from x in dbContext.Users.Where(x => x.SiteId == siteId)
+                        select x;
+
+            dbContext.Users.RemoveRange(query);
+            int rowsAffected = await dbContext.SaveChangesAsync();
+            result = rowsAffected > 0;
+
+            return result;
         }
 
         public async Task<bool> FlagAsDeleted(int userId)
@@ -708,6 +724,21 @@ namespace cloudscribe.Core.Repositories.EF
             return result;
         }
 
+        public async Task<bool> DeleteRolesBySite(int siteId)
+        {
+            var result = false;
+            var itemToRemove = await dbContext.Roles.SingleOrDefaultAsync(x => x.SiteId == siteId);
+            if (itemToRemove != null)
+            {
+                // TODO: should delete userrole rows first
+                dbContext.Roles.Remove(itemToRemove);
+                int rowsAffected = await dbContext.SaveChangesAsync();
+                result = rowsAffected > 0;
+            }
+
+            return result;
+        }
+
         public async Task<bool> AddUserToRole(
             int roleId,
             Guid roleGuid,
@@ -768,6 +799,18 @@ namespace cloudscribe.Core.Repositories.EF
         {
             var query = from x in dbContext.UserRoles
                         where x.RoleId == roleId
+                        select x;
+
+            dbContext.UserRoles.RemoveRange(query);
+            int rowsAffected = await dbContext.SaveChangesAsync();
+            return rowsAffected > 0;
+        }
+
+        public async Task<bool> DeleteUserRolesBySite(int siteId)
+        {
+            var query = from x in dbContext.UserRoles
+                        join y in dbContext.Roles on x.RoleId equals y.RoleId
+                        where y.SiteId == siteId
                         select x;
 
             dbContext.UserRoles.RemoveRange(query);

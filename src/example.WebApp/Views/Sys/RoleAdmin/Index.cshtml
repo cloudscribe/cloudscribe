@@ -20,7 +20,7 @@
                     </span>
                     <div class="btn-group pull-right" role="group">
                         <form class="form-inline" asp-controller="RoleAdmin" asp-action="RoleDelete">
-                            <input asp-for="@item.SiteGuid" type="hidden" />
+                            <input name="SiteGuid" value="@item.SiteGuid" type="hidden" />
                             <input id="roleId" name="roleId" type="hidden" value="@item.RoleId" />
                             <input id="roleGuid" name="roleGuid" type="hidden" value="@item.RoleGuid" />
                             <span class="btn btn-default btn-xs">

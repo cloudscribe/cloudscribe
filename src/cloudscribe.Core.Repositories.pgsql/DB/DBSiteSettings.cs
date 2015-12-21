@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-11-18
+// Last Modified:			2015-12-21
 //
 
 using cloudscribe.DbHelpers.pgsql;
@@ -1605,6 +1605,28 @@ namespace cloudscribe.Core.Repositories.pgsql
             //    "mp_sitehosts_delete(:hostid)",
             //    arParams);
 
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
+                writeConnectionString,
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams);
+
+            return rowsAffected > 0;
+        }
+
+        public async Task<bool> DeleteHostsBySite(int siteId)
+        {
+            NpgsqlParameter[] arParams = new NpgsqlParameter[1];
+
+            arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
+            arParams[0].Value = siteId;
+
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("DELETE FROM mp_sitehosts ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("siteid = :siteid ");
+            sqlCommand.Append(";");
+            
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 CommandType.Text,

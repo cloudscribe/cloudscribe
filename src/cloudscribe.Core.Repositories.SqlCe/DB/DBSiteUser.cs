@@ -1358,6 +1358,29 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
         }
 
+        public bool DeleteUsersBySite(int siteId)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("DELETE FROM mp_Users ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("SiteID = @SiteID ");
+            sqlCommand.Append(";");
+
+            SqlCeParameter[] arParams = new SqlCeParameter[1];
+
+            arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
+            arParams[0].Value = siteId;
+
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
+                connectionString,
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams);
+
+            return (rowsAffected > -1);
+
+        }
+
 
 
         public bool UpdateLastActivityTime(Guid userGuid, DateTime lastUpdate)

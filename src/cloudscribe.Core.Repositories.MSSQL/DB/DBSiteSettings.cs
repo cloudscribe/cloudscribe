@@ -741,6 +741,19 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return rowsAffected > 0;
         }
 
+        public async Task<bool> DeleteHostsBySite(int siteId)
+        {
+            SqlParameterHelper sph = new SqlParameterHelper(
+                logFactory,
+                writeConnectionString,
+                "mp_SiteHosts_DeleteBySite",
+                1);
+
+            sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
+            int rowsAffected = await sph.ExecuteNonQueryAsync();
+            return rowsAffected > 0;
+        }
+
 
         public async Task<int> CountOtherSites(int currentSiteId)
         {

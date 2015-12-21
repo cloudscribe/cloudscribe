@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-14
-// Last Modified:			2015-10-14
+// Last Modified:			2015-12-21
 // 
 
 
@@ -48,14 +48,19 @@ namespace cloudscribe.Core.Repositories.Caching
             return await implementation.Save(user);
         }
 
-        public async Task<bool> Delete(ISiteUser user)
-        {
-            return await implementation.Delete(user);
-        }
+        //public async Task<bool> Delete(ISiteUser user)
+        //{
+        //    return await implementation.Delete(user);
+        //}
 
         public async Task<bool> Delete(int siteId, int userId)
         {
             return await implementation.Delete(siteId, userId);
+        }
+
+        public async Task<bool> DeleteUsersBySite(int siteId)
+        {
+            return await implementation.DeleteUsersBySite(siteId);
         }
 
         public async Task<bool> FlagAsDeleted(int userId)
@@ -231,6 +236,11 @@ namespace cloudscribe.Core.Repositories.Caching
             return await implementation.DeleteRole(roleId);
         }
 
+        public async Task<bool> DeleteRolesBySite(int siteId)
+        {
+            return await implementation.DeleteRolesBySite(siteId);
+        }
+
         public async Task<bool> AddUserToRole(
             int roleId,
             Guid roleGuid,
@@ -254,6 +264,11 @@ namespace cloudscribe.Core.Repositories.Caching
         public async Task<bool> DeleteUserRolesByRole(int roleId)
         {
             return await implementation.DeleteUserRolesByRole(roleId);
+        }
+
+        public async Task<bool> DeleteUserRolesBySite(int siteId)
+        {
+            return await implementation.DeleteUserRolesBySite(siteId);
         }
 
         public async Task<bool> RoleExists(int siteId, string roleName)
