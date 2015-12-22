@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2015-12-21
+// Last Modified:			2015-12-22
 // 
 
 
@@ -323,68 +323,228 @@ namespace cloudscribe.Core.Repositories.EF
 
             int offset = (pageSize * pageNumber) - pageSize;
 
-            IQueryable<IUserInfo> query 
-                = from x in dbContext.Users
-                        
-                        where 
-                        (
-                            x.SiteId == siteId
-                            && x.IsDeleted == false
-                            && x.AccountApproved == true
-                            && (
-                            userNameBeginsWith == string.Empty
-                            || x.DisplayName.StartsWith(userNameBeginsWith)
-                            )
-                        )
-                        select new UserInfo
-                        {
-                            AvatarUrl = x.AvatarUrl,
-                            AccountApproved = x.AccountApproved,
-                            Country = x.Country,
-                            CreatedUtc = x.CreatedUtc,
-                            DateOfBirth = x.DateOfBirth,
-                            DisplayInMemberList = x.DisplayInMemberList,
-                            DisplayName = x.DisplayName,
-                            Email = x.Email,
-                            FirstName = x.FirstName,
-                            Gender = x.Gender,
-                            IsDeleted = x.IsDeleted,
-                            IsLockedOut = x.IsLockedOut,
-                            LastActivityDate = x.LastActivityDate,
-                            LastLoginDate = x.LastLoginDate,
-                            LastName= x.LastName,
-                            PhoneNumber = x.PhoneNumber,
-                            PhoneNumberConfirmed = x.PhoneNumberConfirmed,
-                            SiteGuid = x.SiteGuid,
-                            SiteId = x.SiteId,
-                            State = x.State,
-                            TimeZoneId = x.TimeZoneId,
-                            Trusted = x.Trusted,
-                            UserGuid = x.UserGuid,
-                            UserId = x.UserId,
-                            UserName = x.UserName,
-                            WebSiteUrl = x.WebSiteUrl
-                             
-                        };
-     
+            //IQueryable<IUserInfo> query 
+            //    = from x in dbContext.Users
 
+            //            where 
+            //            (
+            //                x.SiteId == siteId
+            //                && x.IsDeleted == false
+            //                && x.AccountApproved == true
+            //                && (
+            //                userNameBeginsWith == string.Empty
+            //                || x.DisplayName.StartsWith(userNameBeginsWith)
+            //                )
+            //            )
+            //           // orderby x.DisplayName
+            //            select new UserInfo
+            //            {
+            //                AvatarUrl = x.AvatarUrl,
+            //                AccountApproved = x.AccountApproved,
+            //                Country = x.Country,
+            //                CreatedUtc = x.CreatedUtc,
+            //                DateOfBirth = x.DateOfBirth,
+            //                DisplayInMemberList = x.DisplayInMemberList,
+            //                DisplayName = x.DisplayName,
+            //                Email = x.Email,
+            //                FirstName = x.FirstName,
+            //                Gender = x.Gender,
+            //                IsDeleted = x.IsDeleted,
+            //                IsLockedOut = x.IsLockedOut,
+            //                LastActivityDate = x.LastActivityDate,
+            //                LastLoginDate = x.LastLoginDate,
+            //                LastName= x.LastName,
+            //                PhoneNumber = x.PhoneNumber,
+            //                PhoneNumberConfirmed = x.PhoneNumberConfirmed,
+            //                SiteGuid = x.SiteGuid,
+            //                SiteId = x.SiteId,
+            //                State = x.State,
+            //                TimeZoneId = x.TimeZoneId,
+            //                Trusted = x.Trusted,
+            //                UserGuid = x.UserGuid,
+            //                UserId = x.UserId,
+            //                UserName = x.UserName,
+            //                WebSiteUrl = x.WebSiteUrl
+
+            //            };
+
+
+            //switch (sortMode)
+            //{
+            //    case 2:
+            //        query = query.OrderBy(sl => sl.LastName).ThenBy(s2 => s2.FirstName).AsQueryable();
+            //        break;
+            //    case 1:
+            //        query = query.OrderByDescending(sl => sl.CreatedUtc).AsQueryable();
+            //        break;
+
+            //    case 0:
+            //    default:
+            //        query = query.OrderBy(sl => sl.DisplayName).AsQueryable();
+            //        break;
+            //}
+
+            //this is pretty ugly, surely there is a better way to dynamically set the order by
+
+            IQueryable<IUserInfo> query;
             switch (sortMode)
             {
                 case 2:
-                    query = query.OrderBy(sl => sl.LastName).ThenBy(s2 => s2.FirstName).AsQueryable();
+                    //query = query.OrderBy(sl => sl.LastName).ThenBy(s2 => s2.FirstName).AsQueryable();
+                    query
+                = from x in dbContext.Users
+
+                  where
+                  (
+                      x.SiteId == siteId
+                      && x.IsDeleted == false
+                      && x.AccountApproved == true
+                      && (
+                      userNameBeginsWith == string.Empty
+                      || x.DisplayName.StartsWith(userNameBeginsWith)
+                      )
+                  )
+                  orderby x.LastName, x.FirstName
+                  select new UserInfo
+                  {
+                      AvatarUrl = x.AvatarUrl,
+                      AccountApproved = x.AccountApproved,
+                      Country = x.Country,
+                      CreatedUtc = x.CreatedUtc,
+                      DateOfBirth = x.DateOfBirth,
+                      DisplayInMemberList = x.DisplayInMemberList,
+                      DisplayName = x.DisplayName,
+                      Email = x.Email,
+                      FirstName = x.FirstName,
+                      Gender = x.Gender,
+                      IsDeleted = x.IsDeleted,
+                      IsLockedOut = x.IsLockedOut,
+                      LastActivityDate = x.LastActivityDate,
+                      LastLoginDate = x.LastLoginDate,
+                      LastName = x.LastName,
+                      PhoneNumber = x.PhoneNumber,
+                      PhoneNumberConfirmed = x.PhoneNumberConfirmed,
+                      SiteGuid = x.SiteGuid,
+                      SiteId = x.SiteId,
+                      State = x.State,
+                      TimeZoneId = x.TimeZoneId,
+                      Trusted = x.Trusted,
+                      UserGuid = x.UserGuid,
+                      UserId = x.UserId,
+                      UserName = x.UserName,
+                      WebSiteUrl = x.WebSiteUrl
+
+                  };
+
+
+
                     break;
                 case 1:
-                    query = query.OrderByDescending(sl => sl.CreatedUtc).AsQueryable();
+                    //query = query.OrderByDescending(sl => sl.CreatedUtc).AsQueryable();
+
+                    query
+                = from x in dbContext.Users
+
+                  where
+                  (
+                      x.SiteId == siteId
+                      && x.IsDeleted == false
+                      && x.AccountApproved == true
+                      && (
+                      userNameBeginsWith == string.Empty
+                      || x.DisplayName.StartsWith(userNameBeginsWith)
+                      )
+                  )
+                  orderby x.CreatedUtc descending
+                  select new UserInfo
+                  {
+                      AvatarUrl = x.AvatarUrl,
+                      AccountApproved = x.AccountApproved,
+                      Country = x.Country,
+                      CreatedUtc = x.CreatedUtc,
+                      DateOfBirth = x.DateOfBirth,
+                      DisplayInMemberList = x.DisplayInMemberList,
+                      DisplayName = x.DisplayName,
+                      Email = x.Email,
+                      FirstName = x.FirstName,
+                      Gender = x.Gender,
+                      IsDeleted = x.IsDeleted,
+                      IsLockedOut = x.IsLockedOut,
+                      LastActivityDate = x.LastActivityDate,
+                      LastLoginDate = x.LastLoginDate,
+                      LastName = x.LastName,
+                      PhoneNumber = x.PhoneNumber,
+                      PhoneNumberConfirmed = x.PhoneNumberConfirmed,
+                      SiteGuid = x.SiteGuid,
+                      SiteId = x.SiteId,
+                      State = x.State,
+                      TimeZoneId = x.TimeZoneId,
+                      Trusted = x.Trusted,
+                      UserGuid = x.UserGuid,
+                      UserId = x.UserId,
+                      UserName = x.UserName,
+                      WebSiteUrl = x.WebSiteUrl
+
+                  };
+
+
                     break;
-                
+
                 case 0:
                 default:
-                    query = query.OrderBy(sl => sl.DisplayName).AsQueryable();
+                    //query = query.OrderBy(sl => sl.DisplayName).AsQueryable();
+
+                    query
+                = from x in dbContext.Users
+
+                  where
+                  (
+                      x.SiteId == siteId
+                      && x.IsDeleted == false
+                      && x.AccountApproved == true
+                      && (
+                      userNameBeginsWith == string.Empty
+                      || x.DisplayName.StartsWith(userNameBeginsWith)
+                      )
+                  )
+                  orderby x.DisplayName
+                  select new UserInfo
+                  {
+                      AvatarUrl = x.AvatarUrl,
+                      AccountApproved = x.AccountApproved,
+                      Country = x.Country,
+                      CreatedUtc = x.CreatedUtc,
+                      DateOfBirth = x.DateOfBirth,
+                      DisplayInMemberList = x.DisplayInMemberList,
+                      DisplayName = x.DisplayName,
+                      Email = x.Email,
+                      FirstName = x.FirstName,
+                      Gender = x.Gender,
+                      IsDeleted = x.IsDeleted,
+                      IsLockedOut = x.IsLockedOut,
+                      LastActivityDate = x.LastActivityDate,
+                      LastLoginDate = x.LastLoginDate,
+                      LastName = x.LastName,
+                      PhoneNumber = x.PhoneNumber,
+                      PhoneNumberConfirmed = x.PhoneNumberConfirmed,
+                      SiteGuid = x.SiteGuid,
+                      SiteId = x.SiteId,
+                      State = x.State,
+                      TimeZoneId = x.TimeZoneId,
+                      Trusted = x.Trusted,
+                      UserGuid = x.UserGuid,
+                      UserId = x.UserId,
+                      UserName = x.UserName,
+                      WebSiteUrl = x.WebSiteUrl
+
+                  };
+
+
+
                     break;
             }
 
-           
-
+            
             return await query.AsNoTracking().Skip(offset).Take(pageSize).ToListAsync<IUserInfo>(); 
             
             
@@ -727,15 +887,13 @@ namespace cloudscribe.Core.Repositories.EF
         public async Task<bool> DeleteRolesBySite(int siteId)
         {
             var result = false;
-            var itemToRemove = await dbContext.Roles.SingleOrDefaultAsync(x => x.SiteId == siteId);
-            if (itemToRemove != null)
-            {
-                // TODO: should delete userrole rows first
-                dbContext.Roles.Remove(itemToRemove);
-                int rowsAffected = await dbContext.SaveChangesAsync();
-                result = rowsAffected > 0;
-            }
-
+            var query = from r in dbContext.Roles.Where(x => x.SiteId == siteId)
+                        select r;
+            
+            dbContext.Roles.RemoveRange(query);
+            int rowsAffected = await dbContext.SaveChangesAsync();
+            result = rowsAffected > 0;
+            
             return result;
         }
 
@@ -861,7 +1019,7 @@ namespace cloudscribe.Core.Repositories.EF
             return await dbContext.Roles.CountAsync<SiteRole>(
                 x => x.SiteId.Equals(siteId)
                 && (
-                 string.IsNullOrEmpty(searchInput)
+                 (searchInput == "")
                         || x.DisplayName.Contains(searchInput)
                         || x.RoleName.Contains(searchInput)
                 )
@@ -880,7 +1038,7 @@ namespace cloudscribe.Core.Repositories.EF
             var listQuery = from x in dbContext.Roles
                             where (
                             x.SiteId.Equals(siteId) &&
-                            (string.IsNullOrEmpty(searchInput) || x.DisplayName.Contains(searchInput) || x.RoleName.Contains(searchInput))
+                            (searchInput == "" || x.DisplayName.Contains(searchInput) || x.RoleName.Contains(searchInput))
                             )
                             orderby x.RoleName ascending
                             select new SiteRole {
@@ -906,7 +1064,7 @@ namespace cloudscribe.Core.Repositories.EF
                         where (
                             (x.SiteId.Equals(siteId) && y.RoleId.Equals(roleId))
                             && (
-                                string.IsNullOrEmpty(searchInput)
+                                (searchInput == "")
                                 || x.Email.Contains(searchInput)
                                 || x.DisplayName.Contains(searchInput)
                                 || x.UserName.Contains(searchInput)
@@ -938,7 +1096,7 @@ namespace cloudscribe.Core.Repositories.EF
                         where (
                             (x.SiteId.Equals(siteId) && y.RoleId.Equals(roleId))
                             && (
-                                string.IsNullOrEmpty(searchInput)
+                                (searchInput == "")
                                 || x.Email.Contains(searchInput)
                                 || x.DisplayName.Contains(searchInput)
                                 || x.UserName.Contains(searchInput)
@@ -985,17 +1143,18 @@ namespace cloudscribe.Core.Repositories.EF
                         on new { r.RoleId, u.UserId } equals new { ur.RoleId, ur.UserId } into t
                         from t2 in t.DefaultIfEmpty()
                         where (
-                        u.SiteId.Equals(siteId)
+                        u.SiteId == siteId
+                        && r.SiteId == siteId
+                        && r.RoleId == roleId
                         && (
-                                string.IsNullOrEmpty(searchInput)
+                                (searchInput == "")
                                 || u.Email.Contains(searchInput)
                                 || u.DisplayName.Contains(searchInput)
                                 || u.UserName.Contains(searchInput)
                                 || u.FirstName.Contains(searchInput)
                                 || u.LastName.Contains(searchInput)
                             )
-                        && r.SiteId.Equals(siteId)
-                        && r.RoleId.Equals(roleId)
+                        
                         && t2 == null
                         )
    
@@ -1014,23 +1173,25 @@ namespace cloudscribe.Core.Repositories.EF
         {
             int offset = (pageSize * pageNumber) - pageSize;
             // it took me a lot of tries to figure out how to do this query
+            // it works but is still logging a warning DefaultIfEmpty() could not be translated and will be evaluated locally
             var query = from u in dbContext.Users
                         from r in dbContext.Roles
                         join ur in dbContext.UserRoles
                         on new { r.RoleId, u.UserId } equals new { ur.RoleId, ur.UserId } into t
                         from t2 in t.DefaultIfEmpty()
                         where (
-                        u.SiteId.Equals(siteId)
+                        u.SiteId == siteId
+                        && r.SiteId == siteId
+                        && r.RoleId == roleId
                         && (
-                                string.IsNullOrEmpty(searchInput)
+                                (searchInput == "")
                                 || u.Email.Contains(searchInput)
                                 || u.DisplayName.Contains(searchInput)
                                 || u.UserName.Contains(searchInput)
                                 || u.FirstName.Contains(searchInput)
                                 || u.LastName.Contains(searchInput)
                             )
-                        && r.SiteId.Equals(siteId)
-                        && r.RoleId.Equals(roleId)
+                       
                         && t2 == null
                         )
                         orderby u.DisplayName
