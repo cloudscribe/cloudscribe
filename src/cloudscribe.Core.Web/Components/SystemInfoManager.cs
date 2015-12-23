@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //	Author:                 Joe Audette
 //  Created:			    2011-08-21
-//	Last Modified:		    2015-11-18
+//	Last Modified:		    2015-12-23
 // 
 
 
@@ -22,14 +22,12 @@ namespace cloudscribe.Core.Web.Components
             IHostingEnvironment hostingEnvironment,
             IApplicationEnvironment appEnvironment,
             IVersionProviderFactory versionProviderFactory,
-            IDataPlatformInfo databaseInfo,
-            ILogRepository logRepository)
+            IDataPlatformInfo databaseInfo)
         {
             runtimeInfo = runtimeEnvironment;
             appInfo = appEnvironment;
             hostingInfo = hostingEnvironment;
             dbInfo = databaseInfo;
-            logRepo = logRepository;
             versionProviders = versionProviderFactory;
             cloudscribeVersionProvider = versionProviders.Get("cloudscribe-core");
 
@@ -42,7 +40,7 @@ namespace cloudscribe.Core.Web.Components
         private IVersionProviderFactory versionProviders;
         IVersionProvider cloudscribeVersionProvider = null;
         private IDataPlatformInfo dbInfo;
-        private ILogRepository logRepo;
+        
 
         public string OperatingSystem
         {
@@ -77,30 +75,7 @@ namespace cloudscribe.Core.Web.Components
         }
 
 
-        public async Task<int> GetLogItemCount()
-        {
-            return await logRepo.GetCount();
-        }
-
-        public async Task<List<ILogItem>> GetLogsDescending(int pageNumber, int pageSize)
-        {
-            return await logRepo.GetPageDescending(pageNumber, pageSize);
-        }
-
-        public async Task<List<ILogItem>> GetLogsAscending(int pageNumber, int pageSize)
-        {
-            return await logRepo.GetPageAscending(pageNumber, pageSize);
-        }
-
-        public async Task<bool> DeleteLogItem(int id)
-        {
-            return await logRepo.Delete(id);
-        }
-
-        public async Task<bool> DeleteAllLogItems()
-        {
-            return await logRepo.DeleteAll();
-        }
+        
 
     }
 }

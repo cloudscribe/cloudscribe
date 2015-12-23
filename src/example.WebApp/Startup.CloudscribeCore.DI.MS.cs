@@ -35,8 +35,9 @@ using Microsoft.AspNet.Mvc.Core;
 using Microsoft.AspNet.Routing;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Identity;
-using cloudscribe.Core.Models.Logging;
+using cloudscribe.Web.Logging;
 using cloudscribe.Core.Models.Geography;
+using cloudscribe.Core.Models.Logging;
 using cloudscribe.Core.Web;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.Navigation;
@@ -44,6 +45,7 @@ using cloudscribe.Core.Web.Razor;
 using cloudscribe.Messaging;
 using cloudscribe.Web.Navigation;
 using cloudscribe.Web.Pagination;
+using cloudscribe.Web.Setup;
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Repositories.EF;
 
@@ -74,17 +76,7 @@ namespace example.WebApp
             services.Configure<UIOptions>(configuration.GetSection("UIOptions"));
             services.Configure<UIOptions>(configuration.GetSection("CkeditorOptions"));
 
-            //services.AddAuthorization(options =>
-            //{
-            //    options.AddPolicy("MustBeGroot", policy => 
-            //    policy.AddRequirements(
-            //    policy.RequireClaim("IAmGroot")
-
-            //    );
-            //});
-
-
-
+          
 
             //*** Database platform ****************************************************************
             // here is where you could change to use one of the other db platforms
@@ -100,7 +92,7 @@ namespace example.WebApp
 
             switch (devOptions.DbPlatform)
             {
-                case "ef7": // this case is not fully implemented yet
+                case "ef7": 
 
                     services.TryAddScoped<ICoreModelMapper, SqlServerCoreModelMapper>();
 

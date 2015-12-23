@@ -1,4 +1,6 @@
 
+http://www.developerdrive.com/2015/12/what-you-need-to-know-about-bootstrap-4/
+
 MS seems to push bootstrap on us via project templates but Bootstrap is kind of large and bloated by default
 
 I think we need to carefully review alternatives and figure out ways to make it flexible to use others even if we settle on one.

@@ -38,7 +38,7 @@ using cloudscribe.Core.Models.Logging;
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Repositories.MSSQL;
 using cloudscribe.Core.Web.Components;
-using cloudscribe.Core.Web.Components.Logging;
+using cloudscribe.Web.Logging;
 //using Autofac;
 //using Autofac.Framework.DependencyInjection;
 
@@ -136,6 +136,13 @@ namespace example.WebApp
                         authBuilder.RequireRole("Role Admins", "Admins");
                     });
 
+                options.AddPolicy(
+                    "SystemLogPolicy",
+                    authBuilder =>
+                    {
+                        authBuilder.RequireRole("ServerAdmins");
+                    });
+
             });
 
             // we may need this on linux/mac as urls are case sensitive by default
@@ -144,7 +151,9 @@ namespace example.WebApp
             // Setup dependencies for cloudscribe Identity, Roles and and Site Administration
             // this is in Startup.CloudscribeCore.DI.MS.cs
             services.ConfigureCloudscribeCore(Configuration);
-            
+
+            services.TryAddScoped<LogManager, LogManager>();
+
 
             //services.Configure<MvcOptions>(options =>
             //{
@@ -163,26 +172,26 @@ namespace example.WebApp
             //});
 
 
-                // we are adding this from Startup.CloudscribeCore.cs so it is not needed here
-                // Add MVC services to the services container.
-                //services.AddMvc();
+            // we are adding this from Startup.CloudscribeCore.cs so it is not needed here
+            // Add MVC services to the services container.
+            //services.AddMvc();
 
-                // Uncomment the following line to add Web API services which makes it easier to port Web API 2 controllers.
-                // You will also need to add the Microsoft.AspNet.Mvc.WebApiCompatShim package to the 'dependencies' section of project.json.
-                // services.AddWebApiConventions();
+            // Uncomment the following line to add Web API services which makes it easier to port Web API 2 controllers.
+            // You will also need to add the Microsoft.AspNet.Mvc.WebApiCompatShim package to the 'dependencies' section of project.json.
+            // services.AddWebApiConventions();
 
-                //Autofac config
-                // var builder = new ContainerBuilder();
+            //Autofac config
+            // var builder = new ContainerBuilder();
 
-                ////Populate the container with services that were previously registered
-                //// it seems this depends on beta4
-                //builder.Populate(services);
+            ////Populate the container with services that were previously registered
+            //// it seems this depends on beta4
+            //builder.Populate(services);
 
-                //var container = builder.Build();
+            //var container = builder.Build();
 
-                //return container.Resolve<IServiceProvider>();
+            //return container.Resolve<IServiceProvider>();
 
-            }
+        }
 
         // Configure is called after ConfigureServices is called.
         // you can change this method signature to include any dependencies that need to be injected into this method

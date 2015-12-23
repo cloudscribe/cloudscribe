@@ -59,62 +59,7 @@ namespace cloudscribe.Core.Web.Controllers
             return View(serverInfo);
         }
 
-        [Authorize(Policy = "ServerAdminPolicy")]
-        public async Task<IActionResult> ViewLog(
-            int pageNumber = 1,
-            int pageSize = -1,
-            string sort = "desc")
-        {
-            ViewData["Title"] = "System Log";
-            ViewData["Heading"] = "System Log";
-
-            int itemsPerPage = uiOptions.DefaultPageSize_LogView;
-            if (pageSize > 0)
-            {
-                itemsPerPage = pageSize;
-            }
-
-            var model = new LogListViewModel();
-            if (sort == "desc")
-            {
-                model.LogPage = await systemInfo.GetLogsDescending(pageNumber, itemsPerPage);
-            }
-            else
-            {
-                model.LogPage = await systemInfo.GetLogsAscending(pageNumber, itemsPerPage);
-            }
-
-            model.TimeZone = await timeZoneResolver.GetUserTimeZone();
-
-            var count = await systemInfo.GetLogItemCount();
-
-            model.Paging.CurrentPage = pageNumber;
-            model.Paging.ItemsPerPage = itemsPerPage;
-            model.Paging.TotalItems = count;
-
-            return View(model);
-
-        }
-
-        [Authorize(Policy = "ServerAdminPolicy")]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> LogItemDelete(int id)
-        {
-            bool result = await systemInfo.DeleteLogItem(id);
-               
-            return RedirectToAction("ViewLog");
-        }
-
-        [Authorize(Policy = "ServerAdminPolicy")]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> LogDeleteAll()
-        {
-            bool result = await systemInfo.DeleteAllLogItems();
-
-            return RedirectToAction("ViewLog");
-        }
+        
 
 
 

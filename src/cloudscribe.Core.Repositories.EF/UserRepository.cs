@@ -1172,8 +1172,9 @@ namespace cloudscribe.Core.Repositories.EF
             int pageSize)
         {
             int offset = (pageSize * pageNumber) - pageSize;
-            // it took me a lot of tries to figure out how to do this query
+            // it took me a lot of tries and googling to figure out how to get this query to work as intended
             // it works but is still logging a warning DefaultIfEmpty() could not be translated and will be evaluated locally
+
             var query = from u in dbContext.Users
                         from r in dbContext.Roles
                         join ur in dbContext.UserRoles

@@ -1,5 +1,4 @@
-﻿@model cloudscribe.Core.Web.ViewModels.SystemInfo.LogListViewModel
-
+﻿@model cloudscribe.Web.Logging.LogListViewModel
 
 @functions
 {
@@ -27,7 +26,7 @@
     @foreach (var item in Model.LogPage)
         {
         <li class="@GetClassFromLogLevel(item.LogLevel)">
-            <form role="form" class="form-inline" asp-controller="SystemInfo" asp-action="LogItemDelete">
+            <form role="form" class="form-inline" asp-controller="SystemLog" asp-action="LogItemDelete">
                 <input type="hidden" id="id" name="id" value="@item.Id" />
                 <input type="submit" value="CommonResources.Delete" class="btn btn-xs btn-default pull-left" />
             </form>  
@@ -49,7 +48,7 @@
                 asp-action="ViewLog" asp-controller="SystemInfo"
                 asp-route-pagesize="@Model.Paging.ItemsPerPage"></cs-pager>
 </div>
-<form role="form" class="form-inline" asp-controller="SystemInfo" asp-action="LogDeleteAll">
+<form role="form" class="form-inline" asp-controller="SystemLog" asp-action="LogDeleteAll">
     <a asp-action="ViewLog" class="btn btn-sm btn-default ">Refresh</a>  
     <input type="submit" value="CommonResources.ClearLog" class="btn btn-sm btn-danger " />
 </form>  

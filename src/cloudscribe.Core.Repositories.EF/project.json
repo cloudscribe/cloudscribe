@@ -2,7 +2,7 @@
   "version": "1.0.0-*",
   "title": "cloudscribe.Core.Repositories.EF",
   "description": "Entity Framework 7 implementation of cloudscribe core repositories",
-  "authors": [ "Joe" ],
+  "authors": [ "Joe Audette" ],
   "tags": [ "" ],
   "projectUrl": "",
   "licenseUrl": "",

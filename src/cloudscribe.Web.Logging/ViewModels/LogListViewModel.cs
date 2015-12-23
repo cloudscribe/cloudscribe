@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //	Author:                 Joe Audette
 //  Created:			    2011-08-21
-//	Last Modified:		    2015-10-12
+//	Last Modified:		    2015-12-23
 // 
 
 using cloudscribe.Core.Models.Logging;
@@ -10,7 +10,7 @@ using cloudscribe.Web.Pagination;
 using System;
 using System.Collections.Generic;
 
-namespace cloudscribe.Core.Web.ViewModels.SystemInfo
+namespace cloudscribe.Web.Logging
 {
     public class LogListViewModel
     {

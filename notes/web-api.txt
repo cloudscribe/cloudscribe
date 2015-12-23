@@ -1,0 +1,4 @@
+
+http://damienbod.com/2015/12/13/asp-net-5-mvc-6-api-documentation-using-swagger/
+
+http://www.dotnetcurry.com/aspnet/1223/secure-aspnet-web-api-using-tokens-owin-angularjs
