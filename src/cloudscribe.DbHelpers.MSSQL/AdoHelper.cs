@@ -10,7 +10,19 @@ namespace cloudscribe.DbHelpers.MSSQL
     {
         private static DbProviderFactory GetFactory()
         {
+            // back in mvc 5 this DbProviderFactories was configured in web.config
+            // and glimpse was able to wrap around it for tracking ado queries
             //var factory = DbProviderFactories.GetFactory("System.Data.SqlClient");
+            // need to figure out how to make this ado code glimpse friendly
+            // so that glimpse can track the queries.
+            // I see clues how glimpse hooks into EF here: 
+            //https://github.com/Glimpse/Glimpse.Prototype/blob/dev/src/Glimpse.Agent.Dnx/Internal/Inspectors/EF/EFDiagnosticsInspector.cs
+            // and I've asked a question here:
+            // https://github.com/Glimpse/Glimpse.Prototype/issues/99
+            // my guess is that we will need to change this class from being static
+            // as part of the solution, but need to learn more before making changes in that direction
+
+
             return System.Data.SqlClient.SqlClientFactory.Instance;
 
            // return factory;

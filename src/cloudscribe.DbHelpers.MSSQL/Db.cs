@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-01-10
-// Last Modified:			2015-11-18
+// Last Modified:			2015-12-24
 // 
 
 using cloudscribe.Core.Models;
@@ -43,13 +43,15 @@ namespace cloudscribe.DbHelpers.MSSQL
         private string writeConnectionString;
         private string readConnectionString;
         private string ownerPrefix;
-        
+
+        #region IDb
+
+        public string DBPlatform { get { return "MSSQL"; } }
+
         public IVersionProviderFactory VersionProviders
         {
             get { return versionProviders; }
         }
-
-        public string DBPlatform { get { return "MSSQL"; } }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
         public void EnsureDatabase()
@@ -142,45 +144,6 @@ namespace cloudscribe.DbHelpers.MSSQL
 
 
             return result;
-
-        }
-
-        public DbException GetConnectionError(String overrideConnectionInfo)
-        {
-            DbException exception = null;
-
-            SqlConnection connection;
-
-            if (
-                (overrideConnectionInfo != null)
-                && (overrideConnectionInfo.Length > 0)
-              )
-            {
-                connection = new SqlConnection(overrideConnectionInfo);
-            }
-            else
-            {
-                connection = new SqlConnection(readConnectionString);
-            }
-
-            try
-            {
-                connection.Open();
-
-
-            }
-            catch (DbException ex)
-            {
-                exception = ex;
-            }
-            finally
-            {
-                if (connection.State == ConnectionState.Open)
-                    connection.Close();
-            }
-
-
-            return exception;
 
         }
 
@@ -305,9 +268,49 @@ namespace cloudscribe.DbHelpers.MSSQL
 
         }
 
+
+        public DbException GetConnectionError(String overrideConnectionInfo)
+        {
+            DbException exception = null;
+
+            SqlConnection connection;
+
+            if (
+                (overrideConnectionInfo != null)
+                && (overrideConnectionInfo.Length > 0)
+              )
+            {
+                connection = new SqlConnection(overrideConnectionInfo);
+            }
+            else
+            {
+                connection = new SqlConnection(readConnectionString);
+            }
+
+            try
+            {
+                connection.Open();
+
+
+            }
+            catch (DbException ex)
+            {
+                exception = ex;
+            }
+            finally
+            {
+                if (connection.State == ConnectionState.Open)
+                    connection.Close();
+            }
+
+
+            return exception;
+
+        }
+
         public bool RunScript(
             FileInfo scriptFile,
-            String overrideConnectionInfo)
+            string overrideConnectionInfo)
         {
             if (scriptFile == null) return false;
 
@@ -393,144 +396,6 @@ namespace cloudscribe.DbHelpers.MSSQL
             return result;
         }
 
-        public bool UpdateTableField(
-            string connectionString,
-            string tableName,
-            string keyFieldName,
-            string keyFieldValue,
-            string dataFieldName,
-            string dataFieldValue,
-            string additionalWhere)
-        {
-            bool result = false;
-
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("UPDATE " + tableName + " ");
-            sqlCommand.Append(" SET " + dataFieldName + " = @fieldValue ");
-            sqlCommand.Append(" WHERE " + keyFieldName + " = " + keyFieldValue);
-            sqlCommand.Append(" " + additionalWhere + " ");
-            sqlCommand.Append("  ");
-
-            SqlParameter[] arParams = new SqlParameter[1];
-
-            arParams[0] = new SqlParameter("@fieldValue", SqlDbType.Text);
-            arParams[0].Direction = ParameterDirection.Input;
-            arParams[0].Value = dataFieldValue;
-
-            //SqlConnection connection = new SqlConnection(connectionString);
-            //connection.Open();
-            //try
-            //{
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
-                connectionString,
-                CommandType.Text,
-                sqlCommand.ToString(), arParams);
-
-            result = (rowsAffected > 0);
-
-            //}
-            //finally
-            //{
-            //    connection.Close();
-            //}
-
-            return result;
-
-        }
-
-        public bool UpdateTableField(
-            string tableName,
-            string keyFieldName,
-            string keyFieldValue,
-            string dataFieldName,
-            string dataFieldValue,
-            string additionalWhere)
-        {
-            bool result = false;
-
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("UPDATE " + tableName + " ");
-            sqlCommand.Append(" SET " + dataFieldName + " = @fieldValue ");
-            sqlCommand.Append(" WHERE " + keyFieldName + " = " + keyFieldValue);
-            sqlCommand.Append(" " + additionalWhere + " ");
-            sqlCommand.Append("  ");
-
-            SqlParameter[] arParams = new SqlParameter[1];
-
-            arParams[0] = new SqlParameter("@fieldValue", SqlDbType.Text);
-            arParams[0].Direction = ParameterDirection.Input;
-            arParams[0].Value = dataFieldValue;
-
-            //SqlConnection connection = new SqlConnection(GetConnectionString());
-            //connection.Open();
-            //try
-            //{
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
-                writeConnectionString,
-                CommandType.Text,
-                sqlCommand.ToString(), arParams);
-
-            result = (rowsAffected > 0);
-
-            //}
-            //finally
-            //{
-            //    connection.Close();
-            //}
-
-            return result;
-
-        }
-
-        public DbDataReader GetReader(
-            string connectionString,
-            string tableName,
-            string whereClause)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("SELECT * ");
-            sqlCommand.Append("FROM " + tableName + " ");
-            sqlCommand.Append(whereClause);
-            sqlCommand.Append("  ");
-
-            return AdoHelper.ExecuteReader(
-                connectionString,
-                CommandType.Text,
-                sqlCommand.ToString());
-
-        }
-
-        public DbDataReader GetReader(
-            string connectionString,
-            string query
-            )
-        {
-            if (string.IsNullOrEmpty(connectionString)) { connectionString = readConnectionString; }
-
-            return AdoHelper.ExecuteReader(
-                connectionString,
-                CommandType.Text,
-                query);
-
-        }
-
-        public int ExecteNonQuery(
-            string connectionString,
-            string query
-            )
-        {
-            if (string.IsNullOrEmpty(connectionString)) { connectionString = writeConnectionString; }
-
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
-                connectionString,
-                CommandType.Text,
-                query);
-
-            return rowsAffected;
-
-        }
-
-       
         public bool TableExists(string tableName)
         {
             try
@@ -545,11 +410,11 @@ namespace cloudscribe.DbHelpers.MSSQL
                     sqlCommand.ToString(),
                     null))
                 {
-                    if(reader.Read())
+                    if (reader.Read())
                     {
                         return true;
                     }
-                   // need to return true here if no error
+                    // need to return true here if no error
                     // the table may be empty but it does exist if no error
                     return true;
                 }
@@ -560,37 +425,15 @@ namespace cloudscribe.DbHelpers.MSSQL
         }
 
 
-        public bool SitesTableExists()
+        public bool SchemaTableExists()
         {
-            return TableExists("mp_Sites");
+            return TableExists("mp_SchemaVersion");
         }
-
-        public int ExistingSiteCount()
-        {
-            int count = 0;
-            try
-            {
-                SqlParameterHelper sph = new SqlParameterHelper(
-                    logFactory,
-                    readConnectionString, 
-                    "mp_Sites_CountOtherSites", 
-                    1);
-
-                sph.DefineSqlParameter("@CurrentSiteID", SqlDbType.Int, ParameterDirection.Input, -1);
-                count = Convert.ToInt32(sph.ExecuteScalar());
-            }
-            catch (DbException) { }
-            catch (InvalidOperationException) { }
-
-            return count;
-
-        }
-
 
         public Guid GetOrGenerateSchemaApplicationId(string applicationName)
         {
             IVersionProvider versionProvider = versionProviders.Get(applicationName);
-            if(versionProvider != null) { return versionProvider.ApplicationId; }
+            if (versionProvider != null) { return versionProvider.ApplicationId; }
 
             Guid appID = Guid.NewGuid();
 
@@ -614,89 +457,7 @@ namespace cloudscribe.DbHelpers.MSSQL
 
         }
 
-
-        private DbDataReader GetSchemaId(string applicationName)
-        {
-            return GetReader(
-                readConnectionString,
-                "mp_SchemaVersion",
-                " WHERE LOWER(ApplicationName) = '" + applicationName.ToLower() + "'");
-        }
-
-
-        public bool AddSchemaVersion(
-          Guid applicationId,
-          string applicationName,
-          int major,
-          int minor,
-          int build,
-          int revision)
-        {
-            SqlParameterHelper sph = new SqlParameterHelper(
-                logFactory,
-                writeConnectionString, 
-                "mp_SchemaVersion_Insert", 
-                6);
-
-            sph.DefineSqlParameter("@ApplicationID", SqlDbType.UniqueIdentifier, ParameterDirection.Input, applicationId);
-            sph.DefineSqlParameter("@ApplicationName", SqlDbType.NVarChar, ParameterDirection.Input, applicationName);
-            sph.DefineSqlParameter("@Major", SqlDbType.Int, ParameterDirection.Input, major);
-            sph.DefineSqlParameter("@Minor", SqlDbType.Int, ParameterDirection.Input, minor);
-            sph.DefineSqlParameter("@Build", SqlDbType.Int, ParameterDirection.Input, build);
-            sph.DefineSqlParameter("@Revision", SqlDbType.Int, ParameterDirection.Input, revision);
-            int rowsAffected = Convert.ToInt32(sph.ExecuteNonQuery());
-            return (rowsAffected > 0);
-        }
-
-
-        public bool UpdateSchemaVersion(
-            Guid applicationId,
-            string applicationName,
-            int major,
-            int minor,
-            int build,
-            int revision)
-        {
-            SqlParameterHelper sph = new SqlParameterHelper(
-                logFactory,
-                writeConnectionString, 
-                "mp_SchemaVersion_Update", 
-                6);
-
-            sph.DefineSqlParameter("@ApplicationID", SqlDbType.UniqueIdentifier, ParameterDirection.Input, applicationId);
-            sph.DefineSqlParameter("@ApplicationName", SqlDbType.NVarChar, ParameterDirection.Input, applicationName);
-            sph.DefineSqlParameter("@Major", SqlDbType.Int, ParameterDirection.Input, major);
-            sph.DefineSqlParameter("@Minor", SqlDbType.Int, ParameterDirection.Input, minor);
-            sph.DefineSqlParameter("@Build", SqlDbType.Int, ParameterDirection.Input, build);
-            sph.DefineSqlParameter("@Revision", SqlDbType.Int, ParameterDirection.Input, revision);
-            int rowsAffected = sph.ExecuteNonQuery();
-            return (rowsAffected > 0);
-        }
-
-        //public bool DeleteSchemaVersion(Guid applicationId)
-        //{
-        //    SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetWriteConnectionString(), "mp_SchemaVersion_Delete", 1);
-        //    sph.DefineSqlParameter("@ApplicationID", SqlDbType.UniqueIdentifier, ParameterDirection.Input, applicationId);
-        //    int rowsAffected = sph.ExecuteNonQuery();
-        //    return (rowsAffected > -1);
-        //}
-
-        public bool SchemaVersionExists(Guid applicationId)
-        {
-            bool result = false;
-
-            using (DbDataReader reader = GetSchemaVersionFromGuid(applicationId))
-            {
-                if (reader.Read())
-                {
-                    result = true;
-                }
-            }
-
-            return result;
-        }
-
-
+        
         public Version GetSchemaVersion(Guid applicationId)
         {
 
@@ -732,16 +493,281 @@ namespace cloudscribe.DbHelpers.MSSQL
             return new Version(major, minor, build, revision);
         }
 
+        public bool SchemaVersionExists(Guid applicationId)
+        {
+            bool result = false;
+
+            using (DbDataReader reader = GetSchemaVersionFromGuid(applicationId))
+            {
+                if (reader.Read())
+                {
+                    result = true;
+                }
+            }
+
+            return result;
+        }
+
+        public bool AddSchemaVersion(
+          Guid applicationId,
+          string applicationName,
+          int major,
+          int minor,
+          int build,
+          int revision)
+        {
+            SqlParameterHelper sph = new SqlParameterHelper(
+                logFactory,
+                writeConnectionString,
+                "mp_SchemaVersion_Insert",
+                6);
+
+            sph.DefineSqlParameter("@ApplicationID", SqlDbType.UniqueIdentifier, ParameterDirection.Input, applicationId);
+            sph.DefineSqlParameter("@ApplicationName", SqlDbType.NVarChar, ParameterDirection.Input, applicationName);
+            sph.DefineSqlParameter("@Major", SqlDbType.Int, ParameterDirection.Input, major);
+            sph.DefineSqlParameter("@Minor", SqlDbType.Int, ParameterDirection.Input, minor);
+            sph.DefineSqlParameter("@Build", SqlDbType.Int, ParameterDirection.Input, build);
+            sph.DefineSqlParameter("@Revision", SqlDbType.Int, ParameterDirection.Input, revision);
+            int rowsAffected = Convert.ToInt32(sph.ExecuteNonQuery());
+            return (rowsAffected > 0);
+        }
+
+
+        public bool UpdateSchemaVersion(
+            Guid applicationId,
+            string applicationName,
+            int major,
+            int minor,
+            int build,
+            int revision)
+        {
+            SqlParameterHelper sph = new SqlParameterHelper(
+                logFactory,
+                writeConnectionString,
+                "mp_SchemaVersion_Update",
+                6);
+
+            sph.DefineSqlParameter("@ApplicationID", SqlDbType.UniqueIdentifier, ParameterDirection.Input, applicationId);
+            sph.DefineSqlParameter("@ApplicationName", SqlDbType.NVarChar, ParameterDirection.Input, applicationName);
+            sph.DefineSqlParameter("@Major", SqlDbType.Int, ParameterDirection.Input, major);
+            sph.DefineSqlParameter("@Minor", SqlDbType.Int, ParameterDirection.Input, minor);
+            sph.DefineSqlParameter("@Build", SqlDbType.Int, ParameterDirection.Input, build);
+            sph.DefineSqlParameter("@Revision", SqlDbType.Int, ParameterDirection.Input, revision);
+            int rowsAffected = sph.ExecuteNonQuery();
+            return (rowsAffected > 0);
+        }
+
+
+        #endregion
+
+
+        #region Private methods
+
+        private DbDataReader GetSchemaId(string applicationName)
+        {
+            return GetReader(
+                readConnectionString,
+                "mp_SchemaVersion",
+                " WHERE LOWER(ApplicationName) = '" + applicationName.ToLower() + "'");
+        }
+
+        private DbDataReader GetReader(
+            string connectionString,
+            string tableName,
+            string whereClause)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT * ");
+            sqlCommand.Append("FROM " + tableName + " ");
+            sqlCommand.Append(whereClause);
+            sqlCommand.Append("  ");
+
+            return AdoHelper.ExecuteReader(
+                connectionString,
+                CommandType.Text,
+                sqlCommand.ToString());
+
+        }
+
+
         private DbDataReader GetSchemaVersionFromGuid(Guid applicationId)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
-                readConnectionString, 
-                "mp_SchemaVersion_SelectOne", 
+                readConnectionString,
+                "mp_SchemaVersion_SelectOne",
                 1);
             sph.DefineSqlParameter("@ApplicationID", SqlDbType.UniqueIdentifier, ParameterDirection.Input, applicationId);
             return sph.ExecuteReader();
         }
+
+        #endregion
+
+
+
+
+
+
+
+
+
+
+        //public bool UpdateTableField(
+        //    string connectionString,
+        //    string tableName,
+        //    string keyFieldName,
+        //    string keyFieldValue,
+        //    string dataFieldName,
+        //    string dataFieldValue,
+        //    string additionalWhere)
+        //{
+        //    bool result = false;
+
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("UPDATE " + tableName + " ");
+        //    sqlCommand.Append(" SET " + dataFieldName + " = @fieldValue ");
+        //    sqlCommand.Append(" WHERE " + keyFieldName + " = " + keyFieldValue);
+        //    sqlCommand.Append(" " + additionalWhere + " ");
+        //    sqlCommand.Append("  ");
+
+        //    SqlParameter[] arParams = new SqlParameter[1];
+
+        //    arParams[0] = new SqlParameter("@fieldValue", SqlDbType.Text);
+        //    arParams[0].Direction = ParameterDirection.Input;
+        //    arParams[0].Value = dataFieldValue;
+
+        //    //SqlConnection connection = new SqlConnection(connectionString);
+        //    //connection.Open();
+        //    //try
+        //    //{
+        //    int rowsAffected = AdoHelper.ExecuteNonQuery(
+        //        connectionString,
+        //        CommandType.Text,
+        //        sqlCommand.ToString(), arParams);
+
+        //    result = (rowsAffected > 0);
+
+        //    //}
+        //    //finally
+        //    //{
+        //    //    connection.Close();
+        //    //}
+
+        //    return result;
+
+        //}
+
+        //public bool UpdateTableField(
+        //    string tableName,
+        //    string keyFieldName,
+        //    string keyFieldValue,
+        //    string dataFieldName,
+        //    string dataFieldValue,
+        //    string additionalWhere)
+        //{
+        //    bool result = false;
+
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("UPDATE " + tableName + " ");
+        //    sqlCommand.Append(" SET " + dataFieldName + " = @fieldValue ");
+        //    sqlCommand.Append(" WHERE " + keyFieldName + " = " + keyFieldValue);
+        //    sqlCommand.Append(" " + additionalWhere + " ");
+        //    sqlCommand.Append("  ");
+
+        //    SqlParameter[] arParams = new SqlParameter[1];
+
+        //    arParams[0] = new SqlParameter("@fieldValue", SqlDbType.Text);
+        //    arParams[0].Direction = ParameterDirection.Input;
+        //    arParams[0].Value = dataFieldValue;
+
+        //    //SqlConnection connection = new SqlConnection(GetConnectionString());
+        //    //connection.Open();
+        //    //try
+        //    //{
+        //    int rowsAffected = AdoHelper.ExecuteNonQuery(
+        //        writeConnectionString,
+        //        CommandType.Text,
+        //        sqlCommand.ToString(), arParams);
+
+        //    result = (rowsAffected > 0);
+
+        //    //}
+        //    //finally
+        //    //{
+        //    //    connection.Close();
+        //    //}
+
+        //    return result;
+
+        //}
+
+        
+
+        //public DbDataReader GetReader(
+        //    string connectionString,
+        //    string query
+        //    )
+        //{
+        //    if (string.IsNullOrEmpty(connectionString)) { connectionString = readConnectionString; }
+
+        //    return AdoHelper.ExecuteReader(
+        //        connectionString,
+        //        CommandType.Text,
+        //        query);
+
+        //}
+
+        //public int ExecteNonQuery(
+        //    string connectionString,
+        //    string query
+        //    )
+        //{
+        //    if (string.IsNullOrEmpty(connectionString)) { connectionString = writeConnectionString; }
+
+        //    int rowsAffected = AdoHelper.ExecuteNonQuery(
+        //        connectionString,
+        //        CommandType.Text,
+        //        query);
+
+        //    return rowsAffected;
+
+        //}
+
+
+
+
+        //public int ExistingSiteCount()
+        //{
+        //    int count = 0;
+        //    try
+        //    {
+        //        SqlParameterHelper sph = new SqlParameterHelper(
+        //            logFactory,
+        //            readConnectionString, 
+        //            "mp_Sites_CountOtherSites", 
+        //            1);
+
+        //        sph.DefineSqlParameter("@CurrentSiteID", SqlDbType.Int, ParameterDirection.Input, -1);
+        //        count = Convert.ToInt32(sph.ExecuteScalar());
+        //    }
+        //    catch (DbException) { }
+        //    catch (InvalidOperationException) { }
+
+        //    return count;
+
+        //}
+
+
+
+        //public bool DeleteSchemaVersion(Guid applicationId)
+        //{
+        //    SqlParameterHelper sph = new SqlParameterHelper(ConnectionString.GetWriteConnectionString(), "mp_SchemaVersion_Delete", 1);
+        //    sph.DefineSqlParameter("@ApplicationID", SqlDbType.UniqueIdentifier, ParameterDirection.Input, applicationId);
+        //    int rowsAffected = sph.ExecuteNonQuery();
+        //    return (rowsAffected > -1);
+        //}
+
+
 
         //public IDataReader SchemaVersionGetNonCore()
         //{
@@ -749,29 +775,29 @@ namespace cloudscribe.DbHelpers.MSSQL
         //    return sph.ExecuteReader();
         //}
 
-        public int AddSchemaScriptHistory(
-            Guid applicationId,
-            string scriptFile,
-            DateTime runTime,
-            bool errorOccurred,
-            string errorMessage,
-            string scriptBody)
-        {
+        //public int AddSchemaScriptHistory(
+        //    Guid applicationId,
+        //    string scriptFile,
+        //    DateTime runTime,
+        //    bool errorOccurred,
+        //    string errorMessage,
+        //    string scriptBody)
+        //{
 
-            SqlParameterHelper sph = new SqlParameterHelper(
-                logFactory,
-                writeConnectionString, 
-                "mp_SchemaScriptHistory_Insert", 
-                6);
-            sph.DefineSqlParameter("@ApplicationID", SqlDbType.UniqueIdentifier, ParameterDirection.Input, applicationId);
-            sph.DefineSqlParameter("@ScriptFile", SqlDbType.NVarChar, 255, ParameterDirection.Input, scriptFile);
-            sph.DefineSqlParameter("@RunTime", SqlDbType.DateTime, ParameterDirection.Input, runTime);
-            sph.DefineSqlParameter("@ErrorOccurred", SqlDbType.Bit, ParameterDirection.Input, errorOccurred);
-            sph.DefineSqlParameter("@ErrorMessage", SqlDbType.NVarChar, -1, ParameterDirection.Input, errorMessage);
-            sph.DefineSqlParameter("@ScriptBody", SqlDbType.NVarChar, -1, ParameterDirection.Input, scriptBody);
-            int newID = Convert.ToInt32(sph.ExecuteScalar());
-            return newID;
-        }
+        //    SqlParameterHelper sph = new SqlParameterHelper(
+        //        logFactory,
+        //        writeConnectionString, 
+        //        "mp_SchemaScriptHistory_Insert", 
+        //        6);
+        //    sph.DefineSqlParameter("@ApplicationID", SqlDbType.UniqueIdentifier, ParameterDirection.Input, applicationId);
+        //    sph.DefineSqlParameter("@ScriptFile", SqlDbType.NVarChar, 255, ParameterDirection.Input, scriptFile);
+        //    sph.DefineSqlParameter("@RunTime", SqlDbType.DateTime, ParameterDirection.Input, runTime);
+        //    sph.DefineSqlParameter("@ErrorOccurred", SqlDbType.Bit, ParameterDirection.Input, errorOccurred);
+        //    sph.DefineSqlParameter("@ErrorMessage", SqlDbType.NVarChar, -1, ParameterDirection.Input, errorMessage);
+        //    sph.DefineSqlParameter("@ScriptBody", SqlDbType.NVarChar, -1, ParameterDirection.Input, scriptBody);
+        //    int newID = Convert.ToInt32(sph.ExecuteScalar());
+        //    return newID;
+        //}
 
         //public bool DeleteSchemaScriptHistory(int id)
         //{

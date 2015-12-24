@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2004-08-03
-// Last Modified:		    2015-11-18
+// Last Modified:		    2015-12-24
 
 using cloudscribe.Core.Models;
 using Microsoft.Data.Sqlite;
@@ -39,53 +39,16 @@ namespace cloudscribe.DbHelpers.SQLite
         private string connectionString;
         private string sqliteFilePath = string.Empty;
 
-        public IVersionProviderFactory VersionProviders
-        {
-            get { return versionProviders; }
-        }
+        #region IDb
 
         public string DBPlatform
         {
             get { return "SQLite"; }
         }
 
-        public DbException GetConnectionError(string overrideConnectionInfo)
+        public IVersionProviderFactory VersionProviders
         {
-            DbException exception = null;
-
-            SqliteConnection connection;
-
-            if (
-                (overrideConnectionInfo != null)
-                && (overrideConnectionInfo.Length > 0)
-              )
-            {
-                connection = new SqliteConnection(overrideConnectionInfo);
-            }
-            else
-            {
-                connection = new SqliteConnection(connectionString);
-            }
-
-            try
-            {
-                connection.Open();
-
-
-            }
-            catch (DbException ex)
-            {
-                exception = ex;
-            }
-            finally
-            {
-                if (connection.State == ConnectionState.Open)
-                    connection.Close();
-            }
-
-
-            return exception;
-
+            get { return versionProviders; }
         }
 
         private object theLock = new object();
@@ -97,7 +60,7 @@ namespace cloudscribe.DbHelpers.SQLite
                 if (sqliteFilePath.Length > 0)
                 {
 
-                    
+
                     //sqlite will automatically create the db when it tries to connect but the folder must exist
 
                     string folderPath = Path.GetDirectoryName(sqliteFilePath);
@@ -105,18 +68,18 @@ namespace cloudscribe.DbHelpers.SQLite
                     {
                         Directory.CreateDirectory(folderPath);
                     }
-                    
+
                     if (!File.Exists(sqliteFilePath))
                     {
                         using (SqliteConnection conn = new SqliteConnection(connectionString))
                         {
                             conn.Open();
                         } //this closes it
-                           
-                        
+
+
                     }
 
-                       
+
 
                 }
             }
@@ -199,7 +162,7 @@ namespace cloudscribe.DbHelpers.SQLite
             }
             catch (Exception ex)
             {
-                if(ex is DbException)
+                if (ex is DbException)
                 {
                     //string foo = "foo";
                 }
@@ -265,6 +228,47 @@ namespace cloudscribe.DbHelpers.SQLite
             return result;
         }
 
+        public DbException GetConnectionError(string overrideConnectionInfo)
+        {
+            DbException exception = null;
+
+            SqliteConnection connection;
+
+            if (
+                (overrideConnectionInfo != null)
+                && (overrideConnectionInfo.Length > 0)
+              )
+            {
+                connection = new SqliteConnection(overrideConnectionInfo);
+            }
+            else
+            {
+                connection = new SqliteConnection(connectionString);
+            }
+
+            try
+            {
+                connection.Open();
+
+
+            }
+            catch (DbException ex)
+            {
+                exception = ex;
+            }
+            finally
+            {
+                if (connection.State == ConnectionState.Open)
+                    connection.Close();
+            }
+
+
+            return exception;
+
+        }
+
+
+
         public bool RunScript(
             FileInfo scriptFile,
             string overrideConnectionInfo)
@@ -322,193 +326,11 @@ namespace cloudscribe.DbHelpers.SQLite
             return result;
         }
 
-        public bool UpdateTableField(
-            string connectionString,
-            string tableName,
-            string keyFieldName,
-            string keyFieldValue,
-            string dataFieldName,
-            string dataFieldValue,
-            string additionalWhere)
-        {
-            bool result = false;
-
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("UPDATE " + tableName + " ");
-            sqlCommand.Append(" SET " + dataFieldName + " = :fieldValue ");
-            sqlCommand.Append(" WHERE " + keyFieldName + " = " + keyFieldValue);
-            sqlCommand.Append(" " + additionalWhere + " ");
-            sqlCommand.Append(" ; ");
-
-            SqliteParameter[] arParams = new SqliteParameter[1];
-
-            arParams[0] = new SqliteParameter(":fieldValue", DbType.String);
-            arParams[0].Direction = ParameterDirection.Input;
-            arParams[0].Value = dataFieldValue;
-
-            SqliteConnection connection = new SqliteConnection(connectionString);
-            connection.Open();
-            try
-            {
-                int rowsAffected = AdoHelper.ExecuteNonQuery(connection, sqlCommand.ToString(), arParams);
-                result = (rowsAffected > 0);
-            }
-            finally
-            {
-                connection.Close();
-            }
-
-            return result;
-
-        }
-
-        public bool UpdateTableField(
-            string tableName,
-            string keyFieldName,
-            string keyFieldValue,
-            string dataFieldName,
-            string dataFieldValue,
-            string additionalWhere)
-        {
-            bool result = false;
-
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("UPDATE " + tableName + " ");
-            sqlCommand.Append(" SET " + dataFieldName + " = :fieldValue ");
-            sqlCommand.Append(" WHERE " + keyFieldName + " = " + keyFieldValue);
-            sqlCommand.Append(" " + additionalWhere + " ");
-            sqlCommand.Append(" ; ");
-
-            SqliteParameter[] arParams = new SqliteParameter[1];
-
-            arParams[0] = new SqliteParameter(":fieldValue", DbType.String);
-            arParams[0].Direction = ParameterDirection.Input;
-            arParams[0].Value = dataFieldValue;
-
-            SqliteConnection connection = new SqliteConnection(connectionString);
-            connection.Open();
-            try
-            {
-                int rowsAffected = AdoHelper.ExecuteNonQuery(connection, sqlCommand.ToString(), arParams);
-                result = (rowsAffected > 0);
-            }
-            finally
-            {
-                connection.Close();
-            }
-
-            return result;
-
-        }
-
-        public DbDataReader GetReader(
-            string connectionString,
-            string tableName,
-            string whereClause)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("SELECT * ");
-            sqlCommand.Append("FROM " + tableName + " ");
-            sqlCommand.Append(whereClause);
-            sqlCommand.Append(" ; ");
-
-            return AdoHelper.ExecuteReader(
-                connectionString,
-                sqlCommand.ToString());
-
-        }
-
-        public DbDataReader GetReader(
-            string connectString,
-            string query
-            )
-        {
-            if (string.IsNullOrEmpty(connectString)) { connectString = connectionString; }
-
-            return AdoHelper.ExecuteReader(
-                connectString,
-                query);
-
-        }
-
-        public int ExecteNonQuery(
-            string connectString,
-            string query
-            )
-        {
-            if (string.IsNullOrEmpty(connectString)) { connectString = connectionString; }
-
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
-                connectString,
-                query);
-
-            return rowsAffected;
-
-        }
-
-        //public DataTable GetTable(
-        //    String connectionString,
-        //    String tableName,
-        //    String whereClause)
-        //{
-        //    StringBuilder sqlCommand = new StringBuilder();
-        //    sqlCommand.Append("SELECT * ");
-        //    sqlCommand.Append("FROM " + tableName + " ");
-        //    sqlCommand.Append(whereClause);
-        //    sqlCommand.Append(" ; ");
-
-        //    DataSet ds = AdoHelper.ExecuteDataset(
-        //        connectionString,
-        //        CommandType.Text,
-        //        sqlCommand.ToString());
-
-        //    return ds.Tables[0];
-
-        //}
-
-
-        public int ExistingSiteCount()
-        {
-            int count = 0;
-            try
-            {
-                StringBuilder sqlCommand = new StringBuilder();
-                sqlCommand.Append("SELECT  Count(*) ");
-                sqlCommand.Append("FROM	mp_Sites ");
-                sqlCommand.Append(";");
-
-                count = Convert.ToInt32(AdoHelper.ExecuteScalar(
-                    connectionString,
-                    sqlCommand.ToString(),
-                    null));
-            }
-            catch (DbException) { }
-            catch (InvalidOperationException) { }
-
-
-            return count;
-
-        }
-
-        public bool SitesTableExists()
-        {
-            return TableExists("mp_Sites");
-        }
+        
 
         public bool TableExists(string tableName)
         {
-            //SqliteConnection connection = new SqliteConnection(ConnectionString.GetConnectionString());
-            //string[] restrictions = new string[4];
-            //restrictions[2] = tableName;
-            //connection.Open();
-            //DataTable table = connection.GetSchema("Tables", restrictions);
-            //connection.Close();
-            //if (table != null)
-            //{
-            //    return (table.Rows.Count > 0);
-            //}
-
-            //return false;
+            
 
             try
             {
@@ -521,30 +343,52 @@ namespace cloudscribe.DbHelpers.SQLite
                 arParams[0].Value = tableName;
 
                 object result = AdoHelper.ExecuteScalar(connectionString,
-                    sqlCommand.ToString(), 
+                    sqlCommand.ToString(),
                     arParams);
 
                 int count = Convert.ToInt32(result);
 
                 return count > 0;
 
-                //using (DbDataReader reader = AdoHelper.ExecuteReader(
-                //    connectionString,
-                //    CommandType.Text,
-                //    sqlCommand.ToString(),
-                //    null))
-                //{
-                //    if (reader.Read())
-                //    {
-                //        return true;
-                //    }
-                //}
+                
             }
             catch { }
 
             return false;
         }
 
+        public bool SchemaTableExists()
+        {
+            return TableExists("mp_SchemaVersion");
+        }
+
+        public Guid GetOrGenerateSchemaApplicationId(string applicationName)
+        {
+            IVersionProvider versionProvider = versionProviders.Get(applicationName);
+            if (versionProvider != null) { return versionProvider.ApplicationId; }
+
+            Guid appID = Guid.NewGuid();
+
+            try
+            {
+                using (DbDataReader reader = GetSchemaId(applicationName))
+                {
+                    if (reader.Read())
+                    {
+                        appID = new Guid(reader["ApplicationID"].ToString());
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                log.LogError("error", ex);
+            }
+
+
+            return appID;
+
+        }
 
         public Version GetSchemaVersion(Guid applicationId)
         {
@@ -581,45 +425,21 @@ namespace cloudscribe.DbHelpers.SQLite
             return new Version(major, minor, build, revision);
         }
 
-        public Guid GetOrGenerateSchemaApplicationId(string applicationName)
+
+        public bool SchemaVersionExists(Guid applicationId)
         {
-            IVersionProvider versionProvider = versionProviders.Get(applicationName);
-            if (versionProvider != null) { return versionProvider.ApplicationId; }
+            bool result = false;
 
-            Guid appID = Guid.NewGuid();
-
-            try
+            using (DbDataReader reader = GetSchemaVersionFromGuid(applicationId))
             {
-                using (DbDataReader reader = GetSchemaId(applicationName))
+                if (reader.Read())
                 {
-                    if (reader.Read())
-                    {
-                        appID = new Guid(reader["ApplicationID"].ToString());
-
-                    }
+                    result = true;
                 }
             }
-            catch (Exception ex)
-            {
-                log.LogError("error",ex);
-            }
 
-
-            return appID;
-
+            return result;
         }
-
-
-        private DbDataReader GetSchemaId(string applicationName)
-        {
-            return GetReader(
-                connectionString,
-                "mp_SchemaVersion",
-                " WHERE LOWER(ApplicationName) = '" + applicationName.ToLower() + "'");
-
-        }
-
-
 
         public bool AddSchemaVersion(
             Guid applicationId,
@@ -732,13 +552,253 @@ namespace cloudscribe.DbHelpers.SQLite
 
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
-                connectionString, 
-                sqlCommand.ToString(), 
+                connectionString,
+                sqlCommand.ToString(),
                 arParams);
 
             return (rowsAffected > 0);
 
         }
+
+        #endregion
+
+
+        #region Private Methods
+
+        private DbDataReader GetSchemaVersionFromGuid(Guid applicationId)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  * ");
+            sqlCommand.Append("FROM	mp_SchemaVersion ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("ApplicationID = :ApplicationID ;");
+
+            SqliteParameter[] arParams = new SqliteParameter[1];
+
+            arParams[0] = new SqliteParameter(":ApplicationID", DbType.String);
+            arParams[0].Direction = ParameterDirection.Input;
+            arParams[0].Value = applicationId.ToString();
+
+            return AdoHelper.ExecuteReader(
+                connectionString,
+                sqlCommand.ToString(),
+                arParams);
+
+        }
+
+        private DbDataReader GetSchemaId(string applicationName)
+        {
+            //return GetReader(
+            //    connectionString,
+            //    "mp_SchemaVersion",
+            //    " WHERE LOWER(ApplicationName) = '" + applicationName.ToLower() + "'");
+
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  * ");
+            sqlCommand.Append("FROM	mp_SchemaVersion ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("LOWER(ApplicationName) = :ApplicationName ;");
+
+            SqliteParameter[] arParams = new SqliteParameter[1];
+
+            arParams[0] = new SqliteParameter(":ApplicationName", DbType.String);
+            arParams[0].Direction = ParameterDirection.Input;
+            arParams[0].Value = applicationName.ToLowerInvariant();
+
+            return AdoHelper.ExecuteReader(
+                connectionString,
+                sqlCommand.ToString(),
+                arParams);
+
+        }
+
+
+        #endregion
+
+
+
+
+        //public bool UpdateTableField(
+        //    string connectionString,
+        //    string tableName,
+        //    string keyFieldName,
+        //    string keyFieldValue,
+        //    string dataFieldName,
+        //    string dataFieldValue,
+        //    string additionalWhere)
+        //{
+        //    bool result = false;
+
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("UPDATE " + tableName + " ");
+        //    sqlCommand.Append(" SET " + dataFieldName + " = :fieldValue ");
+        //    sqlCommand.Append(" WHERE " + keyFieldName + " = " + keyFieldValue);
+        //    sqlCommand.Append(" " + additionalWhere + " ");
+        //    sqlCommand.Append(" ; ");
+
+        //    SqliteParameter[] arParams = new SqliteParameter[1];
+
+        //    arParams[0] = new SqliteParameter(":fieldValue", DbType.String);
+        //    arParams[0].Direction = ParameterDirection.Input;
+        //    arParams[0].Value = dataFieldValue;
+
+        //    SqliteConnection connection = new SqliteConnection(connectionString);
+        //    connection.Open();
+        //    try
+        //    {
+        //        int rowsAffected = AdoHelper.ExecuteNonQuery(connection, sqlCommand.ToString(), arParams);
+        //        result = (rowsAffected > 0);
+        //    }
+        //    finally
+        //    {
+        //        connection.Close();
+        //    }
+
+        //    return result;
+
+        //}
+
+        //public bool UpdateTableField(
+        //    string tableName,
+        //    string keyFieldName,
+        //    string keyFieldValue,
+        //    string dataFieldName,
+        //    string dataFieldValue,
+        //    string additionalWhere)
+        //{
+        //    bool result = false;
+
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("UPDATE " + tableName + " ");
+        //    sqlCommand.Append(" SET " + dataFieldName + " = :fieldValue ");
+        //    sqlCommand.Append(" WHERE " + keyFieldName + " = " + keyFieldValue);
+        //    sqlCommand.Append(" " + additionalWhere + " ");
+        //    sqlCommand.Append(" ; ");
+
+        //    SqliteParameter[] arParams = new SqliteParameter[1];
+
+        //    arParams[0] = new SqliteParameter(":fieldValue", DbType.String);
+        //    arParams[0].Direction = ParameterDirection.Input;
+        //    arParams[0].Value = dataFieldValue;
+
+        //    SqliteConnection connection = new SqliteConnection(connectionString);
+        //    connection.Open();
+        //    try
+        //    {
+        //        int rowsAffected = AdoHelper.ExecuteNonQuery(connection, sqlCommand.ToString(), arParams);
+        //        result = (rowsAffected > 0);
+        //    }
+        //    finally
+        //    {
+        //        connection.Close();
+        //    }
+
+        //    return result;
+
+        //}
+
+        //public DbDataReader GetReader(
+        //    string connectionString,
+        //    string tableName,
+        //    string whereClause)
+        //{
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("SELECT * ");
+        //    sqlCommand.Append("FROM " + tableName + " ");
+        //    sqlCommand.Append(whereClause);
+        //    sqlCommand.Append(" ; ");
+
+        //    return AdoHelper.ExecuteReader(
+        //        connectionString,
+        //        sqlCommand.ToString());
+
+        //}
+
+        //public DbDataReader GetReader(
+        //    string connectString,
+        //    string query
+        //    )
+        //{
+        //    if (string.IsNullOrEmpty(connectString)) { connectString = connectionString; }
+
+        //    return AdoHelper.ExecuteReader(
+        //        connectString,
+        //        query);
+
+        //}
+
+        //public int ExecteNonQuery(
+        //    string connectString,
+        //    string query
+        //    )
+        //{
+        //    if (string.IsNullOrEmpty(connectString)) { connectString = connectionString; }
+
+        //    int rowsAffected = AdoHelper.ExecuteNonQuery(
+        //        connectString,
+        //        query);
+
+        //    return rowsAffected;
+
+        //}
+
+        //public DataTable GetTable(
+        //    String connectionString,
+        //    String tableName,
+        //    String whereClause)
+        //{
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("SELECT * ");
+        //    sqlCommand.Append("FROM " + tableName + " ");
+        //    sqlCommand.Append(whereClause);
+        //    sqlCommand.Append(" ; ");
+
+        //    DataSet ds = AdoHelper.ExecuteDataset(
+        //        connectionString,
+        //        CommandType.Text,
+        //        sqlCommand.ToString());
+
+        //    return ds.Tables[0];
+
+        //}
+
+
+        //public int ExistingSiteCount()
+        //{
+        //    int count = 0;
+        //    try
+        //    {
+        //        StringBuilder sqlCommand = new StringBuilder();
+        //        sqlCommand.Append("SELECT  Count(*) ");
+        //        sqlCommand.Append("FROM	mp_Sites ");
+        //        sqlCommand.Append(";");
+
+        //        count = Convert.ToInt32(AdoHelper.ExecuteScalar(
+        //            connectionString,
+        //            sqlCommand.ToString(),
+        //            null));
+        //    }
+        //    catch (DbException) { }
+        //    catch (InvalidOperationException) { }
+
+
+        //    return count;
+
+        //}
+
+        
+
+
+        
+
+        
+
+
+        
+
+
+
+        
 
 
         //public bool DeleteSchemaVersion(
@@ -764,42 +824,9 @@ namespace cloudscribe.DbHelpers.SQLite
 
         //}
 
-        public bool SchemaVersionExists(Guid applicationId)
-        {
-            bool result = false;
+        
 
-            using (DbDataReader reader = GetSchemaVersionFromGuid(applicationId))
-            {
-                if (reader.Read())
-                {
-                    result = true;
-                }
-            }
-
-            return result;
-        }
-
-        private DbDataReader GetSchemaVersionFromGuid(
-            Guid applicationId)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("SELECT  * ");
-            sqlCommand.Append("FROM	mp_SchemaVersion ");
-            sqlCommand.Append("WHERE ");
-            sqlCommand.Append("ApplicationID = :ApplicationID ;");
-
-            SqliteParameter[] arParams = new SqliteParameter[1];
-
-            arParams[0] = new SqliteParameter(":ApplicationID", DbType.String);
-            arParams[0].Direction = ParameterDirection.Input;
-            arParams[0].Value = applicationId.ToString();
-
-            return AdoHelper.ExecuteReader(
-                connectionString,
-                sqlCommand.ToString(),
-                arParams);
-
-        }
+        
 
         //public IDataReader SchemaVersionGetNonCore()
         //{
@@ -819,85 +846,85 @@ namespace cloudscribe.DbHelpers.SQLite
 
         //}
 
-        public int AddSchemaScriptHistory(
-            Guid applicationId,
-            string scriptFile,
-            DateTime runTime,
-            bool errorOccurred,
-            string errorMessage,
-            string scriptBody)
-        {
-            #region Bit Conversion
+        //public int AddSchemaScriptHistory(
+        //    Guid applicationId,
+        //    string scriptFile,
+        //    DateTime runTime,
+        //    bool errorOccurred,
+        //    string errorMessage,
+        //    string scriptBody)
+        //{
+        //    #region Bit Conversion
 
-            int intErrorOccurred;
-            if (errorOccurred)
-            {
-                intErrorOccurred = 1;
-            }
-            else
-            {
-                intErrorOccurred = 0;
-            }
-
-
-            #endregion
-
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("INSERT INTO mp_SchemaScriptHistory (");
-            sqlCommand.Append("ApplicationID, ");
-            sqlCommand.Append("ScriptFile, ");
-            sqlCommand.Append("RunTime, ");
-            sqlCommand.Append("ErrorOccurred, ");
-            sqlCommand.Append("ErrorMessage, ");
-            sqlCommand.Append("ScriptBody )");
-
-            sqlCommand.Append(" VALUES (");
-            sqlCommand.Append(":ApplicationID, ");
-            sqlCommand.Append(":ScriptFile, ");
-            sqlCommand.Append(":RunTime, ");
-            sqlCommand.Append(":ErrorOccurred, ");
-            sqlCommand.Append(":ErrorMessage, ");
-            sqlCommand.Append(":ScriptBody );");
-
-            sqlCommand.Append("SELECT LAST_INSERT_ROWID();");
-
-            SqliteParameter[] arParams = new SqliteParameter[6];
-
-            arParams[0] = new SqliteParameter(":ApplicationID", DbType.String);
-            arParams[0].Direction = ParameterDirection.Input;
-            arParams[0].Value = applicationId.ToString();
-
-            arParams[1] = new SqliteParameter(":ScriptFile", DbType.String);
-            arParams[1].Direction = ParameterDirection.Input;
-            arParams[1].Value = scriptFile;
-
-            arParams[2] = new SqliteParameter(":RunTime", DbType.DateTime);
-            arParams[2].Direction = ParameterDirection.Input;
-            arParams[2].Value = runTime;
-
-            arParams[3] = new SqliteParameter(":ErrorOccurred", DbType.Int32);
-            arParams[3].Direction = ParameterDirection.Input;
-            arParams[3].Value = intErrorOccurred;
-
-            arParams[4] = new SqliteParameter(":ErrorMessage", DbType.Object);
-            arParams[4].Direction = ParameterDirection.Input;
-            arParams[4].Value = errorMessage;
-
-            arParams[5] = new SqliteParameter(":ScriptBody", DbType.Object);
-            arParams[5].Direction = ParameterDirection.Input;
-            arParams[5].Value = scriptBody;
+        //    int intErrorOccurred;
+        //    if (errorOccurred)
+        //    {
+        //        intErrorOccurred = 1;
+        //    }
+        //    else
+        //    {
+        //        intErrorOccurred = 0;
+        //    }
 
 
-            int newID = 0;
-            newID = Convert.ToInt32(
-                AdoHelper.ExecuteScalar(
-                connectionString,
-                sqlCommand.ToString(),
-                arParams).ToString());
+        //    #endregion
 
-            return newID;
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("INSERT INTO mp_SchemaScriptHistory (");
+        //    sqlCommand.Append("ApplicationID, ");
+        //    sqlCommand.Append("ScriptFile, ");
+        //    sqlCommand.Append("RunTime, ");
+        //    sqlCommand.Append("ErrorOccurred, ");
+        //    sqlCommand.Append("ErrorMessage, ");
+        //    sqlCommand.Append("ScriptBody )");
 
-        }
+        //    sqlCommand.Append(" VALUES (");
+        //    sqlCommand.Append(":ApplicationID, ");
+        //    sqlCommand.Append(":ScriptFile, ");
+        //    sqlCommand.Append(":RunTime, ");
+        //    sqlCommand.Append(":ErrorOccurred, ");
+        //    sqlCommand.Append(":ErrorMessage, ");
+        //    sqlCommand.Append(":ScriptBody );");
+
+        //    sqlCommand.Append("SELECT LAST_INSERT_ROWID();");
+
+        //    SqliteParameter[] arParams = new SqliteParameter[6];
+
+        //    arParams[0] = new SqliteParameter(":ApplicationID", DbType.String);
+        //    arParams[0].Direction = ParameterDirection.Input;
+        //    arParams[0].Value = applicationId.ToString();
+
+        //    arParams[1] = new SqliteParameter(":ScriptFile", DbType.String);
+        //    arParams[1].Direction = ParameterDirection.Input;
+        //    arParams[1].Value = scriptFile;
+
+        //    arParams[2] = new SqliteParameter(":RunTime", DbType.DateTime);
+        //    arParams[2].Direction = ParameterDirection.Input;
+        //    arParams[2].Value = runTime;
+
+        //    arParams[3] = new SqliteParameter(":ErrorOccurred", DbType.Int32);
+        //    arParams[3].Direction = ParameterDirection.Input;
+        //    arParams[3].Value = intErrorOccurred;
+
+        //    arParams[4] = new SqliteParameter(":ErrorMessage", DbType.Object);
+        //    arParams[4].Direction = ParameterDirection.Input;
+        //    arParams[4].Value = errorMessage;
+
+        //    arParams[5] = new SqliteParameter(":ScriptBody", DbType.Object);
+        //    arParams[5].Direction = ParameterDirection.Input;
+        //    arParams[5].Value = scriptBody;
+
+
+        //    int newID = 0;
+        //    newID = Convert.ToInt32(
+        //        AdoHelper.ExecuteScalar(
+        //        connectionString,
+        //        sqlCommand.ToString(),
+        //        arParams).ToString());
+
+        //    return newID;
+
+        //}
 
         //public bool DeleteSchemaScriptHistory(int id)
         //{

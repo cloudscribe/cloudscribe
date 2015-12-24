@@ -210,7 +210,7 @@ namespace cloudscribe.Web.Setup
 
             if (!CoreSystemIsReady()) return false;
 
-            existingSiteCount = setupManager.ExistingSiteCount();
+            existingSiteCount = await siteManager.ExistingSiteCount();
 
             if (existingSiteCount == 0)
             {
@@ -616,13 +616,13 @@ namespace cloudscribe.Web.Setup
                     newVersion.Build,
                     newVersion.Revision);
 
-                setupManager.AddSchemaScriptHistory(
-                    applicationId,
-                    scriptFile.Name,
-                    DateTime.UtcNow,
-                    false,
-                    string.Empty,
-                    string.Empty);
+                //setupManager.AddSchemaScriptHistory(
+                //    applicationId,
+                //    scriptFile.Name,
+                //    DateTime.UtcNow,
+                //    false,
+                //    string.Empty,
+                //    string.Empty);
 
                     currentSchemaVersion = newVersion;
                     return true;
@@ -746,7 +746,7 @@ namespace cloudscribe.Web.Setup
                             false);
                     }
 
-                    existingSiteCount = setupManager.ExistingSiteCount();
+                    existingSiteCount = await siteManager.ExistingSiteCount();
 
                     await WritePageContent(response,
                         string.Format(

@@ -23,44 +23,24 @@ namespace cloudscribe.Core.Models
         // a clash if the sql core scripts exist on disk - we don't want to run them if using EF for core repos
         // but we still want to be able to let other scripts run if they are not related to core
 
+        IVersionProviderFactory VersionProviders { get; }
         void EnsureDatabase();
         bool CanAccessDatabase();
         bool CanAccessDatabase(string overrideConnectionInfo);
         bool CanAlterSchema(string overrideConnectionInfo);
         bool CanCreateTemporaryTables();
         
-        IVersionProviderFactory VersionProviders { get; }
-        int ExecteNonQuery(string connectionString, string query);
         DbException GetConnectionError(string overrideConnectionInfo);
-        //DbDataReader GetReader(string connectionString, string query);
-        //DbDataReader GetReader(string connectionString, string tableName, string whereClause);
-        //http://stackoverflow.com/questions/27900493/asp-vnext-core-5-0-datatable
-        //DataTable GetTable(string connectionString, string tableName, string whereClause);
+        
         bool RunScript(FileInfo scriptFile, string overrideConnectionInfo);
         bool RunScript(string script, string overrideConnectionInfo);
         bool TableExists(string tableName);
-        //bool UpdateTableField(
-        //    string connectionString,
-        //    string tableName,
-        //    string keyFieldName,
-        //    string keyFieldValue,
-        //    string dataFieldName,
-        //    string dataFieldValue,
-        //    string additionalWhere);
-
-        //bool UpdateTableField(
-        //    string tableName,
-        //    string keyFieldName,
-        //    string keyFieldValue,
-        //    string dataFieldName,
-        //    string dataFieldValue,
-        //    string additionalWhere);
-
-        bool SitesTableExists();
-        int ExistingSiteCount();
-
+        
+        bool SchemaTableExists();
+       
         Guid GetOrGenerateSchemaApplicationId(string applicationName);
         Version GetSchemaVersion(Guid applicationId);
+        bool SchemaVersionExists(Guid applicationId);
 
         bool AddSchemaVersion(
           Guid applicationId,
@@ -78,14 +58,39 @@ namespace cloudscribe.Core.Models
             int build,
             int revision);
 
-        bool SchemaVersionExists(Guid applicationId);
+        
 
-        int AddSchemaScriptHistory(
-            Guid applicationId,
-            string scriptFile,
-            DateTime runTime,
-            bool errorOccurred,
-            string errorMessage,
-            string scriptBody);
+        //int AddSchemaScriptHistory(
+        //    Guid applicationId,
+        //    string scriptFile,
+        //    DateTime runTime,
+        //    bool errorOccurred,
+        //    string errorMessage,
+        //    string scriptBody);
+
+        //int ExecteNonQuery(string connectionString, string query);
+
+        //bool UpdateTableField(
+        //    string connectionString,
+        //    string tableName,
+        //    string keyFieldName,
+        //    string keyFieldValue,
+        //    string dataFieldName,
+        //    string dataFieldValue,
+        //    string additionalWhere);
+
+        //bool UpdateTableField(
+        //    string tableName,
+        //    string keyFieldName,
+        //    string keyFieldValue,
+        //    string dataFieldName,
+        //    string dataFieldValue,
+        //    string additionalWhere);
+
+        //DbDataReader GetReader(string connectionString, string query);
+        //DbDataReader GetReader(string connectionString, string tableName, string whereClause);
+        //http://stackoverflow.com/questions/27900493/asp-vnext-core-5-0-datatable
+        //DataTable GetTable(string connectionString, string tableName, string whereClause);
+
     }
 }

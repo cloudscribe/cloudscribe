@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-07-17
-// Last Modified:		    2015-11-11
+// Last Modified:		    2015-12-24
 
 
 using cloudscribe.Core.Models;
@@ -45,55 +45,16 @@ namespace cloudscribe.DbHelpers.Firebird
         private string writeConnectionString;
         private string readConnectionString;
 
-        public IVersionProviderFactory VersionProviders
-        {
-            get { return versionProviders; }
-        }
+        #region IDb
 
         public string DBPlatform
         {
             get { return "Firebird"; }
         }
 
-        
-
-        public DbException GetConnectionError(string overrideConnectionInfo)
+        public IVersionProviderFactory VersionProviders
         {
-            DbException exception = null;
-
-            FbConnection connection;
-
-            if (
-                (overrideConnectionInfo != null)
-                && (overrideConnectionInfo.Length > 0)
-              )
-            {
-                connection = new FbConnection(overrideConnectionInfo);
-            }
-            else
-            {
-                connection = new FbConnection(readConnectionString);
-            }
-
-            try
-            {
-                connection.Open();
-
-
-            }
-            catch (DbException ex)
-            {
-                exception = ex;
-            }
-            finally
-            {
-                if (connection.State == ConnectionState.Open)
-                    connection.Close();
-            }
-
-
-            return exception;
-
+            get { return versionProviders; }
         }
 
         public void EnsureDatabase()
@@ -207,6 +168,45 @@ namespace cloudscribe.DbHelpers.Firebird
             return true;
         }
 
+        public DbException GetConnectionError(string overrideConnectionInfo)
+        {
+            DbException exception = null;
+
+            FbConnection connection;
+
+            if (
+                (overrideConnectionInfo != null)
+                && (overrideConnectionInfo.Length > 0)
+              )
+            {
+                connection = new FbConnection(overrideConnectionInfo);
+            }
+            else
+            {
+                connection = new FbConnection(readConnectionString);
+            }
+
+            try
+            {
+                connection.Open();
+
+
+            }
+            catch (DbException ex)
+            {
+                exception = ex;
+            }
+            finally
+            {
+                if (connection.State == ConnectionState.Open)
+                    connection.Close();
+            }
+
+
+            return exception;
+
+        }
+
         public bool RunScript(
             FileInfo scriptFile,
             String overrideConnectionInfo)
@@ -257,13 +257,6 @@ namespace cloudscribe.DbHelpers.Firebird
 
         }
 
-        private static int CompareFileNames(FileInfo f1, FileInfo f2)
-        {
-            return f1.FullName.CompareTo(f2.FullName);
-        }
-
-
-
         public bool RunScript(
             string script,
             string overrideConnectionInfo)
@@ -312,192 +305,7 @@ namespace cloudscribe.DbHelpers.Firebird
             return result;
         }
 
-        private bool RunScriptByStatements(
-            DirectoryInfo scriptDirectory,
-            string overrideConnectionInfo)
-        {
-            if (scriptDirectory == null) return false;
-
-            bool result = false;
-
-
-            FileInfo[] scriptFiles = scriptDirectory.GetFiles("*.sql");
-
-            Array.Sort(scriptFiles, CompareFileNames);
-
-            foreach (FileInfo scriptFile in scriptFiles)
-            {
-                if (
-                (overrideConnectionInfo == null)
-                || (overrideConnectionInfo.Length == 0)
-              )
-                {
-                    overrideConnectionInfo = writeConnectionString;
-                }
-
-                result = AdoHelper.ExecuteBatchScript(
-                    overrideConnectionInfo,
-                    scriptFile.FullName);
-            }
-
-
-            return result;
-        }
-
-        public bool UpdateTableField(
-            string connectionString,
-            string tableName,
-            string keyFieldName,
-            string keyFieldValue,
-            string dataFieldName,
-            string dataFieldValue,
-            string additionalWhere)
-        {
-
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("UPDATE " + tableName + " ");
-            sqlCommand.Append(" SET " + dataFieldName + " = @fieldValue ");
-            sqlCommand.Append(" WHERE " + keyFieldName + " = " + keyFieldValue);
-            sqlCommand.Append(" " + additionalWhere + " ");
-            sqlCommand.Append(" ; ");
-
-            FbParameter[] arParams = new FbParameter[1];
-
-            arParams[0] = new FbParameter("@fieldValue", FbDbType.VarChar);
-            arParams[0].Direction = ParameterDirection.Input;
-            arParams[0].Value = dataFieldValue;
-
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
-                connectionString,
-                sqlCommand.ToString(),
-                arParams);
-
-
-            return (rowsAffected > 0);
-
-        }
-
-        public bool UpdateTableField(
-            string tableName,
-            string keyFieldName,
-            string keyFieldValue,
-            string dataFieldName,
-            string dataFieldValue,
-            string additionalWhere)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("UPDATE " + tableName + " ");
-            sqlCommand.Append(" SET " + dataFieldName + " = @fieldValue ");
-            sqlCommand.Append(" WHERE " + keyFieldName + " = " + keyFieldValue);
-            sqlCommand.Append(" " + additionalWhere + " ");
-            sqlCommand.Append(" ; ");
-
-            FbParameter[] arParams = new FbParameter[1];
-
-            arParams[0] = new FbParameter("@fieldValue", FbDbType.VarChar);
-            arParams[0].Direction = ParameterDirection.Input;
-            arParams[0].Value = dataFieldValue;
-
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
-                writeConnectionString,
-                sqlCommand.ToString(),
-                arParams);
-
-            return (rowsAffected > 0);
-
-        }
-
-        public DbDataReader GetReader(
-            String connectionString,
-            String tableName,
-            String whereClause)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("SELECT * ");
-            sqlCommand.Append("FROM " + tableName + " ");
-            sqlCommand.Append(whereClause);
-            sqlCommand.Append(" ; ");
-
-            return AdoHelper.ExecuteReader(
-                connectionString,
-                sqlCommand.ToString());
-
-        }
-
-        public DbDataReader GetReader(
-            string connectionString,
-            string query
-            )
-        {
-            if (string.IsNullOrEmpty(connectionString)) { connectionString = readConnectionString; }
-
-            return AdoHelper.ExecuteReader(
-               connectionString,
-               query);
-        }
-
-        public int ExecteNonQuery(
-           string connectionString,
-           string query
-           )
-        {
-            if (string.IsNullOrEmpty(connectionString)) { connectionString = writeConnectionString; }
-
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
-               connectionString,
-               query);
-
-            return rowsAffected;
-
-        }
-
-        //public DataTable GetTable(
-        //    string connectionString,
-        //    string tableName,
-        //    string whereClause)
-        //{
-        //    StringBuilder sqlCommand = new StringBuilder();
-        //    sqlCommand.Append("SELECT * ");
-        //    sqlCommand.Append("FROM " + tableName + " ");
-        //    sqlCommand.Append(whereClause);
-        //    sqlCommand.Append(" ; ");
-
-        //    DataSet ds = AdoHelper.ExecuteDataset(
-        //        connectionString,
-        //        sqlCommand.ToString());
-
-        //    return ds.Tables[0];
-
-        //}
-
-        public int ExistingSiteCount()
-        {
-            int count = 0;
-            try
-            {
-                StringBuilder sqlCommand = new StringBuilder();
-                sqlCommand.Append("SELECT  Count(*) ");
-                sqlCommand.Append("FROM	mp_Sites ");
-                sqlCommand.Append(";");
-
-                count = Convert.ToInt32(AdoHelper.ExecuteScalar(
-                    readConnectionString,
-                    sqlCommand.ToString(),
-                    null));
-
-            }
-            catch (DbException) { }
-            catch (InvalidOperationException) { }
-
-            return count;
-
-        }
-
-        public bool SitesTableExists()
-        {
-            return TableExists("MP_SITES");
-        }
-
+        
         public bool TableExists(string tableName)
         {
             //FbConnection connection = new FbConnection(GetConnectionString());
@@ -539,7 +347,38 @@ namespace cloudscribe.DbHelpers.Firebird
             return false;
         }
 
+        public bool SchemaTableExists()
+        {
+            return TableExists("MP_SCHEMAVERSION");
+        }
 
+        public Guid GetOrGenerateSchemaApplicationId(string applicationName)
+        {
+            IVersionProvider versionProvider = versionProviders.Get(applicationName);
+            if (versionProvider != null) { return versionProvider.ApplicationId; }
+
+            Guid appID = Guid.NewGuid();
+
+            try
+            {
+                using (DbDataReader reader = GetSchemaId(applicationName))
+                {
+                    if (reader.Read())
+                    {
+                        appID = new Guid(reader["ApplicationID"].ToString());
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                log.LogError("error", ex);
+            }
+
+
+            return appID;
+
+        }
 
         public Version GetSchemaVersion(Guid applicationId)
         {
@@ -574,46 +413,6 @@ namespace cloudscribe.DbHelpers.Firebird
 
 
             return new Version(major, minor, build, revision);
-        }
-
-
-        public Guid GetOrGenerateSchemaApplicationId(string applicationName)
-        {
-            IVersionProvider versionProvider = versionProviders.Get(applicationName);
-            if (versionProvider != null) { return versionProvider.ApplicationId; }
-            
-            Guid appID = Guid.NewGuid();
-
-            try
-            {
-                using (DbDataReader reader = GetSchemaId(applicationName))
-                {
-                    if (reader.Read())
-                    {
-                        appID = new Guid(reader["ApplicationID"].ToString());
-
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                log.LogError("error", ex);
-            }
-
-
-            return appID;
-
-        }
-
-
-
-        private DbDataReader GetSchemaId(string applicationName)
-        {
-            return GetReader(
-                readConnectionString,
-                "MP_SCHEMAVERSION",
-                " WHERE UPPER(ApplicationName) = '" + applicationName.ToUpper() + "'");
-
         }
 
         public bool SchemaVersionExists(Guid applicationId)
@@ -747,35 +546,55 @@ namespace cloudscribe.DbHelpers.Firebird
 
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
-                writeConnectionString, 
-                sqlCommand.ToString(), 
+                writeConnectionString,
+                sqlCommand.ToString(),
                 arParams);
 
             return (rowsAffected > 0);
 
         }
 
+        #endregion
 
-        //public bool DeleteSchemaVersion(
-        //    Guid applicationId)
-        //{
-        //    StringBuilder sqlCommand = new StringBuilder();
-        //    sqlCommand.Append("DELETE FROM mp_SchemaVersion ");
-        //    sqlCommand.Append("WHERE ");
-        //    sqlCommand.Append("ApplicationID = @ApplicationID ;");
+        #region private methods
 
-        //    FbParameter[] arParams = new FbParameter[1];
+        private static int CompareFileNames(FileInfo f1, FileInfo f2)
+        {
+            return f1.FullName.CompareTo(f2.FullName);
+        }
 
-        //    arParams[0] = new FbParameter("@ApplicationID", FbDbType.VarChar, 36);
-        //    arParams[0].Direction = ParameterDirection.Input;
-        //    arParams[0].Value = applicationId.ToString();
+        
+        private bool RunScriptByStatements(
+            DirectoryInfo scriptDirectory,
+            string overrideConnectionInfo)
+        {
+            if (scriptDirectory == null) return false;
 
-        //    int rowsAffected = AdoHelper.ExecuteNonQuery(ConnectionString.GetWriteConnectionString(), sqlCommand.ToString(), arParams);
+            bool result = false;
 
-        //    return (rowsAffected > 0);
 
-        //}
+            FileInfo[] scriptFiles = scriptDirectory.GetFiles("*.sql");
 
+            Array.Sort(scriptFiles, CompareFileNames);
+
+            foreach (FileInfo scriptFile in scriptFiles)
+            {
+                if (
+                (overrideConnectionInfo == null)
+                || (overrideConnectionInfo.Length == 0)
+              )
+                {
+                    overrideConnectionInfo = writeConnectionString;
+                }
+
+                result = AdoHelper.ExecuteBatchScript(
+                    overrideConnectionInfo,
+                    scriptFile.FullName);
+            }
+
+
+            return result;
+        }
 
         private DbDataReader GetSchemaVersionFromGuid(
             Guid applicationId)
@@ -799,6 +618,230 @@ namespace cloudscribe.DbHelpers.Firebird
 
         }
 
+        private DbDataReader GetSchemaId(string applicationName)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  * ");
+            sqlCommand.Append("FROM	mp_SchemaVersion ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("UPPER(ApplicationName) = @ApplicationName ;");
+
+            FbParameter[] arParams = new FbParameter[1];
+
+            arParams[0] = new FbParameter("@ApplicationName", FbDbType.VarChar, 255);
+            arParams[0].Direction = ParameterDirection.Input;
+            arParams[0].Value = applicationName.ToUpper();
+
+            return AdoHelper.ExecuteReader(
+                readConnectionString,
+                sqlCommand.ToString(),
+                arParams);
+
+            //return GetReader(
+            //    readConnectionString,
+            //    "MP_SCHEMAVERSION",
+            //    " WHERE UPPER(ApplicationName) = '" + applicationName.ToUpper() + "'");
+
+        }
+
+        #endregion
+
+        // some of these methods might be usefull but they ar enot part of the interface so commented out for now
+
+
+
+        //public bool UpdateTableField(
+        //    string connectionString,
+        //    string tableName,
+        //    string keyFieldName,
+        //    string keyFieldValue,
+        //    string dataFieldName,
+        //    string dataFieldValue,
+        //    string additionalWhere)
+        //{
+
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("UPDATE " + tableName + " ");
+        //    sqlCommand.Append(" SET " + dataFieldName + " = @fieldValue ");
+        //    sqlCommand.Append(" WHERE " + keyFieldName + " = " + keyFieldValue);
+        //    sqlCommand.Append(" " + additionalWhere + " ");
+        //    sqlCommand.Append(" ; ");
+
+        //    FbParameter[] arParams = new FbParameter[1];
+
+        //    arParams[0] = new FbParameter("@fieldValue", FbDbType.VarChar);
+        //    arParams[0].Direction = ParameterDirection.Input;
+        //    arParams[0].Value = dataFieldValue;
+
+        //    int rowsAffected = AdoHelper.ExecuteNonQuery(
+        //        connectionString,
+        //        sqlCommand.ToString(),
+        //        arParams);
+
+
+        //    return (rowsAffected > 0);
+
+        //}
+
+        //public bool UpdateTableField(
+        //    string tableName,
+        //    string keyFieldName,
+        //    string keyFieldValue,
+        //    string dataFieldName,
+        //    string dataFieldValue,
+        //    string additionalWhere)
+        //{
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("UPDATE " + tableName + " ");
+        //    sqlCommand.Append(" SET " + dataFieldName + " = @fieldValue ");
+        //    sqlCommand.Append(" WHERE " + keyFieldName + " = " + keyFieldValue);
+        //    sqlCommand.Append(" " + additionalWhere + " ");
+        //    sqlCommand.Append(" ; ");
+
+        //    FbParameter[] arParams = new FbParameter[1];
+
+        //    arParams[0] = new FbParameter("@fieldValue", FbDbType.VarChar);
+        //    arParams[0].Direction = ParameterDirection.Input;
+        //    arParams[0].Value = dataFieldValue;
+
+        //    int rowsAffected = AdoHelper.ExecuteNonQuery(
+        //        writeConnectionString,
+        //        sqlCommand.ToString(),
+        //        arParams);
+
+        //    return (rowsAffected > 0);
+
+        //}
+
+        //public DbDataReader GetReader(
+        //    String connectionString,
+        //    String tableName,
+        //    String whereClause)
+        //{
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("SELECT * ");
+        //    sqlCommand.Append("FROM " + tableName + " ");
+        //    sqlCommand.Append(whereClause);
+        //    sqlCommand.Append(" ; ");
+
+        //    return AdoHelper.ExecuteReader(
+        //        connectionString,
+        //        sqlCommand.ToString());
+
+        //}
+
+        //public DbDataReader GetReader(
+        //    string connectionString,
+        //    string query
+        //    )
+        //{
+        //    if (string.IsNullOrEmpty(connectionString)) { connectionString = readConnectionString; }
+
+        //    return AdoHelper.ExecuteReader(
+        //       connectionString,
+        //       query);
+        //}
+
+        //public int ExecteNonQuery(
+        //   string connectionString,
+        //   string query
+        //   )
+        //{
+        //    if (string.IsNullOrEmpty(connectionString)) { connectionString = writeConnectionString; }
+
+        //    int rowsAffected = AdoHelper.ExecuteNonQuery(
+        //       connectionString,
+        //       query);
+
+        //    return rowsAffected;
+
+        //}
+
+        //public DataTable GetTable(
+        //    string connectionString,
+        //    string tableName,
+        //    string whereClause)
+        //{
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("SELECT * ");
+        //    sqlCommand.Append("FROM " + tableName + " ");
+        //    sqlCommand.Append(whereClause);
+        //    sqlCommand.Append(" ; ");
+
+        //    DataSet ds = AdoHelper.ExecuteDataset(
+        //        connectionString,
+        //        sqlCommand.ToString());
+
+        //    return ds.Tables[0];
+
+        //}
+
+        //public int ExistingSiteCount()
+        //{
+        //    int count = 0;
+        //    try
+        //    {
+        //        StringBuilder sqlCommand = new StringBuilder();
+        //        sqlCommand.Append("SELECT  Count(*) ");
+        //        sqlCommand.Append("FROM	mp_Sites ");
+        //        sqlCommand.Append(";");
+
+        //        count = Convert.ToInt32(AdoHelper.ExecuteScalar(
+        //            readConnectionString,
+        //            sqlCommand.ToString(),
+        //            null));
+
+        //    }
+        //    catch (DbException) { }
+        //    catch (InvalidOperationException) { }
+
+        //    return count;
+
+        //}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //public bool DeleteSchemaVersion(
+        //    Guid applicationId)
+        //{
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("DELETE FROM mp_SchemaVersion ");
+        //    sqlCommand.Append("WHERE ");
+        //    sqlCommand.Append("ApplicationID = @ApplicationID ;");
+
+        //    FbParameter[] arParams = new FbParameter[1];
+
+        //    arParams[0] = new FbParameter("@ApplicationID", FbDbType.VarChar, 36);
+        //    arParams[0].Direction = ParameterDirection.Input;
+        //    arParams[0].Value = applicationId.ToString();
+
+        //    int rowsAffected = AdoHelper.ExecuteNonQuery(ConnectionString.GetWriteConnectionString(), sqlCommand.ToString(), arParams);
+
+        //    return (rowsAffected > 0);
+
+        //}
+
+
+
+
+
+
+
+
         //public IDataReader SchemaVersionGetNonCore()
         //{
         //    StringBuilder sqlCommand = new StringBuilder();
@@ -816,65 +859,65 @@ namespace cloudscribe.DbHelpers.Firebird
 
         //}
 
-        public int AddSchemaScriptHistory(
-            Guid applicationId,
-            string scriptFile,
-            DateTime runTime,
-            bool errorOccurred,
-            string errorMessage,
-            string scriptBody)
-        {
+        //public int AddSchemaScriptHistory(
+        //    Guid applicationId,
+        //    string scriptFile,
+        //    DateTime runTime,
+        //    bool errorOccurred,
+        //    string errorMessage,
+        //    string scriptBody)
+        //{
 
-            #region Bit Conversion
-            int intErrorOccurred;
-            if (errorOccurred)
-            {
-                intErrorOccurred = 1;
-            }
-            else
-            {
-                intErrorOccurred = 0;
-            }
+        //    #region Bit Conversion
+        //    int intErrorOccurred;
+        //    if (errorOccurred)
+        //    {
+        //        intErrorOccurred = 1;
+        //    }
+        //    else
+        //    {
+        //        intErrorOccurred = 0;
+        //    }
 
 
-            #endregion
+        //    #endregion
 
-            FbParameter[] arParams = new FbParameter[6];
+        //    FbParameter[] arParams = new FbParameter[6];
 
-            arParams[0] = new FbParameter(":ApplicationID", FbDbType.Char, 36);
-            arParams[0].Direction = ParameterDirection.Input;
-            arParams[0].Value = applicationId.ToString();
+        //    arParams[0] = new FbParameter(":ApplicationID", FbDbType.Char, 36);
+        //    arParams[0].Direction = ParameterDirection.Input;
+        //    arParams[0].Value = applicationId.ToString();
 
-            arParams[1] = new FbParameter(":ScriptFile", FbDbType.VarChar, 255);
-            arParams[1].Direction = ParameterDirection.Input;
-            arParams[1].Value = scriptFile;
+        //    arParams[1] = new FbParameter(":ScriptFile", FbDbType.VarChar, 255);
+        //    arParams[1].Direction = ParameterDirection.Input;
+        //    arParams[1].Value = scriptFile;
 
-            arParams[2] = new FbParameter(":RunTime", FbDbType.TimeStamp);
-            arParams[2].Direction = ParameterDirection.Input;
-            arParams[2].Value = runTime;
+        //    arParams[2] = new FbParameter(":RunTime", FbDbType.TimeStamp);
+        //    arParams[2].Direction = ParameterDirection.Input;
+        //    arParams[2].Value = runTime;
 
-            arParams[3] = new FbParameter(":ErrorOccurred", FbDbType.SmallInt);
-            arParams[3].Direction = ParameterDirection.Input;
-            arParams[3].Value = intErrorOccurred;
+        //    arParams[3] = new FbParameter(":ErrorOccurred", FbDbType.SmallInt);
+        //    arParams[3].Direction = ParameterDirection.Input;
+        //    arParams[3].Value = intErrorOccurred;
 
-            arParams[4] = new FbParameter(":ErrorMessage", FbDbType.VarChar);
-            arParams[4].Direction = ParameterDirection.Input;
-            arParams[4].Value = errorMessage;
+        //    arParams[4] = new FbParameter(":ErrorMessage", FbDbType.VarChar);
+        //    arParams[4].Direction = ParameterDirection.Input;
+        //    arParams[4].Value = errorMessage;
 
-            arParams[5] = new FbParameter(":ScriptBody", FbDbType.VarChar);
-            arParams[5].Direction = ParameterDirection.Input;
-            arParams[5].Value = scriptBody;
+        //    arParams[5] = new FbParameter(":ScriptBody", FbDbType.VarChar);
+        //    arParams[5].Direction = ParameterDirection.Input;
+        //    arParams[5].Value = scriptBody;
 
-            int newID = Convert.ToInt32(AdoHelper.ExecuteScalar(
-                writeConnectionString,
-                CommandType.StoredProcedure,
-                "EXECUTE PROCEDURE MP_SCHEMASCRIPTHISTORY_INSERT ("
-                + AdoHelper.GetParamString(arParams.Length) + ")",
-                arParams));
+        //    int newID = Convert.ToInt32(AdoHelper.ExecuteScalar(
+        //        writeConnectionString,
+        //        CommandType.StoredProcedure,
+        //        "EXECUTE PROCEDURE MP_SCHEMASCRIPTHISTORY_INSERT ("
+        //        + AdoHelper.GetParamString(arParams.Length) + ")",
+        //        arParams));
 
-            return newID;
+        //    return newID;
 
-        }
+        //}
 
         //public bool DeleteSchemaScriptHistory(int id)
         //{

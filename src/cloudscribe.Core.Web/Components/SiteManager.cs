@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-22
-// Last Modified:			2015-12-09
+// Last Modified:			2015-12-24
 // 
 
 using cloudscribe.Core.Models;
@@ -373,6 +373,19 @@ namespace cloudscribe.Core.Web.Components
             // this is only used on setup controller
             // to make sure admin user and role was created
             return await userRepo.CountOfRoles(siteId, string.Empty);
+        }
+
+        public async Task<int> ExistingSiteCount()
+        {
+            try
+            {
+                return await siteRepo.GetCount();
+            }
+            catch { }
+            // errors are expected here before the db is initialized
+            // so just return 0 if error here
+            return 0;
+            
         }
 
     }

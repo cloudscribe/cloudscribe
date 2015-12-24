@@ -92,13 +92,13 @@ namespace cloudscribe.Web.Setup
 
         public bool SiteTableExists()
         {
-            return db.SitesTableExists();
+            return db.SchemaTableExists();
         }
 
-        public int ExistingSiteCount()
-        {
-            return db.ExistingSiteCount();
-        }
+        //public int ExistingSiteCount()
+        //{
+        //    return db.ExistingSiteCount();
+        //}
 
         public bool NeedsUpgrade(string applicationName)
         {
@@ -292,16 +292,16 @@ namespace cloudscribe.Web.Setup
         //        revision);
         //}
 
-        public int AddSchemaScriptHistory(
-            Guid applicationId,
-            string scriptFile,
-            DateTime runTime,
-            bool errorOccurred,
-            string errorMessage,
-            string scriptBody)
-        {
-            return db.AddSchemaScriptHistory(applicationId, scriptFile, runTime, errorOccurred, errorMessage, scriptBody);
-        }
+        //public int AddSchemaScriptHistory(
+        //    Guid applicationId,
+        //    string scriptFile,
+        //    DateTime runTime,
+        //    bool errorOccurred,
+        //    string errorMessage,
+        //    string scriptBody)
+        //{
+        //    return db.AddSchemaScriptHistory(applicationId, scriptFile, runTime, errorOccurred, errorMessage, scriptBody);
+        //}
 
         ///
         /// returning empty string indicates success

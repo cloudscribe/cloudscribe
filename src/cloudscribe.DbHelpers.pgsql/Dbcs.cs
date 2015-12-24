@@ -1,7 +1,7 @@
 ﻿// Original Author:					Joseph Hill
 // Created:							2005-02-16 
 // Additions and fixes have been added by Joe Audette, Dean Brettle, TJ Fontaine
-// Last Modified:                   2015-11-18
+// Last Modified:                   2015-12-24
 
 
 using cloudscribe.Core.Models;
@@ -43,55 +43,17 @@ namespace cloudscribe.DbHelpers.pgsql
         private string writeConnectionString;
         private string readConnectionString;
 
-        public IVersionProviderFactory VersionProviders
-        {
-            get { return versionProviders; }
-        }
+        #region IDb
 
         public string DBPlatform
         {
             get { return "pgsql"; }
         }
 
-        public DbException GetConnectionError(string overrideConnectionInfo)
+        public IVersionProviderFactory VersionProviders
         {
-            DbException exception = null;
-
-            NpgsqlConnection connection;
-
-            if (
-                (overrideConnectionInfo != null)
-                && (overrideConnectionInfo.Length > 0)
-              )
-            {
-                connection = new NpgsqlConnection(overrideConnectionInfo);
-            }
-            else
-            {
-                connection = new NpgsqlConnection(writeConnectionString);
-            }
-
-            try
-            {
-                connection.Open();
-
-
-            }
-            catch (DbException ex)
-            {
-                exception = ex;
-            }
-            finally
-            {
-                if (connection.State == ConnectionState.Open)
-                    connection.Close();
-            }
-
-
-            return exception;
-
+            get { return versionProviders; }
         }
-
 
         public void EnsureDatabase()
         {
@@ -225,6 +187,45 @@ namespace cloudscribe.DbHelpers.pgsql
             return result;
         }
 
+        public DbException GetConnectionError(string overrideConnectionInfo)
+        {
+            DbException exception = null;
+
+            NpgsqlConnection connection;
+
+            if (
+                (overrideConnectionInfo != null)
+                && (overrideConnectionInfo.Length > 0)
+              )
+            {
+                connection = new NpgsqlConnection(overrideConnectionInfo);
+            }
+            else
+            {
+                connection = new NpgsqlConnection(writeConnectionString);
+            }
+
+            try
+            {
+                connection.Open();
+
+
+            }
+            catch (DbException ex)
+            {
+                exception = ex;
+            }
+            finally
+            {
+                if (connection.State == ConnectionState.Open)
+                    connection.Close();
+            }
+
+
+            return exception;
+
+        }
+
         public bool RunScript(
             FileInfo scriptFile,
             string overrideConnectionInfo)
@@ -285,193 +286,7 @@ namespace cloudscribe.DbHelpers.pgsql
             return result;
         }
 
-        public bool UpdateTableField(
-            string connectionString,
-            string tableName,
-            string keyFieldName,
-            string keyFieldValue,
-            string dataFieldName,
-            string dataFieldValue,
-            string additionalWhere)
-        {
-            bool result = false;
-
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("UPDATE " + tableName.ToLower() + " ");
-            sqlCommand.Append(" SET " + dataFieldName.ToLower() + " = :fieldvalue ");
-            sqlCommand.Append(" WHERE " + keyFieldName.ToLower() + " = " + keyFieldValue);
-            sqlCommand.Append(" " + additionalWhere + " ");
-            sqlCommand.Append(" ; ");
-
-            NpgsqlParameter[] arParams = new NpgsqlParameter[1];
-
-            arParams[0] = new NpgsqlParameter(":fieldvalue", NpgsqlDbType.Text);
-            arParams[0].Direction = ParameterDirection.Input;
-            arParams[0].Value = dataFieldValue;
-
-            //NpgsqlConnection connection = new NpgsqlConnection(connectionString);
-            //connection.Open();
-            //try
-            //{
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
-                connectionString,
-                CommandType.Text,
-                sqlCommand.ToString(),
-                arParams);
-
-            result = (rowsAffected > 0);
-            //}
-            //finally
-            //{
-            //    connection.Close();
-            //}
-
-            return result;
-
-        }
-
-        public bool UpdateTableField(
-            string tableName,
-            string keyFieldName,
-            string keyFieldValue,
-            string dataFieldName,
-            string dataFieldValue,
-            string additionalWhere)
-        {
-            bool result = false;
-
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("UPDATE " + tableName.ToLower() + " ");
-            sqlCommand.Append(" SET " + dataFieldName.ToLower() + " = :fieldvalue ");
-            sqlCommand.Append(" WHERE " + keyFieldName.ToLower() + " = " + keyFieldValue);
-            sqlCommand.Append(" " + additionalWhere + " ");
-            sqlCommand.Append(" ; ");
-
-            NpgsqlParameter[] arParams = new NpgsqlParameter[1];
-
-            arParams[0] = new NpgsqlParameter(":fieldvalue", NpgsqlDbType.Text);
-            arParams[0].Direction = ParameterDirection.Input;
-            arParams[0].Value = dataFieldValue;
-
-            //NpgsqlConnection connection = new NpgsqlConnection(GetConnectionString());
-            //connection.Open();
-            //try
-            //{
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
-                writeConnectionString,
-                CommandType.Text,
-                sqlCommand.ToString(),
-                arParams);
-
-            result = (rowsAffected > 0);
-            //}
-            //finally
-            //{
-            //    connection.Close();
-            //}
-
-            return result;
-
-        }
-
-        public DbDataReader GetReader(
-            string connectionString,
-            string tableName,
-            string whereClause)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("select * ");
-            sqlCommand.Append("from " + tableName.ToLower() + " ");
-            sqlCommand.Append(whereClause);
-            sqlCommand.Append(" ; ");
-
-            return AdoHelper.ExecuteReader(
-                connectionString,
-                CommandType.Text,
-                sqlCommand.ToString());
-
-        }
-
-        public DbDataReader GetReader(
-            string connectionString,
-            string query
-            )
-        {
-            if (string.IsNullOrEmpty(connectionString)) { connectionString = readConnectionString; }
-
-            return AdoHelper.ExecuteReader(
-                connectionString,
-                CommandType.Text,
-                query);
-
-
-        }
-
-        public int ExecteNonQuery(
-            string connectionString,
-            string query
-            )
-        {
-            if (string.IsNullOrEmpty(connectionString)) { connectionString = writeConnectionString; }
-
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
-                connectionString,
-                CommandType.Text,
-                query);
-
-            return rowsAffected;
-
-        }
-
-        //public DataTable GetTable(
-        //    string connectionString,
-        //    string tableName,
-        //    string whereClause)
-        //{
-        //    StringBuilder sqlCommand = new StringBuilder();
-        //    sqlCommand.Append("select * ");
-        //    sqlCommand.Append("from " + tableName.ToLower() + " ");
-        //    sqlCommand.Append(whereClause);
-        //    sqlCommand.Append(" ; ");
-
-        //    DataSet ds = AdoHelper.ExecuteDataset(
-        //        connectionString,
-        //        CommandType.Text,
-        //        sqlCommand.ToString());
-
-        //    return ds.Tables[0];
-
-        //}
-
-
-        public int ExistingSiteCount()
-        {
-            int count = 0;
-            try
-            {
-                StringBuilder sqlCommand = new StringBuilder();
-                sqlCommand.Append("SELECT  Count(*) ");
-                sqlCommand.Append("FROM	mp_sites ");
-                sqlCommand.Append(";");
-
-                count = Convert.ToInt32(AdoHelper.ExecuteScalar(
-                    readConnectionString,
-                    CommandType.Text,
-                    sqlCommand.ToString(),
-                    null));
-            }
-            catch (DbException) { }
-            catch (InvalidOperationException) { }
-
-
-            return count;
-        }
-
-        public bool SitesTableExists()
-        {
-            return TableExists("mp_sites");
-        }
-
+        
         public bool TableExists(string tableName)
         {
             //NpgsqlConnection connection = new NpgsqlConnection(ConnectionString.GetWriteConnectionString());
@@ -512,6 +327,38 @@ namespace cloudscribe.DbHelpers.pgsql
             return false;
         }
 
+        public bool SchemaTableExists()
+        {
+            return TableExists("mp_schemaversion");
+        }
+
+        public Guid GetOrGenerateSchemaApplicationId(string applicationName)
+        {
+            IVersionProvider versionProvider = versionProviders.Get(applicationName);
+            if (versionProvider != null) { return versionProvider.ApplicationId; }
+
+            Guid appID = Guid.NewGuid();
+
+            try
+            {
+                using (DbDataReader reader = GetSchemaId(applicationName))
+                {
+                    if (reader.Read())
+                    {
+                        appID = new Guid(reader["ApplicationID"].ToString());
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                log.LogError("error", ex);
+            }
+
+
+            return appID;
+
+        }
 
         public Version GetSchemaVersion(Guid applicationId)
         {
@@ -548,46 +395,20 @@ namespace cloudscribe.DbHelpers.pgsql
             return new Version(major, minor, build, revision);
         }
 
-        public Guid GetOrGenerateSchemaApplicationId(string applicationName)
+        public bool SchemaVersionExists(Guid applicationId)
         {
-            IVersionProvider versionProvider = versionProviders.Get(applicationName);
-            if (versionProvider != null) { return versionProvider.ApplicationId; }
+            bool result = false;
 
-            Guid appID = Guid.NewGuid();
-
-            try
+            using (DbDataReader reader = GetSchemaVersionFromGuid(applicationId))
             {
-                using (DbDataReader reader = GetSchemaId(applicationName))
+                if (reader.Read())
                 {
-                    if (reader.Read())
-                    {
-                        appID = new Guid(reader["ApplicationID"].ToString());
-
-                    }
+                    result = true;
                 }
             }
-            catch (Exception ex)
-            {
-                log.LogError("error", ex);
-            }
 
-
-            return appID;
-
+            return result;
         }
-
-
-
-
-        private DbDataReader GetSchemaId(string applicationName)
-        {
-            return GetReader(
-                readConnectionString,
-                "mp_schemaversion",
-                " WHERE applicationname ILIKE '" + applicationName.ToLower() + "'");
-
-        }
-
 
         public bool AddSchemaVersion(
             Guid applicationId,
@@ -726,53 +547,12 @@ namespace cloudscribe.DbHelpers.pgsql
 
         }
 
-        public bool DeleteSchemaVersion(Guid applicationId)
-        {
-            NpgsqlParameter[] arParams = new NpgsqlParameter[1];
+        #endregion
 
-            arParams[0] = new NpgsqlParameter("applicationid", NpgsqlTypes.NpgsqlDbType.Varchar, 36);
-            arParams[0].Direction = ParameterDirection.Input;
-            arParams[0].Value = applicationId.ToString();
 
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("DELETE FROM mp_schemaversion ");
-            sqlCommand.Append("WHERE ");
-            sqlCommand.Append("applicationid = :applicationid ");
-            sqlCommand.Append(";");
+        #region Private Methods
 
-            //int rowsAffected = AdoHelper.ExecuteNonQuery(
-            //    writeConnectionString,
-            //    CommandType.StoredProcedure,
-            //    "mp_schemaversion_delete(:applicationid)",
-            //    arParams);
-
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
-                writeConnectionString,
-                CommandType.Text,
-                sqlCommand.ToString(),
-                arParams);
-
-            return (rowsAffected > -1);
-
-        }
-
-        public bool SchemaVersionExists(Guid applicationId)
-        {
-            bool result = false;
-
-            using (DbDataReader reader = GetSchemaVersionFromGuid(applicationId))
-            {
-                if (reader.Read())
-                {
-                    result = true;
-                }
-            }
-
-            return result;
-        }
-
-        private DbDataReader GetSchemaVersionFromGuid(
-            Guid applicationId)
+        private DbDataReader GetSchemaVersionFromGuid(Guid applicationId)
         {
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
@@ -786,13 +566,7 @@ namespace cloudscribe.DbHelpers.pgsql
             sqlCommand.Append("WHERE ");
             sqlCommand.Append("applicationid = :applicationid ");
             sqlCommand.Append(";");
-
-            //return AdoHelper.ExecuteReader(
-            //    readConnectionString,
-            //    CommandType.StoredProcedure,
-            //    "mp_schemaversion_select_one(:applicationid)",
-            //    arParams);
-
+            
             return AdoHelper.ExecuteReader(
                 readConnectionString,
                 CommandType.Text,
@@ -800,6 +574,257 @@ namespace cloudscribe.DbHelpers.pgsql
                 arParams);
 
         }
+
+        private DbDataReader GetSchemaId(string applicationName)
+        {
+            return GetReader(
+                readConnectionString,
+                "mp_schemaversion",
+                " WHERE applicationname ILIKE '" + applicationName.ToLower() + "'");
+
+        }
+
+        private DbDataReader GetReader(
+            string connectionString,
+            string tableName,
+            string whereClause)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("select * ");
+            sqlCommand.Append("from " + tableName.ToLower() + " ");
+            sqlCommand.Append(whereClause);
+            sqlCommand.Append(" ; ");
+
+            return AdoHelper.ExecuteReader(
+                connectionString,
+                CommandType.Text,
+                sqlCommand.ToString());
+
+        }
+
+        #endregion
+
+
+
+
+
+
+
+
+        //public bool UpdateTableField(
+        //    string connectionString,
+        //    string tableName,
+        //    string keyFieldName,
+        //    string keyFieldValue,
+        //    string dataFieldName,
+        //    string dataFieldValue,
+        //    string additionalWhere)
+        //{
+        //    bool result = false;
+
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("UPDATE " + tableName.ToLower() + " ");
+        //    sqlCommand.Append(" SET " + dataFieldName.ToLower() + " = :fieldvalue ");
+        //    sqlCommand.Append(" WHERE " + keyFieldName.ToLower() + " = " + keyFieldValue);
+        //    sqlCommand.Append(" " + additionalWhere + " ");
+        //    sqlCommand.Append(" ; ");
+
+        //    NpgsqlParameter[] arParams = new NpgsqlParameter[1];
+
+        //    arParams[0] = new NpgsqlParameter(":fieldvalue", NpgsqlDbType.Text);
+        //    arParams[0].Direction = ParameterDirection.Input;
+        //    arParams[0].Value = dataFieldValue;
+
+        //    //NpgsqlConnection connection = new NpgsqlConnection(connectionString);
+        //    //connection.Open();
+        //    //try
+        //    //{
+        //    int rowsAffected = AdoHelper.ExecuteNonQuery(
+        //        connectionString,
+        //        CommandType.Text,
+        //        sqlCommand.ToString(),
+        //        arParams);
+
+        //    result = (rowsAffected > 0);
+        //    //}
+        //    //finally
+        //    //{
+        //    //    connection.Close();
+        //    //}
+
+        //    return result;
+
+        //}
+
+        //public bool UpdateTableField(
+        //    string tableName,
+        //    string keyFieldName,
+        //    string keyFieldValue,
+        //    string dataFieldName,
+        //    string dataFieldValue,
+        //    string additionalWhere)
+        //{
+        //    bool result = false;
+
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("UPDATE " + tableName.ToLower() + " ");
+        //    sqlCommand.Append(" SET " + dataFieldName.ToLower() + " = :fieldvalue ");
+        //    sqlCommand.Append(" WHERE " + keyFieldName.ToLower() + " = " + keyFieldValue);
+        //    sqlCommand.Append(" " + additionalWhere + " ");
+        //    sqlCommand.Append(" ; ");
+
+        //    NpgsqlParameter[] arParams = new NpgsqlParameter[1];
+
+        //    arParams[0] = new NpgsqlParameter(":fieldvalue", NpgsqlDbType.Text);
+        //    arParams[0].Direction = ParameterDirection.Input;
+        //    arParams[0].Value = dataFieldValue;
+
+        //    //NpgsqlConnection connection = new NpgsqlConnection(GetConnectionString());
+        //    //connection.Open();
+        //    //try
+        //    //{
+        //    int rowsAffected = AdoHelper.ExecuteNonQuery(
+        //        writeConnectionString,
+        //        CommandType.Text,
+        //        sqlCommand.ToString(),
+        //        arParams);
+
+        //    result = (rowsAffected > 0);
+        //    //}
+        //    //finally
+        //    //{
+        //    //    connection.Close();
+        //    //}
+
+        //    return result;
+
+        //}
+
+
+
+        //public DbDataReader GetReader(
+        //    string connectionString,
+        //    string query
+        //    )
+        //{
+        //    if (string.IsNullOrEmpty(connectionString)) { connectionString = readConnectionString; }
+
+        //    return AdoHelper.ExecuteReader(
+        //        connectionString,
+        //        CommandType.Text,
+        //        query);
+
+
+        //}
+
+        //public int ExecteNonQuery(
+        //    string connectionString,
+        //    string query
+        //    )
+        //{
+        //    if (string.IsNullOrEmpty(connectionString)) { connectionString = writeConnectionString; }
+
+        //    int rowsAffected = AdoHelper.ExecuteNonQuery(
+        //        connectionString,
+        //        CommandType.Text,
+        //        query);
+
+        //    return rowsAffected;
+
+        //}
+
+        //public DataTable GetTable(
+        //    string connectionString,
+        //    string tableName,
+        //    string whereClause)
+        //{
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("select * ");
+        //    sqlCommand.Append("from " + tableName.ToLower() + " ");
+        //    sqlCommand.Append(whereClause);
+        //    sqlCommand.Append(" ; ");
+
+        //    DataSet ds = AdoHelper.ExecuteDataset(
+        //        connectionString,
+        //        CommandType.Text,
+        //        sqlCommand.ToString());
+
+        //    return ds.Tables[0];
+
+        //}
+
+
+        //public int ExistingSiteCount()
+        //{
+        //    int count = 0;
+        //    try
+        //    {
+        //        StringBuilder sqlCommand = new StringBuilder();
+        //        sqlCommand.Append("SELECT  Count(*) ");
+        //        sqlCommand.Append("FROM	mp_sites ");
+        //        sqlCommand.Append(";");
+
+        //        count = Convert.ToInt32(AdoHelper.ExecuteScalar(
+        //            readConnectionString,
+        //            CommandType.Text,
+        //            sqlCommand.ToString(),
+        //            null));
+        //    }
+        //    catch (DbException) { }
+        //    catch (InvalidOperationException) { }
+
+
+        //    return count;
+        //}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //public bool DeleteSchemaVersion(Guid applicationId)
+        //{
+        //    NpgsqlParameter[] arParams = new NpgsqlParameter[1];
+
+        //    arParams[0] = new NpgsqlParameter("applicationid", NpgsqlTypes.NpgsqlDbType.Varchar, 36);
+        //    arParams[0].Direction = ParameterDirection.Input;
+        //    arParams[0].Value = applicationId.ToString();
+
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("DELETE FROM mp_schemaversion ");
+        //    sqlCommand.Append("WHERE ");
+        //    sqlCommand.Append("applicationid = :applicationid ");
+        //    sqlCommand.Append(";");
+
+        //    //int rowsAffected = AdoHelper.ExecuteNonQuery(
+        //    //    writeConnectionString,
+        //    //    CommandType.StoredProcedure,
+        //    //    "mp_schemaversion_delete(:applicationid)",
+        //    //    arParams);
+
+        //    int rowsAffected = AdoHelper.ExecuteNonQuery(
+        //        writeConnectionString,
+        //        CommandType.Text,
+        //        sqlCommand.ToString(),
+        //        arParams);
+
+        //    return (rowsAffected > -1);
+
+        //}
+
+
+
+
 
         //public IDataReader SchemaVersionGetNonCore()
         //{
@@ -820,78 +845,78 @@ namespace cloudscribe.DbHelpers.pgsql
 
         //}
 
-        public int AddSchemaScriptHistory(
-            Guid applicationId,
-            string scriptFile,
-            DateTime runTime,
-            bool errorOccurred,
-            string errorMessage,
-            string scriptBody)
-        {
+        //public int AddSchemaScriptHistory(
+        //    Guid applicationId,
+        //    string scriptFile,
+        //    DateTime runTime,
+        //    bool errorOccurred,
+        //    string errorMessage,
+        //    string scriptBody)
+        //{
 
-            NpgsqlParameter[] arParams = new NpgsqlParameter[6];
+        //    NpgsqlParameter[] arParams = new NpgsqlParameter[6];
 
-            arParams[0] = new NpgsqlParameter("applicationid", NpgsqlTypes.NpgsqlDbType.Varchar, 36);
-            arParams[0].Direction = ParameterDirection.Input;
-            arParams[0].Value = applicationId.ToString();
+        //    arParams[0] = new NpgsqlParameter("applicationid", NpgsqlTypes.NpgsqlDbType.Varchar, 36);
+        //    arParams[0].Direction = ParameterDirection.Input;
+        //    arParams[0].Value = applicationId.ToString();
 
-            arParams[1] = new NpgsqlParameter("scriptfile", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[1].Direction = ParameterDirection.Input;
-            arParams[1].Value = scriptFile;
+        //    arParams[1] = new NpgsqlParameter("scriptfile", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
+        //    arParams[1].Direction = ParameterDirection.Input;
+        //    arParams[1].Value = scriptFile;
 
-            arParams[2] = new NpgsqlParameter("runtime", NpgsqlTypes.NpgsqlDbType.Date);
-            arParams[2].Direction = ParameterDirection.Input;
-            arParams[2].Value = runTime;
+        //    arParams[2] = new NpgsqlParameter("runtime", NpgsqlTypes.NpgsqlDbType.Date);
+        //    arParams[2].Direction = ParameterDirection.Input;
+        //    arParams[2].Value = runTime;
 
-            arParams[3] = new NpgsqlParameter("erroroccurred", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[3].Direction = ParameterDirection.Input;
-            arParams[3].Value = errorOccurred;
+        //    arParams[3] = new NpgsqlParameter("erroroccurred", NpgsqlTypes.NpgsqlDbType.Boolean);
+        //    arParams[3].Direction = ParameterDirection.Input;
+        //    arParams[3].Value = errorOccurred;
 
-            arParams[4] = new NpgsqlParameter("errormessage", NpgsqlTypes.NpgsqlDbType.Text);
-            arParams[4].Direction = ParameterDirection.Input;
-            arParams[4].Value = errorMessage;
+        //    arParams[4] = new NpgsqlParameter("errormessage", NpgsqlTypes.NpgsqlDbType.Text);
+        //    arParams[4].Direction = ParameterDirection.Input;
+        //    arParams[4].Value = errorMessage;
 
-            arParams[5] = new NpgsqlParameter("scriptbody", NpgsqlTypes.NpgsqlDbType.Text);
-            arParams[5].Direction = ParameterDirection.Input;
-            arParams[5].Value = scriptBody;
+        //    arParams[5] = new NpgsqlParameter("scriptbody", NpgsqlTypes.NpgsqlDbType.Text);
+        //    arParams[5].Direction = ParameterDirection.Input;
+        //    arParams[5].Value = scriptBody;
 
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("INSERT INTO mp_schemascripthistory (");
-            sqlCommand.Append("applicationid, ");
-            sqlCommand.Append("scriptfile, ");
-            sqlCommand.Append("runtime, ");
-            sqlCommand.Append("erroroccurred, ");
-            sqlCommand.Append("errormessage, ");
-            sqlCommand.Append("scriptbody )");
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("INSERT INTO mp_schemascripthistory (");
+        //    sqlCommand.Append("applicationid, ");
+        //    sqlCommand.Append("scriptfile, ");
+        //    sqlCommand.Append("runtime, ");
+        //    sqlCommand.Append("erroroccurred, ");
+        //    sqlCommand.Append("errormessage, ");
+        //    sqlCommand.Append("scriptbody )");
 
-            sqlCommand.Append(" VALUES (");
-            sqlCommand.Append(":applicationid, ");
-            sqlCommand.Append(":scriptfile, ");
-            sqlCommand.Append(":runtime, ");
-            sqlCommand.Append(":erroroccurred, ");
-            sqlCommand.Append(":errormessage, ");
-            sqlCommand.Append(":scriptbody )");
-            sqlCommand.Append(";");
-            sqlCommand.Append(" SELECT CURRVAL('mp_schemascripthistoryid_seq');");
+        //    sqlCommand.Append(" VALUES (");
+        //    sqlCommand.Append(":applicationid, ");
+        //    sqlCommand.Append(":scriptfile, ");
+        //    sqlCommand.Append(":runtime, ");
+        //    sqlCommand.Append(":erroroccurred, ");
+        //    sqlCommand.Append(":errormessage, ");
+        //    sqlCommand.Append(":scriptbody )");
+        //    sqlCommand.Append(";");
+        //    sqlCommand.Append(" SELECT CURRVAL('mp_schemascripthistoryid_seq');");
 
-            object obj = AdoHelper.ExecuteScalar(
-                writeConnectionString,
-                CommandType.Text,
-                sqlCommand.ToString(),
-                arParams);
+        //    object obj = AdoHelper.ExecuteScalar(
+        //        writeConnectionString,
+        //        CommandType.Text,
+        //        sqlCommand.ToString(),
+        //        arParams);
 
-            int newID = Convert.ToInt32(obj);
+        //    int newID = Convert.ToInt32(obj);
 
-            //int newID = Convert.ToInt32(AdoHelper.ExecuteScalar(
-            //    writeConnectionString,
-            //    CommandType.StoredProcedure,
-            //    "mp_schemascripthistory_insert(:applicationid,:scriptfile,:runtime,:erroroccurred,:errormessage,:scriptbody)",
-            //    arParams));
+        //    //int newID = Convert.ToInt32(AdoHelper.ExecuteScalar(
+        //    //    writeConnectionString,
+        //    //    CommandType.StoredProcedure,
+        //    //    "mp_schemascripthistory_insert(:applicationid,:scriptfile,:runtime,:erroroccurred,:errormessage,:scriptbody)",
+        //    //    arParams));
 
-            return newID;
+        //    return newID;
 
 
-        }
+        //}
 
         //public bool DeleteSchemaScriptHistory(int id)
         //{

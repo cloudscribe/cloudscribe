@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2004-08-03
-// Last Modified:		    2015-11-18
+// Last Modified:		    2015-12-24
 
 using cloudscribe.Core.Models;
 using Microsoft.Extensions.OptionsModel;
@@ -43,54 +43,16 @@ namespace cloudscribe.DbHelpers.MySql
         private string writeConnectionString;
         private string readConnectionString;
 
-        public IVersionProviderFactory VersionProviders
-        {
-            get { return versionProviders; }
-        }
+        #region IDb
 
         public string DBPlatform
         {
             get { return "MySQL"; }
         }
 
-
-        public DbException GetConnectionError(String overrideConnectionInfo)
+        public IVersionProviderFactory VersionProviders
         {
-            DbException exception = null;
-
-            MySqlConnection connection;
-
-            if (
-                (overrideConnectionInfo != null)
-                && (overrideConnectionInfo.Length > 0)
-              )
-            {
-                connection = new MySqlConnection(overrideConnectionInfo);
-            }
-            else
-            {
-                connection = new MySqlConnection(writeConnectionString);
-            }
-
-            try
-            {
-                connection.Open();
-
-
-            }
-            catch (DbException ex)
-            {
-                exception = ex;
-            }
-            finally
-            {
-                if (connection.State == ConnectionState.Open)
-                    connection.Close();
-            }
-
-
-            return exception;
-
+            get { return versionProviders; }
         }
 
         public void EnsureDatabase()
@@ -142,71 +104,9 @@ namespace cloudscribe.DbHelpers.MySql
 
 
 
+        
+
         public bool CanAlterSchema(string overrideConnectionInfo)
-        {
-
-            bool result = true;
-            // Make sure we can create, alter and drop tables
-
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append(@"
-                CREATE TABLE `mp_Testdb` (
-                  `FooID` int(11) NOT NULL auto_increment,
-                  `Foo` varchar(255) NOT NULL default '',
-                  PRIMARY KEY  (`FooID`)
-                ) ENGINE=MyISAM  ;
-                ");
-
-            try
-            {
-                RunScript(sqlCommand.ToString(), overrideConnectionInfo);
-            }
-            catch (DbException)
-            {
-                result = false;
-            }
-            catch (ArgumentException)
-            {
-                result = false;
-            }
-
-
-            sqlCommand = new StringBuilder();
-            sqlCommand.Append("ALTER TABLE mp_Testdb ADD COLUMN `MoreFoo` varchar(255) NULL;");
-
-            try
-            {
-                RunScript(sqlCommand.ToString(), overrideConnectionInfo);
-            }
-            catch (DbException)
-            {
-                result = false;
-            }
-            catch (ArgumentException)
-            {
-                result = false;
-            }
-
-            sqlCommand = new StringBuilder();
-            sqlCommand.Append("DROP TABLE mp_Testdb;");
-
-            try
-            {
-                RunScript(sqlCommand.ToString(), overrideConnectionInfo);
-            }
-            catch (DbException)
-            {
-                result = false;
-            }
-            catch (ArgumentException)
-            {
-                result = false;
-            }
-
-            return result;
-        }
-
-        public bool CanAlterInnoDbSchema(string overrideConnectionInfo)
         {
 
             bool result = true;
@@ -291,6 +191,45 @@ namespace cloudscribe.DbHelpers.MySql
             return result;
         }
 
+        public DbException GetConnectionError(string overrideConnectionInfo)
+        {
+            DbException exception = null;
+
+            MySqlConnection connection;
+
+            if (
+                (overrideConnectionInfo != null)
+                && (overrideConnectionInfo.Length > 0)
+              )
+            {
+                connection = new MySqlConnection(overrideConnectionInfo);
+            }
+            else
+            {
+                connection = new MySqlConnection(writeConnectionString);
+            }
+
+            try
+            {
+                connection.Open();
+
+
+            }
+            catch (DbException ex)
+            {
+                exception = ex;
+            }
+            finally
+            {
+                if (connection.State == ConnectionState.Open)
+                    connection.Close();
+            }
+
+
+            return exception;
+
+        }
+
         public bool RunScript(
             FileInfo scriptFile,
             string overrideConnectionInfo)
@@ -359,193 +298,6 @@ namespace cloudscribe.DbHelpers.MySql
             return result;
         }
 
-        public bool UpdateTableField(
-            string connectionString,
-            string tableName,
-            string keyFieldName,
-            string keyFieldValue,
-            string dataFieldName,
-            string dataFieldValue,
-            string additionalWhere)
-        {
-
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("UPDATE " + tableName + " ");
-            sqlCommand.Append(" SET " + dataFieldName + " = ?fieldValue ");
-            sqlCommand.Append(" WHERE " + keyFieldName + " = " + keyFieldValue);
-            sqlCommand.Append(" " + additionalWhere + " ");
-            sqlCommand.Append(" ; ");
-
-            MySqlParameter[] arParams = new MySqlParameter[1];
-
-            arParams[0] = new MySqlParameter("?fieldValue", MySqlDbType.Blob);
-            arParams[0].Direction = ParameterDirection.Input;
-            arParams[0].Value = dataFieldValue;
-
-            int rowsAffected = MySqlHelper.ExecuteNonQuery(
-                connectionString,
-                sqlCommand.ToString(),
-                arParams);
-
-
-            return (rowsAffected > 0);
-
-        }
-
-        public bool UpdateTableField(
-            string tableName,
-            string keyFieldName,
-            string keyFieldValue,
-            string dataFieldName,
-            string dataFieldValue,
-            string additionalWhere)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("UPDATE " + tableName + " ");
-            sqlCommand.Append(" SET " + dataFieldName + " = ?fieldValue ");
-            sqlCommand.Append(" WHERE " + keyFieldName + " = " + keyFieldValue);
-            sqlCommand.Append(" " + additionalWhere + " ");
-            sqlCommand.Append(" ; ");
-
-            MySqlParameter[] arParams = new MySqlParameter[1];
-
-            arParams[0] = new MySqlParameter("?fieldValue", MySqlDbType.Blob);
-            arParams[0].Direction = ParameterDirection.Input;
-            arParams[0].Value = dataFieldValue;
-
-            int rowsAffected = MySqlHelper.ExecuteNonQuery(
-                writeConnectionString,
-                sqlCommand.ToString(),
-                arParams);
-
-            return (rowsAffected > 0);
-
-        }
-
-        public DbDataReader GetReader(
-            string connectionString,
-            string tableName,
-            string whereClause)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("SELECT * ");
-            sqlCommand.Append("FROM " + tableName + " ");
-            sqlCommand.Append(whereClause);
-            sqlCommand.Append(" ; ");
-
-            return MySqlHelper.ExecuteReader(
-                connectionString,
-                sqlCommand.ToString());
-
-        }
-
-        public DbDataReader GetReader(
-            string connectionString,
-            string query
-            )
-        {
-            if (string.IsNullOrEmpty(connectionString)) { connectionString = readConnectionString; }
-
-            return MySqlHelper.ExecuteReader(
-                connectionString,
-                query);
-
-        }
-
-        public int ExecteNonQuery(
-            string connectionString,
-            string query
-            )
-        {
-            if (string.IsNullOrEmpty(connectionString)) { connectionString = writeConnectionString; }
-
-            int rowsAffected = MySqlHelper.ExecuteNonQuery(
-                connectionString,
-                query);
-
-            return rowsAffected;
-
-        }
-
-
-
-        public static DataTable DatabaseHelperGetTable(
-            String connectionString,
-            String tableName,
-            String whereClause)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("SELECT * ");
-            sqlCommand.Append("FROM " + tableName + " ");
-            sqlCommand.Append(whereClause);
-            sqlCommand.Append(" ; ");
-
-            DataSet ds = MySqlHelper.ExecuteDataset(
-                connectionString,
-                sqlCommand.ToString());
-
-            return ds.Tables[0];
-
-        }
-
-
-        public int ExistingSiteCount()
-        {
-            int count = 0;
-            try
-            {
-                StringBuilder sqlCommand = new StringBuilder();
-                sqlCommand.Append("SELECT  Count(*) ");
-                sqlCommand.Append("FROM	mp_Sites ");
-                sqlCommand.Append(";");
-
-                count = Convert.ToInt32(AdoHelper.ExecuteScalar(
-                    readConnectionString,
-                    sqlCommand.ToString(),
-                    null));
-
-            }
-            catch (DbException) { }
-            catch (InvalidOperationException) { }
-
-            return count;
-
-        }
-
-        public bool SitesTableExists()
-        {
-            bool result = false;
-            //return DatabaseHelper_TableExists("`mp_Sites`");
-            try
-            {
-                using (DbDataReader reader = GetSiteList())
-                {
-                    if (reader.Read())
-                    {
-                        //
-                    }
-                }
-                // no error yet it must exist
-                result = true;
-            }
-            catch { }
-
-            return result;
-        }
-
-        private DbDataReader GetSiteList()
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("SELECT * ");
-
-            sqlCommand.Append("FROM	mp_Sites ");
-
-            sqlCommand.Append("ORDER BY	SiteName ;");
-            return AdoHelper.ExecuteReader(
-                readConnectionString,
-                sqlCommand.ToString());
-        }
-
         public bool TableExists(string tableName)
         {
             //using (MySqlConnection connection = new MySqlConnection(ConnectionString.GetWriteConnectionString()))
@@ -579,6 +331,8 @@ namespace cloudscribe.DbHelpers.MySql
                     {
                         return true;
                     }
+                    // return true if no error, doesn't matter if rows exist
+                    return true;
                 }
             }
             catch { }
@@ -586,26 +340,39 @@ namespace cloudscribe.DbHelpers.MySql
             return false;
         }
 
-        //public DataTable GetTable(
-        //    string connectionString,
-        //    string tableName,
-        //    string whereClause)
-        //{
-        //    StringBuilder sqlCommand = new StringBuilder();
-        //    sqlCommand.Append("SELECT * ");
-        //    sqlCommand.Append("FROM " + tableName + " ");
-        //    sqlCommand.Append(whereClause);
-        //    sqlCommand.Append(" ; ");
+        public bool SchemaTableExists()
+        {
+            return TableExists("mp_SchemaVersion");
+            
+        }
 
-        //    DataSet ds = MySqlHelper.ExecuteDataset(
-        //        connectionString,
-        //        sqlCommand.ToString());
+        public Guid GetOrGenerateSchemaApplicationId(string applicationName)
+        {
+            IVersionProvider versionProvider = versionProviders.Get(applicationName);
+            if (versionProvider != null) { return versionProvider.ApplicationId; }
 
-        //    return ds.Tables[0];
+            Guid appID = Guid.NewGuid();
 
-        //}
+            try
+            {
+                using (DbDataReader reader = GetSchemaId(applicationName))
+                {
+                    if (reader.Read())
+                    {
+                        appID = new Guid(reader["ApplicationID"].ToString());
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                log.LogError("error", ex);
+            }
 
 
+            return appID;
+
+        }
 
         public Version GetSchemaVersion(Guid applicationId)
         {
@@ -631,54 +398,27 @@ namespace cloudscribe.DbHelpers.MySql
             }
             catch (DbException) { }
             catch (InvalidOperationException) { }
-            //catch (Exception ex)
             {
-                // hate to trap System.Exception but SqlCeException doe snot inherit from DbException as it should
-                //if (DatabaseHelper.DBPlatform() != "SqlCe") { throw; }
-                //log.Error(ex);
+                
             }
 
 
             return new Version(major, minor, build, revision);
         }
 
-
-        public Guid GetOrGenerateSchemaApplicationId(string applicationName)
+        public bool SchemaVersionExists(Guid applicationId)
         {
-            IVersionProvider versionProvider = versionProviders.Get(applicationName);
-            if (versionProvider != null) { return versionProvider.ApplicationId; }
-            
-            Guid appID = Guid.NewGuid();
+            bool result = false;
 
-            try
+            using (DbDataReader reader = GetSchemaVersionFromGuid(applicationId))
             {
-                using (DbDataReader reader = GetSchemaId(applicationName))
+                if (reader.Read())
                 {
-                    if (reader.Read())
-                    {
-                        appID = new Guid(reader["ApplicationID"].ToString());
-
-                    }
+                    result = true;
                 }
             }
-            catch (Exception ex)
-            {
-                log.LogError("error", ex);
-            }
 
-
-            return appID;
-
-        }
-
-
-        private DbDataReader GetSchemaId(string applicationName)
-        {
-            return GetReader(
-                readConnectionString,
-                "mp_SchemaVersion",
-                " WHERE LCASE(ApplicationName) = '" + applicationName.ToLower() + "'");
-
+            return result;
         }
 
 
@@ -754,7 +494,6 @@ namespace cloudscribe.DbHelpers.MySql
             int revision)
         {
 
-
             StringBuilder sqlCommand = new StringBuilder();
 
             sqlCommand.Append("UPDATE mp_SchemaVersion ");
@@ -804,6 +543,274 @@ namespace cloudscribe.DbHelpers.MySql
 
         }
 
+        #endregion
+
+        #region Private Methods
+
+        private DbDataReader GetSchemaId(string applicationName)
+        {
+            //return GetReader(
+            //    readConnectionString,
+            //    "mp_SchemaVersion",
+            //    " WHERE LCASE(ApplicationName) = '" + applicationName.ToLower() + "'");
+
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  * ");
+            sqlCommand.Append("FROM	mp_SchemaVersion ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("LCASE(ApplicationName) = ?ApplicationName ;");
+
+            MySqlParameter[] arParams = new MySqlParameter[1];
+
+            arParams[0] = new MySqlParameter("?ApplicationName", MySqlDbType.VarChar, 255);
+            arParams[0].Direction = ParameterDirection.Input;
+            arParams[0].Value = applicationName.ToLowerInvariant();
+
+            return MySqlHelper.ExecuteReader(
+                readConnectionString,
+                sqlCommand.ToString(),
+                arParams);
+
+        }
+
+
+        private DbDataReader GetSchemaVersionFromGuid(Guid applicationId)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  * ");
+            sqlCommand.Append("FROM	mp_SchemaVersion ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("ApplicationID = ?ApplicationID ;");
+
+            MySqlParameter[] arParams = new MySqlParameter[1];
+
+            arParams[0] = new MySqlParameter("?ApplicationID", MySqlDbType.VarChar, 36);
+            arParams[0].Direction = ParameterDirection.Input;
+            arParams[0].Value = applicationId.ToString();
+
+            return MySqlHelper.ExecuteReader(
+                readConnectionString,
+                sqlCommand.ToString(),
+                arParams);
+
+        }
+
+        #endregion
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //public bool UpdateTableField(
+        //    string connectionString,
+        //    string tableName,
+        //    string keyFieldName,
+        //    string keyFieldValue,
+        //    string dataFieldName,
+        //    string dataFieldValue,
+        //    string additionalWhere)
+        //{
+
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("UPDATE " + tableName + " ");
+        //    sqlCommand.Append(" SET " + dataFieldName + " = ?fieldValue ");
+        //    sqlCommand.Append(" WHERE " + keyFieldName + " = " + keyFieldValue);
+        //    sqlCommand.Append(" " + additionalWhere + " ");
+        //    sqlCommand.Append(" ; ");
+
+        //    MySqlParameter[] arParams = new MySqlParameter[1];
+
+        //    arParams[0] = new MySqlParameter("?fieldValue", MySqlDbType.Blob);
+        //    arParams[0].Direction = ParameterDirection.Input;
+        //    arParams[0].Value = dataFieldValue;
+
+        //    int rowsAffected = MySqlHelper.ExecuteNonQuery(
+        //        connectionString,
+        //        sqlCommand.ToString(),
+        //        arParams);
+
+
+        //    return (rowsAffected > 0);
+
+        //}
+
+        //public bool UpdateTableField(
+        //    string tableName,
+        //    string keyFieldName,
+        //    string keyFieldValue,
+        //    string dataFieldName,
+        //    string dataFieldValue,
+        //    string additionalWhere)
+        //{
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("UPDATE " + tableName + " ");
+        //    sqlCommand.Append(" SET " + dataFieldName + " = ?fieldValue ");
+        //    sqlCommand.Append(" WHERE " + keyFieldName + " = " + keyFieldValue);
+        //    sqlCommand.Append(" " + additionalWhere + " ");
+        //    sqlCommand.Append(" ; ");
+
+        //    MySqlParameter[] arParams = new MySqlParameter[1];
+
+        //    arParams[0] = new MySqlParameter("?fieldValue", MySqlDbType.Blob);
+        //    arParams[0].Direction = ParameterDirection.Input;
+        //    arParams[0].Value = dataFieldValue;
+
+        //    int rowsAffected = MySqlHelper.ExecuteNonQuery(
+        //        writeConnectionString,
+        //        sqlCommand.ToString(),
+        //        arParams);
+
+        //    return (rowsAffected > 0);
+
+        //}
+
+        //public DbDataReader GetReader(
+        //    string connectionString,
+        //    string tableName,
+        //    string whereClause)
+        //{
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("SELECT * ");
+        //    sqlCommand.Append("FROM " + tableName + " ");
+        //    sqlCommand.Append(whereClause);
+        //    sqlCommand.Append(" ; ");
+
+        //    return MySqlHelper.ExecuteReader(
+        //        connectionString,
+        //        sqlCommand.ToString());
+
+        //}
+
+        //public DbDataReader GetReader(
+        //    string connectionString,
+        //    string query
+        //    )
+        //{
+        //    if (string.IsNullOrEmpty(connectionString)) { connectionString = readConnectionString; }
+
+        //    return MySqlHelper.ExecuteReader(
+        //        connectionString,
+        //        query);
+
+        //}
+
+        //public int ExecteNonQuery(
+        //    string connectionString,
+        //    string query
+        //    )
+        //{
+        //    if (string.IsNullOrEmpty(connectionString)) { connectionString = writeConnectionString; }
+
+        //    int rowsAffected = MySqlHelper.ExecuteNonQuery(
+        //        connectionString,
+        //        query);
+
+        //    return rowsAffected;
+
+        //}
+
+
+
+        //public static DataTable DatabaseHelperGetTable(
+        //    string connectionString,
+        //    string tableName,
+        //    string whereClause)
+        //{
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("SELECT * ");
+        //    sqlCommand.Append("FROM " + tableName + " ");
+        //    sqlCommand.Append(whereClause);
+        //    sqlCommand.Append(" ; ");
+
+        //    DataSet ds = MySqlHelper.ExecuteDataset(
+        //        connectionString,
+        //        sqlCommand.ToString());
+
+        //    return ds.Tables[0];
+
+        //}
+
+
+        //public int ExistingSiteCount()
+        //{
+        //    int count = 0;
+        //    try
+        //    {
+        //        StringBuilder sqlCommand = new StringBuilder();
+        //        sqlCommand.Append("SELECT  Count(*) ");
+        //        sqlCommand.Append("FROM	mp_Sites ");
+        //        sqlCommand.Append(";");
+
+        //        count = Convert.ToInt32(AdoHelper.ExecuteScalar(
+        //            readConnectionString,
+        //            sqlCommand.ToString(),
+        //            null));
+
+        //    }
+        //    catch (DbException) { }
+        //    catch (InvalidOperationException) { }
+
+        //    return count;
+
+        //}
+
+        
+
+        //private DbDataReader GetSiteList()
+        //{
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("SELECT * ");
+
+        //    sqlCommand.Append("FROM	mp_Sites ");
+
+        //    sqlCommand.Append("ORDER BY	SiteName ;");
+        //    return AdoHelper.ExecuteReader(
+        //        readConnectionString,
+        //        sqlCommand.ToString());
+        //}
+
+        
+
+        //public DataTable GetTable(
+        //    string connectionString,
+        //    string tableName,
+        //    string whereClause)
+        //{
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("SELECT * ");
+        //    sqlCommand.Append("FROM " + tableName + " ");
+        //    sqlCommand.Append(whereClause);
+        //    sqlCommand.Append(" ; ");
+
+        //    DataSet ds = MySqlHelper.ExecuteDataset(
+        //        connectionString,
+        //        sqlCommand.ToString());
+
+        //    return ds.Tables[0];
+
+        //}
+
+
+
+        
+
+
+        
+
+
+        
+
+
+        
+
 
         //public bool DeleteSchemaVersion(
         //    Guid applicationId)
@@ -829,42 +836,9 @@ namespace cloudscribe.DbHelpers.MySql
 
         //}
 
-        public bool SchemaVersionExists(Guid applicationId)
-        {
-            bool result = false;
+        
 
-            using (DbDataReader reader = GetSchemaVersionFromGuid(applicationId))
-            {
-                if (reader.Read())
-                {
-                    result = true;
-                }
-            }
-
-            return result;
-        }
-
-        private DbDataReader GetSchemaVersionFromGuid(
-            Guid applicationId)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("SELECT  * ");
-            sqlCommand.Append("FROM	mp_SchemaVersion ");
-            sqlCommand.Append("WHERE ");
-            sqlCommand.Append("ApplicationID = ?ApplicationID ;");
-
-            MySqlParameter[] arParams = new MySqlParameter[1];
-
-            arParams[0] = new MySqlParameter("?ApplicationID", MySqlDbType.VarChar, 36);
-            arParams[0].Direction = ParameterDirection.Input;
-            arParams[0].Value = applicationId.ToString();
-
-            return MySqlHelper.ExecuteReader(
-                readConnectionString,
-                sqlCommand.ToString(),
-                arParams);
-
-        }
+        
 
         //public IDataReader SchemaVersionGetNonCore()
         //{
@@ -883,83 +857,147 @@ namespace cloudscribe.DbHelpers.MySql
 
         //}
 
-        public int AddSchemaScriptHistory(
-            Guid applicationId,
-            string scriptFile,
-            DateTime runTime,
-            bool errorOccurred,
-            string errorMessage,
-            string scriptBody)
-        {
+        //public int AddSchemaScriptHistory(
+        //    Guid applicationId,
+        //    string scriptFile,
+        //    DateTime runTime,
+        //    bool errorOccurred,
+        //    string errorMessage,
+        //    string scriptBody)
+        //{
 
-            #region Bit Conversion
-            int intErrorOccurred;
-            if (errorOccurred)
-            {
-                intErrorOccurred = 1;
-            }
-            else
-            {
-                intErrorOccurred = 0;
-            }
-
-
-            #endregion
-
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("INSERT INTO mp_SchemaScriptHistory (");
-            sqlCommand.Append("ApplicationID, ");
-            sqlCommand.Append("ScriptFile, ");
-            sqlCommand.Append("RunTime, ");
-            sqlCommand.Append("ErrorOccurred, ");
-            sqlCommand.Append("ErrorMessage, ");
-            sqlCommand.Append("ScriptBody )");
-
-            sqlCommand.Append(" VALUES (");
-            sqlCommand.Append("?ApplicationID, ");
-            sqlCommand.Append("?ScriptFile, ");
-            sqlCommand.Append("?RunTime, ");
-            sqlCommand.Append("?ErrorOccurred, ");
-            sqlCommand.Append("?ErrorMessage, ");
-            sqlCommand.Append("?ScriptBody );");
-
-            sqlCommand.Append("SELECT LAST_INSERT_ID();");
-
-            MySqlParameter[] arParams = new MySqlParameter[6];
-
-            arParams[0] = new MySqlParameter("?ApplicationID", MySqlDbType.VarChar, 36);
-            arParams[0].Direction = ParameterDirection.Input;
-            arParams[0].Value = applicationId.ToString();
-
-            arParams[1] = new MySqlParameter("?ScriptFile", MySqlDbType.VarChar, 255);
-            arParams[1].Direction = ParameterDirection.Input;
-            arParams[1].Value = scriptFile;
-
-            arParams[2] = new MySqlParameter("?RunTime", MySqlDbType.DateTime);
-            arParams[2].Direction = ParameterDirection.Input;
-            arParams[2].Value = runTime;
-
-            arParams[3] = new MySqlParameter("?ErrorOccurred", MySqlDbType.Int32);
-            arParams[3].Direction = ParameterDirection.Input;
-            arParams[3].Value = intErrorOccurred;
-
-            arParams[4] = new MySqlParameter("?ErrorMessage", MySqlDbType.Text);
-            arParams[4].Direction = ParameterDirection.Input;
-            arParams[4].Value = errorMessage;
-
-            arParams[5] = new MySqlParameter("?ScriptBody", MySqlDbType.Text);
-            arParams[5].Direction = ParameterDirection.Input;
-            arParams[5].Value = scriptBody;
+        //    #region Bit Conversion
+        //    int intErrorOccurred;
+        //    if (errorOccurred)
+        //    {
+        //        intErrorOccurred = 1;
+        //    }
+        //    else
+        //    {
+        //        intErrorOccurred = 0;
+        //    }
 
 
-            int newID = 0;
-            newID = Convert.ToInt32(MySqlHelper.ExecuteScalar(
-                writeConnectionString,
-                sqlCommand.ToString(),
-                arParams).ToString());
-            return newID;
+        //    #endregion
 
-        }
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("INSERT INTO mp_SchemaScriptHistory (");
+        //    sqlCommand.Append("ApplicationID, ");
+        //    sqlCommand.Append("ScriptFile, ");
+        //    sqlCommand.Append("RunTime, ");
+        //    sqlCommand.Append("ErrorOccurred, ");
+        //    sqlCommand.Append("ErrorMessage, ");
+        //    sqlCommand.Append("ScriptBody )");
+
+        //    sqlCommand.Append(" VALUES (");
+        //    sqlCommand.Append("?ApplicationID, ");
+        //    sqlCommand.Append("?ScriptFile, ");
+        //    sqlCommand.Append("?RunTime, ");
+        //    sqlCommand.Append("?ErrorOccurred, ");
+        //    sqlCommand.Append("?ErrorMessage, ");
+        //    sqlCommand.Append("?ScriptBody );");
+
+        //    sqlCommand.Append("SELECT LAST_INSERT_ID();");
+
+        //    MySqlParameter[] arParams = new MySqlParameter[6];
+
+        //    arParams[0] = new MySqlParameter("?ApplicationID", MySqlDbType.VarChar, 36);
+        //    arParams[0].Direction = ParameterDirection.Input;
+        //    arParams[0].Value = applicationId.ToString();
+
+        //    arParams[1] = new MySqlParameter("?ScriptFile", MySqlDbType.VarChar, 255);
+        //    arParams[1].Direction = ParameterDirection.Input;
+        //    arParams[1].Value = scriptFile;
+
+        //    arParams[2] = new MySqlParameter("?RunTime", MySqlDbType.DateTime);
+        //    arParams[2].Direction = ParameterDirection.Input;
+        //    arParams[2].Value = runTime;
+
+        //    arParams[3] = new MySqlParameter("?ErrorOccurred", MySqlDbType.Int32);
+        //    arParams[3].Direction = ParameterDirection.Input;
+        //    arParams[3].Value = intErrorOccurred;
+
+        //    arParams[4] = new MySqlParameter("?ErrorMessage", MySqlDbType.Text);
+        //    arParams[4].Direction = ParameterDirection.Input;
+        //    arParams[4].Value = errorMessage;
+
+        //    arParams[5] = new MySqlParameter("?ScriptBody", MySqlDbType.Text);
+        //    arParams[5].Direction = ParameterDirection.Input;
+        //    arParams[5].Value = scriptBody;
+
+
+        //    int newID = 0;
+        //    newID = Convert.ToInt32(MySqlHelper.ExecuteScalar(
+        //        writeConnectionString,
+        //        sqlCommand.ToString(),
+        //        arParams).ToString());
+        //    return newID;
+
+        //}
+
+        //public bool CanAlterMyIsamSchema(string overrideConnectionInfo)
+        //{
+
+        //    bool result = true;
+        //    // Make sure we can create, alter and drop tables
+
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append(@"
+        //        CREATE TABLE `mp_Testdb` (
+        //          `FooID` int(11) NOT NULL auto_increment,
+        //          `Foo` varchar(255) NOT NULL default '',
+        //          PRIMARY KEY  (`FooID`)
+        //        ) ENGINE=MyISAM  ;
+        //        ");
+
+        //    try
+        //    {
+        //        RunScript(sqlCommand.ToString(), overrideConnectionInfo);
+        //    }
+        //    catch (DbException)
+        //    {
+        //        result = false;
+        //    }
+        //    catch (ArgumentException)
+        //    {
+        //        result = false;
+        //    }
+
+
+        //    sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("ALTER TABLE mp_Testdb ADD COLUMN `MoreFoo` varchar(255) NULL;");
+
+        //    try
+        //    {
+        //        RunScript(sqlCommand.ToString(), overrideConnectionInfo);
+        //    }
+        //    catch (DbException)
+        //    {
+        //        result = false;
+        //    }
+        //    catch (ArgumentException)
+        //    {
+        //        result = false;
+        //    }
+
+        //    sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("DROP TABLE mp_Testdb;");
+
+        //    try
+        //    {
+        //        RunScript(sqlCommand.ToString(), overrideConnectionInfo);
+        //    }
+        //    catch (DbException)
+        //    {
+        //        result = false;
+        //    }
+        //    catch (ArgumentException)
+        //    {
+        //        result = false;
+        //    }
+
+        //    return result;
+        //}
 
         //public bool DeleteSchemaScriptHistory(int id)
         //{
