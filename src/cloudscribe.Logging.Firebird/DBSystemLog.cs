@@ -2,33 +2,35 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //	Author:                 Joe Audette
 //  Created:			    2011-07-23
-//	Last Modified:		    2015-11-18
+//	Last Modified:		    2015-12-25
 // 
 
-using cloudscribe.DbHelpers.SQLite;
+using cloudscribe.DbHelpers.Firebird;
+using FirebirdSql.Data.FirebirdClient;
 using System;
 using System.Data;
 using System.Data.Common;
-using Microsoft.Data.Sqlite;
-using Microsoft.Extensions.Logging;
+using System.Globalization;
 using System.Text;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
-namespace cloudscribe.Core.Repositories.SQLite
+namespace cloudscribe.Logging.Firebird
 {
     internal class DBSystemLog
     {
         internal DBSystemLog(
-            string dbConnectionString)
+            string dbReadConnectionString,
+            string dbWriteConnectionString)
         {
-            //logFactory = loggerFactory;
-            connectionString = dbConnectionString;
-
-
+            
+            readConnectionString = dbReadConnectionString;
+            writeConnectionString = dbWriteConnectionString;
         }
 
-        //private ILoggerFactory logFactory;
-        //private ILogger log;
-        private string connectionString;
+       
+        private string readConnectionString;
+        private string writeConnectionString;
 
         /// <summary>
         /// Inserts a row in the mp_SystemLog table. Returns new integer id.
@@ -54,65 +56,41 @@ namespace cloudscribe.Core.Repositories.SQLite
             string logger,
             string message)
         {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("INSERT INTO mp_SystemLog (");
-            sqlCommand.Append("LogDate, ");
-            sqlCommand.Append("IpAddress, ");
-            sqlCommand.Append("Culture, ");
-            sqlCommand.Append("Url, ");
-            sqlCommand.Append("ShortUrl, ");
-            sqlCommand.Append("Thread, ");
-            sqlCommand.Append("LogLevel, ");
-            sqlCommand.Append("Logger, ");
-            sqlCommand.Append("Message )");
+            FbParameter[] arParams = new FbParameter[9];
 
-            sqlCommand.Append(" VALUES (");
-            sqlCommand.Append(":LogDate, ");
-            sqlCommand.Append(":IpAddress, ");
-            sqlCommand.Append(":Culture, ");
-            sqlCommand.Append(":Url, ");
-            sqlCommand.Append(":ShortUrl, ");
-            sqlCommand.Append(":Thread, ");
-            sqlCommand.Append(":LogLevel, ");
-            sqlCommand.Append(":Logger, ");
-            sqlCommand.Append(":Message )");
-            sqlCommand.Append(";");
-
-            sqlCommand.Append("SELECT LAST_INSERT_ROWID();");
-
-            SqliteParameter[] arParams = new SqliteParameter[9];
-
-            arParams[0] = new SqliteParameter(":LogDate", DbType.DateTime);
+            arParams[0] = new FbParameter(":LogDate", FbDbType.TimeStamp);
             arParams[0].Value = logDate;
 
-            arParams[1] = new SqliteParameter(":IpAddress", DbType.String);
+            arParams[1] = new FbParameter(":IpAddress", FbDbType.VarChar, 50);
             arParams[1].Value = ipAddress;
 
-            arParams[2] = new SqliteParameter(":Culture", DbType.String);
+            arParams[2] = new FbParameter(":Culture", FbDbType.VarChar, 10);
             arParams[2].Value = culture;
 
-            arParams[3] = new SqliteParameter(":Url", DbType.Object);
+            arParams[3] = new FbParameter(":Url", FbDbType.VarChar);
             arParams[3].Value = url;
 
-            arParams[4] = new SqliteParameter(":ShortUrl", DbType.String);
+            arParams[4] = new FbParameter(":ShortUrl", FbDbType.VarChar, 255);
             arParams[4].Value = shortUrl;
 
-            arParams[5] = new SqliteParameter(":Thread", DbType.String);
+            arParams[5] = new FbParameter(":Thread", FbDbType.VarChar, 255);
             arParams[5].Value = thread;
 
-            arParams[6] = new SqliteParameter(":LogLevel", DbType.String);
+            arParams[6] = new FbParameter(":LogLevel", FbDbType.VarChar, 20);
             arParams[6].Value = logLevel;
 
-            arParams[7] = new SqliteParameter(":Logger", DbType.String);
+            arParams[7] = new FbParameter(":Logger", FbDbType.VarChar, 255);
             arParams[7].Value = logger;
 
-            arParams[8] = new SqliteParameter(":Message", DbType.Object);
+            arParams[8] = new FbParameter(":Message", FbDbType.VarChar);
             arParams[8].Value = message;
 
             int newID = Convert.ToInt32(AdoHelper.ExecuteScalar(
-                connectionString,
-                sqlCommand.ToString(),
-                arParams).ToString());
+                writeConnectionString,
+                CommandType.StoredProcedure,
+                "EXECUTE PROCEDURE MP_SYSTEMLOG_INSERT ("
+                + AdoHelper.GetParamString(arParams.Length) + ")",
+                arParams));
 
             return newID;
 
@@ -121,26 +99,27 @@ namespace cloudscribe.Core.Repositories.SQLite
         /// <summary>
         /// Deletes rows from the mp_SystemLog table. Returns true if rows deleted.
         /// </summary>
-        public bool DeleteAll()
+        public async Task<bool> DeleteAll()
         {
+
+            //TODO: does firebird support truncate table?
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_SystemLog ");
             //sqlCommand.Append("WHERE ");
-            //sqlCommand.Append("ID = :ID ");
+            //sqlCommand.Append("ID = @ID ");
             sqlCommand.Append(";");
 
-            //SqliteParameter[] arParams = new SqliteParameter[1];
+            //FbParameter[] arParams = new FbParameter[1];
 
-            //arParams[0] = new SqliteParameter(":ID", DbType.Int32);
+            //arParams[0] = new FbParameter("@ID", FbDbType.Integer);
             //arParams[0].Value = id;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
-                connectionString,
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
+                writeConnectionString,
                 sqlCommand.ToString(),
                 null);
 
             return (rowsAffected > 0);
-
         }
 
         /// <summary>
@@ -148,25 +127,24 @@ namespace cloudscribe.Core.Repositories.SQLite
         /// </summary>
         /// <param name="id"> id </param>
         /// <returns>bool</returns>
-        public bool Delete(int id)
+        public async Task<bool> Delete(int id)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_SystemLog ");
             sqlCommand.Append("WHERE ");
-            sqlCommand.Append("ID = :ID ");
+            sqlCommand.Append("ID = @ID ");
             sqlCommand.Append(";");
+            FbParameter[] arParams = new FbParameter[1];
 
-            SqliteParameter[] arParams = new SqliteParameter[1];
-
-            arParams[0] = new SqliteParameter(":ID", DbType.Int32);
+            arParams[0] = new FbParameter("@ID", FbDbType.Integer);
             arParams[0].Value = id;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
-                connectionString,
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
+                writeConnectionString,
                 sqlCommand.ToString(),
                 arParams);
 
-            return (rowsAffected > 0);
+            return (rowsAffected > -1);
 
         }
 
@@ -175,70 +153,70 @@ namespace cloudscribe.Core.Repositories.SQLite
         /// </summary>
         /// <param name="id"> id </param>
         /// <returns>bool</returns>
-        public bool DeleteOlderThan(DateTime cutoffDate)
+        public async Task<bool> DeleteOlderThan(DateTime cutoffDate)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_SystemLog ");
             sqlCommand.Append("WHERE ");
-            sqlCommand.Append("LogDate < :CutoffDate ");
+            sqlCommand.Append("LogDate < @CutoffDate ");
             sqlCommand.Append(";");
+            FbParameter[] arParams = new FbParameter[1];
 
-            SqliteParameter[] arParams = new SqliteParameter[1];
-
-            arParams[0] = new SqliteParameter(":CutoffDate", DbType.DateTime);
+            arParams[0] = new FbParameter("@CutoffDate", FbDbType.TimeStamp);
             arParams[0].Value = cutoffDate;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
-                connectionString,
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
+                writeConnectionString,
                 sqlCommand.ToString(),
                 arParams);
 
-            return (rowsAffected > 0);
+            return (rowsAffected > -1);
 
         }
-
 
         /// <summary>
         /// Deletes rows from the mp_SystemLog table. Returns true if rows deleted.
         /// </summary>
         /// <param name="id"> id </param>
         /// <returns>bool</returns>
-        public bool DeleteByLevel(string logLevel)
+        public async Task<bool> DeleteByLevel(string logLevel)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_SystemLog ");
             sqlCommand.Append("WHERE ");
-            sqlCommand.Append("LogLevel = :LogLevel ");
+            sqlCommand.Append("LogLevel = @LogLevel ");
             sqlCommand.Append(";");
+            FbParameter[] arParams = new FbParameter[1];
 
-            SqliteParameter[] arParams = new SqliteParameter[1];
-
-            arParams[0] = new SqliteParameter(":LogLevel", DbType.String);
+            arParams[0] = new FbParameter("@LogLevel", FbDbType.VarChar, 20);
             arParams[0].Value = logLevel;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
-                connectionString,
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
+                writeConnectionString,
                 sqlCommand.ToString(),
                 arParams);
 
-            return (rowsAffected > 0);
+            return (rowsAffected > -1);
 
         }
 
         /// <summary>
         /// Gets a count of rows in the mp_SystemLog table.
         /// </summary>
-        public int GetCount()
+        public async Task<int> GetCount()
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  Count(*) ");
             sqlCommand.Append("FROM	mp_SystemLog ");
             sqlCommand.Append(";");
 
-            return Convert.ToInt32(AdoHelper.ExecuteScalar(
-                connectionString,
+            object result = await AdoHelper.ExecuteScalarAsync(
+                readConnectionString,
                 sqlCommand.ToString(),
-                null));
+                null);
+
+            return Convert.ToInt32(result);
+
         }
 
         /// <summary>
@@ -247,7 +225,7 @@ namespace cloudscribe.Core.Repositories.SQLite
         /// <param name="pageNumber">The page number.</param>
         /// <param name="pageSize">Size of the page.</param>
         /// <param name="totalPages">total pages</param>
-        public DbDataReader GetPageAscending(
+        public async Task<DbDataReader> GetPageAscending(
             int pageNumber,
             int pageSize)
         {
@@ -272,30 +250,26 @@ namespace cloudscribe.Core.Repositories.SQLite
             //}
 
             StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("SELECT	* ");
+            sqlCommand.Append("SELECT FIRST " + pageSize.ToString(CultureInfo.InvariantCulture) + " ");
+            if (pageNumber > 1)
+            {
+                sqlCommand.Append("	SKIP " + pageLowerBound.ToString(CultureInfo.InvariantCulture) + " ");
+            }
+            sqlCommand.Append("	* ");
             sqlCommand.Append("FROM	mp_SystemLog  ");
-            //sqlCommand.Append("WHERE  ");
+            //sqlCommand.Append("WHERE   ");
             sqlCommand.Append("ORDER BY ID  ");
-            //sqlCommand.Append("  ");
-            sqlCommand.Append("LIMIT :PageSize ");
-            if (pageNumber > 1)
-            {
-                sqlCommand.Append("OFFSET :OffsetRows ");
-            }
-            sqlCommand.Append(";");
+            sqlCommand.Append("	; ");
 
-            SqliteParameter[] arParams = new SqliteParameter[2];
+            //FbParameter[] arParams = new FbParameter[1];
 
-            arParams[0] = new SqliteParameter(":PageSize", DbType.Int32);
-            arParams[0].Value = pageSize;
+            //arParams[0] = new FbParameter("@CountryGuid", FbDbType.Char, 36);
+            //arParams[0].Value = countryGuid.ToString();
 
-            arParams[1] = new SqliteParameter(":OffsetRows", DbType.Int32);
-            arParams[1].Value = pageLowerBound;
-
-            return AdoHelper.ExecuteReader(
-                connectionString,
+            return await AdoHelper.ExecuteReaderAsync(
+                readConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                null);
 
         }
 
@@ -305,7 +279,7 @@ namespace cloudscribe.Core.Repositories.SQLite
         /// <param name="pageNumber">The page number.</param>
         /// <param name="pageSize">Size of the page.</param>
         /// <param name="totalPages">total pages</param>
-        public DbDataReader GetPageDescending(
+        public async Task<DbDataReader> GetPageDescending(
             int pageNumber,
             int pageSize)
         {
@@ -330,33 +304,28 @@ namespace cloudscribe.Core.Repositories.SQLite
             //}
 
             StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("SELECT	* ");
-            sqlCommand.Append("FROM	mp_SystemLog  ");
-            //sqlCommand.Append("WHERE  ");
-            sqlCommand.Append("ORDER BY ID DESC ");
-            //sqlCommand.Append("  ");
-            sqlCommand.Append("LIMIT :PageSize ");
+            sqlCommand.Append("SELECT FIRST " + pageSize.ToString(CultureInfo.InvariantCulture) + " ");
             if (pageNumber > 1)
             {
-                sqlCommand.Append("OFFSET :OffsetRows ");
+                sqlCommand.Append("	SKIP " + pageLowerBound.ToString(CultureInfo.InvariantCulture) + " ");
             }
-            sqlCommand.Append(";");
+            sqlCommand.Append("	* ");
+            sqlCommand.Append("FROM	mp_SystemLog  ");
+            //sqlCommand.Append("WHERE   ");
+            sqlCommand.Append("ORDER BY ID DESC  ");
+            sqlCommand.Append("	; ");
 
-            SqliteParameter[] arParams = new SqliteParameter[2];
+            //FbParameter[] arParams = new FbParameter[1];
 
-            arParams[0] = new SqliteParameter(":PageSize", DbType.Int32);
-            arParams[0].Value = pageSize;
+            //arParams[0] = new FbParameter("@CountryGuid", FbDbType.Char, 36);
+            //arParams[0].Value = countryGuid.ToString();
 
-            arParams[1] = new SqliteParameter(":OffsetRows", DbType.Int32);
-            arParams[1].Value = pageLowerBound;
-
-            return AdoHelper.ExecuteReader(
-                connectionString,
+            return await AdoHelper.ExecuteReaderAsync(
+                readConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                null);
 
         }
-
 
     }
 }

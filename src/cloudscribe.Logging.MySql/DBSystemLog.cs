@@ -2,18 +2,17 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //	Author:                 Joe Audette
 //  Created:			    2011-07-23
-//	Last Modified:		    2015-11-18
+//	Last Modified:		    2015-12-25
 // 
 
 using cloudscribe.DbHelpers.MySql;
-using Microsoft.Extensions.Logging;
 using MySql.Data.MySqlClient;
 using System;
 using System.Data.Common;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace cloudscribe.Core.Repositories.MySql
+namespace cloudscribe.Logging.MySql
 {
     internal class DBSystemLog
     {
@@ -21,13 +20,11 @@ namespace cloudscribe.Core.Repositories.MySql
             string dbReadConnectionString,
             string dbWriteConnectionString)
         {
-            //logFactory = loggerFactory;
             readConnectionString = dbReadConnectionString;
             writeConnectionString = dbWriteConnectionString;
         }
 
-        //private ILoggerFactory logFactory;
-        //private ILogger log;
+       
         private string readConnectionString;
         private string writeConnectionString;
 

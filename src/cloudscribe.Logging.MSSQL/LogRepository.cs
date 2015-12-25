@@ -2,40 +2,44 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //	Author:                 Joe Audette
 //  Created:			    2011-08-18
-//	Last Modified:		    2015-11-18
+//	Last Modified:		    2015-12-25
 // 
 
 using cloudscribe.Core.Models.DataExtensions;
 using cloudscribe.Core.Models.Logging;
-using cloudscribe.DbHelpers.SqlCe;
+using cloudscribe.DbHelpers.MSSQL;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.OptionsModel;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Threading.Tasks;
 
-namespace cloudscribe.Core.Repositories.SqlCe
+namespace cloudscribe.Logging.MSSQL
 {
-#pragma warning disable 1998
-
     public class LogRepository : ILogRepository
     {
         public LogRepository(
-            SqlCeConnectionStringResolver connectionStringResolver)
+            IOptions<MSSQLConnectionOptions> connectionOptions)
         {
-            if (connectionStringResolver == null) { throw new ArgumentNullException(nameof(connectionStringResolver)); }
+            if (connectionOptions == null) { throw new ArgumentNullException(nameof(connectionOptions)); }
             //if (loggerFactory == null) { throw new ArgumentNullException(nameof(loggerFactory)); }
 
             //logFactory = loggerFactory;
-            //log = loggerFactory.CreateLogger(typeof(LogRepository).FullName);
-            connectionString = connectionStringResolver.Resolve();
+            //log = loggerFactory.CreateLogger(typeof(GeoRepository).FullName);
 
-            dbSystemLog = new DBSystemLog(connectionString);
+            readConnectionString = connectionOptions.Value.ReadConnectionString;
+            writeConnectionString = connectionOptions.Value.WriteConnectionString;
+
+            // passing in null for loggerFactory because we don't want to allow debug sql logging for log related sql activity
+            // it would cause a never ending loop condition if logging events generate more logging events
+            dbSystemLog = new DBSystemLog(readConnectionString, writeConnectionString, null);
         }
 
         //private ILoggerFactory logFactory;
-        //private ILogger log;
-        private string connectionString;
+       // private ILogger log;
+        private string readConnectionString;
+        private string writeConnectionString;
         private DBSystemLog dbSystemLog;
 
         public int AddLogItem(
@@ -49,7 +53,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             string logger,
             string message)
         {
-            return dbSystemLog.Create(
+            return  dbSystemLog.Create(
                 logDate,
                 ipAddress,
                 culture,
@@ -63,7 +67,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
         public async Task<int> GetCount()
         {
-            return dbSystemLog.GetCount();
+            return await dbSystemLog.GetCount();
         }
 
         public async Task<List<ILogItem>> GetPageAscending(
@@ -71,7 +75,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             int pageSize)
         {
             List<ILogItem> logItems = new List<ILogItem>();
-            using (DbDataReader reader = dbSystemLog.GetPageAscending(pageNumber, pageSize))
+            using (DbDataReader reader = await dbSystemLog.GetPageAscending(pageNumber, pageSize))
             {
                 while (reader.Read())
                 {
@@ -89,7 +93,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             int pageSize)
         {
             List<ILogItem> logItems = new List<ILogItem>();
-            using (DbDataReader reader = dbSystemLog.GetPageDescending(pageNumber, pageSize))
+            using (DbDataReader reader = await dbSystemLog.GetPageDescending(pageNumber, pageSize))
             {
                 while (reader.Read())
                 {
@@ -104,26 +108,23 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
         public async Task<bool> DeleteAll()
         {
-            return dbSystemLog.DeleteAll();
+            return await dbSystemLog.DeleteAll();
         }
 
         public async Task<bool> Delete(int logItemId)
         {
-            return dbSystemLog.Delete(logItemId);
+            return await dbSystemLog.Delete(logItemId);
         }
 
         public async Task<bool> DeleteOlderThan(DateTime cutoffDateUtc)
         {
-            return dbSystemLog.DeleteOlderThan(cutoffDateUtc);
+            return await dbSystemLog.DeleteOlderThan(cutoffDateUtc);
         }
 
         public async Task<bool> DeleteByLevel(string logLevel)
         {
-            return dbSystemLog.DeleteByLevel(logLevel);
+            return await dbSystemLog.DeleteByLevel(logLevel);
         }
 
-
     }
-
-#pragma warning restore 1998
 }

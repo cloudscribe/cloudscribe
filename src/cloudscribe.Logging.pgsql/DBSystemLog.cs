@@ -2,20 +2,18 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //	Author:                 Joe Audette
 //  Created:			    2011-07-23
-//	Last Modified:		    2015-11-18
+//	Last Modified:		    2015-12-25
 // 
 
-using cloudscribe.DbHelpers.Firebird;
-using FirebirdSql.Data.FirebirdClient;
+using cloudscribe.DbHelpers.pgsql;
+using Npgsql;
 using System;
 using System.Data;
 using System.Data.Common;
-using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 
-namespace cloudscribe.Core.Repositories.Firebird
+namespace cloudscribe.Logging.pgsql
 {
     internal class DBSystemLog
     {
@@ -28,7 +26,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             writeConnectionString = dbWriteConnectionString;
         }
 
-       
+        
         private string readConnectionString;
         private string writeConnectionString;
 
@@ -56,70 +54,88 @@ namespace cloudscribe.Core.Repositories.Firebird
             string logger,
             string message)
         {
-            FbParameter[] arParams = new FbParameter[9];
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("INSERT INTO mp_systemlog (");
+            sqlCommand.Append("logdate, ");
+            sqlCommand.Append("ipaddress, ");
+            sqlCommand.Append("culture, ");
+            sqlCommand.Append("url, ");
+            sqlCommand.Append("shorturl, ");
+            sqlCommand.Append("thread, ");
+            sqlCommand.Append("loglevel, ");
+            sqlCommand.Append("logger, ");
+            sqlCommand.Append("message )");
 
-            arParams[0] = new FbParameter(":LogDate", FbDbType.TimeStamp);
+            sqlCommand.Append(" VALUES (");
+            sqlCommand.Append(":logdate, ");
+            sqlCommand.Append(":ipaddress, ");
+            sqlCommand.Append(":culture, ");
+            sqlCommand.Append(":url, ");
+            sqlCommand.Append(":shorturl, ");
+            sqlCommand.Append(":thread, ");
+            sqlCommand.Append(":loglevel, ");
+            sqlCommand.Append(":logger, ");
+            sqlCommand.Append(":message )");
+            sqlCommand.Append(";");
+            sqlCommand.Append(" SELECT CURRVAL('mp_systemlogid_seq');");
+
+            NpgsqlParameter[] arParams = new NpgsqlParameter[9];
+            arParams[0] = new NpgsqlParameter("logdate", NpgsqlTypes.NpgsqlDbType.Timestamp);
             arParams[0].Value = logDate;
 
-            arParams[1] = new FbParameter(":IpAddress", FbDbType.VarChar, 50);
+            arParams[1] = new NpgsqlParameter("ipaddress", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
             arParams[1].Value = ipAddress;
 
-            arParams[2] = new FbParameter(":Culture", FbDbType.VarChar, 10);
+            arParams[2] = new NpgsqlParameter("culture", NpgsqlTypes.NpgsqlDbType.Varchar, 10);
             arParams[2].Value = culture;
 
-            arParams[3] = new FbParameter(":Url", FbDbType.VarChar);
+            arParams[3] = new NpgsqlParameter("url", NpgsqlTypes.NpgsqlDbType.Text);
             arParams[3].Value = url;
 
-            arParams[4] = new FbParameter(":ShortUrl", FbDbType.VarChar, 255);
+            arParams[4] = new NpgsqlParameter("shorturl", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
             arParams[4].Value = shortUrl;
 
-            arParams[5] = new FbParameter(":Thread", FbDbType.VarChar, 255);
+            arParams[5] = new NpgsqlParameter("thread", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
             arParams[5].Value = thread;
 
-            arParams[6] = new FbParameter(":LogLevel", FbDbType.VarChar, 20);
+            arParams[6] = new NpgsqlParameter("loglevel", NpgsqlTypes.NpgsqlDbType.Varchar, 20);
             arParams[6].Value = logLevel;
 
-            arParams[7] = new FbParameter(":Logger", FbDbType.VarChar, 255);
+            arParams[7] = new NpgsqlParameter("logger", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
             arParams[7].Value = logger;
 
-            arParams[8] = new FbParameter(":Message", FbDbType.VarChar);
+            arParams[8] = new NpgsqlParameter("message", NpgsqlTypes.NpgsqlDbType.Text);
             arParams[8].Value = message;
 
             int newID = Convert.ToInt32(AdoHelper.ExecuteScalar(
                 writeConnectionString,
-                CommandType.StoredProcedure,
-                "EXECUTE PROCEDURE MP_SYSTEMLOG_INSERT ("
-                + AdoHelper.GetParamString(arParams.Length) + ")",
+                CommandType.Text,
+                sqlCommand.ToString(),
                 arParams));
 
             return newID;
 
         }
 
+
         /// <summary>
         /// Deletes rows from the mp_SystemLog table. Returns true if rows deleted.
         /// </summary>
         public async Task<bool> DeleteAll()
         {
-
-            //TODO: does firebird support truncate table?
             StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("DELETE FROM mp_SystemLog ");
-            //sqlCommand.Append("WHERE ");
-            //sqlCommand.Append("ID = @ID ");
+            sqlCommand.Append("DELETE FROM mp_systemlog ");
+
             sqlCommand.Append(";");
-
-            //FbParameter[] arParams = new FbParameter[1];
-
-            //arParams[0] = new FbParameter("@ID", FbDbType.Integer);
-            //arParams[0].Value = id;
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 null);
 
             return (rowsAffected > 0);
+
         }
 
         /// <summary>
@@ -130,17 +146,19 @@ namespace cloudscribe.Core.Repositories.Firebird
         public async Task<bool> Delete(int id)
         {
             StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("DELETE FROM mp_SystemLog ");
+            sqlCommand.Append("DELETE FROM mp_systemlog ");
             sqlCommand.Append("WHERE ");
-            sqlCommand.Append("ID = @ID ");
+            sqlCommand.Append("id = :id ");
             sqlCommand.Append(";");
-            FbParameter[] arParams = new FbParameter[1];
 
-            arParams[0] = new FbParameter("@ID", FbDbType.Integer);
+            NpgsqlParameter[] arParams = new NpgsqlParameter[1];
+
+            arParams[0] = new NpgsqlParameter("id", NpgsqlTypes.NpgsqlDbType.Integer);
             arParams[0].Value = id;
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
 
@@ -156,17 +174,19 @@ namespace cloudscribe.Core.Repositories.Firebird
         public async Task<bool> DeleteOlderThan(DateTime cutoffDate)
         {
             StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("DELETE FROM mp_SystemLog ");
+            sqlCommand.Append("DELETE FROM mp_systemlog ");
             sqlCommand.Append("WHERE ");
-            sqlCommand.Append("LogDate < @CutoffDate ");
+            sqlCommand.Append("logdate < :cutoffdate ");
             sqlCommand.Append(";");
-            FbParameter[] arParams = new FbParameter[1];
 
-            arParams[0] = new FbParameter("@CutoffDate", FbDbType.TimeStamp);
+            NpgsqlParameter[] arParams = new NpgsqlParameter[1];
+
+            arParams[0] = new NpgsqlParameter("cutoffdate", NpgsqlTypes.NpgsqlDbType.Timestamp);
             arParams[0].Value = cutoffDate;
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
 
@@ -182,17 +202,19 @@ namespace cloudscribe.Core.Repositories.Firebird
         public async Task<bool> DeleteByLevel(string logLevel)
         {
             StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("DELETE FROM mp_SystemLog ");
+            sqlCommand.Append("DELETE FROM mp_systemlog ");
             sqlCommand.Append("WHERE ");
-            sqlCommand.Append("LogLevel = @LogLevel ");
+            sqlCommand.Append("loglevel = :loglevel ");
             sqlCommand.Append(";");
-            FbParameter[] arParams = new FbParameter[1];
 
-            arParams[0] = new FbParameter("@LogLevel", FbDbType.VarChar, 20);
+            NpgsqlParameter[] arParams = new NpgsqlParameter[1];
+
+            arParams[0] = new NpgsqlParameter("loglevel", NpgsqlTypes.NpgsqlDbType.Integer);
             arParams[0].Value = logLevel;
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
 
@@ -207,16 +229,16 @@ namespace cloudscribe.Core.Repositories.Firebird
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  Count(*) ");
-            sqlCommand.Append("FROM	mp_SystemLog ");
+            sqlCommand.Append("FROM	mp_systemlog ");
             sqlCommand.Append(";");
 
             object result = await AdoHelper.ExecuteScalarAsync(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 null);
 
             return Convert.ToInt32(result);
-
         }
 
         /// <summary>
@@ -249,27 +271,32 @@ namespace cloudscribe.Core.Repositories.Firebird
             //    }
             //}
 
+            NpgsqlParameter[] arParams = new NpgsqlParameter[2];
+
+            arParams[0] = new NpgsqlParameter("pagesize", NpgsqlTypes.NpgsqlDbType.Integer);
+            arParams[0].Value = pageSize;
+
+            arParams[1] = new NpgsqlParameter("pageoffset", NpgsqlTypes.NpgsqlDbType.Integer);
+            arParams[1].Value = pageLowerBound;
+
             StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("SELECT FIRST " + pageSize.ToString(CultureInfo.InvariantCulture) + " ");
+            sqlCommand.Append("SELECT	* ");
+            sqlCommand.Append("FROM	mp_systemlog  ");
+            //sqlCommand.Append("WHERE  ");
+            sqlCommand.Append("ORDER BY id  ");
+            //sqlCommand.Append("  ");
+            sqlCommand.Append("LIMIT  :pagesize");
+
             if (pageNumber > 1)
-            {
-                sqlCommand.Append("	SKIP " + pageLowerBound.ToString(CultureInfo.InvariantCulture) + " ");
-            }
-            sqlCommand.Append("	* ");
-            sqlCommand.Append("FROM	mp_SystemLog  ");
-            //sqlCommand.Append("WHERE   ");
-            sqlCommand.Append("ORDER BY ID  ");
-            sqlCommand.Append("	; ");
+                sqlCommand.Append(" OFFSET :pageoffset ");
 
-            //FbParameter[] arParams = new FbParameter[1];
-
-            //arParams[0] = new FbParameter("@CountryGuid", FbDbType.Char, 36);
-            //arParams[0].Value = countryGuid.ToString();
+            sqlCommand.Append(";");
 
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
-                null);
+                arParams);
 
         }
 
@@ -303,29 +330,36 @@ namespace cloudscribe.Core.Repositories.Firebird
             //    }
             //}
 
+            NpgsqlParameter[] arParams = new NpgsqlParameter[2];
+
+            arParams[0] = new NpgsqlParameter("pagesize", NpgsqlTypes.NpgsqlDbType.Integer);
+            arParams[0].Value = pageSize;
+
+            arParams[1] = new NpgsqlParameter("pageoffset", NpgsqlTypes.NpgsqlDbType.Integer);
+            arParams[1].Value = pageLowerBound;
+
             StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("SELECT FIRST " + pageSize.ToString(CultureInfo.InvariantCulture) + " ");
+            sqlCommand.Append("SELECT	* ");
+            sqlCommand.Append("FROM	mp_systemlog  ");
+            //sqlCommand.Append("WHERE  ");
+            sqlCommand.Append("ORDER BY id DESC  ");
+            //sqlCommand.Append("  ");
+            sqlCommand.Append("LIMIT  :pagesize");
+
             if (pageNumber > 1)
-            {
-                sqlCommand.Append("	SKIP " + pageLowerBound.ToString(CultureInfo.InvariantCulture) + " ");
-            }
-            sqlCommand.Append("	* ");
-            sqlCommand.Append("FROM	mp_SystemLog  ");
-            //sqlCommand.Append("WHERE   ");
-            sqlCommand.Append("ORDER BY ID DESC  ");
-            sqlCommand.Append("	; ");
+                sqlCommand.Append(" OFFSET :pageoffset ");
 
-            //FbParameter[] arParams = new FbParameter[1];
-
-            //arParams[0] = new FbParameter("@CountryGuid", FbDbType.Char, 36);
-            //arParams[0].Value = countryGuid.ToString();
+            sqlCommand.Append(";");
 
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
-                null);
+                arParams);
 
         }
 
+
     }
+
 }

@@ -1,0 +1,27 @@
+﻿{
+  "version": "1.0.0-*",
+  "title": "cloudscribe.Logging.SqlCe",
+  "description": "Implementation of cloudscribe ILogRepository for SqlServer Compact edition",
+  "authors": [ "Joe Audette" ],
+  "owners": [ "Source Tree Solutions" ],
+  "tags": [ "cloudscribe", "logging", "sqlce", "SqlServerCe" ],
+  "projectUrl": "https://github.com/joeaudette/cloudscribe",
+  "licenseUrl": "http://www.apache.org/licenses/LICENSE-2.0",
+  "copyright": "2015 Source Tree Solutions",
+  "iconUrl": "https://raw.githubusercontent.com/joeaudette/cloudscribe/master/cloudscribe-icon-32.png",
+  "requireLicenseAcceptance": false,
+  "releaseNotes": "",
+
+  "dependencies": {
+    "cloudscribe.Core.Models": "1.0.0-*",
+    "cloudscribe.DbHelpers.SqlCe": "1.0.0-*",
+    "Microsoft.SqlServer.Compact": "4.0.8876.1",
+    "Microsoft.Extensions.Logging": "1.0.0-rc1-final",
+    "Microsoft.Extensions.OptionsModel": "1.0.0-rc1-final"
+  },
+
+  "frameworks": {
+    "net451": { }
+    
+  }
+}

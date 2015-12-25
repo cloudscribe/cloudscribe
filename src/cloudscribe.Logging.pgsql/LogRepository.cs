@@ -2,42 +2,34 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //	Author:                 Joe Audette
 //  Created:			    2011-08-18
-//	Last Modified:		    2015-11-18
+//	Last Modified:		    2015-12-25
 // 
 
 using cloudscribe.Core.Models.DataExtensions;
 using cloudscribe.Core.Models.Logging;
-using cloudscribe.DbHelpers.MSSQL;
-using Microsoft.Extensions.Logging;
+using cloudscribe.DbHelpers.pgsql;
 using Microsoft.Extensions.OptionsModel;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Threading.Tasks;
 
-namespace cloudscribe.Core.Repositories.MSSQL
+namespace cloudscribe.Logging.pgsql
 {
     public class LogRepository : ILogRepository
     {
         public LogRepository(
-            IOptions<MSSQLConnectionOptions> connectionOptions)
+            IOptions<PostgreSqlConnectionOptions> configuration)
         {
-            if (connectionOptions == null) { throw new ArgumentNullException(nameof(connectionOptions)); }
-            //if (loggerFactory == null) { throw new ArgumentNullException(nameof(loggerFactory)); }
+            if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
+            
+            readConnectionString = configuration.Value.ReadConnectionString;
+            writeConnectionString = configuration.Value.WriteConnectionString;
 
-            //logFactory = loggerFactory;
-            //log = loggerFactory.CreateLogger(typeof(GeoRepository).FullName);
-
-            readConnectionString = connectionOptions.Value.ReadConnectionString;
-            writeConnectionString = connectionOptions.Value.WriteConnectionString;
-
-            // passing in null for loggerFactory because we don't want to allow debug sql logging for log related sql activity
-            // it would cause a never ending loop condition if logging events generate more logging events
-            dbSystemLog = new DBSystemLog(readConnectionString, writeConnectionString, null);
+            dbSystemLog = new DBSystemLog(readConnectionString, writeConnectionString);
         }
 
-        //private ILoggerFactory logFactory;
-       // private ILogger log;
+        
         private string readConnectionString;
         private string writeConnectionString;
         private DBSystemLog dbSystemLog;
@@ -53,7 +45,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             string logger,
             string message)
         {
-            return  dbSystemLog.Create(
+            return dbSystemLog.Create(
                 logDate,
                 ipAddress,
                 culture,

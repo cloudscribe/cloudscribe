@@ -2,42 +2,34 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //	Author:                 Joe Audette
 //  Created:			    2011-08-18
-//	Last Modified:		    2015-11-18
+//	Last Modified:		    2015-12-25
 // 
 
 using cloudscribe.Core.Models.DataExtensions;
 using cloudscribe.Core.Models.Logging;
-using cloudscribe.DbHelpers.SQLite;
-using Microsoft.Extensions.Logging;
+using cloudscribe.DbHelpers.SqlCe;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Threading.Tasks;
 
-namespace cloudscribe.Core.Repositories.SQLite
+namespace cloudscribe.Logging.SqlCe
 {
-    //disable warning about not really being async
-    // we know it is not, and for Sqlite there is probably no benefit to making it really async
 #pragma warning disable 1998
 
     public class LogRepository : ILogRepository
     {
         public LogRepository(
-            SqliteConnectionstringResolver connectionStringResolver)
+            SqlCeConnectionStringResolver connectionStringResolver)
         {
             if (connectionStringResolver == null) { throw new ArgumentNullException(nameof(connectionStringResolver)); }
-            //if (loggerFactory == null) { throw new ArgumentNullException(nameof(loggerFactory)); }
-
-            //logFactory = loggerFactory;
-            //log = loggerFactory.CreateLogger(typeof(GeoRepository).FullName);
+            
             connectionString = connectionStringResolver.Resolve();
 
             dbSystemLog = new DBSystemLog(connectionString);
-
         }
 
-        private ILoggerFactory logFactory;
-        private ILogger log;
+        
         private string connectionString;
         private DBSystemLog dbSystemLog;
 
@@ -124,6 +116,7 @@ namespace cloudscribe.Core.Repositories.SQLite
         {
             return dbSystemLog.DeleteByLevel(logLevel);
         }
+
 
     }
 

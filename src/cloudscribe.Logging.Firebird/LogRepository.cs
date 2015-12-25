@@ -2,12 +2,12 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //	Author:                 Joe Audette
 //  Created:			    2011-08-18
-//	Last Modified:		    2015-11-18
+//	Last Modified:		    2015-12-25
 // 
 
 using cloudscribe.Core.Models.DataExtensions;
 using cloudscribe.Core.Models.Logging;
-using cloudscribe.DbHelpers.pgsql;
+using cloudscribe.DbHelpers.Firebird;
 using Microsoft.Extensions.OptionsModel;
 using Microsoft.Extensions.Logging;
 using System;
@@ -15,19 +15,20 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Threading.Tasks;
 
-namespace cloudscribe.Core.Repositories.pgsql
+namespace cloudscribe.Logging.Firebird
 {
     public class LogRepository : ILogRepository
     {
         public LogRepository(
-            IOptions<PostgreSqlConnectionOptions> configuration)
+            IOptions<FirebirdConnectionOptions> configuration)
         {
             if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
-            
+           
             readConnectionString = configuration.Value.ReadConnectionString;
             writeConnectionString = configuration.Value.WriteConnectionString;
 
             dbSystemLog = new DBSystemLog(readConnectionString, writeConnectionString);
+
         }
 
         
@@ -118,6 +119,7 @@ namespace cloudscribe.Core.Repositories.pgsql
         {
             return await dbSystemLog.DeleteByLevel(logLevel);
         }
+
 
     }
 }

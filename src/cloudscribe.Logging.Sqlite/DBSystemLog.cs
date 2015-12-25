@@ -2,34 +2,29 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //	Author:                 Joe Audette
 //  Created:			    2011-07-23
-//	Last Modified:		    2015-11-18
+//	Last Modified:		    2015-12-25
 // 
 
-using cloudscribe.DbHelpers.pgsql;
-using Microsoft.Extensions.Logging;
-using Npgsql;
+using cloudscribe.DbHelpers.SQLite;
 using System;
 using System.Data;
 using System.Data.Common;
+using Microsoft.Data.Sqlite;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace cloudscribe.Core.Repositories.pgsql
+namespace cloudscribe.Logging.Sqlite
 {
     internal class DBSystemLog
     {
         internal DBSystemLog(
-            string dbReadConnectionString,
-            string dbWriteConnectionString)
+            string dbConnectionString)
         {
-            
-            readConnectionString = dbReadConnectionString;
-            writeConnectionString = dbWriteConnectionString;
+            connectionString = dbConnectionString;
+
         }
 
         
-        private string readConnectionString;
-        private string writeConnectionString;
+        private string connectionString;
 
         /// <summary>
         /// Inserts a row in the mp_SystemLog table. Returns new integer id.
@@ -56,82 +51,87 @@ namespace cloudscribe.Core.Repositories.pgsql
             string message)
         {
             StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("INSERT INTO mp_systemlog (");
-            sqlCommand.Append("logdate, ");
-            sqlCommand.Append("ipaddress, ");
-            sqlCommand.Append("culture, ");
-            sqlCommand.Append("url, ");
-            sqlCommand.Append("shorturl, ");
-            sqlCommand.Append("thread, ");
-            sqlCommand.Append("loglevel, ");
-            sqlCommand.Append("logger, ");
-            sqlCommand.Append("message )");
+            sqlCommand.Append("INSERT INTO mp_SystemLog (");
+            sqlCommand.Append("LogDate, ");
+            sqlCommand.Append("IpAddress, ");
+            sqlCommand.Append("Culture, ");
+            sqlCommand.Append("Url, ");
+            sqlCommand.Append("ShortUrl, ");
+            sqlCommand.Append("Thread, ");
+            sqlCommand.Append("LogLevel, ");
+            sqlCommand.Append("Logger, ");
+            sqlCommand.Append("Message )");
 
             sqlCommand.Append(" VALUES (");
-            sqlCommand.Append(":logdate, ");
-            sqlCommand.Append(":ipaddress, ");
-            sqlCommand.Append(":culture, ");
-            sqlCommand.Append(":url, ");
-            sqlCommand.Append(":shorturl, ");
-            sqlCommand.Append(":thread, ");
-            sqlCommand.Append(":loglevel, ");
-            sqlCommand.Append(":logger, ");
-            sqlCommand.Append(":message )");
+            sqlCommand.Append(":LogDate, ");
+            sqlCommand.Append(":IpAddress, ");
+            sqlCommand.Append(":Culture, ");
+            sqlCommand.Append(":Url, ");
+            sqlCommand.Append(":ShortUrl, ");
+            sqlCommand.Append(":Thread, ");
+            sqlCommand.Append(":LogLevel, ");
+            sqlCommand.Append(":Logger, ");
+            sqlCommand.Append(":Message )");
             sqlCommand.Append(";");
-            sqlCommand.Append(" SELECT CURRVAL('mp_systemlogid_seq');");
 
-            NpgsqlParameter[] arParams = new NpgsqlParameter[9];
-            arParams[0] = new NpgsqlParameter("logdate", NpgsqlTypes.NpgsqlDbType.Timestamp);
+            sqlCommand.Append("SELECT LAST_INSERT_ROWID();");
+
+            SqliteParameter[] arParams = new SqliteParameter[9];
+
+            arParams[0] = new SqliteParameter(":LogDate", DbType.DateTime);
             arParams[0].Value = logDate;
 
-            arParams[1] = new NpgsqlParameter("ipaddress", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
+            arParams[1] = new SqliteParameter(":IpAddress", DbType.String);
             arParams[1].Value = ipAddress;
 
-            arParams[2] = new NpgsqlParameter("culture", NpgsqlTypes.NpgsqlDbType.Varchar, 10);
+            arParams[2] = new SqliteParameter(":Culture", DbType.String);
             arParams[2].Value = culture;
 
-            arParams[3] = new NpgsqlParameter("url", NpgsqlTypes.NpgsqlDbType.Text);
+            arParams[3] = new SqliteParameter(":Url", DbType.Object);
             arParams[3].Value = url;
 
-            arParams[4] = new NpgsqlParameter("shorturl", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
+            arParams[4] = new SqliteParameter(":ShortUrl", DbType.String);
             arParams[4].Value = shortUrl;
 
-            arParams[5] = new NpgsqlParameter("thread", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
+            arParams[5] = new SqliteParameter(":Thread", DbType.String);
             arParams[5].Value = thread;
 
-            arParams[6] = new NpgsqlParameter("loglevel", NpgsqlTypes.NpgsqlDbType.Varchar, 20);
+            arParams[6] = new SqliteParameter(":LogLevel", DbType.String);
             arParams[6].Value = logLevel;
 
-            arParams[7] = new NpgsqlParameter("logger", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
+            arParams[7] = new SqliteParameter(":Logger", DbType.String);
             arParams[7].Value = logger;
 
-            arParams[8] = new NpgsqlParameter("message", NpgsqlTypes.NpgsqlDbType.Text);
+            arParams[8] = new SqliteParameter(":Message", DbType.Object);
             arParams[8].Value = message;
 
             int newID = Convert.ToInt32(AdoHelper.ExecuteScalar(
-                writeConnectionString,
-                CommandType.Text,
+                connectionString,
                 sqlCommand.ToString(),
-                arParams));
+                arParams).ToString());
 
             return newID;
 
         }
 
-
         /// <summary>
         /// Deletes rows from the mp_SystemLog table. Returns true if rows deleted.
         /// </summary>
-        public async Task<bool> DeleteAll()
+        public bool DeleteAll()
         {
             StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("DELETE FROM mp_systemlog ");
-
+            sqlCommand.Append("DELETE FROM mp_SystemLog ");
+            //sqlCommand.Append("WHERE ");
+            //sqlCommand.Append("ID = :ID ");
             sqlCommand.Append(";");
 
-            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
-                writeConnectionString,
-                CommandType.Text,
+            //SqliteParameter[] arParams = new SqliteParameter[1];
+
+            //arParams[0] = new SqliteParameter(":ID", DbType.Int32);
+            //arParams[0].Value = id;
+
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
+                connectionString,
                 sqlCommand.ToString(),
                 null);
 
@@ -144,26 +144,25 @@ namespace cloudscribe.Core.Repositories.pgsql
         /// </summary>
         /// <param name="id"> id </param>
         /// <returns>bool</returns>
-        public async Task<bool> Delete(int id)
+        public bool Delete(int id)
         {
             StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("DELETE FROM mp_systemlog ");
+            sqlCommand.Append("DELETE FROM mp_SystemLog ");
             sqlCommand.Append("WHERE ");
-            sqlCommand.Append("id = :id ");
+            sqlCommand.Append("ID = :ID ");
             sqlCommand.Append(";");
 
-            NpgsqlParameter[] arParams = new NpgsqlParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new NpgsqlParameter("id", NpgsqlTypes.NpgsqlDbType.Integer);
+            arParams[0] = new SqliteParameter(":ID", DbType.Int32);
             arParams[0].Value = id;
 
-            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
-                writeConnectionString,
-                CommandType.Text,
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
+                connectionString,
                 sqlCommand.ToString(),
                 arParams);
 
-            return (rowsAffected > -1);
+            return (rowsAffected > 0);
 
         }
 
@@ -172,74 +171,70 @@ namespace cloudscribe.Core.Repositories.pgsql
         /// </summary>
         /// <param name="id"> id </param>
         /// <returns>bool</returns>
-        public async Task<bool> DeleteOlderThan(DateTime cutoffDate)
+        public bool DeleteOlderThan(DateTime cutoffDate)
         {
             StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("DELETE FROM mp_systemlog ");
+            sqlCommand.Append("DELETE FROM mp_SystemLog ");
             sqlCommand.Append("WHERE ");
-            sqlCommand.Append("logdate < :cutoffdate ");
+            sqlCommand.Append("LogDate < :CutoffDate ");
             sqlCommand.Append(";");
 
-            NpgsqlParameter[] arParams = new NpgsqlParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new NpgsqlParameter("cutoffdate", NpgsqlTypes.NpgsqlDbType.Timestamp);
+            arParams[0] = new SqliteParameter(":CutoffDate", DbType.DateTime);
             arParams[0].Value = cutoffDate;
 
-            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
-                writeConnectionString,
-                CommandType.Text,
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
+                connectionString,
                 sqlCommand.ToString(),
                 arParams);
 
-            return (rowsAffected > -1);
+            return (rowsAffected > 0);
 
         }
+
 
         /// <summary>
         /// Deletes rows from the mp_SystemLog table. Returns true if rows deleted.
         /// </summary>
         /// <param name="id"> id </param>
         /// <returns>bool</returns>
-        public async Task<bool> DeleteByLevel(string logLevel)
+        public bool DeleteByLevel(string logLevel)
         {
             StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("DELETE FROM mp_systemlog ");
+            sqlCommand.Append("DELETE FROM mp_SystemLog ");
             sqlCommand.Append("WHERE ");
-            sqlCommand.Append("loglevel = :loglevel ");
+            sqlCommand.Append("LogLevel = :LogLevel ");
             sqlCommand.Append(";");
 
-            NpgsqlParameter[] arParams = new NpgsqlParameter[1];
+            SqliteParameter[] arParams = new SqliteParameter[1];
 
-            arParams[0] = new NpgsqlParameter("loglevel", NpgsqlTypes.NpgsqlDbType.Integer);
+            arParams[0] = new SqliteParameter(":LogLevel", DbType.String);
             arParams[0].Value = logLevel;
 
-            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
-                writeConnectionString,
-                CommandType.Text,
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
+                connectionString,
                 sqlCommand.ToString(),
                 arParams);
 
-            return (rowsAffected > -1);
+            return (rowsAffected > 0);
 
         }
 
         /// <summary>
         /// Gets a count of rows in the mp_SystemLog table.
         /// </summary>
-        public async Task<int> GetCount()
+        public int GetCount()
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  Count(*) ");
-            sqlCommand.Append("FROM	mp_systemlog ");
+            sqlCommand.Append("FROM	mp_SystemLog ");
             sqlCommand.Append(";");
 
-            object result = await AdoHelper.ExecuteScalarAsync(
-                readConnectionString,
-                CommandType.Text,
+            return Convert.ToInt32(AdoHelper.ExecuteScalar(
+                connectionString,
                 sqlCommand.ToString(),
-                null);
-
-            return Convert.ToInt32(result);
+                null));
         }
 
         /// <summary>
@@ -248,7 +243,7 @@ namespace cloudscribe.Core.Repositories.pgsql
         /// <param name="pageNumber">The page number.</param>
         /// <param name="pageSize">Size of the page.</param>
         /// <param name="totalPages">total pages</param>
-        public async Task<DbDataReader> GetPageAscending(
+        public DbDataReader GetPageAscending(
             int pageNumber,
             int pageSize)
         {
@@ -272,30 +267,29 @@ namespace cloudscribe.Core.Repositories.pgsql
             //    }
             //}
 
-            NpgsqlParameter[] arParams = new NpgsqlParameter[2];
-
-            arParams[0] = new NpgsqlParameter("pagesize", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[0].Value = pageSize;
-
-            arParams[1] = new NpgsqlParameter("pageoffset", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[1].Value = pageLowerBound;
-
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT	* ");
-            sqlCommand.Append("FROM	mp_systemlog  ");
+            sqlCommand.Append("FROM	mp_SystemLog  ");
             //sqlCommand.Append("WHERE  ");
-            sqlCommand.Append("ORDER BY id  ");
+            sqlCommand.Append("ORDER BY ID  ");
             //sqlCommand.Append("  ");
-            sqlCommand.Append("LIMIT  :pagesize");
-
+            sqlCommand.Append("LIMIT :PageSize ");
             if (pageNumber > 1)
-                sqlCommand.Append(" OFFSET :pageoffset ");
-
+            {
+                sqlCommand.Append("OFFSET :OffsetRows ");
+            }
             sqlCommand.Append(";");
 
-            return await AdoHelper.ExecuteReaderAsync(
-                readConnectionString,
-                CommandType.Text,
+            SqliteParameter[] arParams = new SqliteParameter[2];
+
+            arParams[0] = new SqliteParameter(":PageSize", DbType.Int32);
+            arParams[0].Value = pageSize;
+
+            arParams[1] = new SqliteParameter(":OffsetRows", DbType.Int32);
+            arParams[1].Value = pageLowerBound;
+
+            return AdoHelper.ExecuteReader(
+                connectionString,
                 sqlCommand.ToString(),
                 arParams);
 
@@ -307,7 +301,7 @@ namespace cloudscribe.Core.Repositories.pgsql
         /// <param name="pageNumber">The page number.</param>
         /// <param name="pageSize">Size of the page.</param>
         /// <param name="totalPages">total pages</param>
-        public async Task<DbDataReader> GetPageDescending(
+        public DbDataReader GetPageDescending(
             int pageNumber,
             int pageSize)
         {
@@ -331,30 +325,29 @@ namespace cloudscribe.Core.Repositories.pgsql
             //    }
             //}
 
-            NpgsqlParameter[] arParams = new NpgsqlParameter[2];
-
-            arParams[0] = new NpgsqlParameter("pagesize", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[0].Value = pageSize;
-
-            arParams[1] = new NpgsqlParameter("pageoffset", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[1].Value = pageLowerBound;
-
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT	* ");
-            sqlCommand.Append("FROM	mp_systemlog  ");
+            sqlCommand.Append("FROM	mp_SystemLog  ");
             //sqlCommand.Append("WHERE  ");
-            sqlCommand.Append("ORDER BY id DESC  ");
+            sqlCommand.Append("ORDER BY ID DESC ");
             //sqlCommand.Append("  ");
-            sqlCommand.Append("LIMIT  :pagesize");
-
+            sqlCommand.Append("LIMIT :PageSize ");
             if (pageNumber > 1)
-                sqlCommand.Append(" OFFSET :pageoffset ");
-
+            {
+                sqlCommand.Append("OFFSET :OffsetRows ");
+            }
             sqlCommand.Append(";");
 
-            return await AdoHelper.ExecuteReaderAsync(
-                readConnectionString,
-                CommandType.Text,
+            SqliteParameter[] arParams = new SqliteParameter[2];
+
+            arParams[0] = new SqliteParameter(":PageSize", DbType.Int32);
+            arParams[0].Value = pageSize;
+
+            arParams[1] = new SqliteParameter(":OffsetRows", DbType.Int32);
+            arParams[1].Value = pageLowerBound;
+
+            return AdoHelper.ExecuteReader(
+                connectionString,
                 sqlCommand.ToString(),
                 arParams);
 
@@ -362,5 +355,4 @@ namespace cloudscribe.Core.Repositories.pgsql
 
 
     }
-
 }

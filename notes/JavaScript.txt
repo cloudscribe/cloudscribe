@@ -20,3 +20,6 @@ http://instinctcoder.com/asp-net-mvc-4-jquery-autocomplete-dropdownlist/
 https://github.com/ghiden/angucomplete-alt
 
 
+http://misoproject.com/
+http://misoproject.com/d3-chart/
+https://github.com/misoproject

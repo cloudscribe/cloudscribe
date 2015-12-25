@@ -2,38 +2,37 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //	Author:                 Joe Audette
 //  Created:			    2011-08-18
-//	Last Modified:		    2015-11-18
+//	Last Modified:		    2015-12-25
 // 
 
 using cloudscribe.Core.Models.DataExtensions;
 using cloudscribe.Core.Models.Logging;
-using cloudscribe.DbHelpers.Firebird;
-using Microsoft.Extensions.OptionsModel;
-using Microsoft.Extensions.Logging;
+using cloudscribe.DbHelpers.SQLite;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Threading.Tasks;
 
-namespace cloudscribe.Core.Repositories.Firebird
+namespace cloudscribe.Logging.Sqlite
 {
+    //disable warning about not really being async
+    // we know it is not, and for Sqlite there is probably no benefit to making it really async
+#pragma warning disable 1998
+
     public class LogRepository : ILogRepository
     {
         public LogRepository(
-            IOptions<FirebirdConnectionOptions> configuration)
+            SqliteConnectionstringResolver connectionStringResolver)
         {
-            if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
-           
-            readConnectionString = configuration.Value.ReadConnectionString;
-            writeConnectionString = configuration.Value.WriteConnectionString;
+            if (connectionStringResolver == null) { throw new ArgumentNullException(nameof(connectionStringResolver)); }
+            
+            connectionString = connectionStringResolver.Resolve();
 
-            dbSystemLog = new DBSystemLog(readConnectionString, writeConnectionString);
+            dbSystemLog = new DBSystemLog(connectionString);
 
         }
 
-        
-        private string readConnectionString;
-        private string writeConnectionString;
+        private string connectionString;
         private DBSystemLog dbSystemLog;
 
         public int AddLogItem(
@@ -61,7 +60,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         public async Task<int> GetCount()
         {
-            return await dbSystemLog.GetCount();
+            return dbSystemLog.GetCount();
         }
 
         public async Task<List<ILogItem>> GetPageAscending(
@@ -69,7 +68,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             int pageSize)
         {
             List<ILogItem> logItems = new List<ILogItem>();
-            using (DbDataReader reader = await dbSystemLog.GetPageAscending(pageNumber, pageSize))
+            using (DbDataReader reader = dbSystemLog.GetPageAscending(pageNumber, pageSize))
             {
                 while (reader.Read())
                 {
@@ -87,7 +86,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             int pageSize)
         {
             List<ILogItem> logItems = new List<ILogItem>();
-            using (DbDataReader reader = await dbSystemLog.GetPageDescending(pageNumber, pageSize))
+            using (DbDataReader reader = dbSystemLog.GetPageDescending(pageNumber, pageSize))
             {
                 while (reader.Read())
                 {
@@ -102,24 +101,25 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         public async Task<bool> DeleteAll()
         {
-            return await dbSystemLog.DeleteAll();
+            return dbSystemLog.DeleteAll();
         }
 
         public async Task<bool> Delete(int logItemId)
         {
-            return await dbSystemLog.Delete(logItemId);
+            return dbSystemLog.Delete(logItemId);
         }
 
         public async Task<bool> DeleteOlderThan(DateTime cutoffDateUtc)
         {
-            return await dbSystemLog.DeleteOlderThan(cutoffDateUtc);
+            return dbSystemLog.DeleteOlderThan(cutoffDateUtc);
         }
 
         public async Task<bool> DeleteByLevel(string logLevel)
         {
-            return await dbSystemLog.DeleteByLevel(logLevel);
+            return dbSystemLog.DeleteByLevel(logLevel);
         }
 
-
     }
+
+#pragma warning restore 1998
 }

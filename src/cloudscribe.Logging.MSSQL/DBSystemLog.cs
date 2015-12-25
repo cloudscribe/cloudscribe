@@ -13,7 +13,7 @@ using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
 
-namespace cloudscribe.Core.Repositories.MSSQL
+namespace cloudscribe.Logging.MSSQL
 {
     internal class DBSystemLog
     {

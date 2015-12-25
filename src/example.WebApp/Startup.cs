@@ -228,16 +228,16 @@ namespace example.WebApp
             loggerFactory.AddConsole(minLevel: LogLevel.Warning);
             
             // a customizable filter for logging
-            LogLevel minimumLevel = LogLevel.Warning;
+            LogLevel minimumLevel = LogLevel.Information;
             List<string> excludedLoggers = new List<string>();
             // add exclusions to remove noise in the logs
 
             // we need to filter out EF otherwise each time we persist a log item to the db more logs are generated
             // so it can become an infinite loop that keeps creating data
             // you can add any loggers that you want to exclude to reduce noise in the log
-            //excludedLoggers.Add("Microsoft.Data.Entity.Storage.Internal.RelationalCommandBuilderFactory");
-            //excludedLoggers.Add("Microsoft.Data.Entity.Query.Internal.QueryCompiler");
-            //excludedLoggers.Add("Microsoft.Data.Entity.DbContext");
+            excludedLoggers.Add("Microsoft.Data.Entity.Storage.Internal.RelationalCommandBuilderFactory");
+            excludedLoggers.Add("Microsoft.Data.Entity.Query.Internal.QueryCompiler");
+            excludedLoggers.Add("Microsoft.Data.Entity.DbContext");
 
             Func<string, LogLevel, bool> logFilter = delegate (string loggerName, LogLevel logLevel)
             {
