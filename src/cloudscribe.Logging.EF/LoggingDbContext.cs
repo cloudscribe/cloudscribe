@@ -6,7 +6,7 @@
 // 
 
 using System;
-using cloudscribe.Core.Models.Logging;
+using cloudscribe.Logging.Web;
 using Microsoft.Data.Entity;
 using Microsoft.Data.Entity.Infrastructure;
 

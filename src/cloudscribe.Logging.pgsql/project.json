@@ -13,7 +13,7 @@
   "releaseNotes": "",
 
   "dependencies": {
-    "cloudscribe.Core.Models": "1.0.0-*",
+    "cloudscribe.Logging.Web": "1.0.0-*",
     "cloudscribe.DbHelpers.pgsql": "1.0.0-*",
     "Microsoft.Extensions.OptionsModel": "1.0.0-rc1-final",
     "npgsql": "3.1.0-*"

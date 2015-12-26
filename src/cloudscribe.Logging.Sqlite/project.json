@@ -13,7 +13,7 @@
   "releaseNotes": "",
 
   "dependencies": {
-    "cloudscribe.Core.Models": "1.0.0-*",
+    "cloudscribe.Logging.Web": "1.0.0-*",
     "cloudscribe.DbHelpers.SQLite": "1.0.0-*",
     "Microsoft.Extensions.OptionsModel": "1.0.0-rc1-final",
     "Microsoft.Data.Sqlite": "1.0.0-rc1-final"

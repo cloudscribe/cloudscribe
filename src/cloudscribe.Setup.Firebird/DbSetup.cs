@@ -2,10 +2,12 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-07-17
-// Last Modified:		    2015-12-24
+// Last Modified:		    2015-12-26
 
 
 using cloudscribe.Core.Models;
+using cloudscribe.Setup.Web;
+using cloudscribe.DbHelpers.Firebird;
 using FirebirdSql.Data.FirebirdClient;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.OptionsModel;
@@ -15,11 +17,11 @@ using System.Data.Common;
 using System.IO;
 using System.Text;
 
-namespace cloudscribe.DbHelpers.Firebird
+namespace cloudscribe.Setup.Firebird
 {
-    public class Db : IDb
+    public class DbSetup : IDbSetup
     {
-        public Db(
+        public DbSetup(
             ILoggerFactory loggerFactory,
             IOptions<FirebirdConnectionOptions> configuration,
             IVersionProviderFactory versionProviderFactory)
@@ -31,7 +33,7 @@ namespace cloudscribe.DbHelpers.Firebird
             //config = configuration;
             versionProviders = versionProviderFactory;
             logFactory = loggerFactory;
-            log = loggerFactory.CreateLogger(typeof(Db).FullName);
+            log = loggerFactory.CreateLogger(typeof(DbSetup).FullName);
 
             writeConnectionString = configuration.Value.WriteConnectionString;
             readConnectionString = configuration.Value.ReadConnectionString;

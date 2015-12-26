@@ -4,15 +4,13 @@
 using System;
 using System.Data.Common;
 using System.IO;
+using cloudscribe.Core.Models;
 
-namespace cloudscribe.Core.Models
+namespace cloudscribe.Setup.Web
 {
-    public interface IDataPlatformInfo
-    {
-        string DBPlatform { get; }
-    }
+    
 
-    public interface IDb : IDataPlatformInfo
+    public interface IDbSetup : IDataPlatformInfo
     {
         //TODO split any of these methods that could/should also be implemented in EF
         // into a different interface ie CanAccessDatabase, ExistingSiteCount, etc

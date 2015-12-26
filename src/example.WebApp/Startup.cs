@@ -34,7 +34,6 @@ using Microsoft.Extensions.OptionsModel;
 using Microsoft.Extensions.PlatformAbstractions;
 using Glimpse;
 using cloudscribe.Core.Models;
-using cloudscribe.Core.Models.Logging;
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Repositories.MSSQL;
 using cloudscribe.Core.Web.Components;

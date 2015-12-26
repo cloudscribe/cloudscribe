@@ -5,7 +5,6 @@
 //	Last Modified:		    2015-12-26
 // 
 
-using cloudscribe.Core.Models.Logging;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Http.Features;
 using Microsoft.Extensions.DependencyInjection;

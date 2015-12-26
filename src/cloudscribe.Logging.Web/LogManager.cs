@@ -5,12 +5,8 @@
 //	Last Modified:		    2015-12-26
 // 
 
-
-using cloudscribe.Core.Models.Logging;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
-
 
 namespace cloudscribe.Logging.Web
 {

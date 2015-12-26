@@ -5,7 +5,7 @@
 // Last Modified:			2015-12-26
 // 
 
-using cloudscribe.Core.Models.Logging;
+using cloudscribe.Logging.Web;
 using Microsoft.Data.Entity;
 using Microsoft.Data.Entity.Metadata.Builders;
 

@@ -5,7 +5,6 @@
 //	Last Modified:		    2015-12-26
 // 
 
-using cloudscribe.Core.Models.Logging;
 using Microsoft.Extensions.Logging;
 using System;
 

@@ -14,7 +14,6 @@ using Microsoft.Data.Entity.Metadata.Builders;
 using Microsoft.Data.Entity.Scaffolding.Metadata;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Geography;
-using cloudscribe.Core.Models.Logging;
 
 //http://ef.readthedocs.org/en/latest/modeling/configuring.html
 // "If you are targeting more than one relational provider with the same model then you 

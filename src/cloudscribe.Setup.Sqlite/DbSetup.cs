@@ -2,9 +2,11 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2004-08-03
-// Last Modified:		    2015-12-24
+// Last Modified:		    2015-12-26
 
 using cloudscribe.Core.Models;
+using cloudscribe.Setup.Web;
+using cloudscribe.DbHelpers.SQLite;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Logging;
 using System;
@@ -13,12 +15,12 @@ using System.Data.Common;
 using System.IO;
 using System.Text;
 
-namespace cloudscribe.DbHelpers.SQLite
+namespace cloudscribe.Setup.Sqlite
 {
-    public class Db : IDb
+    public class DbSetup : IDbSetup
     {
 
-        public Db(
+        public DbSetup(
             SqliteConnectionstringResolver connectionStringResolver,
             ILogger<SqliteConnectionstringResolver> logger,
             IVersionProviderFactory versionProviderFactory)
@@ -39,7 +41,7 @@ namespace cloudscribe.DbHelpers.SQLite
         private string connectionString;
         private string sqliteFilePath = string.Empty;
 
-        #region IDb
+        #region IDbSetup
 
         public string DBPlatform
         {

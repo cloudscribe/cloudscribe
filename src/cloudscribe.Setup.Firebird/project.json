@@ -1,0 +1,32 @@
+﻿{
+  "version": "1.0.0-*",
+  "title": "cloudscribe.Setup.Firebird",
+  "authors": [ "Joe Audette" ],
+  "copyright": "2015 Source Tree Solutions",
+  "description": "cloudscribe database setup component for Firebird Sql",
+  "iconUrl": "https://raw.githubusercontent.com/joeaudette/cloudscribe/master/cloudscribe-icon-32.png",
+  "licenseUrl": "http://www.apache.org/licenses/LICENSE-2.0",
+  "owners": [ "Source Tree Solutions" ],
+  "projectUrl": "https://github.com/joeaudette/cloudscribe",
+  "releaseNotes": "",
+  "requireLicenseAcceptance": false,
+  "tags": [ "cloudscribe", "setup", "firebird", "firebirdsql" ],
+
+
+
+  "dependencies": {
+    "cloudscribe.Core.Models": "1.0.0-*",
+    "cloudscribe.Setup.Web": "1.0.0-*",
+    "cloudscribe.DbHelpers.Firebird": "1.0.0-*",
+    "FirebirdSql.Data.FirebirdClient": "4.6.2",
+    "Microsoft.Extensions.Configuration.Abstractions": "1.0.0-rc1-final",
+    "Microsoft.Extensions.Logging": "1.0.0-rc1-final",
+    "Microsoft.Extensions.Logging.Abstractions": "1.0.0-rc1-final",
+    "Microsoft.Extensions.OptionsModel": "1.0.0-rc1-final"
+  },
+
+  "frameworks": {
+    "net451": { }
+    
+  }
+}

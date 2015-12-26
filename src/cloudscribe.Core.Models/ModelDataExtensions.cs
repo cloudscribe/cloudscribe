@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Globalization;
-using cloudscribe.Core.Models.Logging;
+
 
 namespace cloudscribe.Core.Models.DataExtensions
 {
@@ -406,20 +406,7 @@ namespace cloudscribe.Core.Models.DataExtensions
             }
         }
 
-        public static void LoadFromReader(this ILogItem logItem, DbDataReader reader)
-        {
-            logItem.Id = Convert.ToInt32(reader["ID"]);
-            logItem.LogDateUtc = Convert.ToDateTime(reader["LogDate"]);
-            logItem.IpAddress = reader["IpAddress"].ToString();
-            logItem.Culture = reader["Culture"].ToString();
-            logItem.Url = reader["Url"].ToString();
-            logItem.ShortUrl = reader["ShortUrl"].ToString();
-            logItem.Thread = reader["Thread"].ToString();
-            logItem.LogLevel = reader["LogLevel"].ToString();
-            logItem.Logger = reader["Logger"].ToString();
-            logItem.Message = reader["Message"].ToString();
-
-        }
+        
 
         
     }

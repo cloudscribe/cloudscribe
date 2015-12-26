@@ -2,10 +2,12 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-01-10
-// Last Modified:			2015-12-24
+// Last Modified:			2015-12-26
 // 
 
 using cloudscribe.Core.Models;
+using cloudscribe.Setup.Web;
+using cloudscribe.DbHelpers.MSSQL;
 using Microsoft.Extensions.OptionsModel;
 using Microsoft.Extensions.Logging;
 using System;
@@ -15,11 +17,11 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Text;
 
-namespace cloudscribe.DbHelpers.MSSQL
+namespace cloudscribe.Setup.MSSQL
 {
-    public class Db : cloudscribe.Core.Models.IDb
+    public class DbSetup : IDbSetup
     {
-        public Db(
+        public DbSetup(
             ILoggerFactory loggerFactory,
             IOptions<MSSQLConnectionOptions> connectionOptions,
             IVersionProviderFactory versionProviderFactory)
@@ -30,7 +32,7 @@ namespace cloudscribe.DbHelpers.MSSQL
 
             versionProviders = versionProviderFactory;
             logFactory = loggerFactory;
-            log = loggerFactory.CreateLogger(typeof(Db).FullName);
+            log = loggerFactory.CreateLogger(typeof(DbSetup).FullName);
  
             readConnectionString = connectionOptions.Value.ReadConnectionString;
             writeConnectionString = connectionOptions.Value.WriteConnectionString;
@@ -44,7 +46,7 @@ namespace cloudscribe.DbHelpers.MSSQL
         private string readConnectionString;
         private string ownerPrefix;
 
-        #region IDb
+        #region IDbSetup
 
         public string DBPlatform { get { return "MSSQL"; } }
 

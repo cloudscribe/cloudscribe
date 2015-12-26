@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-06-20
-// Last Modified:			2015-11-19
+// Last Modified:			2015-12-26
 // 
 
 using System;
@@ -36,15 +36,15 @@ using Microsoft.AspNet.Routing;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Identity;
 using cloudscribe.Core.Models.Geography;
-using cloudscribe.Core.Models.Logging;
+using cloudscribe.Logging.Web;
 using cloudscribe.Core.Web;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.Navigation;
 using cloudscribe.Core.Web.Razor;
+using cloudscribe.Setup.Web;
 using cloudscribe.Messaging;
 using cloudscribe.Web.Navigation;
 using cloudscribe.Web.Pagination;
-using cloudscribe.Web.Setup;
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Repositories.EF;
 
@@ -127,8 +127,8 @@ namespace example.WebApp
                 //services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.SqlCe.SiteRepository>();
                 //services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.SqlCe.UserRepository>();
                 //services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.SqlCe.GeoRepository>();
-                //services.TryAddScoped<IDb, cloudscribe.DbHelpers.SqlCe.Db>();
-                //services.TryAddScoped<IDataPlatformInfo, cloudscribe.DbHelpers.SqlCe.Db>();
+                //services.TryAddScoped<IDbSetup, cloudscribe.Setup.SqlCe.DbSetup>();
+                //services.TryAddScoped<IDataPlatformInfo, cloudscribe.Setup.SqlCe.DbSetup>();
                 //services.TryAddScoped<ILogRepository, cloudscribe.Logging.SqlCe.LogRepository>();
                 //services.TryAddScoped<cloudscribe.DbHelpers.SqlCe.SqlCeConnectionStringResolver, cloudscribe.DbHelpers.SqlCe.SqlCeConnectionStringResolver>();
 
@@ -141,8 +141,8 @@ namespace example.WebApp
                 //services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.Firebird.SiteRepository>();
                 //services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.Firebird.UserRepository>();
                 //services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.Firebird.GeoRepository>();
-                //services.TryAddScoped<IDb, cloudscribe.DbHelpers.Firebird.Db>();
-                //services.TryAddScoped<IDataPlatformInfo, cloudscribe.DbHelpers.Firebird.Db>();
+                //services.TryAddScoped<IDbSetup, cloudscribe.Setup.Firebird.DbSetup>();
+                //services.TryAddScoped<IDataPlatformInfo, cloudscribe.Setup.Firebird.DbSetup>();
                 //services.TryAddScoped<ILogRepository, cloudscribe.Logging.Firebird.LogRepository>();
 
                 //break;
@@ -154,8 +154,8 @@ namespace example.WebApp
                 //services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.MySql.SiteRepository>();
                 //services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.MySql.UserRepository>();
                 //services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.MySql.GeoRepository>();
-                //services.TryAddScoped<IDb, cloudscribe.DbHelpers.MySql.Db>();
-                //services.TryAddScoped<IDataPlatformInfo, cloudscribe.DbHelpers.MySql.Db>();
+                //services.TryAddScoped<IDbSetup, cloudscribe.Setup.MySql.DbSetup>();
+                //services.TryAddScoped<IDataPlatformInfo, cloudscribe.Setup.MySql.DbSetup>();
                 //services.TryAddScoped<ILogRepository, cloudscribe.Logging.MySql.LogRepository>();
 
                 // break;
@@ -166,8 +166,8 @@ namespace example.WebApp
                     services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.SQLite.SiteRepository>();
                     services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.SQLite.UserRepository>();
                     services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.SQLite.GeoRepository>();
-                    services.TryAddScoped<IDb, cloudscribe.DbHelpers.SQLite.Db>();
-                    services.TryAddScoped<IDataPlatformInfo, cloudscribe.DbHelpers.SQLite.Db>();
+                    services.TryAddScoped<IDbSetup, cloudscribe.Setup.Sqlite.DbSetup>();
+                    services.TryAddScoped<IDataPlatformInfo, cloudscribe.Setup.Sqlite.DbSetup>();
                     services.TryAddScoped<ILogRepository, cloudscribe.Logging.Sqlite.LogRepository>();
                     services.TryAddScoped<cloudscribe.DbHelpers.SQLite.SqliteConnectionstringResolver, cloudscribe.DbHelpers.SQLite.SqliteConnectionstringResolver>();
                     
@@ -180,8 +180,8 @@ namespace example.WebApp
                     services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.pgsql.SiteRepository>();
                     services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.pgsql.UserRepository>();
                     services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.pgsql.GeoRepository>();
-                    services.TryAddScoped<IDb, cloudscribe.DbHelpers.pgsql.Db>();
-                    services.TryAddScoped<IDataPlatformInfo, cloudscribe.DbHelpers.pgsql.Db>();
+                    services.TryAddScoped<IDbSetup, cloudscribe.Setup.pgsql.DbSetup>();
+                    services.TryAddScoped<IDataPlatformInfo, cloudscribe.Setup.pgsql.DbSetup>();
                     services.TryAddScoped<ILogRepository, cloudscribe.Logging.pgsql.LogRepository>();
 
                     break;
@@ -193,8 +193,8 @@ namespace example.WebApp
                     services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.MSSQL.SiteRepository>();
                     services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.MSSQL.UserRepository>();
                     services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.MSSQL.GeoRepository>();
-                    services.TryAddScoped<IDb, cloudscribe.DbHelpers.MSSQL.Db>();
-                    services.TryAddScoped<IDataPlatformInfo, cloudscribe.DbHelpers.MSSQL.Db>();
+                    services.TryAddScoped<IDbSetup, cloudscribe.Setup.MSSQL.DbSetup>();
+                    services.TryAddScoped<IDataPlatformInfo, cloudscribe.Setup.MSSQL.DbSetup>();
                     services.TryAddScoped<ILogRepository, cloudscribe.Logging.MSSQL.LogRepository>();
 
                     break;

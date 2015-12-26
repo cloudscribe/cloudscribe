@@ -5,7 +5,6 @@
 //	Last Modified:		    2015-12-26
 // 
 
-using cloudscribe.Core.Models.Logging;
 using cloudscribe.Web.Pagination;
 using System;
 using System.Collections.Generic;

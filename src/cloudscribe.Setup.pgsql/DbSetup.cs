@@ -1,10 +1,12 @@
 ﻿// Original Author:					Joseph Hill
 // Created:							2005-02-16 
 // Additions and fixes have been added by Joe Audette, Dean Brettle, TJ Fontaine
-// Last Modified:                   2015-12-24
+// Last Modified:                   2015-12-26
 
 
 using cloudscribe.Core.Models;
+using cloudscribe.Setup.Web;
+using cloudscribe.DbHelpers.pgsql;
 using Microsoft.Extensions.OptionsModel;
 using Microsoft.Extensions.Logging;
 using Npgsql;
@@ -15,11 +17,11 @@ using System.Data.Common;
 using System.IO;
 using System.Text;
 
-namespace cloudscribe.DbHelpers.pgsql
+namespace cloudscribe.Setup.pgsql
 {
-    public class Db : IDb
+    public class DbSetup : IDbSetup
     {
-        public Db(
+        public DbSetup(
             ILoggerFactory loggerFactory,
             IOptions<PostgreSqlConnectionOptions> configuration,
             IVersionProviderFactory versionProviderFactory)
@@ -30,7 +32,7 @@ namespace cloudscribe.DbHelpers.pgsql
 
             versionProviders = versionProviderFactory;
             logFactory = loggerFactory;
-            log = loggerFactory.CreateLogger(typeof(Db).FullName);
+            log = loggerFactory.CreateLogger(typeof(DbSetup).FullName);
 
             writeConnectionString = configuration.Value.WriteConnectionString;
             readConnectionString = configuration.Value.ReadConnectionString;

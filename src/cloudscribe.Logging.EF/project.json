@@ -17,7 +17,7 @@
   },
 
   "dependencies": {
-    "cloudscribe.Core.Models": "1.0.0-*",
+    "cloudscribe.Logging.Web": "1.0.0-*",
     "EntityFramework.Core": "7.0.0-rc1-final",
     "EntityFramework.Commands": "7.0.0-rc1-final",
     "EntityFramework.MicrosoftSqlServer": "7.0.0-rc1-final",
