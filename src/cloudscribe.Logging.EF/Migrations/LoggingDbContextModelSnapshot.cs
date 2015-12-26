@@ -3,15 +3,14 @@ using Microsoft.Data.Entity;
 using Microsoft.Data.Entity.Infrastructure;
 using Microsoft.Data.Entity.Metadata;
 using Microsoft.Data.Entity.Migrations;
-using cloudscribe.Core.Repositories.EF;
+using cloudscribe.Logging.EF;
 
-namespace cloudscribe.Core.Repositories.EF.Migrations.LoggingDb
+namespace cloudscribe.Logging.EF.Migrations
 {
     [DbContext(typeof(LoggingDbContext))]
-    [Migration("20151214182209_Initial")]
-    partial class Initial
+    partial class LoggingDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "7.0.0-rc1-16348")

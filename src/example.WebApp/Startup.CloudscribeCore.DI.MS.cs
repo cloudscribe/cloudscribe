@@ -35,7 +35,6 @@ using Microsoft.AspNet.Mvc.Core;
 using Microsoft.AspNet.Routing;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Identity;
-using cloudscribe.Web.Logging;
 using cloudscribe.Core.Models.Geography;
 using cloudscribe.Core.Models.Logging;
 using cloudscribe.Core.Web;
@@ -95,6 +94,7 @@ namespace example.WebApp
                 case "ef7": 
 
                     services.TryAddScoped<ICoreModelMapper, SqlServerCoreModelMapper>();
+                    services.TryAddScoped<cloudscribe.Logging.EF.ILogModelMapper, cloudscribe.Logging.EF.SqlServerLogModelMapper>();
 
                     services.AddEntityFramework()
                     .AddSqlServer()
@@ -104,15 +104,16 @@ namespace example.WebApp
                        // .UseRowNumberForPaging()
 
                     )
-                    .AddDbContext<LoggingDbContext>(options =>
+                    .AddDbContext<cloudscribe.Logging.EF.LoggingDbContext>(options =>
                     options.UseSqlServer(configuration["Data:EF7ConnectionOptions:ConnectionString"])
                     );
 
                     services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.EF.SiteRepository>();
                     services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.EF.UserRepository>();
                     services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.EF.GeoRepository>();
-                    services.TryAddScoped<ILogRepository, cloudscribe.Core.Repositories.EF.LogRepository>();
                     services.TryAddScoped<IDataPlatformInfo, cloudscribe.Core.Repositories.EF.DataPlatformInfo>();
+
+                    services.TryAddScoped<ILogRepository, cloudscribe.Logging.EF.LogRepository>();
 
                     break;
 

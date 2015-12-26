@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //	Author:                 Joe Audette
 //  Created:			    2011-08-19
-//	Last Modified:		    2015-12-23
+//	Last Modified:		    2015-12-26
 // 
 
 using cloudscribe.Core.Models.Logging;
@@ -15,7 +15,7 @@ using System.Collections;
 using System.Globalization;
 using System.Text;
 
-namespace cloudscribe.Web.Logging
+namespace cloudscribe.Logging.Web
 {
     public class DbLogger : ILogger
     {

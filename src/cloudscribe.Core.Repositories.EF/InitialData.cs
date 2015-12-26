@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-12-03
-// Last Modified:			2015-12-10
+// Last Modified:			2015-12-26
 // 
 
 
@@ -25,21 +25,17 @@ namespace cloudscribe.Core.Repositories.EF
                 var db = serviceScope.ServiceProvider.GetService<CoreDbContext>();
 
                 bool didCreatedDb = await db.Database.EnsureCreatedAsync();
+                if(!didCreatedDb)
+                {
+                    await db.Database.MigrateAsync();
+                }
                 
+
                 await EnsureData(db);
 
-                var db2 = serviceScope.ServiceProvider.GetService<LoggingDbContext>();
-
-                didCreatedDb = await db2.Database.EnsureCreatedAsync();
             }
 
-            using (var serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
-            {
-                var db2 = serviceScope.ServiceProvider.GetService<LoggingDbContext>();
-
-                bool didCreatedDb = await db2.Database.EnsureCreatedAsync();
-                await db2.Database.MigrateAsync();
-            }
+            
         }
 
         private static async Task EnsureData(

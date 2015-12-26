@@ -38,7 +38,7 @@ using cloudscribe.Core.Models.Logging;
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Repositories.MSSQL;
 using cloudscribe.Core.Web.Components;
-using cloudscribe.Web.Logging;
+using cloudscribe.Logging.Web;
 //using Autofac;
 //using Autofac.Framework.DependencyInjection;
 
@@ -394,6 +394,18 @@ namespace example.WebApp
             if (devOptions.DbPlatform == "ef7")
             {
                 cloudscribe.Core.Repositories.EF.InitialData.InitializeDatabaseAsync(app.ApplicationServices).Wait();
+                // this is using EF for the logger but using EF for Core does not mean you must use EF for logging
+                // one should be able to use the MSSQL Logger while still using EF for the core repos
+                // one problem with EF logging is that EF logs a lot of information stuff and if we use EF for logigng
+                // then every time a log item is inserted to the db it generates more logging events
+                // and thus a continuous creation of data can result so the EF logger is designed to leave out
+                // EF components from logging
+                // by using the mssql logger instead then no extra log items will be created and you can more easily allow
+                // EF to log things of its own
+                // however the mssql logger depends on the setup system which is not used by EF components
+                // this dependency is more practical than technical though, you could run the db setup script for mssql logging
+                // manually instead of using the setup system.
+                cloudscribe.Logging.EF.DbInitializer.InitializeDatabaseAsync(app.ApplicationServices).Wait();
             }
 
 

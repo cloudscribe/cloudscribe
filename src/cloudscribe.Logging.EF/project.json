@@ -1,10 +1,10 @@
 ﻿{
   "version": "1.0.0-*",
-  "title": "cloudscribe.Web.Logging",
-  "description": "An implementation of ILogger, ILoggerFactory, ILoggerProvider that logs to a supported database and a controller for viewing and managing the log",
+  "title": "cloudscribe.Logging.EF",
+  "description": "Entity Framework 7 implementation of cloudscribe ILogRepository",
   "authors": [ "Joe Audette" ],
   "owners": [ "Source Tree Solutions" ],
-  "tags": [ "cloudscribe", "logging", "database" ],
+  "tags": [ "cloudscribe", "repositories", "logging" ],
   "projectUrl": "https://github.com/joeaudette/cloudscribe",
   "licenseUrl": "http://www.apache.org/licenses/LICENSE-2.0",
   "copyright": "2015 Source Tree Solutions",
@@ -12,10 +12,20 @@
   "requireLicenseAcceptance": false,
   "releaseNotes": "",
 
+  "commands": {
+    "ef": "EntityFramework.Commands"
+  },
+
   "dependencies": {
     "cloudscribe.Core.Models": "1.0.0-*",
-    "cloudscribe.Web.Pagination": "1.0.0-*"
-
+    "EntityFramework.Core": "7.0.0-rc1-final",
+    "EntityFramework.Commands": "7.0.0-rc1-final",
+    "EntityFramework.MicrosoftSqlServer": "7.0.0-rc1-final",
+    "EntityFramework.Relational": "7.0.0-rc1-final",
+    "Microsoft.Extensions.Logging.Abstractions": "1.0.0-rc1-final",
+    "Microsoft.Extensions.DependencyInjection.Abstractions": "1.0.0-rc1-final",
+    "Microsoft.Extensions.Configuration": "1.0.0-rc1-final",
+    "Microsoft.Extensions.Configuration.Json": "1.0.0-rc1-final"
   },
 
   "frameworks": {

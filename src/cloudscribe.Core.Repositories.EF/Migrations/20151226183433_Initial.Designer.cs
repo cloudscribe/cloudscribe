@@ -8,7 +8,7 @@ using cloudscribe.Core.Repositories.EF;
 namespace cloudscribe.Core.Repositories.EF.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    [Migration("20151214182158_Initial")]
+    [Migration("20151226183433_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

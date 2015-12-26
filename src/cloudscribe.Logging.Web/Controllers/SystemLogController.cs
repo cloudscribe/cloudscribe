@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //	Author:                 Joe Audette
 //  Created:			    2011-12-23
-//	Last Modified:		    2015-12-23
+//	Last Modified:		    2015-12-26
 // 
 
 
@@ -11,7 +11,7 @@ using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
 using System.Threading.Tasks;
 
-namespace cloudscribe.Web.Logging.Controllers
+namespace cloudscribe.Logging.Web.Controllers
 {
     public class SystemLogController : Controller
     {

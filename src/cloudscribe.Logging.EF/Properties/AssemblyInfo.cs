@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("cloudscribe.Web.Logging")]
+[assembly: AssemblyTitle("cloudscribe.Logging.EF")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("cloudscribe.Web.Logging")]
+[assembly: AssemblyProduct("cloudscribe.Logging.EF")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,4 +20,4 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("a941c390-7c3c-4103-9959-3f671378f3c4")]
+[assembly: Guid("c753b1d4-bc93-4a56-8ae3-c9c5ffc5b10d")]

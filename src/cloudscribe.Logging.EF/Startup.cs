@@ -15,7 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.PlatformAbstractions;
 
-namespace cloudscribe.Core.Repositories.EF
+namespace cloudscribe.Logging.EF
 {
     public class Startup
     {
@@ -37,13 +37,12 @@ namespace cloudscribe.Core.Repositories.EF
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.TryAddScoped<ICoreModelMapper, SqlServerCoreModelMapper>();
+            services.TryAddScoped<ILogModelMapper, SqlServerLogModelMapper>();
 
             services.AddEntityFramework()
                 .AddSqlServer()
-                .AddDbContext<CoreDbContext>(options =>
-                    options.UseSqlServer(Configuration["Data:EF7ConnectionOptions:ConnectionString"])
-                    );
+                .AddDbContext<LoggingDbContext>(options =>
+                    options.UseSqlServer(Configuration["Data:EF7ConnectionOptions:ConnectionString"]));
         }
 
 

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-12-10
-// Last Modified:			2015-12-10
+// Last Modified:			2015-12-26
 // 
 
 using System;
@@ -10,7 +10,7 @@ using cloudscribe.Core.Models.Logging;
 using Microsoft.Data.Entity;
 using Microsoft.Data.Entity.Infrastructure;
 
-namespace cloudscribe.Core.Repositories.EF
+namespace cloudscribe.Logging.EF
 {
     public class LoggingDbContext : DbContext
     {
@@ -31,10 +31,10 @@ namespace cloudscribe.Core.Repositories.EF
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
-            ICoreModelMapper mapper = this.GetService<ICoreModelMapper>();
+            ILogModelMapper mapper = this.GetService<ILogModelMapper>();
             if (mapper == null)
             {
-                mapper = new SqlServerCoreModelMapper();
+                mapper = new SqlServerLogModelMapper();
             }
 
             modelBuilder.HasSequence<int>("LogIds")

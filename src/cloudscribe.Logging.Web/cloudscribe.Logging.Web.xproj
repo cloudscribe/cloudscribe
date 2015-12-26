@@ -7,8 +7,8 @@
 
   <Import Project="$(VSToolsPath)\DNX\Microsoft.DNX.Props" Condition="'$(VSToolsPath)' != ''" />
   <PropertyGroup Label="Globals">
-    <ProjectGuid>a941c390-7c3c-4103-9959-3f671378f3c4</ProjectGuid>
-    <RootNamespace>cloudscribe.Web.Logging</RootNamespace>
+    <ProjectGuid>b2e8a527-efa8-4581-a7b9-d6f1bf35a38e</ProjectGuid>
+    <RootNamespace>cloudscribe.Logging.Web</RootNamespace>
     <BaseIntermediateOutputPath Condition="'$(BaseIntermediateOutputPath)'=='' ">..\..\artifacts\obj\$(MSBuildProjectName)</BaseIntermediateOutputPath>
     <OutputPath Condition="'$(OutputPath)'=='' ">..\..\artifacts\bin\$(MSBuildProjectName)\</OutputPath>
   </PropertyGroup>
