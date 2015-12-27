@@ -1,7 +1,7 @@
 {
-  "version": "1.0.0-*",
+  "version": "1.0.0-beta1",
   "title": "cloudscribe.DbHelpers.MSSQL",
-  "description": "cloudscribe database helpers for MS SQL.  you should not normally install this separately, it will be installed if you install cloudscribe.Core.Web",
+  "description": "cloudscribe database helpers for MS SQL and SqlAzure",
   "authors": [ "Joe Audette" ],
   "owners": [ "Source Tree Solutions" ],
   "tags": [ "cloudscribe","mssql" ],

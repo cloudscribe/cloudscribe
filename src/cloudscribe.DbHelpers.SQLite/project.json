@@ -1,5 +1,5 @@
 {
-    "version": "1.0.0-*",
+    "version": "1.0.0-beta1",
     "title": "cloudscribe.DbHelpers.SQLite",
   "description": "cloudscribe database helpers for SQLite.",
   "authors": [ "Joe Audette" ],

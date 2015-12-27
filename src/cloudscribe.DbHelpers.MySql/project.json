@@ -1,7 +1,7 @@
 {
-  "version": "1.0.0-*",
+  "version": "1.0.0-beta1",
   "title": "cloudscribe.DbHelpers.MySql",
-  "description": "cloudscribe database helpers for MySql.  you should not normally install this separately, it will be installed if you install cloudscribe.Core.Web",
+  "description": "cloudscribe database helpers for MySql",
   "authors": [ "Joe Audette" ],
   "owners": [ "Source Tree Solutions" ],
   "tags": [ "cloudscribe","mssql" ],

@@ -8,6 +8,8 @@ I noticed all the async methods on UserStore<TUser> now have CancellationToken i
 such methods are supposed to check the token periodically to see if cancellation has been requested
 https://johnbadams.wordpress.com/2012/03/10/understanding-cancellationtokensource-with-tasks/
 
+http://www.davepaquette.com/archive/2015/07/19/cancelling-long-running-queries-in-asp-net-mvc-and-web-api.aspx
+
 you can see how it is used in EF Identity implementation
 https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity.EntityFramework/UserStore.cs
 

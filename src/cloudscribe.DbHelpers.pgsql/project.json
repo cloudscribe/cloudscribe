@@ -1,7 +1,7 @@
 {
-  "version": "1.0.0-*",
+  "version": "1.0.0-beta1",
   "title": "cloudscribe.DbHelpers.pgsql",
-  "description": "cloudscribe database helpers for PostgreSql.  you should not normally install this separately, it will be installed if you install cloudscribe.Core.Repositories.pgsql",
+  "description": "cloudscribe database helpers for PostgreSql",
   "authors": [ "Joe Audette" ],
   "owners": [ "Source Tree Solutions" ],
   "tags": [ "cloudscribe","pgsql","postgresql","npgsql" ],

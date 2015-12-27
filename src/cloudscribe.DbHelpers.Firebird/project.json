@@ -1,9 +1,9 @@
 {
-  "version": "1.0.0-*",
+  "version": "1.0.0-beta1",
   "title": "cloudscribe.DbHelpers.Firebird",
   "authors": [ "Joe Audette" ],
   "copyright": "2015 Source Tree Solutions",
-  "description": "cloudscribe database helpers for Firebird.  normally you would not need to install this separately, if you install cloudscribe.Core.Repositories.Firebird this will be installed as a dependency.",
+  "description": "cloudscribe database helpers for Firebird",
   "iconUrl": "https://raw.githubusercontent.com/joeaudette/cloudscribe/master/cloudscribe-icon-32.png",
   "licenseUrl": "http://www.apache.org/licenses/LICENSE-2.0",
   "owners": [ "Source Tree Solutions" ],
