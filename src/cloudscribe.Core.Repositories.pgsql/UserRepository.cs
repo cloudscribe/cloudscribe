@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-18
-// Last Modified:			2015-12-21
+// Last Modified:			2015-12-27
 // 
 
 
@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.pgsql
@@ -52,10 +53,11 @@ namespace cloudscribe.Core.Repositories.pgsql
 
         #region User 
 
-        public async Task<bool> Save(ISiteUser user)
+        public async Task<bool> Save(ISiteUser user, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (user.SiteId == -1) { throw new ArgumentException("user must have a siteid"); }
             if (user.SiteGuid == Guid.Empty) { throw new ArgumentException("user must have a siteguid"); }
+            cancellationToken.ThrowIfCancellationRequested();
 
             if (user.UserId == -1)
             {
@@ -100,15 +102,16 @@ namespace cloudscribe.Core.Repositories.pgsql
             }
             else
             {
-                return await Update(user);
+                return await Update(user, cancellationToken);
             }
 
             
 
         }
 
-        private async Task<bool> Update(ISiteUser user)
+        private async Task<bool> Update(ISiteUser user, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             if (string.IsNullOrEmpty(user.LoweredEmail)) { user.LoweredEmail = user.Email.ToLowerInvariant(); }
 
             return await dbSiteUser.UpdateUser(
@@ -160,8 +163,9 @@ namespace cloudscribe.Core.Repositories.pgsql
         //}
 
 
-        public async Task<bool> Delete(int siteId, int userId)
+        public async Task<bool> Delete(int siteId, int userId, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             ISiteUser user = await Fetch(siteId, userId);
             if (user != null)
             {
@@ -173,9 +177,9 @@ namespace cloudscribe.Core.Repositories.pgsql
             return await dbSiteUser.DeleteUser(userId);
         }
 
-        public async Task<bool> DeleteUsersBySite(int siteId)
+        public async Task<bool> DeleteUsersBySite(int siteId, CancellationToken cancellationToken = default(CancellationToken))
         {
-
+            cancellationToken.ThrowIfCancellationRequested();
             bool result = await DeleteLoginsBySite(siteId);
             result = await DeleteClaimsBySite(siteId);
             result = await DeleteUserRolesBySite(siteId);
@@ -183,18 +187,22 @@ namespace cloudscribe.Core.Repositories.pgsql
             return await dbSiteUser.DeleteUsersBySite(siteId);
         }
 
-        public async Task<bool> FlagAsDeleted(int userId)
+        public async Task<bool> FlagAsDeleted(int userId, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbSiteUser.FlagAsDeleted(userId);
         }
 
-        public async Task<bool> FlagAsNotDeleted(int userId)
+        public async Task<bool> FlagAsNotDeleted(int userId,CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbSiteUser.FlagAsNotDeleted(userId);
         }
         
-        public async Task<bool> ConfirmRegistration(Guid registrationGuid)
+        public async Task<bool> ConfirmRegistration(Guid registrationGuid, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             if (registrationGuid == Guid.Empty)
             {
                 return false;
@@ -204,18 +212,24 @@ namespace cloudscribe.Core.Repositories.pgsql
         }
 
 
-        public async Task<bool> LockoutAccount(Guid userGuid)
+        public async Task<bool> LockoutAccount(Guid userGuid, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbSiteUser.AccountLockout(userGuid, DateTime.UtcNow);
         }
 
-        public async Task<bool> UnLockAccount(Guid userGuid)
+        public async Task<bool> UnLockAccount(Guid userGuid, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbSiteUser.AccountClearLockout(userGuid);
         }
 
-        public async Task<bool> UpdateFailedPasswordAttemptCount(Guid userGuid, int failedPasswordAttemptCount)
+        public async Task<bool> UpdateFailedPasswordAttemptCount(
+            Guid userGuid, 
+            int failedPasswordAttemptCount, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbSiteUser.UpdateFailedPasswordAttemptCount(userGuid, failedPasswordAttemptCount);
         }
 
@@ -248,8 +262,9 @@ namespace cloudscribe.Core.Repositories.pgsql
         //    return await Fetch(siteId, newestUserId);
         //}
 
-        public async Task<ISiteUser> Fetch(int siteId, int userId)
+        public async Task<ISiteUser> Fetch(int siteId, int userId, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             using (DbDataReader reader = await dbSiteUser.GetSingleUser(userId))
             {
                 if (reader.Read())
@@ -267,8 +282,10 @@ namespace cloudscribe.Core.Repositories.pgsql
         }
 
 
-        public async Task<ISiteUser> Fetch(int siteId, Guid userGuid)
+        public async Task<ISiteUser> Fetch(int siteId, Guid userGuid, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             using (DbDataReader reader = await dbSiteUser.GetSingleUser(userGuid))
             {
                 if (reader.Read())
@@ -285,8 +302,9 @@ namespace cloudscribe.Core.Repositories.pgsql
             return null;
         }
 
-        public async Task<ISiteUser> FetchByConfirmationGuid(int siteId, Guid confirmGuid)
+        public async Task<ISiteUser> FetchByConfirmationGuid(int siteId, Guid confirmGuid, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             using (DbDataReader reader = await dbSiteUser.GetUserByRegistrationGuid(siteId, confirmGuid))
             {
                 if (reader.Read())
@@ -304,8 +322,9 @@ namespace cloudscribe.Core.Repositories.pgsql
         }
 
 
-        public async Task<ISiteUser> Fetch(int siteId, string email)
-        { 
+        public async Task<ISiteUser> Fetch(int siteId, string email, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
             using (DbDataReader reader = await dbSiteUser.GetSingleUser(siteId, email))
             {
                 if (reader.Read())
@@ -322,8 +341,9 @@ namespace cloudscribe.Core.Repositories.pgsql
             return null;
         }
 
-        public async Task<ISiteUser> FetchByLoginName(int siteId, string userName, bool allowEmailFallback)
-        { 
+        public async Task<ISiteUser> FetchByLoginName(int siteId, string userName, bool allowEmailFallback, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
             using (DbDataReader reader = await dbSiteUser.GetSingleUserByLoginName(siteId, userName, allowEmailFallback))
             {
                 if (reader.Read())
@@ -340,8 +360,9 @@ namespace cloudscribe.Core.Repositories.pgsql
             return null;
         }
         
-        public async Task<List<IUserInfo>> GetByIPAddress(Guid siteGuid, string ipv4Address)
+        public async Task<List<IUserInfo>> GetByIPAddress(Guid siteGuid, string ipv4Address, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             List<IUserInfo> userList = new List<IUserInfo>();
 
             using (DbDataReader reader = await dbUserLocation.GetUsersByIPAddress(siteGuid, ipv4Address))
@@ -359,8 +380,10 @@ namespace cloudscribe.Core.Repositories.pgsql
 
         }
 
-        public async Task<List<IUserInfo>> GetCrossSiteUserListByEmail(string email)
+        public async Task<List<IUserInfo>> GetCrossSiteUserListByEmail(string email, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             List<IUserInfo> userList = new List<IUserInfo>();
 
             using (DbDataReader reader = await dbSiteUser.GetCrossSiteUserListByEmail(email))
@@ -378,8 +401,9 @@ namespace cloudscribe.Core.Repositories.pgsql
 
         }
 
-        public async Task<int> CountUsers(int siteId, String userNameBeginsWith)
-        { 
+        public async Task<int> CountUsers(int siteId, string userNameBeginsWith, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbSiteUser.CountUsers(siteId, userNameBeginsWith);
         }
 
@@ -388,8 +412,11 @@ namespace cloudscribe.Core.Repositories.pgsql
             int pageNumber,
             int pageSize,
             string userNameBeginsWith,
-            int sortMode)
+            int sortMode,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             //sortMode: 0 = DisplayName asc, 1 = JoinDate desc, 2 = Last, First
 
             List<IUserInfo> userList = new List<IUserInfo>();
@@ -452,8 +479,9 @@ namespace cloudscribe.Core.Repositories.pgsql
 
         //}
 
-        public async Task<int> CountUsersForAdminSearch(int siteId, string searchInput)
+        public async Task<int> CountUsersForAdminSearch(int siteId, string searchInput, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbSiteUser.CountUsersForAdminSearch(siteId, searchInput);
         }
 
@@ -462,8 +490,11 @@ namespace cloudscribe.Core.Repositories.pgsql
             int pageNumber,
             int pageSize,
             string searchInput,
-            int sortMode)
+            int sortMode,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             List<IUserInfo> userList = new List<IUserInfo>();
 
             using (DbDataReader reader = await dbSiteUser.GetUserAdminSearchPage(
@@ -489,16 +520,20 @@ namespace cloudscribe.Core.Repositories.pgsql
         }
 
 
-        public async Task<int> CountLockedOutUsers(int siteId)
+        public async Task<int> CountLockedOutUsers(int siteId, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbSiteUser.CountLockedOutUsers(siteId);
         }
 
         public async Task<List<IUserInfo>> GetPageLockedUsers(
             int siteId,
             int pageNumber,
-            int pageSize)
+            int pageSize,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             List<IUserInfo> userList = new List<IUserInfo>();
 
             using (DbDataReader reader = await dbSiteUser.GetPageLockedUsers(
@@ -519,7 +554,7 @@ namespace cloudscribe.Core.Repositories.pgsql
             return userList;
         }
 
-        public async Task<int> CountNotApprovedUsers(int siteId)
+        public async Task<int> CountNotApprovedUsers(int siteId, CancellationToken cancellationToken = default(CancellationToken))
         {
             return await dbSiteUser.CountNotApprovedUsers(siteId);
         }
@@ -527,8 +562,11 @@ namespace cloudscribe.Core.Repositories.pgsql
         public async Task<List<IUserInfo>> GetNotApprovedUsers(
             int siteId,
             int pageNumber,
-            int pageSize)
+            int pageSize,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             List<IUserInfo> userList = new List<IUserInfo>();
 
             using (DbDataReader reader = await dbSiteUser.GetPageNotApprovedUsers(
@@ -563,10 +601,10 @@ namespace cloudscribe.Core.Repositories.pgsql
         //    return DBSiteUser.EmailLookup(siteId, query, rowsToGet);
         //}
 
-        public async Task<bool> EmailExistsInDB(int siteId, string email)
+        public async Task<bool> EmailExistsInDB(int siteId, string email, CancellationToken cancellationToken = default(CancellationToken))
         {
             bool found = false;
-
+            cancellationToken.ThrowIfCancellationRequested();
             using (DbDataReader r = await dbSiteUser.GetSingleUser(siteId, email))
             {
                 while (r.Read()) { found = true; }
@@ -574,10 +612,10 @@ namespace cloudscribe.Core.Repositories.pgsql
             return found;
         }
 
-        public async Task<bool> EmailExistsInDB(int siteId, int userId, string email)
+        public async Task<bool> EmailExistsInDB(int siteId, int userId, string email, CancellationToken cancellationToken = default(CancellationToken))
         {
             bool found = false;
-
+            cancellationToken.ThrowIfCancellationRequested();
             using (DbDataReader r = await dbSiteUser.GetSingleUser(siteId, email))
             {
                 while (r.Read())
@@ -610,8 +648,9 @@ namespace cloudscribe.Core.Repositories.pgsql
         /// <param name="userId"></param>
         /// <param name="loginName"></param>
         /// <returns></returns>
-        public async Task<bool> LoginIsAvailable(int siteId, int userId, string loginName)
+        public async Task<bool> LoginIsAvailable(int siteId, int userId, string loginName, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             bool available = true;
 
             using (DbDataReader r = await dbSiteUser.GetSingleUserByLoginName(siteId, loginName, false))
@@ -628,12 +667,13 @@ namespace cloudscribe.Core.Repositories.pgsql
             return available;
         }
 
-        public async Task<string> GetUserNameFromEmail(int siteId, String email)
+        public async Task<string> GetUserNameFromEmail(int siteId, string email, CancellationToken cancellationToken = default(CancellationToken))
         {
-            string result = String.Empty;
+            cancellationToken.ThrowIfCancellationRequested();
+            string result = string.Empty;
             if ((email != null) && (email.Length > 0) && (siteId > 0))
             {
-                string comma = String.Empty;
+                string comma = string.Empty;
                 using (DbDataReader reader = await dbSiteUser.GetSingleUser(siteId, email))
                 {
                     while (reader.Read())
@@ -673,11 +713,12 @@ namespace cloudscribe.Core.Repositories.pgsql
         /// are also not allowed to be deleted
         /// </summary>
         /// <returns></returns>
-        public async Task<bool> SaveRole(ISiteRole role)
+        public async Task<bool> SaveRole(ISiteRole role, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             if (role.RoleId == -1) // new role
             {
-                bool exists = await RoleExists(role.SiteId, role.DisplayName);
+                bool exists = await RoleExists(role.SiteId, role.DisplayName, cancellationToken);
                 if (exists)
                 {
                     log.LogError("attempt to create a duplicate role "
@@ -711,13 +752,15 @@ namespace cloudscribe.Core.Repositories.pgsql
         }
 
 
-        public async Task<bool> DeleteRole(int roleId)
+        public async Task<bool> DeleteRole(int roleId, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbRoles.Delete(roleId);
         }
 
-        public async Task<bool> DeleteRolesBySite(int siteId)
+        public async Task<bool> DeleteRolesBySite(int siteId, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbRoles.DeleteRolesBySite(siteId);
         }
 
@@ -725,14 +768,17 @@ namespace cloudscribe.Core.Repositories.pgsql
             int roleId,
             Guid roleGuid,
             int userId,
-            Guid userGuid
+            Guid userGuid,
+            CancellationToken cancellationToken = default(CancellationToken)
             )
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbRoles.AddUser(roleId, userId, roleGuid, userGuid);
         }
 
-        public async Task<bool> RemoveUserFromRole(int roleId, int userId)
+        public async Task<bool> RemoveUserFromRole(int roleId, int userId, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbRoles.RemoveUser(roleId, userId);
         }
 
@@ -774,24 +820,28 @@ namespace cloudscribe.Core.Repositories.pgsql
         //    return result;
         //}
 
-        public async Task<bool> DeleteUserRoles(int userId)
+        public async Task<bool> DeleteUserRoles(int userId, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbRoles.DeleteUserRoles(userId);
         }
 
-        public async Task<bool> DeleteUserRolesByRole(int roleId)
+        public async Task<bool> DeleteUserRolesByRole(int roleId, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbRoles.DeleteUserRolesByRole(roleId);
         }
 
-        public async Task<bool> DeleteUserRolesBySite(int siteId)
+        public async Task<bool> DeleteUserRolesBySite(int siteId, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbRoles.DeleteUserRolesBySite(siteId);
         }
 
 
-        public async Task<bool> RoleExists(int siteId, String roleName)
+        public async Task<bool> RoleExists(int siteId, string roleName, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbRoles.Exists(siteId, roleName);
         }
 
@@ -812,8 +862,9 @@ namespace cloudscribe.Core.Repositories.pgsql
 
         }
 
-        public async Task<ISiteRole> FetchRole(int roleId)
+        public async Task<ISiteRole> FetchRole(int roleId, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             using (DbDataReader reader = await dbRoles.GetById(roleId))
             {
                 if (reader.Read())
@@ -827,8 +878,9 @@ namespace cloudscribe.Core.Repositories.pgsql
             return null;
         }
 
-        public async Task<ISiteRole> FetchRole(int siteId, string roleName)
+        public async Task<ISiteRole> FetchRole(int siteId, string roleName, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             SiteRole role = null;
 
             using (DbDataReader reader = await dbRoles.GetByName(siteId, roleName))
@@ -844,8 +896,9 @@ namespace cloudscribe.Core.Repositories.pgsql
 
         }
 
-        public async Task<List<string>> GetUserRoles(int siteId, int userId)
+        public async Task<List<string>> GetUserRoles(int siteId, int userId, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             List<string> userRoles = new List<string>();
             using (DbDataReader reader = await dbSiteUser.GetRolesByUser(siteId, userId))
             {
@@ -863,8 +916,10 @@ namespace cloudscribe.Core.Repositories.pgsql
             int siteId,
             string searchInput,
             int pageNumber,
-            int pageSize)
+            int pageSize,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             IList<ISiteRole> roles = new List<ISiteRole>();
             using (DbDataReader reader = await dbRoles.GetPage(siteId, searchInput, pageNumber, pageSize))
             {
@@ -932,13 +987,15 @@ namespace cloudscribe.Core.Repositories.pgsql
         //}
 
 
-        public async Task<int> CountOfRoles(int siteId, string searchInput)
+        public async Task<int> CountOfRoles(int siteId, string searchInput, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbRoles.GetCountOfSiteRoles(siteId, searchInput);
         }
 
-        public async Task<int> CountUsersInRole(int siteId, int roleId, string searchInput)
+        public async Task<int> CountUsersInRole(int siteId, int roleId, string searchInput, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbRoles.GetCountOfUsersInRole(siteId, roleId, searchInput);
         }
 
@@ -947,8 +1004,10 @@ namespace cloudscribe.Core.Repositories.pgsql
             int roleId,
             string searchInput,
             int pageNumber,
-            int pageSize)
+            int pageSize,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             IList<IUserInfo> users = new List<IUserInfo>();
 
             using (DbDataReader reader = await dbRoles.GetUsersInRole(siteId, roleId, searchInput, pageNumber, pageSize))
@@ -968,8 +1027,10 @@ namespace cloudscribe.Core.Repositories.pgsql
 
         public async Task<IList<ISiteUser>> GetUsersInRole(
             int siteId,
-            string roleName)
+            string roleName,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             IList<ISiteUser> users = new List<ISiteUser>();
 
             ISiteRole role = await FetchRole(siteId, roleName);
@@ -994,8 +1055,9 @@ namespace cloudscribe.Core.Repositories.pgsql
             return users;
         }
 
-        public async Task<int> CountUsersNotInRole(int siteId, int roleId, string searchInput)
+        public async Task<int> CountUsersNotInRole(int siteId, int roleId, string searchInput, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbRoles.GetCountOfUsersNotInRole(siteId, roleId, searchInput);
         }
 
@@ -1004,8 +1066,11 @@ namespace cloudscribe.Core.Repositories.pgsql
             int roleId,
             string searchInput,
             int pageNumber,
-            int pageSize)
+            int pageSize,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             IList<IUserInfo> users = new List<IUserInfo>();
 
             using (DbDataReader reader = await dbRoles.GetUsersNotInRole(siteId, roleId, searchInput, pageNumber, pageSize))
@@ -1034,8 +1099,9 @@ namespace cloudscribe.Core.Repositories.pgsql
         /// Persists a new instance of UserClaim. Returns true on success.
         /// </summary>
         /// <returns></returns>
-        public async Task<bool> SaveClaim(IUserClaim userClaim)
+        public async Task<bool> SaveClaim(IUserClaim userClaim, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             int newId = await dbUserClaims.Create(
                 userClaim.SiteId,
                 userClaim.UserId,
@@ -1047,28 +1113,33 @@ namespace cloudscribe.Core.Repositories.pgsql
             return (newId > -1);
         }
 
-        public async Task<bool> DeleteClaim(int id)
+        public async Task<bool> DeleteClaim(int id, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbUserClaims.Delete(id);
         }
 
-        public async Task<bool> DeleteClaimsByUser(int siteId, string userId)
+        public async Task<bool> DeleteClaimsByUser(int siteId, string userId, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbUserClaims.DeleteByUser(siteId, userId);
         }
 
-        public async Task<bool> DeleteClaimByUser(int siteId, string userId, string claimType)
+        public async Task<bool> DeleteClaimByUser(int siteId, string userId, string claimType, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbUserClaims.DeleteByUser(siteId, userId, claimType);
         }
 
-        public async Task<bool> DeleteClaimsBySite(int siteId)
+        public async Task<bool> DeleteClaimsBySite(int siteId, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbUserClaims.DeleteBySite(siteId);
         }
 
-        public async Task<IList<IUserClaim>> GetClaimsByUser(int siteId, string userId)
+        public async Task<IList<IUserClaim>> GetClaimsByUser(int siteId, string userId, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             DbDataReader reader = await dbUserClaims.GetByUser(siteId, userId);
             return LoadClaimListFromReader(reader);
 
@@ -1077,8 +1148,11 @@ namespace cloudscribe.Core.Repositories.pgsql
         public async Task<IList<ISiteUser>> GetUsersForClaim(
             int siteId,
             string claimType,
-            string claimValue)
+            string claimValue,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             IList<ISiteUser> users = new List<ISiteUser>();
 
             using (DbDataReader reader = await dbUserClaims.GetUsersByClaim(siteId, claimType, claimValue))
@@ -1125,11 +1199,12 @@ namespace cloudscribe.Core.Repositories.pgsql
         /// Persists a new instance of UserLogin. Returns true on success.
         /// </summary>
         /// <returns></returns>
-        public async Task<bool> CreateLogin(IUserLogin userLogin)
+        public async Task<bool> CreateLogin(IUserLogin userLogin, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (userLogin.LoginProvider.Length == -1) { return false; }
             if (userLogin.ProviderKey.Length == -1) { return false; }
             if (userLogin.UserId.Length == -1) { return false; }
+            cancellationToken.ThrowIfCancellationRequested();
 
             return await dbUserLogins.Create(
                 userLogin.SiteId,
@@ -1147,8 +1222,10 @@ namespace cloudscribe.Core.Repositories.pgsql
         public async Task<IUserLogin> FindLogin(
             int siteId,
             string loginProvider,
-            string providerKey)
+            string providerKey,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             using (DbDataReader reader = await dbUserLogins.Find(
                 siteId,
                 loginProvider,
@@ -1178,8 +1255,10 @@ namespace cloudscribe.Core.Repositories.pgsql
             int siteId,
             string loginProvider,
             string providerKey,
-            string userId)
+            string userId,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbUserLogins.Delete(
                 siteId,
                 loginProvider,
@@ -1187,13 +1266,15 @@ namespace cloudscribe.Core.Repositories.pgsql
                 userId);
         }
 
-        public async Task<bool> DeleteLoginsByUser(int siteId, string userId)
+        public async Task<bool> DeleteLoginsByUser(int siteId, string userId, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbUserLogins.DeleteByUser(siteId, userId);
         }
 
-        public async Task<bool> DeleteLoginsBySite(int siteId)
+        public async Task<bool> DeleteLoginsBySite(int siteId, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbUserLogins.DeleteBySite(siteId);
         }
 
@@ -1205,8 +1286,11 @@ namespace cloudscribe.Core.Repositories.pgsql
         /// </summary>
         public async Task<IList<IUserLogin>> GetLoginsByUser(
             int siteId,
-            string userId)
+            string userId,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             List<IUserLogin> userLoginList = new List<IUserLogin>();
             using (DbDataReader reader = await dbUserLogins.GetByUser(siteId, userId))
             {

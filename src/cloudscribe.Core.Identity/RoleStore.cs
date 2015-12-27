@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-06-19
-// Last Modified:		    2015-11-18
+// Last Modified:		    2015-12-27
 // 
 
 using cloudscribe.Core.Models;
@@ -82,7 +82,7 @@ namespace cloudscribe.Core.Identity
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
 
-            bool result = await userRepo.SaveRole(role);
+            bool result = await userRepo.SaveRole(role, cancellationToken);
 
             if(result) { return IdentityResult.Success; }
 
@@ -100,8 +100,8 @@ namespace cloudscribe.Core.Identity
             }
 
             // remove all users form the role
-            bool result = await userRepo.DeleteUserRolesByRole(role.RoleId);
-            result = await userRepo.DeleteRole(role.RoleId);
+            bool result = await userRepo.DeleteUserRolesByRole(role.RoleId, cancellationToken);
+            result = await userRepo.DeleteRole(role.RoleId, cancellationToken);
 
             if (result) { return IdentityResult.Success; }
 
@@ -112,7 +112,7 @@ namespace cloudscribe.Core.Identity
         {
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
-            ISiteRole role = await userRepo.FetchRole(Convert.ToInt32(roleId));
+            ISiteRole role = await userRepo.FetchRole(Convert.ToInt32(roleId), cancellationToken);
 
             return (TRole)role;
         }
@@ -125,7 +125,7 @@ namespace cloudscribe.Core.Identity
             int siteId = Site.SiteId;
             if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
-            ISiteRole role = await userRepo.FetchRole(siteId, normalizedRoleName);
+            ISiteRole role = await userRepo.FetchRole(siteId, normalizedRoleName, cancellationToken);
 
             return (TRole)role;
         }
@@ -205,7 +205,7 @@ namespace cloudscribe.Core.Identity
                 throw new ArgumentNullException("role");
             }
 
-            bool result = await userRepo.SaveRole(role);
+            bool result = await userRepo.SaveRole(role, cancellationToken);
 
             if (result) { return IdentityResult.Success; }
 

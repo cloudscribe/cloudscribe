@@ -2,13 +2,15 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-22
-// Last Modified:			2015-12-24
+// Last Modified:			2015-12-27
 // 
 
 using cloudscribe.Core.Models;
 using Microsoft.Extensions.OptionsModel;
+using Microsoft.AspNet.Http;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Components
@@ -21,14 +23,19 @@ namespace cloudscribe.Core.Web.Components
             ISiteRepository siteRepository,
             IUserRepository userRepository,
             IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
-            IOptions<SetupOptions> setupOptionsAccessor)
+            IOptions<SetupOptions> setupOptionsAccessor,
+            IHttpContextAccessor contextAccessor)
         {
             resolver = siteResolver;
             siteRepo = siteRepository;
             userRepo = userRepository;
             multiTenantOptions = multiTenantOptionsAccessor.Value;
             setupOptions = setupOptionsAccessor.Value;
+            _context = contextAccessor?.HttpContext;
         }
+
+        private readonly HttpContext _context;
+        private CancellationToken CancellationToken => _context?.RequestAborted ?? CancellationToken.None;
 
         private MultiTenantOptions multiTenantOptions;
         private SetupOptions setupOptions;
@@ -96,9 +103,9 @@ namespace cloudscribe.Core.Web.Components
             // a way to use dependency injection?
 
             // delete users
-            bool resultStep = await userRepo.DeleteUsersBySite(site.SiteId); // this also deletes userroles claims logins
+            bool resultStep = await userRepo.DeleteUsersBySite(site.SiteId, CancellationToken); // this also deletes userroles claims logins
 
-            resultStep = await userRepo.DeleteRolesBySite(site.SiteId);
+            resultStep = await userRepo.DeleteRolesBySite(site.SiteId, CancellationToken);
             resultStep = await siteRepo.DeleteHostsBySite(site.SiteId);
             resultStep = await siteRepo.DeleteFoldersBySite(site.SiteGuid);
 
@@ -118,8 +125,7 @@ namespace cloudscribe.Core.Web.Components
             return await siteRepo.Delete(site.SiteId);
         }
 
-        public async Task<SiteSettings> CreateNewSite(
-            bool isServerAdminSite)
+        public async Task<SiteSettings> CreateNewSite(bool isServerAdminSite)
         {
             //string templateFolderPath = GetMessageTemplateFolder();
             //string templateFolder = templateFolderPath;
@@ -194,7 +200,7 @@ namespace cloudscribe.Core.Web.Components
         public async Task<bool> CreateAdminUser(ISiteSettings site)
         {
 
-            ISiteRole adminRole = await userRepo.FetchRole(site.SiteId, "Admins");
+            ISiteRole adminRole = await userRepo.FetchRole(site.SiteId, "Admins", CancellationToken);
 
             if(adminRole == null)
             {
@@ -237,13 +243,14 @@ namespace cloudscribe.Core.Web.Components
             adminUser.PasswordHash = "admin||0"; //pwd/salt/format 
 
 
-            bool result = await userRepo.Save(adminUser);
+            bool result = await userRepo.Save(adminUser, CancellationToken);
             
             result = await userRepo.AddUserToRole(
                 adminRole.RoleId,
                 adminRole.RoleGuid,
                 adminUser.UserId,
-                adminUser.UserGuid);
+                adminUser.UserGuid,
+                CancellationToken);
 
             return result;
 
@@ -253,7 +260,7 @@ namespace cloudscribe.Core.Web.Components
         {
             bool result = true;
 
-            bool exists = await userRepo.RoleExists(site.SiteId, "Admins");
+            bool exists = await userRepo.RoleExists(site.SiteId, "Admins", CancellationToken);
 
             if(!exists)
             {
@@ -262,12 +269,12 @@ namespace cloudscribe.Core.Web.Components
                 //adminRole.DisplayName = "Administrators";
                 adminRole.SiteId = site.SiteId;
                 adminRole.SiteGuid = site.SiteGuid;
-                result = await userRepo.SaveRole(adminRole);
+                result = await userRepo.SaveRole(adminRole, CancellationToken);
                 adminRole.DisplayName = "Administrators";
-                result = await userRepo.SaveRole(adminRole);
+                result = await userRepo.SaveRole(adminRole, CancellationToken);
             }
 
-            exists = await userRepo.RoleExists(site.SiteId, "Role Admins");
+            exists = await userRepo.RoleExists(site.SiteId, "Role Admins", CancellationToken);
 
             if (!exists)
             {
@@ -275,13 +282,13 @@ namespace cloudscribe.Core.Web.Components
                 roleAdminRole.DisplayName = "Role Admins";
                 roleAdminRole.SiteId = site.SiteId;
                 roleAdminRole.SiteGuid = site.SiteGuid;
-                result = await userRepo.SaveRole(roleAdminRole);
+                result = await userRepo.SaveRole(roleAdminRole, CancellationToken);
 
                 roleAdminRole.DisplayName = "Role Administrators";
-                result = await userRepo.SaveRole(roleAdminRole);
+                result = await userRepo.SaveRole(roleAdminRole, CancellationToken);
             }
 
-            exists = await userRepo.RoleExists(site.SiteId, "Content Administrators");
+            exists = await userRepo.RoleExists(site.SiteId, "Content Administrators", CancellationToken);
 
             if (!exists)
             {
@@ -289,10 +296,10 @@ namespace cloudscribe.Core.Web.Components
                 contentAdminRole.DisplayName = "Content Administrators";
                 contentAdminRole.SiteId = site.SiteId;
                 contentAdminRole.SiteGuid = site.SiteGuid;
-                result = await userRepo.SaveRole(contentAdminRole);
+                result = await userRepo.SaveRole(contentAdminRole, CancellationToken);
             }
 
-            exists = await userRepo.RoleExists(site.SiteId, "Authenticated Users");
+            exists = await userRepo.RoleExists(site.SiteId, "Authenticated Users", CancellationToken);
 
             if (!exists)
             {
@@ -300,7 +307,7 @@ namespace cloudscribe.Core.Web.Components
                 authenticatedUserRole.DisplayName = "Authenticated Users";
                 authenticatedUserRole.SiteId = site.SiteId;
                 authenticatedUserRole.SiteGuid = site.SiteGuid;
-                result = await userRepo.SaveRole(authenticatedUserRole);
+                result = await userRepo.SaveRole(authenticatedUserRole, CancellationToken);
             }
 
             
@@ -365,14 +372,14 @@ namespace cloudscribe.Core.Web.Components
         {
             // this is only used on setup controller
             // to make sure admin user was created
-            return await userRepo.CountUsers(siteId, string.Empty);
+            return await userRepo.CountUsers(siteId, string.Empty, CancellationToken);
         }
 
         public async Task<int> GetRoleCount(int siteId)
         {
             // this is only used on setup controller
             // to make sure admin user and role was created
-            return await userRepo.CountOfRoles(siteId, string.Empty);
+            return await userRepo.CountOfRoles(siteId, string.Empty, CancellationToken);
         }
 
         public async Task<int> ExistingSiteCount()
