@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-11-02
-// Last Modified:			2015-11-18
+// Last Modified:			2015-12-28
 // 
 
 using cloudscribe.Core.Models.Geography;
@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.MSSQL
@@ -50,8 +51,10 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// Persists a new instance of GeoCountry.
         /// </summary>
         /// <returns></returns>
-        public async Task<bool> Save(IGeoCountry geoCountry)
+        public async Task<bool> Save(IGeoCountry geoCountry, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             if (geoCountry == null) { return false; }
             bool result;
             if (geoCountry.Guid == Guid.Empty)
@@ -79,8 +82,10 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
 
         /// <param name="guid"> guid </param>
-        public async Task<IGeoCountry> FetchCountry(Guid guid)
+        public async Task<IGeoCountry> FetchCountry(Guid guid, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             using (DbDataReader reader = await dbGeoCountry.GetOne(guid))
             {
                 if (reader.Read())
@@ -95,8 +100,9 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return null;
         }
 
-        public async Task<IGeoCountry> FetchCountry(string isoCode2)
+        public async Task<IGeoCountry> FetchCountry(string isoCode2, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             using (DbDataReader reader = await dbGeoCountry.GetByISOCode2(isoCode2))
             {
                 if (reader.Read())
@@ -117,8 +123,9 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// </summary>
         /// <param name="guid"> guid </param>
         /// <returns>bool</returns>
-        public async Task<bool> DeleteCountry(Guid guid)
+        public async Task<bool> DeleteCountry(Guid guid, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbGeoCountry.Delete(guid);
         }
 
@@ -126,8 +133,9 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// <summary>
         /// Gets a count of GeoCountry. 
         /// </summary>
-        public async Task<int> GetCountryCount()
+        public async Task<int> GetCountryCount(CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbGeoCountry.GetCount();
         }
 
@@ -135,8 +143,9 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// <summary>
         /// Gets an IList with all instances of GeoCountry.
         /// </summary>
-        public async Task<List<IGeoCountry>> GetAllCountries()
+        public async Task<List<IGeoCountry>> GetAllCountries(CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             DbDataReader reader = await dbGeoCountry.GetAll();
             return LoadCountryListFromReader(reader);
 
@@ -148,8 +157,9 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// <param name="pageNumber">The page number.</param>
         /// <param name="pageSize">Size of the page.</param>
         /// <param name="totalPages">total pages</param>
-        public async Task<List<IGeoCountry>> GetCountriesPage(int pageNumber, int pageSize)
+        public async Task<List<IGeoCountry>> GetCountriesPage(int pageNumber, int pageSize, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             DbDataReader reader = await dbGeoCountry.GetPage(pageNumber, pageSize);
             return LoadCountryListFromReader(reader);
         }
@@ -160,9 +170,10 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// Persists a new instance of GeoZone.
         /// </summary>
         /// <returns></returns>
-        public async Task<bool> Save(IGeoZone geoZone)
+        public async Task<bool> Save(IGeoZone geoZone, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (geoZone == null) { return false; }
+            cancellationToken.ThrowIfCancellationRequested();
             bool result;
             if (geoZone.Guid == Guid.Empty)
             {
@@ -188,8 +199,9 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
 
         /// <param name="guid"> guid </param>
-        public async Task<IGeoZone> FetchGeoZone(Guid guid)
+        public async Task<IGeoZone> FetchGeoZone(Guid guid, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             using (DbDataReader reader = await dbGeoZone.GetOne(guid))
             {
                 if (reader.Read())
@@ -214,21 +226,24 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// </summary>
         /// <param name="guid"> guid </param>
         /// <returns>bool</returns>
-        public async Task<bool> DeleteGeoZone(Guid guid)
+        public async Task<bool> DeleteGeoZone(Guid guid, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbGeoZone.Delete(guid);
         }
 
-        public async Task<bool> DeleteGeoZonesByCountry(Guid countryGuid)
+        public async Task<bool> DeleteGeoZonesByCountry(Guid countryGuid, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbGeoZone.DeleteByCountry(countryGuid);
         }
 
         /// <summary>
         /// Gets a count of GeoZone. 
         /// </summary>
-        public async Task<int> GetGeoZoneCount(Guid countryGuid)
+        public async Task<int> GetGeoZoneCount(Guid countryGuid, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbGeoZone.GetCount(countryGuid);
         }
 
@@ -236,22 +251,25 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// <summary>
         /// Gets an IList with all instances of GeoZone.
         /// </summary>
-        public async Task<List<IGeoZone>> GetGeoZonesByCountry(Guid countryGuid)
+        public async Task<List<IGeoZone>> GetGeoZonesByCountry(Guid countryGuid, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             DbDataReader reader = await dbGeoZone.GetByCountry(countryGuid);
             return LoadGeoZoneListFromReader(reader);
 
         }
 
 
-        public async Task<List<IGeoCountry>> CountryAutoComplete(string query, int maxRows)
+        public async Task<List<IGeoCountry>> CountryAutoComplete(string query, int maxRows, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             DbDataReader reader = await dbGeoCountry.AutoComplete(query, maxRows);
             return LoadCountryListFromReader(reader);
         }
 
-        public async Task<List<IGeoZone>> StateAutoComplete(Guid countryGuid, string query, int maxRows)
+        public async Task<List<IGeoZone>> StateAutoComplete(Guid countryGuid, string query, int maxRows, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             DbDataReader reader = await dbGeoZone.AutoComplete(countryGuid, query, maxRows);
             return LoadGeoZoneListFromReader(reader);
         }
@@ -262,8 +280,9 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// <param name="pageNumber">The page number.</param>
         /// <param name="pageSize">Size of the page.</param>
         /// <param name="totalPages">total pages</param>
-        public async Task<List<IGeoZone>> GetGeoZonePage(Guid countryGuid, int pageNumber, int pageSize)
+        public async Task<List<IGeoZone>> GetGeoZonePage(Guid countryGuid, int pageNumber, int pageSize, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             DbDataReader reader = await dbGeoZone.GetPage(countryGuid, pageNumber, pageSize);
             return LoadGeoZoneListFromReader(reader);
         }
@@ -324,9 +343,10 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         }
 
-        public async Task<bool> Save(ILanguage language)
+        public async Task<bool> Save(ILanguage language, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (language == null) { return false; }
+            cancellationToken.ThrowIfCancellationRequested();
             bool result;
             if (language.Guid == Guid.Empty)
             {
@@ -351,8 +371,9 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return result;
         }
 
-        public async Task<ILanguage> FetchLanguage(Guid guid)
+        public async Task<ILanguage> FetchLanguage(Guid guid, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             using (DbDataReader reader = await dbLanguage.GetOne(guid))
             {
                 if (reader.Read())
@@ -372,25 +393,29 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// </summary>
         /// <param name="guid"> guid </param>
         /// <returns>bool</returns>
-        public async Task<bool> DeleteLanguage(Guid guid)
+        public async Task<bool> DeleteLanguage(Guid guid, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbLanguage.Delete(guid);
         }
 
-        public async Task<int> GetLanguageCount()
+        public async Task<int> GetLanguageCount(CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbLanguage.GetCount();
         }
 
-        public async Task<List<ILanguage>> GetAllLanguages()
+        public async Task<List<ILanguage>> GetAllLanguages(CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             DbDataReader reader = await dbLanguage.GetAll();
             return LoadLanguageListFromReader(reader);
 
         }
 
-        public async Task<List<ILanguage>> GetLanguagePage(int pageNumber, int pageSize)
+        public async Task<List<ILanguage>> GetLanguagePage(int pageNumber, int pageSize, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             DbDataReader reader = await dbLanguage.GetPage(pageNumber, pageSize);
             return LoadLanguageListFromReader(reader);
         }
@@ -422,9 +447,10 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         }
 
-        public async Task<bool> Save(ICurrency currency)
+        public async Task<bool> Save(ICurrency currency, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (currency == null) { return false; }
+            cancellationToken.ThrowIfCancellationRequested();
             bool result;
             if (currency.Guid == Guid.Empty)
             {
@@ -462,8 +488,9 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return result;
         }
 
-        public async Task<ICurrency> FetchCurrency(Guid guid)
+        public async Task<ICurrency> FetchCurrency(Guid guid, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             using (DbDataReader reader = await dbCurrency.GetOne(guid))
             {
                 if (reader.Read())
@@ -478,13 +505,15 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return null;
         }
 
-        public async Task<bool> DeleteCurrency(Guid guid)
+        public async Task<bool> DeleteCurrency(Guid guid, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbCurrency.Delete(guid);
         }
 
-        public async Task<List<ICurrency>> GetAllCurrencies()
+        public async Task<List<ICurrency>> GetAllCurrencies(CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             DbDataReader reader = await dbCurrency.GetAll();
             return LoadCurrencyListFromReader(reader);
 
