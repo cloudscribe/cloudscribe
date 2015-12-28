@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2015-12-21
+// Last Modified:			2015-12-28
 // 
 
 
@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.SQLite
@@ -50,8 +51,9 @@ namespace cloudscribe.Core.Repositories.SQLite
 
         #region ISiteRepository
 
-        public async Task<bool> Save(ISiteSettings site)
+        public async Task<bool> Save(ISiteSettings site, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             int passedInSiteId = site.SiteId;
             bool result = false;
 
@@ -241,8 +243,9 @@ namespace cloudscribe.Core.Repositories.SQLite
         }
 
 
-        public async Task<ISiteSettings> Fetch(int siteId)
+        public async Task<ISiteSettings> Fetch(int siteId, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             SiteSettings site = new SiteSettings();
 
             using (DbDataReader reader = dbSiteSettings.GetSite(siteId))
@@ -287,8 +290,9 @@ namespace cloudscribe.Core.Repositories.SQLite
 
         }
 
-        public async Task<ISiteSettings> Fetch(Guid siteGuid)
+        public async Task<ISiteSettings> Fetch(Guid siteGuid, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             SiteSettings site = new SiteSettings();
 
             using (DbDataReader reader = dbSiteSettings.GetSite(siteGuid))
@@ -333,8 +337,9 @@ namespace cloudscribe.Core.Repositories.SQLite
 
         }
 
-        public async Task<ISiteSettings> Fetch(string hostName)
+        public async Task<ISiteSettings> Fetch(string hostName, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             SiteSettings site = new SiteSettings();
 
             using (DbDataReader reader = dbSiteSettings.GetSite(hostName))
@@ -380,20 +385,23 @@ namespace cloudscribe.Core.Repositories.SQLite
         }
 
 
-        public async Task<bool> Delete(int siteId)
+        public async Task<bool> Delete(int siteId, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return dbSiteSettings.Delete(siteId);
         }
 
 
 
-        public async Task<int> GetCount()
+        public async Task<int> GetCount(CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return dbSiteSettings.CountOtherSites(-1);
         }
 
-        public async Task<List<ISiteInfo>> GetList()
+        public async Task<List<ISiteInfo>> GetList(CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             List<ISiteInfo> sites = new List<ISiteInfo>();
             using (DbDataReader reader = dbSiteSettings.GetSiteList())
             {
@@ -409,8 +417,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             return sites;
         }
 
-        public async Task<int> CountOtherSites(int currentSiteId)
+        public async Task<int> CountOtherSites(int currentSiteId, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return dbSiteSettings.CountOtherSites(currentSiteId);
         }
 
@@ -424,8 +433,10 @@ namespace cloudscribe.Core.Repositories.SQLite
         public async Task<List<ISiteInfo>> GetPageOtherSites(
             int currentSiteId,
             int pageNumber,
-            int pageSize)
+            int pageSize,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             List<ISiteInfo> sites = new List<ISiteInfo>();
 
             using (DbDataReader reader = dbSiteSettings.GetPageOfOtherSites(currentSiteId, pageNumber, pageSize))
@@ -441,8 +452,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             return sites;
         }
 
-        public async Task<List<ISiteHost>> GetAllHosts()
+        public async Task<List<ISiteHost>> GetAllHosts(CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             List<ISiteHost> hosts = new List<ISiteHost>();
             using (DbDataReader reader = dbSiteSettings.GetAllHosts())
             {
@@ -475,15 +487,18 @@ namespace cloudscribe.Core.Repositories.SQLite
             return hosts;
         }
 
-        public async Task<int> GetHostCount()
+        public async Task<int> GetHostCount(CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return dbSiteSettings.GetHostCount();
         }
 
         public async Task<List<ISiteHost>> GetPageHosts(
             int pageNumber,
-            int pageSize)
+            int pageSize,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             List<ISiteHost> hosts = new List<ISiteHost>();
             using (DbDataReader reader = dbSiteSettings.GetPageHosts(pageNumber, pageSize))
             {
@@ -499,8 +514,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             return hosts;
         }
 
-        public async Task<List<ISiteHost>> GetSiteHosts(int siteId)
+        public async Task<List<ISiteHost>> GetSiteHosts(int siteId, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             List<ISiteHost> hosts = new List<ISiteHost>();
             using (DbDataReader reader = dbSiteSettings.GetHostList(siteId))
             {
@@ -516,8 +532,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             return hosts;
         }
 
-        public async Task<ISiteHost> GetSiteHost(string hostName)
+        public async Task<ISiteHost> GetSiteHost(string hostName, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             using (DbDataReader reader = dbSiteSettings.GetHost(hostName))
             {
                 while (reader.Read())
@@ -532,28 +549,37 @@ namespace cloudscribe.Core.Repositories.SQLite
             return null;
         }
 
-        public async Task<bool> AddHost(Guid siteGuid, int siteId, string hostName)
+        public async Task<bool> AddHost(
+            Guid siteGuid, 
+            int siteId, 
+            string hostName,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return dbSiteSettings.AddHost(siteGuid, siteId, hostName);
         }
 
-        public async Task<bool> DeleteHost(int hostId)
+        public async Task<bool> DeleteHost(int hostId, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return dbSiteSettings.DeleteHost(hostId);
         }
 
-        public async Task<bool> DeleteHostsBySite(int siteId)
+        public async Task<bool> DeleteHostsBySite(int siteId, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return dbSiteSettings.DeleteHostsBySite(siteId);
         }
 
-        public async Task<int> GetSiteIdByHostName(string hostName)
+        public async Task<int> GetSiteIdByHostName(string hostName, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return dbSiteSettings.GetSiteIdByHostName(hostName);
         }
 
-        public async Task<List<ISiteFolder>> GetSiteFoldersBySite(Guid siteGuid)
+        public async Task<List<ISiteFolder>> GetSiteFoldersBySite(Guid siteGuid, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             List<ISiteFolder> siteFolderList
                 = new List<ISiteFolder>();
 
@@ -571,8 +597,9 @@ namespace cloudscribe.Core.Repositories.SQLite
 
         }
 
-        public async Task<ISiteFolder> GetSiteFolder(string folderName)
+        public async Task<ISiteFolder> GetSiteFolder(string folderName, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             using (DbDataReader reader = dbSiteFolder.GetOne(folderName))
             {
                 if (reader.Read())
@@ -586,8 +613,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             return null;
         }
 
-        public async Task<List<ISiteFolder>> GetAllSiteFolders()
+        public async Task<List<ISiteFolder>> GetAllSiteFolders(CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             List<ISiteFolder> siteFolderList
                 = new List<ISiteFolder>();
 
@@ -624,15 +652,18 @@ namespace cloudscribe.Core.Repositories.SQLite
 
         }
 
-        public async Task<int> GetFolderCount()
+        public async Task<int> GetFolderCount(CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return dbSiteFolder.GetFolderCount();
         }
 
         public async Task<List<ISiteFolder>> GetPageSiteFolders(
             int pageNumber,
-            int pageSize)
+            int pageSize,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             List<ISiteFolder> siteFolderList
                 = new List<ISiteFolder>();
 
@@ -651,9 +682,10 @@ namespace cloudscribe.Core.Repositories.SQLite
         }
 
 
-        public async Task<bool> Save(ISiteFolder siteFolder)
+        public async Task<bool> Save(ISiteFolder siteFolder, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (siteFolder == null) { return false; }
+            cancellationToken.ThrowIfCancellationRequested();
 
             if (siteFolder.Guid == Guid.Empty)
             {
@@ -674,33 +706,38 @@ namespace cloudscribe.Core.Repositories.SQLite
             }
         }
 
-        public async Task<bool> DeleteFolder(Guid guid)
+        public async Task<bool> DeleteFolder(Guid guid, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return dbSiteFolder.Delete(guid);
         }
 
-        public async Task<bool> DeleteFoldersBySite(Guid siteGuid)
+        public async Task<bool> DeleteFoldersBySite(Guid siteGuid, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return dbSiteFolder.DeleteFoldersBySite(siteGuid);
         }
 
-        public async Task<int> GetSiteIdByFolder(string folderName)
+        public async Task<int> GetSiteIdByFolder(string folderName, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return dbSiteSettings.GetSiteIdByFolder(folderName);
         }
 
         public int GetSiteIdByFolderNonAsync(string folderName)
-        {
+        { 
             return dbSiteSettings.GetSiteIdByFolder(folderName);
         }
 
-        public async Task<Guid> GetSiteGuidByFolder(string folderName)
+        public async Task<Guid> GetSiteGuidByFolder(string folderName, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return dbSiteFolder.GetSiteGuid(folderName);
         }
 
-        public async Task<bool> FolderExists(string folderName)
+        public async Task<bool> FolderExists(string folderName, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return dbSiteFolder.Exists(folderName);
         }
 

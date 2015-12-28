@@ -103,7 +103,7 @@ namespace cloudscribe.Core.Web.Controllers
                 //});
 
                 //controller.TempData[Alert.TempDataKey] = alerts;
-
+                
                 var alerts = controller.TempData.GetAlerts();
 
                 alerts.Add(new Alert

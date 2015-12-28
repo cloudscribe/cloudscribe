@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2015-12-21
+// Last Modified:			2015-12-28
 // 
 
 using cloudscribe.Core.Models;
@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.Firebird
@@ -50,8 +51,9 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         #region ISiteRepository
 
-        public async Task<bool> Save(ISiteSettings site)
+        public async Task<bool> Save(ISiteSettings site, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             int passedInSiteId = site.SiteId;
             bool result = false;
 
@@ -242,8 +244,9 @@ namespace cloudscribe.Core.Repositories.Firebird
         }
 
 
-        public async Task<ISiteSettings> Fetch(int siteId)
+        public async Task<ISiteSettings> Fetch(int siteId, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             SiteSettings site = new SiteSettings();
 
             using (DbDataReader reader = await dbSiteSettings.GetSite(siteId))
@@ -266,7 +269,7 @@ namespace cloudscribe.Core.Repositories.Firebird
         }
 
         public ISiteSettings FetchNonAsync(int siteId)
-        {
+        { 
             SiteSettings site = new SiteSettings();
 
             using (DbDataReader reader = dbSiteSettings.GetSiteNonAsync(siteId))
@@ -287,8 +290,9 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         }
 
-        public async Task<ISiteSettings> Fetch(Guid siteGuid)
+        public async Task<ISiteSettings> Fetch(Guid siteGuid, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             SiteSettings site = new SiteSettings();
 
             using (DbDataReader reader = await dbSiteSettings.GetSite(siteGuid))
@@ -334,8 +338,9 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         }
 
-        public async Task<ISiteSettings> Fetch(string hostName)
+        public async Task<ISiteSettings> Fetch(string hostName, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             SiteSettings site = new SiteSettings();
 
             using (DbDataReader reader = await dbSiteSettings.GetSite(hostName))
@@ -381,20 +386,23 @@ namespace cloudscribe.Core.Repositories.Firebird
         }
 
 
-        public async Task<bool> Delete(int siteId)
+        public async Task<bool> Delete(int siteId, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbSiteSettings.Delete(siteId);
         }
 
 
 
-        public async Task<int> GetCount()
+        public async Task<int> GetCount(CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbSiteSettings.CountOtherSites(-1);
         }
 
-        public async Task<List<ISiteInfo>> GetList()
+        public async Task<List<ISiteInfo>> GetList(CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             List<ISiteInfo> sites = new List<ISiteInfo>();
             using (DbDataReader reader = await dbSiteSettings.GetSiteList())
             {
@@ -410,8 +418,9 @@ namespace cloudscribe.Core.Repositories.Firebird
             return sites;
         }
 
-        public async Task<int> CountOtherSites(int currentSiteId)
+        public async Task<int> CountOtherSites(int currentSiteId, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbSiteSettings.CountOtherSites(currentSiteId);
         }
 
@@ -425,8 +434,10 @@ namespace cloudscribe.Core.Repositories.Firebird
         public async Task<List<ISiteInfo>> GetPageOtherSites(
             int currentSiteId,
             int pageNumber,
-            int pageSize)
+            int pageSize,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             List<ISiteInfo> sites = new List<ISiteInfo>();
 
             using (DbDataReader reader = await dbSiteSettings.GetPageOfOtherSites(currentSiteId, pageNumber, pageSize))
@@ -442,8 +453,9 @@ namespace cloudscribe.Core.Repositories.Firebird
             return sites;
         }
 
-        public async Task<List<ISiteHost>> GetAllHosts()
+        public async Task<List<ISiteHost>> GetAllHosts(CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             List<ISiteHost> hosts = new List<ISiteHost>();
             using (DbDataReader reader = await dbSiteSettings.GetAllHosts())
             {
@@ -476,8 +488,9 @@ namespace cloudscribe.Core.Repositories.Firebird
             return hosts;
         }
 
-        public async Task<ISiteHost> GetSiteHost(string hostName)
+        public async Task<ISiteHost> GetSiteHost(string hostName, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             using (DbDataReader reader = await dbSiteSettings.GetHost(hostName))
             {
                 while (reader.Read())
@@ -492,15 +505,18 @@ namespace cloudscribe.Core.Repositories.Firebird
             return null;
         }
 
-        public async Task<int> GetHostCount()
+        public async Task<int> GetHostCount(CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbSiteSettings.GetHostCount();
         }
 
         public async Task<List<ISiteHost>> GetPageHosts(
             int pageNumber,
-            int pageSize)
+            int pageSize,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             List<ISiteHost> hosts = new List<ISiteHost>();
             using (DbDataReader reader = await dbSiteSettings.GetPageHosts(pageNumber, pageSize))
             {
@@ -516,8 +532,9 @@ namespace cloudscribe.Core.Repositories.Firebird
             return hosts;
         }
 
-        public async Task<List<ISiteHost>> GetSiteHosts(int siteId)
+        public async Task<List<ISiteHost>> GetSiteHosts(int siteId, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             List<ISiteHost> hosts = new List<ISiteHost>();
             using (DbDataReader reader = await dbSiteSettings.GetHostList(siteId))
             {
@@ -534,28 +551,37 @@ namespace cloudscribe.Core.Repositories.Firebird
         }
 
 
-        public async Task<bool> AddHost(Guid siteGuid, int siteId, string hostName)
+        public async Task<bool> AddHost(
+            Guid siteGuid, 
+            int siteId, 
+            string hostName,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbSiteSettings.AddHost(siteGuid, siteId, hostName);
         }
 
-        public async Task<bool> DeleteHost(int hostId)
+        public async Task<bool> DeleteHost(int hostId, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbSiteSettings.DeleteHost(hostId);
         }
 
-        public async Task<bool> DeleteHostsBySite(int siteId)
+        public async Task<bool> DeleteHostsBySite(int siteId, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbSiteSettings.DeleteHostsBySite(siteId);
         }
 
-        public async Task<int> GetSiteIdByHostName(string hostName)
+        public async Task<int> GetSiteIdByHostName(string hostName, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbSiteSettings.GetSiteIdByHostName(hostName);
         }
 
-        public async Task<List<ISiteFolder>> GetSiteFoldersBySite(Guid siteGuid)
+        public async Task<List<ISiteFolder>> GetSiteFoldersBySite(Guid siteGuid, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             List<ISiteFolder> siteFolderList
                 = new List<ISiteFolder>();
 
@@ -573,8 +599,9 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         }
 
-        public async Task<ISiteFolder> GetSiteFolder(string folderName)
+        public async Task<ISiteFolder> GetSiteFolder(string folderName, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             using (DbDataReader reader = await dbSiteFolder.GetOne(folderName))
             {
                 if (reader.Read())
@@ -588,8 +615,9 @@ namespace cloudscribe.Core.Repositories.Firebird
             return null;
         }
 
-        public async Task<List<ISiteFolder>> GetAllSiteFolders()
+        public async Task<List<ISiteFolder>> GetAllSiteFolders(CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             List<ISiteFolder> siteFolderList
                 = new List<ISiteFolder>();
 
@@ -626,15 +654,19 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         }
 
-        public async Task<int> GetFolderCount()
+        public async Task<int> GetFolderCount(CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbSiteFolder.GetFolderCount();
         }
 
         public async Task<List<ISiteFolder>> GetPageSiteFolders(
             int pageNumber,
-            int pageSize)
+            int pageSize,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             List<ISiteFolder> siteFolderList
                 = new List<ISiteFolder>();
 
@@ -652,9 +684,10 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         }
 
-        public async Task<bool> Save(ISiteFolder siteFolder)
+        public async Task<bool> Save(ISiteFolder siteFolder, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (siteFolder == null) { return false; }
+            cancellationToken.ThrowIfCancellationRequested();
 
             if (siteFolder.Guid == Guid.Empty)
             {
@@ -675,18 +708,21 @@ namespace cloudscribe.Core.Repositories.Firebird
             }
         }
 
-        public async Task<bool> DeleteFolder(Guid guid)
+        public async Task<bool> DeleteFolder(Guid guid, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbSiteFolder.Delete(guid);
         }
 
-        public async Task<bool> DeleteFoldersBySite(Guid siteGuid)
+        public async Task<bool> DeleteFoldersBySite(Guid siteGuid, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbSiteFolder.DeleteBySite(siteGuid);
         }
 
-        public async Task<int> GetSiteIdByFolder(string folderName)
+        public async Task<int> GetSiteIdByFolder(string folderName, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbSiteSettings.GetSiteIdByFolder(folderName);
         }
 
@@ -695,13 +731,15 @@ namespace cloudscribe.Core.Repositories.Firebird
             return dbSiteSettings.GetSiteIdByFolderNonAsync(folderName);
         }
 
-        public async Task<Guid> GetSiteGuidByFolder(string folderName)
+        public async Task<Guid> GetSiteGuidByFolder(string folderName, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbSiteFolder.GetSiteGuid(folderName);
         }
 
-        public async Task<bool> FolderExists(string folderName)
+        public async Task<bool> FolderExists(string folderName, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbSiteFolder.Exists(folderName);
         }
 

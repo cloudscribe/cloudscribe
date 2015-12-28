@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-22
-// Last Modified:			2015-12-27
+// Last Modified:			2015-12-28
 // 
 
 using cloudscribe.Core.Models;
@@ -64,33 +64,33 @@ namespace cloudscribe.Core.Web.Components
             int pageNumber,
             int pageSize)
         {
-            return await siteRepo.GetPageOtherSites(currentSiteId, pageNumber, pageSize);
+            return await siteRepo.GetPageOtherSites(currentSiteId, pageNumber, pageSize, CancellationToken);
 
         }
 
         public async Task<int> CountOtherSites(int currentSiteId)
         {
-            return await siteRepo.CountOtherSites(currentSiteId);
+            return await siteRepo.CountOtherSites(currentSiteId, CancellationToken);
         }
 
         public async Task<ISiteSettings> Fetch(Guid siteGuid)
         {
-            return await siteRepo.Fetch(siteGuid);
+            return await siteRepo.Fetch(siteGuid, CancellationToken);
         }
 
         public async Task<ISiteSettings> Fetch(int siteId)
         {
-            return await siteRepo.Fetch(siteId);
+            return await siteRepo.Fetch(siteId, CancellationToken);
         }
 
         public async Task<ISiteSettings> Fetch(string hostname)
         {
-            return await siteRepo.Fetch(hostname);
+            return await siteRepo.Fetch(hostname, CancellationToken);
         }
 
         public async Task<bool> Save(ISiteSettings site)
         {
-            return await siteRepo.Save(site);
+            return await siteRepo.Save(site, CancellationToken.None);
         }
 
         public async Task<bool> Delete(ISiteSettings site)
@@ -103,11 +103,11 @@ namespace cloudscribe.Core.Web.Components
             // a way to use dependency injection?
 
             // delete users
-            bool resultStep = await userRepo.DeleteUsersBySite(site.SiteId, CancellationToken); // this also deletes userroles claims logins
+            bool resultStep = await userRepo.DeleteUsersBySite(site.SiteId, CancellationToken.None); // this also deletes userroles claims logins
 
-            resultStep = await userRepo.DeleteRolesBySite(site.SiteId, CancellationToken);
-            resultStep = await siteRepo.DeleteHostsBySite(site.SiteId);
-            resultStep = await siteRepo.DeleteFoldersBySite(site.SiteGuid);
+            resultStep = await userRepo.DeleteRolesBySite(site.SiteId, CancellationToken.None);
+            resultStep = await siteRepo.DeleteHostsBySite(site.SiteId, CancellationToken.None);
+            resultStep = await siteRepo.DeleteFoldersBySite(site.SiteGuid, CancellationToken.None);
 
 
             // the below method deletes a lot of things by siteid including the following tables
@@ -122,7 +122,7 @@ namespace cloudscribe.Core.Web.Components
             // mp_SiteSettingsEx
             // mp_Sites
 
-            return await siteRepo.Delete(site.SiteId);
+            return await siteRepo.Delete(site.SiteId, CancellationToken.None);
         }
 
         public async Task<SiteSettings> CreateNewSite(bool isServerAdminSite)
@@ -141,8 +141,7 @@ namespace cloudscribe.Core.Web.Components
 
         }
 
-        public async Task<bool> CreateNewSite(
-            ISiteSettings newSite)
+        public async Task<bool> CreateNewSite(ISiteSettings newSite)
         {
             if (siteRepo == null) { throw new ArgumentNullException("you must pass in an instance of ISiteRepository"); }
             if (newSite == null) { throw new ArgumentNullException("you must pass in an instance of ISiteSettings"); }
@@ -179,7 +178,7 @@ namespace cloudscribe.Core.Web.Components
             newSite.MinRequiredPasswordLength = 7;
             
             
-            bool result = await siteRepo.Save(newSite);
+            bool result = await siteRepo.Save(newSite, CancellationToken.None);
 
 
             return result;
@@ -187,8 +186,7 @@ namespace cloudscribe.Core.Web.Components
 
         }
 
-        public async Task<bool> CreateRequiredRolesAndAdminUser(
-            SiteSettings site)
+        public async Task<bool> CreateRequiredRolesAndAdminUser(SiteSettings site)
         {
             bool result = await EnsureRequiredRoles(site);
             result = await CreateAdminUser(site);
@@ -213,7 +211,7 @@ namespace cloudscribe.Core.Web.Components
             // we could just skip creating this user since in related sites mode all users come from the first site
             // but then if the config were changed to not related sites mode there would be no admin user
             // so in related sites mode we create one only as a backup in case settings are changed later
-            int countOfSites = await siteRepo.GetCount();
+            int countOfSites = await siteRepo.GetCount(CancellationToken);
             string siteDifferentiator = string.Empty;
             if (
                 (countOfSites >= 1)
@@ -321,27 +319,27 @@ namespace cloudscribe.Core.Web.Components
 
         public async Task<ISiteFolder> GetSiteFolder(string folderName)
         {
-            return await siteRepo.GetSiteFolder(folderName);
+            return await siteRepo.GetSiteFolder(folderName, CancellationToken);
         }
 
         public async Task<bool> EnsureSiteFolder(ISiteSettings site)
         {
-            bool folderExists = await siteRepo.FolderExists(site.SiteFolderName);
+            bool folderExists = await siteRepo.FolderExists(site.SiteFolderName, CancellationToken);
 
             if (!folderExists)
             {
-                List<ISiteFolder> siteFolders = await siteRepo.GetSiteFoldersBySite(site.SiteGuid);
+                List<ISiteFolder> siteFolders = await siteRepo.GetSiteFoldersBySite(site.SiteGuid, CancellationToken);
                 //delete any existing folders before creating a new one
                 foreach (ISiteFolder f in siteFolders)
                 {
-                    bool deleted = await siteRepo.DeleteFolder(f.Guid);
+                    bool deleted = await siteRepo.DeleteFolder(f.Guid, CancellationToken);
                 }
 
                 //ensure the current folder mapping
                 SiteFolder folder = new SiteFolder();
                 folder.FolderName = site.SiteFolderName;
                 folder.SiteGuid = site.SiteGuid;
-                folderExists = await siteRepo.Save(folder);
+                folderExists = await siteRepo.Save(folder, CancellationToken);
             }
 
             return folderExists;
@@ -349,23 +347,23 @@ namespace cloudscribe.Core.Web.Components
 
         public async Task<ISiteHost> GetSiteHost(string hostName)
         {
-            return await siteRepo.GetSiteHost(hostName);
+            return await siteRepo.GetSiteHost(hostName, CancellationToken);
         }
 
         public async Task<List<ISiteHost>> GetSiteHosts(int siteId)
         {
-            return await siteRepo.GetSiteHosts(siteId);
+            return await siteRepo.GetSiteHosts(siteId, CancellationToken);
         }
 
         public async Task<bool> AddHost(Guid siteGuid, int siteId, string hostName)
         {
-            return await siteRepo.AddHost(siteGuid, siteId, hostName);
+            return await siteRepo.AddHost(siteGuid, siteId, hostName, CancellationToken);
         }
 
         public async Task<bool> DeleteHost(int hostId)
         {
             
-            return await siteRepo.DeleteHost(hostId);
+            return await siteRepo.DeleteHost(hostId, CancellationToken);
         }
 
         public async Task<int> GetUserCount(int siteId)
@@ -386,7 +384,7 @@ namespace cloudscribe.Core.Web.Components
         {
             try
             {
-                return await siteRepo.GetCount();
+                return await siteRepo.GetCount(CancellationToken);
             }
             catch { }
             // errors are expected here before the db is initialized

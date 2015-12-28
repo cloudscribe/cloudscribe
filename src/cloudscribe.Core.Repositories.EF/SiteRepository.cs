@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2015-12-21
+// Last Modified:			2015-12-28
 // 
 
 
@@ -11,6 +11,7 @@ using Microsoft.Data.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.EF
@@ -26,7 +27,7 @@ namespace cloudscribe.Core.Repositories.EF
 
         private CoreDbContext dbContext;
 
-        public async Task<bool> Save(ISiteSettings site)
+        public async Task<bool> Save(ISiteSettings site, CancellationToken cancellationToken = default(CancellationToken))
         {
             if(site == null) { return false; }
 
@@ -49,7 +50,7 @@ namespace cloudscribe.Core.Repositories.EF
 
 
 
-            int rowsAffected = await dbContext.SaveChangesAsync();
+            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
 
             // update the original with the new keys after insert
             if((site.SiteId == -1)&&(siteSettings != null))
@@ -62,10 +63,10 @@ namespace cloudscribe.Core.Repositories.EF
             return rowsAffected > 0;
         }
 
-        public async Task<ISiteSettings> Fetch(int siteId)
+        public async Task<ISiteSettings> Fetch(int siteId, CancellationToken cancellationToken = default(CancellationToken))
         {
             SiteSettings item
-                = await dbContext.Sites.SingleOrDefaultAsync(x => x.SiteId.Equals(siteId));
+                = await dbContext.Sites.SingleOrDefaultAsync(x => x.SiteId.Equals(siteId), cancellationToken);
 
             return item;
         }
@@ -78,10 +79,10 @@ namespace cloudscribe.Core.Repositories.EF
             return item;
         }
 
-        public async Task<ISiteSettings> Fetch(Guid siteGuid)
+        public async Task<ISiteSettings> Fetch(Guid siteGuid, CancellationToken cancellationToken = default(CancellationToken))
         {
             SiteSettings item
-                = await dbContext.Sites.SingleOrDefaultAsync(x => x.SiteGuid.Equals(siteGuid));
+                = await dbContext.Sites.SingleOrDefaultAsync(x => x.SiteGuid.Equals(siteGuid), cancellationToken);
 
             return item;
         }
@@ -94,9 +95,9 @@ namespace cloudscribe.Core.Repositories.EF
             return item;
         }
 
-        public async Task<ISiteSettings> Fetch(string hostName)
+        public async Task<ISiteSettings> Fetch(string hostName, CancellationToken cancellationToken = default(CancellationToken))
         {
-            SiteHost host = await dbContext.SiteHosts.FirstOrDefaultAsync(x => x.HostName.Equals(hostName));
+            SiteHost host = await dbContext.SiteHosts.FirstOrDefaultAsync(x => x.HostName.Equals(hostName), cancellationToken);
             if(host == null)
             {
                 var query = from s in dbContext.Sites
@@ -104,10 +105,10 @@ namespace cloudscribe.Core.Repositories.EF
                             orderby s.SiteId ascending
                             select s;
 
-                return await query.SingleOrDefaultAsync<SiteSettings>();
+                return await query.SingleOrDefaultAsync<SiteSettings>(cancellationToken);
             }
             
-            return await dbContext.Sites.SingleOrDefaultAsync(x => x.SiteId.Equals(host.SiteId));
+            return await dbContext.Sites.SingleOrDefaultAsync(x => x.SiteId.Equals(host.SiteId), cancellationToken);
 
 
         }
@@ -129,14 +130,14 @@ namespace cloudscribe.Core.Repositories.EF
 
         }
 
-        public async Task<bool> Delete(int siteId)
+        public async Task<bool> Delete(int siteId, CancellationToken cancellationToken = default(CancellationToken))
         {
             var result = false;
-            var itemToRemove = await dbContext.Sites.SingleOrDefaultAsync(x => x.SiteId == siteId);
+            var itemToRemove = await dbContext.Sites.SingleOrDefaultAsync(x => x.SiteId == siteId, cancellationToken);
             if (itemToRemove != null)
             {
                 dbContext.Sites.Remove(itemToRemove);
-                int rowsAffected = await dbContext.SaveChangesAsync();
+                int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
                 result = rowsAffected > 0;
             }
 
@@ -145,12 +146,12 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
 
-        public async Task<int> GetCount()
+        public async Task<int> GetCount(CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await dbContext.Sites.CountAsync<SiteSettings>();
+            return await dbContext.Sites.CountAsync<SiteSettings>(cancellationToken);
         }
 
-        public async Task<List<ISiteInfo>> GetList()
+        public async Task<List<ISiteInfo>> GetList(CancellationToken cancellationToken = default(CancellationToken))
         {
             var query = from x in dbContext.Sites
                         orderby x.SiteName ascending
@@ -164,20 +165,21 @@ namespace cloudscribe.Core.Repositories.EF
                         }
                         ;
 
-            var items = await query.AsNoTracking().ToListAsync<ISiteInfo>();
+            var items = await query.AsNoTracking().ToListAsync<ISiteInfo>(cancellationToken);
             
             return items;
         }
 
-        public async Task<int> CountOtherSites(int currentSiteId)
+        public async Task<int> CountOtherSites(int currentSiteId, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await dbContext.Sites.CountAsync<SiteSettings>(x =>  x.SiteId != currentSiteId);
+            return await dbContext.Sites.CountAsync<SiteSettings>(x =>  x.SiteId != currentSiteId, cancellationToken);
         }
 
         public async Task<List<ISiteInfo>> GetPageOtherSites(
             int currentSiteId,
             int pageNumber,
-            int pageSize)
+            int pageSize,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             int offset = (pageSize * pageNumber) - pageSize;
 
@@ -197,18 +199,18 @@ namespace cloudscribe.Core.Repositories.EF
                         };
 
             
-            return await query.AsNoTracking().Skip(offset).Take(pageSize).ToListAsync<ISiteInfo>();
+            return await query.AsNoTracking().Skip(offset).Take(pageSize).ToListAsync<ISiteInfo>(cancellationToken);
 
            
         }
 
-        public async Task<List<ISiteHost>> GetAllHosts()
+        public async Task<List<ISiteHost>> GetAllHosts(CancellationToken cancellationToken = default(CancellationToken))
         {
             var query = from x in dbContext.SiteHosts
                         orderby x.HostName ascending
                         select x;
 
-            var items = await query.AsNoTracking().ToListAsync<ISiteHost>();
+            var items = await query.AsNoTracking().ToListAsync<ISiteHost>(cancellationToken);
             
             return items;
         }
@@ -224,14 +226,15 @@ namespace cloudscribe.Core.Repositories.EF
             return items;
         }
 
-        public async Task<int> GetHostCount()
+        public async Task<int> GetHostCount(CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await dbContext.SiteHosts.CountAsync<SiteHost>();
+            return await dbContext.SiteHosts.CountAsync<SiteHost>(cancellationToken);
         }
 
         public async Task<List<ISiteHost>> GetPageHosts(
             int pageNumber,
-            int pageSize)
+            int pageSize,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             int offset = (pageSize * pageNumber) - pageSize;
 
@@ -241,11 +244,11 @@ namespace cloudscribe.Core.Repositories.EF
                         select x
                         ;
 
-            return await query.AsNoTracking().Skip(offset).Take(pageSize).ToListAsync<ISiteHost>();
+            return await query.AsNoTracking().Skip(offset).Take(pageSize).ToListAsync<ISiteHost>(cancellationToken);
       
         }
 
-        public async Task<List<ISiteHost>> GetSiteHosts(int siteId)
+        public async Task<List<ISiteHost>> GetSiteHosts(int siteId, CancellationToken cancellationToken = default(CancellationToken))
         {
             var query = from x in dbContext.SiteHosts
                         where x.SiteId == siteId
@@ -253,12 +256,12 @@ namespace cloudscribe.Core.Repositories.EF
                         select x
                         ;
 
-            var items = await query.AsNoTracking().ToListAsync<ISiteHost>();
+            var items = await query.AsNoTracking().ToListAsync<ISiteHost>(cancellationToken);
 
             return items;
         }
 
-        public async Task<ISiteHost> GetSiteHost(string hostName)
+        public async Task<ISiteHost> GetSiteHost(string hostName, CancellationToken cancellationToken = default(CancellationToken))
         {
             var query = from x in dbContext.SiteHosts
                         where x.HostName == hostName
@@ -266,11 +269,15 @@ namespace cloudscribe.Core.Repositories.EF
                         select x
                         ;
 
-            return await query.SingleOrDefaultAsync<SiteHost>();
+            return await query.SingleOrDefaultAsync<SiteHost>(cancellationToken);
             
         }
 
-        public async Task<bool> AddHost(Guid siteGuid, int siteId, string hostName)
+        public async Task<bool> AddHost(
+            Guid siteGuid, 
+            int siteId, 
+            string hostName,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             SiteHost host = new SiteHost();
             host.SiteGuid = siteGuid;
@@ -278,20 +285,20 @@ namespace cloudscribe.Core.Repositories.EF
             host.HostName = hostName;
 
             dbContext.SiteHosts.Add(host);
-            int rowsAffected = await dbContext.SaveChangesAsync();
+            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
 
             return rowsAffected > 0;
 
         }
 
-        public async Task<bool> DeleteHost(int hostId)
+        public async Task<bool> DeleteHost(int hostId, CancellationToken cancellationToken = default(CancellationToken))
         {
             var result = false;
-            var itemToRemove = await dbContext.SiteHosts.SingleOrDefaultAsync(x => x.HostId == hostId);
+            var itemToRemove = await dbContext.SiteHosts.SingleOrDefaultAsync(x => x.HostId == hostId, cancellationToken);
             if (itemToRemove != null)
             {
                 dbContext.SiteHosts.Remove(itemToRemove);
-                int rowsAffected = await dbContext.SaveChangesAsync();
+                int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
                 result = rowsAffected > 0;
             }
 
@@ -299,14 +306,14 @@ namespace cloudscribe.Core.Repositories.EF
 
         }
 
-        public async Task<bool> DeleteHostsBySite(int siteId)
+        public async Task<bool> DeleteHostsBySite(int siteId, CancellationToken cancellationToken = default(CancellationToken))
         {
             var result = false;
             var query = from x in  dbContext.SiteHosts.Where(x => x.SiteId == siteId)
                 select x;
            
             dbContext.SiteHosts.RemoveRange(query);
-            int rowsAffected = await dbContext.SaveChangesAsync();
+            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
             result = rowsAffected > 0;
             
 
@@ -314,7 +321,7 @@ namespace cloudscribe.Core.Repositories.EF
 
         }
 
-        public async Task<int> GetSiteIdByHostName(string hostName)
+        public async Task<int> GetSiteIdByHostName(string hostName, CancellationToken cancellationToken = default(CancellationToken))
         {
             var query = from x in dbContext.SiteHosts
                         where x.HostName == hostName
@@ -322,14 +329,14 @@ namespace cloudscribe.Core.Repositories.EF
                         select x
                         ;
 
-            var host = await query.SingleOrDefaultAsync<SiteHost>();
+            var host = await query.SingleOrDefaultAsync<SiteHost>(cancellationToken);
 
             if(host != null) { return host.SiteId; }
 
             return -1; // not found
         }
 
-        public async Task<List<ISiteFolder>> GetSiteFoldersBySite(Guid siteGuid)
+        public async Task<List<ISiteFolder>> GetSiteFoldersBySite(Guid siteGuid, CancellationToken cancellationToken = default(CancellationToken))
         {
             var query = from x in dbContext.SiteFolders
                         where x.SiteGuid == siteGuid
@@ -337,19 +344,19 @@ namespace cloudscribe.Core.Repositories.EF
                         select x
                         ;
 
-            var items = await query.AsNoTracking().ToListAsync<ISiteFolder>();
+            var items = await query.AsNoTracking().ToListAsync<ISiteFolder>(cancellationToken);
 
             return items;
 
         }
 
-        public async Task<List<ISiteFolder>> GetAllSiteFolders()
+        public async Task<List<ISiteFolder>> GetAllSiteFolders(CancellationToken cancellationToken = default(CancellationToken))
         {
             var query = from x in dbContext.SiteFolders
                         orderby x.FolderName ascending
                         select x;
 
-            var items = await query.AsNoTracking().ToListAsync<ISiteFolder>();
+            var items = await query.AsNoTracking().ToListAsync<ISiteFolder>(cancellationToken);
             
             return items;
 
@@ -366,14 +373,15 @@ namespace cloudscribe.Core.Repositories.EF
             return items;
         }
 
-        public async Task<int> GetFolderCount()
+        public async Task<int> GetFolderCount(CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await dbContext.SiteFolders.CountAsync<SiteFolder>();
+            return await dbContext.SiteFolders.CountAsync<SiteFolder>(cancellationToken);
         }
 
         public async Task<List<ISiteFolder>> GetPageSiteFolders(
             int pageNumber,
-            int pageSize)
+            int pageSize,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             int offset = (pageSize * pageNumber) - pageSize;
 
@@ -383,13 +391,13 @@ namespace cloudscribe.Core.Repositories.EF
                         select x
                         ;
 
-            if (offset > 0) { return await query.Skip(offset).ToListAsync<ISiteFolder>(); }
+            if (offset > 0) { return await query.Skip(offset).ToListAsync<ISiteFolder>(cancellationToken); }
 
-            return await query.AsNoTracking().ToListAsync<ISiteFolder>();
+            return await query.AsNoTracking().ToListAsync<ISiteFolder>(cancellationToken);
             
         }
 
-        public async Task<ISiteFolder> GetSiteFolder(string folderName)
+        public async Task<ISiteFolder> GetSiteFolder(string folderName, CancellationToken cancellationToken = default(CancellationToken))
         {
             var query = from x in dbContext.SiteFolders
                         where x.FolderName == folderName
@@ -397,11 +405,11 @@ namespace cloudscribe.Core.Repositories.EF
                         select x
                         ;
 
-            return await query.SingleOrDefaultAsync<SiteFolder>();
+            return await query.SingleOrDefaultAsync<SiteFolder>(cancellationToken);
 
         }
 
-        public async Task<bool> Save(ISiteFolder siteFolder)
+        public async Task<bool> Save(ISiteFolder siteFolder, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (siteFolder == null) { return false; }
 
@@ -421,41 +429,41 @@ namespace cloudscribe.Core.Repositories.EF
 
             }
 
-            int rowsAffected = await dbContext.SaveChangesAsync();
+            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
 
             return rowsAffected > 0;
 
         }
 
-        public async Task<bool> DeleteFolder(Guid guid)
+        public async Task<bool> DeleteFolder(Guid guid, CancellationToken cancellationToken = default(CancellationToken))
         {
             var result = false;
-            var itemToRemove = await dbContext.SiteFolders.SingleOrDefaultAsync(x => x.Guid == guid);
+            var itemToRemove = await dbContext.SiteFolders.SingleOrDefaultAsync(x => x.Guid == guid, cancellationToken);
             if (itemToRemove != null)
             {
                 dbContext.SiteFolders.Remove(itemToRemove);
-                int rowsAffected = await dbContext.SaveChangesAsync();
+                int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
                 result = rowsAffected > 0;
             }
 
             return result;
         }
 
-        public async Task<bool> DeleteFoldersBySite(Guid siteGuid)
+        public async Task<bool> DeleteFoldersBySite(Guid siteGuid, CancellationToken cancellationToken = default(CancellationToken))
         {
             var result = false;
             var query = from x in dbContext.SiteFolders.Where(x => x.SiteGuid == siteGuid)
                         select x;
             
             dbContext.SiteFolders.RemoveRange(query);
-            int rowsAffected = await dbContext.SaveChangesAsync();
+            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
             result = rowsAffected > 0;
             
 
             return result;
         }
 
-        public async Task<int> GetSiteIdByFolder(string folderName)
+        public async Task<int> GetSiteIdByFolder(string folderName, CancellationToken cancellationToken = default(CancellationToken))
         {
             var query = from x in dbContext.Sites
                         join y in dbContext.SiteFolders
@@ -466,10 +474,10 @@ namespace cloudscribe.Core.Repositories.EF
             //TODO: this does not seem optimal
             // how can we reduce this to one db hit?
 
-            bool found = await query.AnyAsync<int>();
+            bool found = await query.AnyAsync<int>(cancellationToken);
             if(found)
             {
-                return await query.FirstOrDefaultAsync<int>();
+                return await query.FirstOrDefaultAsync<int>(cancellationToken);
             }
             else
             {
@@ -477,7 +485,7 @@ namespace cloudscribe.Core.Repositories.EF
                         orderby x.SiteId
                         select x.SiteId
                         ;
-                return await query.FirstOrDefaultAsync<int>();
+                return await query.FirstOrDefaultAsync<int>(cancellationToken);
             }
             
             
@@ -512,21 +520,21 @@ namespace cloudscribe.Core.Repositories.EF
             }
         }
 
-        public async Task<Guid> GetSiteGuidByFolder(string folderName)
+        public async Task<Guid> GetSiteGuidByFolder(string folderName, CancellationToken cancellationToken = default(CancellationToken))
         {
             var query = from x in dbContext.SiteFolders
                         where x.FolderName == folderName 
                         select x
                         ;
 
-            SiteFolder folder = await query.SingleOrDefaultAsync<SiteFolder>();
+            SiteFolder folder = await query.SingleOrDefaultAsync<SiteFolder>(cancellationToken);
             if(folder == null) { return Guid.Empty; }
             return folder.SiteGuid;
         }
 
-        public async Task<bool> FolderExists(string folderName)
+        public async Task<bool> FolderExists(string folderName, CancellationToken cancellationToken = default(CancellationToken))
         {
-            Guid found = await GetSiteGuidByFolder(folderName);
+            Guid found = await GetSiteGuidByFolder(folderName, cancellationToken);
             if(found == Guid.Empty) { return false; }
             return true;
         }

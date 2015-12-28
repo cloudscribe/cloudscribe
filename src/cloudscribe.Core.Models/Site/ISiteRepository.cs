@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2015-12-21
+// Last Modified:			2015-12-28
 // 
 
 // TODO: we should update all the async signatures to take a cancellationtoken
@@ -16,52 +16,57 @@ namespace cloudscribe.Core.Models
 {
     public interface ISiteRepository : IDisposable
     {
-        Task<ISiteSettings> Fetch(int siteId);
         ISiteSettings FetchNonAsync(int siteId);
-        Task<ISiteSettings> Fetch(Guid siteGuid);
         ISiteSettings FetchNonAsync(Guid siteGuid);
-        Task<ISiteSettings> Fetch(string hostName);
         ISiteSettings FetchNonAsync(string hostName);
-        Task<int> GetCount();
-        Task<int> CountOtherSites(int currentSiteId);
-        Task<List<ISiteInfo>> GetList();
+
+        Task<ISiteSettings> Fetch(int siteId, CancellationToken cancellationToken);
+        Task<ISiteSettings> Fetch(Guid siteGuid, CancellationToken cancellationToken);
+        Task<ISiteSettings> Fetch(string hostName, CancellationToken cancellationToken);
+        
+        Task<int> GetCount(CancellationToken cancellationToken);
+        Task<int> CountOtherSites(int currentSiteId, CancellationToken cancellationToken);
+        Task<List<ISiteInfo>> GetList(CancellationToken cancellationToken);
         Task<List<ISiteInfo>> GetPageOtherSites(
             int currentSiteId,
             int pageNumber,
-            int pageSize);
+            int pageSize,
+            CancellationToken cancellationToken);
 
-        Task<bool> Save(ISiteSettings site);
-        Task<bool> Delete(int siteId);
+        Task<bool> Save(ISiteSettings site, CancellationToken cancellationToken);
+        Task<bool> Delete(int siteId, CancellationToken cancellationToken);
 
-        Task<List<ISiteHost>> GetSiteHosts(int siteId);
-        Task<List<ISiteHost>> GetAllHosts();
-        List<ISiteHost> GetAllHostsNonAsync();
-        Task<ISiteHost> GetSiteHost(string hostName);
-        Task<int> GetHostCount();
+        Task<List<ISiteHost>> GetSiteHosts(int siteId, CancellationToken cancellationToken);
+        Task<List<ISiteHost>> GetAllHosts(CancellationToken cancellationToken);
+        Task<ISiteHost> GetSiteHost(string hostName, CancellationToken cancellationToken);
+        Task<int> GetHostCount(CancellationToken cancellationToken);
         Task<List<ISiteHost>> GetPageHosts(
             int pageNumber,
-            int pageSize);
-        Task<bool> AddHost(Guid siteGuid, int siteId, string hostName);
-        Task<bool> DeleteHost(int hostId);
-        Task<bool> DeleteHostsBySite(int siteId);
-        Task<int> GetSiteIdByHostName(string hostName);
-
+            int pageSize,
+            CancellationToken cancellationToken);
+        Task<bool> AddHost(Guid siteGuid, int siteId, string hostName, CancellationToken cancellationToken);
+        Task<bool> DeleteHost(int hostId, CancellationToken cancellationToken);
+        Task<bool> DeleteHostsBySite(int siteId, CancellationToken cancellationToken);
+        Task<int> GetSiteIdByHostName(string hostName, CancellationToken cancellationToken);
         
-        Task<List<ISiteFolder>> GetSiteFoldersBySite(Guid siteGuid);
-        Task<List<ISiteFolder>> GetAllSiteFolders();
-        List<ISiteFolder> GetAllSiteFoldersNonAsync();
-        Task<int> GetFolderCount();
-        Task<ISiteFolder> GetSiteFolder(string folderName);
+        Task<List<ISiteFolder>> GetSiteFoldersBySite(Guid siteGuid, CancellationToken cancellationToken);
+        Task<List<ISiteFolder>> GetAllSiteFolders(CancellationToken cancellationToken);
+        Task<int> GetFolderCount(CancellationToken cancellationToken);
+        Task<ISiteFolder> GetSiteFolder(string folderName, CancellationToken cancellationToken);
         Task<List<ISiteFolder>> GetPageSiteFolders(
             int pageNumber,
-            int pageSize);
-        Task<bool> Save(ISiteFolder siteFolder);
-        Task<bool> DeleteFolder(Guid guid);
-        Task<bool> DeleteFoldersBySite(Guid siteGuid);
-        Task<int> GetSiteIdByFolder(string folderName);
+            int pageSize,
+            CancellationToken cancellationToken);
+        Task<bool> Save(ISiteFolder siteFolder, CancellationToken cancellationToken);
+        Task<bool> DeleteFolder(Guid guid, CancellationToken cancellationToken);
+        Task<bool> DeleteFoldersBySite(Guid siteGuid, CancellationToken cancellationToken);
+        Task<int> GetSiteIdByFolder(string folderName, CancellationToken cancellationToken);
+        Task<Guid> GetSiteGuidByFolder(string folderName, CancellationToken cancellationToken);
+        Task<bool> FolderExists(string folderName, CancellationToken cancellationToken);
+
+        List<ISiteHost> GetAllHostsNonAsync();
+        List<ISiteFolder> GetAllSiteFoldersNonAsync();
         int GetSiteIdByFolderNonAsync(string folderName);
-        Task<Guid> GetSiteGuidByFolder(string folderName);
-        Task<bool> FolderExists(string folderName);
 
     }
 }
