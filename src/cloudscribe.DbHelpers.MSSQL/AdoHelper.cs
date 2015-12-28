@@ -2,6 +2,7 @@
 using System;
 using System.Data;
 using System.Data.Common;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace cloudscribe.DbHelpers.MSSQL
@@ -171,11 +172,18 @@ namespace cloudscribe.DbHelpers.MSSQL
             string connectionString,
             CommandType commandType,
             string commandText,
-            params DbParameter[] commandParameters)
+            DbParameter[] commandParameters,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             int commandTimeout = 30; //30 seconds default http://msdn.microsoft.com/en-us/library/system.data.sqlclient.sqlcommand.commandtimeout.aspx
 
-            return await ExecuteNonQueryAsync(connectionString, commandType, commandText, commandTimeout, commandParameters);
+            return await ExecuteNonQueryAsync(
+                connectionString, 
+                commandType, 
+                commandText, 
+                commandTimeout, 
+                commandParameters,
+                cancellationToken);
 
 
         }
@@ -185,7 +193,8 @@ namespace cloudscribe.DbHelpers.MSSQL
             CommandType commandType,
             string commandText,
             int commandTimeout,
-            params DbParameter[] commandParameters)
+            DbParameter[] commandParameters,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             if (connectionString == null || connectionString.Length == 0) throw new ArgumentNullException("connectionString");
 
@@ -198,7 +207,7 @@ namespace cloudscribe.DbHelpers.MSSQL
                 {
                     PrepareCommand(command, connection, null, commandType, commandText, commandParameters);
                     command.CommandTimeout = commandTimeout;
-                    return await command.ExecuteNonQueryAsync();
+                    return await command.ExecuteNonQueryAsync(cancellationToken);
                 }
             }
         }
@@ -208,7 +217,8 @@ namespace cloudscribe.DbHelpers.MSSQL
             CommandType commandType,
             string commandText,
             int commandTimeout,
-            params DbParameter[] commandParameters)
+            DbParameter[] commandParameters,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             if (transaction == null) throw new ArgumentNullException("transaction");
             if (transaction != null && transaction.Connection == null) throw new ArgumentException("The transaction was rollbacked or commited, please provide an open transaction.", "transaction");
@@ -227,7 +237,7 @@ namespace cloudscribe.DbHelpers.MSSQL
 
                 command.CommandTimeout = commandTimeout;
 
-                return await command.ExecuteNonQueryAsync();
+                return await command.ExecuteNonQueryAsync(cancellationToken);
             }
         }
 
@@ -294,10 +304,17 @@ namespace cloudscribe.DbHelpers.MSSQL
             string connectionString,
             CommandType commandType,
             string commandText,
-            params DbParameter[] commandParameters)
+            DbParameter[] commandParameters,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             int commandTimeout = 30; //30 seconds default
-            return await ExecuteReaderAsync(connectionString, commandType, commandText, commandTimeout, commandParameters);
+            return await ExecuteReaderAsync(
+                connectionString, 
+                commandType, 
+                commandText, 
+                commandTimeout, 
+                commandParameters,
+                cancellationToken);
 
 
         }
@@ -307,7 +324,8 @@ namespace cloudscribe.DbHelpers.MSSQL
             CommandType commandType,
             string commandText,
             int commandTimeout,
-            params DbParameter[] commandParameters)
+            DbParameter[] commandParameters,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             if (connectionString == null || connectionString.Length == 0) throw new ArgumentNullException("connectionString");
 
@@ -335,7 +353,7 @@ namespace cloudscribe.DbHelpers.MSSQL
 
                     command.CommandTimeout = commandTimeout;
 
-                    DbDataReader reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection);
+                    DbDataReader reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection, cancellationToken);
 
                     return reader;
                 }
@@ -411,10 +429,17 @@ namespace cloudscribe.DbHelpers.MSSQL
             string connectionString,
             CommandType commandType,
             string commandText,
-            params DbParameter[] commandParameters)
+            DbParameter[] commandParameters,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             int commandTimeout = 30; //30 seconds default
-            return await ExecuteScalarAsync(connectionString, commandType, commandText, commandTimeout, commandParameters);
+            return await ExecuteScalarAsync(
+                connectionString, 
+                commandType, 
+                commandText, 
+                commandTimeout, 
+                commandParameters,
+                cancellationToken);
 
 
         }
@@ -424,7 +449,8 @@ namespace cloudscribe.DbHelpers.MSSQL
             CommandType commandType,
             string commandText,
             int commandTimeout,
-            params DbParameter[] commandParameters)
+            DbParameter[] commandParameters,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             if (connectionString == null || connectionString.Length == 0) throw new ArgumentNullException("connectionString");
 
@@ -438,42 +464,10 @@ namespace cloudscribe.DbHelpers.MSSQL
                     PrepareCommand(command, connection, (DbTransaction)null, commandType, commandText, commandParameters);
                     command.CommandTimeout = commandTimeout;
 
-                    return await command.ExecuteScalarAsync();
+                    return await command.ExecuteScalarAsync(cancellationToken);
                 }
             }
         }
-
-        //public static DataSet ExecuteDataset(string connectionString, CommandType commandType, string commandText)
-        //{
-        //    return ExecuteDataset(connectionString, commandType, commandText, (DbParameter[])null);
-        //}
-
-        //public static DataSet ExecuteDataset(
-        //    string connectionString,
-        //    CommandType commandType,
-        //    string commandText,
-        //    params DbParameter[] commandParameters)
-        //{
-        //    if (connectionString == null || connectionString.Length == 0) throw new ArgumentNullException("connectionString");
-
-        //    DbProviderFactory factory = GetFactory();
-
-        //    using (DbConnection connection = GetConnection(connectionString))
-        //    {
-        //        connection.Open();
-        //        using (DbCommand command = factory.CreateCommand())
-        //        {
-        //            PrepareCommand(command, connection, (DbTransaction)null, commandType, commandText, commandParameters);
-        //            using (DbDataAdapter adpater = factory.CreateDataAdapter())
-        //            {
-        //                adpater.SelectCommand = command;
-        //                DataSet dataSet = new DataSet();
-        //                adpater.Fill(dataSet);
-        //                return dataSet;
-        //            }
-        //        }
-        //    }
-        //}
 
     }
 }

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //	Author:                 Joe Audette
 //  Created:			    2011-07-23
-//	Last Modified:		    2015-12-25
+//	Last Modified:		    2015-12-27
 // 
 
 using cloudscribe.DbHelpers.pgsql;
@@ -11,6 +11,7 @@ using System;
 using System.Data;
 using System.Data.Common;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Logging.pgsql
@@ -118,10 +119,8 @@ namespace cloudscribe.Logging.pgsql
         }
 
 
-        /// <summary>
-        /// Deletes rows from the mp_SystemLog table. Returns true if rows deleted.
-        /// </summary>
-        public async Task<bool> DeleteAll()
+        
+        public async Task<bool> DeleteAll(CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_systemlog ");
@@ -132,18 +131,15 @@ namespace cloudscribe.Logging.pgsql
                 writeConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                null);
+                null,
+                cancellationToken);
 
             return (rowsAffected > 0);
 
         }
 
-        /// <summary>
-        /// Deletes a row from the mp_SystemLog table. Returns true if row deleted.
-        /// </summary>
-        /// <param name="id"> id </param>
-        /// <returns>bool</returns>
-        public async Task<bool> Delete(int id)
+        
+        public async Task<bool> Delete(int id, CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_systemlog ");
@@ -160,18 +156,15 @@ namespace cloudscribe.Logging.pgsql
                 writeConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return (rowsAffected > -1);
 
         }
 
-        /// <summary>
-        /// Deletes rows from the mp_SystemLog table. Returns true if rows deleted.
-        /// </summary>
-        /// <param name="id"> id </param>
-        /// <returns>bool</returns>
-        public async Task<bool> DeleteOlderThan(DateTime cutoffDate)
+       
+        public async Task<bool> DeleteOlderThan(DateTime cutoffDate, CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_systemlog ");
@@ -188,18 +181,15 @@ namespace cloudscribe.Logging.pgsql
                 writeConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return (rowsAffected > -1);
 
         }
 
-        /// <summary>
-        /// Deletes rows from the mp_SystemLog table. Returns true if rows deleted.
-        /// </summary>
-        /// <param name="id"> id </param>
-        /// <returns>bool</returns>
-        public async Task<bool> DeleteByLevel(string logLevel)
+        
+        public async Task<bool> DeleteByLevel(string logLevel, CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_systemlog ");
@@ -216,16 +206,15 @@ namespace cloudscribe.Logging.pgsql
                 writeConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams, 
+                cancellationToken);
 
             return (rowsAffected > -1);
 
         }
 
-        /// <summary>
-        /// Gets a count of rows in the mp_SystemLog table.
-        /// </summary>
-        public async Task<int> GetCount()
+        
+        public async Task<int> GetCount(CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  Count(*) ");
@@ -236,41 +225,20 @@ namespace cloudscribe.Logging.pgsql
                 readConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                null);
+                null,
+                cancellationToken);
 
             return Convert.ToInt32(result);
         }
 
-        /// <summary>
-        /// Gets a page of data from the mp_SystemLog table.
-        /// </summary>
-        /// <param name="pageNumber">The page number.</param>
-        /// <param name="pageSize">Size of the page.</param>
-        /// <param name="totalPages">total pages</param>
+       
         public async Task<DbDataReader> GetPageAscending(
             int pageNumber,
-            int pageSize)
+            int pageSize,
+            CancellationToken cancellationToken)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
-            //totalPages = 1;
-            //int totalRows = GetCount();
-
-            //if (pageSize > 0) totalPages = totalRows / pageSize;
-
-            //if (totalRows <= pageSize)
-            //{
-            //    totalPages = 1;
-            //}
-            //else
-            //{
-            //    int remainder;
-            //    Math.DivRem(totalRows, pageSize, out remainder);
-            //    if (remainder > 0)
-            //    {
-            //        totalPages += 1;
-            //    }
-            //}
-
+            
             NpgsqlParameter[] arParams = new NpgsqlParameter[2];
 
             arParams[0] = new NpgsqlParameter("pagesize", NpgsqlTypes.NpgsqlDbType.Integer);
@@ -296,40 +264,19 @@ namespace cloudscribe.Logging.pgsql
                 readConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
         }
 
-        /// <summary>
-        /// Gets a page of data from the mp_SystemLog table.
-        /// </summary>
-        /// <param name="pageNumber">The page number.</param>
-        /// <param name="pageSize">Size of the page.</param>
-        /// <param name="totalPages">total pages</param>
+        
         public async Task<DbDataReader> GetPageDescending(
             int pageNumber,
-            int pageSize)
+            int pageSize,
+            CancellationToken cancellationToken)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
-            //totalPages = 1;
-            //int totalRows = GetCount();
-
-            //if (pageSize > 0) totalPages = totalRows / pageSize;
-
-            //if (totalRows <= pageSize)
-            //{
-            //    totalPages = 1;
-            //}
-            //else
-            //{
-            //    int remainder;
-            //    Math.DivRem(totalRows, pageSize, out remainder);
-            //    if (remainder > 0)
-            //    {
-            //        totalPages += 1;
-            //    }
-            //}
-
+            
             NpgsqlParameter[] arParams = new NpgsqlParameter[2];
 
             arParams[0] = new NpgsqlParameter("pagesize", NpgsqlTypes.NpgsqlDbType.Integer);
@@ -355,7 +302,8 @@ namespace cloudscribe.Logging.pgsql
                 readConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
         }
 

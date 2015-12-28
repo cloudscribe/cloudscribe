@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //	Author:                 Joe Audette
 //  Created:			    2011-08-18
-//	Last Modified:		    2015-12-26
+//	Last Modified:		    2015-12-27
 // 
 
 using cloudscribe.Logging.Web;
@@ -11,6 +11,7 @@ using Microsoft.Extensions.OptionsModel;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Logging.pgsql
@@ -33,7 +34,7 @@ namespace cloudscribe.Logging.pgsql
         private string writeConnectionString;
         private DBSystemLog dbSystemLog;
 
-        public int AddLogItem(
+        public void AddLogItem(
             DateTime logDate,
             string ipAddress,
             string culture,
@@ -44,7 +45,7 @@ namespace cloudscribe.Logging.pgsql
             string logger,
             string message)
         {
-            return dbSystemLog.Create(
+            dbSystemLog.Create(
                 logDate,
                 ipAddress,
                 culture,
@@ -56,17 +57,20 @@ namespace cloudscribe.Logging.pgsql
                 message);
         }
 
-        public async Task<int> GetCount()
+        public async Task<int> GetCount(CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await dbSystemLog.GetCount();
+            cancellationToken.ThrowIfCancellationRequested();
+            return await dbSystemLog.GetCount(cancellationToken);
         }
 
         public async Task<List<ILogItem>> GetPageAscending(
             int pageNumber,
-            int pageSize)
+            int pageSize,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             List<ILogItem> logItems = new List<ILogItem>();
-            using (DbDataReader reader = await dbSystemLog.GetPageAscending(pageNumber, pageSize))
+            using (DbDataReader reader = await dbSystemLog.GetPageAscending(pageNumber, pageSize, cancellationToken))
             {
                 while (reader.Read())
                 {
@@ -81,10 +85,12 @@ namespace cloudscribe.Logging.pgsql
 
         public async Task<List<ILogItem>> GetPageDescending(
             int pageNumber,
-            int pageSize)
+            int pageSize,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             List<ILogItem> logItems = new List<ILogItem>();
-            using (DbDataReader reader = await dbSystemLog.GetPageDescending(pageNumber, pageSize))
+            using (DbDataReader reader = await dbSystemLog.GetPageDescending(pageNumber, pageSize, cancellationToken))
             {
                 while (reader.Read())
                 {
@@ -97,24 +103,28 @@ namespace cloudscribe.Logging.pgsql
             return logItems;
         }
 
-        public async Task<bool> DeleteAll()
+        public async Task<bool> DeleteAll(CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await dbSystemLog.DeleteAll();
+            cancellationToken.ThrowIfCancellationRequested();
+            return await dbSystemLog.DeleteAll(cancellationToken);
         }
 
-        public async Task<bool> Delete(int logItemId)
+        public async Task<bool> Delete(int logItemId, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await dbSystemLog.Delete(logItemId);
+            cancellationToken.ThrowIfCancellationRequested();
+            return await dbSystemLog.Delete(logItemId, cancellationToken);
         }
 
-        public async Task<bool> DeleteOlderThan(DateTime cutoffDateUtc)
+        public async Task<bool> DeleteOlderThan(DateTime cutoffDateUtc, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await dbSystemLog.DeleteOlderThan(cutoffDateUtc);
+            cancellationToken.ThrowIfCancellationRequested();
+            return await dbSystemLog.DeleteOlderThan(cutoffDateUtc, cancellationToken);
         }
 
-        public async Task<bool> DeleteByLevel(string logLevel)
+        public async Task<bool> DeleteByLevel(string logLevel, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await dbSystemLog.DeleteByLevel(logLevel);
+            cancellationToken.ThrowIfCancellationRequested();
+            return await dbSystemLog.DeleteByLevel(logLevel, cancellationToken);
         }
 
     }

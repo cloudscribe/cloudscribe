@@ -1572,7 +1572,8 @@ namespace cloudscribe.Core.Repositories.MySql
             sqlCommand.Append("ORDER BY	SiteName ;");
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
-                sqlCommand.ToString());
+                sqlCommand.ToString(),
+                null);
         }
 
         public int GetFirstSiteID()

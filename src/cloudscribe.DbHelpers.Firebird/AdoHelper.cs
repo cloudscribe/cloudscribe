@@ -4,6 +4,7 @@ using FirebirdSql.Data.Isql;
 using System;
 using System.Data;
 using System.Data.Common;
+using System.Threading;
 using System.Threading.Tasks;
 using System.IO;
 
@@ -31,7 +32,7 @@ namespace cloudscribe.DbHelpers.Firebird
             return connection;
         }
 
-        public static String GetParamString(Int32 count)
+        public static string GetParamString(Int32 count)
         {
             if (count <= 1) { return count < 1 ? "" : "?"; }
             return "?," + GetParamString(count - 1);
@@ -183,16 +184,23 @@ namespace cloudscribe.DbHelpers.Firebird
         public static async Task<int> ExecuteNonQueryAsync(
             string connectionString,
             string commandText,
-            params DbParameter[] commandParameters)
+            DbParameter[] commandParameters,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await ExecuteNonQueryAsync(connectionString, CommandType.Text, commandText, commandParameters);
+            return await ExecuteNonQueryAsync(
+                connectionString, 
+                CommandType.Text, 
+                commandText, 
+                commandParameters,
+                cancellationToken);
         }
 
         public static async Task<int> ExecuteNonQueryAsync(
             string connectionString,
             CommandType commandType,
             string commandText,
-            params DbParameter[] commandParameters)
+            DbParameter[] commandParameters,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             if (connectionString == null || connectionString.Length == 0) { throw new ArgumentNullException("connectionString"); }
 
@@ -206,7 +214,7 @@ namespace cloudscribe.DbHelpers.Firebird
                     using (DbCommand cmd = factory.CreateCommand())
                     {
                         PrepareCommand(cmd, connection, transaction, commandType, commandText, commandParameters);
-                        int rowsAffected = await cmd.ExecuteNonQueryAsync();
+                        int rowsAffected = await cmd.ExecuteNonQueryAsync(cancellationToken);
                         transaction.Commit();
                         return rowsAffected;
                     }
@@ -218,14 +226,15 @@ namespace cloudscribe.DbHelpers.Firebird
             DbTransaction transaction,
             CommandType commandType,
             string commandText,
-            params DbParameter[] commandParameters)
+            DbParameter[] commandParameters,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             if (transaction == null) throw new ArgumentNullException("transaction");
 
             DbProviderFactory factory = GetFactory();
             DbCommand cmd = factory.CreateCommand();
             PrepareCommand(cmd, transaction.Connection, transaction, commandType, commandText, commandParameters);
-            int retval = await cmd.ExecuteNonQueryAsync();
+            int retval = await cmd.ExecuteNonQueryAsync(cancellationToken);
             return retval;
         }
 
@@ -274,16 +283,23 @@ namespace cloudscribe.DbHelpers.Firebird
         public static async Task<DbDataReader> ExecuteReaderAsync(
             string connectionString,
             string commandText,
-            params DbParameter[] commandParameters)
+            DbParameter[] commandParameters,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await ExecuteReaderAsync(connectionString, CommandType.Text, commandText, commandParameters);
+            return await ExecuteReaderAsync(
+                connectionString, 
+                CommandType.Text, 
+                commandText, 
+                commandParameters,
+                cancellationToken);
         }
 
         public static async Task<DbDataReader> ExecuteReaderAsync(
             string connectionString,
             CommandType commandType,
             string commandText,
-            params DbParameter[] commandParameters)
+            DbParameter[] commandParameters,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             if (connectionString == null || connectionString.Length == 0) throw new ArgumentNullException("connectionString");
             DbConnection connection = null;
@@ -303,7 +319,7 @@ namespace cloudscribe.DbHelpers.Firebird
                     commandText,
                     commandParameters);
 
-                return await command.ExecuteReaderAsync(CommandBehavior.CloseConnection);
+                return await command.ExecuteReaderAsync(CommandBehavior.CloseConnection, cancellationToken);
 
             }
             catch
@@ -360,16 +376,23 @@ namespace cloudscribe.DbHelpers.Firebird
         public static async Task<object> ExecuteScalarAsync(
             string connectionString,
             string commandText,
-            params DbParameter[] commandParameters)
+            DbParameter[] commandParameters,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await ExecuteScalarAsync(connectionString, CommandType.Text, commandText, commandParameters);
+            return await ExecuteScalarAsync(
+                connectionString, 
+                CommandType.Text, 
+                commandText, 
+                commandParameters,
+                cancellationToken);
         }
 
         public static async Task<object> ExecuteScalarAsync(
             string connectionString,
             CommandType commandType,
             string commandText,
-            params DbParameter[] commandParameters)
+            DbParameter[] commandParameters,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             if (connectionString == null || connectionString.Length == 0) throw new ArgumentNullException("connectionString");
 
@@ -385,7 +408,7 @@ namespace cloudscribe.DbHelpers.Firebird
                 using (DbCommand command = factory.CreateCommand())
                 {
                     PrepareCommand(command, connection, transaction, commandType, commandText, commandParameters);
-                    object result = await command.ExecuteScalarAsync();
+                    object result = await command.ExecuteScalarAsync(cancellationToken);
 
                     if (transaction != null)
                     {
@@ -400,42 +423,6 @@ namespace cloudscribe.DbHelpers.Firebird
                 }
             }
         }
-
-        //public static DataSet ExecuteDataset(
-        //    string connectionString,
-        //    string commandText,
-        //    params DbParameter[] commandParameters)
-        //{
-        //    return ExecuteDataset(connectionString, CommandType.Text, commandText, commandParameters);
-        //}
-
-        //public static DataSet ExecuteDataset(
-        //    string connectionString,
-        //    CommandType commandType,
-        //    string commandText,
-        //    params DbParameter[] commandParameters)
-        //{
-        //    if (connectionString == null || connectionString.Length == 0) throw new ArgumentNullException("connectionString");
-
-        //    DbProviderFactory factory = GetFactory();
-
-        //    using (DbConnection connection = GetConnection(connectionString))
-        //    {
-        //        connection.Open();
-        //        using (DbCommand command = factory.CreateCommand())
-        //        {
-        //            PrepareCommand(command, connection, (DbTransaction)null, commandType, commandText, commandParameters);
-
-        //            using (DbDataAdapter adapter = factory.CreateDataAdapter())
-        //            {
-        //                adapter.SelectCommand = command;
-        //                DataSet dataSet = new DataSet();
-        //                adapter.Fill(dataSet);
-        //                return dataSet;
-        //            }
-        //        }
-        //    }
-        //}
 
     }
 

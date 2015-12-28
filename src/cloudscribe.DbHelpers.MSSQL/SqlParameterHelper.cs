@@ -23,6 +23,7 @@ using System.Data.Common;
 using System.Data.SqlClient;
 //using System.Configuration;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 //using log4net;
 using Microsoft.Extensions.Logging;
@@ -207,20 +208,20 @@ namespace cloudscribe.DbHelpers.MSSQL
             return AdoHelper.ExecuteReader(connectionString, cmdType, commandText, commandTimeout, arParams);
         }
 
-        public async Task<DbDataReader> ExecuteReaderAsync()
+        public async Task<DbDataReader> ExecuteReaderAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
             Debug.Assert((arParams.Length == index) && (paramCnt == index), "not all parameters were defined");
             //if (debugLog) { log.Debug("ExecuteReader " + commandText); }
             if (log != null)  log.LogDebug("ExecuteReader " + commandText);
-            return await AdoHelper.ExecuteReaderAsync(connectionString, cmdType, commandText, arParams);
+            return await AdoHelper.ExecuteReaderAsync(connectionString, cmdType, commandText, arParams, cancellationToken);
         }
 
-        public async Task<DbDataReader> ExecuteReaderAsync(int commandTimeout)
+        public async Task<DbDataReader> ExecuteReaderAsync(int commandTimeout, CancellationToken cancellationToken = default(CancellationToken))
         {
             Debug.Assert((arParams.Length == index) && (paramCnt == index), "not all parameters were defined");
             //if (debugLog) { log.Debug("ExecuteReader " + commandText); }
             if (log != null)  log.LogDebug("ExecuteReader " + commandText);
-            return await AdoHelper.ExecuteReaderAsync(connectionString, cmdType, commandText, commandTimeout, arParams);
+            return await AdoHelper.ExecuteReaderAsync(connectionString, cmdType, commandText, commandTimeout, arParams, cancellationToken);
         }
 
         public int ExecuteNonQuery()
@@ -239,20 +240,20 @@ namespace cloudscribe.DbHelpers.MSSQL
             return AdoHelper.ExecuteNonQuery(connectionString, cmdType, commandText, commandTimeout, arParams);
         }
 
-        public async Task<int> ExecuteNonQueryAsync()
+        public async Task<int> ExecuteNonQueryAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
             Debug.Assert((arParams.Length == index) && (paramCnt == index), "not all parameters were defined");
             //if (debugLog) { log.Debug("ExecuteNonQuery " + commandText); }
             if (log != null) log.LogDebug("ExecuteReader " + commandText);
-            return await AdoHelper.ExecuteNonQueryAsync(connectionString, cmdType, commandText, arParams);
+            return await AdoHelper.ExecuteNonQueryAsync(connectionString, cmdType, commandText, arParams, cancellationToken);
         }
 
-        public async Task<int> ExecuteNonQueryAsync(int commandTimeout)
+        public async Task<int> ExecuteNonQueryAsync(int commandTimeout, CancellationToken cancellationToken = default(CancellationToken))
         {
             Debug.Assert((arParams.Length == index) && (paramCnt == index), "not all parameters were defined");
             //if (debugLog) { log.Debug("ExecuteNonQuery " + commandText); }
             if (log != null) log.LogDebug("ExecuteReader " + commandText);
-            return await AdoHelper.ExecuteNonQueryAsync(connectionString, cmdType, commandText, commandTimeout, arParams);
+            return await AdoHelper.ExecuteNonQueryAsync(connectionString, cmdType, commandText, commandTimeout, arParams, cancellationToken);
         }
 
 
@@ -273,32 +274,24 @@ namespace cloudscribe.DbHelpers.MSSQL
             return AdoHelper.ExecuteScalar(connectionString, cmdType, commandText, commandTimeout, arParams);
         }
 
-        public async Task<object> ExecuteScalarAsync()
+        public async Task<object> ExecuteScalarAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
             Debug.Assert((arParams.Length == index) && (paramCnt == index), "not all parameters were defined");
             //if (debugLog) { log.Debug("ExecuteScalar " + commandText); }
             if (log != null) log.LogDebug("ExecuteScalar " + commandText);
-            return await AdoHelper.ExecuteScalarAsync(connectionString, cmdType, commandText, arParams);
+            return await AdoHelper.ExecuteScalarAsync(connectionString, cmdType, commandText, arParams, cancellationToken);
         }
 
-        public async Task<object> ExecuteScalarAsync(int commandTimeout)
+        public async Task<object> ExecuteScalarAsync(int commandTimeout, CancellationToken cancellationToken = default(CancellationToken))
         {
             Debug.Assert((arParams.Length == index) && (paramCnt == index), "not all parameters were defined");
             //if (debugLog) { log.Debug("ExecuteScalar " + commandText); }
             if (log != null) log.LogDebug("ExecuteScalar " + commandText);
-            return await AdoHelper.ExecuteScalarAsync(connectionString, cmdType, commandText, commandTimeout, arParams);
+            return await AdoHelper.ExecuteScalarAsync(connectionString, cmdType, commandText, commandTimeout, arParams, cancellationToken);
         }
 
 
-        // http://stackoverflow.com/questions/27900493/asp-vnext-core-5-0-datatable
-        // dataset not supported in core
-        //public DataSet ExecuteDataset()
-        //{
-        //    Debug.Assert((arParams.Length == index) && (paramCnt == index), "not all parameters were defined");
-        //    //if (debugLog) { log.Debug("ExecuteDataSet " + commandText); }
-        //    log.LogDebug(("ExecuteDataSet " + commandText);
-        //    return AdoHelper.ExecuteDataset(connectionString, cmdType, commandText, arParams);
-        //}
+        
 
         public SqlParameter[] Parameters
         {

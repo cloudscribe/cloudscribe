@@ -3,6 +3,7 @@ using System;
 using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
+using System.Threading;
 using MySql.Data.MySqlClient;
 
 namespace cloudscribe.DbHelpers.MySql
@@ -166,20 +167,33 @@ namespace cloudscribe.DbHelpers.MySql
         public static async Task<int> ExecuteNonQueryAsync(
             string connectionString,
             string commandText,
-            params DbParameter[] commandParameters)
+            DbParameter[] commandParameters,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await ExecuteNonQueryAsync(connectionString, CommandType.Text, commandText, commandParameters);
+            return await ExecuteNonQueryAsync(
+                connectionString, 
+                CommandType.Text, 
+                commandText, 
+                commandParameters,
+                cancellationToken);
         }
 
         public static async Task<int> ExecuteNonQueryAsync(
             string connectionString,
             CommandType commandType,
             string commandText,
-            params DbParameter[] commandParameters)
+            DbParameter[] commandParameters,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             int commandTimeout = 30; //30 seconds default http://msdn.microsoft.com/en-us/library/system.data.sqlclient.sqlcommand.commandtimeout.aspx
 
-            return await ExecuteNonQueryAsync(connectionString, commandType, commandText, commandTimeout, commandParameters);
+            return await ExecuteNonQueryAsync(
+                connectionString, 
+                commandType, 
+                commandText, 
+                commandTimeout, 
+                commandParameters,
+                cancellationToken);
 
 
         }
@@ -189,7 +203,8 @@ namespace cloudscribe.DbHelpers.MySql
             CommandType commandType,
             string commandText,
             int commandTimeout,
-            params DbParameter[] commandParameters)
+            DbParameter[] commandParameters,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             if (connectionString == null || connectionString.Length == 0) throw new ArgumentNullException("connectionString");
 
@@ -202,7 +217,7 @@ namespace cloudscribe.DbHelpers.MySql
                 {
                     PrepareCommand(command, connection, null, commandType, commandText, commandParameters);
                     command.CommandTimeout = commandTimeout;
-                    return await command.ExecuteNonQueryAsync();
+                    return await command.ExecuteNonQueryAsync(cancellationToken);
                 }
             }
         }
@@ -278,10 +293,16 @@ namespace cloudscribe.DbHelpers.MySql
         public static async Task<DbDataReader> ExecuteReaderAsync(
             string connectionString,
             string commandText,
-            params DbParameter[] commandParameters)
+            DbParameter[] commandParameters,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
 
-            return await ExecuteReaderAsync(connectionString, CommandType.Text, commandText, commandParameters);
+            return await ExecuteReaderAsync(
+                connectionString, 
+                CommandType.Text, 
+                commandText, 
+                commandParameters,
+                cancellationToken);
 
 
         }
@@ -290,10 +311,17 @@ namespace cloudscribe.DbHelpers.MySql
             string connectionString,
             CommandType commandType,
             string commandText,
-            params DbParameter[] commandParameters)
+            DbParameter[] commandParameters,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             int commandTimeout = 30; //30 seconds default
-            return await ExecuteReaderAsync(connectionString, commandType, commandText, commandTimeout, commandParameters);
+            return await ExecuteReaderAsync(
+                connectionString, 
+                commandType, 
+                commandText, 
+                commandTimeout, 
+                commandParameters,
+                cancellationToken);
 
 
         }
@@ -303,7 +331,8 @@ namespace cloudscribe.DbHelpers.MySql
             CommandType commandType,
             string commandText,
             int commandTimeout,
-            params DbParameter[] commandParameters)
+            DbParameter[] commandParameters,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             if (connectionString == null || connectionString.Length == 0) throw new ArgumentNullException("connectionString");
 
@@ -331,7 +360,7 @@ namespace cloudscribe.DbHelpers.MySql
 
                     command.CommandTimeout = commandTimeout;
 
-                    return await command.ExecuteReaderAsync(CommandBehavior.CloseConnection);
+                    return await command.ExecuteReaderAsync(CommandBehavior.CloseConnection, cancellationToken);
                 }
 
 
@@ -391,9 +420,15 @@ namespace cloudscribe.DbHelpers.MySql
         public static async Task<object> ExecuteScalarAsync(
             string connectionString,
             string commandText,
-            params DbParameter[] commandParameters)
+            DbParameter[] commandParameters,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await ExecuteScalarAsync(connectionString, CommandType.Text, commandText, commandParameters);
+            return await ExecuteScalarAsync(
+                connectionString, 
+                CommandType.Text, 
+                commandText, 
+                commandParameters,
+                cancellationToken);
 
         }
 
@@ -401,10 +436,17 @@ namespace cloudscribe.DbHelpers.MySql
             string connectionString,
             CommandType commandType,
             string commandText,
-            params DbParameter[] commandParameters)
+            DbParameter[] commandParameters,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             int commandTimeout = 30; //30 seconds default
-            return await ExecuteScalarAsync(connectionString, commandType, commandText, commandTimeout, commandParameters);
+            return await ExecuteScalarAsync(
+                connectionString, 
+                commandType, 
+                commandText, 
+                commandTimeout, 
+                commandParameters,
+                cancellationToken);
 
 
         }
@@ -414,7 +456,8 @@ namespace cloudscribe.DbHelpers.MySql
             CommandType commandType,
             string commandText,
             int commandTimeout,
-            params DbParameter[] commandParameters)
+            DbParameter[] commandParameters,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             if (connectionString == null || connectionString.Length == 0) throw new ArgumentNullException("connectionString");
 
@@ -428,43 +471,11 @@ namespace cloudscribe.DbHelpers.MySql
                     PrepareCommand(command, connection, (DbTransaction)null, commandType, commandText, commandParameters);
                     command.CommandTimeout = commandTimeout;
 
-                    return await command.ExecuteScalarAsync();
+                    return await command.ExecuteScalarAsync(cancellationToken);
                 }
             }
         }
 
-        //public static DataSet ExecuteDataset(string connectionString, CommandType commandType, string commandText)
-        //{
-        //    return ExecuteDataset(connectionString, commandType, commandText, (DbParameter[])null);
-        //}
-
-        //public static DataSet ExecuteDataset(
-        //    string connectionString,
-        //    CommandType commandType,
-        //    string commandText,
-        //    params DbParameter[] commandParameters)
-        //{
-        //    if (connectionString == null || connectionString.Length == 0) throw new ArgumentNullException("connectionString");
-
-        //    DbProviderFactory factory = GetFactory();
-
-        //    using (DbConnection connection = GetConnection(connectionString))
-        //    {
-        //        connection.Open();
-        //        using (DbCommand command = factory.CreateCommand())
-        //        {
-        //            PrepareCommand(command, connection, (DbTransaction)null, commandType, commandText, commandParameters);
-        //            using (DbDataAdapter adpater = factory.CreateDataAdapter())
-        //            {
-        //                adpater.SelectCommand = command;
-        //                DataSet dataSet = new DataSet();
-        //                adpater.Fill(dataSet);
-        //                return dataSet;
-        //            }
-        //        }
-        //    }
-        //}
-
-
+       
     }
 }

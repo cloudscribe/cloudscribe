@@ -1627,7 +1627,8 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
-                sqlCommand.ToString());
+                sqlCommand.ToString(),
+                null);
         }
 
         public async Task<DbDataReader> GetSite(int siteId)

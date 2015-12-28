@@ -1,5 +1,5 @@
 ﻿{
-  "version": "1.0.0-*",
+  "version": "1.0.0-beta1",
   "title": "cloudscribe.Logging.MySql",
   "description": "Implementation of cloudscribe.Core.Models.ILogRepository for MySql",
   "authors": [ "Joe Audette" ],

@@ -1,5 +1,5 @@
 ﻿{
-  "version": "1.0.0-*",
+  "version": "1.0.0-beta1",
   "title": "cloudscribe.Logging.MSSQL",
   "description": "Implementation of cloudscribe.Core.Models.ILogRepository for Microsoft Sql Server or SqlAzure",
   "authors": [ "Joe Audette" ],
