@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0-beta2",
+  "version": "1.0.0-beta3",
   "title": "cloudscribe.DbHelpers.Firebird",
   "authors": [ "Joe Audette" ],
   "copyright": "2015 Source Tree Solutions",
@@ -26,7 +26,7 @@
   "frameworks": {
     "net451": {
       "frameworkAssemblies": {
-        "System.Data": ""
+        "System.Data": "4.0.0.0"
       }
     }
   }

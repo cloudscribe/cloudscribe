@@ -37,11 +37,11 @@
   "frameworks": {
     "net451": {
       "frameworkAssemblies": {
-        "System.Configuration": "",
-        "System.Security": "",
-        "System.Web.ApplicationServices": "",
-        "System.Xml": "",
-        "System.Xml.Linq": ""
+        "System.Configuration": "4.0.0.0",
+        "System.Security": "4.0.0.0",
+        "System.Web.ApplicationServices": "4.0.0.0",
+        "System.Xml": "4.0.0.0",
+        "System.Xml.Linq": "4.0.0.0"
       }
 
     },

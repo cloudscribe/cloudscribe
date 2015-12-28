@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0-beta1",
+  "version": "1.0.0-beta2",
   "title": "cloudscribe.Core.Models",
   "description": "model classes for cloudscribe core. you should not normally install this separately, it will be installed if you install cloudscribe.Core.Web",
   "authors": [ "Joe Audette" ],
@@ -21,8 +21,8 @@
   "frameworks": {
     "net451": {
       "frameworkAssemblies": {
-        "System.ComponentModel": "",
-        "System.Data": ""
+        "System.ComponentModel": "4.0.0.0",
+        "System.Data": "4.0.0.0"
       }
     },
     "dnxcore50": {
