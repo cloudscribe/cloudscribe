@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-11-18
+// Last Modified:			2015-12-29
 // 
 
 using cloudscribe.DbHelpers.pgsql;
@@ -12,6 +12,7 @@ using System;
 using System.Data;
 using System.Data.Common;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 
@@ -238,7 +239,10 @@ namespace cloudscribe.Core.Repositories.pgsql
 
         }
 
-        public async Task<int> CountUsers(int siteId, String userNameBeginsWith)
+        public async Task<int> CountUsers(
+            int siteId, 
+            string userNameBeginsWith,
+            CancellationToken cancellationToken)
         {
             NpgsqlParameter[] arParams = new NpgsqlParameter[2];
 
@@ -257,17 +261,12 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append("name like :usernamebeginswith ");
             sqlCommand.Append(";");
 
-            //object result = await AdoHelper.ExecuteScalarAsync(
-            //    readConnectionString,
-            //    CommandType.StoredProcedure,
-            //    "mp_users_countbyfirstletter(:siteid,:usernamebeginswith)", 
-            //    arParams);
-
             object result = await AdoHelper.ExecuteScalarAsync(
                 readConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             int count = Convert.ToInt32(result);
 
@@ -424,7 +423,9 @@ namespace cloudscribe.Core.Repositories.pgsql
 
         }
 
-        public async Task<int> GetNewestUserId(int siteId)
+        public async Task<int> GetNewestUserId(
+            int siteId,
+            CancellationToken cancellationToken)
         {
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
@@ -437,18 +438,13 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append("WHERE ");
             sqlCommand.Append("siteid = :siteid ");
             sqlCommand.Append(";");
-
-            //object result = await AdoHelper.ExecuteScalarAsync(
-            //    readConnectionString,
-            //    CommandType.StoredProcedure,
-            //    "mp_users_getnewestid(:siteid)", 
-            //    arParams);
-
+            
             object result = await AdoHelper.ExecuteScalarAsync(
                 readConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             int count = Convert.ToInt32(result);
 
@@ -462,7 +458,8 @@ namespace cloudscribe.Core.Repositories.pgsql
             int pageNumber,
             int pageSize,
             string userNameBeginsWith,
-            int sortMode)
+            int sortMode,
+            CancellationToken cancellationToken)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
 
@@ -520,11 +517,15 @@ namespace cloudscribe.Core.Repositories.pgsql
                 readConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
         }
 
-        public async Task<int> CountUsersForSearch(int siteId, string searchInput)
+        public async Task<int> CountUsersForSearch(
+            int siteId, 
+            string searchInput,
+            CancellationToken cancellationToken)
         {
 
             StringBuilder sqlCommand = new StringBuilder();
@@ -563,7 +564,8 @@ namespace cloudscribe.Core.Repositories.pgsql
                 readConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return Convert.ToInt32(result);
 
@@ -575,7 +577,8 @@ namespace cloudscribe.Core.Repositories.pgsql
             int pageNumber,
             int pageSize,
             string searchInput,
-            int sortMode)
+            int sortMode,
+            CancellationToken cancellationToken)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
 
@@ -646,11 +649,15 @@ namespace cloudscribe.Core.Repositories.pgsql
                 readConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
         }
 
-        public async Task<int> CountUsersForAdminSearch(int siteId, string searchInput)
+        public async Task<int> CountUsersForAdminSearch(
+            int siteId, 
+            string searchInput,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
 
@@ -684,7 +691,8 @@ namespace cloudscribe.Core.Repositories.pgsql
                 readConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return Convert.ToInt32(result);
 
@@ -695,7 +703,8 @@ namespace cloudscribe.Core.Repositories.pgsql
             int pageNumber,
             int pageSize,
             string searchInput,
-            int sortMode)
+            int sortMode,
+            CancellationToken cancellationToken)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
 
@@ -764,12 +773,15 @@ namespace cloudscribe.Core.Repositories.pgsql
                 readConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
 
         }
 
-        public async Task<int> CountLockedOutUsers(int siteId)
+        public async Task<int> CountLockedOutUsers(
+            int siteId,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
 
@@ -784,7 +796,8 @@ namespace cloudscribe.Core.Repositories.pgsql
                 readConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return Convert.ToInt32(result);
 
@@ -793,7 +806,8 @@ namespace cloudscribe.Core.Repositories.pgsql
         public async Task<DbDataReader> GetPageLockedUsers(
             int siteId,
             int pageNumber,
-            int pageSize)
+            int pageSize,
+            CancellationToken cancellationToken)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
 
@@ -830,13 +844,16 @@ namespace cloudscribe.Core.Repositories.pgsql
                 readConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
         }
 
 
 
-        public async Task<int> CountNotApprovedUsers(int siteId)
+        public async Task<int> CountNotApprovedUsers(
+            int siteId,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
 
@@ -851,7 +868,8 @@ namespace cloudscribe.Core.Repositories.pgsql
                 readConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return Convert.ToInt32(result);
         }
@@ -859,7 +877,8 @@ namespace cloudscribe.Core.Repositories.pgsql
         public async Task<DbDataReader> GetPageNotApprovedUsers(
             int siteId,
             int pageNumber,
-            int pageSize)
+            int pageSize,
+            CancellationToken cancellationToken)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
 
@@ -896,7 +915,8 @@ namespace cloudscribe.Core.Repositories.pgsql
                 readConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
         }
 
@@ -930,7 +950,8 @@ namespace cloudscribe.Core.Repositories.pgsql
             string avatarUrl,
             string signature,
             string authorBio,
-            string comment
+            string comment,
+            CancellationToken cancellationToken
 
             )
         {
@@ -1127,7 +1148,8 @@ namespace cloudscribe.Core.Repositories.pgsql
                 writeConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             int newID = Convert.ToInt32(result);
 
@@ -1167,7 +1189,8 @@ namespace cloudscribe.Core.Repositories.pgsql
             bool phoneNumberConfirmed,
             bool twoFactorEnabled,
             DateTime? lockoutEndDateUtc,
-            bool isLockedOut
+            bool isLockedOut,
+            CancellationToken cancellationToken
             )
         {
 
@@ -1328,14 +1351,15 @@ namespace cloudscribe.Core.Repositories.pgsql
                 writeConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return (rowsAffected > -1);
 
         }
         
 
-        public async Task<bool> DeleteUser(int userId)
+        public async Task<bool> DeleteUser(int userId, CancellationToken cancellationToken)
         {
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
@@ -1347,18 +1371,13 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append("WHERE ");
             sqlCommand.Append("userid = :userid ");
             sqlCommand.Append(";");
-
-            //object result = await AdoHelper.ExecuteScalarAsync(
-            //    writeConnectionString,
-            //    CommandType.StoredProcedure,
-            //    "mp_users_delete(:userid)",
-            //    arParams);
-
+            
             object result = await AdoHelper.ExecuteScalarAsync(
                 writeConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             int rowsAffected = Convert.ToInt32(result);
 
@@ -1366,7 +1385,9 @@ namespace cloudscribe.Core.Repositories.pgsql
 
         }
 
-        public async Task<bool> DeleteUsersBySite(int siteId)
+        public async Task<bool> DeleteUsersBySite(
+            int siteId,
+            CancellationToken cancellationToken)
         {
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
@@ -1383,7 +1404,8 @@ namespace cloudscribe.Core.Repositories.pgsql
                 writeConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             int rowsAffected = Convert.ToInt32(result);
 
@@ -1453,7 +1475,10 @@ namespace cloudscribe.Core.Repositories.pgsql
 
         }
 
-        public async Task<bool> AccountLockout(Guid userGuid, DateTime lockoutTime)
+        public async Task<bool> AccountLockout(
+            Guid userGuid, 
+            DateTime lockoutTime,
+            CancellationToken cancellationToken)
         {
             NpgsqlParameter[] arParams = new NpgsqlParameter[2];
 
@@ -1468,18 +1493,13 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append("SET islockedout = true,  ");
             sqlCommand.Append("lastlockoutdate = :lastlockoutdate ");
             sqlCommand.Append("WHERE userguid = :userguid  ;");
-
-            //object result = await AdoHelper.ExecuteScalarAsync(
-            //    writeConnectionString,
-            //    CommandType.StoredProcedure,
-            //    "mp_users_accountlockout(:userguid,:lastlockoutdate)",
-            //    arParams);
-
+            
             object result = await AdoHelper.ExecuteScalarAsync(
                 writeConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             int rowsAffected = Convert.ToInt32(result);
 
@@ -1502,13 +1522,7 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append("SET ");
             sqlCommand.Append("lastpasswordchangeddate = :lastpasswordchangeddate ");
             sqlCommand.Append("WHERE userguid = :userguid  ;");
-
-            //int rowsAffected = Convert.ToInt32(AdoHelper.ExecuteScalar(
-            //    writeConnectionString,
-            //    CommandType.StoredProcedure,
-            //    "mp_users_updatelastpasswordchangedate(:userguid,:lastpasswordchangeddate)",
-            //    arParams));
-
+            
             int rowsAffected = Convert.ToInt32(AdoHelper.ExecuteScalar(
                 writeConnectionString,
                 CommandType.Text,
@@ -1556,7 +1570,8 @@ namespace cloudscribe.Core.Repositories.pgsql
 
         public async Task<bool> UpdateFailedPasswordAttemptCount(
             Guid userGuid,
-            int attemptCount)
+            int attemptCount,
+            CancellationToken cancellationToken)
         {
 
             NpgsqlParameter[] arParams = new NpgsqlParameter[2];
@@ -1573,17 +1588,12 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append("failedpasswordattemptcount = :attemptcount ");
             sqlCommand.Append("WHERE userguid = :userguid  ;");
 
-            //object result = await AdoHelper.ExecuteScalarAsync(
-            //    writeConnectionString,
-            //    CommandType.StoredProcedure,
-            //    "mp_users_setfailedpasswordattemptcount(:userguid,:attemptcount)",
-            //    arParams);
-
             object result = await AdoHelper.ExecuteScalarAsync(
                 writeConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             int rowsAffected = Convert.ToInt32(result);
 
@@ -1692,7 +1702,10 @@ namespace cloudscribe.Core.Repositories.pgsql
 
         }
 
-        public async Task<bool> ConfirmRegistration(Guid emptyGuid, Guid registrationConfirmationGuid)
+        public async Task<bool> ConfirmRegistration(
+            Guid emptyGuid, 
+            Guid registrationConfirmationGuid,
+            CancellationToken cancellationToken)
         {
             NpgsqlParameter[] arParams = new NpgsqlParameter[2];
 
@@ -1708,18 +1721,13 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append("islockedout = false, ");
             sqlCommand.Append("registerconfirmguid = :emptyguid ");
             sqlCommand.Append("WHERE registerconfirmguid = :registerconfirmguid  ;");
-
-            //object result = await AdoHelper.ExecuteScalarAsync(
-            //    writeConnectionString,
-            //    CommandType.StoredProcedure,
-            //    "mp_users_confirmregistration(:emptyguid,:registerconfirmguid)",
-            //    arParams);
-
+            
             object result = await AdoHelper.ExecuteScalarAsync(
                 writeConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             int rowsAffected = Convert.ToInt32(result);
 
@@ -1727,7 +1735,9 @@ namespace cloudscribe.Core.Repositories.pgsql
 
         }
 
-        public async Task<bool> AccountClearLockout(Guid userGuid)
+        public async Task<bool> AccountClearLockout(
+            Guid userGuid,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("UPDATE mp_users ");
@@ -1746,7 +1756,8 @@ namespace cloudscribe.Core.Repositories.pgsql
                 writeConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             int rowsAffected = Convert.ToInt32(result);
 
@@ -1755,7 +1766,9 @@ namespace cloudscribe.Core.Repositories.pgsql
         }
 
         
-        public async Task<bool> FlagAsDeleted(int userId)
+        public async Task<bool> FlagAsDeleted(
+            int userId,
+            CancellationToken cancellationToken)
         {
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
@@ -1768,18 +1781,13 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append("isdeleted = true ");
             
             sqlCommand.Append("WHERE userid = :userid  ;");
-
-            //object result = await AdoHelper.ExecuteScalarAsync(
-            //    writeConnectionString,
-            //    CommandType.StoredProcedure,
-            //    "mp_users_flagasdeleted(:userid)",
-            //    arParams);
-
+            
             object result = await AdoHelper.ExecuteScalarAsync(
                 writeConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             int rowsAffected = Convert.ToInt32(result);
 
@@ -1787,7 +1795,9 @@ namespace cloudscribe.Core.Repositories.pgsql
 
         }
 
-        public async Task<bool> FlagAsNotDeleted(int userId)
+        public async Task<bool> FlagAsNotDeleted(
+            int userId,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("UPDATE mp_users ");
@@ -1804,13 +1814,17 @@ namespace cloudscribe.Core.Repositories.pgsql
                 writeConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return (rowsAffected > -1);
         }
 
        
-        public async Task<DbDataReader> GetRolesByUser(int siteId, int userId)
+        public async Task<DbDataReader> GetRolesByUser(
+            int siteId, 
+            int userId,
+            CancellationToken cancellationToken)
         {
 
             StringBuilder sqlCommand = new StringBuilder();
@@ -1841,11 +1855,15 @@ namespace cloudscribe.Core.Repositories.pgsql
                 readConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
         }
 
-        public async Task<DbDataReader> GetUserByRegistrationGuid(int siteId, Guid registerConfirmGuid)
+        public async Task<DbDataReader> GetUserByRegistrationGuid(
+            int siteId, 
+            Guid registerConfirmGuid,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  * ");
@@ -1868,12 +1886,16 @@ namespace cloudscribe.Core.Repositories.pgsql
                 readConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
         }
 
 
-        public async Task<DbDataReader> GetSingleUser(int siteId, string email)
+        public async Task<DbDataReader> GetSingleUser(
+            int siteId, 
+            string email,
+            CancellationToken cancellationToken)
         {
             NpgsqlParameter[] arParams = new NpgsqlParameter[2];
 
@@ -1896,11 +1918,14 @@ namespace cloudscribe.Core.Repositories.pgsql
                 readConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
         }
 
-        public async Task<DbDataReader> GetCrossSiteUserListByEmail(string email)
+        public async Task<DbDataReader> GetCrossSiteUserListByEmail(
+            string email,
+            CancellationToken cancellationToken)
         {
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
@@ -1920,13 +1945,18 @@ namespace cloudscribe.Core.Repositories.pgsql
                 readConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
 
 
         }
 
-        public async Task<DbDataReader> GetSingleUserByLoginName(int siteId, string loginName, bool allowEmailFallback)
+        public async Task<DbDataReader> GetSingleUserByLoginName(
+            int siteId, 
+            string loginName, 
+            bool allowEmailFallback,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT * ");
@@ -1966,11 +1996,15 @@ namespace cloudscribe.Core.Repositories.pgsql
                 readConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
         }
 
-        public DbDataReader GetSingleUserByLoginNameNonAsync(int siteId, string loginName, bool allowEmailFallback)
+        public DbDataReader GetSingleUserByLoginNameNonAsync(
+            int siteId, 
+            string loginName, 
+            bool allowEmailFallback)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT * ");
@@ -2014,7 +2048,9 @@ namespace cloudscribe.Core.Repositories.pgsql
 
         }
 
-        public async Task<DbDataReader> GetSingleUser(int userId)
+        public async Task<DbDataReader> GetSingleUser(
+            int userId,
+            CancellationToken cancellationToken)
         {
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
@@ -2027,22 +2063,19 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append("WHERE ");
             sqlCommand.Append("userid = :userid ");
             sqlCommand.Append(";");
-
-            //return await AdoHelper.ExecuteReaderAsync(
-            //    readConnectionString,
-            //    CommandType.StoredProcedure,
-            //    "mp_users_selectone(:userid)",
-            //    arParams);
-
+            
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
         }
 
-        public async Task<DbDataReader> GetSingleUser(Guid userGuid)
+        public async Task<DbDataReader> GetSingleUser(
+            Guid userGuid,
+            CancellationToken cancellationToken)
         {
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
@@ -2055,18 +2088,13 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append("WHERE ");
             sqlCommand.Append("userguid = :userguid ");
             sqlCommand.Append(";");
-
-            //return await AdoHelper.ExecuteReaderAsync(
-            //    readConnectionString,
-            //    CommandType.StoredProcedure,
-            //    "mp_users_selectonebyguid(:userguid)",
-            //    arParams);
-
+            
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
         }
 
