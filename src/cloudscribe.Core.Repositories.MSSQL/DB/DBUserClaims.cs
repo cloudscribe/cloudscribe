@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-10
-// Last Modified:			2015-11-18
+// Last Modified:			2015-12-29
 // 
 
 using cloudscribe.DbHelpers.MSSQL;
@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Data;
 using System.Data.Common;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.MSSQL
@@ -37,7 +38,8 @@ namespace cloudscribe.Core.Repositories.MSSQL
             int siteId,
             string userId,
             string claimType,
-            string claimValue)
+            string claimValue,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -50,7 +52,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@ClaimValue", SqlDbType.NVarChar, -1, ParameterDirection.Input, claimValue);
             sph.DefineSqlParameter("@SiteId", SqlDbType.Int, ParameterDirection.Input, siteId);
 
-            object result = await sph.ExecuteScalarAsync();
+            object result = await sph.ExecuteScalarAsync(cancellationToken);
             int newID = Convert.ToInt32(result);
             return newID;
         }
@@ -58,7 +60,9 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
 
 
-        public async Task<bool> Delete(int id)
+        public async Task<bool> Delete(
+            int id,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -67,12 +71,15 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 1);
 
             sph.DefineSqlParameter("@Id", SqlDbType.Int, ParameterDirection.Input, id);
-            int rowsAffected = await sph.ExecuteNonQueryAsync();
+            int rowsAffected = await sph.ExecuteNonQueryAsync(cancellationToken);
             return (rowsAffected > 0);
 
         }
 
-        public async Task<bool> DeleteByUser(int siteId, string userId)
+        public async Task<bool> DeleteByUser(
+            int siteId, 
+            string userId,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -82,12 +89,16 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
             sph.DefineSqlParameter("@UserId", SqlDbType.NVarChar, 128, ParameterDirection.Input, userId);
             sph.DefineSqlParameter("@SiteId", SqlDbType.Int, ParameterDirection.Input, siteId);
-            int rowsAffected = await sph.ExecuteNonQueryAsync();
+            int rowsAffected = await sph.ExecuteNonQueryAsync(cancellationToken);
             return (rowsAffected > 0);
 
         }
 
-        public async Task<bool> DeleteByUser(int siteId, string userId, string claimType)
+        public async Task<bool> DeleteByUser(
+            int siteId, 
+            string userId, 
+            string claimType,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -98,7 +109,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@UserId", SqlDbType.NVarChar, 128, ParameterDirection.Input, userId);
             sph.DefineSqlParameter("@ClaimType", SqlDbType.NVarChar, -1, ParameterDirection.Input, claimType);
             sph.DefineSqlParameter("@SiteId", SqlDbType.Int, ParameterDirection.Input, siteId);
-            int rowsAffected = await sph.ExecuteNonQueryAsync();
+            int rowsAffected = await sph.ExecuteNonQueryAsync(cancellationToken);
             return (rowsAffected > 0);
 
         }
@@ -119,7 +130,9 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         //}
 
-        public async Task<bool> DeleteBySite(int siteId)
+        public async Task<bool> DeleteBySite(
+            int siteId,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -128,7 +141,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 1);
 
             sph.DefineSqlParameter("@SiteId", SqlDbType.Int, ParameterDirection.Input, siteId);
-            int rowsAffected = await sph.ExecuteNonQueryAsync();
+            int rowsAffected = await sph.ExecuteNonQueryAsync(cancellationToken);
             return (rowsAffected > 0);
 
         }
@@ -136,7 +149,8 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         public async Task<DbDataReader> GetByUser(
             int siteId,
-            string userId)
+            string userId,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -146,11 +160,15 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
             sph.DefineSqlParameter("@UserId", SqlDbType.NVarChar, 128, ParameterDirection.Input, userId);
             sph.DefineSqlParameter("@SiteId", SqlDbType.Int, ParameterDirection.Input, siteId);
-            return await sph.ExecuteReaderAsync();
+            return await sph.ExecuteReaderAsync(cancellationToken);
 
         }
 
-        public async Task<DbDataReader> GetUsersByClaim(int siteId, string claimType, string claimValue)
+        public async Task<DbDataReader> GetUsersByClaim(
+            int siteId, 
+            string claimType, 
+            string claimValue,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -161,7 +179,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
             sph.DefineSqlParameter("@ClaimType", SqlDbType.NVarChar, -1, ParameterDirection.Input, claimType);
             sph.DefineSqlParameter("@ClaimValue", SqlDbType.NVarChar, -1, ParameterDirection.Input, claimValue);
-            return await sph.ExecuteReaderAsync();
+            return await sph.ExecuteReaderAsync(cancellationToken);
 
         }
 

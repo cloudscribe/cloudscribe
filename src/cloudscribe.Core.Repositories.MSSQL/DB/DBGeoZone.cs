@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2008-06-22
-// Last Modified:			2015-11-18
+// Last Modified:			2015-12-29
 // 
 
 using cloudscribe.DbHelpers.MSSQL;
@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Data;
 using System.Data.Common;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.MSSQL
@@ -43,7 +44,8 @@ namespace cloudscribe.Core.Repositories.MSSQL
             Guid guid,
             Guid countryGuid,
             string name,
-            string code)
+            string code,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -55,7 +57,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@CountryGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, countryGuid);
             sph.DefineSqlParameter("@Name", SqlDbType.NVarChar, 255, ParameterDirection.Input, name);
             sph.DefineSqlParameter("@Code", SqlDbType.NVarChar, 255, ParameterDirection.Input, code);
-            int rowsAffected = await sph.ExecuteNonQueryAsync();
+            int rowsAffected = await sph.ExecuteNonQueryAsync(cancellationToken);
             return rowsAffected > 0;
 
         }
@@ -73,7 +75,8 @@ namespace cloudscribe.Core.Repositories.MSSQL
             Guid guid,
             Guid countryGuid,
             string name,
-            string code)
+            string code,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -85,7 +88,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@CountryGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, countryGuid);
             sph.DefineSqlParameter("@Name", SqlDbType.NVarChar, 255, ParameterDirection.Input, name);
             sph.DefineSqlParameter("@Code", SqlDbType.NVarChar, 255, ParameterDirection.Input, code);
-            int rowsAffected = await sph.ExecuteNonQueryAsync();
+            int rowsAffected = await sph.ExecuteNonQueryAsync(cancellationToken);
             return (rowsAffected > 0);
 
         }
@@ -95,7 +98,9 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// </summary>
         /// <param name="guid"> guid </param>
         /// <returns>bool</returns>
-        public async Task<bool> Delete(Guid guid)
+        public async Task<bool> Delete(
+            Guid guid,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -104,12 +109,14 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 1);
 
             sph.DefineSqlParameter("@Guid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, guid);
-            int rowsAffected = await sph.ExecuteNonQueryAsync();
+            int rowsAffected = await sph.ExecuteNonQueryAsync(cancellationToken);
             return (rowsAffected > 0);
 
         }
 
-        public async Task<bool> DeleteByCountry(Guid countryGuid)
+        public async Task<bool> DeleteByCountry(
+            Guid countryGuid,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -118,7 +125,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 1);
 
             sph.DefineSqlParameter("@CountryGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, countryGuid);
-            int rowsAffected = await sph.ExecuteNonQueryAsync();
+            int rowsAffected = await sph.ExecuteNonQueryAsync(cancellationToken);
             return (rowsAffected > 0);
 
         }
@@ -127,7 +134,9 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// Gets an IDataReader with one row from the mp_GeoZone table.
         /// </summary>
         /// <param name="guid"> guid </param>
-        public async Task<DbDataReader> GetOne(Guid guid)
+        public async Task<DbDataReader> GetOne(
+            Guid guid,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -136,7 +145,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 1);
 
             sph.DefineSqlParameter("@Guid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, guid);
-            return await sph.ExecuteReaderAsync();
+            return await sph.ExecuteReaderAsync(cancellationToken);
 
         }
 
@@ -144,7 +153,10 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// Gets an IDataReader with one row from the mp_GeoZone table.
         /// </summary>
         /// <param name="guid"> guid </param>
-        public async Task<DbDataReader> GetByCode(Guid countryGuid, string code)
+        public async Task<DbDataReader> GetByCode(
+            Guid countryGuid, 
+            string code,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -154,11 +166,15 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
             sph.DefineSqlParameter("@CountryGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, countryGuid);
             sph.DefineSqlParameter("@Code", SqlDbType.NVarChar, 255, ParameterDirection.Input, code);
-            return await sph.ExecuteReaderAsync();
+            return await sph.ExecuteReaderAsync(cancellationToken);
 
         }
 
-        public async Task<DbDataReader> AutoComplete(Guid countryGuid, string query, int maxRows)
+        public async Task<DbDataReader> AutoComplete(
+            Guid countryGuid, 
+            string query, 
+            int maxRows,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -169,14 +185,16 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@CountryGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, countryGuid);
             sph.DefineSqlParameter("@Query", SqlDbType.NVarChar, 255, ParameterDirection.Input, query);
             sph.DefineSqlParameter("@RowsToGet", SqlDbType.NVarChar, 255, ParameterDirection.Input, maxRows);
-            return await sph.ExecuteReaderAsync();
+            return await sph.ExecuteReaderAsync(cancellationToken);
 
         }
 
         /// <summary>
         /// Gets a count of rows in the mp_GeoZone table.
         /// </summary>
-        public async Task<int> GetCount(Guid countryGuid)
+        public async Task<int> GetCount(
+            Guid countryGuid,
+            CancellationToken cancellationToken)
         {
 
             SqlParameterHelper sph = new SqlParameterHelper(
@@ -186,7 +204,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 1);
 
             sph.DefineSqlParameter("@CountryGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, countryGuid);
-            object result = await sph.ExecuteScalarAsync();
+            object result = await sph.ExecuteScalarAsync(cancellationToken);
             return Convert.ToInt32(result);
 
 
@@ -195,7 +213,9 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// <summary>
         /// Gets an IDataReader with all rows in the mp_GeoZone table.
         /// </summary>
-        public async Task<DbDataReader> GetByCountry(Guid countryGuid)
+        public async Task<DbDataReader> GetByCountry(
+            Guid countryGuid,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -204,7 +224,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 1);
 
             sph.DefineSqlParameter("@CountryGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, countryGuid);
-            return await sph.ExecuteReaderAsync();
+            return await sph.ExecuteReaderAsync(cancellationToken);
 
 
         }
@@ -218,28 +238,9 @@ namespace cloudscribe.Core.Repositories.MSSQL
         public async Task<DbDataReader> GetPage(
             Guid countryGuid,
             int pageNumber,
-            int pageSize)
+            int pageSize,
+            CancellationToken cancellationToken)
         {
-            //totalPages = 1;
-            //int totalRows
-            //    = GetCount(countryGuid);
-
-            //if (pageSize > 0) totalPages = totalRows / pageSize;
-
-            //if (totalRows <= pageSize)
-            //{
-            //    totalPages = 1;
-            //}
-            //else
-            //{
-            //    int remainder;
-            //    Math.DivRem(totalRows, pageSize, out remainder);
-            //    if (remainder > 0)
-            //    {
-            //        totalPages += 1;
-            //    }
-            //}
-
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
                 readConnectionString, 
@@ -249,7 +250,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@CountryGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, countryGuid);
             sph.DefineSqlParameter("@PageNumber", SqlDbType.Int, ParameterDirection.Input, pageNumber);
             sph.DefineSqlParameter("@PageSize", SqlDbType.Int, ParameterDirection.Input, pageSize);
-            return await sph.ExecuteReaderAsync();
+            return await sph.ExecuteReaderAsync(cancellationToken);
 
         }
 

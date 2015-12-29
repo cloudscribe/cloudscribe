@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-11-18
+// Last Modified:			2015-12-29
 // 
 
 
@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Data;
 using System.Data.Common;
+using System.Threading;
 using System.Threading.Tasks;
 
 
@@ -108,7 +109,8 @@ namespace cloudscribe.Core.Repositories.MSSQL
             string smtpPreferredEncoding,
             bool smtpRequiresAuth,
             bool smtpUseSsl,
-            bool requireApprovalBeforeLogin
+            bool requireApprovalBeforeLogin,
+            CancellationToken cancellationToken
             )
         {
 
@@ -194,7 +196,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@RequireApprovalBeforeLogin", SqlDbType.Bit, ParameterDirection.Input, requireApprovalBeforeLogin);
 
 
-            object result = await sph.ExecuteScalarAsync();
+            object result = await sph.ExecuteScalarAsync(cancellationToken);
             int newID = Convert.ToInt32(result);
             return newID;
         }
@@ -274,7 +276,8 @@ namespace cloudscribe.Core.Repositories.MSSQL
             string smtpPreferredEncoding,
             bool smtpRequiresAuth,
             bool smtpUseSsl,
-            bool requireApprovalBeforeLogin
+            bool requireApprovalBeforeLogin,
+            CancellationToken cancellationToken
             )
         {
 
@@ -359,7 +362,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@SmtpUseSsl", SqlDbType.Bit, ParameterDirection.Input, smtpUseSsl);
             sph.DefineSqlParameter("@RequireApprovalBeforeLogin", SqlDbType.Bit, ParameterDirection.Input, requireApprovalBeforeLogin);
 
-            int rowsAffected = await sph.ExecuteNonQueryAsync();
+            int rowsAffected = await sph.ExecuteNonQueryAsync(cancellationToken);
             return (rowsAffected > -1);
         }
 
@@ -374,8 +377,8 @@ namespace cloudscribe.Core.Repositories.MSSQL
             int passwordFormat,
             int minRequiredPasswordLength,
             int minRequiredNonAlphanumericCharacters,
-            String passwordStrengthRegularExpression,
-            String defaultEmailFromAddress
+            string passwordStrengthRegularExpression,
+            string defaultEmailFromAddress
             )
         {
             SqlParameterHelper sph = new SqlParameterHelper(
@@ -486,7 +489,9 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
 
 
-        public async Task<bool> Delete(int siteId)
+        public async Task<bool> Delete(
+            int siteId,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -495,11 +500,11 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 1);
 
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
-            int rowsAffected = await sph.ExecuteNonQueryAsync();
+            int rowsAffected = await sph.ExecuteNonQueryAsync(cancellationToken);
             return (rowsAffected > -1);
         }
 
-        public async Task<DbDataReader> GetSiteList()
+        public async Task<DbDataReader> GetSiteList(CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -507,10 +512,10 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 "mp_Sites_SelectAll", 
                 0);
 
-            return await sph.ExecuteReaderAsync();
+            return await sph.ExecuteReaderAsync(cancellationToken);
         }
 
-        public async Task<DbDataReader> GetSite(string hostName)
+        public async Task<DbDataReader> GetSite(string hostName, CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -519,7 +524,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 1);
 
             sph.DefineSqlParameter("@HostName", SqlDbType.NVarChar, 50, ParameterDirection.Input, hostName);
-            return await sph.ExecuteReaderAsync();
+            return await sph.ExecuteReaderAsync(cancellationToken);
 
         }
 
@@ -566,7 +571,9 @@ namespace cloudscribe.Core.Repositories.MSSQL
         //}
 
 
-        public async Task<DbDataReader> GetSite(int siteId)
+        public async Task<DbDataReader> GetSite(
+            int siteId,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -575,7 +582,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 1);
 
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
-            return await sph.ExecuteReaderAsync();
+            return await sph.ExecuteReaderAsync(cancellationToken);
         }
 
         public DbDataReader GetSiteNonAsync(int siteId)
@@ -590,7 +597,9 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return sph.ExecuteReader();
         }
 
-        public async Task<DbDataReader> GetSite(Guid siteGuid)
+        public async Task<DbDataReader> GetSite(
+            Guid siteGuid,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -599,7 +608,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 1);
 
             sph.DefineSqlParameter("@SiteGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, siteGuid);
-            return await sph.ExecuteReaderAsync();
+            return await sph.ExecuteReaderAsync(cancellationToken);
         }
 
         public DbDataReader GetSiteNonAsync(Guid siteGuid)
@@ -628,25 +637,27 @@ namespace cloudscribe.Core.Repositories.MSSQL
         //    return sph.ExecuteReader();
         //}
 
-        public async Task<int> GetHostCount()
+        public async Task<int> GetHostCount(CancellationToken cancellationToken)
         {
             object result = await AdoHelper.ExecuteScalarAsync(
                 readConnectionString,
                 CommandType.StoredProcedure,
                 "mp_SiteHosts_GetCount",
-                null);
+                null,
+                cancellationToken);
 
             return Convert.ToInt32(result);
 
         }
 
-        public async Task<DbDataReader> GetAllHosts()
+        public async Task<DbDataReader> GetAllHosts(CancellationToken cancellationToken)
         {
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
                 CommandType.StoredProcedure,
                 "mp_SiteHosts_SelectAll",
-                null);
+                null,
+                cancellationToken);
 
         }
 
@@ -662,7 +673,8 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         public async Task<DbDataReader> GetPageHosts(
             int pageNumber,
-            int pageSize)
+            int pageSize,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -672,11 +684,13 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
             sph.DefineSqlParameter("@PageNumber", SqlDbType.Int, ParameterDirection.Input, pageNumber);
             sph.DefineSqlParameter("@PageSize", SqlDbType.Int, ParameterDirection.Input, pageSize);
-            return await sph.ExecuteReaderAsync();
+            return await sph.ExecuteReaderAsync(cancellationToken);
 
         }
 
-        public async Task<DbDataReader> GetHostList(int siteId)
+        public async Task<DbDataReader> GetHostList(
+            int siteId,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -685,10 +699,12 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 1);
 
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
-            return await sph.ExecuteReaderAsync();
+            return await sph.ExecuteReaderAsync(cancellationToken);
         }
 
-        public async Task<DbDataReader> GetHost(string hostName)
+        public async Task<DbDataReader> GetHost(
+            string hostName,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -697,10 +713,12 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 1);
 
             sph.DefineSqlParameter("@HostName", SqlDbType.NVarChar, 255, ParameterDirection.Input, hostName);
-            return await sph.ExecuteReaderAsync();
+            return await sph.ExecuteReaderAsync(cancellationToken);
         }
 
-        public async Task<DbDataReader> GetHost(int hostId)
+        public async Task<DbDataReader> GetHost(
+            int hostId,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -709,10 +727,14 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 1);
 
             sph.DefineSqlParameter("@HostID", SqlDbType.Int, ParameterDirection.Input, hostId);
-            return await sph.ExecuteReaderAsync();
+            return await sph.ExecuteReaderAsync(cancellationToken);
         }
 
-        public async Task<bool> AddHost(Guid siteGuid, int siteId, string hostName)
+        public async Task<bool> AddHost(
+            Guid siteGuid, 
+            int siteId, 
+            string hostName,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -723,12 +745,14 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@SiteGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, siteGuid);
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
             sph.DefineSqlParameter("@HostName", SqlDbType.NVarChar, 255, ParameterDirection.Input, hostName);
-            int rowsAffected = await sph.ExecuteNonQueryAsync();
+            int rowsAffected = await sph.ExecuteNonQueryAsync(cancellationToken);
 
             return rowsAffected > 0;
         }
 
-        public async Task<bool> DeleteHost(int hostId)
+        public async Task<bool> DeleteHost(
+            int hostId,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -737,11 +761,13 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 1);
 
             sph.DefineSqlParameter("@HostID", SqlDbType.Int, ParameterDirection.Input, hostId);
-            int rowsAffected = await sph.ExecuteNonQueryAsync();
+            int rowsAffected = await sph.ExecuteNonQueryAsync(cancellationToken);
             return rowsAffected > 0;
         }
 
-        public async Task<bool> DeleteHostsBySite(int siteId)
+        public async Task<bool> DeleteHostsBySite(
+            int siteId,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -750,12 +776,14 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 1);
 
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
-            int rowsAffected = await sph.ExecuteNonQueryAsync();
+            int rowsAffected = await sph.ExecuteNonQueryAsync(cancellationToken);
             return rowsAffected > 0;
         }
 
 
-        public async Task<int> CountOtherSites(int currentSiteId)
+        public async Task<int> CountOtherSites(
+            int currentSiteId,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -764,7 +792,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 1);
 
             sph.DefineSqlParameter("@CurrentSiteID", SqlDbType.Int, ParameterDirection.Input, currentSiteId);
-            object result = await sph.ExecuteScalarAsync();
+            object result = await sph.ExecuteScalarAsync(cancellationToken);
             return Convert.ToInt32(result);
 
         }
@@ -772,7 +800,8 @@ namespace cloudscribe.Core.Repositories.MSSQL
         public async Task<DbDataReader> GetPageOfOtherSites(
             int currentSiteId,
             int pageNumber,
-            int pageSize)
+            int pageSize,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -783,12 +812,14 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@CurrentSiteID", SqlDbType.Int, ParameterDirection.Input, currentSiteId);
             sph.DefineSqlParameter("@PageNumber", SqlDbType.Int, ParameterDirection.Input, pageNumber);
             sph.DefineSqlParameter("@PageSize", SqlDbType.Int, ParameterDirection.Input, pageSize);
-            return await sph.ExecuteReaderAsync();
+            return await sph.ExecuteReaderAsync(cancellationToken);
 
         }
 
 
-        public async Task<int> GetSiteIdByHostName(string hostName)
+        public async Task<int> GetSiteIdByHostName(
+            string hostName,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -797,12 +828,14 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 1);
 
             sph.DefineSqlParameter("@HostName", SqlDbType.NVarChar, 255, ParameterDirection.Input, hostName);
-            object result = await sph.ExecuteScalarAsync();
+            object result = await sph.ExecuteScalarAsync(cancellationToken);
             return Convert.ToInt32(result);
 
         }
 
-        public async Task<int> GetSiteIdByFolder(string folderName)
+        public async Task<int> GetSiteIdByFolder(
+            string folderName,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -811,7 +844,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 1);
 
             sph.DefineSqlParameter("@FolderName", SqlDbType.NVarChar, 255, ParameterDirection.Input, folderName);
-            object result = await sph.ExecuteScalarAsync();
+            object result = await sph.ExecuteScalarAsync(cancellationToken);
             return Convert.ToInt32(result);
 
         }

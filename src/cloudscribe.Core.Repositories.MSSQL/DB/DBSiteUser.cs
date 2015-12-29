@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-11-18
+// Last Modified:			2015-12-29
 // 
 
 using cloudscribe.DbHelpers.MSSQL;
@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Data;
 using System.Data.Common;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.MSSQL
@@ -96,7 +97,10 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return count;
         }
 
-        public async Task<int> CountUsers(int siteId, String userNameBeginsWith)
+        public async Task<int> CountUsers(
+            int siteId, 
+            string userNameBeginsWith,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -106,7 +110,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
             sph.DefineSqlParameter("@UserNameBeginsWith", SqlDbType.NVarChar, 1, ParameterDirection.Input, userNameBeginsWith);
-            object result = await sph.ExecuteScalarAsync();
+            object result = await sph.ExecuteScalarAsync(cancellationToken);
             int count = Convert.ToInt32(result);
             return count;
         }
@@ -170,7 +174,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
         }
 
 
-        public async Task<int> GetNewestUserId(int siteId)
+        public async Task<int> GetNewestUserId(int siteId, CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -179,7 +183,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 1);
 
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
-            object result = await sph.ExecuteScalarAsync();
+            object result = await sph.ExecuteScalarAsync(cancellationToken);
             int count = Convert.ToInt32(result);
             return count;
         }
@@ -189,7 +193,8 @@ namespace cloudscribe.Core.Repositories.MSSQL
             int pageNumber,
             int pageSize,
             string userNameBeginsWith,
-            int sortMode
+            int sortMode,
+            CancellationToken cancellationToken
             )
         {
             //totalPages = 1;
@@ -248,10 +253,13 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@PageSize", SqlDbType.Int, ParameterDirection.Input, pageSize);
             sph.DefineSqlParameter("@UserNameBeginsWith", SqlDbType.NVarChar, 50, ParameterDirection.Input, userNameBeginsWith);
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
-            return await sph.ExecuteReaderAsync();
+            return await sph.ExecuteReaderAsync(cancellationToken);
         }
 
-        public async Task<int> CountUsersForSearch(int siteId, string searchInput)
+        public async Task<int> CountUsersForSearch(
+            int siteId, 
+            string searchInput,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -261,7 +269,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
             sph.DefineSqlParameter("@SearchInput", SqlDbType.NVarChar, 50, ParameterDirection.Input, searchInput);
-            object result = await sph.ExecuteScalarAsync();
+            object result = await sph.ExecuteScalarAsync(cancellationToken);
             int count = Convert.ToInt32(result);
             return count;
         }
@@ -271,7 +279,8 @@ namespace cloudscribe.Core.Repositories.MSSQL
             int pageNumber,
             int pageSize,
             string searchInput,
-            int sortMode)
+            int sortMode,
+            CancellationToken cancellationToken)
         {
             
             SqlParameterHelper sph;
@@ -311,11 +320,14 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@SearchInput", SqlDbType.NVarChar, 50, ParameterDirection.Input, searchInput);
             sph.DefineSqlParameter("@PageNumber", SqlDbType.Int, ParameterDirection.Input, pageNumber);
             sph.DefineSqlParameter("@PageSize", SqlDbType.Int, ParameterDirection.Input, pageSize);
-            return await sph.ExecuteReaderAsync();
+            return await sph.ExecuteReaderAsync(cancellationToken);
 
         }
 
-        public async Task<int> CountUsersForAdminSearch(int siteId, string searchInput)
+        public async Task<int> CountUsersForAdminSearch(
+            int siteId, 
+            string searchInput,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -325,7 +337,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
             sph.DefineSqlParameter("@SearchInput", SqlDbType.NVarChar, 50, ParameterDirection.Input, searchInput);
-            object result = await sph.ExecuteScalarAsync();
+            object result = await sph.ExecuteScalarAsync(cancellationToken);
             int count = Convert.ToInt32(result);
             return count;
         }
@@ -335,7 +347,8 @@ namespace cloudscribe.Core.Repositories.MSSQL
             int pageNumber,
             int pageSize,
             string searchInput,
-            int sortMode)
+            int sortMode,
+            CancellationToken cancellationToken)
         {
             
             SqlParameterHelper sph;
@@ -377,11 +390,13 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@SearchInput", SqlDbType.NVarChar, 50, ParameterDirection.Input, searchInput);
             sph.DefineSqlParameter("@PageNumber", SqlDbType.Int, ParameterDirection.Input, pageNumber);
             sph.DefineSqlParameter("@PageSize", SqlDbType.Int, ParameterDirection.Input, pageSize);
-            return await sph.ExecuteReaderAsync();
+            return await sph.ExecuteReaderAsync(cancellationToken);
 
         }
 
-        public async Task<int> CountLockedOutUsers(int siteId)
+        public async Task<int> CountLockedOutUsers(
+            int siteId,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -390,7 +405,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 1);
 
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
-            object result = await sph.ExecuteScalarAsync();
+            object result = await sph.ExecuteScalarAsync(cancellationToken);
             int count = Convert.ToInt32(result);
             return count;
         }
@@ -398,7 +413,8 @@ namespace cloudscribe.Core.Repositories.MSSQL
         public async Task<DbDataReader> GetPageLockedUsers(
             int siteId,
             int pageNumber,
-            int pageSize)
+            int pageSize,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -409,11 +425,13 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
             sph.DefineSqlParameter("@PageNumber", SqlDbType.Int, ParameterDirection.Input, pageNumber);
             sph.DefineSqlParameter("@PageSize", SqlDbType.Int, ParameterDirection.Input, pageSize);
-            return await sph.ExecuteReaderAsync();
+            return await sph.ExecuteReaderAsync(cancellationToken);
 
         }
 
-        public async Task<int> CountNotApprovedUsers(int siteId)
+        public async Task<int> CountNotApprovedUsers(
+            int siteId,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -422,7 +440,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 1);
 
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
-            object result = await sph.ExecuteScalarAsync();
+            object result = await sph.ExecuteScalarAsync(cancellationToken);
             int count = Convert.ToInt32(result);
             return count;
         }
@@ -430,7 +448,8 @@ namespace cloudscribe.Core.Repositories.MSSQL
         public async Task<DbDataReader> GetPageNotApprovedUsers(
             int siteId,
             int pageNumber,
-            int pageSize)
+            int pageSize,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -441,7 +460,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
             sph.DefineSqlParameter("@PageNumber", SqlDbType.Int, ParameterDirection.Input, pageNumber);
             sph.DefineSqlParameter("@PageSize", SqlDbType.Int, ParameterDirection.Input, pageSize);
-            return await sph.ExecuteReaderAsync();
+            return await sph.ExecuteReaderAsync(cancellationToken);
 
         }
 
@@ -510,7 +529,8 @@ namespace cloudscribe.Core.Repositories.MSSQL
             string avatarUrl,
             string signature,
             string authorBio,
-            string comment
+            string comment,
+            CancellationToken cancellationToken
             )
         {
 
@@ -568,7 +588,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@AuthorBio", SqlDbType.NVarChar, -1, ParameterDirection.Input, authorBio);
             sph.DefineSqlParameter("@Comment", SqlDbType.NVarChar, -1, ParameterDirection.Input, comment);
 
-            object result = await sph.ExecuteScalarAsync();
+            object result = await sph.ExecuteScalarAsync(cancellationToken);
 
             int newID = Convert.ToInt32(result);
             return newID;
@@ -607,7 +627,8 @@ namespace cloudscribe.Core.Repositories.MSSQL
             bool phoneNumberConfirmed,
             bool twoFactorEnabled,
             DateTime? lockoutEndDateUtc,
-            bool isLockedOut
+            bool isLockedOut,
+            CancellationToken cancellationToken
             )
         {
             SqlParameterHelper sph = new SqlParameterHelper(
@@ -667,12 +688,14 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
             sph.DefineSqlParameter("@IsLockedOut", SqlDbType.Bit, ParameterDirection.Input, isLockedOut);
 
-            int rowsAffected = await sph.ExecuteNonQueryAsync();
+            int rowsAffected = await sph.ExecuteNonQueryAsync(cancellationToken);
             return (rowsAffected > -1);
         }
 
 
-        public async Task<bool> DeleteUser(int userId)
+        public async Task<bool> DeleteUser(
+            int userId,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -681,11 +704,13 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 1);
 
             sph.DefineSqlParameter("@UserID", SqlDbType.Int, ParameterDirection.Input, userId);
-            int rowsAffected = await sph.ExecuteNonQueryAsync();
+            int rowsAffected = await sph.ExecuteNonQueryAsync(cancellationToken);
             return (rowsAffected > -1);
         }
 
-        public async Task<bool> DeleteUsersBySite(int siteId)
+        public async Task<bool> DeleteUsersBySite(
+            int siteId,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -694,7 +719,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 1);
 
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
-            int rowsAffected = await sph.ExecuteNonQueryAsync();
+            int rowsAffected = await sph.ExecuteNonQueryAsync(cancellationToken);
             return (rowsAffected > -1);
         }
 
@@ -758,7 +783,8 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         public async Task<bool> UpdateFailedPasswordAttemptCount(
             Guid userGuid,
-            int attemptCount)
+            int attemptCount,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -768,7 +794,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
             sph.DefineSqlParameter("@UserGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, userGuid);
             sph.DefineSqlParameter("@AttemptCount", SqlDbType.Int, ParameterDirection.Input, attemptCount);
-            int rowsAffected = await sph.ExecuteNonQueryAsync();
+            int rowsAffected = await sph.ExecuteNonQueryAsync(cancellationToken);
             return (rowsAffected > -1);
         }
 
@@ -804,7 +830,10 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return (rowsAffected > -1);
         }
 
-        public async Task<bool> AccountLockout(Guid userGuid, DateTime lockoutTime)
+        public async Task<bool> AccountLockout(
+            Guid userGuid, 
+            DateTime lockoutTime,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -814,11 +843,13 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
             sph.DefineSqlParameter("@UserGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, userGuid);
             sph.DefineSqlParameter("@LockoutTime", SqlDbType.DateTime, ParameterDirection.Input, lockoutTime);
-            int rowsAffected = await sph.ExecuteNonQueryAsync();
+            int rowsAffected = await sph.ExecuteNonQueryAsync(cancellationToken);
             return (rowsAffected > -1);
         }
 
-        public async Task<bool> AccountClearLockout(Guid userGuid)
+        public async Task<bool> AccountClearLockout(
+            Guid userGuid,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -827,7 +858,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 1);
 
             sph.DefineSqlParameter("@UserGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, userGuid);
-            int rowsAffected = await sph.ExecuteNonQueryAsync();
+            int rowsAffected = await sph.ExecuteNonQueryAsync(cancellationToken);
             return (rowsAffected > -1);
         }
 
@@ -845,7 +876,10 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return (rowsAffected > -1);
         }
 
-        public async Task<bool> ConfirmRegistration(Guid emptyGuid, Guid registrationConfirmationGuid)
+        public async Task<bool> ConfirmRegistration(
+            Guid emptyGuid, 
+            Guid registrationConfirmationGuid,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -855,7 +889,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
             sph.DefineSqlParameter("@EmptyGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, emptyGuid);
             sph.DefineSqlParameter("@RegisterConfirmGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, registrationConfirmationGuid);
-            int rowsAffected = await sph.ExecuteNonQueryAsync();
+            int rowsAffected = await sph.ExecuteNonQueryAsync(cancellationToken);
             return (rowsAffected > -1);
         }
 
@@ -881,8 +915,8 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         public bool UpdatePasswordQuestionAndAnswer(
             Guid userGuid,
-            String passwordQuestion,
-            String passwordAnswer)
+            string passwordQuestion,
+            string passwordAnswer)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -923,7 +957,9 @@ namespace cloudscribe.Core.Repositories.MSSQL
         //}
 
 
-        public async Task<bool> FlagAsDeleted(int userId)
+        public async Task<bool> FlagAsDeleted(
+            int userId,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -932,11 +968,13 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 1);
 
             sph.DefineSqlParameter("@UserID", SqlDbType.Int, ParameterDirection.Input, userId);
-            int rowsAffected = await sph.ExecuteNonQueryAsync();
+            int rowsAffected = await sph.ExecuteNonQueryAsync(cancellationToken);
             return (rowsAffected > -1);
         }
 
-        public async Task<bool> FlagAsNotDeleted(int userId)
+        public async Task<bool> FlagAsNotDeleted(
+            int userId,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -945,7 +983,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 1);
 
             sph.DefineSqlParameter("@UserID", SqlDbType.Int, ParameterDirection.Input, userId);
-            int rowsAffected = await sph.ExecuteNonQueryAsync();
+            int rowsAffected = await sph.ExecuteNonQueryAsync(cancellationToken);
             return (rowsAffected > -1);
         }
 
@@ -975,7 +1013,10 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return (rowsAffected > -1);
         }
 
-        public async Task<DbDataReader> GetRolesByUser(int siteId, int userId)
+        public async Task<DbDataReader> GetRolesByUser(
+            int siteId, 
+            int userId,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -985,11 +1026,14 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
             sph.DefineSqlParameter("@UserID", SqlDbType.Int, ParameterDirection.Input, userId);
-            return await sph.ExecuteReaderAsync();
+            return await sph.ExecuteReaderAsync(cancellationToken);
         }
 
 
-        public async Task<DbDataReader> GetUserByRegistrationGuid(int siteId, Guid registerConfirmGuid)
+        public async Task<DbDataReader> GetUserByRegistrationGuid(
+            int siteId, 
+            Guid registerConfirmGuid,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -999,11 +1043,14 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
             sph.DefineSqlParameter("@RegisterConfirmGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, registerConfirmGuid);
-            return await sph.ExecuteReaderAsync();
+            return await sph.ExecuteReaderAsync(cancellationToken);
         }
 
 
-        public async Task<DbDataReader> GetSingleUser(int siteId, string email)
+        public async Task<DbDataReader> GetSingleUser(
+            int siteId, 
+            string email,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -1013,10 +1060,12 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
             sph.DefineSqlParameter("@Email", SqlDbType.NVarChar, 100, ParameterDirection.Input, email);
-            return await sph.ExecuteReaderAsync();
+            return await sph.ExecuteReaderAsync(cancellationToken);
         }
 
-        public async Task<DbDataReader> GetCrossSiteUserListByEmail(string email)
+        public async Task<DbDataReader> GetCrossSiteUserListByEmail(
+            string email,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -1025,10 +1074,14 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 1);
 
             sph.DefineSqlParameter("@Email", SqlDbType.NVarChar, 100, ParameterDirection.Input, email);
-            return await sph.ExecuteReaderAsync();
+            return await sph.ExecuteReaderAsync(cancellationToken);
         }
 
-        public async Task<DbDataReader> GetSingleUserByLoginName(int siteId, string loginName, bool allowEmailFallback)
+        public async Task<DbDataReader> GetSingleUserByLoginName(
+            int siteId, 
+            string loginName, 
+            bool allowEmailFallback,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -1039,7 +1092,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
             sph.DefineSqlParameter("@LoginName", SqlDbType.NVarChar, 50, ParameterDirection.Input, loginName);
             sph.DefineSqlParameter("@AllowEmailFallback", SqlDbType.Bit, ParameterDirection.Input, allowEmailFallback);
-            return await sph.ExecuteReaderAsync();
+            return await sph.ExecuteReaderAsync(cancellationToken);
         }
 
         public DbDataReader GetSingleUserByLoginNameNonAsync(int siteId, string loginName, bool allowEmailFallback)
@@ -1056,7 +1109,9 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return sph.ExecuteReader();
         }
 
-        public async Task<DbDataReader> GetSingleUser(int userId)
+        public async Task<DbDataReader> GetSingleUser(
+            int userId,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -1065,10 +1120,12 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 1);
 
             sph.DefineSqlParameter("@UserID", SqlDbType.Int, ParameterDirection.Input, userId);
-            return await sph.ExecuteReaderAsync();
+            return await sph.ExecuteReaderAsync(cancellationToken);
         }
 
-        public async Task<DbDataReader> GetSingleUser(Guid userGuid)
+        public async Task<DbDataReader> GetSingleUser(
+            Guid userGuid,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -1077,7 +1134,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 1);
 
             sph.DefineSqlParameter("@UserGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, userGuid);
-            return await sph.ExecuteReaderAsync();
+            return await sph.ExecuteReaderAsync(cancellationToken);
         }
 
         public Guid GetUserGuidFromOpenId(

@@ -83,21 +83,8 @@ namespace example.WebApp
 
         public IConfigurationRoot Configuration { get; set; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        //public IServiceProvider ConfigureServices(IServiceCollection services)
-        public void ConfigureServices(IServiceCollection services)
+        private void ConfigureAuthPolicy(IServiceCollection services)
         {
-            //services.TryAddScoped<IConfigurationRoot, Configuration>();
-
-            //http://blog.getglimpse.com/2015/11/19/installing-glimpse-v2-beta1/
-            bool enableGlimpse = Configuration.Get<bool>("DiagnosticOptions:EnableGlimpse", false);
-            if (enableGlimpse)
-            {
-                services.AddGlimpse();
-            }
-
-            //services.AddLocalization(options => options.ResourcesPath = "AppResources");
-
             services.AddAuthorization(options =>
             {
                 options.AddPolicy(
@@ -143,6 +130,26 @@ namespace example.WebApp
                     });
 
             });
+
+        }
+
+        // This method gets called by the runtime. Use this method to add services to the container.
+        //public IServiceProvider ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
+        {
+            //services.TryAddScoped<IConfigurationRoot, Configuration>();
+
+            //http://blog.getglimpse.com/2015/11/19/installing-glimpse-v2-beta1/
+            bool enableGlimpse = Configuration.Get<bool>("DiagnosticOptions:EnableGlimpse", false);
+            if (enableGlimpse)
+            {
+                services.AddGlimpse();
+            }
+
+            //services.AddLocalization(options => options.ResourcesPath = "AppResources");
+
+            ConfigureAuthPolicy(services);
+
 
             // we may need this on linux/mac as urls are case sensitive by default
             //services.Configure<RouteOptions>(routeOptions => routeOptions.LowercaseUrls = true);

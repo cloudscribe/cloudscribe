@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2008-01-04
-// Last Modified:			2015-11-18
+// Last Modified:			2015-12-29
 // 
 
 using cloudscribe.DbHelpers.MSSQL;
@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Data;
 using System.Data.Common;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.MSSQL
@@ -268,7 +269,10 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// Gets an IDataReader with rows from the mp_Users table which have the passed in IP Address
         /// </summary>
         /// <param name="siteGuid"> siteGuid </param>
-        public async Task<DbDataReader> GetUsersByIPAddress(Guid siteGuid, string ipv4Address)
+        public async Task<DbDataReader> GetUsersByIPAddress(
+            Guid siteGuid, 
+            string ipv4Address,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -278,7 +282,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
             sph.DefineSqlParameter("@SiteGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, siteGuid);
             sph.DefineSqlParameter("@IPAddress", SqlDbType.NVarChar, 50, ParameterDirection.Input, ipv4Address);
-            return await sph.ExecuteReaderAsync();
+            return await sph.ExecuteReaderAsync(cancellationToken);
         }
 
         /// <summary>
@@ -342,27 +346,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             Guid userGuid,
             int pageNumber,
             int pageSize)
-        {
-            //totalPages = 1;
-            //int totalRows
-            //    = GetCountByUser(userGuid);
-
-            //if (pageSize > 0) totalPages = totalRows / pageSize;
-
-            //if (totalRows <= pageSize)
-            //{
-            //    totalPages = 1;
-            //}
-            //else
-            //{
-            //    int remainder;
-            //    Math.DivRem(totalRows, pageSize, out remainder);
-            //    if (remainder > 0)
-            //    {
-            //        totalPages += 1;
-            //    }
-            //}
-
+        {   
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
                 readConnectionString, 
@@ -388,26 +372,6 @@ namespace cloudscribe.Core.Repositories.MSSQL
             int pageNumber,
             int pageSize)
         {
-            //totalPages = 1;
-            //int totalRows
-            //    = GetCountBySite(siteGuid);
-
-            //if (pageSize > 0) totalPages = totalRows / pageSize;
-
-            //if (totalRows <= pageSize)
-            //{
-            //    totalPages = 1;
-            //}
-            //else
-            //{
-            //    int remainder;
-            //    Math.DivRem(totalRows, pageSize, out remainder);
-            //    if (remainder > 0)
-            //    {
-            //        totalPages += 1;
-            //    }
-            //}
-
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
                 readConnectionString, 

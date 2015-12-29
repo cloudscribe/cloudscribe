@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:				Joe Audette
 // Created:			    2007-06-22
-// Last Modified:		2015-11-18
+// Last Modified:		2015-12-29
 // 
 
 using cloudscribe.DbHelpers.MSSQL;
@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Data;
 using System.Data.Common;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.MSSQL
@@ -58,7 +59,8 @@ namespace cloudscribe.Core.Repositories.MSSQL
             string decimalPlaces,
             decimal value,
             DateTime lastModified,
-            DateTime created)
+            DateTime created,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -77,7 +79,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@Value", SqlDbType.Decimal, ParameterDirection.Input, value);
             sph.DefineSqlParameter("@LastModified", SqlDbType.DateTime, ParameterDirection.Input, lastModified);
             sph.DefineSqlParameter("@Created", SqlDbType.DateTime, ParameterDirection.Input, created);
-            int rowsAffected = await sph.ExecuteNonQueryAsync();
+            int rowsAffected = await sph.ExecuteNonQueryAsync(cancellationToken);
             return rowsAffected > 0;
 
         }
@@ -108,7 +110,8 @@ namespace cloudscribe.Core.Repositories.MSSQL
             string thousandsPointChar,
             string decimalPlaces,
             decimal value,
-            DateTime lastModified)
+            DateTime lastModified,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -126,7 +129,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@DecimalPlaces", SqlDbType.NChar, 1, ParameterDirection.Input, decimalPlaces);
             sph.DefineSqlParameter("@Value", SqlDbType.Decimal, ParameterDirection.Input, value);
             sph.DefineSqlParameter("@LastModified", SqlDbType.DateTime, ParameterDirection.Input, lastModified);
-            int rowsAffected = await sph.ExecuteNonQueryAsync();
+            int rowsAffected = await sph.ExecuteNonQueryAsync(cancellationToken);
             return (rowsAffected > 0);
 
         }
@@ -136,7 +139,9 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// </summary>
         /// <param name="guid"> guid </param>
         /// <returns>bool</returns>
-        public async Task<bool> Delete(Guid guid)
+        public async Task<bool> Delete(
+            Guid guid,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -145,7 +150,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 1);
 
             sph.DefineSqlParameter("@Guid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, guid);
-            int rowsAffected = await sph.ExecuteNonQueryAsync();
+            int rowsAffected = await sph.ExecuteNonQueryAsync(cancellationToken);
             return (rowsAffected > 0);
 
         }
@@ -154,7 +159,9 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// Gets an IDataReader with one row from the mp_Currency table.
         /// </summary>
         /// <param name="guid"> guid </param>
-        public async Task<DbDataReader> GetOne(Guid guid)
+        public async Task<DbDataReader> GetOne(
+            Guid guid,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -163,7 +170,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 1);
 
             sph.DefineSqlParameter("@Guid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, guid);
-            return await sph.ExecuteReaderAsync();
+            return await sph.ExecuteReaderAsync(cancellationToken);
 
         }
 
@@ -171,13 +178,14 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// <summary>
         /// Gets an IDataReader with all rows in the mp_Currency table.
         /// </summary>
-        public async Task<DbDataReader> GetAll()
+        public async Task<DbDataReader> GetAll(CancellationToken cancellationToken)
         {
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
                 CommandType.StoredProcedure,
                 "mp_Currency_SelectAll",
-                null);
+                null,
+                cancellationToken);
 
         }
 
