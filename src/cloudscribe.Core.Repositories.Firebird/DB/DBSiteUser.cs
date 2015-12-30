@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-11-18
+// Last Modified:			2015-12-30
 // 
 
 using cloudscribe.DbHelpers.Firebird;
@@ -12,6 +12,7 @@ using System;
 using System.Data;
 using System.Data.Common;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.Firebird
@@ -29,7 +30,6 @@ namespace cloudscribe.Core.Repositories.Firebird
         }
 
         private ILoggerFactory logFactory;
-        //private ILogger log;
         private string readConnectionString;
         private string writeConnectionString;
 
@@ -206,7 +206,9 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         }
 
-        public async Task<int> CountLockedOutUsers(int siteId)
+        public async Task<int> CountLockedOutUsers(
+            int siteId,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT COUNT(*) FROM mp_Users WHERE SiteID = @SiteID AND IsLockedOut = 1;");
@@ -219,14 +221,17 @@ namespace cloudscribe.Core.Repositories.Firebird
             object result = await AdoHelper.ExecuteScalarAsync(
                 readConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams, 
+                cancellationToken);
 
             int count = Convert.ToInt32(result);
 
             return count;
         }
 
-        public async Task<int> CountNotApprovedUsers(int siteId)
+        public async Task<int> CountNotApprovedUsers(
+            int siteId,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT COUNT(*) FROM mp_Users WHERE SiteID = @SiteID AND AccountApproved = 0;");
@@ -239,7 +244,8 @@ namespace cloudscribe.Core.Repositories.Firebird
             object result = await AdoHelper.ExecuteScalarAsync(
                 readConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             int count = Convert.ToInt32(result);
 
@@ -377,7 +383,9 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         }
 
-        public async Task<int> GetNewestUserId(int siteId)
+        public async Task<int> GetNewestUserId(
+            int siteId,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT MAX(UserID) FROM mp_Users WHERE SiteID = @SiteID;");
@@ -390,7 +398,8 @@ namespace cloudscribe.Core.Repositories.Firebird
             object result = await AdoHelper.ExecuteScalarAsync(
                 readConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             int count = Convert.ToInt32(result);
 
@@ -399,7 +408,10 @@ namespace cloudscribe.Core.Repositories.Firebird
 
 
 
-        public async Task<int> CountUsers(int siteId, string userNameBeginsWith)
+        public async Task<int> CountUsers(
+            int siteId, 
+            string userNameBeginsWith,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT Count(*) FROM mp_Users WHERE SiteID = @SiteID ");
@@ -423,7 +435,8 @@ namespace cloudscribe.Core.Repositories.Firebird
             object result = await AdoHelper.ExecuteScalarAsync(
                 readConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             int count = Convert.ToInt32(result);
 
@@ -436,7 +449,8 @@ namespace cloudscribe.Core.Repositories.Firebird
             int pageNumber,
             int pageSize,
             string userNameBeginsWith,
-            int sortMode)
+            int sortMode,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
 
@@ -492,11 +506,15 @@ namespace cloudscribe.Core.Repositories.Firebird
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
         }
 
-        public async Task<int> CountUsersForSearch(int siteId, string searchInput)
+        public async Task<int> CountUsersForSearch(
+            int siteId, 
+            string searchInput,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT Count(*) FROM mp_Users WHERE SiteID = @SiteID ");
@@ -532,7 +550,8 @@ namespace cloudscribe.Core.Repositories.Firebird
             object result = await AdoHelper.ExecuteScalarAsync(
                 readConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             int count = Convert.ToInt32(result);
 
@@ -545,7 +564,8 @@ namespace cloudscribe.Core.Repositories.Firebird
             int pageNumber,
             int pageSize,
             string searchInput,
-            int sortMode)
+            int sortMode,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
 
@@ -611,11 +631,15 @@ namespace cloudscribe.Core.Repositories.Firebird
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
         }
 
-        public async Task<int> CountUsersForAdminSearch(int siteId, string searchInput)
+        public async Task<int> CountUsersForAdminSearch(
+            int siteId, 
+            string searchInput,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT Count(*) FROM mp_Users WHERE SiteID = @SiteID ");
@@ -647,7 +671,8 @@ namespace cloudscribe.Core.Repositories.Firebird
             object result = await AdoHelper.ExecuteScalarAsync(
                 readConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             int count = Convert.ToInt32(result);
 
@@ -660,7 +685,8 @@ namespace cloudscribe.Core.Repositories.Firebird
             int pageNumber,
             int pageSize,
             string searchInput,
-            int sortMode)
+            int sortMode,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
 
@@ -722,14 +748,16 @@ namespace cloudscribe.Core.Repositories.Firebird
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
         }
 
         public async Task<DbDataReader> GetPageLockedUsers(
             int siteId,
             int pageNumber,
-            int pageSize)
+            int pageSize,
+            CancellationToken cancellationToken)
         {
             int skip = pageSize * (pageNumber - 1);
 
@@ -760,14 +788,16 @@ namespace cloudscribe.Core.Repositories.Firebird
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
         }
 
         public async Task<DbDataReader> GetPageNotApprovedUsers(
             int siteId,
             int pageNumber,
-            int pageSize)
+            int pageSize,
+            CancellationToken cancellationToken)
         {
 
             int skip = pageSize * (pageNumber - 1);
@@ -799,7 +829,8 @@ namespace cloudscribe.Core.Repositories.Firebird
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
         }
 
@@ -833,7 +864,8 @@ namespace cloudscribe.Core.Repositories.Firebird
             string avatarUrl,
             string signature,
             string authorBio,
-            string comment
+            string comment,
+            CancellationToken cancellationToken
             )
         {
             
@@ -972,7 +1004,8 @@ namespace cloudscribe.Core.Repositories.Firebird
                 writeConnectionString,
                 CommandType.StoredProcedure,
                 statement,
-                arParams);
+                arParams,
+                cancellationToken);
 
             int newID = Convert.ToInt32(result);
 
@@ -1013,7 +1046,8 @@ namespace cloudscribe.Core.Repositories.Firebird
             bool phoneNumberConfirmed,
             bool twoFactorEnabled,
             DateTime? lockoutEndDateUtc,
-            bool isLockedOut
+            bool isLockedOut,
+            CancellationToken cancellationToken
             )
         {
            
@@ -1175,14 +1209,17 @@ namespace cloudscribe.Core.Repositories.Firebird
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return (rowsAffected > 0);
 
         }
 
 
-        public async Task<bool> DeleteUser(int userId)
+        public async Task<bool> DeleteUser(
+            int userId,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_Users ");
@@ -1196,12 +1233,15 @@ namespace cloudscribe.Core.Repositories.Firebird
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return (rowsAffected > 0);
         }
 
-        public async Task<bool> DeleteUsersBySite(int siteId)
+        public async Task<bool> DeleteUsersBySite(
+            int siteId,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_Users ");
@@ -1215,7 +1255,8 @@ namespace cloudscribe.Core.Repositories.Firebird
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return (rowsAffected > 0);
         }
@@ -1271,7 +1312,10 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         }
 
-        public async Task<bool> AccountLockout(Guid userGuid, DateTime lockoutTime)
+        public async Task<bool> AccountLockout(
+            Guid userGuid, 
+            DateTime lockoutTime,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("UPDATE mp_Users ");
@@ -1290,13 +1334,16 @@ namespace cloudscribe.Core.Repositories.Firebird
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return (rowsAffected > 0);
 
         }
 
-        public bool UpdateLastPasswordChangeTime(Guid userGuid, DateTime lastPasswordChangeTime)
+        public bool UpdateLastPasswordChangeTime(
+            Guid userGuid, 
+            DateTime lastPasswordChangeTime)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("UPDATE mp_Users ");
@@ -1354,7 +1401,8 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         public async Task<bool> UpdateFailedPasswordAttemptCount(
             Guid userGuid,
-            int attemptCount)
+            int attemptCount,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("UPDATE mp_Users ");
@@ -1375,7 +1423,8 @@ namespace cloudscribe.Core.Repositories.Firebird
             rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return (rowsAffected > 0);
 
@@ -1465,7 +1514,10 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         }
 
-        public async Task<bool> ConfirmRegistration(Guid emptyGuid, Guid registrationConfirmationGuid)
+        public async Task<bool> ConfirmRegistration(
+            Guid emptyGuid, 
+            Guid registrationConfirmationGuid,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("UPDATE mp_Users ");
@@ -1485,12 +1537,15 @@ namespace cloudscribe.Core.Repositories.Firebird
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return (rowsAffected > 0);
         }
 
-        public async Task<bool> AccountClearLockout(Guid userGuid)
+        public async Task<bool> AccountClearLockout(
+            Guid userGuid,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("UPDATE mp_Users ");
@@ -1510,7 +1565,8 @@ namespace cloudscribe.Core.Repositories.Firebird
             rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return (rowsAffected > 0);
         }
@@ -1627,7 +1683,9 @@ namespace cloudscribe.Core.Repositories.Firebird
 
 
 
-        public async Task<bool> FlagAsDeleted(int userId)
+        public async Task<bool> FlagAsDeleted(
+            int userId,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("UPDATE mp_Users ");
@@ -1642,12 +1700,15 @@ namespace cloudscribe.Core.Repositories.Firebird
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return (rowsAffected > 0);
         }
 
-        public async Task<bool> FlagAsNotDeleted(int userId)
+        public async Task<bool> FlagAsNotDeleted(
+            int userId,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("UPDATE mp_Users ");
@@ -1662,7 +1723,8 @@ namespace cloudscribe.Core.Repositories.Firebird
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return (rowsAffected > 0);
         }
@@ -1709,7 +1771,10 @@ namespace cloudscribe.Core.Repositories.Firebird
         //    return (rowsAffected > 0);
         //}
 
-        public async Task<DbDataReader> GetRolesByUser(int siteId, int userId)
+        public async Task<DbDataReader> GetRolesByUser(
+            int siteId, 
+            int userId,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT ");
@@ -1738,11 +1803,15 @@ namespace cloudscribe.Core.Repositories.Firebird
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
         }
 
-        public async Task<DbDataReader> GetUserByRegistrationGuid(int siteId, Guid registerConfirmGuid)
+        public async Task<DbDataReader> GetUserByRegistrationGuid(
+            int siteId, 
+            Guid registerConfirmGuid,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT * ");
@@ -1762,12 +1831,16 @@ namespace cloudscribe.Core.Repositories.Firebird
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
         }
 
 
-        public async Task<DbDataReader> GetSingleUser(int siteId, string email)
+        public async Task<DbDataReader> GetSingleUser(
+            int siteId, 
+            string email,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT * ");
@@ -1787,11 +1860,14 @@ namespace cloudscribe.Core.Repositories.Firebird
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
         }
 
-        public async Task<DbDataReader> GetCrossSiteUserListByEmail(string email)
+        public async Task<DbDataReader> GetCrossSiteUserListByEmail(
+            string email,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT * ");
@@ -1808,11 +1884,16 @@ namespace cloudscribe.Core.Repositories.Firebird
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
         }
 
-        public async Task<DbDataReader> GetSingleUserByLoginName(int siteId, string loginName, bool allowEmailFallback)
+        public async Task<DbDataReader> GetSingleUserByLoginName(
+            int siteId, 
+            string loginName, 
+            bool allowEmailFallback,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT * ");
@@ -1853,7 +1934,8 @@ namespace cloudscribe.Core.Repositories.Firebird
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
         }
 
@@ -1898,7 +1980,9 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         }
 
-        public async Task<DbDataReader> GetSingleUser(int userId)
+        public async Task<DbDataReader> GetSingleUser(
+            int userId,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT * ");
@@ -1915,11 +1999,14 @@ namespace cloudscribe.Core.Repositories.Firebird
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
         }
 
-        public async Task<DbDataReader> GetSingleUser(Guid userGuid)
+        public async Task<DbDataReader> GetSingleUser(
+            Guid userGuid,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT * ");
@@ -1934,7 +2021,8 @@ namespace cloudscribe.Core.Repositories.Firebird
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
         }
 

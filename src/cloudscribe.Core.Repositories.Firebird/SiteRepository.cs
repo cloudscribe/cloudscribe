@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2015-12-28
+// Last Modified:			2015-12-30
 // 
 
 using cloudscribe.Core.Models;
@@ -51,7 +51,9 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         #region ISiteRepository
 
-        public async Task<bool> Save(ISiteSettings site, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> Save(
+            ISiteSettings site, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
             int passedInSiteId = site.SiteId;
@@ -136,8 +138,8 @@ namespace cloudscribe.Core.Repositories.Firebird
                     site.SmtpPreferredEncoding,
                     site.SmtpRequiresAuth,
                     site.SmtpUseSsl,
-                    site.RequireApprovalBeforeLogin
-
+                    site.RequireApprovalBeforeLogin,
+                    cancellationToken
                     );
 
                 result = site.SiteId > -1;
@@ -220,7 +222,8 @@ namespace cloudscribe.Core.Repositories.Firebird
                     site.SmtpPreferredEncoding,
                     site.SmtpRequiresAuth,
                     site.SmtpUseSsl,
-                    site.RequireApprovalBeforeLogin
+                    site.RequireApprovalBeforeLogin,
+                    cancellationToken
                     );
 
             }
@@ -244,12 +247,16 @@ namespace cloudscribe.Core.Repositories.Firebird
         }
 
 
-        public async Task<ISiteSettings> Fetch(int siteId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<ISiteSettings> Fetch(
+            int siteId, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
             SiteSettings site = new SiteSettings();
 
-            using (DbDataReader reader = await dbSiteSettings.GetSite(siteId))
+            using (DbDataReader reader = await dbSiteSettings.GetSite(
+                siteId,
+                cancellationToken))
             {
                 if (reader.Read())
                 {
@@ -290,12 +297,16 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         }
 
-        public async Task<ISiteSettings> Fetch(Guid siteGuid, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<ISiteSettings> Fetch(
+            Guid siteGuid, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
             SiteSettings site = new SiteSettings();
 
-            using (DbDataReader reader = await dbSiteSettings.GetSite(siteGuid))
+            using (DbDataReader reader = await dbSiteSettings.GetSite(
+                siteGuid,
+                cancellationToken))
             {
                 if (reader.Read())
                 {
@@ -338,12 +349,16 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         }
 
-        public async Task<ISiteSettings> Fetch(string hostName, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<ISiteSettings> Fetch(
+            string hostName, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
             SiteSettings site = new SiteSettings();
 
-            using (DbDataReader reader = await dbSiteSettings.GetSite(hostName))
+            using (DbDataReader reader = await dbSiteSettings.GetSite(
+                hostName,
+                cancellationToken))
             {
                 if (reader.Read())
                 {
@@ -386,10 +401,12 @@ namespace cloudscribe.Core.Repositories.Firebird
         }
 
 
-        public async Task<bool> Delete(int siteId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> Delete(
+            int siteId, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbSiteSettings.Delete(siteId);
+            return await dbSiteSettings.Delete(siteId, cancellationToken);
         }
 
 
@@ -397,14 +414,14 @@ namespace cloudscribe.Core.Repositories.Firebird
         public async Task<int> GetCount(CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbSiteSettings.CountOtherSites(-1);
+            return await dbSiteSettings.CountOtherSites(-1, cancellationToken);
         }
 
         public async Task<List<ISiteInfo>> GetList(CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
             List<ISiteInfo> sites = new List<ISiteInfo>();
-            using (DbDataReader reader = await dbSiteSettings.GetSiteList())
+            using (DbDataReader reader = await dbSiteSettings.GetSiteList(cancellationToken))
             {
                 while (reader.Read())
                 {
@@ -418,10 +435,12 @@ namespace cloudscribe.Core.Repositories.Firebird
             return sites;
         }
 
-        public async Task<int> CountOtherSites(int currentSiteId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<int> CountOtherSites(
+            int currentSiteId, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbSiteSettings.CountOtherSites(currentSiteId);
+            return await dbSiteSettings.CountOtherSites(currentSiteId, cancellationToken);
         }
 
         /// <summary>
@@ -440,7 +459,11 @@ namespace cloudscribe.Core.Repositories.Firebird
             cancellationToken.ThrowIfCancellationRequested();
             List<ISiteInfo> sites = new List<ISiteInfo>();
 
-            using (DbDataReader reader = await dbSiteSettings.GetPageOfOtherSites(currentSiteId, pageNumber, pageSize))
+            using (DbDataReader reader = await dbSiteSettings.GetPageOfOtherSites(
+                currentSiteId, 
+                pageNumber, 
+                pageSize,
+                cancellationToken))
             {
                 while (reader.Read())
                 {
@@ -457,7 +480,7 @@ namespace cloudscribe.Core.Repositories.Firebird
         {
             cancellationToken.ThrowIfCancellationRequested();
             List<ISiteHost> hosts = new List<ISiteHost>();
-            using (DbDataReader reader = await dbSiteSettings.GetAllHosts())
+            using (DbDataReader reader = await dbSiteSettings.GetAllHosts(cancellationToken))
             {
                 while (reader.Read())
                 {
@@ -488,10 +511,12 @@ namespace cloudscribe.Core.Repositories.Firebird
             return hosts;
         }
 
-        public async Task<ISiteHost> GetSiteHost(string hostName, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<ISiteHost> GetSiteHost(
+            string hostName, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            using (DbDataReader reader = await dbSiteSettings.GetHost(hostName))
+            using (DbDataReader reader = await dbSiteSettings.GetHost(hostName, cancellationToken))
             {
                 while (reader.Read())
                 {
@@ -508,7 +533,7 @@ namespace cloudscribe.Core.Repositories.Firebird
         public async Task<int> GetHostCount(CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbSiteSettings.GetHostCount();
+            return await dbSiteSettings.GetHostCount(cancellationToken);
         }
 
         public async Task<List<ISiteHost>> GetPageHosts(
@@ -518,7 +543,10 @@ namespace cloudscribe.Core.Repositories.Firebird
         {
             cancellationToken.ThrowIfCancellationRequested();
             List<ISiteHost> hosts = new List<ISiteHost>();
-            using (DbDataReader reader = await dbSiteSettings.GetPageHosts(pageNumber, pageSize))
+            using (DbDataReader reader = await dbSiteSettings.GetPageHosts(
+                pageNumber, 
+                pageSize,
+                cancellationToken))
             {
                 while (reader.Read())
                 {
@@ -532,11 +560,15 @@ namespace cloudscribe.Core.Repositories.Firebird
             return hosts;
         }
 
-        public async Task<List<ISiteHost>> GetSiteHosts(int siteId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<List<ISiteHost>> GetSiteHosts(
+            int siteId, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
             List<ISiteHost> hosts = new List<ISiteHost>();
-            using (DbDataReader reader = await dbSiteSettings.GetHostList(siteId))
+            using (DbDataReader reader = await dbSiteSettings.GetHostList(
+                siteId,
+                cancellationToken))
             {
                 while (reader.Read())
                 {
@@ -558,34 +590,44 @@ namespace cloudscribe.Core.Repositories.Firebird
             CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbSiteSettings.AddHost(siteGuid, siteId, hostName);
+            return await dbSiteSettings.AddHost(siteGuid, siteId, hostName, cancellationToken);
         }
 
-        public async Task<bool> DeleteHost(int hostId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> DeleteHost(
+            int hostId, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbSiteSettings.DeleteHost(hostId);
+            return await dbSiteSettings.DeleteHost(hostId, cancellationToken);
         }
 
-        public async Task<bool> DeleteHostsBySite(int siteId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> DeleteHostsBySite(
+            int siteId, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbSiteSettings.DeleteHostsBySite(siteId);
+            return await dbSiteSettings.DeleteHostsBySite(siteId, cancellationToken);
         }
 
-        public async Task<int> GetSiteIdByHostName(string hostName, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<int> GetSiteIdByHostName(
+            string hostName, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbSiteSettings.GetSiteIdByHostName(hostName);
+            return await dbSiteSettings.GetSiteIdByHostName(hostName, cancellationToken);
         }
 
-        public async Task<List<ISiteFolder>> GetSiteFoldersBySite(Guid siteGuid, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<List<ISiteFolder>> GetSiteFoldersBySite(
+            Guid siteGuid, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
             List<ISiteFolder> siteFolderList
                 = new List<ISiteFolder>();
 
-            using (DbDataReader reader = await dbSiteFolder.GetBySite(siteGuid))
+            using (DbDataReader reader = await dbSiteFolder.GetBySite(
+                siteGuid,
+                cancellationToken))
             {
                 while (reader.Read())
                 {
@@ -599,10 +641,14 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         }
 
-        public async Task<ISiteFolder> GetSiteFolder(string folderName, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<ISiteFolder> GetSiteFolder(
+            string folderName, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            using (DbDataReader reader = await dbSiteFolder.GetOne(folderName))
+            using (DbDataReader reader = await dbSiteFolder.GetOne(
+                folderName,
+                cancellationToken))
             {
                 if (reader.Read())
                 {
@@ -621,7 +667,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             List<ISiteFolder> siteFolderList
                 = new List<ISiteFolder>();
 
-            using (DbDataReader reader = await dbSiteFolder.GetAll())
+            using (DbDataReader reader = await dbSiteFolder.GetAll(cancellationToken))
             {
                 while (reader.Read())
                 {
@@ -657,7 +703,7 @@ namespace cloudscribe.Core.Repositories.Firebird
         public async Task<int> GetFolderCount(CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbSiteFolder.GetFolderCount();
+            return await dbSiteFolder.GetFolderCount(cancellationToken);
         }
 
         public async Task<List<ISiteFolder>> GetPageSiteFolders(
@@ -670,7 +716,10 @@ namespace cloudscribe.Core.Repositories.Firebird
             List<ISiteFolder> siteFolderList
                 = new List<ISiteFolder>();
 
-            using (DbDataReader reader = await dbSiteFolder.GetPage(pageNumber, pageSize))
+            using (DbDataReader reader = await dbSiteFolder.GetPage(
+                pageNumber, 
+                pageSize,
+                cancellationToken))
             {
                 while (reader.Read())
                 {
@@ -684,7 +733,9 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         }
 
-        public async Task<bool> Save(ISiteFolder siteFolder, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> Save(
+            ISiteFolder siteFolder, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             if (siteFolder == null) { return false; }
             cancellationToken.ThrowIfCancellationRequested();
@@ -696,34 +747,42 @@ namespace cloudscribe.Core.Repositories.Firebird
                 return await dbSiteFolder.Add(
                     siteFolder.Guid,
                     siteFolder.SiteGuid,
-                    siteFolder.FolderName);
+                    siteFolder.FolderName,
+                    cancellationToken);
             }
             else
             {
                 return await dbSiteFolder.Update(
                     siteFolder.Guid,
                     siteFolder.SiteGuid,
-                    siteFolder.FolderName);
+                    siteFolder.FolderName,
+                    cancellationToken);
 
             }
         }
 
-        public async Task<bool> DeleteFolder(Guid guid, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> DeleteFolder(
+            Guid guid, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbSiteFolder.Delete(guid);
+            return await dbSiteFolder.Delete(guid, cancellationToken);
         }
 
-        public async Task<bool> DeleteFoldersBySite(Guid siteGuid, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> DeleteFoldersBySite(
+            Guid siteGuid, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbSiteFolder.DeleteBySite(siteGuid);
+            return await dbSiteFolder.DeleteBySite(siteGuid, cancellationToken);
         }
 
-        public async Task<int> GetSiteIdByFolder(string folderName, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<int> GetSiteIdByFolder(
+            string folderName, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbSiteSettings.GetSiteIdByFolder(folderName);
+            return await dbSiteSettings.GetSiteIdByFolder(folderName, cancellationToken);
         }
 
         public int GetSiteIdByFolderNonAsync(string folderName)
@@ -731,16 +790,20 @@ namespace cloudscribe.Core.Repositories.Firebird
             return dbSiteSettings.GetSiteIdByFolderNonAsync(folderName);
         }
 
-        public async Task<Guid> GetSiteGuidByFolder(string folderName, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<Guid> GetSiteGuidByFolder(
+            string folderName, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbSiteFolder.GetSiteGuid(folderName);
+            return await dbSiteFolder.GetSiteGuid(folderName, cancellationToken);
         }
 
-        public async Task<bool> FolderExists(string folderName, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> FolderExists(
+            string folderName, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbSiteFolder.Exists(folderName);
+            return await dbSiteFolder.Exists(folderName, cancellationToken);
         }
 
 

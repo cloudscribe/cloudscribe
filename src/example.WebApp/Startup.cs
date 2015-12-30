@@ -49,16 +49,10 @@ namespace example.WebApp
 
         public Startup(IHostingEnvironment env, IApplicationEnvironment appEnv)
         {
-           // var a = PlatformServices.Default.Application.ApplicationBasePath;
-
             // Setup configuration sources.
             var builder = new ConfigurationBuilder()
-                //.SetBasePath(appEnv.ApplicationBasePath)
                 .AddJsonFile("appsettings.json")
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
-
-            //appEnv.
-            //env.EnvironmentName = "Development";
 
             if (env.IsEnvironment("Development"))
             {

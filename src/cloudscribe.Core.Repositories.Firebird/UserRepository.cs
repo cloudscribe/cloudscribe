@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-18
-// Last Modified:			2015-12-27
+// Last Modified:			2015-12-30
 // 
 
 
@@ -53,7 +53,9 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         #region User 
 
-        public async Task<bool> Save(ISiteUser user, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> Save(
+            ISiteUser user, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             if (user.SiteId == -1) { throw new ArgumentException("user must have a siteid"); }
             if (user.SiteGuid == Guid.Empty) { throw new ArgumentException("user must have a siteguid"); }
@@ -94,7 +96,8 @@ namespace cloudscribe.Core.Repositories.Firebird
                     user.AvatarUrl,
                     user.Signature,
                     user.AuthorBio,
-                    user.Comment
+                    user.Comment,
+                    cancellationToken
                     );
 
                 return user.UserId > -1;
@@ -109,7 +112,9 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         }
 
-        private async Task<bool> Update(ISiteUser user, CancellationToken cancellationToken = default(CancellationToken))
+        private async Task<bool> Update(
+            ISiteUser user, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -148,7 +153,8 @@ namespace cloudscribe.Core.Repositories.Firebird
                     user.PhoneNumberConfirmed,
                     user.TwoFactorEnabled,
                     user.LockoutEndDateUtc,
-                    user.IsLockedOut
+                    user.IsLockedOut,
+                    cancellationToken
                     );
 
             
@@ -166,7 +172,10 @@ namespace cloudscribe.Core.Repositories.Firebird
 
 
         
-        public async Task<bool> Delete(int siteId, int userId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> Delete(
+            int siteId, 
+            int userId, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
             ISiteUser user = await Fetch(siteId, userId);
@@ -176,34 +185,42 @@ namespace cloudscribe.Core.Repositories.Firebird
                 result = await DeleteClaimsByUser(user.SiteId, user.Id);
                 result = await DeleteUserRoles(user.UserId);
             }
-            return await dbSiteUser.DeleteUser(userId);
+            return await dbSiteUser.DeleteUser(userId, cancellationToken);
         }
 
-        public async Task<bool> DeleteUsersBySite(int siteId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> DeleteUsersBySite(
+            int siteId, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
             bool result = await DeleteLoginsBySite(siteId);
             result = await DeleteClaimsBySite(siteId);
             result = await DeleteUserRolesBySite(siteId);
             
-            return await dbSiteUser.DeleteUsersBySite(siteId);
+            return await dbSiteUser.DeleteUsersBySite(siteId, cancellationToken);
         }
 
-        public async Task<bool> FlagAsDeleted(int userId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> FlagAsDeleted(
+            int userId, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbSiteUser.FlagAsDeleted(userId);
+            return await dbSiteUser.FlagAsDeleted(userId, cancellationToken);
         }
 
-        public async Task<bool> FlagAsNotDeleted(int userId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> FlagAsNotDeleted(
+            int userId, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbSiteUser.FlagAsNotDeleted(userId);
+            return await dbSiteUser.FlagAsNotDeleted(userId, cancellationToken);
         }
 
         
 
-        public async Task<bool> ConfirmRegistration(Guid registrationGuid, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> ConfirmRegistration(
+            Guid registrationGuid, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -212,20 +229,24 @@ namespace cloudscribe.Core.Repositories.Firebird
                 return false;
             }
 
-            return await dbSiteUser.ConfirmRegistration(Guid.Empty, registrationGuid);
+            return await dbSiteUser.ConfirmRegistration(Guid.Empty, registrationGuid, cancellationToken);
         }
 
 
-        public async Task<bool> LockoutAccount(Guid userGuid, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> LockoutAccount(
+            Guid userGuid, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbSiteUser.AccountLockout(userGuid, DateTime.UtcNow);
+            return await dbSiteUser.AccountLockout(userGuid, DateTime.UtcNow, cancellationToken);
         }
 
-        public async Task<bool> UnLockAccount(Guid userGuid, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> UnLockAccount(
+            Guid userGuid, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbSiteUser.AccountClearLockout(userGuid);
+            return await dbSiteUser.AccountClearLockout(userGuid, cancellationToken);
         }
 
         public async Task<bool> UpdateFailedPasswordAttemptCount(
@@ -234,7 +255,10 @@ namespace cloudscribe.Core.Repositories.Firebird
             CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbSiteUser.UpdateFailedPasswordAttemptCount(userGuid, failedPasswordAttemptCount);
+            return await dbSiteUser.UpdateFailedPasswordAttemptCount(
+                userGuid, 
+                failedPasswordAttemptCount,
+                cancellationToken);
         }
 
         
@@ -291,10 +315,15 @@ namespace cloudscribe.Core.Repositories.Firebird
         //    return await Fetch(siteId, newestUserId);
         //}
 
-        public async Task<ISiteUser> Fetch(int siteId, int userId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<ISiteUser> Fetch(
+            int siteId, 
+            int userId, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            using (DbDataReader reader = await dbSiteUser.GetSingleUser(userId))
+            using (DbDataReader reader = await dbSiteUser.GetSingleUser(
+                userId,
+                cancellationToken))
             {
                 if (reader.Read())
                 {
@@ -311,11 +340,16 @@ namespace cloudscribe.Core.Repositories.Firebird
         }
 
 
-        public async Task<ISiteUser> Fetch(int siteId, Guid userGuid, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<ISiteUser> Fetch(
+            int siteId, 
+            Guid userGuid, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            using (DbDataReader reader = await dbSiteUser.GetSingleUser(userGuid))
+            using (DbDataReader reader = await dbSiteUser.GetSingleUser(
+                userGuid,
+                cancellationToken))
             {
                 if (reader.Read())
                 {
@@ -331,10 +365,16 @@ namespace cloudscribe.Core.Repositories.Firebird
             return null;
         }
 
-        public async Task<ISiteUser> FetchByConfirmationGuid(int siteId, Guid confirmGuid, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<ISiteUser> FetchByConfirmationGuid(
+            int siteId, 
+            Guid confirmGuid, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            using (DbDataReader reader = await dbSiteUser.GetUserByRegistrationGuid(siteId, confirmGuid))
+            using (DbDataReader reader = await dbSiteUser.GetUserByRegistrationGuid(
+                siteId, 
+                confirmGuid,
+                cancellationToken))
             {
                 if (reader.Read())
                 {
@@ -351,10 +391,16 @@ namespace cloudscribe.Core.Repositories.Firebird
         }
 
 
-        public async Task<ISiteUser> Fetch(int siteId, string email, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<ISiteUser> Fetch(
+            int siteId, 
+            string email, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            using (DbDataReader reader = await dbSiteUser.GetSingleUser(siteId, email))
+            using (DbDataReader reader = await dbSiteUser.GetSingleUser(
+                siteId, 
+                email,
+                cancellationToken))
             {
                 if (reader.Read())
                 {
@@ -370,10 +416,18 @@ namespace cloudscribe.Core.Repositories.Firebird
             return null;
         }
 
-        public async Task<ISiteUser> FetchByLoginName(int siteId, string userName, bool allowEmailFallback, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<ISiteUser> FetchByLoginName(
+            int siteId, 
+            string userName, 
+            bool allowEmailFallback, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            using (DbDataReader reader = await dbSiteUser.GetSingleUserByLoginName(siteId, userName, allowEmailFallback))
+            using (DbDataReader reader = await dbSiteUser.GetSingleUserByLoginName(
+                siteId, 
+                userName, 
+                allowEmailFallback,
+                cancellationToken))
             {
                 if (reader.Read())
                 {
@@ -389,12 +443,18 @@ namespace cloudscribe.Core.Repositories.Firebird
             return null;
         }
         
-        public async Task<List<IUserInfo>> GetByIPAddress(Guid siteGuid, string ipv4Address, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<List<IUserInfo>> GetByIPAddress(
+            Guid siteGuid, 
+            string ipv4Address, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
             List<IUserInfo> userList = new List<IUserInfo>();
 
-            using (DbDataReader reader = await dbUserLocation.GetUsersByIPAddress(siteGuid, ipv4Address))
+            using (DbDataReader reader = await dbUserLocation.GetUsersByIPAddress(
+                siteGuid, 
+                ipv4Address,
+                cancellationToken))
             {
                 while (reader.Read())
                 {
@@ -409,13 +469,17 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         }
 
-        public async Task<List<IUserInfo>> GetCrossSiteUserListByEmail(string email, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<List<IUserInfo>> GetCrossSiteUserListByEmail(
+            string email, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
 
             List<IUserInfo> userList = new List<IUserInfo>();
 
-            using (DbDataReader reader = await dbSiteUser.GetCrossSiteUserListByEmail(email))
+            using (DbDataReader reader = await dbSiteUser.GetCrossSiteUserListByEmail(
+                email,
+                cancellationToken))
             {
                 while (reader.Read())
                 {
@@ -430,10 +494,13 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         }
 
-        public async Task<int> CountUsers(int siteId, string userNameBeginsWith, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<int> CountUsers(
+            int siteId, 
+            string userNameBeginsWith, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbSiteUser.CountUsers(siteId, userNameBeginsWith);
+            return await dbSiteUser.CountUsers(siteId, userNameBeginsWith, cancellationToken);
         }
 
         public async Task<List<IUserInfo>> GetPage(
@@ -451,7 +518,12 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             using (DbDataReader reader
                 = await dbSiteUser.GetUserListPage(
-                    siteId, pageNumber, pageSize, userNameBeginsWith, sortMode))
+                    siteId, 
+                    pageNumber, 
+                    pageSize, 
+                    userNameBeginsWith, 
+                    sortMode,
+                    cancellationToken))
             {
 
                 while (reader.Read())
@@ -504,10 +576,13 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         //}
 
-        public async Task<int> CountUsersForAdminSearch(int siteId, string searchInput, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<int> CountUsersForAdminSearch(
+            int siteId, 
+            string searchInput, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbSiteUser.CountUsersForAdminSearch(siteId, searchInput);
+            return await dbSiteUser.CountUsersForAdminSearch(siteId, searchInput, cancellationToken);
         }
 
         public async Task<List<IUserInfo>> GetUserAdminSearchPage(
@@ -527,7 +602,8 @@ namespace cloudscribe.Core.Repositories.Firebird
                 pageNumber,
                 pageSize,
                 searchInput,
-                sortMode))
+                sortMode,
+                cancellationToken))
             {
                 while (reader.Read())
                 {
@@ -541,10 +617,12 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         }
 
-        public async Task<int> CountLockedOutUsers(int siteId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<int> CountLockedOutUsers(
+            int siteId, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbSiteUser.CountLockedOutUsers(siteId);
+            return await dbSiteUser.CountLockedOutUsers(siteId, cancellationToken);
         }
 
         public async Task<List<IUserInfo>> GetPageLockedUsers(
@@ -560,7 +638,8 @@ namespace cloudscribe.Core.Repositories.Firebird
             using (DbDataReader reader = await dbSiteUser.GetPageLockedUsers(
                 siteId,
                 pageNumber,
-                pageSize))
+                pageSize,
+                cancellationToken))
             {
 
                 while (reader.Read())
@@ -575,10 +654,12 @@ namespace cloudscribe.Core.Repositories.Firebird
             return userList;
         }
 
-        public async Task<int> CountNotApprovedUsers(int siteId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<int> CountNotApprovedUsers(
+            int siteId, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbSiteUser.CountNotApprovedUsers(siteId);
+            return await dbSiteUser.CountNotApprovedUsers(siteId, cancellationToken);
         }
 
         public async Task<List<IUserInfo>> GetNotApprovedUsers(
@@ -594,7 +675,8 @@ namespace cloudscribe.Core.Repositories.Firebird
             using (DbDataReader reader = await dbSiteUser.GetPageNotApprovedUsers(
                 siteId,
                 pageNumber,
-                pageSize))
+                pageSize,
+                cancellationToken))
             {
 
                 while (reader.Read())
@@ -623,22 +705,35 @@ namespace cloudscribe.Core.Repositories.Firebird
         //    return DBSiteUser.EmailLookup(siteId, query, rowsToGet);
         //}
 
-        public async Task<bool> EmailExistsInDB(int siteId, string email, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> EmailExistsInDB(
+            int siteId, 
+            string email, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             bool found = false;
             cancellationToken.ThrowIfCancellationRequested();
-            using (DbDataReader r = await dbSiteUser.GetSingleUser(siteId, email))
+            using (DbDataReader r = await dbSiteUser.GetSingleUser(
+                siteId, 
+                email,
+                cancellationToken))
             {
                 while (r.Read()) { found = true; }
             }
             return found;
         }
 
-        public async Task<bool> EmailExistsInDB(int siteId, int userId, string email, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> EmailExistsInDB(
+            int siteId, 
+            int userId, 
+            string email, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             bool found = false;
             cancellationToken.ThrowIfCancellationRequested();
-            using (DbDataReader r = await dbSiteUser.GetSingleUser(siteId, email))
+            using (DbDataReader r = await dbSiteUser.GetSingleUser(
+                siteId, 
+                email,
+                cancellationToken))
             {
                 while (r.Read())
                 {
@@ -670,12 +765,20 @@ namespace cloudscribe.Core.Repositories.Firebird
         /// <param name="userId"></param>
         /// <param name="loginName"></param>
         /// <returns></returns>
-        public async Task<bool> LoginIsAvailable(int siteId, int userId, string loginName, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> LoginIsAvailable(
+            int siteId, 
+            int userId, 
+            string loginName, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
             bool available = true;
 
-            using (DbDataReader r = await dbSiteUser.GetSingleUserByLoginName(siteId, loginName, false))
+            using (DbDataReader r = await dbSiteUser.GetSingleUserByLoginName(
+                siteId, 
+                loginName, 
+                false,
+                cancellationToken))
             {
                 while (r.Read())
                 {
@@ -689,14 +792,20 @@ namespace cloudscribe.Core.Repositories.Firebird
             return available;
         }
 
-        public async Task<string> GetUserNameFromEmail(int siteId, string email, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<string> GetUserNameFromEmail(
+            int siteId, 
+            string email, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
             string result = string.Empty;
             if ((email != null) && (email.Length > 0) && (siteId > 0))
             {
                 string comma = string.Empty;
-                using (DbDataReader reader = await dbSiteUser.GetSingleUser(siteId, email))
+                using (DbDataReader reader = await dbSiteUser.GetSingleUser(
+                    siteId, 
+                    email,
+                    cancellationToken))
                 {
                     while (reader.Read())
                     {
@@ -735,7 +844,9 @@ namespace cloudscribe.Core.Repositories.Firebird
         /// are also not allowed to be deleted
         /// </summary>
         /// <returns></returns>
-        public async Task<bool> SaveRole(ISiteRole role, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> SaveRole(
+            ISiteRole role, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (role.RoleId == -1) // new role
@@ -756,7 +867,8 @@ namespace cloudscribe.Core.Repositories.Firebird
                     role.RoleGuid,
                     role.SiteGuid,
                     role.SiteId,
-                    role.DisplayName
+                    role.DisplayName,
+                    cancellationToken
                     );
 
                 role.RoleName = role.DisplayName;
@@ -767,23 +879,28 @@ namespace cloudscribe.Core.Repositories.Firebird
             {
                 return await dbRoles.Update(
                     role.RoleId,
-                    role.DisplayName);
+                    role.DisplayName,
+                    cancellationToken);
 
             }
 
         }
 
 
-        public async Task<bool> DeleteRole(int roleId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> DeleteRole(
+            int roleId, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbRoles.Delete(roleId);
+            return await dbRoles.Delete(roleId, cancellationToken);
         }
 
-        public async Task<bool> DeleteRolesBySite(int siteId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> DeleteRolesBySite(
+            int siteId, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbRoles.DeleteRolesBySite(siteId);
+            return await dbRoles.DeleteRolesBySite(siteId, cancellationToken);
         }
 
         public async Task<bool> AddUserToRole(
@@ -795,13 +912,16 @@ namespace cloudscribe.Core.Repositories.Firebird
             )
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbRoles.AddUser(roleId, userId, roleGuid, userGuid);
+            return await dbRoles.AddUser(roleId, userId, roleGuid, userGuid, cancellationToken);
         }
 
-        public async Task<bool> RemoveUserFromRole(int roleId, int userId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> RemoveUserFromRole(
+            int roleId, 
+            int userId, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbRoles.RemoveUser(roleId, userId);
+            return await dbRoles.RemoveUser(roleId, userId, cancellationToken);
         }
 
         //public async Task<bool> AddUserToDefaultRoles(ISiteUser siteUser)
@@ -843,29 +963,38 @@ namespace cloudscribe.Core.Repositories.Firebird
         //    return result;
         //}
 
-        public async Task<bool> DeleteUserRoles(int userId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> DeleteUserRoles(
+            int userId, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbRoles.DeleteUserRoles(userId);
+            return await dbRoles.DeleteUserRoles(userId, cancellationToken);
         }
 
-        public async Task<bool> DeleteUserRolesByRole(int roleId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> DeleteUserRolesByRole(
+            int roleId, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbRoles.DeleteUserRolesByRole(roleId);
+            return await dbRoles.DeleteUserRolesByRole(roleId, cancellationToken);
         }
 
-        public async Task<bool> DeleteUserRolesBySite(int siteId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> DeleteUserRolesBySite(
+            int siteId, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbRoles.DeleteUserRolesBySite(siteId);
+            return await dbRoles.DeleteUserRolesBySite(siteId, cancellationToken);
         }
 
 
-        public async Task<bool> RoleExists(int siteId, string roleName, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> RoleExists(
+            int siteId, 
+            string roleName, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbRoles.Exists(siteId, roleName);
+            return await dbRoles.Exists(siteId, roleName, cancellationToken);
         }
 
         public int GetRoleMemberCount(int roleId)
@@ -885,10 +1014,14 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         }
 
-        public async Task<ISiteRole> FetchRole(int roleId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<ISiteRole> FetchRole(
+            int roleId, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            using (DbDataReader reader = await dbRoles.GetById(roleId))
+            using (DbDataReader reader = await dbRoles.GetById(
+                roleId,
+                cancellationToken))
             {
                 if (reader.Read())
                 {
@@ -901,11 +1034,17 @@ namespace cloudscribe.Core.Repositories.Firebird
             return null;
         }
 
-        public async Task<ISiteRole> FetchRole(int siteId, string roleName, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<ISiteRole> FetchRole(
+            int siteId, 
+            string roleName, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
             SiteRole role = null;
-            using (DbDataReader reader = await dbRoles.GetByName(siteId, roleName))
+            using (DbDataReader reader = await dbRoles.GetByName(
+                siteId, 
+                roleName,
+                cancellationToken))
             {
                 if (reader.Read())
                 {
@@ -918,11 +1057,17 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         }
 
-        public async Task<List<string>> GetUserRoles(int siteId, int userId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<List<string>> GetUserRoles(
+            int siteId, 
+            int userId, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
             List<string> userRoles = new List<string>();
-            using (DbDataReader reader = await dbSiteUser.GetRolesByUser(siteId, userId))
+            using (DbDataReader reader = await dbSiteUser.GetRolesByUser(
+                siteId, 
+                userId,
+                cancellationToken))
             {
                 while (reader.Read())
                 {
@@ -943,7 +1088,12 @@ namespace cloudscribe.Core.Repositories.Firebird
         {
             cancellationToken.ThrowIfCancellationRequested();
             IList<ISiteRole> roles = new List<ISiteRole>();
-            using (DbDataReader reader = await dbRoles.GetPage(siteId, searchInput, pageNumber, pageSize))
+            using (DbDataReader reader = await dbRoles.GetPage(
+                siteId, 
+                searchInput, 
+                pageNumber, 
+                pageSize,
+                cancellationToken))
             {
                 while (reader.Read())
                 {
@@ -1009,16 +1159,23 @@ namespace cloudscribe.Core.Repositories.Firebird
         //}
 
 
-        public async Task<int> CountOfRoles(int siteId, string searchInput, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<int> CountOfRoles(
+            int siteId, 
+            string searchInput, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbRoles.GetCountOfSiteRoles(siteId, searchInput);
+            return await dbRoles.GetCountOfSiteRoles(siteId, searchInput, cancellationToken);
         }
 
-        public async Task<int> CountUsersInRole(int siteId, int roleId, string searchInput, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<int> CountUsersInRole(
+            int siteId, 
+            int roleId, 
+            string searchInput, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbRoles.GetCountOfUsersInRole(siteId, roleId, searchInput);
+            return await dbRoles.GetCountOfUsersInRole(siteId, roleId, searchInput, cancellationToken);
         }
 
         public async Task<IList<ISiteUser>> GetUsersInRole(
@@ -1037,7 +1194,13 @@ namespace cloudscribe.Core.Repositories.Firebird
                 roleId = role.RoleId;
             }
 
-            using (DbDataReader reader = await dbRoles.GetUsersInRole(siteId, roleId, string.Empty, 1, 100000))
+            using (DbDataReader reader = await dbRoles.GetUsersInRole(
+                siteId, 
+                roleId, 
+                string.Empty, 
+                1, 
+                100000,
+                cancellationToken))
             {
                 while (reader.Read())
                 {
@@ -1064,7 +1227,13 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             IList<IUserInfo> users = new List<IUserInfo>();
 
-            using (DbDataReader reader = await dbRoles.GetUsersInRole(siteId, roleId, searchInput, pageNumber, pageSize))
+            using (DbDataReader reader = await dbRoles.GetUsersInRole(
+                siteId, 
+                roleId, 
+                searchInput, 
+                pageNumber, 
+                pageSize,
+                cancellationToken))
             {
                 while (reader.Read())
                 {
@@ -1079,10 +1248,18 @@ namespace cloudscribe.Core.Repositories.Firebird
             return users;
         }
 
-        public async Task<int> CountUsersNotInRole(int siteId, int roleId, string searchInput, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<int> CountUsersNotInRole(
+            int siteId, 
+            int roleId, 
+            string searchInput, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbRoles.GetCountOfUsersNotInRole(siteId, roleId, searchInput);
+            return await dbRoles.GetCountOfUsersNotInRole(
+                siteId, 
+                roleId, 
+                searchInput,
+                cancellationToken);
         }
 
         public async Task<IList<IUserInfo>> GetUsersNotInRole(
@@ -1097,7 +1274,13 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             IList<IUserInfo> users = new List<IUserInfo>();
 
-            using (DbDataReader reader = await dbRoles.GetUsersNotInRole(siteId, roleId, searchInput, pageNumber, pageSize))
+            using (DbDataReader reader = await dbRoles.GetUsersNotInRole(
+                siteId, 
+                roleId, 
+                searchInput, 
+                pageNumber, 
+                pageSize,
+                cancellationToken))
             {
                 while (reader.Read())
                 {
@@ -1121,14 +1304,17 @@ namespace cloudscribe.Core.Repositories.Firebird
         /// Persists a new instance of UserClaim. Returns true on success.
         /// </summary>
         /// <returns></returns>
-        public async Task<bool> SaveClaim(IUserClaim userClaim, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> SaveClaim(
+            IUserClaim userClaim, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
             int newId = await dbUserClaims.Create(
                 userClaim.SiteId,
                 userClaim.UserId,
                 userClaim.ClaimType,
-                userClaim.ClaimValue);
+                userClaim.ClaimValue,
+                cancellationToken);
 
             userClaim.Id = newId;
 
@@ -1137,34 +1323,48 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         }
 
-        public async Task<bool> DeleteClaim(int id, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> DeleteClaim(
+            int id, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbUserClaims.Delete(id);
+            return await dbUserClaims.Delete(id, cancellationToken);
         }
 
-        public async Task<bool> DeleteClaimsByUser(int siteId, string userId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> DeleteClaimsByUser(
+            int siteId, 
+            string userId, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbUserClaims.DeleteByUser(siteId, userId);
+            return await dbUserClaims.DeleteByUser(siteId, userId, cancellationToken);
         }
 
-        public async Task<bool> DeleteClaimByUser(int siteId, string userId, string claimType, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> DeleteClaimByUser(
+            int siteId, 
+            string userId, 
+            string claimType, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbUserClaims.DeleteByUser(siteId, userId, claimType);
+            return await dbUserClaims.DeleteByUser(siteId, userId, claimType, cancellationToken);
         }
 
-        public async Task<bool> DeleteClaimsBySite(int siteId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> DeleteClaimsBySite(
+            int siteId, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbUserClaims.DeleteBySite(siteId);
+            return await dbUserClaims.DeleteBySite(siteId, cancellationToken);
         }
 
-        public async Task<IList<IUserClaim>> GetClaimsByUser(int siteId, string userId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<IList<IUserClaim>> GetClaimsByUser(
+            int siteId, 
+            string userId, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            DbDataReader reader = await dbUserClaims.GetByUser(siteId, userId);
+            DbDataReader reader = await dbUserClaims.GetByUser(siteId, userId, cancellationToken);
             return LoadClaimListFromReader(reader);
 
         }
@@ -1179,7 +1379,11 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             IList<ISiteUser> users = new List<ISiteUser>();
 
-            using (DbDataReader reader = await dbUserClaims.GetUsersByClaim(siteId, claimType, claimValue))
+            using (DbDataReader reader = await dbUserClaims.GetUsersByClaim(
+                siteId, 
+                claimType, 
+                claimValue,
+                cancellationToken))
             {
                 while (reader.Read())
                 {
@@ -1223,7 +1427,9 @@ namespace cloudscribe.Core.Repositories.Firebird
         /// Persists a new instance of UserLogin. Returns true on success.
         /// </summary>
         /// <returns></returns>
-        public async Task<bool> CreateLogin(IUserLogin userLogin, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> CreateLogin(
+            IUserLogin userLogin, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             if (userLogin.LoginProvider.Length == -1) { return false; }
             if (userLogin.ProviderKey.Length == -1) { return false; }
@@ -1235,7 +1441,8 @@ namespace cloudscribe.Core.Repositories.Firebird
                 userLogin.LoginProvider,
                 userLogin.ProviderKey,
                 userLogin.ProviderDisplayName,
-                userLogin.UserId);
+                userLogin.UserId,
+                cancellationToken);
 
 
         }
@@ -1253,7 +1460,8 @@ namespace cloudscribe.Core.Repositories.Firebird
             using (DbDataReader reader = await dbUserLogins.Find(
                 siteId,
                 loginProvider,
-                providerKey))
+                providerKey,
+                cancellationToken))
             {
                 if (reader.Read())
                 {
@@ -1287,19 +1495,25 @@ namespace cloudscribe.Core.Repositories.Firebird
                 siteId,
                 loginProvider,
                 providerKey,
-                userId);
+                userId,
+                cancellationToken);
         }
 
-        public async Task<bool> DeleteLoginsByUser(int siteId, string userId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> DeleteLoginsByUser(
+            int siteId, 
+            string userId, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbUserLogins.DeleteByUser(siteId, userId);
+            return await dbUserLogins.DeleteByUser(siteId, userId, cancellationToken);
         }
 
-        public async Task<bool> DeleteLoginsBySite(int siteId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> DeleteLoginsBySite(
+            int siteId, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbUserLogins.DeleteBySite(siteId);
+            return await dbUserLogins.DeleteBySite(siteId, cancellationToken);
         }
 
 
@@ -1316,7 +1530,10 @@ namespace cloudscribe.Core.Repositories.Firebird
             cancellationToken.ThrowIfCancellationRequested();
 
             List<IUserLogin> userLoginList = new List<IUserLogin>();
-            using (DbDataReader reader = await dbUserLogins.GetByUser(siteId, userId))
+            using (DbDataReader reader = await dbUserLogins.GetByUser(
+                siteId, 
+                userId,
+                cancellationToken))
             {
                 while (reader.Read())
                 {

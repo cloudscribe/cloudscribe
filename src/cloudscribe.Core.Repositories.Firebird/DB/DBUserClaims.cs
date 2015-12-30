@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-11
-// Last Modified:			2015-11-18
+// Last Modified:			2015-12-30
 // 
 
 using cloudscribe.DbHelpers.Firebird;
@@ -12,6 +12,7 @@ using System;
 using System.Data;
 using System.Data.Common;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.Firebird
@@ -29,7 +30,6 @@ namespace cloudscribe.Core.Repositories.Firebird
         }
 
         private ILoggerFactory logFactory;
-        //private ILogger log;
         private string readConnectionString;
         private string writeConnectionString;
 
@@ -38,7 +38,8 @@ namespace cloudscribe.Core.Repositories.Firebird
             int siteId,
             string userId,
             string claimType,
-            string claimValue)
+            string claimValue,
+            CancellationToken cancellationToken)
         {
 
             FbParameter[] arParams = new FbParameter[4];
@@ -62,7 +63,8 @@ namespace cloudscribe.Core.Repositories.Firebird
                 writeConnectionString,
                 CommandType.StoredProcedure,
                 statement,
-                arParams);
+                arParams,
+                cancellationToken);
 
             int newID = Convert.ToInt32(result);
 
@@ -70,7 +72,9 @@ namespace cloudscribe.Core.Repositories.Firebird
         }
 
 
-        public async Task<bool> Delete(int id)
+        public async Task<bool> Delete(
+            int id,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_UserClaims ");
@@ -86,12 +90,16 @@ namespace cloudscribe.Core.Repositories.Firebird
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return (rowsAffected > -1);
         }
 
-        public async Task<bool> DeleteByUser(int siteId, string userId)
+        public async Task<bool> DeleteByUser(
+            int siteId, 
+            string userId,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_UserClaims ");
@@ -112,12 +120,17 @@ namespace cloudscribe.Core.Repositories.Firebird
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                writeConnectionString,
                sqlCommand.ToString(),
-               arParams);
+               arParams,
+               cancellationToken);
 
             return (rowsAffected > -1);
         }
 
-        public async Task<bool> DeleteByUser(int siteId, string userId, string claimType)
+        public async Task<bool> DeleteByUser(
+            int siteId, 
+            string userId, 
+            string claimType,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_UserClaims ");
@@ -143,13 +156,19 @@ namespace cloudscribe.Core.Repositories.Firebird
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                writeConnectionString,
                sqlCommand.ToString(),
-               arParams);
+               arParams,
+               cancellationToken);
 
             return (rowsAffected > -1);
 
         }
 
-        public async Task<bool> DeleteByUser(int siteId, string userId, string claimType, string claimValue)
+        public async Task<bool> DeleteByUser(
+            int siteId, 
+            string userId, 
+            string claimType, 
+            string claimValue,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_UserClaims ");
@@ -180,13 +199,16 @@ namespace cloudscribe.Core.Repositories.Firebird
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                writeConnectionString,
                sqlCommand.ToString(),
-               arParams);
+               arParams,
+               cancellationToken);
 
             return (rowsAffected > -1);
 
         }
 
-        public async Task<bool> DeleteBySite(int siteId)
+        public async Task<bool> DeleteBySite(
+            int siteId,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_UserClaims ");
@@ -202,14 +224,18 @@ namespace cloudscribe.Core.Repositories.Firebird
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                writeConnectionString,
                sqlCommand.ToString(),
-               arParams);
+               arParams,
+               cancellationToken);
 
             return (rowsAffected > -1);
 
         }
 
 
-        public async Task<DbDataReader> GetByUser(int siteId, string userId)
+        public async Task<DbDataReader> GetByUser(
+            int siteId, 
+            string userId,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  * ");
@@ -231,11 +257,16 @@ namespace cloudscribe.Core.Repositories.Firebird
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
         }
 
-        public async Task<DbDataReader> GetUsersByClaim(int siteId, string claimType, string claimValue)
+        public async Task<DbDataReader> GetUsersByClaim(
+            int siteId, 
+            string claimType, 
+            string claimValue,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  u.* ");
@@ -270,7 +301,8 @@ namespace cloudscribe.Core.Repositories.Firebird
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
         }
 

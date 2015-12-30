@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-10
-// Last Modified:			2015-11-18
+// Last Modified:			2015-12-30
 // 
 
 using cloudscribe.DbHelpers.MySql;
@@ -11,6 +11,7 @@ using MySql.Data.MySqlClient;
 using System;
 using System.Data.Common;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.MySql
@@ -29,7 +30,6 @@ namespace cloudscribe.Core.Repositories.MySql
         }
 
         private ILoggerFactory logFactory;
-        //private ILogger log;
         private string readConnectionString;
         private string writeConnectionString;
 
@@ -39,7 +39,8 @@ namespace cloudscribe.Core.Repositories.MySql
             string loginProvider, 
             string providerKey,
             string providerDisplayName,
-            string userId)
+            string userId,
+            CancellationToken cancellationToken)
         {
 
             StringBuilder sqlCommand = new StringBuilder();
@@ -79,7 +80,8 @@ namespace cloudscribe.Core.Repositories.MySql
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return (rowsAffected > -1);
 
@@ -91,7 +93,8 @@ namespace cloudscribe.Core.Repositories.MySql
             int siteId,
             string loginProvider,
             string providerKey,
-            string userId)
+            string userId,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_UserLogins ");
@@ -120,13 +123,17 @@ namespace cloudscribe.Core.Repositories.MySql
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return (rowsAffected > 0);
 
         }
 
-        public async Task<bool> DeleteByUser(int siteId, string userId)
+        public async Task<bool> DeleteByUser(
+            int siteId, 
+            string userId,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_UserLogins ");
@@ -147,12 +154,16 @@ namespace cloudscribe.Core.Repositories.MySql
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
+
             return (rowsAffected > 0);
 
         }
 
-        public async Task<bool> DeleteBySite(int siteId)
+        public async Task<bool> DeleteBySite(
+            int siteId,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_UserLogins ");
@@ -169,7 +180,8 @@ namespace cloudscribe.Core.Repositories.MySql
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return (rowsAffected > 0);
 
@@ -179,7 +191,8 @@ namespace cloudscribe.Core.Repositories.MySql
         public async Task<DbDataReader> Find(
             int siteId,
             string loginProvider, 
-            string providerKey)
+            string providerKey,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  * ");
@@ -207,13 +220,15 @@ namespace cloudscribe.Core.Repositories.MySql
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
         }
 
         public async Task<DbDataReader> GetByUser(
             int siteId,
-            string userId)
+            string userId,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  * ");
@@ -236,7 +251,8 @@ namespace cloudscribe.Core.Repositories.MySql
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
         }
 

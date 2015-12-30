@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2008-06-22
-// Last Modified:			2015-11-18
+// Last Modified:			2015-12-30
 // 
 
 using cloudscribe.DbHelpers.MySql;
@@ -11,6 +11,7 @@ using MySql.Data.MySqlClient;
 using System;
 using System.Data.Common;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.MySql
@@ -18,7 +19,6 @@ namespace cloudscribe.Core.Repositories.MySql
     internal class DBCurrency
     {
         private ILoggerFactory logFactory;
-        //private ILogger log;
         private string readConnectionString;
         private string writeConnectionString;
 
@@ -58,7 +58,8 @@ namespace cloudscribe.Core.Repositories.MySql
             string decimalPlaces,
             decimal value,
             DateTime lastModified,
-            DateTime created)
+            DateTime created,
+            CancellationToken cancellationToken)
         {
 
             StringBuilder sqlCommand = new StringBuilder();
@@ -127,7 +128,8 @@ namespace cloudscribe.Core.Repositories.MySql
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return rowsAffected > 0;
 
@@ -158,7 +160,8 @@ namespace cloudscribe.Core.Repositories.MySql
             string thousandsPointChar,
             string decimalPlaces,
             decimal value,
-            DateTime lastModified)
+            DateTime lastModified,
+            CancellationToken cancellationToken)
         {
 
             StringBuilder sqlCommand = new StringBuilder();
@@ -213,7 +216,8 @@ namespace cloudscribe.Core.Repositories.MySql
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return (rowsAffected > -1);
 
@@ -224,7 +228,9 @@ namespace cloudscribe.Core.Repositories.MySql
         /// </summary>
         /// <param name="guid"> guid </param>
         /// <returns>bool</returns>
-        public async Task<bool> Delete(Guid guid)
+        public async Task<bool> Delete(
+            Guid guid,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_Currency ");
@@ -240,7 +246,8 @@ namespace cloudscribe.Core.Repositories.MySql
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return (rowsAffected > 0);
 
@@ -250,7 +257,9 @@ namespace cloudscribe.Core.Repositories.MySql
         /// Gets an IDataReader with one row from the mp_Currency table.
         /// </summary>
         /// <param name="guid"> guid </param>
-        public async Task<DbDataReader> GetOne(Guid guid)
+        public async Task<DbDataReader> GetOne(
+            Guid guid,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  * ");
@@ -267,14 +276,15 @@ namespace cloudscribe.Core.Repositories.MySql
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
         }
 
         /// <summary>
         /// Gets an IDataReader with all rows in the mp_Currency table.
         /// </summary>
-        public async Task<DbDataReader> GetAll()
+        public async Task<DbDataReader> GetAll(CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  * ");
@@ -284,7 +294,8 @@ namespace cloudscribe.Core.Repositories.MySql
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
                 sqlCommand.ToString(),
-                null);
+                null,
+                cancellationToken);
         }
 
         ///// <summary>

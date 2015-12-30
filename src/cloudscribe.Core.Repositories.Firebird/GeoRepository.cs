@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-11-03
-// Last Modified:			2015-12-28
+// Last Modified:			2015-12-30
 // 
 
 using cloudscribe.Core.Models.Geography;
@@ -51,7 +51,9 @@ namespace cloudscribe.Core.Repositories.Firebird
         /// Persists a new instance of GeoCountry.
         /// </summary>
         /// <returns></returns>
-        public async Task<bool> Save(IGeoCountry geoCountry, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> Save(
+            IGeoCountry geoCountry, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             if (geoCountry == null) { return false; }
             cancellationToken.ThrowIfCancellationRequested();
@@ -64,7 +66,8 @@ namespace cloudscribe.Core.Repositories.Firebird
                     geoCountry.Guid,
                     geoCountry.Name,
                     geoCountry.ISOCode2,
-                    geoCountry.ISOCode3);
+                    geoCountry.ISOCode3,
+                    cancellationToken);
 
 
             }
@@ -74,7 +77,8 @@ namespace cloudscribe.Core.Repositories.Firebird
                     geoCountry.Guid,
                     geoCountry.Name,
                     geoCountry.ISOCode2,
-                    geoCountry.ISOCode3);
+                    geoCountry.ISOCode3,
+                    cancellationToken);
 
             }
 
@@ -83,10 +87,14 @@ namespace cloudscribe.Core.Repositories.Firebird
 
 
         /// <param name="guid"> guid </param>
-        public async Task<IGeoCountry> FetchCountry(Guid guid, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<IGeoCountry> FetchCountry(
+            Guid guid, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            using (DbDataReader reader = await dbGeoCountry.GetOne(guid))
+            using (DbDataReader reader = await dbGeoCountry.GetOne(
+                guid, 
+                cancellationToken))
             {
                 if (reader.Read())
                 {
@@ -100,10 +108,14 @@ namespace cloudscribe.Core.Repositories.Firebird
             return null;
         }
 
-        public async Task<IGeoCountry> FetchCountry(string isoCode2, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<IGeoCountry> FetchCountry(
+            string isoCode2, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            using (DbDataReader reader = await dbGeoCountry.GetByISOCode2(isoCode2))
+            using (DbDataReader reader = await dbGeoCountry.GetByISOCode2(
+                isoCode2,
+                cancellationToken))
             {
                 if (reader.Read())
                 {
@@ -123,10 +135,12 @@ namespace cloudscribe.Core.Repositories.Firebird
         /// </summary>
         /// <param name="guid"> guid </param>
         /// <returns>bool</returns>
-        public async Task<bool> DeleteCountry(Guid guid, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> DeleteCountry(
+            Guid guid, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbGeoCountry.Delete(guid);
+            return await dbGeoCountry.Delete(guid, cancellationToken);
         }
 
 
@@ -136,7 +150,7 @@ namespace cloudscribe.Core.Repositories.Firebird
         public async Task<int> GetCountryCount(CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbGeoCountry.GetCount();
+            return await dbGeoCountry.GetCount(cancellationToken);
         }
 
 
@@ -146,7 +160,7 @@ namespace cloudscribe.Core.Repositories.Firebird
         public async Task<List<IGeoCountry>> GetAllCountries(CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            DbDataReader reader = await dbGeoCountry.GetAll();
+            DbDataReader reader = await dbGeoCountry.GetAll(cancellationToken);
             return LoadCountryListFromReader(reader);
 
         }
@@ -163,7 +177,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            DbDataReader reader = await dbGeoCountry.GetPage(pageNumber, pageSize);
+            DbDataReader reader = await dbGeoCountry.GetPage(pageNumber, pageSize, cancellationToken);
             return LoadCountryListFromReader(reader);
         }
 
@@ -173,7 +187,9 @@ namespace cloudscribe.Core.Repositories.Firebird
         /// Persists a new instance of GeoZone.
         /// </summary>
         /// <returns></returns>
-        public async Task<bool> Save(IGeoZone geoZone, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> Save(
+            IGeoZone geoZone, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             if (geoZone == null) { return false; }
             cancellationToken.ThrowIfCancellationRequested();
@@ -186,7 +202,8 @@ namespace cloudscribe.Core.Repositories.Firebird
                     geoZone.Guid,
                     geoZone.CountryGuid,
                     geoZone.Name,
-                    geoZone.Code);
+                    geoZone.Code,
+                    cancellationToken);
             }
             else
             {
@@ -194,7 +211,8 @@ namespace cloudscribe.Core.Repositories.Firebird
                     geoZone.Guid,
                     geoZone.CountryGuid,
                     geoZone.Name,
-                    geoZone.Code);
+                    geoZone.Code,
+                    cancellationToken);
 
             }
 
@@ -203,10 +221,14 @@ namespace cloudscribe.Core.Repositories.Firebird
 
 
         /// <param name="guid"> guid </param>
-        public async Task<IGeoZone> FetchGeoZone(Guid guid, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<IGeoZone> FetchGeoZone(
+            Guid guid, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            using (DbDataReader reader = await dbGeoZone.GetOne(guid))
+            using (DbDataReader reader = await dbGeoZone.GetOne(
+                guid,
+                cancellationToken))
             {
                 if (reader.Read())
                 {
@@ -235,7 +257,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbGeoZone.Delete(guid);
+            return await dbGeoZone.Delete(guid, cancellationToken);
         }
 
         public async Task<bool> DeleteGeoZonesByCountry(
@@ -243,7 +265,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbGeoZone.DeleteByCountry(countryGuid);
+            return await dbGeoZone.DeleteByCountry(countryGuid, cancellationToken);
         }
 
         /// <summary>
@@ -254,7 +276,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbGeoZone.GetCount(countryGuid);
+            return await dbGeoZone.GetCount(countryGuid, cancellationToken);
         }
 
 
@@ -266,7 +288,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            DbDataReader reader = await dbGeoZone.GetByCountry(countryGuid);
+            DbDataReader reader = await dbGeoZone.GetByCountry(countryGuid, cancellationToken);
             return LoadGeoZoneListFromReader(reader);
 
         }
@@ -277,7 +299,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            DbDataReader reader = await dbGeoCountry.AutoComplete(query, maxRows);
+            DbDataReader reader = await dbGeoCountry.AutoComplete(query, maxRows, cancellationToken);
             return LoadCountryListFromReader(reader);
         }
 
@@ -288,7 +310,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            DbDataReader reader = await dbGeoZone.AutoComplete(countryGuid, query, maxRows);
+            DbDataReader reader = await dbGeoZone.AutoComplete(countryGuid, query, maxRows, cancellationToken);
             return LoadGeoZoneListFromReader(reader);
         }
 
@@ -305,7 +327,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            DbDataReader reader = await dbGeoZone.GetPage(countryGuid, pageNumber, pageSize);
+            DbDataReader reader = await dbGeoZone.GetPage(countryGuid, pageNumber, pageSize, cancellationToken);
             return LoadGeoZoneListFromReader(reader);
         }
 
@@ -366,7 +388,9 @@ namespace cloudscribe.Core.Repositories.Firebird
         }
 
 
-        public async Task<bool> Save(ILanguage language, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> Save(
+            ILanguage language, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             if (language == null) { return false; }
             cancellationToken.ThrowIfCancellationRequested();
@@ -379,7 +403,8 @@ namespace cloudscribe.Core.Repositories.Firebird
                     language.Guid,
                     language.Name,
                     language.Code,
-                    language.Sort);
+                    language.Sort,
+                    cancellationToken);
             }
             else
             {
@@ -387,17 +412,22 @@ namespace cloudscribe.Core.Repositories.Firebird
                     language.Guid,
                     language.Name,
                     language.Code,
-                    language.Sort);
+                    language.Sort,
+                    cancellationToken);
 
             }
 
             return result;
         }
 
-        public async Task<ILanguage> FetchLanguage(Guid guid, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<ILanguage> FetchLanguage(
+            Guid guid, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            using (DbDataReader reader = await dbLanguage.GetOne(guid))
+            using (DbDataReader reader = await dbLanguage.GetOne(
+                guid,
+                cancellationToken))
             {
                 if (reader.Read())
                 {
@@ -421,19 +451,19 @@ namespace cloudscribe.Core.Repositories.Firebird
             CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbLanguage.Delete(guid);
+            return await dbLanguage.Delete(guid, cancellationToken);
         }
 
         public async Task<int> GetLanguageCount(CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbLanguage.GetCount();
+            return await dbLanguage.GetCount(cancellationToken);
         }
 
         public async Task<List<ILanguage>> GetAllLanguages(CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            DbDataReader reader = await dbLanguage.GetAll();
+            DbDataReader reader = await dbLanguage.GetAll(cancellationToken);
             return LoadLanguageListFromReader(reader);
 
         }
@@ -444,7 +474,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            DbDataReader reader = await dbLanguage.GetPage(pageNumber, pageSize);
+            DbDataReader reader = await dbLanguage.GetPage(pageNumber, pageSize, cancellationToken);
             return LoadLanguageListFromReader(reader);
         }
 
@@ -475,7 +505,9 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         }
 
-        public async Task<bool> Save(ICurrency currency, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> Save(
+            ICurrency currency, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             if (currency == null) { return false; }
             cancellationToken.ThrowIfCancellationRequested();
@@ -495,7 +527,8 @@ namespace cloudscribe.Core.Repositories.Firebird
                     currency.DecimalPlaces,
                     currency.Value,
                     currency.LastModified,
-                    currency.Created);
+                    currency.Created,
+                    cancellationToken);
             }
             else
             {
@@ -509,17 +542,22 @@ namespace cloudscribe.Core.Repositories.Firebird
                     currency.ThousandsPointChar,
                     currency.DecimalPlaces,
                     currency.Value,
-                    currency.LastModified);
+                    currency.LastModified,
+                    cancellationToken);
 
             }
 
             return result;
         }
 
-        public async Task<ICurrency> FetchCurrency(Guid guid, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<ICurrency> FetchCurrency(
+            Guid guid, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            using (DbDataReader reader = await dbCurrency.GetOne(guid))
+            using (DbDataReader reader = await dbCurrency.GetOne(
+                guid,
+                cancellationToken))
             {
                 if (reader.Read())
                 {
@@ -533,16 +571,18 @@ namespace cloudscribe.Core.Repositories.Firebird
             return null;
         }
 
-        public async Task<bool> DeleteCurrency(Guid guid, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> DeleteCurrency(
+            Guid guid, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbCurrency.Delete(guid);
+            return await dbCurrency.Delete(guid, cancellationToken);
         }
 
         public async Task<List<ICurrency>> GetAllCurrencies(CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            DbDataReader reader = await dbCurrency.GetAll();
+            DbDataReader reader = await dbCurrency.GetAll(cancellationToken);
             return LoadCurrencyListFromReader(reader);
 
         }

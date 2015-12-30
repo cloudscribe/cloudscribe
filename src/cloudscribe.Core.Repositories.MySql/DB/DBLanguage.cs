@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2008-06-22
-// Last Modified:			2015-11-18
+// Last Modified:			2015-12-30
 // 
 
 using cloudscribe.DbHelpers.MySql;
@@ -11,6 +11,7 @@ using MySql.Data.MySqlClient;
 using System;
 using System.Data.Common;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.MySql
@@ -28,7 +29,6 @@ namespace cloudscribe.Core.Repositories.MySql
         }
 
         private ILoggerFactory logFactory;
-        //private ILogger log;
         private string readConnectionString;
         private string writeConnectionString;
 
@@ -44,7 +44,8 @@ namespace cloudscribe.Core.Repositories.MySql
             Guid guid,
             string name,
             string code,
-            int sort)
+            int sort,
+            CancellationToken cancellationToken)
         {
 
             StringBuilder sqlCommand = new StringBuilder();
@@ -78,7 +79,8 @@ namespace cloudscribe.Core.Repositories.MySql
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return rowsAffected > 0;
 
@@ -97,7 +99,8 @@ namespace cloudscribe.Core.Repositories.MySql
             Guid guid,
             string name,
             string code,
-            int sort)
+            int sort,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("UPDATE mp_Language ");
@@ -127,7 +130,8 @@ namespace cloudscribe.Core.Repositories.MySql
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return (rowsAffected > -1);
 
@@ -138,7 +142,9 @@ namespace cloudscribe.Core.Repositories.MySql
         /// </summary>
         /// <param name="guid"> guid </param>
         /// <returns>bool</returns>
-        public async Task<bool> Delete(Guid guid)
+        public async Task<bool> Delete(
+            Guid guid,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_Language ");
@@ -154,7 +160,8 @@ namespace cloudscribe.Core.Repositories.MySql
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return (rowsAffected > 0);
 
@@ -164,7 +171,9 @@ namespace cloudscribe.Core.Repositories.MySql
         /// Gets an IDataReader with one row from the mp_Language table.
         /// </summary>
         /// <param name="guid"> guid </param>
-        public async Task<DbDataReader> GetOne(Guid guid)
+        public async Task<DbDataReader> GetOne(
+            Guid guid,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  * ");
@@ -181,14 +190,15 @@ namespace cloudscribe.Core.Repositories.MySql
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
         }
 
         /// <summary>
         /// Gets an IDataReader with all rows in the mp_Language table.
         /// </summary>
-        public async Task<DbDataReader> GetAll()
+        public async Task<DbDataReader> GetAll(CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  * ");
@@ -199,13 +209,14 @@ namespace cloudscribe.Core.Repositories.MySql
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
                 sqlCommand.ToString(),
-                null);
+                null,
+                cancellationToken);
         }
 
         /// <summary>
         /// Gets a count of rows in the mp_Language table.
         /// </summary>
-        public async Task<int> GetCount()
+        public async Task<int> GetCount(CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  Count(*) ");
@@ -215,7 +226,8 @@ namespace cloudscribe.Core.Repositories.MySql
             object result = await AdoHelper.ExecuteScalarAsync(
                 readConnectionString,
                 sqlCommand.ToString(),
-                null);
+                null,
+                cancellationToken);
 
             return Convert.ToInt32(result);
         }
@@ -228,28 +240,11 @@ namespace cloudscribe.Core.Repositories.MySql
         /// <param name="totalPages">total pages</param>
         public async Task<DbDataReader> GetPage(
             int pageNumber,
-            int pageSize)
+            int pageSize,
+            CancellationToken cancellationToken)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
-            //totalPages = 1;
-            //int totalRows = GetCount();
-
-            //if (pageSize > 0) totalPages = totalRows / pageSize;
-
-            //if (totalRows <= pageSize)
-            //{
-            //    totalPages = 1;
-            //}
-            //else
-            //{
-            //    int remainder;
-            //    Math.DivRem(totalRows, pageSize, out remainder);
-            //    if (remainder > 0)
-            //    {
-            //        totalPages += 1;
-            //    }
-            //}
-
+            
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT	* ");
             sqlCommand.Append("FROM	mp_Language  ");
@@ -275,7 +270,8 @@ namespace cloudscribe.Core.Repositories.MySql
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
         }
     }
 }

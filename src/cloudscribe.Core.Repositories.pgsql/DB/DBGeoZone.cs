@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2008-06-22
-// Last Modified:			2015-11-18
+// Last Modified:			2015-12-30
 // 
 
 
@@ -13,6 +13,7 @@ using System;
 using System.Data;
 using System.Data.Common;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.pgsql
@@ -31,7 +32,6 @@ namespace cloudscribe.Core.Repositories.pgsql
         }
 
         private ILoggerFactory logFactory;
-        //private ILogger log;
         private string readConnectionString;
         private string writeConnectionString;
 
@@ -48,7 +48,8 @@ namespace cloudscribe.Core.Repositories.pgsql
             Guid guid,
             Guid countryGuid,
             string name,
-            string code)
+            string code,
+            CancellationToken cancellationToken)
         {
             NpgsqlParameter[] arParams = new NpgsqlParameter[4];
 
@@ -83,7 +84,8 @@ namespace cloudscribe.Core.Repositories.pgsql
                 writeConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return rowsAffected > 0;
 
@@ -102,7 +104,8 @@ namespace cloudscribe.Core.Repositories.pgsql
             Guid guid,
             Guid countryGuid,
             string name,
-            string code)
+            string code,
+            CancellationToken cancellationToken)
         {
             NpgsqlParameter[] arParams = new NpgsqlParameter[4];
 
@@ -133,7 +136,8 @@ namespace cloudscribe.Core.Repositories.pgsql
                 writeConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return (rowsAffected > -1);
 
@@ -144,7 +148,9 @@ namespace cloudscribe.Core.Repositories.pgsql
         /// </summary>
         /// <param name="guid"> guid </param>
         /// <returns>bool</returns>
-        public async Task<bool> Delete(Guid guid)
+        public async Task<bool> Delete(
+            Guid guid,
+            CancellationToken cancellationToken)
         {
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
@@ -161,13 +167,16 @@ namespace cloudscribe.Core.Repositories.pgsql
                 writeConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return (rowsAffected > -1);
 
         }
 
-        public async Task<bool> DeleteByCountry(Guid countryGuid)
+        public async Task<bool> DeleteByCountry(
+            Guid countryGuid,
+            CancellationToken cancellationToken)
         {
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
@@ -184,7 +193,8 @@ namespace cloudscribe.Core.Repositories.pgsql
                 writeConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return (rowsAffected > -1);
         }
@@ -193,7 +203,9 @@ namespace cloudscribe.Core.Repositories.pgsql
         /// Gets an IDataReader with one row from the mp_GeoZone table.
         /// </summary>
         /// <param name="guid"> guid </param>
-        public async Task<DbDataReader> GetOne(Guid guid)
+        public async Task<DbDataReader> GetOne(
+            Guid guid,
+            CancellationToken cancellationToken)
         {
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
@@ -211,7 +223,8 @@ namespace cloudscribe.Core.Repositories.pgsql
                 readConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
 
         }
@@ -220,7 +233,10 @@ namespace cloudscribe.Core.Repositories.pgsql
         /// Gets an IDataReader with one row from the mp_GeoZone table.
         /// </summary>
         /// <param name="guid"> guid </param>
-        public async Task<DbDataReader> GetByCode(Guid countryGuid, string code)
+        public async Task<DbDataReader> GetByCode(
+            Guid countryGuid, 
+            string code,
+            CancellationToken cancellationToken)
         {
             NpgsqlParameter[] arParams = new NpgsqlParameter[2];
 
@@ -242,12 +258,17 @@ namespace cloudscribe.Core.Repositories.pgsql
                 readConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
 
         }
 
-        public async Task<DbDataReader> AutoComplete(Guid countryGuid, string query, int maxRows)
+        public async Task<DbDataReader> AutoComplete(
+            Guid countryGuid, 
+            string query, 
+            int maxRows,
+            CancellationToken cancellationToken)
         {
             NpgsqlParameter[] arParams = new NpgsqlParameter[2];
 
@@ -276,14 +297,17 @@ namespace cloudscribe.Core.Repositories.pgsql
                 readConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
         }
 
         /// <summary>
         /// Gets an IDataReader with all rows in the mp_GeoZone table.
         /// </summary>
-        public async Task<DbDataReader> GetByCountry(Guid countryGuid)
+        public async Task<DbDataReader> GetByCountry(
+            Guid countryGuid,
+            CancellationToken cancellationToken)
         {
 
             StringBuilder sqlCommand = new StringBuilder();
@@ -303,7 +327,8 @@ namespace cloudscribe.Core.Repositories.pgsql
                 readConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
 
         }
@@ -311,7 +336,9 @@ namespace cloudscribe.Core.Repositories.pgsql
         /// <summary>
         /// Gets a count of rows in the mp_GeoZone table.
         /// </summary>
-        public async Task<int> GetCount(Guid countryGuid)
+        public async Task<int> GetCount(
+            Guid countryGuid,
+            CancellationToken cancellationToken)
         {
 
             StringBuilder sqlCommand = new StringBuilder();
@@ -330,7 +357,8 @@ namespace cloudscribe.Core.Repositories.pgsql
                 readConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return Convert.ToInt32(result);
 
@@ -345,7 +373,8 @@ namespace cloudscribe.Core.Repositories.pgsql
         public async Task<DbDataReader> GetPage(
             Guid countryGuid,
             int pageNumber,
-            int pageSize)
+            int pageSize,
+            CancellationToken cancellationToken)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
 
@@ -381,7 +410,8 @@ namespace cloudscribe.Core.Repositories.pgsql
                 readConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
 
         }

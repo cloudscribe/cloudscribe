@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-12-21
+// Last Modified:			2015-12-30
 // 
 
 using cloudscribe.DbHelpers.MySql;
@@ -12,6 +12,7 @@ using System;
 using System.Data;
 using System.Data.Common;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.MySql
@@ -30,7 +31,6 @@ namespace cloudscribe.Core.Repositories.MySql
         }
 
         private ILoggerFactory logFactory;
-        //private ILogger log;
         private string readConnectionString;
         private string writeConnectionString;
 
@@ -39,7 +39,8 @@ namespace cloudscribe.Core.Repositories.MySql
             Guid roleGuid,
             Guid siteGuid,
             int siteId,
-            string roleName)
+            string roleName,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("INSERT INTO mp_Roles (");
@@ -79,7 +80,8 @@ namespace cloudscribe.Core.Repositories.MySql
             object result = await AdoHelper.ExecuteScalarAsync(
                 writeConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             int newID = Convert.ToInt32(result);
 
@@ -87,7 +89,10 @@ namespace cloudscribe.Core.Repositories.MySql
 
         }
 
-        public async Task<bool> Update(int roleId, string roleName)
+        public async Task<bool> Update(
+            int roleId, 
+            string roleName,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("UPDATE mp_Roles ");
@@ -106,12 +111,15 @@ namespace cloudscribe.Core.Repositories.MySql
                 writeConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return (rowsAffected > 0);
         }
 
-        public async Task<bool> Delete(int roleId)
+        public async Task<bool> Delete(
+            int roleId,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_Roles ");
@@ -126,12 +134,15 @@ namespace cloudscribe.Core.Repositories.MySql
                 writeConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return (rowsAffected > 0);
         }
 
-        public async Task<bool> DeleteRolesBySite(int siteId)
+        public async Task<bool> DeleteRolesBySite(
+            int siteId,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_Roles ");
@@ -146,12 +157,15 @@ namespace cloudscribe.Core.Repositories.MySql
                 writeConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return (rowsAffected > 0);
         }
 
-        public async Task<bool> DeleteUserRoles(int userId)
+        public async Task<bool> DeleteUserRoles(
+            int userId,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_UserRoles ");
@@ -165,12 +179,15 @@ namespace cloudscribe.Core.Repositories.MySql
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return (rowsAffected > 0);
         }
 
-        public async Task<bool> DeleteUserRolesByRole(int roleId)
+        public async Task<bool> DeleteUserRolesByRole(
+            int roleId,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_UserRoles ");
@@ -184,12 +201,15 @@ namespace cloudscribe.Core.Repositories.MySql
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return (rowsAffected > 0);
         }
 
-        public async Task<bool> DeleteUserRolesBySite(int siteId)
+        public async Task<bool> DeleteUserRolesBySite(
+            int siteId,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_UserRoles ");
@@ -203,12 +223,15 @@ namespace cloudscribe.Core.Repositories.MySql
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return (rowsAffected > 0);
         }
 
-        public async Task<DbDataReader> GetById(int roleId)
+        public async Task<DbDataReader> GetById(
+            int roleId,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT * ");
@@ -223,11 +246,15 @@ namespace cloudscribe.Core.Repositories.MySql
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
         }
 
-        public async Task<DbDataReader> GetByName(int siteId, string roleName)
+        public async Task<DbDataReader> GetByName(
+            int siteId, 
+            string roleName,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT * ");
@@ -245,11 +272,15 @@ namespace cloudscribe.Core.Repositories.MySql
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
         }
 
-        public async Task<bool> Exists(int siteId, string roleName)
+        public async Task<bool> Exists(
+            int siteId, 
+            string roleName,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT Count(*) ");
@@ -267,7 +298,8 @@ namespace cloudscribe.Core.Repositories.MySql
             object result = await AdoHelper.ExecuteScalarAsync(
                 readConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             int count = Convert.ToInt32(result);
 
@@ -344,7 +376,11 @@ namespace cloudscribe.Core.Repositories.MySql
 
         }
 
-        public async Task<int> GetCountOfUsersNotInRole(int siteId, int roleId, string searchInput)
+        public async Task<int> GetCountOfUsersNotInRole(
+            int siteId, 
+            int roleId, 
+            string searchInput,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT ");
@@ -391,7 +427,8 @@ namespace cloudscribe.Core.Repositories.MySql
             object result = await AdoHelper.ExecuteScalarAsync(
                 readConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return Convert.ToInt32(result);
 
@@ -402,7 +439,8 @@ namespace cloudscribe.Core.Repositories.MySql
             int roleId,
             string searchInput,
             int pageNumber,
-            int pageSize)
+            int pageSize,
+            CancellationToken cancellationToken)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
 
@@ -466,11 +504,16 @@ namespace cloudscribe.Core.Repositories.MySql
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
         }
 
-        public async Task<int> GetCountOfUsersInRole(int siteId, int roleId, string searchInput)
+        public async Task<int> GetCountOfUsersInRole(
+            int siteId, 
+            int roleId, 
+            string searchInput,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT ");
@@ -517,7 +560,8 @@ namespace cloudscribe.Core.Repositories.MySql
             object result = await AdoHelper.ExecuteScalarAsync(
                 readConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return Convert.ToInt32(result);
 
@@ -528,7 +572,8 @@ namespace cloudscribe.Core.Repositories.MySql
             int roleId,
             string searchInput,
             int pageNumber,
-            int pageSize)
+            int pageSize,
+            CancellationToken cancellationToken)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
 
@@ -595,7 +640,8 @@ namespace cloudscribe.Core.Repositories.MySql
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
         }
 
@@ -633,7 +679,8 @@ namespace cloudscribe.Core.Repositories.MySql
             int roleId,
             int userId,
             Guid roleGuid,
-            Guid userGuid
+            Guid userGuid,
+            CancellationToken cancellationToken
             )
         {
             //MS SQL proc checks that no matching record exists, may need to check that
@@ -659,13 +706,17 @@ namespace cloudscribe.Core.Repositories.MySql
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return (rowsAffected > -1);
 
         }
 
-        public async Task<bool> RemoveUser(int roleId, int userId)
+        public async Task<bool> RemoveUser(
+            int roleId, 
+            int userId,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_UserRoles ");
@@ -683,7 +734,8 @@ namespace cloudscribe.Core.Repositories.MySql
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return (rowsAffected > 0);
 
@@ -710,7 +762,10 @@ namespace cloudscribe.Core.Repositories.MySql
 
         }
 
-        public async Task<int> GetCountOfSiteRoles(int siteId, string searchInput)
+        public async Task<int> GetCountOfSiteRoles(
+            int siteId, 
+            string searchInput,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT ");
@@ -745,7 +800,8 @@ namespace cloudscribe.Core.Repositories.MySql
                 readConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return Convert.ToInt32(result);
 
@@ -755,7 +811,8 @@ namespace cloudscribe.Core.Repositories.MySql
             int siteId,
             string searchInput,
             int pageNumber,
-            int pageSize)
+            int pageSize,
+            CancellationToken cancellationToken)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
 
@@ -826,7 +883,8 @@ namespace cloudscribe.Core.Repositories.MySql
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
         }
 
     }

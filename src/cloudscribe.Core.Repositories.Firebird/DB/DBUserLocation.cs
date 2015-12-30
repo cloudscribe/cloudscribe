@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2008-01-04
-// Last Modified:			2015-11-18
+// Last Modified:			2015-12-30
 //
 
 using cloudscribe.DbHelpers.Firebird;
@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Data.Common;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.Firebird
@@ -29,7 +30,6 @@ namespace cloudscribe.Core.Repositories.Firebird
         }
 
         private ILoggerFactory logFactory;
-        //private ILogger log;
         private string readConnectionString;
         private string writeConnectionString;
 
@@ -460,7 +460,10 @@ namespace cloudscribe.Core.Repositories.Firebird
         /// Gets an IDataReader with rows from the mp_Users table which have the passed in IP Address
         /// </summary>
         /// <param name="siteGuid"> siteGuid </param>
-        public async Task<DbDataReader> GetUsersByIPAddress(Guid siteGuid, string ipv4Address)
+        public async Task<DbDataReader> GetUsersByIPAddress(
+            Guid siteGuid, 
+            string ipv4Address,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  u.* ");
@@ -487,7 +490,8 @@ namespace cloudscribe.Core.Repositories.Firebird
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
         }
 
