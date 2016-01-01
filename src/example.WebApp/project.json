@@ -22,6 +22,7 @@
     "cloudscribe.Setup.MSSQL": "1.0.0-*",
     "cloudscribe.Setup.pgsql": "1.0.0-*",
     "cloudscribe.Setup.Sqlite": "1.0.0-*",
+    "cloudscribe.DbHelpers.Ado": "1.0.0-*",
     "cloudscribe.DbHelpers.SQLite": "1.0.0-*",
     "cloudscribe.Messaging": "1.0.0-*",
     "cloudscribe.Web.Navigation": "1.0.0-*",

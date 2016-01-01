@@ -2,10 +2,10 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-12-30
+// Last Modified:			2016-01-01
 //
 
-using cloudscribe.DbHelpers.pgsql;
+using cloudscribe.DbHelpers;
 using Microsoft.Extensions.Logging;
 using Npgsql;
 using System;
@@ -28,11 +28,15 @@ namespace cloudscribe.Core.Repositories.pgsql
             logFactory = loggerFactory;
             readConnectionString = dbReadConnectionString;
             writeConnectionString = dbWriteConnectionString;
+
+            // possibly will change this later to have NpgSqlFactory/DbProviderFactory injected
+            AdoHelper = new AdoHelper(Npgsql.NpgsqlFactory.Instance);
         }
 
         private ILoggerFactory logFactory;
         private string readConnectionString;
         private string writeConnectionString;
+        private AdoHelper AdoHelper;
 
         public async Task<int> Create(
             Guid siteGuid,

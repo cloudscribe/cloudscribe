@@ -2,12 +2,12 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-11-03
-// Last Modified:			2015-12-30
+// Last Modified:			2016-01-01
 // 
 
 
 using cloudscribe.Core.Models.Geography;
-using cloudscribe.DbHelpers.pgsql;
+using cloudscribe.DbHelpers;
 using Microsoft.Extensions.OptionsModel;
 using Microsoft.Extensions.Logging;
 using System;
@@ -21,7 +21,7 @@ namespace cloudscribe.Core.Repositories.pgsql
     public sealed class GeoRepository : IGeoRepository
     {
         public GeoRepository(
-            IOptions<PostgreSqlConnectionOptions> configuration,
+            IOptions<ConnectionStringOptions> configuration,
             ILoggerFactory loggerFactory)
         {
             if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }

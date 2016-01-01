@@ -1,12 +1,12 @@
 ﻿// Original Author:					Joseph Hill
 // Created:							2005-02-16 
 // Additions and fixes have been added by Joe Audette, Dean Brettle, TJ Fontaine
-// Last Modified:                   2015-12-26
+// Last Modified:                   2016-01-01
 
 
 using cloudscribe.Core.Models;
 using cloudscribe.Setup.Web;
-using cloudscribe.DbHelpers.pgsql;
+using cloudscribe.DbHelpers;
 using Microsoft.Extensions.OptionsModel;
 using Microsoft.Extensions.Logging;
 using Npgsql;
@@ -23,7 +23,7 @@ namespace cloudscribe.Setup.pgsql
     {
         public DbSetup(
             ILoggerFactory loggerFactory,
-            IOptions<PostgreSqlConnectionOptions> configuration,
+            IOptions<ConnectionStringOptions> configuration,
             IVersionProviderFactory versionProviderFactory)
         {
             if (loggerFactory == null) { throw new ArgumentNullException(nameof(loggerFactory)); }
@@ -37,6 +37,9 @@ namespace cloudscribe.Setup.pgsql
             writeConnectionString = configuration.Value.WriteConnectionString;
             readConnectionString = configuration.Value.ReadConnectionString;
 
+            // possibly will change this later to have NpgSqlFactory/DbProviderFactory injected
+            AdoHelper = new AdoHelper(Npgsql.NpgsqlFactory.Instance);
+
         }
 
         private IVersionProviderFactory versionProviders;
@@ -44,6 +47,7 @@ namespace cloudscribe.Setup.pgsql
         private ILogger log;
         private string writeConnectionString;
         private string readConnectionString;
+        private AdoHelper AdoHelper;
 
         #region IDb
 

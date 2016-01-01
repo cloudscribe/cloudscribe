@@ -176,7 +176,8 @@ namespace example.WebApp
                     
                 case "pgsql":
 
-                    services.Configure<cloudscribe.DbHelpers.pgsql.PostgreSqlConnectionOptions>(configuration.GetSection("Data:PostgreSqlConnectionOptions"));
+                    services.Configure<cloudscribe.DbHelpers.ConnectionStringOptions>(configuration.GetSection("Data:PostgreSql:ConnectionStringOptions"));
+                    
                     services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.pgsql.SiteRepository>();
                     services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.pgsql.UserRepository>();
                     services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.pgsql.GeoRepository>();
