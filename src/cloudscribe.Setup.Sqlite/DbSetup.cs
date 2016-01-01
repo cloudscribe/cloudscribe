@@ -2,11 +2,11 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2004-08-03
-// Last Modified:		    2015-12-26
+// Last Modified:		    2016-01-01
 
 using cloudscribe.Core.Models;
 using cloudscribe.Setup.Web;
-using cloudscribe.DbHelpers.SQLite;
+using cloudscribe.DbHelpers;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Logging;
 using System;
@@ -21,8 +21,8 @@ namespace cloudscribe.Setup.Sqlite
     {
 
         public DbSetup(
-            SqliteConnectionstringResolver connectionStringResolver,
-            ILogger<SqliteConnectionstringResolver> logger,
+            cloudscribe.DbHelpers.SQLite.SqliteConnectionstringResolver connectionStringResolver,
+            ILogger<DbSetup> logger,
             IVersionProviderFactory versionProviderFactory)
         {
             if (connectionStringResolver == null) { throw new ArgumentNullException(nameof(connectionStringResolver)); }
@@ -34,12 +34,16 @@ namespace cloudscribe.Setup.Sqlite
             connectionString = connectionStringResolver.Resolve();
             sqliteFilePath = connectionStringResolver.SqliteFilePath;
 
+            // possibly will change this later to have SqliteFactory/DbProviderFactory injected
+            AdoHelper = new AdoHelper(SqliteFactory.Instance);
+
         }
 
         private IVersionProviderFactory versionProviders;
         private ILogger log;
         private string connectionString;
         private string sqliteFilePath = string.Empty;
+        private AdoHelper AdoHelper;
 
         #region IDbSetup
 

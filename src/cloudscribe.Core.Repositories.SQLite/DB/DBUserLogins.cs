@@ -2,10 +2,10 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-10
-// Last Modified:			2015-11-18
+// Last Modified:			2016-01-01
 // 
 
-using cloudscribe.DbHelpers.SQLite;
+using cloudscribe.DbHelpers;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Logging;
 using System;
@@ -24,13 +24,13 @@ namespace cloudscribe.Core.Repositories.SQLite
             logFactory = loggerFactory;
             connectionString = dbConnectionString;
 
-
+            // possibly will change this later to have SqliteFactory/DbProviderFactory injected
+            AdoHelper = new AdoHelper(SqliteFactory.Instance);
         }
 
         private ILoggerFactory logFactory;
-        //private ILogger log;
         private string connectionString;
-
+        private AdoHelper AdoHelper;
 
 
         public bool Create(

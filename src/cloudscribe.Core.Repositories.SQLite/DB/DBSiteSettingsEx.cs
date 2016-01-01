@@ -2,10 +2,10 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2008-09-12
-// Last Modified:			2015-11-18
+// Last Modified:			2016-01-01
 //
 
-using cloudscribe.DbHelpers.SQLite;
+using cloudscribe.DbHelpers;
 using System;
 using System.Data;
 using System.Data.Common;
@@ -24,12 +24,13 @@ namespace cloudscribe.Core.Repositories.SQLite
             logFactory = loggerFactory;
             connectionString = dbConnectionString;
 
-
+            // possibly will change this later to have SqliteFactory/DbProviderFactory injected
+            AdoHelper = new AdoHelper(SqliteFactory.Instance);
         }
 
         private ILoggerFactory logFactory;
-        //private ILogger log;
         private string connectionString;
+        private AdoHelper AdoHelper;
 
         public DbDataReader GetSiteSettingsExList(int siteId)
         {

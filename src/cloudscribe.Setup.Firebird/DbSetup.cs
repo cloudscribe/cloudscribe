@@ -2,13 +2,14 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-07-17
-// Last Modified:		    2015-12-26
+// Last Modified:		    2016-01-01
 
 
 using cloudscribe.Core.Models;
 using cloudscribe.Setup.Web;
 using cloudscribe.DbHelpers.Firebird;
 using FirebirdSql.Data.FirebirdClient;
+using FirebirdSql.Data.Isql;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.OptionsModel;
 using System;
@@ -41,7 +42,6 @@ namespace cloudscribe.Setup.Firebird
         }
 
         private IVersionProviderFactory versionProviders;
-        //private IConfiguration config;
         private ILoggerFactory logFactory;
         private ILogger log;
         private string writeConnectionString;
@@ -211,7 +211,7 @@ namespace cloudscribe.Setup.Firebird
 
         public bool RunScript(
             FileInfo scriptFile,
-            String overrideConnectionInfo)
+            string overrideConnectionInfo)
         {
             if (scriptFile == null) return false;
 
@@ -239,7 +239,7 @@ namespace cloudscribe.Setup.Firebird
                     foreach (FileInfo file in scriptFiles)
                     {
 
-                        bool result = AdoHelper.ExecuteBatchScript(
+                        bool result = ExecuteBatchScript(
                             overrideConnectionInfo,
                             file.FullName);
 
@@ -256,6 +256,50 @@ namespace cloudscribe.Setup.Firebird
             }
 
             return false;
+
+        }
+
+        public bool ExecuteBatchScript(
+            string connectionString,
+            string pathToScriptFile)
+        {
+            // http://stackoverflow.com/questions/9259034/the-type-of-the-sql-statement-could-not-be-determinated
+
+            //FbScript script = new FbScript(pathToScriptFile);
+            FbScript script;
+            using (StreamReader sr = File.OpenText(pathToScriptFile))
+            {
+                script = new FbScript(sr.ReadToEnd());
+            }
+
+            FbBatchExecution batch;
+
+            if (script.Parse() > 0)
+            {
+                using (FbConnection connection = new FbConnection(connectionString))
+                {
+                    connection.Open();
+                    try
+                    {
+                        batch = new FbBatchExecution(connection, script);
+                        batch.Execute(true);
+
+
+
+                    }
+                    catch (FbException ex)
+                    {
+
+                        //log.Error(ex);
+                        throw new Exception(pathToScriptFile, ex);
+                    }
+
+
+                }
+
+            }
+
+            return true;
 
         }
 
@@ -589,7 +633,7 @@ namespace cloudscribe.Setup.Firebird
                     overrideConnectionInfo = writeConnectionString;
                 }
 
-                result = AdoHelper.ExecuteBatchScript(
+                result = ExecuteBatchScript(
                     overrideConnectionInfo,
                     scriptFile.FullName);
             }
