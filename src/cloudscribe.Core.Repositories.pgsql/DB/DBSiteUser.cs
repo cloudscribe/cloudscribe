@@ -1226,7 +1226,7 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append("phonenumber = :phonenumber, ");
             sqlCommand.Append("phonenumberconfirmed = :phonenumberconfirmed, ");
             sqlCommand.Append("twofactorenabled = :twofactorenabled, ");
-            sqlCommand.Append("lockoutenddateutc = :lockoutenddateutc ");
+            sqlCommand.Append("lockoutenddateutc = :lockoutenddateutc, ");
 
             sqlCommand.Append("islockedout = :islockedout    ");
 
