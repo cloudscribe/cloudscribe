@@ -2,11 +2,11 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2004-08-03
-// Last Modified:		    2015-12-26
+// Last Modified:		    2016-01-02
 
 using cloudscribe.Core.Models;
 using cloudscribe.Setup.Web;
-using cloudscribe.DbHelpers.MySql;
+using cloudscribe.DbHelpers;
 using Microsoft.Extensions.OptionsModel;
 using Microsoft.Extensions.Logging;
 using MySql.Data.MySqlClient;
@@ -23,7 +23,7 @@ namespace cloudscribe.Setup.MySql
     {
         public DbSetup(
             ILoggerFactory loggerFactory,
-            IOptions<MySqlConnectionOptions> configuration,
+            IOptions<ConnectionStringOptions> configuration,
             IVersionProviderFactory versionProviderFactory)
         {
             if (loggerFactory == null) { throw new ArgumentNullException(nameof(loggerFactory)); }
@@ -37,6 +37,9 @@ namespace cloudscribe.Setup.MySql
             writeConnectionString = configuration.Value.WriteConnectionString;
             readConnectionString = configuration.Value.ReadConnectionString;
 
+            // possibly will change this later to have MySqlClientFactory/DbProviderFactory injected
+            AdoHelper = new AdoHelper(MySqlClientFactory.Instance);
+
         }
 
         private IVersionProviderFactory versionProviders;
@@ -44,6 +47,7 @@ namespace cloudscribe.Setup.MySql
         private ILogger log;
         private string writeConnectionString;
         private string readConnectionString;
+        private AdoHelper AdoHelper;
 
         #region IDb
 

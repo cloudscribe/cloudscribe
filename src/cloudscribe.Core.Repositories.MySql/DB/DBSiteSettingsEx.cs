@@ -2,10 +2,10 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2008-09-12
-// Last Modified:			2015-11-18
+// Last Modified:			2016-01-02
 // 
 
-using cloudscribe.DbHelpers.MySql;
+using cloudscribe.DbHelpers;
 using Microsoft.Extensions.Logging;
 using MySql.Data.MySqlClient;
 using System;
@@ -25,13 +25,15 @@ namespace cloudscribe.Core.Repositories.MySql
             logFactory = loggerFactory;
             readConnectionString = dbReadConnectionString;
             writeConnectionString = dbWriteConnectionString;
+
+            // possibly will change this later to have MySqlClientFactory/DbProviderFactory injected
+            AdoHelper = new AdoHelper(MySqlClientFactory.Instance);
         }
 
         private ILoggerFactory logFactory;
-        //private ILogger log;
         private string readConnectionString;
         private string writeConnectionString;
-
+        private AdoHelper AdoHelper;
 
         public DbDataReader GetSiteSettingsExList(int siteId)
         {

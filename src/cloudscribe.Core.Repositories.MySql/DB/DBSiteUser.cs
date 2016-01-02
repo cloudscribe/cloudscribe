@@ -2,10 +2,10 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-12-30
+// Last Modified:			2016-01-02
 // 
 
-using cloudscribe.DbHelpers.MySql;
+using cloudscribe.DbHelpers;
 using Microsoft.Extensions.Logging;
 using MySql.Data.MySqlClient;
 using System;
@@ -29,11 +29,15 @@ namespace cloudscribe.Core.Repositories.MySql
             logFactory = loggerFactory;
             readConnectionString = dbReadConnectionString;
             writeConnectionString = dbWriteConnectionString;
+
+            // possibly will change this later to have MySqlClientFactory/DbProviderFactory injected
+            AdoHelper = new AdoHelper(MySqlClientFactory.Instance);
         }
 
         private ILoggerFactory logFactory;
         private string readConnectionString;
         private string writeConnectionString;
+        private AdoHelper AdoHelper;
 
         public DbDataReader GetUserCountByYearMonth(int siteId)
         {
@@ -60,6 +64,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
             return AdoHelper.ExecuteReader(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
 
@@ -88,6 +93,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
             return AdoHelper.ExecuteReader(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
 
@@ -144,6 +150,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
             return AdoHelper.ExecuteReader(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
 
@@ -182,6 +189,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
             return AdoHelper.ExecuteReader(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
         }
@@ -198,6 +206,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
             int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams).ToString());
 
@@ -219,6 +228,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
             object result = await AdoHelper.ExecuteScalarAsync(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams,
                 cancellationToken);
@@ -243,6 +253,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
             object result = await AdoHelper.ExecuteScalarAsync(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams,
                 cancellationToken);
@@ -277,6 +288,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
             int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams).ToString());
 
@@ -307,6 +319,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
             int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams).ToString());
 
@@ -330,6 +343,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
             int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams).ToString());
 
@@ -355,6 +369,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
             return AdoHelper.ExecuteReader(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
 
@@ -379,6 +394,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
             return AdoHelper.ExecuteReader(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
 
@@ -398,6 +414,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
             object result = await AdoHelper.ExecuteScalarAsync(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams,
                 cancellationToken);
@@ -435,6 +452,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
             object result = await AdoHelper.ExecuteScalarAsync(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams,
                 cancellationToken);
@@ -504,6 +522,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams,
                 cancellationToken);
@@ -547,6 +566,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
             object result = await AdoHelper.ExecuteScalarAsync(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams,
                 cancellationToken);
@@ -624,6 +644,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams,
                 cancellationToken);
@@ -662,6 +683,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
             object result = await AdoHelper.ExecuteScalarAsync(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams,
                 cancellationToken);
@@ -738,6 +760,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams,
                 cancellationToken);
@@ -776,6 +799,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams,
                 cancellationToken);
@@ -813,6 +837,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams,
                 cancellationToken);
@@ -1042,6 +1067,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
             object result = await AdoHelper.ExecuteScalarAsync(
                 writeConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams,
                 cancellationToken);
@@ -1244,6 +1270,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams,
                 cancellationToken);
@@ -1268,6 +1295,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams,
                 cancellationToken);
@@ -1290,6 +1318,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams,
                 cancellationToken);
@@ -1314,6 +1343,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 writeConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
 
@@ -1341,6 +1371,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 writeConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
 
@@ -1369,6 +1400,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams,
                 cancellationToken);
@@ -1395,6 +1427,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 writeConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
 
@@ -1422,6 +1455,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 writeConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
 
@@ -1450,6 +1484,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams,
                 cancellationToken);
@@ -1560,6 +1595,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams,
                 cancellationToken);
@@ -1588,6 +1624,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
             rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams,
                 cancellationToken);
@@ -1612,6 +1649,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams,
                 cancellationToken);
@@ -1635,6 +1673,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams,
                 cancellationToken);
@@ -1676,6 +1715,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams,
                 cancellationToken);
@@ -1704,6 +1744,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams,
                 cancellationToken
@@ -1734,6 +1775,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams,
                 cancellationToken);
@@ -1758,6 +1800,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams,
                 cancellationToken);
@@ -1802,6 +1845,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams,
                 cancellationToken);
@@ -1865,6 +1909,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams,
                 cancellationToken);
@@ -1887,6 +1932,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams,
                 cancellationToken);

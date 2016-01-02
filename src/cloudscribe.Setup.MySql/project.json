@@ -15,7 +15,7 @@
   "dependencies": {
     "cloudscribe.Core.Models": "1.0.0-*",
     "cloudscribe.Setup.Web": "1.0.0-*",
-    "cloudscribe.DbHelpers.MySql": "1.0.0-*",
+    "cloudscribe.DbHelpers.Ado": "1.0.0-*",
     "Microsoft.Extensions.Logging.Abstractions": "1.0.0-rc1-final",
     "Microsoft.Extensions.OptionsModel": "1.0.0-rc1-final",
     "MySql.Data": "6.9.6"
