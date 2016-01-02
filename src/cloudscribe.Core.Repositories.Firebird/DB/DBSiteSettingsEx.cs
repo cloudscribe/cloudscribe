@@ -2,13 +2,14 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2008-09-12
-// Last Modified:			2015-11-18
+// Last Modified:			2016-01-02
 // 
 
-using cloudscribe.DbHelpers.Firebird;
+using cloudscribe.DbHelpers;
 using FirebirdSql.Data.FirebirdClient;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Data;
 using System.Data.Common;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,12 +26,15 @@ namespace cloudscribe.Core.Repositories.Firebird
             logFactory = loggerFactory;
             readConnectionString = dbReadConnectionString;
             writeConnectionString = dbWriteConnectionString;
+
+            // possibly will change this later to have FirebirdClientFactory/DbProviderFactory injected
+            AdoHelper = new FirebirdHelper(FirebirdClientFactory.Instance);
         }
 
         private ILoggerFactory logFactory;
-        //private ILogger log;
         private string readConnectionString;
         private string writeConnectionString;
+        private FirebirdHelper AdoHelper;
 
         public DbDataReader GetSiteSettingsExList(int siteId)
         {
@@ -107,7 +111,9 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
+                true,
                 null);
 
             return rowsAffected > 0;
@@ -161,7 +167,9 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 writeConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
+                true,
                 arParams);
 
             return (rowsAffected > -1);
@@ -213,7 +221,9 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 writeConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
+                true,
                 arParams);
 
             return (rowsAffected > 0);
@@ -245,7 +255,9 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 writeConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
+                true,
                 arParams);
 
             return (rowsAffected > -1);

@@ -2,10 +2,10 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2015-12-30
+// Last Modified:			2016-01-02
 // 
 
-using cloudscribe.DbHelpers.Firebird;
+using cloudscribe.DbHelpers;
 using FirebirdSql.Data.FirebirdClient;
 using Microsoft.Extensions.Logging;
 using System;
@@ -27,11 +27,15 @@ namespace cloudscribe.Core.Repositories.Firebird
             logFactory = loggerFactory;
             readConnectionString = dbReadConnectionString;
             writeConnectionString = dbWriteConnectionString;
+
+            // possibly will change this later to have FirebirdClientFactory/DbProviderFactory injected
+            AdoHelper = new FirebirdHelper(FirebirdClientFactory.Instance);
         }
 
         private ILoggerFactory logFactory;
         private string readConnectionString;
         private string writeConnectionString;
+        private FirebirdHelper AdoHelper;
 
         public DbDataReader GetUserList(int siteId)
         {
@@ -45,6 +49,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             return AdoHelper.ExecuteReader(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
 
@@ -74,6 +79,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             return AdoHelper.ExecuteReader(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
 
@@ -178,6 +184,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             return AdoHelper.ExecuteReader(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
 
@@ -199,6 +206,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             int count = Convert.ToInt32(
                 AdoHelper.ExecuteScalar(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams).ToString());
 
@@ -220,6 +228,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             object result = await AdoHelper.ExecuteScalarAsync(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams, 
                 cancellationToken);
@@ -243,6 +252,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             object result = await AdoHelper.ExecuteScalarAsync(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams,
                 cancellationToken);
@@ -278,6 +288,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             int count = Convert.ToInt32(
                 AdoHelper.ExecuteScalar(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams).ToString());
 
@@ -309,6 +320,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             int count = Convert.ToInt32(
                 AdoHelper.ExecuteScalar(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams).ToString());
 
@@ -332,6 +344,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams).ToString());
 
@@ -355,6 +368,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             return AdoHelper.ExecuteReader(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
 
@@ -378,6 +392,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             return AdoHelper.ExecuteReader(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
 
@@ -397,6 +412,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             object result = await AdoHelper.ExecuteScalarAsync(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams,
                 cancellationToken);
@@ -434,6 +450,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             object result = await AdoHelper.ExecuteScalarAsync(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams,
                 cancellationToken);
@@ -505,6 +522,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams,
                 cancellationToken);
@@ -549,6 +567,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             object result = await AdoHelper.ExecuteScalarAsync(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams,
                 cancellationToken);
@@ -630,6 +649,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams,
                 cancellationToken);
@@ -670,6 +690,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             object result = await AdoHelper.ExecuteScalarAsync(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams,
                 cancellationToken);
@@ -747,6 +768,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams,
                 cancellationToken);
@@ -787,6 +809,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams,
                 cancellationToken);
@@ -828,6 +851,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams,
                 cancellationToken);
@@ -1004,6 +1028,7 @@ namespace cloudscribe.Core.Repositories.Firebird
                 writeConnectionString,
                 CommandType.StoredProcedure,
                 statement,
+                true,
                 arParams,
                 cancellationToken);
 
@@ -1093,7 +1118,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             sqlCommand.Append("WHERE UserID = @UserID ;");
 
-            FbParameter[] arParams = new FbParameter[32];
+            FbParameter[] arParams = new FbParameter[33];
 
             arParams[0] = new FbParameter("@UserID", FbDbType.Integer);
             arParams[0].Value = userId;
@@ -1206,9 +1231,14 @@ namespace cloudscribe.Core.Repositories.Firebird
             arParams[31] = new FbParameter("@IsLockedOut", FbDbType.Integer);
             arParams[31].Value = isLockedOut ? 1 : 0;
 
+            arParams[32] = new FbParameter("@RolesChanged", FbDbType.Integer);
+            arParams[32].Value = rolesChanged ? 1 : 0;
+
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
+                true,
                 arParams,
                 cancellationToken);
 
@@ -1232,7 +1262,9 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
+                true,
                 arParams,
                 cancellationToken);
 
@@ -1254,7 +1286,9 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
+                true,
                 arParams,
                 cancellationToken);
 
@@ -1278,7 +1312,9 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                     writeConnectionString,
+                    CommandType.Text,
                     sqlCommand.ToString(),
+                    true,
                     arParams);
 
             return (rowsAffected > 0);
@@ -1305,7 +1341,9 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 writeConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
+                true,
                 arParams);
 
             return (rowsAffected > 0);
@@ -1333,7 +1371,9 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
+                true,
                 arParams,
                 cancellationToken);
 
@@ -1363,7 +1403,9 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             rowsAffected = AdoHelper.ExecuteNonQuery(
                 writeConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
+                true,
                 arParams);
 
             return (rowsAffected > 0);
@@ -1392,7 +1434,9 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             rowsAffected = AdoHelper.ExecuteNonQuery(
                 writeConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
+                true,
                 arParams);
 
             return (rowsAffected > 0);
@@ -1422,7 +1466,9 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
+                true,
                 arParams,
                 cancellationToken);
 
@@ -1452,7 +1498,9 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             rowsAffected = AdoHelper.ExecuteNonQuery(
                 writeConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
+                true,
                 arParams);
 
             return (rowsAffected > 0);
@@ -1481,7 +1529,9 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             rowsAffected = AdoHelper.ExecuteNonQuery(
                 writeConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
+                true,
                 arParams);
 
             return (rowsAffected > 0);
@@ -1507,7 +1557,9 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 writeConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
+                true,
                 arParams);
 
             return (rowsAffected > 0);
@@ -1536,7 +1588,9 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
+                true,
                 arParams,
                 cancellationToken);
 
@@ -1564,7 +1618,9 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
+                true,
                 arParams,
                 cancellationToken);
 
@@ -1699,7 +1755,9 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
+                true,
                 arParams,
                 cancellationToken);
 
@@ -1722,7 +1780,9 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
+                true,
                 arParams,
                 cancellationToken);
 
@@ -1802,6 +1862,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams,
                 cancellationToken);
@@ -1830,6 +1891,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams,
                 cancellationToken);
@@ -1859,6 +1921,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams,
                 cancellationToken);
@@ -1883,6 +1946,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams,
                 cancellationToken);
@@ -1933,6 +1997,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams,
                 cancellationToken);
@@ -1975,6 +2040,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             return AdoHelper.ExecuteReader(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
 
@@ -1998,6 +2064,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams,
                 cancellationToken);
@@ -2020,6 +2087,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams,
                 cancellationToken);
@@ -2050,6 +2118,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             using (DbDataReader reader = AdoHelper.ExecuteReader(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams))
             {
@@ -2087,6 +2156,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             using (DbDataReader reader = AdoHelper.ExecuteReader(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams))
             {
@@ -2127,6 +2197,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             using (DbDataReader reader = AdoHelper.ExecuteReader(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams))
             {
@@ -2168,6 +2239,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             using (DbDataReader reader = AdoHelper.ExecuteReader(
                  readConnectionString,
+                 CommandType.Text,
                  sqlCommand.ToString(),
                  arParams))
             {
@@ -2241,6 +2313,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             return AdoHelper.ExecuteReader(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
 
@@ -2263,6 +2336,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams));
 
@@ -2325,7 +2399,9 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             AdoHelper.ExecuteNonQuery(
                 writeConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
+                true,
                 arParams);
 
         }
@@ -2374,7 +2450,9 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             AdoHelper.ExecuteNonQuery(
                 writeConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
+                true,
                 arParams);
 
 
@@ -2394,7 +2472,9 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 writeConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
+                true,
                 arParams);
 
             return (rowsAffected > -1);

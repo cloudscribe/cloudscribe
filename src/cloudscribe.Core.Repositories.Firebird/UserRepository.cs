@@ -2,13 +2,13 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-18
-// Last Modified:			2015-12-30
+// Last Modified:			2016-01-02
 // 
 
 
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.DataExtensions;
-using cloudscribe.DbHelpers.Firebird;
+using cloudscribe.DbHelpers;
 using Microsoft.Extensions.OptionsModel;
 using Microsoft.Extensions.Logging;
 using System;
@@ -22,7 +22,7 @@ namespace cloudscribe.Core.Repositories.Firebird
     public sealed class UserRepository : IUserRepository
     {
         public UserRepository(
-            IOptions<FirebirdConnectionOptions> configuration,
+            IOptions<ConnectionStringOptions> configuration,
             ILoggerFactory loggerFactory)
         {
             if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }

@@ -2,12 +2,12 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-07-17
-// Last Modified:		    2016-01-01
+// Last Modified:		    2016-01-02
 
 
 using cloudscribe.Core.Models;
 using cloudscribe.Setup.Web;
-using cloudscribe.DbHelpers.Firebird;
+using cloudscribe.DbHelpers;
 using FirebirdSql.Data.FirebirdClient;
 using FirebirdSql.Data.Isql;
 using Microsoft.Extensions.Logging;
@@ -24,20 +24,22 @@ namespace cloudscribe.Setup.Firebird
     {
         public DbSetup(
             ILoggerFactory loggerFactory,
-            IOptions<FirebirdConnectionOptions> configuration,
+            IOptions<ConnectionStringOptions> configuration,
             IVersionProviderFactory versionProviderFactory)
         {
             if (loggerFactory == null) { throw new ArgumentNullException(nameof(loggerFactory)); }
             if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
             if (versionProviderFactory == null) { throw new ArgumentNullException(nameof(versionProviderFactory)); }
 
-            //config = configuration;
             versionProviders = versionProviderFactory;
             logFactory = loggerFactory;
             log = loggerFactory.CreateLogger(typeof(DbSetup).FullName);
 
             writeConnectionString = configuration.Value.WriteConnectionString;
             readConnectionString = configuration.Value.ReadConnectionString;
+
+            // possibly will change this later to have FirebirdClientFactory/DbProviderFactory injected
+            AdoHelper = new FirebirdHelper(FirebirdClientFactory.Instance);
 
         }
 
@@ -46,6 +48,7 @@ namespace cloudscribe.Setup.Firebird
         private ILogger log;
         private string writeConnectionString;
         private string readConnectionString;
+        private FirebirdHelper AdoHelper;
 
         #region IDb
 
@@ -533,7 +536,9 @@ namespace cloudscribe.Setup.Firebird
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 writeConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
+                true,
                 arParams);
 
             return (rowsAffected > 0);
@@ -593,7 +598,9 @@ namespace cloudscribe.Setup.Firebird
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 writeConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
+                true,
                 arParams);
 
             return (rowsAffected > 0);
@@ -659,6 +666,7 @@ namespace cloudscribe.Setup.Firebird
 
             return AdoHelper.ExecuteReader(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
 
@@ -680,6 +688,7 @@ namespace cloudscribe.Setup.Firebird
 
             return AdoHelper.ExecuteReader(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams);
 

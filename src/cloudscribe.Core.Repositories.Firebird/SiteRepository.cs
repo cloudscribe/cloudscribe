@@ -7,7 +7,7 @@
 
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.DataExtensions;
-using cloudscribe.DbHelpers.Firebird;
+using cloudscribe.DbHelpers;
 using Microsoft.Extensions.OptionsModel;
 using Microsoft.Extensions.Logging;
 using System;
@@ -22,7 +22,7 @@ namespace cloudscribe.Core.Repositories.Firebird
     public sealed class SiteRepository : ISiteRepository
     {
         public SiteRepository(
-            IOptions<FirebirdConnectionOptions> configuration,
+            IOptions<ConnectionStringOptions> configuration,
             ILoggerFactory loggerFactory)
         {
             if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }

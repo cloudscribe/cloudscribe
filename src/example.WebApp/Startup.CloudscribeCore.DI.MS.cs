@@ -135,17 +135,18 @@ namespace example.WebApp
 
                 //break;
 
-                //case "firebird":
+                case "firebird":
 
-                //services.Configure<cloudscribe.DbHelpers.Firebird.FirebirdConnectionOptions>(configuration.GetSection("Data:FirebirdConnectionOptions"));
-                //services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.Firebird.SiteRepository>();
-                //services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.Firebird.UserRepository>();
-                //services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.Firebird.GeoRepository>();
-                //services.TryAddScoped<IDbSetup, cloudscribe.Setup.Firebird.DbSetup>();
-                //services.TryAddScoped<IDataPlatformInfo, cloudscribe.Setup.Firebird.DbSetup>();
-                //services.TryAddScoped<ILogRepository, cloudscribe.Logging.Firebird.LogRepository>();
+                    services.Configure<cloudscribe.DbHelpers.ConnectionStringOptions>(configuration.GetSection("Data:Firebird:ConnectionStringOptions"));
+                    
+                    services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.Firebird.SiteRepository>();
+                    services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.Firebird.UserRepository>();
+                    services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.Firebird.GeoRepository>();
+                    services.TryAddScoped<IDbSetup, cloudscribe.Setup.Firebird.DbSetup>();
+                    services.TryAddScoped<IDataPlatformInfo, cloudscribe.Setup.Firebird.DbSetup>();
+                    services.TryAddScoped<ILogRepository, cloudscribe.Logging.Firebird.LogRepository>();
 
-                //break;
+                    break;
 
 
                 //case "mysql":

@@ -2,13 +2,14 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2008-01-04
-// Last Modified:			2015-12-30
+// Last Modified:			2016-01-02
 //
 
-using cloudscribe.DbHelpers.Firebird;
+using cloudscribe.DbHelpers;
 using FirebirdSql.Data.FirebirdClient;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Data;
 using System.Data.Common;
 using System.Text;
 using System.Threading;
@@ -27,12 +28,15 @@ namespace cloudscribe.Core.Repositories.Firebird
             logFactory = loggerFactory;
             readConnectionString = dbReadConnectionString;
             writeConnectionString = dbWriteConnectionString;
+
+            // possibly will change this later to have FirebirdClientFactory/DbProviderFactory injected
+            AdoHelper = new FirebirdHelper(FirebirdClientFactory.Instance);
         }
 
         private ILoggerFactory logFactory;
         private string readConnectionString;
         private string writeConnectionString;
-
+        private FirebirdHelper AdoHelper;
 
         /// <summary>
         /// Inserts a row in the mp_UserLocation table. Returns rows affected count.
@@ -174,7 +178,9 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 writeConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
+                true,
                 arParams);
 
             return rowsAffected;
@@ -294,7 +300,9 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 writeConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
+                true,
                 arParams);
 
             return (rowsAffected > -1);
@@ -320,7 +328,9 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 writeConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
+                true,
                 arParams);
 
             return (rowsAffected > -1);
@@ -342,7 +352,9 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 writeConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
+                true,
                 arParams);
 
             return (rowsAffected > -1);
@@ -489,6 +501,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
                 arParams,
                 cancellationToken);
@@ -558,25 +571,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             int pageSize)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
-            //totalPages = 1;
-            //int totalRows = GetCountByUser(userGuid);
-
-            //if (pageSize > 0) totalPages = totalRows / pageSize;
-
-            //if (totalRows <= pageSize)
-            //{
-            //    totalPages = 1;
-            //}
-            //else
-            //{
-            //    int remainder;
-            //    Math.DivRem(totalRows, pageSize, out remainder);
-            //    if (remainder > 0)
-            //    {
-            //        totalPages += 1;
-            //    }
-            //}
-
+            
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT FIRST " + pageSize.ToString() + " ");
             sqlCommand.Append("	SKIP " + pageLowerBound.ToString() + " ");
@@ -614,25 +609,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             int pageSize)
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
-            //totalPages = 1;
-            //int totalRows = GetCountBySite(siteGuid);
-
-            //if (pageSize > 0) totalPages = totalRows / pageSize;
-
-            //if (totalRows <= pageSize)
-            //{
-            //    totalPages = 1;
-            //}
-            //else
-            //{
-            //    int remainder;
-            //    Math.DivRem(totalRows, pageSize, out remainder);
-            //    if (remainder > 0)
-            //    {
-            //        totalPages += 1;
-            //    }
-            //}
-
+           
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT FIRST " + pageSize.ToString() + " ");
             sqlCommand.Append("	SKIP " + pageLowerBound.ToString() + " ");
