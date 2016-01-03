@@ -2,11 +2,11 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-11-02
-// Last Modified:			2015-12-29
+// Last Modified:			2016-01-03
 // 
 
 using cloudscribe.Core.Models.Geography;
-using cloudscribe.DbHelpers.MSSQL;
+using cloudscribe.DbHelpers;
 using Microsoft.Extensions.OptionsModel;
 using Microsoft.Extensions.Logging;
 using System;

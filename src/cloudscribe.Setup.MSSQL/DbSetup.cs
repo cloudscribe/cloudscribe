@@ -2,12 +2,12 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-01-10
-// Last Modified:			2015-12-26
+// Last Modified:			2016-01-03
 // 
 
 using cloudscribe.Core.Models;
 using cloudscribe.Setup.Web;
-using cloudscribe.DbHelpers.MSSQL;
+using cloudscribe.DbHelpers;
 using Microsoft.Extensions.OptionsModel;
 using Microsoft.Extensions.Logging;
 using System;
@@ -37,6 +37,9 @@ namespace cloudscribe.Setup.MSSQL
             readConnectionString = connectionOptions.Value.ReadConnectionString;
             writeConnectionString = connectionOptions.Value.WriteConnectionString;
             ownerPrefix = connectionOptions.Value.OwnerPrefix;
+
+            // possibly will change this later to have SqlClientFactory/DbProviderFactory injected
+            AdoHelper = new AdoHelper(SqlClientFactory.Instance);
         }
 
         private IVersionProviderFactory versionProviders;
@@ -45,6 +48,7 @@ namespace cloudscribe.Setup.MSSQL
         private string writeConnectionString;
         private string readConnectionString;
         private string ownerPrefix;
+        private AdoHelper AdoHelper;
 
         #region IDbSetup
 

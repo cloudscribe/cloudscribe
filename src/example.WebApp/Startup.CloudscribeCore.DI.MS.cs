@@ -123,43 +123,46 @@ namespace example.WebApp
 
                 //case "sqlce":
 
-                //services.Configure<cloudscribe.DbHelpers.SqlCe.SqlCeConnectionOptions>(configuration.GetSection("Data:SqlCeConnectionOptions"));
-                //services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.SqlCe.SiteRepository>();
-                //services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.SqlCe.UserRepository>();
-                //services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.SqlCe.GeoRepository>();
-                //services.TryAddScoped<IDbSetup, cloudscribe.Setup.SqlCe.DbSetup>();
-                //services.TryAddScoped<IDataPlatformInfo, cloudscribe.Setup.SqlCe.DbSetup>();
-                //services.TryAddScoped<ILogRepository, cloudscribe.Logging.SqlCe.LogRepository>();
-                //services.TryAddScoped<cloudscribe.DbHelpers.SqlCe.SqlCeConnectionStringResolver, cloudscribe.DbHelpers.SqlCe.SqlCeConnectionStringResolver>();
+                //    services.Configure<cloudscribe.DbHelpers.SqlCe.SqlCeConnectionOptions>(configuration.GetSection("Data:SqlCeConnectionOptions"));
+                //    services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.SqlCe.SiteRepository>();
+                //    services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.SqlCe.UserRepository>();
+                //    services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.SqlCe.GeoRepository>();
+                //    services.TryAddScoped<IDbSetup, cloudscribe.Setup.SqlCe.DbSetup>();
+                //    services.TryAddScoped<IDataPlatformInfo, cloudscribe.Setup.SqlCe.DbSetup>();
+                //    services.TryAddScoped<ILogRepository, cloudscribe.Logging.SqlCe.LogRepository>();
+                //    services.TryAddScoped<cloudscribe.DbHelpers.SqlCe.SqlCeConnectionStringResolver, cloudscribe.DbHelpers.SqlCe.SqlCeConnectionStringResolver>();
 
 
-                //break;
+                //    break;
 
-                case "firebird":
+                //case "firebird":
 
-                    services.Configure<cloudscribe.DbHelpers.ConnectionStringOptions>(configuration.GetSection("Data:Firebird:ConnectionStringOptions"));
-                    
-                    services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.Firebird.SiteRepository>();
-                    services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.Firebird.UserRepository>();
-                    services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.Firebird.GeoRepository>();
-                    services.TryAddScoped<IDbSetup, cloudscribe.Setup.Firebird.DbSetup>();
-                    services.TryAddScoped<IDataPlatformInfo, cloudscribe.Setup.Firebird.DbSetup>();
-                    services.TryAddScoped<ILogRepository, cloudscribe.Logging.Firebird.LogRepository>();
+                //    services.Configure<cloudscribe.DbHelpers.ConnectionStringOptions>(configuration.GetSection("Data:Firebird:ConnectionStringOptions"));
 
-                    break;
+                //    services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.Firebird.SiteRepository>();
+                //    services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.Firebird.UserRepository>();
+                //    services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.Firebird.GeoRepository>();
+                //    services.TryAddScoped<IDbSetup, cloudscribe.Setup.Firebird.DbSetup>();
+                //    services.TryAddScoped<IDataPlatformInfo, cloudscribe.Setup.Firebird.DbSetup>();
+                //    services.TryAddScoped<ILogRepository, cloudscribe.Logging.Firebird.LogRepository>();
+
+                //    break;
 
 
                 //case "mysql":
 
-                //services.Configure<cloudscribe.DbHelpers.MySql.MySqlConnectionOptions>(configuration.GetSection("Data:MySqlConnectionOptions"));
-                //services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.MySql.SiteRepository>();
-                //services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.MySql.UserRepository>();
-                //services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.MySql.GeoRepository>();
-                //services.TryAddScoped<IDbSetup, cloudscribe.Setup.MySql.DbSetup>();
-                //services.TryAddScoped<IDataPlatformInfo, cloudscribe.Setup.MySql.DbSetup>();
-                //services.TryAddScoped<ILogRepository, cloudscribe.Logging.MySql.LogRepository>();
+                //    services.Configure<cloudscribe.DbHelpers.ConnectionStringOptions>(configuration.GetSection("Data:MySql:ConnectionStringOptions"));
 
-                // break;
+                //   // services.Configure<cloudscribe.DbHelpers.MySql.MySqlConnectionOptions>(configuration.GetSection("Data:MySqlConnectionOptions"));
+
+                //    services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.MySql.SiteRepository>();
+                //    services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.MySql.UserRepository>();
+                //    services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.MySql.GeoRepository>();
+                //    services.TryAddScoped<IDbSetup, cloudscribe.Setup.MySql.DbSetup>();
+                //    services.TryAddScoped<IDataPlatformInfo, cloudscribe.Setup.MySql.DbSetup>();
+                //    services.TryAddScoped<ILogRepository, cloudscribe.Logging.MySql.LogRepository>();
+
+                //    break;
 
                 case "sqlite":
 
@@ -193,7 +196,7 @@ namespace example.WebApp
                 case "mssql":
                 default:
 
-                    services.Configure<cloudscribe.DbHelpers.MSSQL.MSSQLConnectionOptions>(configuration.GetSection("Data:MSSQLConnectionOptions"));
+                    services.Configure<cloudscribe.DbHelpers.MSSQLConnectionOptions>(configuration.GetSection("Data:MSSQLConnectionOptions"));
                     services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.MSSQL.SiteRepository>();
                     services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.MSSQL.UserRepository>();
                     services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.MSSQL.GeoRepository>();

@@ -2,14 +2,15 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2008-06-22
-// Last Modified:			2015-12-29
+// Last Modified:			2016-01-03
 // 
 
-using cloudscribe.DbHelpers.MSSQL;
+using cloudscribe.DbHelpers;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Data;
 using System.Data.Common;
+using System.Data.SqlClient;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -27,12 +28,15 @@ namespace cloudscribe.Core.Repositories.MSSQL
             logFactory = loggerFactory;
             readConnectionString = dbReadConnectionString;
             writeConnectionString = dbWriteConnectionString;
+
+            // possibly will change this later to have SqlClientFactory/DbProviderFactory injected
+            AdoHelper = new AdoHelper(SqlClientFactory.Instance);
         }
 
         private ILoggerFactory logFactory;
-        //private ILogger log;
         private string readConnectionString;
         private string writeConnectionString;
+        private AdoHelper AdoHelper;
 
         /// <summary>
         /// Inserts a row in the mp_Language table. Returns rows affected count.
