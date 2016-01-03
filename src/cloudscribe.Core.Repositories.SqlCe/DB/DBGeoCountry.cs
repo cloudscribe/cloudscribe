@@ -2,10 +2,10 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2010-04-04
-// Last Modified:			2015-11-18
+// Last Modified:			2016-01-02
 // 
 
-using cloudscribe.DbHelpers.SqlCe;
+using cloudscribe.DbHelpers;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Data;
@@ -24,11 +24,14 @@ namespace cloudscribe.Core.Repositories.SqlCe
         {
             logFactory = loggerFactory;
             connectionString = dbConnectionString;
+
+            // possibly will change this later to have SqlCeProviderFactory/DbProviderFactory injected
+            AdoHelper = new SqlCeHelper(SqlCeProviderFactory.Instance);
         }
 
         private ILoggerFactory logFactory;
-        //private ILogger log;
         private string connectionString;
+        private SqlCeHelper AdoHelper;
 
         /// <summary>
         /// Inserts a row in the mp_GeoCountry table. Returns rows affected count.

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2010-03-10
-// Last Modified:			2015-12-21
+// Last Modified:			2016-01-02
 // 
 
 
@@ -13,7 +13,7 @@ using System.Data.Common;
 using System.Globalization;
 using System.Text;
 using System.Data.SqlServerCe;
-using cloudscribe.DbHelpers.SqlCe;
+using cloudscribe.DbHelpers;
 using Microsoft.Extensions.Logging;
 
 namespace cloudscribe.Core.Repositories.SqlCe
@@ -26,12 +26,14 @@ namespace cloudscribe.Core.Repositories.SqlCe
         {
             logFactory = loggerFactory;
             connectionString = dbConnectionString;
+
+            // possibly will change this later to have SqlCeProviderFactory/DbProviderFactory injected
+            AdoHelper = new SqlCeHelper(SqlCeProviderFactory.Instance);
         }
 
         private ILoggerFactory logFactory;
-        //private ILogger log;
         private string connectionString;
-
+        private SqlCeHelper AdoHelper;
 
         public int Create(
             Guid siteGuid,

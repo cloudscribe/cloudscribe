@@ -2,12 +2,12 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:         Joe Audette
 // Created:        2010-03-09
-// Last Modified   2015-12-26
+// Last Modified   2016-01-02
 
 
 using cloudscribe.Core.Models;
 using cloudscribe.Setup.Web;
-using cloudscribe.DbHelpers.SqlCe;
+using cloudscribe.DbHelpers;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Data;
@@ -21,7 +21,7 @@ namespace cloudscribe.Setup.SqlCe
     public class DbSetup : IDbSetup
     {
         public DbSetup(
-            SqlCeConnectionStringResolver connectionStringResolver,
+            cloudscribe.DbHelpers.SqlCe.SqlCeConnectionStringResolver connectionStringResolver,
             ILoggerFactory loggerFactory,
             IVersionProviderFactory versionProviderFactory)
         {
@@ -35,6 +35,9 @@ namespace cloudscribe.Setup.SqlCe
             connectionString = connectionStringResolver.Resolve();
             sqlCeFilePath = connectionStringResolver.SqlCeFilePath;
 
+            // possibly will change this later to have SqlCeProviderFactory/DbProviderFactory injected
+            AdoHelper = new SqlCeHelper(SqlCeProviderFactory.Instance);
+
         }
 
         private IVersionProviderFactory versionProviders;
@@ -42,6 +45,7 @@ namespace cloudscribe.Setup.SqlCe
         private ILogger log;
         private string connectionString;
         private string sqlCeFilePath = string.Empty;
+        private SqlCeHelper AdoHelper;
 
         #region IDbSetup
 
