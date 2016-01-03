@@ -20,6 +20,7 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNet.Authorization;
 
 // this needs redesign/refactoring
 // maybe something like a list of ISetupStep with some ordering logic
@@ -39,7 +40,8 @@ namespace cloudscribe.Setup.Web
             ILogger<SetupController> logger,
             IOptions<SetupOptions> setupOptionsAccessor,
             SetupManager setupManager,
-            SiteManager siteManager 
+            SiteManager siteManager,
+            IAuthorizationService authorizationService
         )
         {
             if (appEnv == null) { throw new ArgumentNullException(nameof(appEnv)); }
@@ -48,15 +50,17 @@ namespace cloudscribe.Setup.Web
             if (setupManager == null) { throw new ArgumentNullException(nameof(setupManager)); }
             if (siteManager == null) { throw new ArgumentNullException(nameof(siteManager)); }
 
-            //config = configuration;
+    
             log = logger;
             appBasePath = appEnv.ApplicationBasePath;
             this.siteManager = siteManager;
             this.setupManager = setupManager;
             setupOptions = setupOptionsAccessor.Value;
+            this.authorizationService = authorizationService;
 
         }
 
+        private IAuthorizationService authorizationService;
         private SetupOptions setupOptions;
         private SetupManager setupManager;
         private string appBasePath;
@@ -89,11 +93,11 @@ namespace cloudscribe.Setup.Web
             
             setupIsDisabled = setupOptions.DisableSetup;
 
+            bool isAllowed = await authorizationService.AuthorizeAsync(User, "SetupSystemPolicy");
+            
+            
 
-            bool isAdmin = User.IsInRole("Admins");
-            bool result;
-
-            if (setupIsDisabled && !isAdmin)
+            if (setupIsDisabled && !isAllowed)
             {
                 log.LogInformation("returning 404 becuase setup is disabled and user is not logged in as an admin");
                 Response.StatusCode = 404;
@@ -103,12 +107,13 @@ namespace cloudscribe.Setup.Web
 
 
             //Response.BufferOutput = true;
-           // Server.ScriptTimeout = int.MaxValue;
+            // Server.ScriptTimeout = int.MaxValue;
+            bool result;
             startTime = DateTime.UtcNow;
             
             await WritePageHeader(HttpContext.Response);
 
-            if (setupIsDisabled && isAdmin)
+            if (setupIsDisabled && isAllowed)
             {
                 await WritePageContent(Response,
                     "RunningSetupForAdminUser" //SetupResources.RunningSetupForAdminUser

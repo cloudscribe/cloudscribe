@@ -20,7 +20,8 @@
     "Microsoft.Extensions.PlatformAbstractions": "1.0.0-rc1-final",
     "Microsoft.AspNet.Http.Abstractions": "1.0.0-rc1-final",
     "Microsoft.AspNet.Http.Features": "1.0.0-rc1-final",
-    "Microsoft.AspNet.Http": "1.0.0-rc1-final"
+    "Microsoft.AspNet.Http": "1.0.0-rc1-final",
+    "Microsoft.AspNet.Authorization": "1.0.0-rc1-final"
   },
 
   "frameworks": {

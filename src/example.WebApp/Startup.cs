@@ -123,6 +123,13 @@ namespace example.WebApp
                         authBuilder.RequireRole("ServerAdmins");
                     });
 
+                options.AddPolicy(
+                    "SetupSystemPolicy",
+                    authBuilder =>
+                    {
+                        authBuilder.RequireRole("ServerAdmins, Admins");
+                    });
+
             });
 
         }
