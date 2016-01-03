@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-08-11
-// Last Modified:			2015-12-26
+// Last Modified:			2016-01-03
 // 
 
 using cloudscribe.Core.Models;
@@ -127,7 +127,8 @@ namespace cloudscribe.Setup.Web
 
         public string GetPathToApplicationsFolder()
         {
-            return appBasePath + "/config/applications".Replace("/", Path.DirectorySeparatorChar.ToString());
+            var appVPath = appBasePath + setupOptions.ConfigBasePath + "/applications";
+            return appVPath.Replace("/", Path.DirectorySeparatorChar.ToString());
         }
 
         public string GetPathToInstallScriptFolder(string applicationName)

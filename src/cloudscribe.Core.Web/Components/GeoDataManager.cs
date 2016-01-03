@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-22
-// Last Modified:			2015-12-28
+// Last Modified:			2016-01-03
 // 
 
 using cloudscribe.Core.Models.Geography;
@@ -55,13 +55,13 @@ namespace cloudscribe.Core.Web.Components
 
         public async Task<bool> Save(IGeoCountry geoCountry)
         {
-            return await repo.Save(geoCountry, CancellationToken);
+            return await repo.Save(geoCountry, CancellationToken.None);
         }
 
         public async Task<bool> DeleteCountry(IGeoCountry country)
         {
-            bool result = await repo.DeleteGeoZonesByCountry(country.Guid, CancellationToken);
-            result = await repo.DeleteCountry(country.Guid, CancellationToken);
+            bool result = await repo.DeleteGeoZonesByCountry(country.Guid, CancellationToken.None);
+            result = await repo.DeleteCountry(country.Guid, CancellationToken.None);
 
             return result;
         }
@@ -98,12 +98,12 @@ namespace cloudscribe.Core.Web.Components
 
         public async Task<bool> Save(IGeoZone geoZone)
         {
-            return await repo.Save(geoZone, CancellationToken);
+            return await repo.Save(geoZone, CancellationToken.None);
         }
 
         public async Task<bool> DeleteGeoZone(IGeoZone geoZone)
         {
-            return await repo.DeleteGeoZone(geoZone.Guid, CancellationToken);
+            return await repo.DeleteGeoZone(geoZone.Guid, CancellationToken.None);
         }
 
 
@@ -120,12 +120,12 @@ namespace cloudscribe.Core.Web.Components
 
         public async Task<bool> Save(ICurrency currency)
         {
-            return await repo.Save(currency, CancellationToken);
+            return await repo.Save(currency, CancellationToken.None);
         }
 
         public async Task<bool> DeleteCurrency(ICurrency currency)
         {
-            return await repo.DeleteCurrency(currency.Guid, CancellationToken);
+            return await repo.DeleteCurrency(currency.Guid, CancellationToken.None);
         }
 
     }

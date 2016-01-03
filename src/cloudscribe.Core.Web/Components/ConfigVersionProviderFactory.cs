@@ -2,11 +2,12 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-06-18
-// Last Modified:			2015-11-18
+// Last Modified:			2016-01-03
 // 
 
 using cloudscribe.Core.Models;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.OptionsModel;
 using Microsoft.Extensions.PlatformAbstractions;
 using System;
 using System.Collections.Generic;
@@ -19,19 +20,21 @@ namespace cloudscribe.Core.Web.Components
     {
         public ConfigVersionProviderFactory(
             IApplicationEnvironment appEnv,
-            //ConfigHelper configuration,
+            IOptions<SetupOptions> setupOptionsAccessor,
             ILoggerFactory loggerFactory)
         {
 
             log = loggerFactory.CreateLogger(typeof(ConfigVersionProviderFactory).FullName);
             appBasePath = appEnv.ApplicationBasePath;
-            //config = configuration;
-            //configFolderName = config.GetOrDefault("AppSettings:VersionProviderFolderPath", configFolderName);
+            setupOptions = setupOptionsAccessor.Value;
+            configFolderName = setupOptions.ConfigBasePath + "/codeversionproviders";
+
             didLoadList = LoadList();
         }
 
         private string appBasePath;
-        private string configFolderName = "/config/codeversionproviders";
+        private string configFolderName = "/cloudscribe_config/codeversionproviders";
+        private SetupOptions setupOptions;
         //private ConfigHelper config;
         private ILogger log;
         private bool didLoadList = false;

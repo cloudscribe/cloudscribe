@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-01-10
-// Last Modified:			2015-12-26
+// Last Modified:			2016-01-03
 // 
 
 using cloudscribe.Core.Models;
@@ -615,15 +615,7 @@ namespace cloudscribe.Setup.Web
                     newVersion.Minor,
                     newVersion.Build,
                     newVersion.Revision);
-
-                //setupManager.AddSchemaScriptHistory(
-                //    applicationId,
-                //    scriptFile.Name,
-                //    DateTime.UtcNow,
-                //    false,
-                //    string.Empty,
-                //    string.Empty);
-
+                
                     currentSchemaVersion = newVersion;
                     return true;
                

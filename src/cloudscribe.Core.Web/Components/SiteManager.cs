@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-22
-// Last Modified:			2015-12-28
+// Last Modified:			2016-01-03
 // 
 
 using cloudscribe.Core.Models;
@@ -241,14 +241,14 @@ namespace cloudscribe.Core.Web.Components
             adminUser.PasswordHash = "admin||0"; //pwd/salt/format 
 
 
-            bool result = await userRepo.Save(adminUser, CancellationToken);
+            bool result = await userRepo.Save(adminUser, CancellationToken.None);
             
             result = await userRepo.AddUserToRole(
                 adminRole.RoleId,
                 adminRole.RoleGuid,
                 adminUser.UserId,
                 adminUser.UserGuid,
-                CancellationToken);
+                CancellationToken.None);
 
             return result;
 
@@ -267,9 +267,9 @@ namespace cloudscribe.Core.Web.Components
                 //adminRole.DisplayName = "Administrators";
                 adminRole.SiteId = site.SiteId;
                 adminRole.SiteGuid = site.SiteGuid;
-                result = await userRepo.SaveRole(adminRole, CancellationToken);
+                result = await userRepo.SaveRole(adminRole, CancellationToken.None);
                 adminRole.DisplayName = "Administrators";
-                result = await userRepo.SaveRole(adminRole, CancellationToken);
+                result = await userRepo.SaveRole(adminRole, CancellationToken.None);
             }
 
             exists = await userRepo.RoleExists(site.SiteId, "Role Admins", CancellationToken);
@@ -280,10 +280,10 @@ namespace cloudscribe.Core.Web.Components
                 roleAdminRole.DisplayName = "Role Admins";
                 roleAdminRole.SiteId = site.SiteId;
                 roleAdminRole.SiteGuid = site.SiteGuid;
-                result = await userRepo.SaveRole(roleAdminRole, CancellationToken);
+                result = await userRepo.SaveRole(roleAdminRole, CancellationToken.None);
 
                 roleAdminRole.DisplayName = "Role Administrators";
-                result = await userRepo.SaveRole(roleAdminRole, CancellationToken);
+                result = await userRepo.SaveRole(roleAdminRole, CancellationToken.None);
             }
 
             exists = await userRepo.RoleExists(site.SiteId, "Content Administrators", CancellationToken);
@@ -294,7 +294,7 @@ namespace cloudscribe.Core.Web.Components
                 contentAdminRole.DisplayName = "Content Administrators";
                 contentAdminRole.SiteId = site.SiteId;
                 contentAdminRole.SiteGuid = site.SiteGuid;
-                result = await userRepo.SaveRole(contentAdminRole, CancellationToken);
+                result = await userRepo.SaveRole(contentAdminRole, CancellationToken.None);
             }
 
             exists = await userRepo.RoleExists(site.SiteId, "Authenticated Users", CancellationToken);
@@ -305,7 +305,7 @@ namespace cloudscribe.Core.Web.Components
                 authenticatedUserRole.DisplayName = "Authenticated Users";
                 authenticatedUserRole.SiteId = site.SiteId;
                 authenticatedUserRole.SiteGuid = site.SiteGuid;
-                result = await userRepo.SaveRole(authenticatedUserRole, CancellationToken);
+                result = await userRepo.SaveRole(authenticatedUserRole, CancellationToken.None);
             }
 
             
