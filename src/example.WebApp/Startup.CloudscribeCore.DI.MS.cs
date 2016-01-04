@@ -75,7 +75,10 @@ namespace example.WebApp
             services.Configure<UIOptions>(configuration.GetSection("UIOptions"));
             services.Configure<cloudscribe.Core.Web.Components.Editor.CkeditorOptions>(configuration.GetSection("CkeditorOptions"));
 
-          
+
+            services.AddScoped<cloudscribe.Core.Models.Setup.ISetupStep, cloudscribe.Core.Web.Components.EnsureSiteSetupStep>();
+            //services.AddScoped<cloudscribe.Core.Models.Setup.ISetupStep, cloudscribe.Core.Web.Components.EnsureSiteSetupStep2>();
+
 
             //*** Database platform ****************************************************************
             // here is where you could change to use one of the other db platforms

@@ -6,6 +6,7 @@
 // 
 
 using cloudscribe.Core.Models;
+using cloudscribe.Core.Models.Setup;
 using cloudscribe.Core.Web.Components;
 //using cloudscribe.Resources;
 using Microsoft.AspNet.Http;
@@ -14,6 +15,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.OptionsModel;
 using Microsoft.Extensions.PlatformAbstractions;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Data.Common;
 using System.Globalization;
 using System.IO;
@@ -23,12 +26,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Authorization;
 
 // this needs redesign/refactoring
-// maybe something like a list of ISetupStep with some ordering logic
-// so runnning sql scripts would be one kind of ISetupStep
-// ensuring the initial core data could be another kind of ISetupStep
-// ensuring the first site with roles and admin user could be another step
-// the sql scripts for mp_SchemaVersion should be separated from cloudscribe.Core
-// and must be bootstrapped in the first step before any other apps can run scripts
+// but it is working and doind what it needs to do 
 
 namespace cloudscribe.Setup.Web
 {
@@ -41,7 +39,8 @@ namespace cloudscribe.Setup.Web
             IOptions<SetupOptions> setupOptionsAccessor,
             SetupManager setupManager,
             SiteManager siteManager,
-            IAuthorizationService authorizationService
+            IAuthorizationService authorizationService,
+            IEnumerable<ISetupStep> setupSteps = null
         )
         {
             if (appEnv == null) { throw new ArgumentNullException(nameof(appEnv)); }
@@ -57,8 +56,14 @@ namespace cloudscribe.Setup.Web
             this.setupManager = setupManager;
             setupOptions = setupOptionsAccessor.Value;
             this.authorizationService = authorizationService;
+            if(setupSteps != null)
+            {
+                this.setupSteps = setupSteps;
+            }
 
         }
+
+        IEnumerable<ISetupStep> setupSteps = null;
 
         private IAuthorizationService authorizationService;
         private SetupOptions setupOptions;
@@ -155,6 +160,15 @@ namespace cloudscribe.Setup.Web
                 // while still providing a way for cloudscribe core data to be ensured
                 result = await EnsureSiteExists(Response);
 
+
+                if(setupSteps != null)
+                {
+                    bool stepResult;
+                    foreach(ISetupStep step in setupSteps)
+                    {
+                        stepResult = await step.DoSetupStep(Response);
+                    }
+                }
 
 
             }

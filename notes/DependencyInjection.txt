@@ -1,4 +1,8 @@
 
+http://autofac.readthedocs.org/en/latest/advanced/adapters-decorators.html
+
+
+
 this question is about something else but it shows a cool technique if you nned to inejct something for use in a static extension method
 thoug some would frown at the use of servicelocator pattern
 http://stackoverflow.com/questions/30755827/getting-absolute-urls-using-asp-net-mvc-6
