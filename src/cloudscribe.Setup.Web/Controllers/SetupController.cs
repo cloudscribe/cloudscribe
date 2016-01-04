@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-01-10
-// Last Modified:			2016-01-03
+// Last Modified:			2016-01-04
 // 
 
 using cloudscribe.Core.Models;
@@ -137,16 +137,26 @@ namespace cloudscribe.Setup.Web
             try
             {
                 await ProbeSystem(Response);
-
-
-                result = await SetupCloudscribeCore(Response);
-
+                // the setup system must be bootstrapped first 
+                // to make sure mp_SchemaVersion table exists
+                // which is used to keep track of script versions that have already been run
+                result = await SetupCloudscribeSetup(Response);
+               
                 if(result)
                 {
+                    // this runs the scripts for other apps including cloudscribe-core, 
+                    // cloudscribe -logging, and any custom apps that use the setup system
                     result = await SetupOtherApplications(Response);
                 }
 
-                
+                // this part could be potentially refactored
+                // and abstracted to run steps that could be plugged in
+                // the goal would be to decouple setup from cloudscribe-core
+                // while still providing a way for cloudscribe core data to be ensured
+                result = await EnsureSiteExists(Response);
+
+
+
             }
             catch(Exception ex)
             {
@@ -182,36 +192,12 @@ namespace cloudscribe.Setup.Web
 
             return new EmptyResult();
         }
-
-        private async Task<bool> SetupCloudscribeCore(HttpResponse response)
+        
+        private async Task<bool> EnsureSiteExists(HttpResponse response)
         {
 
             bool result = true;
             
-            if (!schemaHasBeenCreated)
-            {
-                if (canAlterSchema)
-                {
-
-                    schemaHasBeenCreated = await CreateInitialSchema(response, "cloudscribe-core");
-
-                    if (schemaHasBeenCreated)
-                    {
-                        //recheck
-                        needCoreSchemaUpgrade = setupManager.NeedsUpgrade("cloudscribe-core");
-                    }
-
-                }
-            }
-
-            if (
-                (schemaHasBeenCreated)
-                && (needCoreSchemaUpgrade)
-                && (canAlterSchema)
-                )
-            {
-                needCoreSchemaUpgrade = await UpgradeSchema(response, "cloudscribe-core");
-            }
 
             if (!CoreSystemIsReady()) return false;
 
@@ -237,31 +223,31 @@ namespace cloudscribe.Setup.Web
                 // if something went wrong with creating admin user
                 // setup page should try to correct it on subsequent runs
                 // ie create an admin user if no users exist
-                if(response.HttpContext.Request.Host.HasValue)
+                if (response.HttpContext.Request.Host.HasValue)
                 {
                     ISiteSettings site = await siteManager.Fetch(response.HttpContext.Request.Host.Value);
-                    if(site != null)
+                    if (site != null)
                     {
                         int roleCount = await siteManager.GetRoleCount(site.SiteId);
                         bool roleResult = true;
-                        if(roleCount == 0)
+                        if (roleCount == 0)
                         {
                             roleResult = await siteManager.EnsureRequiredRoles(site);
                         }
 
-                        if(roleResult)
+                        if (roleResult)
                         {
                             int userCount = await siteManager.GetUserCount(site.SiteId);
-                            if(userCount == 0)
+                            if (userCount == 0)
                             {
                                 await siteManager.CreateAdminUser(site);
                             }
                         }
                     }
-                    
+
 
                 }
-                
+
 
             }
 
@@ -270,6 +256,40 @@ namespace cloudscribe.Setup.Web
             //TODO dbSiteSettingsEx.EnsureSettings(); add to ISiteRepository
 
 
+            return result;
+        }
+
+        private async Task<bool> SetupCloudscribeSetup(HttpResponse response)
+        {
+
+            bool result = true;
+
+            if (!schemaHasBeenCreated)
+            {
+                if (canAlterSchema)
+                {
+
+                    schemaHasBeenCreated = await CreateInitialSchema(response, "cloudscribe-setup");
+
+                    if (schemaHasBeenCreated)
+                    {
+                        //recheck
+                        needCoreSchemaUpgrade = setupManager.NeedsUpgrade("cloudscribe-setup");
+                    }
+
+                }
+            }
+
+            if (
+                (schemaHasBeenCreated)
+                && (needCoreSchemaUpgrade)
+                && (canAlterSchema)
+                )
+            {
+                needCoreSchemaUpgrade = await UpgradeSchema(response, "cloudscribe-setup");
+            }
+
+           
             return result;
         }
 
@@ -297,9 +317,9 @@ namespace cloudscribe.Setup.Web
 
             foreach (DirectoryInfo appFolder in appFolders)
             {
-                // skip cloudscribe-core since we set that up first
+                // skip cloudscribe-setup since we set that up first
                 if (
-                    (!string.Equals(appFolder.Name, "cloudscribe-core", StringComparison.CurrentCultureIgnoreCase))
+                    (!string.Equals(appFolder.Name, "cloudscribe-setup", StringComparison.CurrentCultureIgnoreCase))
                     && (appFolder.Name.ToLower() != ".svn")
                     && (appFolder.Name.ToLower() != "_svn")
                     )
@@ -401,6 +421,13 @@ namespace cloudscribe.Setup.Web
             Version versionToStopAt = setupManager.GetCodeVersion(applicationName);
             Guid appID = setupManager.GetOrGenerateSchemaApplicationId(applicationName);
             Version currentSchemaVersion = setupManager.GetSchemaVersion(appID);
+
+            if(versionToStopAt != null)
+            {
+                if(versionToStopAt <= currentSchemaVersion) { return false; }
+
+            }
+
             string pathToScriptFolder = setupManager.GetPathToUpgradeScriptFolder(applicationName);
 
 
@@ -719,7 +746,7 @@ namespace cloudscribe.Setup.Web
                     }
                 }
 
-                schemaHasBeenCreated = setupManager.SiteTableExists();
+                schemaHasBeenCreated = setupManager.SchemaTableExists();
 
                 if (schemaHasBeenCreated)
                 {
@@ -728,7 +755,7 @@ namespace cloudscribe.Setup.Web
                         false);
 
 
-                    needCoreSchemaUpgrade = setupManager.NeedsUpgrade("cloudscribe-core");
+                    needCoreSchemaUpgrade = setupManager.NeedsUpgrade("cloudscribe-setup");
 
                     if (needCoreSchemaUpgrade)
                     {
@@ -778,7 +805,7 @@ namespace cloudscribe.Setup.Web
         {
             if (!canAccessDatabase) return false;
 
-            if (!setupManager.SiteTableExists()) return false;
+            if (!setupManager.SchemaTableExists()) return false;
 
             if (setupManager.NeedsUpgrade("cloudscribe-core")) { return false; }
 

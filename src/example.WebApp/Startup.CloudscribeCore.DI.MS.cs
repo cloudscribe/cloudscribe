@@ -152,9 +152,7 @@ namespace example.WebApp
                 //case "mysql":
 
                 //    services.Configure<cloudscribe.DbHelpers.ConnectionStringOptions>(configuration.GetSection("Data:MySql:ConnectionStringOptions"));
-
-                //   // services.Configure<cloudscribe.DbHelpers.MySql.MySqlConnectionOptions>(configuration.GetSection("Data:MySqlConnectionOptions"));
-
+                    
                 //    services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.MySql.SiteRepository>();
                 //    services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.MySql.UserRepository>();
                 //    services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.MySql.GeoRepository>();

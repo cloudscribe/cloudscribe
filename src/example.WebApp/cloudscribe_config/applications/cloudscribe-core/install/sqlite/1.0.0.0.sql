@@ -1,6 +1,4 @@
 
-
-
 CREATE TABLE `mp_Roles` (
   `RoleID` INTEGER PRIMARY KEY,
   `SiteID` INTEGER NOT NULL default '1',
@@ -121,31 +119,6 @@ SiteGuid VARCHAR(36),
 );
 
 
-
-CREATE TABLE `mp_SchemaVersion` (
- `ApplicationID` varchar(36) NOT NULL PRIMARY KEY, 
- `ApplicationName` varchar(255) NOT NULL,
- `Major` INTEGER NOT NULL default '0',
- `Minor` INTEGER NOT NULL default '0',
- `Build` INTEGER NOT NULL default '0',
- `Revision` INTEGER NOT NULL default '0'
-);
-
-
-
-
-CREATE TABLE `mp_SchemaScriptHistory` (
- `ID` INTEGER NOT NULL PRIMARY KEY, 
- `ApplicationID` varchar(36) NOT NULL,
- `ScriptFile` varchar(255) NOT NULL,
- `RunTime` datetime NOT NULL,
- `ErrorOccurred` INTEGER NOT NULL,
- `ErrorMessage` text NULL,
- `ScriptBody` text NULL
-);
-
-
-
 CREATE TABLE `mp_SiteFolders` (
  `Guid` varchar(36) NOT NULL PRIMARY KEY, 
  `SiteGuid` varchar(36) NOT NULL,
@@ -243,19 +216,6 @@ CREATE TABLE `mp_UserLogins` (
  `ProviderKey` varchar(128) NOT NULL,  
  `UserId` varchar(128) NOT NULL, 
  PRIMARY KEY ( LoginProvider, ProviderKey, UserId)
-);
-
-CREATE TABLE `mp_SystemLog` (
- `ID` INTEGER NOT NULL PRIMARY KEY, 
- `LogDate` datetime NOT NULL,
- `IpAddress` varchar(50) NULL,
- `Culture` varchar(10) NULL,
- `Url` text NULL,
- `ShortUrl` varchar(255) NULL,
- `Thread` varchar(255) NOT NULL,
- `LogLevel` varchar(20) NOT NULL,
- `Logger` varchar(255) NOT NULL,
- `Message` text NOT NULL
 );
 
 

@@ -1,24 +1,3 @@
-CREATE TABLE [mp_SystemLog](
-	[ID] [int] IDENTITY(1,1) NOT NULL,
-	[LogDate] [datetime] NOT NULL,
-	[IpAddress] [nvarchar](50) NULL,
-	[Culture] [nvarchar](10) NULL,
-	[Url] [nvarchar](1000) NULL,
-	[ShortUrl] [nvarchar](255) NULL,
-	[Thread] [nvarchar](255) NOT NULL,
-	[LogLevel] [nvarchar](20) NOT NULL,
-	[Logger] [nvarchar](255) NOT NULL,
-	[Message] [ntext] NOT NULL,
- CONSTRAINT [PK_mp_SystemLog] PRIMARY KEY  
-(
-	[ID] 
-)
-) 
-
-GO
-
-ALTER TABLE [mp_SystemLog] ADD  CONSTRAINT [DF_mp_SystemLog_LogDate]  DEFAULT (getdate()) FOR [LogDate]
-GO
 
 CREATE TABLE [mp_UserLogins] (
     [LoginProvider] NVARCHAR (128) NOT NULL,
@@ -123,36 +102,7 @@ CREATE TABLE [mp_Roles](
 
 GO
 
-CREATE TABLE [mp_SchemaScriptHistory](
-	[ID] [int] IDENTITY(1,1) NOT NULL,
-	[ApplicationID] [uniqueidentifier] NOT NULL,
-	[ScriptFile] [nvarchar](255) NOT NULL,
-	[RunTime] [datetime] NOT NULL,
-	[ErrorOccurred] [bit] NOT NULL,
-	[ErrorMessage] [ntext] NULL,
-	[ScriptBody] [ntext] NULL,
- CONSTRAINT [PK_mp_SchemaScriptHistory] PRIMARY KEY 
-(
-	[ID] 
-)
-)
 
-GO
-
-CREATE TABLE [mp_SchemaVersion](
-	[ApplicationID] [uniqueidentifier] NOT NULL,
-	[ApplicationName] [nvarchar](255) NOT NULL,
-	[Major] [int] NOT NULL,
-	[Minor] [int] NOT NULL,
-	[Build] [int] NOT NULL,
-	[Revision] [int] NOT NULL,
- CONSTRAINT [PK_mp_SchemaVersion] PRIMARY KEY 
-(
-	[ApplicationID] 
-)
-)
-
-GO
 
 CREATE TABLE [mp_SiteFolders](
 	[Guid] [uniqueidentifier] NOT NULL,
@@ -485,34 +435,6 @@ ON DELETE CASCADE
  
 GO
 
-ALTER TABLE [mp_SchemaScriptHistory] ADD  CONSTRAINT [FK_mp_SchemaScriptHistory_mp_SchemaVersion] FOREIGN KEY([ApplicationID])
-REFERENCES [mp_SchemaVersion] ([ApplicationID])
-
-GO
-
-ALTER TABLE [mp_SchemaScriptHistory] ADD  CONSTRAINT [DF_mp_SchemaScriptHistory_RunCompletedTime]  DEFAULT (getdate()) FOR [RunTime]
-
-GO
-
-ALTER TABLE [mp_SchemaScriptHistory] ADD  CONSTRAINT [DF_mp_SchemaScriptHistory_ErrorOccurred]  DEFAULT ((0)) FOR [ErrorOccurred]
-
-GO
-
-ALTER TABLE [mp_SchemaVersion] ADD  CONSTRAINT [DF_mp_SchemaVersion_Major]  DEFAULT ((0)) FOR [Major]
-
-GO
-
-ALTER TABLE [mp_SchemaVersion] ADD  CONSTRAINT [DF_mp_SchemaVersion_Minor]  DEFAULT ((0)) FOR [Minor]
-
-GO
-
-ALTER TABLE [mp_SchemaVersion] ADD  CONSTRAINT [DF_mp_SchemaVersion_Build]  DEFAULT ((0)) FOR [Build]
-
-GO
-
-ALTER TABLE [mp_SchemaVersion] ADD  CONSTRAINT [DF_mp_SchemaVersion_Revision]  DEFAULT ((0)) FOR [Revision]
-
-GO
 
 ALTER TABLE [mp_SiteFolders] ADD  CONSTRAINT [DF_mp_SiteFolders_Guid]  DEFAULT (newid()) FOR [Guid]
 

@@ -90,7 +90,7 @@ namespace cloudscribe.Setup.Web
             return db.CanAlterSchema(null);
         }
 
-        public bool SiteTableExists()
+        public bool SchemaTableExists()
         {
             return db.SchemaTableExists();
         }

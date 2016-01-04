@@ -4,13 +4,6 @@ CREATE SEQUENCE mp_roles_roleid_seq
     NO MINVALUE
     CACHE 1;
 
-CREATE SEQUENCE mp_schemascripthistoryid_seq
-    INCREMENT BY 1
-    NO MAXVALUE
-    NO MINVALUE
-    CACHE 1;
-
-
 CREATE SEQUENCE mp_sitehosts_hostid_seq
     START WITH 1
     INCREMENT BY 1
@@ -37,13 +30,6 @@ CREATE SEQUENCE mp_users_userid_seq
     CACHE 1;
 
 
-CREATE SEQUENCE mp_systemlogid_seq
-    INCREMENT BY 1
-    NO MAXVALUE
-    NO MINVALUE
-    CACHE 1;
-	
-	
 
 CREATE TABLE mp_currency (
     guid character(36) NOT NULL,
@@ -107,37 +93,6 @@ ALTER TABLE ONLY mp_language
     ADD CONSTRAINT pk_language PRIMARY KEY (guid);
 
 CREATE UNIQUE INDEX mp_language_pkey ON mp_language USING btree (guid);
-
-
-
-
-CREATE TABLE mp_schemaversion (
-    applicationid character varying(36) NOT NULL,
-    applicationname character varying(255) NOT NULL,
-    major integer DEFAULT 0 NOT NULL,
-    minor integer DEFAULT 0 NOT NULL,
-    build integer DEFAULT 0 NOT NULL,
-    revision integer DEFAULT 0 NOT NULL
-);
-
-ALTER TABLE ONLY mp_schemaversion
-    ADD CONSTRAINT pk_schemaversion PRIMARY KEY (applicationid);
-
-CREATE TABLE mp_schemascripthistory (
-    id integer DEFAULT nextval(('"mp_schemascripthistoryid_seq"'::text)::regclass) NOT NULL,
-    applicationid character varying(36) NOT NULL,
-    scriptfile character varying(255) NOT NULL,
-    runtime timestamp without time zone NOT NULL,
-    erroroccurred boolean NOT NULL,
-    errormessage text,
-    scriptbody text
-);
-
-ALTER TABLE ONLY mp_schemascripthistory
-    ADD CONSTRAINT pk_schemascripthistory PRIMARY KEY (id);
-
-CREATE INDEX ifk_schemascripthistory_applicationid ON mp_schemascripthistory USING btree (applicationid);
-
 
 
 
@@ -407,20 +362,6 @@ CREATE INDEX ifk_userroles_roleid ON mp_userroles USING btree (roleid);
 CREATE INDEX ifk_userroles_userid ON mp_userroles USING btree (userid);
 
 
-CREATE TABLE mp_systemlog
-(
-  id integer NOT NULL DEFAULT nextval(('"mp_systemlogid_seq"'::text)::regclass),
-  logdate timestamp without time zone NOT NULL,
-  ipaddress varchar(50),
-  culture varchar(10),
-  url text,
-  shorturl varchar(255),
-  thread varchar(255) NOT NULL,
-  loglevel varchar(20) NOT NULL,
-  logger varchar(255) NOT NULL,
-  message text NOT NULL,
-  CONSTRAINT pk_systemlog PRIMARY KEY (id)
-);
 
 
 CREATE TABLE mp_userclaims
@@ -439,13 +380,4 @@ CREATE TABLE mp_userlogins
   userid character varying(128) NOT NULL,
   CONSTRAINT mp_userlogins_pkey PRIMARY KEY (loginprovider, providerkey, userid)
 );
-
-
-
-
-
-	
-
-
-
 

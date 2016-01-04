@@ -37,6 +37,73 @@ Before setting the connection string or using the cloudscribe setup page to run 
 * insert a row in mp_Schema version for cloudscribe-core with ApplicationID as b7dcd727-91c3-477f-bc42-d4e5c8721daa and the version as 1.0.0.0
 That way when you do visit the setup page it will not try to run the version 1.0.0.0.sql file which would try to create tables that already exist.
 
+
+INSERT INTO 	[dbo].[mp_SchemaVersion] 
+(
+				[ApplicationID],
+				[ApplicationName],
+				[Major],
+				[Minor],
+				[Build],
+				[Revision]
+) 
+
+VALUES 
+(
+				'b7dcd727-91c3-477f-bc42-d4e5c8721daa',
+				'cloudscribe-core',
+				1,
+				0,
+				0,
+				0
+				
+)
+GO
+ 
+INSERT INTO 	[dbo].[mp_SchemaVersion] 
+(
+				[ApplicationID],
+				[ApplicationName],
+				[Major],
+				[Minor],
+				[Build],
+				[Revision]
+) 
+
+VALUES 
+(
+				'9e1f3fc4-e46a-46ed-bc6b-a08c649fd4c0',
+				'cloudscribe-setup',
+				1,
+				0,
+				0,
+				0
+				
+)
+GO
+ 
+INSERT INTO 	[dbo].[mp_SchemaVersion] 
+(
+				[ApplicationID],
+				[ApplicationName],
+				[Major],
+				[Minor],
+				[Build],
+				[Revision]
+) 
+
+VALUES 
+(
+				'5edc860e-90c5-4e68-9b89-06c9b77e5184',
+				'cloudscribe-logging',
+				1,
+				0,
+				0,
+				0
+				
+)
+GO
+ 
 One challenge when migrating users is passwords. mojoportal supported clear, encrypted, or hashed. cloudscribe supports only hashed and it is not the same kind of hash that was used in mojoportal. mojoportal encrypted passwords also used encryption based on the machinekey in web.config so if you were trying to migrate existing users with encrypted passwords you would need to install the same machinekey in web.config for the cloudscribe installations at least until all users have logged in, at which point users will be updated to the new hashed format and will use that going forward.
 
 To facilitate this mogration I implemented a custom PasswordHasher: cloudscribe.Core.Identity.SitePasswordHasher. This has the logic to try to validate the existing password if it exists and then migrate to the new format. It inherits from the standard Identity.PasswordHasher and lets it handle the actual hashing for new users and migrated users.

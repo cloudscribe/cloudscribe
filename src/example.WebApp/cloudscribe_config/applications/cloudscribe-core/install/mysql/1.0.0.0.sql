@@ -200,31 +200,6 @@ CREATE TABLE `mp_Language` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-CREATE TABLE `mp_SchemaVersion` (
-  `ApplicationID` varchar(36) NOT NULL,
-  `ApplicationName` varchar(255) NOT NULL,
-  `Major` int(11) NOT NULL default '0',
-  `Minor` int(11) NOT NULL default '0',
-  `Build` int(11) NOT NULL default '0',
-  `Revision` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`ApplicationID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-CREATE TABLE `mp_SchemaScriptHistory` (
-  `ID` int(11) NOT NULL auto_increment,
-  `ApplicationID` varchar(36) NOT NULL,
-  `ScriptFile` varchar(255) NOT NULL,
-  `RunTime` datetime NOT NULL,
-  `ErrorOccurred` tinyint(1) unsigned NOT NULL,
-  `ErrorMessage` text,
-  `ScriptBody` text,
-  PRIMARY KEY  (`ID`),
-  KEY `FK_mp_SchemaScriptHistorySchemaV` (`ApplicationID`),
-  CONSTRAINT `FK_mp_SchemaScriptHistorySchemaV` FOREIGN KEY (`ApplicationID`) REFERENCES `mp_SchemaVersion` (`ApplicationID`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
-
-
 CREATE TABLE `mp_SiteFolders` (
   `Guid` varchar(36) NOT NULL,
   `SiteGuid` varchar(36) NOT NULL,
@@ -307,19 +282,6 @@ CREATE TABLE `mp_UserRoles` (
   PRIMARY KEY  (`ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
-CREATE TABLE `mp_SystemLog` (
- `ID` int(11) NOT NULL auto_increment, 
- `LogDate` datetime NOT NULL,
- `IpAddress` VarChar(50) NULL,
- `Culture` VarChar(10) NULL,
- `Url` Text NULL,
- `ShortUrl` VarChar(255) NULL,
- `Thread` VarChar(255) NOT NULL,
- `LogLevel` VarChar(20) NOT NULL,
- `Logger` VarChar(255) NOT NULL,
- `Message` Text NOT NULL,
- PRIMARY KEY (`ID`)    
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `mp_UserClaims` (
  `Id` int(11) NOT NULL auto_increment, 
