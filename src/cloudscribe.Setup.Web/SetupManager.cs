@@ -12,6 +12,8 @@ using Microsoft.Extensions.PlatformAbstractions;
 using System;
 using System.Data.Common;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace cloudscribe.Setup.Web
 {
@@ -108,9 +110,8 @@ namespace cloudscribe.Setup.Web
             }
 
             Version codeVersion = provider.GetCodeVersion();
-
-            Guid appId = db.GetOrGenerateSchemaApplicationId(applicationName);
-            Version schemaVersion = db.GetSchemaVersion(appId);
+            
+            Version schemaVersion = db.GetSchemaVersion(provider.ApplicationId);
 
             bool result = false;
             if (codeVersion > schemaVersion)
@@ -348,6 +349,105 @@ namespace cloudscribe.Setup.Web
         {
             return f1.FullName.CompareTo(f2.FullName);
         }
+
+        public async Task ProbeSystem(Func<string, bool, Task> output)
+        {
+            await output(
+                "ProbingSystem", //SetupResources.ProbingSystemMessage,
+                false);
+
+            EnsureDatabaseIfPossible();
+
+            bool canAccessDatabase = CanAccessDatabase();
+
+            if (canAccessDatabase)
+            {
+                await output(
+                    DBPlatform
+                    + " " + "DatabaseConnectionOk", // SetupResources.DatabaseConnectionOKMessage,
+                    false);
+            }
+            else
+            {
+                string dbError = string.Format(
+                    "FailedToConnectToDatabase", //SetupResources.FailedToConnectToDatabase,
+                    DBPlatform);
+
+                await output("<div>" + dbError + "</div>", false);
+
+                bool showConnectionError = setupOptions.ShowConnectionError;
+
+                if (showConnectionError)
+                {
+                    await output(
+                        "<div>" + GetDbConnectionError()
+                        + "</div>",
+                        false);
+                }
+            }
+
+            if (canAccessDatabase)
+            {
+                bool canAlterSchema = CanAlterSchema();
+
+                if (canAlterSchema)
+                {
+                    await output(
+                        "DatabaseSchemaPermissionsOk", //SetupResources.DatabaseCanAlterSchemaMessage,
+                        false);
+                }
+                else
+                {
+
+                    if (setupOptions.TryAnywayIfFailedAlterSchemaTest)
+                    {
+                        canAlterSchema = true;
+                    }
+                    else
+                    {
+                        await output(
+                       "<div>" + "CantAlterSchemaWarning" // SetupResources.CantAlterSchemaWarning
+                       + "</div>",
+                       false);
+                    }
+                }
+
+                bool setupSchemaHasBeenCreated = SchemaTableExists();
+
+                if (setupSchemaHasBeenCreated)
+                {
+                    await output(
+                        "SetupSystemSchemaExists", //SetupResources.DatabaseSchemaAlreadyExistsMessage,
+                        false);
+
+                    bool needSetupSchemaUpgrade = NeedsUpgrade("cloudscribe-setup");
+
+                    if (needSetupSchemaUpgrade)
+                    {
+                        await output(
+                            "SetupSystemSchemaNeedsUpgrade", //SetupResources.DatabaseSchemaNeedsUpgradeMessage,
+                            false);
+                    }
+                    else
+                    {
+                        await output(
+                            "SetupSystemSchemaUpToDate", //SetupResources.DatabaseSchemaUpToDateMessage,
+                            false);
+                    }
+
+
+
+                }
+                else
+                {
+                    await output(
+                        "SetupSchemaNotCreatedYet", //SetupResources.DatabaseSchemaNotCreatedYetMessage,
+                        false);
+                }
+
+            }
+        }
+        
 
     }
 }

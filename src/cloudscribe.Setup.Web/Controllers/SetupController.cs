@@ -100,7 +100,7 @@ namespace cloudscribe.Setup.Web
 
             //Response.BufferOutput = true;
             // Server.ScriptTimeout = int.MaxValue;
-            bool result;
+            
             startTime = DateTime.UtcNow;
             
             await WritePageHeader(HttpContext.Response);
@@ -122,7 +122,7 @@ namespace cloudscribe.Setup.Web
 
             // this locking strategy did not work as expected perhaps because we are doing things async
             //int lockTimeoutMilliseconds = config.GetOrDefault("AppSetings:SetupLockTimeoutMilliseconds", 60000); // 1 minute
-
+            bool keepGoing;
             //if(!Monitor.TryEnter(Lock, lockTimeoutMilliseconds))
             //{
             //    //throw new Exception("setup is already locked and runnning")
@@ -135,29 +135,30 @@ namespace cloudscribe.Setup.Web
             //{
             try
             {
-                await ProbeSystem(Response);
+                await setupManager.ProbeSystem(outputWriter);
                 // the setup system must be bootstrapped first 
                 // to make sure mp_SchemaVersion table exists
                 // which is used to keep track of script versions that have already been run
-                result = await SetupCloudscribeSetup(Response);
+                bool needSetupUpdate = setupManager.NeedsUpgrade("cloudscribe-setup");
+                if(needSetupUpdate)
+                {
+                    keepGoing = await SetupCloudscribeSetup(Response);
+                }
+                else
+                {
+                    keepGoing = true;
+                }
+                
                
-                if(result)
+                if(keepGoing)
                 {
                     // this runs the scripts for other apps including cloudscribe-core, 
-                    // cloudscribe -logging, and any custom apps that use the setup system
-                    result = await SetupOtherApplications(Response);
+                    // cloudscribe-logging, and any custom apps that use the setup system
+                    keepGoing = await SetupOtherApplications(Response);
                 }
-
-                // this part could be potentially refactored
-                // and abstracted to run steps that could be plugged in
-                // the goal would be to decouple setup from cloudscribe-core
-                // while still providing a way for cloudscribe core data to be ensured
-                //result = await EnsureSiteExists(Response);
-
-
+                
                 if(setupSteps != null)
-                {
-                    
+                { 
                     foreach(ISetupTask step in setupSteps)
                     {
                         try
@@ -191,15 +192,6 @@ namespace cloudscribe.Setup.Web
                 //ClearSetupLock();
                 //Monitor.Exit(Lock);
             }
-
-            try
-            {
-                await ShowSetupStatus(Response);
-            }
-            catch(Exception ex)
-            {
-                await WriteException(Response, ex);
-            }
             
             await WritePageFooter(Response);
             
@@ -211,35 +203,20 @@ namespace cloudscribe.Setup.Web
         private async Task<bool> SetupCloudscribeSetup(HttpResponse response)
         {
 
-            bool result = true;
-
-            if (!setupSchemaHasBeenCreated)
-            {
-                if (canAlterSchema)
-                {
-
-                    setupSchemaHasBeenCreated = await CreateInitialSchema(response, "cloudscribe-setup");
-
-                    if (setupSchemaHasBeenCreated)
-                    {
-                        //recheck
-                        needSetupSchemaUpgrade = setupManager.NeedsUpgrade("cloudscribe-setup");
-                    }
-
-                }
+            if (!setupManager.SchemaTableExists())
+            {    
+                setupSchemaHasBeenCreated = await CreateInitialSchema(response, "cloudscribe-setup");        
             }
 
-            if (
-                (setupSchemaHasBeenCreated)
-                && (needSetupSchemaUpgrade)
-                && (canAlterSchema)
-                )
+            needSetupSchemaUpgrade = setupManager.NeedsUpgrade("cloudscribe-setup");
+
+            if (needSetupSchemaUpgrade)
             {
                 needSetupSchemaUpgrade = await UpgradeSchema(response, "cloudscribe-setup");
             }
 
            
-            return result;
+            return setupManager.SchemaTableExists() && !needSetupSchemaUpgrade;
         }
 
         private async Task<bool> SetupOtherApplications(HttpResponse response)
@@ -288,9 +265,13 @@ namespace cloudscribe.Setup.Web
 
         private async Task<bool> CreateInitialSchema(HttpResponse response, string applicationName)
         {
-            Guid appID = setupManager.GetOrGenerateSchemaApplicationId(applicationName);
-            Version currentSchemaVersion = setupManager.GetSchemaVersion(appID);
+            Guid appId = setupManager.GetOrGenerateSchemaApplicationId(applicationName);
+            Version currentSchemaVersion = setupManager.GetSchemaVersion(appId);
             Version zeroVersion = new Version(0, 0, 0, 0);
+            if(currentSchemaVersion == null)
+            {
+                currentSchemaVersion = new Version(0, 0, 0, 0);
+            }
 
             if (currentSchemaVersion > zeroVersion) { return true; } //already installed only run upgrade scripts
 
@@ -309,12 +290,58 @@ namespace cloudscribe.Setup.Web
 
             }
 
-            bool result = await RunSetupScript(
-                response,
-                appID,
-                applicationName,
-                pathToScriptFolder,
-                versionToStopAt);
+            //bool result = await RunSetupScript(
+            //    response,
+            //    appID,
+            //    applicationName,
+            //    pathToScriptFolder,
+            //    versionToStopAt);
+            bool result = true;
+
+           
+
+            DirectoryInfo directoryInfo
+                = new DirectoryInfo(pathToScriptFolder);
+
+            FileInfo[] scriptFiles = directoryInfo.GetFiles("*.sql");
+            Array.Sort(scriptFiles, SetupManager.CompareFileNames);
+
+
+            if (scriptFiles.Length == 0)
+            {
+                await WritePageContent(response,
+                "NoScriptsFilesFound" //SetupResources.NoScriptsFilesFoundMessage
+                + " " + pathToScriptFolder,
+                false);
+
+                return false;
+
+            }
+
+            // We only want to run the highest version script from the install folder
+            // normally there is only 1 script in this folder, but if someone upgrades and then starts with a clean db
+            // there can be more than one script because of the previous installs so we need to make sure we only run the highest version found
+            // since we sorted it the highest version is the last item in the array
+            FileInfo highestVersionScriptFile = scriptFiles[(scriptFiles.Length - 1)];
+
+            //Version currentSchemaVersion = setupManager.GetSchemaVersion(applicationId);
+            Version scriptVersion = setupManager.ParseVersionFromFileName(highestVersionScriptFile.Name);
+
+            if (
+                (scriptVersion != null)
+                && (scriptVersion > currentSchemaVersion)
+                && (versionToStopAt == null || (scriptVersion <= versionToStopAt))
+                )
+            {
+                result = await ProcessScript(
+                    response,
+                    highestVersionScriptFile,
+                    appId,
+                    applicationName,
+                    currentSchemaVersion);
+            }
+
+            
 
             return result;
 
@@ -326,8 +353,12 @@ namespace cloudscribe.Setup.Web
             Version versionToStopAt = setupManager.GetCodeVersion(applicationName);
             Guid appID = setupManager.GetOrGenerateSchemaApplicationId(applicationName);
             Version currentSchemaVersion = setupManager.GetSchemaVersion(appID);
+            if (currentSchemaVersion == null)
+            {
+                currentSchemaVersion = new Version(0, 0, 0, 0);
+            }
 
-            if(versionToStopAt != null)
+            if (versionToStopAt != null)
             {
                 if(versionToStopAt <= currentSchemaVersion) { return false; }
 
@@ -370,69 +401,7 @@ namespace cloudscribe.Setup.Web
 
         }
 
-        private async Task<bool> RunSetupScript(
-            HttpResponse response,
-            Guid applicationId,
-            string applicationName,
-            string pathToScriptFolder,
-            Version versionToStopAt)
-        {
-            bool result = true;
-
-            if (!Directory.Exists(pathToScriptFolder))
-            {
-                await WritePageContent(response,
-                pathToScriptFolder + " " 
-                + "ScriptFolderNotFoundAddendum", // SetupResources.ScriptFolderNotFoundAddendum,
-                false);
-
-                return false;
-            }
-
-            DirectoryInfo directoryInfo
-                = new DirectoryInfo(pathToScriptFolder);
-
-            FileInfo[] scriptFiles = directoryInfo.GetFiles("*.sql");
-            Array.Sort(scriptFiles, SetupManager.CompareFileNames);
-
-
-            if (scriptFiles.Length == 0)
-            {
-                await WritePageContent(response,
-                "NoScriptsFilesFound" //SetupResources.NoScriptsFilesFoundMessage
-                + " " + pathToScriptFolder,
-                false);
-
-                return false;
-
-            }
-
-            // We only want to run the highest version script from the install folder
-            // normally there is only 1 script in this folder, but if someone upgrades and then starts with a clean db
-            // there can be more than one script because of the previous installs so we need to make sure we only run the highest version found
-            // since we sorted it the highest version is the last item in the array
-            FileInfo scriptFile = scriptFiles[(scriptFiles.Length - 1)];
-
-            Version currentSchemaVersion = setupManager.GetSchemaVersion(applicationId);
-            Version scriptVersion = setupManager.ParseVersionFromFileName(scriptFile.Name);
-
-            if (
-                (scriptVersion != null)
-                && (scriptVersion > currentSchemaVersion)
-                && (versionToStopAt == null || (scriptVersion <= versionToStopAt))
-                )
-            {
-                result = await ProcessScript(
-                    response,
-                    scriptFile,
-                    applicationId,
-                    applicationName,
-                    currentSchemaVersion);
-            }
-
-            return result;
-
-        }
+        
         
         private async Task<bool> RunUpgradeScripts(
             HttpResponse response,
@@ -472,6 +441,11 @@ namespace cloudscribe.Setup.Web
 
             Version currentSchemaVersion
                 = setupManager.GetSchemaVersion(applicationId);
+
+            if (currentSchemaVersion == null)
+            {
+                currentSchemaVersion = new Version(0, 0, 0, 0);
+            }
 
             foreach (FileInfo scriptFile in scriptFiles)
             {
@@ -555,213 +529,168 @@ namespace cloudscribe.Setup.Web
             return false;
         }
 
-        
+
+        //private async Task<bool> RunSetupScript(
+        //    HttpResponse response,
+        //    Guid applicationId,
+        //    string applicationName,
+        //    string pathToScriptFolder,
+        //    Version versionToStopAt)
+        //{
+        //    bool result = true;
+
+        //    if (!Directory.Exists(pathToScriptFolder))
+        //    {
+        //        await WritePageContent(response,
+        //        pathToScriptFolder + " " 
+        //        + "ScriptFolderNotFoundAddendum", // SetupResources.ScriptFolderNotFoundAddendum,
+        //        false);
+
+        //        return false;
+        //    }
+
+        //    DirectoryInfo directoryInfo
+        //        = new DirectoryInfo(pathToScriptFolder);
+
+        //    FileInfo[] scriptFiles = directoryInfo.GetFiles("*.sql");
+        //    Array.Sort(scriptFiles, SetupManager.CompareFileNames);
 
 
-        private async Task ProbeSystem(HttpResponse response)
-        {
-            await WritePageContent(response,
-                "ProbingSystem", //SetupResources.ProbingSystemMessage,
-                false);
-            
-            setupManager.EnsureDatabaseIfPossible();
-            
-            canAccessDatabase = setupManager.CanAccessDatabase();
-            
-            if (canAccessDatabase)
-            {
-                await WritePageContent(response,
-                    setupManager.DBPlatform
-                    + " " + "DatabaseConnectionOK", // SetupResources.DatabaseConnectionOKMessage,
-                    false);
-            }
-            else
-            {
-                string dbError = string.Format(
-                    "FailedToConnectToDatabase", //SetupResources.FailedToConnectToDatabase,
-                    setupManager.DBPlatform);
+        //    if (scriptFiles.Length == 0)
+        //    {
+        //        await WritePageContent(response,
+        //        "NoScriptsFilesFound" //SetupResources.NoScriptsFilesFoundMessage
+        //        + " " + pathToScriptFolder,
+        //        false);
 
-                await WritePageContent(response, "<div>" + dbError + "</div>", false);
+        //        return false;
 
-                showConnectionError = setupOptions.ShowConnectionError;
-                
-                if (showConnectionError)
-                {
-                    await WritePageContent(response,
-                        "<div>" + setupManager.GetDbConnectionError()
-                        + "</div>",
-                        false);
-                }
-            }
+        //    }
 
-            if (canAccessDatabase)
-            {
-                canAlterSchema = setupManager.CanAlterSchema();
+        //    // We only want to run the highest version script from the install folder
+        //    // normally there is only 1 script in this folder, but if someone upgrades and then starts with a clean db
+        //    // there can be more than one script because of the previous installs so we need to make sure we only run the highest version found
+        //    // since we sorted it the highest version is the last item in the array
+        //    FileInfo scriptFile = scriptFiles[(scriptFiles.Length - 1)];
 
-                if (canAlterSchema)
-                {
-                    await WritePageContent(response,
-                        "DatabaseCanAlterSchema", //SetupResources.DatabaseCanAlterSchemaMessage,
-                        false);
-                }
-                else
-                {
+        //    Version currentSchemaVersion = setupManager.GetSchemaVersion(applicationId);
+        //    Version scriptVersion = setupManager.ParseVersionFromFileName(scriptFile.Name);
 
-                    if (setupOptions.TryAnywayIfFailedAlterSchemaTest)
-                    {
-                        canAlterSchema = true;
-                    }
-                    else
-                    {
-                        await WritePageContent(response,
-                       "<div>" + "CantAlterSchemaWarning" // SetupResources.CantAlterSchemaWarning
-                       + "</div>",
-                       false);
-                    }
-                }
+        //    if (
+        //        (scriptVersion != null)
+        //        && (scriptVersion > currentSchemaVersion)
+        //        && (versionToStopAt == null || (scriptVersion <= versionToStopAt))
+        //        )
+        //    {
+        //        result = await ProcessScript(
+        //            response,
+        //            scriptFile,
+        //            applicationId,
+        //            applicationName,
+        //            currentSchemaVersion);
+        //    }
 
-                setupSchemaHasBeenCreated = setupManager.SchemaTableExists();
+        //    return result;
 
-                if (setupSchemaHasBeenCreated)
-                {
-                    await WritePageContent(response,
-                        "SetupSystemSchemaAlreadyExists", //SetupResources.DatabaseSchemaAlreadyExistsMessage,
-                        false);
+        //}
 
-                    needSetupSchemaUpgrade = setupManager.NeedsUpgrade("cloudscribe-setup");
 
-                    if (needSetupSchemaUpgrade)
-                    {
-                        await WritePageContent(response,
-                            "SetupSystemSchemaNeedsUpgrade", //SetupResources.DatabaseSchemaNeedsUpgradeMessage,
-                            false);
-                    }
-                    else
-                    {
-                        await WritePageContent(response,
-                            "SetupSystemSchemaUpToDate", //SetupResources.DatabaseSchemaUpToDateMessage,
-                            false);
-                    }
+        //private bool CoreSystemIsReady()
+        //{
+        //    if (!canAccessDatabase) return false;
 
-                    
+        //    if (!setupManager.SchemaTableExists()) return false;
 
-                }
-                else
-                {
-                    await WritePageContent(response,
-                        "SetupSchemaNotCreatedYet", //SetupResources.DatabaseSchemaNotCreatedYetMessage,
-                        false);
-                }
+        //    if (setupManager.NeedsUpgrade("cloudscribe-core")) { return false; }
 
-            }
+        //    return true;
+        //}
 
-           
-        }
 
-        
 
-        private bool CoreSystemIsReady()
-        {
-            if (!canAccessDatabase) return false;
+        //private async Task ShowSetupStatus(HttpResponse response)
+        //{
 
-            if (!setupManager.SchemaTableExists()) return false;
+        //    StringBuilder statusMessage = new StringBuilder();
 
-            if (setupManager.NeedsUpgrade("cloudscribe-core")) { return false; }
+        //    if(CoreSystemIsReady())
+        //    {
+        //        if(exceptionsRendered)
+        //        {
+        //            statusMessage.Append("<hr /><div>"
+        //                + "SetupSchemaIsUpToDateButExceptionsOccured" // SetupResources.SetupSuccessMessage 
+        //                + "</div>");
+        //        }
+        //        else
+        //        {
+        //            statusMessage.Append("<hr /><div>"
+        //                + "SetupSuccess" // SetupResources.SetupSuccessMessage 
+        //                + "</div>");
+        //        }
 
-            return true;
-        }
+        //    }
+        //    else
+        //    {
+        //        statusMessage.Append("<hr /><div>"
+        //        + "UnexpectedSetupResult" // SetupResources.SetupSuccessMessage 
+        //        + "</div>");
+        //    }
 
-        
 
-        private async Task ShowSetupStatus(HttpResponse response)
-        {
+        //    statusMessage.Append("<br /><br />");
 
-            StringBuilder statusMessage = new StringBuilder();
+        //    statusMessage.Append("<div class='settingrow'>");
+        //    statusMessage.Append("<span class='settinglabel'>");
+        //    //successMessage.Append(SetupResources.DatabasePlatform);
+        //    statusMessage.Append("DatabasePlatform");
+        //    statusMessage.Append("</span>");
+        //    statusMessage.Append(setupManager.DBPlatform);
+        //    statusMessage.Append("</div>");
 
-            if(CoreSystemIsReady())
-            {
-                if(exceptionsRendered)
-                {
-                    statusMessage.Append("<hr /><div>"
-                        + "SetupSchemaIsUpToDateButExceptionsOccured" // SetupResources.SetupSuccessMessage 
-                        + "</div>");
-                }
-                else
-                {
-                    statusMessage.Append("<hr /><div>"
-                        + "SetupSuccess" // SetupResources.SetupSuccessMessage 
-                        + "</div>");
-                }
-                
-            }
-            else
-            {
-                statusMessage.Append("<hr /><div>"
-                + "UnexpectedSetupResult" // SetupResources.SetupSuccessMessage 
-                + "</div>");
-            }
-            
+        //    if (setupSchemaHasBeenCreated)
+        //    { 
+        //        cloudscribeCoreDbSchemaVersion = setupManager.GetCloudscribeSchemaVersion();
+        //        cloudscribeCoreCodeVersion = setupManager.GetCloudscribeCodeVersion();
 
-            statusMessage.Append("<a href='" + "/" // TODO: was using Page.ResolveUrl("~/")
-                + "' title='" + "Home" //SetupResources.HomeLink 
-                + "'>"
-                + "Home" // SetupResources.HomeLink 
-                + "</a>");
+        //        statusMessage.Append("<div class='settingrow'>");
+        //        statusMessage.Append("<span class='settinglabel'>");
+        //        //successMessage.Append(SetupResources.Version);
+        //        statusMessage.Append("Version");
+        //        statusMessage.Append("</span>");
+        //        statusMessage.Append(cloudscribeCoreCodeVersion.ToString());
+        //        statusMessage.Append("</div>");
 
-            statusMessage.Append("<br /><br />");
+        //        statusMessage.Append("<div class='settingrow'>");
+        //        statusMessage.Append("<span class='settinglabel'>");
+        //        //successMessage.Append(SetupResources.DatabaseStatus);
+        //        statusMessage.Append("DatabaseStatus");
+        //        statusMessage.Append("</span>");
 
-            statusMessage.Append("<div class='settingrow'>");
-            statusMessage.Append("<span class='settinglabel'>");
-            //successMessage.Append(SetupResources.DatabasePlatform);
-            statusMessage.Append("DatabasePlatform");
-            statusMessage.Append("</span>");
-            statusMessage.Append(setupManager.DBPlatform);
-            statusMessage.Append("</div>");
+        //        if (cloudscribeCoreCodeVersion > cloudscribeCoreDbSchemaVersion)
+        //        {
+        //            //successMessage.Append(SetupResources.SchemaUpgradeNeededMessage);
+        //            statusMessage.Append("SchemaUpgradeNeeded");
+        //        }
 
-            if (setupSchemaHasBeenCreated)
-            { 
-                cloudscribeCoreDbSchemaVersion = setupManager.GetCloudscribeSchemaVersion();
-                cloudscribeCoreCodeVersion = setupManager.GetCloudscribeCodeVersion();
-                
-                statusMessage.Append("<div class='settingrow'>");
-                statusMessage.Append("<span class='settinglabel'>");
-                //successMessage.Append(SetupResources.Version);
-                statusMessage.Append("Version");
-                statusMessage.Append("</span>");
-                statusMessage.Append(cloudscribeCoreCodeVersion.ToString());
-                statusMessage.Append("</div>");
+        //        if (cloudscribeCoreCodeVersion < cloudscribeCoreDbSchemaVersion)
+        //        {
+        //            //successMessage.Append(SetupResources.CodeUpgradeNeededMessage);
+        //            statusMessage.Append("CodeUpgradeNeeded");
+        //        }
 
-                statusMessage.Append("<div class='settingrow'>");
-                statusMessage.Append("<span class='settinglabel'>");
-                //successMessage.Append(SetupResources.DatabaseStatus);
-                statusMessage.Append("DatabaseStatus");
-                statusMessage.Append("</span>");
+        //        if (cloudscribeCoreCodeVersion == cloudscribeCoreDbSchemaVersion)
+        //        {
+        //            //successMessage.Append(SetupResources.InstallationUpToDateMessage);
+        //            statusMessage.Append("InstallationUpToDate");
 
-                if (cloudscribeCoreCodeVersion > cloudscribeCoreDbSchemaVersion)
-                {
-                    //successMessage.Append(SetupResources.SchemaUpgradeNeededMessage);
-                    statusMessage.Append("SchemaUpgradeNeeded");
-                }
+        //        }
 
-                if (cloudscribeCoreCodeVersion < cloudscribeCoreDbSchemaVersion)
-                {
-                    //successMessage.Append(SetupResources.CodeUpgradeNeededMessage);
-                    statusMessage.Append("CodeUpgradeNeeded");
-                }
+        //        statusMessage.Append("</div>");
+        //    }
 
-                if (cloudscribeCoreCodeVersion == cloudscribeCoreDbSchemaVersion)
-                {
-                    //successMessage.Append(SetupResources.InstallationUpToDateMessage);
-                    statusMessage.Append("InstallationUpToDate");
+        //    await WritePageContent(response, statusMessage.ToString(), false);
 
-                }
-
-                statusMessage.Append("</div>");
-            }
-
-            await WritePageContent(response, statusMessage.ToString(), false);
-
-        }
+        //}
 
         private async Task WriteException(HttpResponse response, Exception ex)
         {

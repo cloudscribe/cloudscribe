@@ -35,16 +35,50 @@ namespace cloudscribe.Core.Web.Components
             Func<string, Version> codeVersionLookup
             )
         {
+            bool needsUpgrade = appNeedsUpgrade("cloudscribe-core");
            
-            if(appNeedsUpgrade("cloudscribe-core"))
+            if (needsUpgrade)
             {
                 await output("cloudscribe-core needs schema upgrade", false);
                 return;
             }
-            else
+
+            Version codeVersion = codeVersionLookup("cloudscribe-core");
+            Version schemaVersion = schemaVersionLookup("cloudscribe-core");
+            if(codeVersion == null)
             {
-                await output("cloudscribe-core schema is up to date", false);
+                await output("cloudscribe-core code version not found", false);
             }
+            if (schemaVersion == null)
+            {
+                await output("cloudscribe-core schema version not found", false);
+            }
+
+            if((codeVersion != null)&&(schemaVersion != null))
+            {
+                if(codeVersion == schemaVersion)
+                {
+                    var message = string.Format(
+                        "cloudscribe-core schema is up to date at version: {0}",
+                        codeVersion
+                        );
+
+                    await output(message, false);
+
+                }
+                else
+                {
+                    var message = string.Format(
+                        "cloudscribe-core code version: {0} is out of sync with schema version: {1}",
+                        codeVersion, 
+                        schemaVersion
+                        );
+
+                    await output(message, false);
+                }
+            }
+            
+            
 
             int existingSiteCount = await siteManager.ExistingSiteCount();
 
@@ -63,6 +97,13 @@ namespace cloudscribe.Core.Web.Components
                 await output("CreatingRolesAndAdminUser", true);
 
                 bool result = await siteManager.CreateRequiredRolesAndAdminUser(newSite);
+
+                existingSiteCount = await siteManager.ExistingSiteCount();
+                if(existingSiteCount > 0)
+                {
+                    await output(BuildHomeLink(), false);
+                }
+                
             }
             else
             {
@@ -94,10 +135,9 @@ namespace cloudscribe.Core.Web.Components
                             }
                         }
                     }
-
-
                 }
-
+                
+                await output(BuildHomeLink(), false);
 
             }
 
@@ -107,6 +147,16 @@ namespace cloudscribe.Core.Web.Components
 
         }
 
+        private string BuildHomeLink()
+        {
+            var homeLink = "<a href='" + "/" // TODO: was using Page.ResolveUrl("~/")
+                + "' title='" + "Home" //SetupResources.HomeLink 
+                + "'>"
+                + "Home" // SetupResources.HomeLink 
+                + "</a>";
+
+            return homeLink;
+        }
         
 
         //public async Task DoSetupStep(HttpResponse response)
