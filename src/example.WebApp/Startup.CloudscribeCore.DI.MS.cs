@@ -36,6 +36,7 @@ using Microsoft.AspNet.Routing;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Identity;
 using cloudscribe.Core.Models.Geography;
+using cloudscribe.Core.Models.Setup;
 using cloudscribe.Logging.Web;
 using cloudscribe.Core.Web;
 using cloudscribe.Core.Web.Components;
@@ -76,7 +77,7 @@ namespace example.WebApp
             services.Configure<cloudscribe.Core.Web.Components.Editor.CkeditorOptions>(configuration.GetSection("CkeditorOptions"));
 
 
-            services.AddScoped<cloudscribe.Core.Models.Setup.ISetupStep, cloudscribe.Core.Web.Components.EnsureSiteSetupStep>();
+            services.AddScoped<cloudscribe.Core.Models.Setup.ISetupTask, cloudscribe.Core.Web.Components.EnsureSiteSetupTask>();
             //services.AddScoped<cloudscribe.Core.Models.Setup.ISetupStep, cloudscribe.Core.Web.Components.EnsureSiteSetupStep2>();
 
 
@@ -219,10 +220,15 @@ namespace example.WebApp
             services.TryAddScoped<GeoDataManager, GeoDataManager>();
             services.TryAddScoped<SystemInfoManager, SystemInfoManager>();
 
-            
+
 
             // VersionProviders are used by the Setup controller to determine what install and upgrade scripts to run
-            services.TryAddScoped<IVersionProviderFactory, ConfigVersionProviderFactory>();
+            services.AddScoped<IVersionProvider, SetupVersionProvider>();
+            services.AddScoped<IVersionProvider, CloudscribeCoreVersionProvider>();
+            services.AddScoped<IVersionProvider, cloudscribe.Logging.Web.CloudscribeLoggingVersionProvider>();
+
+            // the factory will provide access to the previously registered IVersionProviders
+            services.TryAddScoped<IVersionProviderFactory, VersionProviderFactory>();
 
             services.AddCloudscribeIdentity<SiteUser, SiteRole>()
                 .AddDefaultTokenProviders(); 

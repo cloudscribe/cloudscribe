@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2004-08-03
-// Last Modified:		    2016-01-01
+// Last Modified:		    2016-01-05
 
-using cloudscribe.Core.Models;
+using cloudscribe.Core.Models.Setup;
 using cloudscribe.Setup.Web;
 using cloudscribe.DbHelpers;
 using Microsoft.Data.Sqlite;

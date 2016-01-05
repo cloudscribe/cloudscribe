@@ -6,6 +6,7 @@
 // 
 
 using cloudscribe.Core.Models;
+using cloudscribe.Core.Models.Setup;
 using Microsoft.AspNet.Hosting;
 using Microsoft.Extensions.PlatformAbstractions;
 using System.Collections.Generic;

@@ -7,11 +7,11 @@
 
 using System.Collections.Generic;
 
-namespace cloudscribe.Core.Models
+namespace cloudscribe.Core.Models.Setup
 {
     public interface IVersionProviderFactory
     {
-        List<IVersionProvider> VersionProviders { get; }
+        IEnumerable<IVersionProvider> VersionProviders { get; }
         IVersionProvider Get(string name);
 
     }

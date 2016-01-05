@@ -5,6 +5,7 @@ using System;
 using System.Data.Common;
 using System.IO;
 using cloudscribe.Core.Models;
+using cloudscribe.Core.Models.Setup;
 
 namespace cloudscribe.Setup.Web
 {

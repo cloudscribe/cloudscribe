@@ -1,6 +1,11 @@
 
 http://www.dotnetcurry.com/aspnet/1223/secure-aspnet-web-api-using-tokens-owin-angularjs
 
+http://stackoverflow.com/questions/29048122/token-based-authentication-in-asp-net-5-vnext
+http://stackoverflow.com/questions/34612631/prevent-token-based-authorization-of-preflight-options-requests-in-asp-net-5-vn
+
+https://github.com/mrsheepuk/ASPNETSelfCreatedTokenAuthExample
+
 
 http://www.simplecloud.info/
 System for Cross-domain Identity Management

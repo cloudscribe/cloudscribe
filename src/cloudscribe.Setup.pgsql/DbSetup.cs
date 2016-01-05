@@ -1,10 +1,10 @@
 ﻿// Original Author:					Joseph Hill
 // Created:							2005-02-16 
 // Additions and fixes have been added by Joe Audette, Dean Brettle, TJ Fontaine
-// Last Modified:                   2016-01-01
+// Last Modified:                   2016-01-05
 
 
-using cloudscribe.Core.Models;
+using cloudscribe.Core.Models.Setup;
 using cloudscribe.Setup.Web;
 using cloudscribe.DbHelpers;
 using Microsoft.Extensions.OptionsModel;

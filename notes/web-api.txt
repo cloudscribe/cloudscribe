@@ -2,3 +2,20 @@
 http://damienbod.com/2015/12/13/asp-net-5-mvc-6-api-documentation-using-swagger/
 
 http://www.dotnetcurry.com/aspnet/1223/secure-aspnet-web-api-using-tokens-owin-angularjs
+
+http://stackoverflow.com/questions/29048122/token-based-authentication-in-asp-net-5-vnext
+http://stackoverflow.com/questions/34612631/prevent-token-based-authorization-of-preflight-options-requests-in-asp-net-5-vn
+
+https://github.com/mrsheepuk/ASPNETSelfCreatedTokenAuthExample
+
+https://github.com/mrsheepuk/ASPNETMVC6AngularExample
+
+https://github.com/johnpapa/angular-styleguide
+http://mrsheepuk.github.io/ASPNETMVC6AngularExample/
+http://mrsheepuk.github.io/ASPNETMVC6AngularExample/part01/
+http://mrsheepuk.github.io/ASPNETMVC6AngularExample/part02/
+http://mrsheepuk.github.io/ASPNETMVC6AngularExample/part03/
+http://mrsheepuk.github.io/ASPNETMVC6AngularExample/part04/
+http://mrsheepuk.github.io/ASPNETMVC6AngularExample/part05/
+https://github.com/mrsheepuk/ASPNETMVC6AngularExample/tree/Part05Final
+

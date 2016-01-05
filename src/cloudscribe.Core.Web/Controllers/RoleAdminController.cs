@@ -7,6 +7,7 @@
 
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Models;
+using cloudscribe.Core.Models.Setup;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.ViewModels.RoleAdmin;
 using Microsoft.AspNet.Authorization;

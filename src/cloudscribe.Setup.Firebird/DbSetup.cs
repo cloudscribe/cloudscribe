@@ -5,7 +5,7 @@
 // Last Modified:		    2016-01-02
 
 
-using cloudscribe.Core.Models;
+using cloudscribe.Core.Models.Setup;
 using cloudscribe.Setup.Web;
 using cloudscribe.DbHelpers;
 using FirebirdSql.Data.FirebirdClient;

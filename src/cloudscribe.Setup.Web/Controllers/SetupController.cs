@@ -2,12 +2,11 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-01-10
-// Last Modified:			2016-01-04
+// Last Modified:			2016-01-05
 // 
 
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Setup;
-using cloudscribe.Core.Web.Components;
 //using cloudscribe.Resources;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc;
@@ -38,21 +37,17 @@ namespace cloudscribe.Setup.Web
             ILogger<SetupController> logger,
             IOptions<SetupOptions> setupOptionsAccessor,
             SetupManager setupManager,
-            SiteManager siteManager,
             IAuthorizationService authorizationService,
-            IEnumerable<ISetupStep> setupSteps = null
+            IEnumerable<ISetupTask> setupSteps = null
         )
         {
             if (appEnv == null) { throw new ArgumentNullException(nameof(appEnv)); }
             if (logger == null) { throw new ArgumentNullException(nameof(logger)); }
             //if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
             if (setupManager == null) { throw new ArgumentNullException(nameof(setupManager)); }
-            if (siteManager == null) { throw new ArgumentNullException(nameof(siteManager)); }
 
-    
             log = logger;
             appBasePath = appEnv.ApplicationBasePath;
-            this.siteManager = siteManager;
             this.setupManager = setupManager;
             setupOptions = setupOptionsAccessor.Value;
             this.authorizationService = authorizationService;
@@ -63,23 +58,19 @@ namespace cloudscribe.Setup.Web
 
         }
 
-        IEnumerable<ISetupStep> setupSteps = null;
+        IEnumerable<ISetupTask> setupSteps = null;
 
         private IAuthorizationService authorizationService;
         private SetupOptions setupOptions;
         private SetupManager setupManager;
         private string appBasePath;
-        private SiteManager siteManager;
         private ILogger log;
-        //private ConfigHelper config;
-        private bool setupIsDisabled = false;
-        //private bool dataFolderIsWritable = false;
+        
         private bool canAccessDatabase = false;
-        private bool schemaHasBeenCreated = false;
+        private bool setupSchemaHasBeenCreated = false;
         private bool canAlterSchema = false;
         private bool showConnectionError = false;
-        private int existingSiteCount = 0;
-        private bool needCoreSchemaUpgrade = false;
+        private bool needSetupSchemaUpgrade = false;
         private Version cloudscribeCoreCodeVersion = new Version(0,0);
         private Version cloudscribeCoreDbSchemaVersion = new Version(0,0);
         // private int scriptTimeout;
@@ -96,15 +87,11 @@ namespace cloudscribe.Setup.Web
             //scriptTimeout = Server.ScriptTimeout;
             //Response.Cache.SetCacheability(HttpCacheability.ServerAndNoCache);
             
-            setupIsDisabled = setupOptions.DisableSetup;
-
             bool isAllowed = await authorizationService.AuthorizeAsync(User, "SetupSystemPolicy");
             
-            
-
-            if (setupIsDisabled && !isAllowed)
+            if (!setupOptions.AllowAnonymous && !isAllowed)
             {
-                log.LogInformation("returning 404 becuase setup is disabled and user is not logged in as an admin");
+                log.LogInformation("returning 404 because allowAnonymous is false and user is either not authenticated or not allowed by policy");
                 Response.StatusCode = 404;
                 return new EmptyResult();
             }
@@ -118,13 +105,20 @@ namespace cloudscribe.Setup.Web
             
             await WritePageHeader(HttpContext.Response);
 
-            if (setupIsDisabled && isAllowed)
+            if (!setupOptions.AllowAnonymous && isAllowed)
             {
                 await WritePageContent(Response,
-                    "RunningSetupForAdminUser" //SetupResources.RunningSetupForAdminUser
+                    "RunningSetupForAllowedUser" //SetupResources.RunningSetupForAdminUser
                     );
 
             }
+
+            // ISetupTasks will use this function to write to the response
+            Func<string, bool, Task> outputWriter =  async (string message, bool showTime) =>
+            {
+                await WritePageContent(Response, message, showTime);
+                
+            };
 
             // this locking strategy did not work as expected perhaps because we are doing things async
             //int lockTimeoutMilliseconds = config.GetOrDefault("AppSetings:SetupLockTimeoutMilliseconds", 60000); // 1 minute
@@ -158,15 +152,29 @@ namespace cloudscribe.Setup.Web
                 // and abstracted to run steps that could be plugged in
                 // the goal would be to decouple setup from cloudscribe-core
                 // while still providing a way for cloudscribe core data to be ensured
-                result = await EnsureSiteExists(Response);
+                //result = await EnsureSiteExists(Response);
 
 
                 if(setupSteps != null)
                 {
-                    bool stepResult;
-                    foreach(ISetupStep step in setupSteps)
+                    
+                    foreach(ISetupTask step in setupSteps)
                     {
-                        stepResult = await step.DoSetupStep(Response);
+                        try
+                        {
+                            await step.DoSetupStep(
+                                outputWriter, 
+                                setupManager.NeedsUpgrade,
+                                setupManager.GetSchemaVersion,
+                                setupManager.GetCodeVersion
+                                );
+                        }
+                        catch(Exception ex)
+                        {
+                            await WriteException(Response, ex);
+                        }
+
+                        
                     }
                 }
 
@@ -193,114 +201,41 @@ namespace cloudscribe.Setup.Web
                 await WriteException(Response, ex);
             }
             
-            
-
-
-            //await WritePageContent(Response,
-            //    "SetupEnabled" //SetupResources.SetupEnabledMessage
-            //    );
-
             await WritePageFooter(Response);
-
-            //HttpContext.ApplicationInstance.CompleteRequest();
-
+            
             return new EmptyResult();
         }
         
-        private async Task<bool> EnsureSiteExists(HttpResponse response)
-        {
-
-            bool result = true;
-            
-
-            if (!CoreSystemIsReady()) return false;
-
-            existingSiteCount = await siteManager.ExistingSiteCount();
-
-            if (existingSiteCount == 0)
-            {
-                await WritePageContent(response,
-                    "CreatingSite" //SetupResources.CreatingSiteMessage
-                    , true);
-
-                SiteSettings newSite = await siteManager.CreateNewSite(true);
-
-                await WritePageContent(response,
-                    "CreatingRolesAndAdminUser" //SetupResources.CreatingRolesAndAdminUserMessage
-                    , true);
-
-                result = await siteManager.CreateRequiredRolesAndAdminUser(newSite);
-            }
-            else
-            {
-                // check here if count of users is 0
-                // if something went wrong with creating admin user
-                // setup page should try to correct it on subsequent runs
-                // ie create an admin user if no users exist
-                if (response.HttpContext.Request.Host.HasValue)
-                {
-                    ISiteSettings site = await siteManager.Fetch(response.HttpContext.Request.Host.Value);
-                    if (site != null)
-                    {
-                        int roleCount = await siteManager.GetRoleCount(site.SiteId);
-                        bool roleResult = true;
-                        if (roleCount == 0)
-                        {
-                            roleResult = await siteManager.EnsureRequiredRoles(site);
-                        }
-
-                        if (roleResult)
-                        {
-                            int userCount = await siteManager.GetUserCount(site.SiteId);
-                            if (userCount == 0)
-                            {
-                                await siteManager.CreateAdminUser(site);
-                            }
-                        }
-                    }
-
-
-                }
-
-
-            }
-
-
-
-            //TODO dbSiteSettingsEx.EnsureSettings(); add to ISiteRepository
-
-
-            return result;
-        }
+        
 
         private async Task<bool> SetupCloudscribeSetup(HttpResponse response)
         {
 
             bool result = true;
 
-            if (!schemaHasBeenCreated)
+            if (!setupSchemaHasBeenCreated)
             {
                 if (canAlterSchema)
                 {
 
-                    schemaHasBeenCreated = await CreateInitialSchema(response, "cloudscribe-setup");
+                    setupSchemaHasBeenCreated = await CreateInitialSchema(response, "cloudscribe-setup");
 
-                    if (schemaHasBeenCreated)
+                    if (setupSchemaHasBeenCreated)
                     {
                         //recheck
-                        needCoreSchemaUpgrade = setupManager.NeedsUpgrade("cloudscribe-setup");
+                        needSetupSchemaUpgrade = setupManager.NeedsUpgrade("cloudscribe-setup");
                     }
 
                 }
             }
 
             if (
-                (schemaHasBeenCreated)
-                && (needCoreSchemaUpgrade)
+                (setupSchemaHasBeenCreated)
+                && (needSetupSchemaUpgrade)
                 && (canAlterSchema)
                 )
             {
-                needCoreSchemaUpgrade = await UpgradeSchema(response, "cloudscribe-setup");
+                needSetupSchemaUpgrade = await UpgradeSchema(response, "cloudscribe-setup");
             }
 
            
@@ -341,54 +276,10 @@ namespace cloudscribe.Setup.Web
                     await CreateInitialSchema(response, appFolder.Name);
                     await UpgradeSchema(response, appFolder.Name);
 
-                    // this doesn't currently do anything
-                    // we will use it to plugin other setup taks for cms etc
-                    SetupFeatures(response, appFolder.Name);
                 }
 
             }
-
-           
-
-            //WritePageContent(SetupResources.EnsuringFeaturesInAdminSites, true);
-            //ModuleDefinition.EnsureInstallationInAdminSites();
-
-            //SiteSettings siteSettings = CacheHelper.GetCurrentSiteSettings();
-
-            //if (siteSettings != null)
-            //{
-            //    if (PageSettings.GetCountOfPages(siteSettings.SiteId) == 0)
-            //    {
-            //        WritePageContent(SetupResource.CreatingDefaultContent);
-            //        //SetupContentPages(siteSettings);
-            //        mojoSetup.SetupDefaultContentPages(siteSettings);
-            //    }
-
-            //    try
-            //    {
-            //        int userCount = SiteUser.UserCount(siteSettings.SiteId);
-            //        if (userCount == 0) { mojoSetup.EnsureRolesAndAdminUser(siteSettings); }
-
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        log.Error("EnsureAdminUserAndRoles", ex);
-            //    }
-
-            //    mojoSetup.EnsureSkins(siteSettings.SiteId);
-            //}
-
-            // in case control type controlsrc, regex or sort changed on the definition
-            // update instance properties to match
-            //ThreadPool.QueueUserWorkItem(new WaitCallback(SyncDefinitions), null);
-            //ModuleDefinition.SyncDefinitions();
-
-            //SiteSettings.EnsureExpandoSettings();
-
-            //mojoSetup.EnsureAdditionalSiteFolders();
-
-          
-
+            
             return result;
 
         }
@@ -447,13 +338,7 @@ namespace cloudscribe.Setup.Web
 
             if (!Directory.Exists(pathToScriptFolder))
             {
-                //string warning = string.Format(
-                //    SetupResource.SchemaUpgradeFolderNotFound,
-                //    applicationName, pathToScriptFolder);
-
-                //log.Warn(warning);
-
-                await WritePageContent(response, pathToScriptFolder + "not found");
+                //await WritePageContent(response, pathToScriptFolder + " not found");
                 return false;
 
             }
@@ -678,34 +563,11 @@ namespace cloudscribe.Setup.Web
             await WritePageContent(response,
                 "ProbingSystem", //SetupResources.ProbingSystemMessage,
                 false);
-
-            //dbPlatform = setupManager.DBPlatform;
-
-            setupManager.EnsureDatabaseIfPossible();
-            //dataFolderIsWritable = mojoSetup.DataFolderIsWritable();
-
-
-            //if (dataFolderIsWritable)
-            //{
-            //    await WritePageContent(response,
-            //        "FileSystemPermissionsOK", //SetupResources.FileSystemPermissionsOKMesage,
-            //        false);
-            //}
-            //else
-            //{
-            //    await WritePageContent(response,
-            //        "FileSystemPermissionProblems", //SetupResources.FileSystemPermissionProblemsMessage,
-            //        false);
-
-            //    //WritePageContent(
-            //    //    "<div>" + GetFolderDetailsHtml() + "</div>",
-            //    //    false);
-            //}
-
-            canAccessDatabase = setupManager.CanAccessDatabase();
-
             
-
+            setupManager.EnsureDatabaseIfPossible();
+            
+            canAccessDatabase = setupManager.CanAccessDatabase();
+            
             if (canAccessDatabase)
             {
                 await WritePageContent(response,
@@ -722,8 +584,7 @@ namespace cloudscribe.Setup.Web
                 await WritePageContent(response, "<div>" + dbError + "</div>", false);
 
                 showConnectionError = setupOptions.ShowConnectionError;
-
-
+                
                 if (showConnectionError)
                 {
                     await WritePageContent(response,
@@ -732,7 +593,6 @@ namespace cloudscribe.Setup.Web
                         false);
                 }
             }
-
 
             if (canAccessDatabase)
             {
@@ -760,57 +620,42 @@ namespace cloudscribe.Setup.Web
                     }
                 }
 
-                schemaHasBeenCreated = setupManager.SchemaTableExists();
+                setupSchemaHasBeenCreated = setupManager.SchemaTableExists();
 
-                if (schemaHasBeenCreated)
+                if (setupSchemaHasBeenCreated)
                 {
                     await WritePageContent(response,
-                        "DatabaseSchemaAlreadyExists", //SetupResources.DatabaseSchemaAlreadyExistsMessage,
+                        "SetupSystemSchemaAlreadyExists", //SetupResources.DatabaseSchemaAlreadyExistsMessage,
                         false);
 
+                    needSetupSchemaUpgrade = setupManager.NeedsUpgrade("cloudscribe-setup");
 
-                    needCoreSchemaUpgrade = setupManager.NeedsUpgrade("cloudscribe-setup");
-
-                    if (needCoreSchemaUpgrade)
+                    if (needSetupSchemaUpgrade)
                     {
                         await WritePageContent(response,
-                            "DatabaseSchemaNeedsUpgrade", //SetupResources.DatabaseSchemaNeedsUpgradeMessage,
+                            "SetupSystemSchemaNeedsUpgrade", //SetupResources.DatabaseSchemaNeedsUpgradeMessage,
                             false);
                     }
                     else
                     {
                         await WritePageContent(response,
-                            "DatabaseSchemaUpToDate", //SetupResources.DatabaseSchemaUpToDateMessage,
+                            "SetupSystemSchemaUpToDate", //SetupResources.DatabaseSchemaUpToDateMessage,
                             false);
                     }
 
-                    existingSiteCount = await siteManager.ExistingSiteCount();
-
-                    await WritePageContent(response,
-                        string.Format(
-                        "ExistingSiteCount {0}", //SetupResources.ExistingSiteCountMessage,
-                        existingSiteCount.ToString()),
-                        false);
+                    
 
                 }
                 else
                 {
                     await WritePageContent(response,
-                        "DatabaseSchemaNotCreatedYet", //SetupResources.DatabaseSchemaNotCreatedYetMessage,
+                        "SetupSchemaNotCreatedYet", //SetupResources.DatabaseSchemaNotCreatedYetMessage,
                         false);
                 }
 
             }
 
-            //if (!SetupHelper.RunningInFullTrust())
-            //{
-            //    // inform of Medium trust configuration issues
-            //    WritePageContent(response,
-            //        "<b>" + SetupResources.MediumTrustGeneralMessage + "</b><br />"
-            //        + GetDataAccessMediumTrustMessage() + "<br /><br />",
-            //        false);
-
-            //}
+           
         }
 
         
@@ -838,7 +683,7 @@ namespace cloudscribe.Setup.Web
                 if(exceptionsRendered)
                 {
                     statusMessage.Append("<hr /><div>"
-                        + "SchemaIsUpToDateButExceptionsOccured" // SetupResources.SetupSuccessMessage 
+                        + "SetupSchemaIsUpToDateButExceptionsOccured" // SetupResources.SetupSuccessMessage 
                         + "</div>");
                 }
                 else
@@ -873,7 +718,7 @@ namespace cloudscribe.Setup.Web
             statusMessage.Append(setupManager.DBPlatform);
             statusMessage.Append("</div>");
 
-            if (schemaHasBeenCreated)
+            if (setupSchemaHasBeenCreated)
             { 
                 cloudscribeCoreDbSchemaVersion = setupManager.GetCloudscribeSchemaVersion();
                 cloudscribeCoreCodeVersion = setupManager.GetCloudscribeCodeVersion();
@@ -932,7 +777,6 @@ namespace cloudscribe.Setup.Web
 
         private async Task WritePageContent(HttpResponse response, string message, bool showTime)
         {
-
             if (showTime)
             {
                 await response.WriteAsync(
@@ -946,8 +790,6 @@ namespace cloudscribe.Setup.Web
             }
             await response.WriteAsync("<br/>");
        
-            //response.Flush();
-
         }
 
         private async Task WritePageHeader(HttpResponse response)
@@ -959,7 +801,6 @@ namespace cloudscribe.Setup.Web
                 setupTemplatePath = setupOptions.SetupHeaderConfigPathRtl.Replace("/", Path.DirectorySeparatorChar.ToString());
             }
 
-            //string fsPath = hostingEnvironment.MapPath(setupTemplatePath);
             string fsPath = appBasePath + setupTemplatePath;
 
             if (System.IO.File.Exists(fsPath))
@@ -972,118 +813,13 @@ namespace cloudscribe.Setup.Web
                 await response.WriteAsync(sHtml);
             }
 
-            //response.Flush();
         }
 
         private async Task WritePageFooter(HttpResponse response)
         {
             await response.WriteAsync("</body>");
             await response.WriteAsync("</html>");
-            //response.Flush();
         }
-
-
-
-        private void SetupFeatures(HttpResponse response, string applicationName)
-        {
-            //ContentFeatureConfiguration appFeatureConfig
-            //    = ContentFeatureConfiguration.GetConfig(applicationName);
-
-            //WritePageContent(
-            //    string.Format(SetupResource.ConfigureFeaturesMessage, 
-            //    applicationName));
-
-            //foreach (ContentFeature feature in appFeatureConfig.ContentFeatures)
-            //{
-            //    if (feature.SupportedDatabases.Contains(dbPlatform))
-            //    {
-            //        SetupFeature(feature);
-            //    }
-
-            //}
-        }
-
-        //private async Task<bool> CreateAdminUser(SiteSettings newSite)
-        //{
-
-        //    //bool result = await NewSiteHelper.CreateRequiredRolesAndAdminUser(
-        //    //    newSite,
-        //    //    siteRepository,
-        //    //    userRepository,
-        //    //    config
-        //    //    );
-
-        //    bool result = await siteManager.CreateRequiredRolesAndAdminUser(
-        //        newSite,
-        //        config
-        //        );
-
-        //    return result;
-
-        //}
-
-        //private string GetDataAccessMediumTrustMessage()
-        //{
-        //    string message = string.Empty;
-        //    string dbPlatform = db.DBPlatform;
-        //    switch (dbPlatform)
-        //    {
-        //        case "MySQL":
-        //            message = SetupResources.MediumTrustMySQLMessage;
-        //            break;
-
-        //        case "pgsql":
-        //            message = SetupResources.MediumTrustnpgsqlMessage;
-        //            break;
-
-
-        //    }
-
-        //    return message;
-
-        //}
-
-        //private string RunScript(
-        //    Guid applicationId,
-        //    FileInfo scriptFile,
-        //    String overrideConnectionInfo)
-        //{
-        //    // returning empty string indicates success
-        //    // else return error message
-        //    string resultMessage = string.Empty;
-
-        //    if (scriptFile == null) return resultMessage;
-
-
-
-        //    try
-        //    {
-        //        bool result = db.RunScript(scriptFile, overrideConnectionInfo);
-
-        //        if (!result)
-        //        {
-        //            resultMessage = "script failed with no error message";
-        //        }
-
-        //    }
-        //    catch (DbException ex)
-        //    {
-        //        resultMessage = ex.ToString();
-        //    }
-
-        //    return resultMessage;
-
-        //}
-
-        //private string GetOverrideConnectionString(string applicationName)
-        //{
-        //    string overrideConnectionString = config.GetOrDefault(applicationName + "_ConnectionString", string.Empty);
-
-        //    if (string.IsNullOrEmpty(overrideConnectionString)) { return null; }
-
-        //    return overrideConnectionString;
-        //}
-
 
     }
 }

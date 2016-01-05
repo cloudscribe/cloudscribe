@@ -2,11 +2,10 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-08-11
-// Last Modified:			2016-01-03
+// Last Modified:			2016-01-05
 // 
 
-using cloudscribe.Core.Models;
-using cloudscribe.Core.Web.Components;
+using cloudscribe.Core.Models.Setup;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.OptionsModel;
 using Microsoft.Extensions.PlatformAbstractions;
@@ -24,11 +23,10 @@ namespace cloudscribe.Setup.Web
             ILogger<SetupManager> logger,
             IOptions<SetupOptions> setupOptionsAccessor,
             IDbSetup dbImplementation,
-            IVersionProviderFactory versionProviderFactory,
-            SiteManager siteManager)
+            IVersionProviderFactory versionProviderFactory
+            )
         {
             appBasePath = appEnv.ApplicationBasePath;
-            this.siteManager = siteManager;
             log = logger;
             db = dbImplementation;
             this.versionProviderFactory = versionProviderFactory;
@@ -38,7 +36,6 @@ namespace cloudscribe.Setup.Web
         private SetupOptions setupOptions;
 
         private string appBasePath;
-        private SiteManager siteManager;
         private IDbSetup db;
         private ILogger log;
         private IVersionProviderFactory versionProviderFactory;
@@ -173,10 +170,20 @@ namespace cloudscribe.Setup.Web
             return new Version(0, 0, 0, 0);
         }
 
+        public Version GetSchemaVersion(string applicationName)
+        {
+            Guid appId = GetOrGenerateSchemaApplicationId(applicationName);
+            Version v = GetSchemaVersion(appId);
+            Version zeroVersion = new Version(0, 0, 0, 0);
+            if(v > zeroVersion) { return v; }
+            // if not found return null to be consistent with GetCodeVersion
+            return null;
+        }
+
         public Version GetCloudscribeSchemaVersion()
         {
-            Guid appID = GetOrGenerateSchemaApplicationId("cloudscribe-core");
-            return GetSchemaVersion(appID);
+            Guid appId = GetOrGenerateSchemaApplicationId("cloudscribe-core");
+            return GetSchemaVersion(appId);
         }
 
         public Guid GetOrGenerateSchemaApplicationId(string applicationName)
