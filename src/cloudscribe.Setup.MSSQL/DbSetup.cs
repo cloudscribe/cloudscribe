@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-01-10
-// Last Modified:			2016-01-03
+// Last Modified:			2016-01-06
 // 
 
 using cloudscribe.Core.Models.Setup;
@@ -16,6 +16,8 @@ using System.Data.Common;
 using System.Data.SqlClient;
 using System.IO;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace cloudscribe.Setup.MSSQL
 {
@@ -563,6 +565,17 @@ namespace cloudscribe.Setup.MSSQL
             return (rowsAffected > 0);
         }
 
+
+        public async Task<DbDataReader> SchemaVersionGetAll(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            SqlParameterHelper sph = new SqlParameterHelper(
+                logFactory,
+                readConnectionString, 
+                "mp_SchemaVersion_SelectAll", 
+                0
+                );
+            return await sph.ExecuteReaderAsync(cancellationToken);
+        }
 
         #endregion
 

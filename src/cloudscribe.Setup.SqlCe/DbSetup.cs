@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:         Joe Audette
 // Created:        2010-03-09
-// Last Modified   2016-01-05
+// Last Modified   2016-01-06
 
 
 using cloudscribe.Core.Models.Setup;
@@ -15,6 +15,8 @@ using System.Data.Common;
 using System.Data.SqlServerCe;
 using System.IO;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace cloudscribe.Setup.SqlCe
 {
@@ -595,6 +597,22 @@ namespace cloudscribe.Setup.SqlCe
             return (rowsAffected > 0);
 
 
+        }
+
+        public async Task<DbDataReader> SchemaVersionGetAll(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  * ");
+            sqlCommand.Append("FROM	mp_SchemaVersion ");
+            
+            sqlCommand.Append("ORDER BY ApplicationName ");
+            sqlCommand.Append(";");
+
+            return AdoHelper.ExecuteReader(
+                connectionString,
+                CommandType.Text,
+                sqlCommand.ToString(),
+                null);
         }
 
         #endregion

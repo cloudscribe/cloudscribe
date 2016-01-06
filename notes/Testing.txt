@@ -1,0 +1,8 @@
+
+
+http://dotnetliberty.com/index.php/2015/12/31/fast-asp-net-5-integration-testing-with-xunit/
+http://dotnetliberty.com/index.php/2016/01/04/how-to-unit-test-asp-net-5-mvc-6-modelstate/
+
+perf/load testing
+https://petabridge.com/blog/introduction-to-nbench/
+https://github.com/petabridge/nbench

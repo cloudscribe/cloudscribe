@@ -1,7 +1,7 @@
 ﻿// Original Author:					Joseph Hill
 // Created:							2005-02-16 
 // Additions and fixes have been added by Joe Audette, Dean Brettle, TJ Fontaine
-// Last Modified:                   2016-01-05
+// Last Modified:                   2016-01-06
 
 
 using cloudscribe.Core.Models.Setup;
@@ -16,6 +16,8 @@ using System.Data;
 using System.Data.Common;
 using System.IO;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace cloudscribe.Setup.pgsql
 {
@@ -550,6 +552,25 @@ namespace cloudscribe.Setup.pgsql
                 arParams);
 
             return (rowsAffected > 0);
+
+        }
+
+        public async Task<DbDataReader> SchemaVersionGetAll(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  * ");
+            sqlCommand.Append("FROM	mp_schemaversion ");
+            
+            sqlCommand.Append("ORDER BY applicationname ");
+            sqlCommand.Append(";");
+
+
+            return await AdoHelper.ExecuteReaderAsync(
+                readConnectionString,
+                CommandType.Text,
+                sqlCommand.ToString(),
+                null,
+                cancellationToken);
 
         }
 

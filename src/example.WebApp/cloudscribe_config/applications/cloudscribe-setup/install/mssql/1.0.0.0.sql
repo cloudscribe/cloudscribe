@@ -81,30 +81,7 @@ WHERE
 		[ApplicationID] = @ApplicationID
 GO
  
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE PROCEDURE [dbo].[mp_SchemaVersion_SelectNonCore]
 
-/*
-Author:   			Joe Audette
-Created: 			2009-10-23
-Last Modified: 		2009-10-23
-*/
-
-AS
-
-
-SELECT
-		sv.*
-		
-FROM
-		
-		[dbo].[mp_SchemaVersion] sv
-
-WHERE sv.ApplicationId <> '077E4857-F583-488E-836E-34A4B04BE855'
-
-ORDER BY ApplicationName
-GO
  
 SET QUOTED_IDENTIFIER ON
 GO
@@ -112,23 +89,20 @@ CREATE PROCEDURE [dbo].[mp_SchemaVersion_SelectAll]
 
 /*
 Author:   			Joe Audette
-Created: 			1/29/2007
-Last Modified: 		1/29/2007
+Created: 			2007-01-29
+Last Modified: 		2016-01-06
 */
 
 AS
 
 
-SELECT
-		[ApplicationID],
-		[ApplicationName],
-		[Major],
-		[Minor],
-		[Build],
-		[Revision]
-		
+SELECT	*
+	
 FROM
 		[dbo].[mp_SchemaVersion]
+ORDER BY 
+		ApplicationName
+		
 GO
  
 SET QUOTED_IDENTIFIER ON

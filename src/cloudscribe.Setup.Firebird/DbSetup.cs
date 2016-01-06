@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-07-17
-// Last Modified:		    2016-01-02
+// Last Modified:		    2016-01-06
 
 
 using cloudscribe.Core.Models.Setup;
@@ -17,6 +17,8 @@ using System.Data;
 using System.Data.Common;
 using System.IO;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace cloudscribe.Setup.Firebird
 {
@@ -604,6 +606,24 @@ namespace cloudscribe.Setup.Firebird
                 arParams);
 
             return (rowsAffected > 0);
+
+        }
+
+        public async Task<DbDataReader> SchemaVersionGetAll(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  * ");
+            sqlCommand.Append("FROM	mp_SchemaVersion ");
+           
+            sqlCommand.Append("ORDER BY ApplicationName ");
+            sqlCommand.Append(";");
+
+            return await AdoHelper.ExecuteReaderAsync(
+                readConnectionString,
+                CommandType.Text,
+                sqlCommand.ToString(),
+                null,
+                cancellationToken);
 
         }
 

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //	Author:                 Joe Audette
 //  Created:			    2011-08-21
-//	Last Modified:		    2015-12-26
+//	Last Modified:		    2016-01-06
 // 
 
 using cloudscribe.Core.Models;
@@ -67,7 +67,7 @@ namespace cloudscribe.Core.Web.Components
             {
                 if(cloudscribeVersionProvider != null)
                 {
-                    return cloudscribeVersionProvider.GetCodeVersion().ToString();
+                    return cloudscribeVersionProvider.CurrentVersion.ToString();
                 }
                 return "not found";
             }

@@ -10,6 +10,7 @@ http://stackoverflow.com/questions/27843749/mvc6-specify-custom-location-for-vie
 http://docs.asp.net/en/toc/mvc/migration/migratingfrommvc5.html
 
 http://www.davepaquette.com/archive/2015/05/11/cleaner-forms-using-tag-helpers-in-mvc6.aspx
+http://www.davepaquette.com/archive/2015/12/28/complex-custom-tag-helpers-in-mvc-6.aspx
 
 
 # General Tips
