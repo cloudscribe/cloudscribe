@@ -2,10 +2,11 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-01-04
-// Last Modified:			2016-01-05
+// Last Modified:			2016-01-06
 // 
 
 using cloudscribe.Core.Models;
+using cloudscribe.Core.Models.Geography;
 using cloudscribe.Core.Models.Setup;
 using Microsoft.AspNet.Http;
 using System;
@@ -15,17 +16,20 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Components
 {
-    public class EnsureSiteSetupTask : ISetupTask
+    public class EnsureInitialDataSetupTask : ISetupTask
     {
-        public EnsureSiteSetupTask(
+        public EnsureInitialDataSetupTask(
             IHttpContextAccessor contextAccessor,
-            SiteManager siteManager)
+            SiteManager siteManager,
+            GeoDataManager geoDataManager)
         {
             this.siteManager = siteManager;
             this.contextAccessor = contextAccessor;
+            this.geoDataManager = geoDataManager;
         }
 
         private SiteManager siteManager;
+        private GeoDataManager geoDataManager;
         private IHttpContextAccessor contextAccessor;
 
         public async Task DoSetupStep(
@@ -77,8 +81,46 @@ namespace cloudscribe.Core.Web.Components
                     await output(message, false);
                 }
             }
-            
-            
+
+            int countryCount = await geoDataManager.GetCountryCount();
+            if(countryCount == 0)
+            {
+                await output("creating initial country data", true);
+
+                List<GeoCountry> countries = InitialData.BuildCountryList();
+                foreach(GeoCountry c in countries)
+                {
+                    await geoDataManager.Save(c);
+                }
+
+                await output("creating initial state/region data", true);
+                List<GeoZone> states = InitialData.BuildStateList();
+                foreach (GeoZone s in states)
+                {
+                    await geoDataManager.Save(s);
+                }
+            }
+            List<ICurrency> dbCurrencies = await geoDataManager.GetAllCurrencies();
+            if(dbCurrencies.Count == 0)
+            {
+                await output("creating initial currency data", true);
+                List<Currency> currencies = InitialData.BuildCurrencyList();
+                foreach(Currency c in currencies)
+                {
+                    await geoDataManager.Save(c);
+                }
+            }
+            int languageCount = await geoDataManager.GetLanguageCount();
+            if(languageCount == 0)
+            {
+                await output("creating initial language data", true);
+                List<Language> langs = InitialData.BuildLanguageList();
+                foreach(Language l in langs)
+                {
+                    await geoDataManager.Save(l);
+                }
+            }
+
 
             int existingSiteCount = await siteManager.ExistingSiteCount();
 

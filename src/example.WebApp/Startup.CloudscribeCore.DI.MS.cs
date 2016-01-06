@@ -77,7 +77,7 @@ namespace example.WebApp
             services.Configure<cloudscribe.Core.Web.Components.Editor.CkeditorOptions>(configuration.GetSection("CkeditorOptions"));
 
 
-            services.AddScoped<cloudscribe.Core.Models.Setup.ISetupTask, cloudscribe.Core.Web.Components.EnsureSiteSetupTask>();
+            services.AddScoped<cloudscribe.Core.Models.Setup.ISetupTask, cloudscribe.Core.Web.Components.EnsureInitialDataSetupTask>();
             //services.AddScoped<cloudscribe.Core.Models.Setup.ISetupStep, cloudscribe.Core.Web.Components.EnsureSiteSetupStep2>();
 
 

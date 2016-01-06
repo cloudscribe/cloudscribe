@@ -128,5 +128,15 @@ namespace cloudscribe.Core.Web.Components
             return await repo.DeleteCurrency(currency.Guid, CancellationToken.None);
         }
 
+        public async Task<bool> Save(ILanguage language)
+        {
+            return await repo.Save(language, CancellationToken.None);
+        }
+
+        public async Task<int> GetLanguageCount()
+        {
+            return await repo.GetLanguageCount(CancellationToken);
+        }
+
     }
 }
