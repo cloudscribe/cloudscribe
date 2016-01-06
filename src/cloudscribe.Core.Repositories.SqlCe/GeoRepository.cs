@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-11-03
-// Last Modified:			2015-12-28
+// Last Modified:			2016-01-06
 // 
 
 
@@ -69,11 +69,26 @@ namespace cloudscribe.Core.Repositories.SqlCe
             }
             else
             {
-                result = dbGeoCountry.Update(
+                // we have to account here for the possibility that specific guids are needed to tie
+                // data together for initial/bulk insert for example
+                // so having a non-empty guid does not meean it is always an update
+                var found = await FetchCountry(geoCountry.Guid, cancellationToken);
+                if (found != null)
+                {
+                    result =  dbGeoCountry.Update(
                     geoCountry.Guid,
                     geoCountry.Name,
                     geoCountry.ISOCode2,
                     geoCountry.ISOCode3);
+                }
+                else
+                {
+                    result =  dbGeoCountry.Create(
+                    geoCountry.Guid,
+                    geoCountry.Name,
+                    geoCountry.ISOCode2,
+                    geoCountry.ISOCode3);
+                }
 
             }
 
@@ -191,11 +206,23 @@ namespace cloudscribe.Core.Repositories.SqlCe
             }
             else
             {
-                result = dbGeoZone.Update(
+                var found = await FetchGeoZone(geoZone.Guid, cancellationToken);
+                if (found != null)
+                {
+                    result = dbGeoZone.Update(
                     geoZone.Guid,
                     geoZone.CountryGuid,
                     geoZone.Name,
                     geoZone.Code);
+                }
+                else
+                {
+                    result = dbGeoZone.Create(
+                    geoZone.Guid,
+                    geoZone.CountryGuid,
+                    geoZone.Name,
+                    geoZone.Code);
+                }
 
             }
 
@@ -376,11 +403,23 @@ namespace cloudscribe.Core.Repositories.SqlCe
             }
             else
             {
-                result = dbLanguage.Update(
+                var found = await FetchLanguage(language.Guid, cancellationToken);
+                if (found != null)
+                {
+                    result = dbLanguage.Update(
                     language.Guid,
                     language.Name,
                     language.Code,
                     language.Sort);
+                }
+                else
+                {
+                    result = dbLanguage.Create(
+                    language.Guid,
+                    language.Name,
+                    language.Code,
+                    language.Sort);
+                }
 
             }
             return result;
@@ -489,7 +528,10 @@ namespace cloudscribe.Core.Repositories.SqlCe
             }
             else
             {
-                result = dbCurrency.Update(
+                var found = await FetchCurrency(currency.Guid, cancellationToken);
+                if (found != null)
+                {
+                    result = dbCurrency.Update(
                     currency.Guid,
                     currency.Title,
                     currency.Code,
@@ -500,6 +542,22 @@ namespace cloudscribe.Core.Repositories.SqlCe
                     currency.DecimalPlaces,
                     currency.Value,
                     currency.LastModified);
+                }
+                else
+                {
+                    result = dbCurrency.Create(
+                    currency.Guid,
+                    currency.Title,
+                    currency.Code,
+                    currency.SymbolLeft,
+                    currency.SymbolRight,
+                    currency.DecimalPointChar,
+                    currency.ThousandsPointChar,
+                    currency.DecimalPlaces,
+                    currency.Value,
+                    currency.LastModified,
+                    currency.Created);
+                }
 
             }
 

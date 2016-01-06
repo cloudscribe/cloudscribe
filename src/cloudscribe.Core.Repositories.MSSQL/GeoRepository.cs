@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-11-02
-// Last Modified:			2016-01-03
+// Last Modified:			2016-01-06
 // 
 
 using cloudscribe.Core.Models.Geography;
@@ -72,12 +72,29 @@ namespace cloudscribe.Core.Repositories.MSSQL
             }
             else
             {
-                result = await dbGeoCountry.Update(
+                // we have to account here for the possibility that specific guids are needed to tie
+                // data together for initial/bulk insert for example
+                // so having a non-empty guid does not meean it is always an update
+                var found = await FetchCountry(geoCountry.Guid, cancellationToken);
+                if(found != null)
+                {
+                    result = await dbGeoCountry.Update(
                     geoCountry.Guid,
                     geoCountry.Name,
                     geoCountry.ISOCode2,
                     geoCountry.ISOCode3,
                     cancellationToken);
+                }
+                else
+                {
+                    result = await dbGeoCountry.Create(
+                    geoCountry.Guid,
+                    geoCountry.Name,
+                    geoCountry.ISOCode2,
+                    geoCountry.ISOCode3,
+                    cancellationToken);
+                }
+                
 
             }
 
@@ -203,12 +220,26 @@ namespace cloudscribe.Core.Repositories.MSSQL
             }
             else
             {
-                result = await dbGeoZone.Update(
+                var found = await FetchGeoZone(geoZone.Guid, cancellationToken);
+                if(found != null)
+                {
+                    result = await dbGeoZone.Update(
                     geoZone.Guid,
                     geoZone.CountryGuid,
                     geoZone.Name,
                     geoZone.Code,
                     cancellationToken);
+                }
+                else
+                {
+                    result = await dbGeoZone.Create(
+                    geoZone.Guid,
+                    geoZone.CountryGuid,
+                    geoZone.Name,
+                    geoZone.Code,
+                    cancellationToken);
+                }
+                
 
             }
             return result;
@@ -401,12 +432,26 @@ namespace cloudscribe.Core.Repositories.MSSQL
             }
             else
             {
-                result = await dbLanguage.Update(
+                var found = await FetchLanguage(language.Guid, cancellationToken);
+                if(found != null)
+                {
+                    result = await dbLanguage.Update(
                     language.Guid,
                     language.Name,
                     language.Code,
                     language.Sort,
                     cancellationToken);
+                }
+                else
+                {
+                    result = await dbLanguage.Create(
+                    language.Guid,
+                    language.Name,
+                    language.Code,
+                    language.Sort,
+                    cancellationToken);
+                }
+                
 
             }
 
@@ -523,7 +568,10 @@ namespace cloudscribe.Core.Repositories.MSSQL
             }
             else
             {
-                result = await dbCurrency.Update(
+                var found = await FetchCurrency(currency.Guid, cancellationToken);
+                if(found != null)
+                {
+                    result = await dbCurrency.Update(
                     currency.Guid,
                     currency.Title,
                     currency.Code,
@@ -535,6 +583,24 @@ namespace cloudscribe.Core.Repositories.MSSQL
                     currency.Value,
                     currency.LastModified,
                     cancellationToken);
+                }
+                else
+                {
+                    result = await dbCurrency.Create(
+                    currency.Guid,
+                    currency.Title,
+                    currency.Code,
+                    currency.SymbolLeft,
+                    currency.SymbolRight,
+                    currency.DecimalPointChar,
+                    currency.ThousandsPointChar,
+                    currency.DecimalPlaces,
+                    currency.Value,
+                    currency.LastModified,
+                    currency.Created,
+                    cancellationToken);
+                }
+                
 
             }
 

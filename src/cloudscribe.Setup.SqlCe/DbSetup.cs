@@ -599,6 +599,9 @@ namespace cloudscribe.Setup.SqlCe
 
         }
 
+        //disable warning about not really being async
+        // we know it is not, and for SqlCe there is probably no benefit to making it really async
+#pragma warning disable 1998
         public async Task<DbDataReader> SchemaVersionGetAll(CancellationToken cancellationToken = default(CancellationToken))
         {
             StringBuilder sqlCommand = new StringBuilder();
@@ -614,6 +617,8 @@ namespace cloudscribe.Setup.SqlCe
                 sqlCommand.ToString(),
                 null);
         }
+
+#pragma warning restore 1998
 
         #endregion
 

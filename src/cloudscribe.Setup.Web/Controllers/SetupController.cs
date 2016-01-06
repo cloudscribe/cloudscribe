@@ -62,7 +62,7 @@ namespace cloudscribe.Setup.Web
         private string appBasePath;
         private ILogger log;
         // private int scriptTimeout;
-        private DateTime startTime;
+        private DateTime startTime = DateTime.UtcNow;
         private static object Lock = new object();
 
 
@@ -176,9 +176,48 @@ namespace cloudscribe.Setup.Web
                 //ClearSetupLock();
                 //Monitor.Exit(Lock);
             }
+
+            if(setupOptions.ShowSchemaListOnSetupPage)
+            {
+                await WriteInstalledSchemaSummary(Response);
+            }
             
+
+
             await WritePageFooter(Response);
             
+            return new EmptyResult();
+        }
+
+        public async Task<IActionResult> Status()
+        {
+            bool isAllowed = await authorizationService.AuthorizeAsync(User, "SetupSystemPolicy");
+
+            if (!isAllowed)
+            {
+                log.LogInformation("returning 404 because user is either not authenticated or not allowed by policy");
+                Response.StatusCode = 404;
+                return new EmptyResult();
+            }
+
+            await WritePageHeader(HttpContext.Response);
+
+            if(setupOptions.ProbeSystemOnStatusPage)
+            {
+                // SetupManager and ISetupTasks will use this function to write to the response
+                Func<string, bool, Task> outputWriter = async (string message, bool showTime) =>
+                {
+                    await WritePageContent(Response, message, showTime);
+
+                };
+                await setupManager.ProbeSystem(outputWriter);
+
+            }
+
+            await WriteInstalledSchemaSummary(Response);
+
+            await WritePageFooter(Response);
+
             return new EmptyResult();
         }
 
@@ -186,7 +225,17 @@ namespace cloudscribe.Setup.Web
         {
             //await WritePageContent(response, message, false);
             List<VersionItem> currentSchemas = await setupManager.GetInstalledSchemaList();
+            await response.WriteAsync("<h2>Current Schema Versions</h2>");
+            await response.WriteAsync("<ul>");
 
+            string formatString = "<li>{0} - {1}</li>";
+            foreach(VersionItem item in currentSchemas)
+            {
+                string itemMarkup = string.Format(formatString, item.Name, item.CurrentVersion.ToString());
+                await response.WriteAsync(itemMarkup);
+            }
+
+            await response.WriteAsync("</ul>");
 
         }
 

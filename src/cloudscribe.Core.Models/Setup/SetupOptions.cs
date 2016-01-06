@@ -20,6 +20,8 @@ namespace cloudscribe.Core.Models.Setup
         public string DefaultLayout { get; set; } = "Default_Layout.cshtml";
         public string RolesThatCannotBeDeleted { get; set; } = string.Empty;
         public bool AllowAnonymous { get; set; } = true; // needs to be true for initial setup but can be seto to false as long as you login before upgrading
+        public bool ShowSchemaListOnSetupPage { get; set; } = true;
+        public bool ProbeSystemOnStatusPage { get; set; } = true;
         public bool ShowErrors { get; set; } = true;
         public bool ShowConnectionError { get; set; } = false;
         public bool TryAnywayIfFailedAlterSchemaTest { get; set; } = false;

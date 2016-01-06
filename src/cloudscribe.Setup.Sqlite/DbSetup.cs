@@ -568,6 +568,9 @@ namespace cloudscribe.Setup.Sqlite
 
         }
 
+        //disable warning about not really being async
+        // we know it is not, and for Sqlite there is probably no benefit to making it really async
+#pragma warning disable 1998
         public async Task<DbDataReader> SchemaVersionGetAll(CancellationToken cancellationToken = default(CancellationToken))
         {
             StringBuilder sqlCommand = new StringBuilder();
@@ -583,6 +586,8 @@ namespace cloudscribe.Setup.Sqlite
                 null);
 
         }
+
+#pragma warning restore 1998
 
         #endregion
 
