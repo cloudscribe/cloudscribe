@@ -33,9 +33,7 @@ namespace cloudscribe.Core.Identity
     //TODO: modify this to support multi tenants
     internal class MultiTenantCookieAuthenticationHandler : AuthenticationHandler<CookieAuthenticationOptions>
     {
-        //private const string HeaderNameCacheControl = "Cache-Control";
-        //private const string HeaderNamePragma = "Pragma";
-        //private const string HeaderNameExpires = "Expires";
+        
         private const string HeaderValueNoCache = "no-cache";
         private const string HeaderValueMinusOne = "-1";
         private const string SessionIdClaim = "Microsoft.AspNet.Authentication.Cookies-SessionId";

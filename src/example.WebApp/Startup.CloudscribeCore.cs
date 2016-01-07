@@ -75,6 +75,10 @@ namespace example.WebApp
             //app.UseIdentity();
             app.UseCloudscribeIdentity();
 
+            //https://docs.asp.net/en/latest/security/authentication/sociallogins.html
+
+            // create facebook credentials here:
+            //https://developers.facebook.com/apps
 
             app.UseMultiTenantFacebookAuthentication(options =>
             {
