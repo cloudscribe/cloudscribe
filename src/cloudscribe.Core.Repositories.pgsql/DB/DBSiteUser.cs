@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2016-01-01
+// Last Modified:			2016-01-07
 // 
 
 using cloudscribe.DbHelpers;
@@ -1673,7 +1673,11 @@ namespace cloudscribe.Core.Repositories.pgsql
 
         }
 
-        public bool SetRegistrationConfirmationGuid(Guid userGuid, Guid registrationConfirmationGuid)
+        public async Task<bool> SetRegistrationConfirmationGuid(
+            Guid userGuid, 
+            Guid registrationConfirmationGuid,
+            CancellationToken cancellationToken
+            )
         {
             NpgsqlParameter[] arParams = new NpgsqlParameter[2];
 
@@ -1696,11 +1700,14 @@ namespace cloudscribe.Core.Repositories.pgsql
             //    "mp_users_setregistrationguid(:userguid,:registerconfirmguid)",
             //    arParams));
 
-            int rowsAffected = Convert.ToInt32(AdoHelper.ExecuteScalar(
+           
+
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams));
+                arParams,
+                cancellationToken);
 
             return (rowsAffected > -1);
 

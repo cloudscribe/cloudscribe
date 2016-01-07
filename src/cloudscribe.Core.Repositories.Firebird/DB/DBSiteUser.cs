@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2016-01-02
+// Last Modified:			2016-01-07
 // 
 
 using cloudscribe.DbHelpers;
@@ -1538,7 +1538,10 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         }
 
-        public bool SetRegistrationConfirmationGuid(Guid userGuid, Guid registrationConfirmationGuid)
+        public async Task<bool> SetRegistrationConfirmationGuid(
+            Guid userGuid, 
+            Guid registrationConfirmationGuid,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("UPDATE mp_Users ");
@@ -1555,12 +1558,13 @@ namespace cloudscribe.Core.Repositories.Firebird
             arParams[1] = new FbParameter("@RegisterConfirmGuid", FbDbType.VarChar, 36);
             arParams[1].Value = registrationConfirmationGuid.ToString();
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
                 true,
-                arParams);
+                arParams,
+                cancellationToken);
 
             return (rowsAffected > 0);
 

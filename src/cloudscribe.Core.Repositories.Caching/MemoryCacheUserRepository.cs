@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-14
-// Last Modified:			2015-12-27
+// Last Modified:			2016-01-07
 // 
 
 
@@ -72,6 +72,14 @@ namespace cloudscribe.Core.Repositories.Caching
         public async Task<bool> FlagAsNotDeleted(int userId, CancellationToken cancellationToken = default(CancellationToken))
         {
             return await implementation.FlagAsNotDeleted(userId, cancellationToken);
+        }
+
+        public async Task<bool> SetRegistrationConfirmationGuid(
+            Guid userGuid,
+            Guid registrationConfirmationGuid,
+            CancellationToken cancellationToken)
+        {
+            return await implementation.SetRegistrationConfirmationGuid(userGuid, registrationConfirmationGuid, cancellationToken);
         }
 
         public async Task<bool> ConfirmRegistration(Guid registrationGuid, CancellationToken cancellationToken = default(CancellationToken))

@@ -255,14 +255,38 @@ namespace cloudscribe.Core.Web.Controllers
                 var result = await userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=532713
-                    // Send an email with this link
-                    //var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
-                    //var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Context.Request.Scheme);
-                    //await MessageServices.SendEmailAsync(model.Email, "Confirm your account",
-                    //    "Please confirm your account by clicking this link: <a href=\"" + callbackUrl + "\">link</a>");
-                    await signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToAction("Index", "Home");
+                    
+
+                    if(Site.UseSecureRegistration) // require email confirmation
+                    {
+                        // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=532713
+                        // Send an email with this link
+                        var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
+                        var callbackUrl = Url.Action("ConfirmEmail", "Account", 
+                            new { userId = user.Id, code = code }, 
+                            protocol: HttpContext.Request.Scheme);
+
+                        await emailSender.SendEmailAsync(model.Email, "Confirm your account",
+                            "Please confirm your account by clicking this link: <a href=\"" + callbackUrl + "\">link</a>");
+
+                        this.AlertSuccess("Please check your email inbox, we just sent you a link that you need to click to confirm your account", true);
+                        return RedirectToAction("Index", "Home");
+                    }
+                    else
+                    {
+                        if(Site.RequireApprovalBeforeLogin)
+                        {
+                            //TODO: send notification to admins about request for approval
+
+                        }
+                        else
+                        {
+                            await signInManager.SignInAsync(user, isPersistent: false);
+                            return RedirectToAction("Index", "Home");
+                        }
+                    }
+
+                   
                     
                 }
                 AddErrors(result);

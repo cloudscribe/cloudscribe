@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-18
-// Last Modified:			2015-12-27
+// Last Modified:			2016-01-07
 // 
 
 // TODO: we should update all the async signatures to take a cancellationtoken
@@ -16,6 +16,7 @@ namespace cloudscribe.Core.Models
 {
     public interface IUserRepository : IDisposable
     {
+        Task<bool> SetRegistrationConfirmationGuid(Guid userGuid, Guid registrationConfirmationGuid, CancellationToken cancellationToken);
         Task<bool> ConfirmRegistration(Guid registrationGuid, CancellationToken cancellationToken);
         Task<bool> EmailExistsInDB(int siteId, int userId, string email, CancellationToken cancellationToken);
         Task<bool> EmailExistsInDB(int siteId, string email, CancellationToken cancellationToken);

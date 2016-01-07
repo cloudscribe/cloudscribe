@@ -209,7 +209,22 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return await dbSiteUser.FlagAsNotDeleted(userId, cancellationToken);
         }
 
-        
+        public async Task<bool> SetRegistrationConfirmationGuid(
+            Guid userGuid,
+            Guid registrationConfirmationGuid,
+            CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (registrationConfirmationGuid == Guid.Empty)
+            {
+                return false;
+            }
+
+            return await dbSiteUser.SetRegistrationConfirmationGuid(userGuid, registrationConfirmationGuid, cancellationToken);
+        }
+
+
+
         public async Task<bool> ConfirmRegistration(
             Guid registrationGuid, 
             CancellationToken cancellationToken = default(CancellationToken))

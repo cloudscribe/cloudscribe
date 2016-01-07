@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2015-12-27
+// Last Modified:			2016-01-07
 // 
 
 
@@ -139,6 +139,31 @@ namespace cloudscribe.Core.Repositories.EF
             item.IsDeleted = false;
 
             int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
+
+            return rowsAffected > 0;
+
+        }
+
+        public async Task<bool> SetRegistrationConfirmationGuid(
+            Guid userGuid,
+            Guid registrationConfirmationGuid,
+            CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (registrationConfirmationGuid == Guid.Empty)
+            {
+                return false;
+            }
+
+            SiteUser item
+                = await dbContext.Users.FirstOrDefaultAsync(x => x.UserGuid == userGuid);
+
+            if (item == null) { return false; }
+
+            item.IsLockedOut = true;
+            item.RegisterConfirmGuid = registrationConfirmationGuid;
+
+            int rowsAffected = await dbContext.SaveChangesAsync();
 
             return rowsAffected > 0;
 

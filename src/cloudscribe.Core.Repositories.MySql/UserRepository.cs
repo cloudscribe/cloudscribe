@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-18
-// Last Modified:			2016-01-02
+// Last Modified:			2016-01-07
 // 
 
 
@@ -223,6 +223,20 @@ namespace cloudscribe.Core.Repositories.MySql
         //{
         //    return dbSiteUser.UpdatePasswordAndSalt(userId, passwordFormat, password, passwordSalt);
         //}
+
+        public async Task<bool> SetRegistrationConfirmationGuid(
+            Guid userGuid,
+            Guid registrationConfirmationGuid,
+            CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (registrationConfirmationGuid == Guid.Empty)
+            {
+                return false;
+            }
+
+            return await dbSiteUser.SetRegistrationConfirmationGuid(userGuid, registrationConfirmationGuid, cancellationToken);
+        }
 
         public async Task<bool> ConfirmRegistration(
             Guid registrationGuid, 
