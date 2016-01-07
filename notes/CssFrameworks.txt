@@ -27,4 +27,7 @@ http://purecss.io/
 
 http://matthewhartman.github.io/base/
 
+resources for images
+http://www.engadget.com/2016/01/07/ny-public-library-old-public-domain-images/
+
 

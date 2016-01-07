@@ -72,6 +72,7 @@ namespace example.WebApp
             //});
             
             services.Configure<MultiTenantOptions>(configuration.GetSection("MultiTenantOptions"));
+            services.Configure<SiteConfigOptions>(configuration.GetSection("SiteConfigOptions"));
             services.Configure<SetupOptions>(configuration.GetSection("SetupOptions"));
             services.Configure<UIOptions>(configuration.GetSection("UIOptions"));
             services.Configure<cloudscribe.Core.Web.Components.Editor.CkeditorOptions>(configuration.GetSection("CkeditorOptions"));
