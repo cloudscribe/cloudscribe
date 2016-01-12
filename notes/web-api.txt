@@ -1,4 +1,10 @@
 
+
+https://github.com/chsakell/aspnet5-angular2-typescript
+http://chsakell.com/2015/12/31/cross-platform-single-page-applications-with-asp-net-5-angular-2-typescript/
+
+
+
 http://damienbod.com/2015/12/13/asp-net-5-mvc-6-api-documentation-using-swagger/
 
 http://www.dotnetcurry.com/aspnet/1223/secure-aspnet-web-api-using-tokens-owin-angularjs

@@ -138,6 +138,16 @@ namespace example.WebApp
         //public IServiceProvider ConfigureServices(IServiceCollection services)
         public void ConfigureServices(IServiceCollection services)
         {
+
+            //http://docs.asp.net/en/latest/security/data-protection/configuration/overview.html
+            services.ConfigureDataProtection(configure =>
+            {
+                //configure.PersistKeysToFileSystem(new DirectoryInfo(@"\\server\share\directory\"));
+                //configure.ProtectKeysWithCertificate("thumbprint");
+                //configure.SetDefaultKeyLifetime(TimeSpan.FromDays(14));
+                ///configure.
+            });
+
             //services.TryAddScoped<IConfigurationRoot, Configuration>();
 
             //http://blog.getglimpse.com/2015/11/19/installing-glimpse-v2-beta1/
