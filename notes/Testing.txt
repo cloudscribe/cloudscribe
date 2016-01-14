@@ -6,3 +6,18 @@ http://dotnetliberty.com/index.php/2016/01/04/how-to-unit-test-asp-net-5-mvc-6-m
 perf/load testing
 https://petabridge.com/blog/introduction-to-nbench/
 https://github.com/petabridge/nbench
+
+https://cucumber.io/docs
+https://cucumber.io/docs/reference/specflow
+
+http://www.specflow.org/
+https://github.com/stajs/SpecFlow.Dnx
+
+TestAutomationEssentials
+https://github.com/arnonax/TestEssentials
+
+browser automation for testing
+http://www.seleniumhq.org/
+
+coded ui vs 2015 automation testing use of the app
+https://msdn.microsoft.com/en-us/library/dd286726.aspx?f=255&MSPPError=-2147217396

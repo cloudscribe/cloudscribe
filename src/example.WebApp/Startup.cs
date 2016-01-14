@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Authentication.Cookies;
@@ -73,8 +74,10 @@ namespace example.WebApp
             Configuration = builder.Build();
 
             //env.MapPath
+            appBasePath = appEnv.ApplicationBasePath;
         }
 
+        private string appBasePath;
         public IConfigurationRoot Configuration { get; set; }
 
         private void ConfigureAuthPolicy(IServiceCollection services)
@@ -140,13 +143,29 @@ namespace example.WebApp
         {
 
             //http://docs.asp.net/en/latest/security/data-protection/configuration/overview.html
+            //If you change the key persistence location, the system will no longer automatically encrypt keys 
+            // at rest since it doesn’t know whether DPAPI is an appropriate encryption mechanism.
             services.ConfigureDataProtection(configure =>
             {
-                //configure.PersistKeysToFileSystem(new DirectoryInfo(@"\\server\share\directory\"));
+                string pathToCryptoKeys = appBasePath + Path.DirectorySeparatorChar
+                + "dp_keys" + Path.DirectorySeparatorChar;
+
+                // these keys are not encrypted at rest
+                // since we have specified a non default location
+                // that also makes the key portable so they will still work if we migrate to 
+                // a new machine (will they work on different OS? I think so)
+                // this is a similar server migration issue as the old machinekey
+                // where we specified a machinekey in web.config so it would not change if we 
+                // migrate to a new server
+                configure.PersistKeysToFileSystem(
+                    new DirectoryInfo(pathToCryptoKeys)
+                    );
+
                 //configure.ProtectKeysWithCertificate("thumbprint");
                 //configure.SetDefaultKeyLifetime(TimeSpan.FromDays(14));
                 ///configure.
             });
+
 
             //services.TryAddScoped<IConfigurationRoot, Configuration>();
 

@@ -199,3 +199,4 @@ src/example.WebApp/cloudscribe_config/sqlitedb/*
 .vscode/launch.json
 src/cloudscribe.Core.Repositories.EF/appsettings.local.overrides.json
 src/cloudscribe.Logging.EF/appsettings.local.overrides.json
+**/dp_keys/**
