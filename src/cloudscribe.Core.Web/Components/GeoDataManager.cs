@@ -53,9 +53,14 @@ namespace cloudscribe.Core.Web.Components
             return await repo.GetAllCountries(CancellationToken);
         }
 
-        public async Task<bool> Save(IGeoCountry geoCountry)
+        public async Task<bool> Add(IGeoCountry geoCountry)
         {
-            return await repo.Save(geoCountry, CancellationToken.None);
+            return await repo.Add(geoCountry, CancellationToken.None);
+        }
+
+        public async Task<bool> Update(IGeoCountry geoCountry)
+        {
+            return await repo.Update(geoCountry, CancellationToken.None);
         }
 
         public async Task<bool> DeleteCountry(IGeoCountry country)
@@ -96,9 +101,14 @@ namespace cloudscribe.Core.Web.Components
             return await repo.FetchGeoZone(guid, CancellationToken);
         }
 
-        public async Task<bool> Save(IGeoZone geoZone)
+        public async Task<bool> Add(IGeoZone geoZone)
         {
-            return await repo.Save(geoZone, CancellationToken.None);
+            return await repo.Add(geoZone, CancellationToken.None);
+        }
+
+        public async Task<bool> Update(IGeoZone geoZone)
+        {
+            return await repo.Update(geoZone, CancellationToken.None);
         }
 
         public async Task<bool> DeleteGeoZone(IGeoZone geoZone)
@@ -118,9 +128,14 @@ namespace cloudscribe.Core.Web.Components
             return await repo.FetchCurrency(guid, CancellationToken);
         }
 
-        public async Task<bool> Save(ICurrency currency)
+        public async Task<bool> Add(ICurrency currency)
         {
-            return await repo.Save(currency, CancellationToken.None);
+            return await repo.Add(currency, CancellationToken.None);
+        }
+
+        public async Task<bool> Update(ICurrency currency)
+        {
+            return await repo.Update(currency, CancellationToken.None);
         }
 
         public async Task<bool> DeleteCurrency(ICurrency currency)
@@ -128,9 +143,14 @@ namespace cloudscribe.Core.Web.Components
             return await repo.DeleteCurrency(currency.Guid, CancellationToken.None);
         }
 
-        public async Task<bool> Save(ILanguage language)
+        public async Task<bool> Add(ILanguage language)
         {
-            return await repo.Save(language, CancellationToken.None);
+            return await repo.Add(language, CancellationToken.None);
+        }
+
+        public async Task<bool> Update(ILanguage language)
+        {
+            return await repo.Update(language, CancellationToken.None);
         }
 
         public async Task<int> GetLanguageCount()

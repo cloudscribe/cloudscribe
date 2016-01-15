@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-11-03
-// Last Modified:			2016-01-06
+// Last Modified:			2016-01-15
 // 
 
 
@@ -48,56 +48,47 @@ namespace cloudscribe.Core.Repositories.SqlCe
         private DBLanguage dbLanguage;
         private DBCurrency dbCurrency;
 
-        /// <summary>
-        /// Persists a new instance of GeoCountry.
-        /// </summary>
-        /// <returns></returns>
-        public async Task<bool> Save(IGeoCountry geoCountry, CancellationToken cancellationToken = default(CancellationToken))
+        
+        public async Task<bool> Add(
+            IGeoCountry geoCountry, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             if (geoCountry == null) { return false; }
             cancellationToken.ThrowIfCancellationRequested();
-            bool result;
             if (geoCountry.Guid == Guid.Empty)
             {
-                geoCountry.Guid = Guid.NewGuid();
-
-                result = dbGeoCountry.Create(
-                    geoCountry.Guid,
-                    geoCountry.Name,
-                    geoCountry.ISOCode2,
-                    geoCountry.ISOCode3);
-            }
-            else
-            {
-                // we have to account here for the possibility that specific guids are needed to tie
-                // data together for initial/bulk insert for example
-                // so having a non-empty guid does not meean it is always an update
-                var found = await FetchCountry(geoCountry.Guid, cancellationToken);
-                if (found != null)
-                {
-                    result =  dbGeoCountry.Update(
-                    geoCountry.Guid,
-                    geoCountry.Name,
-                    geoCountry.ISOCode2,
-                    geoCountry.ISOCode3);
-                }
-                else
-                {
-                    result =  dbGeoCountry.Create(
-                    geoCountry.Guid,
-                    geoCountry.Name,
-                    geoCountry.ISOCode2,
-                    geoCountry.ISOCode3);
-                }
-
+                geoCountry.Guid = Guid.NewGuid();  
             }
 
+            bool result = dbGeoCountry.Create(
+                    geoCountry.Guid,
+                    geoCountry.Name,
+                    geoCountry.ISOCode2,
+                    geoCountry.ISOCode3);
+
+            return result;
+        }
+
+        public async Task<bool> Update(
+            IGeoCountry geoCountry, 
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            if (geoCountry == null) { return false; }
+            cancellationToken.ThrowIfCancellationRequested();
+            bool result = dbGeoCountry.Update(
+                    geoCountry.Guid,
+                    geoCountry.Name,
+                    geoCountry.ISOCode2,
+                    geoCountry.ISOCode3);
+                
             return result;
         }
 
 
         /// <param name="guid"> guid </param>
-        public async Task<IGeoCountry> FetchCountry(Guid guid, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<IGeoCountry> FetchCountry(
+            Guid guid, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -115,7 +106,9 @@ namespace cloudscribe.Core.Repositories.SqlCe
             return null;
         }
 
-        public async Task<IGeoCountry> FetchCountry(string isoCode2, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<IGeoCountry> FetchCountry(
+            string isoCode2, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -139,7 +132,9 @@ namespace cloudscribe.Core.Repositories.SqlCe
         /// </summary>
         /// <param name="guid"> guid </param>
         /// <returns>bool</returns>
-        public async Task<bool> DeleteCountry(Guid guid, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> DeleteCountry(
+            Guid guid, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
             return dbGeoCountry.Delete(guid);
@@ -183,55 +178,48 @@ namespace cloudscribe.Core.Repositories.SqlCe
             return LoadCountryListFromReader(reader);
         }
 
-
-
-        /// <summary>
-        /// Persists a new instance of GeoZone.
-        /// </summary>
-        /// <returns></returns>
-        public async Task<bool> Save(IGeoZone geoZone, CancellationToken cancellationToken = default(CancellationToken))
+        
+        public async Task<bool> Add(
+            IGeoZone geoZone, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             if (geoZone == null) { return false; }
             cancellationToken.ThrowIfCancellationRequested();
-            bool result;
+
             if (geoZone.Guid == Guid.Empty)
             {
-                geoZone.Guid = Guid.NewGuid();
-
-                result = dbGeoZone.Create(
-                    geoZone.Guid,
-                    geoZone.CountryGuid,
-                    geoZone.Name,
-                    geoZone.Code);
+                geoZone.Guid = Guid.NewGuid();     
             }
-            else
-            {
-                var found = await FetchGeoZone(geoZone.Guid, cancellationToken);
-                if (found != null)
-                {
-                    result = dbGeoZone.Update(
+            
+            bool result = dbGeoZone.Create(
                     geoZone.Guid,
                     geoZone.CountryGuid,
                     geoZone.Name,
                     geoZone.Code);
-                }
-                else
-                {
-                    result = dbGeoZone.Create(
+
+            return result;
+        }
+
+        public async Task<bool> Update(
+            IGeoZone geoZone,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            if (geoZone == null) { return false; }
+            cancellationToken.ThrowIfCancellationRequested();
+            bool result = dbGeoZone.Update(
                     geoZone.Guid,
                     geoZone.CountryGuid,
                     geoZone.Name,
                     geoZone.Code);
-                }
-
-            }
-
+                
             return result;
         }
 
 
         /// <param name="guid"> guid </param>
-        public async Task<IGeoZone> FetchGeoZone(Guid guid, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<IGeoZone> FetchGeoZone(
+            Guid guid, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -259,13 +247,17 @@ namespace cloudscribe.Core.Repositories.SqlCe
         /// </summary>
         /// <param name="guid"> guid </param>
         /// <returns>bool</returns>
-        public async Task<bool> DeleteGeoZone(Guid guid, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> DeleteGeoZone(
+            Guid guid, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
             return dbGeoZone.Delete(guid);
         }
 
-        public async Task<bool> DeleteGeoZonesByCountry(Guid countryGuid, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> DeleteGeoZonesByCountry(
+            Guid countryGuid, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
             return dbGeoZone.DeleteByCountry(countryGuid);
@@ -274,7 +266,9 @@ namespace cloudscribe.Core.Repositories.SqlCe
         /// <summary>
         /// Gets a count of GeoZone. 
         /// </summary>
-        public async Task<int> GetGeoZoneCount(Guid countryGuid, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<int> GetGeoZoneCount(
+            Guid countryGuid, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
             return dbGeoZone.GetCount(countryGuid);
@@ -284,7 +278,9 @@ namespace cloudscribe.Core.Repositories.SqlCe
         /// <summary>
         /// Gets an IList with all instances of GeoZone.
         /// </summary>
-        public async Task<List<IGeoZone>> GetGeoZonesByCountry(Guid countryGuid, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<List<IGeoZone>> GetGeoZonesByCountry(
+            Guid countryGuid, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
             DbDataReader reader = dbGeoZone.GetByCountry(countryGuid);
@@ -386,46 +382,45 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
         }
 
-        public async Task<bool> Save(ILanguage language, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> Add(
+            ILanguage language, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             if (language == null) { return false; }
             cancellationToken.ThrowIfCancellationRequested();
-            bool result;
+
             if (language.Guid == Guid.Empty)
             {
-                language.Guid = Guid.NewGuid();
-
-                result = dbLanguage.Create(
-                    language.Guid,
-                    language.Name,
-                    language.Code,
-                    language.Sort);
+                language.Guid = Guid.NewGuid(); 
             }
-            else
-            {
-                var found = await FetchLanguage(language.Guid, cancellationToken);
-                if (found != null)
-                {
-                    result = dbLanguage.Update(
-                    language.Guid,
-                    language.Name,
-                    language.Code,
-                    language.Sort);
-                }
-                else
-                {
-                    result = dbLanguage.Create(
-                    language.Guid,
-                    language.Name,
-                    language.Code,
-                    language.Sort);
-                }
 
-            }
+            bool result = dbLanguage.Create(
+                    language.Guid,
+                    language.Name,
+                    language.Code,
+                    language.Sort);
+
             return result;
         }
 
-        public async Task<ILanguage> FetchLanguage(Guid guid, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> Update(
+            ILanguage language,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            if (language == null) { return false; }
+            cancellationToken.ThrowIfCancellationRequested();
+            bool result = dbLanguage.Update(
+                    language.Guid,
+                    language.Name,
+                    language.Code,
+                    language.Sort);
+                
+            return result;
+        }
+
+        public async Task<ILanguage> FetchLanguage(
+            Guid guid, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
             using (DbDataReader reader = dbLanguage.GetOne(guid))
@@ -447,7 +442,9 @@ namespace cloudscribe.Core.Repositories.SqlCe
         /// </summary>
         /// <param name="guid"> guid </param>
         /// <returns>bool</returns>
-        public async Task<bool> DeleteLanguage(Guid guid, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> DeleteLanguage(
+            Guid guid, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
             return dbLanguage.Delete(guid);
@@ -504,16 +501,19 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
         }
 
-        public async Task<bool> Save(ICurrency currency, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> Add(
+            ICurrency currency, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             if (currency == null) { return false; }
             cancellationToken.ThrowIfCancellationRequested();
-            bool result;
+
             if (currency.Guid == Guid.Empty)
             {
-                currency.Guid = Guid.NewGuid();
-
-                result = dbCurrency.Create(
+                currency.Guid = Guid.NewGuid();      
+            }
+           
+            bool result = dbCurrency.Create(
                     currency.Guid,
                     currency.Title,
                     currency.Code,
@@ -525,13 +525,17 @@ namespace cloudscribe.Core.Repositories.SqlCe
                     currency.Value,
                     currency.LastModified,
                     currency.Created);
-            }
-            else
-            {
-                var found = await FetchCurrency(currency.Guid, cancellationToken);
-                if (found != null)
-                {
-                    result = dbCurrency.Update(
+
+            return result;
+        }
+
+        public async Task<bool> Update(
+            ICurrency currency,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            if (currency == null) { return false; }
+            cancellationToken.ThrowIfCancellationRequested();
+            bool result = dbCurrency.Update(
                     currency.Guid,
                     currency.Title,
                     currency.Code,
@@ -542,29 +546,13 @@ namespace cloudscribe.Core.Repositories.SqlCe
                     currency.DecimalPlaces,
                     currency.Value,
                     currency.LastModified);
-                }
-                else
-                {
-                    result = dbCurrency.Create(
-                    currency.Guid,
-                    currency.Title,
-                    currency.Code,
-                    currency.SymbolLeft,
-                    currency.SymbolRight,
-                    currency.DecimalPointChar,
-                    currency.ThousandsPointChar,
-                    currency.DecimalPlaces,
-                    currency.Value,
-                    currency.LastModified,
-                    currency.Created);
-                }
-
-            }
-
+                
             return result;
         }
 
-        public async Task<ICurrency> FetchCurrency(Guid guid, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<ICurrency> FetchCurrency(
+            Guid guid, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
             using (DbDataReader reader = dbCurrency.GetOne(guid))
@@ -581,7 +569,9 @@ namespace cloudscribe.Core.Repositories.SqlCe
             return null;
         }
 
-        public async Task<bool> DeleteCurrency(Guid guid, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> DeleteCurrency(
+            Guid guid, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
             return dbCurrency.Delete(guid);

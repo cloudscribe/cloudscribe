@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2015-12-28
+// Last Modified:			2016-01-15
 // 
 
 using cloudscribe.Core.Models.Geography;
@@ -25,7 +25,7 @@ namespace cloudscribe.Core.Repositories.EF
 
         private CoreDbContext dbContext;
 
-        public async Task<bool> Save(IGeoCountry geoCountry, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> Add(IGeoCountry geoCountry, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (geoCountry == null) { return false; }
 
@@ -33,16 +33,25 @@ namespace cloudscribe.Core.Repositories.EF
             if (country.Guid == Guid.Empty)
             { 
                 country.Guid = Guid.NewGuid();
-                dbContext.Countries.Add(country);
             }
-            else
-            {
-                bool tracking = dbContext.ChangeTracker.Entries<GeoCountry>().Any(x => x.Entity.Guid == country.Guid);
-                if (!tracking)
-                {
-                    dbContext.Countries.Update(country);
-                }
 
+            dbContext.Countries.Add(country);
+
+            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
+
+            return rowsAffected > 0;
+        }
+
+        public async Task<bool> Update(IGeoCountry geoCountry, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            if (geoCountry == null) { return false; }
+
+            GeoCountry country = GeoCountry.FromIGeoCountry(geoCountry); // convert from IGeoCountry
+            
+            bool tracking = dbContext.ChangeTracker.Entries<GeoCountry>().Any(x => x.Entity.Guid == country.Guid);
+            if (!tracking)
+            {
+                dbContext.Countries.Update(country);
             }
             
             int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
@@ -110,7 +119,7 @@ namespace cloudscribe.Core.Repositories.EF
             
         }
 
-        public async Task<bool> Save(IGeoZone geoZone, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> Add(IGeoZone geoZone, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (geoZone == null) { return false; }
 
@@ -118,16 +127,28 @@ namespace cloudscribe.Core.Repositories.EF
 
             if (geoZone.Guid == Guid.Empty)
             {
-                state.Guid = Guid.NewGuid();
-                dbContext.States.Add(state);
+                state.Guid = Guid.NewGuid();   
             }
-            else
+            dbContext.States.Add(state);
+
+            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
+
+            return rowsAffected > 0;
+
+        }
+
+        public async Task<bool> Update(
+            IGeoZone geoZone, 
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            if (geoZone == null) { return false; }
+
+            GeoZone state = GeoZone.FromIGeoZone(geoZone); // convert from IGeoZone
+            
+            bool tracking = dbContext.ChangeTracker.Entries<GeoZone>().Any(x => x.Entity.Guid == state.Guid);
+            if (!tracking)
             {
-                bool tracking = dbContext.ChangeTracker.Entries<GeoZone>().Any(x => x.Entity.Guid == state.Guid);
-                if(!tracking)
-                {
-                    dbContext.States.Update(state);
-                }
+                dbContext.States.Update(state);
             }
             
             int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
@@ -259,7 +280,7 @@ namespace cloudscribe.Core.Repositories.EF
            
         }
 
-        public async Task<bool> Save(ILanguage language, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> Add(ILanguage language, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (language == null) { return false; }
 
@@ -268,15 +289,26 @@ namespace cloudscribe.Core.Repositories.EF
             if (lang.Guid == Guid.Empty)
             { 
                 lang.Guid = Guid.NewGuid();
-                dbContext.Languages.Add(lang);
             }
-            else
+
+            dbContext.Languages.Add(lang);
+
+            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
+
+            return rowsAffected > 0;
+
+        }
+
+        public async Task<bool> Update(ILanguage language, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            if (language == null) { return false; }
+
+            Language lang = Language.FromILanguage(language);
+            
+            bool tracking = dbContext.ChangeTracker.Entries<Language>().Any(x => x.Entity.Guid == lang.Guid);
+            if (!tracking)
             {
-                bool tracking = dbContext.ChangeTracker.Entries<Language>().Any(x => x.Entity.Guid == lang.Guid);
-                if (!tracking)
-                {
-                    dbContext.Languages.Update(lang);
-                }
+                dbContext.Languages.Update(lang);
             }
             
             int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
@@ -339,7 +371,7 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
 
-        public async Task<bool> Save(ICurrency currency, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> Add(ICurrency currency, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (currency == null) { return false; }
 
@@ -347,15 +379,25 @@ namespace cloudscribe.Core.Repositories.EF
             if (c.Guid == Guid.Empty)
             { 
                 c.Guid = Guid.NewGuid();
-                dbContext.Currencies.Add(c);
             }
-            else
+            dbContext.Currencies.Add(c);
+
+            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
+
+            return rowsAffected > 0;
+
+        }
+
+        public async Task<bool> Update(ICurrency currency, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            if (currency == null) { return false; }
+
+            Currency c = Currency.FromICurrency(currency);
+            
+            bool tracking = dbContext.ChangeTracker.Entries<Currency>().Any(x => x.Entity.Guid == c.Guid);
+            if (!tracking)
             {
-                bool tracking = dbContext.ChangeTracker.Entries<Currency>().Any(x => x.Entity.Guid == c.Guid);
-                if (!tracking)
-                {
-                    dbContext.Currencies.Update(c);
-                }
+                dbContext.Currencies.Update(c);
             }
             
             int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);

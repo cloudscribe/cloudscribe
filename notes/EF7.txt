@@ -88,6 +88,8 @@ Use "dnx ef [command] --help" for more information about a command.
 
 dnx ef migrations --help
 
+dnx ef database --help
+
 
 Usage: dnx ef migrations [options] [command]
 
@@ -120,4 +122,32 @@ Options:
 dnx ef migrations add Initial -c CoreDbContext
 dnx ef migrations add Initial -c LoggingDbContext
 
+
+
+dnx ef database --help
+
+
+Usage: dnx ef database [options] [command]
+
+Options:
+  -?|-h|--help  Show help information
+
+Commands:
+  update  Updates the database to a specified migration
+
+Use "database [command] --help" for more information about a command.
+
+dnx ef database update --help
+
+Usage: dnx ef database update [arguments] [options]
+
+Arguments:
+  [migration]  The target migration. If '0', all migrations will be reverted. If omitted, all pending migrations will be applied
+
+Options:
+  -c|--context <context>          The DbContext to use. If omitted, the default DbContext is used
+  -p|--targetProject <project>    The project with the Migration classes. If omitted, the current project is used.
+  -e|--environment <environment>  The environment to use. If omitted, "Development" is used.
+  -v|--verbose                    Show verbose output
+  -?|-h|--help                    Show help information
 

@@ -135,19 +135,19 @@ namespace cloudscribe.Core.Web.Controllers
             {
                 return View(model);
             }
-
+            bool result;
             string successFormat;
             if (model.Guid == Guid.Empty)
             {
                 successFormat = "The country <b>{0}</b> was successfully created.";
+                result = await dataManager.Add(model);
             }
             else
             {
                 successFormat = "The country <b>{0}</b> was successfully updated.";
+                result = await dataManager.Update(model);
             }
-
-            bool result = await dataManager.Save(model);
-
+            
             if (result)
             {
                 this.AlertSuccess(string.Format(successFormat,
@@ -390,17 +390,20 @@ namespace cloudscribe.Core.Web.Controllers
                 return PartialView(model);
             }
 
+            bool result;
             string successFormat;
             if (model.Guid == Guid.Empty)
             {
                 successFormat = "The state <b>{0}</b> was successfully created.";
+                result = await dataManager.Add(model);
             }
             else
             {
                 successFormat = "The state <b>{0}</b> was successfully updated.";
+                result = await dataManager.Update(model);
             }
 
-            bool result = await dataManager.Save(model);
+            
             if (result)
             {
                 this.AlertSuccess(string.Format(successFormat,
@@ -513,10 +516,13 @@ namespace cloudscribe.Core.Web.Controllers
                 return View(model);
             }
 
+            bool result;
             string successFormat;
             ICurrency currency = null;
+            bool add = false;
             if (model.Guid != Guid.Empty)
             {
+                add = true;
                 currency = await dataManager.FetchCurrency(model.Guid);
                 successFormat = "The currency <b>{0}</b> was successfully updated.";
             }
@@ -529,7 +535,16 @@ namespace cloudscribe.Core.Web.Controllers
             currency.Code = model.Code;
             currency.Title = model.Title;
 
-            bool result = await dataManager.Save(currency);
+            if(add)
+            {
+                result = await dataManager.Add(currency);
+            }
+            else
+            {
+                result = await dataManager.Update(currency);
+            }
+
+            
             if (result)
             {
                 this.AlertSuccess(string.Format(successFormat,

@@ -30,4 +30,10 @@ http://matthewhartman.github.io/base/
 resources for images
 http://www.engadget.com/2016/01/07/ny-public-library-old-public-domain-images/
 
+form layout
+http://stackoverflow.com/questions/27825134/bootstrap-complex-form-layout-for-combined-vertical-inline-fields
+
+https://output.jsbin.com/sejemi
+
+
 

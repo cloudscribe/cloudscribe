@@ -90,14 +90,14 @@ namespace cloudscribe.Core.Web.Components
                 List<GeoCountry> countries = InitialData.BuildCountryList();
                 foreach(GeoCountry c in countries)
                 {
-                    await geoDataManager.Save(c);
+                    await geoDataManager.Add(c);
                 }
 
                 await output("creating initial state/region data", true);
                 List<GeoZone> states = InitialData.BuildStateList();
                 foreach (GeoZone s in states)
                 {
-                    await geoDataManager.Save(s);
+                    await geoDataManager.Add(s);
                 }
             }
             List<ICurrency> dbCurrencies = await geoDataManager.GetAllCurrencies();
@@ -107,7 +107,7 @@ namespace cloudscribe.Core.Web.Components
                 List<Currency> currencies = InitialData.BuildCurrencyList();
                 foreach(Currency c in currencies)
                 {
-                    await geoDataManager.Save(c);
+                    await geoDataManager.Add(c);
                 }
             }
             int languageCount = await geoDataManager.GetLanguageCount();
@@ -117,7 +117,7 @@ namespace cloudscribe.Core.Web.Components
                 List<Language> langs = InitialData.BuildLanguageList();
                 foreach(Language l in langs)
                 {
-                    await geoDataManager.Save(l);
+                    await geoDataManager.Add(l);
                 }
             }
 
