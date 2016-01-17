@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2015-12-08
+// Last Modified:			2016-01-17
 // 
 
 using System;
@@ -367,7 +367,11 @@ namespace cloudscribe.Core.Models
             set { privacyPolicy = value; }
         }
 
-        
+        public bool IsDataProtected { get; set; } = false;
+
+        public DateTime CreatedUtc { get; set; } = DateTime.UtcNow;
+
+
         public static SiteSettings FromISiteSettings(ISiteSettings i)
         {
             if(i == null) { return null; }
@@ -448,7 +452,10 @@ namespace cloudscribe.Core.Models
             s.UseLdapAuth = i.UseLdapAuth;
             s.UseSecureRegistration = i.UseSecureRegistration;
             s.UseSslOnAllPages = i.UseSslOnAllPages;
-            
+
+            s.IsDataProtected = i.IsDataProtected;
+            s.CreatedUtc = i.CreatedUtc;
+
 
 
             return s;

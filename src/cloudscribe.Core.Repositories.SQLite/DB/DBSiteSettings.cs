@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2016-01-01
+// Last Modified:			2016-01-17
 // 
 
 using cloudscribe.DbHelpers;
@@ -110,7 +110,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             string smtpPreferredEncoding,
             bool smtpRequiresAuth,
             bool smtpUseSsl,
-            bool requireApprovalBeforeLogin
+            bool requireApprovalBeforeLogin,
+            bool isDataProtected,
+            DateTime createdUtc
 
             )
         {
@@ -191,6 +193,8 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("SmtpRequiresAuth, ");
             sqlCommand.Append("SmtpUseSsl, ");
             sqlCommand.Append("RequireApprovalBeforeLogin, ");
+            sqlCommand.Append("IsDataProtected, ");
+            sqlCommand.Append("CreatedUtc, ");
 
             sqlCommand.Append("SiteGuid ");
 
@@ -274,13 +278,14 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append(":SmtpRequiresAuth, ");
             sqlCommand.Append(":SmtpUseSsl, ");
             sqlCommand.Append(":RequireApprovalBeforeLogin, ");
-
+            sqlCommand.Append(":IsDataProtected, ");
+            sqlCommand.Append(":CreatedUtc, ");
             sqlCommand.Append(" :SiteGuid ");
 
             sqlCommand.Append(");");
             sqlCommand.Append("SELECT LAST_INSERT_ROWID();");
 
-            SqliteParameter[] arParams = new SqliteParameter[74];
+            SqliteParameter[] arParams = new SqliteParameter[76];
 
             arParams[0] = new SqliteParameter(":SiteName", DbType.String);
             arParams[0].Value = siteName;
@@ -504,7 +509,11 @@ namespace cloudscribe.Core.Repositories.SQLite
             arParams[73] = new SqliteParameter(":RequireApprovalBeforeLogin", DbType.Int32);
             arParams[73].Value = requireApprovalBeforeLogin ? 1 : 0;
 
+            arParams[74] = new SqliteParameter(":IsDataProtected", DbType.Int32);
+            arParams[74].Value = isDataProtected ? 1 : 0;
 
+            arParams[75] = new SqliteParameter(":CreatedUtc", DbType.DateTime);
+            arParams[75].Value = createdUtc;
 
             int newID = Convert.ToInt32(AdoHelper.ExecuteScalar(
                 connectionString,
@@ -590,7 +599,8 @@ namespace cloudscribe.Core.Repositories.SQLite
             string smtpPreferredEncoding,
             bool smtpRequiresAuth,
             bool smtpUseSsl,
-            bool requireApprovalBeforeLogin
+            bool requireApprovalBeforeLogin,
+            bool isDataProtected
             )
         {
             
@@ -669,11 +679,12 @@ namespace cloudscribe.Core.Repositories.SQLite
             sqlCommand.Append("SmtpPreferredEncoding = :SmtpPreferredEncoding, ");
             sqlCommand.Append("SmtpRequiresAuth = :SmtpRequiresAuth, ");
             sqlCommand.Append("SmtpUseSsl = :SmtpUseSsl, ");
+            sqlCommand.Append("IsDataProtected = :IsDataProtected, ");
             sqlCommand.Append("RequireApprovalBeforeLogin = :RequireApprovalBeforeLogin ");
 
             sqlCommand.Append(" WHERE SiteID = :SiteID ;");
 
-            SqliteParameter[] arParams = new SqliteParameter[74];
+            SqliteParameter[] arParams = new SqliteParameter[75];
 
             arParams[0] = new SqliteParameter(":SiteID", DbType.Int32);
             arParams[0].Value = siteId;
@@ -896,6 +907,9 @@ namespace cloudscribe.Core.Repositories.SQLite
 
             arParams[73] = new SqliteParameter(":RequireApprovalBeforeLogin", DbType.Int32);
             arParams[73].Value = requireApprovalBeforeLogin ? 1 : 0;
+
+            arParams[74] = new SqliteParameter(":IsDataProtected", DbType.Int32);
+            arParams[74].Value = isDataProtected ? 1 : 0;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 connectionString,

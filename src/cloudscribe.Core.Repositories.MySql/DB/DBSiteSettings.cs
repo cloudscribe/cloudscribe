@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2016-01-02
+// Last Modified:			2016-01-17
 // 
  
 using cloudscribe.DbHelpers;
@@ -114,6 +114,8 @@ namespace cloudscribe.Core.Repositories.MySql
             bool smtpRequiresAuth,
             bool smtpUseSsl,
             bool requireApprovalBeforeLogin,
+            bool isDataProtected,
+            DateTime createdUtc,
             CancellationToken cancellationToken
             )
         {
@@ -194,7 +196,10 @@ namespace cloudscribe.Core.Repositories.MySql
             sqlCommand.Append("SmtpRequiresAuth, ");
             sqlCommand.Append("SmtpUseSsl, ");
             sqlCommand.Append("RequireApprovalBeforeLogin, ");
-            
+
+            sqlCommand.Append("IsDataProtected, ");
+            sqlCommand.Append("CreatedUtc, ");
+
             sqlCommand.Append("SiteGuid ");
             sqlCommand.Append("  )");
 
@@ -273,13 +278,15 @@ namespace cloudscribe.Core.Repositories.MySql
             sqlCommand.Append("?SmtpRequiresAuth, ");
             sqlCommand.Append("?SmtpUseSsl, ");
             sqlCommand.Append("?RequireApprovalBeforeLogin, ");
+            sqlCommand.Append("?IsDataProtected, ");
+            sqlCommand.Append("?CreatedUtc, ");
 
             sqlCommand.Append(" ?SiteGuid ");
 
             sqlCommand.Append(");");
             sqlCommand.Append("SELECT LAST_INSERT_ID();");
 
-            MySqlParameter[] arParams = new MySqlParameter[74];
+            MySqlParameter[] arParams = new MySqlParameter[76];
 
             arParams[0] = new MySqlParameter("?SiteName", MySqlDbType.VarChar, 255);
             arParams[0].Value = siteName;
@@ -503,6 +510,12 @@ namespace cloudscribe.Core.Repositories.MySql
             arParams[73] = new MySqlParameter("?RequireApprovalBeforeLogin", MySqlDbType.Int16);
             arParams[73].Value = requireApprovalBeforeLogin ? 1 : 0;
 
+            arParams[74] = new MySqlParameter("?IsDataProtected", MySqlDbType.Int16);
+            arParams[74].Value = isDataProtected ? 1 : 0;
+
+            arParams[75] = new MySqlParameter("?CreatedUtc", MySqlDbType.DateTime);
+            arParams[75].Value = createdUtc;
+
             object result = await AdoHelper.ExecuteScalarAsync(
                 writeConnectionString,
                 sqlCommand.ToString(),
@@ -592,6 +605,7 @@ namespace cloudscribe.Core.Repositories.MySql
             bool smtpRequiresAuth,
             bool smtpUseSsl,
             bool requireApprovalBeforeLogin,
+            bool isDataProtected,
             CancellationToken cancellationToken
             )
         {
@@ -671,11 +685,12 @@ namespace cloudscribe.Core.Repositories.MySql
             sqlCommand.Append("SmtpPreferredEncoding = ?SmtpPreferredEncoding, ");
             sqlCommand.Append("SmtpRequiresAuth = ?SmtpRequiresAuth, ");
             sqlCommand.Append("SmtpUseSsl = ?SmtpUseSsl, ");
+            sqlCommand.Append("IsDataProtected = ?IsDataProtected, ");
             sqlCommand.Append("RequireApprovalBeforeLogin = ?RequireApprovalBeforeLogin ");
             
             sqlCommand.Append(" WHERE SiteID = ?SiteID ;");
 
-            MySqlParameter[] arParams = new MySqlParameter[74];
+            MySqlParameter[] arParams = new MySqlParameter[75];
 
             arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
             arParams[0].Value = siteId;
@@ -898,7 +913,10 @@ namespace cloudscribe.Core.Repositories.MySql
 
             arParams[73] = new MySqlParameter("?RequireApprovalBeforeLogin", MySqlDbType.Int16);
             arParams[73].Value = requireApprovalBeforeLogin ? 1 : 0;
-            
+
+            arParams[74] = new MySqlParameter("?IsDataProtected", MySqlDbType.Int16);
+            arParams[74].Value = isDataProtected ? 1 : 0;
+
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 sqlCommand.ToString(),

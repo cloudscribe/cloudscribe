@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2016-01-02
+// Last Modified:			2016-01-17
 // 
 
 
@@ -139,6 +139,8 @@ namespace cloudscribe.Core.Repositories.MySql
                     site.SmtpRequiresAuth,
                     site.SmtpUseSsl,
                     site.RequireApprovalBeforeLogin,
+                    site.IsDataProtected,
+                    site.CreatedUtc,
                     cancellationToken
                     );
 
@@ -222,6 +224,7 @@ namespace cloudscribe.Core.Repositories.MySql
                     site.SmtpRequiresAuth,
                     site.SmtpUseSsl,
                     site.RequireApprovalBeforeLogin,
+                    site.IsDataProtected,
                     cancellationToken
                     );
 

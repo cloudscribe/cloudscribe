@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2010-03-10
-// Last Modified:			2016-01-02
+// Last Modified:			2016-01-17
 // 
 
 
@@ -110,7 +110,9 @@ namespace cloudscribe.Core.Repositories.SqlCe
             string smtpPreferredEncoding,
             bool smtpRequiresAuth,
             bool smtpUseSsl,
-            bool requireApprovalBeforeLogin
+            bool requireApprovalBeforeLogin,
+            bool isDataProtected,
+            DateTime createdUtc
 
             )
         {
@@ -191,6 +193,9 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("SmtpPreferredEncoding, ");
             sqlCommand.Append("SmtpRequiresAuth, ");
             sqlCommand.Append("SmtpUseSsl, ");
+            sqlCommand.Append("IsDataProtected, ");
+            sqlCommand.Append("CreatedUtc, ");
+
             sqlCommand.Append("RequireApprovalBeforeLogin ");
 
 
@@ -273,13 +278,15 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("@SmtpPreferredEncoding, ");
             sqlCommand.Append("@SmtpRequiresAuth, ");
             sqlCommand.Append("@SmtpUseSsl, ");
+            sqlCommand.Append("@IsDataProtected, ");
+            sqlCommand.Append("@CreatedUtc, ");
             sqlCommand.Append("@RequireApprovalBeforeLogin ");
 
             
             sqlCommand.Append(")");
             sqlCommand.Append(";");
 
-            SqlCeParameter[] arParams = new SqlCeParameter[74];
+            SqlCeParameter[] arParams = new SqlCeParameter[76];
 
             arParams[0] = new SqlCeParameter("@SiteGuid", SqlDbType.UniqueIdentifier);
             arParams[0].Value = siteGuid;
@@ -503,6 +510,11 @@ namespace cloudscribe.Core.Repositories.SqlCe
             arParams[73] = new SqlCeParameter("@RequireApprovalBeforeLogin", SqlDbType.Bit);
             arParams[73].Value = requireApprovalBeforeLogin;
 
+            arParams[74] = new SqlCeParameter("@IsDataProtected", SqlDbType.Bit);
+            arParams[74].Value = isDataProtected;
+
+            arParams[75] = new SqlCeParameter("@CreatedUtc", SqlDbType.DateTime);
+            arParams[75].Value = createdUtc;
 
 
             int newId = Convert.ToInt32(AdoHelper.DoInsertGetIdentitiy(
@@ -590,7 +602,8 @@ namespace cloudscribe.Core.Repositories.SqlCe
             string smtpPreferredEncoding,
             bool smtpRequiresAuth,
             bool smtpUseSsl,
-            bool requireApprovalBeforeLogin
+            bool requireApprovalBeforeLogin,
+            bool isDataProtected
         
             )
         {
@@ -670,6 +683,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("SmtpPreferredEncoding = @SmtpPreferredEncoding, ");
             sqlCommand.Append("SmtpRequiresAuth = @SmtpRequiresAuth, ");
             sqlCommand.Append("SmtpUseSsl = @SmtpUseSsl, ");
+            sqlCommand.Append("IsDataProtected = @IsDataProtected, ");
             sqlCommand.Append("RequireApprovalBeforeLogin = @RequireApprovalBeforeLogin ");
 
 
@@ -677,7 +691,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("SiteID = @SiteID ");
             sqlCommand.Append(";");
 
-            SqlCeParameter[] arParams = new SqlCeParameter[74];
+            SqlCeParameter[] arParams = new SqlCeParameter[75];
 
             arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
             arParams[0].Value = siteId;
@@ -900,6 +914,9 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
             arParams[73] = new SqlCeParameter("@DefaultEmailFromAddress", SqlDbType.NVarChar);
             arParams[73].Value = defaultEmailFromAddress;
+
+            arParams[74] = new SqlCeParameter("@IsDataProtected", SqlDbType.Bit);
+            arParams[74].Value = isDataProtected;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 connectionString,

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2016-01-03
+// Last Modified:			2016-01-17
 // 
 
 
@@ -115,6 +115,8 @@ namespace cloudscribe.Core.Repositories.MSSQL
             bool smtpRequiresAuth,
             bool smtpUseSsl,
             bool requireApprovalBeforeLogin,
+            bool isDataProtected,
+            DateTime createdUtc,
             CancellationToken cancellationToken
             )
         {
@@ -123,7 +125,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 logFactory,
                 writeConnectionString, 
                 "mp_Sites_Insert", 
-                74);
+                76);
 
             sph.DefineSqlParameter("@SiteName", SqlDbType.NVarChar, 128, ParameterDirection.Input, siteName);
             sph.DefineSqlParameter("@Skin", SqlDbType.NVarChar, 100, ParameterDirection.Input, skin); 
@@ -199,6 +201,8 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@SmtpRequiresAuth", SqlDbType.Bit, ParameterDirection.Input, smtpRequiresAuth);
             sph.DefineSqlParameter("@SmtpUseSsl", SqlDbType.Bit, ParameterDirection.Input, smtpUseSsl);
             sph.DefineSqlParameter("@RequireApprovalBeforeLogin", SqlDbType.Bit, ParameterDirection.Input, requireApprovalBeforeLogin);
+            sph.DefineSqlParameter("@IsDataProtected", SqlDbType.Bit, ParameterDirection.Input, isDataProtected);
+            sph.DefineSqlParameter("@CreatedUtc", SqlDbType.DateTime, ParameterDirection.Input, createdUtc);
 
 
             object result = await sph.ExecuteScalarAsync(cancellationToken);
@@ -282,6 +286,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             bool smtpRequiresAuth,
             bool smtpUseSsl,
             bool requireApprovalBeforeLogin,
+            bool isDataProtected,
             CancellationToken cancellationToken
             )
         {
@@ -290,7 +295,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 logFactory,
                 writeConnectionString, 
                 "mp_Sites_Update", 
-                74);
+                75);
 
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
             sph.DefineSqlParameter("@SiteName", SqlDbType.NVarChar, 128, ParameterDirection.Input, siteName);
@@ -366,6 +371,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@SmtpRequiresAuth", SqlDbType.Bit, ParameterDirection.Input, smtpRequiresAuth);
             sph.DefineSqlParameter("@SmtpUseSsl", SqlDbType.Bit, ParameterDirection.Input, smtpUseSsl);
             sph.DefineSqlParameter("@RequireApprovalBeforeLogin", SqlDbType.Bit, ParameterDirection.Input, requireApprovalBeforeLogin);
+            sph.DefineSqlParameter("@IsDataProtected", SqlDbType.Bit, ParameterDirection.Input, isDataProtected);
 
             int rowsAffected = await sph.ExecuteNonQueryAsync(cancellationToken);
             return (rowsAffected > -1);

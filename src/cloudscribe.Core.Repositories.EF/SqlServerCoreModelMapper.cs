@@ -414,6 +414,17 @@ namespace cloudscribe.Core.Repositories.EF
             .ForSqlServerHasDefaultValue(0)
             ;
 
+            entity.Property(p => p.IsDataProtected)
+            .IsRequired()
+            .ForSqlServerHasColumnType("bit")
+            .ForSqlServerHasDefaultValue(0)
+            ;
+
+            entity.Property(p => p.CreatedUtc)
+            .ForSqlServerHasColumnType("datetime")
+            .ForSqlServerHasDefaultValueSql("getutcdate()")
+            ;
+
         }
 
         public void Map(EntityTypeBuilder<SiteHost> entity)
