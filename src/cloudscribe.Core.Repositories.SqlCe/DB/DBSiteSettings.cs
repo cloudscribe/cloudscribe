@@ -444,25 +444,25 @@ namespace cloudscribe.Core.Repositories.SqlCe
             arParams[51] = new SqlCeParameter("@FacebookAppId", SqlDbType.NVarChar, 100);
             arParams[51].Value = facebookAppId;
 
-            arParams[52] = new SqlCeParameter("@FacebookAppSecret", SqlDbType.NVarChar, 100);
+            arParams[52] = new SqlCeParameter("@FacebookAppSecret", SqlDbType.NText);
             arParams[52].Value = facebookAppSecret;
 
             arParams[53] = new SqlCeParameter("@GoogleClientId", SqlDbType.NVarChar, 100);
             arParams[53].Value = googleClientId;
 
-            arParams[54] = new SqlCeParameter("@GoogleClientSecret", SqlDbType.NVarChar, 100);
+            arParams[54] = new SqlCeParameter("@GoogleClientSecret", SqlDbType.NText);
             arParams[54].Value = googleClientSecret;
 
             arParams[55] = new SqlCeParameter("@TwitterConsumerKey", SqlDbType.NVarChar, 100);
             arParams[55].Value = twitterConsumerKey;
 
-            arParams[56] = new SqlCeParameter("@TwitterConsumerSecret", SqlDbType.NVarChar, 100);
+            arParams[56] = new SqlCeParameter("@TwitterConsumerSecret", SqlDbType.NText);
             arParams[56].Value = twitterConsumerSecret;
 
             arParams[57] = new SqlCeParameter("@MicrosoftClientId", SqlDbType.NVarChar, 100);
             arParams[57].Value = microsoftClientId;
 
-            arParams[58] = new SqlCeParameter("@MicrosoftClientSecret", SqlDbType.NVarChar, 100);
+            arParams[58] = new SqlCeParameter("@MicrosoftClientSecret", SqlDbType.NText);
             arParams[58].Value = microsoftClientSecret;
 
             arParams[59] = new SqlCeParameter("@PreferredHostName", SqlDbType.NVarChar, 250);
@@ -495,7 +495,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             arParams[68] = new SqlCeParameter("@SmtpUser", SqlDbType.NVarChar, 500);
             arParams[68].Value = smtpUser;
 
-            arParams[69] = new SqlCeParameter("@SmtpPassword", SqlDbType.NVarChar, 500);
+            arParams[69] = new SqlCeParameter("@SmtpPassword", SqlDbType.NText);
             arParams[69].Value = smtpPassword;
 
             arParams[70] = new SqlCeParameter("@SmtpPreferredEncoding", SqlDbType.NVarChar, 20);
@@ -831,25 +831,25 @@ namespace cloudscribe.Core.Repositories.SqlCe
             arParams[45] = new SqlCeParameter("@FacebookAppId", SqlDbType.NVarChar, 100);
             arParams[45].Value = facebookAppId;
 
-            arParams[46] = new SqlCeParameter("@FacebookAppSecret", SqlDbType.NVarChar, 100);
+            arParams[46] = new SqlCeParameter("@FacebookAppSecret", SqlDbType.NText);
             arParams[46].Value = facebookAppSecret;
 
             arParams[47] = new SqlCeParameter("@GoogleClientId", SqlDbType.NVarChar, 100);
             arParams[47].Value = googleClientId;
 
-            arParams[48] = new SqlCeParameter("@GoogleClientSecret", SqlDbType.NVarChar, 100);
+            arParams[48] = new SqlCeParameter("@GoogleClientSecret", SqlDbType.NText);
             arParams[48].Value = googleClientSecret;
 
             arParams[49] = new SqlCeParameter("@TwitterConsumerKey", SqlDbType.NVarChar, 100);
             arParams[49].Value = twitterConsumerKey;
 
-            arParams[50] = new SqlCeParameter("@TwitterConsumerSecret", SqlDbType.NVarChar, 100);
+            arParams[50] = new SqlCeParameter("@TwitterConsumerSecret", SqlDbType.NText);
             arParams[50].Value = twitterConsumerSecret;
 
             arParams[51] = new SqlCeParameter("@MicrosoftClientId", SqlDbType.NVarChar, 100);
             arParams[51].Value = microsoftClientId;
 
-            arParams[52] = new SqlCeParameter("@MicrosoftClientSecret", SqlDbType.NVarChar, 100);
+            arParams[52] = new SqlCeParameter("@MicrosoftClientSecret", SqlDbType.NText);
             arParams[52].Value = microsoftClientSecret;
 
             arParams[53] = new SqlCeParameter("@PreferredHostName", SqlDbType.NVarChar, 250);
@@ -882,7 +882,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             arParams[62] = new SqlCeParameter("@SmtpUser", SqlDbType.NVarChar, 500);
             arParams[62].Value = smtpUser;
 
-            arParams[63] = new SqlCeParameter("@SmtpPassword", SqlDbType.NVarChar, 500);
+            arParams[63] = new SqlCeParameter("@SmtpPassword", SqlDbType.NText);
             arParams[63].Value = smtpPassword;
 
             arParams[64] = new SqlCeParameter("@SmtpPreferredEncoding", SqlDbType.NVarChar, 20);

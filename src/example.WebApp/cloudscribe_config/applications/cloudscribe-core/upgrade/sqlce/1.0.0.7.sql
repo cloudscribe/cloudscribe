@@ -144,25 +144,25 @@ GO
 ALTER TABLE mp_Sites ADD FacebookAppId nvarchar(100) NULL 
 GO
 
-ALTER TABLE mp_Sites ADD FacebookAppSecret nvarchar(100) NULL 
+ALTER TABLE mp_Sites ADD FacebookAppSecret ntext NULL 
 GO
 
 ALTER TABLE mp_Sites ADD GoogleClientId nvarchar(100) NULL 
 GO
 
-ALTER TABLE mp_Sites ADD GoogleClientSecret nvarchar(100) NULL 
+ALTER TABLE mp_Sites ADD GoogleClientSecret ntext NULL 
 GO
 
 ALTER TABLE mp_Sites ADD TwitterConsumerKey nvarchar(100) NULL 
 GO
 
-ALTER TABLE mp_Sites ADD TwitterConsumerSecret nvarchar(100) NULL 
+ALTER TABLE mp_Sites ADD TwitterConsumerSecret ntext NULL 
 GO
 
 ALTER TABLE mp_Sites ADD MicrosoftClientId nvarchar(100) NULL 
 GO
 
-ALTER TABLE mp_Sites ADD MicrosoftClientSecret nvarchar(100) NULL 
+ALTER TABLE mp_Sites ADD MicrosoftClientSecret ntext NULL 
 GO
 
 ALTER TABLE mp_Sites ADD PreferredHostName nvarchar(250) NULL 
@@ -195,7 +195,7 @@ GO
 ALTER TABLE mp_Sites ADD SmtpUser nvarchar(500) NULL 
 GO
 
-ALTER TABLE mp_Sites ADD SmtpPassword nvarchar(500) NULL 
+ALTER TABLE mp_Sites ADD SmtpPassword ntext NULL 
 GO
 
 ALTER TABLE mp_Sites ADD SmtpPreferredEncoding nvarchar(20) NULL 

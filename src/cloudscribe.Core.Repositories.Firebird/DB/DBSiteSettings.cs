@@ -278,25 +278,25 @@ namespace cloudscribe.Core.Repositories.Firebird
             arParams[51] = new FbParameter(":FacebookAppId", FbDbType.VarChar, 100);
             arParams[51].Value = facebookAppId;
 
-            arParams[52] = new FbParameter(":FacebookAppSecret", FbDbType.VarChar, 100);
+            arParams[52] = new FbParameter(":FacebookAppSecret", FbDbType.VarChar);
             arParams[52].Value = facebookAppSecret;
 
             arParams[53] = new FbParameter(":GoogleClientId", FbDbType.VarChar, 100);
             arParams[53].Value = googleClientId;
 
-            arParams[54] = new FbParameter(":GoogleClientSecret", FbDbType.VarChar, 100);
+            arParams[54] = new FbParameter(":GoogleClientSecret", FbDbType.VarChar);
             arParams[54].Value = googleClientSecret;
 
             arParams[55] = new FbParameter(":TwitterConsumerKey", FbDbType.VarChar, 100);
             arParams[55].Value = twitterConsumerKey;
 
-            arParams[56] = new FbParameter(":TwitterConsumerSecret", FbDbType.VarChar, 100);
+            arParams[56] = new FbParameter(":TwitterConsumerSecret", FbDbType.VarChar);
             arParams[56].Value = twitterConsumerSecret;
 
             arParams[57] = new FbParameter(":MicrosoftClientId", FbDbType.VarChar, 100);
             arParams[57].Value = microsoftClientId;
 
-            arParams[58] = new FbParameter(":MicrosoftClientSecret", FbDbType.VarChar, 100);
+            arParams[58] = new FbParameter(":MicrosoftClientSecret", FbDbType.VarChar);
             arParams[58].Value = microsoftClientSecret;
 
             arParams[59] = new FbParameter(":PreferredHostName", FbDbType.VarChar, 250);
@@ -329,7 +329,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             arParams[68] = new FbParameter(":SMTPUser", FbDbType.VarChar, 500);
             arParams[68].Value = smtpUser;
 
-            arParams[69] = new FbParameter(":SMTPPassword", FbDbType.VarChar, 500);
+            arParams[69] = new FbParameter(":SMTPPassword", FbDbType.VarChar);
             arParams[69].Value = smtpPassword;
 
             arParams[70] = new FbParameter(":SMTPPreferredEncoding", FbDbType.VarChar, 500);
@@ -668,25 +668,25 @@ namespace cloudscribe.Core.Repositories.Firebird
             arParams[45] = new FbParameter("@FacebookAppId", FbDbType.VarChar, 100);
             arParams[45].Value = facebookAppId;
 
-            arParams[46] = new FbParameter("@FacebookAppSecret", FbDbType.VarChar, 100);
+            arParams[46] = new FbParameter("@FacebookAppSecret", FbDbType.VarChar);
             arParams[46].Value = facebookAppSecret;
 
             arParams[47] = new FbParameter("@GoogleClientId", FbDbType.VarChar, 100);
             arParams[47].Value = googleClientId;
 
-            arParams[48] = new FbParameter("@GoogleClientSecret", FbDbType.VarChar, 100);
+            arParams[48] = new FbParameter("@GoogleClientSecret", FbDbType.VarChar);
             arParams[48].Value = googleClientSecret;
 
             arParams[49] = new FbParameter("@TwitterConsumerKey", FbDbType.VarChar, 100);
             arParams[49].Value = twitterConsumerKey;
 
-            arParams[50] = new FbParameter("@TwitterConsumerSecret", FbDbType.VarChar, 100);
+            arParams[50] = new FbParameter("@TwitterConsumerSecret", FbDbType.VarChar);
             arParams[50].Value = twitterConsumerSecret;
 
             arParams[51] = new FbParameter("@MicrosoftClientId", FbDbType.VarChar, 100);
             arParams[51].Value = microsoftClientId;
 
-            arParams[52] = new FbParameter("@MicrosoftClientSecret", FbDbType.VarChar, 100);
+            arParams[52] = new FbParameter("@MicrosoftClientSecret", FbDbType.VarChar);
             arParams[52].Value = microsoftClientSecret;
 
             arParams[53] = new FbParameter("@PreferredHostName", FbDbType.VarChar, 250);
@@ -719,7 +719,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             arParams[62] = new FbParameter("@SMTPUser", FbDbType.VarChar, 500);
             arParams[62].Value = smtpUser;
 
-            arParams[63] = new FbParameter("@SMTPPassword", FbDbType.VarChar, 500);
+            arParams[63] = new FbParameter("@SMTPPassword", FbDbType.VarChar);
             arParams[63].Value = smtpPassword;
 
             arParams[64] = new FbParameter("@SMTPPreferredEncoding", FbDbType.VarChar, 500);

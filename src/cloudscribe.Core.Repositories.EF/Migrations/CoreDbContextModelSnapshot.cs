@@ -335,8 +335,7 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                     b.Property<string>("FacebookAppId")
                         .HasAnnotation("MaxLength", 100);
 
-                    b.Property<string>("FacebookAppSecret")
-                        .HasAnnotation("MaxLength", 100);
+                    b.Property<string>("FacebookAppSecret");
 
                     b.Property<string>("GoogleAnalyticsProfileId")
                         .HasAnnotation("MaxLength", 25);
@@ -344,8 +343,7 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                     b.Property<string>("GoogleClientId")
                         .HasAnnotation("MaxLength", 100);
 
-                    b.Property<string>("GoogleClientSecret")
-                        .HasAnnotation("MaxLength", 100);
+                    b.Property<string>("GoogleClientSecret");
 
                     b.Property<bool>("IsDataProtected")
                         .HasAnnotation("SqlServer:ColumnType", "bit")
@@ -390,8 +388,7 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                     b.Property<string>("MicrosoftClientId")
                         .HasAnnotation("MaxLength", 100);
 
-                    b.Property<string>("MicrosoftClientSecret")
-                        .HasAnnotation("MaxLength", 100);
+                    b.Property<string>("MicrosoftClientSecret");
 
                     b.Property<int>("MinReqNonAlphaChars")
                         .HasAnnotation("SqlServer:ColumnType", "int")
@@ -459,8 +456,7 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                         .IsRequired()
                         .HasAnnotation("MaxLength", 255);
 
-                    b.Property<string>("SmtpPassword")
-                        .HasAnnotation("MaxLength", 500);
+                    b.Property<string>("SmtpPassword");
 
                     b.Property<int>("SmtpPort")
                         .HasAnnotation("SqlServer:ColumnType", "int")
@@ -492,8 +488,7 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                     b.Property<string>("TwitterConsumerKey")
                         .HasAnnotation("MaxLength", 100);
 
-                    b.Property<string>("TwitterConsumerSecret")
-                        .HasAnnotation("MaxLength", 100);
+                    b.Property<string>("TwitterConsumerSecret");
 
                     b.Property<bool>("UseEmailForLogin")
                         .HasAnnotation("SqlServer:ColumnType", "bit")

@@ -330,7 +330,7 @@ namespace cloudscribe.Core.Repositories.EF
             ;
 
             entity.Property(p => p.FacebookAppSecret)
-            .HasMaxLength(100);
+            //.HasMaxLength(100);
             ;
 
             entity.Property(p => p.GoogleClientId)
@@ -338,7 +338,7 @@ namespace cloudscribe.Core.Repositories.EF
             ;
 
             entity.Property(p => p.GoogleClientSecret)
-            .HasMaxLength(100);
+            //.HasMaxLength(100);
             ;
 
             entity.Property(p => p.TwitterConsumerKey)
@@ -346,7 +346,7 @@ namespace cloudscribe.Core.Repositories.EF
             ;
 
             entity.Property(p => p.TwitterConsumerSecret)
-            .HasMaxLength(100);
+            //.HasMaxLength(100);
             ;
 
             entity.Property(p => p.MicrosoftClientId)
@@ -354,7 +354,7 @@ namespace cloudscribe.Core.Repositories.EF
             ;
 
             entity.Property(p => p.MicrosoftClientSecret)
-            .HasMaxLength(100);
+            //.HasMaxLength(100);
             ;
 
             entity.Property(p => p.PreferredHostName)
@@ -395,7 +395,7 @@ namespace cloudscribe.Core.Repositories.EF
             ;
 
             entity.Property(p => p.SmtpPassword)
-            .HasMaxLength(500);
+            //.HasMaxLength(500);
             ;
 
             entity.Property(p => p.SmtpPreferredEncoding)

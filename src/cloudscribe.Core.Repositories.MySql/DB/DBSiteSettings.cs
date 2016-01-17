@@ -444,25 +444,25 @@ namespace cloudscribe.Core.Repositories.MySql
             arParams[51] = new MySqlParameter("?FacebookAppId", MySqlDbType.VarChar, 100);
             arParams[51].Value = facebookAppId;
 
-            arParams[52] = new MySqlParameter("?FacebookAppSecret", MySqlDbType.VarChar, 100);
+            arParams[52] = new MySqlParameter("?FacebookAppSecret", MySqlDbType.Text);
             arParams[52].Value = facebookAppSecret;
 
             arParams[53] = new MySqlParameter("?GoogleClientId", MySqlDbType.VarChar, 100);
             arParams[53].Value = googleClientId;
 
-            arParams[54] = new MySqlParameter("?GoogleClientSecret", MySqlDbType.VarChar, 100);
+            arParams[54] = new MySqlParameter("?GoogleClientSecret", MySqlDbType.Text);
             arParams[54].Value = googleClientSecret;
 
             arParams[55] = new MySqlParameter("?TwitterConsumerKey", MySqlDbType.VarChar, 100);
             arParams[55].Value = twitterConsumerKey;
 
-            arParams[56] = new MySqlParameter("?TwitterConsumerSecret", MySqlDbType.VarChar, 100);
+            arParams[56] = new MySqlParameter("?TwitterConsumerSecret", MySqlDbType.Text);
             arParams[56].Value = twitterConsumerSecret;
 
             arParams[57] = new MySqlParameter("?MicrosoftClientId", MySqlDbType.VarChar, 100);
             arParams[57].Value = microsoftClientId;
 
-            arParams[58] = new MySqlParameter("?MicrosoftClientSecret", MySqlDbType.VarChar, 100);
+            arParams[58] = new MySqlParameter("?MicrosoftClientSecret", MySqlDbType.Text);
             arParams[58].Value = microsoftClientSecret;
 
             arParams[59] = new MySqlParameter("?PreferredHostName", MySqlDbType.VarChar, 250);
@@ -495,7 +495,7 @@ namespace cloudscribe.Core.Repositories.MySql
             arParams[68] = new MySqlParameter("?SmtpUser", MySqlDbType.VarChar, 500);
             arParams[68].Value = smtpUser;
 
-            arParams[69] = new MySqlParameter("?SmtpPassword", MySqlDbType.VarChar, 500);
+            arParams[69] = new MySqlParameter("?SmtpPassword", MySqlDbType.Text);
             arParams[69].Value = smtpPassword;
 
             arParams[70] = new MySqlParameter("?SmtpPreferredEncoding", MySqlDbType.VarChar, 20);
@@ -848,25 +848,25 @@ namespace cloudscribe.Core.Repositories.MySql
             arParams[51] = new MySqlParameter("?FacebookAppId", MySqlDbType.VarChar, 100);
             arParams[51].Value = facebookAppId;
 
-            arParams[52] = new MySqlParameter("?FacebookAppSecret", MySqlDbType.VarChar, 100);
+            arParams[52] = new MySqlParameter("?FacebookAppSecret", MySqlDbType.Text);
             arParams[52].Value = facebookAppSecret;
 
             arParams[53] = new MySqlParameter("?GoogleClientId", MySqlDbType.VarChar, 100);
             arParams[53].Value = googleClientId;
 
-            arParams[54] = new MySqlParameter("?GoogleClientSecret", MySqlDbType.VarChar, 100);
+            arParams[54] = new MySqlParameter("?GoogleClientSecret", MySqlDbType.Text);
             arParams[54].Value = googleClientSecret;
 
             arParams[55] = new MySqlParameter("?TwitterConsumerKey", MySqlDbType.VarChar, 100);
             arParams[55].Value = twitterConsumerKey;
 
-            arParams[56] = new MySqlParameter("?TwitterConsumerSecret", MySqlDbType.VarChar, 100);
+            arParams[56] = new MySqlParameter("?TwitterConsumerSecret", MySqlDbType.Text);
             arParams[56].Value = twitterConsumerSecret;
 
             arParams[57] = new MySqlParameter("?MicrosoftClientId", MySqlDbType.VarChar, 100);
             arParams[57].Value = microsoftClientId;
 
-            arParams[58] = new MySqlParameter("?MicrosoftClientSecret", MySqlDbType.VarChar, 100);
+            arParams[58] = new MySqlParameter("?MicrosoftClientSecret", MySqlDbType.Text);
             arParams[58].Value = microsoftClientSecret;
 
             arParams[59] = new MySqlParameter("?PreferredHostName", MySqlDbType.VarChar, 250);
@@ -899,7 +899,7 @@ namespace cloudscribe.Core.Repositories.MySql
             arParams[68] = new MySqlParameter("?SmtpUser", MySqlDbType.VarChar, 500);
             arParams[68].Value = smtpUser;
 
-            arParams[69] = new MySqlParameter("?SmtpPassword", MySqlDbType.VarChar, 500);
+            arParams[69] = new MySqlParameter("?SmtpPassword", MySqlDbType.Text);
             arParams[69].Value = smtpPassword;
 
             arParams[70] = new MySqlParameter("?SmtpPreferredEncoding", MySqlDbType.VarChar, 20);

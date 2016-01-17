@@ -8,7 +8,7 @@ using cloudscribe.Core.Repositories.EF;
 namespace cloudscribe.Core.Repositories.EF.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    [Migration("20151226183433_Initial")]
+    [Migration("20160117201011_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -315,6 +315,11 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                     b.Property<string>("CompanyStreetAddress2")
                         .HasAnnotation("MaxLength", 250);
 
+                    b.Property<DateTime>("CreatedUtc")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ColumnType", "datetime")
+                        .HasAnnotation("SqlServer:GeneratedValueSql", "getutcdate()");
+
                     b.Property<string>("DefaultEmailFromAddress")
                         .HasAnnotation("MaxLength", 100);
 
@@ -331,8 +336,7 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                     b.Property<string>("FacebookAppId")
                         .HasAnnotation("MaxLength", 100);
 
-                    b.Property<string>("FacebookAppSecret")
-                        .HasAnnotation("MaxLength", 100);
+                    b.Property<string>("FacebookAppSecret");
 
                     b.Property<string>("GoogleAnalyticsProfileId")
                         .HasAnnotation("MaxLength", 25);
@@ -340,8 +344,12 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                     b.Property<string>("GoogleClientId")
                         .HasAnnotation("MaxLength", 100);
 
-                    b.Property<string>("GoogleClientSecret")
-                        .HasAnnotation("MaxLength", 100);
+                    b.Property<string>("GoogleClientSecret");
+
+                    b.Property<bool>("IsDataProtected")
+                        .HasAnnotation("SqlServer:ColumnType", "bit")
+                        .HasAnnotation("SqlServer:DefaultValue", "0")
+                        .HasAnnotation("SqlServer:DefaultValueType", "System.Int32");
 
                     b.Property<bool>("IsServerAdminSite")
                         .HasAnnotation("SqlServer:ColumnType", "bit")
@@ -381,8 +389,7 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                     b.Property<string>("MicrosoftClientId")
                         .HasAnnotation("MaxLength", 100);
 
-                    b.Property<string>("MicrosoftClientSecret")
-                        .HasAnnotation("MaxLength", 100);
+                    b.Property<string>("MicrosoftClientSecret");
 
                     b.Property<int>("MinReqNonAlphaChars")
                         .HasAnnotation("SqlServer:ColumnType", "int")
@@ -450,8 +457,7 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                         .IsRequired()
                         .HasAnnotation("MaxLength", 255);
 
-                    b.Property<string>("SmtpPassword")
-                        .HasAnnotation("MaxLength", 500);
+                    b.Property<string>("SmtpPassword");
 
                     b.Property<int>("SmtpPort")
                         .HasAnnotation("SqlServer:ColumnType", "int")
@@ -483,8 +489,7 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                     b.Property<string>("TwitterConsumerKey")
                         .HasAnnotation("MaxLength", 100);
 
-                    b.Property<string>("TwitterConsumerSecret")
-                        .HasAnnotation("MaxLength", 100);
+                    b.Property<string>("TwitterConsumerSecret");
 
                     b.Property<bool>("UseEmailForLogin")
                         .HasAnnotation("SqlServer:ColumnType", "bit")

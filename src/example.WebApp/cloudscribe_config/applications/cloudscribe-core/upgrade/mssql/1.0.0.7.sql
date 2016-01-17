@@ -198,25 +198,25 @@ GO
 ALTER TABLE [dbo].mp_Sites ADD FacebookAppId nvarchar(100) NULL 
 GO
 
-ALTER TABLE [dbo].mp_Sites ADD FacebookAppSecret nvarchar(100) NULL 
+ALTER TABLE [dbo].mp_Sites ADD FacebookAppSecret nvarchar(max) NULL 
 GO
 
 ALTER TABLE [dbo].mp_Sites ADD GoogleClientId nvarchar(100) NULL 
 GO
 
-ALTER TABLE [dbo].mp_Sites ADD GoogleClientSecret nvarchar(100) NULL 
+ALTER TABLE [dbo].mp_Sites ADD GoogleClientSecret nvarchar(max) NULL 
 GO
 
 ALTER TABLE [dbo].mp_Sites ADD TwitterConsumerKey nvarchar(100) NULL 
 GO
 
-ALTER TABLE [dbo].mp_Sites ADD TwitterConsumerSecret nvarchar(100) NULL 
+ALTER TABLE [dbo].mp_Sites ADD TwitterConsumerSecret nvarchar(max) NULL 
 GO
 
 ALTER TABLE [dbo].mp_Sites ADD MicrosoftClientId nvarchar(100) NULL 
 GO
 
-ALTER TABLE [dbo].mp_Sites ADD MicrosoftClientSecret nvarchar(100) NULL 
+ALTER TABLE [dbo].mp_Sites ADD MicrosoftClientSecret nvarchar(max) NULL 
 GO
 
 ALTER TABLE [dbo].mp_Sites ADD PreferredHostName nvarchar(250) NULL 
@@ -249,7 +249,7 @@ GO
 ALTER TABLE [dbo].mp_Sites ADD SmtpUser nvarchar(500) NULL 
 GO
 
-ALTER TABLE [dbo].mp_Sites ADD SmtpPassword nvarchar(500) NULL 
+ALTER TABLE [dbo].mp_Sites ADD SmtpPassword nvarchar(max) NULL 
 GO
 
 ALTER TABLE [dbo].mp_Sites ADD SmtpPreferredEncoding nvarchar(20) NULL 
@@ -323,13 +323,13 @@ Last Modified: 		2015-10-31
 @CompanyPhone nvarchar(20),
 @CompanyFax nvarchar(20),
 @FacebookAppId nvarchar(100),
-@FacebookAppSecret nvarchar(100),
+@FacebookAppSecret nvarchar(max),
 @GoogleClientId nvarchar(100),
-@GoogleClientSecret nvarchar(100),
+@GoogleClientSecret nvarchar(max),
 @TwitterConsumerKey nvarchar(100),
-@TwitterConsumerSecret nvarchar(100),
+@TwitterConsumerSecret nvarchar(max),
 @MicrosoftClientId nvarchar(100),
-@MicrosoftClientSecret nvarchar(100),
+@MicrosoftClientSecret nvarchar(max),
 @PreferredHostName nvarchar(250),
 @SiteFolderName nvarchar(50),
 @AddThisDotComUsername nvarchar(50),
@@ -340,7 +340,7 @@ Last Modified: 		2015-10-31
 @SmtpServer nvarchar(200),
 @SmtpPort int,
 @SmtpUser nvarchar(500),
-@SmtpPassword nvarchar(500),
+@SmtpPassword nvarchar(max),
 @SmtpPreferredEncoding nvarchar(20),
 @SmtpRequiresAuth bit,
 @SmtpUseSsl bit,
@@ -571,13 +571,13 @@ Last Modified:	2009-10-16
 @CompanyPhone nvarchar(20),
 @CompanyFax nvarchar(20),
 @FacebookAppId nvarchar(100),
-@FacebookAppSecret nvarchar(100),
+@FacebookAppSecret nvarchar(max),
 @GoogleClientId nvarchar(100),
-@GoogleClientSecret nvarchar(100),
+@GoogleClientSecret nvarchar(max),
 @TwitterConsumerKey nvarchar(100),
-@TwitterConsumerSecret nvarchar(100),
+@TwitterConsumerSecret nvarchar(max),
 @MicrosoftClientId nvarchar(100),
-@MicrosoftClientSecret nvarchar(100),
+@MicrosoftClientSecret nvarchar(max),
 @PreferredHostName nvarchar(250),
 @SiteFolderName nvarchar(50),
 @AddThisDotComUsername nvarchar(50),
@@ -588,7 +588,7 @@ Last Modified:	2009-10-16
 @SmtpServer nvarchar(200),
 @SmtpPort int,
 @SmtpUser nvarchar(500),
-@SmtpPassword nvarchar(500),
+@SmtpPassword nvarchar(max),
 @SmtpPreferredEncoding nvarchar(20),
 @SmtpRequiresAuth bit,
 @SmtpUseSsl bit,

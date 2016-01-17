@@ -447,25 +447,25 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[51] = new NpgsqlParameter("facebookappid", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
             arParams[51].Value = facebookAppId;
 
-            arParams[52] = new NpgsqlParameter("facebookappsecret", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
+            arParams[52] = new NpgsqlParameter("facebookappsecret", NpgsqlTypes.NpgsqlDbType.Text);
             arParams[52].Value = facebookAppSecret;
 
             arParams[53] = new NpgsqlParameter("googleclientid", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
             arParams[53].Value = googleClientId;
 
-            arParams[54] = new NpgsqlParameter("googleclientsecret", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
+            arParams[54] = new NpgsqlParameter("googleclientsecret", NpgsqlTypes.NpgsqlDbType.Text);
             arParams[54].Value = googleClientSecret;
 
             arParams[55] = new NpgsqlParameter("twitterconsumerkey", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
             arParams[55].Value = twitterConsumerKey;
 
-            arParams[56] = new NpgsqlParameter("twitterconsumersecret", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
+            arParams[56] = new NpgsqlParameter("twitterconsumersecret", NpgsqlTypes.NpgsqlDbType.Text);
             arParams[56].Value = twitterConsumerSecret;
 
             arParams[57] = new NpgsqlParameter("microsoftclientid", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
             arParams[57].Value = microsoftClientId;
 
-            arParams[58] = new NpgsqlParameter("microsoftclientsecret", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
+            arParams[58] = new NpgsqlParameter("microsoftclientsecret", NpgsqlTypes.NpgsqlDbType.Text);
             arParams[58].Value = microsoftClientSecret;
 
             arParams[59] = new NpgsqlParameter("preferredhostname", NpgsqlTypes.NpgsqlDbType.Varchar, 250);
@@ -498,7 +498,7 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[68] = new NpgsqlParameter("smtpuser", NpgsqlTypes.NpgsqlDbType.Varchar, 500);
             arParams[68].Value = smtpUser;
 
-            arParams[69] = new NpgsqlParameter("smtppassword", NpgsqlTypes.NpgsqlDbType.Varchar, 500);
+            arParams[69] = new NpgsqlParameter("smtppassword", NpgsqlTypes.NpgsqlDbType.Text);
             arParams[69].Value = smtpPassword;
 
             arParams[70] = new NpgsqlParameter("smtppreferredencoding", NpgsqlTypes.NpgsqlDbType.Varchar, 20);
@@ -858,25 +858,25 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[51] = new NpgsqlParameter("facebookappid", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
             arParams[51].Value = facebookAppId;
 
-            arParams[52] = new NpgsqlParameter("facebookappsecret", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
+            arParams[52] = new NpgsqlParameter("facebookappsecret", NpgsqlTypes.NpgsqlDbType.Text);
             arParams[52].Value = facebookAppSecret;
 
             arParams[53] = new NpgsqlParameter("googleclientid", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
             arParams[53].Value = googleClientId;
 
-            arParams[54] = new NpgsqlParameter("googleclientsecret", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
+            arParams[54] = new NpgsqlParameter("googleclientsecret", NpgsqlTypes.NpgsqlDbType.Text);
             arParams[54].Value = googleClientSecret;
 
             arParams[55] = new NpgsqlParameter("twitterconsumerkey", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
             arParams[55].Value = twitterConsumerKey;
 
-            arParams[56] = new NpgsqlParameter("twitterconsumersecret", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
+            arParams[56] = new NpgsqlParameter("twitterconsumersecret", NpgsqlTypes.NpgsqlDbType.Text);
             arParams[56].Value = twitterConsumerSecret;
 
             arParams[57] = new NpgsqlParameter("microsoftclientid", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
             arParams[57].Value = microsoftClientId;
 
-            arParams[58] = new NpgsqlParameter("microsoftclientsecret", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
+            arParams[58] = new NpgsqlParameter("microsoftclientsecret", NpgsqlTypes.NpgsqlDbType.Text);
             arParams[58].Value = microsoftClientSecret;
 
             arParams[59] = new NpgsqlParameter("preferredhostname", NpgsqlTypes.NpgsqlDbType.Varchar, 250);
@@ -909,7 +909,7 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[68] = new NpgsqlParameter("smtpuser", NpgsqlTypes.NpgsqlDbType.Varchar, 500);
             arParams[68].Value = smtpUser;
 
-            arParams[69] = new NpgsqlParameter("smtppassword", NpgsqlTypes.NpgsqlDbType.Varchar, 500);
+            arParams[69] = new NpgsqlParameter("smtppassword", NpgsqlTypes.NpgsqlDbType.Text);
             arParams[69].Value = smtpPassword;
 
             arParams[70] = new NpgsqlParameter("smtppreferredencoding", NpgsqlTypes.NpgsqlDbType.Varchar, 20);
