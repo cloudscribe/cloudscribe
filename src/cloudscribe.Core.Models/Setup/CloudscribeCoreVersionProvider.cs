@@ -23,7 +23,7 @@ namespace cloudscribe.Core.Models
             // schema script version script that will be run for cloudscribe-core
             // this allows us to work on the next version script without triggering it
             // to execute until we set this version to match the new script version
-          get { return new Version(1, 0, 0, 8); }
+          get { return new Version(1, 0, 0, 9); }
         }
     }
 

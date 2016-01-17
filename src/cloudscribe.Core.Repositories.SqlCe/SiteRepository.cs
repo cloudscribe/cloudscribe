@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2015-12-28
+// Last Modified:			2016-01-17
 // 
 
 
@@ -136,8 +136,9 @@ namespace cloudscribe.Core.Repositories.SqlCe
                     site.SmtpPreferredEncoding,
                     site.SmtpRequiresAuth,
                     site.SmtpUseSsl,
-                    site.RequireApprovalBeforeLogin
-
+                    site.RequireApprovalBeforeLogin,
+                    site.IsDataProtected,
+                    site.CreatedUtc
                     );
 
                 result = site.SiteId > -1;
@@ -220,7 +221,8 @@ namespace cloudscribe.Core.Repositories.SqlCe
                     site.SmtpPreferredEncoding,
                     site.SmtpRequiresAuth,
                     site.SmtpUseSsl,
-                    site.RequireApprovalBeforeLogin
+                    site.RequireApprovalBeforeLogin,
+                    site.IsDataProtected
 
                     );
 

@@ -8,9 +8,10 @@ using cloudscribe.Core.Repositories.EF;
 namespace cloudscribe.Core.Repositories.EF.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    partial class CoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20160117160823_add-dataprotection")]
+    partial class adddataprotection
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "7.0.0-rc1-16348")

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2016-01-02
+// Last Modified:			2016-01-17
 //
 
 using cloudscribe.DbHelpers;
@@ -114,11 +114,13 @@ namespace cloudscribe.Core.Repositories.Firebird
             bool smtpRequiresAuth,
             bool smtpUseSsl,
             bool requireApprovalBeforeLogin,
+            bool isDataProtected,
+            DateTime createdUtc,
             CancellationToken cancellationToken
             )
         {
             
-            FbParameter[] arParams = new FbParameter[74];
+            FbParameter[] arParams = new FbParameter[76];
 
             arParams[0] = new FbParameter(":SiteGuid", FbDbType.VarChar, 36);
             arParams[0].Value = siteGuid.ToString();
@@ -341,7 +343,14 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             arParams[73] = new FbParameter(":RequireApprovalBeforeLogin", FbDbType.SmallInt);
             arParams[73].Value = requireApprovalBeforeLogin ? 1 : 0;
+
+            arParams[74] = new FbParameter(":IsDataProtected", FbDbType.SmallInt);
+            arParams[74].Value = isDataProtected ? 1 : 0;
+
+            arParams[75] = new FbParameter(":CreatedUtc", FbDbType.TimeStamp);
+            arParams[75].Value = createdUtc;
             
+
             object result = await AdoHelper.ExecuteScalarAsync(
                 writeConnectionString,
                 CommandType.StoredProcedure,
@@ -434,6 +443,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             bool smtpRequiresAuth,
             bool smtpUseSsl,
             bool requireApprovalBeforeLogin,
+            bool isDataProtected,
             CancellationToken cancellationToken
             )
         {
@@ -513,11 +523,12 @@ namespace cloudscribe.Core.Repositories.Firebird
             sqlCommand.Append("SmtpPreferredEncoding = @SmtpPreferredEncoding, ");
             sqlCommand.Append("SmtpRequiresAuth = @SmtpRequiresAuth, ");
             sqlCommand.Append("SmtpUseSsl = @SmtpUseSsl, ");
+            sqlCommand.Append("IsDataProtected = @IsDataProtected, ");
             sqlCommand.Append("RequireApprovalBeforeLogin = @RequireApprovalBeforeLogin ");
 
             sqlCommand.Append(" WHERE SiteID = @SiteID ;");
 
-            FbParameter[] arParams = new FbParameter[74];
+            FbParameter[] arParams = new FbParameter[75];
 
             arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
             arParams[0].Value = siteId;
@@ -740,6 +751,9 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             arParams[73] = new FbParameter("@DefaultEmailFromAddress", FbDbType.VarChar, 100);
             arParams[73].Value = defaultEmailFromAddress;
+
+            arParams[74] = new FbParameter(":IsDataProtected", FbDbType.SmallInt);
+            arParams[74].Value = isDataProtected ? 1 : 0;
 
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(

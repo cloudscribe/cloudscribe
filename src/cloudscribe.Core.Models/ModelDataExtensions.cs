@@ -335,6 +335,13 @@ namespace cloudscribe.Core.Models.DataExtensions
             site.SmtpRequiresAuth = Convert.ToBoolean(reader["SmtpRequiresAuth"]);
             site.SmtpUseSsl = Convert.ToBoolean(reader["SmtpUseSsl"]);
 
+            site.IsDataProtected = Convert.ToBoolean(reader["IsDataProtected"]);
+            if(reader["CreatedUtc"] != DBNull.Value)
+            {
+                site.CreatedUtc = Convert.ToDateTime(reader["CreatedUtc"]);
+            }
+            
+
         }
 
 

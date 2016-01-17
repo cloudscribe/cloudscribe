@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2016-01-01
+// Last Modified:			2016-01-17
 //
 
 using cloudscribe.DbHelpers;
@@ -114,6 +114,8 @@ namespace cloudscribe.Core.Repositories.pgsql
             bool smtpRequiresAuth,
             bool smtpUseSsl,
             bool requireApprovalBeforeLogin,
+            bool isDataProtected,
+            DateTime createdUtc,
             CancellationToken cancellationToken
 
             )
@@ -195,6 +197,9 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append("smtppreferredencoding, ");
             sqlCommand.Append("smtprequiresauth, ");
             sqlCommand.Append("smtpusessl, ");
+            sqlCommand.Append("isdataprotected, ");
+            sqlCommand.Append("createdutc, ");
+
             sqlCommand.Append("requireapprovalbeforelogin ");
 
 
@@ -276,13 +281,15 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append(":smtppreferredencoding, ");
             sqlCommand.Append(":smtprequiresauth, ");
             sqlCommand.Append(":smtpusessl, ");
+            sqlCommand.Append(":isdataprotected, ");
+            sqlCommand.Append(":createdutc, ");
             sqlCommand.Append(":requireapprovalbeforelogin ");
 
             sqlCommand.Append(") ");
             sqlCommand.Append(";");
             sqlCommand.Append(" SELECT CURRVAL('mp_sites_siteid_seq');");
 
-            NpgsqlParameter[] arParams = new NpgsqlParameter[74];
+            NpgsqlParameter[] arParams = new NpgsqlParameter[76];
 
             arParams[0] = new NpgsqlParameter("siteguid", NpgsqlTypes.NpgsqlDbType.Char, 36);
             arParams[0].Value = siteGuid.ToString();
@@ -505,7 +512,13 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             arParams[73] = new NpgsqlParameter("requireapprovalbeforelogin", NpgsqlTypes.NpgsqlDbType.Boolean);
             arParams[73].Value = requireApprovalBeforeLogin;
-            
+
+            arParams[74] = new NpgsqlParameter("isdataprotected", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[74].Value = isDataProtected;
+
+            arParams[75] = new NpgsqlParameter("createdutc", NpgsqlTypes.NpgsqlDbType.Timestamp);
+            arParams[75].Value = createdUtc;
+
             object result = await AdoHelper.ExecuteScalarAsync(
                 writeConnectionString,
                 CommandType.Text,
@@ -595,6 +608,7 @@ namespace cloudscribe.Core.Repositories.pgsql
             bool smtpRequiresAuth,
             bool smtpUseSsl,
             bool requireApprovalBeforeLogin,
+            bool isDataProtected,
             CancellationToken cancellationToken
 
             )
@@ -677,6 +691,7 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append("smtppreferredencoding = :smtppreferredencoding, ");
             sqlCommand.Append("smtprequiresauth = :smtprequiresauth, ");
             sqlCommand.Append("smtpusessl = :smtpusessl, ");
+            sqlCommand.Append("isdataprotected = :isdataprotected, ");
             sqlCommand.Append("requireapprovalbeforelogin = :requireapprovalbeforelogin ");
 
 
@@ -685,7 +700,7 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append("siteid = :siteid ");
             sqlCommand.Append(";");
 
-            NpgsqlParameter[] arParams = new NpgsqlParameter[74];
+            NpgsqlParameter[] arParams = new NpgsqlParameter[75];
 
             arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
             arParams[0].Value = siteId;
@@ -908,7 +923,10 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             arParams[73] = new NpgsqlParameter("requireapprovalbeforelogin", NpgsqlTypes.NpgsqlDbType.Boolean);
             arParams[73].Value = requireApprovalBeforeLogin;
-            
+
+            arParams[74] = new NpgsqlParameter("isdataprotected", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[74].Value = isDataProtected;
+
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 CommandType.Text,
