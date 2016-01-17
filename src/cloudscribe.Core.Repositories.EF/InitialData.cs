@@ -24,11 +24,22 @@ namespace cloudscribe.Core.Repositories.EF
             {
                 var db = serviceScope.ServiceProvider.GetService<CoreDbContext>();
 
-                bool didCreatedDb = await db.Database.EnsureCreatedAsync();
-                if(!didCreatedDb)
+                // ran into an error when I made a change to the model and tried to apply the migration
+                // found the reason was this line:
+                //bool didCreatedDb = await db.Database.EnsureCreatedAsync();
+                // according to https://github.com/aspnet/EntityFramework/issues/3160
+                // EnsureCreatedAsync totally bypasses migrations and just creates the schema for you, you can't mix this with migrations. 
+                // EnsureCreated is designed for testing or rapid prototyping where you are ok with dropping and re-creating 
+                // the database each time. If you are using migrations and want to have them automatically applied on app start, 
+                // then you can use context.Database.Migrate() instead.
+                
+                try
                 {
                     await db.Database.MigrateAsync();
                 }
+                catch { }
+                    
+              
                 
 
                 await EnsureData(db);
