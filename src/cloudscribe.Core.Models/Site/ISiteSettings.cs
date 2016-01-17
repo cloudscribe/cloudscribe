@@ -114,6 +114,8 @@ namespace cloudscribe.Core.Models
         string ApiKeyExtra4 { get; set; } 
         string ApiKeyExtra5 { get; set; }
 
+        //bool IsDataProtected { get; set; }
+        //DateTime CreatedUtc { get; set; }
    
     }
 }
