@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-12-19
+// Last Modified:			2016-01-18
 // 
 
 using cloudscribe.Core.Models;
@@ -648,6 +648,111 @@ namespace cloudscribe.Core.Web.Controllers
             }
 
             return RedirectToAction("CompanyInfo");
+
+        }
+
+        [HttpGet]
+        [Authorize(Policy = "AdminPolicy")]
+        public async Task<IActionResult> MailSettings(
+            Guid? siteGuid,
+            int slp = 1)
+        {
+            ISiteSettings selectedSite;
+            // only server admin site can edit other sites settings
+            if ((siteGuid.HasValue) && (siteGuid.Value != Guid.Empty) && (siteGuid.Value != siteManager.CurrentSite.SiteGuid) && (siteManager.CurrentSite.IsServerAdminSite))
+            {
+                selectedSite = await siteManager.Fetch(siteGuid.Value);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - Email Settings", selectedSite.SiteName);
+            }
+            else
+            {
+                selectedSite = siteManager.CurrentSite;
+                ViewData["Title"] = "Email Settings";
+            }
+
+            MailSettingsViewModel model = new MailSettingsViewModel();
+            model.SiteGuid = selectedSite.SiteGuid;
+            model.SiteId = selectedSite.SiteId;
+            model.DefaultEmailFromAddress = selectedSite.DefaultEmailFromAddress;
+            model.SmtpPassword = selectedSite.SmtpPassword;
+            model.SmtpPort = selectedSite.SmtpPort;
+            model.SmtpPreferredEncoding = selectedSite.SmtpPreferredEncoding;
+            model.SmtpRequiresAuth = selectedSite.SmtpRequiresAuth;
+            model.SmtpServer = selectedSite.SmtpServer;
+            model.SmtpUser = selectedSite.SmtpUser;
+            model.SmtpUseSsl = selectedSite.SmtpUseSsl;
+            
+            return View(model);
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Policy = "AdminPolicy")]
+        public async Task<ActionResult> MailSettings(MailSettingsViewModel model)
+        {
+            ISiteSettings selectedSite = null;
+            if (model.SiteGuid == siteManager.CurrentSite.SiteGuid)
+            {
+                selectedSite = siteManager.CurrentSite;
+                ViewData["Title"] = "Email Settings";
+            }
+            else if (siteManager.CurrentSite.IsServerAdminSite)
+            {
+                selectedSite = await siteManager.Fetch(model.SiteGuid);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - Email Settings", selectedSite.SiteName);
+            }
+
+            if (selectedSite == null)
+            {
+                this.AlertDanger("oops something went wrong.", true);
+
+                return RedirectToAction("Index");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            if (model.SiteGuid == Guid.Empty)
+            {
+                this.AlertDanger("oops something went wrong, site was not found.", true);
+
+                return RedirectToAction("Index");
+            }
+
+            //model.SiteId = Site.SiteSettings.SiteId;
+            //model.SiteGuid = Site.SiteSettings.SiteGuid;
+
+            selectedSite.DefaultEmailFromAddress = model.DefaultEmailFromAddress;
+            selectedSite.SmtpPassword = model.SmtpPassword;
+            selectedSite.SmtpPort = model.SmtpPort;
+            selectedSite.SmtpPreferredEncoding = model.SmtpPreferredEncoding;
+            selectedSite.SmtpRequiresAuth = model.SmtpRequiresAuth;
+            selectedSite.SmtpServer = model.SmtpServer;
+            selectedSite.SmtpUser = model.SmtpUser;
+            selectedSite.SmtpUseSsl = model.SmtpUseSsl;
+            
+
+            bool result = await siteManager.Save(selectedSite);
+
+            if (result)
+            {
+                this.AlertSuccess(string.Format("Email Settings for <b>{0}</b> wwas successfully updated.",
+                            selectedSite.SiteName), true);
+            }
+
+
+            if ((siteManager.CurrentSite.IsServerAdminSite)
+                && (siteManager.CurrentSite.SiteGuid != selectedSite.SiteGuid)
+                )
+            {
+
+                return RedirectToAction("MailSettings", new { siteGuid = model.SiteGuid });
+            }
+
+            return RedirectToAction("MailSettings");
 
         }
 

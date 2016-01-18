@@ -8,37 +8,29 @@
 <div class="row">
     <div class="col-md-10 col-md-push-2">
         <h2>@ViewBag.Title</h2>
-        <form method="post" class="form-horizontal" role="form" asp-antiforgery="true">
-            <div class="form-horizontal">
-                <div asp-validation-summary="ValidationSummary.All" class="text-danger"></div>
-                <input asp-for="SiteGuid" type="hidden" />
-                <div class="form-group">
-                    <label asp-for="RegistrationPreamble" class="col-md-2 control-label"></label>
-                    <div class="col-md-10">
-                        <textarea class="form-control" rows="5" asp-for="RegistrationPreamble"
-                                  data-ckeditor-unobtrusive=""
-                                  data-ckeditor-unobtrusive-config-url="@Url.Content(ckOptions.CustomConfigPath)"
-                                  data-ckeditor-unobtrusive-config-toolbar="Full"
-                                  data-ckeditor-unobtrusive-config-language="@System.Globalization.CultureInfo.CurrentUICulture.Name"></textarea>
-                        <span asp-validation-for="RegistrationPreamble" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label asp-for="RegistrationAgreement" class="col-md-2 control-label"></label>
-                    <div class="col-md-10">
-                        <textarea class="form-control" rows="5" asp-for="RegistrationAgreement"
-                                  data-ckeditor-unobtrusive=""
-                                  data-ckeditor-unobtrusive-config-url="@Url.Content(ckOptions.CustomConfigPath)"
-                                  data-ckeditor-unobtrusive-config-toolbar="Full"
-                                  data-ckeditor-unobtrusive-config-language="@System.Globalization.CultureInfo.CurrentUICulture.Name"></textarea>
-                        <span asp-validation-for="RegistrationAgreement" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <input type="submit" value="Save" class="btn btn-default" />
-                    </div>
-                </div>
+        <form method="post" role="form" asp-antiforgery="true">
+            <div asp-validation-summary="ValidationSummary.All" class="text-danger"></div>
+            <input asp-for="SiteGuid" type="hidden" />
+            <div class="form-group">
+                <label asp-for="RegistrationPreamble" class="control-label"></label>
+                <textarea class="form-control" rows="5" asp-for="RegistrationPreamble"
+                          data-ckeditor-unobtrusive=""
+                          data-ckeditor-unobtrusive-config-url="@Url.Content(ckOptions.CustomConfigPath)"
+                          data-ckeditor-unobtrusive-config-toolbar="Full"
+                          data-ckeditor-unobtrusive-config-language="@System.Globalization.CultureInfo.CurrentUICulture.Name"></textarea>
+                <span asp-validation-for="RegistrationPreamble" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RegistrationAgreement" class="control-label"></label>
+                <textarea class="form-control" rows="5" asp-for="RegistrationAgreement"
+                          data-ckeditor-unobtrusive=""
+                          data-ckeditor-unobtrusive-config-url="@Url.Content(ckOptions.CustomConfigPath)"
+                          data-ckeditor-unobtrusive-config-toolbar="Full"
+                          data-ckeditor-unobtrusive-config-language="@System.Globalization.CultureInfo.CurrentUICulture.Name"></textarea>
+                <span asp-validation-for="RegistrationAgreement" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-default" />
             </div>
         </form>
     </div>
@@ -47,21 +39,21 @@
     </div>
 </div>
 @section Scripts {
-<environment names="Development">
-    <script src="~/jsdev/cloudscribe-cascade-unobtrusive.js"></script>
-    <script src="~/lib/ckeditor/ckeditor.js"></script>
-    <script src="~/lib/ckeditor/adapters/jquery.js"></script>
-    <script src="~/jsdev/cloudscribe-ckeditor-unobtrusive.js"></script>
-    <script src="~/lib/metisMenu/dist/metisMenu.min.js"></script>
-    <script src="~/jsdev/cloudscribe-sidemenu.js"></script>
-</environment>
-<environment names="Staging,Production">
-    <script src="~/js/cloudscribe-cascade-unobtrusive.js"></script>
-    <script src="~/js/ckeditor/ckeditor.js"></script>
-    <script src="~/js/ckeditor/adapters/jquery.js"></script>
-    <script src="~/js/cloudscribe-ckeditor-unobtrusive.js"></script>
-    <script src="~/js/metisMenu/dist/metisMenu.min.js"></script>
-    <script src="~/js/cloudscribe-sidemenu.js"></script>
-</environment>
-@{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <environment names="Development">
+        <script src="~/jsdev/cloudscribe-cascade-unobtrusive.js"></script>
+        <script src="~/lib/ckeditor/ckeditor.js"></script>
+        <script src="~/lib/ckeditor/adapters/jquery.js"></script>
+        <script src="~/jsdev/cloudscribe-ckeditor-unobtrusive.js"></script>
+        <script src="~/lib/metisMenu/dist/metisMenu.min.js"></script>
+        <script src="~/jsdev/cloudscribe-sidemenu.js"></script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="~/js/cloudscribe-cascade-unobtrusive.js"></script>
+        <script src="~/js/ckeditor/ckeditor.js"></script>
+        <script src="~/js/ckeditor/adapters/jquery.js"></script>
+        <script src="~/js/cloudscribe-ckeditor-unobtrusive.js"></script>
+        <script src="~/js/metisMenu/dist/metisMenu.min.js"></script>
+        <script src="~/js/cloudscribe-sidemenu.js"></script>
+    </environment>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }

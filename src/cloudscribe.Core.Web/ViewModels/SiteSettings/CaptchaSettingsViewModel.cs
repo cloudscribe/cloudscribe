@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-09-11
+// Last Modified:			2016-01-18
 // 
 
 //using cloudscribe.Configuration.DataAnnotations;
@@ -35,11 +35,13 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         
         //[Display(Name = "RequireCaptchaOnRegistration", ResourceType = typeof(CommonResources))]
         public bool RequireCaptchaOnRegistration { get; set; } = false;
-        
+
         //[Display(Name = "RecaptchaPublicKey", ResourceType = typeof(CommonResources))]
+        [Display(Name = "Public Key")]
         public string RecaptchaPublicKey { get; set; } = string.Empty;
-        
+
         //[Display(Name = "RecaptchaPrivateKey", ResourceType = typeof(CommonResources))]
+        [Display(Name = "Private Key")]
         public string RecaptchaPrivateKey { get; set; } = string.Empty;
 
 

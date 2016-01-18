@@ -264,7 +264,7 @@ namespace example.WebApp
             loggerFactory.AddConsole(minLevel: LogLevel.Warning);
             
             // a customizable filter for logging
-            LogLevel minimumLevel = LogLevel.Information;
+            LogLevel minimumLevel = LogLevel.Warning;
             List<string> excludedLoggers = new List<string>();
             // add exclusions to remove noise in the logs
 

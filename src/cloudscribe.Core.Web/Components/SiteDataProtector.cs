@@ -1,0 +1,213 @@
+﻿// Copyright (c) Source Tree Solutions, LLC. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+// Author:					Joe Audette
+// Created:					2016-01-18
+// Last Modified:			2016-01-18
+// 
+
+
+using cloudscribe.Core.Models;
+using Microsoft.AspNet.DataProtection;
+using Microsoft.Extensions.Logging;
+using System;
+
+namespace cloudscribe.Core.Web.Components
+{
+    public class SiteDataProtector
+    {
+        public SiteDataProtector(
+            IDataProtectionProvider dataProtectionProvider,
+            ILogger<SiteDataProtector> logger)
+        {
+            rawProtector = dataProtectionProvider.CreateProtector("cloudscribe.Core.Models.SiteSettings");
+            log = logger;
+        }
+
+        private ILogger log;
+        private IDataProtector rawProtector = null;
+        private IPersistedDataProtector dataProtector
+        {
+            get { return rawProtector as IPersistedDataProtector; }
+        }
+
+        public bool Protect(ISiteSettings site)
+        {
+            if (site == null) { throw new ArgumentNullException("you must pass in an implementation of ISiteSettings"); }
+            if (site.IsDataProtected) { return true; }
+            if (dataProtector == null) { return false; }
+
+            //if (site.FacebookAppSecret.Length > 0)
+            //{
+            //    try
+            //    {
+            //        site.FacebookAppSecret = dataProtector.PersistentProtect(site.FacebookAppSecret);
+            //    }
+            //    catch(System.Security.Cryptography.CryptographicException ex)
+            //    {
+            //        log.LogError("data protection error", ex);
+            //    }
+
+            //}
+
+            //if (site.GoogleClientSecret.Length > 0)
+            //{
+            //    try
+            //    {
+            //        site.GoogleClientSecret = dataProtector.PersistentProtect(site.GoogleClientSecret);
+            //    }
+            //    catch (System.Security.Cryptography.CryptographicException ex)
+            //    {
+            //        log.LogError("data protection error", ex);
+            //    }
+
+            //}
+
+            if (site.MicrosoftClientSecret.Length > 0)
+            {
+                try
+                {
+                    site.MicrosoftClientSecret = dataProtector.PersistentProtect(site.MicrosoftClientSecret);
+                }
+                catch (System.Security.Cryptography.CryptographicException ex)
+                {
+                    log.LogError("data protection error", ex);
+                }
+
+            }
+
+            //if (site.TwitterConsumerSecret.Length > 0)
+            //{
+            //    try
+            //    {
+            //        site.TwitterConsumerSecret = dataProtector.PersistentProtect(site.TwitterConsumerSecret);
+            //    }
+            //    catch (System.Security.Cryptography.CryptographicException ex)
+            //    {
+            //        log.LogError("data protection error", ex);
+            //    }
+
+            //}
+
+            //if (site.SmtpPassword.Length > 0)
+            //{
+            //    try
+            //    {
+            //        site.SmtpPassword = dataProtector.PersistentProtect(site.SmtpPassword);
+            //    }
+            //    catch (System.Security.Cryptography.CryptographicException ex)
+            //    {
+            //        log.LogError("data protection error", ex);
+            //    }
+
+            //}
+
+            site.IsDataProtected = true;
+
+            return true;
+        }
+
+        public bool UnProtect(ISiteSettings site)
+        {
+            bool requiresMigration = false;
+            bool wasRevoked = false;
+            if (site == null) { throw new ArgumentNullException("you must pass in an implementation of ISiteSettings"); }
+            if (!site.IsDataProtected) { return false; }
+
+            //if(site.FacebookAppSecret.Length > 0)
+            //{
+            //    try
+            //    {
+            //        site.FacebookAppSecret = dataProtector.PersistentUnprotect(site.FacebookAppSecret, out requiresMigration, out wasRevoked);
+            //    }
+            //    catch (System.Security.Cryptography.CryptographicException ex)
+            //    {
+            //        log.LogError("data protection error", ex);
+            //    }
+            //    catch (FormatException ex)
+            //    {
+            //        log.LogError("data protection error", ex);
+            //    }
+
+            //}
+
+            //if (site.GoogleClientSecret.Length > 0)
+            //{
+            //    try
+            //    {
+            //        site.GoogleClientSecret = dataProtector.PersistentUnprotect(site.GoogleClientSecret, out requiresMigration, out wasRevoked);
+            //    }
+            //    catch (System.Security.Cryptography.CryptographicException ex)
+            //    {
+            //        log.LogError("data protection error", ex);
+            //    }
+            //    catch (FormatException ex)
+            //    {
+            //        log.LogError("data protection error", ex);
+            //    }
+
+            //}
+
+            if (site.MicrosoftClientSecret.Length > 0)
+            {
+                try
+                {
+                    site.MicrosoftClientSecret = dataProtector.PersistentUnprotect(site.MicrosoftClientSecret, out requiresMigration, out wasRevoked);
+                }
+                catch (System.Security.Cryptography.CryptographicException ex)
+                {
+                    log.LogError("data protection error", ex);
+                }
+                catch (FormatException ex)
+                {
+                    log.LogError("data protection error", ex);
+                }
+
+            }
+
+            //if (site.TwitterConsumerSecret.Length > 0)
+            //{
+            //    try
+            //    {
+            //        site.TwitterConsumerSecret = dataProtector.PersistentUnprotect(site.TwitterConsumerSecret, out requiresMigration, out wasRevoked);
+            //    }
+            //    catch (System.Security.Cryptography.CryptographicException ex)
+            //    {
+            //        log.LogError("data protection error", ex);
+            //    }
+            //    catch (FormatException ex)
+            //    {
+            //        log.LogError("data protection error", ex);
+            //    }
+
+            //}
+
+            //if (site.SmtpPassword.Length > 0)
+            //{
+            //    try
+            //    {
+            //        site.SmtpPassword = dataProtector.PersistentUnprotect(site.SmtpPassword, out requiresMigration, out wasRevoked);
+            //    }
+            //    catch (System.Security.Cryptography.CryptographicException ex)
+            //    {
+            //        log.LogError("data protection error", ex);
+            //    }
+            //    catch (FormatException ex)
+            //    {
+            //        log.LogError("data protection error", ex);
+            //    }
+
+            //}
+
+            site.IsDataProtected = false;
+
+            if (requiresMigration || wasRevoked)
+            {
+                log.LogWarning("DataProtection key wasRevoked or requires migration, save site settings for " + site.SiteName + " to protect with a new key");
+            }
+
+            return true;
+        }
+
+
+    }
+}

@@ -2,51 +2,51 @@
 
 
 @{
-    
+
 }
 <div class="row">
     <div class="col-md-10 col-md-push-2">
         <h2>@ViewBag.Title</h2>
         <form method="post" class="form-horizontal" role="form" asp-antiforgery="true">
-            <div class="form-horizontal">
-                <div asp-validation-summary="ValidationSummary.All" class="text-danger"></div>
-                <input asp-for="SiteId" type="hidden" />
-                <input asp-for="SiteGuid" type="hidden" />
-                <div class="form-group">
-                    <label asp-for="RecaptchaPublicKey" class="col-md-2 control-label"></label>
-                    <div class="col-md-10">
-                        <input asp-for="RecaptchaPublicKey" class="form-control" />
-                        <span asp-validation-for="RecaptchaPublicKey" class="text-danger"></span>
+            <div asp-validation-summary="ValidationSummary.All" class="text-danger"></div>
+            <input asp-for="SiteId" type="hidden" />
+            <input asp-for="SiteGuid" type="hidden" />
+            <div class="form-group">
+                <label asp-for="RecaptchaPublicKey" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="RecaptchaPublicKey" class="form-control" />
+                    <span asp-validation-for="RecaptchaPublicKey" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="RecaptchaPrivateKey" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="RecaptchaPrivateKey" class="form-control" />
+                    <span asp-validation-for="RecaptchaPrivateKey" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <div class="checkbox">
+                        <label>
+                            <input asp-for="RequireCaptchaOnRegistration" /> Require Captcha On Registration?
+                        </label>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label asp-for="RecaptchaPrivateKey" class="col-md-2 control-label"></label>
-                    <div class="col-md-10">
-                        <input asp-for="RecaptchaPrivateKey" class="form-control" />
-                        <span asp-validation-for="RecaptchaPrivateKey" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <div class="checkbox">
+                        <label>
+                            <input asp-for="RequireCaptchaOnLogin" /> Require Captcha On Login?
+                        </label>
                     </div>
                 </div>
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <div class="checkbox">
-                            <input asp-for="RequireCaptchaOnRegistration" />
-                            <label asp-for="RequireCaptchaOnRegistration"></label>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <div class="checkbox">
-                            <input asp-for="RequireCaptchaOnLogin" />
-                            <label asp-for="RequireCaptchaOnLogin"></label>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Save" class="btn btn-default" />
 
-                    </div>
                 </div>
             </div>
         </form>
@@ -56,13 +56,13 @@
     </div>
 </div>
 @section Scripts {
-<environment names="Development">
-    <script src="~/lib/metisMenu/dist/metisMenu.min.js"></script>
-    <script src="~/jsdev/cloudscribe-sidemenu.js"></script>
-</environment>
-<environment names="Staging,Production">
-    <script src="~/js/metisMenu/dist/metisMenu.min.js"></script>
-    <script src="~/js/cloudscribe-sidemenu.js"></script>
-</environment>
-@{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <environment names="Development">
+        <script src="~/lib/metisMenu/dist/metisMenu.min.js"></script>
+        <script src="~/jsdev/cloudscribe-sidemenu.js"></script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="~/js/metisMenu/dist/metisMenu.min.js"></script>
+        <script src="~/js/cloudscribe-sidemenu.js"></script>
+    </environment>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }

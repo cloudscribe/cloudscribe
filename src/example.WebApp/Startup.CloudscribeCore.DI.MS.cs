@@ -221,7 +221,7 @@ namespace example.WebApp
             services.TryAddScoped<GeoDataManager, GeoDataManager>();
             services.TryAddScoped<SystemInfoManager, SystemInfoManager>();
 
-
+            services.TryAddScoped<SiteDataProtector, SiteDataProtector>();
 
             // VersionProviders are used by the Setup controller to determine what install and upgrade scripts to run
             services.AddScoped<IVersionProvider, SetupVersionProvider>();

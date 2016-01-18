@@ -11,7 +11,7 @@
     CkeditorOptions ckOptions = ckOptionsAccessor.Value;
 }
 <form method="post" class="form-horizontal" role="form" asp-antiforgery="true">
-    <div class="form-horizontal">
+
         <div asp-validation-summary="ValidationSummary.All" class="text-danger"></div>
         <input asp-for="SiteId" type="hidden" />
         <input asp-for="SiteGuid" type="hidden" />
@@ -69,11 +69,11 @@
             </div>
         }
         <div class="form-group">
-            <label class="col-md-2 control-label">Close Site To Public?</label>
-            <div class="col-md-10">
+            <div class="col-md-offset-2 col-md-10">
                 <div class="checkbox">
-                    <input asp-for="IsClosed" />
-                    <label asp-for="IsClosed"></label>
+                    <label>
+                        <input asp-for="IsClosed" /> Close Site To Public
+                    </label>
                 </div>
             </div>
         </div>
@@ -103,7 +103,7 @@
                 }
             </div>
         </div>
-    </div>
+  
 </form>
 @if ((Model.ShowDelete) && (Model.SiteGuid != Guid.Empty))
 {

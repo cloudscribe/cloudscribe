@@ -2,95 +2,91 @@
 
 
 @{
-    
+
 }
 <div class="row">
     <div class="col-md-10 col-md-push-2">
         <h2>@ViewBag.Title</h2>
         <form method="post" class="form-horizontal" role="form" asp-antiforgery="true">
-            <div class="form-horizontal">
-                <div asp-validation-summary="ValidationSummary.All" class="text-danger"></div>
-                <input asp-for="SiteId" type="hidden" />
-                <input asp-for="SiteGuid" type="hidden" />
-
-                <div class="form-group">
-                    <label asp-for="MicrosoftClientId" class="col-md-2 control-label"></label>
-                    <div class="col-md-10">
-                        <input asp-for="MicrosoftClientId" class="form-control" />
-                        <span asp-validation-for="MicrosoftClientId" class="text-danger"></span>
-                    </div>
+            <div asp-validation-summary="ValidationSummary.All" class="text-danger"></div>
+            <input asp-for="SiteId" type="hidden" />
+            <input asp-for="SiteGuid" type="hidden" />
+            <div class="form-group">
+                <label asp-for="MicrosoftClientId" class="col-md-3 control-label"></label>
+                <div class="col-md-9">
+                    <input asp-for="MicrosoftClientId" class="form-control" />
+                    <span asp-validation-for="MicrosoftClientId" class="text-danger"></span>
                 </div>
-                <div class="form-group">
-                    <label asp-for="MicrosoftClientSecret" class="col-md-2 control-label"></label>
-                    <div class="col-md-10">
-                        <input asp-for="MicrosoftClientSecret" class="form-control" />
-                        <span asp-validation-for="MicrosoftClientSecret" class="text-danger"></span>
-                    </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="MicrosoftClientSecret" class="col-md-3 control-label"></label>
+                <div class="col-md-9">
+                    <input asp-for="MicrosoftClientSecret" class="form-control" />
+                    <span asp-validation-for="MicrosoftClientSecret" class="text-danger"></span>
                 </div>
-                <div class="form-group">
-                    <label asp-for="GoogleClientId" class="col-md-2 control-label"></label>
-                    <div class="col-md-10">
-                        <input asp-for="GoogleClientId" class="form-control" />
-                        <span asp-validation-for="GoogleClientId" class="text-danger"></span>
-                    </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="GoogleClientId" class="col-md-3 control-label"></label>
+                <div class="col-md-9">
+                    <input asp-for="GoogleClientId" class="form-control" />
+                    <span asp-validation-for="GoogleClientId" class="text-danger"></span>
                 </div>
-                <div class="form-group">
-                    <label asp-for="GoogleClientSecret" class="col-md-2 control-label"></label>
-                    <div class="col-md-10">
-                        <input asp-for="GoogleClientSecret" class="form-control" />
-                        <span asp-validation-for="GoogleClientSecret" class="text-danger"></span>
-                    </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="GoogleClientSecret" class="col-md-3 control-label"></label>
+                <div class="col-md-9">
+                    <input asp-for="GoogleClientSecret" class="form-control" />
+                    <span asp-validation-for="GoogleClientSecret" class="text-danger"></span>
                 </div>
-                <div class="form-group">
-                    <label asp-for="FacebookAppId" class="col-md-2 control-label"></label>
-                    <div class="col-md-10">
-                        <input asp-for="FacebookAppId" class="form-control" />
-                        <span asp-validation-for="FacebookAppId" class="text-danger"></span>
-                    </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="FacebookAppId" class="col-md-3 control-label"></label>
+                <div class="col-md-9">
+                    <input asp-for="FacebookAppId" class="form-control" />
+                    <span asp-validation-for="FacebookAppId" class="text-danger"></span>
                 </div>
-                <div class="form-group">
-                    <label asp-for="FacebookAppSecret" class="col-md-2 control-label"></label>
-                    <div class="col-md-10">
-                        <input asp-for="FacebookAppSecret" class="form-control" />
-                        <span asp-validation-for="FacebookAppSecret" class="text-danger"></span>
-                    </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="FacebookAppSecret" class="col-md-3 control-label"></label>
+                <div class="col-md-9">
+                    <input asp-for="FacebookAppSecret" class="form-control" />
+                    <span asp-validation-for="FacebookAppSecret" class="text-danger"></span>
                 </div>
-                <div class="form-group">
-                    <label asp-for="TwitterConsumerKey" class="col-md-2 control-label"></label>
-                    <div class="col-md-10">
-                        <input asp-for="TwitterConsumerKey" class="form-control" />
-                        <span asp-validation-for="TwitterConsumerKey" class="text-danger"></span>
-                    </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="TwitterConsumerKey" class="col-md-3 control-label"></label>
+                <div class="col-md-9">
+                    <input asp-for="TwitterConsumerKey" class="form-control" />
+                    <span asp-validation-for="TwitterConsumerKey" class="text-danger"></span>
                 </div>
-                <div class="form-group">
-                    <label asp-for="TwitterConsumerSecret" class="col-md-2 control-label"></label>
-                    <div class="col-md-10">
-                        <input asp-for="TwitterConsumerSecret" class="form-control" />
-                        <span asp-validation-for="TwitterConsumerSecret" class="text-danger"></span>
-                    </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="TwitterConsumerSecret" class="col-md-3 control-label"></label>
+                <div class="col-md-9">
+                    <input asp-for="TwitterConsumerSecret" class="form-control" />
+                    <span asp-validation-for="TwitterConsumerSecret" class="text-danger"></span>
                 </div>
-
-
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <input type="submit" value="Save" class="btn btn-default" />
-                    </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-3 col-md-9">
+                    <input type="submit" value="Save" class="btn btn-default" />
                 </div>
             </div>
         </form>
     </div>
+
     <div class="col-md-2 col-md-pull-10">
         @await Component.InvokeAsync("Navigation", "SideNav", NamedNavigationFilters.ParentTree, "SiteAdmin")
     </div>
 </div>
 @section Scripts {
-<environment names="Development">
-    <script src="~/lib/metisMenu/dist/metisMenu.min.js"></script>
-    <script src="~/jsdev/cloudscribe-sidemenu.js"></script>
-</environment>
-<environment names="Staging,Production">
-    <script src="~/js/metisMenu/dist/metisMenu.min.js"></script>
-    <script src="~/js/cloudscribe-sidemenu.js"></script>
-</environment>
-@{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <environment names="Development">
+        <script src="~/lib/metisMenu/dist/metisMenu.min.js"></script>
+        <script src="~/jsdev/cloudscribe-sidemenu.js"></script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="~/js/metisMenu/dist/metisMenu.min.js"></script>
+        <script src="~/js/cloudscribe-sidemenu.js"></script>
+    </environment>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }

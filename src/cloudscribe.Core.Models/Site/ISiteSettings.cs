@@ -41,6 +41,7 @@ namespace cloudscribe.Core.Models
 
         // TODO use this to force ONLY social logins or ldap option?
         bool DisableDbAuth { get; set; }
+        // TODO: implement
         bool UseSecureRegistration { get; set; } // rename to reflect function RequireConfirmedEmailAddress
         bool RequireApprovalBeforeLogin { get; set; } // TODO: implement
         int MaxInvalidPasswordAttempts { get; set; }
@@ -52,9 +53,11 @@ namespace cloudscribe.Core.Models
        
         bool RequiresQuestionAndAnswer { get; set; }
         bool ReallyDeleteUsers { get; set; }
+        //TODO: implement
         bool AllowNewRegistration { get; set; }
-        
+        // TODO: implement
         bool AllowPersistentLogin { get; set; }
+        // TODO: implement
         bool AllowUserFullNameChange { get; set; }
 
         bool CaptchaOnLogin { get; set; }

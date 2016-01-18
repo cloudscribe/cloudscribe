@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-06-19
-// Last Modified:			2015-11-18
+// Last Modified:			2016-01-18
 // 
 
 using cloudscribe.Core.Models;
@@ -17,18 +17,20 @@ namespace cloudscribe.Core.Web.Components
     {
         public RequestSiteResolver(
             ISiteRepository siteRepository,
+            SiteDataProtector dataProtector,
             IOptions<MultiTenantOptions> multiTenantOptions,
             IHttpContextAccessor httpContextAccessor)
         {
             contextAccessor = httpContextAccessor;
             siteRepo = siteRepository;
             this.multiTenantOptions = multiTenantOptions.Value;
-
+            this.dataProtector = dataProtector;
         }
 
         private MultiTenantOptions multiTenantOptions;
         private IHttpContextAccessor contextAccessor;
         private ISiteRepository siteRepo;
+        private SiteDataProtector dataProtector;
         private string requestPath;
         private string host;
 
@@ -68,12 +70,16 @@ namespace cloudscribe.Core.Web.Components
                 }
                 else
                 {
-                    return siteRepo.FetchNonAsync(siteId);
+                    ISiteSettings site = siteRepo.FetchNonAsync(siteId);
+                    dataProtector.UnProtect(site);
+                    return site;
                 }
             }
             else
             {
-                return siteRepo.FetchNonAsync(host);
+                ISiteSettings site = siteRepo.FetchNonAsync(host);
+                dataProtector.UnProtect(site);
+                return site;
             }
 
 

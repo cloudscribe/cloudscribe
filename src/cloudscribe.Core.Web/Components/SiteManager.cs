@@ -21,34 +21,34 @@ namespace cloudscribe.Core.Web.Components
     {
 
         public SiteManager(
-            ISiteResolver siteResolver, 
             ISiteRepository siteRepository,
             IUserRepository userRepository,
-            IDataProtectionProvider dataProtectionProvider,
+            SiteDataProtector dataProtector,
             IHttpContextAccessor contextAccessor,
+            ISiteResolver siteResolver,
             ILogger<SiteManager> logger,
             IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
             IOptions<SiteConfigOptions> setupOptionsAccessor
             )
         {
-            resolver = siteResolver;
+            
             siteRepo = siteRepository;
             userRepo = userRepository;
             multiTenantOptions = multiTenantOptionsAccessor.Value;
             setupOptions = setupOptionsAccessor.Value;
             _context = contextAccessor?.HttpContext;
-            rawProtector = dataProtectionProvider.CreateProtector("cloudscribe.Core.Web.Components.SiteManager");
+            this.dataProtector = dataProtector;
             log = logger;
+
+            resolver = siteResolver;
         }
 
         private readonly HttpContext _context;
         private CancellationToken CancellationToken => _context?.RequestAborted ?? CancellationToken.None;
         private ILogger log;
-        private IDataProtector rawProtector = null;
-        private IPersistedDataProtector dataProtector
-        {
-            get { return rawProtector as IPersistedDataProtector; }
-        }
+        private SiteDataProtector dataProtector;
+
+
 
         private MultiTenantOptions multiTenantOptions;
         private SiteConfigOptions setupOptions;
@@ -69,166 +69,8 @@ namespace cloudscribe.Core.Web.Components
         {
             get { return Site; }
         }
-
-
-        public bool Protect(ISiteSettings site)
-        {
-            if(site == null) { throw new ArgumentNullException("you must pass in an implementation of ISiteSettings"); }
-            if(site.IsDataProtected) { return true; }
-            if(dataProtector == null) { return false; }
-
-            if (site.FacebookAppSecret.Length > 0)
-            {
-                try
-                {
-                    site.FacebookAppSecret = dataProtector.PersistentProtect(site.FacebookAppSecret);
-                }
-                catch(System.Security.Cryptography.CryptographicException ex)
-                {
-                    log.LogError("data protection error", ex);
-                }
-                
-            }
-
-            if (site.GoogleClientSecret.Length > 0)
-            {
-                try
-                {
-                    site.GoogleClientSecret = dataProtector.PersistentProtect(site.GoogleClientSecret);
-                }
-                catch (System.Security.Cryptography.CryptographicException ex)
-                {
-                    log.LogError("data protection error", ex);
-                }
-                
-            }
-
-            if (site.MicrosoftClientSecret.Length > 0)
-            {
-                try
-                {
-                    site.MicrosoftClientSecret = dataProtector.PersistentProtect(site.MicrosoftClientSecret);
-                }
-                catch (System.Security.Cryptography.CryptographicException ex)
-                {
-                    log.LogError("data protection error", ex);
-                }
-                
-            }
-
-            if (site.TwitterConsumerSecret.Length > 0)
-            {
-                try
-                {
-                    site.TwitterConsumerSecret = dataProtector.PersistentProtect(site.TwitterConsumerSecret);
-                }
-                catch (System.Security.Cryptography.CryptographicException ex)
-                {
-                    log.LogError("data protection error", ex);
-                }
-                
-            }
-
-            if (site.SmtpPassword.Length > 0)
-            {
-                try
-                {
-                    site.SmtpPassword = dataProtector.PersistentProtect(site.SmtpPassword);
-                }
-                catch (System.Security.Cryptography.CryptographicException ex)
-                {
-                    log.LogError("data protection error", ex);
-                }
-                
-            }
-
-            site.IsDataProtected = true;
-
-            return false;
-        }
-
-        public bool UnProtect(ISiteSettings site)
-        {
-            bool requiresMigration = false;
-            bool wasRevoked = false;
-            if (site == null) { throw new ArgumentNullException("you must pass in an implementation of ISiteSettings"); }
-            if (!site.IsDataProtected) { return false; }
-
-            if(site.FacebookAppSecret.Length > 0)
-            {
-                try
-                {
-                    site.FacebookAppSecret = dataProtector.PersistentUnprotect(site.FacebookAppSecret, out requiresMigration, out wasRevoked);
-                }
-                catch (System.Security.Cryptography.CryptographicException ex)
-                {
-                    log.LogError("data protection error", ex);
-                }
-                
-            }
-
-            if (site.GoogleClientSecret.Length > 0)
-            {
-                try
-                {
-                    site.GoogleClientSecret = dataProtector.PersistentUnprotect(site.GoogleClientSecret, out requiresMigration, out wasRevoked);
-                }
-                catch (System.Security.Cryptography.CryptographicException ex)
-                {
-                    log.LogError("data protection error", ex);
-                }
-                
-            }
-
-            if (site.MicrosoftClientSecret.Length > 0)
-            {
-                try
-                {
-                    site.MicrosoftClientSecret = dataProtector.PersistentUnprotect(site.MicrosoftClientSecret, out requiresMigration, out wasRevoked);
-                }
-                catch (System.Security.Cryptography.CryptographicException ex)
-                {
-                    log.LogError("data protection error", ex);
-                }
-                
-            }
-
-            if (site.TwitterConsumerSecret.Length > 0)
-            {
-                try
-                {
-                    site.TwitterConsumerSecret = dataProtector.PersistentUnprotect(site.TwitterConsumerSecret, out requiresMigration, out wasRevoked);
-                }
-                catch (System.Security.Cryptography.CryptographicException ex)
-                {
-                    log.LogError("data protection error", ex);
-                }
-                
-            }
-
-            if (site.SmtpPassword.Length > 0)
-            {
-                try
-                {
-                    site.SmtpPassword = dataProtector.PersistentUnprotect(site.SmtpPassword, out requiresMigration, out wasRevoked);
-                }
-                catch (System.Security.Cryptography.CryptographicException ex)
-                {
-                    log.LogError("data protection error", ex);
-                }
-                
-            }
-
-            site.IsDataProtected = false;
-
-            if(requiresMigration || wasRevoked)
-            {
-                log.LogWarning("DataProtection key wasRevoked or requires migration, save site settings for " + site.SiteName + " to protect with a new key");
-            }
-
-            return true;
-        }
-
+        
+           
 
         public async Task<List<ISiteInfo>> GetPageOtherSites(
             int currentSiteId,
@@ -244,30 +86,49 @@ namespace cloudscribe.Core.Web.Components
             return await siteRepo.CountOtherSites(currentSiteId, CancellationToken);
         }
 
+        public int GetSiteIdByFolderNonAsync(string folderName)
+        {
+            return siteRepo.GetSiteIdByFolderNonAsync(folderName);
+        }
+
         public async Task<ISiteSettings> Fetch(Guid siteGuid)
         {
             ISiteSettings site = await siteRepo.Fetch(siteGuid, CancellationToken);
-            UnProtect(site);
+            dataProtector.UnProtect(site);
+            return site;
+        }
+
+        public ISiteSettings FetchNonAsync(int siteId)
+        {
+            ISiteSettings  site = siteRepo.FetchNonAsync(siteId);
+            dataProtector.UnProtect(site);
+            return site;
+        }
+
+        public ISiteSettings FetchNonAsync(string host)
+        {
+            ISiteSettings site = siteRepo.FetchNonAsync(host);
+            dataProtector.UnProtect(site);
             return site;
         }
 
         public async Task<ISiteSettings> Fetch(int siteId)
         {
             ISiteSettings site = await siteRepo.Fetch(siteId, CancellationToken);
-            UnProtect(site);
+            dataProtector.UnProtect(site);
             return site;
         }
 
         public async Task<ISiteSettings> Fetch(string hostname)
         {
             ISiteSettings site = await siteRepo.Fetch(hostname, CancellationToken);
-            UnProtect(site);
+            dataProtector.UnProtect(site);
             return site;
         }
 
         public async Task<bool> Save(ISiteSettings site)
         {
-            Protect(site);
+            dataProtector.Protect(site);
             return await siteRepo.Save(site, CancellationToken.None);
         }
 
