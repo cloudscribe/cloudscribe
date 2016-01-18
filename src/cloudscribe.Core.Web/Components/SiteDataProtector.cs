@@ -30,37 +30,37 @@ namespace cloudscribe.Core.Web.Components
             get { return rawProtector as IPersistedDataProtector; }
         }
 
-        public bool Protect(ISiteSettings site)
+        public void Protect(ISiteSettings site)
         {
             if (site == null) { throw new ArgumentNullException("you must pass in an implementation of ISiteSettings"); }
-            if (site.IsDataProtected) { return true; }
-            if (dataProtector == null) { return false; }
+            if (site.IsDataProtected) { return; }
+            if (dataProtector == null) { return; }
 
-            //if (site.FacebookAppSecret.Length > 0)
-            //{
-            //    try
-            //    {
-            //        site.FacebookAppSecret = dataProtector.PersistentProtect(site.FacebookAppSecret);
-            //    }
-            //    catch(System.Security.Cryptography.CryptographicException ex)
-            //    {
-            //        log.LogError("data protection error", ex);
-            //    }
+            if (site.FacebookAppSecret.Length > 0)
+            {
+                try
+                {
+                    site.FacebookAppSecret = dataProtector.PersistentProtect(site.FacebookAppSecret);
+                }
+                catch (System.Security.Cryptography.CryptographicException ex)
+                {
+                    log.LogError("data protection error", ex);
+                }
 
-            //}
+            }
 
-            //if (site.GoogleClientSecret.Length > 0)
-            //{
-            //    try
-            //    {
-            //        site.GoogleClientSecret = dataProtector.PersistentProtect(site.GoogleClientSecret);
-            //    }
-            //    catch (System.Security.Cryptography.CryptographicException ex)
-            //    {
-            //        log.LogError("data protection error", ex);
-            //    }
+            if (site.GoogleClientSecret.Length > 0)
+            {
+                try
+                {
+                    site.GoogleClientSecret = dataProtector.PersistentProtect(site.GoogleClientSecret);
+                }
+                catch (System.Security.Cryptography.CryptographicException ex)
+                {
+                    log.LogError("data protection error", ex);
+                }
 
-            //}
+            }
 
             if (site.MicrosoftClientSecret.Length > 0)
             {
@@ -75,77 +75,77 @@ namespace cloudscribe.Core.Web.Components
 
             }
 
-            //if (site.TwitterConsumerSecret.Length > 0)
-            //{
-            //    try
-            //    {
-            //        site.TwitterConsumerSecret = dataProtector.PersistentProtect(site.TwitterConsumerSecret);
-            //    }
-            //    catch (System.Security.Cryptography.CryptographicException ex)
-            //    {
-            //        log.LogError("data protection error", ex);
-            //    }
+            if (site.TwitterConsumerSecret.Length > 0)
+            {
+                try
+                {
+                    site.TwitterConsumerSecret = dataProtector.PersistentProtect(site.TwitterConsumerSecret);
+                }
+                catch (System.Security.Cryptography.CryptographicException ex)
+                {
+                    log.LogError("data protection error", ex);
+                }
 
-            //}
+            }
 
-            //if (site.SmtpPassword.Length > 0)
-            //{
-            //    try
-            //    {
-            //        site.SmtpPassword = dataProtector.PersistentProtect(site.SmtpPassword);
-            //    }
-            //    catch (System.Security.Cryptography.CryptographicException ex)
-            //    {
-            //        log.LogError("data protection error", ex);
-            //    }
+            if (site.SmtpPassword.Length > 0)
+            {
+                try
+                {
+                    site.SmtpPassword = dataProtector.PersistentProtect(site.SmtpPassword);
+                }
+                catch (System.Security.Cryptography.CryptographicException ex)
+                {
+                    log.LogError("data protection error", ex);
+                }
 
-            //}
+            }
 
             site.IsDataProtected = true;
 
-            return true;
+            
         }
 
-        public bool UnProtect(ISiteSettings site)
+        public void UnProtect(ISiteSettings site)
         {
             bool requiresMigration = false;
             bool wasRevoked = false;
             if (site == null) { throw new ArgumentNullException("you must pass in an implementation of ISiteSettings"); }
-            if (!site.IsDataProtected) { return false; }
+            if (!site.IsDataProtected) { return; }
 
-            //if(site.FacebookAppSecret.Length > 0)
-            //{
-            //    try
-            //    {
-            //        site.FacebookAppSecret = dataProtector.PersistentUnprotect(site.FacebookAppSecret, out requiresMigration, out wasRevoked);
-            //    }
-            //    catch (System.Security.Cryptography.CryptographicException ex)
-            //    {
-            //        log.LogError("data protection error", ex);
-            //    }
-            //    catch (FormatException ex)
-            //    {
-            //        log.LogError("data protection error", ex);
-            //    }
+            if (site.FacebookAppSecret.Length > 0)
+            {
+                try
+                {
+                    site.FacebookAppSecret = dataProtector.PersistentUnprotect(site.FacebookAppSecret, out requiresMigration, out wasRevoked);
+                }
+                catch (System.Security.Cryptography.CryptographicException ex)
+                {
+                    log.LogError("data protection error", ex);
+                }
+                catch (FormatException ex)
+                {
+                    log.LogError("data protection error", ex);
+                }
 
-            //}
+            }
 
-            //if (site.GoogleClientSecret.Length > 0)
-            //{
-            //    try
-            //    {
-            //        site.GoogleClientSecret = dataProtector.PersistentUnprotect(site.GoogleClientSecret, out requiresMigration, out wasRevoked);
-            //    }
-            //    catch (System.Security.Cryptography.CryptographicException ex)
-            //    {
-            //        log.LogError("data protection error", ex);
-            //    }
-            //    catch (FormatException ex)
-            //    {
-            //        log.LogError("data protection error", ex);
-            //    }
+            if (site.GoogleClientSecret.Length > 0)
+            {
+                try
+                {
+                    site.GoogleClientSecret = dataProtector.PersistentUnprotect(site.GoogleClientSecret, out requiresMigration, out wasRevoked);
+                }
+                catch (System.Security.Cryptography.CryptographicException ex)
+                {
+                    log.LogError("data protection error", ex);
+                }
+                catch (FormatException ex)
+                {
+                    log.LogError("data protection error", ex);
+                }
 
-            //}
+            }
 
             if (site.MicrosoftClientSecret.Length > 0)
             {
@@ -164,39 +164,39 @@ namespace cloudscribe.Core.Web.Components
 
             }
 
-            //if (site.TwitterConsumerSecret.Length > 0)
-            //{
-            //    try
-            //    {
-            //        site.TwitterConsumerSecret = dataProtector.PersistentUnprotect(site.TwitterConsumerSecret, out requiresMigration, out wasRevoked);
-            //    }
-            //    catch (System.Security.Cryptography.CryptographicException ex)
-            //    {
-            //        log.LogError("data protection error", ex);
-            //    }
-            //    catch (FormatException ex)
-            //    {
-            //        log.LogError("data protection error", ex);
-            //    }
+            if (site.TwitterConsumerSecret.Length > 0)
+            {
+                try
+                {
+                    site.TwitterConsumerSecret = dataProtector.PersistentUnprotect(site.TwitterConsumerSecret, out requiresMigration, out wasRevoked);
+                }
+                catch (System.Security.Cryptography.CryptographicException ex)
+                {
+                    log.LogError("data protection error", ex);
+                }
+                catch (FormatException ex)
+                {
+                    log.LogError("data protection error", ex);
+                }
 
-            //}
+            }
 
-            //if (site.SmtpPassword.Length > 0)
-            //{
-            //    try
-            //    {
-            //        site.SmtpPassword = dataProtector.PersistentUnprotect(site.SmtpPassword, out requiresMigration, out wasRevoked);
-            //    }
-            //    catch (System.Security.Cryptography.CryptographicException ex)
-            //    {
-            //        log.LogError("data protection error", ex);
-            //    }
-            //    catch (FormatException ex)
-            //    {
-            //        log.LogError("data protection error", ex);
-            //    }
+            if (site.SmtpPassword.Length > 0)
+            {
+                try
+                {
+                    site.SmtpPassword = dataProtector.PersistentUnprotect(site.SmtpPassword, out requiresMigration, out wasRevoked);
+                }
+                catch (System.Security.Cryptography.CryptographicException ex)
+                {
+                    log.LogError("data protection error", ex);
+                }
+                catch (FormatException ex)
+                {
+                    log.LogError("data protection error", ex);
+                }
 
-            //}
+            }
 
             site.IsDataProtected = false;
 
@@ -205,7 +205,7 @@ namespace cloudscribe.Core.Web.Components
                 log.LogWarning("DataProtection key wasRevoked or requires migration, save site settings for " + site.SiteName + " to protect with a new key");
             }
 
-            return true;
+            
         }
 
 

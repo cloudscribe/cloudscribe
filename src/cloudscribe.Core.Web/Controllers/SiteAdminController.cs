@@ -722,9 +722,7 @@ namespace cloudscribe.Core.Web.Controllers
                 return RedirectToAction("Index");
             }
 
-            //model.SiteId = Site.SiteSettings.SiteId;
-            //model.SiteGuid = Site.SiteSettings.SiteGuid;
-
+            
             selectedSite.DefaultEmailFromAddress = model.DefaultEmailFromAddress;
             selectedSite.SmtpPassword = model.SmtpPassword;
             selectedSite.SmtpPort = model.SmtpPort;
