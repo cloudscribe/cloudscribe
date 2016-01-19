@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2016-01-18
+// Last Modified:			2016-01-19
 // 
 
 using cloudscribe.Core.Models;
@@ -751,6 +751,107 @@ namespace cloudscribe.Core.Web.Controllers
             }
 
             return RedirectToAction("MailSettings");
+
+        }
+
+        [HttpGet]
+        [Authorize(Policy = "AdminPolicy")]
+        public async Task<IActionResult> SecuritySettings(
+            Guid? siteGuid,
+            int slp = 1)
+        {
+
+            ISiteSettings selectedSite;
+            // only server admin site can edit other sites settings
+            if ((siteGuid.HasValue) && (siteGuid.Value != Guid.Empty) && (siteGuid.Value != siteManager.CurrentSite.SiteGuid) && (siteManager.CurrentSite.IsServerAdminSite))
+            {
+                selectedSite = await siteManager.Fetch(siteGuid.Value);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - Security Settings", selectedSite.SiteName);
+            }
+            else
+            {
+                selectedSite = siteManager.CurrentSite;
+                ViewData["Title"] = "Security Settings";
+            }
+
+            SecuritySettingsViewModel model = new SecuritySettingsViewModel();
+            model.SiteGuid = selectedSite.SiteGuid;
+            model.SiteId = selectedSite.SiteId;
+            model.AllowNewRegistration = selectedSite.AllowNewRegistration;
+            model.AllowPersistentLogin = selectedSite.AllowPersistentLogin;
+            model.DisableDbAuth = selectedSite.DisableDbAuth;
+            model.ReallyDeleteUsers = selectedSite.ReallyDeleteUsers;
+            model.RequireApprovalBeforeLogin = selectedSite.RequireApprovalBeforeLogin;
+            model.RequireEmailConfirmation = selectedSite.UseSecureRegistration;
+            model.UseEmailForLogin = selectedSite.UseEmailForLogin;
+
+            return View(model);
+
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Policy = "AdminPolicy")]
+        public async Task<ActionResult> SecuritySettings(SecuritySettingsViewModel model)
+        {
+            ISiteSettings selectedSite = null;
+            if (model.SiteGuid == siteManager.CurrentSite.SiteGuid)
+            {
+                selectedSite = siteManager.CurrentSite;
+                ViewData["Title"] = "Security Settings";
+            }
+            else if (siteManager.CurrentSite.IsServerAdminSite)
+            {
+                selectedSite = await siteManager.Fetch(model.SiteGuid);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - Security Settings", selectedSite.SiteName);
+            }
+
+            if (selectedSite == null)
+            {
+                this.AlertDanger("oops something went wrong.", true);
+
+                return RedirectToAction("Index");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            if (model.SiteGuid == Guid.Empty)
+            {
+                this.AlertDanger("oops something went wrong, site was not found.", true);
+
+                return RedirectToAction("Index");
+            }
+            
+            selectedSite.AllowNewRegistration = model.AllowNewRegistration;
+            selectedSite.AllowPersistentLogin = model.AllowPersistentLogin;
+            selectedSite.DisableDbAuth = model.DisableDbAuth;
+            selectedSite.ReallyDeleteUsers = model.ReallyDeleteUsers;
+            selectedSite.RequireApprovalBeforeLogin = model.RequireApprovalBeforeLogin;
+            selectedSite.UseSecureRegistration = model.RequireEmailConfirmation;
+            selectedSite.UseEmailForLogin = model.UseEmailForLogin;
+
+            bool result = await siteManager.Save(selectedSite);
+
+            if (result)
+            {
+                this.AlertSuccess(string.Format("Security Settings for <b>{0}</b> wwas successfully updated.",
+                            selectedSite.SiteName), true);
+            }
+
+
+            if ((siteManager.CurrentSite.IsServerAdminSite)
+                && (siteManager.CurrentSite.SiteGuid != selectedSite.SiteGuid)
+                )
+            {
+
+                return RedirectToAction("SecuritySettings", new { siteGuid = model.SiteGuid });
+            }
+
+            return RedirectToAction("SecuritySettings");
 
         }
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace cloudscribe.Messaging
+namespace cloudscribe.Core.Web
 {
     public interface ISmsSender
     {

@@ -2,15 +2,15 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-11-18
+// Last Modified:			2016-01-19
 // 
 
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Models;
-using cloudscribe.Core.Web.Components;
+using cloudscribe.Core.Web.Components.Messaging;
 using cloudscribe.Core.Web.ViewModels.Account;
 using cloudscribe.Core.Web.ViewModels.SiteUser;
-using cloudscribe.Messaging;
+using cloudscribe.Messaging.Email;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Mvc;
@@ -31,8 +31,7 @@ namespace cloudscribe.Core.Web.Controllers
             ISiteResolver siteResolver,
             SiteUserManager<SiteUser> userManager,
             SiteSignInManager<SiteUser> signInManager,
-           // ConfigHelper configuration,
-            IEmailSender emailSender,
+            ISiteMessageEmailSender emailSender,
             ISmsSender smsSender,
             ILogger<AccountController> logger)
         {
@@ -50,7 +49,7 @@ namespace cloudscribe.Core.Web.Controllers
         //private readonly ConfigHelper config;
         private readonly SiteUserManager<SiteUser> userManager;
         private readonly SiteSignInManager<SiteUser> signInManager;
-        private readonly IEmailSender emailSender;
+        private readonly ISiteMessageEmailSender emailSender;
         private readonly ISmsSender smsSender;
         private ILogger log;
 
@@ -266,10 +265,17 @@ namespace cloudscribe.Core.Web.Controllers
                             new { userId = user.Id, code = code }, 
                             protocol: HttpContext.Request.Scheme);
 
-                        await emailSender.SendEmailAsync(model.Email, "Confirm your account",
-                            "Please confirm your account by clicking this link: <a href=\"" + callbackUrl + "\">link</a>");
+                        await emailSender.SendAccountConfirmationEmailAsync(
+                            Site,
+                            model.Email, 
+                            "Confirm your account",
+                            callbackUrl);
 
                         this.AlertSuccess("Please check your email inbox, we just sent you a link that you need to click to confirm your account", true);
+                        // TODO: we should have a specific view for this instead of redirecting home
+                        // the alert currently only works if session is enabled so it would be better to
+                        // redirect to a message page
+
                         return RedirectToAction("Index", "Home");
                     }
                     else
@@ -607,13 +613,19 @@ namespace cloudscribe.Core.Web.Controllers
                 return View("Error");
             }
 
-            var message = "Your security code is: " + code;
+            
             if (model.SelectedProvider == "Email")
             {
-                await emailSender.SendEmailAsync(await userManager.GetEmailAsync(user), "Security Code", message);
+                string toAddress = await userManager.GetEmailAsync(user);
+                await emailSender.SendSecurityCodeEmailAsync(
+                    Site,
+                    toAddress, 
+                    "Security Code", 
+                    code);
             }
             else if (model.SelectedProvider == "Phone")
             {
+                var message = "Your security code is: " + code;
                 await smsSender.SendSmsAsync(await userManager.GetPhoneNumberAsync(user), message);
             }
 

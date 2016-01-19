@@ -291,7 +291,7 @@ namespace cloudscribe.Core.Models.DataExtensions
             
             site.DisableDbAuth = Convert.ToBoolean(reader["DisableDbAuth"]);
             
-            site.RequiresQuestionAndAnswer = Convert.ToBoolean(reader["RequiresQuestionAndAnswer"]);
+            site.RequireApprovalBeforeLogin = Convert.ToBoolean(reader["RequireApprovalBeforeLogin"]);
             site.AllowDbFallbackWithLdap = Convert.ToBoolean(reader["AllowDbFallbackWithLdap"]);
             site.EmailLdapDbFallback = Convert.ToBoolean(reader["EmailLdapDbFallback"]);
             site.AllowPersistentLogin = Convert.ToBoolean(reader["AllowPersistentLogin"]);

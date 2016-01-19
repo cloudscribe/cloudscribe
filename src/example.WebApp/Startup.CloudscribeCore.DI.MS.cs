@@ -46,6 +46,7 @@ using cloudscribe.Setup.Web;
 using cloudscribe.Messaging;
 using cloudscribe.Web.Navigation;
 using cloudscribe.Web.Pagination;
+using cloudscribe.Core.Web.Components.Messaging;
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Repositories.EF;
 
@@ -254,10 +255,10 @@ namespace example.WebApp
 
             services.TryAddTransient<IBuildPaginationLinks, PaginationLinkBuilder>();
 
-
-
-            services.AddTransient<IEmailSender, AuthMessageSender>();
-            services.AddTransient<ISmsSender, AuthMessageSender>();
+            
+            //services.AddTransient<IEmailTemplateService, HardCodedEmailTemplateService>();
+            services.AddTransient<ISiteMessageEmailSender, SiteEmailMessageSender>();
+            services.AddTransient<ISmsSender, SiteSmsSender>();
 
             // TODO: implement TenantLayoutSelector
             services.Configure<LayoutSelectorOptions>(configuration.GetSection("LayoutSelectorOptions"));

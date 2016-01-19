@@ -2,13 +2,13 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-10-17
+// Last Modified:			2016-01-19
 // 
 
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Web.ViewModels.SiteUser;
-using cloudscribe.Messaging;
+using cloudscribe.Messaging.Email;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Mvc;
@@ -26,20 +26,19 @@ namespace cloudscribe.Core.Web.Controllers
             ISiteResolver siteResolver,
             SiteUserManager<SiteUser> userManager,
             SiteSignInManager<SiteUser> signInManager,
-            IEmailSender emailSender,
             ISmsSender smsSender)
         {
             Site = siteResolver.Resolve();
             this.userManager = userManager;
             this.signInManager = signInManager;
-            this.emailSender = emailSender;
+           // this.emailSender = emailSender;
             this.smsSender = smsSender;
         }
 
         private readonly ISiteSettings Site;
         private readonly SiteUserManager<SiteUser> userManager;
         private readonly SiteSignInManager<SiteUser> signInManager;
-        private readonly IEmailSender emailSender;
+        //private readonly IAuthEmailSender emailSender;
         private readonly ISmsSender smsSender;
 
 

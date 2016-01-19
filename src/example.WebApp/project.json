@@ -24,7 +24,7 @@
     "cloudscribe.Setup.Sqlite": "1.0.0-*",
     "cloudscribe.DbHelpers.Ado": "1.0.0-*",
     "cloudscribe.DbHelpers.SQLite": "1.0.0-*",
-    "cloudscribe.Messaging": "1.0.0-*",
+    "cloudscribe.Messaging.Email": "1.0.0-*",
     "cloudscribe.Web.Navigation": "1.0.0-*",
     "cloudscribe.Web.Pagination": "1.0.0-*",
     "EntityFramework.Commands": "7.0.0-rc1-final",
