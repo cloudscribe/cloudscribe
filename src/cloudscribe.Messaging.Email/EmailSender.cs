@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-22
-// Last Modified:			2016-01-19
+// Last Modified:			2016-01-20
 // 
 
 using System;
@@ -42,6 +42,9 @@ namespace cloudscribe.Messaging.Email
             m.From.Add(new MailboxAddress("", from));
             m.To.Add(new MailboxAddress("", to));
             m.Subject = subject;
+            //m.Importance = MessageImportance.Normal;
+            //Header h = new Header(HeaderId.Precedence, "Bulk");
+            //m.Headers.Add()
 
             BodyBuilder bodyBuilder = new BodyBuilder();
             if(plainTextMessage.Length > 0)
@@ -54,15 +57,8 @@ namespace cloudscribe.Messaging.Email
                 bodyBuilder.HtmlBody = htmlMessage;
             }
 
-            
-
             m.Body = bodyBuilder.ToMessageBody();
-
-            //var textPart = new TextPart("plain") { Text = plainTextMessage };
-            //var htmlPart = new HtmlPart("plain") { Text = plainTextMessage };
-
-            //m.Body = new TextPart("plain") { Text = plainTextMessage };
-
+            
             using (var client = new SmtpClient())
             {
                 //client.ServerCertificateValidationCallback = delegate (
@@ -90,5 +86,24 @@ namespace cloudscribe.Messaging.Email
             }
 
         }
+
+        //public async Task SendEmailAsync(
+        //    SmtpOptions smtpOptions,
+        //    string toAddress,
+        //    string toName,
+        //    string from,
+        //    string fromName,
+        //    string replyToAddress,
+        //    string cc,
+        //    string bcc,
+        //    string subject,
+        //    string plainTextMessage,
+        //    string htmlMessage)
+        //{
+
+
+        //}
+
+
     }
 }

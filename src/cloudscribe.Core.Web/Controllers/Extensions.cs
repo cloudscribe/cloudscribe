@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-01-02
-// Last Modified:			2015-10-17
+// Last Modified:			2016-01-20
 // 
 
 
@@ -45,6 +45,11 @@ namespace cloudscribe.Core.Web.Controllers
             return captchaResponse;
         }
 
+        public static bool SessionIsAvailable(this Controller controller)
+        {
+            var sessionFeature = controller.HttpContext.Features.Get<ISessionFeature>();
+            return (sessionFeature != null);
+        }
 
 
         public static void AlertSuccess(
@@ -86,24 +91,8 @@ namespace cloudscribe.Core.Web.Controllers
             bool dismissable)
         {
             
-            if (controller.HttpContext.Features.Get<ISessionFeature>() != null)
+            if (controller.SessionIsAvailable())
             {
-                // this only works with in memory session state we need to do our own serilaization/deserialization
-                //https://github.com/aspnet/Mvc/issues/2850
-                // 
-                //var alerts = controller.TempData.ContainsKey(Alert.TempDataKey)
-                //? (List<Alert>)controller.TempData[Alert.TempDataKey]
-                //: new List<Alert>();
-
-                //alerts.Add(new Alert
-                //{
-                //    AlertStyle = alertStyle,
-                //    Message = message,
-                //    Dismissable = dismissable
-                //});
-
-                //controller.TempData[Alert.TempDataKey] = alerts;
-                
                 var alerts = controller.TempData.GetAlerts();
 
                 alerts.Add(new Alert

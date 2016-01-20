@@ -17,7 +17,8 @@ namespace cloudscribe.Core.Web.Components.Messaging
 {
     public class SiteEmailMessageSender : ISiteMessageEmailSender
     {
-        public SiteEmailMessageSender(IEmailTemplateService templateService = null)
+        public SiteEmailMessageSender(
+            IEmailTemplateService templateService = null)
         {
             if(templateService == null)
             {
@@ -59,8 +60,7 @@ namespace cloudscribe.Core.Web.Components.Messaging
             
             string htmlTemplate = templateService.GetHtmlTemplate(MessagePurpose.ConfirmAccount, "");
             string htmlMessage = string.Format(htmlTemplate, confirmationUrl);
-
-
+            
             EmailSender sender = new EmailSender();
             await sender.SendEmailAsync(
                 smtpOptions,

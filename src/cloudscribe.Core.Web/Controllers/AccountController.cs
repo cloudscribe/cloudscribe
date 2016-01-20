@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2016-01-19
+// Last Modified:			2016-01-20
 // 
 
 using cloudscribe.Core.Identity;
@@ -10,12 +10,13 @@ using cloudscribe.Core.Models;
 using cloudscribe.Core.Web.Components.Messaging;
 using cloudscribe.Core.Web.ViewModels.Account;
 using cloudscribe.Core.Web.ViewModels.SiteUser;
-using cloudscribe.Messaging.Email;
+//using cloudscribe.Messaging.Email;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -255,11 +256,8 @@ namespace cloudscribe.Core.Web.Controllers
                 if (result.Succeeded)
                 {
                     
-
                     if(Site.UseSecureRegistration) // require email confirmation
                     {
-                        // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=532713
-                        // Send an email with this link
                         var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
                         var callbackUrl = Url.Action("ConfirmEmail", "Account", 
                             new { userId = user.Id, code = code }, 
@@ -271,12 +269,17 @@ namespace cloudscribe.Core.Web.Controllers
                             "Confirm your account",
                             callbackUrl);
 
-                        this.AlertSuccess("Please check your email inbox, we just sent you a link that you need to click to confirm your account", true);
-                        // TODO: we should have a specific view for this instead of redirecting home
-                        // the alert currently only works if session is enabled so it would be better to
-                        // redirect to a message page
+                        if (this.SessionIsAvailable())
+                        {
+                            this.AlertSuccess("Please check your email inbox, we just sent you a link that you need to click to confirm your account", true);
+                            
+                            return Redirect("/");
+                        }
+                        else
+                        {
+                            return RedirectToAction("EmailConfirmationRequired", new { userGuid = user.Id, didSend = true });
+                        }
 
-                        return RedirectToAction("Index", "Home");
                     }
                     else
                     {
@@ -288,7 +291,7 @@ namespace cloudscribe.Core.Web.Controllers
                         else
                         {
                             await signInManager.SignInAsync(user, isPersistent: false);
-                            return RedirectToAction("Index", "Home");
+                            return Redirect("/");
                         }
                     }
 
@@ -306,13 +309,56 @@ namespace cloudscribe.Core.Web.Controllers
             return View(model);
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult EmailConfirmationRequired(Guid userGuid, bool didSend = false)
+        {
+            UnconfirmedEmailViewModel model = new UnconfirmedEmailViewModel();
+            model.UserGuid = userGuid;
+            model.DidSend = didSend;
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> VerifyEmail(Guid userGuid)
+        {
+            var user = await userManager.Fetch(userManager.Site.SiteId,  userGuid);
+
+            if(user == null)
+            {
+                return Redirect("/");
+            }
+
+            if(user.EmailConfirmed)
+            {
+                return Redirect("/");
+            }
+
+            var callbackUrl = Url.Action("ConfirmEmail", "Account",
+                            new { userId = user.Id, code = user.RegisterConfirmGuid.ToString() },
+                            protocol: HttpContext.Request.Scheme);
+
+            await emailSender.SendAccountConfirmationEmailAsync(
+                            Site,
+                            user.Email,
+                            "Confirm your account",
+                            callbackUrl);
+
+            return RedirectToAction("EmailConfirmationRequired", new { userGuid = user.Id, didSend = true });
+        }
+
+        //
+
         // POST: /Account/LogOff
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> LogOff()
         {
             await signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Home");
+            return Redirect("/");
         }
 
         //[HttpGet]

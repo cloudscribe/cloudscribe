@@ -1,0 +1,23 @@
+﻿@model cloudscribe.Core.Web.ViewModels.SiteUser.UnconfirmedEmailViewModel
+
+@{
+    ViewData["Title"] = "Please Confirm Email Address";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+    <p>
+        Before you can <a asp-controller="Account" asp-action="Login">Log in</a>, we need to confirm that the email address you provided is valid. 
+        We sent an email to the address you provided with a link that you need to click in order to confirm your email address is valid.
+    </p>
+    @if (!Model.DidSend)
+    {
+        <form asp-controller="Account" asp-action="VerifyEmail" method="post" class="form-horizontal" role="form">
+            <input name="userGuid" value="@Model.UserGuid" type="hidden" />
+            <div class="form-group">
+                <input type="submit" class="btn btn-default" value="Re-Send Verification Email" />
+            </div>
+        </form>
+
+    }
+            

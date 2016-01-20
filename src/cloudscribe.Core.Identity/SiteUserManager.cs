@@ -181,6 +181,13 @@ namespace cloudscribe.Core.Identity
             return await userRepo.Fetch(siteId, userId, CancellationToken);
         }
 
+        public async Task<ISiteUser> Fetch(int siteId, Guid userGuid)
+        {
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+
+            return await userRepo.Fetch(siteId, userGuid, CancellationToken);
+        }
+
         public async Task<ISiteUser> FetchByConfirmationGuid(int siteId, Guid confirmGuid)
         {
             if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }

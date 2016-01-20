@@ -2,13 +2,9 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-01-19
-// Last Modified:			2016-01-19
+// Last Modified:			2016-01-20
 // 
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Components.Messaging
 {
@@ -21,7 +17,12 @@ namespace cloudscribe.Core.Web.Components.Messaging
                 case MessagePurpose.ConfirmAccount:
 
                     return ConfirmAccountHtmlTemplate();
+
+                case MessagePurpose.SendSecurityCode:
                     
+                    return SecurityCodeHtmlTemplate();
+
+
             }
 
             return LastResortHtmlTemplate();
@@ -30,6 +31,11 @@ namespace cloudscribe.Core.Web.Components.Messaging
         private string ConfirmAccountHtmlTemplate()
         {
             return "<html><head><title>Confirm Account</title></head><body>Please confirm your account by clicking this link: <a href=\"{0}\">link</a></body></html>";
+        }
+
+        private string SecurityCodeHtmlTemplate()
+        {
+            return "<html><head><title>Security Code</title></head><body>Your security code is: {1}</body></html>";
         }
 
         private string LastResortHtmlTemplate()
@@ -45,6 +51,10 @@ namespace cloudscribe.Core.Web.Components.Messaging
 
                     return ConfirmAccountPlainTextTemplate();
 
+                case MessagePurpose.SendSecurityCode:
+
+                    return SecurityCodePlainTextTemplate();
+
             }
 
             return LastResortPlainTextTemplate();
@@ -53,6 +63,11 @@ namespace cloudscribe.Core.Web.Components.Messaging
         private string ConfirmAccountPlainTextTemplate()
         {
             return "Please confirm your account by clicking this link: {0} ";
+        }
+
+        private string SecurityCodePlainTextTemplate()
+        {
+            return "Your security code is: {1} ";
         }
 
         private string LastResortPlainTextTemplate()
