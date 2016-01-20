@@ -188,13 +188,13 @@ namespace cloudscribe.Core.Repositories.Caching
             return await implementation.CountLockedOutUsers(siteId, cancellationToken);
         }
 
-        public async Task<List<IUserInfo>> GetPageLockedUsers(
+        public async Task<List<IUserInfo>> GetPageLockedOutUsers(
             int siteId,
             int pageNumber,
             int pageSize,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await implementation.GetPageLockedUsers(siteId, pageNumber, pageSize, cancellationToken);
+            return await implementation.GetPageLockedOutUsers(siteId, pageNumber, pageSize, cancellationToken);
         }
 
         public async Task<int> CountNotApprovedUsers(int siteId, CancellationToken cancellationToken = default(CancellationToken))

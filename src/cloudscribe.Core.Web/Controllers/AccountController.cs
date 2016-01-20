@@ -110,8 +110,20 @@ namespace cloudscribe.Core.Web.Controllers
             }
 
 
+            //TODO: we don't want to lockout on first failure, we need something more advanced
+            // based on sitesettings
+            //var maxFailures = userManager.Site.MaxInvalidPasswordAttempts;
+            // probably need to override signInManager.PasswordSignInAsync
+            // or create a new method that does what we want
+            // we also need to prevent login if site requires confirmed email
+            // and user email is not confirmed
+            // also need to prevent login if site requires approval before new users can login
+            // and user is not yet approved
+            // also need a UI to manually lockout a user 
+
+
             // This doesn't count login failures towards account lockout
-            // To enable password failures to trigger account lockout, change to shouldLockout: true
+            // To enable password failures to trigger account lockout, change to lockoutOnFailure: true
             var result = await signInManager.PasswordSignInAsync(
                 model.Email,
                 model.Password,

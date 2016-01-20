@@ -699,7 +699,7 @@ namespace cloudscribe.Core.Repositories.EF
             return await dbContext.Users.CountAsync<SiteUser>(x => x.SiteId == siteId && x.IsLockedOut == true, cancellationToken);
         }
 
-        public async Task<List<IUserInfo>> GetPageLockedUsers(
+        public async Task<List<IUserInfo>> GetPageLockedOutUsers(
             int siteId,
             int pageNumber,
             int pageSize,

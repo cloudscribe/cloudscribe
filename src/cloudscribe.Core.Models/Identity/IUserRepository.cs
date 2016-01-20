@@ -40,7 +40,7 @@ namespace cloudscribe.Core.Models
         Task<List<IUserInfo>> GetCrossSiteUserListByEmail(string email, CancellationToken cancellationToken);
         Task<List<IUserInfo>> GetNotApprovedUsers(int siteId, int pageNumber, int pageSize, CancellationToken cancellationToken);
         Task<List<IUserInfo>> GetPage(int siteId, int pageNumber, int pageSize, string userNameBeginsWith, int sortMode, CancellationToken cancellationToken);
-        Task<List<IUserInfo>> GetPageLockedUsers(int siteId, int pageNumber, int pageSize, CancellationToken cancellationToken);
+        Task<List<IUserInfo>> GetPageLockedOutUsers(int siteId, int pageNumber, int pageSize, CancellationToken cancellationToken);
         Task<List<IUserInfo>> GetUserAdminSearchPage(int siteId, int pageNumber, int pageSize, string searchInput, int sortMode, CancellationToken cancellationToken);
         //Task<List<IUserInfo>> GetUserSearchPage(int siteId, int pageNumber, int pageSize, string searchInput, int sortMode);
         Task<bool> Save(ISiteUser user, CancellationToken cancellationToken);

@@ -600,7 +600,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return await dbSiteUser.CountLockedOutUsers(siteId, cancellationToken);
         }
 
-        public async Task<List<IUserInfo>> GetPageLockedUsers(
+        public async Task<List<IUserInfo>> GetPageLockedOutUsers(
             int siteId,
             int pageNumber,
             int pageSize,

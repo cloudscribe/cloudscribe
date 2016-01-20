@@ -543,7 +543,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             return dbSiteUser.CountLockedOutUsers(siteId);
         }
 
-        public async Task<List<IUserInfo>> GetPageLockedUsers(
+        public async Task<List<IUserInfo>> GetPageLockedOutUsers(
             int siteId,
             int pageNumber,
             int pageSize,
