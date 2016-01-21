@@ -1730,6 +1730,7 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append("UPDATE mp_users ");
             sqlCommand.Append("SET ");
             sqlCommand.Append("islockedout = false, ");
+            sqlCommand.Append("emailconfirmed = true,  ");
             sqlCommand.Append("registerconfirmguid = :emptyguid ");
             sqlCommand.Append("WHERE registerconfirmguid = :registerconfirmguid  ;");
             

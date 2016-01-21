@@ -1588,6 +1588,7 @@ namespace cloudscribe.Core.Repositories.MySql
             sqlCommand.Append("UPDATE mp_Users ");
             sqlCommand.Append("SET   ");
             sqlCommand.Append("IsLockedOut = 0,  ");
+            sqlCommand.Append("EmailConfirmed = 1,  ");
             sqlCommand.Append("RegisterConfirmGuid = ?EmptyGuid  ");
             sqlCommand.Append("WHERE RegisterConfirmGuid = ?RegisterConfirmGuid  ;");
 

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-08
-// Last Modified:			2015-12-19
+// Last Modified:			2015-12-21
 // 
 
 using cloudscribe.Core.Identity;
@@ -10,6 +10,7 @@ using cloudscribe.Core.Models;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.ViewModels.Account;
 using cloudscribe.Core.Web.ViewModels.UserAdmin;
+using cloudscribe.Web.Navigation;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Mvc;
@@ -194,13 +195,104 @@ namespace cloudscribe.Core.Web.Controllers
 
         }
 
+        [HttpGet]
+        public async Task<IActionResult> LockedUsers(
+            Guid? siteGuid,
+            int pageNumber = 1,
+            int pageSize = -1)
+        {
+            ISiteSettings selectedSite;
+            // only server admin site can edit other sites settings
+            if ((siteGuid.HasValue) && (siteGuid.Value != Guid.Empty) && (siteGuid.Value != siteManager.CurrentSite.SiteGuid) && (siteManager.CurrentSite.IsServerAdminSite))
+            {
+                selectedSite = await siteManager.Fetch(siteGuid.Value);
+            }
+            else
+            {
+                selectedSite = siteManager.CurrentSite;
+            }
+
+            ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - Locked Out User Accounts", selectedSite.SiteName);
+
+            int itemsPerPage = uiOptions.DefaultPageSize_UserList;
+            if (pageSize > 0)
+            {
+                itemsPerPage = pageSize;
+            }
+
+
+            var siteMembers = await UserManager.GetPageLockedUsers(
+                selectedSite.SiteId,
+                pageNumber,
+                itemsPerPage);
+
+            var count = await UserManager.CountLockedOutUsers(selectedSite.SiteId);
+
+            UserListViewModel model = new UserListViewModel();
+            model.SiteGuid = selectedSite.SiteGuid;
+            model.UserList = siteMembers;
+            model.Paging.CurrentPage = pageNumber;
+            model.Paging.ItemsPerPage = itemsPerPage;
+            model.Paging.TotalItems = count;
+            
+            model.ShowAlphaPager = false;
+
+            return View(model);
+
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> UnApprovedUsers(
+            Guid? siteGuid,
+            int pageNumber = 1,
+            int pageSize = -1)
+        {
+            ISiteSettings selectedSite;
+            // only server admin site can edit other sites settings
+            if ((siteGuid.HasValue) && (siteGuid.Value != Guid.Empty) && (siteGuid.Value != siteManager.CurrentSite.SiteGuid) && (siteManager.CurrentSite.IsServerAdminSite))
+            {
+                selectedSite = await siteManager.Fetch(siteGuid.Value);
+            }
+            else
+            {
+                selectedSite = siteManager.CurrentSite;
+            }
+
+            ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - User Accounts Pending Approval", selectedSite.SiteName);
+
+            int itemsPerPage = uiOptions.DefaultPageSize_UserList;
+            if (pageSize > 0)
+            {
+                itemsPerPage = pageSize;
+            }
+
+
+            var siteMembers = await UserManager.GetNotApprovedUsers(
+                selectedSite.SiteId,
+                pageNumber,
+                itemsPerPage);
+
+            var count = await UserManager.CountNotApprovedUsers(selectedSite.SiteId);
+
+            UserListViewModel model = new UserListViewModel();
+            model.SiteGuid = selectedSite.SiteGuid;
+            model.UserList = siteMembers;
+            model.Paging.CurrentPage = pageNumber;
+            model.Paging.ItemsPerPage = itemsPerPage;
+            model.Paging.TotalItems = count;
+
+            model.ShowAlphaPager = false;
+
+            return View(model);
+
+        }
+
+
 
         [HttpGet]
         //[Authorize(Roles = "Admins")]
-        //[MvcSiteMapNode(Title = "New User", ParentKey = "UserAdmin", Key = "UserEdit")]
-        public async Task<ActionResult> UserEdit(
-            Guid? siteGuid,
-            int? userId)
+        public async Task<ActionResult> NewUser(
+            Guid? siteGuid)
         {
             ISiteSettings selectedSite;
             // only server admin site can edit other sites settings
@@ -214,48 +306,128 @@ namespace cloudscribe.Core.Web.Controllers
                 selectedSite = siteManager.CurrentSite;
                 ViewData["Title"] = "New User";
             }
+
+
+            RegisterViewModel model = new RegisterViewModel();
+            model.SiteGuid = selectedSite.SiteGuid;
+
+            
+
+            return View(model);
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> NewUser(RegisterViewModel model)
+        {
+            ISiteSettings selectedSite;
+            // only server admin site can edit other sites settings
+            if ((model.SiteGuid != siteManager.CurrentSite.SiteGuid) && (model.SiteGuid != Guid.Empty) && (siteManager.CurrentSite.IsServerAdminSite))
+            {
+                selectedSite = await siteManager.Fetch(model.SiteGuid);
+            }
+            else
+            {
+                selectedSite = siteManager.CurrentSite;
+            }
+
+            ViewData["Title"] = "New User";
+
+            if (ModelState.IsValid)
+            {
+                
+                    var user = new SiteUser
+                    {
+                        SiteId = selectedSite.SiteId,
+                        SiteGuid = selectedSite.SiteGuid,
+                        UserName = model.LoginName,
+                        Email = model.Email,
+                        FirstName = model.FirstName,
+                        LastName = model.LastName,
+                        DisplayName = model.DisplayName
+                    };
+
+                    if (model.DateOfBirth.HasValue)
+                    {
+                        user.DateOfBirth = model.DateOfBirth.Value;
+                    }
+
+                    var result = await UserManager.CreateAsync(user, model.Password);
+                    if (result.Succeeded)
+                    {
+                        this.AlertSuccess(string.Format("user account for <b>{0}</b> was successfully created.",
+                            user.DisplayName), true);
+
+                        return RedirectToAction("Index", "UserAdmin", new { siteGuid = selectedSite.SiteGuid });
+                    }
+                    AddErrors(result);
+                
+
+
+                }
+
+            // If we got this far, something failed, redisplay form
+            return View(model);
+
+        }
+
+
+        [HttpGet]
+        //[Authorize(Roles = "Admins")]
+        public async Task<ActionResult> UserEdit(
+            int userId,
+            Guid? siteGuid
+            )
+        {
+            ISiteSettings selectedSite;
+            // only server admin site can edit other sites settings
+            if ((siteGuid.HasValue) && (siteGuid.Value != Guid.Empty) && (siteGuid.Value != siteManager.CurrentSite.SiteGuid) && (siteManager.CurrentSite.IsServerAdminSite))
+            {
+                selectedSite = await siteManager.Fetch(siteGuid.Value);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - Manage User", selectedSite.SiteName);
+            }
+            else
+            {
+                selectedSite = siteManager.CurrentSite;
+                ViewData["Title"] = "Manage User";
+            }
             
 
             EditUserViewModel model = new EditUserViewModel();
             model.SiteGuid = selectedSite.SiteGuid;
-
-            if (userId.HasValue)
+            
+            ISiteUser user = await UserManager.Fetch(selectedSite.SiteId, userId);
+            if (user != null)
             {
-                ISiteUser user = await UserManager.Fetch(selectedSite.SiteId, userId.Value);
-                if (user != null)
+                model.UserId = user.UserId;
+                model.UserGuid = user.UserGuid;
+                model.Email = user.Email;
+                model.FirstName = user.FirstName;
+                model.LastName = user.LastName;
+                model.LoginName = user.UserName;
+                model.DisplayName = user.DisplayName;
+
+                model.AccountApproved = user.AccountApproved;
+                model.Comment = user.Comment;
+                model.EmailConfirmed = user.EmailConfirmed;
+                model.IsLockedOut = user.IsLockedOut;
+                model.LastActivityDate = user.LastActivityDate;
+                model.LastLoginDate = user.LastLoginDate;
+                model.TimeZoneId = user.TimeZoneId;
+           
+                if (user.DateOfBirth > DateTime.MinValue)
                 {
-                    model.UserId = user.UserId;
-                    model.UserGuid = user.UserGuid;
-                    model.Email = user.Email;
-                    model.FirstName = user.FirstName;
-                    model.LastName = user.LastName;
-                    model.LoginName = user.UserName;
-                    model.DisplayName = user.DisplayName;
-
-                    if (user.DateOfBirth > DateTime.MinValue)
-                    {
-                        model.DateOfBirth = user.DateOfBirth;
-                    }
-
-                    if ((siteGuid.HasValue) && (siteGuid.Value != Guid.Empty))
-                    {
-                        ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - Manage User", selectedSite.SiteName);
-                    }
-                    else
-                    {
-                        ViewBag.Title = "Manage User";
-                    }
-
-                    
-
-                    //var node = SiteMaps.Current.FindSiteMapNodeFromKey("UserEdit");
-                    //if (node != null)
-                    //{
-                    //    node.Title = "Manage User";
-                    //}
+                    model.DateOfBirth = user.DateOfBirth;
                 }
 
-
+                
+                NavigationNodeAdjuster currentCrumbAdjuster = new NavigationNodeAdjuster(Request.HttpContext);
+                currentCrumbAdjuster.KeyToAdjust = "UserEdit";
+                currentCrumbAdjuster.AdjustedText = user.DisplayName;
+                currentCrumbAdjuster.ViewFilterName = NamedNavigationFilters.Breadcrumbs; // this is default but showing here for readers of code 
+                currentCrumbAdjuster.AddToContext();
+                
             }
 
             return View(model);
@@ -292,6 +464,14 @@ namespace cloudscribe.Core.Web.Controllers
                         user.LastName = model.LastName;
                         user.UserName = model.LoginName;
                         user.DisplayName = model.DisplayName;
+
+                        user.AccountApproved = model.AccountApproved;
+                        user.Comment = model.Comment;
+                        user.EmailConfirmed = model.EmailConfirmed;
+                        user.IsLockedOut = model.IsLockedOut;
+                        
+                        //user.TimeZoneId = model.TimeZoneId;
+
                         if (model.DateOfBirth.HasValue)
                         {
                             user.DateOfBirth = model.DateOfBirth.Value;
@@ -312,34 +492,7 @@ namespace cloudscribe.Core.Web.Controllers
                         return RedirectToAction("Index", "UserAdmin", new { siteGuid = selectedSite.SiteGuid });
                     }
                 }
-                else
-                {
-                    var user = new SiteUser
-                    {
-                        SiteId = selectedSite.SiteId,
-                        SiteGuid = selectedSite.SiteGuid,
-                        UserName = model.LoginName,
-                        Email = model.Email,
-                        FirstName = model.FirstName,
-                        LastName = model.LastName,
-                        DisplayName = model.DisplayName
-                    };
-
-                    if (model.DateOfBirth.HasValue)
-                    {
-                        user.DateOfBirth = model.DateOfBirth.Value;
-                    }
-
-                    var result = await UserManager.CreateAsync(user, model.Password);
-                    if (result.Succeeded)
-                    {
-                        this.AlertSuccess(string.Format("user account for <b>{0}</b> was successfully created.",
-                            user.DisplayName), true);
-
-                        return RedirectToAction("Index", "UserAdmin", new { siteGuid = selectedSite.SiteGuid });
-                    }
-                    AddErrors(result);
-                }
+                
 
 
             }

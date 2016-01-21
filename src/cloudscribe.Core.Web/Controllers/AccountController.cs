@@ -160,7 +160,7 @@ namespace cloudscribe.Core.Web.Controllers
         {
             ViewData["Title"] = "Register";
             
-            EditUserViewModel model = new EditUserViewModel();
+            RegisterViewModel model = new RegisterViewModel();
             model.SiteGuid = Site.SiteGuid;
             if ((Site.CaptchaOnRegistration)&& (Site.RecaptchaPublicKey.Length > 0))
             {
@@ -179,7 +179,7 @@ namespace cloudscribe.Core.Web.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(EditUserViewModel model)
+        public async Task<IActionResult> Register(RegisterViewModel model)
         {
             ViewData["Title"] = "Register";
 

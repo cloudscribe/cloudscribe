@@ -1,6 +1,6 @@
 
 
-
+http://www.strathweb.com/2015/04/asp-net-mvc-6-discovers-controllers/
 
 10 good practices for mvc
 http://www.codemag.com/Article/1405071

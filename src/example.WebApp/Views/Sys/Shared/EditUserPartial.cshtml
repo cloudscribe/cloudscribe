@@ -1,7 +1,10 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.Account.EditUserViewModel
-@{
+@inject IOptions<CkeditorOptions> ckOptionsAccessor
 
+@{
+    CkeditorOptions ckOptions = ckOptionsAccessor.Value;
 }
+
 <div class="form-group">
     <label asp-for="Email" class="col-md-2 control-label"></label>
     <div class="col-md-10">
@@ -35,23 +38,7 @@
         <input asp-for="LastName" class="form-control" />
     </div>
 </div>
-    @if (Model.UserId == -1)
-    {
-<div class="form-group">
-    <label asp-for="Password" class="col-md-2 control-label"></label>
-    <div class="col-md-10">
-        <input asp-for="Password" type="password" class="form-control" />
-        <span asp-validation-for="Password" class="text-danger"></span> 
-    </div>
-</div>
-<div class="form-group">
-    <label asp-for="ConfirmPassword" class="col-md-2 control-label"></label>
-    <div class="col-md-10">
-        <input asp-for="ConfirmPassword" type="password" class="form-control" />
-        <span asp-validation-for="ConfirmPassword" class="text-danger"></span> 
-    </div>
-</div>
-    }
+    
 <div class="form-group">
     <label asp-for="DateOfBirth" class="col-md-2 control-label"></label>
     <div class="col-md-10">
@@ -70,3 +57,42 @@
 
     </div>
 </div>
+<div class="form-group">
+    <div class="col-md-offset-2 col-md-10">
+        <div class="checkbox">
+            <label>
+                <input asp-for="AccountApproved" /> Account Approved
+            </label>
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-md-offset-2 col-md-12">
+        <div class="checkbox">
+            <label>
+                <input asp-for="EmailConfirmed" /> Email Confirmed
+            </label>
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-md-offset-2 col-md-12">
+        <div class="checkbox">
+            <label>
+                <input asp-for="IsLockedOut" /> Account Locked
+            </label>
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <label asp-for="Comment" class="col-md-2 control-label"></label>
+    <div class="col-md-10">
+        <textarea class="form-control" rows="5" asp-for="Comment"
+                  data-ckeditor-unobtrusive=""
+                  data-ckeditor-unobtrusive-config-url="@Url.Content(ckOptions.CustomConfigPath)"
+                  data-ckeditor-unobtrusive-config-toolbar="Full"
+                  data-ckeditor-unobtrusive-config-language="@System.Globalization.CultureInfo.CurrentUICulture.Name"></textarea>
+        
+    </div>
+</div>
+

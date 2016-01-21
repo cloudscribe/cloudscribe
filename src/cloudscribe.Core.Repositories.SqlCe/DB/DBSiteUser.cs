@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2010-04-06
-// Last Modified:			2016-01-02
+// Last Modified:			2016-01-21
 // 
 
 using cloudscribe.DbHelpers;
@@ -1691,6 +1691,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("UPDATE mp_Users ");
             sqlCommand.Append("SET  ");
             sqlCommand.Append("RegisterConfirmGuid = @EmptyGuid, ");
+            sqlCommand.Append("EmailConfirmed = 1,  ");
             sqlCommand.Append("IsLockedOut = 0 ");
 
             sqlCommand.Append("WHERE  ");

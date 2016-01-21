@@ -1,0 +1,27 @@
+﻿@model cloudscribe.Core.Web.ViewModels.UserAdmin.UserListViewModel
+
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<div class="row">
+    <div class="col-md-10 col-md-push-2">
+        <h2>@ViewData["Title"]</h2>
+        @{await Html.RenderPartialAsync("UserGridPartial", Model); }
+    </div>
+    <div class="col-md-2 col-md-pull-10">
+        @await Component.InvokeAsync("Navigation", "SideNav", NamedNavigationFilters.ParentTree, "SiteAdmin")
+    </div>
+</div>
+@section scripts {
+    <environment names="Development">
+        <script src="~/lib/metisMenu/dist/metisMenu.min.js"></script>
+        <script src="~/jsdev/cloudscribe-sidemenu.js"></script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="~/js/metisMenu/dist/metisMenu.min.js"></script>
+        <script src="~/js/cloudscribe-sidemenu.js"></script>
+    </environment>
+}
+

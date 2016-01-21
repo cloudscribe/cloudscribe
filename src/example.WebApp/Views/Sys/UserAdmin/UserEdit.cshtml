@@ -54,14 +54,18 @@
 
 <environment names="Development">
     <script src="~/lib/jquery-ui/jquery-ui.js"></script>
-  
+    <script src="~/lib/ckeditor/ckeditor.js"></script>
+    <script src="~/lib/ckeditor/adapters/jquery.js"></script>
+    <script src="~/jsdev/cloudscribe-ckeditor-unobtrusive.js"></script>
 </environment>
 <environment names="Staging,Production">
     <script src="//ajax.aspnetcdn.com/ajax/jquery.ui/1.11.3/jquery.ui.min.js"
             asp-fallback-src="~/js/lib/jquery-ui/jquery-ui.min.js"
             asp-fallback-test="window.jQuery.ui && window.jQuery.ui.version">
     </script>
-    
+    <script src="~/js/ckeditor/ckeditor.js"></script>
+    <script src="~/js/ckeditor/adapters/jquery.js"></script>
+    <script src="~/js/cloudscribe-ckeditor-unobtrusive.js"></script>
 </environment>
         <script src="~/jsdev/timepicker/jquery-ui-timepicker-addon.js"></script>
 

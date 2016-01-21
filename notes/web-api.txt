@@ -5,6 +5,8 @@ http://chsakell.com/2015/12/31/cross-platform-single-page-applications-with-asp-
 
 http://stephenwalther.com/archive/2015/01/13/asp-net-5-and-angularjs-part-2-using-the-mvc-6-web-api
 
+http://capesean.co.za/blog/asp-net-5-jwt-tokens/
+
 
 
 http://damienbod.com/2015/12/13/asp-net-5-mvc-6-api-documentation-using-swagger/
