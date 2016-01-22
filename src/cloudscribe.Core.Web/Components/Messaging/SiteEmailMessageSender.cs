@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Globalization;
 
 
 namespace cloudscribe.Core.Web.Components.Messaging
@@ -55,12 +56,36 @@ namespace cloudscribe.Core.Web.Components.Messaging
         {
             SmtpOptions smtpOptions = GetSmptOptions(siteSettings);
 
-            string plainTextTemplate = templateService.GetPlainTextTemplate(MessagePurpose.ConfirmAccount, "");
+            string plainTextTemplate = templateService.GetPlainTextTemplate(MessagePurpose.ConfirmAccount, CultureInfo.CurrentUICulture.Name);
             string plainTextMessage = string.Format(plainTextTemplate, confirmationUrl);
             
-            string htmlTemplate = templateService.GetHtmlTemplate(MessagePurpose.ConfirmAccount, "");
+            string htmlTemplate = templateService.GetHtmlTemplate(MessagePurpose.ConfirmAccount, CultureInfo.CurrentUICulture.Name);
             string htmlMessage = string.Format(htmlTemplate, confirmationUrl);
             
+            EmailSender sender = new EmailSender();
+            await sender.SendEmailAsync(
+                smtpOptions,
+                toAddress,
+                siteSettings.DefaultEmailFromAddress,
+                subject,
+                plainTextMessage,
+                htmlMessage);
+        }
+
+        public async Task SendPasswordResetEmailAsync(
+            ISiteSettings siteSettings,
+            string toAddress,
+            string subject,
+            string resetUrl)
+        {
+            SmtpOptions smtpOptions = GetSmptOptions(siteSettings);
+
+            string plainTextTemplate = templateService.GetPlainTextTemplate(MessagePurpose.PasswordReset, CultureInfo.CurrentUICulture.Name);
+            string plainTextMessage = string.Format(plainTextTemplate, resetUrl);
+
+            string htmlTemplate = templateService.GetHtmlTemplate(MessagePurpose.PasswordReset, CultureInfo.CurrentUICulture.Name);
+            string htmlMessage = string.Format(htmlTemplate, resetUrl);
+
             EmailSender sender = new EmailSender();
             await sender.SendEmailAsync(
                 smtpOptions,
@@ -79,10 +104,10 @@ namespace cloudscribe.Core.Web.Components.Messaging
         {
             SmtpOptions smtpOptions = GetSmptOptions(siteSettings);
             
-            string plainTextTemplate = templateService.GetPlainTextTemplate(MessagePurpose.SendSecurityCode, "");
+            string plainTextTemplate = templateService.GetPlainTextTemplate(MessagePurpose.SendSecurityCode, CultureInfo.CurrentUICulture.Name);
             string plainTextMessage = string.Format(plainTextTemplate, securityCode);
 
-            string htmlTemplate = templateService.GetHtmlTemplate(MessagePurpose.SendSecurityCode, "");
+            string htmlTemplate = templateService.GetHtmlTemplate(MessagePurpose.SendSecurityCode, CultureInfo.CurrentUICulture.Name);
             string htmlMessage = string.Format(htmlTemplate, securityCode);
 
 

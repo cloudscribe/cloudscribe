@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-01-19
-// Last Modified:			2016-01-20
+// Last Modified:			2016-01-22
 // 
 
 
@@ -22,6 +22,10 @@ namespace cloudscribe.Core.Web.Components.Messaging
                     
                     return SecurityCodeHtmlTemplate();
 
+                case MessagePurpose.PasswordReset:
+
+                    return PasswordResetHtmlTemplate();
+
 
             }
 
@@ -36,6 +40,11 @@ namespace cloudscribe.Core.Web.Components.Messaging
         private string SecurityCodeHtmlTemplate()
         {
             return "<html><head><title>Security Code</title></head><body>Your security code is: {1}</body></html>";
+        }
+
+        private string PasswordResetHtmlTemplate()
+        {
+            return "<html><head><title>Confirm Account</title></head><body>Please reset your password by clicking here: <a href=\"{0}\">link</a></body></html>";
         }
 
         private string LastResortHtmlTemplate()
@@ -55,6 +64,10 @@ namespace cloudscribe.Core.Web.Components.Messaging
 
                     return SecurityCodePlainTextTemplate();
 
+                case MessagePurpose.PasswordReset:
+
+                    return PasswordResetPlainTextTemplate();
+
             }
 
             return LastResortPlainTextTemplate();
@@ -63,6 +76,11 @@ namespace cloudscribe.Core.Web.Components.Messaging
         private string ConfirmAccountPlainTextTemplate()
         {
             return "Please confirm your account by clicking this link: {0} ";
+        }
+
+        private string PasswordResetPlainTextTemplate()
+        {
+            return "Please reset your password by clicking this link: {0} ";
         }
 
         private string SecurityCodePlainTextTemplate()

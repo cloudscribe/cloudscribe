@@ -109,6 +109,32 @@ namespace cloudscribe.Core.Web.Controllers
                 }
             }
 
+            if(userManager.Site.UseSecureRegistration || userManager.Site.RequireApprovalBeforeLogin)
+            {
+                var user = await userManager.FindByNameAsync(model.Email);
+                if (user != null)
+                {
+                    if (userManager.Site.UseSecureRegistration)
+                    {
+                        if (!await userManager.IsEmailConfirmedAsync(user))
+                        {
+                            ModelState.AddModelError(string.Empty, "You must have a confirmed email to log in.");
+                            return View(model);
+                        }
+                    }
+
+                    if(userManager.Site.RequireApprovalBeforeLogin)
+                    {
+                        if(!user.AccountApproved)
+                        {
+                            ModelState.AddModelError(string.Empty, "Your account must be approved by an administrator before you can log in. If an administrator approves your account, you will receive an email notifying you that your account is ready.");
+                            return View(model);
+                        }
+                    }
+                    
+                }
+            }
+
 
             //TODO: we don't want to lockout on first failure, we need something more advanced
             // based on sitesettings
@@ -124,10 +150,16 @@ namespace cloudscribe.Core.Web.Controllers
 
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to lockoutOnFailure: true
+            bool persistent = false;
+            if(userManager.Site.AllowPersistentLogin)
+            {
+                //TODO: hide remember me in view if persistent login not allowed  site settings
+                persistent = model.RememberMe;
+            }
             var result = await signInManager.PasswordSignInAsync(
                 model.Email,
                 model.Password,
-                model.RememberMe,
+                persistent,
                 lockoutOnFailure : false);
             
             if (result.Succeeded)
@@ -560,11 +592,19 @@ namespace cloudscribe.Core.Web.Controllers
 
                 // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=532713
                 // Send an email with this link
-                // var code = await UserManager.GeneratePasswordResetTokenAsync(user);
-                // var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Context.Request.Scheme);
-                // await emailSender.SendEmailAsync(model.Email, "Reset Password",
-                //    "Please reset your password by clicking here: <a href=\"" + callbackUrl + "\">link</a>");
-                // return View("ForgotPasswordConfirmation");
+                var code = await userManager.GeneratePasswordResetTokenAsync(user);
+                var resetUrl = Url.Action("ResetPassword", "Account", 
+                    new { userId = user.Id, code = code }, 
+                    protocol: HttpContext.Request.Scheme);
+
+
+                await emailSender.SendPasswordResetEmailAsync(
+                    userManager.Site,
+                    model.Email, 
+                    "Reset Password",
+                    resetUrl);
+
+                return View("ForgotPasswordConfirmation");
             }
 
             // If we got this far, something failed, redisplay form

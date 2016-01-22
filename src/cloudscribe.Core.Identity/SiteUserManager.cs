@@ -53,6 +53,8 @@ namespace cloudscribe.Core.Identity
                   logger,
                   contextAccessor)
         {
+            defaultIdentityOptions = optionsAccessor.Value;
+            userStore = store;
             userRepo = userRepository;
             this.siteResolver = siteResolver;
             multiTenantOptions = multiTenantOptionsAccessor.Value;
@@ -60,6 +62,8 @@ namespace cloudscribe.Core.Identity
             _context = contextAccessor?.HttpContext;
         }
 
+        private IdentityOptions defaultIdentityOptions;
+        private IUserStore<TUser> userStore;
         private IUserRepository userRepo;
         private ISiteResolver siteResolver;
         private MultiTenantOptions multiTenantOptions;
@@ -68,6 +72,17 @@ namespace cloudscribe.Core.Identity
         private CancellationToken CancellationToken => _context?.RequestAborted ?? CancellationToken.None;
 
         private ISiteSettings siteSettings = null;
+
+        internal IUserLockoutStore<TUser> GetUserLockoutStore()
+        {
+            var cast = Store as IUserLockoutStore<TUser>;
+            if (cast == null)
+            {
+                throw new NotSupportedException("IUserLockoutStore was null");
+            }
+            return cast;
+        }
+
 
 
         public ISiteSettings Site
@@ -215,6 +230,8 @@ namespace cloudscribe.Core.Identity
 
         }
 
+        #region Overrides
+
         public override async Task<string> GenerateEmailConfirmationTokenAsync(TUser user)
         {
             Guid registerConfirmGuid = Guid.NewGuid();
@@ -240,6 +257,51 @@ namespace cloudscribe.Core.Identity
 
             return IdentityResult.Failed();
         }
+
+        /// <summary>
+        /// Increments the access failed count for the user as an asynchronous operation. 
+        /// If the failed access account is greater than or equal to the configured maximum number of attempts, 
+        /// the user will be locked out for the configured lockout time span.
+        /// </summary>
+        /// <param name="user">The user whose failed access count to increment.</param>
+        /// <returns>The <see cref="Task"/> that represents the asynchronous operation, containing the <see cref="IdentityResult"/> of the operation.</returns>
+        public override async Task<IdentityResult> AccessFailedAsync(TUser user)
+        {
+            //ThrowIfDisposed();
+            var store = GetUserLockoutStore();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+
+            // If this puts the user over the threshold for lockout, lock them out and reset the access failed count
+            var count = await store.IncrementAccessFailedCountAsync(user, CancellationToken);
+
+            //if (count < defaultIdentityOptions.Lockout.MaxFailedAccessAttempts)
+            if (count < Site.MaxInvalidPasswordAttempts)
+            {
+                //return await UpdateUserAsync(user);
+                await userRepo.Save(user, CancellationToken.None);
+                return IdentityResult.Success;
+            }
+
+            Logger.LogWarning(12, "User {userId} is locked out.", await GetUserIdAsync(user));
+
+            // TODO: should DefaultLockoutTimeSpan be promoted to a site setting?
+            await store.SetLockoutEndDateAsync(
+                user, 
+                DateTimeOffset.UtcNow.Add(defaultIdentityOptions.Lockout.DefaultLockoutTimeSpan),
+                CancellationToken);
+
+            await store.ResetAccessFailedCountAsync(user, CancellationToken);
+            //return await UpdateUserAsync(user);
+            await userRepo.Save(user, CancellationToken.None);
+
+            return IdentityResult.Success;
+        }
+
+
+        #endregion
 
 
     }

@@ -26,5 +26,11 @@ namespace cloudscribe.Core.Web.Components.Messaging
             string toAddress,
             string subject,
             string securityCode);
+
+        Task SendPasswordResetEmailAsync(
+            ISiteSettings siteSettings,
+            string toAddress,
+            string subject,
+            string resetUrl);
     }
 }

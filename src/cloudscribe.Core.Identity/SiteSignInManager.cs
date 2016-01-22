@@ -2,8 +2,12 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-27
-// Last Modified:		    2015-11-19
+// Last Modified:		    2016-01-22
 // 
+
+//TODO: we need to override many or most of the methods of the base class
+// https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity/SignInManager.cs
+// specifically wherever it is using IdentityOptions
 
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Identity;
@@ -112,6 +116,7 @@ namespace cloudscribe.Core.Identity
             log.LogInformation("RememberTwoFactorClientAsync called");
 
             var userId = await UserManager.GetUserIdAsync(user);
+     
             var rememberBrowserIdentity = new ClaimsIdentity(tenantResolver.ResolveAuthScheme(AuthenticationScheme.TwoFactorRememberMe));
             rememberBrowserIdentity.AddClaim(new Claim(ClaimTypes.Name, userId));
 

@@ -16,5 +16,6 @@ namespace cloudscribe.Core.Web.Components.Messaging
     {
         public const string ConfirmAccount = "ConfirmAccount";
         public const string SendSecurityCode = "SendSecurityCode";
+        public const string PasswordReset = "PasswordReset";
     }
 }

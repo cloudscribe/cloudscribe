@@ -468,6 +468,11 @@ namespace cloudscribe.Core.Web.Controllers
                         user.AccountApproved = model.AccountApproved;
                         user.Comment = model.Comment;
                         user.EmailConfirmed = model.EmailConfirmed;
+                        if((user.IsLockedOut)&&(!model.IsLockedOut))
+                        {
+                            // identity lockout is really based on the end date
+                            user.LockoutEndDateUtc = DateTime.UtcNow.AddDays(-1);
+                        }
                         user.IsLockedOut = model.IsLockedOut;
                         
                         //user.TimeZoneId = model.TimeZoneId;

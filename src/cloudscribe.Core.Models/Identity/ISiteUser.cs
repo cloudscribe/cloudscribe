@@ -49,7 +49,7 @@ namespace cloudscribe.Core.Models
     {
         string Id { get; }
         
-        Guid EmailChangeGuid { get; set; }
+        
         bool EmailConfirmed { get; set; }
         
         int FailedPasswordAnswerAttemptCount { get; set; }
@@ -72,6 +72,7 @@ namespace cloudscribe.Core.Models
         string SecurityStamp { get; set; }
         
         string LoweredEmail { get; set; }
+        Guid EmailChangeGuid { get; set; }
         string NewEmail { get; set; }
         
         string Signature { get; set; }
