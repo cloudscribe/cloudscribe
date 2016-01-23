@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-22
-// Last Modified:		    2016-01-22
+// Last Modified:		    2016-01-23
 // 
 
 using cloudscribe.Core.Models;
@@ -20,6 +20,7 @@ namespace cloudscribe.Core.Identity
 {
     public sealed class UserStore<TUser> :
         IUserStore<TUser>,
+        IUserSecurityStampStore<TUser>,
         IUserPasswordStore<TUser>,
         IUserEmailStore<TUser>,
         IUserLoginStore<TUser>,
@@ -347,13 +348,56 @@ namespace cloudscribe.Core.Identity
             //return user.UserName.ToLowerInvariant();
         }
 
-//#pragma warning restore 1998
+        //#pragma warning restore 1998
 
         #endregion
 
+        #region ISecurityStampStore
+
+        /// <summary>
+        /// Sets the provided security <paramref name="stamp"/> for the specified <paramref name="user"/>.
+        /// </summary>
+        /// <param name="user">The user whose security stamp should be set.</param>
+        /// <param name="stamp">The security stamp to set.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
+        /// <returns>The <see cref="Task"/> that represents the asynchronous operation.</returns>
+        public Task SetSecurityStampAsync(TUser user, string stamp, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            user.SecurityStamp = stamp;
+            return Task.FromResult(0);
+            //bool result = await repo.Save(user, cancellationToken);
+
+        }
+
+        /// <summary>
+        /// Get the security stamp for the specified <paramref name="user" />.
+        /// </summary>
+        /// <param name="user">The user whose security stamp should be set.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> used to propagate notifications that the operation should be canceled.</param>
+        /// <returns>The <see cref="Task"/> that represents the asynchronous operation, containing the security stamp for the specified <paramref name="user"/>.</returns>
+        public Task<string> GetSecurityStampAsync(TUser user, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            return Task.FromResult(user.SecurityStamp);
+        }
+
+        #endregion
+
+
         #region IUserEmailStore
 
-        
+
 
         public Task<string> GetEmailAsync(TUser user, CancellationToken cancellationToken)
         {

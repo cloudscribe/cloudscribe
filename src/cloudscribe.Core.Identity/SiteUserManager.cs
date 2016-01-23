@@ -232,31 +232,31 @@ namespace cloudscribe.Core.Identity
 
         #region Overrides
 
-        public override async Task<string> GenerateEmailConfirmationTokenAsync(TUser user)
-        {
-            Guid registerConfirmGuid = Guid.NewGuid();
-            bool result = await userRepo.SetRegistrationConfirmationGuid(user.UserGuid, registerConfirmGuid, CancellationToken.None);
+        //public override async Task<string> GenerateEmailConfirmationTokenAsync(TUser user)
+        //{
+        //    Guid registerConfirmGuid = Guid.NewGuid();
+        //    bool result = await userRepo.SetRegistrationConfirmationGuid(user.UserGuid, registerConfirmGuid, CancellationToken.None);
             
-            return registerConfirmGuid.ToString();
-        }
+        //    return registerConfirmGuid.ToString();
+        //}
 
-        public override async Task<IdentityResult> ConfirmEmailAsync(TUser user, string token)
-        {
-            if(token.Length != 36)
-            {
-                // TODO: log info or warning
-                return IdentityResult.Failed();
-            }
-            Guid confirmGuid = new Guid(token);
-            ISiteUser siteUser = await userRepo.FetchByConfirmationGuid(Site.SiteId, confirmGuid, CancellationToken);
-            if((siteUser != null)&&(siteUser.UserGuid == user.UserGuid))
-            {
-                bool result = await userRepo.ConfirmRegistration(confirmGuid, CancellationToken.None);
-                if(result) { return IdentityResult.Success; }
-            }
+        //public override async Task<IdentityResult> ConfirmEmailAsync(TUser user, string token)
+        //{
+        //    if(token.Length != 36)
+        //    {
+        //        // TODO: log info or warning
+        //        return IdentityResult.Failed();
+        //    }
+        //    Guid confirmGuid = new Guid(token);
+        //    ISiteUser siteUser = await userRepo.FetchByConfirmationGuid(Site.SiteId, confirmGuid, CancellationToken);
+        //    if((siteUser != null)&&(siteUser.UserGuid == user.UserGuid))
+        //    {
+        //        bool result = await userRepo.ConfirmRegistration(confirmGuid, CancellationToken.None);
+        //        if(result) { return IdentityResult.Success; }
+        //    }
 
-            return IdentityResult.Failed();
-        }
+        //    return IdentityResult.Failed();
+        //}
 
         /// <summary>
         /// Increments the access failed count for the user as an asynchronous operation. 

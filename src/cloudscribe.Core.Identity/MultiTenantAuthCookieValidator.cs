@@ -6,6 +6,7 @@
 // 
 
 using cloudscribe.Core.Models;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Authentication.Cookies;
 using Microsoft.Extensions.Logging;
 using System.Security.Claims;
@@ -17,20 +18,28 @@ namespace cloudscribe.Core.Identity
     {
         public MultiTenantAuthCookieValidator(
             ISiteResolver siteResolver,
+            ISecurityStampValidator securityStampValidator,
             ILogger<MultiTenantAuthCookieValidator> logger
             )
         {
+            this.securityStampValidator = securityStampValidator;
             this.siteResolver = siteResolver;
             log = logger;
         }
 
+        private ISecurityStampValidator securityStampValidator;
         private ISiteResolver siteResolver;
         private ILogger log;
 
-        public Task ValidatePrincipal(CookieValidatePrincipalContext context)
+        public async Task ValidatePrincipal(CookieValidatePrincipalContext context)
         {
+            await securityStampValidator.ValidateAsync(context);
+            
             ISiteSettings site = siteResolver.Resolve();
-            if (site == null) return Task.FromResult(0);
+            if (site == null)
+            {
+                context.RejectPrincipal();
+            }
 
             Claim siteGuidClaim = new Claim("SiteGuid", site.SiteGuid.ToString());
 
@@ -39,10 +48,8 @@ namespace cloudscribe.Core.Identity
                 log.LogInformation("rejecting principal because it does not have siteguid");
                 context.RejectPrincipal();
             }
-
             
-
-            return Task.FromResult(0);
+           // return Task.FromResult(0);
         }
     }
 }

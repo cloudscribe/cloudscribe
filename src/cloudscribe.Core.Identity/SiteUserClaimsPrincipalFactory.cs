@@ -57,11 +57,13 @@ namespace cloudscribe.Core.Identity
                 );
             id.AddClaim(new Claim(Options.ClaimsIdentity.UserIdClaimType, userId));
             id.AddClaim(new Claim(Options.ClaimsIdentity.UserNameClaimType, userName));
+
             if (UserManager.SupportsUserSecurityStamp)
             {
                 id.AddClaim(new Claim(Options.ClaimsIdentity.SecurityStampClaimType,
                     await UserManager.GetSecurityStampAsync(user)));
             }
+
             if (UserManager.SupportsUserRole)
             {
                 var roles = await UserManager.GetRolesAsync(user);
@@ -95,8 +97,7 @@ namespace cloudscribe.Core.Identity
                 {
                     identity.AddClaim(displayNameClaim);
                 }
-                // this seems pointless to pass in CancellationToken.None
-                //ISiteSettings site = await siteRepo.Fetch(user.SiteId, CancellationToken.None);
+                
                 ISiteSettings site = await siteRepo.Fetch(user.SiteId, CancellationToken.None);
 
                 if (site != null)

@@ -42,13 +42,83 @@ namespace cloudscribe.Core.Models
         // TODO use this to force ONLY social logins or ldap option?
         bool DisableDbAuth { get; set; }
         // TODO: implement
-        bool UseSecureRegistration { get; set; } // rename to reflect function RequireConfirmedEmailAddress
+        bool UseSecureRegistration { get; set; } // rename to reflect function RequireConfirmedEmail, maps to SignInOptions RequireConfirmedEmail
+
+        //TODO: add this which maps to IdentitySignInOptions
+        //https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNetCore.Identity/SignInOptions.cs
+        //public bool RequireConfirmedPhoneNumber { get; set; }
+
         bool RequireApprovalBeforeLogin { get; set; } // TODO: implement
+
+        //https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNetCore.Identity/LockoutOptions.cs
+
+        // should we make this configurable per site:
+
+        /// <value>
+        /// True if a newly created user can be locked out, otherwise false.
+        /// </value>
+        /// <remarks>
+        /// Defaults to true.
+        /// </remarks>
+        //public bool AllowedForNewUsers { get; set; } = true;
+
+
+
+        /// <summary>
+        /// maps to Identity LockoutOptions.MaxFailedAttempts default 5
+        /// </summary>
         int MaxInvalidPasswordAttempts { get; set; }
-        int MinReqNonAlphaChars { get; set; }
-        int MinRequiredPasswordLength { get; set; }
+
+        /// <summary>
+        /// maps to LockoutOptions DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+        /// </summary>
         int PasswordAttemptWindowMinutes { get; set; }
+
+        // IdentityPasswordOptions properties are different than what we currently have
+        // https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNetCore.Identity/PasswordOptions.cs
+        // we should consider removing this since it doesn't map to IdentityPasswordOptions
+        int MinReqNonAlphaChars { get; set; }
+
+        // We could make these other options also site settings but to me it seems like a bad idea to do so.
+        // following owasp guidelines I think we do not want to let site admins make bad security decisions
+        // that lower security below standards, we should only allow them to make more strict settings
+        // other IdentityPasswordOptions:
+        // public bool RequireNonAlphanumeric { get; set; } = true;
+        // public bool RequireLowercase { get; set; } = true;
+        // public bool RequireUppercase { get; set; } = true;
+        // public bool RequireDigit { get; set; } = true;
+
+        // This is from IdentityOptions.cs
+        // should this be configurable per site or not? I lean towards not
+        /// <summary>
+        /// Gets or sets the <see cref="TimeSpan"/> after which security stamps are re-validated.
+        /// </summary>
+        /// <value>
+        /// The <see cref="TimeSpan"/> after which security stamps are re-validated.
+        /// </value>
+        //public TimeSpan SecurityStampValidationInterval { get; set; } = TimeSpan.FromMinutes(30);
+
+
+
+        /// <summary>
+        /// min password length is something that should be allowed to be configured
+        /// on a site by site basis except in related sites mode where the related site should determine all security settings
+        /// It is reasonable that some may want to require longer passwords, but we probably should not let passwords ever be shorter than 6
+        /// which is the default in IdentityPasswordOptions
+        /// </summary>
+        int MinRequiredPasswordLength { get; set; } // maps to IdentityPasswordOptions public int RequiredLength { get; set; } = 6;
+
+
+        // typically we are using true for UseEmailForLogin, as such we probably need to override
+        // IdentityUserOptions.cs https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNetCore.Identity/UserOptions.cs
+        // which by default RequireUniqueEmail = false and we need it to be true if using email for login
+        // the problem comes if someone sets up a site not using email for login
+        // but later changes to use email for login after accounts with duplicate emails exist
+        // therefore I think in all cases we should require unique email
+
         bool UseEmailForLogin { get; set; }
+
+
         bool UseSslOnAllPages { get; set; }
        
         bool RequiresQuestionAndAnswer { get; set; }

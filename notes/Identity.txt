@@ -1,4 +1,6 @@
 
+http://stackoverflow.com/questions/27677345/what-are-a-security-token-and-security-stamp-in-asp-net-identity
+
 http://www.dotnetcurry.com/aspnet/1223/secure-aspnet-web-api-using-tokens-owin-angularjs
 
 http://stackoverflow.com/questions/29048122/token-based-authentication-in-asp-net-5-vnext

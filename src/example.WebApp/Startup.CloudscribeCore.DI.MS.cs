@@ -417,11 +417,17 @@ namespace example.WebApp
 
             //http://docs.asp.net/en/latest/security/2fa.html
 
-            //services.Configure<IdentityOptions>(options =>
-            //{
-            //    //options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
-            //    //options.Lockout.MaxFailedAccessAttempts = 10;
-            //});
+            services.Configure<IdentityOptions>(options =>
+            {
+                // some other options are overridden by ste settings
+                // but in all cases we do want to require each account to have a unique email
+                // it is problematic to not require that when a site is created
+                // then accounts with duplicate email can be created and later
+                // if the configuration is changed to now require unique email
+                // there already exist problem records
+                // the default setting for Identity is false but we want it to be true for these reasons
+                options.User.RequireUniqueEmail = true;
+            });
 
 
             //services.Configure<SharedAuthenticationOptions>(options =>
@@ -482,7 +488,7 @@ namespace example.WebApp
             //}
             //, AuthenticationScheme.TwoFactorUserId);
 
-            
+
 
             IdentityBuilder builder = new IdentityBuilder(typeof(TUser), typeof(TRole), services);
             //builder.AddUserStore(UserStore<SiteUser>>();
