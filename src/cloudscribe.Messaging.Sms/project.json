@@ -1,0 +1,36 @@
+﻿{
+  "version": "1.0.0-*",
+  "title": "cloudscribe.Messaging.Sms",
+  "description": "Sms helper for Twilio REST API",
+  "authors": [ "Joe Audette" ],
+  "owners": [ "Source Tree Solutions" ],
+  "tags": [ "cloudscribe", "messaging", "sms", "twilio" ],
+  "projectUrl": "https://github.com/joeaudette/cloudscribe",
+  "licenseUrl": "http://www.apache.org/licenses/LICENSE-2.0",
+  "copyright": "2015 Source Tree Solutions",
+  "iconUrl": "https://raw.githubusercontent.com/joeaudette/cloudscribe/master/cloudscribe-icon-32.png",
+  "requireLicenseAcceptance": false,
+  "releaseNotes": "",
+
+  "dependencies": {
+    "System.Net.Http": "4.0.1-beta-23516",
+    "Microsoft.Extensions.Logging.Abstractions": "1.0.0-rc1-final"
+  },
+
+  "frameworks": {
+    "net451": {
+      "dependencies": {
+
+      }
+    },
+    "dnxcore50": {
+      "dependencies": {
+        "Microsoft.CSharp": "4.0.1-beta-23516",
+        "System.Collections": "4.0.11-beta-23516",
+        "System.Linq": "4.0.1-beta-23516",
+        "System.Runtime": "4.0.21-beta-23516",
+        "System.Threading": "4.0.11-beta-23516"
+      }
+    }
+  }
+}
