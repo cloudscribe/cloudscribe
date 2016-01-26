@@ -92,7 +92,7 @@ namespace cloudscribe.Core.Repositories.EF
             .ForSqlServerHasDefaultValue(1)
             ;
 
-            entity.Property(p => p.UseSecureRegistration)
+            entity.Property(p => p.RequireConfirmedEmail)
             .IsRequired()
             .ForSqlServerHasColumnType("bit")
             .ForSqlServerHasDefaultValue(0)

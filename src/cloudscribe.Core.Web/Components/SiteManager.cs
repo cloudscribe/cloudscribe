@@ -203,7 +203,7 @@ namespace cloudscribe.Core.Web.Components
             newSite.LdapServer = String.Empty;
             newSite.UseEmailForLogin = true;
             newSite.UseLdapAuth = false;
-            newSite.UseSecureRegistration = false;
+            newSite.RequireConfirmedEmail = false;
             newSite.UseSslOnAllPages = setupOptions.SslIsRequiredByWebServer;
            
             
@@ -268,7 +268,7 @@ namespace cloudscribe.Core.Web.Components
             adminUser.SiteId = site.SiteId;
             adminUser.SiteGuid = site.SiteGuid;
             adminUser.Email = "admin" + siteDifferentiator + "@admin.com";
-            adminUser.LoweredEmail = adminUser.Email;
+            adminUser.NormalizedEmail = adminUser.Email;
             adminUser.DisplayName = "Admin";
             adminUser.UserName = "admin" + siteDifferentiator;
 

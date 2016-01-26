@@ -216,7 +216,7 @@ namespace cloudscribe.Core.Repositories.EF
             if (item == null) { return false; }
 
             item.IsLockedOut = false;
-            item.FailedPasswordAttemptCount = 0;
+            item.AccessFailedCount = 0;
             item.FailedPasswordAnswerAttemptCount = 0;
 
             int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
@@ -234,7 +234,7 @@ namespace cloudscribe.Core.Repositories.EF
 
             if (item == null) { return false; }
             
-            item.FailedPasswordAttemptCount = failedPasswordAttemptCount;
+            item.AccessFailedCount = failedPasswordAttemptCount;
            
             int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
 
@@ -283,7 +283,7 @@ namespace cloudscribe.Core.Repositories.EF
             string loweredEmail = email.ToLowerInvariant();
             SiteUser item
                 = await dbContext.Users.AsNoTracking()
-                .SingleOrDefaultAsync(x => x.SiteId == siteId && x.LoweredEmail == loweredEmail, cancellationToken);
+                .SingleOrDefaultAsync(x => x.SiteId == siteId && x.NormalizedEmail == loweredEmail, cancellationToken);
 
             return item;
         }
@@ -302,7 +302,7 @@ namespace cloudscribe.Core.Repositories.EF
                     x => x.SiteId == siteId 
                     && (
                     (x.UserName == userName) 
-                    || (allowEmailFallback && x.LoweredEmail == loweredUserName)
+                    || (allowEmailFallback && x.NormalizedEmail == loweredUserName)
                     ),
                     cancellationToken
                     );
@@ -330,7 +330,7 @@ namespace cloudscribe.Core.Repositories.EF
             string loweredEmail = email.ToLowerInvariant();
 
             var query = from c in dbContext.Users
-                        where c.LoweredEmail == loweredEmail
+                        where c.NormalizedEmail == loweredEmail
                         orderby c.DisplayName ascending
                         select c;
 

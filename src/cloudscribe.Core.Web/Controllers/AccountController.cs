@@ -109,12 +109,19 @@ namespace cloudscribe.Core.Web.Controllers
                 }
             }
 
-            if(userManager.Site.UseSecureRegistration || userManager.Site.RequireApprovalBeforeLogin)
+            if(userManager.Site.RequireConfirmedEmail || userManager.Site.RequireApprovalBeforeLogin)
             {
                 var user = await userManager.FindByNameAsync(model.Email);
                 if (user != null)
                 {
-                    if (userManager.Site.UseSecureRegistration)
+                    // TODO: showing these messages is not right
+                    // this can be used by a hacker to determine that an account exists
+                    // need to fix this
+                    // probably all of these checks should be moved into signInManager.PasswordSignInAsync
+                    // so that we either redirect to show message if login was correct credentials
+                    // or just show invalid login attempt otherwise
+
+                    if (userManager.Site.RequireConfirmedEmail)
                     {
                         if (!await userManager.IsEmailConfirmedAsync(user))
                         {
@@ -130,6 +137,12 @@ namespace cloudscribe.Core.Web.Controllers
                             ModelState.AddModelError(string.Empty, "Your account must be approved by an administrator before you can log in. If an administrator approves your account, you will receive an email notifying you that your account is ready.");
                             return View(model);
                         }
+                    }
+
+                    if(user.IsLockedOut)
+                    {
+                        ModelState.AddModelError(string.Empty, "Your account must be approved by an administrator before you can log in. If an administrator approves your account, you will receive an email notifying you that your account is ready.");
+                        return View(model);
                     }
                     
                 }
@@ -300,7 +313,7 @@ namespace cloudscribe.Core.Web.Controllers
                 if (result.Succeeded)
                 {
                     
-                    if(Site.UseSecureRegistration) // require email confirmation
+                    if(Site.RequireConfirmedEmail) // require email confirmation
                     {
                         var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
                         var callbackUrl = Url.Action("ConfirmEmail", "Account", 
@@ -381,8 +394,9 @@ namespace cloudscribe.Core.Web.Controllers
                 return Redirect("/");
             }
 
+            var code = await userManager.GenerateEmailConfirmationTokenAsync((SiteUser)user);
             var callbackUrl = Url.Action("ConfirmEmail", "Account",
-                            new { userId = user.Id, code = user.RegisterConfirmGuid.ToString() },
+                            new { userId = user.Id, code = code },
                             protocol: HttpContext.Request.Scheme);
 
             await emailSender.SendAccountConfirmationEmailAsync(
@@ -392,6 +406,25 @@ namespace cloudscribe.Core.Web.Controllers
                             callbackUrl);
 
             return RedirectToAction("EmailConfirmationRequired", new { userGuid = user.Id, didSend = true });
+        }
+
+        // GET: /Account/ConfirmEmail
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> ConfirmEmail(string userId, string code)
+        {
+
+            if (userId == null || code == null)
+            {
+                return View("Error");
+            }
+            var user = await userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return View("Error");
+            }
+            var result = await userManager.ConfirmEmailAsync(user, code);
+            return View(result.Succeeded ? "ConfirmEmail" : "Error");
         }
 
         //
@@ -544,24 +577,7 @@ namespace cloudscribe.Core.Web.Controllers
         }
 
 
-        // GET: /Account/ConfirmEmail
-        [HttpGet]
-        [AllowAnonymous]
-        public async Task<IActionResult> ConfirmEmail(string userId, string code)
-        {
-           
-            if (userId == null || code == null)
-            {
-                return View("Error");
-            }
-            var user = await userManager.FindByIdAsync(userId);
-            if (user == null)
-            {
-                return View("Error");
-            }
-            var result = await userManager.ConfirmEmailAsync(user, code);
-            return View(result.Succeeded ? "ConfirmEmail" : "Error");
-        }
+        
 
 
         // GET: /Account/ForgotPassword
@@ -597,6 +613,14 @@ namespace cloudscribe.Core.Web.Controllers
                     new { userId = user.Id, code = code }, 
                     protocol: HttpContext.Request.Scheme);
 
+                // TODO: best security practice is to not disclose the existence of user accounts
+                // so we show the same message whether the password reset request is for an
+                // actual account or not but if it is an actual account we send the email
+                // problem I have noticed is that there is a noticable delay after clicking the button 
+                // in the case where we do send an email, as such it is pretty easy to guess from this that 
+                // the account exists. I think we need to either eliminate the apparent delay by
+                // spawning a separate thread to send the email or by introducing a similar delay
+                // for non existing accounts
 
                 await emailSender.SendPasswordResetEmailAsync(
                     userManager.Site,

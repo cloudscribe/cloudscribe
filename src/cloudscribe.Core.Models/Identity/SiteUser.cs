@@ -37,7 +37,7 @@ namespace cloudscribe.Core.Models
         }
 
         private string loweredEmail = string.Empty;
-        public string LoweredEmail
+        public string NormalizedEmail
         {
             get { return loweredEmail ?? string.Empty; }
             set { loweredEmail = value; }
@@ -68,7 +68,7 @@ namespace cloudscribe.Core.Models
         }
 
         
-        public int FailedPasswordAttemptCount { get; set; } = 0;
+        public int AccessFailedCount { get; set; } = 0;
         public DateTime FailedPasswordAttemptWindowStart { get; set; } = DateTime.MinValue;
         public int FailedPasswordAnswerAttemptCount { get; set; } = 0;
         public DateTime FailedPasswordAnswerAttemptWindowStart { get; set; } = DateTime.MinValue;
@@ -110,7 +110,7 @@ namespace cloudscribe.Core.Models
             u.EmailConfirmed = user.EmailConfirmed;
             u.FailedPasswordAnswerAttemptCount = user.FailedPasswordAnswerAttemptCount;
             u.FailedPasswordAnswerAttemptWindowStart = user.FailedPasswordAnswerAttemptWindowStart;
-            u.FailedPasswordAttemptCount = user.FailedPasswordAttemptCount;
+            u.AccessFailedCount = user.AccessFailedCount;
             u.FailedPasswordAttemptWindowStart = user.FailedPasswordAttemptWindowStart;
             u.FirstName = user.FirstName;
             u.Gender = user.Gender;
@@ -123,7 +123,7 @@ namespace cloudscribe.Core.Models
             u.LastName = user.LastName;
             u.LastPasswordChangedDate = user.LastPasswordChangedDate;
             u.LockoutEndDateUtc = user.LockoutEndDateUtc;
-            u.LoweredEmail = user.LoweredEmail;
+            u.NormalizedEmail = user.NormalizedEmail;
             u.MustChangePwd = user.MustChangePwd;
             u.NewEmail = user.NewEmail;
             u.PasswordHash = user.PasswordHash;

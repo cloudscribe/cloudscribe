@@ -186,4 +186,46 @@ mp_Users columns to add
 AccountApproved
 
 
+# more changes 2016-01-26
 
+DROP mp_Sites
+MinReqNonAlphaChars
+AllowUserFullNameChange
+PasswordAttemptWindowMinutes
+ApiKeyExtra1
+ApiKeyExtra2
+ApiKeyExtra3
+ApiKeyExtra4
+ApiKeyExtra5
+UseSslOnAllPages
+
+ADD
+RequireConfirmedPhone 0
+DefaultEmailFromAlias 100
+AccountApprovalEmailCsv
+DkimPublicKey
+DkimPrivateKey
+DkimDomain 255
+DkimSelector 128
+SignEmailWithDkim 0
+OidConnectAppId 255
+OidConnectAppSecret text
+SmsClientId 255
+SmsSecureToken text
+SmsFrom 100
+
+mp_Users
+DROP
+FailedPasswordAnswerAttemptCount
+FailedPasswordAnswerAttemptWindowStart
+FailedPasswordAttemptWindowStart
+EmailChangeGuid
+RegisterConfirmGuid
+PasswordResetGuid
+LastLockoutDate
+LastActivityDate
+
+ADD
+NewEmailApproved
+NormalizedUserName 50
+CanBeLockedOut 1

@@ -124,7 +124,7 @@ namespace cloudscribe.Core.Repositories.EF
                 newSite.LdapServer = string.Empty;
                 newSite.UseEmailForLogin = true;
                 newSite.UseLdapAuth = false;
-                newSite.UseSecureRegistration = false;
+                newSite.RequireConfirmedEmail = false;
                 newSite.UseSslOnAllPages = false;
 
 
@@ -218,7 +218,7 @@ namespace cloudscribe.Core.Repositories.EF
                         adminUser.SiteId = site.SiteId;
                         adminUser.SiteGuid = site.SiteGuid;
                         adminUser.Email = "admin@admin.com";
-                        adminUser.LoweredEmail = adminUser.Email;
+                        adminUser.NormalizedEmail = adminUser.Email;
                         adminUser.DisplayName = "Admin";
                         adminUser.UserName = "admin";
                         adminUser.UserId = 0;

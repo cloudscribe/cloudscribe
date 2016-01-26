@@ -122,7 +122,7 @@ namespace cloudscribe.Core.Models.DataExtensions
             user.UserName = reader["LoginName"].ToString();
 
             user.Email = reader["Email"].ToString();
-            user.LoweredEmail = reader["LoweredEmail"].ToString();
+            user.NormalizedEmail = reader["LoweredEmail"].ToString();
             
             user.Gender = reader["Gender"].ToString();
 
@@ -182,7 +182,7 @@ namespace cloudscribe.Core.Models.DataExtensions
             }
             if (reader["FailedPasswordAttemptCount"] != DBNull.Value)
             {
-                user.FailedPasswordAttemptCount = Convert.ToInt32(reader["FailedPasswordAttemptCount"]);
+                user.AccessFailedCount = Convert.ToInt32(reader["FailedPasswordAttemptCount"]);
             }
             if (reader["FailedPwdAttemptWindowStart"] != DBNull.Value)
             {
@@ -254,7 +254,7 @@ namespace cloudscribe.Core.Models.DataExtensions
             site.SiteName = reader["SiteName"].ToString();
             site.Layout = reader["Skin"].ToString();
             site.AllowNewRegistration = Convert.ToBoolean(reader["AllowNewRegistration"]);
-            site.UseSecureRegistration = Convert.ToBoolean(reader["UseSecureRegistration"]);
+            site.RequireConfirmedEmail = Convert.ToBoolean(reader["UseSecureRegistration"]);
             site.UseSslOnAllPages = Convert.ToBoolean(reader["UseSSLOnAllPages"]);
 
             site.IsServerAdminSite = Convert.ToBoolean(reader["IsServerAdminSite"]);

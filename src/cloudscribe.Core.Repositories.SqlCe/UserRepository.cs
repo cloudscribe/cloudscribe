@@ -115,7 +115,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            if (string.IsNullOrEmpty(user.LoweredEmail)) { user.LoweredEmail = user.Email.ToLowerInvariant(); }
+            if (string.IsNullOrEmpty(user.NormalizedEmail)) { user.NormalizedEmail = user.Email.ToLowerInvariant(); }
 
             return dbSiteUser.UpdateUser(
                     user.UserId,
@@ -131,7 +131,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
                     user.State,
                     user.AvatarUrl,
                     user.Signature,
-                    user.LoweredEmail,
+                    user.NormalizedEmail,
                     user.Comment,
                     user.MustChangePwd,
                     user.FirstName,

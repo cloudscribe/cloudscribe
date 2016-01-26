@@ -782,7 +782,7 @@ namespace cloudscribe.Core.Web.Controllers
             model.DisableDbAuth = selectedSite.DisableDbAuth;
             model.ReallyDeleteUsers = selectedSite.ReallyDeleteUsers;
             model.RequireApprovalBeforeLogin = selectedSite.RequireApprovalBeforeLogin;
-            model.RequireEmailConfirmation = selectedSite.UseSecureRegistration;
+            model.RequireEmailConfirmation = selectedSite.RequireConfirmedEmail;
             model.UseEmailForLogin = selectedSite.UseEmailForLogin;
 
             return View(model);
@@ -831,7 +831,7 @@ namespace cloudscribe.Core.Web.Controllers
             selectedSite.DisableDbAuth = model.DisableDbAuth;
             selectedSite.ReallyDeleteUsers = model.ReallyDeleteUsers;
             selectedSite.RequireApprovalBeforeLogin = model.RequireApprovalBeforeLogin;
-            selectedSite.UseSecureRegistration = model.RequireEmailConfirmation;
+            selectedSite.RequireConfirmedEmail = model.RequireEmailConfirmation;
             selectedSite.UseEmailForLogin = model.UseEmailForLogin;
 
             bool result = await siteManager.Save(selectedSite);

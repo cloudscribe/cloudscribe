@@ -36,7 +36,7 @@ namespace cloudscribe.Core.Models
         
         
         public bool AllowNewRegistration { get; set; } = true;
-        public bool UseSecureRegistration { get; set; } = false;
+        public bool RequireConfirmedEmail { get; set; } = false;
         public bool UseSslOnAllPages { get; set; } = false;
         
         public bool UseLdapAuth { get; set; } = false;
@@ -450,7 +450,7 @@ namespace cloudscribe.Core.Models
             s.TwitterConsumerSecret = i.TwitterConsumerSecret;
             s.UseEmailForLogin = i.UseEmailForLogin;
             s.UseLdapAuth = i.UseLdapAuth;
-            s.UseSecureRegistration = i.UseSecureRegistration;
+            s.RequireConfirmedEmail = i.RequireConfirmedEmail;
             s.UseSslOnAllPages = i.UseSslOnAllPages;
 
             s.IsDataProtected = i.IsDataProtected;

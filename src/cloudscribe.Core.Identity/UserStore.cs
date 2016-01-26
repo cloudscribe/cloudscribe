@@ -238,7 +238,7 @@ namespace cloudscribe.Core.Identity
         }
 
 
-        public async Task<TUser> FindByNameAsync(string userName, CancellationToken cancellationToken)
+        public async Task<TUser> FindByNameAsync(string normailzedUserName, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("FindByNameAsync"); }
             cancellationToken.ThrowIfCancellationRequested();
@@ -246,7 +246,7 @@ namespace cloudscribe.Core.Identity
             int siteId = siteSettings.SiteId;
             if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
-            ISiteUser siteUser = await repo.FetchByLoginName(siteId, userName, true, cancellationToken);
+            ISiteUser siteUser = await repo.FetchByLoginName(siteId, normailzedUserName, true, cancellationToken);
             return (TUser)siteUser;
 
         }
@@ -277,7 +277,7 @@ namespace cloudscribe.Core.Identity
 
         }
 
-        public Task SetNormalizedUserNameAsync(TUser user, string userName, CancellationToken cancellationToken)
+        public Task SetNormalizedUserNameAsync(TUser user, string normalizedUserName, CancellationToken cancellationToken)
         {
             if (debugLog) { log.LogInformation("SetNormalizedUserNameAsync"); }
             cancellationToken.ThrowIfCancellationRequested();
@@ -296,7 +296,7 @@ namespace cloudscribe.Core.Identity
                 user.SiteId = siteSettings.SiteId;
             }
 
-            user.UserName = userName;
+            user.UserName = normalizedUserName;
             //cancellationToken.ThrowIfCancellationRequested();
             //bool result = await repo.Save(user);
 
@@ -422,7 +422,7 @@ namespace cloudscribe.Core.Identity
                 throw new ArgumentNullException("user");
             }
 
-            return Task.FromResult(user.LoweredEmail);
+            return Task.FromResult(user.NormalizedEmail);
         }
 
 
@@ -465,7 +465,7 @@ namespace cloudscribe.Core.Identity
             cancellationToken.ThrowIfCancellationRequested();
 
             user.Email = email;
-            user.LoweredEmail = email.ToLower();
+            user.NormalizedEmail = email.ToLower();
 
             bool result = await repo.Save(user, cancellationToken);
 
@@ -491,7 +491,7 @@ namespace cloudscribe.Core.Identity
             }
 
             //user.Email = email;
-            user.LoweredEmail = email.ToLower();
+            user.NormalizedEmail = email.ToLower();
 
             //cancellationToken.ThrowIfCancellationRequested();
 
@@ -694,7 +694,7 @@ namespace cloudscribe.Core.Identity
                 throw new ArgumentNullException("user");
             }
 
-            return Task.FromResult(user.FailedPasswordAttemptCount);
+            return Task.FromResult(user.AccessFailedCount);
         }
 
 
@@ -714,10 +714,10 @@ namespace cloudscribe.Core.Identity
                 throw new ArgumentNullException("user");
             }
 
-            user.FailedPasswordAttemptCount += 1;
+            user.AccessFailedCount += 1;
             cancellationToken.ThrowIfCancellationRequested();
-            await repo.UpdateFailedPasswordAttemptCount(user.UserGuid, user.FailedPasswordAttemptCount, cancellationToken);
-            return user.FailedPasswordAttemptCount;
+            await repo.UpdateFailedPasswordAttemptCount(user.UserGuid, user.AccessFailedCount, cancellationToken);
+            return user.AccessFailedCount;
         }
 
         /// <summary>
@@ -737,11 +737,11 @@ namespace cloudscribe.Core.Identity
                 throw new ArgumentNullException("user");
             }
 
-            user.FailedPasswordAttemptCount = 0;
+            user.AccessFailedCount = 0;
             // EF implementation doesn't save here
             // but we have to since our save doesn't update this
             // we have specific methods as shown here
-            bool result = await repo.UpdateFailedPasswordAttemptCount(user.UserGuid, user.FailedPasswordAttemptCount, cancellationToken);
+            bool result = await repo.UpdateFailedPasswordAttemptCount(user.UserGuid, user.AccessFailedCount, cancellationToken);
 
         }
 
