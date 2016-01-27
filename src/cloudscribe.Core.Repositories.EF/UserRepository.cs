@@ -144,53 +144,53 @@ namespace cloudscribe.Core.Repositories.EF
 
         }
 
-        public async Task<bool> SetRegistrationConfirmationGuid(
-            Guid userGuid,
-            Guid registrationConfirmationGuid,
-            CancellationToken cancellationToken)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (registrationConfirmationGuid == Guid.Empty)
-            {
-                return false;
-            }
+        //public async Task<bool> SetRegistrationConfirmationGuid(
+        //    Guid userGuid,
+        //    Guid registrationConfirmationGuid,
+        //    CancellationToken cancellationToken)
+        //{
+        //    cancellationToken.ThrowIfCancellationRequested();
+        //    if (registrationConfirmationGuid == Guid.Empty)
+        //    {
+        //        return false;
+        //    }
 
-            SiteUser item
-                = await dbContext.Users.FirstOrDefaultAsync(x => x.UserGuid == userGuid);
+        //    SiteUser item
+        //        = await dbContext.Users.FirstOrDefaultAsync(x => x.UserGuid == userGuid);
 
-            if (item == null) { return false; }
+        //    if (item == null) { return false; }
 
-            item.IsLockedOut = true;
-            item.RegisterConfirmGuid = registrationConfirmationGuid;
+        //    item.IsLockedOut = true;
+        //    item.RegisterConfirmGuid = registrationConfirmationGuid;
 
-            int rowsAffected = await dbContext.SaveChangesAsync();
+        //    int rowsAffected = await dbContext.SaveChangesAsync();
 
-            return rowsAffected > 0;
+        //    return rowsAffected > 0;
 
-        }
+        //}
 
-        public async Task<bool> ConfirmRegistration(Guid registrationGuid, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (registrationGuid == Guid.Empty)
-            {
-                return false;
-            }
+        //public async Task<bool> ConfirmRegistration(Guid registrationGuid, CancellationToken cancellationToken = default(CancellationToken))
+        //{
+        //    cancellationToken.ThrowIfCancellationRequested();
+        //    if (registrationGuid == Guid.Empty)
+        //    {
+        //        return false;
+        //    }
 
-            SiteUser item
-                = await dbContext.Users.SingleOrDefaultAsync(x => x.RegisterConfirmGuid == registrationGuid);
+        //    SiteUser item
+        //        = await dbContext.Users.SingleOrDefaultAsync(x => x.RegisterConfirmGuid == registrationGuid);
 
-            if (item == null) { return false; }
+        //    if (item == null) { return false; }
 
-            item.IsLockedOut = false;
-            item.EmailConfirmed = true;
-            item.RegisterConfirmGuid = Guid.Empty;
+        //    item.IsLockedOut = false;
+        //    item.EmailConfirmed = true;
+        //    item.RegisterConfirmGuid = Guid.Empty;
 
-            int rowsAffected = await dbContext.SaveChangesAsync();
+        //    int rowsAffected = await dbContext.SaveChangesAsync();
 
-            return rowsAffected > 0;
+        //    return rowsAffected > 0;
 
-        }
+        //}
 
         public async Task<bool> LockoutAccount(Guid userGuid, CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -200,8 +200,7 @@ namespace cloudscribe.Core.Repositories.EF
             if (item == null) { return false; }
 
             item.IsLockedOut = true;
-            item.LastLockoutDate = DateTime.UtcNow;
-
+            
             int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
 
             return rowsAffected > 0;
@@ -217,8 +216,7 @@ namespace cloudscribe.Core.Repositories.EF
 
             item.IsLockedOut = false;
             item.AccessFailedCount = 0;
-            item.FailedPasswordAnswerAttemptCount = 0;
-
+            
             int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
 
             return rowsAffected > 0;
@@ -267,15 +265,15 @@ namespace cloudscribe.Core.Repositories.EF
             return item;
         }
 
-        public async Task<ISiteUser> FetchByConfirmationGuid(int siteId, Guid confirmGuid, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            SiteUser item
-                = await dbContext.Users.AsNoTracking()
-                .SingleOrDefaultAsync(x => x.SiteId == siteId && x.RegisterConfirmGuid == confirmGuid, cancellationToken);
+        //public async Task<ISiteUser> FetchByConfirmationGuid(int siteId, Guid confirmGuid, CancellationToken cancellationToken = default(CancellationToken))
+        //{
+        //    cancellationToken.ThrowIfCancellationRequested();
+        //    SiteUser item
+        //        = await dbContext.Users.AsNoTracking()
+        //        .SingleOrDefaultAsync(x => x.SiteId == siteId && x.RegisterConfirmGuid == confirmGuid, cancellationToken);
 
-            return item;
-        }
+        //    return item;
+        //}
 
         public async Task<ISiteUser> Fetch(int siteId, string email, CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -466,7 +464,6 @@ namespace cloudscribe.Core.Repositories.EF
                       Gender = x.Gender,
                       IsDeleted = x.IsDeleted,
                       IsLockedOut = x.IsLockedOut,
-                      LastActivityDate = x.LastActivityDate,
                       LastLoginDate = x.LastLoginDate,
                       LastName = x.LastName,
                       PhoneNumber = x.PhoneNumber,
@@ -517,7 +514,6 @@ namespace cloudscribe.Core.Repositories.EF
                       Gender = x.Gender,
                       IsDeleted = x.IsDeleted,
                       IsLockedOut = x.IsLockedOut,
-                      LastActivityDate = x.LastActivityDate,
                       LastLoginDate = x.LastLoginDate,
                       LastName = x.LastName,
                       PhoneNumber = x.PhoneNumber,
@@ -569,7 +565,6 @@ namespace cloudscribe.Core.Repositories.EF
                       Gender = x.Gender,
                       IsDeleted = x.IsDeleted,
                       IsLockedOut = x.IsLockedOut,
-                      LastActivityDate = x.LastActivityDate,
                       LastLoginDate = x.LastLoginDate,
                       LastName = x.LastName,
                       PhoneNumber = x.PhoneNumber,
@@ -657,7 +652,6 @@ namespace cloudscribe.Core.Repositories.EF
                       Gender = x.Gender,
                       IsDeleted = x.IsDeleted,
                       IsLockedOut = x.IsLockedOut,
-                      LastActivityDate = x.LastActivityDate,
                       LastLoginDate = x.LastLoginDate,
                       LastName = x.LastName,
                       PhoneNumber = x.PhoneNumber,
@@ -731,7 +725,6 @@ namespace cloudscribe.Core.Repositories.EF
                       Gender = x.Gender,
                       IsDeleted = x.IsDeleted,
                       IsLockedOut = x.IsLockedOut,
-                      LastActivityDate = x.LastActivityDate,
                       LastLoginDate = x.LastLoginDate,
                       LastName = x.LastName,
                       PhoneNumber = x.PhoneNumber,
@@ -789,7 +782,6 @@ namespace cloudscribe.Core.Repositories.EF
                       Gender = x.Gender,
                       IsDeleted = x.IsDeleted,
                       IsLockedOut = x.IsLockedOut,
-                      LastActivityDate = x.LastActivityDate,
                       LastLoginDate = x.LastLoginDate,
                       LastName = x.LastName,
                       PhoneNumber = x.PhoneNumber,

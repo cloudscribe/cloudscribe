@@ -14,5 +14,5 @@ ALTER TABLE `mp_Sites` ADD COLUMN `SmsSecureToken` text;
 ALTER TABLE `mp_Sites` ADD COLUMN `SmsFrom` varchar(100);
 
 ALTER TABLE `mp_Users` ADD COLUMN `NewEmailApproved` INTEGER NOT NULL default 0;
-ALTER TABLE `mp_Users` ADD COLUMN `CanBeLockedOut` INTEGER NOT NULL default 1;
+ALTER TABLE `mp_Users` ADD COLUMN `CanAutoLockout` INTEGER NOT NULL default 1;
 ALTER TABLE `mp_Users` ADD COLUMN `NormalizedUserName` varchar(50);

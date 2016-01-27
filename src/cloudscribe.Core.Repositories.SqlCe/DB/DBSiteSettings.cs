@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2010-03-10
-// Last Modified:			2016-01-17
+// Last Modified:			2016-01-27
 // 
 
 
@@ -41,7 +41,6 @@ namespace cloudscribe.Core.Repositories.SqlCe
             string skin,
             bool allowNewRegistration,
             bool useSecureRegistration,
-            bool useSslOnAllPages,
             bool isServerAdminSite,
             bool useLdapAuth,
             bool autoCreateLdapUserOnFirstLogin,
@@ -50,23 +49,14 @@ namespace cloudscribe.Core.Repositories.SqlCe
             string ldapDomain,
             string ldapRootDN,
             string ldapUserDNKey,
-            bool allowUserFullNameChange,
             bool useEmailForLogin,
             bool reallyDeleteUsers,
             string recaptchaPrivateKey,
             string recaptchaPublicKey,
-            string apiKeyExtra1,
-            string apiKeyExtra2,
-            string apiKeyExtra3,
-            string apiKeyExtra4,
-            string apiKeyExtra5,
             bool disableDbAuth,
-
             bool requiresQuestionAndAnswer,
             int maxInvalidPasswordAttempts,
-            int passwordAttemptWindowMinutes,
             int minRequiredPasswordLength,
-            int minReqNonAlphaChars,
             string defaultEmailFromAddress,
             bool allowDbFallbackWithLdap,
             bool emailLdapDbFallback,
@@ -112,7 +102,21 @@ namespace cloudscribe.Core.Repositories.SqlCe
             bool smtpUseSsl,
             bool requireApprovalBeforeLogin,
             bool isDataProtected,
-            DateTime createdUtc
+            DateTime createdUtc,
+
+            bool requireConfirmedPhone,
+            string defaultEmailFromAlias,
+            string accountApprovalEmailCsv,
+            string dkimPublicKey,
+            string dkimPrivateKey,
+            string dkimDomain,
+            string dkimSelector,
+            bool signEmailWithDkim,
+            string oidConnectAppId,
+            string oidConnectAppSecret,
+            string smsClientId,
+            string smsSecureToken,
+            string smsFrom
 
             )
         {
@@ -124,7 +128,6 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("Skin, ");
             sqlCommand.Append("AllowNewRegistration, ");
             sqlCommand.Append("UseSecureRegistration, ");
-            sqlCommand.Append("UseSSLOnAllPages, ");
             sqlCommand.Append("IsServerAdminSite, ");
             sqlCommand.Append("UseLdapAuth, ");
             sqlCommand.Append("AutoCreateLdapUserOnFirstLogin, ");
@@ -135,22 +138,13 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("LdapUserDNKey, ");
             sqlCommand.Append("ReallyDeleteUsers, ");
             sqlCommand.Append("UseEmailForLogin, ");
-            sqlCommand.Append("AllowUserFullNameChange, ");
             sqlCommand.Append("RequiresQuestionAndAnswer, ");
             sqlCommand.Append("MaxInvalidPasswordAttempts, ");
-            sqlCommand.Append("PasswordAttemptWindowMinutes, ");
             sqlCommand.Append("MinRequiredPasswordLength, ");
-            sqlCommand.Append("MinReqNonAlphaChars, ");
             sqlCommand.Append("DefaultEmailFromAddress, ");
             sqlCommand.Append("RecaptchaPrivateKey, ");
             sqlCommand.Append("RecaptchaPublicKey, ");
-            sqlCommand.Append("ApiKeyExtra1, ");
-            sqlCommand.Append("ApiKeyExtra2, ");
-            sqlCommand.Append("ApiKeyExtra3, ");
-            sqlCommand.Append("ApiKeyExtra4, ");
-            sqlCommand.Append("ApiKeyExtra5, ");
             sqlCommand.Append("DisableDbAuth, ");
-
             sqlCommand.Append("AllowDbFallbackWithLdap, ");
             sqlCommand.Append("EmailLdapDbFallback, ");
             sqlCommand.Append("AllowPersistentLogin, ");
@@ -196,10 +190,22 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("IsDataProtected, ");
             sqlCommand.Append("CreatedUtc, ");
 
+            sqlCommand.Append("RequireConfirmedPhone, ");
+            sqlCommand.Append("DefaultEmailFromAlias, ");
+            sqlCommand.Append("AccountApprovalEmailCsv, ");
+            sqlCommand.Append("DkimPublicKey, ");
+            sqlCommand.Append("DkimPrivateKey, ");
+            sqlCommand.Append("DkimDomain, ");
+            sqlCommand.Append("DkimSelector, ");
+            sqlCommand.Append("SignEmailWithDkim, ");
+            sqlCommand.Append("OidConnectAppId, ");
+            sqlCommand.Append("OidConnectAppSecret, ");
+            sqlCommand.Append("SmsClientId, ");
+            sqlCommand.Append("SmsSecureToken, ");
+            sqlCommand.Append("SmsFrom, ");
+
             sqlCommand.Append("RequireApprovalBeforeLogin ");
-
-
-
+            
             sqlCommand.Append(")");
 
             sqlCommand.Append(" VALUES ");
@@ -209,7 +215,6 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("@Skin, ");
             sqlCommand.Append("@AllowNewRegistration, ");
             sqlCommand.Append("@UseSecureRegistration, ");
-            sqlCommand.Append("@UseSSLOnAllPages, ");
             sqlCommand.Append("@IsServerAdminSite, ");
             sqlCommand.Append("@UseLdapAuth, ");
             sqlCommand.Append("@AutoCreateLdapUserOnFirstLogin, ");
@@ -220,22 +225,13 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("@LdapUserDNKey, ");
             sqlCommand.Append("@ReallyDeleteUsers, ");
             sqlCommand.Append("@UseEmailForLogin, ");
-            sqlCommand.Append("@AllowUserFullNameChange, ");
             sqlCommand.Append("@RequiresQuestionAndAnswer, ");
             sqlCommand.Append("@MaxInvalidPasswordAttempts, ");
-            sqlCommand.Append("@PasswordAttemptWindowMinutes, ");
             sqlCommand.Append("@MinRequiredPasswordLength, ");
-            sqlCommand.Append("@MinReqNonAlphaChars, ");
             sqlCommand.Append("@DefaultEmailFromAddress, ");
             sqlCommand.Append("@RecaptchaPrivateKey, ");
             sqlCommand.Append("@RecaptchaPublicKey, ");
-            sqlCommand.Append("@ApiKeyExtra1, ");
-            sqlCommand.Append("@ApiKeyExtra2, ");
-            sqlCommand.Append("@ApiKeyExtra3, ");
-            sqlCommand.Append("@ApiKeyExtra4, ");
-            sqlCommand.Append("@ApiKeyExtra5, ");
             sqlCommand.Append("@DisableDbAuth, ");
-
             sqlCommand.Append("@AllowDbFallbackWithLdap, ");
             sqlCommand.Append("@EmailLdapDbFallback, ");
             sqlCommand.Append("@AllowPersistentLogin, ");
@@ -280,13 +276,28 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("@SmtpUseSsl, ");
             sqlCommand.Append("@IsDataProtected, ");
             sqlCommand.Append("@CreatedUtc, ");
+
+            sqlCommand.Append("@RequireConfirmedPhone, ");
+            sqlCommand.Append("@DefaultEmailFromAlias, ");
+            sqlCommand.Append("@AccountApprovalEmailCsv, ");
+            sqlCommand.Append("@DkimPublicKey, ");
+            sqlCommand.Append("@DkimPrivateKey, ");
+            sqlCommand.Append("@DkimDomain, ");
+            sqlCommand.Append("@DkimSelector, ");
+            sqlCommand.Append("@SignEmailWithDkim, ");
+            sqlCommand.Append("@OidConnectAppId, ");
+            sqlCommand.Append("@OidConnectAppSecret, ");
+            sqlCommand.Append("@SmsClientId, ");
+            sqlCommand.Append("@SmsSecureToken, ");
+            sqlCommand.Append("@SmsFrom, ");
+
             sqlCommand.Append("@RequireApprovalBeforeLogin ");
 
             
             sqlCommand.Append(")");
             sqlCommand.Append(";");
 
-            SqlCeParameter[] arParams = new SqlCeParameter[76];
+            SqlCeParameter[] arParams = new SqlCeParameter[80];
 
             arParams[0] = new SqlCeParameter("@SiteGuid", SqlDbType.UniqueIdentifier);
             arParams[0].Value = siteGuid;
@@ -302,219 +313,231 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
             arParams[4] = new SqlCeParameter("@UseSecureRegistration", SqlDbType.Bit);
             arParams[4].Value = useSecureRegistration;
-
-            arParams[5] = new SqlCeParameter("@UseSSLOnAllPages", SqlDbType.Bit);
-            arParams[5].Value = useSslOnAllPages;
             
-            arParams[6] = new SqlCeParameter("@IsServerAdminSite", SqlDbType.Bit);
-            arParams[6].Value = isServerAdminSite;
+            arParams[5] = new SqlCeParameter("@IsServerAdminSite", SqlDbType.Bit);
+            arParams[5].Value = isServerAdminSite;
 
-            arParams[7] = new SqlCeParameter("@UseLdapAuth", SqlDbType.Bit);
-            arParams[7].Value = useLdapAuth;
+            arParams[6] = new SqlCeParameter("@UseLdapAuth", SqlDbType.Bit);
+            arParams[6].Value = useLdapAuth;
 
-            arParams[8] = new SqlCeParameter("@AutoCreateLdapUserOnFirstLogin", SqlDbType.Bit);
-            arParams[8].Value = autoCreateLdapUserOnFirstLogin;
+            arParams[7] = new SqlCeParameter("@AutoCreateLdapUserOnFirstLogin", SqlDbType.Bit);
+            arParams[7].Value = autoCreateLdapUserOnFirstLogin;
 
-            arParams[9] = new SqlCeParameter("@LdapServer", SqlDbType.NVarChar);
-            arParams[9].Value = ldapServer;
+            arParams[8] = new SqlCeParameter("@LdapServer", SqlDbType.NVarChar);
+            arParams[8].Value = ldapServer;
 
-            arParams[10] = new SqlCeParameter("@LdapPort", SqlDbType.Int);
-            arParams[10].Value = ldapPort;
+            arParams[9] = new SqlCeParameter("@LdapPort", SqlDbType.Int);
+            arParams[9].Value = ldapPort;
 
-            arParams[11] = new SqlCeParameter("@LdapDomain", SqlDbType.NVarChar);
-            arParams[11].Value = ldapDomain;
+            arParams[10] = new SqlCeParameter("@LdapDomain", SqlDbType.NVarChar);
+            arParams[10].Value = ldapDomain;
 
-            arParams[12] = new SqlCeParameter("@LdapRootDN", SqlDbType.NVarChar);
-            arParams[12].Value = ldapRootDN;
+            arParams[11] = new SqlCeParameter("@LdapRootDN", SqlDbType.NVarChar);
+            arParams[11].Value = ldapRootDN;
 
-            arParams[13] = new SqlCeParameter("@LdapUserDNKey", SqlDbType.NVarChar);
-            arParams[13].Value = ldapUserDNKey;
+            arParams[12] = new SqlCeParameter("@LdapUserDNKey", SqlDbType.NVarChar);
+            arParams[12].Value = ldapUserDNKey;
 
-            arParams[14] = new SqlCeParameter("@ReallyDeleteUsers", SqlDbType.Bit);
-            arParams[14].Value = reallyDeleteUsers;
+            arParams[13] = new SqlCeParameter("@ReallyDeleteUsers", SqlDbType.Bit);
+            arParams[13].Value = reallyDeleteUsers;
 
-            arParams[15] = new SqlCeParameter("@UseEmailForLogin", SqlDbType.Bit);
-            arParams[15].Value = useEmailForLogin;
-
-            arParams[16] = new SqlCeParameter("@AllowUserFullNameChange", SqlDbType.Bit);
-            arParams[16].Value = allowUserFullNameChange;
+            arParams[14] = new SqlCeParameter("@UseEmailForLogin", SqlDbType.Bit);
+            arParams[14].Value = useEmailForLogin;
             
-            arParams[17] = new SqlCeParameter("@RequiresQuestionAndAnswer", SqlDbType.Bit);
-            arParams[17].Value = requiresQuestionAndAnswer;
+            arParams[15] = new SqlCeParameter("@RequiresQuestionAndAnswer", SqlDbType.Bit);
+            arParams[15].Value = requiresQuestionAndAnswer;
 
-            arParams[18] = new SqlCeParameter("@MaxInvalidPasswordAttempts", SqlDbType.Int);
-            arParams[18].Value = maxInvalidPasswordAttempts;
-
-            arParams[19] = new SqlCeParameter("@PasswordAttemptWindowMinutes", SqlDbType.Int);
-            arParams[19].Value = passwordAttemptWindowMinutes;
+            arParams[16] = new SqlCeParameter("@MaxInvalidPasswordAttempts", SqlDbType.Int);
+            arParams[16].Value = maxInvalidPasswordAttempts;
             
-            arParams[20] = new SqlCeParameter("@MinRequiredPasswordLength", SqlDbType.Int);
-            arParams[20].Value = minRequiredPasswordLength;
-
-            arParams[21] = new SqlCeParameter("@MinReqNonAlphaChars", SqlDbType.Int);
-            arParams[21].Value = minReqNonAlphaChars;
+            arParams[17] = new SqlCeParameter("@MinRequiredPasswordLength", SqlDbType.Int);
+            arParams[17].Value = minRequiredPasswordLength;
             
-            arParams[22] = new SqlCeParameter("@DefaultEmailFromAddress", SqlDbType.NVarChar);
-            arParams[22].Value = defaultEmailFromAddress;
+            arParams[18] = new SqlCeParameter("@DefaultEmailFromAddress", SqlDbType.NVarChar);
+            arParams[18].Value = defaultEmailFromAddress;
             
-            arParams[23] = new SqlCeParameter("@RecaptchaPrivateKey", SqlDbType.NVarChar);
-            arParams[23].Value = recaptchaPrivateKey;
+            arParams[19] = new SqlCeParameter("@RecaptchaPrivateKey", SqlDbType.NVarChar);
+            arParams[19].Value = recaptchaPrivateKey;
 
-            arParams[24] = new SqlCeParameter("@RecaptchaPublicKey", SqlDbType.NVarChar);
-            arParams[24].Value = recaptchaPublicKey;
+            arParams[20] = new SqlCeParameter("@RecaptchaPublicKey", SqlDbType.NVarChar);
+            arParams[20].Value = recaptchaPublicKey;
             
-            arParams[25] = new SqlCeParameter("@ApiKeyExtra1", SqlDbType.NVarChar);
-            arParams[25].Value = apiKeyExtra1;
+            arParams[21] = new SqlCeParameter("@DisableDbAuth", SqlDbType.Bit);
+            arParams[21].Value = disableDbAuth;
 
-            arParams[26] = new SqlCeParameter("@ApiKeyExtra2", SqlDbType.NVarChar);
-            arParams[26].Value = apiKeyExtra2;
+            arParams[22] = new SqlCeParameter("@AllowDbFallbackWithLdap", SqlDbType.Bit);
+            arParams[22].Value = allowDbFallbackWithLdap;
 
-            arParams[27] = new SqlCeParameter("@ApiKeyExtra3", SqlDbType.NVarChar);
-            arParams[27].Value = apiKeyExtra3;
+            arParams[23] = new SqlCeParameter("@EmailLdapDbFallback", SqlDbType.Bit);
+            arParams[23].Value = emailLdapDbFallback;
 
-            arParams[28] = new SqlCeParameter("@ApiKeyExtra4", SqlDbType.NVarChar);
-            arParams[28].Value = apiKeyExtra4;
+            arParams[24] = new SqlCeParameter("@AllowPersistentLogin", SqlDbType.Bit);
+            arParams[24].Value = allowPersistentLogin;
 
-            arParams[29] = new SqlCeParameter("@ApiKeyExtra5", SqlDbType.NVarChar);
-            arParams[29].Value = apiKeyExtra5;
+            arParams[25] = new SqlCeParameter("@CaptchaOnLogin", SqlDbType.Bit);
+            arParams[25].Value = captchaOnLogin;
 
-            arParams[30] = new SqlCeParameter("@DisableDbAuth", SqlDbType.Bit);
-            arParams[30].Value = disableDbAuth;
+            arParams[26] = new SqlCeParameter("@CaptchaOnRegistration", SqlDbType.Bit);
+            arParams[26].Value = captchaOnRegistration;
 
-            arParams[31] = new SqlCeParameter("@AllowDbFallbackWithLdap", SqlDbType.Bit);
-            arParams[31].Value = allowDbFallbackWithLdap;
+            arParams[27] = new SqlCeParameter("@SiteIsClosed", SqlDbType.Bit);
+            arParams[27].Value = siteIsClosed;
 
-            arParams[32] = new SqlCeParameter("@EmailLdapDbFallback", SqlDbType.Bit);
-            arParams[32].Value = emailLdapDbFallback;
+            arParams[28] = new SqlCeParameter("@SiteIsClosedMessage", SqlDbType.NText);
+            arParams[28].Value = siteIsClosedMessage;
 
-            arParams[33] = new SqlCeParameter("@AllowPersistentLogin", SqlDbType.Bit);
-            arParams[33].Value = allowPersistentLogin;
+            arParams[29] = new SqlCeParameter("@PrivacyPolicy", SqlDbType.NText);
+            arParams[29].Value = privacyPolicy;
 
-            arParams[34] = new SqlCeParameter("@CaptchaOnLogin", SqlDbType.Bit);
-            arParams[34].Value = captchaOnLogin;
+            arParams[30] = new SqlCeParameter("@TimeZoneId", SqlDbType.NVarChar, 50);
+            arParams[30].Value = timeZoneId;
 
-            arParams[35] = new SqlCeParameter("@CaptchaOnRegistration", SqlDbType.Bit);
-            arParams[35].Value = captchaOnRegistration;
+            arParams[31] = new SqlCeParameter("@GoogleAnalyticsProfileId", SqlDbType.NVarChar, 25);
+            arParams[31].Value = googleAnalyticsProfileId;
 
-            arParams[36] = new SqlCeParameter("@SiteIsClosed", SqlDbType.Bit);
-            arParams[36].Value = siteIsClosed;
+            arParams[32] = new SqlCeParameter("@CompanyName", SqlDbType.NVarChar, 255);
+            arParams[32].Value = companyName;
 
-            arParams[37] = new SqlCeParameter("@SiteIsClosedMessage", SqlDbType.NText);
-            arParams[37].Value = siteIsClosedMessage;
+            arParams[33] = new SqlCeParameter("@CompanyStreetAddress", SqlDbType.NVarChar, 250);
+            arParams[33].Value = companyStreetAddress;
 
-            arParams[38] = new SqlCeParameter("@PrivacyPolicy", SqlDbType.NText);
-            arParams[38].Value = privacyPolicy;
+            arParams[34] = new SqlCeParameter("@CompanyStreetAddress2", SqlDbType.NVarChar, 250);
+            arParams[34].Value = companyStreetAddress2;
 
-            arParams[39] = new SqlCeParameter("@TimeZoneId", SqlDbType.NVarChar, 50);
-            arParams[39].Value = timeZoneId;
+            arParams[35] = new SqlCeParameter("@CompanyRegion", SqlDbType.NVarChar, 200);
+            arParams[35].Value = companyRegion;
 
-            arParams[40] = new SqlCeParameter("@GoogleAnalyticsProfileId", SqlDbType.NVarChar, 25);
-            arParams[40].Value = googleAnalyticsProfileId;
+            arParams[36] = new SqlCeParameter("@CompanyLocality", SqlDbType.NVarChar, 200);
+            arParams[36].Value = companyLocality;
 
-            arParams[41] = new SqlCeParameter("@CompanyName", SqlDbType.NVarChar, 255);
-            arParams[41].Value = companyName;
+            arParams[37] = new SqlCeParameter("@CompanyCountry", SqlDbType.NVarChar, 10);
+            arParams[37].Value = companyCountry;
 
-            arParams[42] = new SqlCeParameter("@CompanyStreetAddress", SqlDbType.NVarChar, 250);
-            arParams[42].Value = companyStreetAddress;
+            arParams[38] = new SqlCeParameter("@CompanyPostalCode", SqlDbType.NVarChar, 20);
+            arParams[38].Value = companyPostalCode;
 
-            arParams[43] = new SqlCeParameter("@CompanyStreetAddress2", SqlDbType.NVarChar, 250);
-            arParams[43].Value = companyStreetAddress2;
+            arParams[39] = new SqlCeParameter("@CompanyPublicEmail", SqlDbType.NVarChar, 100);
+            arParams[39].Value = companyPublicEmail;
 
-            arParams[44] = new SqlCeParameter("@CompanyRegion", SqlDbType.NVarChar, 200);
-            arParams[44].Value = companyRegion;
+            arParams[40] = new SqlCeParameter("@CompanyPhone", SqlDbType.NVarChar, 20);
+            arParams[40].Value = companyPhone;
 
-            arParams[45] = new SqlCeParameter("@CompanyLocality", SqlDbType.NVarChar, 200);
-            arParams[45].Value = companyLocality;
+            arParams[41] = new SqlCeParameter("@CompanyFax", SqlDbType.NVarChar, 20);
+            arParams[41].Value = companyFax;
 
-            arParams[46] = new SqlCeParameter("@CompanyCountry", SqlDbType.NVarChar, 10);
-            arParams[46].Value = companyCountry;
+            arParams[42] = new SqlCeParameter("@FacebookAppId", SqlDbType.NVarChar, 100);
+            arParams[42].Value = facebookAppId;
 
-            arParams[47] = new SqlCeParameter("@CompanyPostalCode", SqlDbType.NVarChar, 20);
-            arParams[47].Value = companyPostalCode;
+            arParams[43] = new SqlCeParameter("@FacebookAppSecret", SqlDbType.NText);
+            arParams[43].Value = facebookAppSecret;
 
-            arParams[48] = new SqlCeParameter("@CompanyPublicEmail", SqlDbType.NVarChar, 100);
-            arParams[48].Value = companyPublicEmail;
+            arParams[44] = new SqlCeParameter("@GoogleClientId", SqlDbType.NVarChar, 100);
+            arParams[44].Value = googleClientId;
 
-            arParams[49] = new SqlCeParameter("@CompanyPhone", SqlDbType.NVarChar, 20);
-            arParams[49].Value = companyPhone;
+            arParams[45] = new SqlCeParameter("@GoogleClientSecret", SqlDbType.NText);
+            arParams[45].Value = googleClientSecret;
 
-            arParams[50] = new SqlCeParameter("@CompanyFax", SqlDbType.NVarChar, 20);
-            arParams[50].Value = companyFax;
+            arParams[46] = new SqlCeParameter("@TwitterConsumerKey", SqlDbType.NVarChar, 100);
+            arParams[46].Value = twitterConsumerKey;
 
-            arParams[51] = new SqlCeParameter("@FacebookAppId", SqlDbType.NVarChar, 100);
-            arParams[51].Value = facebookAppId;
+            arParams[47] = new SqlCeParameter("@TwitterConsumerSecret", SqlDbType.NText);
+            arParams[47].Value = twitterConsumerSecret;
 
-            arParams[52] = new SqlCeParameter("@FacebookAppSecret", SqlDbType.NText);
-            arParams[52].Value = facebookAppSecret;
+            arParams[48] = new SqlCeParameter("@MicrosoftClientId", SqlDbType.NVarChar, 100);
+            arParams[48].Value = microsoftClientId;
 
-            arParams[53] = new SqlCeParameter("@GoogleClientId", SqlDbType.NVarChar, 100);
-            arParams[53].Value = googleClientId;
+            arParams[49] = new SqlCeParameter("@MicrosoftClientSecret", SqlDbType.NText);
+            arParams[49].Value = microsoftClientSecret;
 
-            arParams[54] = new SqlCeParameter("@GoogleClientSecret", SqlDbType.NText);
-            arParams[54].Value = googleClientSecret;
+            arParams[50] = new SqlCeParameter("@PreferredHostName", SqlDbType.NVarChar, 250);
+            arParams[50].Value = preferredHostName;
 
-            arParams[55] = new SqlCeParameter("@TwitterConsumerKey", SqlDbType.NVarChar, 100);
-            arParams[55].Value = twitterConsumerKey;
+            arParams[51] = new SqlCeParameter("@SiteFolderName", SqlDbType.NVarChar, 50);
+            arParams[51].Value = siteFolderName;
 
-            arParams[56] = new SqlCeParameter("@TwitterConsumerSecret", SqlDbType.NText);
-            arParams[56].Value = twitterConsumerSecret;
+            arParams[52] = new SqlCeParameter("@AddThisDotComUsername", SqlDbType.NVarChar, 50);
+            arParams[52].Value = addThisDotComUsername;
 
-            arParams[57] = new SqlCeParameter("@MicrosoftClientId", SqlDbType.NVarChar, 100);
-            arParams[57].Value = microsoftClientId;
+            arParams[53] = new SqlCeParameter("@LoginInfoTop", SqlDbType.NText);
+            arParams[53].Value = loginInfoTop;
 
-            arParams[58] = new SqlCeParameter("@MicrosoftClientSecret", SqlDbType.NText);
-            arParams[58].Value = microsoftClientSecret;
+            arParams[54] = new SqlCeParameter("@LoginInfoBottom", SqlDbType.NText);
+            arParams[54].Value = loginInfoBottom;
 
-            arParams[59] = new SqlCeParameter("@PreferredHostName", SqlDbType.NVarChar, 250);
-            arParams[59].Value = preferredHostName;
+            arParams[55] = new SqlCeParameter("@RegistrationAgreement", SqlDbType.NText);
+            arParams[55].Value = registrationAgreement;
 
-            arParams[60] = new SqlCeParameter("@SiteFolderName", SqlDbType.NVarChar, 50);
-            arParams[60].Value = siteFolderName;
+            arParams[56] = new SqlCeParameter("@RegistrationPreamble", SqlDbType.NText);
+            arParams[56].Value = registrationPreamble;
 
-            arParams[61] = new SqlCeParameter("@AddThisDotComUsername", SqlDbType.NVarChar, 50);
-            arParams[61].Value = addThisDotComUsername;
+            arParams[57] = new SqlCeParameter("@SmtpServer", SqlDbType.NVarChar, 200);
+            arParams[57].Value = smtpServer;
 
-            arParams[62] = new SqlCeParameter("@LoginInfoTop", SqlDbType.NText);
-            arParams[62].Value = loginInfoTop;
+            arParams[58] = new SqlCeParameter("@SmtpPort", SqlDbType.Int);
+            arParams[58].Value = smtpPort;
 
-            arParams[63] = new SqlCeParameter("@LoginInfoBottom", SqlDbType.NText);
-            arParams[63].Value = loginInfoBottom;
+            arParams[59] = new SqlCeParameter("@SmtpUser", SqlDbType.NVarChar, 500);
+            arParams[59].Value = smtpUser;
 
-            arParams[64] = new SqlCeParameter("@RegistrationAgreement", SqlDbType.NText);
-            arParams[64].Value = registrationAgreement;
+            arParams[60] = new SqlCeParameter("@SmtpPassword", SqlDbType.NText);
+            arParams[60].Value = smtpPassword;
 
-            arParams[65] = new SqlCeParameter("@RegistrationPreamble", SqlDbType.NText);
-            arParams[65].Value = registrationPreamble;
+            arParams[61] = new SqlCeParameter("@SmtpPreferredEncoding", SqlDbType.NVarChar, 20);
+            arParams[61].Value = smtpPreferredEncoding;
 
-            arParams[66] = new SqlCeParameter("@SmtpServer", SqlDbType.NVarChar, 200);
-            arParams[66].Value = smtpServer;
+            arParams[62] = new SqlCeParameter("@SmtpRequiresAuth", SqlDbType.Bit);
+            arParams[62].Value = smtpRequiresAuth;
 
-            arParams[67] = new SqlCeParameter("@SmtpPort", SqlDbType.Int);
-            arParams[67].Value = smtpPort;
+            arParams[63] = new SqlCeParameter("@SmtpUseSsl", SqlDbType.Bit);
+            arParams[63].Value = smtpUseSsl;
 
-            arParams[68] = new SqlCeParameter("@SmtpUser", SqlDbType.NVarChar, 500);
-            arParams[68].Value = smtpUser;
+            arParams[64] = new SqlCeParameter("@RequireApprovalBeforeLogin", SqlDbType.Bit);
+            arParams[64].Value = requireApprovalBeforeLogin;
 
-            arParams[69] = new SqlCeParameter("@SmtpPassword", SqlDbType.NText);
-            arParams[69].Value = smtpPassword;
+            arParams[65] = new SqlCeParameter("@IsDataProtected", SqlDbType.Bit);
+            arParams[65].Value = isDataProtected;
 
-            arParams[70] = new SqlCeParameter("@SmtpPreferredEncoding", SqlDbType.NVarChar, 20);
-            arParams[70].Value = smtpPreferredEncoding;
+            arParams[66] = new SqlCeParameter("@CreatedUtc", SqlDbType.DateTime);
+            arParams[66].Value = createdUtc;
 
-            arParams[71] = new SqlCeParameter("@SmtpRequiresAuth", SqlDbType.Bit);
-            arParams[71].Value = smtpRequiresAuth;
+            arParams[67] = new SqlCeParameter("@RequireConfirmedPhone", SqlDbType.Bit);
+            arParams[67].Value = requireConfirmedPhone;
 
-            arParams[72] = new SqlCeParameter("@SmtpUseSsl", SqlDbType.Bit);
-            arParams[72].Value = smtpUseSsl;
+            arParams[68] = new SqlCeParameter("@DefaultEmailFromAlias", SqlDbType.NVarChar, 100);
+            arParams[68].Value = defaultEmailFromAddress;
 
-            arParams[73] = new SqlCeParameter("@RequireApprovalBeforeLogin", SqlDbType.Bit);
-            arParams[73].Value = requireApprovalBeforeLogin;
+            arParams[69] = new SqlCeParameter("@AccountApprovalEmailCsv", SqlDbType.NText);
+            arParams[69].Value = accountApprovalEmailCsv;
 
-            arParams[74] = new SqlCeParameter("@IsDataProtected", SqlDbType.Bit);
-            arParams[74].Value = isDataProtected;
+            arParams[70] = new SqlCeParameter("@DkimPublicKey", SqlDbType.NText);
+            arParams[70].Value = dkimPublicKey;
 
-            arParams[75] = new SqlCeParameter("@CreatedUtc", SqlDbType.DateTime);
-            arParams[75].Value = createdUtc;
+            arParams[71] = new SqlCeParameter("@DkimPrivateKey", SqlDbType.NText);
+            arParams[71].Value = dkimPrivateKey;
+
+            arParams[72] = new SqlCeParameter("@DkimDomain", SqlDbType.NVarChar, 255);
+            arParams[72].Value = dkimDomain;
+
+            arParams[73] = new SqlCeParameter("@DkimSelector", SqlDbType.NVarChar, 128);
+            arParams[73].Value = dkimSelector;
+
+            arParams[74] = new SqlCeParameter("@SignEmailWithDkim", SqlDbType.Bit);
+            arParams[74].Value = signEmailWithDkim;
+
+            arParams[75] = new SqlCeParameter("@OidConnectAppId", SqlDbType.NVarChar, 255);
+            arParams[75].Value = oidConnectAppId;
+
+            arParams[76] = new SqlCeParameter("@OidConnectAppSecret", SqlDbType.NText);
+            arParams[76].Value = oidConnectAppSecret;
+
+            arParams[77] = new SqlCeParameter("@SmsClientId", SqlDbType.NVarChar, 255);
+            arParams[77].Value = smsClientId;
+
+            arParams[78] = new SqlCeParameter("@SmsSecureToken", SqlDbType.NText);
+            arParams[78].Value = smsSecureToken;
+
+            arParams[79] = new SqlCeParameter("@SmsFrom", SqlDbType.NVarChar, 255);
+            arParams[79].Value = smsFrom;
 
 
             int newId = Convert.ToInt32(AdoHelper.DoInsertGetIdentitiy(
@@ -533,7 +556,6 @@ namespace cloudscribe.Core.Repositories.SqlCe
             string skin,
             bool allowNewRegistration,
             bool useSecureRegistration,
-            bool useSslOnAllPages,
             bool isServerAdminSite,
             bool useLdapAuth,
             bool autoCreateLdapUserOnFirstLogin,
@@ -542,23 +564,14 @@ namespace cloudscribe.Core.Repositories.SqlCe
             string ldapDomain,
             string ldapRootDN,
             string ldapUserDNKey,
-            bool allowUserFullNameChange,
             bool useEmailForLogin,
             bool reallyDeleteUsers,
             string recaptchaPrivateKey,
             string recaptchaPublicKey,
-            string apiKeyExtra1,
-            string apiKeyExtra2,
-            string apiKeyExtra3,
-            string apiKeyExtra4,
-            string apiKeyExtra5,
             bool disableDbAuth,
-
             bool requiresQuestionAndAnswer,
             int maxInvalidPasswordAttempts,
-            int passwordAttemptWindowMinutes,
             int minRequiredPasswordLength,
-            int minReqNonAlphaChars,
             string defaultEmailFromAddress,
             bool allowDbFallbackWithLdap,
             bool emailLdapDbFallback,
@@ -603,8 +616,23 @@ namespace cloudscribe.Core.Repositories.SqlCe
             bool smtpRequiresAuth,
             bool smtpUseSsl,
             bool requireApprovalBeforeLogin,
-            bool isDataProtected
-        
+            bool isDataProtected,
+
+            bool requireConfirmedPhone,
+            string defaultEmailFromAlias,
+            string accountApprovalEmailCsv,
+            string dkimPublicKey,
+            string dkimPrivateKey,
+            string dkimDomain,
+            string dkimSelector,
+            bool signEmailWithDkim,
+            string oidConnectAppId,
+            string oidConnectAppSecret,
+            string smsClientId,
+            string smsSecureToken,
+            string smsFrom
+
+
             )
         {
             StringBuilder sqlCommand = new StringBuilder();
@@ -615,7 +643,6 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("Skin = @Skin, ");
             sqlCommand.Append("AllowNewRegistration = @AllowNewRegistration, ");
             sqlCommand.Append("UseSecureRegistration = @UseSecureRegistration, ");
-            sqlCommand.Append("UseSSLOnAllPages = @UseSSLOnAllPages, ");
             sqlCommand.Append("IsServerAdminSite = @IsServerAdminSite, ");
             sqlCommand.Append("UseLdapAuth = @UseLdapAuth, ");
             sqlCommand.Append("AutoCreateLdapUserOnFirstLogin = @AutoCreateLdapUserOnFirstLogin, ");
@@ -626,21 +653,12 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("LdapUserDNKey = @LdapUserDNKey, ");
             sqlCommand.Append("ReallyDeleteUsers = @ReallyDeleteUsers, ");
             sqlCommand.Append("UseEmailForLogin = @UseEmailForLogin, ");
-            sqlCommand.Append("AllowUserFullNameChange = @AllowUserFullNameChange, ");
             sqlCommand.Append("RecaptchaPrivateKey = @RecaptchaPrivateKey, ");
             sqlCommand.Append("RecaptchaPublicKey = @RecaptchaPublicKey, ");
-            sqlCommand.Append("ApiKeyExtra1 = @ApiKeyExtra1, ");
-            sqlCommand.Append("ApiKeyExtra2 = @ApiKeyExtra2, ");
-            sqlCommand.Append("ApiKeyExtra3 = @ApiKeyExtra3, ");
-            sqlCommand.Append("ApiKeyExtra4 = @ApiKeyExtra4, ");
-            sqlCommand.Append("ApiKeyExtra5 = @ApiKeyExtra5, ");
             sqlCommand.Append("DisableDbAuth = @DisableDbAuth, ");
             sqlCommand.Append("RequiresQuestionAndAnswer = @RequiresQuestionAndAnswer, ");
             sqlCommand.Append("MaxInvalidPasswordAttempts = @MaxInvalidPasswordAttempts, ");
-            sqlCommand.Append("PasswordAttemptWindowMinutes = @PasswordAttemptWindowMinutes, ");
             sqlCommand.Append("MinRequiredPasswordLength = @MinRequiredPasswordLength, ");
-            sqlCommand.Append("MinReqNonAlphaChars = @MinReqNonAlphaChars, ");
-
             sqlCommand.Append("AllowDbFallbackWithLdap = @AllowDbFallbackWithLdap, ");
             sqlCommand.Append("EmailLdapDbFallback = @EmailLdapDbFallback, ");
             sqlCommand.Append("AllowPersistentLogin = @AllowPersistentLogin, ");
@@ -684,14 +702,28 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("SmtpRequiresAuth = @SmtpRequiresAuth, ");
             sqlCommand.Append("SmtpUseSsl = @SmtpUseSsl, ");
             sqlCommand.Append("IsDataProtected = @IsDataProtected, ");
-            sqlCommand.Append("RequireApprovalBeforeLogin = @RequireApprovalBeforeLogin ");
 
+            sqlCommand.Append("RequireConfirmedPhone = @RequireConfirmedPhone, ");
+            sqlCommand.Append("DefaultEmailFromAlias = @DefaultEmailFromAlias, ");
+            sqlCommand.Append("AccountApprovalEmailCsv = @AccountApprovalEmailCsv, ");
+            sqlCommand.Append("DkimPublicKey = @DkimPublicKey, ");
+            sqlCommand.Append("DkimPrivateKey = @DkimPrivateKey, ");
+            sqlCommand.Append("DkimDomain = @DkimDomain, ");
+            sqlCommand.Append("DkimSelector = @DkimSelector, ");
+            sqlCommand.Append("SignEmailWithDkim = @SignEmailWithDkim, ");
+            sqlCommand.Append("OidConnectAppId = @OidConnectAppId, ");
+            sqlCommand.Append("OidConnectAppSecret = @OidConnectAppSecret, ");
+            sqlCommand.Append("SmsClientId = @SmsClientId, ");
+            sqlCommand.Append("SmsSecureToken = @SmsSecureToken, ");
+            sqlCommand.Append("SmsFrom = @SmsFrom, ");
+
+            sqlCommand.Append("RequireApprovalBeforeLogin = @RequireApprovalBeforeLogin ");
 
             sqlCommand.Append("WHERE  ");
             sqlCommand.Append("SiteID = @SiteID ");
             sqlCommand.Append(";");
 
-            SqlCeParameter[] arParams = new SqlCeParameter[75];
+            SqlCeParameter[] arParams = new SqlCeParameter[79];
 
             arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
             arParams[0].Value = siteId;
@@ -707,216 +739,228 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
             arParams[4] = new SqlCeParameter("@UseSecureRegistration", SqlDbType.Bit);
             arParams[4].Value = useSecureRegistration;
-
-            arParams[5] = new SqlCeParameter("@UseSSLOnAllPages", SqlDbType.Bit);
-            arParams[5].Value = useSslOnAllPages;
             
-            arParams[6] = new SqlCeParameter("@IsServerAdminSite", SqlDbType.Bit);
-            arParams[6].Value = isServerAdminSite;
+            arParams[5] = new SqlCeParameter("@IsServerAdminSite", SqlDbType.Bit);
+            arParams[5].Value = isServerAdminSite;
 
-            arParams[7] = new SqlCeParameter("@UseLdapAuth", SqlDbType.Bit);
-            arParams[7].Value = useLdapAuth;
+            arParams[6] = new SqlCeParameter("@UseLdapAuth", SqlDbType.Bit);
+            arParams[6].Value = useLdapAuth;
 
-            arParams[8] = new SqlCeParameter("@AutoCreateLdapUserOnFirstLogin", SqlDbType.Bit);
-            arParams[8].Value = autoCreateLdapUserOnFirstLogin;
+            arParams[7] = new SqlCeParameter("@AutoCreateLdapUserOnFirstLogin", SqlDbType.Bit);
+            arParams[7].Value = autoCreateLdapUserOnFirstLogin;
 
-            arParams[9] = new SqlCeParameter("@LdapServer", SqlDbType.NVarChar);
-            arParams[9].Value = ldapServer;
+            arParams[8] = new SqlCeParameter("@LdapServer", SqlDbType.NVarChar);
+            arParams[8].Value = ldapServer;
 
-            arParams[10] = new SqlCeParameter("@LdapPort", SqlDbType.Int);
-            arParams[10].Value = ldapPort;
+            arParams[9] = new SqlCeParameter("@LdapPort", SqlDbType.Int);
+            arParams[9].Value = ldapPort;
 
-            arParams[11] = new SqlCeParameter("@LdapDomain", SqlDbType.NVarChar);
-            arParams[11].Value = ldapDomain;
+            arParams[10] = new SqlCeParameter("@LdapDomain", SqlDbType.NVarChar);
+            arParams[10].Value = ldapDomain;
 
-            arParams[12] = new SqlCeParameter("@LdapRootDN", SqlDbType.NVarChar);
-            arParams[12].Value = ldapRootDN;
+            arParams[11] = new SqlCeParameter("@LdapRootDN", SqlDbType.NVarChar);
+            arParams[11].Value = ldapRootDN;
 
-            arParams[13] = new SqlCeParameter("@LdapUserDNKey", SqlDbType.NVarChar);
-            arParams[13].Value = ldapUserDNKey;
+            arParams[12] = new SqlCeParameter("@LdapUserDNKey", SqlDbType.NVarChar);
+            arParams[12].Value = ldapUserDNKey;
 
-            arParams[14] = new SqlCeParameter("@ReallyDeleteUsers", SqlDbType.Bit);
-            arParams[14].Value = reallyDeleteUsers;
+            arParams[13] = new SqlCeParameter("@ReallyDeleteUsers", SqlDbType.Bit);
+            arParams[13].Value = reallyDeleteUsers;
 
-            arParams[15] = new SqlCeParameter("@UseEmailForLogin", SqlDbType.Bit);
-            arParams[15].Value = useEmailForLogin;
-
-            arParams[16] = new SqlCeParameter("@AllowUserFullNameChange", SqlDbType.Bit);
-            arParams[16].Value = allowUserFullNameChange;
+            arParams[14] = new SqlCeParameter("@UseEmailForLogin", SqlDbType.Bit);
+            arParams[14].Value = useEmailForLogin;
             
-            arParams[17] = new SqlCeParameter("@RecaptchaPrivateKey", SqlDbType.NVarChar);
-            arParams[17].Value = recaptchaPrivateKey;
+            arParams[15] = new SqlCeParameter("@RecaptchaPrivateKey", SqlDbType.NVarChar);
+            arParams[15].Value = recaptchaPrivateKey;
 
-            arParams[18] = new SqlCeParameter("@RecaptchaPublicKey", SqlDbType.NVarChar);
-            arParams[18].Value = recaptchaPublicKey;
+            arParams[16] = new SqlCeParameter("@RecaptchaPublicKey", SqlDbType.NVarChar);
+            arParams[16].Value = recaptchaPublicKey;
             
-            arParams[19] = new SqlCeParameter("@ApiKeyExtra1", SqlDbType.NVarChar);
-            arParams[19].Value = apiKeyExtra1;
+            arParams[17] = new SqlCeParameter("@DisableDbAuth", SqlDbType.Bit);
+            arParams[17].Value = disableDbAuth;
 
-            arParams[20] = new SqlCeParameter("@ApiKeyExtra2", SqlDbType.NVarChar);
-            arParams[20].Value = apiKeyExtra2;
+            arParams[18] = new SqlCeParameter("@AllowDbFallbackWithLdap", SqlDbType.Bit);
+            arParams[18].Value = allowDbFallbackWithLdap;
 
-            arParams[21] = new SqlCeParameter("@ApiKeyExtra3", SqlDbType.NVarChar);
-            arParams[21].Value = apiKeyExtra3;
+            arParams[19] = new SqlCeParameter("@EmailLdapDbFallback", SqlDbType.Bit);
+            arParams[19].Value = emailLdapDbFallback;
 
-            arParams[22] = new SqlCeParameter("@ApiKeyExtra4", SqlDbType.NVarChar);
-            arParams[22].Value = apiKeyExtra4;
+            arParams[20] = new SqlCeParameter("@AllowPersistentLogin", SqlDbType.Bit);
+            arParams[20].Value = allowPersistentLogin;
 
-            arParams[23] = new SqlCeParameter("@ApiKeyExtra5", SqlDbType.NVarChar);
-            arParams[23].Value = apiKeyExtra5;
+            arParams[21] = new SqlCeParameter("@CaptchaOnLogin", SqlDbType.Bit);
+            arParams[21].Value = captchaOnLogin;
 
-            arParams[24] = new SqlCeParameter("@DisableDbAuth", SqlDbType.Bit);
-            arParams[24].Value = disableDbAuth;
+            arParams[22] = new SqlCeParameter("@CaptchaOnRegistration", SqlDbType.Bit);
+            arParams[22].Value = captchaOnRegistration;
 
-            arParams[25] = new SqlCeParameter("@AllowDbFallbackWithLdap", SqlDbType.Bit);
-            arParams[25].Value = allowDbFallbackWithLdap;
+            arParams[23] = new SqlCeParameter("@SiteIsClosed", SqlDbType.Bit);
+            arParams[23].Value = siteIsClosed;
 
-            arParams[26] = new SqlCeParameter("@EmailLdapDbFallback", SqlDbType.Bit);
-            arParams[26].Value = emailLdapDbFallback;
+            arParams[24] = new SqlCeParameter("@SiteIsClosedMessage", SqlDbType.NText);
+            arParams[24].Value = siteIsClosedMessage;
 
-            arParams[27] = new SqlCeParameter("@AllowPersistentLogin", SqlDbType.Bit);
-            arParams[27].Value = allowPersistentLogin;
+            arParams[25] = new SqlCeParameter("@PrivacyPolicy", SqlDbType.NText);
+            arParams[25].Value = privacyPolicy;
 
-            arParams[28] = new SqlCeParameter("@CaptchaOnLogin", SqlDbType.Bit);
-            arParams[28].Value = captchaOnLogin;
+            arParams[26] = new SqlCeParameter("@TimeZoneId", SqlDbType.NVarChar, 50);
+            arParams[26].Value = timeZoneId;
 
-            arParams[29] = new SqlCeParameter("@CaptchaOnRegistration", SqlDbType.Bit);
-            arParams[29].Value = captchaOnRegistration;
-
-            arParams[30] = new SqlCeParameter("@SiteIsClosed", SqlDbType.Bit);
-            arParams[30].Value = siteIsClosed;
-
-            arParams[31] = new SqlCeParameter("@SiteIsClosedMessage", SqlDbType.NText);
-            arParams[31].Value = siteIsClosedMessage;
-
-            arParams[32] = new SqlCeParameter("@PrivacyPolicy", SqlDbType.NText);
-            arParams[32].Value = privacyPolicy;
-
-            arParams[33] = new SqlCeParameter("@TimeZoneId", SqlDbType.NVarChar, 50);
-            arParams[33].Value = timeZoneId;
-
-            arParams[34] = new SqlCeParameter("@GoogleAnalyticsProfileId", SqlDbType.NVarChar, 25);
-            arParams[34].Value = googleAnalyticsProfileId;
+            arParams[27] = new SqlCeParameter("@GoogleAnalyticsProfileId", SqlDbType.NVarChar, 25);
+            arParams[27].Value = googleAnalyticsProfileId;
         
-            arParams[35] = new SqlCeParameter("@CompanyName", SqlDbType.NVarChar, 255);
-            arParams[35].Value = companyName;
+            arParams[28] = new SqlCeParameter("@CompanyName", SqlDbType.NVarChar, 255);
+            arParams[28].Value = companyName;
 
-            arParams[36] = new SqlCeParameter("@CompanyStreetAddress", SqlDbType.NVarChar, 250);
-            arParams[36].Value = companyStreetAddress;
+            arParams[29] = new SqlCeParameter("@CompanyStreetAddress", SqlDbType.NVarChar, 250);
+            arParams[29].Value = companyStreetAddress;
 
-            arParams[37] = new SqlCeParameter("@CompanyStreetAddress2", SqlDbType.NVarChar, 250);
-            arParams[37].Value = companyStreetAddress2;
+            arParams[30] = new SqlCeParameter("@CompanyStreetAddress2", SqlDbType.NVarChar, 250);
+            arParams[30].Value = companyStreetAddress2;
 
-            arParams[38] = new SqlCeParameter("@CompanyRegion", SqlDbType.NVarChar, 200);
-            arParams[38].Value = companyRegion;
+            arParams[31] = new SqlCeParameter("@CompanyRegion", SqlDbType.NVarChar, 200);
+            arParams[31].Value = companyRegion;
 
-            arParams[39] = new SqlCeParameter("@CompanyLocality", SqlDbType.NVarChar, 200);
-            arParams[39].Value = companyLocality;
+            arParams[32] = new SqlCeParameter("@CompanyLocality", SqlDbType.NVarChar, 200);
+            arParams[32].Value = companyLocality;
 
-            arParams[40] = new SqlCeParameter("@CompanyCountry", SqlDbType.NVarChar, 10);
-            arParams[40].Value = companyCountry;
+            arParams[33] = new SqlCeParameter("@CompanyCountry", SqlDbType.NVarChar, 10);
+            arParams[33].Value = companyCountry;
 
-            arParams[41] = new SqlCeParameter("@CompanyPostalCode", SqlDbType.NVarChar, 20);
-            arParams[41].Value = companyPostalCode;
+            arParams[34] = new SqlCeParameter("@CompanyPostalCode", SqlDbType.NVarChar, 20);
+            arParams[34].Value = companyPostalCode;
 
-            arParams[42] = new SqlCeParameter("@CompanyPublicEmail", SqlDbType.NVarChar, 100);
-            arParams[42].Value = companyPublicEmail;
+            arParams[35] = new SqlCeParameter("@CompanyPublicEmail", SqlDbType.NVarChar, 100);
+            arParams[35].Value = companyPublicEmail;
 
-            arParams[43] = new SqlCeParameter("@CompanyPhone", SqlDbType.NVarChar, 20);
-            arParams[43].Value = companyPhone;
+            arParams[36] = new SqlCeParameter("@CompanyPhone", SqlDbType.NVarChar, 20);
+            arParams[36].Value = companyPhone;
 
-            arParams[44] = new SqlCeParameter("@CompanyFax", SqlDbType.NVarChar, 20);
-            arParams[44].Value = companyFax;
+            arParams[37] = new SqlCeParameter("@CompanyFax", SqlDbType.NVarChar, 20);
+            arParams[37].Value = companyFax;
 
-            arParams[45] = new SqlCeParameter("@FacebookAppId", SqlDbType.NVarChar, 100);
-            arParams[45].Value = facebookAppId;
+            arParams[38] = new SqlCeParameter("@FacebookAppId", SqlDbType.NVarChar, 100);
+            arParams[38].Value = facebookAppId;
 
-            arParams[46] = new SqlCeParameter("@FacebookAppSecret", SqlDbType.NText);
-            arParams[46].Value = facebookAppSecret;
+            arParams[39] = new SqlCeParameter("@FacebookAppSecret", SqlDbType.NText);
+            arParams[39].Value = facebookAppSecret;
 
-            arParams[47] = new SqlCeParameter("@GoogleClientId", SqlDbType.NVarChar, 100);
-            arParams[47].Value = googleClientId;
+            arParams[40] = new SqlCeParameter("@GoogleClientId", SqlDbType.NVarChar, 100);
+            arParams[40].Value = googleClientId;
 
-            arParams[48] = new SqlCeParameter("@GoogleClientSecret", SqlDbType.NText);
-            arParams[48].Value = googleClientSecret;
+            arParams[41] = new SqlCeParameter("@GoogleClientSecret", SqlDbType.NText);
+            arParams[41].Value = googleClientSecret;
 
-            arParams[49] = new SqlCeParameter("@TwitterConsumerKey", SqlDbType.NVarChar, 100);
-            arParams[49].Value = twitterConsumerKey;
+            arParams[42] = new SqlCeParameter("@TwitterConsumerKey", SqlDbType.NVarChar, 100);
+            arParams[42].Value = twitterConsumerKey;
 
-            arParams[50] = new SqlCeParameter("@TwitterConsumerSecret", SqlDbType.NText);
-            arParams[50].Value = twitterConsumerSecret;
+            arParams[43] = new SqlCeParameter("@TwitterConsumerSecret", SqlDbType.NText);
+            arParams[43].Value = twitterConsumerSecret;
 
-            arParams[51] = new SqlCeParameter("@MicrosoftClientId", SqlDbType.NVarChar, 100);
-            arParams[51].Value = microsoftClientId;
+            arParams[44] = new SqlCeParameter("@MicrosoftClientId", SqlDbType.NVarChar, 100);
+            arParams[44].Value = microsoftClientId;
 
-            arParams[52] = new SqlCeParameter("@MicrosoftClientSecret", SqlDbType.NText);
-            arParams[52].Value = microsoftClientSecret;
+            arParams[45] = new SqlCeParameter("@MicrosoftClientSecret", SqlDbType.NText);
+            arParams[45].Value = microsoftClientSecret;
 
-            arParams[53] = new SqlCeParameter("@PreferredHostName", SqlDbType.NVarChar, 250);
-            arParams[53].Value = preferredHostName;
+            arParams[46] = new SqlCeParameter("@PreferredHostName", SqlDbType.NVarChar, 250);
+            arParams[46].Value = preferredHostName;
 
-            arParams[54] = new SqlCeParameter("@SiteFolderName", SqlDbType.NVarChar, 50);
-            arParams[54].Value = siteFolderName;
+            arParams[47] = new SqlCeParameter("@SiteFolderName", SqlDbType.NVarChar, 50);
+            arParams[47].Value = siteFolderName;
 
-            arParams[55] = new SqlCeParameter("@AddThisDotComUsername", SqlDbType.NVarChar, 50);
-            arParams[55].Value = addThisDotComUsername;
+            arParams[48] = new SqlCeParameter("@AddThisDotComUsername", SqlDbType.NVarChar, 50);
+            arParams[48].Value = addThisDotComUsername;
 
-            arParams[56] = new SqlCeParameter("@LoginInfoTop", SqlDbType.NText);
-            arParams[56].Value = loginInfoTop;
+            arParams[49] = new SqlCeParameter("@LoginInfoTop", SqlDbType.NText);
+            arParams[49].Value = loginInfoTop;
 
-            arParams[57] = new SqlCeParameter("@LoginInfoBottom", SqlDbType.NText);
-            arParams[57].Value = loginInfoBottom;
+            arParams[50] = new SqlCeParameter("@LoginInfoBottom", SqlDbType.NText);
+            arParams[50].Value = loginInfoBottom;
 
-            arParams[58] = new SqlCeParameter("@RegistrationAgreement", SqlDbType.NText);
-            arParams[58].Value = registrationAgreement;
+            arParams[51] = new SqlCeParameter("@RegistrationAgreement", SqlDbType.NText);
+            arParams[51].Value = registrationAgreement;
 
-            arParams[59] = new SqlCeParameter("@RegistrationPreamble", SqlDbType.NText);
-            arParams[59].Value = registrationPreamble;
+            arParams[52] = new SqlCeParameter("@RegistrationPreamble", SqlDbType.NText);
+            arParams[52].Value = registrationPreamble;
 
-            arParams[60] = new SqlCeParameter("@SmtpServer", SqlDbType.NVarChar, 200);
-            arParams[60].Value = smtpServer;
+            arParams[53] = new SqlCeParameter("@SmtpServer", SqlDbType.NVarChar, 200);
+            arParams[53].Value = smtpServer;
 
-            arParams[61] = new SqlCeParameter("@SmtpPort", SqlDbType.Int);
-            arParams[61].Value = smtpPort;
+            arParams[54] = new SqlCeParameter("@SmtpPort", SqlDbType.Int);
+            arParams[54].Value = smtpPort;
 
-            arParams[62] = new SqlCeParameter("@SmtpUser", SqlDbType.NVarChar, 500);
-            arParams[62].Value = smtpUser;
+            arParams[55] = new SqlCeParameter("@SmtpUser", SqlDbType.NVarChar, 500);
+            arParams[55].Value = smtpUser;
 
-            arParams[63] = new SqlCeParameter("@SmtpPassword", SqlDbType.NText);
-            arParams[63].Value = smtpPassword;
+            arParams[56] = new SqlCeParameter("@SmtpPassword", SqlDbType.NText);
+            arParams[56].Value = smtpPassword;
 
-            arParams[64] = new SqlCeParameter("@SmtpPreferredEncoding", SqlDbType.NVarChar, 20);
-            arParams[64].Value = smtpPreferredEncoding;
+            arParams[57] = new SqlCeParameter("@SmtpPreferredEncoding", SqlDbType.NVarChar, 20);
+            arParams[57].Value = smtpPreferredEncoding;
 
-            arParams[65] = new SqlCeParameter("@SmtpRequiresAuth", SqlDbType.Bit);
-            arParams[65].Value = smtpRequiresAuth;
+            arParams[58] = new SqlCeParameter("@SmtpRequiresAuth", SqlDbType.Bit);
+            arParams[58].Value = smtpRequiresAuth;
 
-            arParams[66] = new SqlCeParameter("@SmtpUseSsl", SqlDbType.Bit);
-            arParams[66].Value = smtpUseSsl;
+            arParams[59] = new SqlCeParameter("@SmtpUseSsl", SqlDbType.Bit);
+            arParams[59].Value = smtpUseSsl;
 
-            arParams[67] = new SqlCeParameter("@RequireApprovalBeforeLogin", SqlDbType.Bit);
-            arParams[67].Value = requireApprovalBeforeLogin;
+            arParams[60] = new SqlCeParameter("@RequireApprovalBeforeLogin", SqlDbType.Bit);
+            arParams[60].Value = requireApprovalBeforeLogin;
             
-            arParams[68] = new SqlCeParameter("@RequiresQuestionAndAnswer", SqlDbType.Bit);
-            arParams[68].Value = requiresQuestionAndAnswer;
+            arParams[61] = new SqlCeParameter("@RequiresQuestionAndAnswer", SqlDbType.Bit);
+            arParams[61].Value = requiresQuestionAndAnswer;
 
-            arParams[69] = new SqlCeParameter("@MaxInvalidPasswordAttempts", SqlDbType.Int);
-            arParams[69].Value = maxInvalidPasswordAttempts;
+            arParams[62] = new SqlCeParameter("@MaxInvalidPasswordAttempts", SqlDbType.Int);
+            arParams[62].Value = maxInvalidPasswordAttempts;
+            
+            arParams[63] = new SqlCeParameter("@MinRequiredPasswordLength", SqlDbType.Int);
+            arParams[63].Value = minRequiredPasswordLength;
+            
+            arParams[64] = new SqlCeParameter("@DefaultEmailFromAddress", SqlDbType.NVarChar);
+            arParams[64].Value = defaultEmailFromAddress;
 
-            arParams[70] = new SqlCeParameter("@PasswordAttemptWindowMinutes", SqlDbType.Int);
-            arParams[70].Value = passwordAttemptWindowMinutes;
+            arParams[65] = new SqlCeParameter("@IsDataProtected", SqlDbType.Bit);
+            arParams[65].Value = isDataProtected;
 
-            arParams[71] = new SqlCeParameter("@MinRequiredPasswordLength", SqlDbType.Int);
-            arParams[71].Value = minRequiredPasswordLength;
+            arParams[66] = new SqlCeParameter("@RequireConfirmedPhone", SqlDbType.Bit);
+            arParams[66].Value = requireConfirmedPhone;
 
-            arParams[72] = new SqlCeParameter("@MinReqNonAlphaChars", SqlDbType.Int);
-            arParams[72].Value = minReqNonAlphaChars;
+            arParams[67] = new SqlCeParameter("@DefaultEmailFromAlias", SqlDbType.NVarChar, 100);
+            arParams[67].Value = defaultEmailFromAddress;
 
-            arParams[73] = new SqlCeParameter("@DefaultEmailFromAddress", SqlDbType.NVarChar);
-            arParams[73].Value = defaultEmailFromAddress;
+            arParams[68] = new SqlCeParameter("@AccountApprovalEmailCsv", SqlDbType.NText);
+            arParams[68].Value = accountApprovalEmailCsv;
 
-            arParams[74] = new SqlCeParameter("@IsDataProtected", SqlDbType.Bit);
-            arParams[74].Value = isDataProtected;
+            arParams[69] = new SqlCeParameter("@DkimPublicKey", SqlDbType.NText);
+            arParams[69].Value = dkimPublicKey;
+
+            arParams[70] = new SqlCeParameter("@DkimPrivateKey", SqlDbType.NText);
+            arParams[70].Value = dkimPrivateKey;
+
+            arParams[71] = new SqlCeParameter("@DkimDomain", SqlDbType.NVarChar, 255);
+            arParams[71].Value = dkimDomain;
+
+            arParams[72] = new SqlCeParameter("@DkimSelector", SqlDbType.NVarChar, 128);
+            arParams[72].Value = dkimSelector;
+
+            arParams[73] = new SqlCeParameter("@SignEmailWithDkim", SqlDbType.Bit);
+            arParams[73].Value = signEmailWithDkim;
+
+            arParams[74] = new SqlCeParameter("@OidConnectAppId", SqlDbType.NVarChar, 255);
+            arParams[74].Value = oidConnectAppId;
+
+            arParams[75] = new SqlCeParameter("@OidConnectAppSecret", SqlDbType.NText);
+            arParams[75].Value = oidConnectAppSecret;
+
+            arParams[76] = new SqlCeParameter("@SmsClientId", SqlDbType.NVarChar, 255);
+            arParams[76].Value = smsClientId;
+
+            arParams[77] = new SqlCeParameter("@SmsSecureToken", SqlDbType.NText);
+            arParams[77].Value = smsSecureToken;
+
+            arParams[78] = new SqlCeParameter("@SmsFrom", SqlDbType.NVarChar, 255);
+            arParams[78].Value = smsFrom;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 connectionString,

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-09
-// Last Modified:			2015-11-12
+// Last Modified:			2016-01-27
 // 
 
 using System;
@@ -89,10 +89,7 @@ namespace cloudscribe.Core.Models.DataExtensions
             {
                 user.IsDeleted = Convert.ToBoolean(reader["IsDeleted"]);
             }
-            if (reader["LastActivityDate"] != DBNull.Value)
-            {
-                user.LastActivityDate = Convert.ToDateTime(reader["LastActivityDate"]);
-            }
+            
             if (reader["LastLoginDate"] != DBNull.Value)
             {
                 user.LastLoginDate = Convert.ToDateTime(reader["LastLoginDate"]);
@@ -130,11 +127,6 @@ namespace cloudscribe.Core.Models.DataExtensions
             {
                 user.AccountApproved = Convert.ToBoolean(reader["AccountApproved"]);
             }
-
-            if (reader["RegisterConfirmGuid"] != DBNull.Value)
-            {
-                user.RegisterConfirmGuid = new Guid(reader["RegisterConfirmGuid"].ToString());
-            }
             
             if (reader["Trusted"] != DBNull.Value)
             {
@@ -164,10 +156,7 @@ namespace cloudscribe.Core.Models.DataExtensions
             {
                 user.IsDeleted = Convert.ToBoolean(reader["IsDeleted"]);
             }
-            if (reader["LastActivityDate"] != DBNull.Value)
-            {
-                user.LastActivityDate = Convert.ToDateTime(reader["LastActivityDate"]);
-            }
+            
             if (reader["LastLoginDate"] != DBNull.Value)
             {
                 user.LastLoginDate = Convert.ToDateTime(reader["LastLoginDate"]);
@@ -176,26 +165,14 @@ namespace cloudscribe.Core.Models.DataExtensions
             {
                 user.LastPasswordChangedDate = Convert.ToDateTime(reader["LastPasswordChangedDate"]);
             }
-            if (reader["LastLockoutDate"] != DBNull.Value)
-            {
-                user.LastLockoutDate = Convert.ToDateTime(reader["LastLockoutDate"]);
-            }
+            
             if (reader["FailedPasswordAttemptCount"] != DBNull.Value)
             {
                 user.AccessFailedCount = Convert.ToInt32(reader["FailedPasswordAttemptCount"]);
             }
-            if (reader["FailedPwdAttemptWindowStart"] != DBNull.Value)
-            {
-                user.FailedPasswordAttemptWindowStart = Convert.ToDateTime(reader["FailedPwdAttemptWindowStart"]);
-            }
-            if (reader["FailedPwdAnswerAttemptCount"] != DBNull.Value)
-            {
-                user.FailedPasswordAnswerAttemptCount = Convert.ToInt32(reader["FailedPwdAnswerAttemptCount"]);
-            }
-            if (reader["FailedPwdAnswerWindowStart"] != DBNull.Value)
-            {
-                user.FailedPasswordAnswerAttemptWindowStart = Convert.ToDateTime(reader["FailedPwdAnswerWindowStart"]);
-            }
+           
+            
+            
             if (reader["IsLockedOut"] != DBNull.Value)
             {
                 user.IsLockedOut = Convert.ToBoolean(reader["IsLockedOut"]);
@@ -211,9 +188,9 @@ namespace cloudscribe.Core.Models.DataExtensions
             user.MustChangePwd = Convert.ToBoolean(reader["MustChangePwd"]);
             user.NewEmail = reader["NewEmail"].ToString();
             
-            user.EmailChangeGuid = new Guid(reader["EmailChangeGuid"].ToString());
+            
             user.TimeZoneId = reader["TimeZoneId"].ToString();
-            user.PasswordResetGuid = new Guid(reader["PasswordResetGuid"].ToString());
+            
             user.RolesChanged = Convert.ToBoolean(reader["RolesChanged"]);
             user.AuthorBio = reader["AuthorBio"].ToString();
             if (reader["DateOfBirth"] != DBNull.Value)
@@ -233,7 +210,10 @@ namespace cloudscribe.Core.Models.DataExtensions
             }
 
             user.PasswordHash = reader["PasswordHash"].ToString();
-            
+            user.NormalizedUserName = reader["NormalizedUserName"].ToString();
+            user.NewEmailApproved = Convert.ToBoolean(reader["NewEmailApproved"]);
+            user.CanAutoLockout = Convert.ToBoolean(reader["CanAutoLockout"]);
+
         }
 
         public static void LoadFromReader(this ISiteInfo site, DbDataReader reader)
@@ -255,8 +235,7 @@ namespace cloudscribe.Core.Models.DataExtensions
             site.Layout = reader["Skin"].ToString();
             site.AllowNewRegistration = Convert.ToBoolean(reader["AllowNewRegistration"]);
             site.RequireConfirmedEmail = Convert.ToBoolean(reader["UseSecureRegistration"]);
-            site.UseSslOnAllPages = Convert.ToBoolean(reader["UseSSLOnAllPages"]);
-
+            
             site.IsServerAdminSite = Convert.ToBoolean(reader["IsServerAdminSite"]);
             site.UseLdapAuth = Convert.ToBoolean(reader["UseLdapAuth"]);
             site.AutoCreateLdapUserOnFirstLogin = Convert.ToBoolean(reader["AutoCreateLdapUserOnFirstLogin"]);
@@ -269,25 +248,17 @@ namespace cloudscribe.Core.Models.DataExtensions
 
             site.ReallyDeleteUsers = Convert.ToBoolean(reader["ReallyDeleteUsers"]);
             site.UseEmailForLogin = Convert.ToBoolean(reader["UseEmailForLogin"]);
-            site.AllowUserFullNameChange = Convert.ToBoolean(reader["AllowUserFullNameChange"]);
             
             site.RequiresQuestionAndAnswer = Convert.ToBoolean(reader["RequiresQuestionAndAnswer"]);
             site.MaxInvalidPasswordAttempts = Convert.ToInt32(reader["MaxInvalidPasswordAttempts"]);
-            site.PasswordAttemptWindowMinutes = Convert.ToInt32(reader["PasswordAttemptWindowMinutes"]);
-           
+            
             site.MinRequiredPasswordLength = Convert.ToInt32(reader["MinRequiredPasswordLength"]);
-            site.MinReqNonAlphaChars = Convert.ToInt32(reader["MinReqNonAlphaChars"]);
             
             site.DefaultEmailFromAddress = reader["DefaultEmailFromAddress"].ToString();
             site.RecaptchaPrivateKey = reader["RecaptchaPrivateKey"].ToString();
             site.RecaptchaPublicKey = reader["RecaptchaPublicKey"].ToString();
             
             site.AddThisDotComUsername = reader["AddThisDotComUsername"].ToString();
-            site.ApiKeyExtra1 = reader["ApiKeyExtra1"].ToString();
-            site.ApiKeyExtra2 = reader["ApiKeyExtra2"].ToString();
-            site.ApiKeyExtra3 = reader["ApiKeyExtra3"].ToString();
-            site.ApiKeyExtra4 = reader["ApiKeyExtra4"].ToString();
-            site.ApiKeyExtra5 = reader["ApiKeyExtra5"].ToString();
             
             site.DisableDbAuth = Convert.ToBoolean(reader["DisableDbAuth"]);
             
@@ -340,7 +311,21 @@ namespace cloudscribe.Core.Models.DataExtensions
             {
                 site.CreatedUtc = Convert.ToDateTime(reader["CreatedUtc"]);
             }
-            
+
+            site.RequireConfirmedPhone = Convert.ToBoolean(reader["RequireConfirmedPhone"]);
+            site.DefaultEmailFromAlias = reader["DefaultEmailFromAlias"].ToString();
+            site.AccountApprovalEmailCsv = reader["AccountApprovalEmailCsv"].ToString();
+            site.DkimPublicKey = reader["DkimPublicKey"].ToString();
+            site.DkimPrivateKey = reader["DkimPrivateKey"].ToString();
+            site.DkimDomain = reader["DkimDomain"].ToString();
+            site.DkimSelector = reader["DkimSelector"].ToString();
+            site.SignEmailWithDkim = Convert.ToBoolean(reader["SignEmailWithDkim"]);
+            site.OidConnectAppId = reader["OidConnectAppId"].ToString();
+            site.OidConnectAppSecret = reader["OidConnectAppSecret"].ToString();
+            site.SmsClientId = reader["SmsClientId"].ToString();
+            site.SmsSecureToken = reader["SmsSecureToken"].ToString();
+            site.SmsFrom = reader["SmsFrom"].ToString();
+
 
         }
 

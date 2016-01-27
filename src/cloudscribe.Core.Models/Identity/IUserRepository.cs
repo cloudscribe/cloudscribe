@@ -16,14 +16,14 @@ namespace cloudscribe.Core.Models
 {
     public interface IUserRepository : IDisposable
     {
-        Task<bool> SetRegistrationConfirmationGuid(Guid userGuid, Guid registrationConfirmationGuid, CancellationToken cancellationToken);
-        Task<bool> ConfirmRegistration(Guid registrationGuid, CancellationToken cancellationToken);
+        //Task<bool> SetRegistrationConfirmationGuid(Guid userGuid, Guid registrationConfirmationGuid, CancellationToken cancellationToken);
+        //Task<bool> ConfirmRegistration(Guid registrationGuid, CancellationToken cancellationToken);
         Task<bool> EmailExistsInDB(int siteId, int userId, string email, CancellationToken cancellationToken);
         Task<bool> EmailExistsInDB(int siteId, string email, CancellationToken cancellationToken);
         Task<ISiteUser> Fetch(int siteId, Guid userGuid, CancellationToken cancellationToken);
         Task<ISiteUser> Fetch(int siteId, int userId, CancellationToken cancellationToken);
         Task<ISiteUser> Fetch(int siteId, string email, CancellationToken cancellationToken);
-        Task<ISiteUser> FetchByConfirmationGuid(int siteId, Guid confirmGuid, CancellationToken cancellationToken);
+        //Task<ISiteUser> FetchByConfirmationGuid(int siteId, Guid confirmGuid, CancellationToken cancellationToken);
         Task<ISiteUser> FetchByLoginName(int siteId, string userName, bool allowEmailFallback, CancellationToken cancellationToken);
         //Task<ISiteUser> FetchNewest(int siteId);
         Task<bool> Delete(int siteId, int userId, CancellationToken cancellationToken);

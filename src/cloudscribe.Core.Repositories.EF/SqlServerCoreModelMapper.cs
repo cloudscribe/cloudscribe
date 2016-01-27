@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-17
-// Last Modified:			2015-12-26
+// Last Modified:			2015-12-27
 // 
 
 using System;
@@ -98,9 +98,8 @@ namespace cloudscribe.Core.Repositories.EF
             .ForSqlServerHasDefaultValue(0)
             ;
 
-            entity.Property(p => p.UseSslOnAllPages)
+            entity.Property(p => p.RequireConfirmedPhone)
             .IsRequired()
-            .HasColumnName("UseSSLOnAllPages")
             .ForSqlServerHasColumnType("bit")
             .ForSqlServerHasDefaultValue(0)
             ;
@@ -157,12 +156,7 @@ namespace cloudscribe.Core.Repositories.EF
             .ForSqlServerHasDefaultValue(1)
             ;
 
-            entity.Property(p => p.AllowUserFullNameChange)
-            .IsRequired()
-            .ForSqlServerHasColumnType("bit")
-            .ForSqlServerHasDefaultValue(0)
-            ;
-
+            
             entity.Property(p => p.RequiresQuestionAndAnswer)
             .IsRequired()
             .ForSqlServerHasColumnType("bit")
@@ -175,25 +169,18 @@ namespace cloudscribe.Core.Repositories.EF
             .ForSqlServerHasDefaultValue(5)
             ;
 
-            entity.Property(p => p.PasswordAttemptWindowMinutes)
-            .IsRequired()
-            .ForSqlServerHasColumnType("int")
-            .ForSqlServerHasDefaultValue(5)
-            ;
-
+            
             entity.Property(p => p.MinRequiredPasswordLength)
             .IsRequired()
             .ForSqlServerHasColumnType("int")
             .ForSqlServerHasDefaultValue(5)
             ;
-
-            entity.Property(p => p.MinReqNonAlphaChars)
-            .IsRequired()
-            .ForSqlServerHasColumnType("int")
-            .ForSqlServerHasDefaultValue(0)
+            
+            entity.Property(p => p.DefaultEmailFromAddress)
+            .HasMaxLength(100);
             ;
 
-            entity.Property(p => p.DefaultEmailFromAddress)
+            entity.Property(p => p.DefaultEmailFromAlias)
             .HasMaxLength(100);
             ;
 
@@ -205,25 +192,8 @@ namespace cloudscribe.Core.Repositories.EF
             .HasMaxLength(255);
             ;
 
-            entity.Property(p => p.ApiKeyExtra1)
-            .HasMaxLength(255);
-            ;
-
-            entity.Property(p => p.ApiKeyExtra2)
-            .HasMaxLength(255);
-            ;
-
-            entity.Property(p => p.ApiKeyExtra3)
-            .HasMaxLength(255);
-            ;
-
-            entity.Property(p => p.ApiKeyExtra4)
-            .HasMaxLength(255);
-            ;
-
-            entity.Property(p => p.ApiKeyExtra5)
-            .HasMaxLength(255);
-            ;
+            
+           
 
             entity.Property(p => p.DisableDbAuth)
             .IsRequired()
@@ -273,7 +243,7 @@ namespace cloudscribe.Core.Repositories.EF
             .ForSqlServerHasDefaultValue(0)
             ;
 
-            //not mapped should map to ntext by default I think
+            //not mapped should map to nvarchar(max) by default I think
             // SiteIsClosedMessage 
             // PrivacyPolicy
 
@@ -354,8 +324,13 @@ namespace cloudscribe.Core.Repositories.EF
             ;
 
             entity.Property(p => p.MicrosoftClientSecret)
-            //.HasMaxLength(100);
             ;
+
+            entity.Property(p => p.OidConnectAppId)
+           .HasMaxLength(255);
+            ;
+
+            //OidConnectAppSecret nvarchar(max)
 
             entity.Property(p => p.PreferredHostName)
             .HasMaxLength(250);
@@ -412,6 +387,30 @@ namespace cloudscribe.Core.Repositories.EF
             .IsRequired()
             .ForSqlServerHasColumnType("bit")
             .ForSqlServerHasDefaultValue(0)
+            ;
+
+            entity.Property(p => p.DkimDomain)
+            .HasMaxLength(255);
+            ;
+
+            entity.Property(p => p.DkimSelector)
+            .HasMaxLength(128);
+            ;
+
+            entity.Property(p => p.SignEmailWithDkim)
+            .IsRequired()
+            .ForSqlServerHasColumnType("bit")
+            .ForSqlServerHasDefaultValue(0)
+            ;
+
+            entity.Property(p => p.SmsClientId)
+            .HasMaxLength(255);
+            ;
+
+            //SmsSecureToken nvarchar(max)
+
+            entity.Property(p => p.SmsFrom)
+            .HasMaxLength(100);
             ;
 
             entity.Property(p => p.IsDataProtected)
@@ -517,7 +516,79 @@ namespace cloudscribe.Core.Repositories.EF
                 .IsRequired()
                 ;
 
+            entity.Property(p => p.AccountApproved)
+            .IsRequired()
+            .ForSqlServerHasColumnType("bit")
+            .ForSqlServerHasDefaultValue(1)
+            ;
+
+            entity.Property(p => p.DisplayInMemberList)
+            .IsRequired()
+            .ForSqlServerHasColumnType("bit")
+            .ForSqlServerHasDefaultValue(1)
+            ;
+
+            entity.Property(p => p.EmailConfirmed)
+            .IsRequired()
+            .ForSqlServerHasColumnType("bit")
+            .ForSqlServerHasDefaultValue(0)
+            ;
+
+            entity.Property(p => p.IsDeleted)
+            .IsRequired()
+            .ForSqlServerHasColumnType("bit")
+            .ForSqlServerHasDefaultValue(0)
+            ;
+
+            entity.Property(p => p.IsLockedOut)
+            .IsRequired()
+            .ForSqlServerHasColumnType("bit")
+            .ForSqlServerHasDefaultValue(0)
+            ;
+
+            entity.Property(p => p.MustChangePwd)
+            .IsRequired()
+            .ForSqlServerHasColumnType("bit")
+            .ForSqlServerHasDefaultValue(0)
+            ;
+
+            entity.Property(p => p.NewEmailApproved)
+            .IsRequired()
+            .ForSqlServerHasColumnType("bit")
+            .ForSqlServerHasDefaultValue(0)
+            ;
+
+            entity.Property(p => p.RolesChanged)
+            .IsRequired()
+            .ForSqlServerHasColumnType("bit")
+            .ForSqlServerHasDefaultValue(0)
+            ;
+
+            entity.Property(p => p.TwoFactorEnabled)
+            .IsRequired()
+            .ForSqlServerHasColumnType("bit")
+            .ForSqlServerHasDefaultValue(0)
+            ;
+
+            entity.Property(p => p.PhoneNumberConfirmed)
+            .IsRequired()
+            .ForSqlServerHasColumnType("bit")
+            .ForSqlServerHasDefaultValue(0)
+            ;
+
+            entity.Property(p => p.CanAutoLockout)
+            .IsRequired()
+            .ForSqlServerHasColumnType("bit")
+            .ForSqlServerHasDefaultValue(1)
+            ;
+
+
             entity.HasIndex(p => p.SiteGuid);
+
+            entity.HasIndex(p => p.Email);
+            entity.HasIndex(p => p.NormalizedEmail);
+            entity.HasIndex(p => p.UserName);
+            entity.HasIndex(p => p.NormalizedUserName);
 
 
         }

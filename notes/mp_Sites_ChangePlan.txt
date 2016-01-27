@@ -228,4 +228,4 @@ LastActivityDate
 ADD
 NewEmailApproved
 NormalizedUserName 50
-CanBeLockedOut 1
+CanAutoLockout 1

@@ -80,7 +80,7 @@ namespace cloudscribe.Core.Models
         /// >= site.MaxInvalidPasswordAttempts
         /// If false then this account will not be locked out by failed access attempts.
         /// </summary>
-        //bool CanAutoLockout { get; set; }
+        bool CanAutoLockout { get; set; }
 
         //TODO: implement a middleware to detect this and reset the the auth/role cookie
         // set this true whenever a users roles have been changed and set false after cookie reset
@@ -93,12 +93,10 @@ namespace cloudscribe.Core.Models
 
         bool EmailConfirmed { get; set; }
         string NormalizedEmail { get; set; } // maps to LoweredEmail in ado data layers
-
-        //TODO: add
-        //string NormalizedUserName { get; set; }
+        string NormalizedUserName { get; set; }
 
         string NewEmail { get; set; }
-        // TODO: add
+        
 
         /// <summary>
         /// when a user requests a change to their currently confirmed account email
@@ -110,21 +108,21 @@ namespace cloudscribe.Core.Models
         /// This strategy should make it difficult to take over an account even if a session hijack
         /// somehow had been achieved.
         /// </summary>
-        //bool NewEmailApproved { get; set; }
+        bool NewEmailApproved { get; set; }
 
         string Signature { get; set; }
         string AuthorBio { get; set; }
         string Comment { get; set; }
 
         // TODO: remove 
-        Guid EmailChangeGuid { get; set; }
-        Guid RegisterConfirmGuid { get; }
-        Guid PasswordResetGuid { get; set; }
-        int FailedPasswordAnswerAttemptCount { get; set; }
-        DateTime FailedPasswordAnswerAttemptWindowStart { get; set; }
-        DateTime FailedPasswordAttemptWindowStart { get; set; }
-        DateTime LastLockoutDate { get; set; }
-        DateTime LastActivityDate { get; set; }
+        //Guid EmailChangeGuid { get; set; }
+        //Guid RegisterConfirmGuid { get; }
+        //Guid PasswordResetGuid { get; set; }
+        //int FailedPasswordAnswerAttemptCount { get; set; }
+        //DateTime FailedPasswordAnswerAttemptWindowStart { get; set; }
+        //DateTime FailedPasswordAttemptWindowStart { get; set; }
+        //DateTime LastLockoutDate { get; set; }
+        //DateTime LastActivityDate { get; set; }
 
     }
 }

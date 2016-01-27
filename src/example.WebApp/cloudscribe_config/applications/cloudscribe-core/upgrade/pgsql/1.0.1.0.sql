@@ -32,5 +32,5 @@ ALTER TABLE mp_users DROP COLUMN lastlockoutdate;
 ALTER TABLE mp_users DROP COLUMN lastactivitydate;
 
 ALTER TABLE mp_users ADD COLUMN newemailapproved bool not null default false;
-ALTER TABLE mp_users ADD COLUMN canbelockedout bool not null default true;
+ALTER TABLE mp_users ADD COLUMN canautolockout bool not null default true;
 ALTER TABLE mp_users ADD COLUMN normalizedusername varchar(50);

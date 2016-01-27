@@ -203,12 +203,12 @@ namespace cloudscribe.Core.Identity
             return await userRepo.Fetch(siteId, userGuid, CancellationToken);
         }
 
-        public async Task<ISiteUser> FetchByConfirmationGuid(int siteId, Guid confirmGuid)
-        {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+        //public async Task<ISiteUser> FetchByConfirmationGuid(int siteId, Guid confirmGuid)
+        //{
+        //    if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
-            return await userRepo.FetchByConfirmationGuid(siteId, confirmGuid, CancellationToken);
-        }
+        //    return await userRepo.FetchByConfirmationGuid(siteId, confirmGuid, CancellationToken);
+        //}
 
         public async Task<bool> Save(ISiteUser user)
         {

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2016-01-17
+// Last Modified:			2016-01-27
 //
 
 using cloudscribe.DbHelpers;
@@ -44,7 +44,6 @@ namespace cloudscribe.Core.Repositories.pgsql
             string skin,
             bool allowNewRegistration,
             bool useSecureRegistration,
-            bool useSslOnAllPages,
             bool isServerAdminSite,
             bool useLdapAuth,
             bool autoCreateLdapUserOnFirstLogin,
@@ -53,23 +52,14 @@ namespace cloudscribe.Core.Repositories.pgsql
             string ldapDomain,
             string ldapRootDN,
             string ldapUserDNKey,
-            bool allowUserFullNameChange,
             bool useEmailForLogin,
             bool reallyDeleteUsers,
             string recaptchaPrivateKey,
             string recaptchaPublicKey,
-            string apiKeyExtra1,
-            string apiKeyExtra2,
-            string apiKeyExtra3,
-            string apiKeyExtra4,
-            string apiKeyExtra5,
             bool disableDbAuth,
-
             bool requiresQuestionAndAnswer,
             int maxInvalidPasswordAttempts,
-            int passwordAttemptWindowMinutes,
             int minRequiredPasswordLength,
-            int minReqNonAlphaChars,
             string defaultEmailFromAddress,
             bool allowDbFallbackWithLdap,
             bool emailLdapDbFallback,
@@ -116,6 +106,21 @@ namespace cloudscribe.Core.Repositories.pgsql
             bool requireApprovalBeforeLogin,
             bool isDataProtected,
             DateTime createdUtc,
+
+            bool requireConfirmedPhone,
+            string defaultEmailFromAlias,
+            string accountApprovalEmailCsv,
+            string dkimPublicKey,
+            string dkimPrivateKey,
+            string dkimDomain,
+            string dkimSelector,
+            bool signEmailWithDkim,
+            string oidConnectAppId,
+            string oidConnectAppSecret,
+            string smsClientId,
+            string smsSecureToken,
+            string smsFrom,
+
             CancellationToken cancellationToken
 
             )
@@ -128,7 +133,6 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append("skin, ");
             sqlCommand.Append("allownewregistration, ");
             sqlCommand.Append("usesecureregistration, ");
-            sqlCommand.Append("usesslonallpages, ");
             sqlCommand.Append("isserveradminsite, ");
             sqlCommand.Append("useldapauth, ");
             sqlCommand.Append("autocreateldapuseronfirstlogin, ");
@@ -139,21 +143,12 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append("ldapuserdnkey, ");
             sqlCommand.Append("reallydeleteusers, ");
             sqlCommand.Append("useemailforlogin, ");
-            sqlCommand.Append("allowuserfullnamechange, ");
             sqlCommand.Append("disabledbauth, ");
             sqlCommand.Append("recaptchaprivatekey, ");
             sqlCommand.Append("recaptchapublickey, ");
-            sqlCommand.Append("apikeyextra1, ");
-            sqlCommand.Append("apikeyextra2, ");
-            sqlCommand.Append("apikeyextra3, ");
-            sqlCommand.Append("apikeyextra4, ");
-            sqlCommand.Append("apikeyextra5, ");
-
             sqlCommand.Append("requiresquestionandanswer, ");
             sqlCommand.Append("maxinvalidpasswordattempts, ");
-            sqlCommand.Append("passwordattemptwindowminutes, ");
             sqlCommand.Append("minrequiredpasswordlength, ");
-            sqlCommand.Append("minreqnonalphachars, ");
             sqlCommand.Append("defaultemailfromaddress, ");
             sqlCommand.Append("allowdbfallbackwithldap, ");
             sqlCommand.Append("emailldapdbfallback, ");
@@ -200,6 +195,20 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append("isdataprotected, ");
             sqlCommand.Append("createdutc, ");
 
+            sqlCommand.Append("requireconfirmedphone, ");
+            sqlCommand.Append("defaultemailfromalias, ");
+            sqlCommand.Append("accountapprovalemailcsv, ");
+            sqlCommand.Append("dkimpublickey, ");
+            sqlCommand.Append("dkimprivatekey, ");
+            sqlCommand.Append("dkimdomain, ");
+            sqlCommand.Append("dkimselector, ");
+            sqlCommand.Append("signemailwithdkim, ");
+            sqlCommand.Append("oidconnectappid, ");
+            sqlCommand.Append("oidconnectappsecret, ");
+            sqlCommand.Append("smsclientid, ");
+            sqlCommand.Append("smssecuretoken, ");
+            sqlCommand.Append("smsfrom, ");
+
             sqlCommand.Append("requireapprovalbeforelogin ");
 
 
@@ -212,7 +221,6 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append(":skin, ");
             sqlCommand.Append(":allownewregistration, ");
             sqlCommand.Append(":usesecureregistration, ");
-            sqlCommand.Append(":usesslonallpages, ");
             sqlCommand.Append(":isserveradminsite, ");
             sqlCommand.Append(":useldapauth, ");
             sqlCommand.Append(":autocreateldapuseronfirstlogin, ");
@@ -223,21 +231,12 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append(":ldapuserdnkey, ");
             sqlCommand.Append(":reallydeleteusers, ");
             sqlCommand.Append(":useemailforlogin, ");
-            sqlCommand.Append(":allowuserfullnamechange, ");
             sqlCommand.Append(":disabledbauth, ");
             sqlCommand.Append(":recaptchaprivatekey, ");
             sqlCommand.Append(":recaptchapublickey, ");
-            sqlCommand.Append(":apikeyextra1, ");
-            sqlCommand.Append(":apikeyextra2, ");
-            sqlCommand.Append(":apikeyextra3, ");
-            sqlCommand.Append(":apikeyextra4, ");
-            sqlCommand.Append(":apikeyextra5, ");
-
             sqlCommand.Append(":requiresquestionandanswer, ");
             sqlCommand.Append(":maxinvalidpasswordattempts, ");
-            sqlCommand.Append(":passwordattemptwindowminutes, ");
             sqlCommand.Append(":minrequiredpasswordlength, ");
-            sqlCommand.Append(":minreqnonalphachars, ");
             sqlCommand.Append(":defaultemailfromaddress, ");
             sqlCommand.Append(":allowdbfallbackwithldap, ");
             sqlCommand.Append(":emailldapdbfallback, ");
@@ -283,13 +282,28 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append(":smtpusessl, ");
             sqlCommand.Append(":isdataprotected, ");
             sqlCommand.Append(":createdutc, ");
+
+            sqlCommand.Append(":requireconfirmedphone, ");
+            sqlCommand.Append(":defaultemailfromalias, ");
+            sqlCommand.Append(":accountapprovalemailcsv, ");
+            sqlCommand.Append(":dkimpublickey, ");
+            sqlCommand.Append(":dkimprivatekey, ");
+            sqlCommand.Append(":dkimdomain, ");
+            sqlCommand.Append(":dkimselector, ");
+            sqlCommand.Append(":signemailwithdkim, ");
+            sqlCommand.Append(":oidconnectappid, ");
+            sqlCommand.Append(":oidconnectappsecret, ");
+            sqlCommand.Append(":smsclientid, ");
+            sqlCommand.Append(":smssecuretoken, ");
+            sqlCommand.Append(":smsfrom, ");
+
             sqlCommand.Append(":requireapprovalbeforelogin ");
 
             sqlCommand.Append(") ");
             sqlCommand.Append(";");
             sqlCommand.Append(" SELECT CURRVAL('mp_sites_siteid_seq');");
 
-            NpgsqlParameter[] arParams = new NpgsqlParameter[76];
+            NpgsqlParameter[] arParams = new NpgsqlParameter[80];
 
             arParams[0] = new NpgsqlParameter("siteguid", NpgsqlTypes.NpgsqlDbType.Char, 36);
             arParams[0].Value = siteGuid.ToString();
@@ -305,219 +319,231 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             arParams[4] = new NpgsqlParameter("usesecureregistration", NpgsqlTypes.NpgsqlDbType.Boolean);
             arParams[4].Value = useSecureRegistration;
-
-            arParams[5] = new NpgsqlParameter("usesslonallpages", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[5].Value = useSslOnAllPages;
             
-            arParams[6] = new NpgsqlParameter("isserveradminsite", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[6].Value = isServerAdminSite;
+            arParams[5] = new NpgsqlParameter("isserveradminsite", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[5].Value = isServerAdminSite;
 
-            arParams[7] = new NpgsqlParameter("useldapauth", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[7].Value = useLdapAuth;
+            arParams[6] = new NpgsqlParameter("useldapauth", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[6].Value = useLdapAuth;
 
-            arParams[8] = new NpgsqlParameter("autocreateldapuseronfirstlogin", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[8].Value = autoCreateLdapUserOnFirstLogin;
+            arParams[7] = new NpgsqlParameter("autocreateldapuseronfirstlogin", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[7].Value = autoCreateLdapUserOnFirstLogin;
 
-            arParams[9] = new NpgsqlParameter("ldapserver", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[9].Value = ldapServer;
+            arParams[8] = new NpgsqlParameter("ldapserver", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
+            arParams[8].Value = ldapServer;
 
-            arParams[10] = new NpgsqlParameter("ldapport", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[10].Value = ldapPort;
+            arParams[9] = new NpgsqlParameter("ldapport", NpgsqlTypes.NpgsqlDbType.Integer);
+            arParams[9].Value = ldapPort;
 
-            arParams[11] = new NpgsqlParameter("ldapdomain", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[11].Value = ldapDomain;
+            arParams[10] = new NpgsqlParameter("ldapdomain", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
+            arParams[10].Value = ldapDomain;
 
-            arParams[12] = new NpgsqlParameter("ldaprootdn", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[12].Value = ldapRootDN;
+            arParams[11] = new NpgsqlParameter("ldaprootdn", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
+            arParams[11].Value = ldapRootDN;
 
-            arParams[13] = new NpgsqlParameter("ldapuserdnkey", NpgsqlTypes.NpgsqlDbType.Varchar, 10);
-            arParams[13].Value = ldapUserDNKey;
+            arParams[12] = new NpgsqlParameter("ldapuserdnkey", NpgsqlTypes.NpgsqlDbType.Varchar, 10);
+            arParams[12].Value = ldapUserDNKey;
 
-            arParams[14] = new NpgsqlParameter("reallydeleteusers", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[14].Value = reallyDeleteUsers;
+            arParams[13] = new NpgsqlParameter("reallydeleteusers", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[13].Value = reallyDeleteUsers;
 
-            arParams[15] = new NpgsqlParameter("useemailforlogin", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[15].Value = useEmailForLogin;
-
-            arParams[16] = new NpgsqlParameter("allowuserfullnamechange", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[16].Value = allowUserFullNameChange;
+            arParams[14] = new NpgsqlParameter("useemailforlogin", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[14].Value = useEmailForLogin;
             
-            arParams[17] = new NpgsqlParameter("recaptchaprivatekey", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[17].Value = recaptchaPrivateKey;
+            arParams[15] = new NpgsqlParameter("recaptchaprivatekey", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
+            arParams[15].Value = recaptchaPrivateKey;
 
-            arParams[18] = new NpgsqlParameter("recaptchapublickey", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[18].Value = recaptchaPublicKey;
+            arParams[16] = new NpgsqlParameter("recaptchapublickey", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
+            arParams[16].Value = recaptchaPublicKey;
             
-            arParams[19] = new NpgsqlParameter("apikeyextra1", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[19].Value = apiKeyExtra1;
+            arParams[17] = new NpgsqlParameter("disabledbauth", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[17].Value = disableDbAuth;
 
-            arParams[20] = new NpgsqlParameter("apikeyextra2", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[20].Value = apiKeyExtra2;
+            arParams[18] = new NpgsqlParameter("requiresquestionandanswer", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[18].Value = requiresQuestionAndAnswer;
 
-            arParams[21] = new NpgsqlParameter("apikeyextra3", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[21].Value = apiKeyExtra3;
+            arParams[19] = new NpgsqlParameter("maxinvalidpasswordattempts", NpgsqlTypes.NpgsqlDbType.Integer);
+            arParams[19].Value = maxInvalidPasswordAttempts;
+            
+            arParams[20] = new NpgsqlParameter("minrequiredpasswordlength", NpgsqlTypes.NpgsqlDbType.Integer);
+            arParams[20].Value = minRequiredPasswordLength;
+            
+            arParams[21] = new NpgsqlParameter("defaultemailfromaddress", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
+            arParams[21].Value = defaultEmailFromAddress;
 
-            arParams[22] = new NpgsqlParameter("apikeyextra4", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[22].Value = apiKeyExtra4;
+            arParams[22] = new NpgsqlParameter("allowdbfallbackwithldap", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[22].Value = allowDbFallbackWithLdap;
 
-            arParams[23] = new NpgsqlParameter("apikeyextra5", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[23].Value = apiKeyExtra5;
+            arParams[23] = new NpgsqlParameter("emailldapdbfallback", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[23].Value = emailLdapDbFallback;
 
-            arParams[24] = new NpgsqlParameter("disabledbauth", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[24].Value = disableDbAuth;
+            arParams[24] = new NpgsqlParameter("allowpersistentlogin", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[24].Value = allowPersistentLogin;
 
-            arParams[25] = new NpgsqlParameter("requiresquestionandanswer", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[25].Value = requiresQuestionAndAnswer;
+            arParams[25] = new NpgsqlParameter("captchaonlogin", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[25].Value = captchaOnLogin;
 
-            arParams[26] = new NpgsqlParameter("maxinvalidpasswordattempts", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[26].Value = maxInvalidPasswordAttempts;
+            arParams[26] = new NpgsqlParameter("captchaonregistration", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[26].Value = captchaOnRegistration;
 
-            arParams[27] = new NpgsqlParameter("passwordattemptwindowminutes", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[27].Value = passwordAttemptWindowMinutes;
+            arParams[27] = new NpgsqlParameter("siteisclosed", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[27].Value = siteIsClosed;
 
-            arParams[28] = new NpgsqlParameter("minrequiredpasswordlength", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[28].Value = minRequiredPasswordLength;
+            arParams[28] = new NpgsqlParameter("siteisclosedmessage", NpgsqlTypes.NpgsqlDbType.Text);
+            arParams[28].Value = siteIsClosedMessage;
 
-            arParams[29] = new NpgsqlParameter("minreqnonalphachars", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[29].Value = minReqNonAlphaChars;
+            arParams[29] = new NpgsqlParameter("privacypolicy", NpgsqlTypes.NpgsqlDbType.Text);
+            arParams[29].Value = privacyPolicy;
 
-            arParams[30] = new NpgsqlParameter("defaultemailfromaddress", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
-            arParams[30].Value = defaultEmailFromAddress;
+            arParams[30] = new NpgsqlParameter("timezoneid", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
+            arParams[30].Value = timeZoneId;
 
-            arParams[31] = new NpgsqlParameter("allowdbfallbackwithldap", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[31].Value = allowDbFallbackWithLdap;
+            arParams[31] = new NpgsqlParameter("googleanalyticsprofileid", NpgsqlTypes.NpgsqlDbType.Varchar, 25);
+            arParams[31].Value = googleAnalyticsProfileId;
 
-            arParams[32] = new NpgsqlParameter("emailldapdbfallback", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[32].Value = emailLdapDbFallback;
+            arParams[32] = new NpgsqlParameter("companyname", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
+            arParams[32].Value = companyName;
 
-            arParams[33] = new NpgsqlParameter("allowpersistentlogin", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[33].Value = allowPersistentLogin;
+            arParams[33] = new NpgsqlParameter("companystreetaddress", NpgsqlTypes.NpgsqlDbType.Varchar, 250);
+            arParams[33].Value = companyStreetAddress;
 
-            arParams[34] = new NpgsqlParameter("captchaonlogin", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[34].Value = captchaOnLogin;
+            arParams[34] = new NpgsqlParameter("companystreetaddress2", NpgsqlTypes.NpgsqlDbType.Varchar, 250);
+            arParams[34].Value = companyStreetAddress2;
 
-            arParams[35] = new NpgsqlParameter("captchaonregistration", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[35].Value = captchaOnRegistration;
+            arParams[35] = new NpgsqlParameter("companyregion", NpgsqlTypes.NpgsqlDbType.Varchar, 200);
+            arParams[35].Value = companyRegion;
 
-            arParams[36] = new NpgsqlParameter("siteisclosed", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[36].Value = siteIsClosed;
+            arParams[36] = new NpgsqlParameter("companylocality", NpgsqlTypes.NpgsqlDbType.Varchar, 200);
+            arParams[36].Value = companyLocality;
 
-            arParams[37] = new NpgsqlParameter("siteisclosedmessage", NpgsqlTypes.NpgsqlDbType.Text);
-            arParams[37].Value = siteIsClosedMessage;
+            arParams[37] = new NpgsqlParameter("companycountry", NpgsqlTypes.NpgsqlDbType.Varchar, 10);
+            arParams[37].Value = companyCountry;
 
-            arParams[38] = new NpgsqlParameter("privacypolicy", NpgsqlTypes.NpgsqlDbType.Text);
-            arParams[38].Value = privacyPolicy;
+            arParams[38] = new NpgsqlParameter("companypostalcode", NpgsqlTypes.NpgsqlDbType.Varchar, 20);
+            arParams[38].Value = companyPostalCode;
 
-            arParams[39] = new NpgsqlParameter("timezoneid", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
-            arParams[39].Value = timeZoneId;
+            arParams[39] = new NpgsqlParameter("companypublicemail", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
+            arParams[39].Value = companyPublicEmail;
 
-            arParams[40] = new NpgsqlParameter("googleanalyticsprofileid", NpgsqlTypes.NpgsqlDbType.Varchar, 25);
-            arParams[40].Value = googleAnalyticsProfileId;
+            arParams[40] = new NpgsqlParameter("companyphone", NpgsqlTypes.NpgsqlDbType.Varchar, 20);
+            arParams[40].Value = companyPhone;
 
-            arParams[41] = new NpgsqlParameter("companyname", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[41].Value = companyName;
+            arParams[41] = new NpgsqlParameter("companyfax", NpgsqlTypes.NpgsqlDbType.Varchar, 20);
+            arParams[41].Value = companyFax;
 
-            arParams[42] = new NpgsqlParameter("companystreetaddress", NpgsqlTypes.NpgsqlDbType.Varchar, 250);
-            arParams[42].Value = companyStreetAddress;
+            arParams[42] = new NpgsqlParameter("facebookappid", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
+            arParams[42].Value = facebookAppId;
 
-            arParams[43] = new NpgsqlParameter("companystreetaddress2", NpgsqlTypes.NpgsqlDbType.Varchar, 250);
-            arParams[43].Value = companyStreetAddress2;
+            arParams[43] = new NpgsqlParameter("facebookappsecret", NpgsqlTypes.NpgsqlDbType.Text);
+            arParams[43].Value = facebookAppSecret;
 
-            arParams[44] = new NpgsqlParameter("companyregion", NpgsqlTypes.NpgsqlDbType.Varchar, 200);
-            arParams[44].Value = companyRegion;
+            arParams[44] = new NpgsqlParameter("googleclientid", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
+            arParams[44].Value = googleClientId;
 
-            arParams[45] = new NpgsqlParameter("companylocality", NpgsqlTypes.NpgsqlDbType.Varchar, 200);
-            arParams[45].Value = companyLocality;
+            arParams[45] = new NpgsqlParameter("googleclientsecret", NpgsqlTypes.NpgsqlDbType.Text);
+            arParams[45].Value = googleClientSecret;
 
-            arParams[46] = new NpgsqlParameter("companycountry", NpgsqlTypes.NpgsqlDbType.Varchar, 10);
-            arParams[46].Value = companyCountry;
+            arParams[46] = new NpgsqlParameter("twitterconsumerkey", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
+            arParams[46].Value = twitterConsumerKey;
 
-            arParams[47] = new NpgsqlParameter("companypostalcode", NpgsqlTypes.NpgsqlDbType.Varchar, 20);
-            arParams[47].Value = companyPostalCode;
+            arParams[47] = new NpgsqlParameter("twitterconsumersecret", NpgsqlTypes.NpgsqlDbType.Text);
+            arParams[47].Value = twitterConsumerSecret;
 
-            arParams[48] = new NpgsqlParameter("companypublicemail", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
-            arParams[48].Value = companyPublicEmail;
+            arParams[48] = new NpgsqlParameter("microsoftclientid", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
+            arParams[48].Value = microsoftClientId;
 
-            arParams[49] = new NpgsqlParameter("companyphone", NpgsqlTypes.NpgsqlDbType.Varchar, 20);
-            arParams[49].Value = companyPhone;
+            arParams[49] = new NpgsqlParameter("microsoftclientsecret", NpgsqlTypes.NpgsqlDbType.Text);
+            arParams[49].Value = microsoftClientSecret;
 
-            arParams[50] = new NpgsqlParameter("companyfax", NpgsqlTypes.NpgsqlDbType.Varchar, 20);
-            arParams[50].Value = companyFax;
+            arParams[50] = new NpgsqlParameter("preferredhostname", NpgsqlTypes.NpgsqlDbType.Varchar, 250);
+            arParams[50].Value = preferredHostName;
 
-            arParams[51] = new NpgsqlParameter("facebookappid", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
-            arParams[51].Value = facebookAppId;
+            arParams[51] = new NpgsqlParameter("sitefoldername", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
+            arParams[51].Value = siteFolderName;
 
-            arParams[52] = new NpgsqlParameter("facebookappsecret", NpgsqlTypes.NpgsqlDbType.Text);
-            arParams[52].Value = facebookAppSecret;
+            arParams[52] = new NpgsqlParameter("addthisdotcomusername", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
+            arParams[52].Value = addThisDotComUsername;
 
-            arParams[53] = new NpgsqlParameter("googleclientid", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
-            arParams[53].Value = googleClientId;
+            arParams[53] = new NpgsqlParameter("logininfotop", NpgsqlTypes.NpgsqlDbType.Text);
+            arParams[53].Value = loginInfoTop;
 
-            arParams[54] = new NpgsqlParameter("googleclientsecret", NpgsqlTypes.NpgsqlDbType.Text);
-            arParams[54].Value = googleClientSecret;
+            arParams[54] = new NpgsqlParameter("logininfobottom", NpgsqlTypes.NpgsqlDbType.Text);
+            arParams[54].Value = loginInfoBottom;
 
-            arParams[55] = new NpgsqlParameter("twitterconsumerkey", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
-            arParams[55].Value = twitterConsumerKey;
+            arParams[55] = new NpgsqlParameter("registrationagreement", NpgsqlTypes.NpgsqlDbType.Text);
+            arParams[55].Value = registrationAgreement;
 
-            arParams[56] = new NpgsqlParameter("twitterconsumersecret", NpgsqlTypes.NpgsqlDbType.Text);
-            arParams[56].Value = twitterConsumerSecret;
+            arParams[56] = new NpgsqlParameter("registrationpreamble", NpgsqlTypes.NpgsqlDbType.Text);
+            arParams[56].Value = registrationPreamble;
 
-            arParams[57] = new NpgsqlParameter("microsoftclientid", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
-            arParams[57].Value = microsoftClientId;
+            arParams[57] = new NpgsqlParameter("smtpserver", NpgsqlTypes.NpgsqlDbType.Varchar, 200);
+            arParams[57].Value = smtpServer;
 
-            arParams[58] = new NpgsqlParameter("microsoftclientsecret", NpgsqlTypes.NpgsqlDbType.Text);
-            arParams[58].Value = microsoftClientSecret;
+            arParams[58] = new NpgsqlParameter("smtpport", NpgsqlTypes.NpgsqlDbType.Integer);
+            arParams[58].Value = smtpPort;
 
-            arParams[59] = new NpgsqlParameter("preferredhostname", NpgsqlTypes.NpgsqlDbType.Varchar, 250);
-            arParams[59].Value = preferredHostName;
+            arParams[59] = new NpgsqlParameter("smtpuser", NpgsqlTypes.NpgsqlDbType.Varchar, 500);
+            arParams[59].Value = smtpUser;
 
-            arParams[60] = new NpgsqlParameter("sitefoldername", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
-            arParams[60].Value = siteFolderName;
+            arParams[60] = new NpgsqlParameter("smtppassword", NpgsqlTypes.NpgsqlDbType.Text);
+            arParams[60].Value = smtpPassword;
 
-            arParams[61] = new NpgsqlParameter("addthisdotcomusername", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
-            arParams[61].Value = addThisDotComUsername;
+            arParams[61] = new NpgsqlParameter("smtppreferredencoding", NpgsqlTypes.NpgsqlDbType.Varchar, 20);
+            arParams[61].Value = smtpPreferredEncoding;
 
-            arParams[62] = new NpgsqlParameter("logininfotop", NpgsqlTypes.NpgsqlDbType.Text);
-            arParams[62].Value = loginInfoTop;
+            arParams[62] = new NpgsqlParameter("smtprequiresauth", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[62].Value = smtpRequiresAuth;
 
-            arParams[63] = new NpgsqlParameter("logininfobottom", NpgsqlTypes.NpgsqlDbType.Text);
-            arParams[63].Value = loginInfoBottom;
+            arParams[63] = new NpgsqlParameter("smtpusessl", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[63].Value = smtpUseSsl;
 
-            arParams[64] = new NpgsqlParameter("registrationagreement", NpgsqlTypes.NpgsqlDbType.Text);
-            arParams[64].Value = registrationAgreement;
+            arParams[64] = new NpgsqlParameter("requireapprovalbeforelogin", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[64].Value = requireApprovalBeforeLogin;
 
-            arParams[65] = new NpgsqlParameter("registrationpreamble", NpgsqlTypes.NpgsqlDbType.Text);
-            arParams[65].Value = registrationPreamble;
+            arParams[65] = new NpgsqlParameter("isdataprotected", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[65].Value = isDataProtected;
 
-            arParams[66] = new NpgsqlParameter("smtpserver", NpgsqlTypes.NpgsqlDbType.Varchar, 200);
-            arParams[66].Value = smtpServer;
+            arParams[66] = new NpgsqlParameter("createdutc", NpgsqlTypes.NpgsqlDbType.Timestamp);
+            arParams[66].Value = createdUtc;
 
-            arParams[67] = new NpgsqlParameter("smtpport", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[67].Value = smtpPort;
+            arParams[67] = new NpgsqlParameter("requireconfirmedphone", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[67].Value = requireConfirmedPhone;
 
-            arParams[68] = new NpgsqlParameter("smtpuser", NpgsqlTypes.NpgsqlDbType.Varchar, 500);
-            arParams[68].Value = smtpUser;
+            arParams[68] = new NpgsqlParameter("defaultemailfromalias", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
+            arParams[68].Value = defaultEmailFromAlias;
 
-            arParams[69] = new NpgsqlParameter("smtppassword", NpgsqlTypes.NpgsqlDbType.Text);
-            arParams[69].Value = smtpPassword;
+            arParams[69] = new NpgsqlParameter("accountapprovalemailcsv", NpgsqlTypes.NpgsqlDbType.Text);
+            arParams[69].Value = accountApprovalEmailCsv;
 
-            arParams[70] = new NpgsqlParameter("smtppreferredencoding", NpgsqlTypes.NpgsqlDbType.Varchar, 20);
-            arParams[70].Value = smtpPreferredEncoding;
+            arParams[70] = new NpgsqlParameter("dkimpublickey", NpgsqlTypes.NpgsqlDbType.Text);
+            arParams[70].Value = dkimPublicKey;
 
-            arParams[71] = new NpgsqlParameter("smtprequiresauth", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[71].Value = smtpRequiresAuth;
+            arParams[71] = new NpgsqlParameter("dkimprivatekey", NpgsqlTypes.NpgsqlDbType.Text);
+            arParams[71].Value = dkimPrivateKey;
 
-            arParams[72] = new NpgsqlParameter("smtpusessl", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[72].Value = smtpUseSsl;
+            arParams[72] = new NpgsqlParameter("dkimdomain", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
+            arParams[72].Value = dkimDomain;
 
-            arParams[73] = new NpgsqlParameter("requireapprovalbeforelogin", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[73].Value = requireApprovalBeforeLogin;
+            arParams[73] = new NpgsqlParameter("dkimselector", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
+            arParams[73].Value = dkimSelector;
 
-            arParams[74] = new NpgsqlParameter("isdataprotected", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[74].Value = isDataProtected;
+            arParams[74] = new NpgsqlParameter("signemailwithdkim", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[74].Value = signEmailWithDkim;
 
-            arParams[75] = new NpgsqlParameter("createdutc", NpgsqlTypes.NpgsqlDbType.Timestamp);
-            arParams[75].Value = createdUtc;
+            arParams[75] = new NpgsqlParameter("oidconnectappId", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
+            arParams[75].Value = oidConnectAppId;
+
+            arParams[76] = new NpgsqlParameter("oidconnectappsecret", NpgsqlTypes.NpgsqlDbType.Text);
+            arParams[76].Value = oidConnectAppSecret;
+
+            arParams[77] = new NpgsqlParameter("smsclientid", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
+            arParams[77].Value = smsClientId;
+
+            arParams[78] = new NpgsqlParameter("smssecuretoken", NpgsqlTypes.NpgsqlDbType.Text);
+            arParams[78].Value = smsSecureToken;
+
+            arParams[79] = new NpgsqlParameter("smsfrom", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
+            arParams[79].Value = smsFrom;
 
             object result = await AdoHelper.ExecuteScalarAsync(
                 writeConnectionString,
@@ -538,7 +564,6 @@ namespace cloudscribe.Core.Repositories.pgsql
             string skin,
             bool allowNewRegistration,
             bool useSecureRegistration,
-            bool useSslOnAllPages,
             bool isServerAdminSite,
             bool useLdapAuth,
             bool autoCreateLdapUserOnFirstLogin,
@@ -547,23 +572,14 @@ namespace cloudscribe.Core.Repositories.pgsql
             string ldapDomain,
             string ldapRootDN,
             string ldapUserDNKey,
-            bool allowUserFullNameChange,
             bool useEmailForLogin,
             bool reallyDeleteUsers,
             string recaptchaPrivateKey,
             string recaptchaPublicKey,
-            string apiKeyExtra1,
-            string apiKeyExtra2,
-            string apiKeyExtra3,
-            string apiKeyExtra4,
-            string apiKeyExtra5,
             bool disableDbAuth,
-
             bool requiresQuestionAndAnswer,
             int maxInvalidPasswordAttempts,
-            int passwordAttemptWindowMinutes,
             int minRequiredPasswordLength,
-            int minReqNonAlphaChars,
             string defaultEmailFromAddress,
             bool allowDbFallbackWithLdap,
             bool emailLdapDbFallback,
@@ -609,6 +625,21 @@ namespace cloudscribe.Core.Repositories.pgsql
             bool smtpUseSsl,
             bool requireApprovalBeforeLogin,
             bool isDataProtected,
+
+            bool requireConfirmedPhone,
+            string defaultEmailFromAlias,
+            string accountApprovalEmailCsv,
+            string dkimPublicKey,
+            string dkimPrivateKey,
+            string dkimDomain,
+            string dkimSelector,
+            bool signEmailWithDkim,
+            string oidConnectAppId,
+            string oidConnectAppSecret,
+            string smsClientId,
+            string smsSecureToken,
+            string smsFrom,
+
             CancellationToken cancellationToken
 
             )
@@ -622,7 +653,6 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append("skin = :skin, ");
             sqlCommand.Append("allownewregistration = :allownewregistration, ");
             sqlCommand.Append("usesecureregistration = :usesecureregistration, ");
-            sqlCommand.Append("usesslonallpages = :usesslonallpages, ");
             sqlCommand.Append("isserveradminsite = :isserveradminsite, ");
             sqlCommand.Append("useldapauth = :useldapauth, ");
             sqlCommand.Append("autocreateldapuseronfirstlogin = :autocreateldapuseronfirstlogin, ");
@@ -633,21 +663,12 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append("ldapuserdnkey = :ldapuserdnkey, ");
             sqlCommand.Append("reallydeleteusers = :reallydeleteusers, ");
             sqlCommand.Append("useemailforlogin = :useemailforlogin, ");
-            sqlCommand.Append("allowuserfullnamechange = :allowuserfullnamechange, ");
             sqlCommand.Append("disabledbauth = :disabledbauth, ");
             sqlCommand.Append("recaptchaprivatekey = :recaptchaprivatekey, ");
             sqlCommand.Append("recaptchapublickey = :recaptchapublickey, ");
-            sqlCommand.Append("apikeyextra1 = :apikeyextra1, ");
-            sqlCommand.Append("apikeyextra2 = :apikeyextra2, ");
-            sqlCommand.Append("apikeyextra3 = :apikeyextra3, ");
-            sqlCommand.Append("apikeyextra4 = :apikeyextra4, ");
-            sqlCommand.Append("apikeyextra5 = :apikeyextra5, ");
-
             sqlCommand.Append("requiresquestionandanswer = :requiresquestionandanswer, ");
             sqlCommand.Append("maxinvalidpasswordattempts = :maxinvalidpasswordattempts, ");
-            sqlCommand.Append("passwordattemptwindowminutes = :passwordattemptwindowminutes, ");
             sqlCommand.Append("minrequiredpasswordlength = :minrequiredpasswordlength, ");
-            sqlCommand.Append("minreqnonalphachars = :minreqnonalphachars, ");
             sqlCommand.Append("defaultemailfromaddress = :defaultemailfromaddress, ");
             sqlCommand.Append("allowdbfallbackwithldap = :allowdbfallbackwithldap, ");
             sqlCommand.Append("emailldapdbfallback = :emailldapdbfallback, ");
@@ -692,15 +713,28 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append("smtprequiresauth = :smtprequiresauth, ");
             sqlCommand.Append("smtpusessl = :smtpusessl, ");
             sqlCommand.Append("isdataprotected = :isdataprotected, ");
+
+            sqlCommand.Append("requireconfirmedphone = :requireconfirmedphone, ");
+            sqlCommand.Append("defaultemailfromalias = :defaultemailfromalias, ");
+            sqlCommand.Append("accountapprovalemailcsv = :accountapprovalemailcsv, ");
+            sqlCommand.Append("dkimpublickey = :dkimpublickey, ");
+            sqlCommand.Append("dkimprivatekey = :dkimprivatekey, ");
+            sqlCommand.Append("dkimdomain = :dkimdomain, ");
+            sqlCommand.Append("dkimselector = :dkimselector, ");
+            sqlCommand.Append("signemailwithdkim = :signemailwithdkim, ");
+            sqlCommand.Append("oidconnectappid = :oidconnectappid, ");
+            sqlCommand.Append("oidconnectappsecret = :oidconnectappsecret, ");
+            sqlCommand.Append("smsclientid = :smsclientid, ");
+            sqlCommand.Append("smssecuretoken = :smssecuretoken, ");
+            sqlCommand.Append("smsfrom = :smsfrom, ");
+
             sqlCommand.Append("requireapprovalbeforelogin = :requireapprovalbeforelogin ");
-
-
-
+            
             sqlCommand.Append("WHERE  ");
             sqlCommand.Append("siteid = :siteid ");
             sqlCommand.Append(";");
 
-            NpgsqlParameter[] arParams = new NpgsqlParameter[75];
+            NpgsqlParameter[] arParams = new NpgsqlParameter[79];
 
             arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
             arParams[0].Value = siteId;
@@ -716,216 +750,228 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             arParams[4] = new NpgsqlParameter("usesecureregistration", NpgsqlTypes.NpgsqlDbType.Boolean);
             arParams[4].Value = useSecureRegistration;
-
-            arParams[5] = new NpgsqlParameter("usesslonallpages", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[5].Value = useSslOnAllPages;
             
-            arParams[6] = new NpgsqlParameter("isserveradminsite", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[6].Value = isServerAdminSite;
+            arParams[5] = new NpgsqlParameter("isserveradminsite", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[5].Value = isServerAdminSite;
 
-            arParams[7] = new NpgsqlParameter("useldapauth", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[7].Value = useLdapAuth;
+            arParams[6] = new NpgsqlParameter("useldapauth", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[6].Value = useLdapAuth;
 
-            arParams[8] = new NpgsqlParameter("autocreateldapuseronfirstlogin", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[8].Value = autoCreateLdapUserOnFirstLogin;
+            arParams[7] = new NpgsqlParameter("autocreateldapuseronfirstlogin", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[7].Value = autoCreateLdapUserOnFirstLogin;
 
-            arParams[9] = new NpgsqlParameter("ldapserver", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[9].Value = ldapServer;
+            arParams[8] = new NpgsqlParameter("ldapserver", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
+            arParams[8].Value = ldapServer;
 
-            arParams[10] = new NpgsqlParameter("ldapport", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[10].Value = ldapPort;
+            arParams[9] = new NpgsqlParameter("ldapport", NpgsqlTypes.NpgsqlDbType.Integer);
+            arParams[9].Value = ldapPort;
 
-            arParams[11] = new NpgsqlParameter("ldapdomain", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[11].Value = ldapDomain;
+            arParams[10] = new NpgsqlParameter("ldapdomain", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
+            arParams[10].Value = ldapDomain;
 
-            arParams[12] = new NpgsqlParameter("ldaprootdn", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[12].Value = ldapRootDN;
+            arParams[11] = new NpgsqlParameter("ldaprootdn", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
+            arParams[11].Value = ldapRootDN;
 
-            arParams[13] = new NpgsqlParameter("ldapuserdnkey", NpgsqlTypes.NpgsqlDbType.Varchar, 10);
-            arParams[13].Value = ldapUserDNKey;
+            arParams[12] = new NpgsqlParameter("ldapuserdnkey", NpgsqlTypes.NpgsqlDbType.Varchar, 10);
+            arParams[12].Value = ldapUserDNKey;
 
-            arParams[14] = new NpgsqlParameter("reallydeleteusers", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[14].Value = reallyDeleteUsers;
+            arParams[13] = new NpgsqlParameter("reallydeleteusers", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[13].Value = reallyDeleteUsers;
 
-            arParams[15] = new NpgsqlParameter("useemailforlogin", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[15].Value = useEmailForLogin;
-
-            arParams[16] = new NpgsqlParameter("allowuserfullnamechange", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[16].Value = allowUserFullNameChange;
+            arParams[14] = new NpgsqlParameter("useemailforlogin", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[14].Value = useEmailForLogin;
             
-            arParams[17] = new NpgsqlParameter("recaptchaprivatekey", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[17].Value = recaptchaPrivateKey;
+            arParams[15] = new NpgsqlParameter("recaptchaprivatekey", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
+            arParams[15].Value = recaptchaPrivateKey;
 
-            arParams[18] = new NpgsqlParameter("recaptchapublickey", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[18].Value = recaptchaPublicKey;
+            arParams[16] = new NpgsqlParameter("recaptchapublickey", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
+            arParams[16].Value = recaptchaPublicKey;
             
-            arParams[19] = new NpgsqlParameter("apikeyextra1", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[19].Value = apiKeyExtra1;
+            arParams[17] = new NpgsqlParameter("disabledbauth", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[17].Value = disableDbAuth;
 
-            arParams[20] = new NpgsqlParameter("apikeyextra2", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[20].Value = apiKeyExtra2;
+            arParams[18] = new NpgsqlParameter("requiresquestionandanswer", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[18].Value = requiresQuestionAndAnswer;
 
-            arParams[21] = new NpgsqlParameter("apikeyextra3", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[21].Value = apiKeyExtra3;
+            arParams[19] = new NpgsqlParameter("maxinvalidpasswordattempts", NpgsqlTypes.NpgsqlDbType.Integer);
+            arParams[19].Value = maxInvalidPasswordAttempts;
+            
+            arParams[20] = new NpgsqlParameter("minrequiredpasswordlength", NpgsqlTypes.NpgsqlDbType.Integer);
+            arParams[20].Value = minRequiredPasswordLength;
+            
+            arParams[21] = new NpgsqlParameter("defaultemailfromaddress", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
+            arParams[21].Value = defaultEmailFromAddress;
 
-            arParams[22] = new NpgsqlParameter("apikeyextra4", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[22].Value = apiKeyExtra4;
+            arParams[22] = new NpgsqlParameter("allowdbfallbackwithldap", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[22].Value = allowDbFallbackWithLdap;
 
-            arParams[23] = new NpgsqlParameter("apikeyextra5", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[23].Value = apiKeyExtra5;
+            arParams[23] = new NpgsqlParameter("emailldapdbfallback", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[23].Value = emailLdapDbFallback;
 
-            arParams[24] = new NpgsqlParameter("disabledbauth", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[24].Value = disableDbAuth;
+            arParams[24] = new NpgsqlParameter("allowpersistentlogin", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[24].Value = allowPersistentLogin;
 
-            arParams[25] = new NpgsqlParameter("requiresquestionandanswer", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[25].Value = requiresQuestionAndAnswer;
+            arParams[25] = new NpgsqlParameter("captchaonlogin", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[25].Value = captchaOnLogin;
 
-            arParams[26] = new NpgsqlParameter("maxinvalidpasswordattempts", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[26].Value = maxInvalidPasswordAttempts;
+            arParams[26] = new NpgsqlParameter("captchaonregistration", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[26].Value = captchaOnRegistration;
 
-            arParams[27] = new NpgsqlParameter("passwordattemptwindowminutes", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[27].Value = passwordAttemptWindowMinutes;
+            arParams[27] = new NpgsqlParameter("siteisclosed", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[27].Value = siteIsClosed;
 
-            arParams[28] = new NpgsqlParameter("minrequiredpasswordlength", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[28].Value = minRequiredPasswordLength;
+            arParams[28] = new NpgsqlParameter("siteisclosedmessage", NpgsqlTypes.NpgsqlDbType.Text);
+            arParams[28].Value = siteIsClosedMessage;
 
-            arParams[29] = new NpgsqlParameter("minreqnonalphachars", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[29].Value = minReqNonAlphaChars;
+            arParams[29] = new NpgsqlParameter("privacypolicy", NpgsqlTypes.NpgsqlDbType.Text);
+            arParams[29].Value = privacyPolicy;
 
-            arParams[30] = new NpgsqlParameter("defaultemailfromaddress", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
-            arParams[30].Value = defaultEmailFromAddress;
+            arParams[30] = new NpgsqlParameter("timezoneid", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
+            arParams[30].Value = timeZoneId;
 
-            arParams[31] = new NpgsqlParameter("allowdbfallbackwithldap", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[31].Value = allowDbFallbackWithLdap;
+            arParams[31] = new NpgsqlParameter("googleanalyticsprofileid", NpgsqlTypes.NpgsqlDbType.Varchar, 25);
+            arParams[31].Value = googleAnalyticsProfileId;
 
-            arParams[32] = new NpgsqlParameter("emailldapdbfallback", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[32].Value = emailLdapDbFallback;
+            arParams[32] = new NpgsqlParameter("companyname", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
+            arParams[32].Value = companyName;
 
-            arParams[33] = new NpgsqlParameter("allowpersistentlogin", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[33].Value = allowPersistentLogin;
+            arParams[33] = new NpgsqlParameter("companystreetaddress", NpgsqlTypes.NpgsqlDbType.Varchar, 250);
+            arParams[33].Value = companyStreetAddress;
 
-            arParams[34] = new NpgsqlParameter("captchaonlogin", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[34].Value = captchaOnLogin;
+            arParams[34] = new NpgsqlParameter("companystreetaddress2", NpgsqlTypes.NpgsqlDbType.Varchar, 250);
+            arParams[34].Value = companyStreetAddress2;
 
-            arParams[35] = new NpgsqlParameter("captchaonregistration", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[35].Value = captchaOnRegistration;
+            arParams[35] = new NpgsqlParameter("companyregion", NpgsqlTypes.NpgsqlDbType.Varchar, 200);
+            arParams[35].Value = companyRegion;
 
-            arParams[36] = new NpgsqlParameter("siteisclosed", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[36].Value = siteIsClosed;
+            arParams[36] = new NpgsqlParameter("companylocality", NpgsqlTypes.NpgsqlDbType.Varchar, 200);
+            arParams[36].Value = companyLocality;
 
-            arParams[37] = new NpgsqlParameter("siteisclosedmessage", NpgsqlTypes.NpgsqlDbType.Text);
-            arParams[37].Value = siteIsClosedMessage;
+            arParams[37] = new NpgsqlParameter("companycountry", NpgsqlTypes.NpgsqlDbType.Varchar, 10);
+            arParams[37].Value = companyCountry;
 
-            arParams[38] = new NpgsqlParameter("privacypolicy", NpgsqlTypes.NpgsqlDbType.Text);
-            arParams[38].Value = privacyPolicy;
+            arParams[38] = new NpgsqlParameter("companypostalcode", NpgsqlTypes.NpgsqlDbType.Varchar, 20);
+            arParams[38].Value = companyPostalCode;
 
-            arParams[39] = new NpgsqlParameter("timezoneid", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
-            arParams[39].Value = timeZoneId;
+            arParams[39] = new NpgsqlParameter("companypublicemail", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
+            arParams[39].Value = companyPublicEmail;
 
-            arParams[40] = new NpgsqlParameter("googleanalyticsprofileid", NpgsqlTypes.NpgsqlDbType.Varchar, 25);
-            arParams[40].Value = googleAnalyticsProfileId;
+            arParams[40] = new NpgsqlParameter("companyphone", NpgsqlTypes.NpgsqlDbType.Varchar, 20);
+            arParams[40].Value = companyPhone;
 
-            arParams[41] = new NpgsqlParameter("companyname", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
-            arParams[41].Value = companyName;
+            arParams[41] = new NpgsqlParameter("companyfax", NpgsqlTypes.NpgsqlDbType.Varchar, 20);
+            arParams[41].Value = companyFax;
 
-            arParams[42] = new NpgsqlParameter("companystreetaddress", NpgsqlTypes.NpgsqlDbType.Varchar, 250);
-            arParams[42].Value = companyStreetAddress;
+            arParams[42] = new NpgsqlParameter("facebookappid", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
+            arParams[42].Value = facebookAppId;
 
-            arParams[43] = new NpgsqlParameter("companystreetaddress2", NpgsqlTypes.NpgsqlDbType.Varchar, 250);
-            arParams[43].Value = companyStreetAddress2;
+            arParams[43] = new NpgsqlParameter("facebookappsecret", NpgsqlTypes.NpgsqlDbType.Text);
+            arParams[43].Value = facebookAppSecret;
 
-            arParams[44] = new NpgsqlParameter("companyregion", NpgsqlTypes.NpgsqlDbType.Varchar, 200);
-            arParams[44].Value = companyRegion;
+            arParams[44] = new NpgsqlParameter("googleclientid", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
+            arParams[44].Value = googleClientId;
 
-            arParams[45] = new NpgsqlParameter("companylocality", NpgsqlTypes.NpgsqlDbType.Varchar, 200);
-            arParams[45].Value = companyLocality;
+            arParams[45] = new NpgsqlParameter("googleclientsecret", NpgsqlTypes.NpgsqlDbType.Text);
+            arParams[45].Value = googleClientSecret;
 
-            arParams[46] = new NpgsqlParameter("companycountry", NpgsqlTypes.NpgsqlDbType.Varchar, 10);
-            arParams[46].Value = companyCountry;
+            arParams[46] = new NpgsqlParameter("twitterconsumerkey", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
+            arParams[46].Value = twitterConsumerKey;
 
-            arParams[47] = new NpgsqlParameter("companypostalcode", NpgsqlTypes.NpgsqlDbType.Varchar, 20);
-            arParams[47].Value = companyPostalCode;
+            arParams[47] = new NpgsqlParameter("twitterconsumersecret", NpgsqlTypes.NpgsqlDbType.Text);
+            arParams[47].Value = twitterConsumerSecret;
 
-            arParams[48] = new NpgsqlParameter("companypublicemail", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
-            arParams[48].Value = companyPublicEmail;
+            arParams[48] = new NpgsqlParameter("microsoftclientid", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
+            arParams[48].Value = microsoftClientId;
 
-            arParams[49] = new NpgsqlParameter("companyphone", NpgsqlTypes.NpgsqlDbType.Varchar, 20);
-            arParams[49].Value = companyPhone;
+            arParams[49] = new NpgsqlParameter("microsoftclientsecret", NpgsqlTypes.NpgsqlDbType.Text);
+            arParams[49].Value = microsoftClientSecret;
 
-            arParams[50] = new NpgsqlParameter("companyfax", NpgsqlTypes.NpgsqlDbType.Varchar, 20);
-            arParams[50].Value = companyFax;
+            arParams[50] = new NpgsqlParameter("preferredhostname", NpgsqlTypes.NpgsqlDbType.Varchar, 250);
+            arParams[50].Value = preferredHostName;
 
-            arParams[51] = new NpgsqlParameter("facebookappid", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
-            arParams[51].Value = facebookAppId;
+            arParams[51] = new NpgsqlParameter("sitefoldername", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
+            arParams[51].Value = siteFolderName;
 
-            arParams[52] = new NpgsqlParameter("facebookappsecret", NpgsqlTypes.NpgsqlDbType.Text);
-            arParams[52].Value = facebookAppSecret;
+            arParams[52] = new NpgsqlParameter("addthisdotcomusername", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
+            arParams[52].Value = addThisDotComUsername;
 
-            arParams[53] = new NpgsqlParameter("googleclientid", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
-            arParams[53].Value = googleClientId;
+            arParams[53] = new NpgsqlParameter("logininfotop", NpgsqlTypes.NpgsqlDbType.Text);
+            arParams[53].Value = loginInfoTop;
 
-            arParams[54] = new NpgsqlParameter("googleclientsecret", NpgsqlTypes.NpgsqlDbType.Text);
-            arParams[54].Value = googleClientSecret;
+            arParams[54] = new NpgsqlParameter("logininfobottom", NpgsqlTypes.NpgsqlDbType.Text);
+            arParams[54].Value = loginInfoBottom;
 
-            arParams[55] = new NpgsqlParameter("twitterconsumerkey", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
-            arParams[55].Value = twitterConsumerKey;
+            arParams[55] = new NpgsqlParameter("registrationagreement", NpgsqlTypes.NpgsqlDbType.Text);
+            arParams[55].Value = registrationAgreement;
 
-            arParams[56] = new NpgsqlParameter("twitterconsumersecret", NpgsqlTypes.NpgsqlDbType.Text);
-            arParams[56].Value = twitterConsumerSecret;
+            arParams[56] = new NpgsqlParameter("registrationpreamble", NpgsqlTypes.NpgsqlDbType.Text);
+            arParams[56].Value = registrationPreamble;
 
-            arParams[57] = new NpgsqlParameter("microsoftclientid", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
-            arParams[57].Value = microsoftClientId;
+            arParams[57] = new NpgsqlParameter("smtpserver", NpgsqlTypes.NpgsqlDbType.Varchar, 200);
+            arParams[57].Value = smtpServer;
 
-            arParams[58] = new NpgsqlParameter("microsoftclientsecret", NpgsqlTypes.NpgsqlDbType.Text);
-            arParams[58].Value = microsoftClientSecret;
+            arParams[58] = new NpgsqlParameter("smtpport", NpgsqlTypes.NpgsqlDbType.Integer);
+            arParams[58].Value = smtpPort;
 
-            arParams[59] = new NpgsqlParameter("preferredhostname", NpgsqlTypes.NpgsqlDbType.Varchar, 250);
-            arParams[59].Value = preferredHostName;
+            arParams[59] = new NpgsqlParameter("smtpuser", NpgsqlTypes.NpgsqlDbType.Varchar, 500);
+            arParams[59].Value = smtpUser;
 
-            arParams[60] = new NpgsqlParameter("sitefoldername", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
-            arParams[60].Value = siteFolderName;
+            arParams[60] = new NpgsqlParameter("smtppassword", NpgsqlTypes.NpgsqlDbType.Text);
+            arParams[60].Value = smtpPassword;
 
-            arParams[61] = new NpgsqlParameter("addthisdotcomusername", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
-            arParams[61].Value = addThisDotComUsername;
+            arParams[61] = new NpgsqlParameter("smtppreferredencoding", NpgsqlTypes.NpgsqlDbType.Varchar, 20);
+            arParams[61].Value = smtpPreferredEncoding;
 
-            arParams[62] = new NpgsqlParameter("logininfotop", NpgsqlTypes.NpgsqlDbType.Text);
-            arParams[62].Value = loginInfoTop;
+            arParams[62] = new NpgsqlParameter("smtprequiresauth", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[62].Value = smtpRequiresAuth;
 
-            arParams[63] = new NpgsqlParameter("logininfobottom", NpgsqlTypes.NpgsqlDbType.Text);
-            arParams[63].Value = loginInfoBottom;
+            arParams[63] = new NpgsqlParameter("smtpusessl", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[63].Value = smtpUseSsl;
 
-            arParams[64] = new NpgsqlParameter("registrationagreement", NpgsqlTypes.NpgsqlDbType.Text);
-            arParams[64].Value = registrationAgreement;
+            arParams[64] = new NpgsqlParameter("requireapprovalbeforelogin", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[64].Value = requireApprovalBeforeLogin;
 
-            arParams[65] = new NpgsqlParameter("registrationpreamble", NpgsqlTypes.NpgsqlDbType.Text);
-            arParams[65].Value = registrationPreamble;
+            arParams[65] = new NpgsqlParameter("isdataprotected", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[65].Value = isDataProtected;
 
-            arParams[66] = new NpgsqlParameter("smtpserver", NpgsqlTypes.NpgsqlDbType.Varchar, 200);
-            arParams[66].Value = smtpServer;
+            arParams[66] = new NpgsqlParameter("requireconfirmedphone", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[66].Value = requireConfirmedPhone;
 
-            arParams[67] = new NpgsqlParameter("smtpport", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[67].Value = smtpPort;
+            arParams[67] = new NpgsqlParameter("defaultemailfromalias", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
+            arParams[67].Value = defaultEmailFromAlias;
 
-            arParams[68] = new NpgsqlParameter("smtpuser", NpgsqlTypes.NpgsqlDbType.Varchar, 500);
-            arParams[68].Value = smtpUser;
+            arParams[68] = new NpgsqlParameter("accountapprovalemailcsv", NpgsqlTypes.NpgsqlDbType.Text);
+            arParams[68].Value = accountApprovalEmailCsv;
 
-            arParams[69] = new NpgsqlParameter("smtppassword", NpgsqlTypes.NpgsqlDbType.Text);
-            arParams[69].Value = smtpPassword;
+            arParams[69] = new NpgsqlParameter("dkimpublickey", NpgsqlTypes.NpgsqlDbType.Text);
+            arParams[69].Value = dkimPublicKey;
 
-            arParams[70] = new NpgsqlParameter("smtppreferredencoding", NpgsqlTypes.NpgsqlDbType.Varchar, 20);
-            arParams[70].Value = smtpPreferredEncoding;
+            arParams[70] = new NpgsqlParameter("dkimprivatekey", NpgsqlTypes.NpgsqlDbType.Text);
+            arParams[70].Value = dkimPrivateKey;
 
-            arParams[71] = new NpgsqlParameter("smtprequiresauth", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[71].Value = smtpRequiresAuth;
+            arParams[71] = new NpgsqlParameter("dkimdomain", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
+            arParams[71].Value = dkimDomain;
 
-            arParams[72] = new NpgsqlParameter("smtpusessl", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[72].Value = smtpUseSsl;
+            arParams[72] = new NpgsqlParameter("dkimselector", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
+            arParams[72].Value = dkimSelector;
 
-            arParams[73] = new NpgsqlParameter("requireapprovalbeforelogin", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[73].Value = requireApprovalBeforeLogin;
+            arParams[73] = new NpgsqlParameter("signemailwithdkim", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[73].Value = signEmailWithDkim;
 
-            arParams[74] = new NpgsqlParameter("isdataprotected", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[74].Value = isDataProtected;
+            arParams[74] = new NpgsqlParameter("oidconnectappId", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
+            arParams[74].Value = oidConnectAppId;
+
+            arParams[75] = new NpgsqlParameter("oidconnectappsecret", NpgsqlTypes.NpgsqlDbType.Text);
+            arParams[75].Value = oidConnectAppSecret;
+
+            arParams[76] = new NpgsqlParameter("smsclientid", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
+            arParams[76].Value = smsClientId;
+
+            arParams[77] = new NpgsqlParameter("smssecuretoken", NpgsqlTypes.NpgsqlDbType.Text);
+            arParams[77].Value = smsSecureToken;
+
+            arParams[78] = new NpgsqlParameter("smsfrom", NpgsqlTypes.NpgsqlDbType.Varchar, 255);
+            arParams[78].Value = smsFrom;
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,

@@ -93,6 +93,6 @@ GO
 ALTER TABLE mp_Users ADD NormalizedUserName nvarchar(50) NULL 
 GO
 
-ALTER TABLE mp_Users ADD CanBeLockedOut bit NOT NULL default 1
+ALTER TABLE mp_Users ADD CanAutoLockout bit NOT NULL default 1
 GO
 

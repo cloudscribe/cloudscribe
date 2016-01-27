@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2016-01-17
+// Last Modified:			2016-01-27
 // 
 
 
@@ -67,7 +67,6 @@ namespace cloudscribe.Core.Repositories.SQLite
                     site.Layout,
                     site.AllowNewRegistration,
                     site.RequireConfirmedEmail,
-                    site.UseSslOnAllPages,
                     site.IsServerAdminSite,
                     site.UseLdapAuth,
                     site.AutoCreateLdapUserOnFirstLogin,
@@ -76,23 +75,14 @@ namespace cloudscribe.Core.Repositories.SQLite
                     site.LdapDomain,
                     site.LdapRootDN,
                     site.LdapUserDNKey,
-                    site.AllowUserFullNameChange,
                     site.UseEmailForLogin,
                     site.ReallyDeleteUsers,
                     site.RecaptchaPrivateKey,
                     site.RecaptchaPublicKey,
-                    site.ApiKeyExtra1,
-                    site.ApiKeyExtra2,
-                    site.ApiKeyExtra3,
-                    site.ApiKeyExtra4,
-                    site.ApiKeyExtra5,
                     site.DisableDbAuth,
-
                     site.RequiresQuestionAndAnswer,
                     site.MaxInvalidPasswordAttempts,
-                    site.PasswordAttemptWindowMinutes,
                     site.MinRequiredPasswordLength,
-                    site.MinReqNonAlphaChars,
                     site.DefaultEmailFromAddress,
                     site.AllowDbFallbackWithLdap,
                     site.EmailLdapDbFallback,
@@ -138,7 +128,20 @@ namespace cloudscribe.Core.Repositories.SQLite
                     site.SmtpUseSsl,
                     site.RequireApprovalBeforeLogin,
                     site.IsDataProtected,
-                    site.CreatedUtc
+                    site.CreatedUtc,
+                    site.RequireConfirmedPhone,
+                    site.DefaultEmailFromAlias,
+                    site.AccountApprovalEmailCsv,
+                    site.DkimPublicKey,
+                    site.DkimPrivateKey,
+                    site.DkimDomain,
+                    site.DkimSelector,
+                    site.SignEmailWithDkim,
+                    site.OidConnectAppId,
+                    site.OidConnectAppSecret,
+                    site.SmsClientId,
+                    site.SmsSecureToken,
+                    site.SmsFrom
 
                     );
 
@@ -152,7 +155,6 @@ namespace cloudscribe.Core.Repositories.SQLite
                     site.Layout,
                     site.AllowNewRegistration,
                     site.RequireConfirmedEmail,
-                    site.UseSslOnAllPages,
                     site.IsServerAdminSite,
                     site.UseLdapAuth,
                     site.AutoCreateLdapUserOnFirstLogin,
@@ -161,23 +163,14 @@ namespace cloudscribe.Core.Repositories.SQLite
                     site.LdapDomain,
                     site.LdapRootDN,
                     site.LdapUserDNKey,
-                    site.AllowUserFullNameChange,
                     site.UseEmailForLogin,
                     site.ReallyDeleteUsers,
                     site.RecaptchaPrivateKey,
                     site.RecaptchaPublicKey,
-                    site.ApiKeyExtra1,
-                    site.ApiKeyExtra2,
-                    site.ApiKeyExtra3,
-                    site.ApiKeyExtra4,
-                    site.ApiKeyExtra5,
                     site.DisableDbAuth,
-
                     site.RequiresQuestionAndAnswer,
                     site.MaxInvalidPasswordAttempts,
-                    site.PasswordAttemptWindowMinutes,
                     site.MinRequiredPasswordLength,
-                    site.MinReqNonAlphaChars,
                     site.DefaultEmailFromAddress,
                     site.AllowDbFallbackWithLdap,
                     site.EmailLdapDbFallback,
@@ -222,7 +215,21 @@ namespace cloudscribe.Core.Repositories.SQLite
                     site.SmtpRequiresAuth,
                     site.SmtpUseSsl,
                     site.RequireApprovalBeforeLogin,
-                    site.IsDataProtected
+                    site.IsDataProtected,
+
+                    site.RequireConfirmedPhone,
+                    site.DefaultEmailFromAlias,
+                    site.AccountApprovalEmailCsv,
+                    site.DkimPublicKey,
+                    site.DkimPrivateKey,
+                    site.DkimDomain,
+                    site.DkimSelector,
+                    site.SignEmailWithDkim,
+                    site.OidConnectAppId,
+                    site.OidConnectAppSecret,
+                    site.SmsClientId,
+                    site.SmsSecureToken,
+                    site.SmsFrom
 
                     );
 

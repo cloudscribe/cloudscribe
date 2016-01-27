@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2016-01-17
+// Last Modified:			2016-01-27
 // 
 
 
@@ -45,7 +45,6 @@ namespace cloudscribe.Core.Repositories.MSSQL
             string skin,
             bool allowNewRegistration, 
             bool useSecureRegistration,
-            bool useSslOnAllPages,
             bool isServerAdminSite,
             bool useLdapAuth,
             bool autoCreateLdapUserOnFirstLogin,
@@ -54,23 +53,14 @@ namespace cloudscribe.Core.Repositories.MSSQL
             string ldapDomain,
             string ldapRootDN,
             string ldapUserDNKey,
-            bool allowUserFullNameChange,
             bool useEmailForLogin,
             bool reallyDeleteUsers,
             string recaptchaPrivateKey,
             string recaptchaPublicKey,
-            string apiKeyExtra1,
-            string apiKeyExtra2,
-            string apiKeyExtra3,
-            string apiKeyExtra4,
-            string apiKeyExtra5,
             bool disableDbAuth,
-            
             bool requiresQuestionAndAnswer,
             int maxInvalidPasswordAttempts,
-            int passwordAttemptWindowMinutes,
             int minRequiredPasswordLength,
-            int minReqNonAlphaChars,
             string defaultEmailFromAddress,
             bool allowDbFallbackWithLdap,
             bool emailLdapDbFallback,
@@ -117,6 +107,21 @@ namespace cloudscribe.Core.Repositories.MSSQL
             bool requireApprovalBeforeLogin,
             bool isDataProtected,
             DateTime createdUtc,
+
+            bool requireConfirmedPhone,
+            string defaultEmailFromAlias,
+            string accountApprovalEmailCsv,
+            string dkimPublicKey,
+            string dkimPrivateKey,
+            string dkimDomain,
+            string dkimSelector,
+            bool signEmailWithDkim,
+            string oidConnectAppId,
+            string oidConnectAppSecret,
+            string smsClientId,
+            string smsSecureToken,
+            string smsFrom,
+
             CancellationToken cancellationToken
             )
         {
@@ -125,13 +130,12 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 logFactory,
                 writeConnectionString, 
                 "mp_Sites_Insert", 
-                76);
+                80);
 
             sph.DefineSqlParameter("@SiteName", SqlDbType.NVarChar, 128, ParameterDirection.Input, siteName);
             sph.DefineSqlParameter("@Skin", SqlDbType.NVarChar, 100, ParameterDirection.Input, skin); 
             sph.DefineSqlParameter("@AllowNewRegistration", SqlDbType.Bit, ParameterDirection.Input, allowNewRegistration);
             sph.DefineSqlParameter("@UseSecureRegistration", SqlDbType.Bit, ParameterDirection.Input, useSecureRegistration);
-            sph.DefineSqlParameter("@UseSSLOnAllPages", SqlDbType.Bit, ParameterDirection.Input, useSslOnAllPages); 
             sph.DefineSqlParameter("@IsServerAdminSite", SqlDbType.Bit, ParameterDirection.Input, isServerAdminSite);
             sph.DefineSqlParameter("@UseLdapAuth", SqlDbType.Bit, ParameterDirection.Input, useLdapAuth);
             sph.DefineSqlParameter("@AutoCreateLDAPUserOnFirstLogin", SqlDbType.Bit, ParameterDirection.Input, autoCreateLdapUserOnFirstLogin);
@@ -140,23 +144,15 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@LdapDomain", SqlDbType.NVarChar, 255, ParameterDirection.Input, ldapDomain);
             sph.DefineSqlParameter("@LdapRootDN", SqlDbType.NVarChar, 255, ParameterDirection.Input, ldapRootDN);
             sph.DefineSqlParameter("@LdapUserDNKey", SqlDbType.NVarChar, 10, ParameterDirection.Input, ldapUserDNKey);
-            sph.DefineSqlParameter("@AllowUserFullNameChange", SqlDbType.Bit, ParameterDirection.Input, allowUserFullNameChange);
             sph.DefineSqlParameter("@UseEmailForLogin", SqlDbType.Bit, ParameterDirection.Input, useEmailForLogin);
             sph.DefineSqlParameter("@ReallyDeleteUsers", SqlDbType.Bit, ParameterDirection.Input, reallyDeleteUsers);
             sph.DefineSqlParameter("@SiteGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, siteGuid);
             sph.DefineSqlParameter("@RecaptchaPrivateKey", SqlDbType.NVarChar, 255, ParameterDirection.Input, recaptchaPrivateKey);
             sph.DefineSqlParameter("@RecaptchaPublicKey", SqlDbType.NVarChar, 255, ParameterDirection.Input, recaptchaPublicKey);
-            sph.DefineSqlParameter("@ApiKeyExtra1", SqlDbType.NVarChar, 255, ParameterDirection.Input, apiKeyExtra1);
-            sph.DefineSqlParameter("@ApiKeyExtra2", SqlDbType.NVarChar, 255, ParameterDirection.Input, apiKeyExtra2);
-            sph.DefineSqlParameter("@ApiKeyExtra3", SqlDbType.NVarChar, 255, ParameterDirection.Input, apiKeyExtra3);
-            sph.DefineSqlParameter("@ApiKeyExtra4", SqlDbType.NVarChar, 255, ParameterDirection.Input, apiKeyExtra4);
-            sph.DefineSqlParameter("@ApiKeyExtra5", SqlDbType.NVarChar, 255, ParameterDirection.Input, apiKeyExtra5);
             sph.DefineSqlParameter("@DisableDbAuth", SqlDbType.Bit, ParameterDirection.Input, disableDbAuth);
             sph.DefineSqlParameter("@RequiresQuestionAndAnswer", SqlDbType.Bit, ParameterDirection.Input, requiresQuestionAndAnswer);
             sph.DefineSqlParameter("@MaxInvalidPasswordAttempts", SqlDbType.Int, ParameterDirection.Input, maxInvalidPasswordAttempts);
-            sph.DefineSqlParameter("@PasswordAttemptWindowMinutes", SqlDbType.Int, ParameterDirection.Input, passwordAttemptWindowMinutes);
             sph.DefineSqlParameter("@MinRequiredPasswordLength", SqlDbType.Int, ParameterDirection.Input, minRequiredPasswordLength);
-            sph.DefineSqlParameter("@MinReqNonAlphaChars", SqlDbType.Int, ParameterDirection.Input, minReqNonAlphaChars);
             sph.DefineSqlParameter("@DefaultEmailFromAddress", SqlDbType.NVarChar, 100, ParameterDirection.Input, defaultEmailFromAddress);
             sph.DefineSqlParameter("@AllowDbFallbackWithLdap", SqlDbType.Bit, ParameterDirection.Input, allowDbFallbackWithLdap);
             sph.DefineSqlParameter("@EmailLdapDbFallback", SqlDbType.Bit, ParameterDirection.Input, emailLdapDbFallback);
@@ -204,6 +200,24 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@IsDataProtected", SqlDbType.Bit, ParameterDirection.Input, isDataProtected);
             sph.DefineSqlParameter("@CreatedUtc", SqlDbType.DateTime, ParameterDirection.Input, createdUtc);
 
+            sph.DefineSqlParameter("@RequireConfirmedPhone", SqlDbType.Bit, ParameterDirection.Input, requireConfirmedPhone);
+            sph.DefineSqlParameter("@DefaultEmailFromAlias", SqlDbType.NVarChar, 100, ParameterDirection.Input, defaultEmailFromAlias);
+            sph.DefineSqlParameter("@AccountApprovalEmailCsv", SqlDbType.NVarChar, -1, ParameterDirection.Input, accountApprovalEmailCsv);
+            sph.DefineSqlParameter("@DkimPublicKey", SqlDbType.NVarChar, 100, ParameterDirection.Input, dkimPublicKey);
+            sph.DefineSqlParameter("@DkimPrivateKey", SqlDbType.NVarChar, -1, ParameterDirection.Input, dkimPrivateKey);
+            sph.DefineSqlParameter("@DkimDomain", SqlDbType.NVarChar, 255, ParameterDirection.Input, dkimDomain);
+            sph.DefineSqlParameter("@DkimSelector", SqlDbType.NVarChar, 128, ParameterDirection.Input, dkimSelector);
+            sph.DefineSqlParameter("@SignEmailWithDkim", SqlDbType.Bit, ParameterDirection.Input, signEmailWithDkim);
+            sph.DefineSqlParameter("@OidConnectAppId", SqlDbType.NVarChar, 100, ParameterDirection.Input, oidConnectAppId);
+            sph.DefineSqlParameter("@OidConnectAppSecret", SqlDbType.NVarChar, -1, ParameterDirection.Input, oidConnectAppSecret);
+            sph.DefineSqlParameter("@SmsClientId", SqlDbType.NVarChar, 100, ParameterDirection.Input, smsClientId);
+            sph.DefineSqlParameter("@SmsSecureToken", SqlDbType.NVarChar, -1, ParameterDirection.Input, smsSecureToken);
+            sph.DefineSqlParameter("@SmsFrom", SqlDbType.NVarChar, 100, ParameterDirection.Input, smsFrom);
+
+
+
+            //-9 + 13 = 4
+
 
             object result = await sph.ExecuteScalarAsync(cancellationToken);
             int newID = Convert.ToInt32(result);
@@ -216,7 +230,6 @@ namespace cloudscribe.Core.Repositories.MSSQL
             string skin, 
             bool allowNewRegistration,
             bool useSecureRegistration,
-            bool useSslOnAllPages,
             bool isServerAdminSite,
             bool useLdapAuth,
             bool autoCreateLdapUserOnFirstLogin,
@@ -225,23 +238,15 @@ namespace cloudscribe.Core.Repositories.MSSQL
             string ldapDomain,
             string ldapRootDN,
             string ldapUserDNKey,
-            bool allowUserFullNameChange,
             bool useEmailForLogin,
             bool reallyDeleteUsers,
             string recaptchaPrivateKey,
             string recaptchaPublicKey,
-            string apiKeyExtra1,
-            string apiKeyExtra2,
-            string apiKeyExtra3,
-            string apiKeyExtra4,
-            string apiKeyExtra5,
             bool disableDbAuth,
 
             bool requiresQuestionAndAnswer,
             int maxInvalidPasswordAttempts,
-            int passwordAttemptWindowMinutes,
             int minRequiredPasswordLength,
-            int minReqNonAlphaChars,
             string defaultEmailFromAddress,
             bool allowDbFallbackWithLdap,
             bool emailLdapDbFallback,
@@ -287,6 +292,21 @@ namespace cloudscribe.Core.Repositories.MSSQL
             bool smtpUseSsl,
             bool requireApprovalBeforeLogin,
             bool isDataProtected,
+
+            bool requireConfirmedPhone,
+            string defaultEmailFromAlias,
+            string accountApprovalEmailCsv,
+            string dkimPublicKey,
+            string dkimPrivateKey,
+            string dkimDomain,
+            string dkimSelector,
+            bool signEmailWithDkim,
+            string oidConnectAppId,
+            string oidConnectAppSecret,
+            string smsClientId,
+            string smsSecureToken,
+            string smsFrom,
+
             CancellationToken cancellationToken
             )
         {
@@ -295,14 +315,13 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 logFactory,
                 writeConnectionString, 
                 "mp_Sites_Update", 
-                75);
+                79);
 
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
             sph.DefineSqlParameter("@SiteName", SqlDbType.NVarChar, 128, ParameterDirection.Input, siteName);
             sph.DefineSqlParameter("@Skin", SqlDbType.NVarChar, 100, ParameterDirection.Input, skin);
             sph.DefineSqlParameter("@AllowNewRegistration", SqlDbType.Bit, ParameterDirection.Input, allowNewRegistration);
             sph.DefineSqlParameter("@UseSecureRegistration", SqlDbType.Bit, ParameterDirection.Input, useSecureRegistration);
-            sph.DefineSqlParameter("@UseSSLOnAllPages", SqlDbType.Bit, ParameterDirection.Input, useSslOnAllPages);
             sph.DefineSqlParameter("@IsServerAdminSite", SqlDbType.Bit, ParameterDirection.Input, isServerAdminSite);
             sph.DefineSqlParameter("@UseLdapAuth", SqlDbType.Bit, ParameterDirection.Input, useLdapAuth);
             sph.DefineSqlParameter("@AutoCreateLDAPUserOnFirstLogin", SqlDbType.Bit, ParameterDirection.Input, autoCreateLdapUserOnFirstLogin);
@@ -310,23 +329,15 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@LdapPort", SqlDbType.Int, ParameterDirection.Input, ldapPort);
             sph.DefineSqlParameter("@LdapRootDN", SqlDbType.NVarChar, 255, ParameterDirection.Input, ldapRootDN);
             sph.DefineSqlParameter("@LdapUserDNKey", SqlDbType.NVarChar, 10, ParameterDirection.Input, ldapUserDNKey);
-            sph.DefineSqlParameter("@AllowUserFullNameChange", SqlDbType.Bit, ParameterDirection.Input, allowUserFullNameChange);
             sph.DefineSqlParameter("@UseEmailForLogin", SqlDbType.Bit, ParameterDirection.Input, useEmailForLogin);
             sph.DefineSqlParameter("@ReallyDeleteUsers", SqlDbType.Bit, ParameterDirection.Input, reallyDeleteUsers);  
             sph.DefineSqlParameter("@LdapDomain", SqlDbType.NVarChar, 255, ParameterDirection.Input, ldapDomain);
             sph.DefineSqlParameter("@RecaptchaPrivateKey", SqlDbType.NVarChar, 255, ParameterDirection.Input, recaptchaPrivateKey);
             sph.DefineSqlParameter("@RecaptchaPublicKey", SqlDbType.NVarChar, 255, ParameterDirection.Input, recaptchaPublicKey);
-            sph.DefineSqlParameter("@ApiKeyExtra1", SqlDbType.NVarChar, 255, ParameterDirection.Input, apiKeyExtra1);
-            sph.DefineSqlParameter("@ApiKeyExtra2", SqlDbType.NVarChar, 255, ParameterDirection.Input, apiKeyExtra2);
-            sph.DefineSqlParameter("@ApiKeyExtra3", SqlDbType.NVarChar, 255, ParameterDirection.Input, apiKeyExtra3);
-            sph.DefineSqlParameter("@ApiKeyExtra4", SqlDbType.NVarChar, 255, ParameterDirection.Input, apiKeyExtra4);
-            sph.DefineSqlParameter("@ApiKeyExtra5", SqlDbType.NVarChar, 255, ParameterDirection.Input, apiKeyExtra5);
             sph.DefineSqlParameter("@DisableDbAuth", SqlDbType.Bit, ParameterDirection.Input, disableDbAuth);
             sph.DefineSqlParameter("@RequiresQuestionAndAnswer", SqlDbType.Bit, ParameterDirection.Input, requiresQuestionAndAnswer);
             sph.DefineSqlParameter("@MaxInvalidPasswordAttempts", SqlDbType.Int, ParameterDirection.Input, maxInvalidPasswordAttempts);
-            sph.DefineSqlParameter("@PasswordAttemptWindowMinutes", SqlDbType.Int, ParameterDirection.Input, passwordAttemptWindowMinutes);
             sph.DefineSqlParameter("@MinRequiredPasswordLength", SqlDbType.Int, ParameterDirection.Input, minRequiredPasswordLength);
-            sph.DefineSqlParameter("@MinReqNonAlphaChars", SqlDbType.Int, ParameterDirection.Input, minReqNonAlphaChars);
             sph.DefineSqlParameter("@DefaultEmailFromAddress", SqlDbType.NVarChar, 100, ParameterDirection.Input, defaultEmailFromAddress);
             sph.DefineSqlParameter("@AllowDbFallbackWithLdap", SqlDbType.Bit, ParameterDirection.Input, allowDbFallbackWithLdap);
             sph.DefineSqlParameter("@EmailLdapDbFallback", SqlDbType.Bit, ParameterDirection.Input, emailLdapDbFallback);
@@ -372,6 +383,20 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@SmtpUseSsl", SqlDbType.Bit, ParameterDirection.Input, smtpUseSsl);
             sph.DefineSqlParameter("@RequireApprovalBeforeLogin", SqlDbType.Bit, ParameterDirection.Input, requireApprovalBeforeLogin);
             sph.DefineSqlParameter("@IsDataProtected", SqlDbType.Bit, ParameterDirection.Input, isDataProtected);
+
+            sph.DefineSqlParameter("@RequireConfirmedPhone", SqlDbType.Bit, ParameterDirection.Input, requireConfirmedPhone);
+            sph.DefineSqlParameter("@DefaultEmailFromAlias", SqlDbType.NVarChar, 100, ParameterDirection.Input, defaultEmailFromAlias);
+            sph.DefineSqlParameter("@AccountApprovalEmailCsv", SqlDbType.NVarChar, -1, ParameterDirection.Input, accountApprovalEmailCsv);
+            sph.DefineSqlParameter("@DkimPublicKey", SqlDbType.NVarChar, 100, ParameterDirection.Input, dkimPublicKey);
+            sph.DefineSqlParameter("@DkimPrivateKey", SqlDbType.NVarChar, -1, ParameterDirection.Input, dkimPrivateKey);
+            sph.DefineSqlParameter("@DkimDomain", SqlDbType.NVarChar, 255, ParameterDirection.Input, dkimDomain);
+            sph.DefineSqlParameter("@DkimSelector", SqlDbType.NVarChar, 128, ParameterDirection.Input, dkimSelector);
+            sph.DefineSqlParameter("@SignEmailWithDkim", SqlDbType.Bit, ParameterDirection.Input, signEmailWithDkim);
+            sph.DefineSqlParameter("@OidConnectAppId", SqlDbType.NVarChar, 100, ParameterDirection.Input, oidConnectAppId);
+            sph.DefineSqlParameter("@OidConnectAppSecret", SqlDbType.NVarChar, -1, ParameterDirection.Input, oidConnectAppSecret);
+            sph.DefineSqlParameter("@SmsClientId", SqlDbType.NVarChar, 100, ParameterDirection.Input, smsClientId);
+            sph.DefineSqlParameter("@SmsSecureToken", SqlDbType.NVarChar, -1, ParameterDirection.Input, smsSecureToken);
+            sph.DefineSqlParameter("@SmsFrom", SqlDbType.NVarChar, 100, ParameterDirection.Input, smsFrom);
 
             int rowsAffected = await sph.ExecuteNonQueryAsync(cancellationToken);
             return (rowsAffected > -1);

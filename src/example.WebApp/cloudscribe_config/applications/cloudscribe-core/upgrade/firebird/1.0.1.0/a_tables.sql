@@ -15,4 +15,4 @@ ALTER TABLE mp_Sites ADD SmsFrom varchar(100);
 
 ALTER TABLE mp_Users ADD NewEmailApproved smallint default 0;
 ALTER TABLE mp_Users ADD NormalizedUserName varchar(50);
-ALTER TABLE mp_Users ADD CanBeLockedOut smallint default 1;
+ALTER TABLE mp_Users ADD CanAutoLockout smallint default 1;

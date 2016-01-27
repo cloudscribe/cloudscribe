@@ -111,7 +111,7 @@ GO
 ALTER TABLE [dbo].mp_Users ADD NormalizedUserName nvarchar(50) NULL 
 GO
 
-ALTER TABLE [dbo].mp_Users ADD CanBeLockedOut bit NOT NULL default 1
+ALTER TABLE [dbo].mp_Users ADD CanAutoLockout bit NOT NULL default 1
 GO
 
 
@@ -842,7 +842,7 @@ Last Modified:	2016-01-26
 @Comment nvarchar(max),
 @NormalizedUserName nvarchar(50),
 @LoweredEmail nvarchar(100),
-@CanBeLockedOut bit
+@CanAutoLockout bit
 
 
 AS
@@ -884,7 +884,7 @@ INSERT INTO mp_Users
 			NormalizedUserName,
 			LoweredEmail,
 			NewEmailApproved,
-			CanBeLockedOut
+			CanAutoLockout
 		
 	
 
@@ -928,7 +928,7 @@ VALUES
 			@NormalizedUserName,
 			@LoweredEmail,
 			0,
-			@CanBeLockedOut
+			@CanAutoLockout
 )
 
 SELECT		@@Identity As UserID
@@ -978,7 +978,7 @@ Last Modified:	2015-11-05
 @IsLockedOut bit,
 @NormalizedUserName nvarchar(50),
 @NewEmailApproved bit,
-@CanBeLockedOut bit
+@CanAutoLockout bit
 
 
 AS
@@ -1016,7 +1016,7 @@ SET			[Name] = @Name,
 			LockoutEndDateUtc = @LockoutEndDateUtc,
 			NormalizedUserName = @NormalizedUserName,
 			NewEmailApproved = @NewEmailApproved,
-			CanBeLockedOut = @CanBeLockedOut
+			CanAutoLockout = @CanAutoLockout
 			
 WHERE		UserID = @UserID
 

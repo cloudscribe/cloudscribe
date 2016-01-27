@@ -97,9 +97,7 @@ namespace cloudscribe.Core.Models
             get { return state ?? string.Empty; }
             set { state = value; }
         }
-
         
-        public DateTime LastActivityDate { get; set; } = DateTime.MinValue;
         public DateTime LastLoginDate { get; set; } = DateTime.MinValue;
 
         private string phoneNumber = string.Empty;
