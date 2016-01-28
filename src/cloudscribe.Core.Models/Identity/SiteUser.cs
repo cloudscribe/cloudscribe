@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-17
-// Last Modified:			2016-01-27
+// Last Modified:			2016-01-28
 // 
 
 //using Microsoft.AspNet.Identity;
@@ -64,7 +64,7 @@ namespace cloudscribe.Core.Models
 
         public bool NewEmailApproved { get; set; } = false;
 
-        public DateTime LastPasswordChangedDate { get; set; } = DateTime.MinValue;
+        public DateTime? LastPasswordChangedDate { get; set; } //= DateTime.MinValue;
         
         
         public bool MustChangePwd { get; set; } = false;
@@ -117,7 +117,11 @@ namespace cloudscribe.Core.Models
             u.Comment = user.Comment;
             u.Country = user.Country;
             u.CreatedUtc = user.CreatedUtc;
-            u.DateOfBirth = user.DateOfBirth;
+            if(user.DateOfBirth.HasValue)
+            {
+                u.DateOfBirth = user.DateOfBirth.Value;
+            }
+            
             u.DisplayInMemberList = user.DisplayInMemberList;
             u.DisplayName = user.DisplayName;
             u.Email = user.Email;
@@ -134,9 +138,17 @@ namespace cloudscribe.Core.Models
             u.IsLockedOut = user.IsLockedOut;
             //u.LastActivityDate = user.LastActivityDate;
             //u.LastLockoutDate = user.LastLockoutDate;
-            u.LastLoginDate = user.LastLoginDate;
+            if(user.LastLoginDate.HasValue)
+            {
+                u.LastLoginDate = user.LastLoginDate.Value;
+            }
+            
             u.LastName = user.LastName;
-            u.LastPasswordChangedDate = user.LastPasswordChangedDate;
+            if(user.LastPasswordChangedDate.HasValue)
+            {
+                u.LastPasswordChangedDate = user.LastPasswordChangedDate.Value;
+            }
+            
             u.LockoutEndDateUtc = user.LockoutEndDateUtc;
             u.NormalizedEmail = user.NormalizedEmail;
             u.MustChangePwd = user.MustChangePwd;

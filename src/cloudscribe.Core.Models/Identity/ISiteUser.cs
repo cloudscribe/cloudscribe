@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-17
-// Last Modified:			2014-11-12
+// Last Modified:			2016-01-28
 // 
 
 using System;
@@ -25,7 +25,7 @@ namespace cloudscribe.Core.Models
         string LastName { get; set; }
         string Email { get; set; }
         DateTime CreatedUtc { get; set; }
-        DateTime DateOfBirth { get; set; }
+        DateTime? DateOfBirth { get; set; }
         bool DisplayInMemberList { get; set; }
         bool Trusted { get; set; }
         string WebSiteUrl { get; set; }
@@ -36,7 +36,7 @@ namespace cloudscribe.Core.Models
         /// </summary>
         bool IsLockedOut { get; set; }
         
-        DateTime LastLoginDate { get; set; }
+        DateTime? LastLoginDate { get; set; }
         string TimeZoneId { get; set; }
         
         string PhoneNumber { get; set; }
@@ -56,7 +56,7 @@ namespace cloudscribe.Core.Models
         int AccessFailedCount { get; set; } // maps to FailedPasswordAttemptCount in ado data layers
         string PasswordHash { get; set; }
         bool MustChangePwd { get; set; }
-        DateTime LastPasswordChangedDate { get; set; }
+        DateTime? LastPasswordChangedDate { get; set; }
         
         /// <summary>
         /// This property is independendent of IsLockedOut, if the property is populated with a future datetime then

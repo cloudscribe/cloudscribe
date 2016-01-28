@@ -136,7 +136,7 @@ namespace cloudscribe.Core.Identity
         {
             if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
-            return await userRepo.CountLockedOutUsers(siteId, CancellationToken);
+            return await userRepo.CountLockedByAdmin(siteId, CancellationToken);
         }
 
         public async Task<List<IUserInfo>> GetPageLockedUsers(
@@ -146,7 +146,7 @@ namespace cloudscribe.Core.Identity
         {
             if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
-            return await userRepo.GetPageLockedOutUsers(siteId, pageNumber, pageSize, CancellationToken);
+            return await userRepo.GetPageLockedByAdmin(siteId, pageNumber, pageSize, CancellationToken);
         }
 
         public async Task<List<IUserInfo>> GetUserAdminSearchPage(int siteId, int pageNumber, int pageSize, string searchInput, int sortMode)

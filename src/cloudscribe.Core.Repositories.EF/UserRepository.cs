@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2016-01-21
+// Last Modified:			2016-01-28
 // 
 
 
@@ -27,7 +27,9 @@ namespace cloudscribe.Core.Repositories.EF
 
         #region User
 
-        public async Task<bool> Save(ISiteUser user, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> Save(
+            ISiteUser user, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             if (user == null) { return false; }
             if (user.SiteId == -1) { throw new ArgumentException("user must have a siteid"); }
@@ -78,7 +80,10 @@ namespace cloudscribe.Core.Repositories.EF
         //    //return result;
         //}
 
-        public async Task<bool> Delete(int siteId, int userId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> Delete(
+            int siteId, 
+            int userId, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             var result = false;
             var itemToRemove = await dbContext.Users.AsNoTracking().SingleOrDefaultAsync(x => x.UserId == userId && x.SiteId == siteId);
@@ -98,7 +103,9 @@ namespace cloudscribe.Core.Repositories.EF
 
         }
 
-        public async Task<bool> DeleteUsersBySite(int siteId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> DeleteUsersBySite(
+            int siteId, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             bool result = await DeleteLoginsBySite(siteId);
             result = await DeleteClaimsBySite(siteId);
@@ -114,7 +121,9 @@ namespace cloudscribe.Core.Repositories.EF
             return result;
         }
 
-        public async Task<bool> FlagAsDeleted(int userId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> FlagAsDeleted(
+            int userId, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             SiteUser item
                 = await dbContext.Users.SingleOrDefaultAsync(x => x.UserId == userId, cancellationToken);
@@ -129,7 +138,9 @@ namespace cloudscribe.Core.Repositories.EF
 
         }
 
-        public async Task<bool> FlagAsNotDeleted(int userId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> FlagAsNotDeleted(
+            int userId, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             SiteUser item
                 = await dbContext.Users.SingleOrDefaultAsync(x => x.UserId == userId, cancellationToken);
@@ -144,55 +155,11 @@ namespace cloudscribe.Core.Repositories.EF
 
         }
 
-        //public async Task<bool> SetRegistrationConfirmationGuid(
-        //    Guid userGuid,
-        //    Guid registrationConfirmationGuid,
-        //    CancellationToken cancellationToken)
-        //{
-        //    cancellationToken.ThrowIfCancellationRequested();
-        //    if (registrationConfirmationGuid == Guid.Empty)
-        //    {
-        //        return false;
-        //    }
+        
 
-        //    SiteUser item
-        //        = await dbContext.Users.FirstOrDefaultAsync(x => x.UserGuid == userGuid);
-
-        //    if (item == null) { return false; }
-
-        //    item.IsLockedOut = true;
-        //    item.RegisterConfirmGuid = registrationConfirmationGuid;
-
-        //    int rowsAffected = await dbContext.SaveChangesAsync();
-
-        //    return rowsAffected > 0;
-
-        //}
-
-        //public async Task<bool> ConfirmRegistration(Guid registrationGuid, CancellationToken cancellationToken = default(CancellationToken))
-        //{
-        //    cancellationToken.ThrowIfCancellationRequested();
-        //    if (registrationGuid == Guid.Empty)
-        //    {
-        //        return false;
-        //    }
-
-        //    SiteUser item
-        //        = await dbContext.Users.SingleOrDefaultAsync(x => x.RegisterConfirmGuid == registrationGuid);
-
-        //    if (item == null) { return false; }
-
-        //    item.IsLockedOut = false;
-        //    item.EmailConfirmed = true;
-        //    item.RegisterConfirmGuid = Guid.Empty;
-
-        //    int rowsAffected = await dbContext.SaveChangesAsync();
-
-        //    return rowsAffected > 0;
-
-        //}
-
-        public async Task<bool> LockoutAccount(Guid userGuid, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> LockoutAccount(
+            Guid userGuid, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             SiteUser item
                 = await dbContext.Users.SingleOrDefaultAsync(x => x.UserGuid == userGuid, cancellationToken);
@@ -207,7 +174,9 @@ namespace cloudscribe.Core.Repositories.EF
 
         }
 
-        public async Task<bool> UnLockAccount(Guid userGuid, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> UnLockAccount(
+            Guid userGuid, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             SiteUser item
                 = await dbContext.Users.SingleOrDefaultAsync(x => x.UserGuid == userGuid, cancellationToken);
@@ -240,12 +209,34 @@ namespace cloudscribe.Core.Repositories.EF
 
         }
 
+        public async Task<bool> UpdateLastLoginTime(
+            Guid userGuid,
+            DateTime lastLoginTime,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            SiteUser item
+                = await dbContext.Users.SingleOrDefaultAsync(x => x.UserGuid == userGuid, cancellationToken);
+
+            if (item == null) { return false; }
+
+            item.LastLoginDate = lastLoginTime;
+
+            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
+
+            return rowsAffected > 0;
+        }
+
         public int GetCount(int siteId)
         {
             return dbContext.Users.Count<SiteUser>(x => x.SiteId == siteId);
         }
 
-        public async Task<ISiteUser> Fetch(int siteId, int userId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<ISiteUser> Fetch(
+            int siteId, 
+            int userId, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
             SiteUser item
@@ -255,7 +246,10 @@ namespace cloudscribe.Core.Repositories.EF
             return item;
         }
 
-        public async Task<ISiteUser> Fetch(int siteId, Guid userGuid, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<ISiteUser> Fetch(
+            int siteId, 
+            Guid userGuid, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
             SiteUser item
@@ -265,17 +259,11 @@ namespace cloudscribe.Core.Repositories.EF
             return item;
         }
 
-        //public async Task<ISiteUser> FetchByConfirmationGuid(int siteId, Guid confirmGuid, CancellationToken cancellationToken = default(CancellationToken))
-        //{
-        //    cancellationToken.ThrowIfCancellationRequested();
-        //    SiteUser item
-        //        = await dbContext.Users.AsNoTracking()
-        //        .SingleOrDefaultAsync(x => x.SiteId == siteId && x.RegisterConfirmGuid == confirmGuid, cancellationToken);
-
-        //    return item;
-        //}
-
-        public async Task<ISiteUser> Fetch(int siteId, string email, CancellationToken cancellationToken = default(CancellationToken))
+        
+        public async Task<ISiteUser> Fetch(
+            int siteId, 
+            string email, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
             string loweredEmail = email.ToLowerInvariant();
@@ -308,7 +296,10 @@ namespace cloudscribe.Core.Repositories.EF
             return item;
         }
 
-        public async Task<List<IUserInfo>> GetByIPAddress(Guid siteGuid, string ipv4Address, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<List<IUserInfo>> GetByIPAddress(
+            Guid siteGuid, 
+            string ipv4Address, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             var query = from x in dbContext.Users
                         join y in dbContext.UserLocations  
@@ -323,7 +314,9 @@ namespace cloudscribe.Core.Repositories.EF
 
         }
 
-        public async Task<List<IUserInfo>> GetCrossSiteUserListByEmail(string email, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<List<IUserInfo>> GetCrossSiteUserListByEmail(
+            string email, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             string loweredEmail = email.ToLowerInvariant();
 
@@ -338,7 +331,10 @@ namespace cloudscribe.Core.Repositories.EF
 
         }
 
-        public async Task<int> CountUsers(int siteId, string userNameBeginsWith, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<int> CountUsers(
+            int siteId, 
+            string userNameBeginsWith, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             return await dbContext.Users.CountAsync<SiteUser>(
                 x => 
@@ -592,7 +588,10 @@ namespace cloudscribe.Core.Repositories.EF
             
         }
 
-        public async Task<int> CountUsersForAdminSearch(int siteId, string searchInput, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<int> CountUsersForAdminSearch(
+            int siteId, 
+            string searchInput, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             return await dbContext.Users.CountAsync<SiteUser>(
                 x =>
@@ -689,12 +688,14 @@ namespace cloudscribe.Core.Repositories.EF
             
         }
 
-        public async Task<int> CountLockedOutUsers(int siteId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<int> CountLockedByAdmin(
+            int siteId, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             return await dbContext.Users.CountAsync<SiteUser>(x => x.SiteId == siteId && x.IsLockedOut == true, cancellationToken);
         }
 
-        public async Task<List<IUserInfo>> GetPageLockedOutUsers(
+        public async Task<List<IUserInfo>> GetPageLockedByAdmin(
             int siteId,
             int pageNumber,
             int pageSize,
@@ -746,7 +747,200 @@ namespace cloudscribe.Core.Repositories.EF
             
         }
 
-        public async Task<int> CountNotApprovedUsers(int siteId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<int> CountFutureLockoutEndDate(
+            int siteId,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await dbContext.Users.CountAsync<SiteUser>(
+                x => x.SiteId == siteId  
+                && x.LockoutEndDateUtc.HasValue
+                && x.LockoutEndDateUtc.Value > DateTime.UtcNow
+                , 
+                cancellationToken);
+        }
+
+        public async Task<List<IUserInfo>> GetPageFutureLockoutEndDate(
+            int siteId,
+            int pageNumber,
+            int pageSize,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            int offset = (pageSize * pageNumber) - pageSize;
+
+            IQueryable<IUserInfo> query
+                = from x in dbContext.Users
+
+                  where
+                  (
+                      x.SiteId == siteId
+                        && x.LockoutEndDateUtc.HasValue
+                        && x.LockoutEndDateUtc.Value > DateTime.UtcNow
+                  )
+                  orderby x.DisplayName
+                  select new UserInfo
+                  {
+                      AvatarUrl = x.AvatarUrl,
+                      AccountApproved = x.AccountApproved,
+                      Country = x.Country,
+                      CreatedUtc = x.CreatedUtc,
+                      DateOfBirth = x.DateOfBirth,
+                      DisplayInMemberList = x.DisplayInMemberList,
+                      DisplayName = x.DisplayName,
+                      Email = x.Email,
+                      FirstName = x.FirstName,
+                      Gender = x.Gender,
+                      IsDeleted = x.IsDeleted,
+                      IsLockedOut = x.IsLockedOut,
+                      LastLoginDate = x.LastLoginDate,
+                      LastName = x.LastName,
+                      PhoneNumber = x.PhoneNumber,
+                      PhoneNumberConfirmed = x.PhoneNumberConfirmed,
+                      SiteGuid = x.SiteGuid,
+                      SiteId = x.SiteId,
+                      State = x.State,
+                      TimeZoneId = x.TimeZoneId,
+                      Trusted = x.Trusted,
+                      UserGuid = x.UserGuid,
+                      UserId = x.UserId,
+                      UserName = x.UserName,
+                      WebSiteUrl = x.WebSiteUrl
+
+                  };
+
+
+            return await query.AsNoTracking().Skip(offset).Take(pageSize).ToListAsync<IUserInfo>(cancellationToken);
+
+        }
+
+        public async Task<int> CountUnconfirmedEmail(
+            int siteId,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await dbContext.Users.CountAsync<SiteUser>(
+                x => x.SiteId == siteId
+                && x.EmailConfirmed == false
+                ,
+                cancellationToken);
+        }
+
+        public async Task<List<IUserInfo>> GetPageUnconfirmedEmailUsers(
+            int siteId,
+            int pageNumber,
+            int pageSize,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            int offset = (pageSize * pageNumber) - pageSize;
+
+            IQueryable<IUserInfo> query
+                = from x in dbContext.Users
+
+                  where
+                  (
+                      x.SiteId == siteId
+                      && x.EmailConfirmed == false
+                  )
+                  orderby x.DisplayName
+                  select new UserInfo
+                  {
+                      AvatarUrl = x.AvatarUrl,
+                      AccountApproved = x.AccountApproved,
+                      Country = x.Country,
+                      CreatedUtc = x.CreatedUtc,
+                      DateOfBirth = x.DateOfBirth,
+                      DisplayInMemberList = x.DisplayInMemberList,
+                      DisplayName = x.DisplayName,
+                      Email = x.Email,
+                      FirstName = x.FirstName,
+                      Gender = x.Gender,
+                      IsDeleted = x.IsDeleted,
+                      IsLockedOut = x.IsLockedOut,
+                      LastLoginDate = x.LastLoginDate,
+                      LastName = x.LastName,
+                      PhoneNumber = x.PhoneNumber,
+                      PhoneNumberConfirmed = x.PhoneNumberConfirmed,
+                      SiteGuid = x.SiteGuid,
+                      SiteId = x.SiteId,
+                      State = x.State,
+                      TimeZoneId = x.TimeZoneId,
+                      Trusted = x.Trusted,
+                      UserGuid = x.UserGuid,
+                      UserId = x.UserId,
+                      UserName = x.UserName,
+                      WebSiteUrl = x.WebSiteUrl
+
+                  };
+
+
+            return await query.AsNoTracking().Skip(offset).Take(pageSize).ToListAsync<IUserInfo>(cancellationToken);
+
+        }
+
+        public async Task<int> CountUnconfirmedPhone(
+            int siteId,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await dbContext.Users.CountAsync<SiteUser>(
+                x => x.SiteId == siteId
+                && x.PhoneNumberConfirmed == false
+                ,
+                cancellationToken);
+        }
+
+        public async Task<List<IUserInfo>> GetPageUnconfirmedPhoneUsers(
+            int siteId,
+            int pageNumber,
+            int pageSize,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            int offset = (pageSize * pageNumber) - pageSize;
+
+            IQueryable<IUserInfo> query
+                = from x in dbContext.Users
+
+                  where
+                  (
+                      x.SiteId == siteId
+                      && x.PhoneNumberConfirmed == false
+                  )
+                  orderby x.DisplayName
+                  select new UserInfo
+                  {
+                      AvatarUrl = x.AvatarUrl,
+                      AccountApproved = x.AccountApproved,
+                      Country = x.Country,
+                      CreatedUtc = x.CreatedUtc,
+                      DateOfBirth = x.DateOfBirth,
+                      DisplayInMemberList = x.DisplayInMemberList,
+                      DisplayName = x.DisplayName,
+                      Email = x.Email,
+                      FirstName = x.FirstName,
+                      Gender = x.Gender,
+                      IsDeleted = x.IsDeleted,
+                      IsLockedOut = x.IsLockedOut,
+                      LastLoginDate = x.LastLoginDate,
+                      LastName = x.LastName,
+                      PhoneNumber = x.PhoneNumber,
+                      PhoneNumberConfirmed = x.PhoneNumberConfirmed,
+                      SiteGuid = x.SiteGuid,
+                      SiteId = x.SiteId,
+                      State = x.State,
+                      TimeZoneId = x.TimeZoneId,
+                      Trusted = x.Trusted,
+                      UserGuid = x.UserGuid,
+                      UserId = x.UserId,
+                      UserName = x.UserName,
+                      WebSiteUrl = x.WebSiteUrl
+
+                  };
+
+
+            return await query.AsNoTracking().Skip(offset).Take(pageSize).ToListAsync<IUserInfo>(cancellationToken);
+
+        }
+
+        public async Task<int> CountNotApprovedUsers(
+            int siteId, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             return await dbContext.Users.CountAsync<SiteUser>(x => x.SiteId == siteId && x.AccountApproved == false, cancellationToken);
 
@@ -803,7 +997,10 @@ namespace cloudscribe.Core.Repositories.EF
             
         }
 
-        public async Task<bool> EmailExistsInDB(int siteId, string email, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> EmailExistsInDB(
+            int siteId, 
+            string email, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -813,7 +1010,11 @@ namespace cloudscribe.Core.Repositories.EF
 
         }
 
-        public async Task<bool> EmailExistsInDB(int siteId, int userId, string email, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> EmailExistsInDB(
+            int siteId, 
+            int userId, 
+            string email, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -845,7 +1046,11 @@ namespace cloudscribe.Core.Repositories.EF
         /// <param name="userId"></param>
         /// <param name="loginName"></param>
         /// <returns></returns>
-        public async Task<bool> LoginIsAvailable(int siteId, int userId, string loginName, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> LoginIsAvailable(
+            int siteId, 
+            int userId, 
+            string loginName, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             var found = await FetchByLoginName(siteId, loginName, false, cancellationToken);
             if (found == null) { return true; }
@@ -854,7 +1059,10 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
 
-        public async Task<string> GetUserNameFromEmail(int siteId, string email, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<string> GetUserNameFromEmail(
+            int siteId, 
+            string email, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             var found = await Fetch(siteId, email, cancellationToken);
             if (found == null) { return string.Empty; }

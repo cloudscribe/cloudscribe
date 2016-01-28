@@ -71,7 +71,7 @@ namespace cloudscribe.Core.Models
         }
 
         
-        public DateTime DateOfBirth { get; set; } = DateTime.MinValue;
+        public DateTime? DateOfBirth { get; set; } 
         public DateTime CreatedUtc { get; set; } = DateTime.UtcNow;
         public bool DisplayInMemberList { get; set; } = true;
 
@@ -98,7 +98,7 @@ namespace cloudscribe.Core.Models
             set { state = value; }
         }
         
-        public DateTime LastLoginDate { get; set; } = DateTime.MinValue;
+        public DateTime? LastLoginDate { get; set; } 
 
         private string phoneNumber = string.Empty;
         public string PhoneNumber

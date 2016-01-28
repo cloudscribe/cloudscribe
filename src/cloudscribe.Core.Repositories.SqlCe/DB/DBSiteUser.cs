@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2010-04-06
-// Last Modified:			2016-01-21
+// Last Modified:			2016-01-28
 // 
 
 using cloudscribe.DbHelpers;
@@ -87,77 +87,77 @@ namespace cloudscribe.Core.Repositories.SqlCe
                 arParams);
         }
 
-        public DbDataReader GetSmartDropDownData(int siteId, string query, int rowsToGet)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("SELECT TOP(" + rowsToGet.ToString(CultureInfo.InvariantCulture) + ") t.* ");
-            sqlCommand.Append("FROM ");
-            sqlCommand.Append("(");
+        //public DbDataReader GetSmartDropDownData(int siteId, string query, int rowsToGet)
+        //{
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("SELECT TOP(" + rowsToGet.ToString(CultureInfo.InvariantCulture) + ") t.* ");
+        //    sqlCommand.Append("FROM ");
+        //    sqlCommand.Append("(");
 
-            sqlCommand.Append("SELECT TOP(" + rowsToGet.ToString(CultureInfo.InvariantCulture) + ") ");
+        //    sqlCommand.Append("SELECT TOP(" + rowsToGet.ToString(CultureInfo.InvariantCulture) + ") ");
 
-            sqlCommand.Append("u1.UserID, ");
-            sqlCommand.Append("u1.UserGuid, ");
-            sqlCommand.Append("u1.Email, ");
-            sqlCommand.Append("u1.FirstName, ");
-            sqlCommand.Append("u1.LastName, ");
-            sqlCommand.Append("u1.[Name] AS SiteUser ");
+        //    sqlCommand.Append("u1.UserID, ");
+        //    sqlCommand.Append("u1.UserGuid, ");
+        //    sqlCommand.Append("u1.Email, ");
+        //    sqlCommand.Append("u1.FirstName, ");
+        //    sqlCommand.Append("u1.LastName, ");
+        //    sqlCommand.Append("u1.[Name] AS SiteUser ");
 
-            sqlCommand.Append("FROM	mp_Users u1 ");
-            sqlCommand.Append("WHERE ");
+        //    sqlCommand.Append("FROM	mp_Users u1 ");
+        //    sqlCommand.Append("WHERE ");
 
-            sqlCommand.Append("u1.SiteID = @SiteID ");
-            sqlCommand.Append("AND u1.IsDeleted = 0 ");
-            sqlCommand.Append("AND ( ");
-            sqlCommand.Append("(u1.[Name] LIKE @Query + '%') ");
-            sqlCommand.Append("OR (u1.[FirstName] LIKE @Query + '%') ");
-            sqlCommand.Append("OR (u1.[LastName] LIKE @Query + '%') ");
-            sqlCommand.Append(") ");
+        //    sqlCommand.Append("u1.SiteID = @SiteID ");
+        //    sqlCommand.Append("AND u1.IsDeleted = 0 ");
+        //    sqlCommand.Append("AND ( ");
+        //    sqlCommand.Append("(u1.[Name] LIKE @Query + '%') ");
+        //    sqlCommand.Append("OR (u1.[FirstName] LIKE @Query + '%') ");
+        //    sqlCommand.Append("OR (u1.[LastName] LIKE @Query + '%') ");
+        //    sqlCommand.Append(") ");
 
-            sqlCommand.Append("ORDER BY ");
-            sqlCommand.Append("u1.[Name] ");
+        //    sqlCommand.Append("ORDER BY ");
+        //    sqlCommand.Append("u1.[Name] ");
 
-            sqlCommand.Append("UNION ");
+        //    sqlCommand.Append("UNION ");
 
-            sqlCommand.Append("SELECT TOP(" + rowsToGet.ToString(CultureInfo.InvariantCulture) + ") ");
+        //    sqlCommand.Append("SELECT TOP(" + rowsToGet.ToString(CultureInfo.InvariantCulture) + ") ");
 
-            sqlCommand.Append("u2.UserID, ");
-            sqlCommand.Append("u2.UserGuid, ");
-            sqlCommand.Append("u2.Email, ");
-            sqlCommand.Append("u2.FirstName, ");
-            sqlCommand.Append("u2.LastName, ");
-            sqlCommand.Append("u2.[Email] AS SiteUser ");
+        //    sqlCommand.Append("u2.UserID, ");
+        //    sqlCommand.Append("u2.UserGuid, ");
+        //    sqlCommand.Append("u2.Email, ");
+        //    sqlCommand.Append("u2.FirstName, ");
+        //    sqlCommand.Append("u2.LastName, ");
+        //    sqlCommand.Append("u2.[Email] AS SiteUser ");
 
-            sqlCommand.Append("FROM	mp_Users u2 ");
+        //    sqlCommand.Append("FROM	mp_Users u2 ");
 
-            sqlCommand.Append("WHERE ");
+        //    sqlCommand.Append("WHERE ");
 
-            sqlCommand.Append("u2.SiteID = @SiteID ");
-            sqlCommand.Append("AND u2.IsDeleted = 0 ");
-            sqlCommand.Append("AND u2.[Email] LIKE @Query + '%' ");
+        //    sqlCommand.Append("u2.SiteID = @SiteID ");
+        //    sqlCommand.Append("AND u2.IsDeleted = 0 ");
+        //    sqlCommand.Append("AND u2.[Email] LIKE @Query + '%' ");
 
-            sqlCommand.Append("ORDER BY ");
-            sqlCommand.Append("u2.[Email] ");
+        //    sqlCommand.Append("ORDER BY ");
+        //    sqlCommand.Append("u2.[Email] ");
 
-            sqlCommand.Append(") t ");
+        //    sqlCommand.Append(") t ");
 
-            sqlCommand.Append(";");
+        //    sqlCommand.Append(";");
 
-            SqlCeParameter[] arParams = new SqlCeParameter[2];
+        //    SqlCeParameter[] arParams = new SqlCeParameter[2];
 
-            arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
-            arParams[0].Value = siteId;
+        //    arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
+        //    arParams[0].Value = siteId;
 
-            arParams[1] = new SqlCeParameter("@Query", SqlDbType.NVarChar, 50);
-            arParams[1].Value = query;
+        //    arParams[1] = new SqlCeParameter("@Query", SqlDbType.NVarChar, 50);
+        //    arParams[1].Value = query;
 
-            return AdoHelper.ExecuteReader(
-                connectionString,
-                CommandType.Text,
-                sqlCommand.ToString(),
-                arParams);
+        //    return AdoHelper.ExecuteReader(
+        //        connectionString,
+        //        CommandType.Text,
+        //        sqlCommand.ToString(),
+        //        arParams);
 
-        }
+        //}
 
         public DbDataReader EmailLookup(int siteId, string query, int rowsToGet)
         {
@@ -304,84 +304,84 @@ namespace cloudscribe.Core.Repositories.SqlCe
                 arParams));
         }
 
-        public int CountOnlineSince(int siteId, DateTime sinceTime)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("SELECT  Count(*) ");
-            sqlCommand.Append("FROM	mp_Users ");
-            sqlCommand.Append("WHERE ");
-            sqlCommand.Append("SiteID = @SiteID ");
-            sqlCommand.Append("AND LastActivityDate > @SinceTime ");
-            sqlCommand.Append(";");
+        //public int CountOnlineSince(int siteId, DateTime sinceTime)
+        //{
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("SELECT  Count(*) ");
+        //    sqlCommand.Append("FROM	mp_Users ");
+        //    sqlCommand.Append("WHERE ");
+        //    sqlCommand.Append("SiteID = @SiteID ");
+        //    sqlCommand.Append("AND LastActivityDate > @SinceTime ");
+        //    sqlCommand.Append(";");
 
-            SqlCeParameter[] arParams = new SqlCeParameter[2];
+        //    SqlCeParameter[] arParams = new SqlCeParameter[2];
 
-            arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
-            arParams[0].Value = siteId;
+        //    arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
+        //    arParams[0].Value = siteId;
 
-            arParams[1] = new SqlCeParameter("@SinceTime", SqlDbType.DateTime);
-            arParams[1].Value = sinceTime;
+        //    arParams[1] = new SqlCeParameter("@SinceTime", SqlDbType.DateTime);
+        //    arParams[1].Value = sinceTime;
 
-            return Convert.ToInt32(AdoHelper.ExecuteScalar(
-                connectionString,
-                CommandType.Text,
-                sqlCommand.ToString(),
-                arParams));
+        //    return Convert.ToInt32(AdoHelper.ExecuteScalar(
+        //        connectionString,
+        //        CommandType.Text,
+        //        sqlCommand.ToString(),
+        //        arParams));
 
-        }
+        //}
 
-        public DbDataReader GetUsersOnlineSince(int siteId, DateTime sinceTime)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("SELECT  * ");
-            sqlCommand.Append("FROM	mp_Users ");
-            sqlCommand.Append("WHERE ");
-            sqlCommand.Append("SiteID = @SiteID ");
-            sqlCommand.Append("AND LastActivityDate > @SinceTime ");
-            sqlCommand.Append(";");
+        //public DbDataReader GetUsersOnlineSince(int siteId, DateTime sinceTime)
+        //{
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("SELECT  * ");
+        //    sqlCommand.Append("FROM	mp_Users ");
+        //    sqlCommand.Append("WHERE ");
+        //    sqlCommand.Append("SiteID = @SiteID ");
+        //    sqlCommand.Append("AND LastActivityDate > @SinceTime ");
+        //    sqlCommand.Append(";");
 
-            SqlCeParameter[] arParams = new SqlCeParameter[2];
+        //    SqlCeParameter[] arParams = new SqlCeParameter[2];
 
-            arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
-            arParams[0].Value = siteId;
+        //    arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
+        //    arParams[0].Value = siteId;
 
-            arParams[1] = new SqlCeParameter("@SinceTime", SqlDbType.DateTime);
-            arParams[1].Value = sinceTime;
+        //    arParams[1] = new SqlCeParameter("@SinceTime", SqlDbType.DateTime);
+        //    arParams[1].Value = sinceTime;
 
-            return AdoHelper.ExecuteReader(
-                connectionString,
-                CommandType.Text,
-                sqlCommand.ToString(),
-                arParams);
+        //    return AdoHelper.ExecuteReader(
+        //        connectionString,
+        //        CommandType.Text,
+        //        sqlCommand.ToString(),
+        //        arParams);
 
-        }
+        //}
 
-        public DbDataReader GetTop50UsersOnlineSince(int siteId, DateTime sinceTime)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("SELECT TOP(50)  * ");
-            sqlCommand.Append("FROM	mp_Users ");
-            sqlCommand.Append("WHERE ");
-            sqlCommand.Append("SiteID = @SiteID ");
-            sqlCommand.Append("AND LastActivityDate > @SinceTime ");
-            sqlCommand.Append("ORDER BY LastActivityDate desc ");
-            sqlCommand.Append(";");
+        //public DbDataReader GetTop50UsersOnlineSince(int siteId, DateTime sinceTime)
+        //{
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("SELECT TOP(50)  * ");
+        //    sqlCommand.Append("FROM	mp_Users ");
+        //    sqlCommand.Append("WHERE ");
+        //    sqlCommand.Append("SiteID = @SiteID ");
+        //    sqlCommand.Append("AND LastActivityDate > @SinceTime ");
+        //    sqlCommand.Append("ORDER BY LastActivityDate desc ");
+        //    sqlCommand.Append(";");
 
-            SqlCeParameter[] arParams = new SqlCeParameter[2];
+        //    SqlCeParameter[] arParams = new SqlCeParameter[2];
 
-            arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
-            arParams[0].Value = siteId;
+        //    arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
+        //    arParams[0].Value = siteId;
 
-            arParams[1] = new SqlCeParameter("@SinceTime", SqlDbType.DateTime);
-            arParams[1].Value = sinceTime;
+        //    arParams[1] = new SqlCeParameter("@SinceTime", SqlDbType.DateTime);
+        //    arParams[1].Value = sinceTime;
 
-            return AdoHelper.ExecuteReader(
-                connectionString,
-                CommandType.Text,
-                sqlCommand.ToString(),
-                arParams);
+        //    return AdoHelper.ExecuteReader(
+        //        connectionString,
+        //        CommandType.Text,
+        //        sqlCommand.ToString(),
+        //        arParams);
 
-        }
+        //}
 
         public int GetNewestUserId(int siteId)
         {
@@ -889,7 +889,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             string firstName,
             string lastName,
             string timeZoneId,
-            DateTime dateOfBirth,
+            DateTime? dateOfBirth,
             bool emailConfirmed,
             string passwordHash,
             string securityStamp,
@@ -897,7 +897,6 @@ namespace cloudscribe.Core.Repositories.SqlCe
             bool phoneNumberConfirmed,
             bool twoFactorEnabled,
             DateTime? lockoutEndDateUtc,
-
             bool accountApproved,
             bool isLockedOut,
             bool displayInMemberList,
@@ -907,7 +906,11 @@ namespace cloudscribe.Core.Repositories.SqlCe
             string avatarUrl,
             string signature,
             string authorBio,
-            string comment
+            string comment,
+
+            string normalizedUserName,
+            string loweredEmail,
+            bool canAutoLockout
 
             )
         {
@@ -926,15 +929,12 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("UserGuid, ");
             sqlCommand.Append("IsDeleted, ");
             sqlCommand.Append("FailedPasswordAttemptCount, ");
-            sqlCommand.Append("FailedPwdAnswerAttemptCount, ");
             sqlCommand.Append("IsLockedOut, ");
             sqlCommand.Append("SiteGuid, ");
             sqlCommand.Append("FirstName, ");
             sqlCommand.Append("LastName, ");
             sqlCommand.Append("RolesChanged, ");
-            sqlCommand.Append("MustChangePwd, ");
-            sqlCommand.Append("EmailChangeGuid, ");
-            sqlCommand.Append("PasswordResetGuid, ");
+            sqlCommand.Append("MustChangePwd, ");  
             sqlCommand.Append("DateOfBirth, ");
             sqlCommand.Append("EmailConfirmed, ");
             sqlCommand.Append("PasswordHash, ");
@@ -942,8 +942,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("PhoneNumber, ");
             sqlCommand.Append("PhoneNumberConfirmed, ");
             sqlCommand.Append("TwoFactorEnabled, ");
-            sqlCommand.Append("LockoutEndDateUtc, ");
-            
+            sqlCommand.Append("LockoutEndDateUtc, ");      
             sqlCommand.Append("WebSiteURL, ");
             sqlCommand.Append("Country, ");
             sqlCommand.Append("State, ");
@@ -952,7 +951,9 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("AuthorBio, ");
             sqlCommand.Append("Comment, ");
 
-
+            sqlCommand.Append("NormalizedUserName, ");
+            sqlCommand.Append("CanAutoLockout, ");
+            
             sqlCommand.Append("TimeZoneId ");
             sqlCommand.Append(")");
 
@@ -970,15 +971,12 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("@UserGuid, ");
             sqlCommand.Append("@IsDeleted, ");
             sqlCommand.Append("@FailedPasswordAttemptCount, ");
-            sqlCommand.Append("@FailedPwdAnswerAttemptCount, ");
             sqlCommand.Append("@IsLockedOut, ");
             sqlCommand.Append("@SiteGuid, ");
             sqlCommand.Append("@FirstName, ");
             sqlCommand.Append("@LastName, ");
             sqlCommand.Append("0, "); //RolesChanged
             sqlCommand.Append("@MustChangePwd, ");
-            sqlCommand.Append("'00000000-0000-0000-0000-000000000000', "); //EmailChangeGuid
-            sqlCommand.Append("'00000000-0000-0000-0000-000000000000', "); //PasswordResetGuid
             sqlCommand.Append("@DateOfBirth, ");
             sqlCommand.Append("@EmailConfirmed, ");
             sqlCommand.Append("@PasswordHash, ");
@@ -987,7 +985,6 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("@PhoneNumberConfirmed, ");
             sqlCommand.Append("@TwoFactorEnabled, ");
             sqlCommand.Append("@LockoutEndDateUtc, ");
-
             sqlCommand.Append("@WebSiteURL, ");
             sqlCommand.Append("@Country, ");
             sqlCommand.Append("@State, ");
@@ -996,11 +993,14 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("@AuthorBio, ");
             sqlCommand.Append("@Comment, ");
 
+            sqlCommand.Append("@NormalizedUserName, ");
+            sqlCommand.Append("@CanAutoLockout, ");
+
             sqlCommand.Append("@TimeZoneId ");
             sqlCommand.Append(")");
             sqlCommand.Append(";");
 
-            SqlCeParameter[] arParams = new SqlCeParameter[34];
+            SqlCeParameter[] arParams = new SqlCeParameter[35];
 
             arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
             arParams[0].Value = siteId;
@@ -1015,7 +1015,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             arParams[3].Value = email.ToLower();
 
             arParams[4] = new SqlCeParameter("@LoweredEmail", SqlDbType.NVarChar, 100);
-            arParams[4].Value = email.ToLower();
+            arParams[4].Value = loweredEmail;
 
             arParams[5] = new SqlCeParameter("@AccountApproved", SqlDbType.Bit);
             arParams[5].Value = accountApproved;
@@ -1037,87 +1037,89 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
             arParams[11] = new SqlCeParameter("@FailedPasswordAttemptCount", SqlDbType.Int);
             arParams[11].Value = 0;
-
-            arParams[12] = new SqlCeParameter("@FailedPwdAnswerAttemptCount", SqlDbType.Int);
-            arParams[12].Value = 0;
-
-            arParams[13] = new SqlCeParameter("@IsLockedOut", SqlDbType.Bit);
-            arParams[13].Value = isLockedOut;
-
-            arParams[14] = new SqlCeParameter("@SiteGuid", SqlDbType.UniqueIdentifier);
-            arParams[14].Value = siteGuid;
             
-            arParams[15] = new SqlCeParameter("@FirstName", SqlDbType.NVarChar, 100);
-            arParams[15].Value = firstName;
+            arParams[12] = new SqlCeParameter("@IsLockedOut", SqlDbType.Bit);
+            arParams[12].Value = isLockedOut;
 
-            arParams[16] = new SqlCeParameter("@LastName", SqlDbType.NVarChar, 100);
-            arParams[16].Value = lastName;
+            arParams[13] = new SqlCeParameter("@SiteGuid", SqlDbType.UniqueIdentifier);
+            arParams[13].Value = siteGuid;
             
-            arParams[17] = new SqlCeParameter("@MustChangePwd", SqlDbType.Bit);
-            arParams[17].Value = mustChangePwd;
+            arParams[14] = new SqlCeParameter("@FirstName", SqlDbType.NVarChar, 100);
+            arParams[14].Value = firstName;
 
-            arParams[18] = new SqlCeParameter("@TimeZoneId", SqlDbType.NVarChar, 32);
-            arParams[18].Value = timeZoneId;
+            arParams[15] = new SqlCeParameter("@LastName", SqlDbType.NVarChar, 100);
+            arParams[15].Value = lastName;
             
-            arParams[19] = new SqlCeParameter("@DateOfBirth", SqlDbType.DateTime);
-            if (dateOfBirth == DateTime.MinValue)
+            arParams[16] = new SqlCeParameter("@MustChangePwd", SqlDbType.Bit);
+            arParams[16].Value = mustChangePwd;
+
+            arParams[17] = new SqlCeParameter("@TimeZoneId", SqlDbType.NVarChar, 32);
+            arParams[17].Value = timeZoneId;
+            
+            arParams[18] = new SqlCeParameter("@DateOfBirth", SqlDbType.DateTime);
+            if (!dateOfBirth.HasValue)
             {
-                arParams[19].Value = DBNull.Value;
+                arParams[18].Value = DBNull.Value;
             }
             else
             {
-                arParams[19].Value = dateOfBirth;
+                arParams[18].Value = dateOfBirth;
             }
 
-            arParams[20] = new SqlCeParameter("@EmailConfirmed", SqlDbType.Bit);
-            arParams[20].Value = emailConfirmed;
+            arParams[19] = new SqlCeParameter("@EmailConfirmed", SqlDbType.Bit);
+            arParams[19].Value = emailConfirmed;
             
-            arParams[21] = new SqlCeParameter("@PasswordHash", SqlDbType.NText);
-            arParams[21].Value = passwordHash;
+            arParams[20] = new SqlCeParameter("@PasswordHash", SqlDbType.NText);
+            arParams[20].Value = passwordHash;
 
-            arParams[22] = new SqlCeParameter("@SecurityStamp", SqlDbType.NText);
-            arParams[22].Value = securityStamp;
+            arParams[21] = new SqlCeParameter("@SecurityStamp", SqlDbType.NText);
+            arParams[21].Value = securityStamp;
 
-            arParams[23] = new SqlCeParameter("@PhoneNumber", SqlDbType.NVarChar, 50);
-            arParams[23].Value = phoneNumber;
+            arParams[22] = new SqlCeParameter("@PhoneNumber", SqlDbType.NVarChar, 50);
+            arParams[22].Value = phoneNumber;
 
-            arParams[24] = new SqlCeParameter("@PhoneNumberConfirmed", SqlDbType.Bit);
-            arParams[24].Value = phoneNumberConfirmed;
+            arParams[23] = new SqlCeParameter("@PhoneNumberConfirmed", SqlDbType.Bit);
+            arParams[23].Value = phoneNumberConfirmed;
 
-            arParams[25] = new SqlCeParameter("@TwoFactorEnabled", SqlDbType.Bit);
-            arParams[25].Value = twoFactorEnabled;
+            arParams[24] = new SqlCeParameter("@TwoFactorEnabled", SqlDbType.Bit);
+            arParams[24].Value = twoFactorEnabled;
 
-            arParams[26] = new SqlCeParameter("@LockoutEndDateUtc", SqlDbType.DateTime);
-            if (lockoutEndDateUtc == null)
+            arParams[25] = new SqlCeParameter("@LockoutEndDateUtc", SqlDbType.DateTime);
+            if (!lockoutEndDateUtc.HasValue)
             {
-                arParams[26].Value = DBNull.Value;
+                arParams[25].Value = DBNull.Value;
             }
             else
             {
-                arParams[26].Value = lockoutEndDateUtc;
+                arParams[25].Value = lockoutEndDateUtc;
             }
 
-            arParams[27] = new SqlCeParameter("@WebSiteURL", SqlDbType.NVarChar, 100);
-            arParams[27].Value = webSiteUrl;
+            arParams[26] = new SqlCeParameter("@WebSiteURL", SqlDbType.NVarChar, 100);
+            arParams[26].Value = webSiteUrl;
 
-            arParams[28] = new SqlCeParameter("@Country", SqlDbType.NVarChar, 100);
-            arParams[28].Value = country;
+            arParams[27] = new SqlCeParameter("@Country", SqlDbType.NVarChar, 100);
+            arParams[27].Value = country;
 
-            arParams[29] = new SqlCeParameter("@State", SqlDbType.NVarChar, 100);
-            arParams[29].Value = state;
+            arParams[28] = new SqlCeParameter("@State", SqlDbType.NVarChar, 100);
+            arParams[28].Value = state;
 
-            arParams[30] = new SqlCeParameter("@AvatarUrl", SqlDbType.NVarChar, 250);
-            arParams[30].Value = avatarUrl;
+            arParams[29] = new SqlCeParameter("@AvatarUrl", SqlDbType.NVarChar, 250);
+            arParams[29].Value = avatarUrl;
 
-            arParams[31] = new SqlCeParameter("@Signature", SqlDbType.NText);
-            arParams[31].Value = signature;
+            arParams[30] = new SqlCeParameter("@Signature", SqlDbType.NText);
+            arParams[30].Value = signature;
 
-            arParams[32] = new SqlCeParameter("@AuthorBio", SqlDbType.NText);
-            arParams[32].Value = authorBio;
+            arParams[31] = new SqlCeParameter("@AuthorBio", SqlDbType.NText);
+            arParams[31].Value = authorBio;
 
-            arParams[33] = new SqlCeParameter("@Comment", SqlDbType.NText);
-            arParams[33].Value = comment;
+            arParams[32] = new SqlCeParameter("@Comment", SqlDbType.NText);
+            arParams[32].Value = comment;
 
+            arParams[33] = new SqlCeParameter("@NormalizedUserName", SqlDbType.NVarChar, 250);
+            arParams[33].Value = normalizedUserName;
+
+            arParams[34] = new SqlCeParameter("@CanAutoLockout", SqlDbType.Bit);
+            arParams[34].Value = canAutoLockout;
 
             int newId = Convert.ToInt32(AdoHelper.DoInsertGetIdentitiy(
                 connectionString,
@@ -1151,11 +1153,9 @@ namespace cloudscribe.Core.Repositories.SqlCe
             string lastName,
             string timeZoneId,
             string newEmail,
-            Guid emailChangeGuid,
-            Guid passwordResetGuid,
             bool rolesChanged,
             string authorBio,
-            DateTime dateOfBirth,
+            DateTime? dateOfBirth,
             bool emailConfirmed,
             string passwordHash,
             string securityStamp,
@@ -1163,7 +1163,12 @@ namespace cloudscribe.Core.Repositories.SqlCe
             bool phoneNumberConfirmed,
             bool twoFactorEnabled,
             DateTime? lockoutEndDateUtc,
-            bool isLockedOut
+            bool isLockedOut,
+
+            string normalizedUserName,
+            bool newEmailApproved,
+            bool canAutoLockout,
+            DateTime? lastPasswordChangedDate
             )
         {
             StringBuilder sqlCommand = new StringBuilder();
@@ -1189,8 +1194,6 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("RolesChanged = @RolesChanged, ");
             sqlCommand.Append("MustChangePwd = @MustChangePwd, ");
             sqlCommand.Append("NewEmail = @NewEmail, ");
-            sqlCommand.Append("EmailChangeGuid = @EmailChangeGuid, ");
-            sqlCommand.Append("PasswordResetGuid = @PasswordResetGuid, ");
             sqlCommand.Append("AuthorBio = @AuthorBio, ");
             sqlCommand.Append("DateOfBirth = @DateOfBirth, ");
             sqlCommand.Append("EmailConfirmed = @EmailConfirmed, ");
@@ -1202,13 +1205,18 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("LockoutEndDateUtc = @LockoutEndDateUtc, ");
             sqlCommand.Append("IsLockedOut = @IsLockedOut, ");
 
+            sqlCommand.Append("NormalizedUserName = @NormalizedUserName, ");
+            sqlCommand.Append("NewEmailApproved = @NewEmailApproved, ");
+            sqlCommand.Append("CanAutoLockout = @CanAutoLockout, ");
+            sqlCommand.Append("LastPasswordChangedDate = @LastPasswordChangedDate, ");
+
             sqlCommand.Append("TimeZoneId = @TimeZoneId ");
 
             sqlCommand.Append("WHERE  ");
             sqlCommand.Append("UserID = @UserID ");
             sqlCommand.Append(";");
 
-            SqlCeParameter[] arParams = new SqlCeParameter[33];
+            SqlCeParameter[] arParams = new SqlCeParameter[34];
 
             arParams[0] = new SqlCeParameter("@UserID", SqlDbType.Int);
             arParams[0].Value = userId;
@@ -1223,7 +1231,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             arParams[3].Value = email.ToLower();
 
             arParams[4] = new SqlCeParameter("@LoweredEmail", SqlDbType.NVarChar, 100);
-            arParams[4].Value = loweredEmail.ToLower();
+            arParams[4].Value = loweredEmail;
             
             arParams[5] = new SqlCeParameter("@Gender", SqlDbType.NChar, 10);
             arParams[5].Value = gender;
@@ -1267,61 +1275,74 @@ namespace cloudscribe.Core.Repositories.SqlCe
             arParams[18] = new SqlCeParameter("@NewEmail", SqlDbType.NVarChar, 100);
             arParams[18].Value = newEmail;
             
-            arParams[19] = new SqlCeParameter("@EmailChangeGuid", SqlDbType.UniqueIdentifier);
-            arParams[19].Value = emailChangeGuid;
-
-            arParams[20] = new SqlCeParameter("@TimeZoneId", SqlDbType.NVarChar, 32);
-            arParams[20].Value = timeZoneId;
-
-            arParams[21] = new SqlCeParameter("@PasswordResetGuid", SqlDbType.UniqueIdentifier);
-            arParams[21].Value = passwordResetGuid;
+            arParams[19] = new SqlCeParameter("@TimeZoneId", SqlDbType.NVarChar, 32);
+            arParams[19].Value = timeZoneId;
             
-            arParams[22] = new SqlCeParameter("@RolesChanged", SqlDbType.Bit);
-            arParams[22].Value = rolesChanged;
+            arParams[20] = new SqlCeParameter("@RolesChanged", SqlDbType.Bit);
+            arParams[20].Value = rolesChanged;
 
-            arParams[23] = new SqlCeParameter("@AuthorBio", SqlDbType.NText);
-            arParams[23].Value = authorBio;
+            arParams[21] = new SqlCeParameter("@AuthorBio", SqlDbType.NText);
+            arParams[21].Value = authorBio;
 
-            arParams[24] = new SqlCeParameter("@DateOfBirth", SqlDbType.DateTime);
-            if (dateOfBirth == DateTime.MinValue)
+            arParams[22] = new SqlCeParameter("@DateOfBirth", SqlDbType.DateTime);
+            if (!dateOfBirth.HasValue)
             {
-                arParams[24].Value = DBNull.Value;
+                arParams[22].Value = DBNull.Value;
             }
             else
             {
-                arParams[24].Value = dateOfBirth;
+                arParams[22].Value = dateOfBirth;
             }
 
-            arParams[25] = new SqlCeParameter("@EmailConfirmed", SqlDbType.Bit);
-            arParams[25].Value = emailConfirmed;
+            arParams[23] = new SqlCeParameter("@EmailConfirmed", SqlDbType.Bit);
+            arParams[23].Value = emailConfirmed;
             
-            arParams[26] = new SqlCeParameter("@PasswordHash", SqlDbType.NText);
-            arParams[26].Value = passwordHash;
+            arParams[24] = new SqlCeParameter("@PasswordHash", SqlDbType.NText);
+            arParams[24].Value = passwordHash;
 
-            arParams[27] = new SqlCeParameter("@SecurityStamp", SqlDbType.NText);
-            arParams[27].Value = securityStamp;
+            arParams[24] = new SqlCeParameter("@SecurityStamp", SqlDbType.NText);
+            arParams[24].Value = securityStamp;
 
-            arParams[28] = new SqlCeParameter("@PhoneNumber", SqlDbType.NVarChar, 50);
-            arParams[28].Value = phoneNumber;
+            arParams[25] = new SqlCeParameter("@PhoneNumber", SqlDbType.NVarChar, 50);
+            arParams[25].Value = phoneNumber;
 
-            arParams[29] = new SqlCeParameter("@PhoneNumberConfirmed", SqlDbType.Bit);
-            arParams[29].Value = phoneNumberConfirmed;
+            arParams[26] = new SqlCeParameter("@PhoneNumberConfirmed", SqlDbType.Bit);
+            arParams[26].Value = phoneNumberConfirmed;
 
-            arParams[30] = new SqlCeParameter("@TwoFactorEnabled", SqlDbType.Bit);
-            arParams[30].Value = twoFactorEnabled;
+            arParams[27] = new SqlCeParameter("@TwoFactorEnabled", SqlDbType.Bit);
+            arParams[27].Value = twoFactorEnabled;
 
-            arParams[31] = new SqlCeParameter("@LockoutEndDateUtc", SqlDbType.DateTime);
-            if (lockoutEndDateUtc == null)
+            arParams[28] = new SqlCeParameter("@LockoutEndDateUtc", SqlDbType.DateTime);
+            if (!lockoutEndDateUtc.HasValue)
             {
-                arParams[31].Value = DBNull.Value;
+                arParams[28].Value = DBNull.Value;
             }
             else
             {
-                arParams[31].Value = lockoutEndDateUtc;
+                arParams[28].Value = lockoutEndDateUtc;
             }
 
-            arParams[32] = new SqlCeParameter("@IsLockedOut", SqlDbType.Bit);
-            arParams[32].Value = isLockedOut;
+            arParams[29] = new SqlCeParameter("@IsLockedOut", SqlDbType.Bit);
+            arParams[29].Value = isLockedOut;
+
+            arParams[30] = new SqlCeParameter("@NormalizedUserName", SqlDbType.NVarChar, 50);
+            arParams[30].Value = normalizedUserName;
+
+            arParams[31] = new SqlCeParameter("@NewEmailApproved", SqlDbType.Bit);
+            arParams[31].Value = newEmailApproved;
+
+            arParams[32] = new SqlCeParameter("@CanAutoLockout", SqlDbType.Bit);
+            arParams[32].Value = canAutoLockout;
+
+            arParams[33] = new SqlCeParameter("@LastPasswordChangedDate", SqlDbType.DateTime);
+            if (!lastPasswordChangedDate.HasValue)
+            {
+                arParams[33].Value = DBNull.Value;
+            }
+            else
+            {
+                arParams[33].Value = lastPasswordChangedDate;
+            }
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 connectionString,
@@ -1383,34 +1404,34 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
 
 
-        public bool UpdateLastActivityTime(Guid userGuid, DateTime lastUpdate)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("UPDATE mp_Users ");
-            sqlCommand.Append("SET  ");
-            sqlCommand.Append("LastActivityDate = @LastActivityDate ");
+        //public bool UpdateLastActivityTime(Guid userGuid, DateTime lastUpdate)
+        //{
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("UPDATE mp_Users ");
+        //    sqlCommand.Append("SET  ");
+        //    sqlCommand.Append("LastActivityDate = @LastActivityDate ");
 
-            sqlCommand.Append("WHERE  ");
-            sqlCommand.Append("UserGuid = @UserGuid ");
-            sqlCommand.Append(";");
+        //    sqlCommand.Append("WHERE  ");
+        //    sqlCommand.Append("UserGuid = @UserGuid ");
+        //    sqlCommand.Append(";");
 
-            SqlCeParameter[] arParams = new SqlCeParameter[2];
+        //    SqlCeParameter[] arParams = new SqlCeParameter[2];
 
-            arParams[0] = new SqlCeParameter("@UserGuid", SqlDbType.UniqueIdentifier);
-            arParams[0].Value = userGuid;
+        //    arParams[0] = new SqlCeParameter("@UserGuid", SqlDbType.UniqueIdentifier);
+        //    arParams[0].Value = userGuid;
 
-            arParams[1] = new SqlCeParameter("@LastActivityDate", SqlDbType.DateTime);
-            arParams[1].Value = lastUpdate;
+        //    arParams[1] = new SqlCeParameter("@LastActivityDate", SqlDbType.DateTime);
+        //    arParams[1].Value = lastUpdate;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
-                connectionString,
-                CommandType.Text,
-                sqlCommand.ToString(),
-                arParams);
+        //    int rowsAffected = AdoHelper.ExecuteNonQuery(
+        //        connectionString,
+        //        CommandType.Text,
+        //        sqlCommand.ToString(),
+        //        arParams);
 
-            return (rowsAffected > -1);
+        //    return (rowsAffected > -1);
 
-        }
+        //}
 
         public bool UpdateLastLoginTime(Guid userGuid, DateTime lastLoginTime)
         {
@@ -1418,8 +1439,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("UPDATE mp_Users ");
             sqlCommand.Append("SET  ");
             sqlCommand.Append("LastLoginDate = @LastLoginDate, ");
-            sqlCommand.Append("FailedPasswordAttemptCount = 0, ");
-            sqlCommand.Append("FailedPwdAnswerAttemptCount = 0 ");
+            sqlCommand.Append("FailedPasswordAttemptCount = 0 ");
 
             sqlCommand.Append("WHERE  ");
             sqlCommand.Append("UserGuid = @UserGuid ");
@@ -1442,65 +1462,65 @@ namespace cloudscribe.Core.Repositories.SqlCe
             return (rowsAffected > -1);
         }
 
-        public bool UpdateLastPasswordChangeTime(Guid userGuid, DateTime lastPasswordChangeTime)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("UPDATE mp_Users ");
-            sqlCommand.Append("SET  ");
-            sqlCommand.Append("LastPasswordChangedDate = @LastPasswordChangedDate ");
+        //public bool UpdateLastPasswordChangeTime(Guid userGuid, DateTime lastPasswordChangeTime)
+        //{
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("UPDATE mp_Users ");
+        //    sqlCommand.Append("SET  ");
+        //    sqlCommand.Append("LastPasswordChangedDate = @LastPasswordChangedDate ");
 
-            sqlCommand.Append("WHERE  ");
-            sqlCommand.Append("UserGuid = @UserGuid ");
-            sqlCommand.Append(";");
+        //    sqlCommand.Append("WHERE  ");
+        //    sqlCommand.Append("UserGuid = @UserGuid ");
+        //    sqlCommand.Append(";");
 
-            SqlCeParameter[] arParams = new SqlCeParameter[2];
+        //    SqlCeParameter[] arParams = new SqlCeParameter[2];
 
-            arParams[0] = new SqlCeParameter("@UserGuid", SqlDbType.UniqueIdentifier);
-            arParams[0].Value = userGuid;
+        //    arParams[0] = new SqlCeParameter("@UserGuid", SqlDbType.UniqueIdentifier);
+        //    arParams[0].Value = userGuid;
 
-            arParams[1] = new SqlCeParameter("@LastPasswordChangedDate", SqlDbType.DateTime);
-            arParams[1].Value = lastPasswordChangeTime;
+        //    arParams[1] = new SqlCeParameter("@LastPasswordChangedDate", SqlDbType.DateTime);
+        //    arParams[1].Value = lastPasswordChangeTime;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
-                connectionString,
-                CommandType.Text,
-                sqlCommand.ToString(),
-                arParams);
+        //    int rowsAffected = AdoHelper.ExecuteNonQuery(
+        //        connectionString,
+        //        CommandType.Text,
+        //        sqlCommand.ToString(),
+        //        arParams);
 
-            return (rowsAffected > -1);
+        //    return (rowsAffected > -1);
 
-        }
+        //}
 
-        public bool UpdateFailedPasswordAttemptStartWindow(
-            Guid userGuid,
-            DateTime windowStartTime)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("UPDATE mp_Users ");
-            sqlCommand.Append("SET  ");
-            sqlCommand.Append("FailedPwdAnswerWindowStart = @FailedPwdAnswerWindowStart ");
+        //public bool UpdateFailedPasswordAttemptStartWindow(
+        //    Guid userGuid,
+        //    DateTime windowStartTime)
+        //{
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("UPDATE mp_Users ");
+        //    sqlCommand.Append("SET  ");
+        //    sqlCommand.Append("FailedPwdAnswerWindowStart = @FailedPwdAnswerWindowStart ");
 
-            sqlCommand.Append("WHERE  ");
-            sqlCommand.Append("UserGuid = @UserGuid ");
-            sqlCommand.Append(";");
+        //    sqlCommand.Append("WHERE  ");
+        //    sqlCommand.Append("UserGuid = @UserGuid ");
+        //    sqlCommand.Append(";");
 
-            SqlCeParameter[] arParams = new SqlCeParameter[2];
+        //    SqlCeParameter[] arParams = new SqlCeParameter[2];
 
-            arParams[0] = new SqlCeParameter("@UserGuid", SqlDbType.UniqueIdentifier);
-            arParams[0].Value = userGuid;
+        //    arParams[0] = new SqlCeParameter("@UserGuid", SqlDbType.UniqueIdentifier);
+        //    arParams[0].Value = userGuid;
 
-            arParams[1] = new SqlCeParameter("@FailedPwdAnswerWindowStart", SqlDbType.DateTime);
-            arParams[1].Value = windowStartTime;
+        //    arParams[1] = new SqlCeParameter("@FailedPwdAnswerWindowStart", SqlDbType.DateTime);
+        //    arParams[1].Value = windowStartTime;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
-                connectionString,
-                CommandType.Text,
-                sqlCommand.ToString(),
-                arParams);
+        //    int rowsAffected = AdoHelper.ExecuteNonQuery(
+        //        connectionString,
+        //        CommandType.Text,
+        //        sqlCommand.ToString(),
+        //        arParams);
 
-            return (rowsAffected > -1);
+        //    return (rowsAffected > -1);
 
-        }
+        //}
 
         public bool UpdateFailedPasswordAttemptCount(
             Guid userGuid,
@@ -1533,68 +1553,68 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
         }
 
-        public bool UpdateFailedPasswordAnswerAttemptStartWindow(
-            Guid userGuid,
-            DateTime windowStartTime)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("UPDATE mp_Users ");
-            sqlCommand.Append("SET  ");
-            sqlCommand.Append("FailedPwdAnswerWindowStart = @FailedPwdAnswerWindowStart ");
+        //public bool UpdateFailedPasswordAnswerAttemptStartWindow(
+        //    Guid userGuid,
+        //    DateTime windowStartTime)
+        //{
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("UPDATE mp_Users ");
+        //    sqlCommand.Append("SET  ");
+        //    sqlCommand.Append("FailedPwdAnswerWindowStart = @FailedPwdAnswerWindowStart ");
 
-            sqlCommand.Append("WHERE  ");
-            sqlCommand.Append("UserGuid = @UserGuid ");
-            sqlCommand.Append(";");
+        //    sqlCommand.Append("WHERE  ");
+        //    sqlCommand.Append("UserGuid = @UserGuid ");
+        //    sqlCommand.Append(";");
 
-            SqlCeParameter[] arParams = new SqlCeParameter[2];
+        //    SqlCeParameter[] arParams = new SqlCeParameter[2];
 
-            arParams[0] = new SqlCeParameter("@UserGuid", SqlDbType.UniqueIdentifier);
-            arParams[0].Value = userGuid;
+        //    arParams[0] = new SqlCeParameter("@UserGuid", SqlDbType.UniqueIdentifier);
+        //    arParams[0].Value = userGuid;
 
-            arParams[1] = new SqlCeParameter("@FailedPwdAnswerWindowStart", SqlDbType.DateTime);
-            arParams[1].Value = windowStartTime;
+        //    arParams[1] = new SqlCeParameter("@FailedPwdAnswerWindowStart", SqlDbType.DateTime);
+        //    arParams[1].Value = windowStartTime;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
-                connectionString,
-                CommandType.Text,
-                sqlCommand.ToString(),
-                arParams);
+        //    int rowsAffected = AdoHelper.ExecuteNonQuery(
+        //        connectionString,
+        //        CommandType.Text,
+        //        sqlCommand.ToString(),
+        //        arParams);
 
-            return (rowsAffected > -1);
+        //    return (rowsAffected > -1);
 
-        }
+        //}
 
-        public bool UpdateFailedPasswordAnswerAttemptCount(
-            Guid userGuid,
-            int attemptCount)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("UPDATE mp_Users ");
-            sqlCommand.Append("SET  ");
-            sqlCommand.Append("FailedPwdAnswerAttemptCount = @FailedPwdAnswerAttemptCount ");
+        //public bool UpdateFailedPasswordAnswerAttemptCount(
+        //    Guid userGuid,
+        //    int attemptCount)
+        //{
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("UPDATE mp_Users ");
+        //    sqlCommand.Append("SET  ");
+        //    sqlCommand.Append("FailedPwdAnswerAttemptCount = @FailedPwdAnswerAttemptCount ");
 
-            sqlCommand.Append("WHERE  ");
-            sqlCommand.Append("UserGuid = @UserGuid ");
-            sqlCommand.Append(";");
+        //    sqlCommand.Append("WHERE  ");
+        //    sqlCommand.Append("UserGuid = @UserGuid ");
+        //    sqlCommand.Append(";");
 
-            SqlCeParameter[] arParams = new SqlCeParameter[2];
+        //    SqlCeParameter[] arParams = new SqlCeParameter[2];
 
-            arParams[0] = new SqlCeParameter("@UserGuid", SqlDbType.UniqueIdentifier);
-            arParams[0].Value = userGuid;
+        //    arParams[0] = new SqlCeParameter("@UserGuid", SqlDbType.UniqueIdentifier);
+        //    arParams[0].Value = userGuid;
 
-            arParams[1] = new SqlCeParameter("@FailedPwdAnswerAttemptCount", SqlDbType.Int);
-            arParams[1].Value = attemptCount;
+        //    arParams[1] = new SqlCeParameter("@FailedPwdAnswerAttemptCount", SqlDbType.Int);
+        //    arParams[1].Value = attemptCount;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
-                connectionString,
-                CommandType.Text,
-                sqlCommand.ToString(),
-                arParams);
+        //    int rowsAffected = AdoHelper.ExecuteNonQuery(
+        //        connectionString,
+        //        CommandType.Text,
+        //        sqlCommand.ToString(),
+        //        arParams);
 
-            return (rowsAffected > -1);
+        //    return (rowsAffected > -1);
 
 
-        }
+        //}
 
 
         public bool AccountLockout(Guid userGuid, DateTime lockoutTime)
@@ -1655,66 +1675,66 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
         }
 
-        public bool SetRegistrationConfirmationGuid(Guid userGuid, Guid registrationConfirmationGuid)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("UPDATE mp_Users ");
-            sqlCommand.Append("SET  ");
-            sqlCommand.Append("RegisterConfirmGuid = @RegisterConfirmGuid, ");
-            sqlCommand.Append("IsLockedOut = 1 ");
+        //public bool SetRegistrationConfirmationGuid(Guid userGuid, Guid registrationConfirmationGuid)
+        //{
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("UPDATE mp_Users ");
+        //    sqlCommand.Append("SET  ");
+        //    sqlCommand.Append("RegisterConfirmGuid = @RegisterConfirmGuid, ");
+        //    sqlCommand.Append("IsLockedOut = 1 ");
 
-            sqlCommand.Append("WHERE  ");
-            sqlCommand.Append("UserGuid = @UserGuid ");
-            sqlCommand.Append(";");
+        //    sqlCommand.Append("WHERE  ");
+        //    sqlCommand.Append("UserGuid = @UserGuid ");
+        //    sqlCommand.Append(";");
 
-            SqlCeParameter[] arParams = new SqlCeParameter[2];
+        //    SqlCeParameter[] arParams = new SqlCeParameter[2];
 
-            arParams[0] = new SqlCeParameter("@UserGuid", SqlDbType.UniqueIdentifier);
-            arParams[0].Value = userGuid;
+        //    arParams[0] = new SqlCeParameter("@UserGuid", SqlDbType.UniqueIdentifier);
+        //    arParams[0].Value = userGuid;
 
-            arParams[1] = new SqlCeParameter("@RegisterConfirmGuid", SqlDbType.UniqueIdentifier);
-            arParams[1].Value = registrationConfirmationGuid;
+        //    arParams[1] = new SqlCeParameter("@RegisterConfirmGuid", SqlDbType.UniqueIdentifier);
+        //    arParams[1].Value = registrationConfirmationGuid;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
-                connectionString,
-                CommandType.Text,
-                sqlCommand.ToString(),
-                arParams);
+        //    int rowsAffected = AdoHelper.ExecuteNonQuery(
+        //        connectionString,
+        //        CommandType.Text,
+        //        sqlCommand.ToString(),
+        //        arParams);
 
-            return (rowsAffected > -1);
+        //    return (rowsAffected > -1);
 
-        }
+        //}
 
-        public bool ConfirmRegistration(Guid emptyGuid, Guid registrationConfirmationGuid)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("UPDATE mp_Users ");
-            sqlCommand.Append("SET  ");
-            sqlCommand.Append("RegisterConfirmGuid = @EmptyGuid, ");
-            sqlCommand.Append("EmailConfirmed = 1,  ");
-            sqlCommand.Append("IsLockedOut = 0 ");
+        //public bool ConfirmRegistration(Guid emptyGuid, Guid registrationConfirmationGuid)
+        //{
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("UPDATE mp_Users ");
+        //    sqlCommand.Append("SET  ");
+        //    sqlCommand.Append("RegisterConfirmGuid = @EmptyGuid, ");
+        //    sqlCommand.Append("EmailConfirmed = 1,  ");
+        //    sqlCommand.Append("IsLockedOut = 0 ");
 
-            sqlCommand.Append("WHERE  ");
-            sqlCommand.Append("RegisterConfirmGuid = @RegisterConfirmGuid ");
-            sqlCommand.Append(";");
+        //    sqlCommand.Append("WHERE  ");
+        //    sqlCommand.Append("RegisterConfirmGuid = @RegisterConfirmGuid ");
+        //    sqlCommand.Append(";");
 
-            SqlCeParameter[] arParams = new SqlCeParameter[2];
+        //    SqlCeParameter[] arParams = new SqlCeParameter[2];
 
-            arParams[0] = new SqlCeParameter("@EmptyGuid", SqlDbType.UniqueIdentifier);
-            arParams[0].Value = emptyGuid;
+        //    arParams[0] = new SqlCeParameter("@EmptyGuid", SqlDbType.UniqueIdentifier);
+        //    arParams[0].Value = emptyGuid;
 
-            arParams[1] = new SqlCeParameter("@RegisterConfirmGuid", SqlDbType.UniqueIdentifier);
-            arParams[1].Value = registrationConfirmationGuid;
+        //    arParams[1] = new SqlCeParameter("@RegisterConfirmGuid", SqlDbType.UniqueIdentifier);
+        //    arParams[1].Value = registrationConfirmationGuid;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
-                connectionString,
-                CommandType.Text,
-                sqlCommand.ToString(),
-                arParams);
+        //    int rowsAffected = AdoHelper.ExecuteNonQuery(
+        //        connectionString,
+        //        CommandType.Text,
+        //        sqlCommand.ToString(),
+        //        arParams);
 
-            return (rowsAffected > -1);
+        //    return (rowsAffected > -1);
 
-        }
+        //}
 
         
 
@@ -1769,57 +1789,57 @@ namespace cloudscribe.Core.Repositories.SqlCe
             return (rowsAffected > -1);
         }
 
-        public bool IncrementTotalPosts(int userId)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("UPDATE mp_Users ");
-            sqlCommand.Append("SET  ");
-            sqlCommand.Append("TotalPosts = TotalPosts + 1 ");
+        //public bool IncrementTotalPosts(int userId)
+        //{
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("UPDATE mp_Users ");
+        //    sqlCommand.Append("SET  ");
+        //    sqlCommand.Append("TotalPosts = TotalPosts + 1 ");
 
-            sqlCommand.Append("WHERE  ");
-            sqlCommand.Append("UserID = @UserID ");
-            sqlCommand.Append(";");
+        //    sqlCommand.Append("WHERE  ");
+        //    sqlCommand.Append("UserID = @UserID ");
+        //    sqlCommand.Append(";");
 
-            SqlCeParameter[] arParams = new SqlCeParameter[1];
+        //    SqlCeParameter[] arParams = new SqlCeParameter[1];
 
-            arParams[0] = new SqlCeParameter("@UserID", SqlDbType.Int);
-            arParams[0].Value = userId;
+        //    arParams[0] = new SqlCeParameter("@UserID", SqlDbType.Int);
+        //    arParams[0].Value = userId;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
-                connectionString,
-                CommandType.Text,
-                sqlCommand.ToString(),
-                arParams);
+        //    int rowsAffected = AdoHelper.ExecuteNonQuery(
+        //        connectionString,
+        //        CommandType.Text,
+        //        sqlCommand.ToString(),
+        //        arParams);
 
-            return (rowsAffected > -1);
+        //    return (rowsAffected > -1);
 
-        }
+        //}
 
-        public bool DecrementTotalPosts(int userId)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("UPDATE mp_Users ");
-            sqlCommand.Append("SET  ");
-            sqlCommand.Append("TotalPosts = TotalPosts - 1 ");
+        //public bool DecrementTotalPosts(int userId)
+        //{
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("UPDATE mp_Users ");
+        //    sqlCommand.Append("SET  ");
+        //    sqlCommand.Append("TotalPosts = TotalPosts - 1 ");
 
-            sqlCommand.Append("WHERE  ");
-            sqlCommand.Append("UserID = @UserID ");
-            sqlCommand.Append(";");
+        //    sqlCommand.Append("WHERE  ");
+        //    sqlCommand.Append("UserID = @UserID ");
+        //    sqlCommand.Append(";");
 
-            SqlCeParameter[] arParams = new SqlCeParameter[1];
+        //    SqlCeParameter[] arParams = new SqlCeParameter[1];
 
-            arParams[0] = new SqlCeParameter("@UserID", SqlDbType.Int);
-            arParams[0].Value = userId;
+        //    arParams[0] = new SqlCeParameter("@UserID", SqlDbType.Int);
+        //    arParams[0].Value = userId;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
-                connectionString,
-                CommandType.Text,
-                sqlCommand.ToString(),
-                arParams);
+        //    int rowsAffected = AdoHelper.ExecuteNonQuery(
+        //        connectionString,
+        //        CommandType.Text,
+        //        sqlCommand.ToString(),
+        //        arParams);
 
-            return (rowsAffected > -1);
+        //    return (rowsAffected > -1);
 
-        }
+        //}
 
         public DbDataReader GetRolesByUser(int siteId, int userId)
         {
@@ -1858,31 +1878,31 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
         }
 
-        public DbDataReader GetUserByRegistrationGuid(int siteId, Guid registerConfirmGuid)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("SELECT  * ");
-            sqlCommand.Append("FROM	mp_Users ");
-            sqlCommand.Append("WHERE ");
-            sqlCommand.Append("SiteID = @SiteID ");
-            sqlCommand.Append("AND RegisterConfirmGuid = @RegisterConfirmGuid ");
-            sqlCommand.Append(";");
+        //public DbDataReader GetUserByRegistrationGuid(int siteId, Guid registerConfirmGuid)
+        //{
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("SELECT  * ");
+        //    sqlCommand.Append("FROM	mp_Users ");
+        //    sqlCommand.Append("WHERE ");
+        //    sqlCommand.Append("SiteID = @SiteID ");
+        //    sqlCommand.Append("AND RegisterConfirmGuid = @RegisterConfirmGuid ");
+        //    sqlCommand.Append(";");
 
-            SqlCeParameter[] arParams = new SqlCeParameter[2];
+        //    SqlCeParameter[] arParams = new SqlCeParameter[2];
 
-            arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
-            arParams[0].Value = siteId;
+        //    arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
+        //    arParams[0].Value = siteId;
 
-            arParams[1] = new SqlCeParameter("@RegisterConfirmGuid", SqlDbType.UniqueIdentifier);
-            arParams[1].Value = registerConfirmGuid;
+        //    arParams[1] = new SqlCeParameter("@RegisterConfirmGuid", SqlDbType.UniqueIdentifier);
+        //    arParams[1].Value = registerConfirmGuid;
 
-            return AdoHelper.ExecuteReader(
-                connectionString,
-                CommandType.Text,
-                sqlCommand.ToString(),
-                arParams);
+        //    return AdoHelper.ExecuteReader(
+        //        connectionString,
+        //        CommandType.Text,
+        //        sqlCommand.ToString(),
+        //        arParams);
 
-        }
+        //}
 
         public DbDataReader GetSingleUser(int siteId, string email)
         {
@@ -2021,81 +2041,81 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
         }
 
-        public Guid GetUserGuidFromOpenId(
-            int siteId,
-            string openIduri)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("SELECT  * ");
-            sqlCommand.Append("FROM	mp_Users ");
-            sqlCommand.Append("WHERE ");
-            sqlCommand.Append("SiteID = @SiteID ");
-            sqlCommand.Append("AND OpenIDURI = @OpenIDURI ");
-            sqlCommand.Append(";");
+        //public Guid GetUserGuidFromOpenId(
+        //    int siteId,
+        //    string openIduri)
+        //{
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("SELECT  * ");
+        //    sqlCommand.Append("FROM	mp_Users ");
+        //    sqlCommand.Append("WHERE ");
+        //    sqlCommand.Append("SiteID = @SiteID ");
+        //    sqlCommand.Append("AND OpenIDURI = @OpenIDURI ");
+        //    sqlCommand.Append(";");
 
-            SqlCeParameter[] arParams = new SqlCeParameter[2];
+        //    SqlCeParameter[] arParams = new SqlCeParameter[2];
 
-            arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
-            arParams[0].Value = siteId;
+        //    arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
+        //    arParams[0].Value = siteId;
 
-            arParams[1] = new SqlCeParameter("@OpenIDURI", SqlDbType.NVarChar, 50);
-            arParams[1].Value = openIduri;
+        //    arParams[1] = new SqlCeParameter("@OpenIDURI", SqlDbType.NVarChar, 50);
+        //    arParams[1].Value = openIduri;
 
-            Guid userGuid = Guid.Empty;
+        //    Guid userGuid = Guid.Empty;
 
-            using (DbDataReader reader = AdoHelper.ExecuteReader(
-                connectionString,
-                CommandType.Text,
-                sqlCommand.ToString(),
-                arParams))
-            {
-                if (reader.Read())
-                {
-                    userGuid = new Guid(reader["UserGuid"].ToString());
-                }
-            }
+        //    using (DbDataReader reader = AdoHelper.ExecuteReader(
+        //        connectionString,
+        //        CommandType.Text,
+        //        sqlCommand.ToString(),
+        //        arParams))
+        //    {
+        //        if (reader.Read())
+        //        {
+        //            userGuid = new Guid(reader["UserGuid"].ToString());
+        //        }
+        //    }
 
-            return userGuid;
+        //    return userGuid;
 
-        }
+        //}
 
-        public Guid GetUserGuidFromWindowsLiveId(
-            int siteId,
-            string windowsLiveId)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("SELECT  * ");
-            sqlCommand.Append("FROM	mp_Users ");
-            sqlCommand.Append("WHERE ");
-            sqlCommand.Append("SiteID = @SiteID ");
-            sqlCommand.Append("AND WindowsLiveID = @WindowsLiveID ");
-            sqlCommand.Append(";");
+        //public Guid GetUserGuidFromWindowsLiveId(
+        //    int siteId,
+        //    string windowsLiveId)
+        //{
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("SELECT  * ");
+        //    sqlCommand.Append("FROM	mp_Users ");
+        //    sqlCommand.Append("WHERE ");
+        //    sqlCommand.Append("SiteID = @SiteID ");
+        //    sqlCommand.Append("AND WindowsLiveID = @WindowsLiveID ");
+        //    sqlCommand.Append(";");
 
-            SqlCeParameter[] arParams = new SqlCeParameter[2];
+        //    SqlCeParameter[] arParams = new SqlCeParameter[2];
 
-            arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
-            arParams[0].Value = siteId;
+        //    arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
+        //    arParams[0].Value = siteId;
 
-            arParams[1] = new SqlCeParameter("@WindowsLiveID", SqlDbType.NVarChar, 50);
-            arParams[1].Value = windowsLiveId;
+        //    arParams[1] = new SqlCeParameter("@WindowsLiveID", SqlDbType.NVarChar, 50);
+        //    arParams[1].Value = windowsLiveId;
 
-            Guid userGuid = Guid.Empty;
+        //    Guid userGuid = Guid.Empty;
 
-            using (DbDataReader reader = AdoHelper.ExecuteReader(
-                connectionString,
-                CommandType.Text,
-                sqlCommand.ToString(),
-                arParams))
-            {
-                if (reader.Read())
-                {
-                    userGuid = new Guid(reader["UserGuid"].ToString());
-                }
-            }
+        //    using (DbDataReader reader = AdoHelper.ExecuteReader(
+        //        connectionString,
+        //        CommandType.Text,
+        //        sqlCommand.ToString(),
+        //        arParams))
+        //    {
+        //        if (reader.Read())
+        //        {
+        //            userGuid = new Guid(reader["UserGuid"].ToString());
+        //        }
+        //    }
 
-            return userGuid;
+        //    return userGuid;
 
-        }
+        //}
 
         public string LoginByEmail(int siteId, string email, string password)
         {

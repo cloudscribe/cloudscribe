@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-08
-// Last Modified:			2015-12-21
+// Last Modified:			2015-12-28
 // 
 
 using cloudscribe.Core.Identity;
@@ -412,7 +412,6 @@ namespace cloudscribe.Core.Web.Controllers
                 model.Comment = user.Comment;
                 model.EmailConfirmed = user.EmailConfirmed;
                 model.IsLockedOut = user.IsLockedOut;
-                model.LastActivityDate = user.LastActivityDate;
                 model.LastLoginDate = user.LastLoginDate;
                 model.TimeZoneId = user.TimeZoneId;
            

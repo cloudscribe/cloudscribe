@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2016-01-03
+// Last Modified:			2016-01-28
 // 
 
 using cloudscribe.DbHelpers;
@@ -201,25 +201,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             CancellationToken cancellationToken
             )
         {
-            //totalPages = 1;
-            //int totalRows = UserCount(siteId, userNameBeginsWith);
-
-            //if (pageSize > 0) totalPages = totalRows / pageSize;
-
-            //if (totalRows <= pageSize)
-            //{
-            //    totalPages = 1;
-            //}
-            //else
-            //{
-            //    int remainder;
-            //    Math.DivRem(totalRows, pageSize, out remainder);
-            //    if (remainder > 0)
-            //    {
-            //        totalPages += 1;
-            //    }
-            //}
-
+           
             SqlParameterHelper sph;
 
             switch (sortMode)
@@ -433,6 +415,117 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         }
 
+        public async Task<int> CountEmailUnconfirmed(
+            int siteId,
+            CancellationToken cancellationToken)
+        {
+            SqlParameterHelper sph = new SqlParameterHelper(
+                logFactory,
+                readConnectionString,
+                "mp_Users_CountEmailUnconfirmed",
+                1);
+
+            sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
+            object result = await sph.ExecuteScalarAsync(cancellationToken);
+            int count = Convert.ToInt32(result);
+            return count;
+        }
+
+        public async Task<DbDataReader> GetPageEmailUnconfirmed(
+            int siteId,
+            int pageNumber,
+            int pageSize,
+            CancellationToken cancellationToken)
+        {
+            SqlParameterHelper sph = new SqlParameterHelper(
+                logFactory,
+                readConnectionString,
+                "mp_Users_UnconfirmedEmailPage",
+                3);
+
+            sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
+            sph.DefineSqlParameter("@PageNumber", SqlDbType.Int, ParameterDirection.Input, pageNumber);
+            sph.DefineSqlParameter("@PageSize", SqlDbType.Int, ParameterDirection.Input, pageSize);
+            return await sph.ExecuteReaderAsync(cancellationToken);
+
+        }
+
+        public async Task<int> CountPhoneUnconfirmed(
+            int siteId,
+            CancellationToken cancellationToken)
+        {
+            SqlParameterHelper sph = new SqlParameterHelper(
+                logFactory,
+                readConnectionString,
+                "mp_Users_CountPhoneUnconfirmed",
+                1);
+
+            sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
+            object result = await sph.ExecuteScalarAsync(cancellationToken);
+            int count = Convert.ToInt32(result);
+            return count;
+        }
+
+        public async Task<DbDataReader> GetPagePhoneUnconfirmed(
+            int siteId,
+            int pageNumber,
+            int pageSize,
+            CancellationToken cancellationToken)
+        {
+            SqlParameterHelper sph = new SqlParameterHelper(
+                logFactory,
+                readConnectionString,
+                "mp_Users_UnconfirmedPhonePage",
+                3);
+
+            sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
+            sph.DefineSqlParameter("@PageNumber", SqlDbType.Int, ParameterDirection.Input, pageNumber);
+            sph.DefineSqlParameter("@PageSize", SqlDbType.Int, ParameterDirection.Input, pageSize);
+            return await sph.ExecuteReaderAsync(cancellationToken);
+
+        }
+
+
+        public async Task<int> CountFutureLockoutDate(
+            int siteId,
+            CancellationToken cancellationToken)
+        {
+            SqlParameterHelper sph = new SqlParameterHelper(
+                logFactory,
+                readConnectionString,
+                "mp_Users_CountFutureLockoutDate",
+                2);
+
+            sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
+            sph.DefineSqlParameter("@CurrentUtc", SqlDbType.DateTime, ParameterDirection.Input, DateTime.UtcNow);
+
+            object result = await sph.ExecuteScalarAsync(cancellationToken);
+            int count = Convert.ToInt32(result);
+            return count;
+        }
+
+        public async Task<DbDataReader> GetFutureLockoutPage(
+            int siteId,
+            int pageNumber,
+            int pageSize,
+            CancellationToken cancellationToken)
+        {
+            SqlParameterHelper sph = new SqlParameterHelper(
+                logFactory,
+                readConnectionString,
+                "mp_Users_FutureLockoutPage",
+                4);
+
+            sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
+            sph.DefineSqlParameter("@PageNumber", SqlDbType.Int, ParameterDirection.Input, pageNumber);
+            sph.DefineSqlParameter("@PageSize", SqlDbType.Int, ParameterDirection.Input, pageSize);
+            sph.DefineSqlParameter("@CurrentUtc", SqlDbType.DateTime, ParameterDirection.Input, DateTime.UtcNow);
+            return await sph.ExecuteReaderAsync(cancellationToken);
+
+        }
+
+
+
         public async Task<int> CountNotApprovedUsers(
             int siteId,
             CancellationToken cancellationToken)
@@ -515,15 +608,14 @@ namespace cloudscribe.Core.Repositories.MSSQL
             string firstName,
             string lastName,
             string timeZoneId,
-            DateTime dateOfBirth,
+            DateTime? dateOfBirth,
             bool emailConfirmed,
             string passwordHash,
             string securityStamp,
             string phoneNumber,
             bool phoneNumberConfirmed,
             bool twoFactorEnabled,
-            DateTime? lockoutEndDateUtc,
-            
+            DateTime? lockoutEndDateUtc, 
             bool accountApproved,
             bool isLockedOut,
             bool displayInMemberList,
@@ -534,6 +626,11 @@ namespace cloudscribe.Core.Repositories.MSSQL
             string signature,
             string authorBio,
             string comment,
+
+            string normalizedUserName,
+            string loweredEmail,
+            bool canAutoLockout,
+            
             CancellationToken cancellationToken
             )
         {
@@ -542,7 +639,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 logFactory,
                 writeConnectionString, 
                 "mp_Users_Insert", 
-                30);
+                32);
 
             sph.DefineSqlParameter("@SiteGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, siteGuid);
             sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
@@ -557,7 +654,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@TimeZoneId", SqlDbType.NVarChar, 32, ParameterDirection.Input, timeZoneId);
             sph.DefineSqlParameter("@EmailChangeGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, Guid.Empty);
 
-            if (dateOfBirth == DateTime.MinValue)
+            if (!dateOfBirth.HasValue)
             {
                 sph.DefineSqlParameter("@DateOfBirth", SqlDbType.DateTime, ParameterDirection.Input, DBNull.Value);
             }
@@ -572,7 +669,8 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@PhoneNumber", SqlDbType.NVarChar, 50, ParameterDirection.Input, phoneNumber);
             sph.DefineSqlParameter("@PhoneNumberConfirmed", SqlDbType.Bit, ParameterDirection.Input, phoneNumberConfirmed);
             sph.DefineSqlParameter("@TwoFactorEnabled", SqlDbType.Bit, ParameterDirection.Input, twoFactorEnabled);
-            if (lockoutEndDateUtc == null)
+
+            if (!lockoutEndDateUtc.HasValue)
             {
                 sph.DefineSqlParameter("@LockoutEndDateUtc", SqlDbType.DateTime, ParameterDirection.Input, DBNull.Value);
             }
@@ -591,6 +689,12 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@Signature", SqlDbType.NVarChar, -1, ParameterDirection.Input, signature);
             sph.DefineSqlParameter("@AuthorBio", SqlDbType.NVarChar, -1, ParameterDirection.Input, authorBio);
             sph.DefineSqlParameter("@Comment", SqlDbType.NVarChar, -1, ParameterDirection.Input, comment);
+
+            sph.DefineSqlParameter("@NormalizedUserName", SqlDbType.NVarChar, 50, ParameterDirection.Input, normalizedUserName);
+            sph.DefineSqlParameter("@LoweredEmail", SqlDbType.NVarChar, 100, ParameterDirection.Input, loweredEmail);
+            sph.DefineSqlParameter("@CanAutoLockout", SqlDbType.Bit, ParameterDirection.Input, canAutoLockout);
+
+            
 
             object result = await sph.ExecuteScalarAsync(cancellationToken);
 
@@ -619,11 +723,9 @@ namespace cloudscribe.Core.Repositories.MSSQL
             string lastName,
             string timeZoneId, 
             string newEmail,
-            Guid emailChangeGuid,
-            Guid passwordResetGuid,
             bool rolesChanged,
             string authorBio,
-            DateTime dateOfBirth,
+            DateTime? dateOfBirth,
             bool emailConfirmed,
             string passwordHash,
             string securityStamp,
@@ -632,6 +734,12 @@ namespace cloudscribe.Core.Repositories.MSSQL
             bool twoFactorEnabled,
             DateTime? lockoutEndDateUtc,
             bool isLockedOut,
+
+            string normalizedUserName,
+            bool newEmailApproved,
+            bool canAutoLockout,
+            DateTime? lastPasswordChangedDate,
+
             CancellationToken cancellationToken
             )
         {
@@ -639,7 +747,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 logFactory,
                 writeConnectionString, 
                 "mp_Users_Update", 
-                33);
+                35);
 
             sph.DefineSqlParameter("@UserID", SqlDbType.Int, ParameterDirection.Input, userId);
             sph.DefineSqlParameter("@Name", SqlDbType.NVarChar, 100, ParameterDirection.Input, name);
@@ -661,12 +769,10 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@LastName", SqlDbType.NVarChar, 100, ParameterDirection.Input, lastName);
             sph.DefineSqlParameter("@TimeZoneId", SqlDbType.NVarChar, 32, ParameterDirection.Input, timeZoneId);
             sph.DefineSqlParameter("@NewEmail", SqlDbType.NVarChar, 100, ParameterDirection.Input, newEmail);
-            sph.DefineSqlParameter("@EmailChangeGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, emailChangeGuid);
-            sph.DefineSqlParameter("@PasswordResetGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, passwordResetGuid);
             sph.DefineSqlParameter("@RolesChanged", SqlDbType.Bit, ParameterDirection.Input, rolesChanged);
             sph.DefineSqlParameter("@AuthorBio", SqlDbType.NVarChar, -1, ParameterDirection.Input, authorBio);
 
-            if (dateOfBirth == DateTime.MinValue)
+            if (!dateOfBirth.HasValue)
             {
                 sph.DefineSqlParameter("@DateOfBirth", SqlDbType.DateTime, ParameterDirection.Input, DBNull.Value);
             }
@@ -681,7 +787,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@PhoneNumber", SqlDbType.NVarChar, 50, ParameterDirection.Input, phoneNumber);
             sph.DefineSqlParameter("@PhoneNumberConfirmed", SqlDbType.Bit, ParameterDirection.Input, phoneNumberConfirmed);
             sph.DefineSqlParameter("@TwoFactorEnabled", SqlDbType.Bit, ParameterDirection.Input, twoFactorEnabled);
-            if (lockoutEndDateUtc == null)
+            if (!lockoutEndDateUtc.HasValue)
             {
                 sph.DefineSqlParameter("@LockoutEndDateUtc", SqlDbType.DateTime, ParameterDirection.Input, DBNull.Value);
             }
@@ -691,6 +797,20 @@ namespace cloudscribe.Core.Repositories.MSSQL
             }
 
             sph.DefineSqlParameter("@IsLockedOut", SqlDbType.Bit, ParameterDirection.Input, isLockedOut);
+
+            sph.DefineSqlParameter("@NormalizedUserName", SqlDbType.NVarChar, 50, ParameterDirection.Input, normalizedUserName);
+            sph.DefineSqlParameter("@NewEmailApproved", SqlDbType.Bit, ParameterDirection.Input, newEmailApproved);
+            sph.DefineSqlParameter("@CanAutoLockout", SqlDbType.Bit, ParameterDirection.Input, canAutoLockout);
+
+            if (!lastPasswordChangedDate.HasValue)
+            {
+                sph.DefineSqlParameter("@LastPasswordChangedDate", SqlDbType.DateTime, ParameterDirection.Input, DBNull.Value);
+            }
+            else
+            {
+                sph.DefineSqlParameter("@LastPasswordChangedDate", SqlDbType.DateTime, ParameterDirection.Input, lastPasswordChangedDate);
+            }
+
 
             int rowsAffected = await sph.ExecuteNonQueryAsync(cancellationToken);
             return (rowsAffected > -1);
@@ -741,7 +861,10 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return (rowsAffected > -1);
         }
 
-        public bool UpdateLastLoginTime(Guid userGuid, DateTime lastLoginTime)
+        public async Task<bool> UpdateLastLoginTime(
+            Guid userGuid, 
+            DateTime lastLoginTime,
+            CancellationToken cancellationToken)
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -749,41 +872,41 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 "mp_Users_UpdateLastLoginTime", 
                 2);
 
-            sph.DefineSqlParameter("@UserID", SqlDbType.UniqueIdentifier, ParameterDirection.Input, userGuid);
-            sph.DefineSqlParameter("@LastLoginTime", SqlDbType.DateTime, ParameterDirection.Input, lastLoginTime);
-            int rowsAffected = sph.ExecuteNonQuery();
-            return (rowsAffected > -1);
-        }
-
-        public bool UpdateLastPasswordChangeTime(Guid userGuid, DateTime lastPasswordChangeTime)
-        {
-            SqlParameterHelper sph = new SqlParameterHelper(
-                logFactory,
-                writeConnectionString, 
-                "mp_Users_UpdateLastPasswordChangeTime", 
-                2);
-
-            sph.DefineSqlParameter("@UserID", SqlDbType.UniqueIdentifier, ParameterDirection.Input, userGuid);
-            sph.DefineSqlParameter("@PasswordChangeTime", SqlDbType.DateTime, ParameterDirection.Input, lastPasswordChangeTime);
-            int rowsAffected = sph.ExecuteNonQuery();
-            return (rowsAffected > -1);
-        }
-
-        public bool UpdateFailedPasswordAttemptStartWindow(
-            Guid userGuid,
-            DateTime windowStartTime)
-        {
-            SqlParameterHelper sph = new SqlParameterHelper(
-                logFactory,
-                writeConnectionString, 
-                "mp_Users_SetFailedPasswordAttemptStartWindow", 
-                2);
-
             sph.DefineSqlParameter("@UserGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, userGuid);
-            sph.DefineSqlParameter("@WindowStartTime", SqlDbType.DateTime, ParameterDirection.Input, windowStartTime);
-            int rowsAffected = sph.ExecuteNonQuery();
+            sph.DefineSqlParameter("@LastLoginTime", SqlDbType.DateTime, ParameterDirection.Input, lastLoginTime);
+            int rowsAffected = await sph.ExecuteNonQueryAsync(cancellationToken);
             return (rowsAffected > -1);
         }
+
+        //public bool UpdateLastPasswordChangeTime(Guid userGuid, DateTime lastPasswordChangeTime)
+        //{
+        //    SqlParameterHelper sph = new SqlParameterHelper(
+        //        logFactory,
+        //        writeConnectionString, 
+        //        "mp_Users_UpdateLastPasswordChangeTime", 
+        //        2);
+
+        //    sph.DefineSqlParameter("@UserID", SqlDbType.UniqueIdentifier, ParameterDirection.Input, userGuid);
+        //    sph.DefineSqlParameter("@PasswordChangeTime", SqlDbType.DateTime, ParameterDirection.Input, lastPasswordChangeTime);
+        //    int rowsAffected = sph.ExecuteNonQuery();
+        //    return (rowsAffected > -1);
+        //}
+
+        //public bool UpdateFailedPasswordAttemptStartWindow(
+        //    Guid userGuid,
+        //    DateTime windowStartTime)
+        //{
+        //    SqlParameterHelper sph = new SqlParameterHelper(
+        //        logFactory,
+        //        writeConnectionString, 
+        //        "mp_Users_SetFailedPasswordAttemptStartWindow", 
+        //        2);
+
+        //    sph.DefineSqlParameter("@UserGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, userGuid);
+        //    sph.DefineSqlParameter("@WindowStartTime", SqlDbType.DateTime, ParameterDirection.Input, windowStartTime);
+        //    int rowsAffected = sph.ExecuteNonQuery();
+        //    return (rowsAffected > -1);
+        //}
 
         public async Task<bool> UpdateFailedPasswordAttemptCount(
             Guid userGuid,
@@ -802,37 +925,37 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return (rowsAffected > -1);
         }
 
-        public bool UpdateFailedPasswordAnswerAttemptStartWindow(
-            Guid userGuid,
-            DateTime windowStartTime)
-        {
-            SqlParameterHelper sph = new SqlParameterHelper(
-                logFactory,
-                writeConnectionString, 
-                "mp_Users_SetFailedPasswordAnswerAttemptStartWindow", 
-                2);
+        //public bool UpdateFailedPasswordAnswerAttemptStartWindow(
+        //    Guid userGuid,
+        //    DateTime windowStartTime)
+        //{
+        //    SqlParameterHelper sph = new SqlParameterHelper(
+        //        logFactory,
+        //        writeConnectionString, 
+        //        "mp_Users_SetFailedPasswordAnswerAttemptStartWindow", 
+        //        2);
 
-            sph.DefineSqlParameter("@UserGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, userGuid);
-            sph.DefineSqlParameter("@WindowStartTime", SqlDbType.DateTime, ParameterDirection.Input, windowStartTime);
-            int rowsAffected = sph.ExecuteNonQuery();
-            return (rowsAffected > -1);
-        }
+        //    sph.DefineSqlParameter("@UserGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, userGuid);
+        //    sph.DefineSqlParameter("@WindowStartTime", SqlDbType.DateTime, ParameterDirection.Input, windowStartTime);
+        //    int rowsAffected = sph.ExecuteNonQuery();
+        //    return (rowsAffected > -1);
+        //}
 
-        public bool UpdateFailedPasswordAnswerAttemptCount(
-            Guid userGuid,
-            int attemptCount)
-        {
-            SqlParameterHelper sph = new SqlParameterHelper(
-                logFactory,
-                writeConnectionString, 
-                "mp_Users_SetFailedPasswordAnswerAttemptCount", 
-                2);
+        //public bool UpdateFailedPasswordAnswerAttemptCount(
+        //    Guid userGuid,
+        //    int attemptCount)
+        //{
+        //    SqlParameterHelper sph = new SqlParameterHelper(
+        //        logFactory,
+        //        writeConnectionString, 
+        //        "mp_Users_SetFailedPasswordAnswerAttemptCount", 
+        //        2);
 
-            sph.DefineSqlParameter("@UserGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, userGuid);
-            sph.DefineSqlParameter("@AttemptCount", SqlDbType.Int, ParameterDirection.Input, attemptCount);
-            int rowsAffected = sph.ExecuteNonQuery();
-            return (rowsAffected > -1);
-        }
+        //    sph.DefineSqlParameter("@UserGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, userGuid);
+        //    sph.DefineSqlParameter("@AttemptCount", SqlDbType.Int, ParameterDirection.Input, attemptCount);
+        //    int rowsAffected = sph.ExecuteNonQuery();
+        //    return (rowsAffected > -1);
+        //}
 
         public async Task<bool> AccountLockout(
             Guid userGuid, 
@@ -866,39 +989,39 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return (rowsAffected > -1);
         }
 
-        public async Task<bool> SetRegistrationConfirmationGuid(
-            Guid userGuid, 
-            Guid registrationConfirmationGuid,
-            CancellationToken cancellationToken)
-        {
-            SqlParameterHelper sph = new SqlParameterHelper(
-                logFactory,
-                writeConnectionString, 
-                "mp_Users_SetRegistrationConfirmationGuid", 
-                2);
+        //public async Task<bool> SetRegistrationConfirmationGuid(
+        //    Guid userGuid, 
+        //    Guid registrationConfirmationGuid,
+        //    CancellationToken cancellationToken)
+        //{
+        //    SqlParameterHelper sph = new SqlParameterHelper(
+        //        logFactory,
+        //        writeConnectionString, 
+        //        "mp_Users_SetRegistrationConfirmationGuid", 
+        //        2);
 
-            sph.DefineSqlParameter("@UserGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, userGuid);
-            sph.DefineSqlParameter("@RegisterConfirmGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, registrationConfirmationGuid);
-            int rowsAffected = await sph.ExecuteNonQueryAsync(cancellationToken);
-            return (rowsAffected > -1);
-        }
+        //    sph.DefineSqlParameter("@UserGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, userGuid);
+        //    sph.DefineSqlParameter("@RegisterConfirmGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, registrationConfirmationGuid);
+        //    int rowsAffected = await sph.ExecuteNonQueryAsync(cancellationToken);
+        //    return (rowsAffected > -1);
+        //}
 
-        public async Task<bool> ConfirmRegistration(
-            Guid emptyGuid, 
-            Guid registrationConfirmationGuid,
-            CancellationToken cancellationToken)
-        {
-            SqlParameterHelper sph = new SqlParameterHelper(
-                logFactory,
-                writeConnectionString, 
-                "mp_Users_ConfirmRegistration", 
-                2);
+        //public async Task<bool> ConfirmRegistration(
+        //    Guid emptyGuid, 
+        //    Guid registrationConfirmationGuid,
+        //    CancellationToken cancellationToken)
+        //{
+        //    SqlParameterHelper sph = new SqlParameterHelper(
+        //        logFactory,
+        //        writeConnectionString, 
+        //        "mp_Users_ConfirmRegistration", 
+        //        2);
 
-            sph.DefineSqlParameter("@EmptyGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, emptyGuid);
-            sph.DefineSqlParameter("@RegisterConfirmGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, registrationConfirmationGuid);
-            int rowsAffected = await sph.ExecuteNonQueryAsync(cancellationToken);
-            return (rowsAffected > -1);
-        }
+        //    sph.DefineSqlParameter("@EmptyGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, emptyGuid);
+        //    sph.DefineSqlParameter("@RegisterConfirmGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, registrationConfirmationGuid);
+        //    int rowsAffected = await sph.ExecuteNonQueryAsync(cancellationToken);
+        //    return (rowsAffected > -1);
+        //}
 
         //public bool UpdatePasswordAndSalt(
         //    int userId,
@@ -920,23 +1043,23 @@ namespace cloudscribe.Core.Repositories.MSSQL
         //    return (rowsAffected > -1);
         //}
 
-        public bool UpdatePasswordQuestionAndAnswer(
-            Guid userGuid,
-            string passwordQuestion,
-            string passwordAnswer)
-        {
-            SqlParameterHelper sph = new SqlParameterHelper(
-                logFactory,
-                writeConnectionString, 
-                "mp_Users_UpdatePasswordQuestionAndAnswer", 
-                3);
+        //public bool UpdatePasswordQuestionAndAnswer(
+        //    Guid userGuid,
+        //    string passwordQuestion,
+        //    string passwordAnswer)
+        //{
+        //    SqlParameterHelper sph = new SqlParameterHelper(
+        //        logFactory,
+        //        writeConnectionString, 
+        //        "mp_Users_UpdatePasswordQuestionAndAnswer", 
+        //        3);
 
-            sph.DefineSqlParameter("@UserGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, userGuid);
-            sph.DefineSqlParameter("@PasswordQuestion", SqlDbType.NVarChar, 255, ParameterDirection.Input, passwordQuestion);
-            sph.DefineSqlParameter("@PasswordAnswer", SqlDbType.NVarChar, 255, ParameterDirection.Input, passwordAnswer);
-            int rowsAffected = sph.ExecuteNonQuery();
-            return (rowsAffected > -1);
-        }
+        //    sph.DefineSqlParameter("@UserGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, userGuid);
+        //    sph.DefineSqlParameter("@PasswordQuestion", SqlDbType.NVarChar, 255, ParameterDirection.Input, passwordQuestion);
+        //    sph.DefineSqlParameter("@PasswordAnswer", SqlDbType.NVarChar, 255, ParameterDirection.Input, passwordAnswer);
+        //    int rowsAffected = sph.ExecuteNonQuery();
+        //    return (rowsAffected > -1);
+        //}
 
         //public async Task<bool> UpdateTotalRevenue(Guid userGuid)
         //{
@@ -994,31 +1117,31 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return (rowsAffected > -1);
         }
 
-        public bool IncrementTotalPosts(int userId)
-        {
-            SqlParameterHelper sph = new SqlParameterHelper(
-                logFactory,
-                writeConnectionString, 
-                "mp_Users_IncrementTotalPosts", 
-                1);
+        //public bool IncrementTotalPosts(int userId)
+        //{
+        //    SqlParameterHelper sph = new SqlParameterHelper(
+        //        logFactory,
+        //        writeConnectionString, 
+        //        "mp_Users_IncrementTotalPosts", 
+        //        1);
 
-            sph.DefineSqlParameter("@UserID", SqlDbType.Int, ParameterDirection.Input, userId);
-            int rowsAffected = sph.ExecuteNonQuery();
-            return (rowsAffected > -1);
-        }
+        //    sph.DefineSqlParameter("@UserID", SqlDbType.Int, ParameterDirection.Input, userId);
+        //    int rowsAffected = sph.ExecuteNonQuery();
+        //    return (rowsAffected > -1);
+        //}
 
-        public bool DecrementTotalPosts(int userId)
-        {
-            SqlParameterHelper sph = new SqlParameterHelper(
-                logFactory,
-                writeConnectionString, 
-                "mp_Users_DecrementTotalPosts", 
-                1);
+        //public bool DecrementTotalPosts(int userId)
+        //{
+        //    SqlParameterHelper sph = new SqlParameterHelper(
+        //        logFactory,
+        //        writeConnectionString, 
+        //        "mp_Users_DecrementTotalPosts", 
+        //        1);
 
-            sph.DefineSqlParameter("@UserID", SqlDbType.Int, ParameterDirection.Input, userId);
-            int rowsAffected = sph.ExecuteNonQuery();
-            return (rowsAffected > -1);
-        }
+        //    sph.DefineSqlParameter("@UserID", SqlDbType.Int, ParameterDirection.Input, userId);
+        //    int rowsAffected = sph.ExecuteNonQuery();
+        //    return (rowsAffected > -1);
+        //}
 
         public async Task<DbDataReader> GetRolesByUser(
             int siteId, 
@@ -1144,57 +1267,57 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return await sph.ExecuteReaderAsync(cancellationToken);
         }
 
-        public Guid GetUserGuidFromOpenId(
-            int siteId,
-            string openIduri)
-        {
-            SqlParameterHelper sph = new SqlParameterHelper(
-                logFactory,
-                readConnectionString, 
-                "mp_Users_SelectGuidByOpenIDURI", 
-                2);
+        //public Guid GetUserGuidFromOpenId(
+        //    int siteId,
+        //    string openIduri)
+        //{
+        //    SqlParameterHelper sph = new SqlParameterHelper(
+        //        logFactory,
+        //        readConnectionString, 
+        //        "mp_Users_SelectGuidByOpenIDURI", 
+        //        2);
 
-            sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
-            sph.DefineSqlParameter("@OpenIDURI", SqlDbType.NVarChar, 100, ParameterDirection.Input, openIduri);
+        //    sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
+        //    sph.DefineSqlParameter("@OpenIDURI", SqlDbType.NVarChar, 100, ParameterDirection.Input, openIduri);
 
-            Guid userGuid = Guid.Empty;
+        //    Guid userGuid = Guid.Empty;
 
-            using (DbDataReader reader = sph.ExecuteReader())
-            {
-                if (reader.Read())
-                {
-                    userGuid = new Guid(reader["UserGuid"].ToString());
-                }
-            }
+        //    using (DbDataReader reader = sph.ExecuteReader())
+        //    {
+        //        if (reader.Read())
+        //        {
+        //            userGuid = new Guid(reader["UserGuid"].ToString());
+        //        }
+        //    }
 
-            return userGuid;
-        }
+        //    return userGuid;
+        //}
 
-        public Guid GetUserGuidFromWindowsLiveId(
-            int siteId,
-            string windowsLiveId)
-        {
-            SqlParameterHelper sph = new SqlParameterHelper(
-                logFactory,
-                readConnectionString, 
-                "mp_Users_SelectGuidByWindowsLiveID", 
-                2);
+        //public Guid GetUserGuidFromWindowsLiveId(
+        //    int siteId,
+        //    string windowsLiveId)
+        //{
+        //    SqlParameterHelper sph = new SqlParameterHelper(
+        //        logFactory,
+        //        readConnectionString, 
+        //        "mp_Users_SelectGuidByWindowsLiveID", 
+        //        2);
 
-            sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
-            sph.DefineSqlParameter("@WindowsLiveID", SqlDbType.NVarChar, 100, ParameterDirection.Input, windowsLiveId);
+        //    sph.DefineSqlParameter("@SiteID", SqlDbType.Int, ParameterDirection.Input, siteId);
+        //    sph.DefineSqlParameter("@WindowsLiveID", SqlDbType.NVarChar, 100, ParameterDirection.Input, windowsLiveId);
 
-            Guid userGuid = Guid.Empty;
+        //    Guid userGuid = Guid.Empty;
 
-            using (DbDataReader reader = sph.ExecuteReader())
-            {
-                if (reader.Read())
-                {
-                    userGuid = new Guid(reader["UserGuid"].ToString());
-                }
-            }
+        //    using (DbDataReader reader = sph.ExecuteReader())
+        //    {
+        //        if (reader.Read())
+        //        {
+        //            userGuid = new Guid(reader["UserGuid"].ToString());
+        //        }
+        //    }
 
-            return userGuid;
-        }
+        //    return userGuid;
+        //}
 
         public string LoginByEmail(int siteId, string email, string password)
         {

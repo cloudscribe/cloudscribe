@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-18
-// Last Modified:			2016-01-07
+// Last Modified:			2016-01-28
 // 
 
 
@@ -53,7 +53,9 @@ namespace cloudscribe.Core.Repositories.pgsql
 
         #region User 
 
-        public async Task<bool> Save(ISiteUser user, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> Save(
+            ISiteUser user, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             if (user.SiteId == -1) { throw new ArgumentException("user must have a siteid"); }
             if (user.SiteGuid == Guid.Empty) { throw new ArgumentException("user must have a siteguid"); }
@@ -94,6 +96,9 @@ namespace cloudscribe.Core.Repositories.pgsql
                     user.Signature,
                     user.AuthorBio,
                     user.Comment,
+                    user.NormalizedUserName,
+                    user.NormalizedEmail,
+                    user.CanAutoLockout,
                     cancellationToken
 
                     );
@@ -110,7 +115,9 @@ namespace cloudscribe.Core.Repositories.pgsql
 
         }
 
-        private async Task<bool> Update(ISiteUser user, CancellationToken cancellationToken = default(CancellationToken))
+        private async Task<bool> Update(
+            ISiteUser user, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (string.IsNullOrEmpty(user.NormalizedEmail)) { user.NormalizedEmail = user.Email.ToLowerInvariant(); }
@@ -136,8 +143,6 @@ namespace cloudscribe.Core.Repositories.pgsql
                     user.LastName,
                     user.TimeZoneId,
                     user.NewEmail,
-                    user.EmailChangeGuid,
-                    user.PasswordResetGuid,
                     user.RolesChanged,
                     user.AuthorBio,
                     user.DateOfBirth,
@@ -149,6 +154,10 @@ namespace cloudscribe.Core.Repositories.pgsql
                     user.TwoFactorEnabled,
                     user.LockoutEndDateUtc,
                     user.IsLockedOut,
+                    user.NormalizedUserName,
+                    user.NewEmailApproved,
+                    user.CanAutoLockout,
+                    user.LastPasswordChangedDate,
                     cancellationToken
                     );
 
@@ -210,35 +219,7 @@ namespace cloudscribe.Core.Repositories.pgsql
             return await dbSiteUser.FlagAsNotDeleted(userId, cancellationToken);
         }
 
-        public async Task<bool> SetRegistrationConfirmationGuid(
-            Guid userGuid,
-            Guid registrationConfirmationGuid,
-            CancellationToken cancellationToken)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (registrationConfirmationGuid == Guid.Empty)
-            {
-                return false;
-            }
-
-            return await dbSiteUser.SetRegistrationConfirmationGuid(userGuid, registrationConfirmationGuid, cancellationToken);
-        }
-
-        public async Task<bool> ConfirmRegistration(
-            Guid registrationGuid, 
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-
-            if (registrationGuid == Guid.Empty)
-            {
-                return false;
-            }
-
-            return await dbSiteUser.ConfirmRegistration(Guid.Empty, registrationGuid, cancellationToken);
-        }
-
-
+        
         public async Task<bool> LockoutAccount(
             Guid userGuid, 
             CancellationToken cancellationToken = default(CancellationToken))
@@ -264,7 +245,14 @@ namespace cloudscribe.Core.Repositories.pgsql
             return await dbSiteUser.UpdateFailedPasswordAttemptCount(userGuid, failedPasswordAttemptCount, cancellationToken);
         }
 
-        
+        public async Task<bool> UpdateLastLoginTime(
+            Guid userGuid,
+            DateTime lastLoginTime,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            return await dbSiteUser.UpdateLastLoginTime(userGuid, lastLoginTime, cancellationToken);
+        }
 
         public int GetCount(int siteId)
         {
@@ -339,29 +327,7 @@ namespace cloudscribe.Core.Repositories.pgsql
             return null;
         }
 
-        public async Task<ISiteUser> FetchByConfirmationGuid(
-            int siteId, 
-            Guid confirmGuid, 
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            using (DbDataReader reader = await dbSiteUser.GetUserByRegistrationGuid(siteId, confirmGuid, cancellationToken))
-            {
-                if (reader.Read())
-                {
-                    SiteUser user = new SiteUser();
-
-                    user.LoadFromReader(reader);
-
-                    if (user.SiteId == siteId) { return user; }
-
-                }
-            }
-
-            return null;
-        }
-
-
+        
         public async Task<ISiteUser> Fetch(
             int siteId, 
             string email, 
@@ -587,7 +553,7 @@ namespace cloudscribe.Core.Repositories.pgsql
         }
 
 
-        public async Task<int> CountLockedOutUsers(
+        public async Task<int> CountLockedByAdmin(
             int siteId, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -595,7 +561,7 @@ namespace cloudscribe.Core.Repositories.pgsql
             return await dbSiteUser.CountLockedOutUsers(siteId, cancellationToken);
         }
 
-        public async Task<List<IUserInfo>> GetPageLockedOutUsers(
+        public async Task<List<IUserInfo>> GetPageLockedByAdmin(
             int siteId,
             int pageNumber,
             int pageSize,

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-18
-// Last Modified:			2016-01-07
+// Last Modified:			2016-01-28
 // 
 
 
@@ -54,7 +54,9 @@ namespace cloudscribe.Core.Repositories.SQLite
 
         #region User 
 
-        public async Task<bool> Save(ISiteUser user, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> Save(
+            ISiteUser user, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             if (user.SiteId == -1) { throw new ArgumentException("user must have a siteid"); }
             if (user.SiteGuid == Guid.Empty) { throw new ArgumentException("user must have a siteguid"); }
@@ -94,7 +96,10 @@ namespace cloudscribe.Core.Repositories.SQLite
                     user.AvatarUrl,
                     user.Signature,
                     user.AuthorBio,
-                    user.Comment
+                    user.Comment,
+                    user.NormalizedUserName,
+                    user.NormalizedEmail,
+                    user.CanAutoLockout
 
                     );
 
@@ -109,11 +114,12 @@ namespace cloudscribe.Core.Repositories.SQLite
 
         }
 
-        private bool Update(ISiteUser user, CancellationToken cancellationToken = default(CancellationToken))
+        private bool Update(
+            ISiteUser user, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            if (string.IsNullOrEmpty(user.NormalizedEmail)) { user.NormalizedEmail = user.Email.ToLowerInvariant(); }
-
+           
             return dbSiteUser.UpdateUser(
                     user.UserId,
                     user.DisplayName,
@@ -135,8 +141,6 @@ namespace cloudscribe.Core.Repositories.SQLite
                     user.LastName,
                     user.TimeZoneId,
                     user.NewEmail,
-                    user.EmailChangeGuid,
-                    user.PasswordResetGuid,
                     user.RolesChanged,
                     user.AuthorBio,
                     user.DateOfBirth,
@@ -147,14 +151,21 @@ namespace cloudscribe.Core.Repositories.SQLite
                     user.PhoneNumberConfirmed,
                     user.TwoFactorEnabled,
                     user.LockoutEndDateUtc,
-                    user.IsLockedOut
+                    user.IsLockedOut,
+                    user.NormalizedUserName,
+                    user.NewEmailApproved,
+                    user.CanAutoLockout,
+                    user.LastPasswordChangedDate
                     );
 
         }
 
         
 
-        public async Task<bool> Delete(int siteId, int userId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> Delete(
+            int siteId, 
+            int userId, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
             ISiteUser user = await Fetch(siteId, userId);
@@ -168,7 +179,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             return dbSiteUser.DeleteUser(userId);
         }
 
-        public async Task<bool> DeleteUsersBySite(int siteId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> DeleteUsersBySite(
+            int siteId, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
             bool result = await DeleteLoginsBySite(siteId);
@@ -178,52 +191,33 @@ namespace cloudscribe.Core.Repositories.SQLite
             return dbSiteUser.DeleteUsersBySite(siteId);
         }
 
-        public async Task<bool> FlagAsDeleted(int userId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> FlagAsDeleted(
+            int userId, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
             return dbSiteUser.FlagAsDeleted(userId);
         }
 
-        public async Task<bool> FlagAsNotDeleted(int userId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> FlagAsNotDeleted(
+            int userId, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
             return dbSiteUser.FlagAsNotDeleted(userId);
         }
-
-        public async Task<bool> SetRegistrationConfirmationGuid(
-            Guid userGuid,
-            Guid registrationConfirmationGuid,
-            CancellationToken cancellationToken)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (registrationConfirmationGuid == Guid.Empty)
-            {
-                return false;
-            }
-
-            return dbSiteUser.SetRegistrationConfirmationGuid(userGuid, registrationConfirmationGuid);
-        }
-
-        public async Task<bool> ConfirmRegistration(Guid registrationGuid, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-
-            if (registrationGuid == Guid.Empty)
-            {
-                return false;
-            }
-
-            return dbSiteUser.ConfirmRegistration(Guid.Empty, registrationGuid);
-        }
-
-
-        public async Task<bool> LockoutAccount(Guid userGuid, CancellationToken cancellationToken = default(CancellationToken))
+        
+        public async Task<bool> LockoutAccount(
+            Guid userGuid, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
             return dbSiteUser.AccountLockout(userGuid, DateTime.UtcNow);
         }
 
-        public async Task<bool> UnLockAccount(Guid userGuid, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> UnLockAccount(
+            Guid userGuid, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
             return dbSiteUser.AccountClearLockout(userGuid);
@@ -238,7 +232,16 @@ namespace cloudscribe.Core.Repositories.SQLite
             return dbSiteUser.UpdateFailedPasswordAttemptCount(userGuid, failedPasswordAttemptCount);
         }
 
-        
+        public async Task<bool> UpdateLastLoginTime(
+            Guid userGuid,
+            DateTime lastLoginTime,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            return dbSiteUser.UpdateLastLoginTime(userGuid, lastLoginTime);
+        }
+
+
 
         public int GetCount(int siteId)
         {
@@ -268,7 +271,10 @@ namespace cloudscribe.Core.Repositories.SQLite
         //    return await Fetch(siteId, newestUserId);
         //}
 
-        public async Task<ISiteUser> Fetch(int siteId, int userId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<ISiteUser> Fetch(
+            int siteId, 
+            int userId, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
             using (DbDataReader reader = dbSiteUser.GetSingleUser(userId))
@@ -288,7 +294,10 @@ namespace cloudscribe.Core.Repositories.SQLite
         }
 
 
-        public async Task<ISiteUser> Fetch(int siteId, Guid userGuid, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<ISiteUser> Fetch(
+            int siteId, 
+            Guid userGuid, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -308,27 +317,12 @@ namespace cloudscribe.Core.Repositories.SQLite
             return null;
         }
 
-        public async Task<ISiteUser> FetchByConfirmationGuid(int siteId, Guid confirmGuid, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            using (DbDataReader reader = dbSiteUser.GetUserByRegistrationGuid(siteId, confirmGuid))
-            {
-                if (reader.Read())
-                {
-                    SiteUser user = new SiteUser();
+        
 
-                    user.LoadFromReader(reader);
-
-                    if (user.SiteId == siteId) { return user; }
-
-                }
-            }
-
-            return null;
-        }
-
-
-        public async Task<ISiteUser> Fetch(int siteId, string email, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<ISiteUser> Fetch(
+            int siteId, 
+            string email, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
             using (DbDataReader reader = dbSiteUser.GetSingleUser(siteId, email))
@@ -347,7 +341,11 @@ namespace cloudscribe.Core.Repositories.SQLite
             return null;
         }
 
-        public async Task<ISiteUser> FetchByLoginName(int siteId, string userName, bool allowEmailFallback, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<ISiteUser> FetchByLoginName(
+            int siteId, 
+            string userName, 
+            bool allowEmailFallback, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
             using (DbDataReader reader = dbSiteUser.GetSingleUserByLoginName(siteId, userName, allowEmailFallback))
@@ -366,7 +364,10 @@ namespace cloudscribe.Core.Repositories.SQLite
             return null;
         }
         
-        public async Task<List<IUserInfo>> GetByIPAddress(Guid siteGuid, string ipv4Address, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<List<IUserInfo>> GetByIPAddress(
+            Guid siteGuid, 
+            string ipv4Address, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
             List<IUserInfo> userList = new List<IUserInfo>();
@@ -384,7 +385,9 @@ namespace cloudscribe.Core.Repositories.SQLite
             return userList;
         }
 
-        public async Task<List<IUserInfo>> GetCrossSiteUserListByEmail(string email, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<List<IUserInfo>> GetCrossSiteUserListByEmail(
+            string email, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
             List<IUserInfo> userList = new List<IUserInfo>();
@@ -402,7 +405,10 @@ namespace cloudscribe.Core.Repositories.SQLite
             return userList;
         }
 
-        public async Task<int> CountUsers(int siteId, string userNameBeginsWith, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<int> CountUsers(
+            int siteId, 
+            string userNameBeginsWith, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
             return dbSiteUser.CountUsers(siteId, userNameBeginsWith);
@@ -515,13 +521,13 @@ namespace cloudscribe.Core.Repositories.SQLite
 
         }
 
-        public async Task<int> CountLockedOutUsers(int siteId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<int> CountLockedByAdmin(int siteId, CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
             return dbSiteUser.CountLockedOutUsers(siteId);
         }
 
-        public async Task<List<IUserInfo>> GetPageLockedOutUsers(
+        public async Task<List<IUserInfo>> GetPageLockedByAdmin(
             int siteId,
             int pageNumber,
             int pageSize,

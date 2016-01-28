@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2016-01-07
+// Last Modified:			2016-01-28
 // 
 
 using cloudscribe.DbHelpers;
@@ -99,62 +99,62 @@ namespace cloudscribe.Core.Repositories.MySql
 
         }
 
-        public DbDataReader GetSmartDropDownData(int siteId, string query, int rowsToGet)
-        {
+        //public DbDataReader GetSmartDropDownData(int siteId, string query, int rowsToGet)
+        //{
 
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("SELECT ");
-            sqlCommand.Append("UserID, ");
-            sqlCommand.Append("UserGuid, ");
-            sqlCommand.Append("Email, ");
-            sqlCommand.Append("FirstName, ");
-            sqlCommand.Append("LastName, ");
-            sqlCommand.Append("Name As SiteUser ");
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("SELECT ");
+        //    sqlCommand.Append("UserID, ");
+        //    sqlCommand.Append("UserGuid, ");
+        //    sqlCommand.Append("Email, ");
+        //    sqlCommand.Append("FirstName, ");
+        //    sqlCommand.Append("LastName, ");
+        //    sqlCommand.Append("Name As SiteUser ");
 
-            sqlCommand.Append("FROM mp_Users ");
+        //    sqlCommand.Append("FROM mp_Users ");
 
-            sqlCommand.Append("WHERE SiteID = ?SiteID ");
-            sqlCommand.Append("AND IsDeleted = 0 ");
-            sqlCommand.Append("AND (");
-            sqlCommand.Append("(Name LIKE ?Query) ");
-            sqlCommand.Append("OR (FirstName LIKE ?Query) ");
-            sqlCommand.Append("OR (LastName LIKE ?Query) ");
-            sqlCommand.Append(") ");
+        //    sqlCommand.Append("WHERE SiteID = ?SiteID ");
+        //    sqlCommand.Append("AND IsDeleted = 0 ");
+        //    sqlCommand.Append("AND (");
+        //    sqlCommand.Append("(Name LIKE ?Query) ");
+        //    sqlCommand.Append("OR (FirstName LIKE ?Query) ");
+        //    sqlCommand.Append("OR (LastName LIKE ?Query) ");
+        //    sqlCommand.Append(") ");
 
-            sqlCommand.Append("UNION ");
+        //    sqlCommand.Append("UNION ");
 
-            sqlCommand.Append("SELECT ");
-            sqlCommand.Append("UserID, ");
-            sqlCommand.Append("UserGuid, ");
-            sqlCommand.Append("Email, ");
-            sqlCommand.Append("FirstName, ");
-            sqlCommand.Append("LastName, ");
-            sqlCommand.Append("Email As SiteUser ");
+        //    sqlCommand.Append("SELECT ");
+        //    sqlCommand.Append("UserID, ");
+        //    sqlCommand.Append("UserGuid, ");
+        //    sqlCommand.Append("Email, ");
+        //    sqlCommand.Append("FirstName, ");
+        //    sqlCommand.Append("LastName, ");
+        //    sqlCommand.Append("Email As SiteUser ");
 
-            sqlCommand.Append("FROM mp_Users ");
-            sqlCommand.Append("WHERE SiteID = ?SiteID ");
-            sqlCommand.Append("AND IsDeleted = 0 ");
-            sqlCommand.Append("AND Email LIKE ?Query ");
+        //    sqlCommand.Append("FROM mp_Users ");
+        //    sqlCommand.Append("WHERE SiteID = ?SiteID ");
+        //    sqlCommand.Append("AND IsDeleted = 0 ");
+        //    sqlCommand.Append("AND Email LIKE ?Query ");
 
-            sqlCommand.Append("ORDER BY SiteUser ");
-            sqlCommand.Append("LIMIT " + rowsToGet.ToString());
-            sqlCommand.Append(";");
+        //    sqlCommand.Append("ORDER BY SiteUser ");
+        //    sqlCommand.Append("LIMIT " + rowsToGet.ToString());
+        //    sqlCommand.Append(";");
 
-            MySqlParameter[] arParams = new MySqlParameter[2];
+        //    MySqlParameter[] arParams = new MySqlParameter[2];
 
-            arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
-            arParams[0].Value = siteId;
+        //    arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
+        //    arParams[0].Value = siteId;
 
-            arParams[1] = new MySqlParameter("?Query", MySqlDbType.VarChar, 50);
-            arParams[1].Value = query + "%";
+        //    arParams[1] = new MySqlParameter("?Query", MySqlDbType.VarChar, 50);
+        //    arParams[1].Value = query + "%";
 
-            return AdoHelper.ExecuteReader(
-                readConnectionString,
-                CommandType.Text,
-                sqlCommand.ToString(),
-                arParams);
+        //    return AdoHelper.ExecuteReader(
+        //        readConnectionString,
+        //        CommandType.Text,
+        //        sqlCommand.ToString(),
+        //        arParams);
 
-        }
+        //}
 
         public DbDataReader EmailLookup(int siteId, string query, int rowsToGet)
         {
@@ -327,78 +327,78 @@ namespace cloudscribe.Core.Repositories.MySql
 
         }
 
-        public int CountOnlineSince(int siteId, DateTime sinceTime)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("SELECT COUNT(*) FROM mp_Users WHERE SiteID = ?SiteID ");
-            sqlCommand.Append("AND LastActivityDate > ?SinceTime ;  ");
+        //public int CountOnlineSince(int siteId, DateTime sinceTime)
+        //{
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("SELECT COUNT(*) FROM mp_Users WHERE SiteID = ?SiteID ");
+        //    sqlCommand.Append("AND LastActivityDate > ?SinceTime ;  ");
 
-            MySqlParameter[] arParams = new MySqlParameter[2];
+        //    MySqlParameter[] arParams = new MySqlParameter[2];
 
-            arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
-            arParams[0].Value = siteId;
+        //    arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
+        //    arParams[0].Value = siteId;
 
-            arParams[1] = new MySqlParameter("?SinceTime", MySqlDbType.DateTime);
-            arParams[1].Value = sinceTime;
+        //    arParams[1] = new MySqlParameter("?SinceTime", MySqlDbType.DateTime);
+        //    arParams[1].Value = sinceTime;
 
-            int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
-                readConnectionString,
-                CommandType.Text,
-                sqlCommand.ToString(),
-                arParams).ToString());
+        //    int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
+        //        readConnectionString,
+        //        CommandType.Text,
+        //        sqlCommand.ToString(),
+        //        arParams).ToString());
 
-            return count;
+        //    return count;
 
-        }
+        //}
 
-        public DbDataReader GetUsersOnlineSince(int siteId, DateTime sinceTime)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("SELECT * FROM mp_Users WHERE SiteID = ?SiteID ");
-            sqlCommand.Append("AND LastActivityDate >= ?SinceTime   ");
-            sqlCommand.Append("AND DisplayInMemberList = 1 ");
-            sqlCommand.Append(";");
+        //public DbDataReader GetUsersOnlineSince(int siteId, DateTime sinceTime)
+        //{
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("SELECT * FROM mp_Users WHERE SiteID = ?SiteID ");
+        //    sqlCommand.Append("AND LastActivityDate >= ?SinceTime   ");
+        //    sqlCommand.Append("AND DisplayInMemberList = 1 ");
+        //    sqlCommand.Append(";");
 
-            MySqlParameter[] arParams = new MySqlParameter[2];
+        //    MySqlParameter[] arParams = new MySqlParameter[2];
 
-            arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
-            arParams[0].Value = siteId;
+        //    arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
+        //    arParams[0].Value = siteId;
 
-            arParams[1] = new MySqlParameter("?SinceTime", MySqlDbType.DateTime);
-            arParams[1].Value = sinceTime;
+        //    arParams[1] = new MySqlParameter("?SinceTime", MySqlDbType.DateTime);
+        //    arParams[1].Value = sinceTime;
 
-            return AdoHelper.ExecuteReader(
-                readConnectionString,
-                CommandType.Text,
-                sqlCommand.ToString(),
-                arParams);
+        //    return AdoHelper.ExecuteReader(
+        //        readConnectionString,
+        //        CommandType.Text,
+        //        sqlCommand.ToString(),
+        //        arParams);
 
 
-        }
+        //}
 
-        public DbDataReader GetTop50UsersOnlineSince(int siteId, DateTime sinceTime)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("SELECT * FROM mp_Users WHERE SiteID = ?SiteID ");
-            sqlCommand.Append("AND LastActivityDate >= ?SinceTime   ");
-            sqlCommand.Append("ORDER BY LastActivityDate desc   ");
-            sqlCommand.Append("LIMIT 50 ;   ");
+        //public DbDataReader GetTop50UsersOnlineSince(int siteId, DateTime sinceTime)
+        //{
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("SELECT * FROM mp_Users WHERE SiteID = ?SiteID ");
+        //    sqlCommand.Append("AND LastActivityDate >= ?SinceTime   ");
+        //    sqlCommand.Append("ORDER BY LastActivityDate desc   ");
+        //    sqlCommand.Append("LIMIT 50 ;   ");
 
-            MySqlParameter[] arParams = new MySqlParameter[2];
+        //    MySqlParameter[] arParams = new MySqlParameter[2];
 
-            arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
-            arParams[0].Value = siteId;
+        //    arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
+        //    arParams[0].Value = siteId;
 
-            arParams[1] = new MySqlParameter("?SinceTime", MySqlDbType.DateTime);
-            arParams[1].Value = sinceTime;
+        //    arParams[1] = new MySqlParameter("?SinceTime", MySqlDbType.DateTime);
+        //    arParams[1].Value = sinceTime;
 
-            return AdoHelper.ExecuteReader(
-                readConnectionString,
-                CommandType.Text,
-                sqlCommand.ToString(),
-                arParams);
+        //    return AdoHelper.ExecuteReader(
+        //        readConnectionString,
+        //        CommandType.Text,
+        //        sqlCommand.ToString(),
+        //        arParams);
 
-        }
+        //}
 
         public async Task<int> GetNewestUserId(
             int siteId,
@@ -859,7 +859,7 @@ namespace cloudscribe.Core.Repositories.MySql
             string firstName,
             string lastName,
             string timeZoneId,
-            DateTime dateOfBirth,
+            DateTime? dateOfBirth,
             bool emailConfirmed,
             string passwordHash,
             string securityStamp,
@@ -867,7 +867,6 @@ namespace cloudscribe.Core.Repositories.MySql
             bool phoneNumberConfirmed,
             bool twoFactorEnabled,
             DateTime? lockoutEndDateUtc,
-
             bool accountApproved,
             bool isLockedOut,
             bool displayInMemberList,
@@ -878,6 +877,11 @@ namespace cloudscribe.Core.Repositories.MySql
             string signature,
             string authorBio,
             string comment,
+
+            string normalizedUserName,
+            string loweredEmail,
+            bool canAutoLockout,
+
             CancellationToken cancellationToken
             )
         {
@@ -892,8 +896,6 @@ namespace cloudscribe.Core.Repositories.MySql
             sqlCommand.Append("FirstName, ");
             sqlCommand.Append("LastName, ");
             sqlCommand.Append("TimeZoneId, ");
-            sqlCommand.Append("EmailChangeGuid, ");
-            sqlCommand.Append("PasswordResetGuid, ");
             sqlCommand.Append("MustChangePwd, ");
             sqlCommand.Append("RolesChanged, ");
             sqlCommand.Append("DateCreated, ");
@@ -905,7 +907,6 @@ namespace cloudscribe.Core.Repositories.MySql
             sqlCommand.Append("PhoneNumberConfirmed, ");
             sqlCommand.Append("TwoFactorEnabled, ");
             sqlCommand.Append("LockoutEndDateUtc, ");
-
             sqlCommand.Append("AccountApproved, ");
             sqlCommand.Append("IsLockedOut, ");
             sqlCommand.Append("DisplayInMemberList, ");
@@ -917,23 +918,25 @@ namespace cloudscribe.Core.Repositories.MySql
             sqlCommand.Append("AuthorBio, ");
             sqlCommand.Append("Comment, ");
 
+            sqlCommand.Append("NormalizedUserName, ");
+            sqlCommand.Append("LoweredEmail, ");
+            sqlCommand.Append("CanAutoLockout, ");
+
             sqlCommand.Append("UserGuid");
             sqlCommand.Append(")");
 
             sqlCommand.Append("VALUES (");
-            sqlCommand.Append(" ?SiteGuid , ");
-            sqlCommand.Append(" ?SiteID , ");
-            sqlCommand.Append(" ?FullName , ");
-            sqlCommand.Append(" ?LoginName , ");
-            sqlCommand.Append(" ?Email , ");
+            sqlCommand.Append("?SiteGuid , ");
+            sqlCommand.Append("?SiteID , ");
+            sqlCommand.Append("?FullName , ");
+            sqlCommand.Append("?LoginName , ");
+            sqlCommand.Append("?Email , ");
             sqlCommand.Append("?FirstName, ");
             sqlCommand.Append("?LastName, ");
             sqlCommand.Append("?TimeZoneId, ");
-            sqlCommand.Append("?EmailChangeGuid, ");
-            sqlCommand.Append("'00000000-0000-0000-0000-000000000000', "); //PasswordResetGuid
             sqlCommand.Append("?MustChangePwd, ");
-            sqlCommand.Append(" 0, "); //RolesChanged
-            sqlCommand.Append(" ?DateCreated, ");
+            sqlCommand.Append("0, "); //RolesChanged
+            sqlCommand.Append("?DateCreated, ");
             sqlCommand.Append("?DateOfBirth, ");
             sqlCommand.Append("?EmailConfirmed, ");
             sqlCommand.Append("?PasswordHash, ");
@@ -942,7 +945,6 @@ namespace cloudscribe.Core.Repositories.MySql
             sqlCommand.Append("?PhoneNumberConfirmed, ");
             sqlCommand.Append("?TwoFactorEnabled, ");
             sqlCommand.Append("?LockoutEndDateUtc, ");
-
             sqlCommand.Append("?AccountApproved, ");
             sqlCommand.Append("?IsLockedOut, ");
             sqlCommand.Append("?DisplayInMemberList, ");
@@ -954,12 +956,16 @@ namespace cloudscribe.Core.Repositories.MySql
             sqlCommand.Append("?AuthorBio, ");
             sqlCommand.Append("?Comment, ");
 
+            sqlCommand.Append("?NormalizedUserName, ");
+            sqlCommand.Append("?LoweredEmail, ");
+            sqlCommand.Append("?CanAutoLockout, ");
+
             sqlCommand.Append(" ?UserGuid ");
 
             sqlCommand.Append(");");
             sqlCommand.Append("SELECT LAST_INSERT_ID();");
 
-            MySqlParameter[] arParams = new MySqlParameter[30];
+            MySqlParameter[] arParams = new MySqlParameter[32];
 
             arParams[0] = new MySqlParameter("?FullName", MySqlDbType.VarChar, 100);
             arParams[0].Value = fullName;
@@ -993,77 +999,83 @@ namespace cloudscribe.Core.Repositories.MySql
 
             arParams[10] = new MySqlParameter("?TimeZoneId", MySqlDbType.VarChar, 100);
             arParams[10].Value = timeZoneId;
-
-            arParams[11] = new MySqlParameter("?EmailChangeGuid", MySqlDbType.VarChar, 36);
-            arParams[11].Value = Guid.Empty.ToString();
             
-            arParams[12] = new MySqlParameter("?DateOfBirth", MySqlDbType.DateTime);
-            if (dateOfBirth == DateTime.MinValue)
+            arParams[11] = new MySqlParameter("?DateOfBirth", MySqlDbType.DateTime);
+            if (!dateOfBirth.HasValue)
             {
-                arParams[12].Value = DBNull.Value;
+                arParams[11].Value = DBNull.Value;
             }
             else
             {
-                arParams[12].Value = dateOfBirth;
+                arParams[11].Value = dateOfBirth;
             }
 
-            arParams[13] = new MySqlParameter("?EmailConfirmed", MySqlDbType.Int32);
-            arParams[13].Value = emailConfirmed ? 1 : 0;
+            arParams[12] = new MySqlParameter("?EmailConfirmed", MySqlDbType.Int32);
+            arParams[12].Value = emailConfirmed ? 1 : 0;
             
-            arParams[14] = new MySqlParameter("?PasswordHash", MySqlDbType.Text);
-            arParams[14].Value = passwordHash;
+            arParams[13] = new MySqlParameter("?PasswordHash", MySqlDbType.Text);
+            arParams[13].Value = passwordHash;
 
-            arParams[15] = new MySqlParameter("?SecurityStamp", MySqlDbType.Text);
-            arParams[15].Value = securityStamp;
+            arParams[14] = new MySqlParameter("?SecurityStamp", MySqlDbType.Text);
+            arParams[14].Value = securityStamp;
 
-            arParams[16] = new MySqlParameter("?PhoneNumber", MySqlDbType.VarChar, 50);
-            arParams[16].Value = phoneNumber;
+            arParams[15] = new MySqlParameter("?PhoneNumber", MySqlDbType.VarChar, 50);
+            arParams[15].Value = phoneNumber;
 
-            arParams[17] = new MySqlParameter("?PhoneNumberConfirmed", MySqlDbType.Int32);
-            arParams[17].Value = phoneNumberConfirmed ? 1 : 0;
+            arParams[16] = new MySqlParameter("?PhoneNumberConfirmed", MySqlDbType.Int32);
+            arParams[16].Value = phoneNumberConfirmed ? 1 : 0;
 
-            arParams[18] = new MySqlParameter("?TwoFactorEnabled", MySqlDbType.Int32);
-            arParams[18].Value = twoFactorEnabled ? 1 : 0;
+            arParams[17] = new MySqlParameter("?TwoFactorEnabled", MySqlDbType.Int32);
+            arParams[17].Value = twoFactorEnabled ? 1 : 0;
 
-            arParams[19] = new MySqlParameter("?LockoutEndDateUtc", MySqlDbType.DateTime);
-            if (lockoutEndDateUtc == null)
+            arParams[18] = new MySqlParameter("?LockoutEndDateUtc", MySqlDbType.DateTime);
+            if (!lockoutEndDateUtc.HasValue)
             {
-                arParams[19].Value = DBNull.Value;
+                arParams[18].Value = DBNull.Value;
             }
             else
             {
-                arParams[19].Value = lockoutEndDateUtc;
+                arParams[18].Value = lockoutEndDateUtc;
             }
 
-            arParams[20] = new MySqlParameter("?AccountApproved", MySqlDbType.Int32);
-            arParams[20].Value = accountApproved ? 1 : 0;
+            arParams[19] = new MySqlParameter("?AccountApproved", MySqlDbType.Int32);
+            arParams[19].Value = accountApproved ? 1 : 0;
 
-            arParams[21] = new MySqlParameter("?IsLockedOut", MySqlDbType.Int32);
-            arParams[21].Value = isLockedOut ? 1 : 0;
+            arParams[20] = new MySqlParameter("?IsLockedOut", MySqlDbType.Int32);
+            arParams[20].Value = isLockedOut ? 1 : 0;
 
-            arParams[22] = new MySqlParameter("?DisplayInMemberList", MySqlDbType.Int32);
-            arParams[22].Value = displayInMemberList ? 1 : 0;
+            arParams[21] = new MySqlParameter("?DisplayInMemberList", MySqlDbType.Int32);
+            arParams[21].Value = displayInMemberList ? 1 : 0;
 
-            arParams[23] = new MySqlParameter("?WebSiteURL", MySqlDbType.VarChar, 100);
-            arParams[23].Value = webSiteUrl;
+            arParams[22] = new MySqlParameter("?WebSiteURL", MySqlDbType.VarChar, 100);
+            arParams[22].Value = webSiteUrl;
 
-            arParams[24] = new MySqlParameter("?Country", MySqlDbType.VarChar, 100);
-            arParams[24].Value = country;
+            arParams[23] = new MySqlParameter("?Country", MySqlDbType.VarChar, 100);
+            arParams[23].Value = country;
 
-            arParams[25] = new MySqlParameter("?State", MySqlDbType.VarChar, 100);
-            arParams[25].Value = state;
+            arParams[24] = new MySqlParameter("?State", MySqlDbType.VarChar, 100);
+            arParams[24].Value = state;
 
-            arParams[26] = new MySqlParameter("?AvatarUrl", MySqlDbType.VarChar, 250);
-            arParams[26].Value = avatarUrl;
+            arParams[25] = new MySqlParameter("?AvatarUrl", MySqlDbType.VarChar, 250);
+            arParams[25].Value = avatarUrl;
 
-            arParams[27] = new MySqlParameter("?Signature", MySqlDbType.Text);
-            arParams[27].Value = signature;
+            arParams[26] = new MySqlParameter("?Signature", MySqlDbType.Text);
+            arParams[26].Value = signature;
 
-            arParams[28] = new MySqlParameter("?AuthorBio", MySqlDbType.Text);
-            arParams[28].Value = authorBio;
+            arParams[27] = new MySqlParameter("?AuthorBio", MySqlDbType.Text);
+            arParams[27].Value = authorBio;
 
-            arParams[29] = new MySqlParameter("?Comment", MySqlDbType.Text);
-            arParams[29].Value = comment;
+            arParams[28] = new MySqlParameter("?Comment", MySqlDbType.Text);
+            arParams[28].Value = comment;
+
+            arParams[29] = new MySqlParameter("?NormalizedUserName", MySqlDbType.VarChar, 50);
+            arParams[29].Value = normalizedUserName;
+
+            arParams[30] = new MySqlParameter("?LoweredEmail", MySqlDbType.VarChar, 50);
+            arParams[30].Value = loweredEmail;
+
+            arParams[31] = new MySqlParameter("?CanAutoLockout", MySqlDbType.Int32);
+            arParams[31].Value = canAutoLockout ? 1 : 0;
 
             object result = await AdoHelper.ExecuteScalarAsync(
                 writeConnectionString,
@@ -1099,11 +1111,9 @@ namespace cloudscribe.Core.Repositories.MySql
             string lastName,
             string timeZoneId,
             string newEmail,
-            Guid emailChangeGuid,
-            Guid passwordResetGuid,
             bool rolesChanged,
             string authorBio,
-            DateTime dateOfBirth,
+            DateTime? dateOfBirth,
             bool emailConfirmed,
             string passwordHash,
             string securityStamp,
@@ -1112,6 +1122,12 @@ namespace cloudscribe.Core.Repositories.MySql
             bool twoFactorEnabled,
             DateTime? lockoutEndDateUtc,
             bool isLockedOut,
+
+            string normalizedUserName,
+            bool newEmailApproved,
+            bool canAutoLockout,
+            DateTime? lastPasswordChangedDate,
+
             CancellationToken cancellationToken)
         {
             
@@ -1124,8 +1140,6 @@ namespace cloudscribe.Core.Repositories.MySql
             sqlCommand.Append("LastName = ?LastName,    ");
             sqlCommand.Append("TimeZoneId = ?TimeZoneId,    ");
             sqlCommand.Append("NewEmail = ?NewEmail,    ");
-            sqlCommand.Append("EmailChangeGuid = ?EmailChangeGuid,    ");
-            sqlCommand.Append("PasswordResetGuid = ?PasswordResetGuid,    ");
             sqlCommand.Append("MustChangePwd = ?MustChangePwd,    ");
             sqlCommand.Append("RolesChanged = ?RolesChanged,    ");
             sqlCommand.Append("Gender = ?Gender,    ");
@@ -1149,11 +1163,16 @@ namespace cloudscribe.Core.Repositories.MySql
             sqlCommand.Append("TwoFactorEnabled = ?TwoFactorEnabled, ");
             sqlCommand.Append("LockoutEndDateUtc = ?LockoutEndDateUtc, ");
 
+            sqlCommand.Append("NormalizedUserName = ?NormalizedUserName, ");
+            sqlCommand.Append("NewEmailApproved = ?NewEmailApproved, ");
+            sqlCommand.Append("CanAutoLockout = ?CanAutoLockout, ");
+            sqlCommand.Append("LastPasswordChangedDate = ?LastPasswordChangedDate, ");
+
             sqlCommand.Append("IsLockedOut = ?IsLockedOut ");
             
             sqlCommand.Append("WHERE UserID = ?UserID ;");
 
-            MySqlParameter[] arParams = new MySqlParameter[33];
+            MySqlParameter[] arParams = new MySqlParameter[35];
 
             arParams[0] = new MySqlParameter("?UserID", MySqlDbType.Int32);
             arParams[0].Value = userId;
@@ -1214,59 +1233,72 @@ namespace cloudscribe.Core.Repositories.MySql
             
             arParams[19] = new MySqlParameter("?NewEmail", MySqlDbType.VarChar, 100);
             arParams[19].Value = newEmail;
-
-            arParams[20] = new MySqlParameter("?EmailChangeGuid", MySqlDbType.VarChar, 36);
-            arParams[20].Value = emailChangeGuid.ToString();
-
-            arParams[21] = new MySqlParameter("?PasswordResetGuid", MySqlDbType.VarChar, 36);
-            arParams[21].Value = passwordResetGuid.ToString();
             
-            arParams[22] = new MySqlParameter("?RolesChanged", MySqlDbType.Int32);
-            arParams[22].Value = rolesChanged ? 1 : 0;
+            arParams[20] = new MySqlParameter("?RolesChanged", MySqlDbType.Int32);
+            arParams[20].Value = rolesChanged ? 1 : 0;
 
-            arParams[23] = new MySqlParameter("?AuthorBio", MySqlDbType.Text);
-            arParams[23].Value = authorBio;
+            arParams[21] = new MySqlParameter("?AuthorBio", MySqlDbType.Text);
+            arParams[21].Value = authorBio;
 
-            arParams[24] = new MySqlParameter("?DateOfBirth", MySqlDbType.DateTime);
-            if (dateOfBirth == DateTime.MinValue)
+            arParams[22] = new MySqlParameter("?DateOfBirth", MySqlDbType.DateTime);
+            if (!dateOfBirth.HasValue)
             {
-                arParams[24].Value = DBNull.Value;
+                arParams[22].Value = DBNull.Value;
             }
             else
             {
-                arParams[24].Value = dateOfBirth;
+                arParams[22].Value = dateOfBirth;
             }
 
-            arParams[25] = new MySqlParameter("?EmailConfirmed", MySqlDbType.Int32);
-            arParams[25].Value = emailConfirmed ? 1 : 0;
+            arParams[23] = new MySqlParameter("?EmailConfirmed", MySqlDbType.Int32);
+            arParams[23].Value = emailConfirmed ? 1 : 0;
             
-            arParams[26] = new MySqlParameter("?PasswordHash", MySqlDbType.Text);
-            arParams[26].Value = passwordHash;
+            arParams[24] = new MySqlParameter("?PasswordHash", MySqlDbType.Text);
+            arParams[24].Value = passwordHash;
 
-            arParams[27] = new MySqlParameter("?SecurityStamp", MySqlDbType.Text);
-            arParams[27].Value = securityStamp;
+            arParams[25] = new MySqlParameter("?SecurityStamp", MySqlDbType.Text);
+            arParams[25].Value = securityStamp;
 
-            arParams[28] = new MySqlParameter("?PhoneNumber", MySqlDbType.VarChar, 50);
-            arParams[28].Value = phoneNumber;
+            arParams[26] = new MySqlParameter("?PhoneNumber", MySqlDbType.VarChar, 50);
+            arParams[26].Value = phoneNumber;
 
-            arParams[29] = new MySqlParameter("?PhoneNumberConfirmed", MySqlDbType.Int32);
-            arParams[29].Value = phoneNumberConfirmed ? 1 : 0;
+            arParams[27] = new MySqlParameter("?PhoneNumberConfirmed", MySqlDbType.Int32);
+            arParams[27].Value = phoneNumberConfirmed ? 1 : 0;
 
-            arParams[30] = new MySqlParameter("?TwoFactorEnabled", MySqlDbType.Int32);
-            arParams[30].Value = twoFactorEnabled ? 1 : 0;
+            arParams[28] = new MySqlParameter("?TwoFactorEnabled", MySqlDbType.Int32);
+            arParams[28].Value = twoFactorEnabled ? 1 : 0;
 
-            arParams[31] = new MySqlParameter("?LockoutEndDateUtc", MySqlDbType.DateTime);
-            if (lockoutEndDateUtc == null)
+            arParams[29] = new MySqlParameter("?LockoutEndDateUtc", MySqlDbType.DateTime);
+            if (!lockoutEndDateUtc.HasValue)
             {
-                arParams[31].Value = DBNull.Value;
+                arParams[29].Value = DBNull.Value;
             }
             else
             {
-                arParams[31].Value = lockoutEndDateUtc;
+                arParams[29].Value = lockoutEndDateUtc;
             }
 
-            arParams[32] = new MySqlParameter("?IsLockedOut", MySqlDbType.Int32);
-            arParams[32].Value = isLockedOut ? 1 : 0;
+            arParams[30] = new MySqlParameter("?IsLockedOut", MySqlDbType.Int32);
+            arParams[30].Value = isLockedOut ? 1 : 0;
+
+            arParams[31] = new MySqlParameter("?NormalizedUserName", MySqlDbType.VarChar, 50);
+            arParams[31].Value = normalizedUserName;
+
+            arParams[32] = new MySqlParameter("?NewEmailApproved", MySqlDbType.Int32);
+            arParams[32].Value = newEmailApproved ? 1 : 0;
+
+            arParams[33] = new MySqlParameter("?CanAutoLockout", MySqlDbType.Int32);
+            arParams[33].Value = canAutoLockout ? 1 : 0;
+
+            arParams[34] = new MySqlParameter("?LastPasswordChangedDate", MySqlDbType.DateTime);
+            if (!lastPasswordChangedDate.HasValue)
+            {
+                arParams[34].Value = DBNull.Value;
+            }
+            else
+            {
+                arParams[34].Value = lastPasswordChangedDate;
+            }
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
@@ -1326,38 +1358,40 @@ namespace cloudscribe.Core.Repositories.MySql
             return (rowsAffected > 0);
         }
 
-        public bool UpdateLastActivityTime(Guid userGuid, DateTime lastUpdate)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("UPDATE mp_Users ");
-            sqlCommand.Append("SET LastActivityDate = ?LastUpdate  ");
-            sqlCommand.Append("WHERE UserGuid = ?UserGuid  ;");
+        //public bool UpdateLastActivityTime(Guid userGuid, DateTime lastUpdate)
+        //{
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("UPDATE mp_Users ");
+        //    sqlCommand.Append("SET LastActivityDate = ?LastUpdate  ");
+        //    sqlCommand.Append("WHERE UserGuid = ?UserGuid  ;");
 
-            MySqlParameter[] arParams = new MySqlParameter[2];
+        //    MySqlParameter[] arParams = new MySqlParameter[2];
 
-            arParams[0] = new MySqlParameter("?UserGuid", MySqlDbType.VarChar, 36);
-            arParams[0].Value = userGuid.ToString();
+        //    arParams[0] = new MySqlParameter("?UserGuid", MySqlDbType.VarChar, 36);
+        //    arParams[0].Value = userGuid.ToString();
 
-            arParams[1] = new MySqlParameter("?LastUpdate", MySqlDbType.DateTime);
-            arParams[1].Value = lastUpdate;
+        //    arParams[1] = new MySqlParameter("?LastUpdate", MySqlDbType.DateTime);
+        //    arParams[1].Value = lastUpdate;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
-                writeConnectionString,
-                CommandType.Text,
-                sqlCommand.ToString(),
-                arParams);
+        //    int rowsAffected = AdoHelper.ExecuteNonQuery(
+        //        writeConnectionString,
+        //        CommandType.Text,
+        //        sqlCommand.ToString(),
+        //        arParams);
 
-            return (rowsAffected > 0);
+        //    return (rowsAffected > 0);
 
-        }
+        //}
 
-        public bool UpdateLastLoginTime(Guid userGuid, DateTime lastLoginTime)
+        public async Task<bool> UpdateLastLoginTime(
+            Guid userGuid, 
+            DateTime lastLoginTime,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("UPDATE mp_Users ");
             sqlCommand.Append("SET LastLoginDate = ?LastLoginTime,  ");
-            sqlCommand.Append("FailedPasswordAttemptCount = 0, ");
-            sqlCommand.Append("FailedPwdAnswerAttemptCount = 0 ");
+            sqlCommand.Append("FailedPasswordAttemptCount = 0 ");
 
             sqlCommand.Append("WHERE UserGuid = ?UserGuid  ;");
 
@@ -1369,11 +1403,12 @@ namespace cloudscribe.Core.Repositories.MySql
             arParams[1] = new MySqlParameter("?LastLoginTime", MySqlDbType.DateTime);
             arParams[1].Value = lastLoginTime;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return (rowsAffected > 0);
 

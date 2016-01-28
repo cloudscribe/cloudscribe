@@ -142,7 +142,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
                     site.OidConnectAppSecret,
                     site.SmsClientId,
                     site.SmsSecureToken,
-                    site.SmsFrom,
+                    site.SmsFrom
                     );
 
                 result = site.SiteId > -1;

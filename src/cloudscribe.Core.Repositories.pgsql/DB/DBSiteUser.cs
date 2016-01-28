@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2016-01-07
+// Last Modified:			2016-01-28
 // 
 
 using cloudscribe.DbHelpers;
@@ -323,109 +323,88 @@ namespace cloudscribe.Core.Repositories.pgsql
         }
 
 
-        public int CountOnlineSince(int siteId, DateTime sinceTime)
-        {
-            NpgsqlParameter[] arParams = new NpgsqlParameter[2];
+        //public int CountOnlineSince(int siteId, DateTime sinceTime)
+        //{
+        //    NpgsqlParameter[] arParams = new NpgsqlParameter[2];
 
-            arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[0].Value = siteId;
+        //    arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
+        //    arParams[0].Value = siteId;
 
-            arParams[1] = new NpgsqlParameter("sincetime", NpgsqlTypes.NpgsqlDbType.Timestamp);
-            arParams[1].Value = sinceTime;
+        //    arParams[1] = new NpgsqlParameter("sincetime", NpgsqlTypes.NpgsqlDbType.Timestamp);
+        //    arParams[1].Value = sinceTime;
 
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("SELECT  Count(*) ");
-            sqlCommand.Append("FROM	mp_users ");
-            sqlCommand.Append("WHERE ");
-            sqlCommand.Append("siteid = :siteid ");
-            sqlCommand.Append("AND ");
-            sqlCommand.Append("lastactivitydate > :sincetime ");
-            sqlCommand.Append(";");
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("SELECT  Count(*) ");
+        //    sqlCommand.Append("FROM	mp_users ");
+        //    sqlCommand.Append("WHERE ");
+        //    sqlCommand.Append("siteid = :siteid ");
+        //    sqlCommand.Append("AND ");
+        //    sqlCommand.Append("lastactivitydate > :sincetime ");
+        //    sqlCommand.Append(";");
+            
+        //    int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
+        //        readConnectionString,
+        //        CommandType.Text,
+        //        sqlCommand.ToString(),
+        //        arParams));
 
-            //int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
-            //    readConnectionString,
-            //    CommandType.StoredProcedure,
-            //    "mp_users_countonlinesince(:siteid,:sincetime)", 
-            //    arParams));
+        //    return count;
 
-            int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
-                readConnectionString,
-                CommandType.Text,
-                sqlCommand.ToString(),
-                arParams));
+        //}
 
-            return count;
+        //public DbDataReader GetUsersOnlineSince(int siteId, DateTime sinceTime)
+        //{
+        //    NpgsqlParameter[] arParams = new NpgsqlParameter[2];
 
-        }
+        //    arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
+        //    arParams[0].Value = siteId;
 
-        public DbDataReader GetUsersOnlineSince(int siteId, DateTime sinceTime)
-        {
-            NpgsqlParameter[] arParams = new NpgsqlParameter[2];
+        //    arParams[1] = new NpgsqlParameter("sincetime", NpgsqlTypes.NpgsqlDbType.Timestamp);
+        //    arParams[1].Value = sinceTime;
 
-            arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[0].Value = siteId;
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("SELECT  * ");
+        //    sqlCommand.Append("FROM	mp_users ");
+        //    sqlCommand.Append("WHERE ");
+        //    sqlCommand.Append("siteid = :siteid ");
+        //    sqlCommand.Append("AND ");
+        //    sqlCommand.Append("lastactivitydate > :sincetime ");
+        //    sqlCommand.Append(";");
 
-            arParams[1] = new NpgsqlParameter("sincetime", NpgsqlTypes.NpgsqlDbType.Timestamp);
-            arParams[1].Value = sinceTime;
+        //    return AdoHelper.ExecuteReader(
+        //        readConnectionString,
+        //        CommandType.Text,
+        //        sqlCommand.ToString(),
+        //        arParams);
 
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("SELECT  * ");
-            sqlCommand.Append("FROM	mp_users ");
-            sqlCommand.Append("WHERE ");
-            sqlCommand.Append("siteid = :siteid ");
-            sqlCommand.Append("AND ");
-            sqlCommand.Append("lastactivitydate > :sincetime ");
-            sqlCommand.Append(";");
+        //}
 
-            //return AdoHelper.ExecuteReader(
-            //    readConnectionString,
-            //    CommandType.StoredProcedure,
-            //    "mp_users_getusersonlinesince(:siteid,:sincetime)",
-            //    arParams);
+        //public DbDataReader GetTop50UsersOnlineSince(int siteId, DateTime sinceTime)
+        //{
+        //    NpgsqlParameter[] arParams = new NpgsqlParameter[2];
 
-            return AdoHelper.ExecuteReader(
-                readConnectionString,
-                CommandType.Text,
-                sqlCommand.ToString(),
-                arParams);
+        //    arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
+        //    arParams[0].Value = siteId;
 
-        }
+        //    arParams[1] = new NpgsqlParameter("sincetime", NpgsqlTypes.NpgsqlDbType.Timestamp);
+        //    arParams[1].Value = sinceTime;
 
-        public DbDataReader GetTop50UsersOnlineSince(int siteId, DateTime sinceTime)
-        {
-            NpgsqlParameter[] arParams = new NpgsqlParameter[2];
-
-            arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
-            arParams[0].Value = siteId;
-
-            arParams[1] = new NpgsqlParameter("sincetime", NpgsqlTypes.NpgsqlDbType.Timestamp);
-            arParams[1].Value = sinceTime;
-
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("SELECT  * ");
-            sqlCommand.Append("FROM	mp_users ");
-            sqlCommand.Append("WHERE ");
-            sqlCommand.Append("siteid = :siteid ");
-            sqlCommand.Append("AND ");
-            sqlCommand.Append("lastactivitydate > :sincetime ");
-            sqlCommand.Append("LIMIT 50");
-            sqlCommand.Append(";");
-
-            //return AdoHelper.ExecuteReader(
-            //    readConnectionString,
-            //    CommandType.StoredProcedure,
-            //    "mp_users_gettopusersonlinesince(:siteid,:sincetime)",
-            //    arParams);
-
-            return AdoHelper.ExecuteReader(
-                readConnectionString,
-                CommandType.Text,
-                sqlCommand.ToString(),
-                arParams);
-
-
-
-        }
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("SELECT  * ");
+        //    sqlCommand.Append("FROM	mp_users ");
+        //    sqlCommand.Append("WHERE ");
+        //    sqlCommand.Append("siteid = :siteid ");
+        //    sqlCommand.Append("AND ");
+        //    sqlCommand.Append("lastactivitydate > :sincetime ");
+        //    sqlCommand.Append("LIMIT 50");
+        //    sqlCommand.Append(";");
+            
+        //    return AdoHelper.ExecuteReader(
+        //        readConnectionString,
+        //        CommandType.Text,
+        //        sqlCommand.ToString(),
+        //        arParams);
+        //}
 
         public async Task<int> GetNewestUserId(
             int siteId,
@@ -936,7 +915,7 @@ namespace cloudscribe.Core.Repositories.pgsql
             string firstName,
             string lastName,
             string timeZoneId,
-            DateTime dateOfBirth,
+            DateTime? dateOfBirth,
             bool emailConfirmed,
             string passwordHash,
             string securityStamp,
@@ -944,7 +923,6 @@ namespace cloudscribe.Core.Repositories.pgsql
             bool phoneNumberConfirmed,
             bool twoFactorEnabled,
             DateTime? lockoutEndDateUtc,
-
             bool accountApproved,
             bool isLockedOut,
             bool displayInMemberList,
@@ -955,6 +933,11 @@ namespace cloudscribe.Core.Repositories.pgsql
             string signature,
             string authorBio,
             string comment,
+
+            string normalizedUserName,
+            string loweredEmail,
+            bool canAutoLockout,
+
             CancellationToken cancellationToken
 
             )
@@ -970,8 +953,6 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append("firstname, ");
             sqlCommand.Append("lastname, ");
             sqlCommand.Append("timezoneid, ");
-            sqlCommand.Append("emailchangeguid, ");
-            sqlCommand.Append("passwordresetguid, ");
             sqlCommand.Append("mustchangepwd, ");
             sqlCommand.Append("roleschanged, ");
             sqlCommand.Append("datecreated, ");
@@ -984,7 +965,6 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append("phonenumberconfirmed, ");
             sqlCommand.Append("twofactorenabled, ");
             sqlCommand.Append("lockoutenddateutc, ");
-
             sqlCommand.Append("accountapproved, ");
             sqlCommand.Append("islockedout, ");
             sqlCommand.Append("displayinmemberlist, ");
@@ -994,8 +974,11 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append("avatarurl, ");
             sqlCommand.Append("signature, ");
             sqlCommand.Append("authorbio, ");
-            sqlCommand.Append("comment ");
 
+            sqlCommand.Append("normalizedusername, ");
+            sqlCommand.Append("canautolockout, ");
+
+            sqlCommand.Append("comment ");
             sqlCommand.Append(")");
 
             sqlCommand.Append(" VALUES (");
@@ -1008,8 +991,6 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append(":firstname, ");
             sqlCommand.Append(":lastname, ");
             sqlCommand.Append(":timezoneid, ");
-            sqlCommand.Append(":emailchangeguid, ");
-            sqlCommand.Append("'00000000-0000-0000-0000-000000000000', "); //passwordresetguid
             sqlCommand.Append(":mustchangepwd, ");
             sqlCommand.Append("false, "); //roleschanged
             sqlCommand.Append(":datecreated, ");
@@ -1022,7 +1003,6 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append(":phonenumberconfirmed, ");
             sqlCommand.Append(":twofactorenabled, ");
             sqlCommand.Append(":lockoutenddateutc, ");
-
             sqlCommand.Append(":accountapproved, ");
             sqlCommand.Append(":islockedout, ");
             sqlCommand.Append(":displayinmemberlist, ");
@@ -1032,14 +1012,16 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append(":avatarurl, ");
             sqlCommand.Append(":signature, ");
             sqlCommand.Append(":authorbio, ");
+
+            sqlCommand.Append(":normalizedusername, ");
+            sqlCommand.Append(":canautolockout, ");
+
             sqlCommand.Append(":comment ");
-
-
             sqlCommand.Append(")");
             sqlCommand.Append(";");
             sqlCommand.Append(" SELECT CURRVAL('mp_users_userid_seq');");
 
-            NpgsqlParameter[] arParams = new NpgsqlParameter[31];
+            NpgsqlParameter[] arParams = new NpgsqlParameter[32];
 
             arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
             arParams[0].Value = siteId;
@@ -1063,7 +1045,7 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[6].Value = siteGuid.ToString();
 
             arParams[7] = new NpgsqlParameter("loweredemail", NpgsqlTypes.NpgsqlDbType.Text, 100);
-            arParams[7].Value = email.ToLower();
+            arParams[7].Value = loweredEmail;
 
             arParams[8] = new NpgsqlParameter("mustchangepwd", NpgsqlTypes.NpgsqlDbType.Boolean);
             arParams[8].Value = mustChangePwd;
@@ -1076,77 +1058,80 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             arParams[11] = new NpgsqlParameter("timezoneid", NpgsqlTypes.NpgsqlDbType.Text, 32);
             arParams[11].Value = timeZoneId;
-
-            arParams[12] = new NpgsqlParameter("emailchangeguid", NpgsqlTypes.NpgsqlDbType.Char, 36);
-            arParams[12].Value = Guid.Empty.ToString();
             
-            arParams[13] = new NpgsqlParameter("dateofbirth", NpgsqlTypes.NpgsqlDbType.Timestamp);
-            if (dateOfBirth == DateTime.MinValue)
+            arParams[12] = new NpgsqlParameter("dateofbirth", NpgsqlTypes.NpgsqlDbType.Timestamp);
+            if (!dateOfBirth.HasValue)
             {
-                arParams[13].Value = DBNull.Value;
+                arParams[12].Value = DBNull.Value;
             }
             else
             {
-                arParams[13].Value = dateOfBirth;
+                arParams[12].Value = dateOfBirth;
             }
 
-            arParams[14] = new NpgsqlParameter("emailconfirmed", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[14].Value = emailConfirmed;
+            arParams[13] = new NpgsqlParameter("emailconfirmed", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[13].Value = emailConfirmed;
             
-            arParams[15] = new NpgsqlParameter("passwordhash", NpgsqlTypes.NpgsqlDbType.Text);
-            arParams[15].Value = passwordHash;
+            arParams[14] = new NpgsqlParameter("passwordhash", NpgsqlTypes.NpgsqlDbType.Text);
+            arParams[14].Value = passwordHash;
 
-            arParams[16] = new NpgsqlParameter("securitystamp", NpgsqlTypes.NpgsqlDbType.Text);
-            arParams[16].Value = securityStamp;
+            arParams[15] = new NpgsqlParameter("securitystamp", NpgsqlTypes.NpgsqlDbType.Text);
+            arParams[15].Value = securityStamp;
 
-            arParams[17] = new NpgsqlParameter("phonenumber", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
-            arParams[17].Value = phoneNumber;
+            arParams[16] = new NpgsqlParameter("phonenumber", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
+            arParams[16].Value = phoneNumber;
 
-            arParams[18] = new NpgsqlParameter("phonenumberconfirmed", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[18].Value = phoneNumberConfirmed;
+            arParams[17] = new NpgsqlParameter("phonenumberconfirmed", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[17].Value = phoneNumberConfirmed;
 
-            arParams[19] = new NpgsqlParameter("twofactorenabled", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[19].Value = twoFactorEnabled;
+            arParams[18] = new NpgsqlParameter("twofactorenabled", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[18].Value = twoFactorEnabled;
 
-            arParams[20] = new NpgsqlParameter("lockoutenddateutc", NpgsqlTypes.NpgsqlDbType.Timestamp);
-            if (lockoutEndDateUtc == null)
+            arParams[19] = new NpgsqlParameter("lockoutenddateutc", NpgsqlTypes.NpgsqlDbType.Timestamp);
+            if (lockoutEndDateUtc.HasValue)
             {
-                arParams[20].Value = DBNull.Value;
+                arParams[19].Value = DBNull.Value;
             }
             else
             {
-                arParams[20].Value = lockoutEndDateUtc;
+                arParams[19].Value = lockoutEndDateUtc;
             }
 
-            arParams[21] = new NpgsqlParameter("accountapproved", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[21].Value = accountApproved;
+            arParams[20] = new NpgsqlParameter("accountapproved", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[20].Value = accountApproved;
 
-            arParams[22] = new NpgsqlParameter("islockedout", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[22].Value = isLockedOut;
+            arParams[21] = new NpgsqlParameter("islockedout", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[21].Value = isLockedOut;
 
-            arParams[23] = new NpgsqlParameter("displayinmemberlist", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[23].Value = displayInMemberList;
+            arParams[22] = new NpgsqlParameter("displayinmemberlist", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[22].Value = displayInMemberList;
 
-            arParams[24] = new NpgsqlParameter("websiteurl", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
-            arParams[24].Value = webSiteUrl;
+            arParams[23] = new NpgsqlParameter("websiteurl", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
+            arParams[23].Value = webSiteUrl;
 
-            arParams[25] = new NpgsqlParameter("country", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
-            arParams[25].Value = country;
+            arParams[24] = new NpgsqlParameter("country", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
+            arParams[24].Value = country;
 
-            arParams[26] = new NpgsqlParameter("state", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
-            arParams[26].Value = state;
+            arParams[25] = new NpgsqlParameter("state", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
+            arParams[25].Value = state;
 
-            arParams[27] = new NpgsqlParameter("avatarurl", NpgsqlTypes.NpgsqlDbType.Varchar, 250);
-            arParams[27].Value = avatarUrl;
+            arParams[26] = new NpgsqlParameter("avatarurl", NpgsqlTypes.NpgsqlDbType.Varchar, 250);
+            arParams[26].Value = avatarUrl;
 
-            arParams[28] = new NpgsqlParameter("signature", NpgsqlTypes.NpgsqlDbType.Text);
-            arParams[28].Value = signature;
+            arParams[27] = new NpgsqlParameter("signature", NpgsqlTypes.NpgsqlDbType.Text);
+            arParams[27].Value = signature;
 
-            arParams[29] = new NpgsqlParameter("authorbio", NpgsqlTypes.NpgsqlDbType.Text);
-            arParams[29].Value = authorBio;
+            arParams[28] = new NpgsqlParameter("authorbio", NpgsqlTypes.NpgsqlDbType.Text);
+            arParams[28].Value = authorBio;
 
-            arParams[30] = new NpgsqlParameter("comment", NpgsqlTypes.NpgsqlDbType.Text);
-            arParams[30].Value = comment;
+            arParams[29] = new NpgsqlParameter("comment", NpgsqlTypes.NpgsqlDbType.Text);
+            arParams[29].Value = comment;
+
+            arParams[30] = new NpgsqlParameter("normalizedusername", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
+            arParams[30].Value = normalizedUserName;
+
+            arParams[31] = new NpgsqlParameter("canautolockout", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[31].Value = canAutoLockout;
 
             object result = await AdoHelper.ExecuteScalarAsync(
                 writeConnectionString,
@@ -1181,11 +1166,9 @@ namespace cloudscribe.Core.Repositories.pgsql
             string lastName,
             string timeZoneId,
             string newEmail,
-            Guid emailChangeGuid,
-            Guid passwordResetGuid,
             bool rolesChanged,
             string authorBio,
-            DateTime dateOfBirth,
+            DateTime? dateOfBirth,
             bool emailConfirmed,
             string passwordHash,
             string securityStamp,
@@ -1194,6 +1177,12 @@ namespace cloudscribe.Core.Repositories.pgsql
             bool twoFactorEnabled,
             DateTime? lockoutEndDateUtc,
             bool isLockedOut,
+
+            string normalizedUserName,
+            bool newEmailApproved,
+            bool canAutoLockout,
+            DateTime? lastPasswordChangedDate,
+
             CancellationToken cancellationToken
             )
         {
@@ -1207,8 +1196,6 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append("lastname = :lastname,");
             sqlCommand.Append("timezoneid = :timezoneid,");
             sqlCommand.Append("newemail = :newemail, ");
-            sqlCommand.Append("emailchangeguid = :emailchangeguid, ");
-            sqlCommand.Append("passwordresetguid = :passwordresetguid,");
             sqlCommand.Append("mustchangepwd = :mustchangepwd,");
             sqlCommand.Append("roleschanged = :roleschanged,");
             sqlCommand.Append("gender = :gender,");
@@ -1232,11 +1219,17 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append("twofactorenabled = :twofactorenabled, ");
             sqlCommand.Append("lockoutenddateutc = :lockoutenddateutc, ");
 
+            sqlCommand.Append("normalizedusername = :normalizedusername, ");
+            sqlCommand.Append("newemailapproved = :newemailapproved, ");
+            sqlCommand.Append("canautolockout = :canautolockout, ");
+            sqlCommand.Append("lastpasswordchangeddate = :lastpasswordchangeddate, ");
+
+
             sqlCommand.Append("islockedout = :islockedout    ");
 
             sqlCommand.Append("WHERE userid = :userid ;");
 
-            NpgsqlParameter[] arParams = new NpgsqlParameter[33];
+            NpgsqlParameter[] arParams = new NpgsqlParameter[34];
 
             arParams[0] = new NpgsqlParameter("userid", NpgsqlTypes.NpgsqlDbType.Integer);
             arParams[0].Value = userId;
@@ -1297,59 +1290,69 @@ namespace cloudscribe.Core.Repositories.pgsql
             
             arParams[19] = new NpgsqlParameter("newemail", NpgsqlTypes.NpgsqlDbType.Varchar, 100);
             arParams[19].Value = newEmail;
-
-            arParams[20] = new NpgsqlParameter("emailchangeguid", NpgsqlTypes.NpgsqlDbType.Char, 36);
-            arParams[20].Value = emailChangeGuid.ToString();
-
-            arParams[21] = new NpgsqlParameter("passwordresetguid", NpgsqlTypes.NpgsqlDbType.Char, 36);
-            arParams[21].Value = passwordResetGuid.ToString();
             
-            arParams[22] = new NpgsqlParameter("roleschanged", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[22].Value = rolesChanged;
+            arParams[20] = new NpgsqlParameter("roleschanged", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[20].Value = rolesChanged;
 
-            arParams[23] = new NpgsqlParameter("authorbio", NpgsqlTypes.NpgsqlDbType.Text);
-            arParams[23].Value = authorBio;
+            arParams[21] = new NpgsqlParameter("authorbio", NpgsqlTypes.NpgsqlDbType.Text);
+            arParams[21].Value = authorBio;
 
-            arParams[24] = new NpgsqlParameter("dateofbirth", NpgsqlTypes.NpgsqlDbType.Timestamp);
-            if (dateOfBirth == DateTime.MinValue)
+            arParams[22] = new NpgsqlParameter("dateofbirth", NpgsqlTypes.NpgsqlDbType.Timestamp);
+            if (!dateOfBirth.HasValue)
             {
-                arParams[24].Value = DBNull.Value;
+                arParams[22].Value = DBNull.Value;
             }
             else
             {
-                arParams[24].Value = dateOfBirth;
+                arParams[22].Value = dateOfBirth;
             }
 
-            arParams[25] = new NpgsqlParameter("emailconfirmed", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[25].Value = emailConfirmed;
+            arParams[23] = new NpgsqlParameter("emailconfirmed", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[23].Value = emailConfirmed;
             
-            arParams[26] = new NpgsqlParameter("passwordhash", NpgsqlTypes.NpgsqlDbType.Text);
-            arParams[26].Value = passwordHash;
+            arParams[24] = new NpgsqlParameter("passwordhash", NpgsqlTypes.NpgsqlDbType.Text);
+            arParams[24].Value = passwordHash;
 
-            arParams[27] = new NpgsqlParameter("securitystamp", NpgsqlTypes.NpgsqlDbType.Text);
-            arParams[27].Value = securityStamp;
+            arParams[25] = new NpgsqlParameter("securitystamp", NpgsqlTypes.NpgsqlDbType.Text);
+            arParams[25].Value = securityStamp;
 
-            arParams[28] = new NpgsqlParameter("phonenumber", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
-            arParams[28].Value = phoneNumber;
+            arParams[26] = new NpgsqlParameter("phonenumber", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
+            arParams[26].Value = phoneNumber;
 
-            arParams[29] = new NpgsqlParameter("phonenumberconfirmed", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[29].Value = phoneNumberConfirmed;
+            arParams[27] = new NpgsqlParameter("phonenumberconfirmed", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[27].Value = phoneNumberConfirmed;
 
-            arParams[30] = new NpgsqlParameter("twofactorenabled", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[30].Value = twoFactorEnabled;
+            arParams[28] = new NpgsqlParameter("twofactorenabled", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[28].Value = twoFactorEnabled;
 
-            arParams[31] = new NpgsqlParameter("lockoutenddateutc", NpgsqlTypes.NpgsqlDbType.Timestamp);
-            if (lockoutEndDateUtc == null)
+            arParams[29] = new NpgsqlParameter("lockoutenddateutc", NpgsqlTypes.NpgsqlDbType.Timestamp);
+            if (!lockoutEndDateUtc.HasValue)
             {
-                arParams[31].Value = DBNull.Value;
+                arParams[29].Value = DBNull.Value;
             }
             else
             {
-                arParams[31].Value = lockoutEndDateUtc;
+                arParams[29].Value = lockoutEndDateUtc;
             }
 
-            arParams[32] = new NpgsqlParameter("islockedout", NpgsqlTypes.NpgsqlDbType.Boolean);
-            arParams[32].Value = isLockedOut;
+            arParams[30] = new NpgsqlParameter("islockedout", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[30].Value = isLockedOut;
+
+            arParams[31] = new NpgsqlParameter("normalizedusername", NpgsqlTypes.NpgsqlDbType.Varchar, 50);
+            arParams[31].Value = normalizedUserName;
+
+            arParams[32] = new NpgsqlParameter("canautolockout", NpgsqlTypes.NpgsqlDbType.Boolean);
+            arParams[32].Value = canAutoLockout;
+
+            arParams[33] = new NpgsqlParameter("lastpasswordchangeddate", NpgsqlTypes.NpgsqlDbType.Timestamp);
+            if (!lastPasswordChangedDate.HasValue)
+            {
+                arParams[33].Value = DBNull.Value;
+            }
+            else
+            {
+                arParams[33].Value = lastPasswordChangedDate;
+            }
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
@@ -1417,47 +1420,43 @@ namespace cloudscribe.Core.Repositories.pgsql
 
         }
 
-        public bool UpdateLastActivityTime(Guid userGuid, DateTime lastUpdate)
-        {
-            NpgsqlParameter[] arParams = new NpgsqlParameter[2];
+        //public bool UpdateLastActivityTime(Guid userGuid, DateTime lastUpdate)
+        //{
+        //    NpgsqlParameter[] arParams = new NpgsqlParameter[2];
 
-            arParams[0] = new NpgsqlParameter("userguid", NpgsqlTypes.NpgsqlDbType.Varchar, 36);
-            arParams[0].Value = userGuid.ToString();
+        //    arParams[0] = new NpgsqlParameter("userguid", NpgsqlTypes.NpgsqlDbType.Varchar, 36);
+        //    arParams[0].Value = userGuid.ToString();
 
-            arParams[1] = new NpgsqlParameter("lastactivitydate", NpgsqlTypes.NpgsqlDbType.Timestamp);
-            arParams[1].Value = lastUpdate;
+        //    arParams[1] = new NpgsqlParameter("lastactivitydate", NpgsqlTypes.NpgsqlDbType.Timestamp);
+        //    arParams[1].Value = lastUpdate;
 
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("UPDATE mp_users ");
-            sqlCommand.Append("set lastactivitydate = :lastactivitydate ");
-            sqlCommand.Append("WHERE ");
-            sqlCommand.Append("userguid = :userguid ");
-            sqlCommand.Append(";");
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("UPDATE mp_users ");
+        //    sqlCommand.Append("set lastactivitydate = :lastactivitydate ");
+        //    sqlCommand.Append("WHERE ");
+        //    sqlCommand.Append("userguid = :userguid ");
+        //    sqlCommand.Append(";");
+            
+        //    int rowsAffected = Convert.ToInt32(AdoHelper.ExecuteScalar(
+        //        writeConnectionString,
+        //        CommandType.Text,
+        //        sqlCommand.ToString(),
+        //        arParams));
 
-            //int rowsAffected = Convert.ToInt32(AdoHelper.ExecuteScalar(
-            //    writeConnectionString,
-            //    CommandType.StoredProcedure,
-            //    "mp_users_updatelastactivitytime(:userguid,:lastactivitydate)",
-            //    arParams));
+        //    return (rowsAffected > -1);
 
-            int rowsAffected = Convert.ToInt32(AdoHelper.ExecuteScalar(
-                writeConnectionString,
-                CommandType.Text,
-                sqlCommand.ToString(),
-                arParams));
+        //}
 
-            return (rowsAffected > -1);
-
-        }
-
-        public bool UpdateLastLoginTime(Guid userGuid, DateTime lastLoginTime)
+        public async Task<bool> UpdateLastLoginTime(
+            Guid userGuid, 
+            DateTime lastLoginTime,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("UPDATE mp_users ");
 
             sqlCommand.Append("SET lastlogindate = :lastlogindate,  ");
-            sqlCommand.Append("failedpasswordattemptcount = 0, ");
-            sqlCommand.Append("failedpwdanswerattemptcount = 0 ");
+            sqlCommand.Append("failedpasswordattemptcount = 0 ");
 
             sqlCommand.Append("WHERE userguid = :userguid  ;");
 
@@ -1469,11 +1468,12 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[1] = new NpgsqlParameter("lastlogindate", NpgsqlTypes.NpgsqlDbType.Timestamp);
             arParams[1].Value = lastLoginTime;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return (rowsAffected > -1);
 

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2016-01-21
+// Last Modified:			2016-01-28
 // 
 
 using cloudscribe.DbHelpers;
@@ -85,70 +85,7 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         }
 
-        //public DbDataReader GetSmartDropDownData(int siteId, string query, int rowsToGet)
-        //{
-
-        //    StringBuilder sqlCommand = new StringBuilder();
-        //    sqlCommand.Append("SELECT First " + rowsToGet.ToString());
-        //    sqlCommand.Append(" UserID, ");
-        //    sqlCommand.Append("UserGuid, ");
-        //    sqlCommand.Append("Email, ");
-        //    sqlCommand.Append("FirstName, ");
-        //    sqlCommand.Append("LastName, ");
-        //    sqlCommand.Append("SiteUser ");
-
-        //    sqlCommand.Append("FROM (");
-
-        //    sqlCommand.Append("SELECT ");
-        //    sqlCommand.Append("UserID, ");
-        //    sqlCommand.Append("UserGuid, ");
-        //    sqlCommand.Append("Email, ");
-        //    sqlCommand.Append("FirstName, ");
-        //    sqlCommand.Append("LastName, ");
-        //    sqlCommand.Append("Name As SiteUser ");
-
-        //    sqlCommand.Append("FROM mp_Users ");
-        //    sqlCommand.Append("WHERE SiteID = @SiteID ");
-        //    sqlCommand.Append("AND IsDeleted = 0 ");
-        //    sqlCommand.Append("AND (");
-        //    sqlCommand.Append("(Name LIKE @Query) ");
-        //    sqlCommand.Append("OR (FirstName LIKE @Query) ");
-        //    sqlCommand.Append("OR (LastName LIKE @Query) ");
-        //    sqlCommand.Append(") ");
-
-        //    sqlCommand.Append("UNION ");
-
-        //    sqlCommand.Append("SELECT ");
-        //    sqlCommand.Append("UserID, ");
-        //    sqlCommand.Append("UserGuid, ");
-        //    sqlCommand.Append("Email, ");
-        //    sqlCommand.Append("FirstName, ");
-        //    sqlCommand.Append("LastName, ");
-        //    sqlCommand.Append("Email As SiteUser ");
-
-        //    sqlCommand.Append("FROM mp_Users ");
-        //    sqlCommand.Append("WHERE SiteID = @SiteID ");
-        //    sqlCommand.Append("AND IsDeleted = 0 ");
-        //    sqlCommand.Append("AND Email LIKE @Query  ");
-
-        //    sqlCommand.Append(")");
-
-        //    sqlCommand.Append("ORDER BY SiteUser; ");
-
-        //    FbParameter[] arParams = new FbParameter[2];
-
-        //    arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
-        //    arParams[0].Value = siteId;
-
-        //    arParams[1] = new FbParameter("@Query", FbDbType.VarChar, 50);
-        //    arParams[1].Value = query + "%";
-
-        //    return AdoHelper.ExecuteReader(
-        //        readConnectionString,
-        //        sqlCommand.ToString(),
-        //        arParams);
-
-        //}
+        
 
         public DbDataReader EmailLookup(int siteId, string query, int rowsToGet)
         {
@@ -328,75 +265,75 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         }
 
-        public int CountOnlineSince(int siteId, DateTime sinceTime)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("SELECT COUNT(*) FROM mp_Users WHERE SiteID = @SiteID ");
-            sqlCommand.Append("AND LastActivityDate > @SinceTime ;  ");
+        //public int CountOnlineSince(int siteId, DateTime sinceTime)
+        //{
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("SELECT COUNT(*) FROM mp_Users WHERE SiteID = @SiteID ");
+        //    sqlCommand.Append("AND LastActivityDate > @SinceTime ;  ");
 
-            FbParameter[] arParams = new FbParameter[2];
+        //    FbParameter[] arParams = new FbParameter[2];
 
-            arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
-            arParams[0].Value = siteId;
+        //    arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
+        //    arParams[0].Value = siteId;
 
-            arParams[1] = new FbParameter("@SinceTime", FbDbType.TimeStamp);
-            arParams[1].Value = sinceTime;
+        //    arParams[1] = new FbParameter("@SinceTime", FbDbType.TimeStamp);
+        //    arParams[1].Value = sinceTime;
 
-            int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
-                readConnectionString,
-                CommandType.Text,
-                sqlCommand.ToString(),
-                arParams).ToString());
+        //    int count = Convert.ToInt32(AdoHelper.ExecuteScalar(
+        //        readConnectionString,
+        //        CommandType.Text,
+        //        sqlCommand.ToString(),
+        //        arParams).ToString());
 
-            return count;
+        //    return count;
 
-        }
+        //}
 
-        public DbDataReader GetUsersOnlineSince(int siteId, DateTime sinceTime)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("SELECT * FROM mp_Users WHERE SiteID = @SiteID ");
-            sqlCommand.Append("AND LastActivityDate >= @SinceTime ;  ");
+        //public DbDataReader GetUsersOnlineSince(int siteId, DateTime sinceTime)
+        //{
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("SELECT * FROM mp_Users WHERE SiteID = @SiteID ");
+        //    sqlCommand.Append("AND LastActivityDate >= @SinceTime ;  ");
 
-            FbParameter[] arParams = new FbParameter[2];
+        //    FbParameter[] arParams = new FbParameter[2];
 
-            arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
-            arParams[0].Value = siteId;
+        //    arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
+        //    arParams[0].Value = siteId;
 
-            arParams[1] = new FbParameter("@SinceTime", FbDbType.TimeStamp);
-            arParams[1].Value = sinceTime;
+        //    arParams[1] = new FbParameter("@SinceTime", FbDbType.TimeStamp);
+        //    arParams[1].Value = sinceTime;
 
-            return AdoHelper.ExecuteReader(
-                readConnectionString,
-                CommandType.Text,
-                sqlCommand.ToString(),
-                arParams);
+        //    return AdoHelper.ExecuteReader(
+        //        readConnectionString,
+        //        CommandType.Text,
+        //        sqlCommand.ToString(),
+        //        arParams);
 
-        }
+        //}
 
-        public DbDataReader GetTop50UsersOnlineSince(int siteId, DateTime sinceTime)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("SELECT FIRST 50 * FROM mp_Users WHERE SiteID = @SiteID ");
-            sqlCommand.Append("AND LastActivityDate >= @SinceTime   ");
-            sqlCommand.Append("ORDER BY LastActivityDate desc   ");
-            sqlCommand.Append(" ;   ");
+        //public DbDataReader GetTop50UsersOnlineSince(int siteId, DateTime sinceTime)
+        //{
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("SELECT FIRST 50 * FROM mp_Users WHERE SiteID = @SiteID ");
+        //    sqlCommand.Append("AND LastActivityDate >= @SinceTime   ");
+        //    sqlCommand.Append("ORDER BY LastActivityDate desc   ");
+        //    sqlCommand.Append(" ;   ");
 
-            FbParameter[] arParams = new FbParameter[2];
+        //    FbParameter[] arParams = new FbParameter[2];
 
-            arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
-            arParams[0].Value = siteId;
+        //    arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
+        //    arParams[0].Value = siteId;
 
-            arParams[1] = new FbParameter("@SinceTime", FbDbType.TimeStamp);
-            arParams[1].Value = sinceTime;
+        //    arParams[1] = new FbParameter("@SinceTime", FbDbType.TimeStamp);
+        //    arParams[1].Value = sinceTime;
 
-            return AdoHelper.ExecuteReader(
-                readConnectionString,
-                CommandType.Text,
-                sqlCommand.ToString(),
-                arParams);
+        //    return AdoHelper.ExecuteReader(
+        //        readConnectionString,
+        //        CommandType.Text,
+        //        sqlCommand.ToString(),
+        //        arParams);
 
-        }
+        //}
 
         public async Task<int> GetNewestUserId(
             int siteId,
@@ -870,7 +807,7 @@ namespace cloudscribe.Core.Repositories.Firebird
             string firstName,
             string lastName,
             string timeZoneId,
-            DateTime dateOfBirth,
+            DateTime? dateOfBirth,
             bool emailConfirmed,
             string passwordHash,
             string securityStamp,
@@ -878,7 +815,6 @@ namespace cloudscribe.Core.Repositories.Firebird
             bool phoneNumberConfirmed,
             bool twoFactorEnabled,
             DateTime? lockoutEndDateUtc,
-
             bool accountApproved,
             bool isLockedOut,
             bool displayInMemberList,
@@ -889,11 +825,16 @@ namespace cloudscribe.Core.Repositories.Firebird
             string signature,
             string authorBio,
             string comment,
+
+            string normalizedUserName,
+            string loweredEmail,
+            bool canAutoLockout,
+
             CancellationToken cancellationToken
             )
         {
             
-            FbParameter[] arParams = new FbParameter[37];
+            FbParameter[] arParams = new FbParameter[36];
 
             arParams[0] = new FbParameter(":SiteID", FbDbType.Integer);
             arParams[0].Value = siteId;
@@ -915,111 +856,108 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             arParams[6] = new FbParameter(":AccountApproved", FbDbType.SmallInt);
             arParams[6].Value = accountApproved ? 1 : 0;
-
-            arParams[7] = new FbParameter(":RegisterConfirmGuid", FbDbType.Char, 36);
-            arParams[7].Value = Guid.Empty.ToString();
             
-            arParams[8] = new FbParameter(":Trusted", FbDbType.SmallInt);
-            arParams[8].Value = 0;
+            arParams[7] = new FbParameter(":Trusted", FbDbType.SmallInt);
+            arParams[7].Value = 0;
 
-            arParams[9] = new FbParameter(":DisplayInMemberList", FbDbType.SmallInt);
-            arParams[9].Value = displayInMemberList ? 1 : 0;
+            arParams[8] = new FbParameter(":DisplayInMemberList", FbDbType.SmallInt);
+            arParams[8].Value = displayInMemberList ? 1 : 0;
 
-            arParams[10] = new FbParameter(":WebSiteURL", FbDbType.VarChar, 100);
-            arParams[10].Value = webSiteUrl;
+            arParams[9] = new FbParameter(":WebSiteURL", FbDbType.VarChar, 100);
+            arParams[9].Value = webSiteUrl;
 
-            arParams[11] = new FbParameter(":Country", FbDbType.VarChar, 100);
-            arParams[11].Value = country;
+            arParams[10] = new FbParameter(":Country", FbDbType.VarChar, 100);
+            arParams[10].Value = country;
 
-            arParams[12] = new FbParameter(":State", FbDbType.VarChar, 100);
-            arParams[12].Value = state;
+            arParams[11] = new FbParameter(":State", FbDbType.VarChar, 100);
+            arParams[11].Value = state;
             
-            arParams[13] = new FbParameter(":AvatarUrl", FbDbType.VarChar, 255);
-            arParams[13].Value = avatarUrl;
+            arParams[12] = new FbParameter(":AvatarUrl", FbDbType.VarChar, 255);
+            arParams[12].Value = avatarUrl;
             
-            arParams[14] = new FbParameter(":Signature", FbDbType.VarChar, 4000);
-            arParams[14].Value = signature;
+            arParams[13] = new FbParameter(":Signature", FbDbType.VarChar, 4000);
+            arParams[13].Value = signature;
 
-            arParams[15] = new FbParameter(":DateCreated", FbDbType.TimeStamp);
-            arParams[15].Value = dateCreated;
+            arParams[14] = new FbParameter(":DateCreated", FbDbType.TimeStamp);
+            arParams[14].Value = dateCreated;
 
-            arParams[16] = new FbParameter(":UserGuid", FbDbType.Char, 36);
-            arParams[16].Value = userGuid.ToString();
+            arParams[15] = new FbParameter(":UserGuid", FbDbType.Char, 36);
+            arParams[15].Value = userGuid.ToString();
             
-            arParams[17] = new FbParameter(":IsDeleted", FbDbType.SmallInt);
+            arParams[16] = new FbParameter(":IsDeleted", FbDbType.SmallInt);
+            arParams[16].Value = 0;
+
+            arParams[17] = new FbParameter(":FailedPasswordAttemptCount", FbDbType.Integer);
             arParams[17].Value = 0;
-
-            arParams[18] = new FbParameter(":FailedPasswordAttemptCount", FbDbType.Integer);
-            arParams[18].Value = 0;
-
-            arParams[19] = new FbParameter(":FailedPwdAnswerAttemptCount", FbDbType.Integer);
-            arParams[19].Value = 0;
-
-            arParams[20] = new FbParameter(":IsLockedOut", FbDbType.SmallInt);
-            arParams[20].Value = isLockedOut ? 1 : 0;
             
-            arParams[21] = new FbParameter(":Comment", FbDbType.VarChar);
-            arParams[21].Value = comment;
+            arParams[18] = new FbParameter(":IsLockedOut", FbDbType.SmallInt);
+            arParams[18].Value = isLockedOut ? 1 : 0;
+            
+            arParams[19] = new FbParameter(":Comment", FbDbType.VarChar);
+            arParams[19].Value = comment;
 
-            arParams[22] = new FbParameter(":SiteGuid", FbDbType.Char, 36);
-            arParams[22].Value = siteGuid.ToString();
+            arParams[20] = new FbParameter(":SiteGuid", FbDbType.Char, 36);
+            arParams[20].Value = siteGuid.ToString();
 
-            arParams[23] = new FbParameter(":MustChangePwd", FbDbType.Integer);
-            arParams[23].Value = mustChangePwd ? 1 : 0;
+            arParams[21] = new FbParameter(":MustChangePwd", FbDbType.Integer);
+            arParams[21].Value = mustChangePwd ? 1 : 0;
 
-            arParams[24] = new FbParameter(":FirstName", FbDbType.VarChar, 100);
-            arParams[24].Value = firstName;
+            arParams[22] = new FbParameter(":FirstName", FbDbType.VarChar, 100);
+            arParams[22].Value = firstName;
 
-            arParams[25] = new FbParameter(":LastName", FbDbType.VarChar, 100);
-            arParams[25].Value = lastName;
+            arParams[23] = new FbParameter(":LastName", FbDbType.VarChar, 100);
+            arParams[23].Value = lastName;
+            
+            arParams[24] = new FbParameter(":TimeZoneId", FbDbType.VarChar, 32);
+            arParams[24].Value = timeZoneId;
 
-            arParams[26] = new FbParameter(":EmailChangeGuid", FbDbType.Char, 36);
-            arParams[26].Value = Guid.Empty.ToString();
-
-            arParams[27] = new FbParameter(":TimeZoneId", FbDbType.VarChar, 32);
-            arParams[27].Value = timeZoneId;
-
-            arParams[28] = new FbParameter(":DateOfBirth", FbDbType.TimeStamp);
-            if (dateOfBirth == DateTime.MinValue)
+            arParams[25] = new FbParameter(":DateOfBirth", FbDbType.TimeStamp);
+            if (!dateOfBirth.HasValue)
             {
-                arParams[28].Value = DBNull.Value;
+                arParams[25].Value = DBNull.Value;
             }
             else
             {
-                arParams[28].Value = dateOfBirth;
+                arParams[25].Value = dateOfBirth;
             }
 
             
-            arParams[29] = new FbParameter(":EmailConfirmed", FbDbType.Integer);
-            arParams[29].Value = emailConfirmed ? 1 : 0;
+            arParams[26] = new FbParameter(":EmailConfirmed", FbDbType.Integer);
+            arParams[26].Value = emailConfirmed ? 1 : 0;
 
-            arParams[30] = new FbParameter(":PasswordHash", FbDbType.VarChar);
-            arParams[30].Value = passwordHash;
+            arParams[27] = new FbParameter(":PasswordHash", FbDbType.VarChar);
+            arParams[27].Value = passwordHash;
 
-            arParams[31] = new FbParameter(":SecurityStamp", FbDbType.VarChar);
-            arParams[31].Value = securityStamp;
+            arParams[28] = new FbParameter(":SecurityStamp", FbDbType.VarChar);
+            arParams[28].Value = securityStamp;
 
-            arParams[32] = new FbParameter(":PhoneNumber", FbDbType.VarChar, 50);
-            arParams[32].Value = phoneNumber;
+            arParams[29] = new FbParameter(":PhoneNumber", FbDbType.VarChar, 50);
+            arParams[29].Value = phoneNumber;
 
-            arParams[33] = new FbParameter(":PhoneNumberConfirmed", FbDbType.Integer);
-            arParams[33].Value = phoneNumberConfirmed ? 1 : 0;
+            arParams[30] = new FbParameter(":PhoneNumberConfirmed", FbDbType.Integer);
+            arParams[30].Value = phoneNumberConfirmed ? 1 : 0;
 
-            arParams[34] = new FbParameter(":TwoFactorEnabled", FbDbType.Integer);
-            arParams[34].Value = twoFactorEnabled ? 1 : 0;
+            arParams[31] = new FbParameter(":TwoFactorEnabled", FbDbType.Integer);
+            arParams[31].Value = twoFactorEnabled ? 1 : 0;
 
-            arParams[35] = new FbParameter(":LockoutEndDateUtc", FbDbType.TimeStamp);
-            if (lockoutEndDateUtc == null)
+            arParams[32] = new FbParameter(":LockoutEndDateUtc", FbDbType.TimeStamp);
+            if (!lockoutEndDateUtc.HasValue)
             {
-                arParams[35].Value = DBNull.Value;
+                arParams[32].Value = DBNull.Value;
             }
             else
             {
-                arParams[35].Value = lockoutEndDateUtc;
+                arParams[32].Value = lockoutEndDateUtc;
             }
 
-            arParams[36] = new FbParameter(":AuthorBio", FbDbType.VarChar);
-            arParams[36].Value = authorBio;
+            arParams[33] = new FbParameter(":AuthorBio", FbDbType.VarChar);
+            arParams[33].Value = authorBio;
+
+            arParams[34] = new FbParameter(":NormalizedUserName", FbDbType.VarChar, 50);
+            arParams[34].Value = normalizedUserName;
+
+            arParams[35] = new FbParameter(":CanAutoLockout", FbDbType.Integer);
+            arParams[35].Value = canAutoLockout ? 1 : 0;
 
             string statement = "EXECUTE PROCEDURE MP_USERS_INSERT ("
                 + AdoHelper.GetParamString(arParams.Length) + ")";
@@ -1059,11 +997,9 @@ namespace cloudscribe.Core.Repositories.Firebird
             string lastName,
             string timeZoneId,
             string newEmail,
-            Guid emailChangeGuid,
-            Guid passwordResetGuid,
             bool rolesChanged,
             string authorBio,
-            DateTime dateOfBirth,
+            DateTime? dateOfBirth,
             bool emailConfirmed,
             string passwordHash,
             string securityStamp,
@@ -1072,6 +1008,12 @@ namespace cloudscribe.Core.Repositories.Firebird
             bool twoFactorEnabled,
             DateTime? lockoutEndDateUtc,
             bool isLockedOut,
+
+            string normalizedUserName,
+            bool newEmailApproved,
+            bool canAutoLockout,
+            DateTime? lastPasswordChangedDate,
+
             CancellationToken cancellationToken
             )
         {
@@ -1100,8 +1042,6 @@ namespace cloudscribe.Core.Repositories.Firebird
             sqlCommand.Append("LastName = @LastName, ");
             sqlCommand.Append("TimeZoneId = @TimeZoneId, ");
             sqlCommand.Append("NewEmail = @NewEmail, ");
-            sqlCommand.Append("EmailChangeGuid = @EmailChangeGuid, ");
-            sqlCommand.Append("PasswordResetGuid = @PasswordResetGuid, ");
             sqlCommand.Append("AuthorBio = @AuthorBio, ");
             sqlCommand.Append("DateOfBirth = @DateOfBirth, ");
 
@@ -1114,11 +1054,18 @@ namespace cloudscribe.Core.Repositories.Firebird
             sqlCommand.Append("TwoFactorEnabled = @TwoFactorEnabled, ");
             sqlCommand.Append("LockoutEndDateUtc = @LockoutEndDateUtc, ");
 
+            sqlCommand.Append("NormalizedUserName = @NormalizedUserName, ");
+            sqlCommand.Append("NewEmailApproved = @NewEmailApproved, ");
+            sqlCommand.Append("CanAutoLockout = @CanAutoLockout, ");
+            sqlCommand.Append("LastPasswordChangedDate = @LastPasswordChangedDate, ");
+
+
+
             sqlCommand.Append("IsLockedOut = @IsLockedOut    ");
 
             sqlCommand.Append("WHERE UserID = @UserID ;");
 
-            FbParameter[] arParams = new FbParameter[33];
+            FbParameter[] arParams = new FbParameter[37];
 
             arParams[0] = new FbParameter("@UserID", FbDbType.Integer);
             arParams[0].Value = userId;
@@ -1179,18 +1126,12 @@ namespace cloudscribe.Core.Repositories.Firebird
             
             arParams[19] = new FbParameter("@NewEmail", FbDbType.VarChar, 100);
             arParams[19].Value = newEmail;
-
-            arParams[20] = new FbParameter("@EmailChangeGuid", FbDbType.Char, 36);
-            arParams[20].Value = emailChangeGuid.ToString();
-
-            arParams[21] = new FbParameter("@PasswordResetGuid", FbDbType.Char, 36);
-            arParams[21].Value = passwordResetGuid.ToString();
             
             arParams[22] = new FbParameter("@AuthorBio", FbDbType.VarChar);
             arParams[22].Value = authorBio;
 
             arParams[23] = new FbParameter("@DateOfBirth", FbDbType.TimeStamp);
-            if (dateOfBirth == DateTime.MinValue)
+            if (!dateOfBirth.HasValue)
             {
                 arParams[23].Value = DBNull.Value;
             }
@@ -1233,6 +1174,25 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             arParams[32] = new FbParameter("@RolesChanged", FbDbType.Integer);
             arParams[32].Value = rolesChanged ? 1 : 0;
+
+            arParams[33] = new FbParameter("@NormalizedUserName", FbDbType.VarChar, 50);
+            arParams[33].Value = normalizedUserName;
+
+            arParams[34] = new FbParameter("@NewEmailApproved", FbDbType.Integer);
+            arParams[34].Value = newEmailApproved ? 1 : 0;
+
+            arParams[35] = new FbParameter("@CanAutoLockout", FbDbType.Integer);
+            arParams[35].Value = canAutoLockout ? 1 : 0;
+
+            arParams[36] = new FbParameter("@LastPasswordChangedDate", FbDbType.TimeStamp);
+            if (lastPasswordChangedDate == null)
+            {
+                arParams[36].Value = DBNull.Value;
+            }
+            else
+            {
+                arParams[36].Value = lastPasswordChangedDate;
+            }
 
             int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
@@ -1295,39 +1255,41 @@ namespace cloudscribe.Core.Repositories.Firebird
             return (rowsAffected > 0);
         }
 
-        public bool UpdateLastActivityTime(Guid userGuid, DateTime lastUpdate)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("UPDATE mp_Users ");
-            sqlCommand.Append("SET LastActivityDate = @LastUpdate  ");
-            sqlCommand.Append("WHERE UserGuid = @UserGuid  ;");
+        //public bool UpdateLastActivityTime(Guid userGuid, DateTime lastUpdate)
+        //{
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("UPDATE mp_Users ");
+        //    sqlCommand.Append("SET LastActivityDate = @LastUpdate  ");
+        //    sqlCommand.Append("WHERE UserGuid = @UserGuid  ;");
 
-            FbParameter[] arParams = new FbParameter[2];
+        //    FbParameter[] arParams = new FbParameter[2];
 
-            arParams[0] = new FbParameter("@UserGuid", FbDbType.VarChar, 36);
-            arParams[0].Value = userGuid.ToString();
+        //    arParams[0] = new FbParameter("@UserGuid", FbDbType.VarChar, 36);
+        //    arParams[0].Value = userGuid.ToString();
 
-            arParams[1] = new FbParameter("@LastUpdate", FbDbType.TimeStamp);
-            arParams[1].Value = lastUpdate;
+        //    arParams[1] = new FbParameter("@LastUpdate", FbDbType.TimeStamp);
+        //    arParams[1].Value = lastUpdate;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
-                    writeConnectionString,
-                    CommandType.Text,
-                    sqlCommand.ToString(),
-                    true,
-                    arParams);
+        //    int rowsAffected = AdoHelper.ExecuteNonQuery(
+        //            writeConnectionString,
+        //            CommandType.Text,
+        //            sqlCommand.ToString(),
+        //            true,
+        //            arParams);
 
-            return (rowsAffected > 0);
+        //    return (rowsAffected > 0);
 
-        }
+        //}
 
-        public bool UpdateLastLoginTime(Guid userGuid, DateTime lastLoginTime)
+        public async Task<bool> UpdateLastLoginTime(
+            Guid userGuid, 
+            DateTime lastLoginTime,
+            CancellationToken cancellationToken)
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("UPDATE mp_Users ");
             sqlCommand.Append("SET LastLoginDate = @LastLoginTime,  ");
-            sqlCommand.Append("FailedPasswordAttemptCount = 0, ");
-            sqlCommand.Append("FailedPwdAnswerAttemptCount = 0 ");
+            sqlCommand.Append("FailedPasswordAttemptCount = 0 ");
 
             sqlCommand.Append("WHERE UserGuid = @UserGuid  ;");
 
@@ -1339,12 +1301,13 @@ namespace cloudscribe.Core.Repositories.Firebird
             arParams[1] = new FbParameter("@LastLoginTime", FbDbType.TimeStamp);
             arParams[1].Value = lastLoginTime;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
                 true,
-                arParams);
+                arParams,
+                cancellationToken);
 
             return (rowsAffected > 0);
 

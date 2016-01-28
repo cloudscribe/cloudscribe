@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-18
-// Last Modified:			2016-01-03
+// Last Modified:			2016-01-28
 // 
 
 
@@ -99,6 +99,10 @@ namespace cloudscribe.Core.Repositories.MSSQL
                     user.Signature,
                     user.AuthorBio,
                     user.Comment,
+
+                    user.NormalizedUserName,
+                    user.NormalizedEmail,
+                    user.CanAutoLockout,
                     cancellationToken
                     );
 
@@ -119,9 +123,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-
-            if (string.IsNullOrEmpty(user.NormalizedEmail)) { user.NormalizedEmail = user.Email.ToLowerInvariant(); }
-
+            
             return await dbSiteUser.UpdateUser(
                     user.UserId,
                     user.DisplayName,
@@ -143,8 +145,6 @@ namespace cloudscribe.Core.Repositories.MSSQL
                     user.LastName,
                     user.TimeZoneId,
                     user.NewEmail,
-                    user.EmailChangeGuid,
-                    user.PasswordResetGuid,
                     user.RolesChanged,
                     user.AuthorBio,
                     user.DateOfBirth,
@@ -156,6 +156,10 @@ namespace cloudscribe.Core.Repositories.MSSQL
                     user.TwoFactorEnabled,
                     user.LockoutEndDateUtc,
                     user.IsLockedOut,
+                    user.NormalizedUserName,
+                    user.NewEmailApproved,
+                    user.CanAutoLockout,
+                    user.LastPasswordChangedDate,
                     cancellationToken
                     );
 
@@ -209,34 +213,34 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return await dbSiteUser.FlagAsNotDeleted(userId, cancellationToken);
         }
 
-        public async Task<bool> SetRegistrationConfirmationGuid(
-            Guid userGuid,
-            Guid registrationConfirmationGuid,
-            CancellationToken cancellationToken)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (registrationConfirmationGuid == Guid.Empty)
-            {
-                return false;
-            }
+        //public async Task<bool> SetRegistrationConfirmationGuid(
+        //    Guid userGuid,
+        //    Guid registrationConfirmationGuid,
+        //    CancellationToken cancellationToken)
+        //{
+        //    cancellationToken.ThrowIfCancellationRequested();
+        //    if (registrationConfirmationGuid == Guid.Empty)
+        //    {
+        //        return false;
+        //    }
 
-            return await dbSiteUser.SetRegistrationConfirmationGuid(userGuid, registrationConfirmationGuid, cancellationToken);
-        }
+        //    return await dbSiteUser.SetRegistrationConfirmationGuid(userGuid, registrationConfirmationGuid, cancellationToken);
+        //}
 
 
 
-        public async Task<bool> ConfirmRegistration(
-            Guid registrationGuid, 
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (registrationGuid == Guid.Empty)
-            {
-                return false;
-            }
+        //public async Task<bool> ConfirmRegistration(
+        //    Guid registrationGuid, 
+        //    CancellationToken cancellationToken = default(CancellationToken))
+        //{
+        //    cancellationToken.ThrowIfCancellationRequested();
+        //    if (registrationGuid == Guid.Empty)
+        //    {
+        //        return false;
+        //    }
 
-            return await dbSiteUser.ConfirmRegistration(Guid.Empty, registrationGuid, cancellationToken);
-        }
+        //    return await dbSiteUser.ConfirmRegistration(Guid.Empty, registrationGuid, cancellationToken);
+        //}
 
 
         public async Task<bool> LockoutAccount(
@@ -253,6 +257,15 @@ namespace cloudscribe.Core.Repositories.MSSQL
         {
             cancellationToken.ThrowIfCancellationRequested();
             return await dbSiteUser.AccountClearLockout(userGuid, cancellationToken);
+        }
+
+        public async Task<bool> UpdateLastLoginTime(
+            Guid userGuid, 
+            DateTime lastLoginTime,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            return await dbSiteUser.UpdateLastLoginTime(userGuid, lastLoginTime, cancellationToken);
         }
 
         public async Task<bool> UpdateFailedPasswordAttemptCount(
@@ -328,31 +341,6 @@ namespace cloudscribe.Core.Repositories.MSSQL
             cancellationToken.ThrowIfCancellationRequested();
 
             using (DbDataReader reader = await dbSiteUser.GetSingleUser(userGuid, cancellationToken))
-            {
-                if (reader.Read())
-                {
-                    SiteUser user = new SiteUser();
-
-                    user.LoadFromReader(reader);
-
-                    if (user.SiteId == siteId) { return user; }
-
-                }
-            }
-
-            return null;
-        }
-
-        public async Task<ISiteUser> FetchByConfirmationGuid(
-            int siteId, 
-            Guid confirmGuid, 
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            using (DbDataReader reader = await dbSiteUser.GetUserByRegistrationGuid(
-                siteId, 
-                confirmGuid,
-                cancellationToken))
             {
                 if (reader.Read())
                 {
@@ -592,7 +580,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return userList;
         }
 
-        public async Task<int> CountLockedOutUsers(
+        public async Task<int> CountLockedByAdmin(
             int siteId, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -600,7 +588,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             return await dbSiteUser.CountLockedOutUsers(siteId, cancellationToken);
         }
 
-        public async Task<List<IUserInfo>> GetPageLockedOutUsers(
+        public async Task<List<IUserInfo>> GetPageLockedByAdmin(
             int siteId,
             int pageNumber,
             int pageSize,
@@ -610,6 +598,114 @@ namespace cloudscribe.Core.Repositories.MSSQL
             List<IUserInfo> userList = new List<IUserInfo>();
 
             using (DbDataReader reader = await dbSiteUser.GetPageLockedUsers(
+                siteId,
+                pageNumber,
+                pageSize,
+                cancellationToken))
+            {
+
+                while (reader.Read())
+                {
+                    UserInfo user = new UserInfo();
+                    user.LoadFromReader(reader);
+                    userList.Add(user);
+
+                }
+            }
+
+            return userList;
+        }
+
+        public async Task<int> CountFutureLockoutEndDate(
+            int siteId,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            return await dbSiteUser.CountFutureLockoutDate(siteId, cancellationToken);
+        }
+
+        public async Task<List<IUserInfo>> GetPageFutureLockoutEndDate(
+            int siteId,
+            int pageNumber,
+            int pageSize,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            List<IUserInfo> userList = new List<IUserInfo>();
+
+            using (DbDataReader reader = await dbSiteUser.GetFutureLockoutPage(
+                siteId,
+                pageNumber,
+                pageSize,
+                cancellationToken))
+            {
+
+                while (reader.Read())
+                {
+                    UserInfo user = new UserInfo();
+                    user.LoadFromReader(reader);
+                    userList.Add(user);
+
+                }
+            }
+
+            return userList;
+        }
+
+        public async Task<int> CountUnconfirmedEmail(
+            int siteId,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            return await dbSiteUser.CountEmailUnconfirmed(siteId, cancellationToken);
+        }
+
+        public async Task<List<IUserInfo>> GetPageUnconfirmedEmailUsers(
+            int siteId,
+            int pageNumber,
+            int pageSize,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            List<IUserInfo> userList = new List<IUserInfo>();
+
+            using (DbDataReader reader = await dbSiteUser.GetPageEmailUnconfirmed(
+                siteId,
+                pageNumber,
+                pageSize,
+                cancellationToken))
+            {
+
+                while (reader.Read())
+                {
+                    UserInfo user = new UserInfo();
+                    user.LoadFromReader(reader);
+                    userList.Add(user);
+
+                }
+            }
+
+            return userList;
+        }
+
+        public async Task<int> CountUnconfirmedPhone(
+            int siteId,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            return await dbSiteUser.CountPhoneUnconfirmed(siteId, cancellationToken);
+        }
+
+        public async Task<List<IUserInfo>> GetPageUnconfirmedPhoneUsers(
+            int siteId,
+            int pageNumber,
+            int pageSize,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            List<IUserInfo> userList = new List<IUserInfo>();
+
+            using (DbDataReader reader = await dbSiteUser.GetPagePhoneUnconfirmed(
                 siteId,
                 pageNumber,
                 pageSize,

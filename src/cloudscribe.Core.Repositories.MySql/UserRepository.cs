@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-18
-// Last Modified:			2016-01-07
+// Last Modified:			2016-01-28
 // 
 
 
@@ -88,7 +88,6 @@ namespace cloudscribe.Core.Repositories.MySql
                     user.PhoneNumberConfirmed,
                     user.TwoFactorEnabled,
                     user.LockoutEndDateUtc,
-
                     user.AccountApproved,
                     user.IsLockedOut,
                     user.DisplayInMemberList,
@@ -99,6 +98,9 @@ namespace cloudscribe.Core.Repositories.MySql
                     user.Signature,
                     user.AuthorBio,
                     user.Comment,
+                    user.NormalizedUserName,
+                    user.NormalizedEmail,
+                    user.CanAutoLockout,
                     cancellationToken
                     );
 
@@ -119,9 +121,7 @@ namespace cloudscribe.Core.Repositories.MySql
             CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-
-            if (string.IsNullOrEmpty(user.NormalizedEmail)) { user.NormalizedEmail = user.Email.ToLowerInvariant(); }
-
+            
             return await dbSiteUser.UpdateUser(
                     user.UserId,
                     user.DisplayName,
@@ -143,8 +143,6 @@ namespace cloudscribe.Core.Repositories.MySql
                     user.LastName,
                     user.TimeZoneId,
                     user.NewEmail,
-                    user.EmailChangeGuid,
-                    user.PasswordResetGuid,
                     user.RolesChanged,
                     user.AuthorBio,
                     user.DateOfBirth,
@@ -156,6 +154,10 @@ namespace cloudscribe.Core.Repositories.MySql
                     user.TwoFactorEnabled,
                     user.LockoutEndDateUtc,
                     user.IsLockedOut,
+                    user.NormalizedUserName,
+                    user.NewEmailApproved,
+                    user.CanAutoLockout,
+                    user.LastPasswordChangedDate,
                     cancellationToken);
             
         }
@@ -215,44 +217,7 @@ namespace cloudscribe.Core.Repositories.MySql
             return await dbSiteUser.FlagAsNotDeleted(userId, cancellationToken);
         }
 
-        //public bool UpdatePasswordAndSalt(
-        //    int userId,
-        //    int passwordFormat,
-        //    string password,
-        //    string passwordSalt)
-        //{
-        //    return dbSiteUser.UpdatePasswordAndSalt(userId, passwordFormat, password, passwordSalt);
-        //}
-
-        public async Task<bool> SetRegistrationConfirmationGuid(
-            Guid userGuid,
-            Guid registrationConfirmationGuid,
-            CancellationToken cancellationToken)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (registrationConfirmationGuid == Guid.Empty)
-            {
-                return false;
-            }
-
-            return await dbSiteUser.SetRegistrationConfirmationGuid(userGuid, registrationConfirmationGuid, cancellationToken);
-        }
-
-        public async Task<bool> ConfirmRegistration(
-            Guid registrationGuid, 
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-
-            if (registrationGuid == Guid.Empty)
-            {
-                return false;
-            }
-
-            return await dbSiteUser.ConfirmRegistration(Guid.Empty, registrationGuid, cancellationToken);
-        }
-
-
+        
         public async Task<bool> LockoutAccount(
             Guid userGuid, 
             CancellationToken cancellationToken = default(CancellationToken))
@@ -281,45 +246,16 @@ namespace cloudscribe.Core.Repositories.MySql
                 cancellationToken);
         }
 
-        //public async Task<bool> UpdateTotalRevenue(Guid userGuid)
-        //{
-        //    return await dbSiteUser.UpdateTotalRevenue(userGuid);
+        public async Task<bool> UpdateLastLoginTime(
+            Guid userGuid,
+            DateTime lastLoginTime,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            return await dbSiteUser.UpdateLastLoginTime(userGuid, lastLoginTime, cancellationToken);
+        }
 
-        //}
-
-        ///// <summary>
-        ///// updates the total revenue for all users
-        ///// </summary>
-        //public async Task<bool> UpdateTotalRevenue()
-        //{
-        //    return await dbSiteUser.UpdateTotalRevenue();
-        //}
-
-
-        //public DataTable GetUserListForPasswordFormatChange(int siteId)
-        //{
-        //    // if (UseRelatedSiteMode) { siteId = RelatedSiteID; }
-
-        //    DataTable dt = new DataTable();
-        //    dt.Columns.Add("UserID", typeof(int));
-        //    dt.Columns.Add("PasswordSalt", typeof(String));
-        //    dt.Columns.Add("Pwd", typeof(String));
-
-        //    using (DbDataReader reader = dbSiteUser.GetUserList(siteId))
-        //    {
-        //        while (reader.Read())
-        //        {
-        //            DataRow row = dt.NewRow();
-        //            row["UserID"] = reader["UserID"];
-        //            row["PasswordSalt"] = reader["PasswordSalt"];
-        //            row["Pwd"] = reader["Pwd"];
-        //            dt.Rows.Add(row);
-
-        //        }
-        //    }
-
-        //    return dt;
-        //}
+        
 
         public int GetCount(int siteId)
         { 
@@ -650,7 +586,7 @@ namespace cloudscribe.Core.Repositories.MySql
 
         }
 
-        public async Task<int> CountLockedOutUsers(
+        public async Task<int> CountLockedByAdmin(
             int siteId, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -658,7 +594,7 @@ namespace cloudscribe.Core.Repositories.MySql
             return await dbSiteUser.CountLockedOutUsers(siteId, cancellationToken);
         }
 
-        public async Task<List<IUserInfo>> GetPageLockedOutUsers(
+        public async Task<List<IUserInfo>> GetPageLockedByAdmin(
             int siteId,
             int pageNumber,
             int pageSize,

@@ -1,3 +1,20 @@
+DROP PROCEDURE [dbo].[mp_Users_SelectByRegisterGuid]
+DROP PROCEDURE [dbo].[mp_Users_SelectGuidByOpenIDURI]
+DROP PROCEDURE [dbo].[mp_Users_SelectGuidByWindowsLiveID]
+DROP PROCEDURE [dbo].[mp_Users_ConfirmRegistration] 
+DROP PROCEDURE [dbo].[mp_Users_CountOnlineSinceTime]
+DROP PROCEDURE [dbo].[mp_Users_SelectTop50UsersOnlineSinceTime]
+DROP PROCEDURE [dbo].[mp_Users_SelectUsersOnlineSinceTime]
+DROP PROCEDURE [dbo].[mp_Users_SetFailedPasswordAnswerAttemptCount]
+DROP PROCEDURE [dbo].[mp_Users_SetFailedPasswordAnswerAttemptStartWindow]
+DROP PROCEDURE [dbo].[mp_Users_SetFailedPasswordAttemptStartWindow]
+DROP PROCEDURE [dbo].[mp_Users_SetRegistrationConfirmationGuid] 
+DROP PROCEDURE [dbo].[mp_Users_UpdateLastActivityTime]
+DROP PROCEDURE [dbo].[mp_Users_UpdateLastPasswordChangeTime]
+
+GO
+
+
 ALTER TABLE [dbo].mp_Sites DROP CONSTRAINT DF_mp_Sites_MinRequiredNonAlphanumericCharacters
 GO
 
@@ -578,7 +595,6 @@ Last Modified:	2016-01-27
 @LdapPort				int,
 @LdapRootDN				nvarchar(255),
 @LdapUserDNKey			nvarchar(10),
-@AllowUserFullNameChange		bit,
 @UseEmailForLogin			bit,
 @RequiresQuestionAndAnswer	bit,
 @MaxInvalidPasswordAttempts	int,
@@ -599,7 +615,6 @@ SET
     LdapDomain = @LdapDomain,
 	LdapRootDN = @LdapRootDN,
 	LdapUserDNKey = @LdapUserDNKey,
-	AllowUserFullNameChange = @AllowUserFullNameChange,
 	UseEmailForLogin = @UseEmailForLogin,
 	RequiresQuestionAndAnswer = @RequiresQuestionAndAnswer,
 	MaxInvalidPasswordAttempts = @MaxInvalidPasswordAttempts,
@@ -802,12 +817,136 @@ DROP TABLE #PageIndexForUsers
 GO
 
 
+CREATE PROCEDURE [dbo].[mp_Users_CountFutureLockoutDate]
+
+/*
+Author:			Joe Audette
+Created:		2016-01-25
+Last Modified:	2016-01-25
+
+*/
+
+@SiteID		int,
+@CurrentUtc datetime
+
+AS
+
+SELECT  	COUNT(*)
+
+FROM		mp_Users
+
+WHERE	SiteID = @SiteID
+		AND LockoutEndDateUtc IS NOT NULL
+		AND LockoutEndDateUtc > @CurrentUtc
+
+GO
+
+CREATE PROCEDURE [dbo].[mp_Users_FutureLockoutPage]
+
+/*
+Author:			Joe Audette
+Created:		2016-01-28
+Last Modified:	2016-01-28
+
+*/
+
+@SiteID	int,
+@PageNumber int,
+@PageSize int,
+@CurrentUtc datetime
+
+
+
+AS
+DECLARE @PageLowerBound int
+DECLARE @PageUpperBound int
+
+
+SET @PageLowerBound = (@PageSize * @PageNumber) - @PageSize
+SET @PageUpperBound = @PageLowerBound + @PageSize + 1
+
+
+CREATE TABLE #PageIndexForUsers 
+(
+	IndexID int IDENTITY (1, 1) NOT NULL,
+	UserID int
+)	
+
+
+ BEGIN
+	    INSERT INTO 	#PageIndexForUsers (UserID)
+
+	    SELECT 	UserID
+		FROM 		[dbo].mp_Users 
+		WHERE 	
+				SiteID = @SiteID
+				AND LockoutEndDateUtc IS NOT NULL
+				AND LockoutEndDateUtc > @CurrentUtc
+				
+		ORDER BY 	[Name]
+
+END
+
+
+SELECT		u.*
+
+FROM			[dbo].mp_Users u
+
+JOIN			#PageIndexForUsers p
+ON			u.UserID = p.UserID
+
+WHERE 		
+			u.SiteID = 1
+			AND p.IndexID > @PageLowerBound 
+			AND p.IndexID < @PageUpperBound
+
+ORDER BY		p.IndexID
+
+DROP TABLE #PageIndexForUsers
+
+
+GO
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ALTER Procedure [dbo].[mp_Users_Insert]
 
 /*
 Author:			Joe Audette
 Created:		2004-09-30
-Last Modified:	2016-01-26
+Last Modified:	2016-01-28
 
 */
 
@@ -940,7 +1079,7 @@ ALTER PROCEDURE [dbo].[mp_Users_Update]
 /*
 Author:			Joe Audette
 Created:		2004-09-30
-Last Modified:	2015-11-05
+Last Modified:	2016-01-28
 
 */
 
@@ -978,7 +1117,8 @@ Last Modified:	2015-11-05
 @IsLockedOut bit,
 @NormalizedUserName nvarchar(50),
 @NewEmailApproved bit,
-@CanAutoLockout bit
+@CanAutoLockout bit,
+@LastPasswordChangedDate datetime
 
 
 AS
@@ -1016,12 +1156,30 @@ SET			[Name] = @Name,
 			LockoutEndDateUtc = @LockoutEndDateUtc,
 			NormalizedUserName = @NormalizedUserName,
 			NewEmailApproved = @NewEmailApproved,
-			CanAutoLockout = @CanAutoLockout
+			CanAutoLockout = @CanAutoLockout,
+			LastPasswordChangedDate = @LastPasswordChangedDate
 			
 WHERE		UserID = @UserID
 
 GO
 
+
+ALTER PROCEDURE [dbo].[mp_Users_UpdateLastLoginTime]
+
+
+@UserGuid uniqueidentifier,
+@LastLoginTime	datetime
+
+
+AS
+
+UPDATE mp_Users WITH (ROWLOCK)
+SET LastLoginDate = @LastLoginTime,
+FailedPasswordAttemptCount = 0
+		
+WHERE UserGuid = @UserGuid
+
+GO
 
 
 

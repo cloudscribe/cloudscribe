@@ -85,7 +85,7 @@ namespace cloudscribe.Core.Models
         }
 
         
-        public int MaxInvalidPasswordAttempts { get; set; } = 10;
+        public int MaxInvalidPasswordAttempts { get; set; } = 5;
         
         
         public int MinRequiredPasswordLength { get; set; } = 7;    
