@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-18
-// Last Modified:			2016-01-28
+// Last Modified:			2016-01-29
 // 
 
 
@@ -608,6 +608,114 @@ namespace cloudscribe.Core.Repositories.pgsql
             List<IUserInfo> userList = new List<IUserInfo>();
 
             using (DbDataReader reader = await dbSiteUser.GetPageNotApprovedUsers(
+                siteId,
+                pageNumber,
+                pageSize,
+                cancellationToken))
+            {
+
+                while (reader.Read())
+                {
+                    UserInfo user = new UserInfo();
+                    user.LoadFromReader(reader);
+                    userList.Add(user);
+
+                }
+            }
+
+            return userList;
+        }
+
+        public async Task<int> CountFutureLockoutEndDate(
+            int siteId,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            return await dbSiteUser.CountFutureLockoutDate(siteId, cancellationToken);
+        }
+
+        public async Task<List<IUserInfo>> GetPageFutureLockoutEndDate(
+            int siteId,
+            int pageNumber,
+            int pageSize,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            List<IUserInfo> userList = new List<IUserInfo>();
+
+            using (DbDataReader reader = await dbSiteUser.GetFutureLockoutPage(
+                siteId,
+                pageNumber,
+                pageSize,
+                cancellationToken))
+            {
+
+                while (reader.Read())
+                {
+                    UserInfo user = new UserInfo();
+                    user.LoadFromReader(reader);
+                    userList.Add(user);
+
+                }
+            }
+
+            return userList;
+        }
+
+        public async Task<int> CountUnconfirmedEmail(
+            int siteId,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            return await dbSiteUser.CountEmailUnconfirmed(siteId, cancellationToken);
+        }
+
+        public async Task<List<IUserInfo>> GetPageUnconfirmedEmailUsers(
+            int siteId,
+            int pageNumber,
+            int pageSize,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            List<IUserInfo> userList = new List<IUserInfo>();
+
+            using (DbDataReader reader = await dbSiteUser.GetPageEmailUnconfirmed(
+                siteId,
+                pageNumber,
+                pageSize,
+                cancellationToken))
+            {
+
+                while (reader.Read())
+                {
+                    UserInfo user = new UserInfo();
+                    user.LoadFromReader(reader);
+                    userList.Add(user);
+
+                }
+            }
+
+            return userList;
+        }
+
+        public async Task<int> CountUnconfirmedPhone(
+            int siteId,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            return await dbSiteUser.CountPhoneUnconfirmed(siteId, cancellationToken);
+        }
+
+        public async Task<List<IUserInfo>> GetPageUnconfirmedPhoneUsers(
+            int siteId,
+            int pageNumber,
+            int pageSize,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            List<IUserInfo> userList = new List<IUserInfo>();
+
+            using (DbDataReader reader = await dbSiteUser.GetPagePhoneUnconfirmed(
                 siteId,
                 pageNumber,
                 pageSize,

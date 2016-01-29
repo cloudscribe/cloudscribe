@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2016-01-28
+// Last Modified:			2016-01-29
 // 
 
 using cloudscribe.DbHelpers;
@@ -753,6 +753,8 @@ namespace cloudscribe.Core.Repositories.Firebird
 
         }
 
+
+
         public async Task<DbDataReader> GetPageNotApprovedUsers(
             int siteId,
             int pageNumber,
@@ -785,6 +787,214 @@ namespace cloudscribe.Core.Repositories.Firebird
 
             arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
             arParams[0].Value = siteId;
+
+            return await AdoHelper.ExecuteReaderAsync(
+                readConnectionString,
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams,
+                cancellationToken);
+
+        }
+
+        public async Task<int> CountEmailUnconfirmed(
+            int siteId,
+            CancellationToken cancellationToken)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT COUNT(*) FROM mp_Users WHERE SiteID = @SiteID AND EmailConfirmed = 0;");
+
+            FbParameter[] arParams = new FbParameter[1];
+
+            arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
+            arParams[0].Value = siteId;
+
+            object result = await AdoHelper.ExecuteScalarAsync(
+                readConnectionString,
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams,
+                cancellationToken);
+
+            int count = Convert.ToInt32(result);
+
+            return count;
+        }
+
+        public async Task<DbDataReader> GetPageEmailUnconfirmed(
+            int siteId,
+            int pageNumber,
+            int pageSize,
+            CancellationToken cancellationToken)
+        {
+
+            int skip = pageSize * (pageNumber - 1);
+
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT	 ");
+            sqlCommand.Append(" FIRST " + pageSize.ToString() + " ");
+            if (pageNumber > 1)
+            {
+                sqlCommand.Append(" SKIP " + skip.ToString() + "  ");
+            }
+            sqlCommand.Append(" u.*  ");
+
+            sqlCommand.Append("FROM	mp_Users u  ");
+
+            sqlCommand.Append("WHERE   ");
+            sqlCommand.Append("u.SiteID = @SiteID   ");
+            sqlCommand.Append("AND ");
+            sqlCommand.Append("u.EmailConfirmed = 0 ");
+
+            sqlCommand.Append(" ORDER BY u.Name ");
+            sqlCommand.Append(" ; ");
+
+            FbParameter[] arParams = new FbParameter[1];
+
+            arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
+            arParams[0].Value = siteId;
+
+            return await AdoHelper.ExecuteReaderAsync(
+                readConnectionString,
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams,
+                cancellationToken);
+
+        }
+
+        public async Task<int> CountPhoneUnconfirmed(
+            int siteId,
+            CancellationToken cancellationToken)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT COUNT(*) FROM mp_Users WHERE SiteID = @SiteID AND PhoneNumberConfirmed = 0;");
+
+            FbParameter[] arParams = new FbParameter[1];
+
+            arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
+            arParams[0].Value = siteId;
+
+            object result = await AdoHelper.ExecuteScalarAsync(
+                readConnectionString,
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams,
+                cancellationToken);
+
+            int count = Convert.ToInt32(result);
+
+            return count;
+        }
+
+        public async Task<DbDataReader> GetPagePhoneUnconfirmed(
+            int siteId,
+            int pageNumber,
+            int pageSize,
+            CancellationToken cancellationToken)
+        {
+
+            int skip = pageSize * (pageNumber - 1);
+
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT	 ");
+            sqlCommand.Append(" FIRST " + pageSize.ToString() + " ");
+            if (pageNumber > 1)
+            {
+                sqlCommand.Append(" SKIP " + skip.ToString() + "  ");
+            }
+            sqlCommand.Append(" u.*  ");
+
+            sqlCommand.Append("FROM	mp_Users u  ");
+
+            sqlCommand.Append("WHERE   ");
+            sqlCommand.Append("u.SiteID = @SiteID   ");
+            sqlCommand.Append("AND ");
+            sqlCommand.Append("u.PhoneNumberConfirmed = 0 ");
+
+            sqlCommand.Append(" ORDER BY u.Name ");
+            sqlCommand.Append(" ; ");
+
+            FbParameter[] arParams = new FbParameter[1];
+
+            arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
+            arParams[0].Value = siteId;
+
+            return await AdoHelper.ExecuteReaderAsync(
+                readConnectionString,
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams,
+                cancellationToken);
+
+        }
+
+        public async Task<int> CountFutureLockoutDate(
+            int siteId,
+            CancellationToken cancellationToken)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT COUNT(*) FROM mp_Users ");
+            sqlCommand.Append("WHERE SiteID = @SiteID ");
+            sqlCommand.Append("AND LockoutEndDateUtc IS NOT NULL ");
+            sqlCommand.Append("AND LockoutEndDateUtc > @CurrentUtc");
+            sqlCommand.Append(";");
+
+            FbParameter[] arParams = new FbParameter[2];
+
+            arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
+            arParams[0].Value = siteId;
+
+            arParams[1] = new FbParameter("@CurrentUtc", FbDbType.TimeStamp);
+            arParams[1].Value = DateTime.UtcNow;
+
+            object result = await AdoHelper.ExecuteScalarAsync(
+                readConnectionString,
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams,
+                cancellationToken);
+
+            int count = Convert.ToInt32(result);
+
+            return count;
+        }
+
+        public async Task<DbDataReader> GetFutureLockoutPage(
+            int siteId,
+            int pageNumber,
+            int pageSize,
+            CancellationToken cancellationToken)
+        {
+
+            int skip = pageSize * (pageNumber - 1);
+
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT	 ");
+            sqlCommand.Append(" FIRST " + pageSize.ToString() + " ");
+            if (pageNumber > 1)
+            {
+                sqlCommand.Append(" SKIP " + skip.ToString() + "  ");
+            }
+            sqlCommand.Append(" u.*  ");
+
+            sqlCommand.Append("FROM	mp_Users u  ");
+
+            sqlCommand.Append("WHERE   ");
+            sqlCommand.Append("u.SiteID = @SiteID   ");
+            sqlCommand.Append("AND LockoutEndDateUtc IS NOT NULL ");
+            sqlCommand.Append("AND LockoutEndDateUtc > @CurrentUtc");
+
+            sqlCommand.Append(" ORDER BY u.Name ");
+            sqlCommand.Append(" ; ");
+
+            FbParameter[] arParams = new FbParameter[2];
+
+            arParams[0] = new FbParameter("@SiteID", FbDbType.Integer);
+            arParams[0].Value = siteId;
+
+            arParams[1] = new FbParameter("@CurrentUtc", FbDbType.TimeStamp);
+            arParams[1].Value = DateTime.UtcNow;
 
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,

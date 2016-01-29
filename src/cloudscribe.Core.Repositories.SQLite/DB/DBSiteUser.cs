@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2016-01-28
+// Last Modified:			2016-01-29
 // 
 
 using cloudscribe.DbHelpers;
@@ -700,6 +700,188 @@ namespace cloudscribe.Core.Repositories.SQLite
 
             arParams[2] = new SqliteParameter(":SiteID", DbType.Int32);
             arParams[2].Value = siteId;
+
+            return AdoHelper.ExecuteReader(
+                connectionString,
+                sqlCommand.ToString(),
+                arParams);
+
+        }
+
+        public int CountEmailUnconfirmed(int siteId)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT COUNT(*) FROM mp_Users WHERE SiteID = :SiteID AND EmailConfirmed = 0;");
+
+            SqliteParameter[] arParams = new SqliteParameter[1];
+
+            arParams[0] = new SqliteParameter(":SiteID", DbType.Int32);
+            arParams[0].Value = siteId;
+
+            int count = Convert.ToInt32(
+                AdoHelper.ExecuteScalar(
+                connectionString,
+                sqlCommand.ToString(),
+                arParams).ToString());
+
+            return count;
+        }
+
+        public DbDataReader GetPageEmailUnconfirmed(
+            int siteId,
+            int pageNumber,
+            int pageSize)
+        {
+            int pageLowerBound = (pageSize * pageNumber) - pageSize;
+
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT *  ");
+
+            sqlCommand.Append("FROM	mp_Users  ");
+
+            sqlCommand.Append("WHERE  ");
+            sqlCommand.Append("SiteID = :SiteID  ");
+            sqlCommand.Append("AND ");
+            sqlCommand.Append("EmailConfirmed = 0 ");
+
+            sqlCommand.Append(" ORDER BY Name ");
+            sqlCommand.Append("LIMIT " + pageLowerBound.ToString() + ", :PageSize  ; ");
+
+            SqliteParameter[] arParams = new SqliteParameter[3];
+
+            arParams[0] = new SqliteParameter(":PageNumber", DbType.Int32);
+            arParams[0].Value = pageNumber;
+
+            arParams[1] = new SqliteParameter(":PageSize", DbType.Int32);
+            arParams[1].Value = pageSize;
+
+            arParams[2] = new SqliteParameter(":SiteID", DbType.Int32);
+            arParams[2].Value = siteId;
+
+            return AdoHelper.ExecuteReader(
+                connectionString,
+                sqlCommand.ToString(),
+                arParams);
+
+        }
+
+        public int CountPhoneUnconfirmed(int siteId)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT COUNT(*) FROM mp_Users WHERE SiteID = :SiteID AND PhoneNumberConfirmed = 0;");
+
+            SqliteParameter[] arParams = new SqliteParameter[1];
+
+            arParams[0] = new SqliteParameter(":SiteID", DbType.Int32);
+            arParams[0].Value = siteId;
+
+            int count = Convert.ToInt32(
+                AdoHelper.ExecuteScalar(
+                connectionString,
+                sqlCommand.ToString(),
+                arParams).ToString());
+
+            return count;
+        }
+
+        public DbDataReader GetPagePhoneUnconfirmed(
+            int siteId,
+            int pageNumber,
+            int pageSize)
+        {
+            int pageLowerBound = (pageSize * pageNumber) - pageSize;
+
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT *  ");
+
+            sqlCommand.Append("FROM	mp_Users  ");
+
+            sqlCommand.Append("WHERE  ");
+            sqlCommand.Append("SiteID = :SiteID  ");
+            sqlCommand.Append("AND ");
+            sqlCommand.Append("PhoneNumberConfirmed = 0 ");
+
+            sqlCommand.Append(" ORDER BY Name ");
+            sqlCommand.Append("LIMIT " + pageLowerBound.ToString() + ", :PageSize  ; ");
+
+            SqliteParameter[] arParams = new SqliteParameter[3];
+
+            arParams[0] = new SqliteParameter(":PageNumber", DbType.Int32);
+            arParams[0].Value = pageNumber;
+
+            arParams[1] = new SqliteParameter(":PageSize", DbType.Int32);
+            arParams[1].Value = pageSize;
+
+            arParams[2] = new SqliteParameter(":SiteID", DbType.Int32);
+            arParams[2].Value = siteId;
+
+            return AdoHelper.ExecuteReader(
+                connectionString,
+                sqlCommand.ToString(),
+                arParams);
+
+        }
+
+        public int CountFutureLockoutDate(int siteId)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT COUNT(*) ");
+            sqlCommand.Append("FROM mp_Users ");
+            sqlCommand.Append("WHERE SiteID = :SiteID ");
+            sqlCommand.Append("AND LockoutEndDateUtc IS NOT NULL ");
+            sqlCommand.Append("AND LockoutEndDateUtc > :CurrentUtc ");
+            sqlCommand.Append(";");
+
+            SqliteParameter[] arParams = new SqliteParameter[2];
+
+            arParams[0] = new SqliteParameter(":SiteID", DbType.Int32);
+            arParams[0].Value = siteId;
+
+            arParams[1] = new SqliteParameter(":CurrentUtc", DbType.DateTime);
+            arParams[1].Value = DateTime.UtcNow;
+
+            int count = Convert.ToInt32(
+                AdoHelper.ExecuteScalar(
+                connectionString,
+                sqlCommand.ToString(),
+                arParams).ToString());
+
+            return count;
+        }
+
+        public DbDataReader GetFutureLockoutPage(
+            int siteId,
+            int pageNumber,
+            int pageSize)
+        {
+            int pageLowerBound = (pageSize * pageNumber) - pageSize;
+
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT *  ");
+
+            sqlCommand.Append("FROM	mp_Users  ");
+
+            sqlCommand.Append("WHERE  ");
+            sqlCommand.Append("SiteID = :SiteID  ");
+            sqlCommand.Append("AND LockoutEndDateUtc IS NOT NULL ");
+            sqlCommand.Append("AND LockoutEndDateUtc > :CurrentUtc ");
+
+            sqlCommand.Append(" ORDER BY Name ");
+            sqlCommand.Append("LIMIT " + pageLowerBound.ToString() + ", :PageSize  ; ");
+
+            SqliteParameter[] arParams = new SqliteParameter[4];
+
+            arParams[0] = new SqliteParameter(":PageNumber", DbType.Int32);
+            arParams[0].Value = pageNumber;
+
+            arParams[1] = new SqliteParameter(":PageSize", DbType.Int32);
+            arParams[1].Value = pageSize;
+
+            arParams[2] = new SqliteParameter(":SiteID", DbType.Int32);
+            arParams[2].Value = siteId;
+
+            arParams[3] = new SqliteParameter(":CurrentUtc", DbType.DateTime);
+            arParams[3].Value = DateTime.UtcNow;
 
             return AdoHelper.ExecuteReader(
                 connectionString,

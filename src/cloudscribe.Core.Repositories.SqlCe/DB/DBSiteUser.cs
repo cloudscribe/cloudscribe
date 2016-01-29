@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2010-04-06
-// Last Modified:			2016-01-28
+// Last Modified:			2016-01-29
 // 
 
 using cloudscribe.DbHelpers;
@@ -842,7 +842,8 @@ namespace cloudscribe.Core.Repositories.SqlCe
             sqlCommand.Append("(");
             sqlCommand.Append("SELECT TOP (" + pageSize.ToString(CultureInfo.InvariantCulture) + ") * FROM ");
             sqlCommand.Append("(");
-            sqlCommand.Append("SELECT TOP (" + pageNumber.ToString(CultureInfo.InvariantCulture) + " * " + pageSize.ToString(CultureInfo.InvariantCulture) + ") u.* ");
+            sqlCommand.Append("SELECT TOP (" + pageNumber.ToString(CultureInfo.InvariantCulture) 
+                + " * " + pageSize.ToString(CultureInfo.InvariantCulture) + ") u.* ");
 
             sqlCommand.Append("FROM	mp_Users u  ");
             sqlCommand.Append("WHERE ");
@@ -868,6 +869,222 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
             arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
             arParams[0].Value = siteId;
+
+            return AdoHelper.ExecuteReader(
+                connectionString,
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams);
+
+        }
+
+        public int CountEmailUnconfirmed(int siteId)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  Count(*) ");
+            sqlCommand.Append("FROM	mp_Users ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("SiteID = @SiteID ");
+            sqlCommand.Append("AND ");
+            sqlCommand.Append("EmailConfirmed = 0 ");
+            sqlCommand.Append(";");
+
+            SqlCeParameter[] arParams = new SqlCeParameter[1];
+
+            arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
+            arParams[0].Value = siteId;
+
+            return Convert.ToInt32(AdoHelper.ExecuteScalar(
+                connectionString,
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams));
+
+        }
+
+        public DbDataReader GetPageEmailUnconfirmed(
+            int siteId,
+            int pageNumber,
+            int pageSize)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT * FROM ");
+            sqlCommand.Append("(");
+            sqlCommand.Append("SELECT TOP (" + pageSize.ToString(CultureInfo.InvariantCulture) + ") * FROM ");
+            sqlCommand.Append("(");
+            sqlCommand.Append("SELECT TOP (" + pageNumber.ToString(CultureInfo.InvariantCulture)
+                + " * " + pageSize.ToString(CultureInfo.InvariantCulture) + ") u.* ");
+
+            sqlCommand.Append("FROM	mp_Users u  ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("u.SiteID = @SiteID ");
+            sqlCommand.Append("AND ");
+            sqlCommand.Append("u.EmailConfirmed = 0 ");
+
+            sqlCommand.Append("ORDER BY  ");
+            sqlCommand.Append("[Name]  ");
+
+            sqlCommand.Append(") AS t1 ");
+            sqlCommand.Append("ORDER BY  ");
+            sqlCommand.Append("t1.[Name] DESC ");
+
+            sqlCommand.Append(") AS t2 ");
+
+            sqlCommand.Append("ORDER BY  ");
+            sqlCommand.Append("t2.[Name]  ");
+            sqlCommand.Append(";");
+
+
+            SqlCeParameter[] arParams = new SqlCeParameter[1];
+
+            arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
+            arParams[0].Value = siteId;
+
+            return AdoHelper.ExecuteReader(
+                connectionString,
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams);
+
+        }
+
+        public int CountPhoneUnconfirmed(int siteId)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  Count(*) ");
+            sqlCommand.Append("FROM	mp_Users ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("SiteID = @SiteID ");
+            sqlCommand.Append("AND ");
+            sqlCommand.Append("PhoneNumberConfirmed = 0 ");
+            sqlCommand.Append(";");
+
+            SqlCeParameter[] arParams = new SqlCeParameter[1];
+
+            arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
+            arParams[0].Value = siteId;
+
+            return Convert.ToInt32(AdoHelper.ExecuteScalar(
+                connectionString,
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams));
+
+        }
+
+        public DbDataReader GetPagePhoneUnconfirmed(
+            int siteId,
+            int pageNumber,
+            int pageSize)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT * FROM ");
+            sqlCommand.Append("(");
+            sqlCommand.Append("SELECT TOP (" + pageSize.ToString(CultureInfo.InvariantCulture) + ") * FROM ");
+            sqlCommand.Append("(");
+            sqlCommand.Append("SELECT TOP (" + pageNumber.ToString(CultureInfo.InvariantCulture)
+                + " * " + pageSize.ToString(CultureInfo.InvariantCulture) + ") u.* ");
+
+            sqlCommand.Append("FROM	mp_Users u  ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("u.SiteID = @SiteID ");
+            sqlCommand.Append("AND ");
+            sqlCommand.Append("u.PhoneNumberConfirmed = 0 ");
+
+            sqlCommand.Append("ORDER BY  ");
+            sqlCommand.Append("[Name]  ");
+
+            sqlCommand.Append(") AS t1 ");
+            sqlCommand.Append("ORDER BY  ");
+            sqlCommand.Append("t1.[Name] DESC ");
+
+            sqlCommand.Append(") AS t2 ");
+
+            sqlCommand.Append("ORDER BY  ");
+            sqlCommand.Append("t2.[Name]  ");
+            sqlCommand.Append(";");
+
+
+            SqlCeParameter[] arParams = new SqlCeParameter[1];
+
+            arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
+            arParams[0].Value = siteId;
+
+            return AdoHelper.ExecuteReader(
+                connectionString,
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams);
+
+        }
+
+        public int CountFutureLockoutDate(int siteId)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT  Count(*) ");
+            sqlCommand.Append("FROM	mp_Users ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("SiteID = @SiteID ");
+            sqlCommand.Append("AND LockoutEndDateUtc IS NOT NULL ");
+            sqlCommand.Append("AND LockoutEndDateUtc > @CurrentUtc ");
+            sqlCommand.Append(";");
+
+            SqlCeParameter[] arParams = new SqlCeParameter[2];
+
+            arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
+            arParams[0].Value = siteId;
+
+            arParams[1] = new SqlCeParameter("@CurrentUtc", SqlDbType.DateTime);
+            arParams[1].Value = DateTime.UtcNow;
+
+            return Convert.ToInt32(AdoHelper.ExecuteScalar(
+                connectionString,
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams));
+
+        }
+
+        public DbDataReader GetFutureLockoutPage(
+            int siteId,
+            int pageNumber,
+            int pageSize)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT * FROM ");
+            sqlCommand.Append("(");
+            sqlCommand.Append("SELECT TOP (" + pageSize.ToString(CultureInfo.InvariantCulture) + ") * FROM ");
+            sqlCommand.Append("(");
+            sqlCommand.Append("SELECT TOP (" + pageNumber.ToString(CultureInfo.InvariantCulture)
+                + " * " + pageSize.ToString(CultureInfo.InvariantCulture) + ") u.* ");
+
+            sqlCommand.Append("FROM	mp_Users u  ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("u.SiteID = @SiteID ");
+            sqlCommand.Append("AND LockoutEndDateUtc IS NOT NULL ");
+            sqlCommand.Append("AND LockoutEndDateUtc > @CurrentUtc ");
+
+            sqlCommand.Append("ORDER BY  ");
+            sqlCommand.Append("[Name]  ");
+
+            sqlCommand.Append(") AS t1 ");
+            sqlCommand.Append("ORDER BY  ");
+            sqlCommand.Append("t1.[Name] DESC ");
+
+            sqlCommand.Append(") AS t2 ");
+
+            sqlCommand.Append("ORDER BY  ");
+            sqlCommand.Append("t2.[Name]  ");
+            sqlCommand.Append(";");
+
+
+            SqlCeParameter[] arParams = new SqlCeParameter[2];
+
+            arParams[0] = new SqlCeParameter("@SiteID", SqlDbType.Int);
+            arParams[0].Value = siteId;
+
+            arParams[1] = new SqlCeParameter("@CurrentUtc", SqlDbType.DateTime);
+            arParams[1].Value = DateTime.UtcNow;
 
             return AdoHelper.ExecuteReader(
                 connectionString,

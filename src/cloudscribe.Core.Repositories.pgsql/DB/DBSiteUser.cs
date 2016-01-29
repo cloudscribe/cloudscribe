@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2016-01-28
+// Last Modified:			2016-01-29
 // 
 
 using cloudscribe.DbHelpers;
@@ -884,6 +884,224 @@ namespace cloudscribe.Core.Repositories.pgsql
             sqlCommand.Append("siteid = :siteid  ");
             sqlCommand.Append("AND ");
             sqlCommand.Append("accountapproved = false ");
+
+            sqlCommand.Append("ORDER BY  ");
+            sqlCommand.Append("name  ");
+            sqlCommand.Append("LIMIT  :pagesize");
+
+            if (pageNumber > 1)
+                sqlCommand.Append(" OFFSET :pageoffset ");
+
+            sqlCommand.Append(";");
+
+            return await AdoHelper.ExecuteReaderAsync(
+                readConnectionString,
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams,
+                cancellationToken);
+
+        }
+
+        public async Task<int> CountEmailUnconfirmed(
+            int siteId,
+            CancellationToken cancellationToken)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+
+            sqlCommand.Append("SELECT Count(*) FROM mp_users WHERE siteid = :siteid AND emailconfirmed = false; ");
+
+            NpgsqlParameter[] arParams = new NpgsqlParameter[1];
+
+            arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
+            arParams[0].Value = siteId;
+
+            object result = await AdoHelper.ExecuteScalarAsync(
+                readConnectionString,
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams,
+                cancellationToken);
+
+            return Convert.ToInt32(result);
+        }
+
+        public async Task<DbDataReader> GetPageEmailUnconfirmed(
+            int siteId,
+            int pageNumber,
+            int pageSize,
+            CancellationToken cancellationToken)
+        {
+            int pageLowerBound = (pageSize * pageNumber) - pageSize;
+
+            NpgsqlParameter[] arParams = new NpgsqlParameter[3];
+
+            arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
+            arParams[0].Value = siteId;
+
+            arParams[1] = new NpgsqlParameter("pagesize", NpgsqlTypes.NpgsqlDbType.Integer);
+            arParams[1].Value = pageSize;
+
+            arParams[2] = new NpgsqlParameter("pageoffset", NpgsqlTypes.NpgsqlDbType.Integer);
+            arParams[2].Value = pageLowerBound;
+
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT	* ");
+            sqlCommand.Append("FROM	mp_users  ");
+
+            sqlCommand.Append("WHERE  ");
+            sqlCommand.Append("siteid = :siteid  ");
+            sqlCommand.Append("AND ");
+            sqlCommand.Append("emailconfirmed = false ");
+
+            sqlCommand.Append("ORDER BY  ");
+            sqlCommand.Append("name  ");
+            sqlCommand.Append("LIMIT  :pagesize");
+
+            if (pageNumber > 1)
+                sqlCommand.Append(" OFFSET :pageoffset ");
+
+            sqlCommand.Append(";");
+
+            return await AdoHelper.ExecuteReaderAsync(
+                readConnectionString,
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams,
+                cancellationToken);
+
+        }
+
+        public async Task<int> CountPhoneUnconfirmed(
+            int siteId,
+            CancellationToken cancellationToken)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+
+            sqlCommand.Append("SELECT Count(*) FROM mp_users WHERE siteid = :siteid AND phonenumberconfirmed = false; ");
+
+            NpgsqlParameter[] arParams = new NpgsqlParameter[1];
+
+            arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
+            arParams[0].Value = siteId;
+
+            object result = await AdoHelper.ExecuteScalarAsync(
+                readConnectionString,
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams,
+                cancellationToken);
+
+            return Convert.ToInt32(result);
+        }
+
+        public async Task<DbDataReader> GetPagePhoneUnconfirmed(
+            int siteId,
+            int pageNumber,
+            int pageSize,
+            CancellationToken cancellationToken)
+        {
+            int pageLowerBound = (pageSize * pageNumber) - pageSize;
+
+            NpgsqlParameter[] arParams = new NpgsqlParameter[3];
+
+            arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
+            arParams[0].Value = siteId;
+
+            arParams[1] = new NpgsqlParameter("pagesize", NpgsqlTypes.NpgsqlDbType.Integer);
+            arParams[1].Value = pageSize;
+
+            arParams[2] = new NpgsqlParameter("pageoffset", NpgsqlTypes.NpgsqlDbType.Integer);
+            arParams[2].Value = pageLowerBound;
+
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT	* ");
+            sqlCommand.Append("FROM	mp_users  ");
+
+            sqlCommand.Append("WHERE  ");
+            sqlCommand.Append("siteid = :siteid  ");
+            sqlCommand.Append("AND ");
+            sqlCommand.Append("phonenumberconfirmed = false ");
+
+            sqlCommand.Append("ORDER BY  ");
+            sqlCommand.Append("name  ");
+            sqlCommand.Append("LIMIT  :pagesize");
+
+            if (pageNumber > 1)
+                sqlCommand.Append(" OFFSET :pageoffset ");
+
+            sqlCommand.Append(";");
+
+            return await AdoHelper.ExecuteReaderAsync(
+                readConnectionString,
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams,
+                cancellationToken);
+
+        }
+
+        public async Task<int> CountFutureLockoutDate(
+            int siteId,
+            CancellationToken cancellationToken)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+
+            sqlCommand.Append("SELECT Count(*) ");
+            sqlCommand.Append("FROM mp_users ");
+            sqlCommand.Append("WHERE siteid = :siteid ");
+            sqlCommand.Append("AND lockoutenddateutc IS NOT NULL ");
+            sqlCommand.Append("AND lockoutenddateutc > :currentutc ");
+            sqlCommand.Append(";");
+
+            NpgsqlParameter[] arParams = new NpgsqlParameter[2];
+
+            arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
+            arParams[0].Value = siteId;
+
+            arParams[1] = new NpgsqlParameter("currentutc", NpgsqlTypes.NpgsqlDbType.Timestamp);
+            arParams[1].Value = DateTime.UtcNow;
+
+            object result = await AdoHelper.ExecuteScalarAsync(
+                readConnectionString,
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams,
+                cancellationToken);
+
+            return Convert.ToInt32(result);
+        }
+
+        public async Task<DbDataReader> GetFutureLockoutPage(
+            int siteId,
+            int pageNumber,
+            int pageSize,
+            CancellationToken cancellationToken)
+        {
+            int pageLowerBound = (pageSize * pageNumber) - pageSize;
+
+            NpgsqlParameter[] arParams = new NpgsqlParameter[4];
+
+            arParams[0] = new NpgsqlParameter("siteid", NpgsqlTypes.NpgsqlDbType.Integer);
+            arParams[0].Value = siteId;
+
+            arParams[1] = new NpgsqlParameter("pagesize", NpgsqlTypes.NpgsqlDbType.Integer);
+            arParams[1].Value = pageSize;
+
+            arParams[2] = new NpgsqlParameter("pageoffset", NpgsqlTypes.NpgsqlDbType.Integer);
+            arParams[2].Value = pageLowerBound;
+
+            arParams[3] = new NpgsqlParameter("currentutc", NpgsqlTypes.NpgsqlDbType.Timestamp);
+            arParams[3].Value = DateTime.UtcNow;
+
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT	* ");
+            sqlCommand.Append("FROM	mp_users  ");
+
+            sqlCommand.Append("WHERE  ");
+            sqlCommand.Append("siteid = :siteid  ");
+            sqlCommand.Append("AND lockoutenddateutc IS NOT NULL ");
+            sqlCommand.Append("AND lockoutenddateutc > :currentutc ");
 
             sqlCommand.Append("ORDER BY  ");
             sqlCommand.Append("name  ");

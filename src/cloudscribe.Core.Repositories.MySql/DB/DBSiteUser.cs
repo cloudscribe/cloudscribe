@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2007-11-03
-// Last Modified:			2016-01-28
+// Last Modified:			2016-01-29
 // 
 
 using cloudscribe.DbHelpers;
@@ -834,6 +834,204 @@ namespace cloudscribe.Core.Repositories.MySql
 
             arParams[1] = new MySqlParameter("?PageSize", MySqlDbType.Int32);
             arParams[1].Value = pageSize;
+
+            return await AdoHelper.ExecuteReaderAsync(
+                readConnectionString,
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams,
+                cancellationToken);
+
+        }
+
+        public async Task<int> CountEmailUnconfirmed(
+            int siteId,
+            CancellationToken cancellationToken)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT COUNT(*) FROM mp_Users WHERE SiteID = ?SiteID AND EmailConfirmed = 0;");
+
+            MySqlParameter[] arParams = new MySqlParameter[1];
+
+            arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
+            arParams[0].Value = siteId;
+
+            object result = await AdoHelper.ExecuteScalarAsync(
+                readConnectionString,
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams,
+                cancellationToken);
+
+            int count = Convert.ToInt32(result);
+
+            return count;
+        }
+
+        public async Task<DbDataReader> GetPageEmailUnconfirmed(
+            int siteId,
+            int pageNumber,
+            int pageSize,
+            CancellationToken cancellationToken)
+        {
+            int pageLowerBound = (pageSize * pageNumber) - pageSize;
+
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT *  ");
+            sqlCommand.Append("FROM	mp_Users  ");
+            sqlCommand.Append("WHERE   ");
+            sqlCommand.Append("SiteID = ?SiteID    ");
+            sqlCommand.Append("AND ");
+            sqlCommand.Append("EmailConfirmed = 0 ");
+
+            sqlCommand.Append(" ORDER BY Name ");
+            sqlCommand.Append("LIMIT "
+                + pageLowerBound.ToString(CultureInfo.InvariantCulture)
+                + ", ?PageSize  ; ");
+
+            MySqlParameter[] arParams = new MySqlParameter[2];
+
+            arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
+            arParams[0].Value = siteId;
+
+            arParams[1] = new MySqlParameter("?PageSize", MySqlDbType.Int32);
+            arParams[1].Value = pageSize;
+
+            return await AdoHelper.ExecuteReaderAsync(
+                readConnectionString,
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams,
+                cancellationToken);
+
+        }
+
+        public async Task<int> CountPhoneUnconfirmed(
+            int siteId,
+            CancellationToken cancellationToken)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT COUNT(*) FROM mp_Users WHERE SiteID = ?SiteID AND PhoneNumberConfirmed = 0;");
+
+            MySqlParameter[] arParams = new MySqlParameter[1];
+
+            arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
+            arParams[0].Value = siteId;
+
+            object result = await AdoHelper.ExecuteScalarAsync(
+                readConnectionString,
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams,
+                cancellationToken);
+
+            int count = Convert.ToInt32(result);
+
+            return count;
+        }
+
+        public async Task<DbDataReader> GetPagePhoneUnconfirmed(
+            int siteId,
+            int pageNumber,
+            int pageSize,
+            CancellationToken cancellationToken)
+        {
+            int pageLowerBound = (pageSize * pageNumber) - pageSize;
+
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT *  ");
+            sqlCommand.Append("FROM	mp_Users  ");
+            sqlCommand.Append("WHERE   ");
+            sqlCommand.Append("SiteID = ?SiteID    ");
+            sqlCommand.Append("AND ");
+            sqlCommand.Append("PhoneNumberConfirmed = 0 ");
+
+            sqlCommand.Append(" ORDER BY Name ");
+            sqlCommand.Append("LIMIT "
+                + pageLowerBound.ToString(CultureInfo.InvariantCulture)
+                + ", ?PageSize  ; ");
+
+            MySqlParameter[] arParams = new MySqlParameter[2];
+
+            arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
+            arParams[0].Value = siteId;
+
+            arParams[1] = new MySqlParameter("?PageSize", MySqlDbType.Int32);
+            arParams[1].Value = pageSize;
+
+            return await AdoHelper.ExecuteReaderAsync(
+                readConnectionString,
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams,
+                cancellationToken);
+
+        }
+
+        public async Task<int> CountFutureLockoutDate(
+            int siteId,
+            CancellationToken cancellationToken)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT COUNT(*) ");
+            sqlCommand.Append("FROM mp_Users ");
+            sqlCommand.Append("WHERE SiteID = ?SiteID ");
+            sqlCommand.Append("AND LockoutEndDateUtc IS NOT NULL ");
+            sqlCommand.Append("AND LockoutEndDateUtc > ?CurrentUtc ");
+            sqlCommand.Append(";");
+
+
+            MySqlParameter[] arParams = new MySqlParameter[2];
+
+            arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
+            arParams[0].Value = siteId;
+
+            arParams[1] = new MySqlParameter("?CurrentUtc", MySqlDbType.DateTime);
+            arParams[1].Value = DateTime.UtcNow;
+
+            object result = await AdoHelper.ExecuteScalarAsync(
+                readConnectionString,
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams,
+                cancellationToken);
+
+            int count = Convert.ToInt32(result);
+
+            return count;
+        }
+
+        public async Task<DbDataReader> GetFutureLockoutPage(
+            int siteId,
+            int pageNumber,
+            int pageSize,
+            CancellationToken cancellationToken)
+        {
+            int pageLowerBound = (pageSize * pageNumber) - pageSize;
+
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("SELECT *  ");
+            sqlCommand.Append("FROM	mp_Users  ");
+            sqlCommand.Append("WHERE   ");
+            sqlCommand.Append("SiteID = ?SiteID    ");
+            sqlCommand.Append("AND LockoutEndDateUtc IS NOT NULL ");
+            sqlCommand.Append("AND LockoutEndDateUtc > ?CurrentUtc ");
+
+            sqlCommand.Append(" ORDER BY Name ");
+            sqlCommand.Append("LIMIT "
+                + pageLowerBound.ToString(CultureInfo.InvariantCulture)
+                + ", ?PageSize  ; ");
+
+            MySqlParameter[] arParams = new MySqlParameter[3];
+
+            arParams[0] = new MySqlParameter("?SiteID", MySqlDbType.Int32);
+            arParams[0].Value = siteId;
+
+            arParams[1] = new MySqlParameter("?PageSize", MySqlDbType.Int32);
+            arParams[1].Value = pageSize;
+
+            arParams[2] = new MySqlParameter("?CurrentUtc", MySqlDbType.DateTime);
+            arParams[2].Value = DateTime.UtcNow;
 
             return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
