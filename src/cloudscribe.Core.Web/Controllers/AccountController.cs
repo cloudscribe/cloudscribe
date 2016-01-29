@@ -177,6 +177,10 @@ namespace cloudscribe.Core.Web.Controllers
             
             if (result.Succeeded)
             {
+
+                //TODO: track ip address
+                //HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToLong();
+
                 return this.RedirectToLocal(returnUrl);
             }
             if (result.RequiresTwoFactor)

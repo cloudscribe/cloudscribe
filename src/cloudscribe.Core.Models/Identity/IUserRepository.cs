@@ -391,5 +391,67 @@ namespace cloudscribe.Core.Models
             int siteId, 
             string userId, 
             CancellationToken cancellationToken);
+
+
+        // the commented method belongs in a service class
+        ///// <summary>
+        ///// for quickly adding or updating a userlocation, ie for ipaddres tracking
+        ///// </summary>
+        ///// <param name="userGuid"></param>
+        ///// <param name="ipv4Address"></param>
+        ///// <param name="hostName"></param>
+        ///// <param name="cancellationToken"></param>
+        ///// <returns></returns>
+        //Task<bool> TackUserLocation(
+        //    Guid siteGuid,
+        //    Guid userGuid,
+        //    string ipv4Address,
+        //    string hostName,
+        //    CancellationToken cancellationToken);
+
+        
+       // Task<IUserLocation> FetchByUserAndIpv4Address(
+       //     Guid userGuid,
+       //     long ipv4AddressAsLong,
+       //     CancellationToken cancellationToken);
+
+       // Task<IList<IUserLocation>> FetchByUser(
+       //     Guid userGuid,
+       //     CancellationToken cancellationToken);
+
+       //// this should also probably go in the service 
+       // //Task<bool> SaveUserLocation(
+       // //    IUserLocation userLocation,
+       // //    CancellationToken cancellationToken);
+
+       // Task<bool> AddUserLocation(
+       //     IUserLocation userLocation,
+       //     CancellationToken cancellationToken);
+
+       // Task<bool> UpdateUserLocation(
+       //     IUserLocation userLocation,
+       //     CancellationToken cancellationToken);
+
+       // Task<bool> DeleteUserLocation(
+       //     Guid rowGuid,
+       //     CancellationToken cancellationToken);
+
+       // Task<bool> DeleteUserLocationsByUser(
+       //     Guid userGuid,
+       //     CancellationToken cancellationToken);
+
+       // Task<bool> DeleteUserLocationsBySite(
+       //     int siteId,
+       //     CancellationToken cancellationToken);
+
+       // Task<int> CountUserLocationsByUser(Guid userGuid);
+
+       // Task<IList<IUserLocation>> GetUserLocationsByUser(          
+       //     Guid userGuid,
+       //     int pageNumber,
+       //     int pageSize,
+       //     CancellationToken cancellationToken);
+
+
     }
 }

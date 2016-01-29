@@ -57,7 +57,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// <param name="firstCaptureUTC"> firstCaptureUTC </param>
         /// <param name="lastCaptureUTC"> lastCaptureUTC </param>
         /// <returns>int</returns>
-        public int Create(
+        public async Task<bool> Add(
             Guid rowID,
             Guid userGuid,
             Guid siteGuid,
@@ -74,8 +74,13 @@ namespace cloudscribe.Core.Repositories.MSSQL
             string timeZone,
             int captureCount,
             DateTime firstCaptureUTC,
-            DateTime lastCaptureUTC)
+            DateTime lastCaptureUTC,
+            CancellationToken cancellationToken
+
+            )
         {
+            if(rowID == Guid.Empty) { rowID = Guid.NewGuid(); }
+
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
                 writeConnectionString, 
@@ -99,8 +104,8 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@CaptureCount", SqlDbType.Int, ParameterDirection.Input, captureCount);
             sph.DefineSqlParameter("@FirstCaptureUTC", SqlDbType.DateTime, ParameterDirection.Input, firstCaptureUTC);
             sph.DefineSqlParameter("@LastCaptureUTC", SqlDbType.DateTime, ParameterDirection.Input, lastCaptureUTC);
-            int rowsAffected = sph.ExecuteNonQuery();
-            return rowsAffected;
+            int rowsAffected = await sph.ExecuteNonQueryAsync(cancellationToken);
+            return rowsAffected > 0;
         }
 
 
@@ -124,7 +129,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// <param name="captureCount"> captureCount </param>
         /// <param name="lastCaptureUTC"> lastCaptureUTC </param>
         /// <returns>bool</returns>
-        public bool Update(
+        public async Task<bool> Update(
             Guid rowID,
             Guid userGuid,
             Guid siteGuid,
@@ -140,7 +145,9 @@ namespace cloudscribe.Core.Repositories.MSSQL
             string city,
             string timeZone,
             int captureCount,
-            DateTime lastCaptureUTC)
+            DateTime lastCaptureUTC,
+            CancellationToken cancellationToken
+            )
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -164,7 +171,7 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@TimeZone", SqlDbType.NVarChar, 255, ParameterDirection.Input, timeZone);
             sph.DefineSqlParameter("@CaptureCount", SqlDbType.Int, ParameterDirection.Input, captureCount);
             sph.DefineSqlParameter("@LastCaptureUTC", SqlDbType.DateTime, ParameterDirection.Input, lastCaptureUTC);
-            int rowsAffected = sph.ExecuteNonQuery();
+            int rowsAffected = await sph.ExecuteNonQueryAsync(cancellationToken);
             return (rowsAffected > 0);
         }
 
@@ -173,7 +180,10 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// </summary>
         /// <param name="rowID"> rowID </param>
         /// <returns>bool</returns>
-        public bool Delete(Guid rowID)
+        public async Task<bool> Delete(
+            Guid rowID,
+            CancellationToken cancellationToken
+            )
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -182,12 +192,15 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 1);
 
             sph.DefineSqlParameter("@RowID", SqlDbType.UniqueIdentifier, ParameterDirection.Input, rowID);
-            int rowsAffected = sph.ExecuteNonQuery();
+            int rowsAffected = await sph.ExecuteNonQueryAsync(cancellationToken);
             return (rowsAffected > 0);
 
         }
 
-        public bool DeleteByUser(Guid userGuid)
+        public async Task<bool> DeleteByUser(
+            Guid userGuid,
+            CancellationToken cancellationToken
+            )
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -196,33 +209,54 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 1);
 
             sph.DefineSqlParameter("@UserGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, userGuid);
-            int rowsAffected = sph.ExecuteNonQuery();
+            int rowsAffected = await sph.ExecuteNonQueryAsync(cancellationToken);
             return (rowsAffected > 0);
 
         }
 
-        /// <summary>
-        /// Gets an IDataReader with one row from the mp_UserLocation table.
-        /// </summary>
-        /// <param name="rowID"> rowID </param>
-        public DbDataReader GetOne(Guid rowID)
+        public async Task<bool> DeleteBySite(
+            int siteId,
+            CancellationToken cancellationToken
+            )
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
-                readConnectionString, 
-                "mp_UserLocation_SelectOne", 
+                writeConnectionString,
+                "mp_UserLogins_DeleteBySite",
                 1);
 
-            sph.DefineSqlParameter("@RowID", SqlDbType.UniqueIdentifier, ParameterDirection.Input, rowID);
-            return sph.ExecuteReader();
+            sph.DefineSqlParameter("@SiteId", SqlDbType.UniqueIdentifier, ParameterDirection.Input, siteId);
+            int rowsAffected = await sph.ExecuteNonQueryAsync(cancellationToken);
+            return (rowsAffected > 0);
+
         }
+
+        ///// <summary>
+        ///// Gets an IDataReader with one row from the mp_UserLocation table.
+        ///// </summary>
+        ///// <param name="rowID"> rowID </param>
+        //public DbDataReader GetOne(Guid rowID)
+        //{
+        //    SqlParameterHelper sph = new SqlParameterHelper(
+        //        logFactory,
+        //        readConnectionString, 
+        //        "mp_UserLocation_SelectOne", 
+        //        1);
+
+        //    sph.DefineSqlParameter("@RowID", SqlDbType.UniqueIdentifier, ParameterDirection.Input, rowID);
+        //    return sph.ExecuteReader();
+        //}
 
         /// <summary>
         /// Gets an IDataReader with one row from the mp_UserLocation table.
         /// </summary>
         /// <param name="userGuid"> userGuid </param>
         /// <param name="iPAddress"> iPAddress </param>
-        public DbDataReader GetOne(Guid userGuid, long iPAddressLong)
+        public async Task<DbDataReader> GetOne(
+            Guid userGuid, 
+            long iPAddressLong,
+            CancellationToken cancellationToken
+            )
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -232,42 +266,42 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
             sph.DefineSqlParameter("@UserGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, userGuid);
             sph.DefineSqlParameter("@IPAddressLong", SqlDbType.BigInt, ParameterDirection.Input, iPAddressLong);
-            return sph.ExecuteReader();
+            return await sph.ExecuteReaderAsync(cancellationToken);
         }
 
-        /// <summary>
-        /// Gets an IDataReader with one row from the mp_UserLocation table.
-        /// </summary>
-        /// <param name="userGuid"> userGuid </param>
-        public DbDataReader GetByUser(Guid userGuid)
-        {
-            SqlParameterHelper sph = new SqlParameterHelper(
-                logFactory,
-                readConnectionString, 
-                "mp_UserLocation_SelectByUser", 
-                1);
+        ///// <summary>
+        ///// Gets an IDataReader with one row from the mp_UserLocation table.
+        ///// </summary>
+        ///// <param name="userGuid"> userGuid </param>
+        //public DbDataReader GetByUser(Guid userGuid)
+        //{
+        //    SqlParameterHelper sph = new SqlParameterHelper(
+        //        logFactory,
+        //        readConnectionString, 
+        //        "mp_UserLocation_SelectByUser", 
+        //        1);
 
-            sph.DefineSqlParameter("@UserGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, userGuid);
-            return sph.ExecuteReader();
-        }
+        //    sph.DefineSqlParameter("@UserGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, userGuid);
+        //    return sph.ExecuteReader();
+        //}
 
 
 
-        /// <summary>
-        /// Gets an IDataReader with one row from the mp_UserLocation table.
-        /// </summary>
-        /// <param name="siteGuid"> siteGuid </param>
-        public DbDataReader GetBySite(Guid siteGuid)
-        {
-            SqlParameterHelper sph = new SqlParameterHelper(
-                logFactory,
-                readConnectionString, 
-                "mp_UserLocation_SelectBySite", 
-                1);
+        ///// <summary>
+        ///// Gets an IDataReader with one row from the mp_UserLocation table.
+        ///// </summary>
+        ///// <param name="siteGuid"> siteGuid </param>
+        //public DbDataReader GetBySite(Guid siteGuid)
+        //{
+        //    SqlParameterHelper sph = new SqlParameterHelper(
+        //        logFactory,
+        //        readConnectionString, 
+        //        "mp_UserLocation_SelectBySite", 
+        //        1);
 
-            sph.DefineSqlParameter("@SiteGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, siteGuid);
-            return sph.ExecuteReader();
-        }
+        //    sph.DefineSqlParameter("@SiteGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, siteGuid);
+        //    return sph.ExecuteReader();
+        //}
 
         /// <summary>
         /// Gets an IDataReader with rows from the mp_Users table which have the passed in IP Address
@@ -293,7 +327,10 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// Gets a count of rows in the mp_UserLocation table for the passed in userGuid.
         /// </summary>
         /// <param name="userGuid"> userGuid </param>
-        public int GetCountByUser(Guid userGuid)
+        public async Task<int> GetCountByUser(
+            Guid userGuid,
+            CancellationToken cancellationToken
+            )
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -302,7 +339,8 @@ namespace cloudscribe.Core.Repositories.MSSQL
                 1);
 
             sph.DefineSqlParameter("@UserGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, userGuid);
-            return Convert.ToInt32(sph.ExecuteScalar());
+            object result = await sph.ExecuteScalarAsync(cancellationToken);
+            return Convert.ToInt32(result);
 
 
         }
@@ -319,23 +357,23 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
         //}
 
-        /// <summary>
-        /// Gets a count of rows in the mp_UserLocation table for the passed in userGuid.
-        /// </summary>
-        /// <param name="siteGuid"> siteGuid </param>
-        public int GetCountBySite(Guid siteGuid)
-        {
-            SqlParameterHelper sph = new SqlParameterHelper(
-                logFactory,
-                readConnectionString, 
-                "mp_UserLocation_GetCountBySite", 
-                1);
+        ///// <summary>
+        ///// Gets a count of rows in the mp_UserLocation table for the passed in userGuid.
+        ///// </summary>
+        ///// <param name="siteGuid"> siteGuid </param>
+        //public int GetCountBySite(Guid siteGuid)
+        //{
+        //    SqlParameterHelper sph = new SqlParameterHelper(
+        //        logFactory,
+        //        readConnectionString, 
+        //        "mp_UserLocation_GetCountBySite", 
+        //        1);
 
-            sph.DefineSqlParameter("@SiteGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, siteGuid);
-            return Convert.ToInt32(sph.ExecuteScalar());
+        //    sph.DefineSqlParameter("@SiteGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, siteGuid);
+        //    return Convert.ToInt32(sph.ExecuteScalar());
 
 
-        }
+        //}
 
 
 
@@ -346,10 +384,12 @@ namespace cloudscribe.Core.Repositories.MSSQL
         /// <param name="pageNumber">The page number.</param>
         /// <param name="pageSize">Size of the page.</param>
         /// <param name="totalPages">total pages</param>
-        public DbDataReader GetPageByUser(
+        public  async Task<DbDataReader> GetPageByUser(
             Guid userGuid,
             int pageNumber,
-            int pageSize)
+            int pageSize,
+            CancellationToken cancellationToken
+            )
         {   
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
@@ -360,34 +400,34 @@ namespace cloudscribe.Core.Repositories.MSSQL
             sph.DefineSqlParameter("@UserGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, userGuid);
             sph.DefineSqlParameter("@PageNumber", SqlDbType.Int, ParameterDirection.Input, pageNumber);
             sph.DefineSqlParameter("@PageSize", SqlDbType.Int, ParameterDirection.Input, pageSize);
-            return sph.ExecuteReader();
+            return await sph.ExecuteReaderAsync(cancellationToken);
 
         }
 
-        /// <summary>
-        /// Gets a page of data from the mp_UserLocation table.
-        /// </summary>
-        /// <param name="siteGuid"> siteGuid </param>
-        /// <param name="pageNumber">The page number.</param>
-        /// <param name="pageSize">Size of the page.</param>
-        /// <param name="totalPages">total pages</param>
-        public DbDataReader GetPageBySite(
-            Guid siteGuid,
-            int pageNumber,
-            int pageSize)
-        {
-            SqlParameterHelper sph = new SqlParameterHelper(
-                logFactory,
-                readConnectionString, 
-                "mp_UserLocation_SelectPageBySite", 
-                3);
+        ///// <summary>
+        ///// Gets a page of data from the mp_UserLocation table.
+        ///// </summary>
+        ///// <param name="siteGuid"> siteGuid </param>
+        ///// <param name="pageNumber">The page number.</param>
+        ///// <param name="pageSize">Size of the page.</param>
+        ///// <param name="totalPages">total pages</param>
+        //public DbDataReader GetPageBySite(
+        //    Guid siteGuid,
+        //    int pageNumber,
+        //    int pageSize)
+        //{
+        //    SqlParameterHelper sph = new SqlParameterHelper(
+        //        logFactory,
+        //        readConnectionString, 
+        //        "mp_UserLocation_SelectPageBySite", 
+        //        3);
 
-            sph.DefineSqlParameter("@SiteGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, siteGuid);
-            sph.DefineSqlParameter("@PageNumber", SqlDbType.Int, ParameterDirection.Input, pageNumber);
-            sph.DefineSqlParameter("@PageSize", SqlDbType.Int, ParameterDirection.Input, pageSize);
-            return sph.ExecuteReader();
+        //    sph.DefineSqlParameter("@SiteGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, siteGuid);
+        //    sph.DefineSqlParameter("@PageNumber", SqlDbType.Int, ParameterDirection.Input, pageNumber);
+        //    sph.DefineSqlParameter("@PageSize", SqlDbType.Int, ParameterDirection.Input, pageSize);
+        //    return sph.ExecuteReader();
 
-        }
+        //}
 
 
     }
