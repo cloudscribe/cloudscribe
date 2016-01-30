@@ -687,7 +687,8 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ClaimType");
+                    b.Property<string>("ClaimType")
+                        .HasAnnotation("MaxLength", 255);
 
                     b.Property<string>("ClaimValue");
 
@@ -728,7 +729,8 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                     b.Property<DateTime>("FirstCaptureUtc")
                         .HasAnnotation("Relational:ColumnName", "FirstCaptureUTC");
 
-                    b.Property<string>("HostName");
+                    b.Property<string>("HostName")
+                        .HasAnnotation("MaxLength", 255);
 
                     b.Property<string>("IpAddress")
                         .HasAnnotation("MaxLength", 50)

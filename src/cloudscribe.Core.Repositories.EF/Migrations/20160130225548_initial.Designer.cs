@@ -8,7 +8,7 @@ using cloudscribe.Core.Repositories.EF;
 namespace cloudscribe.Core.Repositories.EF.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    [Migration("20160130222955_initial")]
+    [Migration("20160130225548_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -688,7 +688,8 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ClaimType");
+                    b.Property<string>("ClaimType")
+                        .HasAnnotation("MaxLength", 255);
 
                     b.Property<string>("ClaimValue");
 
@@ -729,7 +730,8 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                     b.Property<DateTime>("FirstCaptureUtc")
                         .HasAnnotation("Relational:ColumnName", "FirstCaptureUTC");
 
-                    b.Property<string>("HostName");
+                    b.Property<string>("HostName")
+                        .HasAnnotation("MaxLength", 255);
 
                     b.Property<string>("IpAddress")
                         .HasAnnotation("MaxLength", 50)

@@ -703,6 +703,12 @@ namespace cloudscribe.Core.Repositories.EF
             .IsRequired()
             ;
 
+            entity.Property(p => p.ClaimType)
+            .HasMaxLength(255)
+            ;
+
+            // should we limit claim value?
+
             entity.HasIndex(p => p.SiteId);
 
             // not mapped will result in nvarchar(max) I think
@@ -956,6 +962,10 @@ namespace cloudscribe.Core.Repositories.EF
             entity.Property(p => p.Longitude)
                .ForSqlServerHasColumnType("float")
             ;
+
+            entity.Property(p => p.HostName)
+                .HasMaxLength(255)
+             ;
 
             entity.HasIndex(p => p.UserGuid);
 
