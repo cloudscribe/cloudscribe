@@ -5,7 +5,7 @@ using Microsoft.Data.Entity.Metadata;
 
 namespace cloudscribe.Core.Repositories.EF.Migrations
 {
-    public partial class Initial : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -116,16 +116,11 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                 {
                     SiteID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    AccountApprovalEmailCsv = table.Column<string>(nullable: true),
                     AddThisDotComUsername = table.Column<string>(nullable: true),
                     AllowDbFallbackWithLdap = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
                     AllowNewRegistration = table.Column<bool>(type: "bit", nullable: false, defaultValue: 1),
                     AllowPersistentLogin = table.Column<bool>(type: "bit", nullable: false, defaultValue: 1),
-                    AllowUserFullNameChange = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
-                    ApiKeyExtra1 = table.Column<string>(nullable: true),
-                    ApiKeyExtra2 = table.Column<string>(nullable: true),
-                    ApiKeyExtra3 = table.Column<string>(nullable: true),
-                    ApiKeyExtra4 = table.Column<string>(nullable: true),
-                    ApiKeyExtra5 = table.Column<string>(nullable: true),
                     AutoCreateLdapUserOnFirstLogin = table.Column<bool>(type: "bit", nullable: false, defaultValue: 1),
                     CaptchaOnLogin = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
                     CaptchaOnRegistration = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
@@ -141,7 +136,12 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                     CompanyStreetAddress2 = table.Column<string>(nullable: true),
                     CreatedUtc = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "getutcdate()"),
                     DefaultEmailFromAddress = table.Column<string>(nullable: true),
+                    DefaultEmailFromAlias = table.Column<string>(nullable: true),
                     DisableDbAuth = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
+                    DkimDomain = table.Column<string>(nullable: true),
+                    DkimPrivateKey = table.Column<string>(nullable: true),
+                    DkimPublicKey = table.Column<string>(nullable: true),
+                    DkimSelector = table.Column<string>(nullable: true),
                     EmailLdapDbFallback = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
                     FacebookAppId = table.Column<string>(nullable: true),
                     FacebookAppSecret = table.Column<string>(nullable: true),
@@ -161,9 +161,9 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                     MaxInvalidPasswordAttempts = table.Column<int>(type: "int", nullable: false, defaultValue: 5),
                     MicrosoftClientId = table.Column<string>(nullable: true),
                     MicrosoftClientSecret = table.Column<string>(nullable: true),
-                    MinReqNonAlphaChars = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     MinRequiredPasswordLength = table.Column<int>(type: "int", nullable: false, defaultValue: 5),
-                    PasswordAttemptWindowMinutes = table.Column<int>(type: "int", nullable: false, defaultValue: 5),
+                    OidConnectAppId = table.Column<string>(nullable: true),
+                    OidConnectAppSecret = table.Column<string>(nullable: true),
                     PreferredHostName = table.Column<string>(nullable: true),
                     PrivacyPolicy = table.Column<string>(nullable: true),
                     ReallyDeleteUsers = table.Column<bool>(type: "bit", nullable: false, defaultValue: 1),
@@ -172,12 +172,18 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                     RegistrationAgreement = table.Column<string>(nullable: true),
                     RegistrationPreamble = table.Column<string>(nullable: true),
                     RequireApprovalBeforeLogin = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
+                    RequireConfirmedEmail = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
+                    RequireConfirmedPhone = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
                     RequiresQuestionAndAnswer = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
+                    SignEmailWithDkim = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
                     SiteFolderName = table.Column<string>(nullable: true, defaultValue: ""),
                     SiteGuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
                     SiteIsClosed = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
                     SiteIsClosedMessage = table.Column<string>(nullable: true),
                     SiteName = table.Column<string>(nullable: false),
+                    SmsClientId = table.Column<string>(nullable: true),
+                    SmsFrom = table.Column<string>(nullable: true),
+                    SmsSecureToken = table.Column<string>(nullable: true),
                     SmtpPassword = table.Column<string>(nullable: true),
                     SmtpPort = table.Column<int>(type: "int", nullable: false, defaultValue: 25),
                     SmtpPreferredEncoding = table.Column<string>(nullable: true),
@@ -189,9 +195,7 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                     TwitterConsumerKey = table.Column<string>(nullable: true),
                     TwitterConsumerSecret = table.Column<string>(nullable: true),
                     UseEmailForLogin = table.Column<bool>(type: "bit", nullable: false, defaultValue: 1),
-                    UseLdapAuth = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
-                    UseSecureRegistration = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
-                    UseSSLOnAllPages = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0)
+                    UseLdapAuth = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0)
                 },
                 constraints: table =>
                 {
@@ -203,41 +207,36 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                 {
                     UserID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    AccountApproved = table.Column<bool>(nullable: false),
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    AccountApproved = table.Column<bool>(type: "bit", nullable: false, defaultValue: 1),
                     AuthorBio = table.Column<string>(nullable: true),
                     AvatarUrl = table.Column<string>(nullable: true),
+                    CanAutoLockout = table.Column<bool>(type: "bit", nullable: false, defaultValue: 1),
                     Comment = table.Column<string>(nullable: true),
                     Country = table.Column<string>(nullable: true),
                     CreatedUtc = table.Column<DateTime>(nullable: false),
-                    DateOfBirth = table.Column<DateTime>(nullable: false),
-                    DisplayInMemberList = table.Column<bool>(nullable: false),
+                    DateOfBirth = table.Column<DateTime>(nullable: true),
+                    DisplayInMemberList = table.Column<bool>(type: "bit", nullable: false, defaultValue: 1),
                     DisplayName = table.Column<string>(nullable: true),
-                    Email = table.Column<string>(nullable: true),
-                    EmailChangeGuid = table.Column<Guid>(nullable: false),
-                    EmailConfirmed = table.Column<bool>(nullable: false),
-                    FailedPasswordAnswerAttemptCount = table.Column<int>(nullable: false),
-                    FailedPasswordAnswerAttemptWindowStart = table.Column<DateTime>(nullable: false),
-                    FailedPasswordAttemptCount = table.Column<int>(nullable: false),
-                    FailedPasswordAttemptWindowStart = table.Column<DateTime>(nullable: false),
+                    Email = table.Column<string>(nullable: false),
+                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
                     FirstName = table.Column<string>(nullable: true),
                     Gender = table.Column<string>(nullable: true),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    IsLockedOut = table.Column<bool>(nullable: false),
-                    LastActivityDate = table.Column<DateTime>(nullable: false),
-                    LastLockoutDate = table.Column<DateTime>(nullable: false),
-                    LastLoginDate = table.Column<DateTime>(nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
+                    IsLockedOut = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
+                    LastLoginDate = table.Column<DateTime>(nullable: true),
                     LastName = table.Column<string>(nullable: true),
-                    LastPasswordChangedDate = table.Column<DateTime>(nullable: false),
+                    LastPasswordChangedDate = table.Column<DateTime>(nullable: true),
                     LockoutEndDateUtc = table.Column<DateTime>(nullable: true),
-                    LoweredEmail = table.Column<string>(nullable: true),
-                    MustChangePwd = table.Column<bool>(nullable: false),
+                    MustChangePwd = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
                     NewEmail = table.Column<string>(nullable: true),
+                    NewEmailApproved = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
+                    NormalizedEmail = table.Column<string>(nullable: false),
+                    NormalizedUserName = table.Column<string>(nullable: false),
                     PasswordHash = table.Column<string>(nullable: true),
-                    PasswordResetGuid = table.Column<Guid>(nullable: false),
                     PhoneNumber = table.Column<string>(nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(nullable: false),
-                    RegisterConfirmGuid = table.Column<Guid>(nullable: false),
-                    RolesChanged = table.Column<bool>(nullable: false),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
+                    RolesChanged = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
                     SecurityStamp = table.Column<string>(nullable: true),
                     Signature = table.Column<string>(nullable: true),
                     SiteGuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -245,9 +244,9 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                     State = table.Column<string>(nullable: true),
                     TimeZoneId = table.Column<string>(nullable: true),
                     Trusted = table.Column<bool>(nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
                     UserGuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
-                    UserName = table.Column<string>(nullable: true),
+                    UserName = table.Column<string>(nullable: false),
                     WebSiteUrl = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -284,8 +283,8 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                     IPAddressLong = table.Column<long>(nullable: false),
                     ISP = table.Column<string>(nullable: true),
                     LastCaptureUTC = table.Column<DateTime>(nullable: false),
-                    Latitude = table.Column<float>(nullable: false),
-                    Longitude = table.Column<float>(nullable: false),
+                    Latitude = table.Column<double>(type: "float", nullable: false),
+                    Longitude = table.Column<double>(type: "float", nullable: false),
                     Region = table.Column<string>(nullable: true),
                     SiteGuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TimeZone = table.Column<string>(nullable: true),
@@ -355,6 +354,18 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                 column: "SiteGuid",
                 unique: true);
             migrationBuilder.CreateIndex(
+                name: "IX_SiteUser_Email",
+                table: "mp_Users",
+                column: "Email");
+            migrationBuilder.CreateIndex(
+                name: "IX_SiteUser_NormalizedEmail",
+                table: "mp_Users",
+                column: "NormalizedEmail");
+            migrationBuilder.CreateIndex(
+                name: "IX_SiteUser_NormalizedUserName",
+                table: "mp_Users",
+                column: "NormalizedUserName");
+            migrationBuilder.CreateIndex(
                 name: "IX_SiteUser_SiteGuid",
                 table: "mp_Users",
                 column: "SiteGuid");
@@ -368,9 +379,17 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                 column: "UserGuid",
                 unique: true);
             migrationBuilder.CreateIndex(
+                name: "IX_SiteUser_UserName",
+                table: "mp_Users",
+                column: "UserName");
+            migrationBuilder.CreateIndex(
                 name: "IX_UserClaim_SiteId",
                 table: "mp_UserClaims",
                 column: "SiteId");
+            migrationBuilder.CreateIndex(
+                name: "IX_UserLocation_UserGuid",
+                table: "mp_UserLocation",
+                column: "UserGuid");
             migrationBuilder.CreateIndex(
                 name: "IX_UserLogin_SiteId",
                 table: "mp_UserLogins",

@@ -528,6 +528,31 @@ namespace cloudscribe.Core.Repositories.EF
             .ForSqlServerHasDefaultValue(1)
             ;
 
+            entity.Property(p => p.Email)
+            .IsRequired()
+            .HasMaxLength(100)
+            ;
+
+            entity.Property(p => p.NormalizedEmail)
+            .IsRequired()
+            .HasMaxLength(100)
+            ;
+
+            entity.Property(p => p.UserName)
+            .IsRequired()
+            .HasMaxLength(50)
+            ;
+
+            entity.Property(p => p.NormalizedUserName)
+            .IsRequired()
+            .HasMaxLength(50)
+            ;
+
+            entity.Property(p => p.NormalizedEmail)
+            .IsRequired()
+            .HasMaxLength(100)
+            ;
+
             entity.Property(p => p.EmailConfirmed)
             .IsRequired()
             .ForSqlServerHasColumnType("bit")
@@ -570,6 +595,11 @@ namespace cloudscribe.Core.Repositories.EF
             .ForSqlServerHasDefaultValue(0)
             ;
 
+
+            entity.Property(p => p.PhoneNumber)
+           .HasMaxLength(50)
+           ;
+
             entity.Property(p => p.PhoneNumberConfirmed)
             .IsRequired()
             .ForSqlServerHasColumnType("bit")
@@ -582,7 +612,15 @@ namespace cloudscribe.Core.Repositories.EF
             .ForSqlServerHasDefaultValue(1)
             ;
 
+            entity.Property(p => p.AvatarUrl)
+            .HasMaxLength(255)
+            ;
 
+            entity.Property(p => p.WebSiteUrl)
+            .HasMaxLength(100)
+            ;
+
+           
             entity.HasIndex(p => p.SiteGuid);
 
             entity.HasIndex(p => p.Email);
@@ -910,6 +948,20 @@ namespace cloudscribe.Core.Repositories.EF
             entity.Property(p => p.LastCaptureUtc)
                .HasColumnName("LastCaptureUTC")
             ;
+
+            entity.Property(p => p.Latitude)
+               .ForSqlServerHasColumnType("float")
+            ;
+
+            entity.Property(p => p.Longitude)
+               .ForSqlServerHasColumnType("float")
+            ;
+
+            entity.HasIndex(p => p.UserGuid);
+
+            // goode idea or not?
+            //entity.HasIndex(p => p.Latitude);
+            //entity.HasIndex(p => p.Longitude);
 
         }
 

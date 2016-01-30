@@ -231,6 +231,8 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                         .HasAnnotation("Relational:ColumnName", "SiteID")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("AccountApprovalEmailCsv");
+
                     b.Property<string>("AddThisDotComUsername")
                         .HasAnnotation("MaxLength", 50);
 
@@ -248,26 +250,6 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                         .HasAnnotation("SqlServer:ColumnType", "bit")
                         .HasAnnotation("SqlServer:DefaultValue", "1")
                         .HasAnnotation("SqlServer:DefaultValueType", "System.Int32");
-
-                    b.Property<bool>("AllowUserFullNameChange")
-                        .HasAnnotation("SqlServer:ColumnType", "bit")
-                        .HasAnnotation("SqlServer:DefaultValue", "0")
-                        .HasAnnotation("SqlServer:DefaultValueType", "System.Int32");
-
-                    b.Property<string>("ApiKeyExtra1")
-                        .HasAnnotation("MaxLength", 255);
-
-                    b.Property<string>("ApiKeyExtra2")
-                        .HasAnnotation("MaxLength", 255);
-
-                    b.Property<string>("ApiKeyExtra3")
-                        .HasAnnotation("MaxLength", 255);
-
-                    b.Property<string>("ApiKeyExtra4")
-                        .HasAnnotation("MaxLength", 255);
-
-                    b.Property<string>("ApiKeyExtra5")
-                        .HasAnnotation("MaxLength", 255);
 
                     b.Property<bool>("AutoCreateLdapUserOnFirstLogin")
                         .HasAnnotation("SqlServer:ColumnType", "bit")
@@ -322,10 +304,23 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                     b.Property<string>("DefaultEmailFromAddress")
                         .HasAnnotation("MaxLength", 100);
 
+                    b.Property<string>("DefaultEmailFromAlias")
+                        .HasAnnotation("MaxLength", 100);
+
                     b.Property<bool>("DisableDbAuth")
                         .HasAnnotation("SqlServer:ColumnType", "bit")
                         .HasAnnotation("SqlServer:DefaultValue", "0")
                         .HasAnnotation("SqlServer:DefaultValueType", "System.Int32");
+
+                    b.Property<string>("DkimDomain")
+                        .HasAnnotation("MaxLength", 255);
+
+                    b.Property<string>("DkimPrivateKey");
+
+                    b.Property<string>("DkimPublicKey");
+
+                    b.Property<string>("DkimSelector")
+                        .HasAnnotation("MaxLength", 128);
 
                     b.Property<bool>("EmailLdapDbFallback")
                         .HasAnnotation("SqlServer:ColumnType", "bit")
@@ -390,20 +385,15 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
 
                     b.Property<string>("MicrosoftClientSecret");
 
-                    b.Property<int>("MinReqNonAlphaChars")
-                        .HasAnnotation("SqlServer:ColumnType", "int")
-                        .HasAnnotation("SqlServer:DefaultValue", "0")
-                        .HasAnnotation("SqlServer:DefaultValueType", "System.Int32");
-
                     b.Property<int>("MinRequiredPasswordLength")
                         .HasAnnotation("SqlServer:ColumnType", "int")
                         .HasAnnotation("SqlServer:DefaultValue", "5")
                         .HasAnnotation("SqlServer:DefaultValueType", "System.Int32");
 
-                    b.Property<int>("PasswordAttemptWindowMinutes")
-                        .HasAnnotation("SqlServer:ColumnType", "int")
-                        .HasAnnotation("SqlServer:DefaultValue", "5")
-                        .HasAnnotation("SqlServer:DefaultValueType", "System.Int32");
+                    b.Property<string>("OidConnectAppId")
+                        .HasAnnotation("MaxLength", 255);
+
+                    b.Property<string>("OidConnectAppSecret");
 
                     b.Property<string>("PreferredHostName")
                         .HasAnnotation("MaxLength", 250);
@@ -430,7 +420,22 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                         .HasAnnotation("SqlServer:DefaultValue", "0")
                         .HasAnnotation("SqlServer:DefaultValueType", "System.Int32");
 
+                    b.Property<bool>("RequireConfirmedEmail")
+                        .HasAnnotation("SqlServer:ColumnType", "bit")
+                        .HasAnnotation("SqlServer:DefaultValue", "0")
+                        .HasAnnotation("SqlServer:DefaultValueType", "System.Int32");
+
+                    b.Property<bool>("RequireConfirmedPhone")
+                        .HasAnnotation("SqlServer:ColumnType", "bit")
+                        .HasAnnotation("SqlServer:DefaultValue", "0")
+                        .HasAnnotation("SqlServer:DefaultValueType", "System.Int32");
+
                     b.Property<bool>("RequiresQuestionAndAnswer")
+                        .HasAnnotation("SqlServer:ColumnType", "bit")
+                        .HasAnnotation("SqlServer:DefaultValue", "0")
+                        .HasAnnotation("SqlServer:DefaultValueType", "System.Int32");
+
+                    b.Property<bool>("SignEmailWithDkim")
                         .HasAnnotation("SqlServer:ColumnType", "bit")
                         .HasAnnotation("SqlServer:DefaultValue", "0")
                         .HasAnnotation("SqlServer:DefaultValueType", "System.Int32");
@@ -455,6 +460,14 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                     b.Property<string>("SiteName")
                         .IsRequired()
                         .HasAnnotation("MaxLength", 255);
+
+                    b.Property<string>("SmsClientId")
+                        .HasAnnotation("MaxLength", 255);
+
+                    b.Property<string>("SmsFrom")
+                        .HasAnnotation("MaxLength", 100);
+
+                    b.Property<string>("SmsSecureToken");
 
                     b.Property<string>("SmtpPassword");
 
@@ -500,17 +513,6 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                         .HasAnnotation("SqlServer:DefaultValue", "0")
                         .HasAnnotation("SqlServer:DefaultValueType", "System.Int32");
 
-                    b.Property<bool>("UseSecureRegistration")
-                        .HasAnnotation("SqlServer:ColumnType", "bit")
-                        .HasAnnotation("SqlServer:DefaultValue", "0")
-                        .HasAnnotation("SqlServer:DefaultValueType", "System.Int32");
-
-                    b.Property<bool>("UseSslOnAllPages")
-                        .HasAnnotation("Relational:ColumnName", "UseSSLOnAllPages")
-                        .HasAnnotation("SqlServer:ColumnType", "bit")
-                        .HasAnnotation("SqlServer:DefaultValue", "0")
-                        .HasAnnotation("SqlServer:DefaultValueType", "System.Int32");
-
                     b.HasKey("SiteId");
 
                     b.HasIndex("SiteGuid")
@@ -526,11 +528,22 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                         .HasAnnotation("Relational:ColumnName", "UserID")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<bool>("AccountApproved");
+                    b.Property<int>("AccessFailedCount");
+
+                    b.Property<bool>("AccountApproved")
+                        .HasAnnotation("SqlServer:ColumnType", "bit")
+                        .HasAnnotation("SqlServer:DefaultValue", "1")
+                        .HasAnnotation("SqlServer:DefaultValueType", "System.Int32");
 
                     b.Property<string>("AuthorBio");
 
-                    b.Property<string>("AvatarUrl");
+                    b.Property<string>("AvatarUrl")
+                        .HasAnnotation("MaxLength", 255);
+
+                    b.Property<bool>("CanAutoLockout")
+                        .HasAnnotation("SqlServer:ColumnType", "bit")
+                        .HasAnnotation("SqlServer:DefaultValue", "1")
+                        .HasAnnotation("SqlServer:DefaultValueType", "System.Int32");
 
                     b.Property<string>("Comment");
 
@@ -538,63 +551,80 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
 
                     b.Property<DateTime>("CreatedUtc");
 
-                    b.Property<DateTime>("DateOfBirth");
+                    b.Property<DateTime?>("DateOfBirth");
 
-                    b.Property<bool>("DisplayInMemberList");
+                    b.Property<bool>("DisplayInMemberList")
+                        .HasAnnotation("SqlServer:ColumnType", "bit")
+                        .HasAnnotation("SqlServer:DefaultValue", "1")
+                        .HasAnnotation("SqlServer:DefaultValueType", "System.Int32");
 
                     b.Property<string>("DisplayName");
 
-                    b.Property<string>("Email");
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasAnnotation("MaxLength", 100);
 
-                    b.Property<Guid>("EmailChangeGuid");
-
-                    b.Property<bool>("EmailConfirmed");
-
-                    b.Property<int>("FailedPasswordAnswerAttemptCount");
-
-                    b.Property<DateTime>("FailedPasswordAnswerAttemptWindowStart");
-
-                    b.Property<int>("FailedPasswordAttemptCount");
-
-                    b.Property<DateTime>("FailedPasswordAttemptWindowStart");
+                    b.Property<bool>("EmailConfirmed")
+                        .HasAnnotation("SqlServer:ColumnType", "bit")
+                        .HasAnnotation("SqlServer:DefaultValue", "0")
+                        .HasAnnotation("SqlServer:DefaultValueType", "System.Int32");
 
                     b.Property<string>("FirstName");
 
                     b.Property<string>("Gender");
 
-                    b.Property<bool>("IsDeleted");
+                    b.Property<bool>("IsDeleted")
+                        .HasAnnotation("SqlServer:ColumnType", "bit")
+                        .HasAnnotation("SqlServer:DefaultValue", "0")
+                        .HasAnnotation("SqlServer:DefaultValueType", "System.Int32");
 
-                    b.Property<bool>("IsLockedOut");
+                    b.Property<bool>("IsLockedOut")
+                        .HasAnnotation("SqlServer:ColumnType", "bit")
+                        .HasAnnotation("SqlServer:DefaultValue", "0")
+                        .HasAnnotation("SqlServer:DefaultValueType", "System.Int32");
 
-                    b.Property<DateTime>("LastActivityDate");
-
-                    b.Property<DateTime>("LastLockoutDate");
-
-                    b.Property<DateTime>("LastLoginDate");
+                    b.Property<DateTime?>("LastLoginDate");
 
                     b.Property<string>("LastName");
 
-                    b.Property<DateTime>("LastPasswordChangedDate");
+                    b.Property<DateTime?>("LastPasswordChangedDate");
 
                     b.Property<DateTime?>("LockoutEndDateUtc");
 
-                    b.Property<string>("LoweredEmail");
-
-                    b.Property<bool>("MustChangePwd");
+                    b.Property<bool>("MustChangePwd")
+                        .HasAnnotation("SqlServer:ColumnType", "bit")
+                        .HasAnnotation("SqlServer:DefaultValue", "0")
+                        .HasAnnotation("SqlServer:DefaultValueType", "System.Int32");
 
                     b.Property<string>("NewEmail");
 
+                    b.Property<bool>("NewEmailApproved")
+                        .HasAnnotation("SqlServer:ColumnType", "bit")
+                        .HasAnnotation("SqlServer:DefaultValue", "0")
+                        .HasAnnotation("SqlServer:DefaultValueType", "System.Int32");
+
+                    b.Property<string>("NormalizedEmail")
+                        .IsRequired()
+                        .HasAnnotation("MaxLength", 100);
+
+                    b.Property<string>("NormalizedUserName")
+                        .IsRequired()
+                        .HasAnnotation("MaxLength", 50);
+
                     b.Property<string>("PasswordHash");
 
-                    b.Property<Guid>("PasswordResetGuid");
+                    b.Property<string>("PhoneNumber")
+                        .HasAnnotation("MaxLength", 50);
 
-                    b.Property<string>("PhoneNumber");
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasAnnotation("SqlServer:ColumnType", "bit")
+                        .HasAnnotation("SqlServer:DefaultValue", "0")
+                        .HasAnnotation("SqlServer:DefaultValueType", "System.Int32");
 
-                    b.Property<bool>("PhoneNumberConfirmed");
-
-                    b.Property<Guid>("RegisterConfirmGuid");
-
-                    b.Property<bool>("RolesChanged");
+                    b.Property<bool>("RolesChanged")
+                        .HasAnnotation("SqlServer:ColumnType", "bit")
+                        .HasAnnotation("SqlServer:DefaultValue", "0")
+                        .HasAnnotation("SqlServer:DefaultValueType", "System.Int32");
 
                     b.Property<string>("SecurityStamp");
 
@@ -614,18 +644,30 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
 
                     b.Property<bool>("Trusted");
 
-                    b.Property<bool>("TwoFactorEnabled");
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasAnnotation("SqlServer:ColumnType", "bit")
+                        .HasAnnotation("SqlServer:DefaultValue", "0")
+                        .HasAnnotation("SqlServer:DefaultValueType", "System.Int32");
 
                     b.Property<Guid>("UserGuid")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier")
                         .HasAnnotation("SqlServer:GeneratedValueSql", "newid()");
 
-                    b.Property<string>("UserName");
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasAnnotation("MaxLength", 50);
 
-                    b.Property<string>("WebSiteUrl");
+                    b.Property<string>("WebSiteUrl")
+                        .HasAnnotation("MaxLength", 100);
 
                     b.HasKey("UserId");
+
+                    b.HasIndex("Email");
+
+                    b.HasIndex("NormalizedEmail");
+
+                    b.HasIndex("NormalizedUserName");
 
                     b.HasIndex("SiteGuid");
 
@@ -633,6 +675,8 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
 
                     b.HasIndex("UserGuid")
                         .IsUnique();
+
+                    b.HasIndex("UserName");
 
                     b.HasAnnotation("Relational:TableName", "mp_Users");
                 });
@@ -700,9 +744,11 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                     b.Property<DateTime>("LastCaptureUtc")
                         .HasAnnotation("Relational:ColumnName", "LastCaptureUTC");
 
-                    b.Property<float>("Latitude");
+                    b.Property<double>("Latitude")
+                        .HasAnnotation("SqlServer:ColumnType", "float");
 
-                    b.Property<float>("Longitude");
+                    b.Property<double>("Longitude")
+                        .HasAnnotation("SqlServer:ColumnType", "float");
 
                     b.Property<string>("Region")
                         .HasAnnotation("MaxLength", 255);
@@ -717,6 +763,8 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                         .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier");
 
                     b.HasKey("RowId");
+
+                    b.HasIndex("UserGuid");
 
                     b.HasAnnotation("Relational:TableName", "mp_UserLocation");
                 });
