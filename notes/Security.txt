@@ -30,6 +30,11 @@ Unfortunately this does and will make input harder to normalise and correctly ma
 
 https://www.owasp.org/index.php/Choosing_and_Using_Security_Questions_Cheat_Sheet
 
+http://stackoverflow.com/questions/28332344/mvc-using-asp-net-identity-individual-accounts-how-to-add-security-questions
+
+http://brockallen.com/2014/02/11/concerns-with-two-factor-authentication-in-asp-net-identity-v2/
+"an identity management system should support password reset secret questions and answers"
+
 "there really are NO GOOD security questions; only fair or bad questions"
 
 Any security questions or identity information presented to users to reset forgotten passwords should ideally have the following four characteristics:

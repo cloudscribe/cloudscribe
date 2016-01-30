@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-31
-// Last Modified:		    2016-01-21
+// Last Modified:		    2016-01-28
 // 
 // TODO: support custom profile properties that are required for registration
 
@@ -88,9 +88,8 @@ namespace cloudscribe.Core.Web.ViewModels.Account
         //[Display(Name = "DateOfBirth", ResourceType = typeof(CommonResources))]
         public DateTime? DateOfBirth { get; set; }
 
-        public DateTime LastActivityDate { get; set; }
-
-        public DateTime LastLoginDate { get; set; }
+        
+        public DateTime? LastLoginDate { get; set; }
 
         public string TimeZoneId { get; set; }
 

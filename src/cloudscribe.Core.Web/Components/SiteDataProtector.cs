@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-01-18
-// Last Modified:			2016-01-18
+// Last Modified:			2016-01-27
 // 
 
 
@@ -101,6 +101,45 @@ namespace cloudscribe.Core.Web.Components
 
             }
 
+            if (site.OidConnectAppSecret.Length > 0)
+            {
+                try
+                {
+                    site.OidConnectAppSecret = dataProtector.PersistentProtect(site.OidConnectAppSecret);
+                }
+                catch (System.Security.Cryptography.CryptographicException ex)
+                {
+                    log.LogError("data protection error", ex);
+                }
+
+            }
+
+            if (site.DkimPrivateKey.Length > 0)
+            {
+                try
+                {
+                    site.DkimPrivateKey = dataProtector.PersistentProtect(site.DkimPrivateKey);
+                }
+                catch (System.Security.Cryptography.CryptographicException ex)
+                {
+                    log.LogError("data protection error", ex);
+                }
+
+            }
+
+            if (site.SmsSecureToken.Length > 0)
+            {
+                try
+                {
+                    site.SmsSecureToken = dataProtector.PersistentProtect(site.SmsSecureToken);
+                }
+                catch (System.Security.Cryptography.CryptographicException ex)
+                {
+                    log.LogError("data protection error", ex);
+                }
+
+            }
+
             site.IsDataProtected = true;
 
             
@@ -186,6 +225,57 @@ namespace cloudscribe.Core.Web.Components
                 try
                 {
                     site.SmtpPassword = dataProtector.PersistentUnprotect(site.SmtpPassword, out requiresMigration, out wasRevoked);
+                }
+                catch (System.Security.Cryptography.CryptographicException ex)
+                {
+                    log.LogError("data protection error", ex);
+                }
+                catch (FormatException ex)
+                {
+                    log.LogError("data protection error", ex);
+                }
+
+            }
+
+            if (site.OidConnectAppSecret.Length > 0)
+            {
+                try
+                {
+                    site.OidConnectAppSecret = dataProtector.PersistentUnprotect(site.OidConnectAppSecret, out requiresMigration, out wasRevoked);
+                }
+                catch (System.Security.Cryptography.CryptographicException ex)
+                {
+                    log.LogError("data protection error", ex);
+                }
+                catch (FormatException ex)
+                {
+                    log.LogError("data protection error", ex);
+                }
+
+            }
+
+            if (site.SmsSecureToken.Length > 0)
+            {
+                try
+                {
+                    site.SmsSecureToken = dataProtector.PersistentUnprotect(site.SmsSecureToken, out requiresMigration, out wasRevoked);
+                }
+                catch (System.Security.Cryptography.CryptographicException ex)
+                {
+                    log.LogError("data protection error", ex);
+                }
+                catch (FormatException ex)
+                {
+                    log.LogError("data protection error", ex);
+                }
+
+            }
+
+            if (site.DkimPrivateKey.Length > 0)
+            {
+                try
+                {
+                    site.DkimPrivateKey = dataProtector.PersistentUnprotect(site.DkimPrivateKey, out requiresMigration, out wasRevoked);
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {

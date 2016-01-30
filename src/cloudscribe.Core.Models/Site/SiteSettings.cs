@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2016-01-17
+// Last Modified:			2016-01-27
 // 
 
 using System;
@@ -18,14 +18,9 @@ namespace cloudscribe.Core.Models
 
         }
 
-        private string defaultEmailFromAddress = string.Empty;
-        public string DefaultEmailFromAddress
-        {
-            get { return defaultEmailFromAddress ?? string.Empty; }
-            set { defaultEmailFromAddress = value; }
-        }
+        
 
-        //public string DefaultFromEmailAlias { get; set; } = string.Empty;
+        
 
         private string layout = string.Empty;
         public string Layout
@@ -36,9 +31,9 @@ namespace cloudscribe.Core.Models
         
         
         public bool AllowNewRegistration { get; set; } = true;
-        public bool UseSecureRegistration { get; set; } = false;
-        public bool UseSslOnAllPages { get; set; } = false;
-        
+        public bool RequireConfirmedEmail { get; set; } = false;
+        public bool RequireConfirmedPhone { get; set; } = false;
+
         public bool UseLdapAuth { get; set; } = false;
         public bool AllowDbFallbackWithLdap { get; set; } = false;
         public bool EmailLdapDbFallback { get; set; } = false;
@@ -74,24 +69,32 @@ namespace cloudscribe.Core.Models
             set { ldapUserDNKey = value; }
         }
         
-        public bool AllowUserFullNameChange { get; set; } = true;
+        
         public bool ReallyDeleteUsers { get; set; } = true;
         public bool UseEmailForLogin { get; set; } = true;
         public bool DisableDbAuth { get; set; } = false;
        
         public bool RequiresQuestionAndAnswer { get; set; } = false;
         public bool RequireApprovalBeforeLogin { get; set; } = false;
+
+        private string accountApprovalEmailCsv = string.Empty;
+        public string AccountApprovalEmailCsv
+        {
+            get { return accountApprovalEmailCsv ?? string.Empty; }
+            set { accountApprovalEmailCsv = value; }
+        }
+
         
-        public int MaxInvalidPasswordAttempts { get; set; } = 10;
-        public int PasswordAttemptWindowMinutes { get; set; } = 5;
+        public int MaxInvalidPasswordAttempts { get; set; } = 5;
+        
         
         public int MinRequiredPasswordLength { get; set; } = 7;    
-        public int MinReqNonAlphaChars { get; set; } = 0;
+       
         
         public bool AllowPersistentLogin { get; set; } = true;
         public bool CaptchaOnRegistration { get; set; } = false;
         public bool CaptchaOnLogin { get; set; } = false;
-        //public bool RequireEnterEmailTwiceOnRegistration { get; set; } = false;
+        
 
         private string recaptchaPrivateKey = string.Empty;
         public string RecaptchaPrivateKey
@@ -163,6 +166,20 @@ namespace cloudscribe.Core.Models
             set { twitterConsumerSecret = value; }
         }
 
+        private string oidConnectAppId = string.Empty;
+        public string OidConnectAppId
+        {
+            get { return oidConnectAppId ?? string.Empty; }
+            set { oidConnectAppId = value; }
+        }
+
+        private string oidConnectAppSecret = string.Empty; // protected with data protection
+        public string OidConnectAppSecret
+        {
+            get { return oidConnectAppSecret ?? string.Empty; }
+            set { oidConnectAppSecret = value; }
+        }
+        
         private string addThisDotComUsername = string.Empty;
         public string AddThisDotComUsername
         {
@@ -170,40 +187,7 @@ namespace cloudscribe.Core.Models
             set { addThisDotComUsername = value; }
         }
 
-        private string apiKeyExtra1 = string.Empty;
-        public string ApiKeyExtra1
-        {
-            get { return apiKeyExtra1 ?? string.Empty; }
-            set { apiKeyExtra1 = value; }
-        }
-
-        private string apiKeyExtra2 = string.Empty;
-        public string ApiKeyExtra2
-        {
-            get { return apiKeyExtra2 ?? string.Empty; }
-            set { apiKeyExtra2 = value; }
-        }
-
-        private string apiKeyExtra3 = string.Empty;
-        public string ApiKeyExtra3
-        {
-            get { return apiKeyExtra3 ?? string.Empty; }
-            set { apiKeyExtra3 = value; }
-        }
-
-        private string apiKeyExtra4 = string.Empty;
-        public string ApiKeyExtra4
-        {
-            get { return apiKeyExtra4 ?? string.Empty; }
-            set { apiKeyExtra4 = value; }
-        }
-
-        private string apiKeyExtra5 = string.Empty;
-        public string ApiKeyExtra5
-        {
-            get { return apiKeyExtra5 ?? string.Empty; }
-            set { apiKeyExtra5 = value; }
-        }
+        
 
         private string timeZoneId = "Eastern Standard Time";
         public string TimeZoneId
@@ -282,6 +266,20 @@ namespace cloudscribe.Core.Models
             set { companyPublicEmail = value; }
         }
 
+        private string defaultEmailFromAddress = string.Empty;
+        public string DefaultEmailFromAddress
+        {
+            get { return defaultEmailFromAddress ?? string.Empty; }
+            set { defaultEmailFromAddress = value; }
+        }
+
+        private string defaultEmailFromAlias = string.Empty;
+        public string DefaultEmailFromAlias
+        {
+            get { return defaultEmailFromAlias ?? string.Empty; }
+            set { defaultEmailFromAlias = value; }
+        }
+
         private string smtpUser = string.Empty;
         public string SmtpUser
         {
@@ -315,6 +313,59 @@ namespace cloudscribe.Core.Models
         public bool SmtpRequiresAuth { get; set; } = false;
         public bool SmtpUseSsl { get; set; } = false;
 
+        private string dkimPublicKey = string.Empty;
+        public string DkimPublicKey
+        {
+            get { return dkimPublicKey ?? string.Empty; }
+            set { dkimPublicKey = value; }
+        }
+
+        private string dkimPrivateKey = string.Empty; // protected with data protection
+        public string DkimPrivateKey
+        {
+            get { return dkimPrivateKey ?? string.Empty; }
+            set { dkimPrivateKey = value; }
+        }
+
+        private string dkimDomain = string.Empty;
+        public string DkimDomain
+        {
+            get { return dkimDomain ?? string.Empty; }
+            set { dkimDomain = value; }
+        }
+
+        private string dkimSelector = string.Empty;
+        public string DkimSelector
+        {
+            get { return dkimSelector ?? string.Empty; }
+            set { dkimSelector = value; }
+        }
+
+        public bool SignEmailWithDkim { get; set; } = false;
+
+
+        private string smsClientId = string.Empty;
+        public string SmsClientId
+        {
+            get { return smsClientId ?? string.Empty; }
+            set { smsClientId = value; }
+        }
+
+        private string smsSecureToken = string.Empty; //protected with data protection
+        public string SmsSecureToken
+        {
+            get { return smsSecureToken ?? string.Empty; }
+            set { smsSecureToken = value; }
+        }
+
+        private string smsFrom = string.Empty;
+        public string SmsFrom
+        {
+            get { return smsFrom ?? string.Empty; }
+            set { smsFrom = value; }
+        }
+
+        
         private string googleAnalyticsProfileId = string.Empty;
         public string GoogleAnalyticsProfileId
         {
@@ -371,6 +422,50 @@ namespace cloudscribe.Core.Models
 
         public DateTime CreatedUtc { get; set; } = DateTime.UtcNow;
 
+        //public bool UseSslOnAllPages { get; set; } = false;
+
+        //public int PasswordAttemptWindowMinutes { get; set; } = 5;
+        //public int MinReqNonAlphaChars { get; set; } = 0;
+
+        //public bool RequireEnterEmailTwiceOnRegistration { get; set; } = false;
+
+        //public bool AllowUserFullNameChange { get; set; } = true;
+
+        //private string apiKeyExtra1 = string.Empty;
+        //public string ApiKeyExtra1
+        //{
+        //    get { return apiKeyExtra1 ?? string.Empty; }
+        //    set { apiKeyExtra1 = value; }
+        //}
+
+        //private string apiKeyExtra2 = string.Empty;
+        //public string ApiKeyExtra2
+        //{
+        //    get { return apiKeyExtra2 ?? string.Empty; }
+        //    set { apiKeyExtra2 = value; }
+        //}
+
+        //private string apiKeyExtra3 = string.Empty;
+        //public string ApiKeyExtra3
+        //{
+        //    get { return apiKeyExtra3 ?? string.Empty; }
+        //    set { apiKeyExtra3 = value; }
+        //}
+
+        //private string apiKeyExtra4 = string.Empty;
+        //public string ApiKeyExtra4
+        //{
+        //    get { return apiKeyExtra4 ?? string.Empty; }
+        //    set { apiKeyExtra4 = value; }
+        //}
+
+        //private string apiKeyExtra5 = string.Empty;
+        //public string ApiKeyExtra5
+        //{
+        //    get { return apiKeyExtra5 ?? string.Empty; }
+        //    set { apiKeyExtra5 = value; }
+        //}
+
 
         public static SiteSettings FromISiteSettings(ISiteSettings i)
         {
@@ -381,12 +476,12 @@ namespace cloudscribe.Core.Models
             s.AllowDbFallbackWithLdap = i.AllowDbFallbackWithLdap;
             s.AllowNewRegistration = i.AllowNewRegistration;
             s.AllowPersistentLogin = i.AllowPersistentLogin;
-            s.AllowUserFullNameChange = i.AllowUserFullNameChange;
-            s.ApiKeyExtra1 = i.ApiKeyExtra1;
-            s.ApiKeyExtra2 = i.ApiKeyExtra2;
-            s.ApiKeyExtra3 = i.ApiKeyExtra3;
-            s.ApiKeyExtra4 = i.ApiKeyExtra4;
-            s.ApiKeyExtra5 = i.ApiKeyExtra5;
+            //s.AllowUserFullNameChange = i.AllowUserFullNameChange;
+            //s.ApiKeyExtra1 = i.ApiKeyExtra1;
+            //s.ApiKeyExtra2 = i.ApiKeyExtra2;
+            //s.ApiKeyExtra3 = i.ApiKeyExtra3;
+            //s.ApiKeyExtra4 = i.ApiKeyExtra4;
+            //s.ApiKeyExtra5 = i.ApiKeyExtra5;
             s.AutoCreateLdapUserOnFirstLogin = i.AutoCreateLdapUserOnFirstLogin;
             s.CaptchaOnLogin = i.CaptchaOnLogin;
             s.CaptchaOnRegistration = i.CaptchaOnRegistration;
@@ -420,9 +515,9 @@ namespace cloudscribe.Core.Models
             s.MaxInvalidPasswordAttempts = i.MaxInvalidPasswordAttempts;
             s.MicrosoftClientId = i.MicrosoftClientId;
             s.MicrosoftClientSecret = i.MicrosoftClientSecret;
-            s.MinReqNonAlphaChars = i.MinReqNonAlphaChars;
+            //s.MinReqNonAlphaChars = i.MinReqNonAlphaChars;
             s.MinRequiredPasswordLength = i.MinRequiredPasswordLength;
-            s.PasswordAttemptWindowMinutes = i.PasswordAttemptWindowMinutes;
+            //s.PasswordAttemptWindowMinutes = i.PasswordAttemptWindowMinutes;
             s.PreferredHostName = i.PreferredHostName;
             s.PrivacyPolicy = i.PrivacyPolicy;
             s.ReallyDeleteUsers = i.ReallyDeleteUsers;
@@ -450,8 +545,8 @@ namespace cloudscribe.Core.Models
             s.TwitterConsumerSecret = i.TwitterConsumerSecret;
             s.UseEmailForLogin = i.UseEmailForLogin;
             s.UseLdapAuth = i.UseLdapAuth;
-            s.UseSecureRegistration = i.UseSecureRegistration;
-            s.UseSslOnAllPages = i.UseSslOnAllPages;
+            s.RequireConfirmedEmail = i.RequireConfirmedEmail;
+           // s.UseSslOnAllPages = i.UseSslOnAllPages;
 
             s.IsDataProtected = i.IsDataProtected;
             s.CreatedUtc = i.CreatedUtc;

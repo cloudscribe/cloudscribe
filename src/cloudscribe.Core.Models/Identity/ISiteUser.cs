@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-17
-// Last Modified:			2014-11-12
+// Last Modified:			2016-01-28
 // 
 
 using System;
@@ -25,7 +25,7 @@ namespace cloudscribe.Core.Models
         string LastName { get; set; }
         string Email { get; set; }
         DateTime CreatedUtc { get; set; }
-        DateTime DateOfBirth { get; set; }
+        DateTime? DateOfBirth { get; set; }
         bool DisplayInMemberList { get; set; }
         bool Trusted { get; set; }
         string WebSiteUrl { get; set; }
@@ -35,8 +35,8 @@ namespace cloudscribe.Core.Models
         /// this property indicates if an account has been locked by an administrator
         /// </summary>
         bool IsLockedOut { get; set; }
-        DateTime LastActivityDate { get; set; }
-        DateTime LastLoginDate { get; set; }
+        
+        DateTime? LastLoginDate { get; set; }
         string TimeZoneId { get; set; }
         
         string PhoneNumber { get; set; }
@@ -52,29 +52,14 @@ namespace cloudscribe.Core.Models
     public interface ISiteUser : IUserInfo
     {
         string Id { get; }
-        
-        
-        bool EmailConfirmed { get; set; }
-        
-        int FailedPasswordAnswerAttemptCount { get; set; }
-        DateTime FailedPasswordAnswerAttemptWindowStart { get; set; }
-        int FailedPasswordAttemptCount { get; set; }
-        DateTime FailedPasswordAttemptWindowStart { get; set; }
-
+       
+        int AccessFailedCount { get; set; } // maps to FailedPasswordAttemptCount in ado data layers
         string PasswordHash { get; set; }
-
-        // TODO: this field should not be used, guids don't make good security tokens
-        // the Identity System can generate self expiring purpose tokens based on the the user security stamp
-        // and we don't need to persist any of the generated tokens
-        Guid PasswordResetGuid { get; set; }
-
         bool MustChangePwd { get; set; }
-        DateTime LastPasswordChangedDate { get; set; }
-
-        DateTime LastLockoutDate { get; set; }
-
+        DateTime? LastPasswordChangedDate { get; set; }
+        
         /// <summary>
-        /// This property is independendent IsLockedOut, it the property is populated with a future datetime then
+        /// This property is independendent of IsLockedOut, if the property is populated with a future datetime then
         /// the user is locked out until that datetime. This property is used for lockouts related to failed authentication attempts,
         /// as opposed to IsLockedOut which is a property the admin can use to permanently lock out an account.
         /// </summary>
@@ -90,27 +75,54 @@ namespace cloudscribe.Core.Models
 
         bool TwoFactorEnabled { get; set; }
 
-        // TODO: again we should not be using a guid for email verification
-        // this should be removed and we should use Identity system to generate self expiring purpose token based on the security stamp
+        /// <summary>
+        /// indicates if this account can be automatically locked out (temporarily) due to AccessFailedCount
+        /// >= site.MaxInvalidPasswordAttempts
+        /// If false then this account will not be locked out by failed access attempts.
+        /// </summary>
+        bool CanAutoLockout { get; set; }
 
-        Guid RegisterConfirmGuid { get; }
+        //TODO: implement a middleware to detect this and reset the the auth/role cookie
+        // set this true whenever a users roles have been changed and set false after cookie reset
         bool RolesChanged { get; set; }
 
         /// <summary>
         /// A random value that must change whenever a users credentials change (password changed, login removed)
         /// </summary>
         string SecurityStamp { get; set; }
-        
-        string LoweredEmail { get; set; }
 
-        // TODO: remove this, we should not use guids as tokens for security purposes
-        Guid EmailChangeGuid { get; set; }
+        bool EmailConfirmed { get; set; }
+        string NormalizedEmail { get; set; } // maps to LoweredEmail in ado data layers
+        string NormalizedUserName { get; set; }
 
         string NewEmail { get; set; }
         
+
+        /// <summary>
+        /// when a user requests a change to their currently confirmed account email
+        /// we should send them an approval link to their current email
+        /// if the user clicks the link we should set this to true, then send an email with 
+        /// a link to confirm the new email. Once they click that link we should move the new email to the
+        /// Email and NormalizedEmail fields, mark it as confirmed and clear the value from NewEmail,
+        /// and set NewEmailApproved to false
+        /// This strategy should make it difficult to take over an account even if a session hijack
+        /// somehow had been achieved.
+        /// </summary>
+        bool NewEmailApproved { get; set; }
+
         string Signature { get; set; }
         string AuthorBio { get; set; }
         string Comment { get; set; }
-        
+
+        // TODO: remove 
+        //Guid EmailChangeGuid { get; set; }
+        //Guid RegisterConfirmGuid { get; }
+        //Guid PasswordResetGuid { get; set; }
+        //int FailedPasswordAnswerAttemptCount { get; set; }
+        //DateTime FailedPasswordAnswerAttemptWindowStart { get; set; }
+        //DateTime FailedPasswordAttemptWindowStart { get; set; }
+        //DateTime LastLockoutDate { get; set; }
+        //DateTime LastActivityDate { get; set; }
+
     }
 }

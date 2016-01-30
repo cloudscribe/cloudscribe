@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-12-01
-// Last Modified:			2015-12-08
+// Last Modified:			2016-01-30
 // 
 
 using System;
@@ -31,8 +31,8 @@ namespace cloudscribe.Core.Models
             set { hostName = value; }
         }
 
-        public float Longitude { get; set; } = 0;
-        public float Latitude { get; set; } = 0;
+        public double Longitude { get; set; } = 0;
+        public double Latitude { get; set; } = 0;
 
         private string isp = string.Empty;
         public string Isp
@@ -79,6 +79,30 @@ namespace cloudscribe.Core.Models
         public int CaptureCount { get; set; } = 0;
         public DateTime FirstCaptureUtc { get; set; } = DateTime.UtcNow;
         public DateTime LastCaptureUtc { get; set; } = DateTime.UtcNow;
+
+        public static UserLocation FromIUserLocation(IUserLocation i)
+        {
+            UserLocation l = new UserLocation();
+
+            l.CaptureCount = i.CaptureCount;
+            l.City = i.City;
+            l.Continent = i.Continent;
+            l.Country = i.Country;
+            l.FirstCaptureUtc = i.FirstCaptureUtc;
+            l.HostName = i.HostName;
+            l.IpAddress = i.IpAddress;
+            l.IpAddressLong = i.IpAddressLong;
+            l.LastCaptureUtc = i.LastCaptureUtc;
+            l.Latitude = i.Latitude;
+            l.Longitude = i.Longitude;
+            l.Region = i.Region;
+            l.RowId = i.RowId;
+            l.SiteGuid = i.SiteGuid;
+            l.TimeZone = i.TimeZone;
+            l.UserGuid = i.UserGuid;
+
+            return l;
+        }
 
 
     }

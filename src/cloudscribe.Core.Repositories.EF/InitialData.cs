@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-12-03
-// Last Modified:			2015-12-26
+// Last Modified:			2016-01-27
 // 
 
 
@@ -116,7 +116,7 @@ namespace cloudscribe.Core.Repositories.EF
                 newSite.Layout = "Default_Layout.cshtml";
 
                 newSite.AllowNewRegistration = true;
-                newSite.AllowUserFullNameChange = false;
+                //newSite.AllowUserFullNameChange = false;
                 newSite.AutoCreateLdapUserOnFirstLogin = true;
                 newSite.ReallyDeleteUsers = true;
                 newSite.LdapPort = 389;
@@ -124,8 +124,8 @@ namespace cloudscribe.Core.Repositories.EF
                 newSite.LdapServer = string.Empty;
                 newSite.UseEmailForLogin = true;
                 newSite.UseLdapAuth = false;
-                newSite.UseSecureRegistration = false;
-                newSite.UseSslOnAllPages = false;
+                newSite.RequireConfirmedEmail = false;
+                //newSite.UseSslOnAllPages = false;
 
 
                 //0 = clear, 1= hashed, 2= encrypted
@@ -133,8 +133,8 @@ namespace cloudscribe.Core.Repositories.EF
 
                 newSite.RequiresQuestionAndAnswer = false;
                 newSite.MaxInvalidPasswordAttempts = 10;
-                newSite.PasswordAttemptWindowMinutes = 5;
-                newSite.MinReqNonAlphaChars = 0;
+                //newSite.PasswordAttemptWindowMinutes = 5;
+                //newSite.MinReqNonAlphaChars = 0;
                 newSite.MinRequiredPasswordLength = 7;
 
                 db.Sites.Add(newSite);
@@ -218,7 +218,7 @@ namespace cloudscribe.Core.Repositories.EF
                         adminUser.SiteId = site.SiteId;
                         adminUser.SiteGuid = site.SiteGuid;
                         adminUser.Email = "admin@admin.com";
-                        adminUser.LoweredEmail = adminUser.Email;
+                        adminUser.NormalizedEmail = adminUser.Email;
                         adminUser.DisplayName = "Admin";
                         adminUser.UserName = "admin";
                         adminUser.UserId = 0;

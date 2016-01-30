@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-22
-// Last Modified:			2016-01-17
+// Last Modified:			2016-01-28
 // 
 
 using cloudscribe.Core.Models;
@@ -190,38 +190,15 @@ namespace cloudscribe.Core.Web.Components
             //string templateFolder = templateFolderPath;
 
             //SiteSettings newSite = new SiteSettings();
-
-
+            
             newSite.Layout = setupOptions.DefaultLayout;
-            
-            newSite.AllowNewRegistration = true;
-            newSite.AllowUserFullNameChange = false;
-            newSite.AutoCreateLdapUserOnFirstLogin = true;
-            newSite.ReallyDeleteUsers = true;
-            newSite.LdapPort = 389;
-            newSite.LdapRootDN = String.Empty;
-            newSite.LdapServer = String.Empty;
-            newSite.UseEmailForLogin = true;
-            newSite.UseLdapAuth = false;
-            newSite.UseSecureRegistration = false;
-            newSite.UseSslOnAllPages = setupOptions.SslIsRequiredByWebServer;
-           
-            
-            //0 = clear, 1= hashed, 2= encrypted
-            //newSite.PasswordFormat = 1;
-
-            newSite.RequiresQuestionAndAnswer = false;
-            newSite.MaxInvalidPasswordAttempts = 10;
-            newSite.PasswordAttemptWindowMinutes = 5;
-            newSite.MinReqNonAlphaChars = 0;
-            newSite.MinRequiredPasswordLength = 7;
+            // TODO: more configurable options?
             
             
             bool result = await siteRepo.Save(newSite, CancellationToken.None);
 
 
             return result;
-
 
         }
 
@@ -268,7 +245,7 @@ namespace cloudscribe.Core.Web.Components
             adminUser.SiteId = site.SiteId;
             adminUser.SiteGuid = site.SiteGuid;
             adminUser.Email = "admin" + siteDifferentiator + "@admin.com";
-            adminUser.LoweredEmail = adminUser.Email;
+            adminUser.NormalizedEmail = adminUser.Email;
             adminUser.DisplayName = "Admin";
             adminUser.UserName = "admin" + siteDifferentiator;
 

@@ -14,8 +14,13 @@ namespace cloudscribe.Core.Models
         long IpAddressLong { get; set; }
         string Isp { get; set; }
         DateTime LastCaptureUtc { get; set; }
-        float Latitude { get; set; }
-        float Longitude { get; set; }
+
+        //http://stackoverflow.com/questions/28068123/double-or-decimal-for-latitude-longitude-values-in-c-sharp
+        //http://stackoverflow.com/questions/1440620/which-sql-server-data-type-best-represents-a-double-in-c
+
+        double Latitude { get; set; }
+        double Longitude { get; set; }
+
         string Region { get; set; }
         Guid RowId { get; set; }
         Guid SiteGuid { get; set; }
