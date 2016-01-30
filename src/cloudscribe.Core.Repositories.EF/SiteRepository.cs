@@ -431,7 +431,7 @@ namespace cloudscribe.Core.Repositories.EF
                         select x
                         ;
 
-            return await query.SingleOrDefaultAsync<SiteFolder>(cancellationToken);
+            return await query.AsNoTracking().SingleOrDefaultAsync<SiteFolder>(cancellationToken);
 
         }
 

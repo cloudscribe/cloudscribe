@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2008-01-04
-// Last Modified:			2016-01-02
+// Last Modified:			2016-01-30
 //
 
 using cloudscribe.DbHelpers;
@@ -59,7 +59,7 @@ namespace cloudscribe.Core.Repositories.Firebird
         /// <param name="firstCaptureUTC"> firstCaptureUTC </param>
         /// <param name="lastCaptureUTC"> lastCaptureUTC </param>
         /// <returns>int</returns>
-        public int Create(
+        public async Task<bool> Create(
             Guid rowID,
             Guid userGuid,
             Guid siteGuid,
@@ -76,12 +76,10 @@ namespace cloudscribe.Core.Repositories.Firebird
             string timeZone,
             int captureCount,
             DateTime firstCaptureUTC,
-            DateTime lastCaptureUTC)
+            DateTime lastCaptureUTC,
+            CancellationToken cancellationToken
+            )
         {
-            #region Bit Conversion
-
-
-            #endregion
 
             FbParameter[] arParams = new FbParameter[17];
 
@@ -176,14 +174,15 @@ namespace cloudscribe.Core.Repositories.Firebird
             sqlCommand.Append("@LastCaptureUTC )");
             sqlCommand.Append(";");
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
                 true,
-                arParams);
+                arParams,
+                cancellationToken);
 
-            return rowsAffected;
+            return rowsAffected > 0;
 
         }
 
@@ -207,7 +206,7 @@ namespace cloudscribe.Core.Repositories.Firebird
         /// <param name="captureCount"> captureCount </param>
         /// <param name="lastCaptureUTC"> lastCaptureUTC </param>
         /// <returns>bool</returns>
-        public bool Update(
+        public async Task<bool> Update(
             Guid rowID,
             Guid userGuid,
             Guid siteGuid,
@@ -223,7 +222,9 @@ namespace cloudscribe.Core.Repositories.Firebird
             string city,
             string timeZone,
             int captureCount,
-            DateTime lastCaptureUTC)
+            DateTime lastCaptureUTC,
+            CancellationToken cancellationToken
+            )
         {    
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("UPDATE mp_UserLocation ");
@@ -298,12 +299,13 @@ namespace cloudscribe.Core.Repositories.Firebird
             arParams[15] = new FbParameter("@LastCaptureUTC", FbDbType.TimeStamp);
             arParams[15].Value = lastCaptureUTC;
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
                 true,
-                arParams);
+                arParams,
+                cancellationToken);
 
             return (rowsAffected > -1);
 
@@ -314,7 +316,10 @@ namespace cloudscribe.Core.Repositories.Firebird
         /// </summary>
         /// <param name="rowID"> rowID </param>
         /// <returns>bool</returns>
-        public bool Delete(Guid rowID)
+        public async Task<bool> Delete(
+            Guid rowID,
+            CancellationToken cancellationToken
+            )
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_UserLocation ");
@@ -326,18 +331,22 @@ namespace cloudscribe.Core.Repositories.Firebird
             arParams[0] = new FbParameter("@RowID", FbDbType.Char, 36);
             arParams[0].Value = rowID.ToString();
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
                 true,
-                arParams);
+                arParams,
+                cancellationToken);
 
             return (rowsAffected > -1);
 
         }
 
-        public bool DeleteByUser(Guid userGuid)
+        public async Task<bool> DeleteByUser(
+            Guid userGuid,
+            CancellationToken cancellationToken
+            )
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_UserLocation ");
@@ -350,48 +359,81 @@ namespace cloudscribe.Core.Repositories.Firebird
             arParams[0] = new FbParameter("@UserGuid", FbDbType.Char, 36);
             arParams[0].Value = userGuid.ToString();
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
                 true,
-                arParams);
+                arParams,
+                cancellationToken);
 
             return (rowsAffected > -1);
 
         }
 
-        /// <summary>
-        /// Gets an IDataReader with one row from the mp_UserLocation table.
-        /// </summary>
-        /// <param name="rowID"> rowID </param>
-        public DbDataReader GetOne(Guid rowID)
+        public async Task<bool> DeleteBySite(
+            Guid siteGuid,
+            CancellationToken cancellationToken
+            )
         {
             StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("SELECT  * ");
-            sqlCommand.Append("FROM	mp_UserLocation ");
+            sqlCommand.Append("DELETE FROM mp_UserLocation ");
             sqlCommand.Append("WHERE ");
-            sqlCommand.Append("RowID = @RowID ");
+            sqlCommand.Append("SiteGuid = @SiteGuid ");
             sqlCommand.Append(";");
 
             FbParameter[] arParams = new FbParameter[1];
 
-            arParams[0] = new FbParameter("@RowID", FbDbType.Char, 36);
-            arParams[0].Value = rowID.ToString();
+            arParams[0] = new FbParameter("@SiteGuid", FbDbType.Char, 36);
+            arParams[0].Value = siteGuid.ToString();
 
-            return AdoHelper.ExecuteReader(
-                readConnectionString,
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
+                writeConnectionString,
+                CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                true,
+                arParams,
+                cancellationToken);
+
+            return (rowsAffected > -1);
 
         }
+
+        ///// <summary>
+        ///// Gets an IDataReader with one row from the mp_UserLocation table.
+        ///// </summary>
+        ///// <param name="rowID"> rowID </param>
+        //public DbDataReader GetOne(Guid rowID)
+        //{
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("SELECT  * ");
+        //    sqlCommand.Append("FROM	mp_UserLocation ");
+        //    sqlCommand.Append("WHERE ");
+        //    sqlCommand.Append("RowID = @RowID ");
+        //    sqlCommand.Append(";");
+
+        //    FbParameter[] arParams = new FbParameter[1];
+
+        //    arParams[0] = new FbParameter("@RowID", FbDbType.Char, 36);
+        //    arParams[0].Value = rowID.ToString();
+
+        //    return AdoHelper.ExecuteReader(
+        //        readConnectionString,
+        //        sqlCommand.ToString(),
+        //        arParams);
+
+        //}
 
         /// <summary>
         /// Gets an IDataReader with one row from the mp_UserLocation table.
         /// </summary>
         /// <param name="userguid"> userguid </param>
         /// <param name="iPAddress"> iPAddress </param>
-        public DbDataReader GetOne(Guid userguid, long iPAddressLong)
+        public async Task<DbDataReader> GetOne(
+            Guid userguid, 
+            long iPAddressLong,
+            CancellationToken cancellationToken
+            )
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  * ");
@@ -409,64 +451,65 @@ namespace cloudscribe.Core.Repositories.Firebird
             arParams[1] = new FbParameter("@IPAddressLong", FbDbType.BigInt);
             arParams[1].Value = iPAddressLong;
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
         }
 
-        /// <summary>
-        /// Gets an IDataReader with one row from the mp_UserLocation table.
-        /// </summary>
-        /// <param name="userGuid"> userGuid </param>
-        public DbDataReader GetByUser(Guid userGuid)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("SELECT  * ");
-            sqlCommand.Append("FROM	mp_UserLocation ");
-            sqlCommand.Append("WHERE ");
-            sqlCommand.Append("UserGuid = @UserGuid ");
-            sqlCommand.Append("ORDER BY LastCaptureUTC DESC ");
-            sqlCommand.Append(";");
+        ///// <summary>
+        ///// Gets an IDataReader with one row from the mp_UserLocation table.
+        ///// </summary>
+        ///// <param name="userGuid"> userGuid </param>
+        //public DbDataReader GetByUser(Guid userGuid)
+        //{
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("SELECT  * ");
+        //    sqlCommand.Append("FROM	mp_UserLocation ");
+        //    sqlCommand.Append("WHERE ");
+        //    sqlCommand.Append("UserGuid = @UserGuid ");
+        //    sqlCommand.Append("ORDER BY LastCaptureUTC DESC ");
+        //    sqlCommand.Append(";");
 
-            FbParameter[] arParams = new FbParameter[1];
+        //    FbParameter[] arParams = new FbParameter[1];
 
-            arParams[0] = new FbParameter("@UserGuid", FbDbType.Char, 36);
-            arParams[0].Value = userGuid.ToString();
+        //    arParams[0] = new FbParameter("@UserGuid", FbDbType.Char, 36);
+        //    arParams[0].Value = userGuid.ToString();
 
-            return AdoHelper.ExecuteReader(
-                readConnectionString,
-                sqlCommand.ToString(),
-                arParams);
+        //    return AdoHelper.ExecuteReader(
+        //        readConnectionString,
+        //        sqlCommand.ToString(),
+        //        arParams);
 
-        }
+        //}
 
-        /// <summary>
-        /// Gets an IDataReader with one row from the mp_UserLocation table.
-        /// </summary>
-        /// <param name="siteGuid"> siteGuid </param>
-        public DbDataReader GetBySite(Guid siteGuid)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("SELECT  * ");
-            sqlCommand.Append("FROM	mp_UserLocation ");
-            sqlCommand.Append("WHERE ");
-            sqlCommand.Append("SiteGuid = @SiteGuid ");
-            sqlCommand.Append("ORDER BY IPAddressLong ");
-            sqlCommand.Append(";");
+        ///// <summary>
+        ///// Gets an IDataReader with one row from the mp_UserLocation table.
+        ///// </summary>
+        ///// <param name="siteGuid"> siteGuid </param>
+        //public DbDataReader GetBySite(Guid siteGuid)
+        //{
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("SELECT  * ");
+        //    sqlCommand.Append("FROM	mp_UserLocation ");
+        //    sqlCommand.Append("WHERE ");
+        //    sqlCommand.Append("SiteGuid = @SiteGuid ");
+        //    sqlCommand.Append("ORDER BY IPAddressLong ");
+        //    sqlCommand.Append(";");
 
-            FbParameter[] arParams = new FbParameter[1];
+        //    FbParameter[] arParams = new FbParameter[1];
 
-            arParams[0] = new FbParameter("@SiteGuid", FbDbType.Char, 36);
-            arParams[0].Value = siteGuid.ToString();
+        //    arParams[0] = new FbParameter("@SiteGuid", FbDbType.Char, 36);
+        //    arParams[0].Value = siteGuid.ToString();
 
-            return AdoHelper.ExecuteReader(
-                readConnectionString,
-                sqlCommand.ToString(),
-                arParams);
+        //    return AdoHelper.ExecuteReader(
+        //        readConnectionString,
+        //        sqlCommand.ToString(),
+        //        arParams);
 
-        }
+        //}
 
         /// <summary>
         /// Gets an IDataReader with rows from the mp_Users table which have the passed in IP Address
@@ -512,7 +555,10 @@ namespace cloudscribe.Core.Repositories.Firebird
         /// Gets a count of rows in the mp_UserLocation table.
         /// </summary>
         /// <param name="userGuid"> userGuid </param>
-        public int GetCountByUser(Guid userGuid)
+        public async Task<int> GetCountByUser(
+            Guid userGuid,
+            CancellationToken cancellationToken
+            )
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("SELECT  Count(*) ");
@@ -526,37 +572,40 @@ namespace cloudscribe.Core.Repositories.Firebird
             arParams[0] = new FbParameter("@UserGuid", FbDbType.Char, 36);
             arParams[0].Value = userGuid.ToString();
 
-            return Convert.ToInt32(AdoHelper.ExecuteScalar(
+            object result = await AdoHelper.ExecuteScalarAsync(
                 readConnectionString,
                 sqlCommand.ToString(),
-                arParams));
+                arParams,
+                cancellationToken);
+
+            return Convert.ToInt32(result);
 
         }
 
-        /// <summary>
-        /// Gets a count of rows in the mp_UserLocation table.
-        /// </summary>
-        /// <param name="siteGuid"> siteGuid </param>
-        public int GetCountBySite(Guid siteGuid)
-        {
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("SELECT  Count(*) ");
-            sqlCommand.Append("FROM	mp_UserLocation ");
-            sqlCommand.Append("WHERE ");
-            sqlCommand.Append("SiteGuid = @SiteGuid ");
-            sqlCommand.Append(";");
+        ///// <summary>
+        ///// Gets a count of rows in the mp_UserLocation table.
+        ///// </summary>
+        ///// <param name="siteGuid"> siteGuid </param>
+        //public int GetCountBySite(Guid siteGuid)
+        //{
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("SELECT  Count(*) ");
+        //    sqlCommand.Append("FROM	mp_UserLocation ");
+        //    sqlCommand.Append("WHERE ");
+        //    sqlCommand.Append("SiteGuid = @SiteGuid ");
+        //    sqlCommand.Append(";");
 
-            FbParameter[] arParams = new FbParameter[1];
+        //    FbParameter[] arParams = new FbParameter[1];
 
-            arParams[0] = new FbParameter("@SiteGuid", FbDbType.Char, 36);
-            arParams[0].Value = siteGuid.ToString();
+        //    arParams[0] = new FbParameter("@SiteGuid", FbDbType.Char, 36);
+        //    arParams[0].Value = siteGuid.ToString();
 
-            return Convert.ToInt32(AdoHelper.ExecuteScalar(
-                readConnectionString,
-                sqlCommand.ToString(),
-                arParams));
+        //    return Convert.ToInt32(AdoHelper.ExecuteScalar(
+        //        readConnectionString,
+        //        sqlCommand.ToString(),
+        //        arParams));
 
-        }
+        //}
 
         /// <summary>
         /// Gets a page of data from the mp_UserLocation table.
@@ -565,10 +614,12 @@ namespace cloudscribe.Core.Repositories.Firebird
         /// <param name="pageNumber">The page number.</param>
         /// <param name="pageSize">Size of the page.</param>
         /// <param name="totalPages">total pages</param>
-        public DbDataReader GetPageByUser(
+        public async Task<DbDataReader> GetPageByUser(
             Guid userGuid,
             int pageNumber,
-            int pageSize)
+            int pageSize,
+            CancellationToken cancellationToken
+            )
         {
             int pageLowerBound = (pageSize * pageNumber) - pageSize;
             
@@ -588,50 +639,51 @@ namespace cloudscribe.Core.Repositories.Firebird
             arParams[0] = new FbParameter("@UserGuid", FbDbType.Char, 36);
             arParams[0].Value = userGuid.ToString();
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
         }
 
 
-        /// <summary>
-        /// Gets a page of data from the mp_UserLocation table.
-        /// </summary>
-        /// <param name="siteGuid"> siteGuid </param>
-        /// <param name="pageNumber">The page number.</param>
-        /// <param name="pageSize">Size of the page.</param>
-        /// <param name="totalPages">total pages</param>
-        public DbDataReader GetPageBySite(
-            Guid siteGuid,
-            int pageNumber,
-            int pageSize)
-        {
-            int pageLowerBound = (pageSize * pageNumber) - pageSize;
+        ///// <summary>
+        ///// Gets a page of data from the mp_UserLocation table.
+        ///// </summary>
+        ///// <param name="siteGuid"> siteGuid </param>
+        ///// <param name="pageNumber">The page number.</param>
+        ///// <param name="pageSize">Size of the page.</param>
+        ///// <param name="totalPages">total pages</param>
+        //public DbDataReader GetPageBySite(
+        //    Guid siteGuid,
+        //    int pageNumber,
+        //    int pageSize)
+        //{
+        //    int pageLowerBound = (pageSize * pageNumber) - pageSize;
            
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("SELECT FIRST " + pageSize.ToString() + " ");
-            sqlCommand.Append("	SKIP " + pageLowerBound.ToString() + " ");
-            sqlCommand.Append("	* ");
-            sqlCommand.Append("FROM	mp_UserLocation  ");
-            sqlCommand.Append("WHERE ");
-            sqlCommand.Append("SiteGuid = @SiteGuid ");
-            sqlCommand.Append("ORDER BY  ");
-            sqlCommand.Append("IPAddressLong  ");
-            sqlCommand.Append("	; ");
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("SELECT FIRST " + pageSize.ToString() + " ");
+        //    sqlCommand.Append("	SKIP " + pageLowerBound.ToString() + " ");
+        //    sqlCommand.Append("	* ");
+        //    sqlCommand.Append("FROM	mp_UserLocation  ");
+        //    sqlCommand.Append("WHERE ");
+        //    sqlCommand.Append("SiteGuid = @SiteGuid ");
+        //    sqlCommand.Append("ORDER BY  ");
+        //    sqlCommand.Append("IPAddressLong  ");
+        //    sqlCommand.Append("	; ");
 
-            FbParameter[] arParams = new FbParameter[1];
+        //    FbParameter[] arParams = new FbParameter[1];
 
-            arParams[0] = new FbParameter("@SiteGuid", FbDbType.Char, 36);
-            arParams[0].Value = siteGuid.ToString();
+        //    arParams[0] = new FbParameter("@SiteGuid", FbDbType.Char, 36);
+        //    arParams[0].Value = siteGuid.ToString();
 
-            return AdoHelper.ExecuteReader(
-                readConnectionString,
-                sqlCommand.ToString(),
-                arParams);
+        //    return AdoHelper.ExecuteReader(
+        //        readConnectionString,
+        //        sqlCommand.ToString(),
+        //        arParams);
 
-        }
+        //}
 
     }
 }

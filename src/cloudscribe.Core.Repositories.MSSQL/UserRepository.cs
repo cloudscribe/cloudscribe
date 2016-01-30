@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-18
-// Last Modified:			2016-01-28
+// Last Modified:			2016-01-30
 // 
 
 
@@ -1564,6 +1564,170 @@ namespace cloudscribe.Core.Repositories.MSSQL
 
 
 
+
+        #endregion
+
+        #region UserLocation
+
+        public async Task<IUserLocation> FetchByUserAndIpv4Address(
+            Guid userGuid,
+            long ipv4AddressAsLong,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            using (DbDataReader reader = await dbUserLocation.GetOne(
+                userGuid,
+                ipv4AddressAsLong,
+                cancellationToken)
+                )
+            {
+                if (reader.Read())
+                {
+                    UserLocation userLocation = new UserLocation();
+                    userLocation.LoadFromReader(reader);
+                    return userLocation;
+                }
+            }
+
+            return null;
+
+        }
+
+        public async Task<bool> AddUserLocation(
+            IUserLocation userLocation,
+            CancellationToken cancellationToken = default(CancellationToken)
+            )
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            return await dbUserLocation.Add(
+                userLocation.RowId,
+                userLocation.UserGuid,
+                userLocation.SiteGuid,
+                userLocation.IpAddress,
+                userLocation.IpAddressLong,
+                userLocation.HostName,
+                userLocation.Longitude,
+                userLocation.Latitude,
+                userLocation.Isp,
+                userLocation.Continent,
+                userLocation.Country,
+                userLocation.Region,
+                userLocation.City,
+                userLocation.TimeZone,
+                userLocation.CaptureCount,
+                userLocation.FirstCaptureUtc,
+                userLocation.LastCaptureUtc,
+                cancellationToken
+                );
+
+        }
+
+        public async Task<bool> UpdateUserLocation(
+            IUserLocation userLocation,
+            CancellationToken cancellationToken = default(CancellationToken)
+            )
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            return await dbUserLocation.Update(
+                userLocation.RowId,
+                userLocation.UserGuid,
+                userLocation.SiteGuid,
+                userLocation.IpAddress,
+                userLocation.IpAddressLong,
+                userLocation.HostName,
+                userLocation.Longitude,
+                userLocation.Latitude,
+                userLocation.Isp,
+                userLocation.Continent,
+                userLocation.Country,
+                userLocation.Region,
+                userLocation.City,
+                userLocation.TimeZone,
+                userLocation.CaptureCount,
+                userLocation.LastCaptureUtc,
+                cancellationToken
+                );
+
+        }
+
+        public async Task<bool> DeleteUserLocation(
+            Guid rowGuid,
+            CancellationToken cancellationToken = default(CancellationToken)
+            )
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            return await dbUserLocation.Delete(
+                rowGuid,
+                cancellationToken);
+
+        }
+
+        public async Task<bool> DeleteUserLocationsByUser(
+            Guid userGuid,
+            CancellationToken cancellationToken = default(CancellationToken)
+            )
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            return await dbUserLocation.DeleteByUser(
+                userGuid,
+                cancellationToken);
+
+        }
+
+        public async Task<bool> DeleteUserLocationsBySite(
+            Guid siteGuid,
+            CancellationToken cancellationToken = default(CancellationToken)
+            )
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            return await dbUserLocation.DeleteBySite(
+                siteGuid,
+                cancellationToken);
+
+        }
+
+        public async Task<int> CountUserLocationsByUser(
+            Guid userGuid,
+            CancellationToken cancellationToken = default(CancellationToken)
+            )
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            return await dbUserLocation.GetCountByUser(
+                userGuid,
+                cancellationToken);
+        }
+
+        public async Task<IList<IUserLocation>> GetUserLocationsByUser(
+            Guid userGuid,
+            int pageNumber,
+            int pageSize,
+            CancellationToken cancellationToken = default(CancellationToken)
+            )
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            List<IUserLocation> userLocationList = new List<IUserLocation>();
+            using (DbDataReader reader = await dbUserLocation.GetPageByUser(
+                userGuid,
+                pageNumber,
+                pageSize,
+                cancellationToken)
+                )
+            {
+                while (reader.Read())
+                {
+                    UserLocation userLocation = new UserLocation();
+                    userLocation.LoadFromReader(reader);
+                    userLocationList.Add(userLocation);
+
+                }
+            }
+
+            return userLocationList;
+
+        }
 
         #endregion
 

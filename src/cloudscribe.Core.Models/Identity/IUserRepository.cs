@@ -409,48 +409,50 @@ namespace cloudscribe.Core.Models
         //    string hostName,
         //    CancellationToken cancellationToken);
 
-        
-       // Task<IUserLocation> FetchByUserAndIpv4Address(
-       //     Guid userGuid,
-       //     long ipv4AddressAsLong,
-       //     CancellationToken cancellationToken);
 
-       // Task<IList<IUserLocation>> FetchByUser(
-       //     Guid userGuid,
-       //     CancellationToken cancellationToken);
+        Task<IUserLocation> FetchByUserAndIpv4Address(
+            Guid userGuid,
+            long ipv4AddressAsLong,
+            CancellationToken cancellationToken);
 
-       //// this should also probably go in the service 
-       // //Task<bool> SaveUserLocation(
-       // //    IUserLocation userLocation,
-       // //    CancellationToken cancellationToken);
+        //Task<IList<IUserLocation>> FetchByUser(
+        //    Guid userGuid,
+        //    CancellationToken cancellationToken);
 
-       // Task<bool> AddUserLocation(
-       //     IUserLocation userLocation,
-       //     CancellationToken cancellationToken);
+        // this should also probably go in the service 
+        //Task<bool> SaveUserLocation(
+        //    IUserLocation userLocation,
+        //    CancellationToken cancellationToken);
 
-       // Task<bool> UpdateUserLocation(
-       //     IUserLocation userLocation,
-       //     CancellationToken cancellationToken);
+        Task<bool> AddUserLocation(
+            IUserLocation userLocation,
+            CancellationToken cancellationToken);
 
-       // Task<bool> DeleteUserLocation(
-       //     Guid rowGuid,
-       //     CancellationToken cancellationToken);
+        Task<bool> UpdateUserLocation(
+            IUserLocation userLocation,
+            CancellationToken cancellationToken);
 
-       // Task<bool> DeleteUserLocationsByUser(
-       //     Guid userGuid,
-       //     CancellationToken cancellationToken);
+        Task<bool> DeleteUserLocation(
+            Guid rowGuid,
+            CancellationToken cancellationToken);
 
-       // Task<bool> DeleteUserLocationsBySite(
-       //     int siteId,
-       //     CancellationToken cancellationToken);
+        Task<bool> DeleteUserLocationsByUser(
+            Guid userGuid,
+            CancellationToken cancellationToken);
 
-       // Task<int> CountUserLocationsByUser(Guid userGuid);
+        Task<bool> DeleteUserLocationsBySite(
+            Guid siteGuid,
+            CancellationToken cancellationToken);
 
-       // Task<IList<IUserLocation>> GetUserLocationsByUser(          
-       //     Guid userGuid,
-       //     int pageNumber,
-       //     int pageSize,
-       //     CancellationToken cancellationToken);
+        Task<int> CountUserLocationsByUser(
+            Guid userGuid, 
+            CancellationToken cancellationToken);
+
+        Task<IList<IUserLocation>> GetUserLocationsByUser(
+            Guid userGuid,
+            int pageNumber,
+            int pageSize,
+            CancellationToken cancellationToken);
 
 
     }

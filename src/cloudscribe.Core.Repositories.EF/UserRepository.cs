@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2016-01-28
+// Last Modified:			2016-01-30
 // 
 
 
@@ -1710,6 +1710,168 @@ namespace cloudscribe.Core.Repositories.EF
             var items = await query.AsNoTracking().ToListAsync<IUserLogin>(cancellationToken);
 
             return items;
+
+        }
+
+        #endregion
+
+        #region UserLocation
+
+        public async Task<IUserLocation> FetchByUserAndIpv4Address(
+            Guid userGuid,
+            long ipv4AddressAsLong,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var query = from x in dbContext.UserLocations
+                        where x.UserGuid == userGuid
+                        && x.IpAddressLong == ipv4AddressAsLong
+                        select x
+                        ;
+
+            return await query.AsNoTracking().SingleOrDefaultAsync<UserLocation>(cancellationToken);
+
+        }
+
+        public async Task<bool> AddUserLocation(
+            IUserLocation userLocation,
+            CancellationToken cancellationToken = default(CancellationToken)
+            )
+        {
+            if (userLocation == null) { return false; }
+
+            UserLocation ul = UserLocation.FromIUserLocation(userLocation);
+            if (ul.RowId == Guid.Empty) { ul.RowId = Guid.NewGuid(); }
+            cancellationToken.ThrowIfCancellationRequested();
+
+            dbContext.UserLocations.Add(ul);
+            cancellationToken.ThrowIfCancellationRequested();
+
+            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
+       
+            return rowsAffected > 0;
+
+        }
+
+        public async Task<bool> UpdateUserLocation(
+            IUserLocation userLocation,
+            CancellationToken cancellationToken = default(CancellationToken)
+            )
+        {
+            if (userLocation == null) { return false; }
+
+            UserLocation ul = UserLocation.FromIUserLocation(userLocation);
+            
+            cancellationToken.ThrowIfCancellationRequested();
+
+            bool tracking = dbContext.ChangeTracker.Entries<UserLocation>().Any(x => x.Entity.RowId == ul.RowId);
+            if (!tracking)
+            {
+                dbContext.UserLocations.Update(ul);
+            }
+
+            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
+
+            return rowsAffected > 0;
+
+        }
+
+        public async Task<bool> DeleteUserLocation(
+            Guid rowGuid,
+            CancellationToken cancellationToken = default(CancellationToken)
+            )
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var result = false;
+            var itemToRemove = await dbContext.UserLocations.SingleOrDefaultAsync(x => x.RowId == rowGuid, cancellationToken);
+            if (itemToRemove != null)
+            {
+                dbContext.UserLocations.Remove(itemToRemove);
+                int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
+                result = rowsAffected > 0;
+            }
+
+            return result;
+
+
+        }
+
+        public async Task<bool> DeleteUserLocationsByUser(
+            Guid userGuid,
+            CancellationToken cancellationToken = default(CancellationToken)
+            )
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var result = false;
+            var itemToRemove = await dbContext.UserLocations.SingleOrDefaultAsync(x => x.UserGuid == userGuid, cancellationToken);
+            if (itemToRemove != null)
+            {
+                dbContext.UserLocations.Remove(itemToRemove);
+                int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
+                result = rowsAffected > 0;
+            }
+
+            return result;
+
+        }
+
+        public async Task<bool> DeleteUserLocationsBySite(
+            Guid siteGuid,
+            CancellationToken cancellationToken = default(CancellationToken)
+            )
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var result = false;
+            var itemToRemove = await dbContext.UserLocations.SingleOrDefaultAsync(x => x.SiteGuid == siteGuid, cancellationToken);
+            if (itemToRemove != null)
+            {
+                dbContext.UserLocations.Remove(itemToRemove);
+                int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
+                result = rowsAffected > 0;
+            }
+
+            return result;
+
+
+        }
+
+        public async Task<int> CountUserLocationsByUser(
+            Guid userGuid,
+            CancellationToken cancellationToken = default(CancellationToken)
+            )
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            return await dbContext.SiteFolders.CountAsync<SiteFolder>(cancellationToken);
+
+
+        }
+
+        public async Task<IList<IUserLocation>> GetUserLocationsByUser(
+            Guid userGuid,
+            int pageNumber,
+            int pageSize,
+            CancellationToken cancellationToken = default(CancellationToken)
+            )
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            int offset = (pageSize * pageNumber) - pageSize;
+
+            var query = dbContext.UserLocations
+                .OrderBy(x => x.IpAddressLong)
+                .Select(p => p)
+                .Skip(offset)
+                .Take(pageSize)
+                .Where(x => x.UserGuid == userGuid)
+                ;
+
+
+            return await query.AsNoTracking().ToListAsync<IUserLocation>(cancellationToken);
 
         }
 

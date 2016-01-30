@@ -215,17 +215,17 @@ namespace cloudscribe.Core.Repositories.MSSQL
         }
 
         public async Task<bool> DeleteBySite(
-            int siteId,
+            Guid siteGuid,
             CancellationToken cancellationToken
             )
         {
             SqlParameterHelper sph = new SqlParameterHelper(
                 logFactory,
                 writeConnectionString,
-                "mp_UserLogins_DeleteBySite",
+                "mp_UserLocation_DeleteBySite",
                 1);
 
-            sph.DefineSqlParameter("@SiteId", SqlDbType.UniqueIdentifier, ParameterDirection.Input, siteId);
+            sph.DefineSqlParameter("@SiteGuid", SqlDbType.UniqueIdentifier, ParameterDirection.Input, siteGuid);
             int rowsAffected = await sph.ExecuteNonQueryAsync(cancellationToken);
             return (rowsAffected > 0);
 

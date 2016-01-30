@@ -1185,5 +1185,23 @@ GO
 
 
 
+CREATE PROCEDURE [dbo].[mp_UserLocation_DeleteBySite]
+
+/*
+Author:   			Joe Audette
+Created: 			2016-01-30
+Last Modified: 		2016-01-30
+*/
+
+@SiteGuid uniqueidentifier
+
+AS
+
+DELETE FROM [dbo].[mp_UserLocation]
+WHERE
+	[SiteGuid] = @SiteGuid
+
+GO
+
 
 

@@ -345,6 +345,27 @@ namespace cloudscribe.Core.Models.DataExtensions
             host.SiteId = Convert.ToInt32(reader["SiteID"]);
         }
 
+        public static void LoadFromReader(this IUserLocation location, DbDataReader reader)
+        {
+            location.RowId = new Guid(reader["RowID"].ToString());
+            location.UserGuid = new Guid(reader["UserGuid"].ToString());
+            location.SiteGuid = new Guid(reader["SiteGuid"].ToString());
+            location.IpAddress = reader["IPAddress"].ToString();
+            location.IpAddressLong = Convert.ToInt64(reader["IPAddressLong"]);
+            location.HostName = reader["Hostname"].ToString();
+            location.Longitude = Convert.ToDouble(reader["Longitude"]);
+            location.Latitude = Convert.ToDouble(reader["Latitude"]);
+            location.Isp = reader["ISP"].ToString();
+            location.Continent = reader["Continent"].ToString();
+            location.Country = reader["Country"].ToString();
+            location.Region = reader["Region"].ToString();
+            location.City = reader["City"].ToString();
+            location.TimeZone = reader["TimeZone"].ToString();
+            location.CaptureCount = Convert.ToInt32(reader["CaptureCount"]);
+            location.FirstCaptureUtc = Convert.ToDateTime(reader["FirstCaptureUTC"]);
+            location.LastCaptureUtc = Convert.ToDateTime(reader["LastCaptureUTC"]);
+        }
+
         public static void LoadExpandoSettings(this ISiteSettings site, List<ExpandoSetting> expandoProperties)
         {
             // this may go away
