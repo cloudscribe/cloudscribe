@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2010-04-06
-// Last Modified:			2016-01-02
+// Last Modified:			2016-01-30
 // 
 
 using cloudscribe.DbHelpers;
@@ -55,7 +55,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
         /// <param name="firstCaptureUTC"> firstCaptureUTC </param>
         /// <param name="lastCaptureUTC"> lastCaptureUTC </param>
         /// <returns>int</returns>
-        public int Create(
+        public bool Create(
             Guid rowID,
             Guid userGuid,
             Guid siteGuid,
@@ -177,7 +177,7 @@ namespace cloudscribe.Core.Repositories.SqlCe
                 sqlCommand.ToString(),
                 arParams);
 
-            return rowsAffected;
+            return rowsAffected > 0;
 
         }
 
@@ -342,6 +342,29 @@ namespace cloudscribe.Core.Repositories.SqlCe
 
             arParams[0] = new SqlCeParameter("@UserGuid", SqlDbType.UniqueIdentifier);
             arParams[0].Value = userGuid;
+
+            int rowsAffected = AdoHelper.ExecuteNonQuery(
+                connectionString,
+                CommandType.Text,
+                sqlCommand.ToString(),
+                arParams);
+
+            return (rowsAffected > -1);
+
+        }
+
+        public bool DeleteBySite(Guid siteGuid)
+        {
+            StringBuilder sqlCommand = new StringBuilder();
+            sqlCommand.Append("DELETE FROM mp_UserLocation ");
+            sqlCommand.Append("WHERE ");
+            sqlCommand.Append("SiteGuid = @SiteGuid ");
+            sqlCommand.Append(";");
+
+            SqlCeParameter[] arParams = new SqlCeParameter[1];
+
+            arParams[0] = new SqlCeParameter("@SiteGuid", SqlDbType.UniqueIdentifier);
+            arParams[0].Value = siteGuid;
 
             int rowsAffected = AdoHelper.ExecuteNonQuery(
                 connectionString,

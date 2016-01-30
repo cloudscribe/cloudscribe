@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2008-01-04
-// Last Modified:			2016-01-01
+// Last Modified:			2016-01-30
 // 
 
 using cloudscribe.DbHelpers;
@@ -58,8 +58,8 @@ namespace cloudscribe.Core.Repositories.pgsql
         /// <param name="captureCount"> captureCount </param>
         /// <param name="firstCaptureUTC"> firstCaptureUTC </param>
         /// <param name="lastCaptureUTC"> lastCaptureUTC </param>
-        /// <returns>int</returns>
-        public int Create(
+        /// <returns>bool</returns>
+        public async Task<bool> Create(
             Guid rowID,
             Guid userGuid,
             Guid siteGuid,
@@ -76,7 +76,9 @@ namespace cloudscribe.Core.Repositories.pgsql
             string timeZone,
             int captureCount,
             DateTime firstCaptureUTC,
-            DateTime lastCaptureUTC)
+            DateTime lastCaptureUTC,
+            CancellationToken cancellationToken
+            )
         {
             NpgsqlParameter[] arParams = new NpgsqlParameter[17];
 
@@ -178,13 +180,14 @@ namespace cloudscribe.Core.Repositories.pgsql
             //    "mp_userlocation_insert(:rowid,:userguid,:siteguid,:ipaddress,:ipaddresslong,:hostname,:longitude,:latitude,:isp,:continent,:country,:region,:city,:timezone,:capturecount,:firstcaptureutc,:lastcaptureutc)",
             //    arParams);
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
-            return rowsAffected;
+            return rowsAffected > 0;
 
         }
 
@@ -209,7 +212,7 @@ namespace cloudscribe.Core.Repositories.pgsql
         /// <param name="captureCount"> captureCount </param>
         /// <param name="lastCaptureUTC"> lastCaptureUTC </param>
         /// <returns>bool</returns>
-        public bool Update(
+        public async Task<bool> Update(
             Guid rowID,
             Guid userGuid,
             Guid siteGuid,
@@ -225,7 +228,9 @@ namespace cloudscribe.Core.Repositories.pgsql
             string city,
             string timeZone,
             int captureCount,
-            DateTime lastCaptureUTC)
+            DateTime lastCaptureUTC,
+            CancellationToken cancellationToken
+            )
         {
             NpgsqlParameter[] arParams = new NpgsqlParameter[16];
 
@@ -306,11 +311,12 @@ namespace cloudscribe.Core.Repositories.pgsql
             //    "mp_userlocation_update(:rowid,:userguid,:siteguid,:ipaddress,:ipaddresslong,:hostname,:longitude,:latitude,:isp,:continent,:country,:region,:city,:timezone,:capturecount,:lastcaptureutc)",
             //    arParams);
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return (rowsAffected > -1);
 
@@ -321,7 +327,10 @@ namespace cloudscribe.Core.Repositories.pgsql
         /// </summary>
         /// <param name="rowID"> rowID </param>
         /// <returns>bool</returns>
-        public bool Delete(Guid rowID)
+        public async Task<bool> Delete(
+            Guid rowID,
+            CancellationToken cancellationToken
+            )
         {
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
@@ -340,17 +349,21 @@ namespace cloudscribe.Core.Repositories.pgsql
             //    "mp_userlocation_delete(:rowid)",
             //    arParams);
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return (rowsAffected > -1);
 
         }
 
-        public bool DeleteByUser(Guid userGuid)
+        public async Task<bool> DeleteByUser(
+            Guid userGuid,
+            CancellationToken cancellationToken
+            )
         {
             StringBuilder sqlCommand = new StringBuilder();
             sqlCommand.Append("DELETE FROM mp_userlocation ");
@@ -363,54 +376,86 @@ namespace cloudscribe.Core.Repositories.pgsql
             arParams[0] = new NpgsqlParameter("userguid", NpgsqlTypes.NpgsqlDbType.Char, 36);
             arParams[0].Value = userGuid.ToString();
 
-            int rowsAffected = AdoHelper.ExecuteNonQuery(
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
                 writeConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return (rowsAffected > -1);
 
         }
 
-        /// <summary>
-        /// Gets an IDataReader with one row from the mp_UserLocation table.
-        /// </summary>
-        /// <param name="rowID"> rowID </param>
-        public DbDataReader GetOne(Guid rowID)
+        public async Task<bool> DeleteBySite(
+            Guid siteGuid,
+            CancellationToken cancellationToken
+            )
         {
-            NpgsqlParameter[] arParams = new NpgsqlParameter[1];
-
-            arParams[0] = new NpgsqlParameter("rowid", NpgsqlTypes.NpgsqlDbType.Char, 36);
-            arParams[0].Value = rowID.ToString();
-
             StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("SELECT  * ");
-            sqlCommand.Append("FROM	mp_userlocation ");
+            sqlCommand.Append("DELETE FROM mp_userlocation ");
             sqlCommand.Append("WHERE ");
-            sqlCommand.Append("rowid = :rowid ");
+            sqlCommand.Append("siteguid = :siteguid ");
             sqlCommand.Append(";");
 
-            //return AdoHelper.ExecuteReader(
-            //    readConnectionString,
-            //    CommandType.StoredProcedure,
-            //    "mp_userlocation_select_one(:rowid)",
-            //    arParams);
+            NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
-            return AdoHelper.ExecuteReader(
-                readConnectionString,
+            arParams[0] = new NpgsqlParameter("siteguid", NpgsqlTypes.NpgsqlDbType.Char, 36);
+            arParams[0].Value = siteGuid.ToString();
+
+            int rowsAffected = await AdoHelper.ExecuteNonQueryAsync(
+                writeConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
+
+            return (rowsAffected > -1);
 
         }
+
+        ///// <summary>
+        ///// Gets an IDataReader with one row from the mp_UserLocation table.
+        ///// </summary>
+        ///// <param name="rowID"> rowID </param>
+        //public DbDataReader GetOne(Guid rowID)
+        //{
+        //    NpgsqlParameter[] arParams = new NpgsqlParameter[1];
+
+        //    arParams[0] = new NpgsqlParameter("rowid", NpgsqlTypes.NpgsqlDbType.Char, 36);
+        //    arParams[0].Value = rowID.ToString();
+
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("SELECT  * ");
+        //    sqlCommand.Append("FROM	mp_userlocation ");
+        //    sqlCommand.Append("WHERE ");
+        //    sqlCommand.Append("rowid = :rowid ");
+        //    sqlCommand.Append(";");
+
+        //    //return AdoHelper.ExecuteReader(
+        //    //    readConnectionString,
+        //    //    CommandType.StoredProcedure,
+        //    //    "mp_userlocation_select_one(:rowid)",
+        //    //    arParams);
+
+        //    return AdoHelper.ExecuteReader(
+        //        readConnectionString,
+        //        CommandType.Text,
+        //        sqlCommand.ToString(),
+        //        arParams);
+
+        //}
 
         /// <summary>
         /// Gets an IDataReader with one row from the mp_UserLocation table.
         /// </summary>
         /// <param name="userguid"> userguid </param>
         /// <param name="iPAddress"> iPAddress </param>
-        public DbDataReader GetOne(Guid userGuid, long iPAddressLong)
+        public async Task<DbDataReader> GetOne(
+            Guid userGuid, 
+            long iPAddressLong,
+            CancellationToken cancellationToken
+            )
         {
             NpgsqlParameter[] arParams = new NpgsqlParameter[2];
 
@@ -435,46 +480,47 @@ namespace cloudscribe.Core.Repositories.pgsql
             //    "mp_userlocation_select_onebyuserandip(:userguid,:ipaddresslong)",
             //    arParams);
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
         }
 
-        /// <summary>
-        /// Gets an IDataReader with one row from the mp_UserLocation table.
-        /// </summary>
-        /// <param name="userGuid"> userGuid </param>
-        public DbDataReader GetByUser(Guid userGuid)
-        {
-            NpgsqlParameter[] arParams = new NpgsqlParameter[1];
+        ///// <summary>
+        ///// Gets an IDataReader with one row from the mp_UserLocation table.
+        ///// </summary>
+        ///// <param name="userGuid"> userGuid </param>
+        //public DbDataReader GetByUser(Guid userGuid)
+        //{
+        //    NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
-            arParams[0] = new NpgsqlParameter("userguid", NpgsqlTypes.NpgsqlDbType.Char, 36);
-            arParams[0].Value = userGuid.ToString();
+        //    arParams[0] = new NpgsqlParameter("userguid", NpgsqlTypes.NpgsqlDbType.Char, 36);
+        //    arParams[0].Value = userGuid.ToString();
 
-            StringBuilder sqlCommand = new StringBuilder();
-            sqlCommand.Append("SELECT  * ");
-            sqlCommand.Append("FROM	mp_userlocation ");
-            sqlCommand.Append("WHERE ");
-            sqlCommand.Append("userguid = :userguid ");
-            sqlCommand.Append("ORDER BY lastcaptureutc DESC ");
-            sqlCommand.Append(";");
+        //    StringBuilder sqlCommand = new StringBuilder();
+        //    sqlCommand.Append("SELECT  * ");
+        //    sqlCommand.Append("FROM	mp_userlocation ");
+        //    sqlCommand.Append("WHERE ");
+        //    sqlCommand.Append("userguid = :userguid ");
+        //    sqlCommand.Append("ORDER BY lastcaptureutc DESC ");
+        //    sqlCommand.Append(";");
 
-            //return AdoHelper.ExecuteReader(
-            //    readConnectionString,
-            //    CommandType.StoredProcedure,
-            //    "mp_userlocation_select_byuser(:userguid)",
-            //    arParams);
+        //    //return AdoHelper.ExecuteReader(
+        //    //    readConnectionString,
+        //    //    CommandType.StoredProcedure,
+        //    //    "mp_userlocation_select_byuser(:userguid)",
+        //    //    arParams);
 
-            return AdoHelper.ExecuteReader(
-                readConnectionString,
-                CommandType.Text,
-                sqlCommand.ToString(),
-                arParams);
+        //    return AdoHelper.ExecuteReader(
+        //        readConnectionString,
+        //        CommandType.Text,
+        //        sqlCommand.ToString(),
+        //        arParams);
 
-        }
+        //}
 
         ///// <summary>
         ///// Gets an IDataReader with one row from the mp_UserLocation table.
@@ -546,7 +592,10 @@ namespace cloudscribe.Core.Repositories.pgsql
         /// Gets a count of rows in the mp_UserLocation table.
         /// </summary>
         /// <param name="userGuid"> userGuid </param>
-        public int GetCountByUser(Guid userGuid)
+        public async Task<int> GetCountByUser(
+            Guid userGuid,
+            CancellationToken cancellationToken
+            )
         {
             NpgsqlParameter[] arParams = new NpgsqlParameter[1];
 
@@ -566,11 +615,12 @@ namespace cloudscribe.Core.Repositories.pgsql
             //    "mp_userlocation_countbyuser(:userguid)",
             //    arParams));
 
-            object obj = AdoHelper.ExecuteScalar(
+            object obj = await AdoHelper.ExecuteScalarAsync(
                 readConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             return Convert.ToInt32(obj);
 
@@ -611,31 +661,14 @@ namespace cloudscribe.Core.Repositories.pgsql
         /// <param name="pageNumber">The page number.</param>
         /// <param name="pageSize">Size of the page.</param>
         /// <param name="totalPages">total pages</param>
-        public DbDataReader GetPageByUser(
+        public async Task<DbDataReader> GetPageByUser(
             Guid userGuid,
             int pageNumber,
-            int pageSize)
+            int pageSize,
+            CancellationToken cancellationToken
+            )
         {
-            //totalPages = 1;
-            //int totalRows
-            //    = GetCountByUser(userGuid);
-
-            //if (pageSize > 0) totalPages = totalRows / pageSize;
-
-            //if (totalRows <= pageSize)
-            //{
-            //    totalPages = 1;
-            //}
-            //else
-            //{
-            //    int remainder;
-            //    Math.DivRem(totalRows, pageSize, out remainder);
-            //    if (remainder > 0)
-            //    {
-            //        totalPages += 1;
-            //    }
-            //}
-
+            
             NpgsqlParameter[] arParams = new NpgsqlParameter[3];
 
             arParams[0] = new NpgsqlParameter("userguid", NpgsqlTypes.NpgsqlDbType.Char, 36);
@@ -661,11 +694,12 @@ namespace cloudscribe.Core.Repositories.pgsql
 
             sqlCommand.Append(";");
 
-            return AdoHelper.ExecuteReader(
+            return await AdoHelper.ExecuteReaderAsync(
                 readConnectionString,
                 CommandType.Text,
                 sqlCommand.ToString(),
-                arParams);
+                arParams,
+                cancellationToken);
 
             //return AdoHelper.ExecuteReader(
             //    readConnectionString,
