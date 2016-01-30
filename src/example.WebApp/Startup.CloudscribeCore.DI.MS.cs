@@ -97,31 +97,7 @@ namespace example.WebApp
 
             switch (devOptions.DbPlatform)
             {
-                case "ef7": 
 
-                    services.TryAddScoped<ICoreModelMapper, SqlServerCoreModelMapper>();
-                    services.TryAddScoped<cloudscribe.Logging.EF.ILogModelMapper, cloudscribe.Logging.EF.SqlServerLogModelMapper>();
-
-                    services.AddEntityFramework()
-                    .AddSqlServer()
-                    .AddDbContext<CoreDbContext>(options =>
-                        options.UseSqlServer(configuration["Data:EF7ConnectionOptions:ConnectionString"])
-                        // this is needed if you use sqlserver 2008
-                       // .UseRowNumberForPaging()
-
-                    )
-                    .AddDbContext<cloudscribe.Logging.EF.LoggingDbContext>(options =>
-                    options.UseSqlServer(configuration["Data:EF7ConnectionOptions:ConnectionString"])
-                    );
-
-                    services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.EF.SiteRepository>();
-                    services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.EF.UserRepository>();
-                    services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.EF.GeoRepository>();
-                    services.TryAddScoped<IDataPlatformInfo, cloudscribe.Core.Repositories.EF.DataPlatformInfo>();
-
-                    services.TryAddScoped<ILogRepository, cloudscribe.Logging.EF.LogRepository>();
-
-                    break;
 
 
                 // the commented ones don't work yet in dnxcore50 so we can't add them to project.json
@@ -158,7 +134,7 @@ namespace example.WebApp
                 //case "mysql":
 
                 //    services.Configure<cloudscribe.DbHelpers.ConnectionStringOptions>(configuration.GetSection("Data:MySql:ConnectionStringOptions"));
-                    
+
                 //    services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.MySql.SiteRepository>();
                 //    services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.MySql.UserRepository>();
                 //    services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.MySql.GeoRepository>();
@@ -168,45 +144,69 @@ namespace example.WebApp
 
                 //    break;
 
-                case "sqlite":
+                //case "sqlite":
 
-                    services.Configure<cloudscribe.DbHelpers.SQLite.SqliteConnectionOptions>(configuration.GetSection("Data:SqliteConnectionOptions"));
+                //    services.Configure<cloudscribe.DbHelpers.SQLite.SqliteConnectionOptions>(configuration.GetSection("Data:SqliteConnectionOptions"));
 
 
-                    services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.SQLite.SiteRepository>();
-                    services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.SQLite.UserRepository>();
-                    services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.SQLite.GeoRepository>();
-                    services.TryAddScoped<IDbSetup, cloudscribe.Setup.Sqlite.DbSetup>();
-                    services.TryAddScoped<IDataPlatformInfo, cloudscribe.Setup.Sqlite.DbSetup>();
-                    services.TryAddScoped<ILogRepository, cloudscribe.Logging.Sqlite.LogRepository>();
-                    services.TryAddScoped<cloudscribe.DbHelpers.SQLite.SqliteConnectionstringResolver, cloudscribe.DbHelpers.SQLite.SqliteConnectionstringResolver>();
-                    
-                    break;
+                //    services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.SQLite.SiteRepository>();
+                //    services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.SQLite.UserRepository>();
+                //    services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.SQLite.GeoRepository>();
+                //    services.TryAddScoped<IDbSetup, cloudscribe.Setup.Sqlite.DbSetup>();
+                //    services.TryAddScoped<IDataPlatformInfo, cloudscribe.Setup.Sqlite.DbSetup>();
+                //    services.TryAddScoped<ILogRepository, cloudscribe.Logging.Sqlite.LogRepository>();
+                //    services.TryAddScoped<cloudscribe.DbHelpers.SQLite.SqliteConnectionstringResolver, cloudscribe.DbHelpers.SQLite.SqliteConnectionstringResolver>();
 
-                    
-                case "pgsql":
+                //    break;
 
-                    services.Configure<cloudscribe.DbHelpers.ConnectionStringOptions>(configuration.GetSection("Data:PostgreSql:ConnectionStringOptions"));
-                    
-                    services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.pgsql.SiteRepository>();
-                    services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.pgsql.UserRepository>();
-                    services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.pgsql.GeoRepository>();
-                    services.TryAddScoped<IDbSetup, cloudscribe.Setup.pgsql.DbSetup>();
-                    services.TryAddScoped<IDataPlatformInfo, cloudscribe.Setup.pgsql.DbSetup>();
-                    services.TryAddScoped<ILogRepository, cloudscribe.Logging.pgsql.LogRepository>();
 
-                    break;
+                //case "pgsql":
 
-                case "mssql":
-                default:
+                //    services.Configure<cloudscribe.DbHelpers.ConnectionStringOptions>(configuration.GetSection("Data:PostgreSql:ConnectionStringOptions"));
 
-                    services.Configure<cloudscribe.DbHelpers.MSSQLConnectionOptions>(configuration.GetSection("Data:MSSQLConnectionOptions"));
-                    services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.MSSQL.SiteRepository>();
-                    services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.MSSQL.UserRepository>();
-                    services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.MSSQL.GeoRepository>();
-                    services.TryAddScoped<IDbSetup, cloudscribe.Setup.MSSQL.DbSetup>();
-                    services.TryAddScoped<IDataPlatformInfo, cloudscribe.Setup.MSSQL.DbSetup>();
-                    services.TryAddScoped<ILogRepository, cloudscribe.Logging.MSSQL.LogRepository>();
+                //    services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.pgsql.SiteRepository>();
+                //    services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.pgsql.UserRepository>();
+                //    services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.pgsql.GeoRepository>();
+                //    services.TryAddScoped<IDbSetup, cloudscribe.Setup.pgsql.DbSetup>();
+                //    services.TryAddScoped<IDataPlatformInfo, cloudscribe.Setup.pgsql.DbSetup>();
+                //    services.TryAddScoped<ILogRepository, cloudscribe.Logging.pgsql.LogRepository>();
+
+                //    break;
+
+                //case "mssql":
+
+                //services.Configure<cloudscribe.DbHelpers.MSSQLConnectionOptions>(configuration.GetSection("Data:MSSQLConnectionOptions"));
+                //services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.MSSQL.SiteRepository>();
+                //services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.MSSQL.UserRepository>();
+                //services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.MSSQL.GeoRepository>();
+                //services.TryAddScoped<IDbSetup, cloudscribe.Setup.MSSQL.DbSetup>();
+                //services.TryAddScoped<IDataPlatformInfo, cloudscribe.Setup.MSSQL.DbSetup>();
+                //services.TryAddScoped<ILogRepository, cloudscribe.Logging.MSSQL.LogRepository>();
+
+                case "ef7":
+
+                    services.TryAddScoped<ICoreModelMapper, SqlServerCoreModelMapper>();
+                    services.TryAddScoped<cloudscribe.Logging.EF.ILogModelMapper, cloudscribe.Logging.EF.SqlServerLogModelMapper>();
+
+                    services.AddEntityFramework()
+                    .AddSqlServer()
+                    .AddDbContext<CoreDbContext>(options =>
+                        options.UseSqlServer(configuration["Data:EF7ConnectionOptions:ConnectionString"])
+                    // this is needed if you use sqlserver 2008
+                    // .UseRowNumberForPaging()
+
+                    )
+                    .AddDbContext<cloudscribe.Logging.EF.LoggingDbContext>(options =>
+                    options.UseSqlServer(configuration["Data:EF7ConnectionOptions:ConnectionString"])
+                    );
+
+                    services.TryAddScoped<ISiteRepository, cloudscribe.Core.Repositories.EF.SiteRepository>();
+                    services.TryAddScoped<IUserRepository, cloudscribe.Core.Repositories.EF.UserRepository>();
+                    services.TryAddScoped<IGeoRepository, cloudscribe.Core.Repositories.EF.GeoRepository>();
+                    services.TryAddScoped<IDataPlatformInfo, cloudscribe.Core.Repositories.EF.DataPlatformInfo>();
+
+                    services.TryAddScoped<ILogRepository, cloudscribe.Logging.EF.LogRepository>();
+
 
                     break;
             }
