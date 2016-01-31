@@ -34,7 +34,7 @@ This project is in early stages, not yet ready for mission critical scenarios, b
 * This project aims to follow the [OWASP](https://www.owasp.org/index.php/Main_Page) Guidelines for best practices in security
 
 ##### Planned Features:
-* Implement options for Security Questions and Answers per OWASP guidelines
+* Implement options for Security Questions and Answers [per OWASP guidelines](https://www.owasp.org/index.php/Forgot_Password_Cheat_Sheet)
 * MongoDB Support - I am interested in trying to implement the data repositories with MongoDB and would welcome help with that. 
 * Localization Support - waiting for runtime and tooling support which may be in rc2 of ASP.NET Core
 * Caching - memory  cache and distributed cache options
