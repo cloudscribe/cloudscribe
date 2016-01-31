@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2015-12-28
+// Last Modified:			2016-01-31
 // 
 
 
@@ -70,7 +70,7 @@ namespace cloudscribe.Core.Repositories.EF
             CancellationToken cancellationToken = default(CancellationToken))
         {
             SiteSettings item
-                = await dbContext.Sites.SingleOrDefaultAsync(x => x.SiteId.Equals(siteId), cancellationToken);
+                = await dbContext.Sites.AsNoTracking().SingleOrDefaultAsync(x => x.SiteId.Equals(siteId), cancellationToken);
 
             return item;
         }
@@ -78,7 +78,7 @@ namespace cloudscribe.Core.Repositories.EF
         public ISiteSettings FetchNonAsync(int siteId)
         {
             SiteSettings item
-                = dbContext.Sites.SingleOrDefault(x => x.SiteId.Equals(siteId));
+                = dbContext.Sites.AsNoTracking().SingleOrDefault(x => x.SiteId.Equals(siteId));
 
             return item;
         }
@@ -88,7 +88,7 @@ namespace cloudscribe.Core.Repositories.EF
             CancellationToken cancellationToken = default(CancellationToken))
         {
             SiteSettings item
-                = await dbContext.Sites.SingleOrDefaultAsync(x => x.SiteGuid.Equals(siteGuid), cancellationToken);
+                = await dbContext.Sites.AsNoTracking().SingleOrDefaultAsync(x => x.SiteGuid.Equals(siteGuid), cancellationToken);
 
             return item;
         }
@@ -96,7 +96,7 @@ namespace cloudscribe.Core.Repositories.EF
         public ISiteSettings FetchNonAsync(Guid siteGuid)
         {
             SiteSettings item
-                = dbContext.Sites.SingleOrDefault(x => x.SiteGuid.Equals(siteGuid));
+                = dbContext.Sites.AsNoTracking().SingleOrDefault(x => x.SiteGuid.Equals(siteGuid));
 
             return item;
         }
@@ -105,7 +105,7 @@ namespace cloudscribe.Core.Repositories.EF
             string hostName, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            SiteHost host = await dbContext.SiteHosts.FirstOrDefaultAsync(x => x.HostName.Equals(hostName), cancellationToken);
+            SiteHost host = await dbContext.SiteHosts.AsNoTracking().FirstOrDefaultAsync(x => x.HostName.Equals(hostName), cancellationToken);
             if(host == null)
             {
                 var query = from s in dbContext.Sites
@@ -113,10 +113,10 @@ namespace cloudscribe.Core.Repositories.EF
                             orderby s.SiteId ascending
                             select s;
 
-                return await query.SingleOrDefaultAsync<SiteSettings>(cancellationToken);
+                return await query.AsNoTracking().SingleOrDefaultAsync<SiteSettings>(cancellationToken);
             }
             
-            return await dbContext.Sites.SingleOrDefaultAsync(x => x.SiteId.Equals(host.SiteId), cancellationToken);
+            return await dbContext.Sites.AsNoTracking().SingleOrDefaultAsync(x => x.SiteId.Equals(host.SiteId), cancellationToken);
 
 
         }
@@ -131,10 +131,27 @@ namespace cloudscribe.Core.Repositories.EF
                             orderby s.SiteId ascending
                             select s;
 
-                return query.SingleOrDefault<SiteSettings>();
+                return query.AsNoTracking().SingleOrDefault<SiteSettings>();
             }
 
-            return dbContext.Sites.SingleOrDefault(x => x.SiteId == host.SiteId);
+            return dbContext.Sites.AsNoTracking().SingleOrDefault(x => x.SiteId == host.SiteId);
+
+        }
+
+        public ISiteSettings FetchByFolderNameNonAsync(string folderName)
+        {
+            ISiteSettings site = dbContext.Sites.AsNoTracking().FirstOrDefault(x => x.SiteFolderName == folderName);
+            if (site == null)
+            {
+                var query = from s in dbContext.Sites
+                            .Take(1)
+                            orderby s.SiteId ascending
+                            select s;
+
+                site = query.AsNoTracking().FirstOrDefault<SiteSettings>();
+            }
+
+            return site;
 
         }
 
@@ -358,224 +375,230 @@ namespace cloudscribe.Core.Repositories.EF
             return -1; // not found
         }
 
-        public async Task<List<ISiteFolder>> GetSiteFoldersBySite(
-            Guid siteGuid, 
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            var query = from x in dbContext.SiteFolders
-                        where x.SiteGuid == siteGuid
-                        orderby x.FolderName ascending
-                        select x
-                        ;
+        //public async Task<List<ISiteFolder>> GetSiteFoldersBySite(
+        //    Guid siteGuid, 
+        //    CancellationToken cancellationToken = default(CancellationToken))
+        //{
+        //    var query = from x in dbContext.SiteFolders
+        //                where x.SiteGuid == siteGuid
+        //                orderby x.FolderName ascending
+        //                select x
+        //                ;
 
-            var items = await query.AsNoTracking().ToListAsync<ISiteFolder>(cancellationToken);
+        //    var items = await query.AsNoTracking().ToListAsync<ISiteFolder>(cancellationToken);
 
-            return items;
+        //    return items;
 
-        }
+        //}
 
-        public async Task<List<ISiteFolder>> GetAllSiteFolders(CancellationToken cancellationToken = default(CancellationToken))
-        {
-            var query = from x in dbContext.SiteFolders
-                        orderby x.FolderName ascending
-                        select x;
+        //public async Task<List<ISiteFolder>> GetAllSiteFolders(CancellationToken cancellationToken = default(CancellationToken))
+        //{
+        //    var query = from x in dbContext.SiteFolders
+        //                orderby x.FolderName ascending
+        //                select x;
 
-            var items = await query.AsNoTracking().ToListAsync<ISiteFolder>(cancellationToken);
+        //    var items = await query.AsNoTracking().ToListAsync<ISiteFolder>(cancellationToken);
             
-            return items;
+        //    return items;
 
-        }
+        //}
 
-        public List<ISiteFolder> GetAllSiteFoldersNonAsync()
-        {
-            var query = from x in dbContext.SiteFolders
-                        orderby x.FolderName ascending
-                        select x;
+        //public List<ISiteFolder> GetAllSiteFoldersNonAsync()
+        //{
+        //    var query = from x in dbContext.SiteFolders
+        //                orderby x.FolderName ascending
+        //                select x;
 
-            var items = query.AsNoTracking().ToList<ISiteFolder>();
+        //    var items = query.AsNoTracking().ToList<ISiteFolder>();
 
-            return items;
-        }
+        //    return items;
+        //}
 
-        public async Task<int> GetFolderCount(CancellationToken cancellationToken = default(CancellationToken))
-        {
-            return await dbContext.SiteFolders.CountAsync<SiteFolder>(cancellationToken);
-        }
+        //public async Task<int> GetFolderCount(CancellationToken cancellationToken = default(CancellationToken))
+        //{
+        //    return await dbContext.SiteFolders.CountAsync<SiteFolder>(cancellationToken);
+        //}
 
-        public async Task<List<ISiteFolder>> GetPageSiteFolders(
-            int pageNumber,
-            int pageSize,
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            int offset = (pageSize * pageNumber) - pageSize;
+        //public async Task<List<ISiteFolder>> GetPageSiteFolders(
+        //    int pageNumber,
+        //    int pageSize,
+        //    CancellationToken cancellationToken = default(CancellationToken))
+        //{
+        //    int offset = (pageSize * pageNumber) - pageSize;
 
-            var query = from x in dbContext.SiteFolders
-                        .Take(pageSize)
-                        orderby x.FolderName ascending
-                        select x
-                        ;
+        //    var query = from x in dbContext.SiteFolders
+        //                .Take(pageSize)
+        //                orderby x.FolderName ascending
+        //                select x
+        //                ;
 
-            if (offset > 0) { return await query.Skip(offset).ToListAsync<ISiteFolder>(cancellationToken); }
+        //    if (offset > 0) { return await query.Skip(offset).ToListAsync<ISiteFolder>(cancellationToken); }
 
-            return await query.AsNoTracking().ToListAsync<ISiteFolder>(cancellationToken);
+        //    return await query.AsNoTracking().ToListAsync<ISiteFolder>(cancellationToken);
             
-        }
+        //}
 
-        public async Task<ISiteFolder> GetSiteFolder(
-            string folderName, 
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            var query = from x in dbContext.SiteFolders
-                        where x.FolderName == folderName
-                        orderby x.FolderName ascending
-                        select x
-                        ;
+        //public async Task<ISiteFolder> GetSiteFolder(
+        //    string folderName, 
+        //    CancellationToken cancellationToken = default(CancellationToken))
+        //{
+        //    var query = from x in dbContext.SiteFolders
+        //                where x.FolderName == folderName
+        //                orderby x.FolderName ascending
+        //                select x
+        //                ;
 
-            return await query.AsNoTracking().SingleOrDefaultAsync<SiteFolder>(cancellationToken);
+        //    return await query.AsNoTracking().SingleOrDefaultAsync<SiteFolder>(cancellationToken);
 
-        }
+        //}
 
-        public async Task<bool> Save(
-            ISiteFolder siteFolder, 
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            if (siteFolder == null) { return false; }
+        //public async Task<bool> Save(
+        //    ISiteFolder siteFolder, 
+        //    CancellationToken cancellationToken = default(CancellationToken))
+        //{
+        //    if (siteFolder == null) { return false; }
 
-            SiteFolder folder = SiteFolder.FromISiteFolder(siteFolder);
-            if (folder.Guid == Guid.Empty)
-            {
-                folder.Guid = Guid.NewGuid();
-                dbContext.SiteFolders.Add(folder);
-            }
-            else
-            {
-                bool tracking = dbContext.ChangeTracker.Entries<SiteFolder>().Any(x => x.Entity.Guid == folder.Guid);
-                if (!tracking)
-                {
-                    dbContext.SiteFolders.Update(folder);
-                }
+        //    SiteFolder folder = SiteFolder.FromISiteFolder(siteFolder);
+        //    if (folder.Guid == Guid.Empty)
+        //    {
+        //        folder.Guid = Guid.NewGuid();
+        //        dbContext.SiteFolders.Add(folder);
+        //    }
+        //    else
+        //    {
+        //        bool tracking = dbContext.ChangeTracker.Entries<SiteFolder>().Any(x => x.Entity.Guid == folder.Guid);
+        //        if (!tracking)
+        //        {
+        //            dbContext.SiteFolders.Update(folder);
+        //        }
 
-            }
+        //    }
 
-            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
+        //    int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
 
-            return rowsAffected > 0;
+        //    return rowsAffected > 0;
 
-        }
+        //}
 
-        public async Task<bool> DeleteFolder(
-            Guid guid, 
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            var result = false;
-            var itemToRemove = await dbContext.SiteFolders.SingleOrDefaultAsync(x => x.Guid == guid, cancellationToken);
-            if (itemToRemove != null)
-            {
-                dbContext.SiteFolders.Remove(itemToRemove);
-                int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
-                result = rowsAffected > 0;
-            }
+        //public async Task<bool> DeleteFolder(
+        //    Guid guid, 
+        //    CancellationToken cancellationToken = default(CancellationToken))
+        //{
+        //    var result = false;
+        //    var itemToRemove = await dbContext.SiteFolders.SingleOrDefaultAsync(x => x.Guid == guid, cancellationToken);
+        //    if (itemToRemove != null)
+        //    {
+        //        dbContext.SiteFolders.Remove(itemToRemove);
+        //        int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
+        //        result = rowsAffected > 0;
+        //    }
 
-            return result;
-        }
+        //    return result;
+        //}
 
-        public async Task<bool> DeleteFoldersBySite(
-            Guid siteGuid, 
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            var result = false;
-            var query = from x in dbContext.SiteFolders.Where(x => x.SiteGuid == siteGuid)
-                        select x;
+        //public async Task<bool> DeleteFoldersBySite(
+        //    Guid siteGuid, 
+        //    CancellationToken cancellationToken = default(CancellationToken))
+        //{
+        //    var result = false;
+        //    var query = from x in dbContext.SiteFolders.Where(x => x.SiteGuid == siteGuid)
+        //                select x;
             
-            dbContext.SiteFolders.RemoveRange(query);
-            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
-            result = rowsAffected > 0;
+        //    dbContext.SiteFolders.RemoveRange(query);
+        //    int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
+        //    result = rowsAffected > 0;
             
 
-            return result;
-        }
+        //    return result;
+        //}
 
-        public async Task<int> GetSiteIdByFolder(
-            string folderName, 
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            var query = from x in dbContext.Sites
-                        join y in dbContext.SiteFolders
-                        on x.SiteGuid equals y.SiteGuid
-                        where y.FolderName == folderName
-                        select x.SiteId
-                        ;
-            //TODO: this does not seem optimal
-            // how can we reduce this to one db hit?
+        //public async Task<int> GetSiteIdByFolder(
+        //    string folderName, 
+        //    CancellationToken cancellationToken = default(CancellationToken))
+        //{
 
-            bool found = await query.AnyAsync<int>(cancellationToken);
-            if(found)
-            {
-                return await query.FirstOrDefaultAsync<int>(cancellationToken);
-            }
-            else
-            {
-                query = from x in dbContext.Sites
-                        orderby x.SiteId
-                        select x.SiteId
-                        ;
-                return await query.FirstOrDefaultAsync<int>(cancellationToken);
-            }
+        //    //TODO: this does not seem optimal
+        //    // how can we reduce this to one db hit?
+        //    //var query = from x in dbContext.Sites
+        //    //            join y in dbContext.SiteFolders
+        //    //            on x.SiteGuid equals y.SiteGuid
+        //    //            where y.FolderName == folderName
+        //    //            select x.SiteId
+        //    //            ;
+
+        //    var query = from x in dbContext.Sites 
+        //                where x.SiteFolderName == folderName
+        //                select x.SiteId
+        //                ;
+
+        //    bool found = await query.AnyAsync<int>(cancellationToken);
+        //    if(found)
+        //    {
+        //        return await query.FirstOrDefaultAsync<int>(cancellationToken);
+        //    }
+        //    else
+        //    {
+        //        query = from x in dbContext.Sites
+        //                orderby x.SiteId
+        //                select x.SiteId
+        //                ;
+        //        return await query.FirstOrDefaultAsync<int>(cancellationToken);
+        //    }
             
             
-            //return -1; // not found
+        //    //return -1; // not found
 
-        }
+        //}
 
-        public int GetSiteIdByFolderNonAsync(string folderName)
-        {
-            var query = from x in dbContext.Sites
-                        join y in dbContext.SiteFolders
-                        on x.SiteGuid equals y.SiteGuid
-                        where y.FolderName == folderName
-                        select x.SiteId
-                        ;
+        //public int GetSiteIdByFolderNonAsync(string folderName)
+        //{
+        //    var query = from x in dbContext.Sites
+        //                join y in dbContext.SiteFolders
+        //                on x.SiteGuid equals y.SiteGuid
+        //                where y.FolderName == folderName
+        //                select x.SiteId
+        //                ;
 
-            //TODO: this does not seem optimal
-            // how can we reduce this to one db hit?
+        //    //TODO: this does not seem optimal
+        //    // how can we reduce this to one db hit?
 
-            bool found = query.Any<int>();
-            if (found)
-            {
-                return query.FirstOrDefault<int>();
-            }
-            else
-            {
-                query = from x in dbContext.Sites
-                        orderby x.SiteId
-                        select x.SiteId
-                        ;
-                return query.FirstOrDefault<int>();
-            }
-        }
+        //    bool found = query.Any<int>();
+        //    if (found)
+        //    {
+        //        return query.FirstOrDefault<int>();
+        //    }
+        //    else
+        //    {
+        //        query = from x in dbContext.Sites
+        //                orderby x.SiteId
+        //                select x.SiteId
+        //                ;
+        //        return query.FirstOrDefault<int>();
+        //    }
+        //}
 
-        public async Task<Guid> GetSiteGuidByFolder(
-            string folderName, 
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            var query = from x in dbContext.SiteFolders
-                        where x.FolderName == folderName 
-                        select x
-                        ;
+        //public async Task<Guid> GetSiteGuidByFolder(
+        //    string folderName, 
+        //    CancellationToken cancellationToken = default(CancellationToken))
+        //{
+        //    var query = from x in dbContext.SiteFolders
+        //                where x.FolderName == folderName 
+        //                select x
+        //                ;
 
-            SiteFolder folder = await query.SingleOrDefaultAsync<SiteFolder>(cancellationToken);
-            if(folder == null) { return Guid.Empty; }
-            return folder.SiteGuid;
-        }
+        //    SiteFolder folder = await query.SingleOrDefaultAsync<SiteFolder>(cancellationToken);
+        //    if(folder == null) { return Guid.Empty; }
+        //    return folder.SiteGuid;
+        //}
 
-        public async Task<bool> FolderExists(
-            string folderName, 
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            Guid found = await GetSiteGuidByFolder(folderName, cancellationToken);
-            if(found == Guid.Empty) { return false; }
-            return true;
-        }
+        //public async Task<bool> FolderExists(
+        //    string folderName, 
+        //    CancellationToken cancellationToken = default(CancellationToken))
+        //{
+        //    Guid found = await GetSiteGuidByFolder(folderName, cancellationToken);
+        //    if(found == Guid.Empty) { return false; }
+        //    return true;
+        //}
 
 
         #region IDisposable

@@ -1846,7 +1846,7 @@ namespace cloudscribe.Core.Repositories.EF
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            return await dbContext.SiteFolders.CountAsync<SiteFolder>(cancellationToken);
+            return await dbContext.UserLocations.CountAsync<UserLocation>(cancellationToken);
 
 
         }

@@ -86,10 +86,10 @@ namespace cloudscribe.Core.Web.Components
             return await siteRepo.CountOtherSites(currentSiteId, CancellationToken);
         }
 
-        public int GetSiteIdByFolderNonAsync(string folderName)
-        {
-            return siteRepo.GetSiteIdByFolderNonAsync(folderName);
-        }
+        //public int GetSiteIdByFolderNonAsync(string folderName)
+        //{
+        //    return siteRepo.GetSiteIdByFolderNonAsync(folderName);
+        //}
 
         public async Task<ISiteSettings> Fetch(Guid siteGuid)
         {
@@ -146,7 +146,7 @@ namespace cloudscribe.Core.Web.Components
 
             resultStep = await userRepo.DeleteRolesBySite(site.SiteId, CancellationToken.None);
             resultStep = await siteRepo.DeleteHostsBySite(site.SiteId, CancellationToken.None);
-            resultStep = await siteRepo.DeleteFoldersBySite(site.SiteGuid, CancellationToken.None);
+            //resultStep = await siteRepo.DeleteFoldersBySite(site.SiteGuid, CancellationToken.None);
 
 
             // the below method deletes a lot of things by siteid including the following tables
@@ -333,33 +333,33 @@ namespace cloudscribe.Core.Web.Components
 
 
 
-        public async Task<ISiteFolder> GetSiteFolder(string folderName)
-        {
-            return await siteRepo.GetSiteFolder(folderName, CancellationToken);
-        }
+        //public async Task<ISiteFolder> GetSiteFolder(string folderName)
+        //{
+        //    return await siteRepo.GetSiteFolder(folderName, CancellationToken);
+        //}
 
-        public async Task<bool> EnsureSiteFolder(ISiteSettings site)
-        {
-            bool folderExists = await siteRepo.FolderExists(site.SiteFolderName, CancellationToken);
+        //public async Task<bool> EnsureSiteFolder(ISiteSettings site)
+        //{
+        //    bool folderExists = await siteRepo.FolderExists(site.SiteFolderName, CancellationToken);
 
-            if (!folderExists)
-            {
-                List<ISiteFolder> siteFolders = await siteRepo.GetSiteFoldersBySite(site.SiteGuid, CancellationToken);
-                //delete any existing folders before creating a new one
-                foreach (ISiteFolder f in siteFolders)
-                {
-                    bool deleted = await siteRepo.DeleteFolder(f.Guid, CancellationToken);
-                }
+        //    if (!folderExists)
+        //    {
+        //        List<ISiteFolder> siteFolders = await siteRepo.GetSiteFoldersBySite(site.SiteGuid, CancellationToken);
+        //        //delete any existing folders before creating a new one
+        //        foreach (ISiteFolder f in siteFolders)
+        //        {
+        //            bool deleted = await siteRepo.DeleteFolder(f.Guid, CancellationToken);
+        //        }
 
-                //ensure the current folder mapping
-                SiteFolder folder = new SiteFolder();
-                folder.FolderName = site.SiteFolderName;
-                folder.SiteGuid = site.SiteGuid;
-                folderExists = await siteRepo.Save(folder, CancellationToken);
-            }
+        //        //ensure the current folder mapping
+        //        SiteFolder folder = new SiteFolder();
+        //        folder.FolderName = site.SiteFolderName;
+        //        folder.SiteGuid = site.SiteGuid;
+        //        folderExists = await siteRepo.Save(folder, CancellationToken);
+        //    }
 
-            return folderExists;
-        }
+        //    return folderExists;
+        //}
 
         public async Task<ISiteHost> GetSiteHost(string hostName)
         {

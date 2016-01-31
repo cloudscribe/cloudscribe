@@ -280,13 +280,16 @@ namespace cloudscribe.Core.Web.Controllers
                     return View(model);
                 }
 
-                ISiteFolder folder = await siteManager.GetSiteFolder(model.SiteFolderName);
-                if ((folder != null) && (folder.SiteGuid != selectedSite.SiteGuid))
-                {
-                    ModelState.AddModelError("foldererror", "The selected folder name is already in use on another site.");
+                //TODO: since we removed the SiteFolders table, now we need to implement looking up the site directly from the
+                // Sites table SiteFolderName field
 
-                    return View(model);
-                }
+                //ISiteFolder folder = await siteManager.GetSiteFolder(model.SiteFolderName);
+                //if ((folder != null) && (folder.SiteGuid != selectedSite.SiteGuid))
+                //{
+                //    ModelState.AddModelError("foldererror", "The selected folder name is already in use on another site.");
+
+                //    return View(model);
+                //}
 
             }
             else if (multiTenantOptions.Mode == MultiTenantMode.HostName)
@@ -336,14 +339,14 @@ namespace cloudscribe.Core.Web.Controllers
             
             bool result = await siteManager.Save(selectedSite);
 
-            if ((result) && (multiTenantOptions.Mode == MultiTenantMode.FolderName))
-            {
-                if (!string.IsNullOrEmpty(selectedSite.SiteFolderName))
-                {
-                    bool folderEnsured = await siteManager.EnsureSiteFolder(selectedSite);
-                }
+            //if ((result) && (multiTenantOptions.Mode == MultiTenantMode.FolderName))
+            //{
+            //    if (!string.IsNullOrEmpty(selectedSite.SiteFolderName))
+            //    {
+            //        bool folderEnsured = await siteManager.EnsureSiteFolder(selectedSite);
+            //    }
 
-            }
+            //}
 
             if (result)
             {
@@ -416,13 +419,15 @@ namespace cloudscribe.Core.Web.Controllers
                     return View(model);
                 }
 
-                ISiteFolder folder = await siteManager.GetSiteFolder(model.SiteFolderName);
-                if (folder != null)
-                {
-                    ModelState.AddModelError("foldererror", "The selected folder name is already in use on another site.");
+                //TODO: since we removed the sitefolders table now we need to check against the sites table to make sure a folder name is not in use
 
-                    return View(model);
-                }
+                //ISiteFolder folder = await siteManager.GetSiteFolder(model.SiteFolderName);
+                //if (folder != null)
+                //{
+                //    ModelState.AddModelError("foldererror", "The selected folder name is already in use on another site.");
+
+                //    return View(model);
+                //}
 
             }
             else
@@ -475,21 +480,21 @@ namespace cloudscribe.Core.Web.Controllers
             bool result = await siteManager.CreateNewSite(newSite);
             result = await siteManager.CreateRequiredRolesAndAdminUser(newSite);
 
-            if ((result) && (multiTenantOptions.Mode == MultiTenantMode.FolderName))
-            {
-                bool folderResult = await siteManager.EnsureSiteFolder(newSite);
+            //if ((result) && (multiTenantOptions.Mode == MultiTenantMode.FolderName))
+            //{
+            //    //bool folderResult = await siteManager.EnsureSiteFolder(newSite);
 
-            // for folder sites we need routes that match the folder
-            // which are normally created during app startup
-            // can we add routes here? or do we need to force the app to recycle?
-            // this seems to work, but we really do need to restart
-            // so that the per folder authentication gets setup too
-            //cloudscribe.Web.Routing.RouteRegistrar.AddDefaultRouteForNewSiteFolder(folder.FolderName);
+            //// for folder sites we need routes that match the folder
+            //// which are normally created during app startup
+            //// can we add routes here? or do we need to force the app to recycle?
+            //// this seems to work, but we really do need to restart
+            //// so that the per folder authentication gets setup too
+            ////cloudscribe.Web.Routing.RouteRegistrar.AddDefaultRouteForNewSiteFolder(folder.FolderName);
 
-            //startup.TriggerStartup();
-            //http://stackoverflow.com/questions/31339896/replacement-httpruntime-unloadappdomain-in-asp-net-5
+            ////startup.TriggerStartup();
+            ////http://stackoverflow.com/questions/31339896/replacement-httpruntime-unloadappdomain-in-asp-net-5
 
-            }
+            //}
 
             if (result && addHostName)
             {

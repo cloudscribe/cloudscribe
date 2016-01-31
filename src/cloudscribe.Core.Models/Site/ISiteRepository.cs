@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2015-12-28
+// Last Modified:			2016-01-31
 // 
 
 // TODO: we should update all the async signatures to take a cancellationtoken
@@ -19,6 +19,7 @@ namespace cloudscribe.Core.Models
         ISiteSettings FetchNonAsync(int siteId);
         ISiteSettings FetchNonAsync(Guid siteGuid);
         ISiteSettings FetchNonAsync(string hostName);
+        ISiteSettings FetchByFolderNameNonAsync(string folderName);
 
         Task<ISiteSettings> Fetch(int siteId, CancellationToken cancellationToken);
         Task<ISiteSettings> Fetch(Guid siteGuid, CancellationToken cancellationToken);
@@ -48,25 +49,28 @@ namespace cloudscribe.Core.Models
         Task<bool> DeleteHost(int hostId, CancellationToken cancellationToken);
         Task<bool> DeleteHostsBySite(int siteId, CancellationToken cancellationToken);
         Task<int> GetSiteIdByHostName(string hostName, CancellationToken cancellationToken);
-        
-        Task<List<ISiteFolder>> GetSiteFoldersBySite(Guid siteGuid, CancellationToken cancellationToken);
-        Task<List<ISiteFolder>> GetAllSiteFolders(CancellationToken cancellationToken);
-        Task<int> GetFolderCount(CancellationToken cancellationToken);
-        Task<ISiteFolder> GetSiteFolder(string folderName, CancellationToken cancellationToken);
-        Task<List<ISiteFolder>> GetPageSiteFolders(
-            int pageNumber,
-            int pageSize,
-            CancellationToken cancellationToken);
-        Task<bool> Save(ISiteFolder siteFolder, CancellationToken cancellationToken);
-        Task<bool> DeleteFolder(Guid guid, CancellationToken cancellationToken);
-        Task<bool> DeleteFoldersBySite(Guid siteGuid, CancellationToken cancellationToken);
-        Task<int> GetSiteIdByFolder(string folderName, CancellationToken cancellationToken);
-        Task<Guid> GetSiteGuidByFolder(string folderName, CancellationToken cancellationToken);
-        Task<bool> FolderExists(string folderName, CancellationToken cancellationToken);
-
         List<ISiteHost> GetAllHostsNonAsync();
-        List<ISiteFolder> GetAllSiteFoldersNonAsync();
-        int GetSiteIdByFolderNonAsync(string folderName);
+
+        // we don't need multiple folders to map to a single site
+        // we have foldername on the sitesettings object and on't need this extra table
+        //Task<List<ISiteFolder>> GetSiteFoldersBySite(Guid siteGuid, CancellationToken cancellationToken);
+        //Task<List<ISiteFolder>> GetAllSiteFolders(CancellationToken cancellationToken);
+        //Task<int> GetFolderCount(CancellationToken cancellationToken);
+        //Task<ISiteFolder> GetSiteFolder(string folderName, CancellationToken cancellationToken);
+        //Task<List<ISiteFolder>> GetPageSiteFolders(
+        //    int pageNumber,
+        //    int pageSize,
+        //    CancellationToken cancellationToken);
+        //Task<bool> Save(ISiteFolder siteFolder, CancellationToken cancellationToken);
+        //Task<bool> DeleteFolder(Guid guid, CancellationToken cancellationToken);
+        //Task<bool> DeleteFoldersBySite(Guid siteGuid, CancellationToken cancellationToken);
+        //Task<int> GetSiteIdByFolder(string folderName, CancellationToken cancellationToken);
+        //Task<Guid> GetSiteGuidByFolder(string folderName, CancellationToken cancellationToken);
+        //Task<bool> FolderExists(string folderName, CancellationToken cancellationToken);
+
+
+        //List<ISiteFolder> GetAllSiteFoldersNonAsync();
+        //int GetSiteIdByFolderNonAsync(string folderName);
 
     }
 }

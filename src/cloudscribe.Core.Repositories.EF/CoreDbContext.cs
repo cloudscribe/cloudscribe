@@ -57,7 +57,7 @@ namespace cloudscribe.Core.Repositories.EF
         
         public DbSet<SiteSettings> Sites { get; set; }
         public DbSet<SiteHost> SiteHosts { get; set; }
-        public DbSet<SiteFolder> SiteFolders { get; set; }
+        //public DbSet<SiteFolder> SiteFolders { get; set; }
 
         public DbSet<SiteUser> Users { get; set; }
         public DbSet<UserClaim> UserClaims { get; set; }
@@ -97,10 +97,10 @@ namespace cloudscribe.Core.Repositories.EF
                 mapper.Map(entity);
             });
 
-            modelBuilder.Entity<SiteFolder>(entity =>
-            {
-                mapper.Map(entity);
-            });
+            //modelBuilder.Entity<SiteFolder>(entity =>
+            //{
+            //    mapper.Map(entity);
+            //});
             
             modelBuilder.Entity<SiteUser>(entity =>
             {

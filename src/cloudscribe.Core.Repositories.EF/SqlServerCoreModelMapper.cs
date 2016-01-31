@@ -342,8 +342,9 @@ namespace cloudscribe.Core.Repositories.EF
             entity.Property(p => p.SiteFolderName)
             .HasMaxLength(50)
             .HasDefaultValue(string.Empty)
-           
             ;
+
+            entity.HasIndex(p => p.SiteFolderName);
 
             entity.Property(p => p.AddThisDotComUsername)
             .HasMaxLength(50);
@@ -457,29 +458,29 @@ namespace cloudscribe.Core.Repositories.EF
 
         }
 
-        public void Map(EntityTypeBuilder<SiteFolder> entity)
-        {
-            entity.ToTable("mp_SiteFolders");
-            entity.HasKey(p => p.Guid);
+        //public void Map(EntityTypeBuilder<SiteFolder> entity)
+        //{
+        //    entity.ToTable("mp_SiteFolders");
+        //    entity.HasKey(p => p.Guid);
 
-            entity.Property(p => p.Guid)
-               .ForSqlServerHasColumnType("uniqueidentifier")
-               .ForSqlServerHasDefaultValueSql("newid()")
-               .IsRequired()
-               ;
+        //    entity.Property(p => p.Guid)
+        //       .ForSqlServerHasColumnType("uniqueidentifier")
+        //       .ForSqlServerHasDefaultValueSql("newid()")
+        //       .IsRequired()
+        //       ;
 
-            entity.Property(p => p.SiteGuid)
-                .HasColumnName("SiteGuid")
-                .ForSqlServerHasColumnType("uniqueidentifier")
-                .IsRequired()
-                ;
+        //    entity.Property(p => p.SiteGuid)
+        //        .HasColumnName("SiteGuid")
+        //        .ForSqlServerHasColumnType("uniqueidentifier")
+        //        .IsRequired()
+        //        ;
 
-            entity.Property(p => p.FolderName)
-            .IsRequired()
-            .HasMaxLength(255);
-            ;
+        //    entity.Property(p => p.FolderName)
+        //    .IsRequired()
+        //    .HasMaxLength(255);
+        //    ;
 
-        }
+        //}
 
         public void Map(EntityTypeBuilder<SiteUser> entity)
         {

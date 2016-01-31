@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-09
-// Last Modified:			2016-01-27
+// Last Modified:			2016-01-31
 // 
 
 using System;
@@ -330,12 +330,12 @@ namespace cloudscribe.Core.Models.DataExtensions
         }
 
 
-        public static void LoadFromReader(this ISiteFolder folder, DbDataReader reader)
-        {
-            folder.Guid = new Guid(reader["Guid"].ToString());
-            folder.SiteGuid = new Guid(reader["SiteGuid"].ToString());
-            folder.FolderName = reader["FolderName"].ToString();
-        }
+        //public static void LoadFromReader(this ISiteFolder folder, DbDataReader reader)
+        //{
+        //    folder.Guid = new Guid(reader["Guid"].ToString());
+        //    folder.SiteGuid = new Guid(reader["SiteGuid"].ToString());
+        //    folder.FolderName = reader["FolderName"].ToString();
+        //}
 
         public static void LoadFromReader(this ISiteHost host, DbDataReader reader)
         {
