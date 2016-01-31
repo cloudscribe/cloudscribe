@@ -82,6 +82,29 @@ namespace cloudscribe.Core.Models
             return result;
         }
 
+        public static long ConvertIpv4ToLong(string ipv4Address)
+        {
+            long result = 0;
+            if (ipv4Address.Contains(":")) { return result; } // an ipv6 address was passed instead
+
+            IPAddress ipAddress;
+            if (IPAddress.TryParse(ipv4Address, out ipAddress))
+            {
+                byte[] b = ipAddress.GetAddressBytes();
+                if (b.Length >= 4) // prevent index out of range error
+                {
+                    result = (long)(b[0] * 16777216);
+                    result += (long)(b[1] * 65536);
+                    result += (long)(b[2] * 256);
+                    result += (long)(b[3] * 1);
+                }
+            }
+
+            return result;
+        }
+
+
+
 
     }
 }

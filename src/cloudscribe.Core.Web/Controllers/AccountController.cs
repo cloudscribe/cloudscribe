@@ -7,6 +7,7 @@
 
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Models;
+using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.Components.Messaging;
 using cloudscribe.Core.Web.ViewModels.Account;
 using cloudscribe.Core.Web.ViewModels.SiteUser;
@@ -32,6 +33,7 @@ namespace cloudscribe.Core.Web.Controllers
             ISiteResolver siteResolver,
             SiteUserManager<SiteUser> userManager,
             SiteSignInManager<SiteUser> signInManager,
+            IpAddressTracker ipAddressTracker,
             ISiteMessageEmailSender emailSender,
             ISmsSender smsSender,
             ILogger<AccountController> logger)
@@ -42,6 +44,7 @@ namespace cloudscribe.Core.Web.Controllers
             //config = configuration;
             this.emailSender = emailSender;
             this.smsSender = smsSender;
+            this.ipAddressTracker = ipAddressTracker;
             log = logger;
         }
 
@@ -52,6 +55,7 @@ namespace cloudscribe.Core.Web.Controllers
         private readonly SiteSignInManager<SiteUser> signInManager;
         private readonly ISiteMessageEmailSender emailSender;
         private readonly ISmsSender smsSender;
+        private IpAddressTracker ipAddressTracker;
         private ILogger log;
 
 
@@ -179,7 +183,9 @@ namespace cloudscribe.Core.Web.Controllers
             {
 
                 //TODO: track ip address
-                //HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToLong();
+                //HttpContext.Connection.
+                //ipAddressTracker.TackUserIpAddress(siteGuid, userGuid) // how to get userGuid here
+                
 
                 return this.RedirectToLocal(returnUrl);
             }
@@ -316,7 +322,8 @@ namespace cloudscribe.Core.Web.Controllers
                 var result = await userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    
+                    await ipAddressTracker.TackUserIpAddress(Site.SiteGuid, user.UserGuid);
+
                     if(Site.RequireConfirmedEmail) // require email confirmation
                     {
                         var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -409,6 +416,8 @@ namespace cloudscribe.Core.Web.Controllers
                             "Confirm your account",
                             callbackUrl);
 
+            await ipAddressTracker.TackUserIpAddress(Site.SiteGuid, user.UserGuid);
+
             return RedirectToAction("EmailConfirmationRequired", new { userGuid = user.Id, didSend = true });
         }
 
@@ -477,10 +486,15 @@ namespace cloudscribe.Core.Web.Controllers
                 return RedirectToAction("Login");
             }
 
+           
+
             // Sign in the user with this external login provider if the user already has a login.
             var result = await signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
             if (result.Succeeded)
             {
+                //TODO: how to get the user here?
+                //await ipAddressTracker.TackUserIpAddress(Site.SiteGuid, user.UserGuid);
+
                 log.LogInformation("ExternalLoginCallback ExternalLoginSignInAsync succeeded ");
                 return this.RedirectToLocal(returnUrl);
             }
@@ -537,6 +551,8 @@ namespace cloudscribe.Core.Web.Controllers
                 if (result.Succeeded)
                 {
                     log.LogInformation("ExternalLoginConfirmation user created ");
+
+                    await ipAddressTracker.TackUserIpAddress(Site.SiteGuid, user.UserGuid);
 
                     result = await userManager.AddLoginAsync(user, info);
                     if (result.Succeeded)

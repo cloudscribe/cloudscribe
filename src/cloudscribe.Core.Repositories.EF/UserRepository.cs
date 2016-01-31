@@ -1717,7 +1717,7 @@ namespace cloudscribe.Core.Repositories.EF
 
         #region UserLocation
 
-        public async Task<IUserLocation> FetchByUserAndIpv4Address(
+        public async Task<IUserLocation> FetchLocationByUserAndIpv4Address(
             Guid userGuid,
             long ipv4AddressAsLong,
             CancellationToken cancellationToken = default(CancellationToken))

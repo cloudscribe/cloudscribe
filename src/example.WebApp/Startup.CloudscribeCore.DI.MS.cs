@@ -221,6 +221,9 @@ namespace example.WebApp
             services.TryAddScoped<SetupManager, SetupManager>();
             services.TryAddScoped<GeoDataManager, GeoDataManager>();
             services.TryAddScoped<SystemInfoManager, SystemInfoManager>();
+            services.TryAddScoped<IpAddressTracker, IpAddressTracker>();
+
+            //
 
             services.TryAddScoped<SiteDataProtector, SiteDataProtector>();
 

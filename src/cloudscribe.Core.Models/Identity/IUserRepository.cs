@@ -180,13 +180,7 @@ namespace cloudscribe.Core.Models
         Task<int> CountFutureLockoutEndDate(
             int siteId,
             CancellationToken cancellationToken);
-
-
-        //Task<int> CountEmailUnconfirmed(
-        //    int siteId,
-        //    CancellationToken cancellationToken);
-
-
+        
         Task<List<IUserInfo>> GetUserAdminSearchPage(
             int siteId, 
             int pageNumber, 
@@ -410,7 +404,7 @@ namespace cloudscribe.Core.Models
         //    CancellationToken cancellationToken);
 
 
-        Task<IUserLocation> FetchByUserAndIpv4Address(
+        Task<IUserLocation> FetchLocationByUserAndIpv4Address(
             Guid userGuid,
             long ipv4AddressAsLong,
             CancellationToken cancellationToken);
