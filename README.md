@@ -36,8 +36,9 @@ This project is in early stages, not yet ready for mission critical scenarios, b
 ##### Planned Features:
 * Implement options for Security Questions and Answers per OWASP guidelines
 * MongoDB Support - I am interested in trying to implement the data repositories with MongoDB and would welcome help with that. 
-* Localization Support - waiting for runtime and tooling support which may be in beta8 of asp.net 5
+* Localization Support - waiting for runtime and tooling support which may be in rc2 of ASP.NET Core
 * Caching - memory  cache and distributed cache options
+* support for [IdentityServer4](https://github.com/IdentityServer/IdentityServer4) both as an authentication/authorization client and a user store. This will bring us support for [Jwt](https://jwt.io/) as an alternative to cookie authentication so we can more readily support SPA (Single Page Application) style web apps as well as authentication from mobile devices.
 * Lots of miscellaneous smaller stuff
 
 ##### Other things we'd like to see:
