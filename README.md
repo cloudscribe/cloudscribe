@@ -45,6 +45,8 @@ This project is in early stages, not yet ready for mission critical scenarios, b
 * If this project were to become popular then it would provide a way for many people to build things on top of it that are compatible with each other, making it easier to assemble various functionality within a site
 * cloudscribe.Cms? I am giving serious consideration to building such a thing, but at the moment feel I need to work on some projects that will generate income for me, and there is still a lot of work to do in this project.
 
+##### Keep In Touch
+
 We are collecting email addresses for a potential newsletter in the future, depending on whether this project becomes popular. If you would like to subscribe to this possible future newsletter, please send an email to subscribe [at] cloudscribe.com with the subject line "subscribe"
 
 If you are interested in consulting or other support services related to cloudscribe, please send an email to info [at] cloudscribe.com.
@@ -52,3 +54,5 @@ If you are interested in consulting or other support services related to cloudsc
 If you have questions or just want to be social, say hello in our gitter chat room. I try to monitor that room on a regular basis while I'm working, but if I'm not around you can leave  message.
 
 [![Join the chat at https://gitter.im/joeaudette/cloudscribe](https://badges.gitter.im/joeaudette/cloudscribe.svg)](https://gitter.im/joeaudette/cloudscribe?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
+I'm also on twitter @joeaudette
