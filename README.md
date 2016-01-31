@@ -1,10 +1,14 @@
-# cloudscibe.Core.Web
+# cloudscribe
 
-[![Join the chat at https://gitter.im/joeaudette/cloudscribe](https://badges.gitter.im/joeaudette/cloudscribe.svg)](https://gitter.im/joeaudette/cloudscribe?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+cloudscribe is a related set of projects and components for building cross platform web applications on ASP.NET Core
+
+The foundational set of projects, known as cloudscibe.Core, provides support for single tennant or multi tenant managemetment of sites users, and roles.
 
 #### Why Start From Scratch?
 
-Every web application or website project tends to need a certain amount of basic functionality, why build this over and over. When I start a new web project I want to use this functionality that is already built so I can jump right in on the specific feature I want to implement. 
+Every web application or website project tends to need a certain amount of basic functionality, why build this over and over. 
+
+If you start a new web application project in Visual Studio 2015 or using the standard project templates, what you get is just a basic implementation for user accounts via ASP.NET Identity. Those templates don't provide you any method for creating administrative users or creating roles or managing users and user role membership. You would typically have to implement that stuff yourself, and if you are like me, you don't want to have to implement that stuff again and again on every project. cloudscribe.Core aims to provide that for you with careful, well thought out implementations that adhere to [OWASP web security guidelines](https://www.owasp.org/index.php/Main_Page).
 
 Eventually you will be able to start with an empty ASP.NET 5 project and pull in nuget packages for cloudscribe, but for now if you want to give it a test drive see 
 [Working with the source code](https://github.com/joeaudette/cloudscribe/wiki/Working-with-the-source-Code). You can download the latest version of cloudscribe Core by clicking the download button on the right side of the page or forking or cloning this repo. 
@@ -12,7 +16,6 @@ Eventually you will be able to start with an empty ASP.NET 5 project and pull in
 This project is in early stages, not yet production ready, we are building on a new framework from  Microsoft that is itself still in beta and changing frequently. Primarily we are targeting the new lightweight cross platform [Core .NET Framework](https://github.com/dotnet/core) aka dnxcore50 so the goal of this project is to work on Windows, Linux, or Mac. We are also targeting dnx451 aka the full desktop framework but we are avoiding taking dependencies on things that only work in dnx451.
 
 ##### Currently Working Features:
-* Setup/Upgrade System for running versioned install and upgrade sql scripts
 * Site Definitions - multi-tenant based on either first folder segment or host names, default is by folder segment for now mainly because it is easier to try that without DNS, it is just a config option so it is easy to change
 * Site is a conceptual container for users, permissions, and content. 
 * Related sites mode setting allows shared users and roles across sites while still allowing permissions to be segmented/siloed by site.
@@ -25,15 +28,16 @@ This project is in early stages, not yet production ready, we are building on a 
 * TagHelper for pagination via [cloudscribe.Web.Pagination project](https://github.com/joeaudette/cloudscribe.Web.Pagination)
 * TagHelpers for navigation menus, breadcrumbs - via [cloudscribe.Web.Navigation project](https://github.com/joeaudette/cloudscribe.Web.Navigation)
 * Unobtrusive js for CKeditor
-* async all the way down - vast majority of the data access is async except with file based databases such as Sqlite and sqlce
-* Currently the project has repository implementations for MSSQL, MySql, PostgreSql, Firebird, SQLCe, and Sqlite, however only MSSQL, pgsql, and Sqlite are currently supported under dnxcore50 because current ADO drivers for the other db platforms are only working in dnx451. Most of the database schema and data access code was re-purposed and refactored from the mojoportal project, and therefore provide a possibility to migrate from mojoPortal.
+* Going forward we are working primarily with Entity Framework Core which has many advantages for rapid development, but a goal of this project is to not impose a specific ORM (Object Relational Mapper) on anyone, so we also intend to provide a variety of other data access options including MongoDB as well as more traditional ADO.NET, and of course anyone is free to implement other data platforms since they are abstracted in a way that makes it easy to swap implementations. Currently the project has repository implementations for MSSQL, MySql, PostgreSql, Firebird, SQLCe, and Sqlite. Those implementations are being maintained in a separate code repository, and may be at various stages of completion. We really could use some help keeing those data access layers up to date so please see the [cloudscribe.Coe.Data code repository](https://github.com/joeaudette/cloudscribe.Core.Data) if you are able to help. Most of the database schema and data access code was originally re-purposed and refactored from the mojoportal project, and therefore provide a possibility to migrate from mojoPortal.
 * A goal of the project for me is to not force a specific ORM on anyone, but, I do want to try to also provide support for using EF7.
+* async all the way down - vast majority of the data access is async except with file based databases such as Sqlite and sqlce
+* This project aims to follow the [OWASP](https://www.owasp.org/index.php/Main_Page) Guidelines for best practices in security
 
 ##### Planned Features:
-* EF7 Support - I am interested in trying to implement the data repositories with EF7 as a way for me to learn EF7. I expect that many or most people who build on top of cloudscribe will want to use EF7. Things could be built on top of cloudscribe using EF7 regardless of whether using EF for the core repositories, but I think it would be good to also have an implementation of the core repositories that does use EF7.
+* Implement options for Security Questions and Answers per OWASP guidelines
+* MongoDB Support - I am interested in trying to implement the data repositories with MongoDB and would welcome help with that. 
 * Localization Support - waiting for runtime and tooling support which may be in beta8 of asp.net 5
 * Caching - memory  cache and distributed cache options
-* TagHelpers to do data- annotations in support of our unobtrusive js for ckeditor
 * Lots of miscellaneous smaller stuff
 
 ##### Other things we'd like to see:
@@ -43,3 +47,7 @@ This project is in early stages, not yet production ready, we are building on a 
 We are collecting email addresses for a potential newsletter in the future, depending on whether this project becomes popular. If you would like to subscribe to this possible future newsletter, please send an email to subscribe [at] cloudscribe.com with the subject line "subscribe"
 
 If you are interested in consulting or other support services related to cloudscribe, please send an email to info [at] cloudscribe.com.
+
+If you have questions or just want to be social, say hello in our gitter chat room. I try to monitor that room on a regular basis while I'm working, but if I'm not around you can leave  message.
+
+[![Join the chat at https://gitter.im/joeaudette/cloudscribe](https://badges.gitter.im/joeaudette/cloudscribe.svg)](https://gitter.im/joeaudette/cloudscribe?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
