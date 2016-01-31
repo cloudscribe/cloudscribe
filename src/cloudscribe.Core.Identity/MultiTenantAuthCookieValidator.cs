@@ -33,7 +33,10 @@ namespace cloudscribe.Core.Identity
 
         public async Task ValidatePrincipal(CookieValidatePrincipalContext context)
         {
-            await securityStampValidator.ValidateAsync(context);
+            // TODO: uncomment this after next release of aspnet core
+            // and fix the broken
+            // it needs to resolve options per tenant
+            //await securityStampValidator.ValidateAsync(context);
             
             ISiteSettings site = siteResolver.Resolve();
             if (site == null)

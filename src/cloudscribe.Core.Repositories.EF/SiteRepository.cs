@@ -121,6 +121,35 @@ namespace cloudscribe.Core.Repositories.EF
 
         }
 
+        /// <summary>
+        /// tries to return a site with a matching folder, if not found returns the default site
+        /// </summary>
+        /// <param name="folderName"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public async Task<ISiteSettings> FetchByFolderName(
+            string folderName,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ISiteSettings site = await dbContext.Sites.AsNoTracking().FirstOrDefaultAsync(
+                x => x.SiteFolderName == folderName
+                , cancellationToken);
+
+            if (site == null)
+            {
+                var query = from s in dbContext.Sites
+                            .Take(1)
+                            orderby s.SiteId ascending
+                            select s;
+
+                site = await query.AsNoTracking().SingleOrDefaultAsync<SiteSettings>(cancellationToken);
+            }
+
+            return site;
+
+
+        }
+
         public ISiteSettings FetchNonAsync(string hostName)
         {
             SiteHost host = dbContext.SiteHosts.FirstOrDefault(x => x.HostName == hostName);

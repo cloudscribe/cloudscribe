@@ -95,6 +95,26 @@ namespace cloudscribe.Core.Identity
         }
         //private ILogger<UserManager<TUser>> logger;
 
+        //public virtual Task<TUser> GetUserAsync(ClaimsPrincipal principal)
+        //{
+        //    if (principal == null)
+        //    {
+        //        throw new ArgumentNullException(nameof(principal));
+        //    }
+        //    var id = GetUserId(principal);
+        //    return id == null ? Task.FromResult<TUser>(null) : FindByIdAsync(id);
+        //}
+
+        //public virtual string GetUserId(ClaimsPrincipal principal)
+        //{
+        //    if (principal == null)
+        //    {
+        //        throw new ArgumentNullException(nameof(principal));
+        //    }
+        //    return principal.FindFirstValue(Options.ClaimsIdentity.UserIdClaimType);
+        //}
+
+
         public async Task<bool> LoginIsAvailable(int userId, string loginName)
         {
             int siteId = Site.SiteId;

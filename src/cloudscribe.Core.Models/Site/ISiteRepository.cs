@@ -16,6 +16,8 @@ namespace cloudscribe.Core.Models
 {
     public interface ISiteRepository : IDisposable
     {
+        //TODO: review all places where these non async methods are used
+        // and consider whether they could be changed to use async
         ISiteSettings FetchNonAsync(int siteId);
         ISiteSettings FetchNonAsync(Guid siteGuid);
         ISiteSettings FetchNonAsync(string hostName);
@@ -24,7 +26,8 @@ namespace cloudscribe.Core.Models
         Task<ISiteSettings> Fetch(int siteId, CancellationToken cancellationToken);
         Task<ISiteSettings> Fetch(Guid siteGuid, CancellationToken cancellationToken);
         Task<ISiteSettings> Fetch(string hostName, CancellationToken cancellationToken);
-        
+        Task<ISiteSettings> FetchByFolderName(string folderName, CancellationToken cancellationToken);
+
         Task<int> GetCount(CancellationToken cancellationToken);
         Task<int> CountOtherSites(int currentSiteId, CancellationToken cancellationToken);
         Task<List<ISiteInfo>> GetList(CancellationToken cancellationToken);

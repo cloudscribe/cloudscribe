@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2016-01-19
+// Last Modified:			2016-01-31
 // 
 
 using cloudscribe.Core.Models;
@@ -291,6 +291,14 @@ namespace cloudscribe.Core.Web.Controllers
                 //    return View(model);
                 //}
 
+                bool folderAvailable = await siteManager.FolderNameIsAvailable(selectedSite, model.SiteFolderName);
+                if (!folderAvailable)
+                {
+                    ModelState.AddModelError("foldererror", "The selected folder name is already in use on another site.");
+
+                    return View(model);
+                }
+
             }
             else if (multiTenantOptions.Mode == MultiTenantMode.HostName)
             {
@@ -409,6 +417,7 @@ namespace cloudscribe.Core.Web.Controllers
             }
             
             bool addHostName = false;
+            SiteSettings newSite = new SiteSettings();
 
             if (multiTenantOptions.Mode == MultiTenantMode.FolderName)
             {
@@ -422,12 +431,13 @@ namespace cloudscribe.Core.Web.Controllers
                 //TODO: since we removed the sitefolders table now we need to check against the sites table to make sure a folder name is not in use
 
                 //ISiteFolder folder = await siteManager.GetSiteFolder(model.SiteFolderName);
-                //if (folder != null)
-                //{
-                //    ModelState.AddModelError("foldererror", "The selected folder name is already in use on another site.");
+                bool folderAvailable = await siteManager.FolderNameIsAvailable(newSite, model.SiteFolderName);
+                if (!folderAvailable)
+                {
+                    ModelState.AddModelError("foldererror", "The selected folder name is already in use on another site.");
 
-                //    return View(model);
-                //}
+                    return View(model);
+                }
 
             }
             else
@@ -457,7 +467,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             }
 
-            SiteSettings newSite = new SiteSettings();
+            
 
             // only the first site created by setup page should be a server admin site
             newSite.IsServerAdminSite = false;

@@ -96,6 +96,10 @@ Lastly, you should consider whether or not you should treat the security questio
 
 # Password Reset 
 
+http://ux.stackexchange.com/questions/72259/should-passwords-expire
+http://security.stackexchange.com/questions/4704/how-does-changing-your-password-every-90-days-increase-security
+http://security.stackexchange.com/questions/19458/requiring-regular-password-change-but-storing-previous-paswords
+
 The first page of a secure Forgot Password feature asks the user for multiple pieces of hard data that should have been previously collected (generally when the user first registers). Steps for this are detailed in the identity section the Choosing and Using Security Questions Cheat Sheet here.
 
 At a minimum, you should have collected some data that will allow you to send the password reset information to some out-of-band side-channel, such as a (possibly different) email address or an SMS text number, etc. to be used in Step 3. 

@@ -126,6 +126,23 @@ namespace cloudscribe.Core.Web.Components
             return site;
         }
 
+        /// <summary>
+        /// returns true if the folder is not in use or is in use only on the passed in ISiteSettings
+        /// </summary>
+        /// <param name=""></param>
+        /// <param name="requestedFolderName"></param>
+        /// <returns></returns>
+        public async Task<bool> FolderNameIsAvailable(ISiteSettings requestingSite, string requestedFolderName)
+        {
+            var matchingSite = await siteRepo.FetchByFolderName(requestedFolderName, CancellationToken);
+            if(matchingSite == null) { return true; }
+            if(matchingSite.SiteFolderName != requestedFolderName) { return true; }
+            if(matchingSite.SiteGuid == requestingSite.SiteGuid) { return true; }
+
+            return false;
+
+        }
+
         public async Task<bool> Save(ISiteSettings site)
         {
             dataProtector.Protect(site);

@@ -385,6 +385,33 @@ namespace cloudscribe.Core.Identity
             return properties;
         }
 
+        /// <summary>
+        /// Validates the security stamp for the specified <paramref name="principal"/> against
+        /// the persisted stamp for the <paramref name="userId"/>, as an asynchronous operation.
+        /// </summary>
+        /// <param name="principal">The principal whose stamp should be validated.</param>
+        /// <param name="userId">The ID for the user.</param>
+        /// <returns>The task object representing the asynchronous operation. The task will contain the <typeparamref name="TUser"/>
+        /// if the stamp matches the persisted value, otherwise it will return false.</returns>
+        //public virtual async Task<TUser> ValidateSecurityStampAsync(ClaimsPrincipal principal)
+        //{
+        //    if (principal == null)
+        //    {
+        //        return null;
+        //    }
+        //    var user = await UserManager.GetUserAsync(principal);
+        //    if (user != null && UserManager.SupportsUserSecurityStamp)
+        //    {
+        //        var securityStamp =
+        //            principal.FindFirstValue(Options.ClaimsIdentity.SecurityStampClaimType);
+        //        if (securityStamp == await UserManager.GetSecurityStampAsync(user))
+        //        {
+        //            return user;
+        //        }
+        //    }
+        //    return null;
+        //}
+
         //https://github.com/aspnet/HttpAbstractions/blob/dev/src/Microsoft.AspNet.Http/Authentication/DefaultAuthenticationManager.cs
         //public override IEnumerable<AuthenticationDescription> GetAuthenticationSchemes()
         //{
