@@ -2,7 +2,7 @@
 
 cloudscribe is a related set of projects and components for building cross platform web applications on ASP.NET Core
 
-The foundational set of projects, known as cloudscibe.Core, provides support for single tennant or multi tenant managemetment of sites users, and roles.
+The foundational set of projects, known as cloudscibe.Core, provides support for single tennant or multi tenant management of sites users, and roles.
 
 #### Why Start From Scratch?
 
