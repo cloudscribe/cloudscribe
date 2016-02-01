@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2016-01-31
+// Last Modified:			2016-02-01
 // 
 
 using cloudscribe.Core.Models;
@@ -797,8 +797,10 @@ namespace cloudscribe.Core.Web.Controllers
             model.DisableDbAuth = selectedSite.DisableDbAuth;
             model.ReallyDeleteUsers = selectedSite.ReallyDeleteUsers;
             model.RequireApprovalBeforeLogin = selectedSite.RequireApprovalBeforeLogin;
-            model.RequireEmailConfirmation = selectedSite.RequireConfirmedEmail;
+            model.RequireConfirmedEmail = selectedSite.RequireConfirmedEmail;
             model.UseEmailForLogin = selectedSite.UseEmailForLogin;
+            model.RequireConfirmedPhone = selectedSite.RequireConfirmedPhone;
+            model.AccountApprovalEmailCsv = selectedSite.AccountApprovalEmailCsv;
 
             return View(model);
 
@@ -840,14 +842,17 @@ namespace cloudscribe.Core.Web.Controllers
 
                 return RedirectToAction("Index");
             }
-            
+
+            selectedSite.AccountApprovalEmailCsv = model.AccountApprovalEmailCsv;
             selectedSite.AllowNewRegistration = model.AllowNewRegistration;
             selectedSite.AllowPersistentLogin = model.AllowPersistentLogin;
             selectedSite.DisableDbAuth = model.DisableDbAuth;
             selectedSite.ReallyDeleteUsers = model.ReallyDeleteUsers;
             selectedSite.RequireApprovalBeforeLogin = model.RequireApprovalBeforeLogin;
-            selectedSite.RequireConfirmedEmail = model.RequireEmailConfirmation;
+            selectedSite.RequireConfirmedEmail = model.RequireConfirmedEmail;
+            selectedSite.RequireConfirmedPhone = model.RequireConfirmedPhone;
             selectedSite.UseEmailForLogin = model.UseEmailForLogin;
+
 
             bool result = await siteManager.Save(selectedSite);
 

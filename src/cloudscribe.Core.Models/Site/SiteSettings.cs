@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2016-01-27
+// Last Modified:			2016-02-01
 // 
 
 using System;
@@ -472,16 +472,11 @@ namespace cloudscribe.Core.Models
             if(i == null) { return null; }
 
             SiteSettings s = new SiteSettings();
+            s.AccountApprovalEmailCsv = i.AccountApprovalEmailCsv;
             s.AddThisDotComUsername = i.AddThisDotComUsername;
             s.AllowDbFallbackWithLdap = i.AllowDbFallbackWithLdap;
             s.AllowNewRegistration = i.AllowNewRegistration;
             s.AllowPersistentLogin = i.AllowPersistentLogin;
-            //s.AllowUserFullNameChange = i.AllowUserFullNameChange;
-            //s.ApiKeyExtra1 = i.ApiKeyExtra1;
-            //s.ApiKeyExtra2 = i.ApiKeyExtra2;
-            //s.ApiKeyExtra3 = i.ApiKeyExtra3;
-            //s.ApiKeyExtra4 = i.ApiKeyExtra4;
-            //s.ApiKeyExtra5 = i.ApiKeyExtra5;
             s.AutoCreateLdapUserOnFirstLogin = i.AutoCreateLdapUserOnFirstLogin;
             s.CaptchaOnLogin = i.CaptchaOnLogin;
             s.CaptchaOnRegistration = i.CaptchaOnRegistration;
@@ -495,14 +490,21 @@ namespace cloudscribe.Core.Models
             s.CompanyRegion = i.CompanyRegion;
             s.CompanyStreetAddress = i.CompanyStreetAddress;
             s.CompanyStreetAddress2 = i.CompanyStreetAddress2;
+            s.CreatedUtc = i.CreatedUtc;
             s.DefaultEmailFromAddress = i.DefaultEmailFromAddress;
+            s.DefaultEmailFromAlias = i.DefaultEmailFromAlias;
             s.DisableDbAuth = i.DisableDbAuth;
+            s.DkimPublicKey = i.DkimPublicKey;
+            s.DkimPrivateKey = i.DkimPrivateKey;
+            s.DkimDomain = i.DkimDomain;
+            s.DkimSelector = i.DkimSelector;
             s.EmailLdapDbFallback = i.EmailLdapDbFallback;
             s.FacebookAppId = i.FacebookAppId;
             s.FacebookAppSecret = i.FacebookAppSecret;
             s.GoogleAnalyticsProfileId = i.GoogleAnalyticsProfileId;
             s.GoogleClientId = i.GoogleClientId;
             s.GoogleClientSecret = i.GoogleClientSecret;
+            s.IsDataProtected = i.IsDataProtected;
             s.IsServerAdminSite = i.IsServerAdminSite;
             s.Layout = i.Layout;
             s.LdapDomain = i.LdapDomain;
@@ -515,9 +517,9 @@ namespace cloudscribe.Core.Models
             s.MaxInvalidPasswordAttempts = i.MaxInvalidPasswordAttempts;
             s.MicrosoftClientId = i.MicrosoftClientId;
             s.MicrosoftClientSecret = i.MicrosoftClientSecret;
-            //s.MinReqNonAlphaChars = i.MinReqNonAlphaChars;
             s.MinRequiredPasswordLength = i.MinRequiredPasswordLength;
-            //s.PasswordAttemptWindowMinutes = i.PasswordAttemptWindowMinutes;
+            s.OidConnectAppId = i.OidConnectAppId;
+            s.OidConnectAppSecret = i.OidConnectAppSecret;
             s.PreferredHostName = i.PreferredHostName;
             s.PrivacyPolicy = i.PrivacyPolicy;
             s.ReallyDeleteUsers = i.ReallyDeleteUsers;
@@ -526,13 +528,19 @@ namespace cloudscribe.Core.Models
             s.RegistrationAgreement = i.RegistrationAgreement;
             s.RegistrationPreamble = i.RegistrationPreamble;
             s.RequireApprovalBeforeLogin = i.RequireApprovalBeforeLogin;
+            s.RequireConfirmedEmail = i.RequireConfirmedEmail;
+            s.RequireConfirmedPhone = i.RequireConfirmedPhone;
             s.RequiresQuestionAndAnswer = i.RequiresQuestionAndAnswer;
+            s.SignEmailWithDkim = i.SignEmailWithDkim;
             s.SiteFolderName = i.SiteFolderName;
             s.SiteGuid = i.SiteGuid;
             s.SiteId = i.SiteId;
             s.SiteIsClosed = i.SiteIsClosed;
             s.SiteIsClosedMessage = i.SiteIsClosedMessage;
             s.SiteName = i.SiteName;
+            s.SmsClientId = i.SmsClientId;
+            s.SmsSecureToken = i.SmsSecureToken;
+            s.SmsFrom = i.SmsFrom;
             s.SmtpPassword = i.SmtpPassword;
             s.SmtpPort = i.SmtpPort;
             s.SmtpPreferredEncoding = i.SmtpPreferredEncoding;
@@ -545,11 +553,9 @@ namespace cloudscribe.Core.Models
             s.TwitterConsumerSecret = i.TwitterConsumerSecret;
             s.UseEmailForLogin = i.UseEmailForLogin;
             s.UseLdapAuth = i.UseLdapAuth;
-            s.RequireConfirmedEmail = i.RequireConfirmedEmail;
-           // s.UseSslOnAllPages = i.UseSslOnAllPages;
-
-            s.IsDataProtected = i.IsDataProtected;
-            s.CreatedUtc = i.CreatedUtc;
+           
+            
+            
 
 
 

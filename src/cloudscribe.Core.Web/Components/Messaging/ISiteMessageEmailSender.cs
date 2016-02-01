@@ -32,5 +32,9 @@ namespace cloudscribe.Core.Web.Components.Messaging
             string toAddress,
             string subject,
             string resetUrl);
+
+        Task AccountPendingApprovalAdminNotification(
+            ISiteSettings siteSettings,
+            ISiteUser user);
     }
 }

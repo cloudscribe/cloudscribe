@@ -13,7 +13,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace cloudscribe.Core.Web.ViewModels.SiteUser
 {
-    public class UnconfirmedEmailViewModel
+    public class PendingNotificationViewModel
     {
         [Display(Name = "UserGuid")]
         public Guid UserGuid { get; set; } = Guid.Empty;

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-17
-// Last Modified:			2016-01-28
+// Last Modified:			2016-02-01
 // 
 
 //using Microsoft.AspNet.Identity;
@@ -99,24 +99,19 @@ namespace cloudscribe.Core.Models
         public bool TwoFactorEnabled { get; set; } = false;
 
 
-        //public DateTime FailedPasswordAttemptWindowStart { get; set; } = DateTime.MinValue;
-        //public DateTime FailedPasswordAnswerAttemptWindowStart { get; set; } = DateTime.MinValue;
-        //public Guid PasswordResetGuid { get; set; } = Guid.Empty;
-        //public Guid RegisterConfirmGuid { get; set; } = Guid.Empty;
-        //public DateTime LastLockoutDate { get; set; } = DateTime.MinValue;
-        //public int FailedPasswordAnswerAttemptCount { get; set; } = 0;
-        //public Guid EmailChangeGuid { get; set; } = Guid.Empty;
-
 
         public static SiteUser FromISiteUser(ISiteUser user)
         {
             SiteUser u = new SiteUser();
+            u.AccessFailedCount = user.AccessFailedCount;
             u.AccountApproved = user.AccountApproved;
             u.AuthorBio = user.AuthorBio;
             u.AvatarUrl = user.AvatarUrl;
+            u.CanAutoLockout = user.CanAutoLockout;
             u.Comment = user.Comment;
             u.Country = user.Country;
             u.CreatedUtc = user.CreatedUtc;
+
             if(user.DateOfBirth.HasValue)
             {
                 u.DateOfBirth = user.DateOfBirth.Value;
@@ -125,19 +120,12 @@ namespace cloudscribe.Core.Models
             u.DisplayInMemberList = user.DisplayInMemberList;
             u.DisplayName = user.DisplayName;
             u.Email = user.Email;
-           // u.EmailChangeGuid = user.EmailChangeGuid;
             u.EmailConfirmed = user.EmailConfirmed;
-            //u.FailedPasswordAnswerAttemptCount = user.FailedPasswordAnswerAttemptCount;
-            //u.FailedPasswordAnswerAttemptWindowStart = user.FailedPasswordAnswerAttemptWindowStart;
-            u.AccessFailedCount = user.AccessFailedCount;
-            //u.FailedPasswordAttemptWindowStart = user.FailedPasswordAttemptWindowStart;
             u.FirstName = user.FirstName;
             u.Gender = user.Gender;
-            //u.Id = user.Id;
             u.IsDeleted = user.IsDeleted;
             u.IsLockedOut = user.IsLockedOut;
-            //u.LastActivityDate = user.LastActivityDate;
-            //u.LastLockoutDate = user.LastLockoutDate;
+            
             if(user.LastLoginDate.HasValue)
             {
                 u.LastLoginDate = user.LastLoginDate.Value;
@@ -150,14 +138,16 @@ namespace cloudscribe.Core.Models
             }
             
             u.LockoutEndDateUtc = user.LockoutEndDateUtc;
-            u.NormalizedEmail = user.NormalizedEmail;
             u.MustChangePwd = user.MustChangePwd;
+            u.NormalizedEmail = user.NormalizedEmail;
+            u.NormalizedUserName = user.NormalizedUserName;
             u.NewEmail = user.NewEmail;
+            u.NewEmailApproved = user.NewEmailApproved;
+            
             u.PasswordHash = user.PasswordHash;
-            //u.PasswordResetGuid = user.PasswordResetGuid;
             u.PhoneNumber = user.PhoneNumber;
             u.PhoneNumberConfirmed = user.PhoneNumberConfirmed;
-            //u.RegisterConfirmGuid = user.RegisterConfirmGuid;
+            
             u.RolesChanged = user.RolesChanged;
             u.SecurityStamp = user.SecurityStamp;
             u.Signature = user.Signature;

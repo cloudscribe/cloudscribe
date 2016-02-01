@@ -11,7 +11,6 @@ using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.Components.Messaging;
 using cloudscribe.Core.Web.ViewModels.Account;
 using cloudscribe.Core.Web.ViewModels.SiteUser;
-//using cloudscribe.Messaging.Email;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Mvc;
@@ -173,6 +172,9 @@ namespace cloudscribe.Core.Web.Controllers
                 //TODO: hide remember me in view if persistent login not allowed  site settings
                 persistent = model.RememberMe;
             }
+
+            //userManager.
+
             var result = await signInManager.PasswordSignInAsync(
                 model.Email,
                 model.Password,
@@ -181,12 +183,12 @@ namespace cloudscribe.Core.Web.Controllers
             
             if (result.Succeeded)
             {
-
-                //TODO: track ip address
-                //HttpContext.Connection.
-                //ipAddressTracker.TackUserIpAddress(siteGuid, userGuid) // how to get userGuid here
+                var user = await userManager.FindByNameAsync(model.Email);
+                if(user != null)
+                {
+                    await ipAddressTracker.TackUserIpAddress(Site.SiteGuid, user.UserGuid);
+                }
                 
-
                 return this.RedirectToLocal(returnUrl);
             }
             if (result.RequiresTwoFactor)
@@ -310,7 +312,8 @@ namespace cloudscribe.Core.Web.Controllers
                     Email = model.Email,
                     FirstName = model.FirstName,
                     LastName = model.LastName,
-                    DisplayName = model.DisplayName
+                    DisplayName = model.DisplayName,
+                    AccountApproved = Site.RequireApprovalBeforeLogin ? false : true
                 };
 
                 if (model.DateOfBirth.HasValue)
@@ -323,8 +326,8 @@ namespace cloudscribe.Core.Web.Controllers
                 if (result.Succeeded)
                 {
                     await ipAddressTracker.TackUserIpAddress(Site.SiteGuid, user.UserGuid);
-
-                    if(Site.RequireConfirmedEmail) // require email confirmation
+                    
+                    if (Site.RequireConfirmedEmail) // require email confirmation
                     {
                         var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
                         var callbackUrl = Url.Action("ConfirmEmail", "Account", 
@@ -353,7 +356,17 @@ namespace cloudscribe.Core.Web.Controllers
                     {
                         if(Site.RequireApprovalBeforeLogin)
                         {
-                            //TODO: send notification to admins about request for approval
+                            await emailSender.AccountPendingApprovalAdminNotification(Site, user);
+                            //if (this.SessionIsAvailable())
+                            //{
+                            //    this.AlertSuccess("Please check your email inbox, we just sent you a link that you need to click to confirm your account", true);
+
+                            //    return Redirect("/");
+                            //}
+                            //else
+                            //{
+                            return RedirectToAction("PendingApproval", new { userGuid = user.Id, didSend = true });
+                            //}
 
                         }
                         else
@@ -379,13 +392,24 @@ namespace cloudscribe.Core.Web.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult EmailConfirmationRequired(Guid userGuid, bool didSend = false)
+        public IActionResult PendingApproval(Guid userGuid, bool didSend = false)
         {
-            UnconfirmedEmailViewModel model = new UnconfirmedEmailViewModel();
+            PendingNotificationViewModel model = new PendingNotificationViewModel();
             model.UserGuid = userGuid;
             model.DidSend = didSend;
 
-            return View(model);
+            return View("PendingApproval", model);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult EmailConfirmationRequired(Guid userGuid, bool didSend = false)
+        {
+            PendingNotificationViewModel model = new PendingNotificationViewModel();
+            model.UserGuid = userGuid;
+            model.DidSend = didSend;
+
+            return View("EmailConfirmationRequired", model);
         }
 
         [HttpPost]
@@ -437,6 +461,14 @@ namespace cloudscribe.Core.Web.Controllers
                 return View("Error");
             }
             var result = await userManager.ConfirmEmailAsync(user, code);
+            
+            if (Site.RequireApprovalBeforeLogin && ! user.AccountApproved)
+            {
+                await emailSender.AccountPendingApprovalAdminNotification(Site, user);
+
+                return RedirectToAction("PendingApproval", new { userGuid = user.Id, didSend = true });
+            }
+
             return View(result.Succeeded ? "ConfirmEmail" : "Error");
         }
 

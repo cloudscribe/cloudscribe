@@ -469,8 +469,9 @@ namespace cloudscribe.Core.Web.Controllers
                         user.EmailConfirmed = model.EmailConfirmed;
                         if((user.IsLockedOut)&&(!model.IsLockedOut))
                         {
-                            // identity lockout is really based on the end date
-                            user.LockoutEndDateUtc = DateTime.UtcNow.AddDays(-1);
+                            // TODO: notify user
+                            // think we need to change this so the admin controls whether
+                            // email is sent when approving an account
                         }
                         user.IsLockedOut = model.IsLockedOut;
                         

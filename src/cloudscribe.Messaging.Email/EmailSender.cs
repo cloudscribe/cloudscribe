@@ -32,7 +32,22 @@ namespace cloudscribe.Messaging.Email
             string plainTextMessage,
             string htmlMessage)
         {
-            if(string.IsNullOrEmpty(plainTextMessage) && string.IsNullOrEmpty(htmlMessage))
+            if (string.IsNullOrEmpty(to))
+            {
+                throw new ArgumentException("no to address provided");
+            }
+
+            if (string.IsNullOrEmpty(from))
+            {
+                throw new ArgumentException("no from address provided");
+            }
+
+            if (string.IsNullOrEmpty(subject))
+            {
+                throw new ArgumentException("no subject provided");
+            }
+
+            if (string.IsNullOrEmpty(plainTextMessage) && string.IsNullOrEmpty(htmlMessage))
             {
                 throw new ArgumentException("no message provided");
             }
@@ -81,6 +96,92 @@ namespace cloudscribe.Messaging.Email
                     await client.AuthenticateAsync(smtpOptions.User, smtpOptions.Password);
                 }
                 
+                client.Send(m);
+                client.Disconnect(true);
+            }
+
+        }
+
+        public async Task SendMultipleEmailAsync(
+            SmtpOptions smtpOptions,
+            string toCsv,
+            string from,
+            string subject,
+            string plainTextMessage,
+            string htmlMessage)
+        {
+            if (string.IsNullOrEmpty(toCsv))
+            {
+                throw new ArgumentException("no to addresses provided");
+            }
+
+            if (string.IsNullOrEmpty(from))
+            {
+                throw new ArgumentException("no from address provided");
+            }
+
+            if (string.IsNullOrEmpty(subject))
+            {
+                throw new ArgumentException("no subject provided");
+            }
+
+            if (string.IsNullOrEmpty(plainTextMessage) && string.IsNullOrEmpty(htmlMessage))
+            {
+                throw new ArgumentException("no message provided");
+            }
+
+            
+
+
+            var m = new MimeMessage();
+
+            m.From.Add(new MailboxAddress("", from));
+
+            string[] adrs = toCsv.Split(',');
+
+            foreach (string item in adrs)
+            {
+                if (!string.IsNullOrEmpty(item)) { m.To.Add(new MailboxAddress("", item)); ; }
+            }
+
+            m.Subject = subject;
+            m.Importance = MessageImportance.High;
+           
+            BodyBuilder bodyBuilder = new BodyBuilder();
+            if (plainTextMessage.Length > 0)
+            {
+                bodyBuilder.TextBody = plainTextMessage;
+            }
+
+            if (htmlMessage.Length > 0)
+            {
+                bodyBuilder.HtmlBody = htmlMessage;
+            }
+
+            m.Body = bodyBuilder.ToMessageBody();
+
+            using (var client = new SmtpClient())
+            {
+                //client.ServerCertificateValidationCallback = delegate (
+                //    Object obj, X509Certificate certificate, X509Chain chain,
+                //    SslPolicyErrors errors)
+                //{
+                //    return (true);
+                //};
+
+                await client.ConnectAsync(smtpOptions.Server, smtpOptions.Port, smtpOptions.UseSsl);
+                //await client.ConnectAsync(smtpOptions.Server, smtpOptions.Port, SecureSocketOptions.StartTls);
+
+                // Note: since we don't have an OAuth2 token, disable
+                // the XOAUTH2 authentication mechanism.
+                client.AuthenticationMechanisms.Remove("XOAUTH2");
+
+                // Note: only needed if the SMTP server requires authentication
+                if (smtpOptions.RequiresAuthentication)
+                {
+                    await client.AuthenticateAsync(smtpOptions.User, smtpOptions.Password);
+                }
+
                 client.Send(m);
                 client.Disconnect(true);
             }

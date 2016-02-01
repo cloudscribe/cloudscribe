@@ -1730,7 +1730,7 @@ namespace cloudscribe.Core.Repositories.EF
                         select x
                         ;
 
-            return await query.AsNoTracking().SingleOrDefaultAsync<UserLocation>(cancellationToken);
+            return await query.AsNoTracking().FirstOrDefaultAsync<UserLocation>(cancellationToken);
 
         }
 

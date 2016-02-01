@@ -47,7 +47,8 @@ namespace cloudscribe.Core.Web.Components
             long ip4aslong = ipv4.ToLong();
             if (ip4aslong == 0) { return false; }
 
-            //string hostName = context.Connection. doesnt seem a good way to get client host name but that doesn't often ahve any meaning value anyway
+            //string hostName = context.Connection. 
+            //doesnt seem a good way to get client host name but that doesn't often have any meaning value anyway
 
             var userLocation = await userRepo.FetchLocationByUserAndIpv4Address(userGuid, ip4aslong, CancellationToken);
             if(userLocation == null)

@@ -296,7 +296,7 @@ namespace cloudscribe.Core.Identity
                 user.SiteId = siteSettings.SiteId;
             }
 
-            user.UserName = normalizedUserName;
+            user.NormalizedUserName = normalizedUserName;
             //cancellationToken.ThrowIfCancellationRequested();
             //bool result = await repo.Save(user);
 
@@ -343,7 +343,7 @@ namespace cloudscribe.Core.Identity
             {
                 throw new ArgumentNullException("user");
             }
-            return Task.FromResult(user.UserName);
+            return Task.FromResult(user.NormalizedUserName);
 
             //return user.UserName.ToLowerInvariant();
         }
@@ -491,7 +491,7 @@ namespace cloudscribe.Core.Identity
             }
 
             //user.Email = email;
-            user.NormalizedEmail = email.ToLower();
+            user.NormalizedEmail = email;
 
             //cancellationToken.ThrowIfCancellationRequested();
 

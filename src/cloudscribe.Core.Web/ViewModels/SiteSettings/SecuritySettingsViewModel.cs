@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-01-19
-// Last Modified:			2016-01-19
+// Last Modified:			2016-02-01
 // 
 
 using System;
@@ -27,11 +27,17 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         [Display(Name = "Allow New Registrations")]
         public bool AllowNewRegistration { get; set; }
 
-        [Display(Name = "Require Email Confirmation")]
-        public bool RequireEmailConfirmation { get; set; }
+        [Display(Name = "Require Confirmed Email")]
+        public bool RequireConfirmedEmail { get; set; }
+
+        [Display(Name = "Require Confirmed Phone")]
+        public bool RequireConfirmedPhone { get; set; }
 
         [Display(Name = "Require Admin Account Approval")]
         public bool RequireApprovalBeforeLogin { get; set; }
+
+        [Display(Name = "Email addresses (csv) to notify of new unapproved users")]
+        public string AccountApprovalEmailCsv { get; set; } = string.Empty;
 
         [Display(Name = "Allow Persistent Login")]
         public bool AllowPersistentLogin { get; set; }
