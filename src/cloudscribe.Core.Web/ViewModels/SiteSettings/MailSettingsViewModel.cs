@@ -26,6 +26,10 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         [EmailAddress]
         public string DefaultEmailFromAddress { get; set; } = string.Empty;
 
+        //[Display(Name = "DefaultEmailFromAddress", ResourceType = typeof(CommonResources))]
+        [Display(Name = "Default Email From Name")]
+        public string DefaultEmailFromAlias { get; set; } = string.Empty;
+
         //[Display(Name = "SmtpUser", ResourceType = typeof(CommonResources))]
         [Display(Name = "Smtp User")]
         public string SmtpUser { get; set; } = string.Empty;

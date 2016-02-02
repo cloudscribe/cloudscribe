@@ -9,17 +9,63 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using cloudscribe.Core.Models;
+using cloudscribe.Messaging.Sms;
+using Microsoft.Extensions.Logging;
 
 namespace cloudscribe.Core.Web.Components.Messaging
 {
     public class SiteSmsSender : ISmsSender
     {
-
-        public Task SendSmsAsync(string number, string message)
+        public SiteSmsSender(ILogger<SiteSmsSender> logger)
         {
-            //TODO:
+            log = logger;
+        }
 
-            return Task.FromResult(0);
+        private ILogger log;
+
+        public async Task SendSmsAsync(
+            ISiteSettings site,
+            string phoneNumber, 
+            string message)
+        {
+            if (string.IsNullOrEmpty(phoneNumber))
+            {
+                throw new ArgumentException("toPhoneNumber was not provided");
+            }
+
+            if (string.IsNullOrEmpty(message))
+            {
+                throw new ArgumentException("message was not provided");
+            }
+
+            var credentials = GetCredentials(site);
+            if(credentials == null)
+            {
+                log.LogError("tried to send sms message with no credentials");
+                return;
+            }
+
+            TwilioSmsSender sender = new TwilioSmsSender(log);
+            await sender.SendMessage(credentials, phoneNumber, message);
+
+            
+        }
+
+        private TwilioSmsCredentials GetCredentials(ISiteSettings site)
+        {
+            if(site == null) { return null; }
+            if(string.IsNullOrEmpty(site.SmsClientId)) { return null; }
+            if (string.IsNullOrEmpty(site.SmsSecureToken)) { return null; }
+            if (string.IsNullOrEmpty(site.SmsFrom)) { return null; }
+
+            TwilioSmsCredentials creds = new TwilioSmsCredentials();
+            creds.AccountSid = site.SmsClientId;
+            creds.AuthToken = site.SmsSecureToken;
+            creds.FromNumber = site.SmsFrom;
+
+            return creds;
+
         }
     }
 }

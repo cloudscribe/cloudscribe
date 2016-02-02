@@ -50,7 +50,7 @@ namespace cloudscribe.Core.Web.Controllers
             var model = new AccountIndexViewModel
             {
                 HasPassword = (user.PasswordHash.Length > 0),
-                PhoneNumber = user.PhoneNumber,
+                PhoneNumber = user.PhoneNumber.Length > 0 ? user.PhoneNumber : null,
                 TwoFactor = user.TwoFactorEnabled,
                 Logins = await userManager.GetLoginsAsync(user),
                 BrowserRemembered = await signInManager.IsTwoFactorClientRememberedAsync(user)
@@ -117,7 +117,7 @@ namespace cloudscribe.Core.Web.Controllers
             // Generate the token and send it
             var user = await userManager.FindByIdAsync(HttpContext.User.GetUserId());
             var code = await userManager.GenerateChangePhoneNumberTokenAsync(user, model.Number);
-            await smsSender.SendSmsAsync(model.Number, "Your security code is: " + code);
+            await smsSender.SendSmsAsync(Site, model.Number, "Your security code is: " + code);
             return RedirectToAction("VerifyPhoneNumber", new { PhoneNumber = model.Number });
 
         }

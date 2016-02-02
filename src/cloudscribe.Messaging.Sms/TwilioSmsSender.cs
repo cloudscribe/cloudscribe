@@ -2,10 +2,11 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2016-01-24
-// Last Modified:		    2016-01-24
+// Last Modified:		    2016-02-02
 // 
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -18,16 +19,14 @@ namespace cloudscribe.Messaging.Sms
 {
     public class TwilioSmsSender
     {
-        public TwilioSmsSender(
-            TwilioSmsCredentials credentials,
-            ILogger logger)
+        public TwilioSmsSender(ILogger logger = null)
         {
-            this.credentials = credentials;
-            log = logger;
+            if(logger != null) { log = logger; }
+            
         }
 
-        private TwilioSmsCredentials credentials;
-        private ILogger log;
+        
+        private ILogger log = null;
 
         /// <summary>
         /// Send an sms message using Twilio REST API
@@ -35,39 +34,62 @@ namespace cloudscribe.Messaging.Sms
         /// <param name="toPhoneNumber">E.164 formatted phone number, e.g. +16175551212</param>
         /// <param name="message"></param>
         /// <returns></returns>
-        public async Task<bool> SendMessage(string toPhoneNumber, string message)
+        public async Task<bool> SendMessage(
+            TwilioSmsCredentials credentials,
+            string toPhoneNumber, 
+            string message)
         {
-            
+            if (string.IsNullOrEmpty(toPhoneNumber))
+            {
+                throw new ArgumentException("toPhoneNumber was not provided");
+            }
+
+            if (string.IsNullOrEmpty(message))
+            {
+                throw new ArgumentException("message was not provided");
+            }
+
             var client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = CreateBasicAuthenticationHeader(
                 credentials.AccountSid, 
                 credentials.AuthToken);
 
-            var content = new StringContent(string.Format(
-                CultureInfo.InvariantCulture,
-                "From={0}&amp;To={1}&amp;Body={2}", 
-                credentials.FromNumber, 
-                toPhoneNumber, 
-                message));
+            var keyValues = new List<KeyValuePair<string, string>>();
+            keyValues.Add(new KeyValuePair<string, string>("To", toPhoneNumber));
+            keyValues.Add(new KeyValuePair<string, string>("From", credentials.FromNumber));
+            keyValues.Add(new KeyValuePair<string, string>("Body", message));
 
-            content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
+            var content = new FormUrlEncodedContent(keyValues);
+            
+            var postUrl = string.Format(
+                    CultureInfo.InvariantCulture,
+                    credentials.SmsEndpointUrlFormat,
+                    credentials.AccountSid);
 
             var response = await client.PostAsync(
-                string.Format(
-                    CultureInfo.InvariantCulture,
-                    credentials.SmsEndpointUrlFormat, 
-                    credentials.AccountSid), content);
+                postUrl, 
+                content);
 
             if (response.IsSuccessStatusCode)
             {
                 //the POST succeeded
-                log.LogDebug("success sending sms message to " + toPhoneNumber);
+                if(log != null)
+                {
+                    log.LogDebug("success sending sms message to " + toPhoneNumber);
+                }
+                
                 return true;
             }
             else
             {
                 //the POST failed
-                log.LogWarning("failed to send sms message " + response.ReasonPhrase);
+                if (log != null)
+                {
+                    string responseBody = await response.Content.ReadAsStringAsync();
+                    var logmessage = $"failed to send sms message to {toPhoneNumber} from {credentials.FromNumber} { response.ReasonPhrase } { responseBody }";
+                    log.LogWarning(logmessage);
+                }
+                
                 return false;
             }
             

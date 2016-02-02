@@ -20,7 +20,7 @@ namespace cloudscribe.Messaging.Sms
 
         public string FromNumber { get;set;}
 
-        public string SmsEndpointUrlFormat { get; set; } = "https://api.twilio.com/2010-04-01/Accounts/{0}/SMS/Messages";
+        public string SmsEndpointUrlFormat { get; set; } = "https://api.twilio.com/2010-04-01/Accounts/{0}/Messages.json";
 
     }
 }

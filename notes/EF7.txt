@@ -1,4 +1,11 @@
 
+Azure Table storage is very low cost which makes it attractive but not sure all the needed query techniques are available
+pagination would be challenging or impossible
+even simple things like count are difficult
+http://stackoverflow.com/questions/28667601/get-the-azure-table-row-count
+http://stackoverflow.com/questions/28599511/add-pagination-mvc-and-azure-table-storage
+
+
 http://jeremybytes.blogspot.com/2014/02/demystifying-var-keyword-in-c.html
 
 C# Reference:

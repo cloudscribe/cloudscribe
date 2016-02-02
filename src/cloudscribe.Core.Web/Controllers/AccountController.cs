@@ -800,7 +800,8 @@ namespace cloudscribe.Core.Web.Controllers
             else if (model.SelectedProvider == "Phone")
             {
                 var message = "Your security code is: " + code;
-                await smsSender.SendSmsAsync(await userManager.GetPhoneNumberAsync(user), message);
+                var userPhone = await userManager.GetPhoneNumberAsync(user);
+                await smsSender.SendSmsAsync(Site, userPhone, message);
             }
 
             return RedirectToAction("VerifyCode", new { Provider = model.SelectedProvider, ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe });

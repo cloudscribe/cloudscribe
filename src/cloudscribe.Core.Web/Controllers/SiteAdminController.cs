@@ -689,6 +689,7 @@ namespace cloudscribe.Core.Web.Controllers
             model.SiteGuid = selectedSite.SiteGuid;
             model.SiteId = selectedSite.SiteId;
             model.DefaultEmailFromAddress = selectedSite.DefaultEmailFromAddress;
+            model.DefaultEmailFromAlias = selectedSite.DefaultEmailFromAlias;
             model.SmtpPassword = selectedSite.SmtpPassword;
             model.SmtpPort = selectedSite.SmtpPort;
             model.SmtpPreferredEncoding = selectedSite.SmtpPreferredEncoding;
@@ -739,6 +740,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             
             selectedSite.DefaultEmailFromAddress = model.DefaultEmailFromAddress;
+            selectedSite.DefaultEmailFromAlias = model.DefaultEmailFromAlias;
             selectedSite.SmtpPassword = model.SmtpPassword;
             selectedSite.SmtpPort = model.SmtpPort;
             selectedSite.SmtpPreferredEncoding = model.SmtpPreferredEncoding;
@@ -752,7 +754,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             if (result)
             {
-                this.AlertSuccess(string.Format("Email Settings for <b>{0}</b> wwas successfully updated.",
+                this.AlertSuccess(string.Format("Email Settings for <b>{0}</b> were successfully updated.",
                             selectedSite.SiteName), true);
             }
 
@@ -766,6 +768,103 @@ namespace cloudscribe.Core.Web.Controllers
             }
 
             return RedirectToAction("MailSettings");
+
+        }
+
+        [HttpGet]
+        [Authorize(Policy = "AdminPolicy")]
+        public async Task<IActionResult> SmsSettings(
+            Guid? siteGuid,
+            int slp = 1)
+        {
+
+            //TODO: we need a way to plugin different sms providers by dependency injection
+            // and indicate which one is being used in the UI
+            // currently using generic labels but only supports twilio
+
+            ISiteSettings selectedSite;
+            // only server admin site can edit other sites settings
+            if ((siteGuid.HasValue) && (siteGuid.Value != Guid.Empty) && (siteGuid.Value != siteManager.CurrentSite.SiteGuid) && (siteManager.CurrentSite.IsServerAdminSite))
+            {
+                selectedSite = await siteManager.Fetch(siteGuid.Value);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - SMS Settings", selectedSite.SiteName);
+            }
+            else
+            {
+                selectedSite = siteManager.CurrentSite;
+                ViewData["Title"] = "SMS Settings";
+            }
+
+            SmsSettingsViewModel model = new SmsSettingsViewModel();
+            model.SiteGuid = selectedSite.SiteGuid;
+            model.SiteId = selectedSite.SiteId;
+            model.SmsFrom = selectedSite.SmsFrom;
+            model.SmsClientId = selectedSite.SmsClientId;
+            model.SmsSecureToken = selectedSite.SmsSecureToken;
+            
+            return View(model);
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Policy = "AdminPolicy")]
+        public async Task<ActionResult> SmsSettings(SmsSettingsViewModel model)
+        {
+            ISiteSettings selectedSite = null;
+            if (model.SiteGuid == siteManager.CurrentSite.SiteGuid)
+            {
+                selectedSite = siteManager.CurrentSite;
+                ViewData["Title"] = "SMS Settings";
+            }
+            else if (siteManager.CurrentSite.IsServerAdminSite)
+            {
+                selectedSite = await siteManager.Fetch(model.SiteGuid);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - SMS Settings", selectedSite.SiteName);
+            }
+
+            if (selectedSite == null)
+            {
+                this.AlertDanger("oops something went wrong.", true);
+
+                return RedirectToAction("Index");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            if (model.SiteGuid == Guid.Empty)
+            {
+                this.AlertDanger("oops something went wrong, site was not found.", true);
+
+                return RedirectToAction("Index");
+            }
+
+
+            selectedSite.SmsFrom = model.SmsFrom;
+            selectedSite.SmsClientId = model.SmsClientId;
+            selectedSite.SmsSecureToken = model.SmsSecureToken;
+            
+            bool result = await siteManager.Save(selectedSite);
+
+            if (result)
+            {
+                this.AlertSuccess(string.Format("SMS Settings for <b>{0}</b> were successfully updated.",
+                            selectedSite.SiteName), true);
+            }
+
+
+            if ((siteManager.CurrentSite.IsServerAdminSite)
+                && (siteManager.CurrentSite.SiteGuid != selectedSite.SiteGuid)
+                )
+            {
+
+                return RedirectToAction("SmsSettings", new { siteGuid = model.SiteGuid });
+            }
+
+            return RedirectToAction("SmsSettings");
 
         }
 

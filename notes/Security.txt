@@ -122,6 +122,11 @@ Other Considerations
     Strength of questions used for reset should vary based on the nature of the credential. Administrator credentials should have a higher requirement.
     The ideal implementation should rotate the questions asked in order to avoid automation.
 
+	
+Anti-Automation
+haveibeenpwned.com
+
+captcha
 
 
 https://letsencrypt.org/
