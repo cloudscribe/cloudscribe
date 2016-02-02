@@ -2,13 +2,13 @@
 
 cloudscribe is a related set of projects and components for building cross platform web applications on ASP.NET Core
 
-The foundational set of projects, known as cloudscibe.Core, provides support for single tenant or multi tenant management of sites users, and roles.
+The foundational set of projects, known as cloudscibe.Core, provides support for single tenant or multi tenant management of sites, users, and roles.
 
 #### Why Start From Scratch?
 
 Every web application or website project tends to need a certain amount of basic functionality, why build this over and over. 
 
-If you start a new web application project in Visual Studio 2015 or using the standard project templates, what you get is just a basic implementation for user accounts via ASP.NET Identity. Those templates don't provide you any method for creating administrative users or creating roles or managing users and user role membership. You would typically have to implement that stuff yourself, and if you are like me, you don't want to have to implement that stuff again and again on every project. cloudscribe.Core aims to provide that for you with careful, well thought out implementations that adhere to [OWASP web security guidelines](https://www.owasp.org/index.php/Main_Page).
+If you start a new web application project in Visual Studio 2015 using the standard project templates, what you get is just a basic implementation for user accounts via ASP.NET Identity. Those templates don't provide you any method for creating administrative users or creating roles or managing users and user role membership. You would typically have to implement that stuff yourself, and if you are like me, you don't want to have to implement that stuff again and again on every project. cloudscribe.Core aims to provide that for you with careful, well thought out implementations that adhere to [OWASP web security guidelines](https://www.owasp.org/index.php/Main_Page).
 
 Eventually you will be able to start with an empty ASP.NET Core project and pull in nuget packages for cloudscribe, but for now if you want to give it a test drive see 
 [Working with the source code](https://github.com/joeaudette/cloudscribe/wiki/Working-with-the-source-Code). You can download the latest version of cloudscribe Core by clicking the download button on the right side of the page or forking or cloning this repo. 
