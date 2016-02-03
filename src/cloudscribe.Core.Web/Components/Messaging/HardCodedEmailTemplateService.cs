@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-01-19
-// Last Modified:			2016-01-22
+// Last Modified:			2016-02-03
 // 
 
 
@@ -26,6 +26,10 @@ namespace cloudscribe.Core.Web.Components.Messaging
 
                     return PasswordResetHtmlTemplate();
 
+                case MessagePurpose.AccountApproved:
+
+                    return AccountApprovedHtmlTemplate();
+
 
             }
 
@@ -44,7 +48,12 @@ namespace cloudscribe.Core.Web.Components.Messaging
 
         private string PasswordResetHtmlTemplate()
         {
-            return "<html><head><title>Confirm Account</title></head><body>Please reset your password by clicking here: <a href=\"{0}\">link</a></body></html>";
+            return "<html><head><title>Password Reset</title></head><body>A password reset has been requested for your account at {0}.<br /> If you did not request a password reset, you can ignore this message, otherwise please <a href=\"{1}\">click here to reset your password</a>.</body></html>";
+        }
+
+        private string AccountApprovedHtmlTemplate()
+        {
+            return "<html><head><title>Account Approved</title></head><body>Your account at {0} has been approved. You may now login by clicking here: <a href=\"{1}\">link</a></body></html>";
         }
 
         private string LastResortHtmlTemplate()
@@ -68,6 +77,10 @@ namespace cloudscribe.Core.Web.Components.Messaging
 
                     return PasswordResetPlainTextTemplate();
 
+                case MessagePurpose.AccountApproved:
+
+                    return AccountApprovedPlainTextTemplate();
+
             }
 
             return LastResortPlainTextTemplate();
@@ -80,7 +93,12 @@ namespace cloudscribe.Core.Web.Components.Messaging
 
         private string PasswordResetPlainTextTemplate()
         {
-            return "Please reset your password by clicking this link: {0} ";
+            return "A password reset has been requested for your account at {0}. If you did not request a password reset, you can ignore this message, otherwise if you need to reset your password please click this link: {1} ";
+        }
+
+        private string AccountApprovedPlainTextTemplate()
+        {
+            return "Your account at {0} has been approved. \r\nYou may now login by clicking here: {1}";
         }
 
         private string SecurityCodePlainTextTemplate()

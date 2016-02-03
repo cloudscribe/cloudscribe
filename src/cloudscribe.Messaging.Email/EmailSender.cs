@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-22
-// Last Modified:			2016-01-20
+// Last Modified:			2016-02-03
 // 
 
 using System;
@@ -86,7 +86,8 @@ namespace cloudscribe.Messaging.Email
                 await client.ConnectAsync(
                     smtpOptions.Server, 
                     smtpOptions.Port, 
-                    smtpOptions.UseSsl);
+                    smtpOptions.UseSsl)
+                    .ConfigureAwait(false);
                 //await client.ConnectAsync(smtpOptions.Server, smtpOptions.Port, SecureSocketOptions.StartTls);
 
                 // Note: since we don't have an OAuth2 token, disable
@@ -96,11 +97,12 @@ namespace cloudscribe.Messaging.Email
                 // Note: only needed if the SMTP server requires authentication
                 if(smtpOptions.RequiresAuthentication)
                 {
-                    await client.AuthenticateAsync(smtpOptions.User, smtpOptions.Password);
+                    await client.AuthenticateAsync(smtpOptions.User, smtpOptions.Password)
+                        .ConfigureAwait(false);
                 }
                 
-                await client.SendAsync(m);
-                await client.DisconnectAsync(true);
+                await client.SendAsync(m).ConfigureAwait(false);
+                await client.DisconnectAsync(true).ConfigureAwait(false);
             }
 
         }
@@ -172,7 +174,10 @@ namespace cloudscribe.Messaging.Email
                 //    return (true);
                 //};
 
-                await client.ConnectAsync(smtpOptions.Server, smtpOptions.Port, smtpOptions.UseSsl);
+                await client.ConnectAsync(
+                    smtpOptions.Server, 
+                    smtpOptions.Port, 
+                    smtpOptions.UseSsl).ConfigureAwait(false);
                 //await client.ConnectAsync(smtpOptions.Server, smtpOptions.Port, SecureSocketOptions.StartTls);
 
                 // Note: since we don't have an OAuth2 token, disable
@@ -182,11 +187,13 @@ namespace cloudscribe.Messaging.Email
                 // Note: only needed if the SMTP server requires authentication
                 if (smtpOptions.RequiresAuthentication)
                 {
-                    await client.AuthenticateAsync(smtpOptions.User, smtpOptions.Password);
+                    await client.AuthenticateAsync(
+                        smtpOptions.User, 
+                        smtpOptions.Password).ConfigureAwait(false);
                 }
 
-                client.Send(m);
-                client.Disconnect(true);
+                await client.SendAsync(m).ConfigureAwait(false);
+                await client.DisconnectAsync(true).ConfigureAwait(false);
             }
 
         }

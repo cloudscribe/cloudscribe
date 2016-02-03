@@ -36,5 +36,11 @@ namespace cloudscribe.Core.Web.Components.Messaging
         Task AccountPendingApprovalAdminNotification(
             ISiteSettings siteSettings,
             ISiteUser user);
+
+        Task SendAccountApprovalNotificationAsync(
+            ISiteSettings siteSettings,
+            string toAddress,
+            string subject,
+            string loginUrl);
     }
 }

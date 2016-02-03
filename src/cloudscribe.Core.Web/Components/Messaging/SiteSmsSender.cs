@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-22
-// Last Modified:			2016-01-19
+// Last Modified:			2016-02-03
 // 
 
 using System;
@@ -49,7 +49,10 @@ namespace cloudscribe.Core.Web.Components.Messaging
             TwilioSmsSender sender = new TwilioSmsSender(log);
             try
             {
-                await sender.SendMessage(credentials, phoneNumber, message);
+                await sender.SendMessage(
+                    credentials, 
+                    phoneNumber, 
+                    message).ConfigureAwait(false);
             }
             catch (Exception ex)
             {

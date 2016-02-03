@@ -19,6 +19,10 @@ namespace cloudscribe.Core.Web.Components.Messaging
 {
     public class SiteEmailMessageSender : ISiteMessageEmailSender
     {
+        //TODO: we should have an option to force only plain text email
+        // html emails are a lot more likely to be phished with copies
+        // because the link urls are obfuscated to some degree
+
         public SiteEmailMessageSender(
             ILogger<SiteEmailMessageSender> logger,
             IEmailTemplateService templateService = null)
@@ -109,10 +113,20 @@ namespace cloudscribe.Core.Web.Components.Messaging
             }
 
             string plainTextTemplate = templateService.GetPlainTextTemplate(MessagePurpose.PasswordReset, CultureInfo.CurrentUICulture.Name);
-            string plainTextMessage = string.Format(plainTextTemplate, resetUrl);
+            string plainTextMessage 
+                = string.Format(
+                    CultureInfo.InvariantCulture, 
+                    plainTextTemplate,
+                    siteSettings.SiteName, //maybe this should be the site url?
+                    resetUrl);
 
             string htmlTemplate = templateService.GetHtmlTemplate(MessagePurpose.PasswordReset, CultureInfo.CurrentUICulture.Name);
-            string htmlMessage = string.Format(htmlTemplate, resetUrl);
+            string htmlMessage 
+                = string.Format(
+                    CultureInfo.InvariantCulture,
+                    htmlTemplate,
+                    siteSettings.SiteName, 
+                    resetUrl);
 
             EmailSender sender = new EmailSender();
             // in account controller we are calling this method without await
@@ -219,6 +233,61 @@ namespace cloudscribe.Core.Web.Components.Messaging
                 log.LogError("error sending email verification email", ex);
             }
             
+        }
+
+        public async Task SendAccountApprovalNotificationAsync(
+            ISiteSettings siteSettings,
+            string toAddress,
+            string subject,
+            string loginUrl)
+        {
+            SmtpOptions smtpOptions = GetSmptOptions(siteSettings);
+
+            if (smtpOptions == null)
+            {
+                var logMessage = $"failed to send account approval email because smtp settings are not populated for site {siteSettings.SiteName}";
+                log.LogError(logMessage);
+                return;
+            }
+
+            string plainTextTemplate = templateService.GetPlainTextTemplate(MessagePurpose.AccountApproved, CultureInfo.CurrentUICulture.Name);
+            string plainTextMessage 
+                = string.Format(
+                    CultureInfo.InvariantCulture,
+                    plainTextTemplate, 
+                    siteSettings.SiteName,
+                    loginUrl
+                    );
+
+            string htmlTemplate = templateService.GetHtmlTemplate(MessagePurpose.AccountApproved, CultureInfo.CurrentUICulture.Name);
+            string htmlMessage 
+                = string.Format(
+                    CultureInfo.InvariantCulture,
+                    htmlTemplate,
+                    siteSettings.SiteName,
+                    loginUrl);
+
+            EmailSender sender = new EmailSender();
+            // in account controller we are calling this method without await
+            // so it doesn't block the UI. Which means it is running on a background thread
+            // similar as the old ThreadPool.QueueWorkItem
+            // as such we need to handle any error that may happen so it doesn't
+            // brind down the thread or the process
+            try
+            {
+                await sender.SendEmailAsync(
+                    smtpOptions,
+                    toAddress,
+                    siteSettings.DefaultEmailFromAddress,
+                    subject,
+                    plainTextMessage,
+                    htmlMessage).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                log.LogError("error sending password reset email", ex);
+            }
+
         }
 
 

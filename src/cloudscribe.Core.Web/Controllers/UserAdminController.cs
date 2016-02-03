@@ -8,6 +8,7 @@
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Web.Components;
+using cloudscribe.Core.Web.Components.Messaging;
 using cloudscribe.Core.Web.ViewModels.Account;
 using cloudscribe.Core.Web.ViewModels.UserAdmin;
 using cloudscribe.Web.Navigation;
@@ -32,6 +33,7 @@ namespace cloudscribe.Core.Web.Controllers
         public UserAdminController(
             SiteManager siteManager,
             SiteUserManager<SiteUser> userManager,
+            ISiteMessageEmailSender emailSender,
             IOptions<UIOptions> uiOptionsAccessor,
             IHtmlLocalizer<CoreResources> localizer
             )
@@ -39,6 +41,7 @@ namespace cloudscribe.Core.Web.Controllers
            
             UserManager = userManager;
             this.siteManager = siteManager;
+            this.emailSender = emailSender;
             uiOptions = uiOptionsAccessor.Value;
             this.localizer = localizer;
 
@@ -46,6 +49,7 @@ namespace cloudscribe.Core.Web.Controllers
 
         private SiteManager siteManager;
         public SiteUserManager<SiteUser> UserManager { get; private set; }
+        private ISiteMessageEmailSender emailSender;
         private UIOptions uiOptions;
         private IHtmlLocalizer localizer;
 
@@ -505,6 +509,56 @@ namespace cloudscribe.Core.Web.Controllers
             // If we got this far, something failed, redisplay form
             return View(model);
 
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Policy = "AdminPolicy")]
+        public async Task<ActionResult> ApproveUserAccount(
+            Guid siteGuid, 
+            int userId, 
+            bool sendEmailNotification,
+            int returnPageNumber = 1)
+        {
+            ISiteSettings selectedSite = await siteManager.Fetch(siteGuid);
+
+            if (
+                (selectedSite != null)
+                && (selectedSite.SiteId == siteManager.CurrentSite.SiteId || siteManager.CurrentSite.IsServerAdminSite)
+                )
+            {
+
+                ISiteUser user = await UserManager.Fetch(selectedSite.SiteId, userId);
+                if(user != null)
+                {
+                    user.AccountApproved = true;
+                    var result = await UserManager.Save((SiteUser)user);
+
+                    if (result)
+                    {
+                        this.AlertSuccess(string.Format("user account for <b>{0}</b> was successfully approved.",
+                            user.DisplayName), true);
+
+                    }
+
+                    if(sendEmailNotification)
+                    {
+                        var loginUrl = Url.Action("Login", "Account",
+                            null,
+                            protocol: HttpContext.Request.Scheme);
+
+                        emailSender.SendAccountConfirmationEmailAsync(
+                        selectedSite,
+                        user.Email,
+                        "Account Approved",
+                        loginUrl).Forget();
+                    }
+                }
+                
+
+            }
+
+            return RedirectToAction("Index", "UserAdmin", new { siteGuid = selectedSite.SiteGuid, pageNumber = returnPageNumber });
         }
 
         [HttpPost]
