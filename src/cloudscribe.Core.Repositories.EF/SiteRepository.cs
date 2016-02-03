@@ -294,7 +294,12 @@ namespace cloudscribe.Core.Repositories.EF
                         };
 
             
-            return await query.AsNoTracking().Skip(offset).Take(pageSize).ToListAsync<ISiteInfo>(cancellationToken);
+            return await query
+                .AsNoTracking()
+                .Skip(offset)
+                .Take(pageSize)
+                .ToListAsync<ISiteInfo>(cancellationToken)
+                .ConfigureAwait(false);
 
            
         }
@@ -305,7 +310,10 @@ namespace cloudscribe.Core.Repositories.EF
                         orderby x.HostName ascending
                         select x;
 
-            var items = await query.AsNoTracking().ToListAsync<ISiteHost>(cancellationToken);
+            var items = await query
+                .AsNoTracking()
+                .ToListAsync<ISiteHost>(cancellationToken)
+                .ConfigureAwait(false);
             
             return items;
         }
@@ -321,9 +329,9 @@ namespace cloudscribe.Core.Repositories.EF
             return items;
         }
 
-        public async Task<int> GetHostCount(CancellationToken cancellationToken = default(CancellationToken))
+        public Task<int> GetHostCount(CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await dbContext.SiteHosts.CountAsync<SiteHost>(cancellationToken);
+            return dbContext.SiteHosts.CountAsync<SiteHost>(cancellationToken);
         }
 
         public async Task<List<ISiteHost>> GetPageHosts(
@@ -339,8 +347,14 @@ namespace cloudscribe.Core.Repositories.EF
                         select x
                         ;
 
-            return await query.AsNoTracking().Skip(offset).Take(pageSize).ToListAsync<ISiteHost>(cancellationToken);
-      
+            return await query
+                .AsNoTracking()
+                .Skip(offset)
+                .Take(pageSize)
+                .ToListAsync<ISiteHost>(cancellationToken)
+                .ConfigureAwait(false);
+
+
         }
 
         public async Task<List<ISiteHost>> GetSiteHosts(
@@ -353,7 +367,10 @@ namespace cloudscribe.Core.Repositories.EF
                         select x
                         ;
 
-            var items = await query.AsNoTracking().ToListAsync<ISiteHost>(cancellationToken);
+            var items = await query
+                .AsNoTracking()
+                .ToListAsync<ISiteHost>(cancellationToken)
+                .ConfigureAwait(false);
 
             return items;
         }
@@ -368,7 +385,8 @@ namespace cloudscribe.Core.Repositories.EF
                         select x
                         ;
 
-            return await query.SingleOrDefaultAsync<SiteHost>(cancellationToken);
+            return await query.SingleOrDefaultAsync<SiteHost>(cancellationToken)
+                .ConfigureAwait(false);
             
         }
 
@@ -384,7 +402,8 @@ namespace cloudscribe.Core.Repositories.EF
             host.HostName = hostName;
 
             dbContext.SiteHosts.Add(host);
-            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
+            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
+                .ConfigureAwait(false);
 
             return rowsAffected > 0;
 
@@ -399,7 +418,9 @@ namespace cloudscribe.Core.Repositories.EF
             if (itemToRemove != null)
             {
                 dbContext.SiteHosts.Remove(itemToRemove);
-                int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
+                int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
+                    .ConfigureAwait(false);
+
                 result = rowsAffected > 0;
             }
 
@@ -416,7 +437,9 @@ namespace cloudscribe.Core.Repositories.EF
                 select x;
            
             dbContext.SiteHosts.RemoveRange(query);
-            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
+            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
+                .ConfigureAwait(false);
+
             result = rowsAffected > 0;
             
 
@@ -434,7 +457,8 @@ namespace cloudscribe.Core.Repositories.EF
                         select x
                         ;
 
-            var host = await query.SingleOrDefaultAsync<SiteHost>(cancellationToken);
+            var host = await query.SingleOrDefaultAsync<SiteHost>(cancellationToken)
+                .ConfigureAwait(false);
 
             if(host != null) { return host.SiteId; }
 
