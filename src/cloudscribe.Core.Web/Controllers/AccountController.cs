@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2016-01-20
+// Last Modified:			2016-02-03
 // 
 
 using cloudscribe.Core.Identity;
@@ -19,6 +19,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 
 
@@ -334,11 +335,11 @@ namespace cloudscribe.Core.Web.Controllers
                             new { userId = user.Id, code = code }, 
                             protocol: HttpContext.Request.Scheme);
 
-                        await emailSender.SendAccountConfirmationEmailAsync(
+                        emailSender.SendAccountConfirmationEmailAsync(
                             Site,
                             model.Email, 
                             "Confirm your account",
-                            callbackUrl);
+                            callbackUrl).Forget();
 
                         if (this.SessionIsAvailable())
                         {
@@ -356,7 +357,7 @@ namespace cloudscribe.Core.Web.Controllers
                     {
                         if(Site.RequireApprovalBeforeLogin)
                         {
-                            await emailSender.AccountPendingApprovalAdminNotification(Site, user);
+                            emailSender.AccountPendingApprovalAdminNotification(Site, user).Forget();
                             //if (this.SessionIsAvailable())
                             //{
                             //    this.AlertSuccess("Please check your email inbox, we just sent you a link that you need to click to confirm your account", true);
@@ -434,11 +435,11 @@ namespace cloudscribe.Core.Web.Controllers
                             new { userId = user.Id, code = code },
                             protocol: HttpContext.Request.Scheme);
 
-            await emailSender.SendAccountConfirmationEmailAsync(
+            emailSender.SendAccountConfirmationEmailAsync(
                             Site,
                             user.Email,
                             "Confirm your account",
-                            callbackUrl);
+                            callbackUrl).Forget();
 
             await ipAddressTracker.TackUserIpAddress(Site.SiteGuid, user.UserGuid);
 
@@ -464,7 +465,7 @@ namespace cloudscribe.Core.Web.Controllers
             
             if (Site.RequireApprovalBeforeLogin && ! user.AccountApproved)
             {
-                await emailSender.AccountPendingApprovalAdminNotification(Site, user);
+                emailSender.AccountPendingApprovalAdminNotification(Site, user).Forget();
 
                 return RedirectToAction("PendingApproval", new { userGuid = user.Id, didSend = true });
             }
@@ -665,7 +666,7 @@ namespace cloudscribe.Core.Web.Controllers
                     new { userId = user.Id, code = code }, 
                     protocol: HttpContext.Request.Scheme);
 
-                // TODO: best security practice is to not disclose the existence of user accounts
+                // best security practice is to not disclose the existence of user accounts
                 // so we show the same message whether the password reset request is for an
                 // actual account or not but if it is an actual account we send the email
                 // problem I have noticed is that there is a noticable delay after clicking the button 
@@ -673,13 +674,20 @@ namespace cloudscribe.Core.Web.Controllers
                 // the account exists. I think we need to either eliminate the apparent delay by
                 // spawning a separate thread to send the email or by introducing a similar delay
                 // for non existing accounts
+                //ThreadPool.
 
-                await emailSender.SendPasswordResetEmailAsync(
+                // await emailSender.SendPasswordResetEmailAsync(
+                // not awaiting this awaitable method on purpose
+                // so it does not delay the ui response
+                // vs would show a warning squiggly line here if not for .Forget()
+                //http://stackoverflow.com/questions/35175960/net-core-alternative-to-threadpool-queueuserworkitem
+                //http://stackoverflow.com/questions/22629951/suppressing-warning-cs4014-because-this-call-is-not-awaited-execution-of-the
+                emailSender.SendPasswordResetEmailAsync(
                     userManager.Site,
-                    model.Email, 
+                    model.Email,
                     "Reset Password",
-                    resetUrl);
-
+                    resetUrl).Forget();
+               
                 return View("ForgotPasswordConfirmation");
             }
 

@@ -2,12 +2,13 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-11-15
-// Last Modified:			2016-01-29
+// Last Modified:			2016-02-03
 // 
 
 using System.Collections.Generic;
 using System.Globalization;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Models
 {
@@ -103,6 +104,17 @@ namespace cloudscribe.Core.Models
             return result;
         }
 
+        /// <summary>
+        /// an extenstion method to avoid the warning when firing an async task without await
+        /// from inside another async task
+        /// for fire and forget scenarios where we don't need to wait for the task to complete
+        /// http://stackoverflow.com/questions/22629951/suppressing-warning-cs4014-because-this-call-is-not-awaited-execution-of-the
+        /// </summary>
+        /// <param name="task"></param>
+        public static void Forget(this Task task)
+        {
+
+        }
 
 
 

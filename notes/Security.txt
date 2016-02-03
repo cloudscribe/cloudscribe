@@ -1,6 +1,8 @@
 
 A goal of cloudscribe core should be to follow the OWASP security guidelines
 
+Automated Security Analyzer for ASP.NET Websites by Troy  Hunt
+https://asafaweb.com
 
 https://www.owasp.org/index.php/Authentication_Cheat_Sheet
 

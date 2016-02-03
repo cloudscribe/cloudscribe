@@ -47,9 +47,15 @@ namespace cloudscribe.Core.Web.Components.Messaging
             }
 
             TwilioSmsSender sender = new TwilioSmsSender(log);
-            await sender.SendMessage(credentials, phoneNumber, message);
-
-            
+            try
+            {
+                await sender.SendMessage(credentials, phoneNumber, message);
+            }
+            catch (Exception ex)
+            {
+                log.LogError("error sending twilio message", ex);
+            }
+                
         }
 
         private TwilioSmsCredentials GetCredentials(ISiteSettings site)

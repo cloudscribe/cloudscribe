@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2016-01-31
+// Last Modified:			2016-02-03
 // 
 
 
@@ -52,7 +52,8 @@ namespace cloudscribe.Core.Repositories.EF
 
 
 
-            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
+            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
+                .ConfigureAwait(false);
 
             // update the original with the new keys after insert
             if((site.SiteId == -1)&&(siteSettings != null))
@@ -70,7 +71,10 @@ namespace cloudscribe.Core.Repositories.EF
             CancellationToken cancellationToken = default(CancellationToken))
         {
             SiteSettings item
-                = await dbContext.Sites.AsNoTracking().SingleOrDefaultAsync(x => x.SiteId.Equals(siteId), cancellationToken);
+                = await dbContext.Sites.AsNoTracking().SingleOrDefaultAsync(
+                    x => x.SiteId.Equals(siteId)
+                    , cancellationToken)
+                    .ConfigureAwait(false);
 
             return item;
         }
@@ -88,7 +92,10 @@ namespace cloudscribe.Core.Repositories.EF
             CancellationToken cancellationToken = default(CancellationToken))
         {
             SiteSettings item
-                = await dbContext.Sites.AsNoTracking().SingleOrDefaultAsync(x => x.SiteGuid.Equals(siteGuid), cancellationToken);
+                = await dbContext.Sites.AsNoTracking().SingleOrDefaultAsync(
+                    x => x.SiteGuid.Equals(siteGuid)
+                    , cancellationToken)
+                    .ConfigureAwait(false);
 
             return item;
         }
@@ -105,7 +112,11 @@ namespace cloudscribe.Core.Repositories.EF
             string hostName, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            SiteHost host = await dbContext.SiteHosts.AsNoTracking().FirstOrDefaultAsync(x => x.HostName.Equals(hostName), cancellationToken);
+            SiteHost host = await dbContext.SiteHosts.AsNoTracking().FirstOrDefaultAsync(
+                x => x.HostName.Equals(hostName)
+                , cancellationToken)
+                .ConfigureAwait(false);
+
             if(host == null)
             {
                 var query = from s in dbContext.Sites
@@ -113,10 +124,18 @@ namespace cloudscribe.Core.Repositories.EF
                             orderby s.SiteId ascending
                             select s;
 
-                return await query.AsNoTracking().SingleOrDefaultAsync<SiteSettings>(cancellationToken);
+                return await query
+                    .AsNoTracking()
+                    .SingleOrDefaultAsync<SiteSettings>(cancellationToken)
+                    .ConfigureAwait(false);
             }
             
-            return await dbContext.Sites.AsNoTracking().SingleOrDefaultAsync(x => x.SiteId.Equals(host.SiteId), cancellationToken);
+            return await dbContext.Sites
+                .AsNoTracking()
+                .SingleOrDefaultAsync(
+                x => x.SiteId.Equals(host.SiteId)
+                , cancellationToken)
+                .ConfigureAwait(false);
 
 
         }
@@ -133,7 +152,8 @@ namespace cloudscribe.Core.Repositories.EF
         {
             ISiteSettings site = await dbContext.Sites.AsNoTracking().FirstOrDefaultAsync(
                 x => x.SiteFolderName == folderName
-                , cancellationToken);
+                , cancellationToken)
+                .ConfigureAwait(false);
 
             if (site == null)
             {
@@ -142,7 +162,10 @@ namespace cloudscribe.Core.Repositories.EF
                             orderby s.SiteId ascending
                             select s;
 
-                site = await query.AsNoTracking().SingleOrDefaultAsync<SiteSettings>(cancellationToken);
+                site = await query
+                    .AsNoTracking()
+                    .SingleOrDefaultAsync<SiteSettings>(cancellationToken)
+                    .ConfigureAwait(false);
             }
 
             return site;
@@ -169,7 +192,10 @@ namespace cloudscribe.Core.Repositories.EF
 
         public ISiteSettings FetchByFolderNameNonAsync(string folderName)
         {
-            ISiteSettings site = dbContext.Sites.AsNoTracking().FirstOrDefault(x => x.SiteFolderName == folderName);
+            ISiteSettings site = dbContext.Sites
+                .AsNoTracking()
+                .FirstOrDefault(x => x.SiteFolderName == folderName);
+
             if (site == null)
             {
                 var query = from s in dbContext.Sites
@@ -189,11 +215,17 @@ namespace cloudscribe.Core.Repositories.EF
             CancellationToken cancellationToken = default(CancellationToken))
         {
             var result = false;
-            var itemToRemove = await dbContext.Sites.SingleOrDefaultAsync(x => x.SiteId == siteId, cancellationToken);
+            var itemToRemove = await dbContext.Sites.SingleOrDefaultAsync(
+                x => x.SiteId == siteId
+                , cancellationToken)
+                .ConfigureAwait(false);
+
             if (itemToRemove != null)
             {
                 dbContext.Sites.Remove(itemToRemove);
-                int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
+                int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
+                    .ConfigureAwait(false);
+
                 result = rowsAffected > 0;
             }
 
@@ -202,9 +234,9 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
 
-        public async Task<int> GetCount(CancellationToken cancellationToken = default(CancellationToken))
+        public Task<int> GetCount(CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await dbContext.Sites.CountAsync<SiteSettings>(cancellationToken);
+            return dbContext.Sites.CountAsync<SiteSettings>(cancellationToken);
         }
 
         public async Task<List<ISiteInfo>> GetList(CancellationToken cancellationToken = default(CancellationToken))
@@ -221,16 +253,21 @@ namespace cloudscribe.Core.Repositories.EF
                         }
                         ;
 
-            var items = await query.AsNoTracking().ToListAsync<ISiteInfo>(cancellationToken);
+            var items = await query
+                .AsNoTracking()
+                .ToListAsync<ISiteInfo>(cancellationToken)
+                .ConfigureAwait(false);
             
             return items;
         }
 
-        public async Task<int> CountOtherSites(
+        public Task<int> CountOtherSites(
             int currentSiteId, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await dbContext.Sites.CountAsync<SiteSettings>(x =>  x.SiteId != currentSiteId, cancellationToken);
+            return dbContext.Sites.CountAsync<SiteSettings>(
+                x =>  x.SiteId != currentSiteId
+                , cancellationToken);
         }
 
         public async Task<List<ISiteInfo>> GetPageOtherSites(

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2016-01-15
+// Last Modified:			2016-02-03
 // 
 
 using cloudscribe.Core.Models.Geography;
@@ -37,7 +37,8 @@ namespace cloudscribe.Core.Repositories.EF
 
             dbContext.Countries.Add(country);
 
-            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
+            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
+                .ConfigureAwait(false);
 
             return rowsAffected > 0;
         }
@@ -54,7 +55,8 @@ namespace cloudscribe.Core.Repositories.EF
                 dbContext.Countries.Update(country);
             }
             
-            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
+            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
+                .ConfigureAwait(false);
 
             return rowsAffected > 0;
         }
@@ -62,24 +64,36 @@ namespace cloudscribe.Core.Repositories.EF
         public async Task<IGeoCountry> FetchCountry(Guid guid, CancellationToken cancellationToken = default(CancellationToken))
         {
             GeoCountry item 
-                = await dbContext.Countries.SingleOrDefaultAsync(x => x.Guid == guid, cancellationToken);
+                = await dbContext.Countries.SingleOrDefaultAsync(
+                    x => x.Guid == guid, 
+                    cancellationToken)
+                    .ConfigureAwait(false);
 
             return item;
         }
 
-        public async Task<IGeoCountry> FetchCountry(string isoCode2, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<IGeoCountry> FetchCountry(
+            string isoCode2, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await dbContext.Countries.SingleOrDefaultAsync(x => x.ISOCode2 == isoCode2, cancellationToken);
+            return await dbContext.Countries.SingleOrDefaultAsync(
+                x => x.ISOCode2 == isoCode2, 
+                cancellationToken)
+                .ConfigureAwait(false);
         }
 
-        public async Task<bool> DeleteCountry(Guid guid, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> DeleteCountry(
+            Guid guid, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             var result = false;
             var itemToRemove = await dbContext.Countries.SingleOrDefaultAsync(x => x.Guid == guid, cancellationToken);
             if (itemToRemove != null)
             {
                 dbContext.Countries.Remove(itemToRemove);
-                int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
+                int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
+                    .ConfigureAwait(false);
+
                 result = rowsAffected > 0;
             }
 
@@ -89,7 +103,8 @@ namespace cloudscribe.Core.Repositories.EF
 
         public async Task<int> GetCountryCount(CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await dbContext.Countries.CountAsync<GeoCountry>(cancellationToken);
+            return await dbContext.Countries.CountAsync<GeoCountry>(cancellationToken)
+                .ConfigureAwait(false);
         }
 
         public async Task<List<IGeoCountry>> GetAllCountries(CancellationToken cancellationToken = default(CancellationToken))
@@ -98,13 +113,19 @@ namespace cloudscribe.Core.Repositories.EF
                         orderby c.Name ascending
                         select c;
 
-            var items = await query.AsNoTracking().ToListAsync<IGeoCountry>(cancellationToken);
+            var items = await query.AsNoTracking()
+                .ToListAsync<IGeoCountry>(cancellationToken)
+                .ConfigureAwait(false)
+                ;
             
             return items;
 
         }
 
-        public async Task<List<IGeoCountry>> GetCountriesPage(int pageNumber, int pageSize, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<List<IGeoCountry>> GetCountriesPage(
+            int pageNumber, 
+            int pageSize, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             int offset = (pageSize * pageNumber) - pageSize;
 
@@ -115,11 +136,16 @@ namespace cloudscribe.Core.Repositories.EF
                 ;
 
          
-           return await query.AsNoTracking().ToListAsync<IGeoCountry>(cancellationToken);
+           return await query
+                .AsNoTracking()
+                .ToListAsync<IGeoCountry>(cancellationToken)
+                .ConfigureAwait(false);
             
         }
 
-        public async Task<bool> Add(IGeoZone geoZone, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> Add(
+            IGeoZone geoZone, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             if (geoZone == null) { return false; }
 
@@ -131,7 +157,8 @@ namespace cloudscribe.Core.Repositories.EF
             }
             dbContext.States.Add(state);
 
-            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
+            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
+                .ConfigureAwait(false);
 
             return rowsAffected > 0;
 
@@ -151,52 +178,70 @@ namespace cloudscribe.Core.Repositories.EF
                 dbContext.States.Update(state);
             }
             
-            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
+            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
+                .ConfigureAwait(false);
 
             return rowsAffected > 0;
 
         }
 
-        public async Task<IGeoZone> FetchGeoZone(Guid guid, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<IGeoZone> FetchGeoZone(
+            Guid guid, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             GeoZone item
-                = await dbContext.States.SingleOrDefaultAsync(x => x.Guid == guid, cancellationToken);
+                = await dbContext.States.SingleOrDefaultAsync(
+                    x => x.Guid == guid,
+                    cancellationToken)
+                    .ConfigureAwait(false);
 
             return item;
         }
 
-        public async Task<bool> DeleteGeoZone(Guid guid, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> DeleteGeoZone(
+            Guid guid, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             var result = false;
             var itemToRemove = await dbContext.States.SingleOrDefaultAsync(x => x.Guid == guid, cancellationToken);
             if (itemToRemove != null)
             {
                 dbContext.States.Remove(itemToRemove);
-                int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
+                int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
+                    .ConfigureAwait(false);
+
                 result = rowsAffected > 0;
             }
 
             return result;
         }
 
-        public async Task<bool> DeleteGeoZonesByCountry(Guid countryGuid, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> DeleteGeoZonesByCountry(
+            Guid countryGuid, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             var query = from l in dbContext.States
                         where l.CountryGuid == countryGuid
                         select l;
 
             dbContext.States.RemoveRange(query);
-            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
+            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
+                .ConfigureAwait(false);
+
             return rowsAffected > 0;
         }
 
-        public async Task<int> GetGeoZoneCount(Guid countryGuid, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<int> GetGeoZoneCount(
+            Guid countryGuid, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await dbContext.States.CountAsync<GeoZone>(
+            return dbContext.States.CountAsync<GeoZone>(
                 g => g.CountryGuid == countryGuid, cancellationToken);
         }
 
-        public async Task<List<IGeoZone>> GetGeoZonesByCountry(Guid countryGuid, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<List<IGeoZone>> GetGeoZonesByCountry(
+            Guid countryGuid, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             //var query = from l in dbContext.States
             //            where l.CountryGuid == countryGuid
@@ -208,13 +253,20 @@ namespace cloudscribe.Core.Repositories.EF
                         .OrderByDescending(x => x.Name)
                         .Select(x => x);
             
-            var items = await query.AsNoTracking().ToListAsync<IGeoZone>(cancellationToken);
+            var items = await query
+                .AsNoTracking()
+                .ToListAsync<IGeoZone>(cancellationToken)
+                .ConfigureAwait(false);
+
             return items;
             
 
         }
 
-        public async Task<List<IGeoCountry>> CountryAutoComplete(string query, int maxRows, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<List<IGeoCountry>> CountryAutoComplete(
+            string query, 
+            int maxRows, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             // approximation of a LIKE operator query
             //http://stackoverflow.com/questions/17097764/linq-to-entities-using-the-sql-like-operator
@@ -231,12 +283,20 @@ namespace cloudscribe.Core.Repositories.EF
                             .Take(maxRows)
                             .Select(x => x);
 
-            var items = await listQuery.AsNoTracking().ToListAsync<IGeoCountry>(cancellationToken);
+            var items = await listQuery
+                .AsNoTracking()
+                .ToListAsync<IGeoCountry>(cancellationToken)
+                .ConfigureAwait(false);
+
             return items;
             
         }
 
-        public async Task<List<IGeoZone>> StateAutoComplete(Guid countryGuid, string query, int maxRows, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<List<IGeoZone>> StateAutoComplete(
+            Guid countryGuid, 
+            string query, 
+            int maxRows, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             //var listQuery = from l in dbContext.States
             //                .Take(maxRows)
@@ -256,7 +316,10 @@ namespace cloudscribe.Core.Repositories.EF
                             .Take(maxRows)
                             .Select(x => x);
 
-            return await listQuery.AsNoTracking().ToListAsync<IGeoZone>(cancellationToken);
+            return await listQuery
+                .AsNoTracking()
+                .ToListAsync<IGeoZone>(cancellationToken)
+                .ConfigureAwait(false);
            
         }
 
@@ -276,11 +339,16 @@ namespace cloudscribe.Core.Repositories.EF
                .Select(p => p)
                ;
             
-            return await query.AsNoTracking().ToListAsync<IGeoZone>(cancellationToken);
+            return await query
+                .AsNoTracking()
+                .ToListAsync<IGeoZone>(cancellationToken)
+                .ConfigureAwait(false);
            
         }
 
-        public async Task<bool> Add(ILanguage language, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> Add(
+            ILanguage language, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             if (language == null) { return false; }
 
@@ -293,13 +361,16 @@ namespace cloudscribe.Core.Repositories.EF
 
             dbContext.Languages.Add(lang);
 
-            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
+            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
+                .ConfigureAwait(false);
 
             return rowsAffected > 0;
 
         }
 
-        public async Task<bool> Update(ILanguage language, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> Update(
+            ILanguage language, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             if (language == null) { return false; }
 
@@ -311,37 +382,50 @@ namespace cloudscribe.Core.Repositories.EF
                 dbContext.Languages.Update(lang);
             }
             
-            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
+            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
+                .ConfigureAwait(false);
 
             return rowsAffected > 0;
 
         }
 
-        public async Task<ILanguage> FetchLanguage(Guid guid, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<ILanguage> FetchLanguage(
+            Guid guid, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             Language item
-                = await dbContext.Languages.SingleOrDefaultAsync(x => x.Guid == guid, cancellationToken);
+                = await dbContext.Languages.SingleOrDefaultAsync(
+                    x => x.Guid == guid, 
+                    cancellationToken)
+                    .ConfigureAwait(false);
 
             return item;
         }
 
-        public async Task<bool> DeleteLanguage(Guid guid, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> DeleteLanguage(
+            Guid guid, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             var result = false;
-            var itemToRemove = await dbContext.Languages.SingleOrDefaultAsync(x => x.Guid == guid, cancellationToken);
+            var itemToRemove = await dbContext.Languages.SingleOrDefaultAsync(
+                x => x.Guid == guid, 
+                cancellationToken)
+                .ConfigureAwait(false);
+
             if (itemToRemove != null)
             {
                 dbContext.Languages.Remove(itemToRemove);
-                int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
+                int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
+                    .ConfigureAwait(false);
                 result = rowsAffected > 0;
             }
 
             return result;
         }
 
-        public async Task<int> GetLanguageCount(CancellationToken cancellationToken = default(CancellationToken))
+        public Task<int> GetLanguageCount(CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await dbContext.Languages.CountAsync<Language>(cancellationToken);
+            return dbContext.Languages.CountAsync<Language>(cancellationToken);
 
         }
 
@@ -351,12 +435,19 @@ namespace cloudscribe.Core.Repositories.EF
                         .OrderBy(x => x.Name)
                         .Select(x => x);
 
-            var items = await query.AsNoTracking().ToListAsync<ILanguage>(cancellationToken);
+            var items = await query
+                .AsNoTracking()
+                .ToListAsync<ILanguage>(cancellationToken)
+                .ConfigureAwait(false);
+
             return items;
         
         }
 
-        public async Task<List<ILanguage>> GetLanguagePage(int pageNumber, int pageSize, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<List<ILanguage>> GetLanguagePage(
+            int pageNumber, 
+            int pageSize, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             int offset = (pageSize * pageNumber) - pageSize;
             
@@ -366,12 +457,17 @@ namespace cloudscribe.Core.Repositories.EF
                         .Take(pageSize)
                         .Select(x => x);
             
-            return await query.AsNoTracking().ToListAsync<ILanguage>(cancellationToken);
+            return await query
+                .AsNoTracking()
+                .ToListAsync<ILanguage>(cancellationToken)
+                .ConfigureAwait(false);
            
         }
 
 
-        public async Task<bool> Add(ICurrency currency, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> Add(
+            ICurrency currency, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             if (currency == null) { return false; }
 
@@ -382,13 +478,16 @@ namespace cloudscribe.Core.Repositories.EF
             }
             dbContext.Currencies.Add(c);
 
-            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
+            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
+                .ConfigureAwait(false);
 
             return rowsAffected > 0;
 
         }
 
-        public async Task<bool> Update(ICurrency currency, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> Update(
+            ICurrency currency, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             if (currency == null) { return false; }
 
@@ -400,29 +499,39 @@ namespace cloudscribe.Core.Repositories.EF
                 dbContext.Currencies.Update(c);
             }
             
-            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
+            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
+                .ConfigureAwait(false);
 
             return rowsAffected > 0;
 
         }
 
 
-        public async Task<ICurrency> FetchCurrency(Guid guid, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<ICurrency> FetchCurrency(
+            Guid guid, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             Currency item
-                = await dbContext.Currencies.SingleOrDefaultAsync(x => x.Guid == guid, cancellationToken);
+                = await dbContext.Currencies.AsNoTracking().SingleOrDefaultAsync(
+                    x => x.Guid == guid, 
+                    cancellationToken)
+                    .ConfigureAwait(false);
 
             return item;
         }
 
-        public async Task<bool> DeleteCurrency(Guid guid, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> DeleteCurrency(
+            Guid guid, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             var result = false;
             var itemToRemove = await dbContext.Currencies.SingleOrDefaultAsync(x => x.Guid == guid, cancellationToken);
             if (itemToRemove != null)
             {
                 dbContext.Currencies.Remove(itemToRemove);
-                int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
+                int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
+                    .ConfigureAwait(false);
+
                 result = rowsAffected > 0;
             }
 
@@ -437,7 +546,11 @@ namespace cloudscribe.Core.Repositories.EF
                         .OrderBy(x => x.Title)
                         .Select(x => x);
 
-            var items = await query.AsNoTracking().ToListAsync<ICurrency>(cancellationToken);
+            var items = await query
+                .AsNoTracking()
+                .ToListAsync<ICurrency>(cancellationToken)
+                .ConfigureAwait(false);
+
             return items;
            
         }

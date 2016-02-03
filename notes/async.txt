@@ -2,6 +2,8 @@ a good introduction to async await, at about 25 minutes it is also about using t
 but shows the correct way to use async await and common wrong way mistakes to avoid
 https://www.youtube.com/watch?v=k81OaT_P6K0#t=60
 
+http://stackoverflow.com/questions/13489065/best-practice-to-call-configureawait-for-all-server-side-code
+
 
 2015-06-08 now using the asp.net 5 bits and identity bits shipped with VS 2015 RC1
 I noticed all the async methods on UserStore<TUser> now have CancellationToken in the method signatures.
@@ -32,6 +34,54 @@ http://www.asp.net/web-forms/overview/performance-and-caching/using-asynchronous
 
 http://stackoverflow.com/questions/22628087/calling-async-method-synchronously
 http://blog.stephencleary.com/2012/07/dont-block-on-async-code.html
+
+http://stackoverflow.com/questions/31390655/async-await-am-i-over-doing-it
+
+public async Task<List<string>> GetMeesagesAsync()
+{
+   if(messageCache != null)
+     return messageCache;
+   return await _referralMessageData.GetMessagesAsync().ConfigureAwait(false);
+}
+Becomes:
+
+public Task<List<string>> GetMeesagesAsync()
+{
+   if(messageCache != null)
+     return Task.FromResult(messageCache);
+   return _referralMessageData.GetMessagesAsync();
+}
+However, if at any point you need the results of a task to do further work, then awaiting is the way to go.
+
+The sample repository and data code don't have much real logic in them (and none after the await), so they can be simplified to return the tasks directly, as other commenters have noted.
+
+On a side note, the sample repository suffers from a common repository problem: doing nothing. If the rest of your real-world repository is similar, you might have one level of abstraction too many in your system. Note that Entity Framework is already a generic unit-of-work repository.
+
+But regarding async and await in the general case, the code often has work to do after the await:
+
+public async Task<IHttpActionResult> GetMessages()
+{
+  var result = await _messageRepository.GetMessagesAsync();
+  return Ok(result);
+}
+Remember that async and await are just fancy syntax for hooking up callbacks. There isn't an easier way to express this method's logic asynchronously. There have been some experiments around, e.g., inferring await, but they have all been discarded at this point (I have a blog post describing why the async/await keywords have all the "cruft" that they do).
+
+And this cruft is necessary for each method. Each method using async/await is establishing its own callback. If the callback isn't necessary, then the method can just return the task directly, avoiding async/await. Other asynchronous systems (e.g., promises in JavaScript) have the same restriction: they have to be asynchronous all the way.
+
+It's possible - conceptually - to define a system in which any blocking operation would yield the thread automatically. My foremost argument against a system like this is that it would have implicit reentrancy. Particularly when considering third-party library changes, an auto-yielding system would be unmaintainable IMO. It's far better to have the asynchrony of an API explicit in its signature (i.e., if it returns Task, then it's asynchronous).
+
+Now, @usr makes a good point that maybe you don't need asynchrony at all. That's almost certainly true if, e.g., your Entity Framework code is querying a single instance of SQL Server. This is because the primary benefit of async on ASP.NET is scalability, and if you don't need scalability (of the ASP.NET portion), then you don't need asynchrony. See the "not a silver bullet" section in my MSDN article on async ASP.NET.
+
+However, I think there's also an argument to be made for "natural APIs". If an operation is naturally asynchronous (e.g., I/O-based), then its most natural API is an asynchronous API. Conversely, naturally synchronous operations (e.g., CPU-based) are most naturally represented as synchronous APIs. The natural API argument is strongest for libraries - if your repository / data access layer was its own dll intended to be reused in other (possibly desktop or mobile) applications, then it should definitely be an asynchronous API. But if (as is more likely the case) it is specific to this ASP.NET application which does not need to scale, then there's no specific need to make the API either asynchronous or synchronous.
+
+But there's a good two-pronged counter-argument regarding developer experience. Many developers don't know their way around async at all; would a code maintainer be likely to mess it up? The other prong of that argument is that the libraries and tooling around async are still coming up to speed. Most notable is the lack of a causality stack when there are exceptions to trace down (on a side note, I wrote a library that helps with this). Furthermore, parts of ASP.NET are not async-compatible - most notably, MVC filters and child actions (they are fixing both of those with ASP.NET vNext). And ASP.NET has different behavior regarding timeouts and thread aborts for asynchronous handlers - adding yet a little more to the async learning curve.
+
+Of course, the counter-counter argument would be that the proper response to behind-the-times developers is to train them, not restrict the technologies available.
+
+In short:
+
+The proper way to do async is "all the way". This is especially true on ASP.NET, and it's not likely to change anytime soon.
+Whether async is appropriate, or helpful, is up to you and your application's scenario.
 
 
 I think it is not possible to make async data access for sqlite or sqlce

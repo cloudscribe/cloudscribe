@@ -71,7 +71,7 @@ namespace cloudscribe.Messaging.Sms
 
             var response = await client.PostAsync(
                 postUrl, 
-                content);
+                content).ConfigureAwait(false);
 
             if (response.IsSuccessStatusCode)
             {

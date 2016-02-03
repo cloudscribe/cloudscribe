@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-22
-// Last Modified:			2016-01-03
+// Last Modified:			2016-02-03
 // 
 
 using cloudscribe.Core.Models.Geography;
@@ -28,39 +28,39 @@ namespace cloudscribe.Core.Web.Components
         private readonly HttpContext _context;
         private CancellationToken CancellationToken => _context?.RequestAborted ?? CancellationToken.None;
 
-        public async Task<List<IGeoCountry>> GetCountriesPage(int pageNumber, int pageSize)
+        public Task<List<IGeoCountry>> GetCountriesPage(int pageNumber, int pageSize)
         {
-            return await repo.GetCountriesPage(pageNumber, pageSize, CancellationToken);
+            return repo.GetCountriesPage(pageNumber, pageSize, CancellationToken);
         }
 
-        public async Task<int> GetCountryCount()
+        public Task<int> GetCountryCount()
         {
-            return await repo.GetCountryCount(CancellationToken);
+            return repo.GetCountryCount(CancellationToken);
         }
 
-        public async Task<IGeoCountry> FetchCountry(Guid guid)
+        public Task<IGeoCountry> FetchCountry(Guid guid)
         {
-            return await repo.FetchCountry(guid, CancellationToken);
+            return repo.FetchCountry(guid, CancellationToken);
         }
 
-        public async Task<IGeoCountry> FetchCountry(string isoCode2)
+        public Task<IGeoCountry> FetchCountry(string isoCode2)
         {
-            return await repo.FetchCountry(isoCode2, CancellationToken);
+            return repo.FetchCountry(isoCode2, CancellationToken);
         }
 
-        public async Task<List<IGeoCountry>> GetAllCountries()
+        public Task<List<IGeoCountry>> GetAllCountries()
         {
-            return await repo.GetAllCountries(CancellationToken);
+            return repo.GetAllCountries(CancellationToken);
         }
 
-        public async Task<bool> Add(IGeoCountry geoCountry)
+        public Task<bool> Add(IGeoCountry geoCountry)
         {
-            return await repo.Add(geoCountry, CancellationToken.None);
+            return repo.Add(geoCountry, CancellationToken.None);
         }
 
-        public async Task<bool> Update(IGeoCountry geoCountry)
+        public Task<bool> Update(IGeoCountry geoCountry)
         {
-            return await repo.Update(geoCountry, CancellationToken.None);
+            return repo.Update(geoCountry, CancellationToken.None);
         }
 
         public async Task<bool> DeleteCountry(IGeoCountry country)
@@ -71,91 +71,91 @@ namespace cloudscribe.Core.Web.Components
             return result;
         }
 
-        public async Task<List<IGeoZone>> GetGeoZonesByCountry(Guid countryGuid)
+        public Task<List<IGeoZone>> GetGeoZonesByCountry(Guid countryGuid)
         {
-            return await repo.GetGeoZonesByCountry(countryGuid, CancellationToken);
+            return repo.GetGeoZonesByCountry(countryGuid, CancellationToken);
         }
 
-        public async Task<List<IGeoZone>> GetGeoZonePage(Guid countryGuid, int pageNumber, int pageSize)
+        public Task<List<IGeoZone>> GetGeoZonePage(Guid countryGuid, int pageNumber, int pageSize)
         {
-            return await repo.GetGeoZonePage(countryGuid, pageNumber, pageSize, CancellationToken);
+            return repo.GetGeoZonePage(countryGuid, pageNumber, pageSize, CancellationToken);
         }
 
-        public async Task<int> GetGeoZoneCount(Guid countryGuid)
+        public Task<int> GetGeoZoneCount(Guid countryGuid)
         {
-            return await repo.GetGeoZoneCount(countryGuid, CancellationToken);
+            return repo.GetGeoZoneCount(countryGuid, CancellationToken);
         }
 
-        public async Task<List<IGeoCountry>> CountryAutoComplete(string query, int maxRows)
+        public Task<List<IGeoCountry>> CountryAutoComplete(string query, int maxRows)
         {
-            return await repo.CountryAutoComplete(query, maxRows, CancellationToken);
+            return repo.CountryAutoComplete(query, maxRows, CancellationToken);
         }
 
-        public async Task<List<IGeoZone>> StateAutoComplete(Guid countryGuid, string query, int maxRows)
+        public Task<List<IGeoZone>> StateAutoComplete(Guid countryGuid, string query, int maxRows)
         {
-            return await repo.StateAutoComplete(countryGuid, query, maxRows, CancellationToken);
+            return repo.StateAutoComplete(countryGuid, query, maxRows, CancellationToken);
         }
 
-        public async Task<IGeoZone> FetchGeoZone(Guid guid)
+        public Task<IGeoZone> FetchGeoZone(Guid guid)
         {
-            return await repo.FetchGeoZone(guid, CancellationToken);
+            return repo.FetchGeoZone(guid, CancellationToken);
         }
 
-        public async Task<bool> Add(IGeoZone geoZone)
+        public Task<bool> Add(IGeoZone geoZone)
         {
-            return await repo.Add(geoZone, CancellationToken.None);
+            return repo.Add(geoZone, CancellationToken.None);
         }
 
-        public async Task<bool> Update(IGeoZone geoZone)
+        public Task<bool> Update(IGeoZone geoZone)
         {
-            return await repo.Update(geoZone, CancellationToken.None);
+            return repo.Update(geoZone, CancellationToken.None);
         }
 
-        public async Task<bool> DeleteGeoZone(IGeoZone geoZone)
+        public Task<bool> DeleteGeoZone(IGeoZone geoZone)
         {
-            return await repo.DeleteGeoZone(geoZone.Guid, CancellationToken.None);
+            return repo.DeleteGeoZone(geoZone.Guid, CancellationToken.None);
         }
 
 
 
-        public async Task<List<ICurrency>> GetAllCurrencies()
+        public Task<List<ICurrency>> GetAllCurrencies()
         {
-            return await repo.GetAllCurrencies(CancellationToken);
+            return repo.GetAllCurrencies(CancellationToken);
         }
 
-        public async Task<ICurrency> FetchCurrency(Guid guid)
+        public Task<ICurrency> FetchCurrency(Guid guid)
         {
-            return await repo.FetchCurrency(guid, CancellationToken);
+            return repo.FetchCurrency(guid, CancellationToken);
         }
 
-        public async Task<bool> Add(ICurrency currency)
+        public Task<bool> Add(ICurrency currency)
         {
-            return await repo.Add(currency, CancellationToken.None);
+            return repo.Add(currency, CancellationToken.None);
         }
 
-        public async Task<bool> Update(ICurrency currency)
+        public Task<bool> Update(ICurrency currency)
         {
-            return await repo.Update(currency, CancellationToken.None);
+            return repo.Update(currency, CancellationToken.None);
         }
 
-        public async Task<bool> DeleteCurrency(ICurrency currency)
+        public Task<bool> DeleteCurrency(ICurrency currency)
         {
-            return await repo.DeleteCurrency(currency.Guid, CancellationToken.None);
+            return repo.DeleteCurrency(currency.Guid, CancellationToken.None);
         }
 
-        public async Task<bool> Add(ILanguage language)
+        public Task<bool> Add(ILanguage language)
         {
-            return await repo.Add(language, CancellationToken.None);
+            return repo.Add(language, CancellationToken.None);
         }
 
-        public async Task<bool> Update(ILanguage language)
+        public Task<bool> Update(ILanguage language)
         {
-            return await repo.Update(language, CancellationToken.None);
+            return repo.Update(language, CancellationToken.None);
         }
 
-        public async Task<int> GetLanguageCount()
+        public Task<int> GetLanguageCount()
         {
-            return await repo.GetLanguageCount(CancellationToken);
+            return repo.GetLanguageCount(CancellationToken);
         }
 
     }

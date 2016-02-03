@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-11-15
-// Last Modified:			2015-12-19
+// Last Modified:			2016-02-03
 // 
 
 using cloudscribe.Core.Web.Components;
@@ -522,12 +522,12 @@ namespace cloudscribe.Core.Web.Controllers
             bool add = false;
             if (model.Guid != Guid.Empty)
             {
-                add = true;
                 currency = await dataManager.FetchCurrency(model.Guid);
                 successFormat = "The currency <b>{0}</b> was successfully updated.";
             }
             else
             {
+                add = true;
                 currency = new Currency();
                 successFormat = "The currency <b>{0}</b> was successfully created.";
             }

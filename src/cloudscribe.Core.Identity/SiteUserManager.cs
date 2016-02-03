@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-22
-// Last Modified:		    2016-01-31
+// Last Modified:		    2016-02-03
 // 
 //
 
@@ -115,27 +115,27 @@ namespace cloudscribe.Core.Identity
         //}
 
 
-        public async Task<bool> LoginIsAvailable(int userId, string loginName)
+        public Task<bool> LoginIsAvailable(int userId, string loginName)
         {
             int siteId = Site.SiteId;
             if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
-            return await userRepo.LoginIsAvailable(siteId, userId, loginName, CancellationToken);
+            return userRepo.LoginIsAvailable(siteId, userId, loginName, CancellationToken);
  
         }
 
-        public async Task<string> GetUserNameFromEmail(int siteId, string email)
+        public Task<string> GetUserNameFromEmail(int siteId, string email)
         {
             if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
-            return await userRepo.GetUserNameFromEmail(siteId, email, CancellationToken);
+            return userRepo.GetUserNameFromEmail(siteId, email, CancellationToken);
         }
 
-        public async Task<List<IUserInfo>> GetPage(int siteId, int pageNumber, int pageSize, string userNameBeginsWith, int sortMode)
+        public Task<List<IUserInfo>> GetPage(int siteId, int pageNumber, int pageSize, string userNameBeginsWith, int sortMode)
         {
             if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
-            return await userRepo.GetPage(siteId, pageNumber, pageSize, userNameBeginsWith, sortMode, CancellationToken);
+            return userRepo.GetPage(siteId, pageNumber, pageSize, userNameBeginsWith, sortMode, CancellationToken);
         }
 
         public int GetCount(int siteId)
@@ -145,82 +145,82 @@ namespace cloudscribe.Core.Identity
             return userRepo.GetCount(siteId);
         }
 
-        public async Task<int> CountUsers(int siteId, string userNameBeginsWith)
+        public Task<int> CountUsers(int siteId, string userNameBeginsWith)
         {
             if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
-            return await userRepo.CountUsers(siteId, userNameBeginsWith, CancellationToken);
+            return userRepo.CountUsers(siteId, userNameBeginsWith, CancellationToken);
         }
 
-        public async Task<int> CountLockedOutUsers(int siteId)
+        public Task<int> CountLockedOutUsers(int siteId)
         {
             if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
-            return await userRepo.CountLockedByAdmin(siteId, CancellationToken);
+            return userRepo.CountLockedByAdmin(siteId, CancellationToken);
         }
 
-        public async Task<List<IUserInfo>> GetPageLockedUsers(
+        public Task<List<IUserInfo>> GetPageLockedUsers(
             int siteId,
             int pageNumber,
             int pageSize)
         {
             if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
-            return await userRepo.GetPageLockedByAdmin(siteId, pageNumber, pageSize, CancellationToken);
+            return userRepo.GetPageLockedByAdmin(siteId, pageNumber, pageSize, CancellationToken);
         }
 
-        public async Task<List<IUserInfo>> GetUserAdminSearchPage(int siteId, int pageNumber, int pageSize, string searchInput, int sortMode)
+        public Task<List<IUserInfo>> GetUserAdminSearchPage(int siteId, int pageNumber, int pageSize, string searchInput, int sortMode)
         {
             if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
-            return await userRepo.GetUserAdminSearchPage(siteId, pageNumber, pageSize, searchInput, sortMode, CancellationToken);
+            return userRepo.GetUserAdminSearchPage(siteId, pageNumber, pageSize, searchInput, sortMode, CancellationToken);
 
         }
 
-        public async Task<int> CountUsersForAdminSearch(int siteId, string searchInput)
+        public Task<int> CountUsersForAdminSearch(int siteId, string searchInput)
         {
             if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
-            return await userRepo.CountUsersForAdminSearch(siteId, searchInput, CancellationToken);
+            return userRepo.CountUsersForAdminSearch(siteId, searchInput, CancellationToken);
         }
 
-        public async Task<int> CountNotApprovedUsers(int siteId)
+        public Task<int> CountNotApprovedUsers(int siteId)
         {
             if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
-            return await userRepo.CountNotApprovedUsers(siteId, CancellationToken);
+            return userRepo.CountNotApprovedUsers(siteId, CancellationToken);
         }
 
-        public async Task<List<IUserInfo>> GetNotApprovedUsers(
+        public Task<List<IUserInfo>> GetNotApprovedUsers(
             int siteId,
             int pageNumber,
             int pageSize)
         {
             if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
-            return await userRepo.GetNotApprovedUsers(siteId, pageNumber, pageSize, CancellationToken);
+            return userRepo.GetNotApprovedUsers(siteId, pageNumber, pageSize, CancellationToken);
 
         }
 
-        public async Task<List<IUserInfo>> GetByIPAddress(Guid siteGuid, string ipv4Address)
+        public Task<List<IUserInfo>> GetByIPAddress(Guid siteGuid, string ipv4Address)
         {
             if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = Guid.Empty; }
 
-            return await userRepo.GetByIPAddress(siteGuid, ipv4Address, CancellationToken);
+            return userRepo.GetByIPAddress(siteGuid, ipv4Address, CancellationToken);
         }
 
-        public async Task<ISiteUser> Fetch(int siteId, int userId)
+        public Task<ISiteUser> Fetch(int siteId, int userId)
         {
             if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
-            return await userRepo.Fetch(siteId, userId, CancellationToken);
+            return userRepo.Fetch(siteId, userId, CancellationToken);
         }
 
-        public async Task<ISiteUser> Fetch(int siteId, Guid userGuid)
+        public Task<ISiteUser> Fetch(int siteId, Guid userGuid)
         {
             if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
-            return await userRepo.Fetch(siteId, userGuid, CancellationToken);
+            return userRepo.Fetch(siteId, userGuid, CancellationToken);
         }
 
         //public async Task<ISiteUser> FetchByConfirmationGuid(int siteId, Guid confirmGuid)
@@ -230,23 +230,23 @@ namespace cloudscribe.Core.Identity
         //    return await userRepo.FetchByConfirmationGuid(siteId, confirmGuid, CancellationToken);
         //}
 
-        public async Task<bool> Save(ISiteUser user)
+        public Task<bool> Save(ISiteUser user)
         {
-            return await userRepo.Save(user, CancellationToken);
+            return userRepo.Save(user, CancellationToken);
         }
 
-        public async Task<bool> EmailExistsInDB(int siteId, string email)
+        public Task<bool> EmailExistsInDB(int siteId, string email)
         {
             if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
-            return await userRepo.EmailExistsInDB(siteId, email, CancellationToken);
+            return userRepo.EmailExistsInDB(siteId, email, CancellationToken);
         }
 
-        public async Task<bool> EmailExistsInDB(int siteId, int userId, string email)
+        public Task<bool> EmailExistsInDB(int siteId, int userId, string email)
         {
             if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
-            return await userRepo.EmailExistsInDB(siteId, userId, email, CancellationToken);
+            return userRepo.EmailExistsInDB(siteId, userId, email, CancellationToken);
 
         }
 

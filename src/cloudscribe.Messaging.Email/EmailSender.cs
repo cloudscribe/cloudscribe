@@ -83,7 +83,10 @@ namespace cloudscribe.Messaging.Email
                 //    return (true);
                 //};
 
-                await client.ConnectAsync(smtpOptions.Server, smtpOptions.Port, smtpOptions.UseSsl);
+                await client.ConnectAsync(
+                    smtpOptions.Server, 
+                    smtpOptions.Port, 
+                    smtpOptions.UseSsl);
                 //await client.ConnectAsync(smtpOptions.Server, smtpOptions.Port, SecureSocketOptions.StartTls);
 
                 // Note: since we don't have an OAuth2 token, disable
@@ -96,8 +99,8 @@ namespace cloudscribe.Messaging.Email
                     await client.AuthenticateAsync(smtpOptions.User, smtpOptions.Password);
                 }
                 
-                client.Send(m);
-                client.Disconnect(true);
+                await client.SendAsync(m);
+                await client.DisconnectAsync(true);
             }
 
         }

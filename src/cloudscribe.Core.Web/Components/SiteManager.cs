@@ -72,18 +72,18 @@ namespace cloudscribe.Core.Web.Components
         
            
 
-        public async Task<List<ISiteInfo>> GetPageOtherSites(
+        public Task<List<ISiteInfo>> GetPageOtherSites(
             int currentSiteId,
             int pageNumber,
             int pageSize)
         {
-            return await siteRepo.GetPageOtherSites(currentSiteId, pageNumber, pageSize, CancellationToken);
+            return siteRepo.GetPageOtherSites(currentSiteId, pageNumber, pageSize, CancellationToken);
 
         }
 
-        public async Task<int> CountOtherSites(int currentSiteId)
+        public Task<int> CountOtherSites(int currentSiteId)
         {
-            return await siteRepo.CountOtherSites(currentSiteId, CancellationToken);
+            return siteRepo.CountOtherSites(currentSiteId, CancellationToken);
         }
 
         //public int GetSiteIdByFolderNonAsync(string folderName)
@@ -378,51 +378,50 @@ namespace cloudscribe.Core.Web.Components
         //    return folderExists;
         //}
 
-        public async Task<ISiteHost> GetSiteHost(string hostName)
+        public Task<ISiteHost> GetSiteHost(string hostName)
         {
-            return await siteRepo.GetSiteHost(hostName, CancellationToken);
+            return siteRepo.GetSiteHost(hostName, CancellationToken);
         }
 
-        public async Task<List<ISiteHost>> GetSiteHosts(int siteId)
+        public Task<List<ISiteHost>> GetSiteHosts(int siteId)
         {
-            return await siteRepo.GetSiteHosts(siteId, CancellationToken);
+            return siteRepo.GetSiteHosts(siteId, CancellationToken);
         }
 
-        public async Task<bool> AddHost(Guid siteGuid, int siteId, string hostName)
+        public Task<bool> AddHost(Guid siteGuid, int siteId, string hostName)
         {
-            return await siteRepo.AddHost(siteGuid, siteId, hostName, CancellationToken);
+            return siteRepo.AddHost(siteGuid, siteId, hostName, CancellationToken);
         }
 
-        public async Task<bool> DeleteHost(int hostId)
+        public Task<bool> DeleteHost(int hostId)
         {
-            
-            return await siteRepo.DeleteHost(hostId, CancellationToken);
+            return siteRepo.DeleteHost(hostId, CancellationToken);
         }
 
-        public async Task<int> GetUserCount(int siteId)
+        public Task<int> GetUserCount(int siteId)
         {
             // this is only used on setup controller
             // to make sure admin user was created
-            return await userRepo.CountUsers(siteId, string.Empty, CancellationToken);
+            return userRepo.CountUsers(siteId, string.Empty, CancellationToken);
         }
 
-        public async Task<int> GetRoleCount(int siteId)
+        public Task<int> GetRoleCount(int siteId)
         {
             // this is only used on setup controller
             // to make sure admin user and role was created
-            return await userRepo.CountOfRoles(siteId, string.Empty, CancellationToken);
+            return userRepo.CountOfRoles(siteId, string.Empty, CancellationToken);
         }
 
-        public async Task<int> ExistingSiteCount()
+        public Task<int> ExistingSiteCount()
         {
             try
             {
-                return await siteRepo.GetCount(CancellationToken);
+                return siteRepo.GetCount(CancellationToken);
             }
             catch { }
             // errors are expected here before the db is initialized
             // so just return 0 if error here
-            return 0;
+            return Task.FromResult(0);
             
         }
 
