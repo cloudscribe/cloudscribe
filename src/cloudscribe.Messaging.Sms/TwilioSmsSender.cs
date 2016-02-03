@@ -1,8 +1,8 @@
 ﻿// Copyright (c) Source Tree Solutions, LLC. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
-// Author:					Joe Audette
-// Created:				    2016-01-24
-// Last Modified:		    2016-02-02
+// Author:                  Joe Audette
+// Created:                 2016-01-24
+// Last Modified:           2016-02-03
 // 
 
 using System;
@@ -27,10 +27,13 @@ namespace cloudscribe.Messaging.Sms
 
         
         private ILogger log = null;
+        private const string TwilioSmsEndpointFormat
+            = "https://api.twilio.com/2010-04-01/Accounts/{0}/Messages.json";
 
         /// <summary>
         /// Send an sms message using Twilio REST API
         /// </summary>
+        /// <param name="credentials">TwilioSmsCredentials</param>
         /// <param name="toPhoneNumber">E.164 formatted phone number, e.g. +16175551212</param>
         /// <param name="message"></param>
         /// <returns></returns>
@@ -63,7 +66,7 @@ namespace cloudscribe.Messaging.Sms
             
             var postUrl = string.Format(
                     CultureInfo.InvariantCulture,
-                    credentials.SmsEndpointUrlFormat,
+                    TwilioSmsEndpointFormat,
                     credentials.AccountSid);
 
             var response = await client.PostAsync(
@@ -72,7 +75,6 @@ namespace cloudscribe.Messaging.Sms
 
             if (response.IsSuccessStatusCode)
             {
-                //the POST succeeded
                 if(log != null)
                 {
                     log.LogDebug("success sending sms message to " + toPhoneNumber);
@@ -82,7 +84,6 @@ namespace cloudscribe.Messaging.Sms
             }
             else
             {
-                //the POST failed
                 if (log != null)
                 {
                     string responseBody = await response.Content.ReadAsStringAsync();
