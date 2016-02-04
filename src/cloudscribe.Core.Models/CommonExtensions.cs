@@ -2,9 +2,10 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-11-15
-// Last Modified:			2016-02-03
+// Last Modified:			2016-02-04
 // 
 
+using Microsoft.AspNet.Http;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Net;
@@ -14,6 +15,32 @@ namespace cloudscribe.Core.Models
 {
     public static class CommonExtensions
     {
+        public static string StartingSegment(this PathString path, out PathString remaining)
+        {
+            var startingSegment = string.Empty;
+
+            var spath = path.ToString();
+            for (var i = 1; i < spath.Length; i++)
+            {
+                if (spath[i] == '/')
+                {
+                    remaining = spath.Substring(i, spath.Length - i);
+                    return startingSegment;
+                }
+
+                startingSegment += spath[i];
+            }
+
+            remaining = PathString.Empty;
+            return startingSegment;
+        }
+
+        public static string StartingSegment(this PathString path)
+        {
+            PathString remainder;
+            return path.StartingSegment(out remainder);
+        }
+
         public static string ToInvariantString(this int i)
         {
             return i.ToString(CultureInfo.InvariantCulture);

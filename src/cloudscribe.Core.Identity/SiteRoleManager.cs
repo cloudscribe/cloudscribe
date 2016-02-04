@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-17
-// Last Modified:		    2015-12-27
+// Last Modified:		    2016-02-04
 // 
 //
 
@@ -26,7 +26,7 @@ namespace cloudscribe.Core.Identity
     public class SiteRoleManager<TRole> : RoleManager<TRole> where TRole : SiteRole
     {
         public SiteRoleManager(
-            ISiteResolver siteResolver,
+            SiteSettings currentSite,
             IUserRepository userRepository,
             IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
             IRoleStore<TRole> roleStore,
@@ -37,17 +37,17 @@ namespace cloudscribe.Core.Identity
             IHttpContextAccessor contextAccessor
             ) : base(
                 roleStore, 
-                roleValidators, 
-                new UseOriginalLookupNormalizer(), //bypass the uppercasenormalizer passed in
+                roleValidators,
+                keyNormalizer, 
                 errors, 
                 logger, 
                 contextAccessor)
         {
-            if (siteResolver == null) { throw new ArgumentNullException(nameof(siteResolver)); }
+            if (currentSite == null) { throw new ArgumentNullException(nameof(currentSite)); }
             if (userRepository == null) { throw new ArgumentNullException(nameof(userRepository)); }
             if (roleStore == null) { throw new ArgumentNullException(nameof(roleStore)); }
 
-            this.siteResolver = siteResolver;
+            siteSettings = currentSite;
             userRepo = userRepository;
             this.logger = logger;
             multiTenantOptions = multiTenantOptionsAccessor.Value;
@@ -59,7 +59,6 @@ namespace cloudscribe.Core.Identity
         private CancellationToken CancellationToken => _context?.RequestAborted ?? CancellationToken.None;
 
         private MultiTenantOptions multiTenantOptions;
-        private ISiteResolver siteResolver;
         private IUserRepository userRepo;
         private ILogger logger;
         private ISiteSettings siteSettings = null;
@@ -67,7 +66,7 @@ namespace cloudscribe.Core.Identity
         {
             get
             {
-                if (siteSettings == null) { siteSettings = siteResolver.Resolve(); }
+                //if (siteSettings == null) { siteSettings = siteResolver.Resolve(); }
                 return siteSettings;
             }
         }

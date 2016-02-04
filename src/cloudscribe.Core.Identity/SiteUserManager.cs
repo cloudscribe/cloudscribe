@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-22
-// Last Modified:		    2016-02-03
+// Last Modified:		    2016-02-04
 // 
 //
 
@@ -28,7 +28,7 @@ namespace cloudscribe.Core.Identity
     {
         
         public SiteUserManager(
-            ISiteResolver siteResolver,
+            SiteSettings currentSite,
             IUserRepository userRepository,
             IUserStore<TUser> store,
             IOptions<IdentityOptions> optionsAccessor,
@@ -56,7 +56,7 @@ namespace cloudscribe.Core.Identity
             defaultIdentityOptions = optionsAccessor.Value;
             userStore = store;
             userRepo = userRepository;
-            this.siteResolver = siteResolver;
+            siteSettings = currentSite;
             multiTenantOptions = multiTenantOptionsAccessor.Value;
             this.contextAccessor = contextAccessor;
             _context = contextAccessor?.HttpContext;
@@ -65,7 +65,6 @@ namespace cloudscribe.Core.Identity
         private IdentityOptions defaultIdentityOptions;
         private IUserStore<TUser> userStore;
         private IUserRepository userRepo;
-        private ISiteResolver siteResolver;
         private MultiTenantOptions multiTenantOptions;
         private IHttpContextAccessor contextAccessor;
         private readonly HttpContext _context;
@@ -89,7 +88,7 @@ namespace cloudscribe.Core.Identity
         {
             get
             {
-                if (siteSettings == null) { siteSettings = siteResolver.Resolve(); }
+                //if (siteSettings == null) { siteSettings = siteResolver.Resolve(); }
                 return siteSettings;
             }
         }

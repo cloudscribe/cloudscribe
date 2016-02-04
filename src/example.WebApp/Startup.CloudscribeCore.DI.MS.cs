@@ -217,6 +217,10 @@ namespace example.WebApp
             // RequestSiteResolver resolves ISiteSettings based on the request to support multi tenancy based on either host name or first folder depending on configuration
             services.TryAddScoped<ISiteResolver, RequestSiteResolver>();
             services.TryAddScoped<ITimeZoneResolver, RequestTimeZoneResolver>();
+
+            services.AddMultitenancy<SiteSettings, SiteResolver>();
+
+
             services.TryAddScoped<SiteManager, SiteManager>();
             services.TryAddScoped<SetupManager, SetupManager>();
             services.TryAddScoped<GeoDataManager, GeoDataManager>();

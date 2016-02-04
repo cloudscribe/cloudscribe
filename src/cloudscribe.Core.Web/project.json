@@ -36,7 +36,8 @@
     "Microsoft.AspNet.Http": "1.0.0-rc1-final",
     "Microsoft.AspNet.Mvc.TagHelpers": "6.0.0-rc1-final",
     "Microsoft.Extensions.OptionsModel": "1.0.0-rc1-final",
-    "Microsoft.Extensions.PlatformAbstractions": "1.0.0-rc1-final"
+    "Microsoft.Extensions.PlatformAbstractions": "1.0.0-rc1-final",
+    "SaasKit.Multitenancy": "1.0.0-*"
 
   },
 

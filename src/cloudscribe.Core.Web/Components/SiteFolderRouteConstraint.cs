@@ -2,14 +2,18 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-06-19
-// Last Modified:			2015-11-18
+// Last Modified:			2016-02-04
 // 
 
 using cloudscribe.Core.Models;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using SaasKit.Multitenancy;
+using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Components
 {
@@ -32,6 +36,9 @@ namespace cloudscribe.Core.Web.Components
         //    requiredSiteFolder = folderParam;
         //}
 
+        //TODO: is this getting called on requests for static resources?
+        // want to make sure it is not, we don't want to hit the db on requests for static files
+
         public bool Match(
             HttpContext httpContext,
             IRouter route,
@@ -39,16 +46,36 @@ namespace cloudscribe.Core.Web.Components
             IDictionary<string,object> values,
             RouteDirection routeDirection)
         {
-            string requestFolder = RequestSiteResolver.GetFirstFolderSegment(httpContext.Request.Path);
+            // TODO: problem here is we want to make this method be async
+            //https://github.com/aspnet/Mvc/issues/1094
+            // but may have to jump through some hoops
+            // for now we are calling an async method synchronously while blocking the thread
+
+            string requestFolder = httpContext.Request.Path.StartingSegment();
             //return string.Equals(requiredSiteFolder, requestFolder, StringComparison.CurrentCultureIgnoreCase);
-            ISiteResolver siteResolver = httpContext.ApplicationServices.GetService<ISiteResolver>();
+            ITenantResolver<SiteSettings> siteResolver 
+                = httpContext.ApplicationServices.GetService<ITenantResolver<SiteSettings>>();
+
             if(siteResolver != null)
             {
                 try
                 {
                     // exceptions expected here until db install scripts have run or if db connection error
-                    ISiteSettings site = siteResolver.Resolve();
-                    if ((site != null) && (site.SiteFolderName == requestFolder)) { return true; }
+                    //ISiteSettings site = siteResolver.Resolve();
+                    //var siteContext = Task.Run<TenantContext<SiteSettings>>(fun => siteResolver.ResolveAsync(httpContext));
+                    //
+
+                    Func<Task<TenantContext<SiteSettings>>> f  = delegate ()
+                    {
+                        return siteResolver.ResolveAsync(httpContext);
+                    };
+
+                    //http://stackoverflow.com/questions/22628087/calling-async-method-synchronously
+                    var siteContext = Task.Run<TenantContext<SiteSettings>>(f).Result;
+
+                    if ((siteContext != null) 
+                        &&(siteContext.Tenant != null) 
+                        && (siteContext.Tenant.SiteFolderName == requestFolder)) { return true; }
                 }
                 catch
                 {

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //  Author:                     Joe Audette
 //  Created:                    2015-10-07
-//	Last Modified:              2015-11-18
+//	Last Modified:              2016-02-04
 //
 
 using cloudscribe.Core.Models;
@@ -19,29 +19,29 @@ namespace cloudscribe.Core.Web.Razor
     {
         public TenantLayoutSelector(
             IRazorViewEngine viewEngine,
-            ISiteResolver siteResolver,
+            SiteSettings currentSite,
             IOptions<LayoutSelectorOptions> layoutOptionsAccesor,
             ILogger<TenantLayoutSelector> logger)
         {
             if (viewEngine == null) { throw new ArgumentNullException(nameof(viewEngine)); }
-            if (siteResolver == null) { throw new ArgumentNullException(nameof(siteResolver)); }
+            if (currentSite == null) { throw new ArgumentNullException(nameof(currentSite)); }
             if (logger == null) { throw new ArgumentNullException(nameof(logger)); }
             if (layoutOptionsAccesor == null) { throw new ArgumentNullException(nameof(layoutOptionsAccesor)); }
 
             this.viewEngine = viewEngine;
-            this.siteResolver = siteResolver;
+            site = currentSite;
             options = layoutOptionsAccesor.Value;
             log = logger;
         }
 
         private IRazorViewEngine viewEngine;
-        private ISiteResolver siteResolver;
+        private ISiteSettings site = null;
         private ILogger log;
         private LayoutSelectorOptions options;
 
         public string GetLayoutName(ViewContext viewContext)
         {
-            ISiteSettings site = siteResolver.Resolve();
+            //ISiteSettings site = siteResolver.Resolve();
             if (site == null) return options.DefaultLayout;
 
             string layout = options.DefaultLayout.Replace(".cshtml", string.Empty); // "Default_Layout"

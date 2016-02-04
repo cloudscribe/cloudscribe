@@ -358,11 +358,12 @@ namespace example.WebApp
 
             // Add static files to the request pipeline.
             app.UseStaticFiles();
-
+            
             // the only thing we are using session for is Alerts
             app.UseSession();
             //app.UseInMemorySession(configure: s => s.IdleTimeout = TimeSpan.FromMinutes(20));
-            
+
+            app.UseMultitenancy<SiteSettings>();
 
             // this is in Startup.CloudscribeCore.cs
             app.UseCloudscribeCore(multiTenantOptions,Configuration);

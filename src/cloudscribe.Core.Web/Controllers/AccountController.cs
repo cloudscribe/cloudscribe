@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2016-02-03
+// Last Modified:			2016-02-04
 // 
 
 using cloudscribe.Core.Identity;
@@ -30,7 +30,7 @@ namespace cloudscribe.Core.Web.Controllers
     {
 
         public AccountController(
-            ISiteResolver siteResolver,
+            SiteSettings currentSite,
             SiteUserManager<SiteUser> userManager,
             SiteSignInManager<SiteUser> signInManager,
             IpAddressTracker ipAddressTracker,
@@ -38,19 +38,16 @@ namespace cloudscribe.Core.Web.Controllers
             ISmsSender smsSender,
             ILogger<AccountController> logger)
         {
-            Site = siteResolver.Resolve();
+            Site = currentSite; 
             this.userManager = userManager;
             this.signInManager = signInManager;
-            //config = configuration;
             this.emailSender = emailSender;
             this.smsSender = smsSender;
             this.ipAddressTracker = ipAddressTracker;
             log = logger;
         }
 
-        //private ISiteResolver resolver;
         private readonly ISiteSettings Site;
-        //private readonly ConfigHelper config;
         private readonly SiteUserManager<SiteUser> userManager;
         private readonly SiteSignInManager<SiteUser> signInManager;
         private readonly ISiteMessageEmailSender emailSender;
@@ -373,7 +370,8 @@ namespace cloudscribe.Core.Web.Controllers
                         else
                         {
                             await signInManager.SignInAsync(user, isPersistent: false);
-                            return Redirect("/");
+                            //return Redirect("/");
+                            return this.RedirectToSiteRoot(Site);
                         }
                     }
 
@@ -422,12 +420,14 @@ namespace cloudscribe.Core.Web.Controllers
 
             if(user == null)
             {
-                return Redirect("/");
+                //return Redirect("/");
+                return this.RedirectToSiteRoot(Site);
             }
 
             if(user.EmailConfirmed)
             {
-                return Redirect("/");
+                //return Redirect("/");
+                return this.RedirectToSiteRoot(Site);
             }
 
             var code = await userManager.GenerateEmailConfirmationTokenAsync((SiteUser)user);
@@ -481,7 +481,8 @@ namespace cloudscribe.Core.Web.Controllers
         public async Task<IActionResult> LogOff()
         {
             await signInManager.SignOutAsync();
-            return Redirect("/");
+            //return Redirect("/");
+            return this.RedirectToSiteRoot(Site);
         }
 
         //[HttpGet]

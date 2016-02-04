@@ -2,13 +2,16 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-27
-// Last Modified:			2015-11-18
+// Last Modified:			2016-02-04
 // 
 
 using cloudscribe.Core.Models;
+using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Authentication.Cookies;
 using Microsoft.Extensions.Logging;
+using SaasKit.Multitenancy;
+
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -17,19 +20,22 @@ namespace cloudscribe.Core.Identity
     public class MultiTenantAuthCookieValidator
     {
         public MultiTenantAuthCookieValidator(
-            ISiteResolver siteResolver,
+            IHttpContextAccessor contextAccessor,
+            ITenantResolver<SiteSettings> siteResolver,
             ISecurityStampValidator securityStampValidator,
             ILogger<MultiTenantAuthCookieValidator> logger
             )
         {
+            this.contextAccessor = contextAccessor;
             this.securityStampValidator = securityStampValidator;
             this.siteResolver = siteResolver;
             log = logger;
         }
 
         private ISecurityStampValidator securityStampValidator;
-        private ISiteResolver siteResolver;
+        private ITenantResolver<SiteSettings> siteResolver;
         private ILogger log;
+        private IHttpContextAccessor contextAccessor;
 
         public async Task ValidatePrincipal(CookieValidatePrincipalContext context)
         {
@@ -37,14 +43,22 @@ namespace cloudscribe.Core.Identity
             // and fix the broken
             // it needs to resolve options per tenant
             //await securityStampValidator.ValidateAsync(context);
+
+
+            TenantContext<SiteSettings> siteContext
+                = await siteResolver.ResolveAsync(contextAccessor.HttpContext);
             
-            ISiteSettings site = siteResolver.Resolve();
-            if (site == null)
+            if (siteContext == null)
             {
                 context.RejectPrincipal();
             }
 
-            Claim siteGuidClaim = new Claim("SiteGuid", site.SiteGuid.ToString());
+            if (siteContext.Tenant == null)
+            {
+                context.RejectPrincipal();
+            }
+
+            Claim siteGuidClaim = new Claim("SiteGuid", siteContext.Tenant.SiteGuid.ToString());
 
             if (!context.Principal.HasClaim(siteGuidClaim.Type, siteGuidClaim.Value))
             {

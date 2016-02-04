@@ -1,8 +1,8 @@
 ﻿// Copyright (c) Source Tree Solutions, LLC. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
-// Author:					Joe Audette
-// Created:					2015-06-19
-// Last Modified:			2016-01-31
+// Author:              Joe Audette
+// Created:             2015-06-19
+// Last Modified:       2016-02-04
 // 
 
 using cloudscribe.Core.Models;
@@ -60,7 +60,10 @@ namespace cloudscribe.Core.Web.Components
            
             if (multiTenantOptions.Mode == MultiTenantMode.FolderName)
             {
-                string siteFolderName = GetFirstFolderSegment(requestPath);
+                //string siteFolderName = GetFirstFolderSegment(requestPath);
+                string siteFolderName = GetFirstFolderSegment(context.Request.Path);
+
+
                 if (siteFolderName.Length == 0) siteFolderName = "root";
                 //siteId = siteRepo.GetSiteIdByFolderNonAsync(siteFolderName);
 
@@ -98,45 +101,52 @@ namespace cloudscribe.Core.Web.Components
 
         }
 
-        public static string GetFirstFolderSegment(string url)
+        public static string GetFirstFolderSegment(PathString pathString)
         {
+            PathString remainder;
+            string firstSegment = pathString.StartingSegment(out remainder);
+            return firstSegment;
+        }
 
-            // find first level folder name
-            // after site root
-            string folderName = string.Empty;
+        //public static string GetFirstFolderSegment(string url)
+        //{
 
-            string requestPath = url.Replace("https://", string.Empty).Replace("http://", string.Empty);
+        //    // find first level folder name
+        //    // after site root
+        //    string folderName = string.Empty;
+
+        //    string requestPath = url.Replace("https://", string.Empty).Replace("http://", string.Empty);
             
-            if (requestPath == "/") return folderName;
+        //    if (requestPath == "/") return folderName;
 
-            //  cloudscribe/Content/css?v=vSkk4S2yX-JkF2jnutJR9WADNnO1X7e9w005ClDaRCs1
+        //    //  cloudscribe/Content/css?v=vSkk4S2yX-JkF2jnutJR9WADNnO1X7e9w005ClDaRCs1
 
-            int indexOfFirstSlash = requestPath.IndexOf("/");
-            int indexOfLastSlash = requestPath.LastIndexOf("/");
+        //    int indexOfFirstSlash = requestPath.IndexOf("/");
+        //    int indexOfLastSlash = requestPath.LastIndexOf("/");
 
-            if (
-                (indexOfFirstSlash > -1)
-                && (indexOfLastSlash > (indexOfFirstSlash + 1))
-                )
-            {
-                requestPath = requestPath.Substring(indexOfFirstSlash + 1, requestPath.Length - indexOfFirstSlash - 1);
+        //    if (
+        //        (indexOfFirstSlash > -1)
+        //        && (indexOfLastSlash > (indexOfFirstSlash + 1))
+        //        )
+        //    {
+        //        requestPath = requestPath.Substring(indexOfFirstSlash + 1, requestPath.Length - indexOfFirstSlash - 1);
 
-                if (requestPath.IndexOf("/") > -1)
-                {
-                    folderName = requestPath.Substring(0, requestPath.IndexOf("/"));
+        //        if (requestPath.IndexOf("/") > -1)
+        //        {
+        //            folderName = requestPath.Substring(0, requestPath.IndexOf("/"));
 
-                }
-            }
+        //        }
+        //    }
 
            
-            //    /en
-            if ((0 == indexOfFirstSlash) && (0 == indexOfLastSlash) && (requestPath.Length > 1))
-            {
-                folderName = requestPath.Substring(1);
-            }
+        //    //    /en
+        //    if ((0 == indexOfFirstSlash) && (0 == indexOfLastSlash) && (requestPath.Length > 1))
+        //    {
+        //        folderName = requestPath.Substring(1);
+        //    }
 
-            return folderName;
-        }
+        //    return folderName;
+        //}
 
     }
 }
