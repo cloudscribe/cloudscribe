@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-27
-// Last Modified:		    2015-11-18
+// Last Modified:		    2016-02-05
 // 
 
 
@@ -12,9 +12,11 @@ using Microsoft.AspNet.Authentication;
 using Microsoft.AspNet.Authentication.OAuth;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.DataProtection;
+using Microsoft.AspNet.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.OptionsModel;
 using Microsoft.Extensions.WebEncoders;
+using SaasKit.Multitenancy;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
@@ -39,9 +41,11 @@ namespace cloudscribe.Core.Identity.OAuth
         public MultiTenantOAuthMiddleware(
             RequestDelegate next,
             IDataProtectionProvider dataProtectionProvider,
+            IHttpContextAccessor contextAccessor,
             ILoggerFactory loggerFactory,
             IUrlEncoder encoder,
-            ISiteResolver siteResolver,
+            //ISiteResolver siteResolver,
+            ITenantResolver<SiteSettings> siteResolver,
             IOptions<MultiTenantOptions> multiTenantOptionsAccesor,
             IOptions<SharedAuthenticationOptions> sharedOptions,
             TOptions options)
@@ -90,14 +94,15 @@ namespace cloudscribe.Core.Identity.OAuth
             {
                 Options.SignInScheme = sharedOptions.Value.SignInScheme;
             }
-
+            this.contextAccessor = contextAccessor;
             this.loggerFactory = loggerFactory;
             this.siteResolver = siteResolver;
             multiTenantOptions = multiTenantOptionsAccesor.Value;
         }
 
         private ILoggerFactory loggerFactory;
-        private ISiteResolver siteResolver;
+        private IHttpContextAccessor contextAccessor;
+        private ITenantResolver<SiteSettings> siteResolver;
         private MultiTenantOptions multiTenantOptions;
 
         protected HttpClient Backchannel { get; private set; }
@@ -111,7 +116,7 @@ namespace cloudscribe.Core.Identity.OAuth
             return new MultiTenantOAuthHandler<TOptions>(
                 Backchannel, 
                 loggerFactory,
-                new MultiTenantOAuthOptionsResolver(siteResolver, multiTenantOptions)
+                new MultiTenantOAuthOptionsResolver(contextAccessor, siteResolver, multiTenantOptions)
                 );
         }
 

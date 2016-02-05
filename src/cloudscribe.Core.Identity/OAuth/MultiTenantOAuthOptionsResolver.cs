@@ -2,10 +2,12 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-09-04
-// Last Modified:		    2015-09-04
+// Last Modified:		    2016-02-05
 //
 
 using cloudscribe.Core.Models;
+using Microsoft.AspNet.Http;
+using SaasKit.Multitenancy;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,35 +18,54 @@ namespace cloudscribe.Core.Identity.OAuth
     public class MultiTenantOAuthOptionsResolver
     {
         public MultiTenantOAuthOptionsResolver(
-            ISiteResolver siteResolver,
+            //ISiteResolver siteResolver,
+            IHttpContextAccessor contextAccessor,
+            ITenantResolver<SiteSettings> siteResolver,
             MultiTenantOptions multiTenantOptions)
         {
             this.siteResolver = siteResolver;
+            this.contextAccessor = contextAccessor;
+            //site = currentSite;
             this.multiTenantOptions = multiTenantOptions;
         }
 
-        private ISiteResolver siteResolver;
+        private IHttpContextAccessor contextAccessor;
+        private ITenantResolver<SiteSettings> siteResolver;
         private MultiTenantOptions multiTenantOptions;
 
-        private ISiteSettings site = null;
-        public ISiteSettings Site
+        private async Task<SiteSettings> GetSite()
         {
-            get
+            TenantContext<SiteSettings> tenantContext 
+                = await siteResolver.ResolveAsync(contextAccessor.HttpContext);
+
+            if(tenantContext != null && tenantContext.Tenant != null)
             {
-                if (site == null) {  site = siteResolver.Resolve(); }
-                return site;
+                return tenantContext.Tenant;
             }
+
+            return null;
         }
 
-        public string ResolveCorrelationKey(string originalCorrelationKey)
+        //private ISiteSettings site = null;
+        //public ISiteSettings Site
+        //{
+        //    get
+        //    {
+        //        //if (site == null) {  site = siteResolver.Resolve(); }
+        //        return site;
+        //    }
+        //}
+
+        public async Task<string> ResolveCorrelationKey(string originalCorrelationKey)
         {
             if(!multiTenantOptions.UseRelatedSitesMode)
             {
                 if(multiTenantOptions.Mode == MultiTenantMode.FolderName)
                 {
-                    if((Site != null)&&(Site.SiteFolderName.Length > 0))
+                    var site = await GetSite();
+                    if ((site != null)&&(site.SiteFolderName.Length > 0))
                     {
-                        return originalCorrelationKey + "-" + Site.SiteFolderName;
+                        return originalCorrelationKey + "-" + site.SiteFolderName;
                     }
                     
                 }

@@ -33,18 +33,14 @@ namespace cloudscribe.Core.Web.Controllers
             IOptions<UIOptions> uiOptionsAccessor,
             IOptions<LayoutSelectorOptions> layoutSeletorOptionsAccessor,
             ILayoutFileListBuilder layoutListBuilder
-            //ConfigHelper configuration
-            //, ITriggerStartup startupTrigger
             )
         {
-            //if (siteResolver == null) { throw new ArgumentNullException(nameof(siteResolver)); }
+            if (siteManager == null) { throw new ArgumentNullException(nameof(siteManager)); }
             if (geoDataManager == null) { throw new ArgumentNullException(nameof(geoDataManager)); }
-            //if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
+            if (multiTenantOptions == null) { throw new ArgumentNullException(nameof(multiTenantOptions)); }
 
-            //config = configuration;
             this.multiTenantOptions = multiTenantOptions.Value;
-            //Site = siteResolver.Resolve();
-
+            
             this.siteManager = siteManager;
             this.geoDataManager = geoDataManager;
             uiOptions = uiOptionsAccessor.Value;
@@ -54,10 +50,8 @@ namespace cloudscribe.Core.Web.Controllers
             //startup = startupTrigger;
         }
 
-        //private ISiteSettings Site;
         private SiteManager siteManager;
         private GeoDataManager geoDataManager;
-        //private ConfigHelper config;
         private MultiTenantOptions multiTenantOptions;
         //private ITriggerStartup startup
         private LayoutSelectorOptions layoutOptions;

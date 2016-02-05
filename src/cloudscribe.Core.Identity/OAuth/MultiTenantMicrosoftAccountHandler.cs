@@ -1,23 +1,26 @@
 ﻿// Copyright (c) Source Tree Solutions, LLC. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
-// Author:					Joe Audette
-// Created:				    2014-08-29
-// Last Modified:		    2015-11-18
+// Author:                  Joe Audette
+// Created:                 2014-08-29
+// Last Modified:           2016-02-05
 // based on https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.MicrosoftAccount/MicrosoftAccountHandler.cs
 
 
 using Microsoft.AspNet.Authentication;
 using Microsoft.AspNet.Authentication.MicrosoftAccount;
 using Microsoft.AspNet.Authentication.OAuth;
+using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Http.Authentication;
 using Microsoft.AspNet.Http.Extensions;
 using Microsoft.Extensions.Logging;
 using cloudscribe.Core.Models;
 using Newtonsoft.Json.Linq;
+using SaasKit.Multitenancy;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Identity.OAuth
@@ -27,26 +30,57 @@ namespace cloudscribe.Core.Identity.OAuth
     {
         public MultiTenantMicrosoftAccountHandler(
             HttpClient httpClient,
-            ISiteResolver siteResolver,
+            //ISiteResolver siteResolver,
+            IHttpContextAccessor contextAccessor,
+            ITenantResolver<SiteSettings> siteResolver,
             ISiteRepository siteRepository,
             MultiTenantOptions multiTenantOptions,
             ILoggerFactory loggerFactory)
             : base(
                   httpClient, 
                   loggerFactory,
-                  new MultiTenantOAuthOptionsResolver(siteResolver, multiTenantOptions)
+                  new MultiTenantOAuthOptionsResolver(contextAccessor, siteResolver, multiTenantOptions)
                   )
         {
             log = loggerFactory.CreateLogger<MultiTenantMicrosoftAccountHandler>();
+            this.contextAccessor = contextAccessor;
             this.siteResolver = siteResolver;
             this.multiTenantOptions = multiTenantOptions;
             siteRepo = siteRepository;
         }
 
         private ILogger log;
-        private ISiteResolver siteResolver;
+        private IHttpContextAccessor contextAccessor;
+        private ITenantResolver<SiteSettings> siteResolver;
         private ISiteRepository siteRepo;
         private MultiTenantOptions multiTenantOptions;
+
+        private ISiteSettings site = null;
+
+        private async Task<ISiteSettings> GetSite()
+        {
+            if (multiTenantOptions.UseRelatedSitesMode)
+            {
+                if (multiTenantOptions.Mode == MultiTenantMode.FolderName)
+                {
+                    CancellationToken cancellationToken
+                        = contextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
+
+                    site = await siteRepo.Fetch(multiTenantOptions.RelatedSiteId, cancellationToken);
+                    return site;
+                }
+            }
+
+            TenantContext<SiteSettings> tenantContext
+                = await siteResolver.ResolveAsync(contextAccessor.HttpContext);
+
+            if (tenantContext != null && tenantContext.Tenant != null)
+            {
+                site = tenantContext.Tenant;
+            }
+
+            return site;
+        }
 
         protected override async Task<OAuthTokenResponse> ExchangeCodeAsync(string code, string redirectUri)
         {
@@ -61,7 +95,12 @@ namespace cloudscribe.Core.Identity.OAuth
             //    { "grant_type", "authorization_code" },
             //};
 
-            var tenantFbOptions = new MultiTenantMicrosoftOptionsResolver(Options, siteResolver, siteRepo, multiTenantOptions);
+            var currentSite = await GetSite();
+
+            var tenantFbOptions = new MultiTenantMicrosoftOptionsResolver(
+                Options,
+                currentSite, 
+                multiTenantOptions);
 
             var tokenRequestParameters = new Dictionary<string, string>()
             {
@@ -84,7 +123,9 @@ namespace cloudscribe.Core.Identity.OAuth
             return new OAuthTokenResponse(payload);
         }
 
-        protected override string BuildChallengeUrl(AuthenticationProperties properties, string redirectUri)
+        protected override async Task<string> BuildChallengeUrl(
+            AuthenticationProperties properties, 
+            string redirectUri)
         {
             log.LogDebug("BuildChallengeUrl called with redirectUri = " + redirectUri);
 
@@ -101,7 +142,14 @@ namespace cloudscribe.Core.Identity.OAuth
             //    { "state", state },
             //};
 
-            var tenantFbOptions = new MultiTenantMicrosoftOptionsResolver(Options, siteResolver, siteRepo, multiTenantOptions);
+            var currentSite = await GetSite();
+
+            var tenantFbOptions = new MultiTenantMicrosoftOptionsResolver(
+                Options,
+                currentSite, 
+                multiTenantOptions);
+
+
             string resolvedRedirectUri = tenantFbOptions.ResolveRedirectUrl(redirectUri);
             log.LogDebug("resolvedRedirectUri was " + resolvedRedirectUri);
 
@@ -157,11 +205,12 @@ namespace cloudscribe.Core.Identity.OAuth
 
             await Options.Events.CreatingTicket(context);
 
-            ISiteSettings site = siteResolver.Resolve();
+            //ISiteSettings site = siteResolver.Resolve();
+            var currentSite = await GetSite();
 
-            if (site != null)
+            if (currentSite != null)
             {
-                Claim siteGuidClaim = new Claim("SiteGuid", site.SiteGuid.ToString());
+                Claim siteGuidClaim = new Claim("SiteGuid", currentSite.SiteGuid.ToString());
                 if (!identity.HasClaim(siteGuidClaim.Type, siteGuidClaim.Value))
                 {
                     identity.AddClaim(siteGuidClaim);

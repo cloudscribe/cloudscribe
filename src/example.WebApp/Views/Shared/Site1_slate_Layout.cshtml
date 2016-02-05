@@ -1,8 +1,8 @@
 ﻿@using cloudscribe.Core.Web.Navigation;
-@inject ISiteResolver siteResolver
+@inject SiteSettings currentSite
+
 @{ 
-    ISiteSettings SiteSettings = siteResolver.Resolve();
-    ViewData["SiteName"] = SiteSettings.SiteName;
+    ViewData["SiteName"] = currentSite.SiteName;
 }
 <!DOCTYPE html>
 <html>

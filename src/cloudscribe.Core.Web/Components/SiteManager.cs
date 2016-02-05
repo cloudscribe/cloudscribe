@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-22
-// Last Modified:			2016-01-28
+// Last Modified:			2016-02-04
 // 
 
 using cloudscribe.Core.Models;
@@ -21,11 +21,11 @@ namespace cloudscribe.Core.Web.Components
     {
 
         public SiteManager(
+            SiteSettings currentSite,
             ISiteRepository siteRepository,
             IUserRepository userRepository,
             SiteDataProtector dataProtector,
             IHttpContextAccessor contextAccessor,
-            ISiteResolver siteResolver,
             ILogger<SiteManager> logger,
             IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
             IOptions<SiteConfigOptions> setupOptionsAccessor
@@ -40,19 +40,17 @@ namespace cloudscribe.Core.Web.Components
             this.dataProtector = dataProtector;
             log = logger;
 
-            resolver = siteResolver;
+            //resolver = siteResolver;
+            siteSettings = currentSite;
         }
 
         private readonly HttpContext _context;
         private CancellationToken CancellationToken => _context?.RequestAborted ?? CancellationToken.None;
         private ILogger log;
         private SiteDataProtector dataProtector;
-
-
-
+        
         private MultiTenantOptions multiTenantOptions;
         private SiteConfigOptions setupOptions;
-        private ISiteResolver resolver;
         private ISiteRepository siteRepo;
         private IUserRepository userRepo;
         private ISiteSettings siteSettings = null;
@@ -60,7 +58,7 @@ namespace cloudscribe.Core.Web.Components
         {
             get
             {
-                if (siteSettings == null) { siteSettings = resolver.Resolve(); }
+                //if (siteSettings == null) { siteSettings = resolver.Resolve(); }
                 return siteSettings;
             }
         }

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-11-15
-// Last Modified:			2016-02-03
+// Last Modified:			2016-02-04
 // 
 
 using cloudscribe.Core.Web.Components;
@@ -25,39 +25,31 @@ namespace cloudscribe.Core.Web.Controllers
     public class CoreDataController : CloudscribeBaseController
     {
         public CoreDataController(
-            ISiteResolver siteResolver,
+            SiteSettings currentSite,
             GeoDataManager geoDataManager,
             IOptions<UIOptions> uiOptionsAccessor
             )
         {
-            Site = siteResolver.Resolve();
+            Site = currentSite; 
             dataManager = geoDataManager;
             uiOptions = uiOptionsAccessor.Value;
         }
 
         private ISiteSettings Site;
-        //private ConfigHelper config;
         private GeoDataManager dataManager;
         private UIOptions uiOptions;
 
-        //disable warning about not really being async
-        // we know it is not, it is not needed to hit the db in these
-#pragma warning disable 1998
-
+        
         // GET: /CoreData/
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             ViewBag.Title = "Core Data Administration";
             ViewBag.Heading = "Core Data Administration";
-
-            
+ 
             return View();
-
-
         }
 
-#pragma warning restore 1998
 
         [HttpGet]
         public async Task<IActionResult> CountryListPage(

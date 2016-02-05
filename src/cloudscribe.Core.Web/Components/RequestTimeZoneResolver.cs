@@ -2,13 +2,13 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //	Author:                 Joe Audette
 //  Created:			    2011-08-23
-//	Last Modified:		    2015-08-23
+//	Last Modified:		    2016-02-04
 // 
 
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Models;
-using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Http;
+using SaasKit.Multitenancy;
 using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -18,8 +18,8 @@ namespace cloudscribe.Core.Web.Components
     public class RequestTimeZoneResolver : ITimeZoneResolver
     {
         public RequestTimeZoneResolver(
-            IHttpContextAccessor contextAccessor,
-            ISiteResolver siteResolver,
+            IHttpContextAccessor contextAccessor,  
+            ITenantResolver<SiteSettings> siteResolver,
             SiteUserManager<SiteUser> userManager
             )
         {
@@ -29,7 +29,7 @@ namespace cloudscribe.Core.Web.Components
         }
 
         private IHttpContextAccessor contextAccessor;
-        private ISiteResolver siteResolver;
+        private ITenantResolver<SiteSettings> siteResolver;
         private SiteUserManager<SiteUser> userManager;
 
         public async Task<TimeZoneInfo> GetUserTimeZone()
@@ -44,15 +44,18 @@ namespace cloudscribe.Core.Web.Components
                 }
             }
 
-            return GetSiteTimeZone();
+            return await GetSiteTimeZone();
         }
 
-        public TimeZoneInfo GetSiteTimeZone()
+        public async Task<TimeZoneInfo> GetSiteTimeZone()
         {
-            ISiteSettings site = siteResolver.Resolve();
-            if((site != null)&&(site.TimeZoneId.Length > 0))
+            TenantContext<SiteSettings> siteContext 
+                = await siteResolver.ResolveAsync(contextAccessor.HttpContext);
+
+            if((siteContext != null)&&(siteContext.Tenant != null))
             {
-                return TimeZoneInfo.FindSystemTimeZoneById(site.TimeZoneId);
+                if((siteContext.Tenant.TimeZoneId.Length > 0))
+                return TimeZoneInfo.FindSystemTimeZoneById(siteContext.Tenant.TimeZoneId);
             }
 
             return TimeZoneInfo.Utc;

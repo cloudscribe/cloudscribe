@@ -2,10 +2,10 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-01-02
-// Last Modified:			2016-01-20
+// Last Modified:			2016-02-04
 // 
 
-
+using cloudscribe.Core.Models;
 using cloudscribe.Core.Web.Models;
 using cloudscribe.Core.Web.ViewModels.Common;
 using Microsoft.AspNet.Http;
@@ -49,6 +49,16 @@ namespace cloudscribe.Core.Web.Controllers
         {
             var sessionFeature = controller.HttpContext.Features.Get<ISessionFeature>();
             return (sessionFeature != null);
+        }
+
+        public static RedirectResult RedirectToSiteRoot(this Controller controller, ISiteSettings site)
+        {
+            if(site.SiteFolderName.Length > 0)
+            {
+                return controller.Redirect("/" + site.SiteFolderName);
+            }
+
+            return controller.Redirect("/");
         }
 
 

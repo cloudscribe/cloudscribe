@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-08-01
-// Last Modified:			2015-11-18
+// Last Modified:			2016-02-04
 // 
 
 using cloudscribe.Core.Models;
@@ -15,36 +15,37 @@ namespace cloudscribe.Core.Identity
     public class MultiTenantCookieOptionsResolver
     {
         public MultiTenantCookieOptionsResolver(
-            ISiteResolver siteResolver,
+            //ISiteResolver siteResolver,
+            SiteSettings currentSite,
             IOptions<MultiTenantOptions> multiTenantOptions,
             ILoggerFactory loggerFactory)
         {
-
-            this.siteResolver = siteResolver;
+            site = currentSite;
+            //this.siteResolver = siteResolver;
             this.multiTenantOptions = multiTenantOptions.Value;
             log = loggerFactory.CreateLogger<MultiTenantCookieOptionsResolver>();
         }
 
         private ILogger log;
         private MultiTenantOptions multiTenantOptions;
-        private ISiteResolver siteResolver;
+        //private ISiteResolver siteResolver;
         private ISiteSettings site = null;
         private ISiteSettings Site
         {
             get
             {
-                if(site == null)
-                {
-                    try
-                    {
-                        site = siteResolver.Resolve();
-                    }
-                    catch(Exception ex)
-                    {
-                        log.LogError("failed to resolve site", ex);
-                    }
+                //if(site == null)
+                //{
+                //    try
+                //    {
+                //        site = siteResolver.Resolve();
+                //    }
+                //    catch(Exception ex)
+                //    {
+                //        log.LogError("failed to resolve site", ex);
+                //    }
                     
-                }
+                //}
                 return site;
             }
         }

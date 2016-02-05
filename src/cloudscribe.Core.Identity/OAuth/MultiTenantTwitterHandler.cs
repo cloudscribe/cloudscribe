@@ -14,6 +14,7 @@ using Microsoft.AspNet.Http.Features.Authentication;
 using Microsoft.AspNet.Http.Internal;
 using Microsoft.AspNet.WebUtilities;
 using Microsoft.Extensions.Logging;
+using SaasKit.Multitenancy;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -21,6 +22,7 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 // this is not available in beta6/7 guess this will have to wait till beta 8 or later
 //using Microsoft.Framework.Primitives;
@@ -40,7 +42,9 @@ namespace cloudscribe.Core.Identity.OAuth
 
         public MultiTenantTwitterHandler(
             HttpClient httpClient,
-            ISiteResolver siteResolver,
+            //ISiteResolver siteResolver,
+            IHttpContextAccessor contextAccessor,
+            ITenantResolver<SiteSettings> siteResolver,
             ISiteRepository siteRepository,
             MultiTenantOptions multiTenantOptions,
             ILoggerFactory loggerFactory)
@@ -48,15 +52,44 @@ namespace cloudscribe.Core.Identity.OAuth
             _httpClient = httpClient;
 
             log = loggerFactory.CreateLogger<MultiTenantTwitterHandler>();
+            this.contextAccessor = contextAccessor;
             this.siteResolver = siteResolver;
             this.multiTenantOptions = multiTenantOptions;
             siteRepo = siteRepository;
         }
 
         private ILogger log;
-        private ISiteResolver siteResolver;
+        private IHttpContextAccessor contextAccessor;
+        private ITenantResolver<SiteSettings> siteResolver;
         private ISiteRepository siteRepo;
         private MultiTenantOptions multiTenantOptions;
+
+        private ISiteSettings site = null;
+
+        private async Task<ISiteSettings> GetSite()
+        {
+            if (multiTenantOptions.UseRelatedSitesMode)
+            {
+                if (multiTenantOptions.Mode == MultiTenantMode.FolderName)
+                {
+                    CancellationToken cancellationToken
+                        = contextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
+
+                    site = await siteRepo.Fetch(multiTenantOptions.RelatedSiteId, cancellationToken);
+                    return site;
+                }
+            }
+
+            TenantContext<SiteSettings> tenantContext
+                = await siteResolver.ResolveAsync(contextAccessor.HttpContext);
+
+            if (tenantContext != null && tenantContext.Tenant != null)
+            {
+                site = tenantContext.Tenant;
+            }
+
+            return site;
+        }
 
         public override async Task<bool> HandleRequestAsync()
         {
@@ -114,7 +147,12 @@ namespace cloudscribe.Core.Identity.OAuth
             AuthenticationProperties properties = null;
             try
             {
-                var tenantOptions = new MultiTenantTwitterOptionsResolver(Options, siteResolver, siteRepo, multiTenantOptions);
+                var currentSite = await GetSite();
+
+                var tenantOptions = new MultiTenantTwitterOptionsResolver(
+                    Options,
+                    currentSite, 
+                    multiTenantOptions);
 
                 var query = Request.Query;
                 var protectedRequestToken = Request.Cookies[tenantOptions.ResolveStateCookieName(StateCookie)];
@@ -226,11 +264,12 @@ namespace cloudscribe.Core.Identity.OAuth
                 return null;
             }
 
-            ISiteSettings site = siteResolver.Resolve();
+            //ISiteSettings site = siteResolver.Resolve();
+            var currentSite = await GetSite();
 
-            if (site != null)
+            if (currentSite != null)
             {
-                Claim siteGuidClaim = new Claim("SiteGuid", site.SiteGuid.ToString());
+                Claim siteGuidClaim = new Claim("SiteGuid", currentSite.SiteGuid.ToString());
                 if (!identity.HasClaim(siteGuidClaim.Type, siteGuidClaim.Value))
                 {
                     identity.AddClaim(siteGuidClaim);
@@ -255,7 +294,12 @@ namespace cloudscribe.Core.Identity.OAuth
                 properties.RedirectUri = CurrentUri;
             }
 
-            var tenantOptions = new MultiTenantTwitterOptionsResolver(Options, siteResolver, siteRepo, multiTenantOptions);
+            var currentSite = await GetSite();
+
+            var tenantOptions = new MultiTenantTwitterOptionsResolver(
+                Options,
+                currentSite, 
+                multiTenantOptions);
 
             //var requestToken = await ObtainRequestTokenAsync(
             //    Options.ConsumerKey, 
@@ -341,7 +385,8 @@ namespace cloudscribe.Core.Identity.OAuth
             var parameterBuilder = new StringBuilder();
             foreach (var authorizationKey in authorizationParts)
             {
-                parameterBuilder.AppendFormat("{0}={1}&", UrlEncoder.UrlEncode(authorizationKey.Key), UrlEncoder.UrlEncode(authorizationKey.Value));
+                parameterBuilder.AppendFormat("{0}={1}&", UrlEncoder.UrlEncode(authorizationKey.Key), 
+                    UrlEncoder.UrlEncode(authorizationKey.Value));
             }
             parameterBuilder.Length--;
             var parameterString = parameterBuilder.ToString();

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-06-19
-// Last Modified:		    2015-12-27
+// Last Modified:		    2016-02-04
 // 
 
 using cloudscribe.Core.Models;
@@ -18,27 +18,18 @@ namespace cloudscribe.Core.Identity
     public sealed class RoleStore<TRole> : IRoleStore<TRole> where TRole : SiteRole
     {
         public RoleStore(
+            SiteSettings currentSite,
             ILogger<RoleStore<TRole>> logger,
-            ISiteResolver siteResolver,
             IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
             IUserRepository userRepository
             )
         {
             if (logger == null) { throw new ArgumentNullException(nameof(logger)); }
-            if (siteResolver == null) { throw new ArgumentNullException(nameof(siteResolver)); }
+            if (currentSite == null) { throw new ArgumentNullException(nameof(currentSite)); }
             if (userRepository == null) { throw new ArgumentNullException(nameof(userRepository)); }
-            //if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
-
-            resolver = siteResolver;
-            //logFactory = loggerFactory;
-            //log = loggerFactory.CreateLogger(this.GetType().FullName);
+           
             log = logger;
-
-            //config = configuration;
-            //debugLog = config.UserStoreDebugEnabled();
-
-
-            //siteSettings = site;
+            siteSettings = currentSite;
 
             multiTenantOptions = multiTenantOptionsAccessor.Value;
             userRepo = userRepository;
@@ -49,18 +40,12 @@ namespace cloudscribe.Core.Identity
         private MultiTenantOptions multiTenantOptions;
         private ILogger log;
         //private bool debugLog = false;
-        //private IConfiguration config;
-        private ISiteResolver resolver;
         private IUserRepository userRepo;
         private ISiteSettings siteSettings = null;
         
         private ISiteSettings Site
         {
-            get
-            {
-                if (siteSettings == null) { siteSettings = resolver.Resolve(); }
-                return siteSettings;
-            }
+            get { return siteSettings; }
         }
         
         public async Task<IdentityResult> CreateAsync(TRole role, CancellationToken cancellationToken)

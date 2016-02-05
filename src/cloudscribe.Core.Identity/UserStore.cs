@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-22
-// Last Modified:		    2016-01-28
+// Last Modified:		    2016-02-04
 // 
 
 using cloudscribe.Core.Models;
@@ -35,18 +35,18 @@ namespace cloudscribe.Core.Identity
         private UserStore() { }
 
         public UserStore(
+            SiteSettings currentSite,
             ILogger<UserStore<TUser>> logger,
-            ISiteResolver siteResolver,
             IUserRepository userRepository,
-            //ConfigHelper config,
             IOptions<MultiTenantOptions> multiTenantOptionsAccessor
             )
         {
             
             log = logger;
 
-            if (siteResolver == null) { throw new ArgumentNullException(nameof(siteResolver)); }
-            resolver = siteResolver;
+            if (currentSite == null) { throw new ArgumentNullException(nameof(currentSite)); }
+
+            _siteSettings = currentSite;
 
             if (userRepository == null) { throw new ArgumentNullException(nameof(userRepository)); }
             repo = userRepository;
@@ -61,21 +61,12 @@ namespace cloudscribe.Core.Identity
 
         private ILogger log;
         private bool debugLog = false;
-        private ISiteResolver resolver;
         private ISiteSettings _siteSettings = null;
         private MultiTenantOptions multiTenantOptions;
-
-
+        
         private ISiteSettings siteSettings
         {
-            get
-            {
-                if (_siteSettings == null)
-                {
-                    _siteSettings = resolver.Resolve();
-                }
-                return _siteSettings;
-            }
+            get { return _siteSettings; }
         }
         private IUserRepository repo;
 

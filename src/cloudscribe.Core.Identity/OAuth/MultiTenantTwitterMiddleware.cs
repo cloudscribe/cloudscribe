@@ -1,8 +1,8 @@
 ﻿// Copyright (c) Source Tree Solutions, LLC. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
-// Author:					Joe Audette
-// Created:				    2014-08-29
-// Last Modified:		    2015-11-18
+// Author:                  Joe Audette
+// Created:                 2014-08-29
+// Last Modified:           2016-02-05
 // based on https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.Twitter/TwitterMiddleware.cs
 
 using cloudscribe.Core.Models;
@@ -10,9 +10,11 @@ using Microsoft.AspNet.Authentication;
 using Microsoft.AspNet.Authentication.Twitter;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.DataProtection;
+using Microsoft.AspNet.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.OptionsModel;
 using Microsoft.Extensions.WebEncoders;
+using SaasKit.Multitenancy;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
@@ -28,7 +30,8 @@ namespace cloudscribe.Core.Identity.OAuth
         
         private readonly HttpClient _httpClient;
         private ILoggerFactory loggerFactory;
-        private ISiteResolver siteResolver;
+        private IHttpContextAccessor contextAccessor;
+        private ITenantResolver<SiteSettings> siteResolver;
         private ISiteRepository siteRepo;
         private MultiTenantOptions multiTenantOptions;
 
@@ -45,7 +48,9 @@ namespace cloudscribe.Core.Identity.OAuth
                 RequestDelegate next,
                 IDataProtectionProvider dataProtectionProvider,
                 ILoggerFactory loggerFactory,
-                ISiteResolver siteResolver,
+                //ISiteResolver siteResolver,
+                IHttpContextAccessor contextAccessor,
+                ITenantResolver<SiteSettings> siteResolver,
                 ISiteRepository siteRepository,
                 IOptions<MultiTenantOptions> multiTenantOptionsAccesor,
                 IUrlEncoder encoder,
@@ -94,7 +99,8 @@ namespace cloudscribe.Core.Identity.OAuth
                 _httpClient.DefaultRequestHeaders.ExpectContinue = false;
 
                 this.loggerFactory = loggerFactory;
-                this.siteResolver = siteResolver;
+            this.contextAccessor = contextAccessor;
+            this.siteResolver = siteResolver;
                 multiTenantOptions = multiTenantOptionsAccesor.Value;
                 siteRepo = siteRepository;
 
@@ -110,6 +116,7 @@ namespace cloudscribe.Core.Identity.OAuth
             {
                 return new MultiTenantTwitterHandler(
                     _httpClient,
+                    contextAccessor,
                     siteResolver,
                     siteRepo,
                     multiTenantOptions,
