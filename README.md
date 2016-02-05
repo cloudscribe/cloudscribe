@@ -6,7 +6,7 @@ The foundational set of projects, known as cloudscibe.Core, provides support for
 
 #### Why Start From Scratch?
 
-Every web application or website project tends to need a certain amount of basic functionality, why build this over and over. 
+Every web application or website project tends to need a certain amount of basic functionality, why build this over and over?
 
 If you start a new web application project in Visual Studio 2015 using the standard project templates, what you get is just a basic implementation for user accounts via ASP.NET Identity. Those templates don't provide you any method for creating administrative users or creating roles or managing users and user role membership. You would typically have to implement that stuff yourself, and if you are like me, you don't want to have to implement that stuff again and again on every project. cloudscribe.Core aims to provide that for you with careful, well thought out implementations that adhere to [OWASP web security guidelines](https://www.owasp.org/index.php/Main_Page).
 
