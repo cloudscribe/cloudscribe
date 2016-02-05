@@ -1,8 +1,8 @@
 ﻿// Copyright (c) Source Tree Solutions, LLC. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
-// Author:					Joe Audette
-// Created:				    2014-09-09
-// Last Modified:		    2015-10-17
+// Author:                  Joe Audette
+// Created:                 2014-09-09
+// Last Modified:           2016-02-05
 // 
 
 
@@ -15,51 +15,51 @@ namespace cloudscribe.Core.Identity.OAuth
     {
         public MultiTenantTwitterOptionsResolver(
             TwitterOptions originalOptions,
-            ISiteResolver siteResolver,
-            ISiteRepository siteRepository,
+            ISiteSettings currentSite,
             MultiTenantOptions multiTenantOptions)
         {
             this.originalOptions = originalOptions;
-            this.siteResolver = siteResolver;
+            //this.siteResolver = siteResolver;
+            site = currentSite;
             this.multiTenantOptions = multiTenantOptions;
-            siteRepo = siteRepository;
+            //siteRepo = siteRepository;
         }
 
         private TwitterOptions originalOptions;
-        private ISiteResolver siteResolver;
-        private ISiteRepository siteRepo;
+        //private ISiteResolver siteResolver;
+        //private ISiteRepository siteRepo;
         private MultiTenantOptions multiTenantOptions;
         private ISiteSettings site = null;
-        public ISiteSettings Site
-        {
-            get
-            {
-                if (site == null)
-                {
-                    if (multiTenantOptions.UseRelatedSitesMode)
-                    {
-                        if (multiTenantOptions.Mode == MultiTenantMode.FolderName)
-                        {
-                            site = siteRepo.FetchNonAsync(multiTenantOptions.RelatedSiteId);
-                        }
-                    }
+        //public ISiteSettings Site
+        //{
+        //    get
+        //    {
+        //        if (site == null)
+        //        {
+        //            if (multiTenantOptions.UseRelatedSitesMode)
+        //            {
+        //                if (multiTenantOptions.Mode == MultiTenantMode.FolderName)
+        //                {
+        //                    site = siteRepo.FetchNonAsync(multiTenantOptions.RelatedSiteId);
+        //                }
+        //            }
 
-                    site = siteResolver.Resolve();
-                }
+        //            site = siteResolver.Resolve();
+        //        }
 
-                return site;
-            }
-        }
+        //        return site;
+        //    }
+        //}
 
         public string ConsumerKey
         {
             get
             {
-                if (Site != null)
+                if (site != null)
                 {
-                    if ((Site.TwitterConsumerKey.Length > 0) && (Site.TwitterConsumerSecret.Length > 0))
+                    if ((site.TwitterConsumerKey.Length > 0) && (site.TwitterConsumerSecret.Length > 0))
                     {
-                        return Site.TwitterConsumerKey;
+                        return site.TwitterConsumerKey;
                     }
                 }
 
@@ -71,11 +71,11 @@ namespace cloudscribe.Core.Identity.OAuth
         {
             get
             {
-                if (Site != null)
+                if (site != null)
                 {
-                    if ((Site.TwitterConsumerKey.Length > 0) && (Site.TwitterConsumerSecret.Length > 0))
+                    if ((site.TwitterConsumerKey.Length > 0) && (site.TwitterConsumerSecret.Length > 0))
                     {
-                        return Site.TwitterConsumerSecret;
+                        return site.TwitterConsumerSecret;
                     }
                 }
 
@@ -87,9 +87,9 @@ namespace cloudscribe.Core.Identity.OAuth
         {
             if (multiTenantOptions.Mode == MultiTenantMode.FolderName)
             {
-                if ((Site != null) && (Site.SiteFolderName.Length > 0))
+                if ((site != null) && (site.SiteFolderName.Length > 0))
                 {
-                    if ((Site.TwitterConsumerKey.Length > 0) && (Site.TwitterConsumerSecret.Length > 0))
+                    if ((site.TwitterConsumerKey.Length > 0) && (site.TwitterConsumerSecret.Length > 0))
                     {
                         return redirectUrl.Replace("signin-twitter", site.SiteFolderName + "/signin-twitter");
                     }
@@ -104,9 +104,9 @@ namespace cloudscribe.Core.Identity.OAuth
         {
             if (multiTenantOptions.Mode == MultiTenantMode.FolderName)
             {
-                if ((Site != null) && (Site.SiteFolderName.Length > 0))
+                if ((site != null) && (site.SiteFolderName.Length > 0))
                 {
-                    if ((Site.TwitterConsumerKey.Length > 0) && (Site.TwitterConsumerSecret.Length > 0))
+                    if ((site.TwitterConsumerKey.Length > 0) && (site.TwitterConsumerSecret.Length > 0))
                     {
                         return site.SiteFolderName + providedCookieName;
                     }

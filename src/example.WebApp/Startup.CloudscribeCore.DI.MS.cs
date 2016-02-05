@@ -215,7 +215,7 @@ namespace example.WebApp
             //**************************************************************************************
 
             // RequestSiteResolver resolves ISiteSettings based on the request to support multi tenancy based on either host name or first folder depending on configuration
-            services.TryAddScoped<ISiteResolver, RequestSiteResolver>();
+            //services.TryAddScoped<ISiteResolver, RequestSiteResolver>();
             services.TryAddScoped<ITimeZoneResolver, RequestTimeZoneResolver>();
 
             services.AddMultitenancy<SiteSettings, SiteResolver>();
@@ -269,7 +269,7 @@ namespace example.WebApp
 
             // TODO: implement TenantLayoutSelector
             services.Configure<LayoutSelectorOptions>(configuration.GetSection("LayoutSelectorOptions"));
-            services.TryAddSingleton<ILayoutSelector, TenantLayoutSelector>();
+            services.TryAddScoped<ILayoutSelector, TenantLayoutSelector>();
             services.TryAddSingleton<ILayoutFileListBuilder, LayoutFileListBuilder>();
             services.TryAddSingleton<ILayoutFileDisplayNameFilter, TenantLayoutFileDisplayNameFilter>();
             

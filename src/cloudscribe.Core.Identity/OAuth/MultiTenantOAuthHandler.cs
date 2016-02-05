@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-27
-// Last Modified:		    2015-11-19
+// Last Modified:		    2016-02-05
 // 
 
 
@@ -150,7 +150,8 @@ namespace cloudscribe.Core.Identity.OAuth
                 }
 
                 // OAuth2 10.12 CSRF
-                if (!ValidateCorrelationId(properties))
+                bool valid = await ValidateCorrelationId(properties);
+                if (!valid)
                 {
                     //return new AuthenticationTicket(properties, Options.AuthenticationScheme);
                     return AuthenticateResult.Failed("Correlation failed.");
@@ -280,9 +281,9 @@ namespace cloudscribe.Core.Identity.OAuth
             }
 
             // OAuth2 10.12 CSRF
-            GenerateCorrelationId(properties);
+            await GenerateCorrelationId(properties);
 
-            var authorizationEndpoint = BuildChallengeUrl(properties, BuildRedirectUri(Options.CallbackPath));
+            var authorizationEndpoint = await BuildChallengeUrl(properties, BuildRedirectUri(Options.CallbackPath));
 
             var redirectContext = new OAuthRedirectToAuthorizationContext(
                 Context, Options,
@@ -310,7 +311,9 @@ namespace cloudscribe.Core.Identity.OAuth
             throw new NotSupportedException();
         }
 
-        protected virtual string BuildChallengeUrl(AuthenticationProperties properties, string redirectUri)
+        protected virtual Task<string> BuildChallengeUrl(
+            AuthenticationProperties properties, 
+            string redirectUri)
         {
             log.LogDebug("BuildChallengeUrl called with redirectUri = " + redirectUri);
 
@@ -326,7 +329,9 @@ namespace cloudscribe.Core.Identity.OAuth
                 { "redirect_uri", redirectUri },
                 { "state", state },
             };
-            return Options.AuthorizationEndpoint + queryBuilder.ToString();
+            string result =  Options.AuthorizationEndpoint + queryBuilder.ToString();
+
+            return Task.FromResult(result);
         }
 
         protected virtual string FormatScope()
@@ -335,14 +340,15 @@ namespace cloudscribe.Core.Identity.OAuth
             return string.Join(" ", Options.Scope);
         }
 
-        protected void GenerateCorrelationId(AuthenticationProperties properties)
+        protected async Task GenerateCorrelationId(AuthenticationProperties properties)
         {
             // I think here we need to use a different correlationkey per folder site
             // becuase that is used for the cookie name
             // unless using related sites mode we want fodler sites to use different cookies
 
             var correlationKey = Constants.CorrelationPrefix + Options.AuthenticationScheme;
-            correlationKey = tenantOptions.ResolveCorrelationKey(correlationKey);
+
+            correlationKey = await tenantOptions.ResolveCorrelationKey(correlationKey);
 
             log.LogDebug("GenerateCorrelationId called, correlationKey was " + correlationKey);
 
@@ -361,11 +367,11 @@ namespace cloudscribe.Core.Identity.OAuth
             Response.Cookies.Append(correlationKey, correlationId, cookieOptions);
         }
 
-        protected bool ValidateCorrelationId(AuthenticationProperties properties)
+        protected async Task<bool> ValidateCorrelationId(AuthenticationProperties properties)
         {
             
             var correlationKey = Constants.CorrelationPrefix + Options.AuthenticationScheme;
-            correlationKey = tenantOptions.ResolveCorrelationKey(correlationKey);
+            correlationKey = await tenantOptions.ResolveCorrelationKey(correlationKey);
 
             log.LogDebug("ValidateCorrelationId called, correlationKey was " + correlationKey);
 

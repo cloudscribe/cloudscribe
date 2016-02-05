@@ -48,12 +48,9 @@ namespace cloudscribe.Core.Web.Components
         private CancellationToken CancellationToken => _context?.RequestAborted ?? CancellationToken.None;
         private ILogger log;
         private SiteDataProtector dataProtector;
-
-
-
+        
         private MultiTenantOptions multiTenantOptions;
         private SiteConfigOptions setupOptions;
-        private ISiteResolver resolver;
         private ISiteRepository siteRepo;
         private IUserRepository userRepo;
         private ISiteSettings siteSettings = null;

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-09-01
-// Last Modified:		    2015-10-17
+// Last Modified:		    2016-02-05
 // 
 
 
@@ -16,51 +16,55 @@ namespace cloudscribe.Core.Identity.OAuth
 
         public MultiTenantMicrosoftOptionsResolver(
             MicrosoftAccountOptions originalOptions,
-            ISiteResolver siteResolver,
-            ISiteRepository siteRepository,
+            //ISiteResolver siteResolver,
+            //ISiteRepository siteRepository,
+            ISiteSettings currentSite,
             MultiTenantOptions multiTenantOptions)
         {
             this.originalOptions = originalOptions;
-            this.siteResolver = siteResolver;
+            //this.siteResolver = siteResolver;
+            site = currentSite;
             this.multiTenantOptions = multiTenantOptions;
-            siteRepo = siteRepository;
+            //siteRepo = siteRepository;
         }
 
         private MicrosoftAccountOptions originalOptions;
-        private ISiteResolver siteResolver;
-        private ISiteRepository siteRepo;
+        //private ISiteResolver siteResolver;
+        //private ISiteRepository siteRepo;
         private MultiTenantOptions multiTenantOptions;
         private ISiteSettings site = null;
-        public ISiteSettings Site
-        {
-            get
-            {
-                if (site == null)
-                {
-                    if (multiTenantOptions.UseRelatedSitesMode)
-                    {
-                        if (multiTenantOptions.Mode == MultiTenantMode.FolderName)
-                        {
-                            site = siteRepo.FetchNonAsync(multiTenantOptions.RelatedSiteId);
-                        }
-                    }
 
-                    site = siteResolver.Resolve();
-                }
+        //private ISiteSettings site = null;
+        //public ISiteSettings Site
+        //{
+        //    get
+        //    {
+        //        if (site == null)
+        //        {
+        //            if (multiTenantOptions.UseRelatedSitesMode)
+        //            {
+        //                if (multiTenantOptions.Mode == MultiTenantMode.FolderName)
+        //                {
+        //                    site = siteRepo.FetchNonAsync(multiTenantOptions.RelatedSiteId);
+        //                }
+        //            }
 
-                return site;
-            }
-        }
+        //            site = siteResolver.Resolve();
+        //        }
+
+        //        return site;
+        //    }
+        //}
 
         public string ClientId
         {
             get
             {
-                if (Site != null)
+                if (site != null)
                 {
-                    if ((Site.MicrosoftClientId.Length > 0) && (Site.MicrosoftClientSecret.Length > 0))
+                    if ((site.MicrosoftClientId.Length > 0) && (site.MicrosoftClientSecret.Length > 0))
                     {
-                        return Site.MicrosoftClientId;
+                        return site.MicrosoftClientId;
                     }
                 }
 
@@ -72,11 +76,11 @@ namespace cloudscribe.Core.Identity.OAuth
         {
             get
             {
-                if (Site != null)
+                if (site != null)
                 {
-                    if ((Site.MicrosoftClientId.Length > 0) && (Site.MicrosoftClientSecret.Length > 0))
+                    if ((site.MicrosoftClientId.Length > 0) && (site.MicrosoftClientSecret.Length > 0))
                     {
-                        return Site.MicrosoftClientSecret;
+                        return site.MicrosoftClientSecret;
                     }
                 }
 
@@ -88,9 +92,9 @@ namespace cloudscribe.Core.Identity.OAuth
         {
             if (multiTenantOptions.Mode == MultiTenantMode.FolderName)
             {
-                if ((Site != null) && (Site.SiteFolderName.Length > 0))
+                if ((site != null) && (site.SiteFolderName.Length > 0))
                 {
-                    if ((Site.MicrosoftClientId.Length > 0) && (Site.MicrosoftClientSecret.Length > 0))
+                    if ((site.MicrosoftClientId.Length > 0) && (site.MicrosoftClientSecret.Length > 0))
                     {
                         return redirectUrl.Replace("signin-microsoft", site.SiteFolderName + "/signin-microsoft");
                     }

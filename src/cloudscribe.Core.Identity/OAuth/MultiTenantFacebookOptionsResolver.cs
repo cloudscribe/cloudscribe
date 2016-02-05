@@ -2,12 +2,15 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-28
-// Last Modified:		    2015-10-17
+// Last Modified:		    2016-02-05
 // 
 
 
 using cloudscribe.Core.Models;
 using Microsoft.AspNet.Authentication.Facebook;
+using Microsoft.AspNet.Http;
+using SaasKit.Multitenancy;
+using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Identity.OAuth
 {
@@ -15,51 +18,70 @@ namespace cloudscribe.Core.Identity.OAuth
     {
         public MultiTenantFacebookOptionsResolver(
             FacebookOptions originalOptions,
-            ISiteResolver siteResolver,
-            ISiteRepository siteRepository,
+            //ISiteResolver siteResolver,
+            //IHttpContextAccessor contextAccessor,
+            //ITenantResolver<SiteSettings> siteResolver,
+            ISiteSettings currentSite,
+            //ISiteRepository siteRepository,
             MultiTenantOptions multiTenantOptions)
         {
             this.originalOptions = originalOptions;
-            this.siteResolver = siteResolver;
+            //this.siteResolver = siteResolver;
+            //this.contextAccessor = contextAccessor;
             this.multiTenantOptions = multiTenantOptions;
-            siteRepo = siteRepository;
+            //siteRepo = siteRepository;
+            site = currentSite;
         }
 
         private FacebookOptions originalOptions;
-        private ISiteResolver siteResolver;
+        private IHttpContextAccessor contextAccessor;
+        private ITenantResolver<SiteSettings> siteResolver;
         private ISiteRepository siteRepo;
         private MultiTenantOptions multiTenantOptions;
         private ISiteSettings site = null;
-        public ISiteSettings Site
-        {
-            get
-            {
-                if(site == null)
-                {
-                    if(multiTenantOptions.UseRelatedSitesMode)
-                    {
-                        if(multiTenantOptions.Mode == MultiTenantMode.FolderName)
-                        {
-                            site = siteRepo.FetchNonAsync(multiTenantOptions.RelatedSiteId);
-                        }
-                    }
+        //public ISiteSettings Site
+        //{
+        //    get
+        //    {
+        //        if(site == null)
+        //        {
+        //            if(multiTenantOptions.UseRelatedSitesMode)
+        //            {
+        //                if(multiTenantOptions.Mode == MultiTenantMode.FolderName)
+        //                {
+        //                    site = siteRepo.FetchNonAsync(multiTenantOptions.RelatedSiteId);
+        //                }
+        //            }
 
-                    site = siteResolver.Resolve();
-                }
+        //            site = siteResolver.Resolve();
+        //        }
 
-                return site;
-            }
-        }
+        //        return site;
+        //    }
+        //}
+
+        //private async Task<SiteSettings> GetSite()
+        //{
+        //    TenantContext<SiteSettings> tenantContext
+        //        = await siteResolver.ResolveAsync(contextAccessor.HttpContext);
+
+        //    if (tenantContext != null && tenantContext.Tenant != null)
+        //    {
+        //        return tenantContext.Tenant;
+        //    }
+
+        //    return null;
+        //}
 
         public string AppId
         {
             get
             {
-                if (Site != null)
+                if (site != null)
                 {
-                    if ((Site.FacebookAppId.Length > 0) && (Site.FacebookAppSecret.Length > 0))
+                    if ((site.FacebookAppId.Length > 0) && (site.FacebookAppSecret.Length > 0))
                     {
-                        return Site.FacebookAppId;
+                        return site.FacebookAppId;
                     }
                 }
 
@@ -71,11 +93,11 @@ namespace cloudscribe.Core.Identity.OAuth
         {
             get
             {
-                if (Site != null)
+                if (site != null)
                 {
-                    if ((Site.FacebookAppId.Length > 0) && (Site.FacebookAppSecret.Length > 0))
+                    if ((site.FacebookAppId.Length > 0) && (site.FacebookAppSecret.Length > 0))
                     {
-                        return Site.FacebookAppSecret;
+                        return site.FacebookAppSecret;
                     }
                 }
 
@@ -87,9 +109,9 @@ namespace cloudscribe.Core.Identity.OAuth
         {
             if (multiTenantOptions.Mode == MultiTenantMode.FolderName)
             {
-                if ((Site != null)&&(Site.SiteFolderName.Length > 0))
+                if ((site != null)&&(site.SiteFolderName.Length > 0))
                 {
-                    if ((Site.FacebookAppId.Length > 0) && (Site.FacebookAppSecret.Length > 0))
+                    if ((site.FacebookAppId.Length > 0) && (site.FacebookAppSecret.Length > 0))
                     {
                         return redirectUrl.Replace("signin-facebook", site.SiteFolderName + "/signin-facebook");
                     }

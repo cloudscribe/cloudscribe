@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-29
-// Last Modified:		    2015-11-18
+// Last Modified:		    2016-02-05
 // based on https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.Google/GoogleMiddleware.cs
 
 
@@ -11,9 +11,11 @@ using Microsoft.AspNet.Authentication;
 using Microsoft.AspNet.Authentication.Google;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.DataProtection;
+using Microsoft.AspNet.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.OptionsModel;
 using Microsoft.Extensions.WebEncoders;
+using SaasKit.Multitenancy;
 using System.Diagnostics.CodeAnalysis;
 
 namespace cloudscribe.Core.Identity.OAuth
@@ -38,20 +40,22 @@ namespace cloudscribe.Core.Identity.OAuth
             RequestDelegate next,
             IDataProtectionProvider dataProtectionProvider,
             ILoggerFactory loggerFactory,
-            ISiteResolver siteResolver,
+            IHttpContextAccessor contextAccessor,
+            ITenantResolver<SiteSettings> siteResolver,
             ISiteRepository siteRepository,
             IOptions<MultiTenantOptions> multiTenantOptionsAccesor,
             IUrlEncoder encoder,
             IOptions<SharedAuthenticationOptions> sharedOptions,
             GoogleOptions options)
             : base(
-                  next, 
-                  dataProtectionProvider, 
-                  loggerFactory, 
+                  next,
+                  dataProtectionProvider,
+                  contextAccessor,
+                  loggerFactory,
                   encoder,
                   siteResolver,
                   multiTenantOptionsAccesor,
-                  sharedOptions, 
+                  sharedOptions,
                   options)
         {
             if (Options.Scope.Count == 0)
@@ -65,6 +69,7 @@ namespace cloudscribe.Core.Identity.OAuth
             }
 
             this.loggerFactory = loggerFactory;
+            this.contextAccessor = contextAccessor;
             this.siteResolver = siteResolver;
             multiTenantOptions = multiTenantOptionsAccesor.Value;
             siteRepo = siteRepository;
@@ -72,7 +77,8 @@ namespace cloudscribe.Core.Identity.OAuth
 
 
         private ILoggerFactory loggerFactory;
-        private ISiteResolver siteResolver;
+        private IHttpContextAccessor contextAccessor;
+        private ITenantResolver<SiteSettings> siteResolver;
         private ISiteRepository siteRepo;
         private MultiTenantOptions multiTenantOptions;
 
@@ -82,7 +88,13 @@ namespace cloudscribe.Core.Identity.OAuth
         /// <returns>An <see cref="AuthenticationHandler"/> configured with the <see cref="GoogleAuthenticationOptions"/> supplied to the constructor.</returns>
         protected override AuthenticationHandler<GoogleOptions> CreateHandler()
         {
-            return new MultiTenantGoogleHandler(Backchannel,siteResolver, siteRepo, multiTenantOptions, loggerFactory);
+            return new MultiTenantGoogleHandler(
+                Backchannel,
+                contextAccessor,
+                siteResolver, 
+                siteRepo, 
+                multiTenantOptions, 
+                loggerFactory);
         }
 
     }

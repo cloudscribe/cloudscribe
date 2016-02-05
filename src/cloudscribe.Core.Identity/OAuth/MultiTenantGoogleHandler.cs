@@ -1,8 +1,8 @@
 ﻿// Copyright (c) Source Tree Solutions, LLC. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
-// Author:					Joe Audette
-// Created:				    2014-08-29
-// Last Modified:		    2015-11-18
+// Author:                  Joe Audette
+// Created:                 2014-08-29
+// Last Modified:           2016-02-05
 // based on https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.Google/GoogleHandler.cs
 
 
@@ -11,15 +11,18 @@ using cloudscribe.Core.Models;
 using Microsoft.AspNet.Authentication;
 using Microsoft.AspNet.Authentication.Google;
 using Microsoft.AspNet.Authentication.OAuth;
+using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Http.Authentication;
 using Microsoft.AspNet.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
+using SaasKit.Multitenancy;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Identity.OAuth
@@ -28,26 +31,59 @@ namespace cloudscribe.Core.Identity.OAuth
     {
         public MultiTenantGoogleHandler(
             HttpClient httpClient,
-            ISiteResolver siteResolver,
+            //ISiteResolver siteResolver,
+            IHttpContextAccessor contextAccessor,
+            ITenantResolver<SiteSettings> siteResolver,
             ISiteRepository siteRepository,
             MultiTenantOptions multiTenantOptions,
             ILoggerFactory loggerFactory)
             : base(
                   httpClient, 
                   loggerFactory,
-                  new MultiTenantOAuthOptionsResolver(siteResolver, multiTenantOptions)
+                  new MultiTenantOAuthOptionsResolver(
+                      contextAccessor,
+                      siteResolver, 
+                      multiTenantOptions)
                   )
         {
             log = loggerFactory.CreateLogger<MultiTenantGoogleHandler>();
+            this.contextAccessor = contextAccessor;
             this.siteResolver = siteResolver;
             this.multiTenantOptions = multiTenantOptions;
             siteRepo = siteRepository;
         }
 
         private ILogger log;
-        private ISiteResolver siteResolver;
+        private IHttpContextAccessor contextAccessor;
+        private ITenantResolver<SiteSettings> siteResolver;
         private ISiteRepository siteRepo;
         private MultiTenantOptions multiTenantOptions;
+        private ISiteSettings site = null;
+
+        private async Task<ISiteSettings> GetSite()
+        {
+            if (multiTenantOptions.UseRelatedSitesMode)
+            {
+                if (multiTenantOptions.Mode == MultiTenantMode.FolderName)
+                {
+                    CancellationToken cancellationToken
+                        = contextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
+
+                    site = await siteRepo.Fetch(multiTenantOptions.RelatedSiteId, cancellationToken);
+                    return site;
+                }
+            }
+
+            TenantContext<SiteSettings> tenantContext
+                = await siteResolver.ResolveAsync(contextAccessor.HttpContext);
+
+            if (tenantContext != null && tenantContext.Tenant != null)
+            {
+                site = tenantContext.Tenant;
+            }
+
+            return site;
+        }
 
         protected override async Task<AuthenticationTicket> CreateTicketAsync(
             ClaimsIdentity identity, 
@@ -112,7 +148,8 @@ namespace cloudscribe.Core.Identity.OAuth
 
             await Options.Events.CreatingTicket(context);
 
-            ISiteSettings site = siteResolver.Resolve();
+            //ISiteSettings site = siteResolver.Resolve();
+            var site = await GetSite();
 
             if (site != null)
             {
@@ -129,11 +166,18 @@ namespace cloudscribe.Core.Identity.OAuth
         }
 
         // TODO: Abstract this properties override pattern into the base class?
-        protected override string BuildChallengeUrl(AuthenticationProperties properties, string redirectUri)
+        protected override async Task<string> BuildChallengeUrl(
+            AuthenticationProperties properties, 
+            string redirectUri)
         {
             var scope = FormatScope();
+            var currentSite = await GetSite();
 
-            var tenantOptions = new MultiTenantGoogleOptionsResolver(Options, siteResolver, siteRepo, multiTenantOptions);
+            var tenantOptions = new MultiTenantGoogleOptionsResolver(
+                Options,
+                currentSite, 
+                multiTenantOptions);
+
             string resolvedRedirectUri = tenantOptions.ResolveRedirectUrl(redirectUri);
             log.LogDebug("resolvedRedirectUri was " + resolvedRedirectUri);
 
@@ -158,8 +202,11 @@ namespace cloudscribe.Core.Identity.OAuth
             return authorizationEndpoint;
         }
 
-        private static void AddQueryString(IDictionary<string, string> queryStrings, AuthenticationProperties properties,
-            string name, string defaultValue = null)
+        private static void AddQueryString(
+            IDictionary<string, string> queryStrings, 
+            AuthenticationProperties properties,
+            string name, 
+            string defaultValue = null)
         {
             string value;
             if (!properties.Items.TryGetValue(name, out value))
@@ -194,7 +241,11 @@ namespace cloudscribe.Core.Identity.OAuth
             //    { "grant_type", "authorization_code" },
             //};
 
-            var tenantOptions = new MultiTenantGoogleOptionsResolver(Options, siteResolver, siteRepo, multiTenantOptions);
+            var currentSite = await GetSite();
+            var tenantOptions = new MultiTenantGoogleOptionsResolver(
+                Options,
+                currentSite, 
+                multiTenantOptions);
 
             var tokenRequestParameters = new Dictionary<string, string>()
             {
