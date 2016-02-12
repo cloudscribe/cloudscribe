@@ -12,12 +12,14 @@
   "iconUrl": "https://raw.githubusercontent.com/joeaudette/cloudscribe/master/cloudscribe-icon-32.png",
   "requireLicenseAcceptance": false,
   "releaseNotes": "",
+ 
 
   "dependencies": {
     "cloudscribe.Core.Identity": "1.0.0-*",
     "cloudscribe.Core.Models": "1.0.0-*",
     "cloudscribe.Messaging.Email": "1.0.0-*",
     "cloudscribe.Messaging.Sms": "1.0.0-*",
+    "cloudscribe.Web.Common": "1.0.0-*",
     "cloudscribe.Web.Navigation": "1.0.0-*",
     "cloudscribe.Web.Pagination": "1.0.0-*",
     "Newtonsoft.Json": "7.0.1",

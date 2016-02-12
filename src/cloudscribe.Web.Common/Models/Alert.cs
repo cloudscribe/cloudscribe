@@ -3,7 +3,7 @@
 
 using System;
 
-namespace cloudscribe.Core.Web.ViewModels.Common
+namespace cloudscribe.Web.Common.Models
 {
     //[Serializable]
     public class Alert

@@ -6,7 +6,7 @@
 //
 
 
-namespace cloudscribe.Core.Web.Razor
+namespace cloudscribe.Web.Common.Razor
 {
     public class LayoutSelectorOptions
     {

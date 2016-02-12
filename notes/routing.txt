@@ -1,0 +1,16 @@
+
+
+https://github.com/aspnet/Routing
+
+https://github.com/aspnet/Mvc/tree/dev/src/Microsoft.AspNetCore.Mvc.Core/Routing
+
+https://github.com/aspnet/Mvc/tree/dev/samples/CustomRouteSample.Web
+
+https://github.com/aspnet/Routing/tree/dev/samples/RoutingSample.Web
+
+
+http://stephenwalther.com/archive/2015/02/07/asp-net-5-deep-dive-routing
+
+http://stackoverflow.com/questions/32582232/imlementing-a-custom-irouter-in-asp-net-5-vnext-mvc-6
+
+http://stackoverflow.com/questions/32565768/change-route-collection-of-mvc6-after-startup#32586837

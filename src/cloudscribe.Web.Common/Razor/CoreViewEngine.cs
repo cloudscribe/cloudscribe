@@ -11,7 +11,7 @@ using Microsoft.Extensions.OptionsModel;
 //using Microsoft.AspNet.Mvc.Razor.OptionDescriptors;
 using System.Collections.Generic;
 
-namespace cloudscribe.Core.Web
+namespace cloudscribe.Web.Common.Razor
 {
     /// <summary>
     /// we are subclassing the razor view engine here to be able to customize the

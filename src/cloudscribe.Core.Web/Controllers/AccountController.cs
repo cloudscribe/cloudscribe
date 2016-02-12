@@ -2,11 +2,12 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2016-02-04
+// Last Modified:			2016-02-12
 // 
 
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Models;
+using cloudscribe.Web.Common.Extensions;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.Components.Messaging;
 using cloudscribe.Core.Web.ViewModels.Account;
@@ -88,9 +89,11 @@ namespace cloudscribe.Core.Web.Controllers
             if ((Site.CaptchaOnLogin)&& (Site.RecaptchaPublicKey.Length > 0))
             {
                 model.RecaptchaSiteKey = Site.RecaptchaPublicKey;
-                model.LoginInfoTop = Site.LoginInfoTop;
-                model.LoginInfoBottom = Site.LoginInfoBottom;
+                
             }
+
+            model.LoginInfoTop = Site.LoginInfoTop;
+            model.LoginInfoBottom = Site.LoginInfoBottom;
 
             if (!ModelState.IsValid)
             {
@@ -99,8 +102,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             if ((Site.CaptchaOnLogin) && (Site.RecaptchaPublicKey.Length > 0))
             {
-                string recpatchaSecretKey = Site.RecaptchaPrivateKey;
-                
+                var recpatchaSecretKey = Site.RecaptchaPrivateKey;
                 var captchaResponse = await this.ValidateRecaptcha(Request, recpatchaSecretKey);
 
                 if (!captchaResponse.Success)

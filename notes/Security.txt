@@ -130,6 +130,11 @@ haveibeenpwned.com
 
 captcha
 
+asp.net data protection stack
+https://vimeo.com/153102690
+
+http://lockmedown.com/preventing-sensitive-data-exposure-aspnet-part1/
+http://lockmedown.com/preventing-sensitive-data-exposure-aspnet-part2/
 
 https://letsencrypt.org/
 

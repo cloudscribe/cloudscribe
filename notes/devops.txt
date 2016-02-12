@@ -1,4 +1,7 @@
 
+
+https://codesnob.wordpress.com/2016/02/04/release-management-using-vsts/
+
 http://reynders.co/setting-up-ci-for-asp-net-core-1-web-apps-from-visual-studio-team-services-to-azure/
 
 http://www.colinsalmcorner.com/post/why-you-should-switch-to-build-vnext

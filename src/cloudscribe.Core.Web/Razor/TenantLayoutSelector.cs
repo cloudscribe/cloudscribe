@@ -6,6 +6,7 @@
 //
 
 using cloudscribe.Core.Models;
+using cloudscribe.Web.Common.Razor;
 using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.AspNet.Mvc.Razor;
 using Microsoft.Extensions.Logging;

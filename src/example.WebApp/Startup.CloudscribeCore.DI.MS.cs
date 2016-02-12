@@ -43,6 +43,7 @@ using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.Navigation;
 using cloudscribe.Core.Web.Razor;
 using cloudscribe.Setup.Web;
+using cloudscribe.Web.Common.Razor;
 using cloudscribe.Messaging;
 using cloudscribe.Web.Navigation;
 using cloudscribe.Web.Pagination;
@@ -272,8 +273,11 @@ namespace example.WebApp
             services.TryAddScoped<ILayoutSelector, TenantLayoutSelector>();
             services.TryAddSingleton<ILayoutFileListBuilder, LayoutFileListBuilder>();
             services.TryAddSingleton<ILayoutFileDisplayNameFilter, TenantLayoutFileDisplayNameFilter>();
-            
 
+            //services.Configure<RazorViewEngineOptions>(options =>
+            //{
+            //    options.ViewLocationExpanders.Add(new TenantViewLocationExpander());
+            //});
 
 
             services.TryAddSingleton<IRazorViewEngine, CoreViewEngine>();

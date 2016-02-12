@@ -8,10 +8,10 @@
 using Microsoft.AspNet.Mvc.Rendering;
 using System.Collections.Generic;
 
-namespace cloudscribe.Core.Web.Razor
+namespace cloudscribe.Web.Common.Razor
 {
     public interface ILayoutFileListBuilder
     {
-        List<SelectListItem> GetAvailableLayouts(int siteId);
+        List<SelectListItem> GetAvailableLayouts(string tenantId);
     }
 }

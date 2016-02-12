@@ -9,7 +9,7 @@
 using Microsoft.AspNet.Razor.TagHelpers;
 using System;
 
-namespace cloudscribe.Core.Web.TagHelpers
+namespace cloudscribe.Web.Common.TagHelpers
 {
     //https://github.com/aspnet/Mvc/blob/dev/src/Microsoft.AspNet.Mvc.TagHelpers/AnchorTagHelper.cs
 

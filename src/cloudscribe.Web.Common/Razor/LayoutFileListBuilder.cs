@@ -13,7 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace cloudscribe.Core.Web.Razor
+namespace cloudscribe.Web.Common.Razor
 {
     public class LayoutFileListBuilder : ILayoutFileListBuilder
     {
@@ -36,7 +36,7 @@ namespace cloudscribe.Core.Web.Razor
         private LayoutSelectorOptions options;
         private ILayoutFileDisplayNameFilter layoutDisplayFilter;
 
-        public List<SelectListItem> GetAvailableLayouts(int siteId)
+        public List<SelectListItem> GetAvailableLayouts(string tenantId)
         {
             List<SelectListItem> layouts = new List<SelectListItem>();
 
@@ -45,14 +45,14 @@ namespace cloudscribe.Core.Web.Razor
             DirectoryInfo directoryInfo
                 = new DirectoryInfo(pathToViews);
 
-            string filterPattern = string.Format(options.BrowseFilterFormat, siteId.ToString());
+            string filterPattern = string.Format(options.BrowseFilterFormat, tenantId);
 
             FileInfo[] files = directoryInfo.GetFiles(filterPattern);
             foreach(FileInfo f in files)
             {
                 SelectListItem layout = new SelectListItem
                 {
-                    Text = layoutDisplayFilter.FilterDisplayName(siteId,f.Name),
+                    Text = layoutDisplayFilter.FilterDisplayName(tenantId, f.Name),
                     Value = f.Name
                 };
                 layouts.Add(layout);
@@ -62,7 +62,7 @@ namespace cloudscribe.Core.Web.Razor
             {
                 layouts.Add(new SelectListItem
                 {
-                    Text = layoutDisplayFilter.FilterDisplayName(siteId, options.DefaultLayout),
+                    Text = layoutDisplayFilter.FilterDisplayName(tenantId, options.DefaultLayout),
                     Value = options.DefaultLayout
                 });
             }

@@ -20,6 +20,6 @@ http://www.codeproject.com/Tips/790565/Unit-testing-MVC-controllers-which-are-us
 login or sign in?
 http://www.designcult.org/2011/08/why-do-we-call-in-logging-in.html
 
-
+http://resxresourcemanager.codeplex.com/
 
 

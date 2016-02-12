@@ -8,7 +8,7 @@
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace cloudscribe.Core.Web.Models
+namespace cloudscribe.Web.Common.Models
 {
     public class RecaptchaResponse
     {

@@ -1,4 +1,5 @@
 
+http://www.hossambarakat.net/2016/02/03/configuring-redis-as-asp-net-core-1-0-session-store/
 
 Distributed cache
 https://github.com/aspnet/Caching/blob/dev/src/Microsoft.Framework.Caching.Abstractions/IDistributedCache.cs

@@ -10,7 +10,7 @@ using Microsoft.Extensions.OptionsModel;
 using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Rendering;
 
-namespace cloudscribe.Core.Web.Razor
+namespace cloudscribe.Web.Common.Razor
 {
     public class FixedLayoutSelector : ILayoutSelector
     {

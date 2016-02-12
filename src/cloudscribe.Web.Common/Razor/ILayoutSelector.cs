@@ -7,7 +7,7 @@
 
 using Microsoft.AspNet.Mvc.Rendering;
 
-namespace cloudscribe.Core.Web.Razor
+namespace cloudscribe.Web.Common.Razor
 {
     public interface ILayoutSelector
     {

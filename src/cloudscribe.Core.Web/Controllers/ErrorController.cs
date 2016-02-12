@@ -5,6 +5,7 @@
 // Last Modified:			2015-11-18
 // 
 
+using cloudscribe.Web.Common.Extensions;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
 using System;

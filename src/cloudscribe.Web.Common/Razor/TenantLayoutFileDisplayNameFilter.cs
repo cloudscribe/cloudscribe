@@ -5,13 +5,13 @@
 //	Last Modified:              2015-10-09
 //
 
-namespace cloudscribe.Core.Web.Razor
+namespace cloudscribe.Web.Common.Razor
 {
     public class TenantLayoutFileDisplayNameFilter : ILayoutFileDisplayNameFilter
     {
-        public string FilterDisplayName(int siteId, string layoutFileName)
+        public string FilterDisplayName(string tenantId, string layoutFileName)
         {
-            string frontSegment = "Site" + siteId.ToString() + "_";
+            string frontSegment = "Site" + tenantId + "_";
             string endsegment = "_Layout.cshtml";
             return layoutFileName.Replace(frontSegment, string.Empty).Replace(endsegment, string.Empty);
         }

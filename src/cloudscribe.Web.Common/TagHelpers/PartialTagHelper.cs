@@ -9,7 +9,7 @@ using Microsoft.AspNet.Mvc.Razor;
 using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.AspNet.Razor.TagHelpers;
 
-namespace cloudscribe.Core.Web.TagHelpers
+namespace cloudscribe.Web.Common.TagHelpers
 {
     [HtmlTargetElement("partial", Attributes = "name")]
     public class PartialTagHelper : TagHelper
