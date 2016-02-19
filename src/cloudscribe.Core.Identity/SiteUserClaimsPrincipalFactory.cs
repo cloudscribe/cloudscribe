@@ -97,7 +97,13 @@ namespace cloudscribe.Core.Identity
                 {
                     identity.AddClaim(displayNameClaim);
                 }
-                
+
+                Claim emailClaim = new Claim(ClaimTypes.Email, user.Email);
+                if (!identity.HasClaim(emailClaim.Type, emailClaim.Value))
+                {
+                    identity.AddClaim(emailClaim);
+                }
+
                 ISiteSettings site = await siteRepo.Fetch(user.SiteId, CancellationToken.None);
 
                 if (site != null)

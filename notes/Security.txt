@@ -1,4 +1,7 @@
 
+https://pierrekim.github.io/blog/2016-02-16-why-i-stopped-using-startssl-because-of-qihoo-360.html
+
+
 A goal of cloudscribe core should be to follow the OWASP security guidelines
 
 Automated Security Analyzer for ASP.NET Websites by Troy  Hunt

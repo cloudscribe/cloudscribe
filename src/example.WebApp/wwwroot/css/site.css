@@ -140,3 +140,21 @@ ul.breadcrumb {margin-bottom:0;}
 
 .agreementcontainer { overflow:auto; border:1px solid #CCC; height:300px; }
 
+
+div.navbar-gravatar {
+    margin-right:0;
+    margin-left:0; 
+    margin-bottom:0;
+    margin-top:10px;
+
+}
+    
+
+.navbar-text img {
+  max-height:30px;
+  width:auto;
+  vertical-align:middle;
+  padding:0;
+  margin:0;
+}
+    
