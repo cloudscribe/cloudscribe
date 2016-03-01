@@ -1,6 +1,6 @@
 # Contributor Code of Conduct
 
-As contributors and maintainers of this project, and in the interest of
+As maintainers of this project, and in the interest of
 fostering an open and welcoming community, we pledge to respect all people who
 contribute through reporting issues, posting feature requests, updating
 documentation, submitting pull requests or patches, and other activities.
@@ -31,20 +31,13 @@ fairly and consistently applying these principles to every aspect of managing
 this project. Project maintainers who do not follow or enforce the Code of
 Conduct may be permanently removed from the project team.
 
-This Code of Conduct applies both within project spaces and in public spaces
-when an individual is representing the project or its community.
+This Code of Conduct applies only within project spaces and is not intended to impose a political philosophy on anyone or limit their ability to express themselves in other environments. 
+
+You do not have to agree to this document in order to participate in this community, it is not a contract, we are only expressing the expected behavior within this project space. Basically we expect everyone to treat everyone else politely and with respect in project related interactions. If you feel that is too much to ask, you have the freedom also to not participate in this project. We don't need help bad enough to accept any mean or abusive behavior in this project.
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
 reported by contacting a project maintainer at abuse@cloudscribe.com. All
 complaints will be reviewed and investigated and will result in a response that
-is deemed necessary and appropriate to the circumstances. Maintainers are
+is deemed necessary and appropriate to the circumstances (not to be interpreted as heavy handed). Maintainers are
 obligated to maintain confidentiality with regard to the reporter of an
 incident.
-
-
-This Code of Conduct is adapted from the [Contributor Covenant][homepage],
-version 1.3.0, available at
-[http://contributor-covenant.org/version/1/3/0/][version]
-
-[homepage]: http://contributor-covenant.org
-[version]: http://contributor-covenant.org/version/1/3/0/

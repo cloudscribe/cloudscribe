@@ -1,3 +1,9 @@
+
+
+https://github.com/OrchardCMS/Orchard2/blob/5342a792dbac9fb70a7d76c2e17bfee7b9c0ba2c/src/Orchard.Hosting.Web/OrchardShell.cs#L36-L63
+
+
+
 owin middleware
 
 http://coding.abel.nu/2014/06/asp-net-identity-and-owin-overview/

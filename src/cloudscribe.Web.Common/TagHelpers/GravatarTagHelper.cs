@@ -14,9 +14,9 @@ using System.Text;
 namespace cloudscribe.Web.Common.TagHelpers
 {
     /// <summary>
-    /// <cs-gravatar email="@User.GetEmail()" size="30"></cs-gravatar>
+    /// <img gravatar-email="@User.GetEmail()" gravatar-size="30" />
     /// </summary>
-    [HtmlTargetElement("cs-gravatar", Attributes = EmailAttributeName)]
+    [HtmlTargetElement("img", Attributes = EmailAttributeName)]
     public class GravatarTagHelper : TagHelper
     {
         public GravatarTagHelper(IHttpContextAccessor contextAccessor)
@@ -26,10 +26,10 @@ namespace cloudscribe.Web.Common.TagHelpers
 
         protected internal IHttpContextAccessor contextAccessor { get; set; }
 
-        private const string EmailAttributeName = "email";
-        private const string SizeAttributeName = "size";
-        private const string DefaultAttributeName = "default-image";
-        private const string RatingAttributeName = "rating";
+        private const string EmailAttributeName = "gravatar-email";
+        private const string SizeAttributeName = "gravatar-size";
+        private const string DefaultAttributeName = "gravatar-default-image";
+        private const string RatingAttributeName = "gravatar-rating";
 
         private const string httpEndpointFormat = "http://gravatar.com/avatar/{0}?s={1}&d={2}&r={3}";
         private const string httpsEndpointFormat = "https://secure.gravatar.com/avatar/{0}?s={1}&d={2}&r={3}";
@@ -48,8 +48,7 @@ namespace cloudscribe.Web.Common.TagHelpers
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            //change the cs-pager element into a 
-            output.TagName = "img";
+           
             string emailHash;
             using (var md5 = MD5.Create())
             {
@@ -85,7 +84,7 @@ namespace cloudscribe.Web.Common.TagHelpers
                 Rating
                 );
 
-            output.Attributes.Clear();
+            output.Attributes.Remove("gravatar-email");
 
             output.Attributes.Add("src", url);
         }

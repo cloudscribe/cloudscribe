@@ -1,0 +1,40 @@
+
+
+http://www.dailyblogtips.com/change-wordpress-permalinks/
+
+https://www.elegantthemes.com/blog/tips-tricks/wordpress-permalinks
+
+http://www.wpbeginner.com/opinion/why-you-should-not-remove-dates-from-your-wordpress-blog-posts/
+
+http://webmasters.stackexchange.com/questions/49781/benefit-of-date-in-url-segments
+
+//[Route("date/{pubdate:datetime:regex(\\d{4}-\\d{2}-\\d{2})}")]
+//[Route("date/{*pubdate:datetime:regex(\\d{4}/\\d{2}/\\d{2})}")]  // new
+http://www.asp.net/web-api/overview/web-api-routing-and-actions/create-a-rest-api-with-attribute-routing
+
+
+http://weblogs.asp.net/jongalloway/looking-at-asp-net-mvc-5-1-and-web-api-2-1-part-2-attribute-routing-with-custom-constraints
+routes.MapRoute("blog", "{year}/{month}/{day}",
+    new { controller = "blog", action = "index" },
+    new { year = @"\d{4}", month = @"\d{2}", day = @"\d{2}" });
+	
+
+Do dates in URLs determine freshness? 
+https://www.youtube.com/watch?v=lIfCERXLlDM
+
+http://blog.2partsmagic.com/restful-uri-design/
+
+This is a good URL design.
+
+    The URLs are can be persistent (they contain no parts that are likely to change; name changes are rare).
+    The URLs are descriptive (users can read the URL and they’ll get an idea what the page is about).
+    The URLs are browsable (users can remove path segments from right to left, and they’ll get no 404).
+
+It’s also good that they don’t contain any "unnecessary" parts (like, for example, cryptic IDs for person/gallery names). Which, of course, means that you have to take care of edge cases like duplicate person names (maybe append an integer) or same person’s duplicate gallery names (maybe forbid these).
+
+I assume that users get some kind of list of all teachers/students when visiting /teacher resp. /student. In this case, I’d probably use the plural forms /teachers* and /students*:
+
+/teachers
+/teachers/john-doe
+/teachers/john-doe/biography
+

@@ -79,6 +79,16 @@ https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication/
 https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication/AuthenticationHandler%601.cs
 
 HttpAuthenticationFeature implements IHttpAuthenticationFeature contains ref to IAuthenticationHandler and ClaimsPrincipal User
+
+
+
+http://blog.dudak.me/2015/non-linear-middleware-chains-in-asp-net-5/
+
+https://github.com/OrchardCMS/Orchard2/blob/5342a792dbac9fb70a7d76c2e17bfee7b9c0ba2c/src/Orchard.Hosting.Web/Routing/Routes/TenantRoute.cs
+
+
+
+
 https://github.com/aspnet/HttpAbstractions/blob/dev/src/Microsoft.AspNet.Http/Features/Authentication/HttpAuthenticationFeature.cs
 
 abstract AuthenticationManager

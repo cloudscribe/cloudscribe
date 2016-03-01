@@ -1,4 +1,5 @@
 
+http://www.inversionofcontrol.co.uk/asp-net-core-1-0-routing-under-the-hood/
 
 https://github.com/aspnet/Routing
 

@@ -6,7 +6,8 @@
         <ul class="nav navbar-nav navbar-right">
             <li>
                 <div class="pull-right navbar-text navbar-gravatar">
-                    <a asp-controller="Manage" asp-action="Index" title="Manage"><cs-gravatar email="@User.GetEmail()" size="30"></cs-gravatar></a>
+                    <a asp-controller="Manage" asp-action="Index" title="Manage">
+                    <img gravatar-email="@User.GetEmail()" gravatar-size="30" /></a>
                 </div>
             </li>
             <li> 

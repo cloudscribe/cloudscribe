@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-08
-// Last Modified:			2016-02-12
+// Last Modified:			2016-02-19
 // 
 
 using cloudscribe.Core.Identity;
@@ -348,6 +348,7 @@ namespace cloudscribe.Core.Web.Controllers
                         SiteGuid = selectedSite.SiteGuid,
                         UserName = model.LoginName,
                         Email = model.Email,
+                        NormalizedEmail = model.Email.ToLowerInvariant(),
                         FirstName = model.FirstName,
                         LastName = model.LastName,
                         DisplayName = model.DisplayName
@@ -463,6 +464,11 @@ namespace cloudscribe.Core.Web.Controllers
                     ISiteUser user = await UserManager.Fetch(selectedSite.SiteId, model.UserId);
                     if (user != null)
                     {
+                        if(user.NormalizedEmail != model.Email.ToLowerInvariant())
+                        {
+                            user.NormalizedEmail = model.Email.ToLowerInvariant();
+                        }
+
                         user.Email = model.Email;
                         user.FirstName = model.FirstName;
                         user.LastName = model.LastName;

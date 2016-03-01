@@ -1,5 +1,7 @@
 
 
+https://royaljay.com/development/angular2-tutorial/
+
 http://www.strathweb.com/2016/02/formatfilter-and-mediatypemappings-in-asp-net-core-1-0-mvc/
 
 https://github.com/chsakell/aspnet5-angular2-typescript

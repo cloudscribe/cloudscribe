@@ -2,6 +2,15 @@
 http://benfoster.io/blog/asp-net-core-themes-and-multi-tenancy
 
 
+http://www.sitepoint.com/understanding-bootstraps-affix-scrollspy-plugins/
+nav bar stuff
+http://jsfiddle.net/SchmalzyB/vNecy/4/
+http://codepen.io/norcal82/pen/ahegw
+
+
+wireframing
+https://balsamiq.com/
+
 http://www.developerdrive.com/2015/12/what-you-need-to-know-about-bootstrap-4/
 
 desktop design tool for bootstrap

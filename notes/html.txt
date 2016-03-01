@@ -1,0 +1,10 @@
+
+
+http://www.brucelawson.co.uk/2012/best-of-time/
+
+hr element now means thematic break
+https://www.w3.org/TR/html-markup/hr.html
+Some examples of thematic breaks that can be marked up using the hr element include a scene change in a story, or a transition to another topic within a section of a reference book.
+
+
+http://prideparrot.com/blog/archive/2014/4/blog_template_using_twitter_bootstrap3_part1

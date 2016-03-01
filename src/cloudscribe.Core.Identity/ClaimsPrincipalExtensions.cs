@@ -7,6 +7,7 @@
 
 using System;
 using System.Security.Claims;
+using Microsoft.AspNet.Identity;
 
 namespace cloudscribe.Core.Identity
 {
@@ -64,5 +65,15 @@ namespace cloudscribe.Core.Identity
             var claim = principal.FindFirst(ClaimTypes.Email);
             return claim != null ? claim.Value : null;
         }
+
+        //public static string GetUserId(this ClaimsPrincipal principal)
+        //{
+        //    if (principal == null)
+        //    {
+        //        throw new ArgumentNullException(nameof(principal));
+        //    }
+        //    var claim = principal.FindFirst(ClaimTypes.NameIdentifier);
+        //    return claim != null ? claim.Value : null;
+        //}
     }
 }
