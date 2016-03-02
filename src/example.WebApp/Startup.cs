@@ -374,9 +374,9 @@ namespace example.WebApp
                 //builder.UseIdentity(OptionsManager => {
                 var cookieEvents = app.ApplicationServices.GetService<MultiTenantCookieAuthenticationEvents>();
 
-                var options = app.ApplicationServices.GetRequiredService<IOptions<IdentityOptions>>().Value;
-                if (options == null) { throw new ArgumentException("failed to get identity options"); }
-                if (options.Cookies.ApplicationCookie == null) { throw new ArgumentException("failed to get identity application cookie options"); }
+                var identityOptions = app.ApplicationServices.GetRequiredService<IOptions<IdentityOptions>>().Value;
+                if (identityOptions == null) { throw new ArgumentException("failed to get identity options"); }
+                if (identityOptions.Cookies.ApplicationCookie == null) { throw new ArgumentException("failed to get identity application cookie options"); }
 
                 if (
                 (multiTenantOptions.Value.Mode == MultiTenantMode.FolderName)
@@ -387,17 +387,17 @@ namespace example.WebApp
                     //options.AuthenticationScheme = AuthenticationScheme.Application + "-" + ctx.Tenant.SiteFolderName;
                     //options.CookieName = AuthenticationScheme.Application + "-" + ctx.Tenant.SiteFolderName;
 
-                    options.Cookies.ExternalCookie.CookieName = AuthenticationScheme.External + "-" + ctx.Tenant.SiteFolderName;
-                    options.Cookies.ExternalCookie.AuthenticationScheme = AuthenticationScheme.External + "-" + ctx.Tenant.SiteFolderName;
+                    identityOptions.Cookies.ExternalCookie.CookieName = AuthenticationScheme.External + "-" + ctx.Tenant.SiteFolderName;
+                    identityOptions.Cookies.ExternalCookie.AuthenticationScheme = AuthenticationScheme.External + "-" + ctx.Tenant.SiteFolderName;
 
-                    options.Cookies.TwoFactorRememberMeCookie.CookieName = AuthenticationScheme.TwoFactorRememberMe + "-" + ctx.Tenant.SiteFolderName;
-                    options.Cookies.TwoFactorRememberMeCookie.AuthenticationScheme = AuthenticationScheme.TwoFactorRememberMe + "-" + ctx.Tenant.SiteFolderName;
+                    identityOptions.Cookies.TwoFactorRememberMeCookie.CookieName = AuthenticationScheme.TwoFactorRememberMe + "-" + ctx.Tenant.SiteFolderName;
+                    identityOptions.Cookies.TwoFactorRememberMeCookie.AuthenticationScheme = AuthenticationScheme.TwoFactorRememberMe + "-" + ctx.Tenant.SiteFolderName;
 
-                    options.Cookies.TwoFactorUserIdCookie.CookieName = AuthenticationScheme.TwoFactorUserId + "-" + ctx.Tenant.SiteFolderName;
-                    options.Cookies.TwoFactorUserIdCookie.AuthenticationScheme = AuthenticationScheme.TwoFactorUserId + "-" + ctx.Tenant.SiteFolderName;
+                    identityOptions.Cookies.TwoFactorUserIdCookie.CookieName = AuthenticationScheme.TwoFactorUserId + "-" + ctx.Tenant.SiteFolderName;
+                    identityOptions.Cookies.TwoFactorUserIdCookie.AuthenticationScheme = AuthenticationScheme.TwoFactorUserId + "-" + ctx.Tenant.SiteFolderName;
 
-                    options.Cookies.ApplicationCookie.CookieName = AuthenticationScheme.Application + "-" + ctx.Tenant.SiteFolderName;
-                    options.Cookies.ApplicationCookie.AuthenticationScheme = AuthenticationScheme.Application + "-" + ctx.Tenant.SiteFolderName;
+                    identityOptions.Cookies.ApplicationCookie.CookieName = AuthenticationScheme.Application + "-" + ctx.Tenant.SiteFolderName;
+                    identityOptions.Cookies.ApplicationCookie.AuthenticationScheme = AuthenticationScheme.Application + "-" + ctx.Tenant.SiteFolderName;
 
                 }
                 else
@@ -405,45 +405,29 @@ namespace example.WebApp
                     //options.AuthenticationScheme = AuthenticationScheme.Application;
                     //options.CookieName = AuthenticationScheme.Application;
 
-                    options.Cookies.ExternalCookie.CookieName = AuthenticationScheme.External;
-                    options.Cookies.ExternalCookie.AuthenticationScheme = AuthenticationScheme.External;
+                    identityOptions.Cookies.ExternalCookie.CookieName = AuthenticationScheme.External;
+                    identityOptions.Cookies.ExternalCookie.AuthenticationScheme = AuthenticationScheme.External;
 
-                    options.Cookies.TwoFactorRememberMeCookie.CookieName = AuthenticationScheme.TwoFactorRememberMe;
-                    options.Cookies.TwoFactorRememberMeCookie.AuthenticationScheme = AuthenticationScheme.TwoFactorRememberMe;
+                    identityOptions.Cookies.TwoFactorRememberMeCookie.CookieName = AuthenticationScheme.TwoFactorRememberMe;
+                    identityOptions.Cookies.TwoFactorRememberMeCookie.AuthenticationScheme = AuthenticationScheme.TwoFactorRememberMe;
 
-                    options.Cookies.TwoFactorUserIdCookie.CookieName = AuthenticationScheme.TwoFactorUserId;
-                    options.Cookies.TwoFactorUserIdCookie.AuthenticationScheme = AuthenticationScheme.TwoFactorUserId;
+                    identityOptions.Cookies.TwoFactorUserIdCookie.CookieName = AuthenticationScheme.TwoFactorUserId;
+                    identityOptions.Cookies.TwoFactorUserIdCookie.AuthenticationScheme = AuthenticationScheme.TwoFactorUserId;
 
-                    options.Cookies.ApplicationCookie.CookieName = AuthenticationScheme.Application;
-                    options.Cookies.ApplicationCookie.AuthenticationScheme = AuthenticationScheme.Application;
+                    identityOptions.Cookies.ApplicationCookie.CookieName = AuthenticationScheme.Application;
+                    identityOptions.Cookies.ApplicationCookie.AuthenticationScheme = AuthenticationScheme.Application;
                 }
 
 
-                //options.Cookies.ExternalCookie.Events = cookieEvents;
+                //identityOptions.Cookies.ExternalCookie.Events = cookieEvents;
+                //identityOptions.Cookies.TwoFactorRememberMeCookie.Events = cookieEvents;
+                //identityOptions.Cookies.TwoFactorUserIdCookie.Events = cookieEvents;
+                //identityOptions.Cookies.ApplicationCookie.Events = cookieEvents;
 
-                //options.Cookies.ExternalCookie.CookieName = AuthenticationScheme.External;
-                //options.Cookies.ExternalCookie.AuthenticationScheme = AuthenticationScheme.External;
-
-                //options.Cookies.TwoFactorRememberMeCookie.Events = cookieEvents;
-                //options.Cookies.TwoFactorRememberMeCookie.CookieName = AuthenticationScheme.TwoFactorRememberMe;
-                //options.Cookies.TwoFactorRememberMeCookie.AuthenticationScheme = AuthenticationScheme.TwoFactorRememberMe;
-
-                //options.Cookies.TwoFactorUserIdCookie.Events = cookieEvents;
-                //options.Cookies.TwoFactorUserIdCookie.CookieName = AuthenticationScheme.TwoFactorUserId;
-                //options.Cookies.TwoFactorUserIdCookie.AuthenticationScheme = AuthenticationScheme.TwoFactorUserId;
-
-
-                //options.Cookies.ApplicationCookie.CookieName = AuthenticationScheme.Application;
-                //options.Cookies.ApplicationCookie.AuthenticationScheme = AuthenticationScheme.Application;
-                //options.Cookies.ApplicationCookie.Events = cookieEvents;
-
-                builder.UseCookieAuthentication(options.Cookies.ExternalCookie);
-                builder.UseCookieAuthentication(options.Cookies.TwoFactorRememberMeCookie);
-                builder.UseCookieAuthentication(options.Cookies.TwoFactorUserIdCookie);
-                builder.UseCookieAuthentication(options.Cookies.ApplicationCookie);
-
-
-            });
+                builder.UseCookieAuthentication(identityOptions.Cookies.ExternalCookie);
+                builder.UseCookieAuthentication(identityOptions.Cookies.TwoFactorRememberMeCookie);
+                builder.UseCookieAuthentication(identityOptions.Cookies.TwoFactorUserIdCookie);
+                builder.UseCookieAuthentication(identityOptions.Cookies.ApplicationCookie);
 
                 //builder.UseCookieAuthentication(options =>
                 //{
@@ -452,42 +436,56 @@ namespace example.WebApp
                 //    options.AccessDeniedPath = new PathString("/account/forbidden");
                 //    options.AutomaticAuthenticate = true;
                 //    options.AutomaticChallenge = true;
-
-                //    if (
-                //    (multiTenantOptions.Value.Mode == MultiTenantMode.FolderName)
-                //    && (!multiTenantOptions.Value.UseRelatedSitesMode)
-                //    && (ctx.Tenant.SiteFolderName.Length > 0)
-                //    )
-                //    {
-                //        options.AuthenticationScheme = AuthenticationScheme.Application + "-" + ctx.Tenant.SiteFolderName;
-                //        options.CookieName = AuthenticationScheme.Application + "-" + ctx.Tenant.SiteFolderName;
-                //    }
-                //    else
-                //    {
-                //        options.AuthenticationScheme = AuthenticationScheme.Application;
-                //        options.CookieName = AuthenticationScheme.Application;
-                //    }
-
-                //    //var cookieEvents = app.ApplicationServices.GetService<MultiTenantCookieAuthenticationEvents>();
-                //    //options.Events = cookieEvents;
-
-
-
-                //    options.Events = new CookieAuthenticationEvents
-                //    {
-                //        OnValidatePrincipal = SecurityStampValidator.ValidatePrincipalAsync
-                //    };
                 //});
 
-                //builder.UseGoogleAuthentication(options =>
-                //{
-                //    options.AuthenticationScheme = "Google";
-                //    options.SignInScheme = "Cookies";
+                // TODO: will this require a restart if the options are updated in the ui?
+                if(!string.IsNullOrEmpty(ctx.Tenant.GoogleClientId))
+                {
+                    builder.UseGoogleAuthentication(options =>
+                    {
+                        options.AuthenticationScheme = "Google";
+                        options.SignInScheme = "Cookies";
 
-                //    options.ClientId = Configuration[$"{ctx.Tenant.Id}:GoogleClientId"];
-                //    options.ClientSecret = Configuration[$"{ctx.Tenant.Id}:GoogleClientSecret"];
-                //});
-            //});
+                        options.ClientId = ctx.Tenant.GoogleClientId;
+                        options.ClientSecret = ctx.Tenant.GoogleClientSecret;
+                    });
+                }
+                
+                if(!string.IsNullOrEmpty(ctx.Tenant.FacebookAppId))
+                {
+                    builder.UseFacebookAuthentication(options =>
+                    {
+                        options.AppId = ctx.Tenant.FacebookAppId;
+                        options.AppSecret = ctx.Tenant.FacebookAppSecret;
+                    });
+                }
+                
+                if(!string.IsNullOrEmpty(ctx.Tenant.MicrosoftClientId))
+                {
+                    builder.UseMicrosoftAccountAuthentication(options =>
+                    {
+                        options.ClientId = ctx.Tenant.MicrosoftClientId;
+                        options.ClientSecret = ctx.Tenant.MicrosoftClientSecret;
+                    });
+                }
+                
+                if(!string.IsNullOrEmpty(ctx.Tenant.TwitterConsumerKey))
+                {
+                    builder.UseTwitterAuthentication(options =>
+                    {
+                        options.ConsumerKey = ctx.Tenant.TwitterConsumerKey;
+                        options.ConsumerSecret = ctx.Tenant.TwitterConsumerSecret;
+                    });
+                }
+                
+
+
+            });
+
+                
+
+                
+           
 
             // this is in Startup.CloudscribeCore.cs
             //app.UseCloudscribeCore(multiTenantOptions,Configuration);

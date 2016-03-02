@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-27
-// Last Modified:		    2016-01-22
+// Last Modified:		    2016-03-02
 // 
 
 //TODO: we need to override many or most of the methods of the base class
@@ -31,7 +31,7 @@ namespace cloudscribe.Core.Identity
         public SiteSignInManager(
             SiteUserManager<TUser> userManager, 
             IHttpContextAccessor contextAccessor,
-            MultiTenantCookieOptionsResolver tenantResolver,
+            //MultiTenantCookieOptionsResolver tenantResolver,
             IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
             ISiteRepository siteRepository,
             IUserClaimsPrincipalFactory<TUser> claimsFactory,
@@ -48,7 +48,7 @@ namespace cloudscribe.Core.Identity
             UserManager = userManager;
             SiteUserManager = userManager;
             this.context = contextAccessor.HttpContext;
-            this.tenantResolver = tenantResolver;
+           // this.tenantResolver = tenantResolver;
             log = logger;
             multiTenantOptions = multiTenantOptionsAccessor.Value;
             siteRepo = siteRepository;
@@ -58,7 +58,7 @@ namespace cloudscribe.Core.Identity
 
         private SiteUserManager<TUser> SiteUserManager { get; set; }
         private HttpContext context;
-        private MultiTenantCookieOptionsResolver tenantResolver;
+        //private MultiTenantCookieOptionsResolver tenantResolver;
         private ILogger<SignInManager<TUser>> log;
         private MultiTenantOptions multiTenantOptions;
         private ISiteRepository siteRepo;
@@ -93,7 +93,8 @@ namespace cloudscribe.Core.Identity
         public override async Task RefreshSignInAsync(TUser user)
         {
             log.LogInformation("SignInAsync called");
-            var auth = new AuthenticateContext(tenantResolver.ResolveAuthScheme(AuthenticationScheme.Application));
+            //var auth = new AuthenticateContext(tenantResolver.ResolveAuthScheme(AuthenticationScheme.Application));
+            var auth = new AuthenticateContext(Options.Cookies.ApplicationCookie.AuthenticationScheme);
             await context.Authentication.AuthenticateAsync(auth);
             var authenticationMethod = auth.Principal?.FindFirstValue(ClaimTypes.AuthenticationMethod);
             await SignInAsync(user, new AuthenticationProperties(auth.Properties), authenticationMethod);
@@ -103,9 +104,12 @@ namespace cloudscribe.Core.Identity
         {
             log.LogInformation("SignOutAsync called");
 
-            await context.Authentication.SignOutAsync(AuthenticationScheme.Application);
-            await context.Authentication.SignOutAsync(AuthenticationScheme.External);
-            await context.Authentication.SignOutAsync(AuthenticationScheme.TwoFactorUserId);
+            //await context.Authentication.SignOutAsync(AuthenticationScheme.Application);
+            //await context.Authentication.SignOutAsync(AuthenticationScheme.External);
+            //await context.Authentication.SignOutAsync(AuthenticationScheme.TwoFactorUserId);
+            await context.Authentication.SignOutAsync(Options.Cookies.ApplicationCookie.AuthenticationScheme);
+            await context.Authentication.SignOutAsync(Options.Cookies.ExternalCookie.AuthenticationScheme);
+            await context.Authentication.SignOutAsync(Options.Cookies.TwoFactorUserIdCookie.AuthenticationScheme);
         }
 
         public override async Task<bool> IsTwoFactorClientRememberedAsync(TUser user)
@@ -113,7 +117,10 @@ namespace cloudscribe.Core.Identity
             log.LogInformation("IsTwoFactorClientRememberedAsync called");
 
             var userId = await UserManager.GetUserIdAsync(user);
-            var result = await context.Authentication.AuthenticateAsync(AuthenticationScheme.TwoFactorRememberMe);
+            //var result = await context.Authentication.AuthenticateAsync(AuthenticationScheme.TwoFactorRememberMe);
+            var result = await context.Authentication.AuthenticateAsync(Options.Cookies.TwoFactorRememberMeCookie.AuthenticationScheme);
+
+
             return (result != null && result.FindFirstValue(ClaimTypes.Name) == userId);
         }
 
@@ -122,11 +129,17 @@ namespace cloudscribe.Core.Identity
             log.LogInformation("RememberTwoFactorClientAsync called");
 
             var userId = await UserManager.GetUserIdAsync(user);
-     
-            var rememberBrowserIdentity = new ClaimsIdentity(tenantResolver.ResolveAuthScheme(AuthenticationScheme.TwoFactorRememberMe));
+
+            //var rememberBrowserIdentity = new ClaimsIdentity(tenantResolver.ResolveAuthScheme(AuthenticationScheme.TwoFactorRememberMe));
+            var rememberBrowserIdentity = new ClaimsIdentity(Options.Cookies.TwoFactorRememberMeCookie.AuthenticationScheme);
+
             rememberBrowserIdentity.AddClaim(new Claim(ClaimTypes.Name, userId));
 
-            await context.Authentication.SignInAsync(AuthenticationScheme.TwoFactorRememberMe,
+            //await context.Authentication.SignInAsync(AuthenticationScheme.TwoFactorRememberMe,
+            //    new ClaimsPrincipal(rememberBrowserIdentity),
+            //    new AuthenticationProperties { IsPersistent = true });
+
+            await context.Authentication.SignInAsync(Options.Cookies.TwoFactorRememberMeCookie.AuthenticationScheme,
                 new ClaimsPrincipal(rememberBrowserIdentity),
                 new AuthenticationProperties { IsPersistent = true });
         }
@@ -135,7 +148,8 @@ namespace cloudscribe.Core.Identity
         {
             log.LogInformation("ForgetTwoFactorClientAsync called");
 
-            return context.Authentication.SignOutAsync(AuthenticationScheme.TwoFactorRememberMe);
+            //return context.Authentication.SignOutAsync(AuthenticationScheme.TwoFactorRememberMe);
+            return context.Authentication.SignOutAsync(Options.Cookies.TwoFactorRememberMeCookie.AuthenticationScheme);
         }
 
         public override IEnumerable<AuthenticationDescription> GetExternalAuthenticationSchemes()
@@ -241,9 +255,13 @@ namespace cloudscribe.Core.Identity
 
             //var auth = new AuthenticateContext(IdentityOptions.ExternalCookieAuthenticationScheme);
             //https://github.com/aspnet/HttpAbstractions/blob/dev/src/Microsoft.AspNet.Http.Features/Authentication/AuthenticateContext.cs
-            var auth = new AuthenticateContext(AuthenticationScheme.External);
+            //var auth = new AuthenticateContext(AuthenticationScheme.External);
+
+            var auth = new AuthenticateContext(Options.Cookies.ExternalCookie.AuthenticationScheme);
+
+
             //var auth = new AuthenticateContext("Facebook");
-           
+
 
             await context.Authentication.AuthenticateAsync(auth);
 
