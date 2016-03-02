@@ -46,6 +46,7 @@ using cloudscribe.Setup.Web;
 using cloudscribe.Web.Common.Razor;
 using cloudscribe.Messaging;
 using cloudscribe.Web.Navigation;
+using cloudscribe.Web.Navigation.Caching;
 using cloudscribe.Web.Pagination;
 using cloudscribe.Core.Web.Components.Messaging;
 using cloudscribe.Core.Identity;
@@ -241,8 +242,8 @@ namespace example.WebApp
             services.TryAddScoped<IVersionProviderFactory, VersionProviderFactory>();
 
             services.AddCloudscribeIdentity<SiteUser, SiteRole>()
-                .AddDefaultTokenProviders(); 
-            
+                .AddDefaultTokenProviders();
+
             // you can use either json or xml to maintain your navigation map we provide examples of each navigation.xml and 
             // navigation.json in the root of this project
             // you can override the name of the file used with AppSettings:NavigationXmlFileName or AppSettings:NavigationJsonFileName in config.json
@@ -253,13 +254,17 @@ namespace example.WebApp
             // granted xml can be broken by typos too but the end tags make it easier to keep track of where you are imho (JA)
             //services.TryAddScoped<INavigationTreeBuilder, JsonNavigationTreeBuilder>();
             //services.TryAddScoped<INavigationTreeBuilder, HardCodedNavigationTreeBuilder>();
-            services.TryAddScoped<INavigationTreeBuilder, XmlNavigationTreeBuilder>();
+            services.TryAddScoped<ITreeCache, MemoryTreeCache>();
+            services.AddScoped<INavigationTreeBuilder, XmlNavigationTreeBuilder>();
+            services.AddScoped<NavigationTreeBuilderService, NavigationTreeBuilderService>();
+            //services.TryAddScoped<INavigationTreeBuilder, XmlNavigationTreeBuilder>();
             services.TryAddScoped<INodeUrlPrefixProvider, FolderTenantNodeUrlPrefixProvider>(); 
             services.TryAddScoped<INavigationNodePermissionResolver, NavigationNodePermissionResolver>();
             services.Configure<NavigationOptions>(configuration.GetSection("NavigationOptions"));
-            services.Configure<DistributedCacheNavigationTreeBuilderOptions>(configuration.GetSection("DistributedCacheNavigationTreeBuilderOptions"));
-            services.Configure<MemoryCacheNavigationTreeBuilderOptions>(configuration.GetSection("MemoryCacheNavigationTreeBuilderOptions"));
-            services.TryAddScoped<INavigationCacheKeyResolver, DefaultNavigationCacheKeyResolver>();
+
+            //services.Configure<DistributedCacheNavigationTreeBuilderOptions>(configuration.GetSection("DistributedCacheNavigationTreeBuilderOptions"));
+            //services.Configure<MemoryCacheNavigationTreeBuilderOptions>(configuration.GetSection("MemoryCacheNavigationTreeBuilderOptions"));
+            //services.TryAddScoped<INavigationCacheKeyResolver, DefaultNavigationCacheKeyResolver>();
 
             services.TryAddTransient<IBuildPaginationLinks, PaginationLinkBuilder>();
 

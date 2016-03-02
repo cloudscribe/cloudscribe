@@ -38,6 +38,7 @@ using cloudscribe.Core.Models;
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Logging.Web;
+using SaasKit.Multitenancy;
 //using Autofac;
 //using Autofac.Framework.DependencyInjection;
 
@@ -365,8 +366,131 @@ namespace example.WebApp
 
             app.UseMultitenancy<SiteSettings>();
 
+            // https://github.com/saaskit/saaskit/blob/master/src/SaasKit.Multitenancy/MultitenancyApplicationBuilderExtensions.cs
+            // should custom builder extension use Microsoft.AspNet.Builder as their own namespace?
+            // I can see the merits but wondered is that conventional
+            app.UsePerTenant<SiteSettings>((ctx, builder) =>
+            {
+                //builder.UseIdentity(OptionsManager => {
+                var cookieEvents = app.ApplicationServices.GetService<MultiTenantCookieAuthenticationEvents>();
+
+                var options = app.ApplicationServices.GetRequiredService<IOptions<IdentityOptions>>().Value;
+                if (options == null) { throw new ArgumentException("failed to get identity options"); }
+                if (options.Cookies.ApplicationCookie == null) { throw new ArgumentException("failed to get identity application cookie options"); }
+
+                if (
+                (multiTenantOptions.Value.Mode == MultiTenantMode.FolderName)
+                && (!multiTenantOptions.Value.UseRelatedSitesMode)
+                && (ctx.Tenant.SiteFolderName.Length > 0)
+                )
+                {
+                    //options.AuthenticationScheme = AuthenticationScheme.Application + "-" + ctx.Tenant.SiteFolderName;
+                    //options.CookieName = AuthenticationScheme.Application + "-" + ctx.Tenant.SiteFolderName;
+
+                    options.Cookies.ExternalCookie.CookieName = AuthenticationScheme.External + "-" + ctx.Tenant.SiteFolderName;
+                    options.Cookies.ExternalCookie.AuthenticationScheme = AuthenticationScheme.External + "-" + ctx.Tenant.SiteFolderName;
+
+                    options.Cookies.TwoFactorRememberMeCookie.CookieName = AuthenticationScheme.TwoFactorRememberMe + "-" + ctx.Tenant.SiteFolderName;
+                    options.Cookies.TwoFactorRememberMeCookie.AuthenticationScheme = AuthenticationScheme.TwoFactorRememberMe + "-" + ctx.Tenant.SiteFolderName;
+
+                    options.Cookies.TwoFactorUserIdCookie.CookieName = AuthenticationScheme.TwoFactorUserId + "-" + ctx.Tenant.SiteFolderName;
+                    options.Cookies.TwoFactorUserIdCookie.AuthenticationScheme = AuthenticationScheme.TwoFactorUserId + "-" + ctx.Tenant.SiteFolderName;
+
+                    options.Cookies.ApplicationCookie.CookieName = AuthenticationScheme.Application + "-" + ctx.Tenant.SiteFolderName;
+                    options.Cookies.ApplicationCookie.AuthenticationScheme = AuthenticationScheme.Application + "-" + ctx.Tenant.SiteFolderName;
+
+                }
+                else
+                {
+                    //options.AuthenticationScheme = AuthenticationScheme.Application;
+                    //options.CookieName = AuthenticationScheme.Application;
+
+                    options.Cookies.ExternalCookie.CookieName = AuthenticationScheme.External;
+                    options.Cookies.ExternalCookie.AuthenticationScheme = AuthenticationScheme.External;
+
+                    options.Cookies.TwoFactorRememberMeCookie.CookieName = AuthenticationScheme.TwoFactorRememberMe;
+                    options.Cookies.TwoFactorRememberMeCookie.AuthenticationScheme = AuthenticationScheme.TwoFactorRememberMe;
+
+                    options.Cookies.TwoFactorUserIdCookie.CookieName = AuthenticationScheme.TwoFactorUserId;
+                    options.Cookies.TwoFactorUserIdCookie.AuthenticationScheme = AuthenticationScheme.TwoFactorUserId;
+
+                    options.Cookies.ApplicationCookie.CookieName = AuthenticationScheme.Application;
+                    options.Cookies.ApplicationCookie.AuthenticationScheme = AuthenticationScheme.Application;
+                }
+
+
+                //options.Cookies.ExternalCookie.Events = cookieEvents;
+
+                //options.Cookies.ExternalCookie.CookieName = AuthenticationScheme.External;
+                //options.Cookies.ExternalCookie.AuthenticationScheme = AuthenticationScheme.External;
+
+                //options.Cookies.TwoFactorRememberMeCookie.Events = cookieEvents;
+                //options.Cookies.TwoFactorRememberMeCookie.CookieName = AuthenticationScheme.TwoFactorRememberMe;
+                //options.Cookies.TwoFactorRememberMeCookie.AuthenticationScheme = AuthenticationScheme.TwoFactorRememberMe;
+
+                //options.Cookies.TwoFactorUserIdCookie.Events = cookieEvents;
+                //options.Cookies.TwoFactorUserIdCookie.CookieName = AuthenticationScheme.TwoFactorUserId;
+                //options.Cookies.TwoFactorUserIdCookie.AuthenticationScheme = AuthenticationScheme.TwoFactorUserId;
+
+
+                //options.Cookies.ApplicationCookie.CookieName = AuthenticationScheme.Application;
+                //options.Cookies.ApplicationCookie.AuthenticationScheme = AuthenticationScheme.Application;
+                //options.Cookies.ApplicationCookie.Events = cookieEvents;
+
+                builder.UseCookieAuthentication(options.Cookies.ExternalCookie);
+                builder.UseCookieAuthentication(options.Cookies.TwoFactorRememberMeCookie);
+                builder.UseCookieAuthentication(options.Cookies.TwoFactorUserIdCookie);
+                builder.UseCookieAuthentication(options.Cookies.ApplicationCookie);
+
+
+            });
+
+                //builder.UseCookieAuthentication(options =>
+                //{
+
+                //    options.LoginPath = new PathString("/account/login");
+                //    options.AccessDeniedPath = new PathString("/account/forbidden");
+                //    options.AutomaticAuthenticate = true;
+                //    options.AutomaticChallenge = true;
+
+                //    if (
+                //    (multiTenantOptions.Value.Mode == MultiTenantMode.FolderName)
+                //    && (!multiTenantOptions.Value.UseRelatedSitesMode)
+                //    && (ctx.Tenant.SiteFolderName.Length > 0)
+                //    )
+                //    {
+                //        options.AuthenticationScheme = AuthenticationScheme.Application + "-" + ctx.Tenant.SiteFolderName;
+                //        options.CookieName = AuthenticationScheme.Application + "-" + ctx.Tenant.SiteFolderName;
+                //    }
+                //    else
+                //    {
+                //        options.AuthenticationScheme = AuthenticationScheme.Application;
+                //        options.CookieName = AuthenticationScheme.Application;
+                //    }
+
+                //    //var cookieEvents = app.ApplicationServices.GetService<MultiTenantCookieAuthenticationEvents>();
+                //    //options.Events = cookieEvents;
+
+
+
+                //    options.Events = new CookieAuthenticationEvents
+                //    {
+                //        OnValidatePrincipal = SecurityStampValidator.ValidatePrincipalAsync
+                //    };
+                //});
+
+                //builder.UseGoogleAuthentication(options =>
+                //{
+                //    options.AuthenticationScheme = "Google";
+                //    options.SignInScheme = "Cookies";
+
+                //    options.ClientId = Configuration[$"{ctx.Tenant.Id}:GoogleClientId"];
+                //    options.ClientSecret = Configuration[$"{ctx.Tenant.Id}:GoogleClientSecret"];
+                //});
+            //});
+
             // this is in Startup.CloudscribeCore.cs
-            app.UseCloudscribeCore(multiTenantOptions,Configuration);
+            //app.UseCloudscribeCore(multiTenantOptions,Configuration);
 
             // it is very important that all authentication configuration be set before configuring mvc
             // ie if app.UseFacebookAuthentication(); was below app.UseMvc the facebook login button will not be shown

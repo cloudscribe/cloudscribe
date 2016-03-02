@@ -79,7 +79,13 @@ namespace cloudscribe.Core.Identity
             {
                 userPrincipal.Identities.First().AddClaim(new Claim(ClaimTypes.AuthenticationMethod, authenticationMethod));
             }
-            await context.Authentication.SignInAsync(AuthenticationScheme.Application,
+
+
+            //await context.Authentication.SignInAsync(AuthenticationScheme.Application,
+            //    userPrincipal,
+            //    authenticationProperties ?? new AuthenticationProperties());
+
+            await context.Authentication.SignInAsync(Options.Cookies.ApplicationCookie.AuthenticationScheme,
                 userPrincipal,
                 authenticationProperties ?? new AuthenticationProperties());
         }
