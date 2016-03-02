@@ -407,8 +407,8 @@ namespace example.WebApp
 
             //services.TryAddScoped<MultiTenantCookieOptionsResolver, MultiTenantCookieOptionsResolver>();
             //services.TryAddScoped<MultiTenantCookieOptionsResolverFactory, MultiTenantCookieOptionsResolverFactory>();
-            services.TryAddScoped<MultiTenantAuthCookieValidator, MultiTenantAuthCookieValidator>();
-            services.TryAddScoped<MultiTenantCookieAuthenticationEvents, MultiTenantCookieAuthenticationEvents>();
+            services.TryAddScoped<SiteAuthCookieValidator, SiteAuthCookieValidator>();
+            services.TryAddScoped<SiteCookieAuthenticationEvents, SiteCookieAuthenticationEvents>();
             //********************************************************************************************************
 
             // most of the below code was borrowed from here:

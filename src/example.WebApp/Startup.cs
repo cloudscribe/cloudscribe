@@ -372,7 +372,7 @@ namespace example.WebApp
             app.UsePerTenant<SiteSettings>((ctx, builder) =>
             {
                 //builder.UseIdentity(OptionsManager => {
-                var cookieEvents = app.ApplicationServices.GetService<MultiTenantCookieAuthenticationEvents>();
+                var cookieEvents = app.ApplicationServices.GetService<SiteCookieAuthenticationEvents>();
 
                 var identityOptions = app.ApplicationServices.GetRequiredService<IOptions<IdentityOptions>>().Value;
                 if (identityOptions == null) { throw new ArgumentException("failed to get identity options"); }
