@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-06-27
-// Last Modified:			2015-12-28
+// Last Modified:			2016-03-02
 // 
 
 
@@ -22,7 +22,7 @@ namespace cloudscribe.Core.Identity
     {
         public SiteUserClaimsPrincipalFactory(
             ISiteRepository siteRepository,
-            MultiTenantCookieOptionsResolver tenantResolver,
+            //MultiTenantCookieOptionsResolver tenantResolver,
             SiteUserManager<TUser> userManager,
             SiteRoleManager<TRole> roleManager, 
             IOptions<IdentityOptions> optionsAccessor) : base(userManager, roleManager, optionsAccessor)
@@ -30,12 +30,12 @@ namespace cloudscribe.Core.Identity
             if (siteRepository == null) { throw new ArgumentNullException(nameof(siteRepository)); }
 
             siteRepo = siteRepository;
-            this.tenantResolver = tenantResolver;
+            //this.tenantResolver = tenantResolver;
             options = optionsAccessor.Value;
         }
 
         private ISiteRepository siteRepo;
-        private MultiTenantCookieOptionsResolver tenantResolver;
+        //private MultiTenantCookieOptionsResolver tenantResolver;
         private IdentityOptions options;
 
         public override async Task<ClaimsPrincipal> CreateAsync(TUser user)
@@ -50,11 +50,19 @@ namespace cloudscribe.Core.Identity
 
             var userId = await UserManager.GetUserIdAsync(user);
             var userName = await UserManager.GetUserNameAsync(user);
+
+            //var id = new ClaimsIdentity(
+            //    tenantResolver.ResolveAuthScheme(AuthenticationScheme.Application),
+            //    Options.ClaimsIdentity.UserNameClaimType,
+            //    Options.ClaimsIdentity.RoleClaimType
+            //    );
+
             var id = new ClaimsIdentity(
-                tenantResolver.ResolveAuthScheme(AuthenticationScheme.Application),
+                options.Cookies.ApplicationCookie.AuthenticationScheme,
                 Options.ClaimsIdentity.UserNameClaimType,
                 Options.ClaimsIdentity.RoleClaimType
                 );
+
             id.AddClaim(new Claim(Options.ClaimsIdentity.UserIdClaimType, userId));
             id.AddClaim(new Claim(Options.ClaimsIdentity.UserNameClaimType, userName));
 

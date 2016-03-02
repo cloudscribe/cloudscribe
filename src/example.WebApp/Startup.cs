@@ -439,17 +439,17 @@ namespace example.WebApp
                 //});
 
                 // TODO: will this require a restart if the options are updated in the ui?
-                if(!string.IsNullOrEmpty(ctx.Tenant.GoogleClientId))
-                {
-                    builder.UseGoogleAuthentication(options =>
-                    {
-                        options.AuthenticationScheme = "Google";
-                        options.SignInScheme = "Cookies";
+                //if(!string.IsNullOrEmpty(ctx.Tenant.GoogleClientId))
+                //{
+                //    builder.UseGoogleAuthentication(options =>
+                //    {
+                //        options.AuthenticationScheme = "Google";
+                //        options.SignInScheme = "Cookies";
 
-                        options.ClientId = ctx.Tenant.GoogleClientId;
-                        options.ClientSecret = ctx.Tenant.GoogleClientSecret;
-                    });
-                }
+                //        options.ClientId = ctx.Tenant.GoogleClientId;
+                //        options.ClientSecret = ctx.Tenant.GoogleClientSecret;
+                //    });
+                //}
                 
                 if(!string.IsNullOrEmpty(ctx.Tenant.FacebookAppId))
                 {
@@ -457,26 +457,28 @@ namespace example.WebApp
                     {
                         options.AppId = ctx.Tenant.FacebookAppId;
                         options.AppSecret = ctx.Tenant.FacebookAppSecret;
+                        //options.AuthenticationScheme = identityOptions.Cookies.ExternalCookie.AuthenticationScheme;
+                        //options.
                     });
                 }
                 
-                if(!string.IsNullOrEmpty(ctx.Tenant.MicrosoftClientId))
-                {
-                    builder.UseMicrosoftAccountAuthentication(options =>
-                    {
-                        options.ClientId = ctx.Tenant.MicrosoftClientId;
-                        options.ClientSecret = ctx.Tenant.MicrosoftClientSecret;
-                    });
-                }
+                //if(!string.IsNullOrEmpty(ctx.Tenant.MicrosoftClientId))
+                //{
+                //    builder.UseMicrosoftAccountAuthentication(options =>
+                //    {
+                //        options.ClientId = ctx.Tenant.MicrosoftClientId;
+                //        options.ClientSecret = ctx.Tenant.MicrosoftClientSecret;
+                //    });
+                //}
                 
-                if(!string.IsNullOrEmpty(ctx.Tenant.TwitterConsumerKey))
-                {
-                    builder.UseTwitterAuthentication(options =>
-                    {
-                        options.ConsumerKey = ctx.Tenant.TwitterConsumerKey;
-                        options.ConsumerSecret = ctx.Tenant.TwitterConsumerSecret;
-                    });
-                }
+                //if(!string.IsNullOrEmpty(ctx.Tenant.TwitterConsumerKey))
+                //{
+                //    builder.UseTwitterAuthentication(options =>
+                //    {
+                //        options.ConsumerKey = ctx.Tenant.TwitterConsumerKey;
+                //        options.ConsumerSecret = ctx.Tenant.TwitterConsumerSecret;
+                //    });
+                //}
                 
 
 

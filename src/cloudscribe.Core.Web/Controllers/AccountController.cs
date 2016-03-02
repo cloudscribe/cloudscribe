@@ -594,7 +594,9 @@ namespace cloudscribe.Core.Web.Controllers
                     if (result.Succeeded)
                     {
                         log.LogInformation("ExternalLoginConfirmation AddLoginAsync succeeded ");
+
                         await signInManager.SignInAsync(user, isPersistent: false);
+
                         return this.RedirectToLocal(returnUrl);
                     }
                     else

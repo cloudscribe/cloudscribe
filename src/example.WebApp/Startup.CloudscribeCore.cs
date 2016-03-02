@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-06-20
-// Last Modified:			2015-11-19
+// Last Modified:			2016-03-02
 // 
 
 using System;
@@ -36,7 +36,7 @@ using cloudscribe.Core.Web.Components;
 using cloudscribe.Messaging;
 using cloudscribe.Web.Navigation;
 using cloudscribe.Core.Identity;
-using cloudscribe.Core.Identity.OAuth;
+//using cloudscribe.Core.Identity.OAuth;
 
 namespace example.WebApp
 {
@@ -61,124 +61,124 @@ namespace example.WebApp
         /// <param name="app"></param>
         /// <param name="config"></param>
         /// <returns></returns>
-        public static IApplicationBuilder UseCloudscribeCore(
-            this IApplicationBuilder app, 
-            IOptions<MultiTenantOptions> multiTenantOptions,
-            IConfigurationRoot Configuration)
-        {
+        //public static IApplicationBuilder UseCloudscribeCore(
+        //    this IApplicationBuilder app, 
+        //    IOptions<MultiTenantOptions> multiTenantOptions,
+        //    IConfigurationRoot Configuration)
+        //{
 
 
 
 
-            //// Add cookie-based authentication to the request pipeline.
-            ////https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity/BuilderExtensions.cs
-            //app.UseIdentity();
-            app.UseCloudscribeIdentity();
+        //    //// Add cookie-based authentication to the request pipeline.
+        //    ////https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity/BuilderExtensions.cs
+        //    //app.UseIdentity();
+        //    app.UseCloudscribeIdentity();
 
-            //https://docs.asp.net/en/latest/security/authentication/sociallogins.html
+        //    //https://docs.asp.net/en/latest/security/authentication/sociallogins.html
 
-            // create facebook credentials here:
-            //https://developers.facebook.com/apps
+        //    // create facebook credentials here:
+        //    //https://developers.facebook.com/apps
 
-            app.UseMultiTenantFacebookAuthentication(options =>
-            {
-                options.AppId = Configuration["Authentication:Facebook:AppId"];
-                options.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
-            });
+        //    //app.UseMultiTenantFacebookAuthentication(options =>
+        //    //{
+        //    //    options.AppId = Configuration["Authentication:Facebook:AppId"];
+        //    //    options.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
+        //    //});
 
-            app.UseMultiTenantGoogleAuthentication(options =>
-            {
-                options.ClientId = Configuration["Authentication:Google:ClientId"];
-                options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
-            });
-            app.UseMultiTenantMicrosoftAccountAuthentication(options =>
-            {
-                options.ClientId = Configuration["Authentication:MicrosoftAccount:ClientId"];
-                options.ClientSecret = Configuration["Authentication:MicrosoftAccount:ClientSecret"];
-            });
+        //    app.UseMultiTenantGoogleAuthentication(options =>
+        //    {
+        //        options.ClientId = Configuration["Authentication:Google:ClientId"];
+        //        options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
+        //    });
+        //    app.UseMultiTenantMicrosoftAccountAuthentication(options =>
+        //    {
+        //        options.ClientId = Configuration["Authentication:MicrosoftAccount:ClientId"];
+        //        options.ClientSecret = Configuration["Authentication:MicrosoftAccount:ClientSecret"];
+        //    });
 
-            app.UseMultiTenantTwitterAuthentication(options =>
-            {
-                options.ConsumerKey = Configuration["Authentication:Twitter:ConsumerKey"];
-                options.ConsumerSecret = Configuration["Authentication:Twitter:ConsumerSecret"];
-            });
-
-
-
-            //app.UseCultureReplacer();
-
-            //app.UseRequestLocalization();
+        //    app.UseMultiTenantTwitterAuthentication(options =>
+        //    {
+        //        options.ConsumerKey = Configuration["Authentication:Twitter:ConsumerKey"];
+        //        options.ConsumerSecret = Configuration["Authentication:Twitter:ConsumerSecret"];
+        //    });
 
 
-            return app;
+
+        //    //app.UseCultureReplacer();
+
+        //    //app.UseRequestLocalization();
+
+
+        //    return app;
             
-        }
+        //}
 
-        public static IApplicationBuilder UseMultiTenantMicrosoftAccountAuthentication(
-            this IApplicationBuilder app, 
-            Action<MicrosoftAccountOptions> configureOptions)
-        {
-            //https://github.com/aspnet/Security/blob/582f562bbb20fc76f37023086e2b2d861eb4d43d/src/Microsoft.AspNet.Authentication.MicrosoftAccount/MicrosoftAccountOptions.cs
-            //https://github.com/aspnet/Security/blob/582f562bbb20fc76f37023086e2b2d861eb4d43d/src/Microsoft.AspNet.Authentication.MicrosoftAccount/MicrosoftAccountDefaults.cs
+        //public static IApplicationBuilder UseMultiTenantMicrosoftAccountAuthentication(
+        //    this IApplicationBuilder app, 
+        //    Action<MicrosoftAccountOptions> configureOptions)
+        //{
+        //    //https://github.com/aspnet/Security/blob/582f562bbb20fc76f37023086e2b2d861eb4d43d/src/Microsoft.AspNet.Authentication.MicrosoftAccount/MicrosoftAccountOptions.cs
+        //    //https://github.com/aspnet/Security/blob/582f562bbb20fc76f37023086e2b2d861eb4d43d/src/Microsoft.AspNet.Authentication.MicrosoftAccount/MicrosoftAccountDefaults.cs
 
-            var options = new MicrosoftAccountOptions();
-            if (configureOptions != null)
-            {
-                configureOptions(options);
-            }
+        //    var options = new MicrosoftAccountOptions();
+        //    if (configureOptions != null)
+        //    {
+        //        configureOptions(options);
+        //    }
 
-            return app.UseMiddleware<MultiTenantMicrosoftAccountMiddleware>(options);
+        //    return app.UseMiddleware<MultiTenantMicrosoftAccountMiddleware>(options);
 
-        }
+        //}
 
-        public static IApplicationBuilder UseMultiTenantGoogleAuthentication(
-            this IApplicationBuilder app, 
-            Action<GoogleOptions> configureOptions)
-        {
-            //https://github.com/aspnet/Security/blob/582f562bbb20fc76f37023086e2b2d861eb4d43d/src/Microsoft.AspNet.Authentication.Google/GoogleOptions.cs
-            //https://github.com/aspnet/Security/blob/582f562bbb20fc76f37023086e2b2d861eb4d43d/src/Microsoft.AspNet.Authentication.Google/GoogleDefaults.cs
+        //public static IApplicationBuilder UseMultiTenantGoogleAuthentication(
+        //    this IApplicationBuilder app, 
+        //    Action<GoogleOptions> configureOptions)
+        //{
+        //    //https://github.com/aspnet/Security/blob/582f562bbb20fc76f37023086e2b2d861eb4d43d/src/Microsoft.AspNet.Authentication.Google/GoogleOptions.cs
+        //    //https://github.com/aspnet/Security/blob/582f562bbb20fc76f37023086e2b2d861eb4d43d/src/Microsoft.AspNet.Authentication.Google/GoogleDefaults.cs
 
-            var options = new GoogleOptions();
-            if (configureOptions != null)
-            {
-                configureOptions(options);
-            }
+        //    var options = new GoogleOptions();
+        //    if (configureOptions != null)
+        //    {
+        //        configureOptions(options);
+        //    }
 
-            return app.UseMiddleware<MultiTenantGoogleMiddleware>(options);
-        }
+        //    return app.UseMiddleware<MultiTenantGoogleMiddleware>(options);
+        //}
 
 
-        public static IApplicationBuilder UseMultiTenantFacebookAuthentication(
-            this IApplicationBuilder app, 
-            Action<FacebookOptions> configureOptions)
-        {
-            //https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.Facebook/FacebookOptions.cs
-            // https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.OAuth/OAuthOptions.cs
+        //public static IApplicationBuilder UseMultiTenantFacebookAuthentication(
+        //    this IApplicationBuilder app, 
+        //    Action<FacebookOptions> configureOptions)
+        //{
+        //    //https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.Facebook/FacebookOptions.cs
+        //    // https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.OAuth/OAuthOptions.cs
 
-            var options = new FacebookOptions();
-            if (configureOptions != null)
-            {
-                configureOptions(options);
-            }
+        //    var options = new FacebookOptions();
+        //    if (configureOptions != null)
+        //    {
+        //        configureOptions(options);
+        //    }
 
-            return app.UseMiddleware<MultiTenantFacebookMiddleware>(options);
-        }
+        //    return app.UseMiddleware<MultiTenantFacebookMiddleware>(options);
+        //}
 
        
-        public static IApplicationBuilder UseMultiTenantTwitterAuthentication(
-            this IApplicationBuilder app, 
-            Action<TwitterOptions> configureOptions)
-        {
-            //https://github.com/aspnet/Security/blob/582f562bbb20fc76f37023086e2b2d861eb4d43d/src/Microsoft.AspNet.Authentication.Twitter/TwitterOptions.cs
+        //public static IApplicationBuilder UseMultiTenantTwitterAuthentication(
+        //    this IApplicationBuilder app, 
+        //    Action<TwitterOptions> configureOptions)
+        //{
+        //    //https://github.com/aspnet/Security/blob/582f562bbb20fc76f37023086e2b2d861eb4d43d/src/Microsoft.AspNet.Authentication.Twitter/TwitterOptions.cs
 
-            var options = new TwitterOptions();
-            if (configureOptions != null)
-            {
-                configureOptions(options);
-            }
+        //    var options = new TwitterOptions();
+        //    if (configureOptions != null)
+        //    {
+        //        configureOptions(options);
+        //    }
 
-            return app.UseMiddleware<MultiTenantTwitterMiddleware>(options);
-        }
+        //    return app.UseMiddleware<MultiTenantTwitterMiddleware>(options);
+        //}
         
 
 

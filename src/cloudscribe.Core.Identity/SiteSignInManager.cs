@@ -368,7 +368,8 @@ namespace cloudscribe.Core.Identity
                 {
                     // Store the userId for use after two factor check
                     var userId = await UserManager.GetUserIdAsync(user);
-                    await context.Authentication.SignInAsync(Options.Cookies.TwoFactorUserIdCookieAuthenticationScheme, StoreTwoFactorInfo(userId, loginProvider));
+                    await context.Authentication.SignInAsync(
+                        Options.Cookies.TwoFactorUserIdCookieAuthenticationScheme, StoreTwoFactorInfo(userId, loginProvider));
                     return SignInResult.TwoFactorRequired;
                 }
             }
@@ -376,7 +377,7 @@ namespace cloudscribe.Core.Identity
             if (loginProvider != null)
             {
                 //await context.Authentication.SignOutAsync(IdentityOptions.ExternalCookieAuthenticationScheme);
-                await context.Authentication.SignOutAsync(AuthenticationScheme.External);
+                await context.Authentication.SignOutAsync(Options.Cookies.ExternalCookie.AuthenticationScheme);
             }
             await SignInAsync(user, isPersistent, loginProvider);
             return SignInResult.Success;

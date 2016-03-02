@@ -405,8 +405,8 @@ namespace example.WebApp
             //services.TryAddScoped<ICookieAuthenticationSchemeSet, DefaultCookieAuthenticationSchemeSet>();
             //services.TryAddScoped<ICookieAuthenticationSchemeSet, FolderTenantCookieAuthSchemeResolver>();
 
-            services.TryAddScoped<MultiTenantCookieOptionsResolver, MultiTenantCookieOptionsResolver>();
-            services.TryAddScoped<MultiTenantCookieOptionsResolverFactory, MultiTenantCookieOptionsResolverFactory>();
+            //services.TryAddScoped<MultiTenantCookieOptionsResolver, MultiTenantCookieOptionsResolver>();
+            //services.TryAddScoped<MultiTenantCookieOptionsResolverFactory, MultiTenantCookieOptionsResolverFactory>();
             services.TryAddScoped<MultiTenantAuthCookieValidator, MultiTenantAuthCookieValidator>();
             services.TryAddScoped<MultiTenantCookieAuthenticationEvents, MultiTenantCookieAuthenticationEvents>();
             //********************************************************************************************************
