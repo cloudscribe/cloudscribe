@@ -6,7 +6,6 @@
 // 
 
 
-using Microsoft.AspNet.Authentication.Cookies;
 using Microsoft.AspNet.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNet.Identity;

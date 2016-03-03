@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-06-27
-// Last Modified:			2016-03-02
+// Last Modified:			2016-03-03
 // 
 
 
@@ -22,7 +22,6 @@ namespace cloudscribe.Core.Identity
     {
         public SiteUserClaimsPrincipalFactory(
             ISiteRepository siteRepository,
-            //MultiTenantCookieOptionsResolver tenantResolver,
             SiteUserManager<TUser> userManager,
             SiteRoleManager<TRole> roleManager, 
             IOptions<IdentityOptions> optionsAccessor) : base(userManager, roleManager, optionsAccessor)
@@ -30,12 +29,10 @@ namespace cloudscribe.Core.Identity
             if (siteRepository == null) { throw new ArgumentNullException(nameof(siteRepository)); }
 
             siteRepo = siteRepository;
-            //this.tenantResolver = tenantResolver;
             options = optionsAccessor.Value;
         }
 
         private ISiteRepository siteRepo;
-        //private MultiTenantCookieOptionsResolver tenantResolver;
         private IdentityOptions options;
 
         public override async Task<ClaimsPrincipal> CreateAsync(TUser user)
