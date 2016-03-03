@@ -378,11 +378,14 @@ namespace example.WebApp
                 if (identityOptions == null) { throw new ArgumentException("failed to get identity options"); }
                 if (identityOptions.Cookies.ApplicationCookie == null) { throw new ArgumentException("failed to get identity application cookie options"); }
 
-                if (
+                var shouldUseFolder = (
                 (multiTenantOptions.Value.Mode == MultiTenantMode.FolderName)
                 && (!multiTenantOptions.Value.UseRelatedSitesMode)
                 && (ctx.Tenant.SiteFolderName.Length > 0)
-                )
+                );
+            
+
+                if (shouldUseFolder)
                 {
                     //options.AuthenticationScheme = AuthenticationScheme.Application + "-" + ctx.Tenant.SiteFolderName;
                     //options.CookieName = AuthenticationScheme.Application + "-" + ctx.Tenant.SiteFolderName;
@@ -439,47 +442,72 @@ namespace example.WebApp
                 //});
 
                 // TODO: will this require a restart if the options are updated in the ui?
-                //if(!string.IsNullOrEmpty(ctx.Tenant.GoogleClientId))
-                //{
-                //    builder.UseGoogleAuthentication(options =>
-                //    {
-                //        options.AuthenticationScheme = "Google";
-                //        options.SignInScheme = "Cookies";
+                if (!string.IsNullOrEmpty(ctx.Tenant.GoogleClientId))
+                {
+                    builder.UseGoogleAuthentication(options =>
+                    {
+                        options.AuthenticationScheme = "Google";
+                        options.SignInScheme = identityOptions.Cookies.ExternalCookie.AuthenticationScheme;
 
-                //        options.ClientId = ctx.Tenant.GoogleClientId;
-                //        options.ClientSecret = ctx.Tenant.GoogleClientSecret;
-                //    });
-                //}
-                
-                if(!string.IsNullOrEmpty(ctx.Tenant.FacebookAppId))
+                        options.ClientId = ctx.Tenant.GoogleClientId;
+                        options.ClientSecret = ctx.Tenant.GoogleClientSecret;
+
+                        if (shouldUseFolder)
+                        {
+                            options.CallbackPath = "/" + ctx.Tenant.SiteFolderName + "/signin-google";
+                        }
+
+                    });
+                }
+
+                if (!string.IsNullOrEmpty(ctx.Tenant.FacebookAppId))
                 {
                     builder.UseFacebookAuthentication(options =>
                     {
+                        options.AuthenticationScheme = "Facebook";
+                        options.SignInScheme = identityOptions.Cookies.ExternalCookie.AuthenticationScheme;
                         options.AppId = ctx.Tenant.FacebookAppId;
                         options.AppSecret = ctx.Tenant.FacebookAppSecret;
-                        //options.AuthenticationScheme = identityOptions.Cookies.ExternalCookie.AuthenticationScheme;
-                        //options.
+
+                        if(shouldUseFolder)
+                        {
+                            options.CallbackPath = "/" + ctx.Tenant.SiteFolderName + "/signin-facebook";
+                        }
+
+
+
                     });
                 }
-                
-                //if(!string.IsNullOrEmpty(ctx.Tenant.MicrosoftClientId))
-                //{
-                //    builder.UseMicrosoftAccountAuthentication(options =>
-                //    {
-                //        options.ClientId = ctx.Tenant.MicrosoftClientId;
-                //        options.ClientSecret = ctx.Tenant.MicrosoftClientSecret;
-                //    });
-                //}
-                
-                //if(!string.IsNullOrEmpty(ctx.Tenant.TwitterConsumerKey))
-                //{
-                //    builder.UseTwitterAuthentication(options =>
-                //    {
-                //        options.ConsumerKey = ctx.Tenant.TwitterConsumerKey;
-                //        options.ConsumerSecret = ctx.Tenant.TwitterConsumerSecret;
-                //    });
-                //}
-                
+
+                if (!string.IsNullOrEmpty(ctx.Tenant.MicrosoftClientId))
+                {
+                    builder.UseMicrosoftAccountAuthentication(options =>
+                    {
+                        options.SignInScheme = identityOptions.Cookies.ExternalCookie.AuthenticationScheme;
+                        options.ClientId = ctx.Tenant.MicrosoftClientId;
+                        options.ClientSecret = ctx.Tenant.MicrosoftClientSecret;
+                        if (shouldUseFolder)
+                        {
+                            options.CallbackPath = "/" + ctx.Tenant.SiteFolderName + "/signin-microsoft";
+                        }
+                    });
+                }
+
+                if (!string.IsNullOrEmpty(ctx.Tenant.TwitterConsumerKey))
+                {
+                    builder.UseTwitterAuthentication(options =>
+                    {
+                        options.SignInScheme = identityOptions.Cookies.ExternalCookie.AuthenticationScheme;
+                        options.ConsumerKey = ctx.Tenant.TwitterConsumerKey;
+                        options.ConsumerSecret = ctx.Tenant.TwitterConsumerSecret;
+                        if (shouldUseFolder)
+                        {
+                            options.CallbackPath = "/" + ctx.Tenant.SiteFolderName + "/signin-twitter";
+                        }
+
+                    });
+                }
+
 
 
             });
