@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //	Author:                 Joe Audette
 //  Created:			    2011-08-23
-//	Last Modified:		    2016-02-04
+//	Last Modified:		    2016-03-03
 // 
 
 using cloudscribe.Core.Identity;
@@ -47,18 +47,17 @@ namespace cloudscribe.Core.Web.Components
             return await GetSiteTimeZone();
         }
 
-        public async Task<TimeZoneInfo> GetSiteTimeZone()
+        public Task<TimeZoneInfo> GetSiteTimeZone()
         {
-            TenantContext<SiteSettings> siteContext 
-                = await siteResolver.ResolveAsync(contextAccessor.HttpContext);
+            var tenant = contextAccessor.HttpContext.GetTenant<SiteSettings>();
 
-            if((siteContext != null)&&(siteContext.Tenant != null))
+            if(tenant != null)
             {
-                if((siteContext.Tenant.TimeZoneId.Length > 0))
-                return TimeZoneInfo.FindSystemTimeZoneById(siteContext.Tenant.TimeZoneId);
+                if((tenant.TimeZoneId.Length > 0))
+                return Task.FromResult(TimeZoneInfo.FindSystemTimeZoneById(tenant.TimeZoneId));
             }
 
-            return TimeZoneInfo.Utc;
+            return Task.FromResult(TimeZoneInfo.Utc);
         }
 
     }

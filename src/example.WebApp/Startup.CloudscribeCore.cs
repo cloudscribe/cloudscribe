@@ -50,7 +50,7 @@ namespace example.WebApp
     /// </summary>
     public static class CloudscribeCoreApplicationBuilderExtensions
     {
-        
+
 
         /// <summary>
         /// application configuration for cloudscribe core
@@ -61,125 +61,167 @@ namespace example.WebApp
         /// <param name="app"></param>
         /// <param name="config"></param>
         /// <returns></returns>
-        //public static IApplicationBuilder UseCloudscribeCore(
-        //    this IApplicationBuilder app, 
-        //    IOptions<MultiTenantOptions> multiTenantOptions,
-        //    IConfigurationRoot Configuration)
-        //{
+        public static IApplicationBuilder UseCloudscribeCore(
+            this IApplicationBuilder app,
+            IOptions<MultiTenantOptions> multiTenantOptions,
+            IConfigurationRoot Configuration)
+        {
+            app.UseMultitenancy<SiteSettings>();
+
+            // https://github.com/saaskit/saaskit/blob/master/src/SaasKit.Multitenancy/MultitenancyApplicationBuilderExtensions.cs
+            // should custom builder extension use Microsoft.AspNet.Builder as their own namespace?
+            // I can see the merits but wondered is that conventional
+            app.UsePerTenant<SiteSettings>((ctx, builder) =>
+            {
 
 
 
+                var identityOptions = app.ApplicationServices.GetRequiredService<IOptions<IdentityOptions>>().Value;
+                if (identityOptions == null) { throw new ArgumentException("failed to get identity options"); }
+                if (identityOptions.Cookies.ApplicationCookie == null) { throw new ArgumentException("failed to get identity application cookie options"); }
 
-        //    //// Add cookie-based authentication to the request pipeline.
-        //    ////https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity/BuilderExtensions.cs
-        //    //app.UseIdentity();
-        //    app.UseCloudscribeIdentity();
-
-        //    //https://docs.asp.net/en/latest/security/authentication/sociallogins.html
-
-        //    // create facebook credentials here:
-        //    //https://developers.facebook.com/apps
-
-        //    //app.UseMultiTenantFacebookAuthentication(options =>
-        //    //{
-        //    //    options.AppId = Configuration["Authentication:Facebook:AppId"];
-        //    //    options.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
-        //    //});
-
-        //    app.UseMultiTenantGoogleAuthentication(options =>
-        //    {
-        //        options.ClientId = Configuration["Authentication:Google:ClientId"];
-        //        options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
-        //    });
-        //    app.UseMultiTenantMicrosoftAccountAuthentication(options =>
-        //    {
-        //        options.ClientId = Configuration["Authentication:MicrosoftAccount:ClientId"];
-        //        options.ClientSecret = Configuration["Authentication:MicrosoftAccount:ClientSecret"];
-        //    });
-
-        //    app.UseMultiTenantTwitterAuthentication(options =>
-        //    {
-        //        options.ConsumerKey = Configuration["Authentication:Twitter:ConsumerKey"];
-        //        options.ConsumerSecret = Configuration["Authentication:Twitter:ConsumerSecret"];
-        //    });
+                var shouldUseFolder = (
+                (multiTenantOptions.Value.Mode == MultiTenantMode.FolderName)
+                && (!multiTenantOptions.Value.UseRelatedSitesMode)
+                && (ctx.Tenant.SiteFolderName.Length > 0)
+                );
 
 
+                if (shouldUseFolder)
+                {
+                    //options.AuthenticationScheme = AuthenticationScheme.Application + "-" + ctx.Tenant.SiteFolderName;
+                    //options.CookieName = AuthenticationScheme.Application + "-" + ctx.Tenant.SiteFolderName;
 
-        //    //app.UseCultureReplacer();
+                    identityOptions.Cookies.ExternalCookie.CookieName = AuthenticationScheme.External + "-" + ctx.Tenant.SiteFolderName;
+                    identityOptions.Cookies.ExternalCookie.AuthenticationScheme = AuthenticationScheme.External + "-" + ctx.Tenant.SiteFolderName;
 
-        //    //app.UseRequestLocalization();
+                    identityOptions.Cookies.TwoFactorRememberMeCookie.CookieName = AuthenticationScheme.TwoFactorRememberMe + "-" + ctx.Tenant.SiteFolderName;
+                    identityOptions.Cookies.TwoFactorRememberMeCookie.AuthenticationScheme = AuthenticationScheme.TwoFactorRememberMe + "-" + ctx.Tenant.SiteFolderName;
+
+                    identityOptions.Cookies.TwoFactorUserIdCookie.CookieName = AuthenticationScheme.TwoFactorUserId + "-" + ctx.Tenant.SiteFolderName;
+                    identityOptions.Cookies.TwoFactorUserIdCookie.AuthenticationScheme = AuthenticationScheme.TwoFactorUserId + "-" + ctx.Tenant.SiteFolderName;
+
+                    identityOptions.Cookies.ApplicationCookie.CookieName = AuthenticationScheme.Application + "-" + ctx.Tenant.SiteFolderName;
+                    identityOptions.Cookies.ApplicationCookie.AuthenticationScheme = AuthenticationScheme.Application + "-" + ctx.Tenant.SiteFolderName;
+
+                }
+                else
+                {
+                    //options.AuthenticationScheme = AuthenticationScheme.Application;
+                    //options.CookieName = AuthenticationScheme.Application;
+
+                    identityOptions.Cookies.ExternalCookie.CookieName = AuthenticationScheme.External;
+                    identityOptions.Cookies.ExternalCookie.AuthenticationScheme = AuthenticationScheme.External;
+
+                    identityOptions.Cookies.TwoFactorRememberMeCookie.CookieName = AuthenticationScheme.TwoFactorRememberMe;
+                    identityOptions.Cookies.TwoFactorRememberMeCookie.AuthenticationScheme = AuthenticationScheme.TwoFactorRememberMe;
+
+                    identityOptions.Cookies.TwoFactorUserIdCookie.CookieName = AuthenticationScheme.TwoFactorUserId;
+                    identityOptions.Cookies.TwoFactorUserIdCookie.AuthenticationScheme = AuthenticationScheme.TwoFactorUserId;
+
+                    identityOptions.Cookies.ApplicationCookie.CookieName = AuthenticationScheme.Application;
+                    identityOptions.Cookies.ApplicationCookie.AuthenticationScheme = AuthenticationScheme.Application;
+                }
+
+                //var cookieEvents = app.ApplicationServices.GetService<SiteCookieAuthenticationEvents>();
+                //identityOptions.Cookies.ExternalCookie.Events = cookieEvents;
+                //identityOptions.Cookies.TwoFactorRememberMeCookie.Events = cookieEvents;
+                //identityOptions.Cookies.TwoFactorUserIdCookie.Events = cookieEvents;
+                //identityOptions.Cookies.ApplicationCookie.Events = cookieEvents;
+
+                builder.UseCookieAuthentication(identityOptions.Cookies.ExternalCookie);
+                builder.UseCookieAuthentication(identityOptions.Cookies.TwoFactorRememberMeCookie);
+                builder.UseCookieAuthentication(identityOptions.Cookies.TwoFactorUserIdCookie);
+                builder.UseCookieAuthentication(identityOptions.Cookies.ApplicationCookie);
+
+                //builder.UseCookieAuthentication(options =>
+                //{
+
+                //    options.LoginPath = new PathString("/account/login");
+                //    options.AccessDeniedPath = new PathString("/account/forbidden");
+                //    options.AutomaticAuthenticate = true;
+                //    options.AutomaticChallenge = true;
+                //});
+
+                // TODO: will this require a restart if the options are updated in the ui?
+                // no just need to clear the tenant cache after updating the settings
+                if (!string.IsNullOrEmpty(ctx.Tenant.GoogleClientId))
+                {
+                    builder.UseGoogleAuthentication(options =>
+                    {
+                        options.AuthenticationScheme = "Google";
+                        options.SignInScheme = identityOptions.Cookies.ExternalCookie.AuthenticationScheme;
+
+                        options.ClientId = ctx.Tenant.GoogleClientId;
+                        options.ClientSecret = ctx.Tenant.GoogleClientSecret;
+
+                        if (shouldUseFolder)
+                        {
+                            options.CallbackPath = "/" + ctx.Tenant.SiteFolderName + "/signin-google";
+                        }
+
+                    });
+                }
+
+                if (!string.IsNullOrEmpty(ctx.Tenant.FacebookAppId))
+                {
+                    builder.UseFacebookAuthentication(options =>
+                    {
+                        options.AuthenticationScheme = "Facebook";
+                        options.SignInScheme = identityOptions.Cookies.ExternalCookie.AuthenticationScheme;
+                        options.AppId = ctx.Tenant.FacebookAppId;
+                        options.AppSecret = ctx.Tenant.FacebookAppSecret;
+
+                        if (shouldUseFolder)
+                        {
+                            options.CallbackPath = "/" + ctx.Tenant.SiteFolderName + "/signin-facebook";
+                        }
 
 
-        //    return app;
-            
-        //}
 
-        //public static IApplicationBuilder UseMultiTenantMicrosoftAccountAuthentication(
-        //    this IApplicationBuilder app, 
-        //    Action<MicrosoftAccountOptions> configureOptions)
-        //{
-        //    //https://github.com/aspnet/Security/blob/582f562bbb20fc76f37023086e2b2d861eb4d43d/src/Microsoft.AspNet.Authentication.MicrosoftAccount/MicrosoftAccountOptions.cs
-        //    //https://github.com/aspnet/Security/blob/582f562bbb20fc76f37023086e2b2d861eb4d43d/src/Microsoft.AspNet.Authentication.MicrosoftAccount/MicrosoftAccountDefaults.cs
+                    });
+                }
 
-        //    var options = new MicrosoftAccountOptions();
-        //    if (configureOptions != null)
-        //    {
-        //        configureOptions(options);
-        //    }
+                if (!string.IsNullOrEmpty(ctx.Tenant.MicrosoftClientId))
+                {
+                    builder.UseMicrosoftAccountAuthentication(options =>
+                    {
+                        options.SignInScheme = identityOptions.Cookies.ExternalCookie.AuthenticationScheme;
+                        options.ClientId = ctx.Tenant.MicrosoftClientId;
+                        options.ClientSecret = ctx.Tenant.MicrosoftClientSecret;
+                        if (shouldUseFolder)
+                        {
+                            options.CallbackPath = "/" + ctx.Tenant.SiteFolderName + "/signin-microsoft";
+                        }
+                    });
+                }
 
-        //    return app.UseMiddleware<MultiTenantMicrosoftAccountMiddleware>(options);
+                if (!string.IsNullOrEmpty(ctx.Tenant.TwitterConsumerKey))
+                {
+                    builder.UseTwitterAuthentication(options =>
+                    {
+                        options.SignInScheme = identityOptions.Cookies.ExternalCookie.AuthenticationScheme;
+                        options.ConsumerKey = ctx.Tenant.TwitterConsumerKey;
+                        options.ConsumerSecret = ctx.Tenant.TwitterConsumerSecret;
+                        if (shouldUseFolder)
+                        {
+                            options.CallbackPath = "/" + ctx.Tenant.SiteFolderName + "/signin-twitter";
+                        }
 
-        //}
-
-        //public static IApplicationBuilder UseMultiTenantGoogleAuthentication(
-        //    this IApplicationBuilder app, 
-        //    Action<GoogleOptions> configureOptions)
-        //{
-        //    //https://github.com/aspnet/Security/blob/582f562bbb20fc76f37023086e2b2d861eb4d43d/src/Microsoft.AspNet.Authentication.Google/GoogleOptions.cs
-        //    //https://github.com/aspnet/Security/blob/582f562bbb20fc76f37023086e2b2d861eb4d43d/src/Microsoft.AspNet.Authentication.Google/GoogleDefaults.cs
-
-        //    var options = new GoogleOptions();
-        //    if (configureOptions != null)
-        //    {
-        //        configureOptions(options);
-        //    }
-
-        //    return app.UseMiddleware<MultiTenantGoogleMiddleware>(options);
-        //}
+                    });
+                }
 
 
-        //public static IApplicationBuilder UseMultiTenantFacebookAuthentication(
-        //    this IApplicationBuilder app, 
-        //    Action<FacebookOptions> configureOptions)
-        //{
-        //    //https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.Facebook/FacebookOptions.cs
-        //    // https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.OAuth/OAuthOptions.cs
 
-        //    var options = new FacebookOptions();
-        //    if (configureOptions != null)
-        //    {
-        //        configureOptions(options);
-        //    }
+            });
 
-        //    return app.UseMiddleware<MultiTenantFacebookMiddleware>(options);
-        //}
 
-       
-        //public static IApplicationBuilder UseMultiTenantTwitterAuthentication(
-        //    this IApplicationBuilder app, 
-        //    Action<TwitterOptions> configureOptions)
-        //{
-        //    //https://github.com/aspnet/Security/blob/582f562bbb20fc76f37023086e2b2d861eb4d43d/src/Microsoft.AspNet.Authentication.Twitter/TwitterOptions.cs
+            return app;
 
-        //    var options = new TwitterOptions();
-        //    if (configureOptions != null)
-        //    {
-        //        configureOptions(options);
-        //    }
+        }
 
-        //    return app.UseMiddleware<MultiTenantTwitterMiddleware>(options);
-        //}
         
+
 
 
     }

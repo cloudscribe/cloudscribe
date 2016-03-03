@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNet.Authentication.Cookies;
-using Microsoft.AspNet.Authentication.Facebook;
-using Microsoft.AspNet.Authentication.Google;
-using Microsoft.AspNet.Authentication.MicrosoftAccount;
-using Microsoft.AspNet.Authentication.Twitter;
+//using Microsoft.AspNet.Authentication.Cookies;
+//using Microsoft.AspNet.Authentication.Facebook;
+//using Microsoft.AspNet.Authentication.Google;
+//using Microsoft.AspNet.Authentication.MicrosoftAccount;
+//using Microsoft.AspNet.Authentication.Twitter;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.IISPlatformHandler;
 using Microsoft.AspNet.Server.Features;
@@ -363,166 +363,11 @@ namespace example.WebApp
             // the only thing we are using session for is Alerts
             app.UseSession();
             //app.UseInMemorySession(configure: s => s.IdleTimeout = TimeSpan.FromMinutes(20));
-
-            app.UseMultitenancy<SiteSettings>();
-
-            // https://github.com/saaskit/saaskit/blob/master/src/SaasKit.Multitenancy/MultitenancyApplicationBuilderExtensions.cs
-            // should custom builder extension use Microsoft.AspNet.Builder as their own namespace?
-            // I can see the merits but wondered is that conventional
-            app.UsePerTenant<SiteSettings>((ctx, builder) =>
-            {
-                //builder.UseIdentity(OptionsManager => {
-                var cookieEvents = app.ApplicationServices.GetService<SiteCookieAuthenticationEvents>();
-
-                var identityOptions = app.ApplicationServices.GetRequiredService<IOptions<IdentityOptions>>().Value;
-                if (identityOptions == null) { throw new ArgumentException("failed to get identity options"); }
-                if (identityOptions.Cookies.ApplicationCookie == null) { throw new ArgumentException("failed to get identity application cookie options"); }
-
-                var shouldUseFolder = (
-                (multiTenantOptions.Value.Mode == MultiTenantMode.FolderName)
-                && (!multiTenantOptions.Value.UseRelatedSitesMode)
-                && (ctx.Tenant.SiteFolderName.Length > 0)
-                );
             
-
-                if (shouldUseFolder)
-                {
-                    //options.AuthenticationScheme = AuthenticationScheme.Application + "-" + ctx.Tenant.SiteFolderName;
-                    //options.CookieName = AuthenticationScheme.Application + "-" + ctx.Tenant.SiteFolderName;
-
-                    identityOptions.Cookies.ExternalCookie.CookieName = AuthenticationScheme.External + "-" + ctx.Tenant.SiteFolderName;
-                    identityOptions.Cookies.ExternalCookie.AuthenticationScheme = AuthenticationScheme.External + "-" + ctx.Tenant.SiteFolderName;
-
-                    identityOptions.Cookies.TwoFactorRememberMeCookie.CookieName = AuthenticationScheme.TwoFactorRememberMe + "-" + ctx.Tenant.SiteFolderName;
-                    identityOptions.Cookies.TwoFactorRememberMeCookie.AuthenticationScheme = AuthenticationScheme.TwoFactorRememberMe + "-" + ctx.Tenant.SiteFolderName;
-
-                    identityOptions.Cookies.TwoFactorUserIdCookie.CookieName = AuthenticationScheme.TwoFactorUserId + "-" + ctx.Tenant.SiteFolderName;
-                    identityOptions.Cookies.TwoFactorUserIdCookie.AuthenticationScheme = AuthenticationScheme.TwoFactorUserId + "-" + ctx.Tenant.SiteFolderName;
-
-                    identityOptions.Cookies.ApplicationCookie.CookieName = AuthenticationScheme.Application + "-" + ctx.Tenant.SiteFolderName;
-                    identityOptions.Cookies.ApplicationCookie.AuthenticationScheme = AuthenticationScheme.Application + "-" + ctx.Tenant.SiteFolderName;
-
-                }
-                else
-                {
-                    //options.AuthenticationScheme = AuthenticationScheme.Application;
-                    //options.CookieName = AuthenticationScheme.Application;
-
-                    identityOptions.Cookies.ExternalCookie.CookieName = AuthenticationScheme.External;
-                    identityOptions.Cookies.ExternalCookie.AuthenticationScheme = AuthenticationScheme.External;
-
-                    identityOptions.Cookies.TwoFactorRememberMeCookie.CookieName = AuthenticationScheme.TwoFactorRememberMe;
-                    identityOptions.Cookies.TwoFactorRememberMeCookie.AuthenticationScheme = AuthenticationScheme.TwoFactorRememberMe;
-
-                    identityOptions.Cookies.TwoFactorUserIdCookie.CookieName = AuthenticationScheme.TwoFactorUserId;
-                    identityOptions.Cookies.TwoFactorUserIdCookie.AuthenticationScheme = AuthenticationScheme.TwoFactorUserId;
-
-                    identityOptions.Cookies.ApplicationCookie.CookieName = AuthenticationScheme.Application;
-                    identityOptions.Cookies.ApplicationCookie.AuthenticationScheme = AuthenticationScheme.Application;
-                }
-
-
-                //identityOptions.Cookies.ExternalCookie.Events = cookieEvents;
-                //identityOptions.Cookies.TwoFactorRememberMeCookie.Events = cookieEvents;
-                //identityOptions.Cookies.TwoFactorUserIdCookie.Events = cookieEvents;
-                //identityOptions.Cookies.ApplicationCookie.Events = cookieEvents;
-
-                builder.UseCookieAuthentication(identityOptions.Cookies.ExternalCookie);
-                builder.UseCookieAuthentication(identityOptions.Cookies.TwoFactorRememberMeCookie);
-                builder.UseCookieAuthentication(identityOptions.Cookies.TwoFactorUserIdCookie);
-                builder.UseCookieAuthentication(identityOptions.Cookies.ApplicationCookie);
-
-                //builder.UseCookieAuthentication(options =>
-                //{
-
-                //    options.LoginPath = new PathString("/account/login");
-                //    options.AccessDeniedPath = new PathString("/account/forbidden");
-                //    options.AutomaticAuthenticate = true;
-                //    options.AutomaticChallenge = true;
-                //});
-
-                // TODO: will this require a restart if the options are updated in the ui?
-                if (!string.IsNullOrEmpty(ctx.Tenant.GoogleClientId))
-                {
-                    builder.UseGoogleAuthentication(options =>
-                    {
-                        options.AuthenticationScheme = "Google";
-                        options.SignInScheme = identityOptions.Cookies.ExternalCookie.AuthenticationScheme;
-
-                        options.ClientId = ctx.Tenant.GoogleClientId;
-                        options.ClientSecret = ctx.Tenant.GoogleClientSecret;
-
-                        if (shouldUseFolder)
-                        {
-                            options.CallbackPath = "/" + ctx.Tenant.SiteFolderName + "/signin-google";
-                        }
-
-                    });
-                }
-
-                if (!string.IsNullOrEmpty(ctx.Tenant.FacebookAppId))
-                {
-                    builder.UseFacebookAuthentication(options =>
-                    {
-                        options.AuthenticationScheme = "Facebook";
-                        options.SignInScheme = identityOptions.Cookies.ExternalCookie.AuthenticationScheme;
-                        options.AppId = ctx.Tenant.FacebookAppId;
-                        options.AppSecret = ctx.Tenant.FacebookAppSecret;
-
-                        if(shouldUseFolder)
-                        {
-                            options.CallbackPath = "/" + ctx.Tenant.SiteFolderName + "/signin-facebook";
-                        }
-
-
-
-                    });
-                }
-
-                if (!string.IsNullOrEmpty(ctx.Tenant.MicrosoftClientId))
-                {
-                    builder.UseMicrosoftAccountAuthentication(options =>
-                    {
-                        options.SignInScheme = identityOptions.Cookies.ExternalCookie.AuthenticationScheme;
-                        options.ClientId = ctx.Tenant.MicrosoftClientId;
-                        options.ClientSecret = ctx.Tenant.MicrosoftClientSecret;
-                        if (shouldUseFolder)
-                        {
-                            options.CallbackPath = "/" + ctx.Tenant.SiteFolderName + "/signin-microsoft";
-                        }
-                    });
-                }
-
-                if (!string.IsNullOrEmpty(ctx.Tenant.TwitterConsumerKey))
-                {
-                    builder.UseTwitterAuthentication(options =>
-                    {
-                        options.SignInScheme = identityOptions.Cookies.ExternalCookie.AuthenticationScheme;
-                        options.ConsumerKey = ctx.Tenant.TwitterConsumerKey;
-                        options.ConsumerSecret = ctx.Tenant.TwitterConsumerSecret;
-                        if (shouldUseFolder)
-                        {
-                            options.CallbackPath = "/" + ctx.Tenant.SiteFolderName + "/signin-twitter";
-                        }
-
-                    });
-                }
-
-
-
-            });
-
-                
-
-                
-           
-
             // this is in Startup.CloudscribeCore.cs
-            //app.UseCloudscribeCore(multiTenantOptions,Configuration);
+            app.UseCloudscribeCore(multiTenantOptions,Configuration);
 
             // it is very important that all authentication configuration be set before configuring mvc
-            // ie if app.UseFacebookAuthentication(); was below app.UseMvc the facebook login button will not be shown
-
             
             // Add MVC to the request pipeline.
             app.UseMvc(routes =>

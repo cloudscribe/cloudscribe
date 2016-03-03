@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-27
-// Last Modified:			2016-0-0
+// Last Modified:			2016-03-03
 // 
 
 using cloudscribe.Core.Models;
@@ -32,13 +32,13 @@ namespace cloudscribe.Core.Web.Components
     {
         public SiteAuthCookieValidator(
             IHttpContextAccessor contextAccessor,
-            ITenantResolver<SiteSettings> siteResolver,
+           // ITenantResolver<SiteSettings> siteResolver,
             ISecurityStampValidator securityStampValidator,
             ILogger<SiteAuthCookieValidator> logger)
         {
             this.contextAccessor = contextAccessor;
             this.securityStampValidator = securityStampValidator;
-            this.siteResolver = siteResolver;
+           // this.siteResolver = siteResolver;
             log = logger;
         }
 
@@ -47,28 +47,22 @@ namespace cloudscribe.Core.Web.Components
         private ILogger log;
         private IHttpContextAccessor contextAccessor;
 
-        public async Task ValidatePrincipal(CookieValidatePrincipalContext context)
+        public Task ValidatePrincipal(CookieValidatePrincipalContext context)
         {
+            // 
             // TODO: uncomment this after next release of aspnet core
             // and fix the broken
             // it needs to resolve options per tenant
             //await securityStampValidator.ValidateAsync(context);
+            
+            var tenant = contextAccessor.HttpContext.GetTenant<SiteSettings>();
 
-
-            TenantContext<SiteSettings> siteContext
-                = await siteResolver.ResolveAsync(contextAccessor.HttpContext);
-
-            if (siteContext == null)
+            if (tenant == null)
             {
                 context.RejectPrincipal();
             }
-
-            if (siteContext.Tenant == null)
-            {
-                context.RejectPrincipal();
-            }
-
-            Claim siteGuidClaim = new Claim("SiteGuid", siteContext.Tenant.SiteGuid.ToString());
+            
+            var siteGuidClaim = new Claim("SiteGuid", tenant.SiteGuid.ToString());
 
             if (!context.Principal.HasClaim(siteGuidClaim.Type, siteGuidClaim.Value))
             {
@@ -76,7 +70,7 @@ namespace cloudscribe.Core.Web.Components
                 context.RejectPrincipal();
             }
 
-            // return Task.FromResult(0);
+            return Task.FromResult(0);
         }
     }
 }
