@@ -43,7 +43,7 @@ namespace cloudscribe.Core.Web.Components
         }
 
         private ISecurityStampValidator securityStampValidator;
-        private ITenantResolver<SiteSettings> siteResolver;
+        //private ITenantResolver<SiteSettings> siteResolver;
         private ILogger log;
         private IHttpContextAccessor contextAccessor;
 

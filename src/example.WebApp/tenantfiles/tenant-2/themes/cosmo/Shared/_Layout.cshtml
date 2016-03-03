@@ -1,0 +1,65 @@
+﻿@inject SiteSettings Tenant
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>@ViewData["Title"] - @(Tenant?.SiteName ?? "Sample")</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    @RenderSection("Meta", required: false)
+  <environment names="Development">
+      <link rel="stylesheet" href="~/css/themes/cosmo/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+  </environment>
+  <environment names="Staging,Production">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.6/cosmo/bootstrap.min.css"
+          asp-fallback-href="~/css/themes/cosmo/bootstrap.min.css"
+          asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+    <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+  </environment>
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+  <header class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a href="~/@(Tenant?.SiteFolderName ?? "")" class="navbar-brand">@(Tenant?.SiteName ?? "Sample")</a>
+      </div>
+      <nav class="navbar-collapse collapse">
+          @await Component.InvokeAsync("Navigation", "BootstrapTopNav", NamedNavigationFilters.TopNav)
+          @await Html.PartialAsync("_LoginPartial")
+      </nav>
+    </div>
+  </header>
+  <div class="container body-content">
+    @await Component.InvokeAsync("Navigation", "BootstrapBreadcrumbs", NamedNavigationFilters.Breadcrumbs)
+    @RenderBody() 
+  </div>
+  <footer class="container text-center" role="contentinfo" itemscope itemtype="http://schema.org/Person" itemprop="author">
+      <small>Copyright &copy; @DateTime.Now.Year - @(Tenant?.SiteName ?? "Sample")</small>
+  </footer>
+  <environment names="Development">
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+  </environment>
+  <environment names="Staging,Production">
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.1.4.min.js"
+            asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+            asp-fallback-test="window.jQuery">
+    </script>
+    <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.5/bootstrap.min.js"
+            asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
+            asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal">
+    </script>
+      <script src="~/js/site.js" asp-append-version="true"></script>
+  </environment>
+@RenderSection("Bottom", required: false)
+@RenderSection("scripts", required: false)
+</body>
+</html>

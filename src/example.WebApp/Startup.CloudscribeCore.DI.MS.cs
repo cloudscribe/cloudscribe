@@ -41,7 +41,7 @@ using cloudscribe.Logging.Web;
 using cloudscribe.Core.Web;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.Navigation;
-using cloudscribe.Core.Web.Razor;
+//using cloudscribe.Core.Web.Razor;
 using cloudscribe.Setup.Web;
 using cloudscribe.Web.Common.Razor;
 using cloudscribe.Messaging;
@@ -257,33 +257,20 @@ namespace example.WebApp
             services.TryAddScoped<ITreeCache, MemoryTreeCache>();
             services.AddScoped<INavigationTreeBuilder, XmlNavigationTreeBuilder>();
             services.AddScoped<NavigationTreeBuilderService, NavigationTreeBuilderService>();
-            //services.TryAddScoped<INavigationTreeBuilder, XmlNavigationTreeBuilder>();
             services.TryAddScoped<INodeUrlPrefixProvider, FolderTenantNodeUrlPrefixProvider>(); 
             services.TryAddScoped<INavigationNodePermissionResolver, NavigationNodePermissionResolver>();
             services.Configure<NavigationOptions>(configuration.GetSection("NavigationOptions"));
 
-            //services.Configure<DistributedCacheNavigationTreeBuilderOptions>(configuration.GetSection("DistributedCacheNavigationTreeBuilderOptions"));
-            //services.Configure<MemoryCacheNavigationTreeBuilderOptions>(configuration.GetSection("MemoryCacheNavigationTreeBuilderOptions"));
-            //services.TryAddScoped<INavigationCacheKeyResolver, DefaultNavigationCacheKeyResolver>();
-
+            
             services.TryAddTransient<IBuildPaginationLinks, PaginationLinkBuilder>();
 
             
             //services.AddTransient<IEmailTemplateService, HardCodedEmailTemplateService>();
             services.AddTransient<ISiteMessageEmailSender, SiteEmailMessageSender>();
             services.AddTransient<ISmsSender, SiteSmsSender>();
-
-            // TODO: implement TenantLayoutSelector
-            services.Configure<LayoutSelectorOptions>(configuration.GetSection("LayoutSelectorOptions"));
-            services.TryAddScoped<ILayoutSelector, TenantLayoutSelector>();
-            services.TryAddSingleton<ILayoutFileListBuilder, LayoutFileListBuilder>();
-            services.TryAddSingleton<ILayoutFileDisplayNameFilter, TenantLayoutFileDisplayNameFilter>();
-
-            //services.Configure<RazorViewEngineOptions>(options =>
-            //{
-            //    options.ViewLocationExpanders.Add(new TenantViewLocationExpander());
-            //});
-
+            
+            services.TryAddSingleton<IThemeListBuilder, SiteThemeListBuilder>();
+            
 
             services.TryAddSingleton<IRazorViewEngine, CoreViewEngine>();
             // cloudscribe.Core.Web.CoreViewEngine adds /Views/Sys as the last place to search for views
@@ -308,6 +295,11 @@ namespace example.WebApp
                  
                  
              });
+
+            services.Configure<RazorViewEngineOptions>(options =>
+            {
+                options.ViewLocationExpanders.Add(new SiteViewLocationExpander());
+            });
 
 
 

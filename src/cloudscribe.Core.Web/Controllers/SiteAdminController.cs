@@ -32,8 +32,8 @@ namespace cloudscribe.Core.Web.Controllers
             GeoDataManager geoDataManager,
             IOptions<MultiTenantOptions> multiTenantOptions,
             IOptions<UIOptions> uiOptionsAccessor,
-            IOptions<LayoutSelectorOptions> layoutSeletorOptionsAccessor,
-            ILayoutFileListBuilder layoutListBuilder
+           // IOptions<LayoutSelectorOptions> layoutSeletorOptionsAccessor,
+            IThemeListBuilder layoutListBuilder
             )
         {
             if (siteManager == null) { throw new ArgumentNullException(nameof(siteManager)); }
@@ -46,7 +46,7 @@ namespace cloudscribe.Core.Web.Controllers
             this.geoDataManager = geoDataManager;
             uiOptions = uiOptionsAccessor.Value;
             this.layoutListBuilder = layoutListBuilder;
-            layoutOptions = layoutSeletorOptionsAccessor.Value;
+            //layoutOptions = layoutSeletorOptionsAccessor.Value;
 
             //startup = startupTrigger;
         }
@@ -55,8 +55,8 @@ namespace cloudscribe.Core.Web.Controllers
         private GeoDataManager geoDataManager;
         private MultiTenantOptions multiTenantOptions;
         //private ITriggerStartup startup
-        private LayoutSelectorOptions layoutOptions;
-        private ILayoutFileListBuilder layoutListBuilder;
+        //private LayoutSelectorOptions layoutOptions;
+        private IThemeListBuilder layoutListBuilder;
         private UIOptions uiOptions;
 
         //disable warning about not really being async
@@ -174,14 +174,9 @@ namespace cloudscribe.Core.Web.Controllers
             {
                 model.HostName = selectedSite.PreferredHostName;
             }
-
-            if(layoutOptions.SelectionMode == LayoutSelectionMode.Browsing)
-            {
-                model.Layout = selectedSite.Layout;
-                model.AvailableLayouts = layoutListBuilder.GetAvailableLayouts(selectedSite.SiteId.ToInvariantString());
-            }
             
-
+            model.Layout = selectedSite.Layout;
+            model.AvailableLayouts = layoutListBuilder.GetAvailableLayouts();
             
             // can only delete from server admin site/cannot delete server admin site
             if (siteManager.CurrentSite.IsServerAdminSite)
@@ -334,11 +329,8 @@ namespace cloudscribe.Core.Web.Controllers
             selectedSite.SiteFolderName = model.SiteFolderName;
             selectedSite.SiteIsClosed = model.IsClosed;
             selectedSite.SiteIsClosedMessage = model.ClosedMessage;
-
-            if (layoutOptions.SelectionMode == LayoutSelectionMode.Browsing)
-            {
-                selectedSite.Layout = model.Layout;
-            }
+            selectedSite.Layout = model.Layout;
+            
             
             bool result = await siteManager.Save(selectedSite);
 
