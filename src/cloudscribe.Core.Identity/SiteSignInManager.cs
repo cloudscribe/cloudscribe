@@ -258,11 +258,7 @@ namespace cloudscribe.Core.Identity
             //var auth = new AuthenticateContext(AuthenticationScheme.External);
 
             var auth = new AuthenticateContext(Options.Cookies.ExternalCookie.AuthenticationScheme);
-
-
-            //var auth = new AuthenticateContext("Facebook");
-
-
+            
             await context.Authentication.AuthenticateAsync(auth);
 
             if (auth.Principal == null)
@@ -358,7 +354,7 @@ namespace cloudscribe.Core.Identity
 
         private async Task<SignInResult> SignInOrTwoFactorAsync(TUser user, bool isPersistent, string loginProvider = null)
         {
-            log.LogInformation("SignInOrTwoFactorAsync called");
+            log.LogDebug("SignInOrTwoFactorAsync called");
 
             if (UserManager.SupportsUserTwoFactor &&
                 await UserManager.GetTwoFactorEnabledAsync(user) &&
@@ -368,8 +364,11 @@ namespace cloudscribe.Core.Identity
                 {
                     // Store the userId for use after two factor check
                     var userId = await UserManager.GetUserIdAsync(user);
+                    //var twoFactorScheme = Options.Cookies.TwoFactorUserIdCookieAuthenticationScheme;
+                    // the above is not getting the value we set in startup though the external one below is working 
+                    var twoFactorScheme = Options.Cookies.TwoFactorUserIdCookie.AuthenticationScheme;
                     await context.Authentication.SignInAsync(
-                        Options.Cookies.TwoFactorUserIdCookieAuthenticationScheme, StoreTwoFactorInfo(userId, loginProvider));
+                        twoFactorScheme, StoreTwoFactorInfo(userId, loginProvider));
                     return SignInResult.TwoFactorRequired;
                 }
             }
@@ -381,6 +380,92 @@ namespace cloudscribe.Core.Identity
             }
             await SignInAsync(user, isPersistent, loginProvider);
             return SignInResult.Success;
+        }
+
+        /// <summary>
+        /// Gets the<typeparamref name= "TUser" /> for the current two factor authentication login, as an asynchronous operation.
+        /// </summary>
+        /// <returns>The task object representing the asynchronous operation containing the<typeparamref name="TUser"/>
+        /// for the sign-in attempt.</returns>
+        //public override async Task<TUser> GetTwoFactorAuthenticationUserAsync()
+        //{
+        //    TwoF
+        //    var info = await RetrieveTwoFactorInfoAsync();
+        //    if (info == null)
+        //    {
+        //        return null;
+        //    }
+
+        //    return await UserManager.FindByIdAsync(info.UserId);
+        //}
+
+        //private async Task<TwoFactorAuthenticationInfo> RetrieveTwoFactorInfoAsync()
+        //{
+        //    var result = await context.Authentication.AuthenticateAsync(Options.Cookies.TwoFactorUserIdCookieAuthenticationScheme);
+        //    if (result != null)
+        //    {
+        //        return new TwoFactorAuthenticationInfo
+        //        {
+        //            UserId = result.FindFirstValue(ClaimTypes.Name),
+        //            LoginProvider = result.FindFirstValue(ClaimTypes.AuthenticationMethod)
+        //        };
+        //    }
+        //    return null;
+        //}
+
+        /// <summary>
+        /// Attempts to sign in the specified <paramref name="user"/> and <paramref name="password"/> combination
+        /// as an asynchronous operation.
+        /// </summary>
+        /// <param name="user">The user to sign in.</param>
+        /// <param name="password">The password to attempt to sign in with.</param>
+        /// <param name="isPersistent">Flag indicating whether the sign-in cookie should persist after the browser is closed.</param>
+        /// <param name="lockoutOnFailure">Flag indicating if the user account should be locked if the sign in fails.</param>
+        /// <returns>The task object representing the asynchronous operation containing the <see name="SignInResult"/>
+        /// for the sign-in attempt.</returns>
+        public override async Task<SignInResult> PasswordSignInAsync(TUser user, string password,
+            bool isPersistent, bool lockoutOnFailure)
+        {
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
+            var error = await PreSignInCheck(user);
+            if (error != null)
+            {
+                return error;
+            }
+            if (await IsLockedOut(user))
+            {
+                return await LockedOut(user);
+            }
+            if (await UserManager.CheckPasswordAsync(user, password))
+            {
+                await ResetLockout(user);
+                return await SignInOrTwoFactorAsync(user, isPersistent);
+            }
+            Logger.LogWarning(2, "User {userId} failed to provide the correct password.", await UserManager.GetUserIdAsync(user));
+
+            if (UserManager.SupportsUserLockout && lockoutOnFailure)
+            {
+                // If lockout is requested, increment access failed count which might lock out the user
+                await UserManager.AccessFailedAsync(user);
+                if (await UserManager.IsLockedOutAsync(user))
+                {
+                    return await LockedOut(user);
+                }
+            }
+            return SignInResult.Failed;
+        }
+
+        private Task ResetLockout(TUser user)
+        {
+            if (UserManager.SupportsUserLockout)
+            {
+                return UserManager.ResetAccessFailedCountAsync(user);
+            }
+            return Task.FromResult(0);
         }
 
         internal ClaimsPrincipal StoreTwoFactorInfo(string userId, string loginProvider)

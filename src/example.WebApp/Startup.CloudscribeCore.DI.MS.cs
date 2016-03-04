@@ -359,7 +359,8 @@ namespace example.WebApp
             services.AddAuthentication(options =>
             {
                 // This is the Default value for ExternalCookieAuthenticationScheme
-                options.SignInScheme = new IdentityCookieOptions().ExternalCookieAuthenticationScheme;
+                //options.SignInScheme = new IdentityCookieOptions().ExternalCookieAuthenticationScheme;
+                options.SignInScheme = AuthenticationScheme.External;
             });
 
             services.TryAddSingleton<IdentityMarkerService>();
@@ -394,11 +395,7 @@ namespace example.WebApp
             services.TryAddScoped<SiteSignInManager<SiteUser>, SiteSignInManager<SiteUser>>();
             //services.TryAddScoped<SignInManager<SiteUser>, SignInManager<SiteUser>>();
 
-            //services.TryAddScoped<ICookieAuthenticationSchemeSet, DefaultCookieAuthenticationSchemeSet>();
-            //services.TryAddScoped<ICookieAuthenticationSchemeSet, FolderTenantCookieAuthSchemeResolver>();
-
-            //services.TryAddScoped<MultiTenantCookieOptionsResolver, MultiTenantCookieOptionsResolver>();
-            //services.TryAddScoped<MultiTenantCookieOptionsResolverFactory, MultiTenantCookieOptionsResolverFactory>();
+            
             services.TryAddScoped<SiteAuthCookieValidator, SiteAuthCookieValidator>();
             services.TryAddScoped<SiteCookieAuthenticationEvents, SiteCookieAuthenticationEvents>();
             //********************************************************************************************************
@@ -424,7 +421,7 @@ namespace example.WebApp
             services.TryAddScoped<RoleManager<TRole>, RoleManager<TRole>>();
 
             //http://docs.asp.net/en/latest/security/2fa.html
-
+            //services.TryAddScoped<IdentityOptions>();
             services.Configure<IdentityOptions>(options =>
             {
                 // some other options are overridden by ste settings
@@ -435,6 +432,7 @@ namespace example.WebApp
                 // there already exist problem records
                 // the default setting for Identity is false but we want it to be true for these reasons
                 options.User.RequireUniqueEmail = true;
+                options.Cookies.TwoFactorUserIdCookieAuthenticationScheme = AuthenticationScheme.TwoFactorUserId;
             });
 
 

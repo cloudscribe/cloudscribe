@@ -319,6 +319,34 @@ namespace cloudscribe.Core.Identity
             return IdentityResult.Success;
         }
 
+        /// <summary>
+        /// Gets a list of valid two factor token providers for the specified <paramref name="user"/>,
+        /// as an asynchronous operation.
+        /// </summary>
+        /// <param name="user">The user the whose two factor authentication providers will be returned.</param>
+        /// <returns>
+        /// The <see cref="Task"/> that represents result of the asynchronous operation, a list of two
+        /// factor authentication providers for the specified user.
+        /// </returns>
+        //public override async Task<IList<string>> GetValidTwoFactorProvidersAsync(TUser user)
+        //{
+        //    ThrowIfDisposed();
+        //    if (user == null)
+        //    {
+        //        throw new ArgumentNullException(nameof(user));
+        //    }
+        //    var results = new List<string>();
+        //    foreach (var f in _tokenProviders)
+        //    {
+        //        if (await f.Value.CanGenerateTwoFactorTokenAsync(this, user))
+        //        {
+        //            results.Add(f.Key);
+        //        }
+        //    }
+        //    return results;
+        //}
+
+
 
         #endregion
 
