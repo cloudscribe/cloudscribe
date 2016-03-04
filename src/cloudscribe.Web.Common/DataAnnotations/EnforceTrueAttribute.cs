@@ -11,7 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace cloudscribe.Core.Models.DataAnnotations
+namespace cloudscribe.Web.Common.DataAnnotations
 {
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
     public class EnforceTrueAttribute : ValidationAttribute

@@ -16,7 +16,6 @@
     "cloudscribe.Core.Models": "1.0.0-*",
     "Microsoft.AspNet.Authentication": "1.0.0-rc1-final",
     "Microsoft.AspNet.Http": "1.0.0-rc1-final",
-    
     "Microsoft.AspNet.Identity": "3.0.0-rc1-final",
     "Microsoft.Extensions.DependencyInjection.Abstractions": "1.0.0-rc1-final",
     "Microsoft.Extensions.Logging.Abstractions": "1.0.0-rc1-final",
@@ -25,12 +24,10 @@
 
   "frameworks": {
     "net451": {
-      "frameworkAssemblies": {
-        "System.Configuration": "4.0.0.0",
+      "frameworkAssemblies": { 
         "System.Security": "4.0.0.0",
-        "System.Web.ApplicationServices": "4.0.0.0",
-        "System.Xml": "4.0.0.0",
-        "System.Xml.Linq": "4.0.0.0"
+        "System.Web.ApplicationServices": "4.0.0.0"
+       
       }
 
     },

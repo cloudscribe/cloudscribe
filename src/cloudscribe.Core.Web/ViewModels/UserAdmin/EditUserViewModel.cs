@@ -8,7 +8,7 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
-using cloudscribe.Core.Models.DataAnnotations;
+using cloudscribe.Web.Common.DataAnnotations;
 //using ExpressiveAnnotations.Attributes;
 
 namespace cloudscribe.Core.Web.ViewModels.Account

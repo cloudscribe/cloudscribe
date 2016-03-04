@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 
-namespace cloudscribe.Core.Models.DataAnnotations
+namespace cloudscribe.Web.Common.DataAnnotations
 {
     public class RequiredWhenAttribute : ValidationAttribute
     {

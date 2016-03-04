@@ -13,7 +13,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Reflection;
 
-namespace cloudscribe.Core.Models.DataAnnotations
+namespace cloudscribe.Web.Common.DataAnnotations
 {
     public class CompareWhenAttribute : ValidationAttribute
     {
