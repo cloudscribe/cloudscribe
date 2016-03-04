@@ -220,7 +220,8 @@ namespace example.WebApp
             //services.TryAddScoped<ISiteResolver, RequestSiteResolver>();
             services.TryAddScoped<ITimeZoneResolver, RequestTimeZoneResolver>();
 
-            services.AddMultitenancy<SiteSettings, SiteResolver>();
+            //services.AddMultitenancy<SiteSettings, SiteResolver>();
+            services.AddMultitenancy<SiteSettings, CachingSiteResolver>();
 
 
             services.TryAddScoped<SiteManager, SiteManager>();
