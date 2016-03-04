@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-27
-// Last Modified:		    2016-03-02
+// Last Modified:		    2016-03-04
 // 
 
 //TODO: we need to override many or most of the methods of the base class
@@ -387,31 +387,36 @@ namespace cloudscribe.Core.Identity
         /// </summary>
         /// <returns>The task object representing the asynchronous operation containing the<typeparamref name="TUser"/>
         /// for the sign-in attempt.</returns>
-        //public override async Task<TUser> GetTwoFactorAuthenticationUserAsync()
-        //{
-        //    TwoF
-        //    var info = await RetrieveTwoFactorInfoAsync();
-        //    if (info == null)
-        //    {
-        //        return null;
-        //    }
+        public override async Task<TUser> GetTwoFactorAuthenticationUserAsync()
+        {
+            var info = await RetrieveTwoFactorInfoAsync();
+            if (info == null)
+            {
+                return null;
+            }
 
-        //    return await UserManager.FindByIdAsync(info.UserId);
-        //}
+            return await UserManager.FindByIdAsync(info.UserId);
+        }
 
-        //private async Task<TwoFactorAuthenticationInfo> RetrieveTwoFactorInfoAsync()
-        //{
-        //    var result = await context.Authentication.AuthenticateAsync(Options.Cookies.TwoFactorUserIdCookieAuthenticationScheme);
-        //    if (result != null)
-        //    {
-        //        return new TwoFactorAuthenticationInfo
-        //        {
-        //            UserId = result.FindFirstValue(ClaimTypes.Name),
-        //            LoginProvider = result.FindFirstValue(ClaimTypes.AuthenticationMethod)
-        //        };
-        //    }
-        //    return null;
-        //}
+        private class TwoFactorAuthenticationInfo
+        {
+            public string UserId { get; set; }
+            public string LoginProvider { get; set; }
+        };
+
+        private async Task<TwoFactorAuthenticationInfo> RetrieveTwoFactorInfoAsync()
+        {
+            var result = await context.Authentication.AuthenticateAsync(Options.Cookies.TwoFactorUserIdCookieAuthenticationScheme);
+            if (result != null)
+            {
+                return new TwoFactorAuthenticationInfo
+                {
+                    UserId = result.FindFirstValue(ClaimTypes.Name),
+                    LoginProvider = result.FindFirstValue(ClaimTypes.AuthenticationMethod)
+                };
+            }
+            return null;
+        }
 
         /// <summary>
         /// Attempts to sign in the specified <paramref name="user"/> and <paramref name="password"/> combination
@@ -549,46 +554,46 @@ namespace cloudscribe.Core.Identity
         //    }
         //}
 
-        //public override async Task<SignInResult> TwoFactorSignInAsync(string provider, string code, bool isPersistent,
-        //    bool rememberClient)
-        //{
-        //    var twoFactorInfo = await RetrieveTwoFactorInfoAsync();
-        //    if (twoFactorInfo == null || twoFactorInfo.UserId == null)
-        //    {
-        //        return SignInResult.Failed;
-        //    }
-        //    var user = await UserManager.FindByIdAsync(twoFactorInfo.UserId);
-        //    if (user == null)
-        //    {
-        //        return SignInResult.Failed;
-        //    }
+        public override async Task<SignInResult> TwoFactorSignInAsync(string provider, string code, bool isPersistent,
+            bool rememberClient)
+        {
+            var twoFactorInfo = await RetrieveTwoFactorInfoAsync();
+            if (twoFactorInfo == null || twoFactorInfo.UserId == null)
+            {
+                return SignInResult.Failed;
+            }
+            var user = await UserManager.FindByIdAsync(twoFactorInfo.UserId);
+            if (user == null)
+            {
+                return SignInResult.Failed;
+            }
 
-        //    var error = await PreSignInCheck(user);
-        //    if (error != null)
-        //    {
-        //        return error;
-        //    }
-        //    if (await UserManager.VerifyTwoFactorTokenAsync(user, provider, code))
-        //    {
-        //        // When token is verified correctly, clear the access failed count used for lockout
-        //        await ResetLockout(user);
-        //        // Cleanup external cookie
-        //        if (twoFactorInfo.LoginProvider != null)
-        //        {
-        //            await Context.Authentication.SignOutAsync(IdentityOptions.ExternalCookieAuthenticationScheme);
-        //        }
-        //        if (rememberClient)
-        //        {
-        //            await RememberTwoFactorClientAsync(user);
-        //        }
-        //        await UserManager.ResetAccessFailedCountAsync(user);
-        //        await SignInAsync(user, isPersistent, twoFactorInfo.LoginProvider);
-        //        return SignInResult.Success;
-        //    }
-        //    // If the token is incorrect, record the failure which also may cause the user to be locked out
-        //    await UserManager.AccessFailedAsync(user);
-        //    return SignInResult.Failed;
-        //}
+            var error = await PreSignInCheck(user);
+            if (error != null)
+            {
+                return error;
+            }
+            if (await UserManager.VerifyTwoFactorTokenAsync(user, provider, code))
+            {
+                // When token is verified correctly, clear the access failed count used for lockout
+                await ResetLockout(user);
+                // Cleanup external cookie
+                if (twoFactorInfo.LoginProvider != null)
+                {
+                    await context.Authentication.SignOutAsync(Options.Cookies.ExternalCookie.AuthenticationScheme);
+                }
+                if (rememberClient)
+                {
+                    await RememberTwoFactorClientAsync(user);
+                }
+                await UserManager.ResetAccessFailedCountAsync(user);
+                await SignInAsync(user, isPersistent, twoFactorInfo.LoginProvider);
+                return SignInResult.Success;
+            }
+            // If the token is incorrect, record the failure which also may cause the user to be locked out
+            await UserManager.AccessFailedAsync(user);
+            return SignInResult.Failed;
+        }
 
 
     }

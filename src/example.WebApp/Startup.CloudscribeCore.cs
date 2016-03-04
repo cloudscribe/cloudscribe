@@ -101,6 +101,9 @@ namespace example.WebApp
                     identityOptions.Cookies.TwoFactorUserIdCookie.CookieName = AuthenticationScheme.TwoFactorUserId + "-" + ctx.Tenant.SiteFolderName;
                     identityOptions.Cookies.TwoFactorUserIdCookie.AuthenticationScheme = AuthenticationScheme.TwoFactorUserId + "-" + ctx.Tenant.SiteFolderName;
 
+                    //identityOptions.Cookies.TwoFactorUserIdCookieAuthenticationScheme = AuthenticationScheme.TwoFactorUserId + "-" + ctx.Tenant.SiteFolderName;
+
+
                     identityOptions.Cookies.ApplicationCookie.CookieName = AuthenticationScheme.Application + "-" + ctx.Tenant.SiteFolderName;
                     identityOptions.Cookies.ApplicationCookie.AuthenticationScheme = AuthenticationScheme.Application + "-" + ctx.Tenant.SiteFolderName;
 
