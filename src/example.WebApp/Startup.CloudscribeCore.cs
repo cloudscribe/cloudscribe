@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-06-20
-// Last Modified:			2016-03-02
+// Last Modified:			2016-03-04
 // 
 
 using System;
@@ -74,8 +74,6 @@ namespace example.WebApp
             app.UsePerTenant<SiteSettings>((ctx, builder) =>
             {
 
-
-
                 var identityOptions = app.ApplicationServices.GetRequiredService<IOptions<IdentityOptions>>().Value;
                 if (identityOptions == null) { throw new ArgumentException("failed to get identity options"); }
                 if (identityOptions.Cookies.ApplicationCookie == null) { throw new ArgumentException("failed to get identity application cookie options"); }
@@ -88,31 +86,29 @@ namespace example.WebApp
 
 
                 if (shouldUseFolder)
-                {
-                    //options.AuthenticationScheme = AuthenticationScheme.Application + "-" + ctx.Tenant.SiteFolderName;
-                    //options.CookieName = AuthenticationScheme.Application + "-" + ctx.Tenant.SiteFolderName;
-
+                {    
                     identityOptions.Cookies.ExternalCookie.CookieName = AuthenticationScheme.External + "-" + ctx.Tenant.SiteFolderName;
                     identityOptions.Cookies.ExternalCookie.AuthenticationScheme = AuthenticationScheme.External + "-" + ctx.Tenant.SiteFolderName;
+                    
+                    identityOptions.Cookies.ExternalCookie.LoginPath = new PathString("/" + ctx.Tenant.SiteFolderName + "/account/login");
+                    identityOptions.Cookies.ExternalCookie.LogoutPath = new PathString("/" + ctx.Tenant.SiteFolderName + "/account/logoff");
+                    identityOptions.Cookies.ExternalCookie.AccessDeniedPath = new PathString("/" + ctx.Tenant.SiteFolderName + "/forbidden");
+                    //identityOptions.Cookies.ExternalCookie.AutomaticChallenge = true;
+                    //identityOptions.Cookies.ExternalCookie.AutomaticAuthenticate = true;
 
                     identityOptions.Cookies.TwoFactorRememberMeCookie.CookieName = AuthenticationScheme.TwoFactorRememberMe + "-" + ctx.Tenant.SiteFolderName;
                     identityOptions.Cookies.TwoFactorRememberMeCookie.AuthenticationScheme = AuthenticationScheme.TwoFactorRememberMe + "-" + ctx.Tenant.SiteFolderName;
 
                     identityOptions.Cookies.TwoFactorUserIdCookie.CookieName = AuthenticationScheme.TwoFactorUserId + "-" + ctx.Tenant.SiteFolderName;
                     identityOptions.Cookies.TwoFactorUserIdCookie.AuthenticationScheme = AuthenticationScheme.TwoFactorUserId + "-" + ctx.Tenant.SiteFolderName;
-
-                    //identityOptions.Cookies.TwoFactorUserIdCookieAuthenticationScheme = AuthenticationScheme.TwoFactorUserId + "-" + ctx.Tenant.SiteFolderName;
-
-
+                    
                     identityOptions.Cookies.ApplicationCookie.CookieName = AuthenticationScheme.Application + "-" + ctx.Tenant.SiteFolderName;
                     identityOptions.Cookies.ApplicationCookie.AuthenticationScheme = AuthenticationScheme.Application + "-" + ctx.Tenant.SiteFolderName;
 
                 }
                 else
                 {
-                    //options.AuthenticationScheme = AuthenticationScheme.Application;
-                    //options.CookieName = AuthenticationScheme.Application;
-
+                    
                     identityOptions.Cookies.ExternalCookie.CookieName = AuthenticationScheme.External;
                     identityOptions.Cookies.ExternalCookie.AuthenticationScheme = AuthenticationScheme.External;
 
