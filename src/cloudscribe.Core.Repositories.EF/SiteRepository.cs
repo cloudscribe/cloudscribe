@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2016-02-03
+// Last Modified:			2016-03-05
 // 
 
 
@@ -150,10 +150,15 @@ namespace cloudscribe.Core.Repositories.EF
             string folderName,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            ISiteSettings site = await dbContext.Sites.AsNoTracking().FirstOrDefaultAsync(
+            ISiteSettings site = null;
+            if(!string.IsNullOrEmpty(folderName) && folderName != "root")
+            {
+                site = await dbContext.Sites.AsNoTracking().FirstOrDefaultAsync(
                 x => x.SiteFolderName == folderName
                 , cancellationToken)
                 .ConfigureAwait(false);
+            }
+            
 
             if (site == null)
             {
@@ -481,17 +486,18 @@ namespace cloudscribe.Core.Repositories.EF
 
         //}
 
-        //public async Task<List<ISiteFolder>> GetAllSiteFolders(CancellationToken cancellationToken = default(CancellationToken))
-        //{
-        //    var query = from x in dbContext.SiteFolders
-        //                orderby x.FolderName ascending
-        //                select x;
+        public List<string> GetAllSiteFolders()
+        {
+            var query = from x in dbContext.Sites
+                        where x.SiteFolderName != null && x.SiteFolderName != ""
+                        orderby x.SiteFolderName ascending
+                        select x.SiteFolderName;
 
-        //    var items = await query.AsNoTracking().ToListAsync<ISiteFolder>(cancellationToken);
-            
-        //    return items;
+            var items =  query.ToList<string>();
 
-        //}
+            return items;
+
+        }
 
         //public List<ISiteFolder> GetAllSiteFoldersNonAsync()
         //{
@@ -525,7 +531,7 @@ namespace cloudscribe.Core.Repositories.EF
         //    if (offset > 0) { return await query.Skip(offset).ToListAsync<ISiteFolder>(cancellationToken); }
 
         //    return await query.AsNoTracking().ToListAsync<ISiteFolder>(cancellationToken);
-            
+
         //}
 
         //public async Task<ISiteFolder> GetSiteFolder(
@@ -593,11 +599,11 @@ namespace cloudscribe.Core.Repositories.EF
         //    var result = false;
         //    var query = from x in dbContext.SiteFolders.Where(x => x.SiteGuid == siteGuid)
         //                select x;
-            
+
         //    dbContext.SiteFolders.RemoveRange(query);
         //    int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken);
         //    result = rowsAffected > 0;
-            
+
 
         //    return result;
         //}
@@ -634,8 +640,8 @@ namespace cloudscribe.Core.Repositories.EF
         //                ;
         //        return await query.FirstOrDefaultAsync<int>(cancellationToken);
         //    }
-            
-            
+
+
         //    //return -1; // not found
 
         //}

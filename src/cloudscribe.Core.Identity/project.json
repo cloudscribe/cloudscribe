@@ -1,7 +1,7 @@
 {
   "version": "1.0.0-*",
   "title": "cloudscribe.Core.Identity",
-    "description": "asp.net identity implementation for cloudscribe web application foundation you should not normally install this separately, it will be installed if you install cloudscribe.Core.Web",
+    "description": "asp.net identity implementation for cloudscribe web application foundation",
     "authors": [ "Joe Audette" ],
   "owners": [ "Source Tree Solutions" ],
   "tags": [ "cloudscribe","identity" ],

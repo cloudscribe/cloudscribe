@@ -163,7 +163,7 @@ namespace cloudscribe.Core.Models
 
 
         string PrivacyPolicy { get; set; }
-        string Layout { get; set; }
+        string Layout { get; set; } //TODO: rename as Theme
         string GoogleAnalyticsProfileId { get; set; }
         
         //social login stuff

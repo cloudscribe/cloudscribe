@@ -31,7 +31,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a href="~/@(Tenant?.SiteFolderName ?? "")" class="navbar-brand">@(Tenant?.SiteName ?? "Sample") - default layout</a>
+                    <a href="~/@(Tenant?.SiteFolderName ?? "")" class="navbar-brand">@(Tenant?.SiteName ?? "Sample")</a>
                 </div>
                 <div class="navbar-collapse collapse">
                     @await Component.InvokeAsync("Navigation", "BootstrapTopNav", NamedNavigationFilters.TopNav) 

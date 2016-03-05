@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2016-01-31
+// Last Modified:			2016-03-05
 // 
 
 // TODO: we should update all the async signatures to take a cancellationtoken
@@ -57,7 +57,7 @@ namespace cloudscribe.Core.Models
         // we don't need multiple folders to map to a single site
         // we have foldername on the sitesettings object and on't need this extra table
         //Task<List<ISiteFolder>> GetSiteFoldersBySite(Guid siteGuid, CancellationToken cancellationToken);
-        //Task<List<ISiteFolder>> GetAllSiteFolders(CancellationToken cancellationToken);
+        List<string> GetAllSiteFolders();
         //Task<int> GetFolderCount(CancellationToken cancellationToken);
         //Task<ISiteFolder> GetSiteFolder(string folderName, CancellationToken cancellationToken);
         //Task<List<ISiteFolder>> GetPageSiteFolders(

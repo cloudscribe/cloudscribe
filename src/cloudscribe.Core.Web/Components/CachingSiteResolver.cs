@@ -1,4 +1,17 @@
-﻿
+﻿// Copyright (c) Source Tree Solutions, LLC. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+// Author:              Joe Audette
+// Created:             2016-02-04
+// Last Modified:       2016-03-05
+// 
+
+//  2016-02-04 found this blog post by Ben Foster
+//  http://benfoster.io/blog/asp-net-5-multitenancy
+//  and the related project https://github.com/saaskit/saaskit
+//  I like his approach better than mine though they are similar
+//  his seems a little cleaner so I'm adopting it here to replace my previous pattern
+//  actual resolution process is the same as before
+
 using cloudscribe.Core.Models;
 using Microsoft.AspNet.Http;
 using Microsoft.Extensions.Caching.Memory;
@@ -22,7 +35,8 @@ namespace cloudscribe.Core.Web.Components
             ILoggerFactory loggerFactory,
             ISiteRepository siteRepository,
             SiteDataProtector dataProtector,
-            IOptions<MultiTenantOptions> multiTenantOptions
+            IOptions<MultiTenantOptions> multiTenantOptions,
+            IOptions<CachingSiteResolverOptions> cachingOptionsAccessor = null
             //,IOptions<MultiTenancyOptions> options
             )
             : base(cache, loggerFactory)
@@ -31,11 +45,40 @@ namespace cloudscribe.Core.Web.Components
             siteRepo = siteRepository;
             this.multiTenantOptions = multiTenantOptions.Value;
             this.dataProtector = dataProtector;
+            cachingOptions = cachingOptionsAccessor?.Value ?? new CachingSiteResolverOptions();
         }
 
         private MultiTenantOptions multiTenantOptions;
         private ISiteRepository siteRepo;
         private SiteDataProtector dataProtector;
+        private CachingSiteResolverOptions cachingOptions;
+
+        private List<string> GetAllSiteFoldersFolders()
+        {
+            var listCacheKey = "folderList";
+            var result = cache.Get(listCacheKey) as List<string>;
+            if(result != null)
+            {
+                log.LogDebug("Folder List retrieved from cache with key \"{cacheKey}\".", listCacheKey);
+                return result;
+            }
+
+            result = siteRepo.GetAllSiteFolders();
+            var cacheEntryOptions = new MemoryCacheEntryOptions()
+                .SetAbsoluteExpiration(cachingOptions.FolderListCacheDuration);
+
+            log.LogDebug("Caching folder lsit with keys \"{cacheKey}\".", listCacheKey);
+            cache.Set(listCacheKey, result, cacheEntryOptions);
+
+            return result;
+
+        }
+
+        protected override MemoryCacheEntryOptions CreateCacheEntryOptions()
+        {
+            return new MemoryCacheEntryOptions()
+                .SetAbsoluteExpiration(cachingOptions.SiteCacheDuration); 
+        }
 
         // Determines what information in the current request should be used to do a cache lookup e.g.the hostname.
         protected override string GetContextIdentifier(HttpContext context)
@@ -43,7 +86,9 @@ namespace cloudscribe.Core.Web.Components
             if (multiTenantOptions.Mode == MultiTenantMode.FolderName)
             {
                 var siteFolderName = context.Request.Path.StartingSegment();
-                if (siteFolderName.Length == 0) { siteFolderName = "root"; }
+                var folders = GetAllSiteFoldersFolders();
+                if(folders.Contains(siteFolderName)) { return siteFolderName; }
+                siteFolderName = "root"; 
                 return siteFolderName;
             }
             return context.Request.Host.Value.ToLower();
@@ -65,6 +110,10 @@ namespace cloudscribe.Core.Web.Components
                 {
                     cacheKeys.Add(context.Tenant.SiteFolderName);
                 }
+                else
+                {
+                    cacheKeys.Add("root");
+                }
             }
             var id =  context.Tenant.SiteGuid.ToString();
             var id2 = "site-" + context.Tenant.SiteId.ToInvariantString();
@@ -84,23 +133,14 @@ namespace cloudscribe.Core.Web.Components
 
             return ResolveByHostAsync(context);
 
-            //TenantContext<SiteSettings> tenantContext = null;
-
-            //var tenant = tenants.FirstOrDefault(t =>
-            //    t.Hostnames.Any(h => h.Equals(context.Request.Host.Value.ToLower())));
-
-            //if (tenant != null)
-            //{
-            //    tenantContext = new TenantContext<SiteSettings>(tenant);
-            //}
-
-            //return Task.FromResult(tenantContext);
+           
         }
 
         private async Task<TenantContext<SiteSettings>> ResolveByFolderAsync(HttpContext context)
         {
-            var siteFolderName = context.Request.Path.StartingSegment();
-            if (siteFolderName.Length == 0) { siteFolderName = "root"; }
+            //var siteFolderName = context.Request.Path.StartingSegment();
+            // (siteFolderName.Length == 0) { siteFolderName = "root"; }
+            var siteFolderName = GetContextIdentifier(context);
 
             TenantContext<SiteSettings> tenantContext = null;
 

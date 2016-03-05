@@ -34,7 +34,7 @@ namespace cloudscribe.Core.Web.Components
         private string appBasePath;
         private IHttpContextAccessor contextAccessor;
 
-        public List<SelectListItem> GetAvailableLayouts()
+        public List<SelectListItem> GetAvailableThemes()
         {
             List<SelectListItem> layouts = new List<SelectListItem>();
 

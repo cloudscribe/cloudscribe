@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2016-02-12
+// Last Modified:			2016-03-05
 // 
 
 using cloudscribe.Core.Models;
@@ -175,8 +175,8 @@ namespace cloudscribe.Core.Web.Controllers
                 model.HostName = selectedSite.PreferredHostName;
             }
             
-            model.Layout = selectedSite.Layout;
-            model.AvailableLayouts = layoutListBuilder.GetAvailableLayouts();
+            model.Theme = selectedSite.Layout;
+            model.AvailableLayouts = layoutListBuilder.GetAvailableThemes();
             
             // can only delete from server admin site/cannot delete server admin site
             if (siteManager.CurrentSite.IsServerAdminSite)
@@ -329,7 +329,7 @@ namespace cloudscribe.Core.Web.Controllers
             selectedSite.SiteFolderName = model.SiteFolderName;
             selectedSite.SiteIsClosed = model.IsClosed;
             selectedSite.SiteIsClosedMessage = model.ClosedMessage;
-            selectedSite.Layout = model.Layout;
+            selectedSite.Layout = model.Theme;
             
             
             bool result = await siteManager.Save(selectedSite);
