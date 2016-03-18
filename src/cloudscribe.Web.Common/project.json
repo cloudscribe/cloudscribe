@@ -1,10 +1,10 @@
 ﻿{
-  "version": "1.0.0-beta3",
+  "version": "1.0.0-beta4",
   "description": "cloudscribe.Web.Common Class Library",
-  "summary": "Multi-tenant MVC and WebApi application foundation with management for sites, users, roles, and geographic data",
+  "summary": "common helpers for web applications",
   "authors": [ "Joe Audette" ],
   "owners": [ "Source Tree Solutions" ],
-  "tags": [ "cloudscribe", "multi-tenant", "mvc6", "site management" ],
+  "tags": [ "cloudscribe" ],
   "projectUrl": "https://github.com/joeaudette/cloudscribe",
   "licenseUrl": "http://www.apache.org/licenses/LICENSE-2.0",
   "copyright": "2015 Source Tree Solutions",

@@ -46,5 +46,10 @@ namespace cloudscribe.Web.Common.Extensions
             return request.Headers["User-Agent"];
         }
 
+        public static string PathAndQuery(this HttpRequest request)
+        {
+            return request.Path + request.QueryString;
+        }
+
     }
 }

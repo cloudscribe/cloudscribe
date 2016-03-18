@@ -29,17 +29,17 @@ namespace cloudscribe.Core.Web.Controllers
 
         
 
-        public static IActionResult RedirectToLocal(this Controller controller, string returnUrl)
-        {
-            if (controller.Url.IsLocalUrl(returnUrl))
-            {
-                return controller.Redirect(returnUrl);
-            }
-            else
-            {
-                return controller.RedirectToAction("Index", "Home");
-            }
-        }   
+        //public static IActionResult RedirectToLocal(this Controller controller, string returnUrl)
+        //{
+        //    if (controller.Url.IsLocalUrl(returnUrl))
+        //    {
+        //        return controller.Redirect(returnUrl);
+        //    }
+        //    else
+        //    {
+        //        return controller.RedirectToAction("Index", "Home");
+        //    }
+        //}   
 
     }
 }

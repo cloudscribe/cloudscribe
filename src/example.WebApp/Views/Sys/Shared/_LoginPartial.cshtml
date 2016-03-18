@@ -1,4 +1,5 @@
 ﻿@using cloudscribe.Core.Identity
+@using cloudscribe.Web.Common.Extensions
 
 @if (User.Identity.IsAuthenticated)
 {
@@ -21,6 +22,6 @@ else
 {
     <ul class="nav navbar-nav navbar-right">
         <li><a id="registerLink" asp-controller="Account" asp-action="Register">Register</a></li>
-        <li><a id="loginLink" asp-controller="Account" asp-action="Login">Log in</a></li>
+        <li><a id="loginLink" asp-controller="Account" asp-action="Login" asp-route-returnurl="@Context.Request.PathAndQuery()">Log in</a></li>
     </ul>
 }

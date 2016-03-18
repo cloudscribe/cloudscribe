@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2016-02-12
+// Last Modified:			2016-03-18
 // 
 
 using cloudscribe.Core.Identity;
@@ -60,7 +60,7 @@ namespace cloudscribe.Core.Web.Controllers
         // GET: /Account/Login
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult Login(string returnUrl)
+        public IActionResult Login(string returnUrl = null)
         {
             ViewData["Title"] = "Log in";
             ViewData["ReturnUrl"] = returnUrl;
@@ -82,7 +82,7 @@ namespace cloudscribe.Core.Web.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginViewModel model, string returnUrl)
+        public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
         {
             ViewData["Title"] = "Log in";
             ViewData["ReturnUrl"] = returnUrl;
@@ -188,8 +188,14 @@ namespace cloudscribe.Core.Web.Controllers
                 {
                     await ipAddressTracker.TackUserIpAddress(Site.SiteGuid, user.UserGuid);
                 }
-                
-                return this.RedirectToLocal(returnUrl);
+
+                if (!string.IsNullOrEmpty(returnUrl))
+                {
+                    return LocalRedirect(returnUrl);
+                }
+
+                return this.RedirectToSiteRoot(Site);
+
             }
             if (result.RequiresTwoFactor)
             {
@@ -532,7 +538,12 @@ namespace cloudscribe.Core.Web.Controllers
                 //await ipAddressTracker.TackUserIpAddress(Site.SiteGuid, user.UserGuid);
 
                 log.LogInformation("ExternalLoginCallback ExternalLoginSignInAsync succeeded ");
-                return this.RedirectToLocal(returnUrl);
+                if (!string.IsNullOrEmpty(returnUrl))
+                {
+                    return LocalRedirect(returnUrl);
+                }
+
+                return this.RedirectToSiteRoot(Site);
             }
             if (result.RequiresTwoFactor)
             {
@@ -597,7 +608,12 @@ namespace cloudscribe.Core.Web.Controllers
 
                         await signInManager.SignInAsync(user, isPersistent: false);
 
-                        return this.RedirectToLocal(returnUrl);
+                        if (!string.IsNullOrEmpty(returnUrl))
+                        {
+                            return LocalRedirect(returnUrl);
+                        }
+
+                        return this.RedirectToSiteRoot(Site);
                     }
                     else
                     {
@@ -856,7 +872,7 @@ namespace cloudscribe.Core.Web.Controllers
             var result = await signInManager.TwoFactorSignInAsync(model.Provider, model.Code, model.RememberMe, model.RememberBrowser);
             if (result.Succeeded)
             {
-                return this.RedirectToLocal(model.ReturnUrl);
+                return LocalRedirect(model.ReturnUrl);
             }
             if (result.IsLockedOut)
             {
