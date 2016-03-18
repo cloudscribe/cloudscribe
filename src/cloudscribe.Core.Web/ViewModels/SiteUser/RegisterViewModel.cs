@@ -53,7 +53,7 @@ namespace cloudscribe.Core.Web.ViewModels.Account
        [Compare("Password", ErrorMessage = "Confirm password doesn't match password")]
         public string ConfirmPassword { get; set; }
 
-
+        // http://stackoverflow.com/questions/36033022/using-remote-validation-wit-asp-net-core
         // //[StringLengthWithConfig(MinimumLength = 3, MaximumLength = 255, MinLengthKey = "SiteNameMinLength", MaxLengthKey = "SiteNameMaxLength", ErrorMessageResourceName = "SiteNameLengthErrorFormat", ErrorMessageResourceType = typeof(CommonResources))]
         //[Remote("LoginNameAvailable", "Account", AdditionalFields = "UserId",
         //    ErrorMessageResourceName = "LoginNameNotAvailable", ErrorMessageResourceType = typeof(CommonResources),

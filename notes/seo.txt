@@ -1,4 +1,6 @@
 
+https://ma.ttias.be/technical-guide-seo/
+
 
 http://www.dailyblogtips.com/change-wordpress-permalinks/
 
@@ -17,6 +19,37 @@ http://weblogs.asp.net/jongalloway/looking-at-asp-net-mvc-5-1-and-web-api-2-1-pa
 routes.MapRoute("blog", "{year}/{month}/{day}",
     new { controller = "blog", action = "index" },
     new { year = @"\d{4}", month = @"\d{2}", day = @"\d{2}" });
+	
+http://stackoverflow.com/questions/2348554/trouble-using-url-action-when-trying-to-create-friendly-hackable-urls
+
+ 3
+down vote
+accepted
+	
+
+The issue there is that the month you're passing in to Url.Action is a single-digit month, and thus doesn't match the month constraint on the route definition. Constraints are typically run not only on incoming URLs but also when generating URLs.
+
+The fix would be to manually call .ToString() on the month and format it as a two-digit number. You'll need to do the same for the day as well. For the year it's not an issue since all the years in our lifetimes will be four-digit numbers.
+
+Here's sample code to format numbers:
+
+int month = 2;
+string formattedMonth = month.ToString("00", CultureInfo.InvariantCulture);
+// formattedMonth == "02"
+
+Please note that when formatting the number manually that you must use the Invariant Culture so that different cultures and languages won't affect how it gets formatted.
+
+You'll also need to set default values for month and day so that they are not required in the URL:
+
+routes.MapRoute( 
+  "Blog", 
+  "blog/{year}/{month}/{day}", 
+  new { controller = "Blog", action = "Index", month = "00", day = "00" }, 
+  new { year = @"\d{4}", month = @"\d{2}", day = @"\d{2}" } 
+);
+
+And in your controller action check if the month or day are 0, in which case you should show an entire month or entire year.
+
 	
 
 Do dates in URLs determine freshness? 
@@ -38,3 +71,12 @@ I assume that users get some kind of list of all teachers/students when visiting
 /teachers/john-doe
 /teachers/john-doe/biography
 
+http://www.hanselman.com/blog/AreBlogURLsImportant.aspx
+
+http://blog.codinghorror.com/dont-devalue-the-address-bar/
+
+http://stackoverflow.com/questions/335575/simple-hackable-url-implementation-for-asp-net-3-5
+
+https://msdn.microsoft.com/en-us/library/ms972974.aspx#urlrewriting_topic7
+
+http://blog.ploeh.dk/2013/05/01/rest-lesson-learned-avoid-hackable-urls/

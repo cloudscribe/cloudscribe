@@ -4,6 +4,10 @@ cloudscribe is a related set of projects and components for building cross platf
 
 The foundational set of projects, known as cloudscibe.Core, provides support for single tenant or multi tenant management of sites, users, and roles.
 
+If you have questions or just want to be social, say hello in our gitter chat room. I try to monitor that room on a regular basis while I'm working, but if I'm not around you can leave a message.
+
+[![Join the chat at https://gitter.im/joeaudette/cloudscribe](https://badges.gitter.im/joeaudette/cloudscribe.svg)](https://gitter.im/joeaudette/cloudscribe?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 #### Why Start From Scratch?
 
 Every web application or website project tends to need a certain amount of basic functionality, why build this over and over?
@@ -50,9 +54,5 @@ This project is in early stages, not yet ready for mission critical scenarios, b
 We are collecting email addresses for a potential newsletter in the future, depending on whether this project becomes popular. If you would like to subscribe to this possible future newsletter, please send an email to subscribe [at] cloudscribe.com with the subject line "subscribe"
 
 If you are interested in consulting or other support services related to cloudscribe, please send an email to info [at] cloudscribe.com.
-
-If you have questions or just want to be social, say hello in our gitter chat room. I try to monitor that room on a regular basis while I'm working, but if I'm not around you can leave a message.
-
-[![Join the chat at https://gitter.im/joeaudette/cloudscribe](https://badges.gitter.im/joeaudette/cloudscribe.svg)](https://gitter.im/joeaudette/cloudscribe?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 I'm also on twitter @cloudscribeweb and @joeaudette

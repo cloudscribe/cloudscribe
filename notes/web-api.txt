@@ -1,4 +1,9 @@
 
+http://wildermuth.com/2016/03/16/Content_Negotiation_in_ASP_NET_Core
+
+http://damienbod.com/2016/03/02/angular2-openid-connect-implicit-flow-with-identityserver4/
+https://github.com/damienbod/AspNet5IdentityServerAngularImplicitFlow
+
 
 https://royaljay.com/development/angular2-tutorial/
 
