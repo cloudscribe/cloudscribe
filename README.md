@@ -2,7 +2,7 @@
 
 cloudscribe is a related set of projects and components for building cross platform web applications on ASP.NET Core
 
-The foundational set of projects, known as cloudscibe.Core, provides support for single tenant or multi tenant management of sites, users, and roles.
+The foundational set of projects in this repository, known as cloudscibe Core, provides support for single tenant or multi tenant management of sites, users, and roles. The other main cloudscribe projects are [cloudscribe SimpleContent](https://github.com/joeaudette/cloudscribe.SimpleContent), [cloudscribe Navigation](https://github.com/joeaudette/cloudscribe.Web.Navigation), and [cloudscribe Pagination](https://github.com/joeaudette/cloudscribe.Web.Pagination). You can find the [full list of projects here](https://github.com/joeaudette?tab=repositories).
 
 If you have questions or just want to be social, say hello in our gitter chat room. I try to monitor that room on a regular basis while I'm working, but if I'm not around you can leave a message.
 
@@ -24,7 +24,6 @@ This project is in early stages, not yet ready for mission critical scenarios, b
 * Site is a conceptual container for users, permissions, and content. 
 * Related sites mode setting allows shared users and roles across sites while still allowing permissions to be segmented/siloed by site.
 * Authentication/Authorization Framework - Mutli-Tenant Implementation of aspnet Identity without Entity Framework
-* Multi-Tenant Social Login middleware
 * Multi-Tenant User and Role Management
 * System Logging - implementation of ILogger that logs to the database, and a UI for viewing the log
 * [Custom RazorViewEngine view resolver, conventions](https://github.com/joeaudette/cloudscribe/wiki/Customizing-Views-and-Display-Templates)
@@ -47,7 +46,7 @@ This project is in early stages, not yet ready for mission critical scenarios, b
 
 ##### Other things we'd like to see:
 * If this project were to become popular then it would provide a way for many people to build things on top of it that are compatible with each other, making it easier to assemble various functionality within a site
-* cloudscribe.Cms? I am giving serious consideration to building such a thing, but at the moment feel I need to work on some projects that will generate income for me, and there is still a lot of work to do in this project.
+* cloudscribe.Cms? Take a look at [cloudscribe.SimpleContent](https://github.com/joeaudette/cloudscribe.SimpleContent)
 
 ##### Keep In Touch
 
