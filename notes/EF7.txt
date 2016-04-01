@@ -24,6 +24,8 @@ First() - when you expect one or more items to be returned by a query but you on
 
 FirstOrDefault() - when you expect zero or more items to be returned by a query but you only want to access the first item in your code (i.e. you are not sure if an item with a given key exists)
 
+http://www.mikesdotnetting.com/article/257/entity-framework-recipe-grouping-by-year-and-month
+
 http://stackoverflow.com/questions/818642/singleordefault-how-to-change-the-default-values
 
 http://stackoverflow.com/questions/6033390/what-is-the-most-reasonable-way-to-find-out-if-entity-is-attached-to-dbcontext-o/6037277#6037277

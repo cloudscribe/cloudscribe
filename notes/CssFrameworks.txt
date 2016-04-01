@@ -7,6 +7,7 @@ nav bar stuff
 http://jsfiddle.net/SchmalzyB/vNecy/4/
 http://codepen.io/norcal82/pen/ahegw
 
+http://www.lavishbootstrap.com/
 
 wireframing
 https://balsamiq.com/

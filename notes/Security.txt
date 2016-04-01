@@ -1,6 +1,11 @@
 
 https://pierrekim.github.io/blog/2016-02-16-why-i-stopped-using-startssl-because-of-qihoo-360.html
 
+xss tutorial
+http://excess-xss.com/
+
+http://www.troyhunt.com/2016/03/understanding-csrf-video-tutorial.html
+
 
 A goal of cloudscribe core should be to follow the OWASP security guidelines
 

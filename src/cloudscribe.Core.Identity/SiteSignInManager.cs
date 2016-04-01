@@ -375,7 +375,7 @@ namespace cloudscribe.Core.Identity
             // Cleanup external cookie
             if (loginProvider != null)
             {
-                //await context.Authentication.SignOutAsync(IdentityOptions.ExternalCookieAuthenticationScheme);
+                //await context.Authentication.SignOutAsync(Options.Cookies.ExternalCookieAuthenticationScheme);
                 await context.Authentication.SignOutAsync(Options.Cookies.ExternalCookie.AuthenticationScheme);
             }
             await SignInAsync(user, isPersistent, loginProvider);
