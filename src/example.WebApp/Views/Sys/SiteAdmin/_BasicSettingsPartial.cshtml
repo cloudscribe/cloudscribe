@@ -61,11 +61,11 @@
         @if (Model.AvailableLayouts.Count > 0)
         {
             <div class="form-group">
-                <label asp-for="Layout" class="col-md-2 control-label"></label>
+                <label asp-for="Theme" class="col-md-2 control-label"></label>
                 <div class="col-md-10">
-                    <select id="Layout" asp-for="Layout"
+                    <select id="Layout" asp-for="Theme"
                             asp-items="Model.AvailableLayouts" class="form-control"></select>
-                    <span asp-validation-for="Layout" class="text-danger"></span>
+                    <span asp-validation-for="Theme" class="text-danger"></span>
                 </div>
             </div>
         }
