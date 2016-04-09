@@ -4,6 +4,12 @@ https://ma.ttias.be/technical-guide-seo/
 
 http://www.dailyblogtips.com/change-wordpress-permalinks/
 
+
+https://yoast.com/rss-feeds-panda-penguin/
+https://blog.superfeedr.com/feeds/rss/atom/best%20practice/feed-publishing-best-practices/
+http://www.webmonkey.com/2010/02/rss_for_beginnners/
+
+
 https://www.elegantthemes.com/blog/tips-tricks/wordpress-permalinks
 
 http://www.wpbeginner.com/opinion/why-you-should-not-remove-dates-from-your-wordpress-blog-posts/

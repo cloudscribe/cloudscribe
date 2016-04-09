@@ -1,4 +1,6 @@
 
+http://shazwazza.com/post/isolated-aspnet-attribute-routing/
+
 http://www.inversionofcontrol.co.uk/asp-net-core-1-0-routing-under-the-hood/
 
 https://github.com/aspnet/Routing
