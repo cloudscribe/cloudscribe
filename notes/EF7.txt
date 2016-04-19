@@ -1,4 +1,7 @@
 
+Edge of the Web: Entity Framework Core: The Future of EF for ASP.NET Core
+https://channel9.msdn.com/Blogs/DevRadio/DR1644 
+
 Azure Table storage is very low cost which makes it attractive but not sure all the needed query techniques are available
 pagination would be challenging or impossible
 even simple things like count are difficult
