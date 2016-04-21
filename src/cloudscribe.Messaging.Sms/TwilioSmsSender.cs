@@ -42,12 +42,12 @@ namespace cloudscribe.Messaging.Sms
             string toPhoneNumber, 
             string message)
         {
-            if (string.IsNullOrEmpty(toPhoneNumber))
+            if (string.IsNullOrWhiteSpace(toPhoneNumber))
             {
                 throw new ArgumentException("toPhoneNumber was not provided");
             }
 
-            if (string.IsNullOrEmpty(message))
+            if (string.IsNullOrWhiteSpace(message))
             {
                 throw new ArgumentException("message was not provided");
             }

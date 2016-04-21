@@ -45,7 +45,7 @@ namespace cloudscribe.Core.Web.Components.Messaging
 
         private SmtpOptions GetSmptOptions(ISiteSettings siteSettings)
         {
-            if(string.IsNullOrEmpty(siteSettings.SmtpServer)) { return null; }
+            if(string.IsNullOrWhiteSpace(siteSettings.SmtpServer)) { return null; }
 
             SmtpOptions smtpOptions = new SmtpOptions();
             smtpOptions.Password = siteSettings.SmtpPassword;

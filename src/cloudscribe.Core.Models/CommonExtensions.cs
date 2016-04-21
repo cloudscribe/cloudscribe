@@ -56,12 +56,12 @@ namespace cloudscribe.Core.Models
         public static List<string> SplitOnChar(this string s, char c)
         {
             List<string> list = new List<string>();
-            if (string.IsNullOrEmpty(s)) { return list; }
+            if (string.IsNullOrWhiteSpace(s)) { return list; }
 
             string[] a = s.Split(c);
             foreach (string item in a)
             {
-                if (!string.IsNullOrEmpty(item)) { list.Add(item); }
+                if (!string.IsNullOrWhiteSpace(item)) { list.Add(item); }
             }
 
 
@@ -71,12 +71,12 @@ namespace cloudscribe.Core.Models
         public static List<string> SplitOnCharAndTrim(this string s, char c)
         {
             List<string> list = new List<string>();
-            if (string.IsNullOrEmpty(s)) { return list; }
+            if (string.IsNullOrWhiteSpace(s)) { return list; }
 
             string[] a = s.Split(c);
             foreach (string item in a)
             {
-                if (!string.IsNullOrEmpty(item)) { list.Add(item.Trim()); }
+                if (!string.IsNullOrWhiteSpace(item)) { list.Add(item.Trim()); }
             }
 
 

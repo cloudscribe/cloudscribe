@@ -16,7 +16,7 @@ namespace cloudscribe.Core.Identity
 
         public static bool IsInRoles(this ClaimsPrincipal principal, string allowedRolesCsv)
         {
-            if(string.IsNullOrEmpty(allowedRolesCsv)) { return true; } // empty indicates no role filtering
+            if(string.IsNullOrWhiteSpace(allowedRolesCsv)) { return true; } // empty indicates no role filtering
             string[] roles;
             // in some cases we are using semicolon separated not comma
             if (allowedRolesCsv.Contains(";"))

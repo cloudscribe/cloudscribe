@@ -1,5 +1,27 @@
 
 
+app.Use((context, next) =>
+            {
+                var request = context.Request;
+                var host = request.Host;
+                if (host.Host.Equals("mysite.com", StringComparison.OrdinalIgnoreCase))
+                {
+                    HostString newHost;
+                    if (host.Port.HasValue)
+                    {
+                        newHost = new HostString("www.mysite.com", host.Port.Value);
+                    }
+                    else
+                    {
+                        newHost = new HostString("www.mysite.com");
+                    }
+                    context.Response.Redirect(UriHelper.Encode(request.Scheme, newHost,
+                        request.PathBase, request.Path, request.QueryString));
+                    return Task.FromResult(0);
+                }
+                return next();
+            });
+
 https://github.com/OrchardCMS/Orchard2/blob/5342a792dbac9fb70a7d76c2e17bfee7b9c0ba2c/src/Orchard.Hosting.Web/OrchardShell.cs#L36-L63
 
 

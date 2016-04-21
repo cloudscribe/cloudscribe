@@ -144,7 +144,7 @@ namespace example.WebApp
 
                 // TODO: will this require a restart if the options are updated in the ui?
                 // no just need to clear the tenant cache after updating the settings
-                if (!string.IsNullOrEmpty(ctx.Tenant.GoogleClientId))
+                if (!string.IsNullOrWhiteSpace(ctx.Tenant.GoogleClientId))
                 {
                     builder.UseGoogleAuthentication(options =>
                     {
@@ -162,7 +162,7 @@ namespace example.WebApp
                     });
                 }
 
-                if (!string.IsNullOrEmpty(ctx.Tenant.FacebookAppId))
+                if (!string.IsNullOrWhiteSpace(ctx.Tenant.FacebookAppId))
                 {
                     builder.UseFacebookAuthentication(options =>
                     {
@@ -181,7 +181,7 @@ namespace example.WebApp
                     });
                 }
 
-                if (!string.IsNullOrEmpty(ctx.Tenant.MicrosoftClientId))
+                if (!string.IsNullOrWhiteSpace(ctx.Tenant.MicrosoftClientId))
                 {
                     builder.UseMicrosoftAccountAuthentication(options =>
                     {
@@ -195,7 +195,7 @@ namespace example.WebApp
                     });
                 }
 
-                if (!string.IsNullOrEmpty(ctx.Tenant.TwitterConsumerKey))
+                if (!string.IsNullOrWhiteSpace(ctx.Tenant.TwitterConsumerKey))
                 {
                     builder.UseTwitterAuthentication(options =>
                     {

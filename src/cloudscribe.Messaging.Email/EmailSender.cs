@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-22
-// Last Modified:			2016-02-03
+// Last Modified:			2016-04-21
 // 
 
 using System;
@@ -32,22 +32,24 @@ namespace cloudscribe.Messaging.Email
             string plainTextMessage,
             string htmlMessage)
         {
-            if (string.IsNullOrEmpty(to))
+            if (string.IsNullOrWhiteSpace(to))
             {
                 throw new ArgumentException("no to address provided");
             }
 
-            if (string.IsNullOrEmpty(from))
+            if (string.IsNullOrWhiteSpace(from))
             {
                 throw new ArgumentException("no from address provided");
             }
 
-            if (string.IsNullOrEmpty(subject))
+            if (string.IsNullOrWhiteSpace(subject))
             {
                 throw new ArgumentException("no subject provided");
             }
 
-            if (string.IsNullOrEmpty(plainTextMessage) && string.IsNullOrEmpty(htmlMessage))
+            var hasPlainText = !string.IsNullOrWhiteSpace(plainTextMessage);
+            var hasHtml = !string.IsNullOrWhiteSpace(htmlMessage);
+            if (!hasPlainText && !hasHtml)
             {
                 throw new ArgumentException("no message provided");
             }
@@ -62,12 +64,12 @@ namespace cloudscribe.Messaging.Email
             //m.Headers.Add()
 
             BodyBuilder bodyBuilder = new BodyBuilder();
-            if(plainTextMessage.Length > 0)
+            if(hasPlainText)
             {
                 bodyBuilder.TextBody = plainTextMessage;
             }
 
-            if (htmlMessage.Length > 0)
+            if (hasHtml)
             {
                 bodyBuilder.HtmlBody = htmlMessage;
             }
@@ -115,27 +117,29 @@ namespace cloudscribe.Messaging.Email
             string plainTextMessage,
             string htmlMessage)
         {
-            if (string.IsNullOrEmpty(toCsv))
+            if (string.IsNullOrWhiteSpace(toCsv))
             {
                 throw new ArgumentException("no to addresses provided");
             }
 
-            if (string.IsNullOrEmpty(from))
+            if (string.IsNullOrWhiteSpace(from))
             {
                 throw new ArgumentException("no from address provided");
             }
 
-            if (string.IsNullOrEmpty(subject))
+            if (string.IsNullOrWhiteSpace(subject))
             {
                 throw new ArgumentException("no subject provided");
             }
 
-            if (string.IsNullOrEmpty(plainTextMessage) && string.IsNullOrEmpty(htmlMessage))
+            var hasPlainText = !string.IsNullOrWhiteSpace(plainTextMessage);
+            var hasHtml = !string.IsNullOrWhiteSpace(htmlMessage);
+            if (!hasPlainText && !hasHtml)
             {
                 throw new ArgumentException("no message provided");
             }
 
-            
+
 
 
             var m = new MimeMessage();
@@ -153,12 +157,12 @@ namespace cloudscribe.Messaging.Email
             m.Importance = MessageImportance.High;
            
             BodyBuilder bodyBuilder = new BodyBuilder();
-            if (plainTextMessage.Length > 0)
+            if (hasPlainText)
             {
                 bodyBuilder.TextBody = plainTextMessage;
             }
 
-            if (htmlMessage.Length > 0)
+            if (hasHtml)
             {
                 bodyBuilder.HtmlBody = htmlMessage;
             }

@@ -1,6 +1,6 @@
 ﻿{
-  "version": "1.0.0-*",
-  "title": "cloudscribe.Messaging.Email",
+  "version": "1.0.0-beta1",
+  "title": "a friendly wrapper around Mailkit/Mimekit",
   "description": "email library",
   "authors": [ "Joe Audette" ],
   "owners": [ "Source Tree Solutions" ],

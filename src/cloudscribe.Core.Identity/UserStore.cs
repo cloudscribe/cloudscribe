@@ -150,7 +150,7 @@ namespace cloudscribe.Core.Identity
                     string[] roleArray = defaultRoles.Split(';');
                     foreach (string roleName in roleArray)
                     {
-                        if (!string.IsNullOrEmpty(roleName))
+                        if (!string.IsNullOrWhiteSpace(roleName))
                         {
                             role = await repo.FetchRole(siteUser.SiteId, roleName, cancellationToken);
                             if ((role != null) && (role.RoleId > -1))

@@ -29,12 +29,12 @@ namespace cloudscribe.Core.Web.Components.Messaging
             string phoneNumber, 
             string message)
         {
-            if (string.IsNullOrEmpty(phoneNumber))
+            if (string.IsNullOrWhiteSpace(phoneNumber))
             {
                 throw new ArgumentException("toPhoneNumber was not provided");
             }
 
-            if (string.IsNullOrEmpty(message))
+            if (string.IsNullOrWhiteSpace(message))
             {
                 throw new ArgumentException("message was not provided");
             }
@@ -64,9 +64,9 @@ namespace cloudscribe.Core.Web.Components.Messaging
         private TwilioSmsCredentials GetCredentials(ISiteSettings site)
         {
             if(site == null) { return null; }
-            if(string.IsNullOrEmpty(site.SmsClientId)) { return null; }
-            if (string.IsNullOrEmpty(site.SmsSecureToken)) { return null; }
-            if (string.IsNullOrEmpty(site.SmsFrom)) { return null; }
+            if(string.IsNullOrWhiteSpace(site.SmsClientId)) { return null; }
+            if (string.IsNullOrWhiteSpace(site.SmsSecureToken)) { return null; }
+            if (string.IsNullOrWhiteSpace(site.SmsFrom)) { return null; }
 
             TwilioSmsCredentials creds = new TwilioSmsCredentials();
             creds.AccountSid = site.SmsClientId;
