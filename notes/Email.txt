@@ -1,4 +1,11 @@
 
+
+http://mehdi.me/generating-html-emails-with-razorengine-introduction/
+https://github.com/mehdime/RazorEngineEmails/tree/master/src/Part%2003/ConsoleApplication
+
+
+
+
 Responsive Email Made Easy
 https://mjml.io/
 

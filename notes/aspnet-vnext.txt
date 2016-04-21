@@ -1,4 +1,10 @@
 
+http://www.strathweb.com/2016/04/request-islocal-in-asp-net-core/
+https://github.com/aspnet/BasicMiddleware/blob/dev/src/Microsoft.AspNetCore.HttpOverrides/ForwardedHeadersMiddleware.cs#L18
+
+
+
+
 #dnxcore50 when you need to find out the package for a namespace:
 https://packagesearch.azurewebsites.net/
 

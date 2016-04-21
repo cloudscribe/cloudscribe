@@ -30,7 +30,8 @@ namespace cloudscribe.Messaging.Email
             string from,
             string subject,
             string plainTextMessage,
-            string htmlMessage)
+            string htmlMessage,
+            string replyTo = null)
         {
             if (string.IsNullOrWhiteSpace(to))
             {
@@ -57,8 +58,13 @@ namespace cloudscribe.Messaging.Email
             var m = new MimeMessage();
            
             m.From.Add(new MailboxAddress("", from));
+            if(!string.IsNullOrWhiteSpace(replyTo))
+            {
+                m.ReplyTo.Add(new MailboxAddress("", replyTo));
+            }
             m.To.Add(new MailboxAddress("", to));
             m.Subject = subject;
+
             //m.Importance = MessageImportance.Normal;
             //Header h = new Header(HeaderId.Precedence, "Bulk");
             //m.Headers.Add()

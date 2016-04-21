@@ -1,5 +1,8 @@
 
 
+https://github.com/ClintBailiff/MiddlewareDemo
+http://odetocode.com/blogs/scott/archive/2015/10/06/authorization-policies-and-middleware-in-asp-net-5.aspx
+
 app.Use((context, next) =>
             {
                 var request = context.Request;
