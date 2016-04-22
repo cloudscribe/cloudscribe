@@ -39,7 +39,7 @@ namespace cloudscribe.Web.Common.Razor
         private ITempDataProvider tempDataProvider;
         private IHttpContextAccessor contextAccesor;
 
-        public async Task<string> RenderPartialViewToString<TModel>(string viewName, TModel model)
+        public async Task<string> RenderViewAsString<TModel>(string viewName, TModel model)
         {
 
             var viewData = new ViewDataDictionary<TModel>(
