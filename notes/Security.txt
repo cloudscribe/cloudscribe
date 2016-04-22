@@ -1,4 +1,7 @@
 
+How you can get a free SSL certificate in 4min - letsencrypt
+https://blog.sverrirs.com/2016/03/windows-app-to-automate-ssl-cert.html
+
 https://pierrekim.github.io/blog/2016-02-16-why-i-stopped-using-startssl-because-of-qihoo-360.html
 
 xss tutorial
