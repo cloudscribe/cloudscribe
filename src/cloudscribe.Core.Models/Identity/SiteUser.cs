@@ -17,10 +17,10 @@ namespace cloudscribe.Core.Models
         public SiteUser()
         { }
 
-        public string Id
-        {
-            get { return UserGuid.ToString(); }
-        }
+        //public string Id
+        //{
+        //    get { return UserGuid.ToString(); }
+        //}
 
         private string authorBio = string.Empty;
         public string AuthorBio

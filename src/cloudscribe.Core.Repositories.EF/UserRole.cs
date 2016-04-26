@@ -19,14 +19,14 @@ namespace cloudscribe.Core.Repositories.EF
     /// </summary>
     public class UserRole
     {
-        public int Id { get; set; } = 0;
-        public int UserId { get; set; } = 0;
+        public Guid Id { get; set; } = Guid.Empty;
+        //public int UserId { get; set; } = 0;
         public Guid UserGuid { get; set; } = Guid.Empty;
 
        // [ForeignKey("UserId")]
       //  public SiteUser User { get; set; }
 
-        public int RoleId { get; set; } = 0;
+        //public int RoleId { get; set; } = 0;
         public Guid RoleGuid { get; set; } = Guid.Empty;
 
       //  [ForeignKey("RoleId")]

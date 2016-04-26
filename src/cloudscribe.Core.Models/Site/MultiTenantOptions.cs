@@ -5,6 +5,7 @@
 // Last Modified:			2015-09-04
 // 
 
+using System;
 
 namespace cloudscribe.Core.Models
 {
@@ -32,7 +33,9 @@ namespace cloudscribe.Core.Models
         /// <summary>
         /// the siteId of the site whose users and roles are shared when UseRelatedSitesMode is true
         /// </summary>
-        public int RelatedSiteId { get; set; } = 1;
+        //public int RelatedSiteId { get; set; } = 1;
+
+        public Guid RelatedSiteGuid { get; set; } = Guid.Empty;
 
         public string DefaultNewUserRoles { get; set; } = "Authenticated Users";
     }

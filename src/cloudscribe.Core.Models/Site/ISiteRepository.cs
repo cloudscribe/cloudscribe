@@ -18,29 +18,29 @@ namespace cloudscribe.Core.Models
     {
         //TODO: review all places where these non async methods are used
         // and consider whether they could be changed to use async
-        ISiteSettings FetchNonAsync(int siteId);
+        //ISiteSettings FetchNonAsync(int siteId);
         ISiteSettings FetchNonAsync(Guid siteGuid);
         ISiteSettings FetchNonAsync(string hostName);
         ISiteSettings FetchByFolderNameNonAsync(string folderName);
 
-        Task<ISiteSettings> Fetch(int siteId, CancellationToken cancellationToken);
+        //Task<ISiteSettings> Fetch(int siteId, CancellationToken cancellationToken);
         Task<ISiteSettings> Fetch(Guid siteGuid, CancellationToken cancellationToken);
         Task<ISiteSettings> Fetch(string hostName, CancellationToken cancellationToken);
         Task<ISiteSettings> FetchByFolderName(string folderName, CancellationToken cancellationToken);
 
         Task<int> GetCount(CancellationToken cancellationToken);
-        Task<int> CountOtherSites(int currentSiteId, CancellationToken cancellationToken);
+        Task<int> CountOtherSites(Guid currentSiteGuid, CancellationToken cancellationToken);
         Task<List<ISiteInfo>> GetList(CancellationToken cancellationToken);
         Task<List<ISiteInfo>> GetPageOtherSites(
-            int currentSiteId,
+            Guid currentSiteGuid,
             int pageNumber,
             int pageSize,
             CancellationToken cancellationToken);
 
         Task<bool> Save(ISiteSettings site, CancellationToken cancellationToken);
-        Task<bool> Delete(int siteId, CancellationToken cancellationToken);
+        Task<bool> Delete(Guid siteGuid, CancellationToken cancellationToken);
 
-        Task<List<ISiteHost>> GetSiteHosts(int siteId, CancellationToken cancellationToken);
+        Task<List<ISiteHost>> GetSiteHosts(Guid siteGuid, CancellationToken cancellationToken);
         Task<List<ISiteHost>> GetAllHosts(CancellationToken cancellationToken);
         Task<ISiteHost> GetSiteHost(string hostName, CancellationToken cancellationToken);
         Task<int> GetHostCount(CancellationToken cancellationToken);
@@ -48,9 +48,9 @@ namespace cloudscribe.Core.Models
             int pageNumber,
             int pageSize,
             CancellationToken cancellationToken);
-        Task<bool> AddHost(Guid siteGuid, int siteId, string hostName, CancellationToken cancellationToken);
-        Task<bool> DeleteHost(int hostId, CancellationToken cancellationToken);
-        Task<bool> DeleteHostsBySite(int siteId, CancellationToken cancellationToken);
+        Task<bool> AddHost(Guid siteGuid, string hostName, CancellationToken cancellationToken);
+        Task<bool> DeleteHost(Guid hostGuid, CancellationToken cancellationToken);
+        Task<bool> DeleteHostsBySite(Guid siteGuid, CancellationToken cancellationToken);
         Task<int> GetSiteIdByHostName(string hostName, CancellationToken cancellationToken);
         List<ISiteHost> GetAllHostsNonAsync();
 
