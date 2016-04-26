@@ -5,6 +5,8 @@
 // Last Modified:           2016-04-26
 // 
 
+using cloudscribe.Core.Models;
+using NoDb;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +16,9 @@ namespace cloudscribe.Core.Repositories.NoDb
 {
     public class SiteRepository
     {
+        public SiteRepository()
+        {
+
+        }
     }
 }

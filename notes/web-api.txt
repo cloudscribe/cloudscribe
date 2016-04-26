@@ -1,4 +1,6 @@
 
+http://gunnarpeipman.com/2016/04/why-azure-rest-api-s-and-how-to-prepare-for-using-them/
+
 http://wildermuth.com/2016/03/16/Content_Negotiation_in_ASP_NET_Core
 
 http://damienbod.com/2016/03/02/angular2-openid-connect-implicit-flow-with-identityserver4/

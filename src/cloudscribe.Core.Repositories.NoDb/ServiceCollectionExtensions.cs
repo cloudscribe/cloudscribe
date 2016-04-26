@@ -9,16 +9,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using cloudscribe.Core.Models;
-using NoDb;
 
 namespace cloudscribe.Core.Repositories.NoDb
 {
-    public class GeoRepository
+    public static class ServiceCollectionExtensions
     {
-        public GeoRepository()
-        {
-
-        }
     }
 }
