@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-17
-// Last Modified:		    2016-02-04
+// Last Modified:		    2016-04-27
 // 
 //
 
@@ -71,22 +71,22 @@ namespace cloudscribe.Core.Identity
             }
         }
 
-        public async Task<int> CountOfRoles(int siteId, string searchInput)
+        public async Task<int> CountOfRoles(Guid siteGuid, string searchInput)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
 
-            return await userRepo.CountOfRoles(siteId, searchInput, CancellationToken);
+            return await userRepo.CountOfRoles(siteGuid, searchInput, CancellationToken);
         }
 
         public async Task<IList<ISiteRole>> GetRolesBySite(
-            int siteId,
+            Guid siteGuid,
             string searchInput,
             int pageNumber,
             int pageSize)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
 
-            return await userRepo.GetRolesBySite(siteId, searchInput, pageNumber, pageSize, CancellationToken);
+            return await userRepo.GetRolesBySite(siteGuid, searchInput, pageNumber, pageSize, CancellationToken);
 
         }
 
@@ -96,9 +96,9 @@ namespace cloudscribe.Core.Identity
         /// </summary>
         /// <param name="roleId"></param>
         /// <returns></returns>
-        public async Task<ISiteRole> FetchRole(int roleId)
+        public async Task<ISiteRole> FetchRole(Guid roleGuid)
         {
-            return await userRepo.FetchRole(roleId, CancellationToken);
+            return await userRepo.FetchRole(roleGuid, CancellationToken);
         }
 
         // again need to consolidate with RoleStore.UpdateAsync
@@ -107,58 +107,58 @@ namespace cloudscribe.Core.Identity
             return await userRepo.SaveRole(role, CancellationToken);
         }
 
-        public async Task<bool> DeleteUserRolesByRole(int roleId)
+        public async Task<bool> DeleteUserRolesByRole(Guid roleGuid)
         {
-            return await userRepo.DeleteUserRolesByRole(roleId, CancellationToken);
+            return await userRepo.DeleteUserRolesByRole(roleGuid, CancellationToken);
         }
 
-        public async Task<bool> DeleteRole(int roleId)
+        public async Task<bool> DeleteRole(Guid roleGuid)
         {
-            return await userRepo.DeleteRole(roleId, CancellationToken);
+            return await userRepo.DeleteRole(roleGuid, CancellationToken);
         }
 
-        public async Task<bool> RoleExists(int siteId, string roleName)
+        public async Task<bool> RoleExists(Guid siteGuid, string roleName)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
 
-            return await userRepo.RoleExists(siteId, roleName, CancellationToken);
+            return await userRepo.RoleExists(siteGuid, roleName, CancellationToken);
         }
 
-        public async Task<IList<IUserInfo>> GetUsersInRole(int siteId, int roleId, string searchInput, int pageNumber, int pageSize)
+        public async Task<IList<IUserInfo>> GetUsersInRole(Guid siteGuid, Guid roleGuid, string searchInput, int pageNumber, int pageSize)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
 
-            return await userRepo.GetUsersInRole(siteId, roleId, searchInput, pageNumber, pageSize, CancellationToken);
+            return await userRepo.GetUsersInRole(siteGuid, roleGuid, searchInput, pageNumber, pageSize, CancellationToken);
         }
 
-        public async Task<int> CountUsersInRole(int siteId, int roleId, string searchInput)
+        public async Task<int> CountUsersInRole(Guid siteGuid, Guid roleGuid, string searchInput)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
 
-            return await userRepo.CountUsersInRole(siteId, roleId, searchInput, CancellationToken);
+            return await userRepo.CountUsersInRole(siteGuid, roleGuid, searchInput, CancellationToken);
         }
 
-        public async Task<IList<IUserInfo>> GetUsersNotInRole(int siteId, int roleId, string searchInput, int pageNumber, int pageSize)
+        public async Task<IList<IUserInfo>> GetUsersNotInRole(Guid siteGuid, Guid roleGuid, string searchInput, int pageNumber, int pageSize)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
 
-            return await userRepo.GetUsersNotInRole(siteId, roleId, searchInput, pageNumber, pageSize, CancellationToken);
+            return await userRepo.GetUsersNotInRole(siteGuid, roleGuid, searchInput, pageNumber, pageSize, CancellationToken);
         }
 
-        public async Task<int> CountUsersNotInRole(int siteId, int roleId, string searchInput)
+        public async Task<int> CountUsersNotInRole(Guid siteGuid, Guid roleGuid, string searchInput)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
 
-            return await userRepo.CountUsersNotInRole(siteId, roleId, searchInput, CancellationToken);
+            return await userRepo.CountUsersNotInRole(siteGuid, roleGuid, searchInput, CancellationToken);
         }
 
         public async Task<bool> AddUserToRole(ISiteUser user, ISiteRole role)
         {
             if (user == null) { throw new ArgumentNullException(nameof(user)); }
             if (role == null) { throw new ArgumentNullException(nameof(role)); }
-            if(role.SiteId != user.SiteId) { throw new ArgumentException("user and role must have the same siteid"); }
+            if(role.SiteGuid != user.SiteGuid) { throw new ArgumentException("user and role must have the same siteid"); }
 
-            bool result = await userRepo.AddUserToRole(role.RoleId, role.RoleGuid, user.UserId, user.UserGuid, CancellationToken);
+            bool result = await userRepo.AddUserToRole(role.RoleGuid, user.UserGuid, CancellationToken);
             if (result)
             {
                 user.RolesChanged = true;
@@ -174,7 +174,7 @@ namespace cloudscribe.Core.Identity
             if (user == null) { throw new ArgumentNullException(nameof(user)); }
             if (role == null) { throw new ArgumentNullException(nameof(role)); }
 
-            bool result = await userRepo.RemoveUserFromRole(role.RoleId, user.UserId, CancellationToken);
+            bool result = await userRepo.RemoveUserFromRole(role.RoleGuid, user.UserGuid, CancellationToken);
 
             if (result)
             {

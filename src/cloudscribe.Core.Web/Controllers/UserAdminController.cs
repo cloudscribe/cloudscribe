@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-08
-// Last Modified:			2016-02-19
+// Last Modified:			2016-04-27
 // 
 
 using cloudscribe.Core.Identity;
@@ -89,13 +89,13 @@ namespace cloudscribe.Core.Web.Controllers
             
 
             var siteMembers = await UserManager.GetPage(
-                selectedSite.SiteId,
+                selectedSite.SiteGuid,
                 pageNumber,
                 itemsPerPage,
                 query,
                 sortMode);
 
-            var count = await UserManager.CountUsers(selectedSite.SiteId, query);
+            var count = await UserManager.CountUsers(selectedSite.SiteGuid, query);
 
             UserListViewModel model = new UserListViewModel();
             model.SiteGuid = selectedSite.SiteGuid;
@@ -140,13 +140,13 @@ namespace cloudscribe.Core.Web.Controllers
             
 
             var siteMembers = await UserManager.GetUserAdminSearchPage(
-                selectedSite.SiteId,
+                selectedSite.SiteGuid,
                 pageNumber,
                 itemsPerPage,
                 query,
                 sortMode);
 
-            var count = await UserManager.CountUsersForAdminSearch(selectedSite.SiteId, query);
+            var count = await UserManager.CountUsersForAdminSearch(selectedSite.SiteGuid, query);
 
             UserListViewModel model = new UserListViewModel();
             model.SiteGuid = selectedSite.SiteGuid;
@@ -227,11 +227,11 @@ namespace cloudscribe.Core.Web.Controllers
 
 
             var siteMembers = await UserManager.GetPageLockedUsers(
-                selectedSite.SiteId,
+                selectedSite.SiteGuid,
                 pageNumber,
                 itemsPerPage);
 
-            var count = await UserManager.CountLockedOutUsers(selectedSite.SiteId);
+            var count = await UserManager.CountLockedOutUsers(selectedSite.SiteGuid);
 
             UserListViewModel model = new UserListViewModel();
             model.SiteGuid = selectedSite.SiteGuid;
@@ -273,11 +273,11 @@ namespace cloudscribe.Core.Web.Controllers
 
 
             var siteMembers = await UserManager.GetNotApprovedUsers(
-                selectedSite.SiteId,
+                selectedSite.SiteGuid,
                 pageNumber,
                 itemsPerPage);
 
-            var count = await UserManager.CountNotApprovedUsers(selectedSite.SiteId);
+            var count = await UserManager.CountNotApprovedUsers(selectedSite.SiteGuid);
 
             UserListViewModel model = new UserListViewModel();
             model.SiteGuid = selectedSite.SiteGuid;
@@ -344,7 +344,6 @@ namespace cloudscribe.Core.Web.Controllers
                 
                     var user = new SiteUser
                     {
-                        SiteId = selectedSite.SiteId,
                         SiteGuid = selectedSite.SiteGuid,
                         UserName = model.LoginName,
                         Email = model.Email,
@@ -382,7 +381,7 @@ namespace cloudscribe.Core.Web.Controllers
         [HttpGet]
         //[Authorize(Roles = "Admins")]
         public async Task<ActionResult> UserEdit(
-            int userId,
+            Guid userGuid,
             Guid? siteGuid
             )
         {
@@ -403,10 +402,9 @@ namespace cloudscribe.Core.Web.Controllers
             EditUserViewModel model = new EditUserViewModel();
             model.SiteGuid = selectedSite.SiteGuid;
             
-            ISiteUser user = await UserManager.Fetch(selectedSite.SiteId, userId);
+            ISiteUser user = await UserManager.Fetch(selectedSite.SiteGuid, userGuid);
             if (user != null)
             {
-                model.UserId = user.UserId;
                 model.UserGuid = user.UserGuid;
                 model.Email = user.Email;
                 model.FirstName = user.FirstName;
@@ -458,10 +456,10 @@ namespace cloudscribe.Core.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                if (model.UserId > -1)
+                if (model.UserGuid != Guid.Empty)
                 {
                     //editing an existing user
-                    ISiteUser user = await UserManager.Fetch(selectedSite.SiteId, model.UserId);
+                    ISiteUser user = await UserManager.Fetch(selectedSite.SiteGuid, model.UserGuid);
                     if (user != null)
                     {
                         if(user.NormalizedEmail != model.Email.ToLowerInvariant())
@@ -523,7 +521,7 @@ namespace cloudscribe.Core.Web.Controllers
         [Authorize(Policy = "AdminPolicy")]
         public async Task<ActionResult> ApproveUserAccount(
             Guid siteGuid, 
-            int userId, 
+            Guid userGuid, 
             bool sendEmailNotification,
             int returnPageNumber = 1)
         {
@@ -531,11 +529,11 @@ namespace cloudscribe.Core.Web.Controllers
 
             if (
                 (selectedSite != null)
-                && (selectedSite.SiteId == siteManager.CurrentSite.SiteId || siteManager.CurrentSite.IsServerAdminSite)
+                && (selectedSite.SiteGuid == siteManager.CurrentSite.SiteGuid || siteManager.CurrentSite.IsServerAdminSite)
                 )
             {
 
-                ISiteUser user = await UserManager.Fetch(selectedSite.SiteId, userId);
+                ISiteUser user = await UserManager.Fetch(selectedSite.SiteGuid, userGuid);
                 if(user != null)
                 {
                     user.AccountApproved = true;
@@ -571,17 +569,17 @@ namespace cloudscribe.Core.Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "AdminPolicy")]
-        public async Task<ActionResult> UserDelete(Guid siteGuid, int userId, int returnPageNumber = 1)
+        public async Task<ActionResult> UserDelete(Guid siteGuid, Guid userGuid, int returnPageNumber = 1)
         {
             ISiteSettings selectedSite = await siteManager.Fetch(siteGuid);
 
             if (
                 (selectedSite != null)
-                && (selectedSite.SiteId == siteManager.CurrentSite.SiteId || siteManager.CurrentSite.IsServerAdminSite)
+                && (selectedSite.SiteGuid == siteManager.CurrentSite.SiteGuid || siteManager.CurrentSite.IsServerAdminSite)
                 )
             {
 
-                ISiteUser user = await UserManager.Fetch(selectedSite.SiteId, userId);
+                ISiteUser user = await UserManager.Fetch(selectedSite.SiteGuid, userGuid);
 
                 var result = await UserManager.DeleteAsync((SiteUser)user);
                 if (result.Succeeded)

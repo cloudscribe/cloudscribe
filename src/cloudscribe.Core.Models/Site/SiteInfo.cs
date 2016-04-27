@@ -20,7 +20,22 @@ namespace cloudscribe.Core.Models
         
         //public int SiteId { get; set; } = -1;
         public Guid SiteGuid { get; set; } = Guid.Empty;
-        
+
+        private string tenantId = null;
+        /// <summary>
+        /// an optional identifier for the site, should be unique per site
+        /// can be used instead of guid as folder name for tenant themes
+        /// </summary>
+        public string TenantId
+        {
+            get { return tenantId ?? SiteGuid.ToString(); }
+            set {
+                if (value != SiteGuid.ToString())
+                {
+                    tenantId = value;
+                }  
+            }
+        }
 
         private string siteName = string.Empty;
         public string SiteName

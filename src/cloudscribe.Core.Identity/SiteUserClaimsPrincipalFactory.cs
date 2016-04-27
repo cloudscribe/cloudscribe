@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-06-27
-// Last Modified:			2016-03-03
+// Last Modified:			2016-04-27
 // 
 
 
@@ -109,7 +109,7 @@ namespace cloudscribe.Core.Identity
                     identity.AddClaim(emailClaim);
                 }
 
-                ISiteSettings site = await siteRepo.Fetch(user.SiteId, CancellationToken.None);
+                ISiteSettings site = await siteRepo.Fetch(user.SiteGuid, CancellationToken.None);
 
                 if (site != null)
                 {

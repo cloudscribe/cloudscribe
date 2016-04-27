@@ -71,7 +71,10 @@ namespace cloudscribe.Core.Repositories.EF
             //.Metadata.SentinelValue = Guid.Empty
             ;
 
-       
+
+            entity.Property(p => p.TenantId)
+            .HasMaxLength(36)
+            ;
 
             //entity.HasIndex(p => p.SiteGuid)  
             //.IsUnique();

@@ -16,9 +16,6 @@ namespace cloudscribe.Core.Web.ViewModels.Account
     public class EditUserViewModel
     {
        
-        [Display(Name = "UserId")]
-        public int UserId { get; set; } = -1;
-        
         [Display(Name = "UserGuid")]
         public Guid UserGuid { get; set; } = Guid.Empty;
         

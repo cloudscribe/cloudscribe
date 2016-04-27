@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-09
-// Last Modified:			2016-01-31
+// Last Modified:			2016-04-27
 // 
 
 using System;
@@ -17,8 +17,6 @@ namespace cloudscribe.Core.Models.DataExtensions
     {
         public static void LoadFromReader(this ISiteRole role, DbDataReader reader)
         {
-            role.RoleId = Convert.ToInt32(reader["RoleID"]);
-            role.SiteId = Convert.ToInt32(reader["SiteID"]);
             role.RoleName = reader["RoleName"].ToString();
             role.DisplayName = reader["DisplayName"].ToString();
             role.SiteGuid = new Guid(reader["SiteGuid"].ToString());
@@ -27,30 +25,30 @@ namespace cloudscribe.Core.Models.DataExtensions
 
         public static void LoadFromReader(this IUserLogin userLogin, DbDataReader reader)
         {
-            userLogin.SiteId = Convert.ToInt32(reader["SiteId"]);
+            userLogin.SiteGuid = new Guid(reader["SiteGuid"].ToString());
             userLogin.LoginProvider = reader["LoginProvider"].ToString();
             userLogin.ProviderKey = reader["ProviderKey"].ToString();
-            userLogin.UserId = reader["UserId"].ToString();
+            userLogin.UserGuid = new Guid(reader["UserId"].ToString());
             userLogin.ProviderDisplayName = reader["ProviderDisplayName"].ToString();
         }
 
         public static void LoadFromReader(this IUserClaim userClaim, DbDataReader reader)
         {
-            userClaim.SiteId = Convert.ToInt32(reader["SiteId"]);
-            userClaim.Id = Convert.ToInt32(reader["Id"]);
-            userClaim.UserId = reader["UserId"].ToString();
+            userClaim.SiteGuid = new Guid(reader["SiteId"].ToString());
+            userClaim.Id = new Guid(reader["Id"].ToString());
+            userClaim.UserGuid = new Guid(reader["UserId"].ToString());
             userClaim.ClaimType = reader["ClaimType"].ToString();
             userClaim.ClaimValue = reader["ClaimValue"].ToString();
         }
 
         public static void LoadFromReader(this IUserInfo user, DbDataReader reader)
         {
-            user.UserId = Convert.ToInt32(reader["UserID"], CultureInfo.InvariantCulture);
+           
             if (reader["UserGuid"] != DBNull.Value)
             {
                 user.UserGuid = new Guid(reader["UserGuid"].ToString());
             }
-            user.SiteId = Convert.ToInt32(reader["SiteID"], CultureInfo.InvariantCulture);
+            
             user.SiteGuid = new Guid(reader["SiteGuid"].ToString());
             user.DisplayName = reader["Name"].ToString();
             user.UserName = reader["LoginName"].ToString();
@@ -113,8 +111,7 @@ namespace cloudscribe.Core.Models.DataExtensions
 
         public static void LoadFromReader(this SiteUser user, DbDataReader reader)
         {
-            user.UserId = Convert.ToInt32(reader["UserID"], CultureInfo.InvariantCulture);
-            user.SiteId = Convert.ToInt32(reader["SiteID"], CultureInfo.InvariantCulture);
+           
             user.DisplayName = reader["Name"].ToString();
             user.UserName = reader["LoginName"].ToString();
 
@@ -218,7 +215,7 @@ namespace cloudscribe.Core.Models.DataExtensions
 
         public static void LoadFromReader(this ISiteInfo site, DbDataReader reader)
         {
-            site.SiteId = Convert.ToInt32(reader["SiteID"]);
+            
             site.SiteGuid = new Guid(reader["SiteGuid"].ToString());
             site.SiteName = reader["SiteName"].ToString();
             site.SiteFolderName = reader["SiteFolderName"].ToString();
@@ -228,7 +225,7 @@ namespace cloudscribe.Core.Models.DataExtensions
 
         public static void LoadFromReader(this ISiteSettings site, DbDataReader reader)
         {
-            site.SiteId = Convert.ToInt32(reader["SiteID"]);
+            
             site.SiteGuid = new Guid(reader["SiteGuid"].ToString());
             
             site.SiteName = reader["SiteName"].ToString();
@@ -339,10 +336,10 @@ namespace cloudscribe.Core.Models.DataExtensions
 
         public static void LoadFromReader(this ISiteHost host, DbDataReader reader)
         {
-            host.HostId = Convert.ToInt32(reader["HostID"]);
+            host.HostGuid = new Guid(reader["HostGuid"].ToString());
             host.HostName = reader["HostName"].ToString();
             host.SiteGuid = new Guid(reader["SiteGuid"].ToString());
-            host.SiteId = Convert.ToInt32(reader["SiteID"]);
+           
         }
 
         public static void LoadFromReader(this IUserLocation location, DbDataReader reader)

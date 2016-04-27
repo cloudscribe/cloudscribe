@@ -18,6 +18,7 @@ namespace cloudscribe.Core.Models
     {
         //int SiteId { get; set; }
         Guid SiteGuid { get; set; }
+        string TenantId { get; set; }
         string SiteName { get; set; }
         string PreferredHostName { get; set; }
         string SiteFolderName { get; set; }

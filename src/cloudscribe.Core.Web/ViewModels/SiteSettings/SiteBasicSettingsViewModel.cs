@@ -23,14 +23,14 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
             availableLayouts = new List<SelectListItem>();
         }
 
-        private int siteID = -1;
+        //private int siteID = -1;
 
-        [Display(Name = "SiteId")]
-        public int SiteId
-        {
-            get { return siteID; }
-            set { siteID = value; }
-        }
+        //[Display(Name = "SiteId")]
+        //public int SiteId
+        //{
+        //    get { return siteID; }
+        //    set { siteID = value; }
+        //}
 
         private Guid siteGuid = Guid.Empty;
 
