@@ -55,15 +55,15 @@ namespace cloudscribe.Core.Repositories.EF
             // to cloudscribe.Core.Repositories.EF or vice versa
 
             entity.ToTable("mp_Sites");
-            entity.HasKey(p => p.SiteId);
+            entity.HasKey(p => p.SiteGuid);
 
-            entity.Property(p => p.SiteId)
-            //.HasSqlServerColumnType("int")
-            .UseSqlServerIdentityColumn<int>()
-            .HasColumnName("SiteID")
-            .ValueGeneratedOnAdd()
-            //.Metadata.SentinelValue = -1
-            ;
+            //entity.Property(p => p.SiteId)
+            ////.HasSqlServerColumnType("int")
+            //.UseSqlServerIdentityColumn<int>()
+            //.HasColumnName("SiteID")
+            //.ValueGeneratedOnAdd()
+            ////.Metadata.SentinelValue = -1
+            //;
 
             entity.Property(p => p.SiteGuid)
             .ForSqlServerHasColumnType("uniqueidentifier")
@@ -73,17 +73,17 @@ namespace cloudscribe.Core.Repositories.EF
 
        
 
-            entity.HasIndex(p => p.SiteGuid)  
-            .IsUnique();
+            //entity.HasIndex(p => p.SiteGuid)  
+            //.IsUnique();
 
             entity.Property(p => p.SiteName)
             //.HasSqlServerColumnType("nvarchar(255)")
             .HasMaxLength(255)
             .IsRequired();
 
-            entity.Property(p => p.Layout)
+            entity.Property(p => p.Theme)
             //.HasSqlServerColumnType("nvarchar(100)")
-            .HasColumnName("Skin")
+            //.HasColumnName("Skin")
             .HasMaxLength(100);
 
             entity.Property(p => p.AllowNewRegistration)
@@ -430,31 +430,39 @@ namespace cloudscribe.Core.Repositories.EF
         public void Map(EntityTypeBuilder<SiteHost> entity)
         {
             entity.ToTable("mp_SiteHosts");
-            entity.HasKey(p => p.HostId);
+            entity.HasKey(p => p.HostGuid);
 
-            entity.Property(p => p.HostId)
-            .UseSqlServerIdentityColumn()
-            .HasColumnName("HostID")
-            //.Metadata.SentinelValue = -1
-            ;
+            entity.Property(p => p.HostGuid)
+           .ForSqlServerHasColumnType("uniqueidentifier")
+           .ForSqlServerHasDefaultValueSql("newid()")
+           //.Metadata.SentinelValue = Guid.Empty
+           ;
 
-            entity.Property(p => p.SiteId)
-            .HasColumnName("SiteID")
-            .ForSqlServerHasColumnType("int")
-            .IsRequired()
-            ;
+            //entity.Property(p => p.HostId)
+            //.UseSqlServerIdentityColumn()
+            //.HasColumnName("HostID")
+            ////.Metadata.SentinelValue = -1
+            //;
+
+            //entity.Property(p => p.SiteId)
+            //.HasColumnName("SiteID")
+            //.ForSqlServerHasColumnType("int")
+            //.IsRequired()
+            //;
 
             entity.Property(p => p.SiteGuid)
             .HasColumnName("SiteGuid")
             .ForSqlServerHasColumnType("uniqueidentifier")
             .IsRequired()
             ;
-
+            entity.HasIndex(p => p.SiteGuid);
 
             entity.Property(p => p.HostName)
             .IsRequired()
             .HasMaxLength(255);
             ;
+
+            entity.HasIndex(p => p.HostName);
 
         }
 
@@ -485,14 +493,15 @@ namespace cloudscribe.Core.Repositories.EF
         public void Map(EntityTypeBuilder<SiteUser> entity)
         {
             entity.ToTable("mp_Users");
-            entity.HasKey(p => p.UserId);
+            entity.HasKey(p => p.UserGuid);
+            // entity.HasKey(p => p.UserId);
 
-            entity.Property(p => p.UserId)
-            .UseSqlServerIdentityColumn<int>()
-            .ValueGeneratedOnAdd()
-            .HasColumnName("UserID")
-           // .Metadata.SentinelValue = -1
-            ;
+            // entity.Property(p => p.UserId)
+            // .UseSqlServerIdentityColumn<int>()
+            // .ValueGeneratedOnAdd()
+            // .HasColumnName("UserID")
+            //// .Metadata.SentinelValue = -1
+            // ;
 
             entity.Property(p => p.UserGuid)
                .ForSqlServerHasColumnType("uniqueidentifier")
@@ -500,22 +509,24 @@ namespace cloudscribe.Core.Repositories.EF
                .IsRequired()
                ;
 
-            entity.HasIndex(p => p.UserGuid)
-            .IsUnique();
+            //entity.HasIndex(p => p.UserGuid)
+            //.IsUnique();
 
-            entity.Property(p => p.SiteId)
-            .HasColumnName("SiteID")
-            .ForSqlServerHasColumnType("int")
-            .IsRequired()
-            ;
+            //entity.Property(p => p.SiteId)
+            //.HasColumnName("SiteID")
+            //.ForSqlServerHasColumnType("int")
+            //.IsRequired()
+            //;
 
-            entity.HasIndex(p => p.SiteId);
+            //entity.HasIndex(p => p.SiteId);
 
             entity.Property(p => p.SiteGuid)
                 .HasColumnName("SiteGuid")
                 .ForSqlServerHasColumnType("uniqueidentifier")
                 .IsRequired()
                 ;
+
+            entity.HasIndex(p => p.SiteGuid);
 
             entity.Property(p => p.AccountApproved)
             .IsRequired()
@@ -539,6 +550,8 @@ namespace cloudscribe.Core.Repositories.EF
             .HasMaxLength(100)
             ;
 
+            entity.HasIndex(p => p.NormalizedEmail);
+
             entity.Property(p => p.UserName)
             .IsRequired()
             .HasMaxLength(50)
@@ -548,11 +561,7 @@ namespace cloudscribe.Core.Repositories.EF
             .IsRequired()
             .HasMaxLength(50)
             ;
-
-            entity.Property(p => p.NormalizedEmail)
-            .IsRequired()
-            .HasMaxLength(100)
-            ;
+            entity.HasIndex(p => p.NormalizedUserName);
 
             entity.Property(p => p.EmailConfirmed)
             .IsRequired()
@@ -622,12 +631,12 @@ namespace cloudscribe.Core.Repositories.EF
             ;
 
            
-            entity.HasIndex(p => p.SiteGuid);
+            //entity.HasIndex(p => p.SiteGuid);
 
-            entity.HasIndex(p => p.Email);
-            entity.HasIndex(p => p.NormalizedEmail);
-            entity.HasIndex(p => p.UserName);
-            entity.HasIndex(p => p.NormalizedUserName);
+            //entity.HasIndex(p => p.Email);
+            //entity.HasIndex(p => p.NormalizedEmail);
+           // entity.HasIndex(p => p.UserName);
+            //entity.HasIndex(p => p.NormalizedUserName);
 
 
         }
@@ -635,14 +644,14 @@ namespace cloudscribe.Core.Repositories.EF
         public void Map(EntityTypeBuilder<SiteRole> entity)
         {
             entity.ToTable("mp_Roles");
-            entity.HasKey(p => p.RoleId);
+            entity.HasKey(p => p.RoleGuid);
 
-            entity.Property(p => p.RoleId)
-            .UseSqlServerIdentityColumn<int>()
-            .ValueGeneratedOnAdd()
-            .ForSqlServerHasColumnName("RoleID")
-            // .Metadata.SentinelValue = -1
-            ;
+            //entity.Property(p => p.RoleId)
+            //.UseSqlServerIdentityColumn<int>()
+            //.ValueGeneratedOnAdd()
+            //.ForSqlServerHasColumnName("RoleID")
+            //// .Metadata.SentinelValue = -1
+            //;
 
             entity.Property(p => p.RoleGuid)
                .ForSqlServerHasColumnType("uniqueidentifier")
@@ -653,13 +662,13 @@ namespace cloudscribe.Core.Repositories.EF
             entity.HasIndex(p => p.RoleGuid)
             .IsUnique();
 
-            entity.Property(p => p.SiteId)
-            .HasColumnName("SiteID")
-            .ForSqlServerHasColumnType("int")
-            .IsRequired()
-            ;
+            //entity.Property(p => p.SiteId)
+            //.HasColumnName("SiteID")
+            //.ForSqlServerHasColumnType("int")
+            //.IsRequired()
+            //;
 
-            entity.HasIndex(p => p.SiteId);
+            //entity.HasIndex(p => p.SiteId);
 
             entity.Property(p => p.SiteGuid)
                .ForSqlServerHasColumnType("uniqueidentifier")
@@ -688,29 +697,33 @@ namespace cloudscribe.Core.Repositories.EF
             entity.HasKey(p => p.Id);
 
             entity.Property(p => p.Id)
-            .UseSqlServerIdentityColumn<int>()
-            .ValueGeneratedOnAdd()
-            // .Metadata.SentinelValue = -1
+               .ForSqlServerHasColumnType("uniqueidentifier")
+               .ForSqlServerHasDefaultValueSql("newid()")
+               .IsRequired()
             ;
 
-            entity.Property(p => p.UserId)
-            .HasMaxLength(128)
+            entity.Property(p => p.UserGuid)
+            .ForSqlServerHasColumnType("uniqueidentifier")
             .IsRequired()
             ;
 
-            entity.Property(p => p.SiteId)
-            .HasColumnName("SiteId")
-            .ForSqlServerHasColumnType("int")
-            .IsRequired()
-            ;
+            entity.HasIndex(p => p.UserGuid);
+
+            entity.Property(p => p.SiteGuid)
+             .ForSqlServerHasColumnType("uniqueidentifier")
+             .IsRequired()
+             ;
+
+            entity.HasIndex(p => p.SiteGuid);
 
             entity.Property(p => p.ClaimType)
             .HasMaxLength(255)
             ;
 
+            entity.HasIndex(p => p.ClaimType);
             // should we limit claim value?
 
-            entity.HasIndex(p => p.SiteId);
+
 
             // not mapped will result in nvarchar(max) I think
             //ClaimType
@@ -721,7 +734,7 @@ namespace cloudscribe.Core.Repositories.EF
         public void Map(EntityTypeBuilder<UserLogin> entity)
         {
             entity.ToTable("mp_UserLogins");
-            entity.HasKey(p => new { p.LoginProvider, p.ProviderKey, p.UserId });
+            entity.HasKey(p => new {p.UserGuid, p.SiteGuid, p.LoginProvider, p.ProviderKey });
 
             entity.Property(p => p.LoginProvider)
             .HasMaxLength(128)
@@ -731,17 +744,19 @@ namespace cloudscribe.Core.Repositories.EF
             .HasMaxLength(128)
             ;
 
-            entity.Property(p => p.UserId)
-            .HasMaxLength(128)
-            ;
-
-            entity.Property(p => p.SiteId)
-            .HasColumnName("SiteId")
-            .ForSqlServerHasColumnType("int")
+            entity.Property(p => p.UserGuid)
+            .ForSqlServerHasColumnType("uniqueidentifier")
             .IsRequired()
             ;
 
-            entity.HasIndex(p => p.SiteId);
+            entity.HasIndex(p => p.UserGuid);
+
+            entity.Property(p => p.SiteGuid)
+            .ForSqlServerHasColumnType("uniqueidentifier")
+            .IsRequired()
+            ;
+
+            entity.HasIndex(p => p.SiteGuid);
 
             entity.Property(p => p.ProviderDisplayName)
             .HasMaxLength(100)
@@ -985,38 +1000,39 @@ namespace cloudscribe.Core.Repositories.EF
             entity.HasKey(p => p.Id);
 
             entity.Property(p => p.Id)
-            //.HasSqlServerColumnType("int")
-            .UseSqlServerIdentityColumn()
-            .HasColumnName("ID")
+            
+            .ForSqlServerHasColumnType("uniqueidentifier")
             //.Metadata.SentinelValue = -1
             ;
 
-            entity.Property(p => p.UserId)
-            .ForSqlServerHasColumnType("int")
-            .HasColumnName("UserID")
-            .IsRequired()
-            ;
+            //entity.Property(p => p.UserId)
+            //.ForSqlServerHasColumnType("int")
+            //.HasColumnName("UserID")
+            //.IsRequired()
+            //;
 
             entity.Property(p => p.UserGuid)
             .ForSqlServerHasColumnType("uniqueidentifier")
             //.Metadata.SentinelValue = Guid.Empty
             ;
+            entity.HasIndex(p => p.UserGuid);
 
-            entity.Property(p => p.RoleId)
-            .ForSqlServerHasColumnType("int")
-            .HasColumnName("RoleID")
-           
-            .IsRequired()
-            ;
+            //entity.Property(p => p.RoleId)
+            //.ForSqlServerHasColumnType("int")
+            //.HasColumnName("RoleID")
+
+            //.IsRequired()
+            //;
 
             entity.Property(p => p.RoleGuid)
             .ForSqlServerHasColumnType("uniqueidentifier")
             //.Metadata.SentinelValue = Guid.Empty
             ;
+            entity.HasIndex(p => p.RoleGuid);
 
-           
-                
-            
+
+
+
         }
 
     }

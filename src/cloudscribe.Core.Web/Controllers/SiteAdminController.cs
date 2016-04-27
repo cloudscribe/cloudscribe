@@ -175,7 +175,7 @@ namespace cloudscribe.Core.Web.Controllers
                 model.HostName = selectedSite.PreferredHostName;
             }
             
-            model.Theme = selectedSite.Layout;
+            model.Theme = selectedSite.Theme;
             model.AvailableLayouts = layoutListBuilder.GetAvailableThemes();
             
             // can only delete from server admin site/cannot delete server admin site
@@ -329,7 +329,7 @@ namespace cloudscribe.Core.Web.Controllers
             selectedSite.SiteFolderName = model.SiteFolderName;
             selectedSite.SiteIsClosed = model.IsClosed;
             selectedSite.SiteIsClosedMessage = model.ClosedMessage;
-            selectedSite.Layout = model.Theme;
+            selectedSite.Theme = model.Theme;
             
             
             bool result = await siteManager.Save(selectedSite);

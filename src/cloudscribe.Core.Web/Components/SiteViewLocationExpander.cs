@@ -22,7 +22,7 @@ namespace cloudscribe.Core.Web.Components
         public void PopulateValues(ViewLocationExpanderContext context)
         {
             context.Values[THEME_KEY]
-                = context.ActionContext.HttpContext.GetTenant<SiteSettings>()?.Layout;
+                = context.ActionContext.HttpContext.GetTenant<SiteSettings>()?.Theme;
 
             context.Values[TENANT_KEY]
                 = "tenant-" + context.ActionContext.HttpContext.GetTenant<SiteSettings>()?.SiteId.ToInvariantString();

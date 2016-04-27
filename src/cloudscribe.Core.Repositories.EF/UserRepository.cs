@@ -1203,7 +1203,7 @@ namespace cloudscribe.Core.Repositories.EF
             }
             else
             {
-                bool tracking = dbContext.ChangeTracker.Entries<SiteRole>().Any(x => x.Entity.RoleId == siteRole.RoleId);
+                bool tracking = dbContext.ChangeTracker.Entries<SiteRole>().Any(x => x.Entity.RoleGuid == siteRole.RoleGuid);
                 if (!tracking)
                 {
                     dbContext.Roles.Update(siteRole);
@@ -1808,7 +1808,7 @@ namespace cloudscribe.Core.Repositories.EF
         {
             var query = from x in dbContext.Users
                         join y in dbContext.UserClaims
-                        on x.UserGuid == y.UserGuid
+                        on x.UserGuid equals y.UserGuid
                         where x.SiteGuid == siteGuid
                         orderby x.DisplayName
                         select x

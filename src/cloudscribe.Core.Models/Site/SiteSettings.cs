@@ -22,11 +22,11 @@ namespace cloudscribe.Core.Models
 
         
 
-        private string layout = string.Empty;
-        public string Layout
+        private string theme = string.Empty;
+        public string Theme
         {
-            get { return layout ?? string.Empty; }
-            set { layout = value; }
+            get { return theme ?? string.Empty; }
+            set { theme = value; }
         }
         
         
@@ -506,7 +506,7 @@ namespace cloudscribe.Core.Models
             s.GoogleClientSecret = i.GoogleClientSecret;
             s.IsDataProtected = i.IsDataProtected;
             s.IsServerAdminSite = i.IsServerAdminSite;
-            s.Layout = i.Layout;
+            s.Theme = i.Theme;
             s.LdapDomain = i.LdapDomain;
             s.LdapPort = i.LdapPort;
             s.LdapRootDN = i.LdapRootDN;

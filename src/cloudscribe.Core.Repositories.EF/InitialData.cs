@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-12-03
-// Last Modified:			2016-01-27
+// Last Modified:			2016-04-27
 // 
 
 
@@ -108,12 +108,12 @@ namespace cloudscribe.Core.Repositories.EF
             {
                 // create first site
                 SiteSettings newSite = new SiteSettings();
-                newSite.SiteId = 0;
+                //newSite.SiteId = 0;
                 newSite.SiteGuid = Guid.NewGuid();
                 newSite.SiteName = "Sample Site";
                 newSite.IsServerAdminSite = true;
 
-                newSite.Layout = "Default_Layout.cshtml";
+                newSite.Theme = "default";
 
                 newSite.AllowNewRegistration = true;
                 //newSite.AllowUserFullNameChange = false;
@@ -148,45 +148,45 @@ namespace cloudscribe.Core.Repositories.EF
             if (count == 0)
             {
                 SiteSettings site = await db.Sites.SingleOrDefaultAsync<SiteSettings>(
-                    s => s.SiteId > 0 && s.IsServerAdminSite == true);
+                    s => s.SiteGuid != Guid.Empty && s.IsServerAdminSite == true);
 
                 if(site != null)
                 {
                     SiteRole adminRole = new SiteRole();
-                    adminRole.RoleId = 0;
+                    //adminRole.RoleId = 0;
                     adminRole.RoleGuid = Guid.NewGuid();
                     adminRole.RoleName = "Admins";
                     adminRole.DisplayName = "Administrators";
-                    adminRole.SiteId = site.SiteId;
+                    //adminRole.SiteId = site.SiteId;
                     adminRole.SiteGuid = site.SiteGuid;
                     db.Roles.Add(adminRole);
                     //rowsAffected = await db.SaveChangesAsync();
                         
                     SiteRole roleAdminRole = new SiteRole();
-                    roleAdminRole.RoleId = 0;
+                    //roleAdminRole.RoleId = 0;
                     roleAdminRole.RoleGuid = Guid.NewGuid();
                     roleAdminRole.RoleName = "Role Admins";
                     roleAdminRole.DisplayName = "Role Administrators";
-                    roleAdminRole.SiteId = site.SiteId;
+                   // roleAdminRole.SiteId = site.SiteId;
                     roleAdminRole.SiteGuid = site.SiteGuid;
                     db.Roles.Add(roleAdminRole);
                     //rowsAffected = await db.SaveChangesAsync();
                     
                     SiteRole contentAdminRole = new SiteRole();
-                    contentAdminRole.RoleId = 0;
+                    //contentAdminRole.RoleId = 0;
                     contentAdminRole.RoleGuid = Guid.NewGuid();
                     contentAdminRole.RoleName = "Content Administrators";
                     contentAdminRole.DisplayName = "Content Administrators";
-                    contentAdminRole.SiteId = site.SiteId;
+                    //contentAdminRole.SiteId = site.SiteId;
                     contentAdminRole.SiteGuid = site.SiteGuid;
                     db.Roles.Add(contentAdminRole);
 
                     SiteRole authenticatedUserRole = new SiteRole();
-                    authenticatedUserRole.RoleId = 0;
+                    //authenticatedUserRole.RoleId = 0;
                     authenticatedUserRole.RoleGuid = Guid.NewGuid();
                     authenticatedUserRole.RoleName = "Authenticated Users";
                     authenticatedUserRole.DisplayName = "Authenticated Users";
-                    authenticatedUserRole.SiteId = site.SiteId;
+                    //authenticatedUserRole.SiteId = site.SiteId;
                     authenticatedUserRole.SiteGuid = site.SiteGuid;
                     db.Roles.Add(authenticatedUserRole);
 
@@ -204,24 +204,24 @@ namespace cloudscribe.Core.Repositories.EF
             if (count == 0)
             {
                 SiteSettings site = await db.Sites.SingleOrDefaultAsync<SiteSettings>(
-                    s => s.SiteId > 0 && s.IsServerAdminSite == true);
+                    s => s.SiteGuid != Guid.Empty && s.IsServerAdminSite == true);
                     
                 if (site != null)
                 {
                     SiteRole role
                         = await db.Roles.SingleOrDefaultAsync(
-                            x => x.SiteId == site.SiteId && x.RoleName == "Admins");
+                            x => x.SiteGuid == site.SiteGuid && x.RoleName == "Admins");
 
                     if(role != null)
                     {
                         SiteUser adminUser = new SiteUser();
-                        adminUser.SiteId = site.SiteId;
+                        //adminUser.SiteId = site.SiteId;
                         adminUser.SiteGuid = site.SiteGuid;
                         adminUser.Email = "admin@admin.com";
                         adminUser.NormalizedEmail = adminUser.Email;
                         adminUser.DisplayName = "Admin";
                         adminUser.UserName = "admin";
-                        adminUser.UserId = 0;
+                        //adminUser.UserId = 0;
                         adminUser.UserGuid = Guid.NewGuid();
 
                         adminUser.EmailConfirmed = true;
@@ -235,14 +235,14 @@ namespace cloudscribe.Core.Repositories.EF
                         
                         rowsAffected = await db.SaveChangesAsync();
                         
-                        if(rowsAffected > 0 && adminUser.UserId > -1)
+                        if(rowsAffected > 0 && adminUser.UserGuid != Guid.Empty)
                         {
                             UserRole ur = new UserRole();
-                            ur.Id = 0;
+                            ur.Id = Guid.NewGuid();
                             ur.RoleGuid = role.RoleGuid;
-                            ur.RoleId = role.RoleId;
+                            //ur.RoleId = role.RoleId;
                             ur.UserGuid = adminUser.UserGuid;
-                            ur.UserId = adminUser.UserId;
+                            //ur.UserId = adminUser.UserId;
 
                             db.UserRoles.Add(ur);
                             rowsAffected = await db.SaveChangesAsync();

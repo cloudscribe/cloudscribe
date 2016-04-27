@@ -51,7 +51,7 @@ namespace cloudscribe.Core.Models
         Task<bool> AddHost(Guid siteGuid, string hostName, CancellationToken cancellationToken);
         Task<bool> DeleteHost(Guid hostGuid, CancellationToken cancellationToken);
         Task<bool> DeleteHostsBySite(Guid siteGuid, CancellationToken cancellationToken);
-        Task<int> GetSiteIdByHostName(string hostName, CancellationToken cancellationToken);
+        //Task<int> GetSiteIdByHostName(string hostName, CancellationToken cancellationToken);
         List<ISiteHost> GetAllHostsNonAsync();
 
         // we don't need multiple folders to map to a single site

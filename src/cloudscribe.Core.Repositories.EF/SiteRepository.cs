@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2016-03-05
+// Last Modified:			2016-04-27
 // 
 
 
@@ -34,15 +34,15 @@ namespace cloudscribe.Core.Repositories.EF
             if(site == null) { return false; }
 
             SiteSettings siteSettings = SiteSettings.FromISiteSettings(site);
-            if (siteSettings.SiteId == -1)  // a newly created item
+            if (siteSettings.SiteGuid == Guid.Empty)  // a newly created item
             { 
-                siteSettings.SiteId = 0; //EF needs this to be 0 in order to generate it from the db identity 
-                if(siteSettings.SiteGuid == Guid.Empty) { siteSettings.SiteGuid = Guid.NewGuid(); }
+                //siteSettings.SiteId = 0; //EF needs this to be 0 in order to generate it from the db identity 
+                siteSettings.SiteGuid = Guid.NewGuid(); 
                 dbContext.Sites.Add(siteSettings);
             }
             else
             {
-                bool tracking = dbContext.ChangeTracker.Entries<SiteSettings>().Any(x => x.Entity.SiteId == siteSettings.SiteId);
+                bool tracking = dbContext.ChangeTracker.Entries<SiteSettings>().Any(x => x.Entity.SiteGuid == siteSettings.SiteGuid);
                 if (!tracking)
                 {
                     dbContext.Sites.Update(siteSettings);
@@ -56,9 +56,9 @@ namespace cloudscribe.Core.Repositories.EF
                 .ConfigureAwait(false);
 
             // update the original with the new keys after insert
-            if((site.SiteId == -1)&&(siteSettings != null))
+            if((site.SiteGuid == Guid.Empty)&&(siteSettings != null))
             {
-                site.SiteId = siteSettings.SiteId;
+                //site.SiteId = siteSettings.SiteId;
                 site.SiteGuid = siteSettings.SiteGuid;
             }
             
@@ -66,26 +66,26 @@ namespace cloudscribe.Core.Repositories.EF
             return rowsAffected > 0;
         }
 
-        public async Task<ISiteSettings> Fetch(
-            int siteId, 
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            SiteSettings item
-                = await dbContext.Sites.AsNoTracking().SingleOrDefaultAsync(
-                    x => x.SiteId.Equals(siteId)
-                    , cancellationToken)
-                    .ConfigureAwait(false);
+        //public async Task<ISiteSettings> Fetch(
+        //    int siteId, 
+        //    CancellationToken cancellationToken = default(CancellationToken))
+        //{
+        //    SiteSettings item
+        //        = await dbContext.Sites.AsNoTracking().SingleOrDefaultAsync(
+        //            x => x.SiteId.Equals(siteId)
+        //            , cancellationToken)
+        //            .ConfigureAwait(false);
 
-            return item;
-        }
+        //    return item;
+        //}
 
-        public ISiteSettings FetchNonAsync(int siteId)
-        {
-            SiteSettings item
-                = dbContext.Sites.AsNoTracking().SingleOrDefault(x => x.SiteId.Equals(siteId));
+        //public ISiteSettings FetchNonAsync(int siteId)
+        //{
+        //    SiteSettings item
+        //        = dbContext.Sites.AsNoTracking().SingleOrDefault(x => x.SiteId.Equals(siteId));
 
-            return item;
-        }
+        //    return item;
+        //}
 
         public async Task<ISiteSettings> Fetch(
             Guid siteGuid, 
@@ -121,7 +121,7 @@ namespace cloudscribe.Core.Repositories.EF
             {
                 var query = from s in dbContext.Sites
                             .Take(1)
-                            orderby s.SiteId ascending
+                            orderby s.CreatedUtc ascending
                             select s;
 
                 return await query
@@ -133,7 +133,7 @@ namespace cloudscribe.Core.Repositories.EF
             return await dbContext.Sites
                 .AsNoTracking()
                 .SingleOrDefaultAsync(
-                x => x.SiteId.Equals(host.SiteId)
+                x => x.SiteGuid.Equals(host.SiteGuid)
                 , cancellationToken)
                 .ConfigureAwait(false);
 
@@ -164,7 +164,7 @@ namespace cloudscribe.Core.Repositories.EF
             {
                 var query = from s in dbContext.Sites
                             .Take(1)
-                            orderby s.SiteId ascending
+                            orderby s.CreatedUtc ascending
                             select s;
 
                 site = await query
@@ -185,13 +185,13 @@ namespace cloudscribe.Core.Repositories.EF
             {
                 var query = from s in dbContext.Sites
                             .Take(1)
-                            orderby s.SiteId ascending
+                            orderby s.CreatedUtc ascending
                             select s;
 
                 return query.AsNoTracking().SingleOrDefault<SiteSettings>();
             }
 
-            return dbContext.Sites.AsNoTracking().SingleOrDefault(x => x.SiteId == host.SiteId);
+            return dbContext.Sites.AsNoTracking().SingleOrDefault(x => x.SiteGuid == host.SiteGuid);
 
         }
 
@@ -205,7 +205,7 @@ namespace cloudscribe.Core.Repositories.EF
             {
                 var query = from s in dbContext.Sites
                             .Take(1)
-                            orderby s.SiteId ascending
+                            orderby s.CreatedUtc ascending
                             select s;
 
                 site = query.AsNoTracking().FirstOrDefault<SiteSettings>();
@@ -216,12 +216,12 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public async Task<bool> Delete(
-            int siteId, 
+            Guid siteGuid, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
             var result = false;
             var itemToRemove = await dbContext.Sites.SingleOrDefaultAsync(
-                x => x.SiteId == siteId
+                x => x.SiteGuid == siteGuid
                 , cancellationToken)
                 .ConfigureAwait(false);
 
@@ -249,7 +249,8 @@ namespace cloudscribe.Core.Repositories.EF
             var query = from x in dbContext.Sites
                         orderby x.SiteName ascending
                         select new SiteInfo
-                        { SiteId = x.SiteId,
+                        {
+                            //SiteId = x.SiteId,
                           SiteGuid = x.SiteGuid,
                           IsServerAdminSite = x.IsServerAdminSite,
                           PreferredHostName = x.PreferredHostName,
@@ -267,16 +268,16 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public Task<int> CountOtherSites(
-            int currentSiteId, 
+            Guid currentSiteGuid, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
             return dbContext.Sites.CountAsync<SiteSettings>(
-                x =>  x.SiteId != currentSiteId
+                x =>  x.SiteGuid != currentSiteGuid
                 , cancellationToken);
         }
 
         public async Task<List<ISiteInfo>> GetPageOtherSites(
-            int currentSiteId,
+            Guid currentSiteGuid,
             int pageNumber,
             int pageSize,
             CancellationToken cancellationToken = default(CancellationToken))
@@ -285,12 +286,12 @@ namespace cloudscribe.Core.Repositories.EF
 
             var query = from x in dbContext.Sites
                         
-                        where (x.SiteId != currentSiteId)
+                        where (x.SiteGuid != currentSiteGuid)
                         orderby x.SiteName ascending
                         //select x;
                         select new SiteInfo
                         {
-                            SiteId = x.SiteId,
+                            //SiteId = x.SiteId,
                             SiteGuid = x.SiteGuid,
                             IsServerAdminSite = x.IsServerAdminSite,
                             PreferredHostName = x.PreferredHostName,
@@ -363,11 +364,11 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public async Task<List<ISiteHost>> GetSiteHosts(
-            int siteId, 
+            Guid siteGuid, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
             var query = from x in dbContext.SiteHosts
-                        where x.SiteId == siteId
+                        where x.SiteGuid == siteGuid
                         orderby x.HostName ascending
                         select x
                         ;
@@ -396,14 +397,13 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public async Task<bool> AddHost(
-            Guid siteGuid, 
-            int siteId, 
+            Guid siteGuid,  
             string hostName,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             SiteHost host = new SiteHost();
             host.SiteGuid = siteGuid;
-            host.SiteId = siteId;
+            //host.SiteId = siteId;
             host.HostName = hostName;
 
             dbContext.SiteHosts.Add(host);
@@ -415,11 +415,11 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public async Task<bool> DeleteHost(
-            int hostId, 
+            Guid hostGuid, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
             var result = false;
-            var itemToRemove = await dbContext.SiteHosts.SingleOrDefaultAsync(x => x.HostId == hostId, cancellationToken);
+            var itemToRemove = await dbContext.SiteHosts.SingleOrDefaultAsync(x => x.HostGuid == hostGuid, cancellationToken);
             if (itemToRemove != null)
             {
                 dbContext.SiteHosts.Remove(itemToRemove);
@@ -434,11 +434,11 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public async Task<bool> DeleteHostsBySite(
-            int siteId, 
+            Guid siteGuid, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
             var result = false;
-            var query = from x in  dbContext.SiteHosts.Where(x => x.SiteId == siteId)
+            var query = from x in  dbContext.SiteHosts.Where(x => x.SiteGuid == siteGuid)
                 select x;
            
             dbContext.SiteHosts.RemoveRange(query);
@@ -452,23 +452,23 @@ namespace cloudscribe.Core.Repositories.EF
 
         }
 
-        public async Task<int> GetSiteIdByHostName(
-            string hostName, 
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            var query = from x in dbContext.SiteHosts
-                        where x.HostName == hostName
-                        orderby x.HostName ascending
-                        select x
-                        ;
+        //public async Task<int> GetSiteIdByHostName(
+        //    string hostName, 
+        //    CancellationToken cancellationToken = default(CancellationToken))
+        //{
+        //    var query = from x in dbContext.SiteHosts
+        //                where x.HostName == hostName
+        //                orderby x.HostName ascending
+        //                select x
+        //                ;
 
-            var host = await query.SingleOrDefaultAsync<SiteHost>(cancellationToken)
-                .ConfigureAwait(false);
+        //    var host = await query.SingleOrDefaultAsync<SiteHost>(cancellationToken)
+        //        .ConfigureAwait(false);
 
-            if(host != null) { return host.SiteId; }
+        //    if(host != null) { return host.SiteId; }
 
-            return -1; // not found
-        }
+        //    return -1; // not found
+        //}
 
         //public async Task<List<ISiteFolder>> GetSiteFoldersBySite(
         //    Guid siteGuid, 

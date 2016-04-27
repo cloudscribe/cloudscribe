@@ -232,7 +232,7 @@ namespace cloudscribe.Core.Models.DataExtensions
             site.SiteGuid = new Guid(reader["SiteGuid"].ToString());
             
             site.SiteName = reader["SiteName"].ToString();
-            site.Layout = reader["Skin"].ToString();
+            site.Theme = reader["Skin"].ToString();
             site.AllowNewRegistration = Convert.ToBoolean(reader["AllowNewRegistration"]);
             site.RequireConfirmedEmail = Convert.ToBoolean(reader["UseSecureRegistration"]);
             

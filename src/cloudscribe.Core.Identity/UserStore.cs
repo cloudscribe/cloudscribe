@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-22
-// Last Modified:		    2016-02-04
+// Last Modified:		    2016-04-27
 // 
 
 using cloudscribe.Core.Models;
@@ -897,14 +897,14 @@ namespace cloudscribe.Core.Identity
                 throw new ArgumentNullException("user");
             }
 
-            int siteId = siteSettings.SiteId;
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+            Guid siteGuid = siteSettings.SiteGuid;
+            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
 
-            await repo.DeleteClaimByUser(siteId, user.Id, claim.Type, cancellationToken);
+            await repo.DeleteClaimByUser(siteGuid, user.UserGuid, claim.Type, cancellationToken);
 
             UserClaim userClaim = new UserClaim();
-            userClaim.SiteId = siteId;
-            userClaim.UserId = user.UserGuid.ToString();
+            userClaim.SiteGuid = siteGuid;
+            userClaim.UserGuid = user.UserGuid;
             userClaim.ClaimType = newClaim.Type;
             userClaim.ClaimValue = newClaim.Value;
             cancellationToken.ThrowIfCancellationRequested();

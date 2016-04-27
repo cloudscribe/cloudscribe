@@ -206,7 +206,7 @@ namespace cloudscribe.Core.Web.Components
 
             //SiteSettings newSite = new SiteSettings();
             
-            newSite.Layout = setupOptions.DefaultLayout;
+            newSite.Theme = setupOptions.DefaultLayout;
             // TODO: more configurable options?
             
             
