@@ -37,6 +37,7 @@ using cloudscribe.Web.Common.Middleware;
 using cloudscribe.Messaging;
 using cloudscribe.Web.Navigation;
 using cloudscribe.Core.Identity;
+using cloudscribe.Core.Web.Middleware;
 //using cloudscribe.Core.Identity.OAuth;
 
 namespace example.WebApp
@@ -67,7 +68,19 @@ namespace example.WebApp
             IOptions<MultiTenantOptions> multiTenantOptions,
             IConfigurationRoot Configuration)
         {
-            app.UseRequestLogger();
+            //app.UseCommonExceptionHandler();
+            //Func<HttpContext> handler = delegate (HttpContext context)
+            //{
+            //    //if (logLevel < minimumLevel) { return false; }
+            //    //if (excludedLoggers.Contains(loggerName)) { return false; }
+
+            //    //return true;
+            //};
+           
+
+
+
+            
 
             app.UseMultitenancy<SiteSettings>();
 

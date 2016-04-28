@@ -15,6 +15,29 @@ using Microsoft.Net.Http.Headers;
 
 namespace cloudscribe.Core.Web.Middleware
 {
+
+    public static class MiddlewareExtensions
+    {
+        public static IApplicationBuilder UseCommonExceptionHandler(this IApplicationBuilder builder)
+        {
+            return builder.UseMiddleware<CommonExceptionHandlerMiddleware>();
+        }
+
+        public static IApplicationBuilder UseCommonExceptionHandler(this IApplicationBuilder app, ExceptionHandlerOptions options)
+        {
+            if (app == null)
+            {
+                throw new ArgumentNullException(nameof(app));
+            }
+            if (options == null)
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
+
+            return app.UseMiddleware<CommonExceptionHandlerMiddleware>(options);
+        }
+    }
+
     public class ExceptionHandlerOptions
     {
         public PathString ExceptionHandlingPath { get; set; }
@@ -64,7 +87,7 @@ namespace cloudscribe.Core.Web.Middleware
             }
             catch (Exception ex)
             {
-                _logger.LogError(0, ex, "An unhandled exception has occurred: " + ex.Message);
+                _logger.LogError("Processing Exception: ", ex);
                 // We can't do anything if the response has already started, just abort.
                 if (context.Response.HasStarted)
                 {
@@ -80,6 +103,20 @@ namespace cloudscribe.Core.Web.Middleware
                 try
                 {
                     context.Response.Clear();
+
+                    //if (ex.Source == "Microsoft.AspNet.Http")
+                    //{
+                    //    foreach (var c in context.Request.Cookies)
+                    //    {
+                    //        context.Response.Cookies.Delete(c.Key);
+
+                    //    }
+                    //    context.Response.Redirect("/home/about");
+                    //    //await _next(context);
+                    //    return;
+
+                    //}
+
                     var exceptionHandlerFeature = new ExceptionHandlerFeature()
                     {
                         Error = ex,
@@ -87,6 +124,8 @@ namespace cloudscribe.Core.Web.Middleware
                     context.Features.Set<IExceptionHandlerFeature>(exceptionHandlerFeature);
                     context.Response.StatusCode = 500;
                     context.Response.OnStarting(_clearCacheHeadersDelegate, context.Response);
+
+                    
 
                     await _options.ExceptionHandler(context);
 

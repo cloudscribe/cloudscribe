@@ -38,6 +38,7 @@ using cloudscribe.Core.Models;
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Logging.Web;
+using cloudscribe.Core.Web.Middleware;
 using SaasKit.Multitenancy;
 //using Autofac;
 //using Autofac.Framework.DependencyInjection;
@@ -350,6 +351,8 @@ namespace example.WebApp
                 //app.UseStatusCodePagesWithReExecute("/errors/{0}");
                 //app.UseStatusCodePagesWithReExecute("/error/{0}");
             }
+
+            //app.UseCommonExceptionHandler();
 
             // Add the platform handler to the request pipeline.
             //app.UseIISPlatformHandler();
