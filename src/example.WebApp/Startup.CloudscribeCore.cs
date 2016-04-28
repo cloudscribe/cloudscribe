@@ -33,6 +33,7 @@ using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Geography;
 using cloudscribe.Core.Web;
 using cloudscribe.Core.Web.Components;
+using cloudscribe.Web.Common.Middleware;
 using cloudscribe.Messaging;
 using cloudscribe.Web.Navigation;
 using cloudscribe.Core.Identity;
@@ -66,6 +67,8 @@ namespace example.WebApp
             IOptions<MultiTenantOptions> multiTenantOptions,
             IConfigurationRoot Configuration)
         {
+            app.UseRequestLogger();
+
             app.UseMultitenancy<SiteSettings>();
 
             // https://github.com/saaskit/saaskit/blob/master/src/SaasKit.Multitenancy/MultitenancyApplicationBuilderExtensions.cs
@@ -213,6 +216,8 @@ namespace example.WebApp
 
 
             });
+
+            //app.UseRequestLogger();
 
 
             return app;

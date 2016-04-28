@@ -534,7 +534,7 @@ namespace cloudscribe.Core.Models
             s.SignEmailWithDkim = i.SignEmailWithDkim;
             s.SiteFolderName = i.SiteFolderName;
             s.SiteGuid = i.SiteGuid;
-            s.TenantId = i.TenantId;
+            s.AliasId = i.AliasId;
             s.SiteIsClosed = i.SiteIsClosed;
             s.SiteIsClosedMessage = i.SiteIsClosedMessage;
             s.SiteName = i.SiteName;

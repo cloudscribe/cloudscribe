@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2016-04-27
+// Last Modified:			2016-04-28
 // 
 
 using System;
@@ -21,18 +21,18 @@ namespace cloudscribe.Core.Models
         //public int SiteId { get; set; } = -1;
         public Guid SiteGuid { get; set; } = Guid.Empty;
 
-        private string tenantId = null;
+        private string aliasId = null;
         /// <summary>
         /// an optional identifier for the site, should be unique per site
-        /// can be used instead of guid as folder name for tenant themes
+        /// can be used instead of guid as folder name for tenant files/themes
         /// </summary>
-        public string TenantId
+        public string AliasId
         {
-            get { return tenantId ?? SiteGuid.ToString(); }
+            get { return aliasId ?? SiteGuid.ToString(); }
             set {
                 if (value != SiteGuid.ToString())
                 {
-                    tenantId = value;
+                    aliasId = value;
                 }  
             }
         }

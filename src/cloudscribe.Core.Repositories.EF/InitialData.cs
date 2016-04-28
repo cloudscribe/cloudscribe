@@ -110,6 +110,7 @@ namespace cloudscribe.Core.Repositories.EF
                 SiteSettings newSite = new SiteSettings();
                 //newSite.SiteId = 0;
                 newSite.SiteGuid = Guid.NewGuid();
+                newSite.AliasId = "tenant-" + (count + 1).ToInvariantString();
                 newSite.SiteName = "Sample Site";
                 newSite.IsServerAdminSite = true;
 
@@ -238,7 +239,7 @@ namespace cloudscribe.Core.Repositories.EF
                         if(rowsAffected > 0 && adminUser.UserGuid != Guid.Empty)
                         {
                             UserRole ur = new UserRole();
-                            ur.Id = Guid.NewGuid();
+                            //ur.Id = Guid.NewGuid();
                             ur.RoleGuid = role.RoleGuid;
                             //ur.RoleId = role.RoleId;
                             ur.UserGuid = adminUser.UserGuid;

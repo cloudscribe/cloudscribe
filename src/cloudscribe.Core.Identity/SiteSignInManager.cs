@@ -107,9 +107,33 @@ namespace cloudscribe.Core.Identity
             //await context.Authentication.SignOutAsync(AuthenticationScheme.Application);
             //await context.Authentication.SignOutAsync(AuthenticationScheme.External);
             //await context.Authentication.SignOutAsync(AuthenticationScheme.TwoFactorUserId);
-            await context.Authentication.SignOutAsync(Options.Cookies.ApplicationCookie.AuthenticationScheme);
-            await context.Authentication.SignOutAsync(Options.Cookies.ExternalCookie.AuthenticationScheme);
-            await context.Authentication.SignOutAsync(Options.Cookies.TwoFactorUserIdCookie.AuthenticationScheme);
+            try
+            {
+                await context.Authentication.SignOutAsync(Options.Cookies.ApplicationCookie.AuthenticationScheme);
+            }
+            catch(InvalidOperationException ex)
+            {
+                log.LogError("sign out error", ex);
+            }
+            try
+            {
+                await context.Authentication.SignOutAsync(Options.Cookies.ExternalCookie.AuthenticationScheme);
+            }
+            catch (InvalidOperationException ex)
+            {
+                log.LogError("", ex);
+            }
+            try
+            {
+                await context.Authentication.SignOutAsync(Options.Cookies.TwoFactorUserIdCookie.AuthenticationScheme);
+            }
+            catch (InvalidOperationException ex)
+            {
+                log.LogError("", ex);
+            }
+            
+            
+            
         }
 
         public override async Task<bool> IsTwoFactorClientRememberedAsync(TUser user)

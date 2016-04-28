@@ -24,7 +24,7 @@ namespace cloudscribe.Core.Web.Components
             context.Values[THEME_KEY]
                 = context.ActionContext.HttpContext.GetTenant<SiteSettings>()?.Theme;
 
-            var tenantKey = context.ActionContext.HttpContext.GetTenant<SiteSettings>()?.TenantId;
+            var tenantKey = context.ActionContext.HttpContext.GetTenant<SiteSettings>()?.AliasId;
             //if(string.IsNullOrWhiteSpace(tenantKey)) tenantKey = "tenant-" + context.ActionContext.HttpContext.GetTenant<SiteSettings>()?.SiteGuid.ToString();
 
             context.Values[TENANT_KEY] = tenantKey;

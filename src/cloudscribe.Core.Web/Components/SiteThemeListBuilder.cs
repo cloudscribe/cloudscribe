@@ -72,7 +72,7 @@ namespace cloudscribe.Core.Web.Components
             var tenant = contextAccessor.HttpContext.GetTenant<SiteSettings>();
             // TODO: more configurable?
             return appBasePath + "/tenantfiles/" 
-                + tenant.TenantId
+                + tenant.AliasId
                 + "/themes/".Replace("/", Path.DirectorySeparatorChar.ToString());
         }
 

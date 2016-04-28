@@ -72,7 +72,7 @@ namespace cloudscribe.Core.Repositories.EF
             ;
 
 
-            entity.Property(p => p.TenantId)
+            entity.Property(p => p.AliasId)
             .HasMaxLength(36)
             ;
 
@@ -496,6 +496,13 @@ namespace cloudscribe.Core.Repositories.EF
         public void Map(EntityTypeBuilder<SiteUser> entity)
         {
             entity.ToTable("mp_Users");
+
+            entity.Property(p => p.UserGuid)
+               .ForSqlServerHasColumnType("uniqueidentifier")
+               .ForSqlServerHasDefaultValueSql("newid()")
+               .IsRequired()
+               ;
+
             entity.HasKey(p => p.UserGuid);
             // entity.HasKey(p => p.UserId);
 
@@ -506,11 +513,7 @@ namespace cloudscribe.Core.Repositories.EF
             //// .Metadata.SentinelValue = -1
             // ;
 
-            entity.Property(p => p.UserGuid)
-               .ForSqlServerHasColumnType("uniqueidentifier")
-               .ForSqlServerHasDefaultValueSql("newid()")
-               .IsRequired()
-               ;
+            
 
             //entity.HasIndex(p => p.UserGuid)
             //.IsUnique();
@@ -1000,38 +1003,24 @@ namespace cloudscribe.Core.Repositories.EF
         public void Map(EntityTypeBuilder<UserRole> entity)
         {
             entity.ToTable("mp_UserRoles");
-            entity.HasKey(p => p.Id);
-
-            entity.Property(p => p.Id)
-            
-            .ForSqlServerHasColumnType("uniqueidentifier")
-            //.Metadata.SentinelValue = -1
-            ;
-
-            //entity.Property(p => p.UserId)
-            //.ForSqlServerHasColumnType("int")
-            //.HasColumnName("UserID")
-            //.IsRequired()
-            //;
 
             entity.Property(p => p.UserGuid)
             .ForSqlServerHasColumnType("uniqueidentifier")
-            //.Metadata.SentinelValue = Guid.Empty
+            
             ;
             entity.HasIndex(p => p.UserGuid);
 
-            //entity.Property(p => p.RoleId)
-            //.ForSqlServerHasColumnType("int")
-            //.HasColumnName("RoleID")
-
-            //.IsRequired()
-            //;
-
             entity.Property(p => p.RoleGuid)
             .ForSqlServerHasColumnType("uniqueidentifier")
-            //.Metadata.SentinelValue = Guid.Empty
+            
             ;
             entity.HasIndex(p => p.RoleGuid);
+
+            entity.HasKey(p => new { p.UserGuid, p.RoleGuid });
+
+            
+
+            
 
 
 

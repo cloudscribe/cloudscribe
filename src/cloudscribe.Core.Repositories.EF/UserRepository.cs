@@ -1251,6 +1251,7 @@ namespace cloudscribe.Core.Repositories.EF
             Guid siteGuid, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
+            
             var result = false;
             var query = from r in dbContext.Roles.Where(x => x.SiteGuid == siteGuid)
                         select r;
@@ -1265,19 +1266,14 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public async Task<bool> AddUserToRole(
-           // int roleId,
             Guid roleGuid,
-            //int userId,
             Guid userGuid,
             CancellationToken cancellationToken = default(CancellationToken)
             )
         {
             UserRole ur = new UserRole();
-            ur.Id = Guid.NewGuid();
             ur.RoleGuid = roleGuid;
-            //ur.RoleId = roleId;
             ur.UserGuid = userGuid;
-            //ur.UserId = userId;
 
             dbContext.UserRoles.Add(ur);
             int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
@@ -1294,8 +1290,8 @@ namespace cloudscribe.Core.Repositories.EF
         {
             var result = false;
             var itemToRemove = await dbContext.UserRoles.SingleOrDefaultAsync(
-                x => x.RoleGuid == roleGuid && x.UserGuid == userGuid, 
-                cancellationToken)
+                x => x.UserGuid == userGuid && x.RoleGuid == roleGuid 
+                , cancellationToken)
                 .ConfigureAwait(false);
 
             if (itemToRemove != null)

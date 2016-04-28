@@ -357,12 +357,12 @@ namespace example.WebApp
         {
             // Services used by identity
             services.AddOptions();
-            services.AddAuthentication(options =>
-            {
-                // This is the Default value for ExternalCookieAuthenticationScheme
-                //options.SignInScheme = new IdentityCookieOptions().ExternalCookieAuthenticationScheme;
-                options.SignInScheme = AuthenticationScheme.External;
-            });
+            //services.AddAuthentication(options =>
+            //{
+            //    // This is the Default value for ExternalCookieAuthenticationScheme
+            //    //options.SignInScheme = new IdentityCookieOptions().ExternalCookieAuthenticationScheme;
+            //    options.SignInScheme = AuthenticationScheme.External;
+            //});
 
             services.TryAddSingleton<IdentityMarkerService>();
 
