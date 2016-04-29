@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-17
-// Last Modified:			2015-12-27
+// Last Modified:			2016-04-29
 // 
 
 using System;
@@ -47,6 +47,12 @@ namespace cloudscribe.Core.Repositories.EF
     /// </summary>
     public class SqlServerCoreModelMapper : ICoreModelMapper
     {
+        public SqlServerCoreModelMapper(CoreTableNames tableNames = null)
+        {
+            this.tableNames = tableNames ?? new CoreTableNames();
+        }
+
+        private CoreTableNames tableNames;
 
         public void Map(EntityTypeBuilder<SiteSettings> entity)
         {
@@ -54,7 +60,8 @@ namespace cloudscribe.Core.Repositories.EF
             // one could change from cloudscribe.Core.Repositories.MSSQL
             // to cloudscribe.Core.Repositories.EF or vice versa
 
-            entity.ToTable("mp_Sites");
+            //entity.ToTable("mp_Sites");
+            entity.ToTable(tableNames.TablePrefix + tableNames.SitesTableName);
             entity.HasKey(p => p.SiteGuid);
 
             //entity.Property(p => p.SiteId)
@@ -432,7 +439,7 @@ namespace cloudscribe.Core.Repositories.EF
 
         public void Map(EntityTypeBuilder<SiteHost> entity)
         {
-            entity.ToTable("mp_SiteHosts");
+            entity.ToTable(tableNames.TablePrefix + tableNames.SiteHostsTableName);
             entity.HasKey(p => p.HostGuid);
 
             entity.Property(p => p.HostGuid)
@@ -495,7 +502,7 @@ namespace cloudscribe.Core.Repositories.EF
 
         public void Map(EntityTypeBuilder<SiteUser> entity)
         {
-            entity.ToTable("mp_Users");
+            entity.ToTable(tableNames.TablePrefix + tableNames.UsersTableName);
 
             entity.Property(p => p.UserGuid)
                .ForSqlServerHasColumnType("uniqueidentifier")
@@ -649,7 +656,7 @@ namespace cloudscribe.Core.Repositories.EF
 
         public void Map(EntityTypeBuilder<SiteRole> entity)
         {
-            entity.ToTable("mp_Roles");
+            entity.ToTable(tableNames.TablePrefix + tableNames.RolesTableName);
             entity.HasKey(p => p.RoleGuid);
 
             //entity.Property(p => p.RoleId)
@@ -699,7 +706,7 @@ namespace cloudscribe.Core.Repositories.EF
 
         public void Map(EntityTypeBuilder<UserClaim> entity)
         {
-            entity.ToTable("mp_UserClaims");
+            entity.ToTable(tableNames.TablePrefix + tableNames.UserClaimsTableName);
             entity.HasKey(p => p.Id);
 
             entity.Property(p => p.Id)
@@ -739,7 +746,7 @@ namespace cloudscribe.Core.Repositories.EF
 
         public void Map(EntityTypeBuilder<UserLogin> entity)
         {
-            entity.ToTable("mp_UserLogins");
+            entity.ToTable(tableNames.TablePrefix + tableNames.UserLoginsTableName);
             entity.HasKey(p => new {p.UserGuid, p.SiteGuid, p.LoginProvider, p.ProviderKey });
 
             entity.Property(p => p.LoginProvider)
@@ -772,7 +779,7 @@ namespace cloudscribe.Core.Repositories.EF
 
         public void Map(EntityTypeBuilder<GeoCountry> entity)
         {
-            entity.ToTable("mp_GeoCountry");
+            entity.ToTable(tableNames.TablePrefix + tableNames.GeoCountryTableName);
             entity.HasKey(p => p.Guid);
 
             entity.Property(p => p.Guid)
@@ -802,7 +809,7 @@ namespace cloudscribe.Core.Repositories.EF
 
         public void Map(EntityTypeBuilder<GeoZone> entity)
         {
-            entity.ToTable("mp_GeoZone");
+            entity.ToTable(tableNames.TablePrefix + tableNames.GeoZoneTableName);
             entity.HasKey(p => p.Guid);
 
             entity.Property(p => p.Guid)
@@ -833,7 +840,7 @@ namespace cloudscribe.Core.Repositories.EF
 
         public void Map(EntityTypeBuilder<Currency> entity)
         {
-            entity.ToTable("mp_Currency");
+            entity.ToTable(tableNames.TablePrefix + tableNames.CurrencyTableName);
             entity.HasKey(p => p.Guid);
 
             entity.Property(p => p.Guid)
@@ -886,7 +893,7 @@ namespace cloudscribe.Core.Repositories.EF
 
         public void Map(EntityTypeBuilder<Language> entity)
         {
-            entity.ToTable("mp_Language");
+            entity.ToTable(tableNames.TablePrefix + tableNames.LanguageTableName);
             entity.HasKey(p => p.Guid);
 
             entity.Property(p => p.Guid)
@@ -912,13 +919,10 @@ namespace cloudscribe.Core.Repositories.EF
             ;
 
         }
-
-
         
-
         public void Map(EntityTypeBuilder<UserLocation> entity)
         {
-            entity.ToTable("mp_UserLocation");
+            entity.ToTable(tableNames.TablePrefix + tableNames.UserLocationTableName);
             entity.HasKey(p => p.RowId);
 
             entity.Property(p => p.RowId)
@@ -996,13 +1000,10 @@ namespace cloudscribe.Core.Repositories.EF
             //entity.HasIndex(p => p.Longitude);
 
         }
-
-
-        // this entity is not part of models is just needed for a join table
-
+        
         public void Map(EntityTypeBuilder<UserRole> entity)
         {
-            entity.ToTable("mp_UserRoles");
+            entity.ToTable(tableNames.TablePrefix + tableNames.UserRolesTableName);
 
             entity.Property(p => p.UserGuid)
             .ForSqlServerHasColumnType("uniqueidentifier")

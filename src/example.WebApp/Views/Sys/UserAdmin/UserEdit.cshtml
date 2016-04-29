@@ -13,7 +13,7 @@
 <form class="form-horizontal" role="form" asp-controller="UserAdmin" asp-action="UserEdit">
     <input asp-for="UserGuid" type="hidden" />
     <input asp-for="SiteGuid" type="hidden" />
-    @if (Model.UserId > -1)
+    @if (Model.UserGuid != Guid.Empty)
     {
     <div class="form-group">
         <label asp-for="UserGuid" class="col-md-2 control-label"></label>

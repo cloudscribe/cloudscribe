@@ -67,7 +67,7 @@ namespace cloudscribe.Core.Web.Components
             var cacheEntryOptions = new MemoryCacheEntryOptions()
                 .SetAbsoluteExpiration(cachingOptions.FolderListCacheDuration);
 
-            log.LogDebug("Caching folder lsit with keys \"{cacheKey}\".", listCacheKey);
+            log.LogDebug("Caching folder list with keys \"{cacheKey}\".", listCacheKey);
             cache.Set(listCacheKey, result, cacheEntryOptions);
 
             return result;

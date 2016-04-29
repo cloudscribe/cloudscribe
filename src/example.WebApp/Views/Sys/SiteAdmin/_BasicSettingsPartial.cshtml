@@ -23,6 +23,13 @@
                 <span asp-validation-for="SiteName" class="text-danger"></span> 
             </div>
         </div>
+    <div class="form-group">
+        <label asp-for="AliasId" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="AliasId" class="form-control" />
+            <span asp-validation-for="AliasId" class="text-danger"></span>
+        </div>
+    </div>
         @if (useFolderTenants)
         {
             <div class="form-group">

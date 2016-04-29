@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2016-04-27
+// Last Modified:			2016-04-29
 // 
 
 using cloudscribe.Core.Models;
@@ -160,6 +160,10 @@ namespace cloudscribe.Core.Web.Controllers
             
             model.SiteGuid = selectedSite.SiteGuid;
             model.SiteName = selectedSite.SiteName;
+            if(selectedSite.AliasId != selectedSite.SiteGuid.ToString())
+            {
+                model.AliasId = selectedSite.AliasId;
+            }
             
             model.TimeZoneId = selectedSite.TimeZoneId;
             
@@ -322,7 +326,8 @@ namespace cloudscribe.Core.Web.Controllers
                 selectedSite.PreferredHostName = model.HostName;
 
             }
-            
+
+            if (model.AliasId.Length > 0) selectedSite.AliasId = model.AliasId;
             selectedSite.SiteName = model.SiteName;
             selectedSite.TimeZoneId = model.TimeZoneId;
             selectedSite.SiteFolderName = model.SiteFolderName;
@@ -456,9 +461,9 @@ namespace cloudscribe.Core.Web.Controllers
 
             // only the first site created by setup page should be a server admin site
             newSite.IsServerAdminSite = false;
-
             newSite.SiteName = model.SiteName;
-            
+            if (model.AliasId.Length > 0) newSite.AliasId = model.AliasId;
+
             if (multiTenantOptions.Mode == MultiTenantMode.FolderName)
             {
                 newSite.SiteFolderName = model.SiteFolderName;
@@ -507,6 +512,17 @@ namespace cloudscribe.Core.Web.Controllers
 
             return RedirectToAction("SiteList", new { pageNumber = model.ReturnPageNumber });
 
+        }
+
+        public async Task<JsonResult> AliasIdAvailable(Guid? siteGuid, string aliasId)
+        {
+            
+            Guid selectedSiteGuid = Guid.Empty;
+            if (siteGuid.HasValue) { selectedSiteGuid = siteGuid.Value; }
+            bool available = await siteManager.AliasIdIsAvailable(selectedSiteGuid, aliasId);
+
+
+            return Json(available);
         }
 
         [HttpGet]

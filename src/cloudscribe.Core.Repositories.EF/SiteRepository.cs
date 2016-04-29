@@ -163,11 +163,10 @@ namespace cloudscribe.Core.Repositories.EF
             if (site == null)
             {
                 var query = from s in dbContext.Sites
-                            .Take(1)
                             orderby s.CreatedUtc ascending
                             select s;
 
-                site = await query
+                site = await query.Take(1)
                     .AsNoTracking()
                     .SingleOrDefaultAsync<SiteSettings>(cancellationToken)
                     .ConfigureAwait(false);

@@ -1,6 +1,25 @@
 
 # An interesting exception that should probably be handled by application code
 
+## Solution - clear all the cookies
+
+closing the browser session should fix it
+
+I did proof of concept of my diagnosis by writing CommonExceptionHandlerMiddleware
+
+if (ex.Source == "Microsoft.AspNet.Http")
+{
+	foreach (var c in context.Request.Cookies)
+	{
+		context.Response.Cookies.Delete(c.Key);
+
+	}
+	context.Response.Redirect("/home/about");
+	//await _next(context);
+	return;
+
+}
+
 ## Steps to produce
 
 *  run example.webapp initial run will auto create the db and an admin user

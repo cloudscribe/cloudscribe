@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-22
-// Last Modified:			2016-04-27
+// Last Modified:			2016-04-29
 // 
 
 using cloudscribe.Core.Models;
@@ -138,6 +138,27 @@ namespace cloudscribe.Core.Web.Components
             if(matchingSite.SiteGuid == requestingSite.SiteGuid) { return true; }
 
             return false;
+
+        }
+
+        public async Task<bool> AliasIdIsAvailable(Guid requestingSiteGuid, string requestedAliasId)
+        {
+            if (string.IsNullOrWhiteSpace(requestedAliasId)) return false;
+            if (requestedAliasId.Length > 36) return false;
+            var list = await siteRepo.GetList(CancellationToken).ConfigureAwait(false);
+            
+            foreach(var s in list)
+            {
+                if(s.AliasId == requestedAliasId)
+                {
+                    if ((requestingSiteGuid == s.SiteGuid)) return true;
+
+                    return false;
+
+                }
+            }
+
+            return true;
 
         }
 

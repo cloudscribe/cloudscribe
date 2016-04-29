@@ -25,6 +25,10 @@ namespace cloudscribe.Core.Models
         /// <summary>
         /// an optional identifier for the site, should be unique per site
         /// can be used instead of guid as folder name for tenant files/themes
+        /// therefore no spaces and use only chars that are reasonable for a folder name
+        /// main purpose is so we don't have to use an ugly guid string for folder name for
+        /// site specific files
+        /// if not specificed then the SiteGuid.ToString wil be used
         /// </summary>
         public string AliasId
         {
