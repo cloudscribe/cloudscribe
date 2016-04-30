@@ -29,6 +29,7 @@ namespace cloudscribe.Core.Identity
         
         public SiteUserManager(
             SiteSettings currentSite,
+            IIdentityOptionsResolver identityResolver,
             IUserRepository userRepository,
             IUserStore<TUser> store,
             IOptions<IdentityOptions> optionsAccessor,
@@ -43,7 +44,8 @@ namespace cloudscribe.Core.Identity
             IHttpContextAccessor contextAccessor)
             : base(
                   store,
-                  optionsAccessor,
+                  ResolveOptions(identityResolver, optionsAccessor)
+                  ,
                   passwordHasher,
                   userValidators,
                   passwordValidators,
@@ -53,6 +55,7 @@ namespace cloudscribe.Core.Identity
                   logger,
                   contextAccessor)
         {
+            this.identityResolver = identityResolver;
             defaultIdentityOptions = optionsAccessor.Value;
             userStore = store;
             userRepo = userRepository;
@@ -62,6 +65,15 @@ namespace cloudscribe.Core.Identity
             _context = contextAccessor?.HttpContext;
         }
 
+        private static IOptions<IdentityOptions> ResolveOptions(
+            IIdentityOptionsResolver identityResolver,
+            IOptions<IdentityOptions> optionsAccessor)
+        {
+            var o = identityResolver.ResolveOptions(optionsAccessor.Value);
+            return new OptionsWrapper<IdentityOptions>(o);
+        }
+
+        private IIdentityOptionsResolver identityResolver;
         private IdentityOptions defaultIdentityOptions;
         private IUserStore<TUser> userStore;
         private IUserRepository userRepo;

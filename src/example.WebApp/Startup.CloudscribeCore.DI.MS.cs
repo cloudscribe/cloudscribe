@@ -222,7 +222,9 @@ namespace example.WebApp
 
             //services.AddMultitenancy<SiteSettings, SiteResolver>();
             services.AddMultitenancy<SiteSettings, CachingSiteResolver>();
+            services.TryAddScoped<IIdentityOptionsResolver, cloudscribe.Core.Web.Components.IdentityOptionsResolver>();
 
+            //
 
             services.TryAddScoped<SiteManager, SiteManager>();
             services.TryAddScoped<SetupManager, SetupManager>();
@@ -242,8 +244,8 @@ namespace example.WebApp
             // the factory will provide access to the previously registered IVersionProviders
             services.TryAddScoped<IVersionProviderFactory, VersionProviderFactory>();
 
-            services.AddCloudscribeIdentity<SiteUser, SiteRole>()
-                .AddDefaultTokenProviders();
+            services.AddCloudscribeIdentity<SiteUser, SiteRole>(); 
+                //.AddDefaultTokenProviders();
 
             // you can use either json or xml to maintain your navigation map we provide examples of each navigation.xml and 
             // navigation.json in the root of this project

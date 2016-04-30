@@ -27,7 +27,6 @@ namespace example.WebApp
             
             tenantContainer.Configure(config =>
             {
-                //config.
                 config.ForSingletonOf<IConfigureOptions<IdentityOptions>>().Use(
                     new ConfigureOptions<IdentityOptions>(identityOptions =>
                 {
@@ -51,20 +50,7 @@ namespace example.WebApp
 
                 }));
 
-                //var ido = OptionsManager<IdentityOptions>(o =>
-
-
-                //);
-
-
-                //if (tenant.Name == "Tenant 1")
-                //{
-                //    config.ForSingletonOf<IMessageService>().Use<OtherMessageService>();
-                //}
-                //else
-                //{
-                //    config.ForSingletonOf<IMessageService>().Use<MessageService>();
-                //}
+        
             });
 
             return Task.FromResult(tenantContainer);

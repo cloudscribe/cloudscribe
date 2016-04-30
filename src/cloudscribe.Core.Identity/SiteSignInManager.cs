@@ -29,7 +29,8 @@ namespace cloudscribe.Core.Identity
     public class SiteSignInManager<TUser> : SignInManager<TUser> where TUser : SiteUser
     {
         public SiteSignInManager(
-            SiteUserManager<TUser> userManager, 
+            SiteUserManager<TUser> userManager,
+            IIdentityOptionsResolver identityResolver,
             IHttpContextAccessor contextAccessor,
             //MultiTenantCookieOptionsResolver tenantResolver,
             IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
@@ -40,8 +41,10 @@ namespace cloudscribe.Core.Identity
             :base(userManager, 
                  contextAccessor,
                  claimsFactory,
-                 optionsAccessor,
-                 logger
+
+                 ResolveOptions(identityResolver,optionsAccessor)
+
+                 , logger
                  )
         {
 
@@ -52,10 +55,20 @@ namespace cloudscribe.Core.Identity
             log = logger;
             multiTenantOptions = multiTenantOptionsAccessor.Value;
             siteRepo = siteRepository;
-            Options = optionsAccessor.Value;
+            Options = identityResolver.ResolveOptions(optionsAccessor.Value);
             //Options = tenantOptions;
 
         }
+
+        private static IOptions<IdentityOptions> ResolveOptions(
+            IIdentityOptionsResolver identityResolver,
+            IOptions<IdentityOptions> optionsAccessor)
+        {
+            var o = identityResolver.ResolveOptions(optionsAccessor.Value);
+            return new OptionsWrapper<IdentityOptions>(o);
+        }
+
+        //private IIdentityOptionsResolver identityResolver;
 
         private SiteUserManager<TUser> SiteUserManager { get; set; }
         private HttpContext context;
