@@ -20,7 +20,7 @@
     "cloudscribe.Messaging.Email": "1.0.0-*",
     "cloudscribe.Messaging.Sms": "1.0.0-*",
     "cloudscribe.Web.Common": "1.0.0-*",
-    "cloudscribe.Web.Navigation": "1.0.0-*",
+    "cloudscribe.Web.Navigation": "1.0.0-beta7",
     "cloudscribe.Web.Pagination": "1.0.0-*",
     "Newtonsoft.Json": "7.0.1",
     "Microsoft.AspNet.Mvc": "6.0.0-rc1-final",
