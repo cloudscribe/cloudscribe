@@ -40,6 +40,8 @@ using cloudscribe.Core.Web.Components;
 using cloudscribe.Logging.Web;
 using cloudscribe.Core.Web.Middleware;
 using SaasKit.Multitenancy;
+using StructureMap;
+using SaasKit.Multitenancy.StructureMap;
 //using Autofac;
 //using Autofac.Framework.DependencyInjection;
 
@@ -139,8 +141,8 @@ namespace example.WebApp
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        //public IServiceProvider ConfigureServices(IServiceCollection services)
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
+        //public void ConfigureServices(IServiceCollection services)
         {
 
             //http://docs.asp.net/en/latest/security/data-protection/configuration/overview.html
@@ -190,6 +192,25 @@ namespace example.WebApp
             services.ConfigureCloudscribeCore(Configuration);
 
             services.TryAddScoped<LogManager, LogManager>();
+
+            var container = new Container();
+
+            container.Populate(services);
+
+            container.Configure(c =>
+            {
+                // Application Services
+                c.For<ITenantContainerBuilder<SiteSettings>>().Use(() => new SiteTenantContainerBuilder(container));
+            });
+
+            container.ConfigureTenants<SiteSettings>(c =>
+            {
+                // Tenant Scoped Services
+                //c.For<IMessageService>().Singleton().Use<MessageService>();
+
+            });
+
+            return container.GetInstance<IServiceProvider>();
 
 
             //services.Configure<MvcOptions>(options =>

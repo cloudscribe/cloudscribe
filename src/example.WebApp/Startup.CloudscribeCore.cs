@@ -83,6 +83,7 @@ namespace example.WebApp
             
 
             app.UseMultitenancy<SiteSettings>();
+            app.UseTenantContainers<SiteSettings>();
 
             // https://github.com/saaskit/saaskit/blob/master/src/SaasKit.Multitenancy/MultitenancyApplicationBuilderExtensions.cs
             // should custom builder extension use Microsoft.AspNet.Builder as their own namespace?
@@ -94,18 +95,26 @@ namespace example.WebApp
                 if (identityOptions == null) { throw new ArgumentException("failed to get identity options"); }
                 if (identityOptions.Cookies.ApplicationCookie == null) { throw new ArgumentException("failed to get identity application cookie options"); }
 
+                identityOptions.User.RequireUniqueEmail = true;
+
+                //var shouldUseFolder = (
+                //(multiTenantOptions.Value.Mode == MultiTenantMode.FolderName)
+                //&& (!multiTenantOptions.Value.UseRelatedSitesMode)
+                //&& (ctx.Tenant.SiteFolderName.Length > 0)
+                //);
+
                 var shouldUseFolder = (
                 (multiTenantOptions.Value.Mode == MultiTenantMode.FolderName)
                 && (!multiTenantOptions.Value.UseRelatedSitesMode)
-                && (ctx.Tenant.SiteFolderName.Length > 0)
+                //&& (ctx.Tenant.SiteFolderName.Length > 0)
                 );
 
 
                 if (shouldUseFolder)
-                {    
+                {
                     identityOptions.Cookies.ExternalCookie.CookieName = AuthenticationScheme.External + "-" + ctx.Tenant.SiteFolderName;
                     identityOptions.Cookies.ExternalCookie.AuthenticationScheme = AuthenticationScheme.External + "-" + ctx.Tenant.SiteFolderName;
-                    
+
                     identityOptions.Cookies.ExternalCookie.LoginPath = new PathString("/" + ctx.Tenant.SiteFolderName + "/account/login");
                     identityOptions.Cookies.ExternalCookie.LogoutPath = new PathString("/" + ctx.Tenant.SiteFolderName + "/account/logoff");
                     identityOptions.Cookies.ExternalCookie.AccessDeniedPath = new PathString("/" + ctx.Tenant.SiteFolderName + "/forbidden");
@@ -117,14 +126,14 @@ namespace example.WebApp
 
                     identityOptions.Cookies.TwoFactorUserIdCookie.CookieName = AuthenticationScheme.TwoFactorUserId + "-" + ctx.Tenant.SiteFolderName;
                     identityOptions.Cookies.TwoFactorUserIdCookie.AuthenticationScheme = AuthenticationScheme.TwoFactorUserId + "-" + ctx.Tenant.SiteFolderName;
-                    
+
                     identityOptions.Cookies.ApplicationCookie.CookieName = AuthenticationScheme.Application + "-" + ctx.Tenant.SiteFolderName;
                     identityOptions.Cookies.ApplicationCookie.AuthenticationScheme = AuthenticationScheme.Application + "-" + ctx.Tenant.SiteFolderName;
 
                 }
                 else
                 {
-                    
+
                     identityOptions.Cookies.ExternalCookie.CookieName = AuthenticationScheme.External;
                     identityOptions.Cookies.ExternalCookie.AuthenticationScheme = AuthenticationScheme.External;
 

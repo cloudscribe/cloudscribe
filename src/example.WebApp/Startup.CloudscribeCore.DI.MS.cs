@@ -51,7 +51,7 @@ using cloudscribe.Web.Pagination;
 using cloudscribe.Core.Web.Components.Messaging;
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Repositories.EF;
-
+using Microsoft.Extensions.OptionsModel;
 
 namespace example.WebApp
 {
@@ -266,7 +266,7 @@ namespace example.WebApp
             services.TryAddTransient<IBuildPaginationLinks, PaginationLinkBuilder>();
 
             
-            //services.AddTransient<IEmailTemplateService, HardCodedEmailTemplateService>();
+            services.AddTransient<IEmailTemplateService, HardCodedEmailTemplateService>();
             services.AddTransient<ISiteMessageEmailSender, SiteEmailMessageSender>();
             services.AddTransient<ISmsSender, SiteSmsSender>();
             
@@ -350,7 +350,8 @@ namespace example.WebApp
         }
 
 
-        public static IdentityBuilder AddCloudscribeIdentity<TUser, TRole>(
+        //public static IdentityBuilder AddCloudscribeIdentity<TUser, TRole>(
+        public static IServiceCollection AddCloudscribeIdentity<TUser, TRole>(
             this IServiceCollection services)
             where TUser : class
             where TRole : class
@@ -422,19 +423,26 @@ namespace example.WebApp
             services.TryAddScoped<RoleManager<TRole>, RoleManager<TRole>>();
 
             //http://docs.asp.net/en/latest/security/2fa.html
-            //services.TryAddScoped<IdentityOptions>();
-            services.Configure<IdentityOptions>(options =>
-            {
-                // some other options are overridden by ste settings
-                // but in all cases we do want to require each account to have a unique email
-                // it is problematic to not require that when a site is created
-                // then accounts with duplicate email can be created and later
-                // if the configuration is changed to now require unique email
-                // there already exist problem records
-                // the default setting for Identity is false but we want it to be true for these reasons
-                options.User.RequireUniqueEmail = true;
-                options.Cookies.TwoFactorUserIdCookieAuthenticationScheme = AuthenticationScheme.TwoFactorUserId;
-            });
+            //services.AddScoped<IdentityOptions>();
+            //services.TryAddScoped<IOptions<IdentityOptions>>();
+            // problem here is services.Configure makes the identity options a singleton
+            //services.Configure<IdentityOptions>(options =>
+            //{
+            //    // some other options are overridden by ste settings
+            //    // but in all cases we do want to require each account to have a unique email
+            //    // it is problematic to not require that when a site is created
+            //    // then accounts with duplicate email can be created and later
+            //    // if the configuration is changed to now require unique email
+            //    // there already exist problem records
+            //    // the default setting for Identity is false but we want it to be true for these reasons
+            //    options.User.RequireUniqueEmail = true;
+            //    options.Cookies.TwoFactorUserIdCookieAuthenticationScheme = AuthenticationScheme.TwoFactorUserId;
+            //});
+
+            //services.Configure<IdentityOptions>(options =>
+            //{
+            //    //...
+            //});
 
 
             //services.Configure<SharedAuthenticationOptions>(options =>
@@ -497,11 +505,13 @@ namespace example.WebApp
 
 
 
-            IdentityBuilder builder = new IdentityBuilder(typeof(TUser), typeof(TRole), services);
+            //IdentityBuilder builder = new IdentityBuilder(typeof(TUser), typeof(TRole), services);
             //builder.AddUserStore(UserStore<SiteUser>>();
 
 
-            return builder;
+            //return builder;
+
+            return services;
         }
 
     }

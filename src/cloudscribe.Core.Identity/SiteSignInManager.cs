@@ -53,6 +53,7 @@ namespace cloudscribe.Core.Identity
             multiTenantOptions = multiTenantOptionsAccessor.Value;
             siteRepo = siteRepository;
             Options = optionsAccessor.Value;
+            //Options = tenantOptions;
 
         }
 
