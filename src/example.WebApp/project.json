@@ -17,7 +17,7 @@
     "cloudscribe.Setup.MSSQL": "1.0.0-*",
     "cloudscribe.DbHelpers.Ado": "1.0.0-*",
     "cloudscribe.Messaging.Email": "1.0.0-*",
-    "cloudscribe.Web.Navigation": "1.0.0-*",
+    "cloudscribe.Web.Navigation": "1.0.0-beta7",
     "cloudscribe.Web.Pagination": "1.0.0-*",
     "SaasKit.Multitenancy": "1.1.0-*",
     "EntityFramework.Commands": "7.0.0-rc1-final",
