@@ -268,7 +268,7 @@ namespace example.WebApp
 
             //http://blog.getglimpse.com/2015/11/19/installing-glimpse-v2-beta1/
             bool enableGlimpse = Configuration.Get<bool>("DiagnosticOptions:EnableGlimpse", false);
-            if(enableGlimpse)
+            if (enableGlimpse)
             {
                 app.UseGlimpse();
             }
@@ -281,7 +281,7 @@ namespace example.WebApp
             //Warning = 4,
             //Error = 5,
             //Critical = 6,
-            
+
             // Add the console logger.
             loggerFactory.AddConsole(minLevel: LogLevel.Warning);
             
@@ -411,16 +411,16 @@ namespace example.WebApp
                 // a controller segment in the route because without a controller segment the route is less specific
 
 
-                // default route for folder sites must be second to last
-                if (multiTenantOptions.Value.Mode == MultiTenantMode.FolderName)
-                {
-                    routes.MapRoute(
-                    name: "folderdefault",
-                    template: "{sitefolder}/{controller}/{action}/{id?}",
-                    defaults: new { controller = "Home", action = "Index" },
-                    constraints: new { name = new SiteFolderRouteConstraint() }
-                    );
-                }
+                //// default route for folder sites must be second to last
+                //if (multiTenantOptions.Value.Mode == MultiTenantMode.FolderName)
+                //{
+                //    routes.MapRoute(
+                //    name: "folderdefault",
+                //    template: "{sitefolder}/{controller}/{action}/{id?}",
+                //    defaults: new { controller = "Home", action = "Index" },
+                //    constraints: new { name = new SiteFolderRouteConstraint() }
+                //    );
+                //}
 
 
                 // the default route has to be added last

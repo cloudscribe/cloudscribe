@@ -50,6 +50,24 @@ namespace cloudscribe.Core.Web.Components
 
             identityOptions.Cookies.ApplicationCookie.CookieName = AuthenticationScheme.Application + "-" + siteSettings.SiteFolderName;
             identityOptions.Cookies.ApplicationCookie.AuthenticationScheme = AuthenticationScheme.Application + "-" + siteSettings.SiteFolderName;
+            //identityOptions.Cookies.ApplicationCookie.AccessDeniedPath
+            //identityOptions.Cookies.ApplicationCookie.AutomaticAuthenticate 
+            //identityOptions.Cookies.ApplicationCookie.AutomaticChallenge
+            //identityOptions.Cookies.ApplicationCookie.ClaimsIssuer
+            //identityOptions.Cookies.ApplicationCookie.CookieDomain
+            //identityOptions.Cookies.ApplicationCookie.CookiePath
+            //identityOptions.Cookies.ApplicationCookie.DataProtectionProvider
+            //identityOptions.Cookies.ApplicationCookie.LoginPath
+            //identityOptions.Cookies.ApplicationCookie.LogoutPath
+            //identityOptions.Cookies.ApplicationCookie.ReturnUrlParameter
+            //identityOptions.Cookies.ApplicationCookie.SlidingExpiration
+            if(siteSettings.SiteFolderName.Length > 0)
+            {
+                identityOptions.Cookies.ApplicationCookie.CookiePath = new PathString("/" + siteSettings.SiteFolderName);
+                identityOptions.Cookies.ApplicationCookie.LoginPath = new PathString("/" + siteSettings.SiteFolderName + "/account/login");
+                identityOptions.Cookies.ApplicationCookie.LogoutPath = new PathString("/" + siteSettings.SiteFolderName + "/account/logoff");
+                //identityOptions.Cookies.ApplicationCookie.AccessDeniedPath
+            }
 
 
             return identityOptions;

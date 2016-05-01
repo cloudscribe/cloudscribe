@@ -92,6 +92,12 @@ namespace example.WebApp
             // I can see the merits but wondered is that conventional
             app.UsePerTenant<SiteSettings>((ctx, builder) =>
             {
+            var folderPath = ctx.Tenant.SiteFolderName;
+
+                
+
+            //builder.UseWhen(f => (context){
+            //}, (ctx,cb))
 
                 var singletonIdentityOptions = app.ApplicationServices.GetRequiredService<IOptions<IdentityOptions>>().Value;
                 var resolver = app.ApplicationServices.GetRequiredService<IIdentityOptionsResolver>();
@@ -157,10 +163,125 @@ namespace example.WebApp
                 identityOptions.Cookies.TwoFactorUserIdCookie.Events = cookieEvents;
                 identityOptions.Cookies.ApplicationCookie.Events = cookieEvents;
 
-                builder.UseCookieAuthentication(identityOptions.Cookies.ExternalCookie);
-                builder.UseCookieAuthentication(identityOptions.Cookies.TwoFactorRememberMeCookie);
-                builder.UseCookieAuthentication(identityOptions.Cookies.TwoFactorUserIdCookie);
-                builder.UseCookieAuthentication(identityOptions.Cookies.ApplicationCookie);
+
+                if (string.IsNullOrEmpty(folderPath))
+                {
+                    builder.UseCookieAuthentication(identityOptions.Cookies.ExternalCookie);
+                    builder.UseCookieAuthentication(identityOptions.Cookies.TwoFactorRememberMeCookie);
+                    builder.UseCookieAuthentication(identityOptions.Cookies.TwoFactorUserIdCookie);
+                    builder.UseCookieAuthentication(identityOptions.Cookies.ApplicationCookie);
+
+                    //builder.UseMiddleware<CookieAuthenticationMiddleware>(
+                    //    new cloudscribe.Core.Identity.OptionsWrapper<CookieAuthenticationOptions>(identityOptions.Cookies.ExternalCookie)
+                    //    );
+                    //builder.UseMiddleware<CookieAuthenticationMiddleware>(
+                    //    new cloudscribe.Core.Identity.OptionsWrapper<CookieAuthenticationOptions>(identityOptions.Cookies.TwoFactorRememberMeCookie)
+                    //    );
+
+                    //builder.UseMiddleware<CookieAuthenticationMiddleware>(
+                    //    new cloudscribe.Core.Identity.OptionsWrapper<CookieAuthenticationOptions>(identityOptions.Cookies.TwoFactorUserIdCookie)
+                    //    );
+
+                    //builder.UseMiddleware<CookieAuthenticationMiddleware>(
+                    //    new cloudscribe.Core.Identity.OptionsWrapper<CookieAuthenticationOptions>(identityOptions.Cookies.ApplicationCookie)
+                    //    );
+
+
+                }
+                else
+                {
+                    // When Map is used, the matched path segment(s) are removed from HttpRequest.Path 
+                    // and appended to HttpRequest.PathBase for each request.
+
+                    builder.Map("/" + folderPath, folderTenant =>
+                    {
+                        //folderTenant.UseIISPlatformHandler(options => options.AuthenticationDescriptions.Clear());
+
+                        //app.UseRuntimeInfoPage("/info");
+
+                        // Add static files to the request pipeline.
+                        folderTenant.UseStaticFiles();
+
+                        // the only thing we are using session for is Alerts
+                        folderTenant.UseSession();
+                        //app.UseInMemorySession(configure: s => s.IdleTimeout = TimeSpan.FromMinutes(20));
+
+                        // this is in Startup.CloudscribeCore.cs
+                        //app.UseCloudscribeCore(multiTenantOptions, Configuration);
+
+                        folderTenant.UseCookieAuthentication(identityOptions.Cookies.ExternalCookie);
+                        folderTenant.UseCookieAuthentication(identityOptions.Cookies.TwoFactorRememberMeCookie);
+                        folderTenant.UseCookieAuthentication(identityOptions.Cookies.TwoFactorUserIdCookie);
+                        folderTenant.UseCookieAuthentication(identityOptions.Cookies.ApplicationCookie);
+
+                        //folderTenant.UseMiddleware<CookieAuthenticationMiddleware>(
+                        //new cloudscribe.Core.Identity.OptionsWrapper<CookieAuthenticationOptions>(identityOptions.Cookies.ExternalCookie)
+                        //);
+                        //folderTenant.UseMiddleware<CookieAuthenticationMiddleware>(
+                        //    new cloudscribe.Core.Identity.OptionsWrapper<CookieAuthenticationOptions>(identityOptions.Cookies.TwoFactorRememberMeCookie)
+                        //    );
+
+                        //folderTenant.UseMiddleware<CookieAuthenticationMiddleware>(
+                        //    new cloudscribe.Core.Identity.OptionsWrapper<CookieAuthenticationOptions>(identityOptions.Cookies.TwoFactorUserIdCookie)
+                        //    );
+
+                        //folderTenant.UseMiddleware<CookieAuthenticationMiddleware>(
+                        //    new cloudscribe.Core.Identity.OptionsWrapper<CookieAuthenticationOptions>(identityOptions.Cookies.ApplicationCookie)
+                        //    );
+
+                        // it is very important that all authentication configuration be set before configuring mvc
+
+                        // Add MVC to the request pipeline.
+                        folderTenant.UseMvc(routes =>
+                        {
+                            // Understanding ASP.NET Routing:
+
+                            // it is very important that routes are registered in the correct order. more specific routes must be registered first and 
+                            // less specific routes must be registered later. a request may match more than one route.
+
+                            // When a request comes in it is compared to routes in the route table and the first route it matches is used no matter if a 
+                            // better match exists. therefore if a less specific route is registered first it will catch requests that would have a better 
+                            // match with a more specific route that was registered later.
+
+                            // ie the default route is usually the least specific route and must be registered last
+
+                            // something like a route for a cms would likely need to be the default route added last especially if you are not going to use 
+                            // a controller segment in the route because without a controller segment the route is less specific
+
+
+                            //// default route for folder sites must be second to last
+                            //if (multiTenantOptions.Value.Mode == MultiTenantMode.FolderName)
+                            //{
+                            //    routes.MapRoute(
+                            //    name: "folderdefault",
+                            //    template: "{sitefolder}/{controller}/{action}/{id?}",
+                            //    defaults: new { controller = "Home", action = "Index" },
+                            //    constraints: new { name = new SiteFolderRouteConstraint() }
+                            //    );
+                            //}
+
+
+                            // the default route has to be added last
+                            routes.MapRoute(
+                                name: "default",
+                                template: "{controller}/{action}/{id?}",
+                                defaults: new { controller = "Home", action = "Index" }
+                                );
+
+                            // Uncomment the following line to add a route for porting Web API 2 controllers.
+                            // routes.MapWebApiRoute("DefaultApi", "api/{controller}/{id?}");
+                        })
+                        ;
+
+
+                        
+                    });
+                }
+
+                
+                
+
+                
 
                 //builder.UseCookieAuthentication(options =>
                 //{
