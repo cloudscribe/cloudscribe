@@ -28,6 +28,7 @@ namespace cloudscribe.Web.Common.Middleware
                 //This is how you call the next module in the Http pipeline.
                 //The code above this call executes during the request.
                 //The code below this call executes during the response.
+                //if(context.User.Identity.)
 
                 await _next.Invoke(context);
             }

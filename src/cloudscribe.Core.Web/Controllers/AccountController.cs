@@ -81,7 +81,7 @@ namespace cloudscribe.Core.Web.Controllers
         // POST: /Account/Login
         [HttpPost]
         [AllowAnonymous]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
         {
             ViewData["Title"] = "Log in";
@@ -485,7 +485,7 @@ namespace cloudscribe.Core.Web.Controllers
 
         // POST: /Account/LogOff
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> LogOff()
         {
             await signInManager.SignOutAsync();

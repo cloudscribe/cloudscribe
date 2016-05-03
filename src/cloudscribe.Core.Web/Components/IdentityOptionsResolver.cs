@@ -35,13 +35,7 @@ namespace cloudscribe.Core.Web.Components
 
             identityOptions.Cookies.ExternalCookie.CookieName = AuthenticationScheme.External + "-" + siteSettings.SiteFolderName;
             identityOptions.Cookies.ExternalCookie.AuthenticationScheme = AuthenticationScheme.External + "-" + siteSettings.SiteFolderName;
-
-            identityOptions.Cookies.ExternalCookie.LoginPath = new PathString("/" + siteSettings.SiteFolderName + "/account/login");
-            identityOptions.Cookies.ExternalCookie.LogoutPath = new PathString("/" + siteSettings.SiteFolderName + "/account/logoff");
-            identityOptions.Cookies.ExternalCookie.AccessDeniedPath = new PathString("/" + siteSettings.SiteFolderName + "/forbidden");
-            //identityOptions.Cookies.ExternalCookie.AutomaticChallenge = true;
-            //identityOptions.Cookies.ExternalCookie.AutomaticAuthenticate = true;
-
+            
             identityOptions.Cookies.TwoFactorRememberMeCookie.CookieName = AuthenticationScheme.TwoFactorRememberMe + "-" + siteSettings.SiteFolderName;
             identityOptions.Cookies.TwoFactorRememberMeCookie.AuthenticationScheme = AuthenticationScheme.TwoFactorRememberMe + "-" + siteSettings.SiteFolderName;
 
@@ -51,8 +45,8 @@ namespace cloudscribe.Core.Web.Components
             identityOptions.Cookies.ApplicationCookie.CookieName = AuthenticationScheme.Application + "-" + siteSettings.SiteFolderName;
             identityOptions.Cookies.ApplicationCookie.AuthenticationScheme = AuthenticationScheme.Application + "-" + siteSettings.SiteFolderName;
             //identityOptions.Cookies.ApplicationCookie.AccessDeniedPath
-            //identityOptions.Cookies.ApplicationCookie.AutomaticAuthenticate 
-            //identityOptions.Cookies.ApplicationCookie.AutomaticChallenge
+            identityOptions.Cookies.ApplicationCookie.AutomaticAuthenticate = true;
+            identityOptions.Cookies.ApplicationCookie.AutomaticChallenge = false;
             //identityOptions.Cookies.ApplicationCookie.ClaimsIssuer
             //identityOptions.Cookies.ApplicationCookie.CookieDomain
             //identityOptions.Cookies.ApplicationCookie.CookiePath
@@ -63,6 +57,18 @@ namespace cloudscribe.Core.Web.Components
             //identityOptions.Cookies.ApplicationCookie.SlidingExpiration
             if(siteSettings.SiteFolderName.Length > 0)
             {
+                identityOptions.Cookies.ExternalCookie.LoginPath = new PathString("/" + siteSettings.SiteFolderName + "/account/login");
+                identityOptions.Cookies.ExternalCookie.LogoutPath = new PathString("/" + siteSettings.SiteFolderName + "/account/logoff");
+                //identityOptions.Cookies.ExternalCookie.AccessDeniedPath = new PathString("/" + siteSettings.SiteFolderName + "/forbidden");
+
+                identityOptions.Cookies.TwoFactorRememberMeCookie.LoginPath = new PathString("/" + siteSettings.SiteFolderName + "/account/login");
+                identityOptions.Cookies.TwoFactorRememberMeCookie.LogoutPath = new PathString("/" + siteSettings.SiteFolderName + "/account/logoff");
+                //identityOptions.Cookies.ExternalCookie.AccessDeniedPath = new PathString("/" + siteSettings.SiteFolderName + "/forbidden");
+
+                identityOptions.Cookies.TwoFactorUserIdCookie.LoginPath = new PathString("/" + siteSettings.SiteFolderName + "/account/login");
+                identityOptions.Cookies.TwoFactorUserIdCookie.LogoutPath = new PathString("/" + siteSettings.SiteFolderName + "/account/logoff");
+                //identityOptions.Cookies.ExternalCookie.AccessDeniedPath = new PathString("/" + siteSettings.SiteFolderName + "/forbidden");
+
                 identityOptions.Cookies.ApplicationCookie.CookiePath = new PathString("/" + siteSettings.SiteFolderName);
                 identityOptions.Cookies.ApplicationCookie.LoginPath = new PathString("/" + siteSettings.SiteFolderName + "/account/login");
                 identityOptions.Cookies.ApplicationCookie.LogoutPath = new PathString("/" + siteSettings.SiteFolderName + "/account/logoff");
