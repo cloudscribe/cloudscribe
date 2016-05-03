@@ -485,7 +485,7 @@ namespace cloudscribe.Core.Web.Controllers
 
         // POST: /Account/LogOff
         [HttpPost]
-        //[ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> LogOff()
         {
             await signInManager.SignOutAsync();

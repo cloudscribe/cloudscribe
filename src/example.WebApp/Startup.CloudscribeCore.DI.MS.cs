@@ -304,6 +304,7 @@ namespace example.WebApp
                 options.ViewLocationExpanders.Add(new SiteViewLocationExpander());
             });
 
+            services.AddSingleton<Microsoft.AspNet.Antiforgery.IAntiforgeryTokenStore, SiteAntiforgeryTokenStore>();
 
 
 
