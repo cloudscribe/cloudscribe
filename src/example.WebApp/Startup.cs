@@ -487,14 +487,14 @@ namespace example.WebApp
 
                 //AddSocialAuth(builder, ctx.Tenant, identityOptions, false);
 
-                AddMvc(builder, true);
+                //AddMvc(builder, true);
 
 
 
             });
 
             // it is very important that all authentication configuration be set before configuring mvc
-            //AddMvc(app, false);
+            AddMvc(app, true);
 
             
 
