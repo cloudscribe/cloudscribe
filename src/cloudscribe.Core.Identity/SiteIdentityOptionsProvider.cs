@@ -1,22 +1,19 @@
-﻿using cloudscribe.Core.Identity;
+﻿
+
 using cloudscribe.Core.Models;
 using Microsoft.AspNet.Authentication.Cookies;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Identity;
 using Microsoft.Extensions.OptionsModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace cloudscribe.Core.Web.Components
+namespace cloudscribe.Core.Identity
 {
-    public class TenantIdentityOptionsProvider : IOptions<IdentityOptions>
+    public class SiteIdentityOptionsProvider : IOptions<IdentityOptions>
     {
         private CookieAuthenticationEvents cookieEvents;
         private IHttpContextAccessor httpContextAccessor;
 
-        public TenantIdentityOptionsProvider(
+        public SiteIdentityOptionsProvider(
             IHttpContextAccessor httpContextAccessor,
             CookieAuthenticationEvents cookieEvents)
         {

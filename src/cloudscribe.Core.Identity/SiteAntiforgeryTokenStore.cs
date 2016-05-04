@@ -1,15 +1,20 @@
-﻿
-using System;
-using System.Diagnostics;
-using System.Threading.Tasks;
+﻿// Copyright (c) Source Tree Solutions, LLC. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+// Author:					Joe Audette
+// Created:					2016-05-03
+// Last Modified:			2016-05-04
+// 
+
+using cloudscribe.Core.Models;
+using Microsoft.AspNet.Antiforgery;
 using Microsoft.AspNet.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.OptionsModel;
-using Microsoft.AspNet.Antiforgery;
-using SaasKit.Multitenancy;
-using cloudscribe.Core.Models;
+using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
-namespace cloudscribe.Core.Web.Components
+namespace cloudscribe.Core.Identity
 {
     public class SiteAntiforgeryTokenStore : IAntiforgeryTokenStore
     {
@@ -126,12 +131,11 @@ namespace cloudscribe.Core.Web.Components
             }
             var tenant = httpContext.GetTenant<SiteSettings>();
             if (tenant.SiteFolderName.Length > 0) options.Path = new PathString("/" + tenant.SiteFolderName);
-            httpContext.Response.Cookies.Append(_options.CookieName + tenant.SiteFolderName , serializedToken, options);
+            httpContext.Response.Cookies.Append(_options.CookieName + tenant.SiteFolderName, serializedToken, options);
         }
     }
+
 }
-
-
 
 // code below pasted from rc2 code here
 // https://github.com/aspnet/Antiforgery/blob/dev/src/Microsoft.AspNetCore.Antiforgery/Internal/DefaultAntiforgeryTokenStore.cs

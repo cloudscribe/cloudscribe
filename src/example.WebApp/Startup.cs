@@ -359,7 +359,7 @@ namespace example.WebApp
 
             services.AddMultitenancy<SiteSettings, CachingSiteResolver>();
 
-            services.AddSingleton<IOptions<IdentityOptions>, TenantIdentityOptionsProvider>();
+            services.AddSingleton<IOptions<IdentityOptions>, SiteIdentityOptionsProvider>();
 
             services.AddScoped<SiteManager, SiteManager>();
             services.AddScoped<SetupManager, SetupManager>();
@@ -416,7 +416,7 @@ namespace example.WebApp
             where TUser : class
             where TRole : class
         {
-            services.AddSingleton<IOptions<IdentityOptions>, TenantIdentityOptionsProvider>();
+            services.AddSingleton<IOptions<IdentityOptions>, SiteIdentityOptionsProvider>();
 
             services.AddScoped<IUserClaimsPrincipalFactory<SiteUser>, SiteUserClaimsPrincipalFactory<SiteUser, SiteRole>>();
             services.AddScoped<IPasswordHasher<SiteUser>, SitePasswordHasher<SiteUser>>();

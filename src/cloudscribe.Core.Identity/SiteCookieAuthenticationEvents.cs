@@ -2,22 +2,19 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-27
-// Last Modified:			2016-03-03
+// Last Modified:			2016-05-04
 // 
 
 using cloudscribe.Core.Models;
+using Microsoft.AspNet.Authentication.Cookies;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Authentication.Cookies;
 using Microsoft.Extensions.Logging;
-using SaasKit.Multitenancy;
-
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace cloudscribe.Core.Web.Components
+namespace cloudscribe.Core.Identity
 {
-
     public class SiteCookieAuthenticationEvents : CookieAuthenticationEvents
     {
         public SiteCookieAuthenticationEvents(
@@ -48,14 +45,14 @@ namespace cloudscribe.Core.Web.Components
             // and fix the broken
             // it needs to resolve options per tenant
             //await securityStampValidator.ValidateAsync(context);
-            
+
             var tenant = context.HttpContext.GetTenant<SiteSettings>();
 
             if (tenant == null)
             {
                 context.RejectPrincipal();
             }
-            
+
             var siteGuidClaim = new Claim("SiteGuid", tenant.SiteGuid.ToString());
 
             if (!context.Principal.HasClaim(siteGuidClaim.Type, siteGuidClaim.Value))
@@ -67,4 +64,5 @@ namespace cloudscribe.Core.Web.Components
             return Task.FromResult(0);
         }
     }
+
 }
