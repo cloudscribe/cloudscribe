@@ -32,18 +32,18 @@ namespace cloudscribe.Core.Repositories.EF
             CancellationToken cancellationToken = default(CancellationToken))
         {
             if (user == null) { return false; }
-            if (user.SiteId == -1) { throw new ArgumentException("user must have a siteid"); }
+            //if (user.SiteId == -1) { throw new ArgumentException("user must have a siteid"); }
             if (user.SiteGuid == Guid.Empty) { throw new ArgumentException("user must have a siteguid"); }
 
             SiteUser siteUser = SiteUser.FromISiteUser(user);
-            if(siteUser.UserId == -1)
+            if(siteUser.UserGuid == Guid.Empty)
             {
-                siteUser.UserId = 0; //EF needs it to be zero in order to generate
+                siteUser.UserGuid = Guid.NewGuid(); 
                 dbContext.Users.Add(siteUser);
             }
             else
             {
-                bool tracking = dbContext.ChangeTracker.Entries<SiteUser>().Any(x => x.Entity.UserId == siteUser.UserId);
+                bool tracking = dbContext.ChangeTracker.Entries<SiteUser>().Any(x => x.Entity.UserGuid == siteUser.UserGuid);
                 if (!tracking)
                 {
                     dbContext.Users.Update(siteUser);
@@ -56,9 +56,9 @@ namespace cloudscribe.Core.Repositories.EF
                 .ConfigureAwait(false)
                 ;
 
-            if(user.UserId == -1)
+            if(user.UserGuid == Guid.Empty)
             {
-                user.UserId = siteUser.UserId;
+                //user.UserId = siteUser.UserId;
                 user.UserGuid = siteUser.UserGuid;
             }
 
@@ -84,21 +84,21 @@ namespace cloudscribe.Core.Repositories.EF
         //}
 
         public async Task<bool> Delete(
-            int siteId, 
-            int userId, 
+            Guid siteGuid, 
+            Guid userGuid, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
             var result = false;
             var itemToRemove = await dbContext.Users
                 .AsNoTracking()
-                .SingleOrDefaultAsync(x => x.UserId == userId && x.SiteId == siteId, cancellationToken)
+                .SingleOrDefaultAsync(x => x.UserGuid == userGuid && x.SiteGuid == siteGuid, cancellationToken)
                 .ConfigureAwait(false);
 
             if (itemToRemove != null)
             {
-                result = await DeleteLoginsByUser(itemToRemove.SiteId, itemToRemove.Id, false);
-                result = await DeleteClaimsByUser(itemToRemove.SiteId, itemToRemove.Id, false);
-                result = await DeleteUserRoles(itemToRemove.UserId, false);
+                result = await DeleteLoginsByUser(itemToRemove.SiteGuid, itemToRemove.UserGuid, false);
+                result = await DeleteClaimsByUser(itemToRemove.SiteGuid, itemToRemove.UserGuid, false);
+                result = await DeleteUserRoles(itemToRemove.UserGuid, false);
 
                 
                 dbContext.Users.Remove(itemToRemove);
@@ -113,14 +113,14 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public async Task<bool> DeleteUsersBySite(
-            int siteId, 
+            Guid siteGuid, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            bool result = await DeleteLoginsBySite(siteId);
-            result = await DeleteClaimsBySite(siteId);
-            result = await DeleteUserRolesBySite(siteId);
+            bool result = await DeleteLoginsBySite(siteGuid);
+            result = await DeleteClaimsBySite(siteGuid);
+            result = await DeleteUserRolesBySite(siteGuid);
 
-            var query = from x in dbContext.Users.Where(x => x.SiteId == siteId)
+            var query = from x in dbContext.Users.Where(x => x.SiteGuid == siteGuid)
                         select x;
 
             dbContext.Users.RemoveRange(query);
@@ -133,12 +133,12 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public async Task<bool> FlagAsDeleted(
-            int userId, 
+            Guid userGuid, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
             SiteUser item
                 = await dbContext.Users.SingleOrDefaultAsync(
-                    x => x.UserId == userId, 
+                    x => x.UserGuid == userGuid, 
                     cancellationToken)
                 .ConfigureAwait(false);
 
@@ -154,12 +154,12 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public async Task<bool> FlagAsNotDeleted(
-            int userId, 
+            Guid userGuid, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
             SiteUser item
                 = await dbContext.Users.SingleOrDefaultAsync(
-                    x => x.UserId == userId, 
+                    x => x.UserGuid == userGuid, 
                     cancellationToken)
                     .ConfigureAwait(false);
 
@@ -263,29 +263,29 @@ namespace cloudscribe.Core.Repositories.EF
             return rowsAffected > 0;
         }
 
-        public int GetCount(int siteId)
+        public int GetCount(Guid siteGuid)
         {
-            return dbContext.Users.Count<SiteUser>(x => x.SiteId == siteId);
+            return dbContext.Users.Count<SiteUser>(x => x.SiteGuid == siteGuid);
         }
 
-        public async Task<ISiteUser> Fetch(
-            int siteId, 
-            int userId, 
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            SiteUser item
-                = await dbContext.Users.AsNoTracking()
-                .SingleOrDefaultAsync(
-                    x => x.SiteId == siteId && x.UserId == userId
-                    , cancellationToken)
-                    .ConfigureAwait(false);
+        //public async Task<ISiteUser> Fetch(
+        //    int siteId, 
+        //    int userId, 
+        //    CancellationToken cancellationToken = default(CancellationToken))
+        //{
+        //    cancellationToken.ThrowIfCancellationRequested();
+        //    SiteUser item
+        //        = await dbContext.Users.AsNoTracking()
+        //        .SingleOrDefaultAsync(
+        //            x => x.SiteId == siteId && x.UserId == userId
+        //            , cancellationToken)
+        //            .ConfigureAwait(false);
 
-            return item;
-        }
+        //    return item;
+        //}
 
         public async Task<ISiteUser> Fetch(
-            int siteId, 
+            Guid siteGuid, 
             Guid userGuid, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -293,7 +293,7 @@ namespace cloudscribe.Core.Repositories.EF
             SiteUser item
                 = await dbContext.Users.AsNoTracking()
                 .SingleOrDefaultAsync(
-                    x => x.SiteId == siteId && x.UserGuid == userGuid
+                    x => x.SiteGuid == siteGuid && x.UserGuid == userGuid
                     , cancellationToken)
                     .ConfigureAwait(false);
 
@@ -302,7 +302,7 @@ namespace cloudscribe.Core.Repositories.EF
 
         
         public async Task<ISiteUser> Fetch(
-            int siteId, 
+            Guid siteGuid, 
             string email, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -311,7 +311,7 @@ namespace cloudscribe.Core.Repositories.EF
             SiteUser item
                 = await dbContext.Users.AsNoTracking()
                 .SingleOrDefaultAsync(
-                    x => x.SiteId == siteId && x.NormalizedEmail == loweredEmail
+                    x => x.SiteGuid == siteGuid && x.NormalizedEmail == loweredEmail
                     , cancellationToken)
                     .ConfigureAwait(false);
 
@@ -319,7 +319,7 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public async Task<ISiteUser> FetchByLoginName(
-            int siteId, 
+            Guid siteGuid, 
             string userName, 
             bool allowEmailFallback, 
             CancellationToken cancellationToken = default(CancellationToken))
@@ -329,7 +329,7 @@ namespace cloudscribe.Core.Repositories.EF
 
             SiteUser item
                 = await dbContext.Users.AsNoTracking().SingleOrDefaultAsync(
-                    x => x.SiteId == siteId 
+                    x => x.SiteGuid == siteGuid
                     && (
                     (x.UserName == userName) 
                     || (allowEmailFallback && x.NormalizedEmail == loweredUserName)
@@ -383,14 +383,14 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public async Task<int> CountUsers(
-            int siteId, 
+            Guid siteGuid, 
             string userNameBeginsWith, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
             return await dbContext.Users.CountAsync<SiteUser>(
                 x =>
                 (
-                    x.SiteId == siteId
+                    x.SiteGuid == siteGuid
                     && x.IsDeleted == false
                     && x.AccountApproved == true
                     && (
@@ -405,7 +405,7 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public async Task<List<IUserInfo>> GetPage(
-            int siteId,
+            Guid siteGuid,
             int pageNumber,
             int pageSize,
             string userNameBeginsWith,
@@ -489,7 +489,7 @@ namespace cloudscribe.Core.Repositories.EF
 
                   where
                   (
-                      x.SiteId == siteId
+                      x.SiteGuid == siteGuid
                       && x.IsDeleted == false
                       && x.AccountApproved == true
                       && (
@@ -517,12 +517,12 @@ namespace cloudscribe.Core.Repositories.EF
                       PhoneNumber = x.PhoneNumber,
                       PhoneNumberConfirmed = x.PhoneNumberConfirmed,
                       SiteGuid = x.SiteGuid,
-                      SiteId = x.SiteId,
+                     // SiteId = x.SiteId,
                       State = x.State,
                       TimeZoneId = x.TimeZoneId,
                       Trusted = x.Trusted,
                       UserGuid = x.UserGuid,
-                      UserId = x.UserId,
+                     // UserId = x.UserId,
                       UserName = x.UserName,
                       WebSiteUrl = x.WebSiteUrl
 
@@ -539,7 +539,7 @@ namespace cloudscribe.Core.Repositories.EF
 
                   where
                   (
-                      x.SiteId == siteId
+                      x.SiteGuid == siteGuid
                       && x.IsDeleted == false
                       && x.AccountApproved == true
                       && (
@@ -567,12 +567,12 @@ namespace cloudscribe.Core.Repositories.EF
                       PhoneNumber = x.PhoneNumber,
                       PhoneNumberConfirmed = x.PhoneNumberConfirmed,
                       SiteGuid = x.SiteGuid,
-                      SiteId = x.SiteId,
+                     // SiteId = x.SiteId,
                       State = x.State,
                       TimeZoneId = x.TimeZoneId,
                       Trusted = x.Trusted,
                       UserGuid = x.UserGuid,
-                      UserId = x.UserId,
+                     // UserId = x.UserId,
                       UserName = x.UserName,
                       WebSiteUrl = x.WebSiteUrl
 
@@ -590,7 +590,7 @@ namespace cloudscribe.Core.Repositories.EF
 
                   where
                   (
-                      x.SiteId == siteId
+                      x.SiteGuid == siteGuid
                       && x.IsDeleted == false
                       && x.AccountApproved == true
                       && (
@@ -618,12 +618,12 @@ namespace cloudscribe.Core.Repositories.EF
                       PhoneNumber = x.PhoneNumber,
                       PhoneNumberConfirmed = x.PhoneNumberConfirmed,
                       SiteGuid = x.SiteGuid,
-                      SiteId = x.SiteId,
+                      //SiteId = x.SiteId,
                       State = x.State,
                       TimeZoneId = x.TimeZoneId,
                       Trusted = x.Trusted,
                       UserGuid = x.UserGuid,
-                      UserId = x.UserId,
+                      //UserId = x.UserId,
                       UserName = x.UserName,
                       WebSiteUrl = x.WebSiteUrl
 
@@ -646,14 +646,14 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public async Task<int> CountUsersForAdminSearch(
-            int siteId, 
+            Guid siteGuid, 
             string searchInput, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
             return await dbContext.Users.CountAsync<SiteUser>(
                 x =>
                 (
-                    x.SiteId == siteId
+                    x.SiteGuid == siteGuid
                     && (
                     searchInput == string.Empty
                     || x.Email.Contains(searchInput)
@@ -669,7 +669,7 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public async Task<List<IUserInfo>> GetUserAdminSearchPage(
-            int siteId,
+            Guid siteGuid,
             int pageNumber,
             int pageSize,
             string searchInput,
@@ -685,7 +685,7 @@ namespace cloudscribe.Core.Repositories.EF
                         
                   where
                   (
-                      x.SiteId == siteId
+                      x.SiteGuid == siteGuid
                         && (
                         searchInput == string.Empty
                         || x.Email.Contains(searchInput)
@@ -714,12 +714,12 @@ namespace cloudscribe.Core.Repositories.EF
                       PhoneNumber = x.PhoneNumber,
                       PhoneNumberConfirmed = x.PhoneNumberConfirmed,
                       SiteGuid = x.SiteGuid,
-                      SiteId = x.SiteId,
+                     // SiteId = x.SiteId,
                       State = x.State,
                       TimeZoneId = x.TimeZoneId,
                       Trusted = x.Trusted,
                       UserGuid = x.UserGuid,
-                      UserId = x.UserId,
+                    //  UserId = x.UserId,
                       UserName = x.UserName,
                       WebSiteUrl = x.WebSiteUrl
 
@@ -752,17 +752,17 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public async Task<int> CountLockedByAdmin(
-            int siteId, 
+            Guid siteGuid, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
             return await dbContext.Users.CountAsync<SiteUser>(
-                x => x.SiteId == siteId && x.IsLockedOut == true, 
+                x => x.SiteGuid == siteGuid && x.IsLockedOut == true, 
                 cancellationToken)
                 .ConfigureAwait(false);
         }
 
         public async Task<List<IUserInfo>> GetPageLockedByAdmin(
-            int siteId,
+            Guid siteGuid,
             int pageNumber,
             int pageSize,
             CancellationToken cancellationToken = default(CancellationToken))
@@ -774,7 +774,7 @@ namespace cloudscribe.Core.Repositories.EF
                         
                   where
                   (
-                      x.SiteId == siteId
+                      x.SiteGuid == siteGuid
                       && x.IsLockedOut == true
                   )
                   orderby x.DisplayName
@@ -797,12 +797,12 @@ namespace cloudscribe.Core.Repositories.EF
                       PhoneNumber = x.PhoneNumber,
                       PhoneNumberConfirmed = x.PhoneNumberConfirmed,
                       SiteGuid = x.SiteGuid,
-                      SiteId = x.SiteId,
+                     // SiteId = x.SiteId,
                       State = x.State,
                       TimeZoneId = x.TimeZoneId,
                       Trusted = x.Trusted,
                       UserGuid = x.UserGuid,
-                      UserId = x.UserId,
+                      //UserId = x.UserId,
                       UserName = x.UserName,
                       WebSiteUrl = x.WebSiteUrl
 
@@ -819,11 +819,11 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public async Task<int> CountFutureLockoutEndDate(
-            int siteId,
+            Guid siteGuid,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             return await dbContext.Users.CountAsync<SiteUser>(
-                x => x.SiteId == siteId  
+                x => x.SiteGuid == siteGuid
                 && x.LockoutEndDateUtc.HasValue
                 && x.LockoutEndDateUtc.Value > DateTime.UtcNow
                 , 
@@ -832,7 +832,7 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public async Task<List<IUserInfo>> GetPageFutureLockoutEndDate(
-            int siteId,
+            Guid siteGuid,
             int pageNumber,
             int pageSize,
             CancellationToken cancellationToken = default(CancellationToken))
@@ -844,7 +844,7 @@ namespace cloudscribe.Core.Repositories.EF
 
                   where
                   (
-                      x.SiteId == siteId
+                      x.SiteGuid == siteGuid
                         && x.LockoutEndDateUtc.HasValue
                         && x.LockoutEndDateUtc.Value > DateTime.UtcNow
                   )
@@ -868,12 +868,12 @@ namespace cloudscribe.Core.Repositories.EF
                       PhoneNumber = x.PhoneNumber,
                       PhoneNumberConfirmed = x.PhoneNumberConfirmed,
                       SiteGuid = x.SiteGuid,
-                      SiteId = x.SiteId,
+                      //SiteId = x.SiteId,
                       State = x.State,
                       TimeZoneId = x.TimeZoneId,
                       Trusted = x.Trusted,
                       UserGuid = x.UserGuid,
-                      UserId = x.UserId,
+                     // UserId = x.UserId,
                       UserName = x.UserName,
                       WebSiteUrl = x.WebSiteUrl
 
@@ -890,11 +890,11 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public async Task<int> CountUnconfirmedEmail(
-            int siteId,
+            Guid siteGuid,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             return await dbContext.Users.CountAsync<SiteUser>(
-                x => x.SiteId == siteId
+                x => x.SiteGuid == siteGuid
                 && x.EmailConfirmed == false
                 ,
                 cancellationToken)
@@ -902,7 +902,7 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public async Task<List<IUserInfo>> GetPageUnconfirmedEmailUsers(
-            int siteId,
+            Guid siteGuid,
             int pageNumber,
             int pageSize,
             CancellationToken cancellationToken = default(CancellationToken))
@@ -914,7 +914,7 @@ namespace cloudscribe.Core.Repositories.EF
 
                   where
                   (
-                      x.SiteId == siteId
+                      x.SiteGuid == siteGuid
                       && x.EmailConfirmed == false
                   )
                   orderby x.DisplayName
@@ -937,12 +937,12 @@ namespace cloudscribe.Core.Repositories.EF
                       PhoneNumber = x.PhoneNumber,
                       PhoneNumberConfirmed = x.PhoneNumberConfirmed,
                       SiteGuid = x.SiteGuid,
-                      SiteId = x.SiteId,
+                     // SiteId = x.SiteId,
                       State = x.State,
                       TimeZoneId = x.TimeZoneId,
                       Trusted = x.Trusted,
                       UserGuid = x.UserGuid,
-                      UserId = x.UserId,
+                     // UserId = x.UserId,
                       UserName = x.UserName,
                       WebSiteUrl = x.WebSiteUrl
 
@@ -959,11 +959,11 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public async Task<int> CountUnconfirmedPhone(
-            int siteId,
+            Guid siteGuid,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             return await dbContext.Users.CountAsync<SiteUser>(
-                x => x.SiteId == siteId
+                x => x.SiteGuid == siteGuid
                 && x.PhoneNumberConfirmed == false
                 ,
                 cancellationToken)
@@ -971,7 +971,7 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public async Task<List<IUserInfo>> GetPageUnconfirmedPhoneUsers(
-            int siteId,
+            Guid siteGuid,
             int pageNumber,
             int pageSize,
             CancellationToken cancellationToken = default(CancellationToken))
@@ -983,7 +983,7 @@ namespace cloudscribe.Core.Repositories.EF
 
                   where
                   (
-                      x.SiteId == siteId
+                      x.SiteGuid == siteGuid
                       && x.PhoneNumberConfirmed == false
                   )
                   orderby x.DisplayName
@@ -1006,12 +1006,12 @@ namespace cloudscribe.Core.Repositories.EF
                       PhoneNumber = x.PhoneNumber,
                       PhoneNumberConfirmed = x.PhoneNumberConfirmed,
                       SiteGuid = x.SiteGuid,
-                      SiteId = x.SiteId,
+                     // SiteId = x.SiteId,
                       State = x.State,
                       TimeZoneId = x.TimeZoneId,
                       Trusted = x.Trusted,
                       UserGuid = x.UserGuid,
-                      UserId = x.UserId,
+                     // UserId = x.UserId,
                       UserName = x.UserName,
                       WebSiteUrl = x.WebSiteUrl
 
@@ -1028,18 +1028,18 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public async Task<int> CountNotApprovedUsers(
-            int siteId, 
+            Guid siteGuid, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
             return await dbContext.Users.CountAsync<SiteUser>(
-                x => x.SiteId == siteId && x.AccountApproved == false, 
+                x => x.SiteGuid == siteGuid && x.AccountApproved == false, 
                 cancellationToken)
                 .ConfigureAwait(false);
 
         }
 
         public async Task<List<IUserInfo>> GetNotApprovedUsers(
-            int siteId,
+            Guid siteGuid,
             int pageNumber,
             int pageSize,
             CancellationToken cancellationToken = default(CancellationToken))
@@ -1050,7 +1050,7 @@ namespace cloudscribe.Core.Repositories.EF
                 = from x in dbContext.Users     
                   where
                   (
-                      x.SiteId == siteId
+                      x.SiteGuid == siteGuid
                       && x.AccountApproved == false
                   )
                   orderby x.DisplayName
@@ -1073,12 +1073,12 @@ namespace cloudscribe.Core.Repositories.EF
                       PhoneNumber = x.PhoneNumber,
                       PhoneNumberConfirmed = x.PhoneNumberConfirmed,
                       SiteGuid = x.SiteGuid,
-                      SiteId = x.SiteId,
+                     // SiteId = x.SiteId,
                       State = x.State,
                       TimeZoneId = x.TimeZoneId,
                       Trusted = x.Trusted,
                       UserGuid = x.UserGuid,
-                      UserId = x.UserId,
+                     // UserId = x.UserId,
                       UserName = x.UserName,
                       WebSiteUrl = x.WebSiteUrl
 
@@ -1095,38 +1095,38 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public async Task<bool> EmailExistsInDB(
-            int siteId, 
+            Guid siteGuid, 
             string email, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            var found = await Fetch(siteId, email);
+            var found = await Fetch(siteGuid, email);
             if(found == null) { return false; }
             return true;
 
         }
 
         public async Task<bool> EmailExistsInDB(
-            int siteId, 
-            int userId, 
+            Guid siteGuid, 
+            Guid userGuid, 
             string email, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            var found = await Fetch(siteId, email);
+            var found = await Fetch(siteGuid, email);
             if (found == null) { return false; }
-            if(found.UserId != userId) { return false; }
+            if(found.UserGuid != userGuid) { return false; }
             return true;
             
         }
 
-        public bool LoginExistsInDB(int siteId, string loginName)
+        public bool LoginExistsInDB(Guid siteGuid, string loginName)
         {
             SiteUser item
                 = dbContext.Users.SingleOrDefault(
-                    x => x.SiteId == siteId
+                    x => x.SiteGuid == siteGuid
                     && x.UserName == loginName
                     );
 
@@ -1144,24 +1144,24 @@ namespace cloudscribe.Core.Repositories.EF
         /// <param name="loginName"></param>
         /// <returns></returns>
         public async Task<bool> LoginIsAvailable(
-            int siteId, 
-            int userId, 
+            Guid siteGuid, 
+            Guid userGuid, 
             string loginName, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            var found = await FetchByLoginName(siteId, loginName, false, cancellationToken);
+            var found = await FetchByLoginName(siteGuid, loginName, false, cancellationToken);
             if (found == null) { return true; }
-            if (found.UserId == userId) { return true; }
+            if (found.UserGuid == userGuid) { return true; }
             return false;
         }
 
 
         public async Task<string> GetUserNameFromEmail(
-            int siteId, 
+            Guid siteGuid, 
             string email, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            var found = await Fetch(siteId, email, cancellationToken);
+            var found = await Fetch(siteGuid, email, cancellationToken);
             if (found == null) { return string.Empty; }
             return found.UserName;
         }
@@ -1188,13 +1188,13 @@ namespace cloudscribe.Core.Repositories.EF
             CancellationToken cancellationToken = default(CancellationToken))
         {
             if (role == null) { return false; }
-            if (role.SiteId == -1) { throw new ArgumentException("SiteId must be provided"); }
+            //if (role.SiteId == -1) { throw new ArgumentException("SiteId must be provided"); }
             if (role.SiteGuid == Guid.Empty) { throw new ArgumentException("SiteGuid must be provided"); }
             
             SiteRole siteRole = SiteRole.FromISiteRole(role); 
-            if(siteRole.RoleId == -1)
+            if(siteRole.RoleGuid == Guid.Empty)
             {
-                siteRole.RoleId = 0;
+                siteRole.RoleGuid = Guid.NewGuid();
                 if(siteRole.RoleName.Length == 0)
                 {
                     siteRole.RoleName = siteRole.DisplayName;
@@ -1203,7 +1203,7 @@ namespace cloudscribe.Core.Repositories.EF
             }
             else
             {
-                bool tracking = dbContext.ChangeTracker.Entries<SiteRole>().Any(x => x.Entity.RoleId == siteRole.RoleId);
+                bool tracking = dbContext.ChangeTracker.Entries<SiteRole>().Any(x => x.Entity.RoleGuid == siteRole.RoleGuid);
                 if (!tracking)
                 {
                     dbContext.Roles.Update(siteRole);
@@ -1214,10 +1214,10 @@ namespace cloudscribe.Core.Repositories.EF
             int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
                 .ConfigureAwait(false);
 
-            if(role.RoleId == -1)
+            if(role.RoleGuid == Guid.Empty)
             {
                 //update the original with the new keys on insert
-                role.RoleId = siteRole.RoleId;
+                //role.RoleId = siteRole.RoleId;
                 role.RoleGuid = siteRole.RoleGuid;
             }
 
@@ -1226,12 +1226,12 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public async Task<bool> DeleteRole(
-            int roleId, 
+            Guid roleGuid, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
             var result = false;
             var itemToRemove = await dbContext.Roles.SingleOrDefaultAsync(
-                x => x.RoleId == roleId, 
+                x => x.RoleGuid == roleGuid, 
                 cancellationToken)
                 .ConfigureAwait(false);
 
@@ -1248,11 +1248,12 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public async Task<bool> DeleteRolesBySite(
-            int siteId, 
+            Guid siteGuid, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
+            
             var result = false;
-            var query = from r in dbContext.Roles.Where(x => x.SiteId == siteId)
+            var query = from r in dbContext.Roles.Where(x => x.SiteGuid == siteGuid)
                         select r;
             
             dbContext.Roles.RemoveRange(query);
@@ -1265,19 +1266,14 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public async Task<bool> AddUserToRole(
-            int roleId,
             Guid roleGuid,
-            int userId,
             Guid userGuid,
             CancellationToken cancellationToken = default(CancellationToken)
             )
         {
             UserRole ur = new UserRole();
-            ur.Id = 0;
             ur.RoleGuid = roleGuid;
-            ur.RoleId = roleId;
             ur.UserGuid = userGuid;
-            ur.UserId = userId;
 
             dbContext.UserRoles.Add(ur);
             int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
@@ -1288,14 +1284,14 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public async Task<bool> RemoveUserFromRole(
-            int roleId, 
-            int userId, 
+            Guid roleGuid, 
+            Guid userGuid, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
             var result = false;
             var itemToRemove = await dbContext.UserRoles.SingleOrDefaultAsync(
-                x => x.RoleId == roleId && x.UserId == userId, 
-                cancellationToken)
+                x => x.UserGuid == userGuid && x.RoleGuid == roleGuid 
+                , cancellationToken)
                 .ConfigureAwait(false);
 
             if (itemToRemove != null)
@@ -1311,19 +1307,19 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public Task<bool> DeleteUserRoles(
-            int userId, 
+            Guid userGuid, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            return DeleteUserRoles(userId, true, cancellationToken);
+            return DeleteUserRoles(userGuid, true, cancellationToken);
         }
 
         public async Task<bool> DeleteUserRoles(
-            int userId, 
+            Guid userGuid,
             bool saveChanges, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
             var query = from x in dbContext.UserRoles
-                        where x.UserId == userId
+                        where x.UserGuid == userGuid
                         select x;
 
             dbContext.UserRoles.RemoveRange(query);
@@ -1338,11 +1334,11 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public async Task<bool> DeleteUserRolesByRole(
-            int roleId, 
+            Guid roleGuid, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
             var query = from x in dbContext.UserRoles
-                        where x.RoleId == roleId
+                        where x.RoleGuid == roleGuid
                         select x;
 
             dbContext.UserRoles.RemoveRange(query);
@@ -1353,12 +1349,12 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public async Task<bool> DeleteUserRolesBySite(
-            int siteId, 
+            Guid siteGuid, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
             var query = from x in dbContext.UserRoles
-                        join y in dbContext.Roles on x.RoleId equals y.RoleId
-                        where y.SiteId == siteId
+                        join y in dbContext.Roles on x.RoleGuid equals y.RoleGuid
+                        where y.SiteGuid == siteGuid
                         select x;
 
             dbContext.UserRoles.RemoveRange(query);
@@ -1370,12 +1366,12 @@ namespace cloudscribe.Core.Repositories.EF
 
 
         public async Task<bool> RoleExists(
-            int siteId, 
+            Guid siteGuid, 
             string roleName, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
             int count = await dbContext.Roles.CountAsync<SiteRole>(
-                r => r.SiteId == siteId && r.RoleName == roleName
+                r => r.SiteGuid == siteGuid && r.RoleName == roleName
                 , cancellationToken)
                 .ConfigureAwait(false);
 
@@ -1383,12 +1379,12 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public async Task<ISiteRole> FetchRole(
-            int roleId, 
+            Guid roleGuid, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
             SiteRole item
                 = await dbContext.Roles.SingleOrDefaultAsync(
-                    x => x.RoleId == roleId
+                    x => x.RoleGuid == roleGuid
                     , cancellationToken)
                     .ConfigureAwait(false);
 
@@ -1396,13 +1392,13 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public async Task<ISiteRole> FetchRole(
-            int siteId, 
+            Guid siteGuid, 
             string roleName, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
             SiteRole item
                 = await dbContext.Roles.SingleOrDefaultAsync(
-                    x => x.SiteId == siteId && x.RoleName == roleName
+                    x => x.SiteGuid == siteGuid && x.RoleName == roleName
                     , cancellationToken)
                     .ConfigureAwait(false);
 
@@ -1411,14 +1407,14 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public async Task<List<string>> GetUserRoles(
-            int siteId, 
-            int userId, 
+            Guid siteGuid,
+            Guid userGuid, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
             var query = from x in dbContext.Roles
                         join y in dbContext.UserRoles
-                        on x.RoleId equals y.RoleId
-                        where y.UserId == userId
+                        on x.RoleGuid equals y.RoleGuid
+                        where y.UserGuid == userGuid
                         orderby x.RoleName
                         select x.RoleName
                         ;
@@ -1430,12 +1426,12 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public async Task<int> CountOfRoles(
-            int siteId, 
+            Guid siteGuid, 
             string searchInput, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
             return await dbContext.Roles.CountAsync<SiteRole>(
-                x => x.SiteId.Equals(siteId)
+                x => x.SiteGuid.Equals(siteGuid)
                 && (
                  (searchInput == "")
                         || x.DisplayName.Contains(searchInput)
@@ -1447,7 +1443,7 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public async Task<IList<ISiteRole>> GetRolesBySite(
-            int siteId,
+            Guid siteGuid,
             string searchInput,
             int pageNumber,
             int pageSize,
@@ -1457,18 +1453,18 @@ namespace cloudscribe.Core.Repositories.EF
 
             var listQuery = from x in dbContext.Roles
                             where (
-                            x.SiteId.Equals(siteId) &&
+                            x.SiteGuid.Equals(siteGuid) &&
                             (searchInput == "" || x.DisplayName.Contains(searchInput) || x.RoleName.Contains(searchInput))
                             )
                             orderby x.RoleName ascending
                             select new SiteRole {
-                                RoleId = x.RoleId,
+                                //RoleId = x.RoleId,
                                 RoleGuid = x.RoleGuid,
-                                SiteId = x.SiteId,
+                               // SiteId = x.SiteId,
                                 SiteGuid = x.SiteGuid,
                                 RoleName = x.RoleName,
                                 DisplayName = x.DisplayName,
-                                MemberCount = dbContext.UserRoles.Count<UserRole>(u => u.RoleId == x.RoleId)
+                                MemberCount = dbContext.UserRoles.Count<UserRole>(u => u.RoleGuid == x.RoleGuid)
                             };
 
             return await listQuery
@@ -1482,16 +1478,16 @@ namespace cloudscribe.Core.Repositories.EF
 
 
         public async Task<int> CountUsersInRole(
-            int siteId, 
-            int roleId, 
+            Guid siteGuid, 
+            Guid roleGuid, 
             string searchInput, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
             var query = from x in dbContext.Users
                         join y in dbContext.UserRoles
-                        on x.UserId equals y.UserId
+                        on x.UserGuid equals y.UserGuid
                         where (
-                            (x.SiteId.Equals(siteId) && y.RoleId.Equals(roleId))
+                            (x.SiteGuid.Equals(siteGuid) && y.RoleGuid.Equals(roleGuid))
                             && (
                                 (searchInput == "")
                                 || x.Email.Contains(searchInput)
@@ -1501,7 +1497,8 @@ namespace cloudscribe.Core.Repositories.EF
                                 || x.LastName.Contains(searchInput)
                             )
                             )
-                        select x.UserId
+                        //select x.UserGuid
+                        select 1
                         ;
 
             return await query.CountAsync<int>(cancellationToken).ConfigureAwait(false);
@@ -1510,8 +1507,8 @@ namespace cloudscribe.Core.Repositories.EF
 
 
         public async Task<IList<IUserInfo>> GetUsersInRole(
-            int siteId,
-            int roleId,
+            Guid siteGuid,
+            Guid roleGuid,
             string searchInput,
             int pageNumber,
             int pageSize,
@@ -1521,10 +1518,10 @@ namespace cloudscribe.Core.Repositories.EF
 
             var query = from x in dbContext.Users
                         join y in dbContext.UserRoles
-                        on x.UserId equals y.UserId
+                        on x.UserGuid equals y.UserGuid
                         orderby x.DisplayName 
                         where (
-                            (x.SiteId.Equals(siteId) && y.RoleId.Equals(roleId))
+                            (x.SiteGuid.Equals(siteGuid) && y.RoleGuid.Equals(roleGuid))
                             && (
                                 (searchInput == "")
                                 || x.Email.Contains(searchInput)
@@ -1550,18 +1547,18 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public async Task<IList<ISiteUser>> GetUsersInRole(
-            int siteId,
+            Guid siteGuid,
             string roleName,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             var query = from x in dbContext.Users
                         join y in dbContext.UserRoles
-                        on x.UserId equals y.UserId
+                        on x.UserGuid equals y.UserGuid
                         join z in dbContext.Roles
-                        on y.RoleId equals z.RoleId
+                        on y.RoleGuid equals z.RoleGuid
                         orderby x.DisplayName
                         where 
-                            (x.SiteId.Equals(siteId) && z.RoleName.Equals(roleName))
+                            (x.SiteGuid.Equals(siteGuid) && z.RoleName.Equals(roleName))
                             
                         select x
                         ;
@@ -1575,20 +1572,20 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public async Task<int> CountUsersNotInRole(
-            int siteId, 
-            int roleId, 
+            Guid siteGuid,
+            Guid roleGuid, 
             string searchInput, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
             var query = from u in dbContext.Users
                         from r in dbContext.Roles
                         join ur in dbContext.UserRoles
-                        on new { r.RoleId, u.UserId } equals new { ur.RoleId, ur.UserId } into t
+                        on new { r.RoleGuid, u.UserGuid } equals new { ur.RoleGuid, ur.UserGuid } into t
                         from t2 in t.DefaultIfEmpty()
                         where (
-                        u.SiteId == siteId
-                        && r.SiteId == siteId
-                        && r.RoleId == roleId
+                        u.SiteGuid == siteGuid
+                        && r.SiteGuid == siteGuid
+                        && r.RoleGuid == roleGuid
                         && (
                                 (searchInput == "")
                                 || u.Email.Contains(searchInput)
@@ -1597,19 +1594,20 @@ namespace cloudscribe.Core.Repositories.EF
                                 || u.FirstName.Contains(searchInput)
                                 || u.LastName.Contains(searchInput)
                             )
-                        
+
                         && t2 == null
                         )
-   
-                        select u.UserId;
+
+                        //select u.UserId;
+                        select 1;
 
             return await query.CountAsync<int>(cancellationToken).ConfigureAwait(false);
 
         }
 
         public async Task<IList<IUserInfo>> GetUsersNotInRole(
-            int siteId,
-            int roleId,
+            Guid siteGuid,
+            Guid roleGuid,
             string searchInput,
             int pageNumber,
             int pageSize,
@@ -1622,12 +1620,12 @@ namespace cloudscribe.Core.Repositories.EF
             var query = from u in dbContext.Users
                         from r in dbContext.Roles
                         join ur in dbContext.UserRoles
-                        on new { r.RoleId, u.UserId } equals new { ur.RoleId, ur.UserId } into t
+                        on new { r.RoleGuid, u.UserGuid } equals new { ur.RoleGuid, ur.UserGuid } into t
                         from t2 in t.DefaultIfEmpty()
                         where (
-                        u.SiteId == siteId
-                        && r.SiteId == siteId
-                        && r.RoleId == roleId
+                        u.SiteGuid == siteGuid
+                        && r.SiteGuid == siteGuid
+                        && r.RoleGuid == roleGuid
                         && (
                                 (searchInput == "")
                                 || u.Email.Contains(searchInput)
@@ -1663,9 +1661,9 @@ namespace cloudscribe.Core.Repositories.EF
             if (userClaim == null) { return false; }
 
             UserClaim claim = UserClaim.FromIUserClaim(userClaim);
-            if(claim.Id == -1)
+            if(claim.Id == Guid.Empty)
             {
-                claim.Id = 0;
+                claim.Id = Guid.NewGuid();
                 dbContext.UserClaims.Add(claim);
             }
             else
@@ -1681,7 +1679,7 @@ namespace cloudscribe.Core.Repositories.EF
             int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
                 .ConfigureAwait(false);
 
-            if(userClaim.Id == -1)
+            if(userClaim.Id == Guid.Empty)
             {
                 //update the original on insert
                 userClaim.Id = claim.Id;
@@ -1692,7 +1690,7 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public async Task<bool> DeleteClaim(
-            int id, 
+            Guid id, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
             var result = false;
@@ -1711,24 +1709,24 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public async Task<bool> DeleteClaimsByUser(
-            int siteId, 
-            string userId, 
+            Guid siteGuid, 
+            Guid userGuid, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await DeleteClaimsByUser(siteId, userId, true, cancellationToken);
+            return await DeleteClaimsByUser(siteGuid, userGuid, true, cancellationToken);
 
         }
 
         public async Task<bool> DeleteClaimsByUser(
-            int siteId, 
-            string userId, 
+            Guid siteGuid, 
+            Guid userGuid, 
             bool saveChanges, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
             var query = from x in dbContext.UserClaims
                         where (
-                        (siteId == -1 || x.SiteId == siteId)
-                        && x.UserId == userId
+                        (siteGuid == Guid.Empty || x.SiteGuid == siteGuid)
+                        && x.UserGuid == userGuid
                         )
                         select x;
 
@@ -1745,15 +1743,15 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public async Task<bool> DeleteClaimByUser(
-            int siteId, 
-            string userId, 
+            Guid siteGuid, 
+            Guid userGuid, 
             string claimType, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
             var query = from x in dbContext.UserClaims
                         where (
-                        (siteId == -1 || x.SiteId == siteId)
-                        && (x.UserId == userId && x.ClaimType == claimType)
+                        (siteGuid == Guid.Empty || x.SiteGuid == siteGuid)
+                        && (x.UserGuid == userGuid && x.ClaimType == claimType)
                         )
                         select x;
 
@@ -1766,11 +1764,11 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public async Task<bool> DeleteClaimsBySite(
-            int siteId, 
+            Guid siteGuid, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
             var query = from x in dbContext.UserClaims
-                        where x.SiteId == siteId
+                        where x.SiteGuid == siteGuid
                         select x;
 
             dbContext.UserClaims.RemoveRange(query);
@@ -1782,13 +1780,13 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public async Task<IList<IUserClaim>> GetClaimsByUser(
-            int siteId, 
-            string userId, 
+            Guid siteGuid,
+            Guid userGuid, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
             var query = from l in dbContext.UserClaims
-                        where l.SiteId == siteId && l.UserId == userId
-                        
+                        where l.SiteGuid == siteGuid && l.UserGuid == userGuid
+
                         select l;
             var items = await query
                 .AsNoTracking()
@@ -1799,15 +1797,15 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public async Task<IList<ISiteUser>> GetUsersForClaim(
-            int siteId,
+            Guid siteGuid,
             string claimType,
             string claimValue,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             var query = from x in dbContext.Users
                         join y in dbContext.UserClaims
-                        on x.UserGuid.ToString() equals y.UserId
-                        where x.SiteId == siteId 
+                        on x.UserGuid equals y.UserGuid
+                        where x.SiteGuid == siteGuid
                         orderby x.DisplayName
                         select x
                         ;
@@ -1832,7 +1830,7 @@ namespace cloudscribe.Core.Repositories.EF
             if (userLogin == null) { return false; }
             if (userLogin.LoginProvider.Length == -1) { return false; }
             if (userLogin.ProviderKey.Length == -1) { return false; }
-            if (userLogin.UserId.Length == -1) { return false; }
+            if (userLogin.UserGuid == Guid.Empty) { return false; }
 
             UserLogin login = UserLogin.FromIUserLogin(userLogin);
             
@@ -1846,14 +1844,14 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public async Task<IUserLogin> FindLogin(
-            int siteId,
+            Guid siteGuid,
             string loginProvider,
             string providerKey,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             var query = from l in dbContext.UserLogins
                         where (
-                        l.SiteId == siteId
+                        l.SiteGuid == siteGuid
                         && l.LoginProvider == loginProvider
                         && l.ProviderKey == providerKey
                         )
@@ -1868,15 +1866,16 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public async Task<bool> DeleteLogin(
-            int siteId,
+            Guid siteGuid,
+            Guid userGuid,
             string loginProvider,
             string providerKey,
-            string userId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             var query = from l in dbContext.UserLogins
                         where (
-                        l.SiteId == siteId
+                        l.SiteGuid == siteGuid
+                        && l.UserGuid == userGuid
                         && l.LoginProvider == loginProvider
                         && l.ProviderKey == providerKey
                         )
@@ -1891,24 +1890,24 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public Task<bool> DeleteLoginsByUser(
-            int siteId, 
-            string userId, 
+            Guid siteGuid, 
+            Guid userGuid, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            return DeleteLoginsByUser(siteId, userId, true, cancellationToken);
+            return DeleteLoginsByUser(siteGuid, userGuid, true, cancellationToken);
 
         }
 
         public async Task<bool> DeleteLoginsByUser(
-            int siteId, 
-            string userId, 
+            Guid siteGuid,
+            Guid userGuid,
             bool saveChanges, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
             var query = from l in dbContext.UserLogins
                         where (
-                        l.SiteId == siteId
-                        && l.UserId == userId
+                        l.SiteGuid == siteGuid
+                        && l.UserGuid == userGuid
                         )
                         select l;
 
@@ -1925,11 +1924,11 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public async Task<bool> DeleteLoginsBySite(
-            int siteId, 
+            Guid siteGuid,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             var query = from l in dbContext.UserLogins
-                        where (l.SiteId == siteId)
+                        where (l.SiteGuid == siteGuid)
                         select l;
 
             dbContext.UserLogins.RemoveRange(query);
@@ -1941,14 +1940,14 @@ namespace cloudscribe.Core.Repositories.EF
         }
 
         public async Task<IList<IUserLogin>> GetLoginsByUser(
-            int siteId,
-            string userId,
+            Guid siteGuid,
+            Guid userGuid,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             var query = from l in dbContext.UserLogins
                         where (
-                        l.SiteId == siteId
-                        && l.UserId == userId
+                        l.SiteGuid == siteGuid
+                        && l.UserGuid == userGuid
                         )
                         select l;
 

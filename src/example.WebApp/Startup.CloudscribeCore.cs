@@ -33,9 +33,11 @@ using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Geography;
 using cloudscribe.Core.Web;
 using cloudscribe.Core.Web.Components;
+using cloudscribe.Web.Common.Middleware;
 using cloudscribe.Messaging;
 using cloudscribe.Web.Navigation;
 using cloudscribe.Core.Identity;
+using cloudscribe.Core.Web.Middleware;
 //using cloudscribe.Core.Identity.OAuth;
 
 namespace example.WebApp
@@ -64,74 +66,178 @@ namespace example.WebApp
         public static IApplicationBuilder UseCloudscribeCore(
             this IApplicationBuilder app,
             IOptions<MultiTenantOptions> multiTenantOptions,
-            IConfigurationRoot Configuration)
+            IConfigurationRoot Configuration
+            //,IIdentityOptionsResolver identityOptionsResolver
+            )
         {
+            //app.UseCommonExceptionHandler();
+            //Func<HttpContext> handler = delegate (HttpContext context)
+            //{
+            //    //if (logLevel < minimumLevel) { return false; }
+            //    //if (excludedLoggers.Contains(loggerName)) { return false; }
+
+            //    //return true;
+            //};
+           
+
+
+
+            
+
             app.UseMultitenancy<SiteSettings>();
+            app.UseTenantContainers<SiteSettings>();
 
             // https://github.com/saaskit/saaskit/blob/master/src/SaasKit.Multitenancy/MultitenancyApplicationBuilderExtensions.cs
             // should custom builder extension use Microsoft.AspNet.Builder as their own namespace?
             // I can see the merits but wondered is that conventional
             app.UsePerTenant<SiteSettings>((ctx, builder) =>
             {
+            var folderPath = ctx.Tenant.SiteFolderName;
 
-                var identityOptions = app.ApplicationServices.GetRequiredService<IOptions<IdentityOptions>>().Value;
-                if (identityOptions == null) { throw new ArgumentException("failed to get identity options"); }
-                if (identityOptions.Cookies.ApplicationCookie == null) { throw new ArgumentException("failed to get identity application cookie options"); }
+                
 
-                var shouldUseFolder = (
-                (multiTenantOptions.Value.Mode == MultiTenantMode.FolderName)
-                && (!multiTenantOptions.Value.UseRelatedSitesMode)
-                && (ctx.Tenant.SiteFolderName.Length > 0)
-                );
+            //builder.UseWhen(f => (context){
+            //}, (ctx,cb))
+
+                var singletonIdentityOptions = app.ApplicationServices.GetRequiredService<IOptions<IdentityOptions>>().Value;
+                var resolver = app.ApplicationServices.GetRequiredService<IIdentityOptionsResolver>();
+                var identityOptions = resolver.ResolveOptions(singletonIdentityOptions);
+                //if (identityOptions == null) { throw new ArgumentException("failed to get identity options"); }
+                //if (identityOptions.Cookies.ApplicationCookie == null) { throw new ArgumentException("failed to get identity application cookie options"); }
+
+               
+                var shouldUseFolder = true;
+                ////var shouldUseFolder = (
+                ////(multiTenantOptions.Value.Mode == MultiTenantMode.FolderName)
+                ////&& (!multiTenantOptions.Value.UseRelatedSitesMode)
+                ////&& (ctx.Tenant.SiteFolderName.Length > 0)
+                ////);
+                
+                var cookieEvents = app.ApplicationServices.GetService<SiteCookieAuthenticationEvents>();
+                identityOptions.Cookies.ExternalCookie.Events = cookieEvents;
+                identityOptions.Cookies.TwoFactorRememberMeCookie.Events = cookieEvents;
+                identityOptions.Cookies.TwoFactorUserIdCookie.Events = cookieEvents;
+                identityOptions.Cookies.ApplicationCookie.Events = cookieEvents;
 
 
-                if (shouldUseFolder)
-                {    
-                    identityOptions.Cookies.ExternalCookie.CookieName = AuthenticationScheme.External + "-" + ctx.Tenant.SiteFolderName;
-                    identityOptions.Cookies.ExternalCookie.AuthenticationScheme = AuthenticationScheme.External + "-" + ctx.Tenant.SiteFolderName;
-                    
-                    identityOptions.Cookies.ExternalCookie.LoginPath = new PathString("/" + ctx.Tenant.SiteFolderName + "/account/login");
-                    identityOptions.Cookies.ExternalCookie.LogoutPath = new PathString("/" + ctx.Tenant.SiteFolderName + "/account/logoff");
-                    identityOptions.Cookies.ExternalCookie.AccessDeniedPath = new PathString("/" + ctx.Tenant.SiteFolderName + "/forbidden");
-                    //identityOptions.Cookies.ExternalCookie.AutomaticChallenge = true;
-                    //identityOptions.Cookies.ExternalCookie.AutomaticAuthenticate = true;
+                if (string.IsNullOrEmpty(folderPath))
+                {
+                    builder.UseCookieAuthentication(identityOptions.Cookies.ExternalCookie);
+                    builder.UseCookieAuthentication(identityOptions.Cookies.TwoFactorRememberMeCookie);
+                    builder.UseCookieAuthentication(identityOptions.Cookies.TwoFactorUserIdCookie);
+                    builder.UseCookieAuthentication(identityOptions.Cookies.ApplicationCookie);
 
-                    identityOptions.Cookies.TwoFactorRememberMeCookie.CookieName = AuthenticationScheme.TwoFactorRememberMe + "-" + ctx.Tenant.SiteFolderName;
-                    identityOptions.Cookies.TwoFactorRememberMeCookie.AuthenticationScheme = AuthenticationScheme.TwoFactorRememberMe + "-" + ctx.Tenant.SiteFolderName;
+                    //builder.UseMiddleware<CookieAuthenticationMiddleware>(
+                    //    new cloudscribe.Core.Identity.OptionsWrapper<CookieAuthenticationOptions>(identityOptions.Cookies.ExternalCookie)
+                    //    );
+                    //builder.UseMiddleware<CookieAuthenticationMiddleware>(
+                    //    new cloudscribe.Core.Identity.OptionsWrapper<CookieAuthenticationOptions>(identityOptions.Cookies.TwoFactorRememberMeCookie)
+                    //    );
 
-                    identityOptions.Cookies.TwoFactorUserIdCookie.CookieName = AuthenticationScheme.TwoFactorUserId + "-" + ctx.Tenant.SiteFolderName;
-                    identityOptions.Cookies.TwoFactorUserIdCookie.AuthenticationScheme = AuthenticationScheme.TwoFactorUserId + "-" + ctx.Tenant.SiteFolderName;
-                    
-                    identityOptions.Cookies.ApplicationCookie.CookieName = AuthenticationScheme.Application + "-" + ctx.Tenant.SiteFolderName;
-                    identityOptions.Cookies.ApplicationCookie.AuthenticationScheme = AuthenticationScheme.Application + "-" + ctx.Tenant.SiteFolderName;
+                    //builder.UseMiddleware<CookieAuthenticationMiddleware>(
+                    //    new cloudscribe.Core.Identity.OptionsWrapper<CookieAuthenticationOptions>(identityOptions.Cookies.TwoFactorUserIdCookie)
+                    //    );
+
+                    //builder.UseMiddleware<CookieAuthenticationMiddleware>(
+                    //    new cloudscribe.Core.Identity.OptionsWrapper<CookieAuthenticationOptions>(identityOptions.Cookies.ApplicationCookie)
+                    //    );
+
 
                 }
                 else
                 {
-                    
-                    identityOptions.Cookies.ExternalCookie.CookieName = AuthenticationScheme.External;
-                    identityOptions.Cookies.ExternalCookie.AuthenticationScheme = AuthenticationScheme.External;
+                    // When Map is used, the matched path segment(s) are removed from HttpRequest.Path 
+                    // and appended to HttpRequest.PathBase for each request.
 
-                    identityOptions.Cookies.TwoFactorRememberMeCookie.CookieName = AuthenticationScheme.TwoFactorRememberMe;
-                    identityOptions.Cookies.TwoFactorRememberMeCookie.AuthenticationScheme = AuthenticationScheme.TwoFactorRememberMe;
+                    builder.Map("/" + folderPath, folderTenant =>
+                    {
+                        //folderTenant.UseIISPlatformHandler(options => options.AuthenticationDescriptions.Clear());
 
-                    identityOptions.Cookies.TwoFactorUserIdCookie.CookieName = AuthenticationScheme.TwoFactorUserId;
-                    identityOptions.Cookies.TwoFactorUserIdCookie.AuthenticationScheme = AuthenticationScheme.TwoFactorUserId;
+                        //app.UseRuntimeInfoPage("/info");
 
-                    identityOptions.Cookies.ApplicationCookie.CookieName = AuthenticationScheme.Application;
-                    identityOptions.Cookies.ApplicationCookie.AuthenticationScheme = AuthenticationScheme.Application;
+                        // Add static files to the request pipeline.
+                        folderTenant.UseStaticFiles();
+
+                        // the only thing we are using session for is Alerts
+                        folderTenant.UseSession();
+                        //app.UseInMemorySession(configure: s => s.IdleTimeout = TimeSpan.FromMinutes(20));
+
+                        // this is in Startup.CloudscribeCore.cs
+                        //app.UseCloudscribeCore(multiTenantOptions, Configuration);
+
+                        folderTenant.UseCookieAuthentication(identityOptions.Cookies.ExternalCookie);
+                        folderTenant.UseCookieAuthentication(identityOptions.Cookies.TwoFactorRememberMeCookie);
+                        folderTenant.UseCookieAuthentication(identityOptions.Cookies.TwoFactorUserIdCookie);
+                        folderTenant.UseCookieAuthentication(identityOptions.Cookies.ApplicationCookie);
+
+                        //folderTenant.UseMiddleware<CookieAuthenticationMiddleware>(
+                        //new cloudscribe.Core.Identity.OptionsWrapper<CookieAuthenticationOptions>(identityOptions.Cookies.ExternalCookie)
+                        //);
+                        //folderTenant.UseMiddleware<CookieAuthenticationMiddleware>(
+                        //    new cloudscribe.Core.Identity.OptionsWrapper<CookieAuthenticationOptions>(identityOptions.Cookies.TwoFactorRememberMeCookie)
+                        //    );
+
+                        //folderTenant.UseMiddleware<CookieAuthenticationMiddleware>(
+                        //    new cloudscribe.Core.Identity.OptionsWrapper<CookieAuthenticationOptions>(identityOptions.Cookies.TwoFactorUserIdCookie)
+                        //    );
+
+                        //folderTenant.UseMiddleware<CookieAuthenticationMiddleware>(
+                        //    new cloudscribe.Core.Identity.OptionsWrapper<CookieAuthenticationOptions>(identityOptions.Cookies.ApplicationCookie)
+                        //    );
+
+                        // it is very important that all authentication configuration be set before configuring mvc
+
+                        // Add MVC to the request pipeline.
+                        folderTenant.UseMvc(routes =>
+                        {
+                            // Understanding ASP.NET Routing:
+
+                            // it is very important that routes are registered in the correct order. more specific routes must be registered first and 
+                            // less specific routes must be registered later. a request may match more than one route.
+
+                            // When a request comes in it is compared to routes in the route table and the first route it matches is used no matter if a 
+                            // better match exists. therefore if a less specific route is registered first it will catch requests that would have a better 
+                            // match with a more specific route that was registered later.
+
+                            // ie the default route is usually the least specific route and must be registered last
+
+                            // something like a route for a cms would likely need to be the default route added last especially if you are not going to use 
+                            // a controller segment in the route because without a controller segment the route is less specific
+
+
+                            //// default route for folder sites must be second to last
+                            //if (multiTenantOptions.Value.Mode == MultiTenantMode.FolderName)
+                            //{
+                            //    routes.MapRoute(
+                            //    name: "folderdefault",
+                            //    template: "{sitefolder}/{controller}/{action}/{id?}",
+                            //    defaults: new { controller = "Home", action = "Index" },
+                            //    constraints: new { name = new SiteFolderRouteConstraint() }
+                            //    );
+                            //}
+
+
+                            // the default route has to be added last
+                            routes.MapRoute(
+                                name: "default",
+                                template: "{controller}/{action}/{id?}",
+                                defaults: new { controller = "Home", action = "Index" }
+                                );
+
+                            // Uncomment the following line to add a route for porting Web API 2 controllers.
+                            // routes.MapWebApiRoute("DefaultApi", "api/{controller}/{id?}");
+                        })
+                        ;
+
+
+                        
+                    });
                 }
 
-                //var cookieEvents = app.ApplicationServices.GetService<SiteCookieAuthenticationEvents>();
-                //identityOptions.Cookies.ExternalCookie.Events = cookieEvents;
-                //identityOptions.Cookies.TwoFactorRememberMeCookie.Events = cookieEvents;
-                //identityOptions.Cookies.TwoFactorUserIdCookie.Events = cookieEvents;
-                //identityOptions.Cookies.ApplicationCookie.Events = cookieEvents;
+                
+                
 
-                builder.UseCookieAuthentication(identityOptions.Cookies.ExternalCookie);
-                builder.UseCookieAuthentication(identityOptions.Cookies.TwoFactorRememberMeCookie);
-                builder.UseCookieAuthentication(identityOptions.Cookies.TwoFactorUserIdCookie);
-                builder.UseCookieAuthentication(identityOptions.Cookies.ApplicationCookie);
+                
 
                 //builder.UseCookieAuthentication(options =>
                 //{
@@ -213,6 +319,8 @@ namespace example.WebApp
 
 
             });
+
+            //app.UseRequestLogger();
 
 
             return app;

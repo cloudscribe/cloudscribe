@@ -17,10 +17,10 @@ namespace cloudscribe.Core.Models
         public SiteUser()
         { }
 
-        public string Id
-        {
-            get { return UserGuid.ToString(); }
-        }
+        //public string Id
+        //{
+        //    get { return UserGuid.ToString(); }
+        //}
 
         private string authorBio = string.Empty;
         public string AuthorBio
@@ -152,13 +152,13 @@ namespace cloudscribe.Core.Models
             u.SecurityStamp = user.SecurityStamp;
             u.Signature = user.Signature;
             u.SiteGuid = user.SiteGuid;
-            u.SiteId = user.SiteId;
+            
             u.State = user.State;
             u.TimeZoneId = user.TimeZoneId;
             u.Trusted = user.Trusted;
             u.TwoFactorEnabled = user.TwoFactorEnabled;
             u.UserGuid = user.UserGuid;
-            u.UserId = user.UserId;
+            
             u.UserName = user.UserName;
             u.WebSiteUrl = user.WebSiteUrl;
            

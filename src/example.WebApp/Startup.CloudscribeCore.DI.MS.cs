@@ -51,7 +51,7 @@ using cloudscribe.Web.Pagination;
 using cloudscribe.Core.Web.Components.Messaging;
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Repositories.EF;
-
+using Microsoft.Extensions.OptionsModel;
 
 namespace example.WebApp
 {
@@ -222,7 +222,9 @@ namespace example.WebApp
 
             //services.AddMultitenancy<SiteSettings, SiteResolver>();
             services.AddMultitenancy<SiteSettings, CachingSiteResolver>();
+            services.TryAddScoped<IIdentityOptionsResolver, cloudscribe.Core.Web.Components.IdentityOptionsResolver>();
 
+            //
 
             services.TryAddScoped<SiteManager, SiteManager>();
             services.TryAddScoped<SetupManager, SetupManager>();
@@ -242,8 +244,8 @@ namespace example.WebApp
             // the factory will provide access to the previously registered IVersionProviders
             services.TryAddScoped<IVersionProviderFactory, VersionProviderFactory>();
 
-            services.AddCloudscribeIdentity<SiteUser, SiteRole>()
-                .AddDefaultTokenProviders();
+            services.AddCloudscribeIdentity<SiteUser, SiteRole>(); 
+                //.AddDefaultTokenProviders();
 
             // you can use either json or xml to maintain your navigation map we provide examples of each navigation.xml and 
             // navigation.json in the root of this project
@@ -266,7 +268,7 @@ namespace example.WebApp
             services.TryAddTransient<IBuildPaginationLinks, PaginationLinkBuilder>();
 
             
-            //services.AddTransient<IEmailTemplateService, HardCodedEmailTemplateService>();
+            services.AddTransient<IEmailTemplateService, HardCodedEmailTemplateService>();
             services.AddTransient<ISiteMessageEmailSender, SiteEmailMessageSender>();
             services.AddTransient<ISmsSender, SiteSmsSender>();
             
@@ -302,6 +304,7 @@ namespace example.WebApp
                 options.ViewLocationExpanders.Add(new SiteViewLocationExpander());
             });
 
+            services.AddSingleton<Microsoft.AspNet.Antiforgery.IAntiforgeryTokenStore, SiteAntiforgeryTokenStore>();
 
 
 
@@ -350,19 +353,20 @@ namespace example.WebApp
         }
 
 
-        public static IdentityBuilder AddCloudscribeIdentity<TUser, TRole>(
+        //public static IdentityBuilder AddCloudscribeIdentity<TUser, TRole>(
+        public static IServiceCollection AddCloudscribeIdentity<TUser, TRole>(
             this IServiceCollection services)
             where TUser : class
             where TRole : class
         {
             // Services used by identity
             services.AddOptions();
-            services.AddAuthentication(options =>
-            {
-                // This is the Default value for ExternalCookieAuthenticationScheme
-                //options.SignInScheme = new IdentityCookieOptions().ExternalCookieAuthenticationScheme;
-                options.SignInScheme = AuthenticationScheme.External;
-            });
+            //services.AddAuthentication(options =>
+            //{
+            //    // This is the Default value for ExternalCookieAuthenticationScheme
+            //    //options.SignInScheme = new IdentityCookieOptions().ExternalCookieAuthenticationScheme;
+            //    options.SignInScheme = AuthenticationScheme.External;
+            //});
 
             services.TryAddSingleton<IdentityMarkerService>();
 
@@ -422,19 +426,26 @@ namespace example.WebApp
             services.TryAddScoped<RoleManager<TRole>, RoleManager<TRole>>();
 
             //http://docs.asp.net/en/latest/security/2fa.html
-            //services.TryAddScoped<IdentityOptions>();
-            services.Configure<IdentityOptions>(options =>
-            {
-                // some other options are overridden by ste settings
-                // but in all cases we do want to require each account to have a unique email
-                // it is problematic to not require that when a site is created
-                // then accounts with duplicate email can be created and later
-                // if the configuration is changed to now require unique email
-                // there already exist problem records
-                // the default setting for Identity is false but we want it to be true for these reasons
-                options.User.RequireUniqueEmail = true;
-                options.Cookies.TwoFactorUserIdCookieAuthenticationScheme = AuthenticationScheme.TwoFactorUserId;
-            });
+            //services.AddScoped<IdentityOptions>();
+            //services.TryAddScoped<IOptions<IdentityOptions>>();
+            // problem here is services.Configure makes the identity options a singleton
+            //services.Configure<IdentityOptions>(options =>
+            //{
+            //    // some other options are overridden by ste settings
+            //    // but in all cases we do want to require each account to have a unique email
+            //    // it is problematic to not require that when a site is created
+            //    // then accounts with duplicate email can be created and later
+            //    // if the configuration is changed to now require unique email
+            //    // there already exist problem records
+            //    // the default setting for Identity is false but we want it to be true for these reasons
+            //    options.User.RequireUniqueEmail = true;
+            //    options.Cookies.TwoFactorUserIdCookieAuthenticationScheme = AuthenticationScheme.TwoFactorUserId;
+            //});
+
+            //services.Configure<IdentityOptions>(options =>
+            //{
+            //    //...
+            //});
 
 
             //services.Configure<SharedAuthenticationOptions>(options =>
@@ -497,11 +508,13 @@ namespace example.WebApp
 
 
 
-            IdentityBuilder builder = new IdentityBuilder(typeof(TUser), typeof(TRole), services);
+            //IdentityBuilder builder = new IdentityBuilder(typeof(TUser), typeof(TRole), services);
             //builder.AddUserStore(UserStore<SiteUser>>();
 
 
-            return builder;
+            //return builder;
+
+            return services;
         }
 
     }

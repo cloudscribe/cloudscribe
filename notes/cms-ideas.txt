@@ -19,3 +19,5 @@ http://www.programmableweb.com/news/cope-create-once-publish-everywhere/2009/10/
 
 http://intentionaldesign.ca/2013/07/22/to-dita-or-not-to-dita-thats-a-good-question-part-1/
 
+https://en.wikipedia.org/wiki/CMS_Pipelines
+

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-06-19
-// Last Modified:		    2016-02-04
+// Last Modified:		    2016-04-27
 // 
 
 using cloudscribe.Core.Models;
@@ -59,11 +59,7 @@ namespace cloudscribe.Core.Identity
             {
                 role.SiteGuid = Site.SiteGuid;
             }
-            if(role.SiteId == -1)
-            {
-                role.SiteId = Site.SiteId;
-            }
-
+            
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
 
@@ -85,8 +81,8 @@ namespace cloudscribe.Core.Identity
             }
 
             // remove all users form the role
-            bool result = await userRepo.DeleteUserRolesByRole(role.RoleId, cancellationToken);
-            result = await userRepo.DeleteRole(role.RoleId, cancellationToken);
+            bool result = await userRepo.DeleteUserRolesByRole(role.RoleGuid, cancellationToken);
+            result = await userRepo.DeleteRole(role.RoleGuid, cancellationToken);
 
             if (result) { return IdentityResult.Success; }
 
@@ -97,7 +93,10 @@ namespace cloudscribe.Core.Identity
         {
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
-            ISiteRole role = await userRepo.FetchRole(Convert.ToInt32(roleId), cancellationToken);
+            if (string.IsNullOrWhiteSpace(roleId)) throw new ArgumentException("invalid roleid");
+            if(roleId.Length != 36) throw new ArgumentException("invalid roleid");
+            Guid roleGuid = new Guid(roleId);
+            ISiteRole role = await userRepo.FetchRole(roleGuid, cancellationToken);
 
             return (TRole)role;
         }
@@ -107,10 +106,10 @@ namespace cloudscribe.Core.Identity
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
 
-            int siteId = Site.SiteId;
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+            Guid siteGuid = Site.SiteGuid;
+            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
 
-            ISiteRole role = await userRepo.FetchRole(siteId, normalizedRoleName, cancellationToken);
+            ISiteRole role = await userRepo.FetchRole(siteGuid, normalizedRoleName, cancellationToken);
 
             return (TRole)role;
         }
@@ -137,7 +136,7 @@ namespace cloudscribe.Core.Identity
                 throw new ArgumentNullException("role");
             }
 
-            return Task.FromResult(role.RoleId.ToInvariantString());
+            return Task.FromResult(role.RoleGuid.ToString());
         }
 
         public Task<string> GetRoleNameAsync(TRole role, CancellationToken cancellationToken)

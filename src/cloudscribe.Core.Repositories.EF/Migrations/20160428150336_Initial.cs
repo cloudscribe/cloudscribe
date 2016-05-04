@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Data.Entity.Migrations;
-using Microsoft.Data.Entity.Metadata;
 
 namespace cloudscribe.Core.Repositories.EF.Migrations
 {
-    public partial class initial : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -69,55 +68,38 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                     table.PrimaryKey("PK_Language", x => x.Guid);
                 });
             migrationBuilder.CreateTable(
-                name: "mp_SiteFolders",
+                name: "mp_SiteHosts",
                 columns: table => new
                 {
-                    Guid = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
-                    FolderName = table.Column<string>(nullable: false),
+                    HostGuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
+                    HostName = table.Column<string>(nullable: false),
                     SiteGuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SiteFolder", x => x.Guid);
-                });
-            migrationBuilder.CreateTable(
-                name: "mp_SiteHosts",
-                columns: table => new
-                {
-                    HostID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    HostName = table.Column<string>(nullable: false),
-                    SiteGuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SiteID = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_SiteHost", x => x.HostID);
+                    table.PrimaryKey("PK_SiteHost", x => x.HostGuid);
                 });
             migrationBuilder.CreateTable(
                 name: "mp_Roles",
                 columns: table => new
                 {
-                    RoleID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    DisplayName = table.Column<string>(nullable: false),
                     RoleGuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
+                    DisplayName = table.Column<string>(nullable: false),
                     RoleName = table.Column<string>(nullable: false),
-                    SiteGuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SiteID = table.Column<int>(type: "int", nullable: false)
+                    SiteGuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SiteRole", x => x.RoleID);
+                    table.PrimaryKey("PK_SiteRole", x => x.RoleGuid);
                 });
             migrationBuilder.CreateTable(
                 name: "mp_Sites",
                 columns: table => new
                 {
-                    SiteID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    SiteGuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
                     AccountApprovalEmailCsv = table.Column<string>(nullable: true),
                     AddThisDotComUsername = table.Column<string>(nullable: true),
+                    AliasId = table.Column<string>(nullable: true),
                     AllowDbFallbackWithLdap = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
                     AllowNewRegistration = table.Column<bool>(type: "bit", nullable: false, defaultValue: 1),
                     AllowPersistentLogin = table.Column<bool>(type: "bit", nullable: false, defaultValue: 1),
@@ -150,7 +132,6 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                     GoogleClientSecret = table.Column<string>(nullable: true),
                     IsDataProtected = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
                     IsServerAdminSite = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
-                    Skin = table.Column<string>(nullable: true),
                     LdapDomain = table.Column<string>(nullable: true),
                     LdapPort = table.Column<int>(type: "int", nullable: false, defaultValue: 389),
                     LdapRootDN = table.Column<string>(nullable: true),
@@ -177,7 +158,6 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                     RequiresQuestionAndAnswer = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
                     SignEmailWithDkim = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
                     SiteFolderName = table.Column<string>(nullable: true, defaultValue: ""),
-                    SiteGuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
                     SiteIsClosed = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
                     SiteIsClosedMessage = table.Column<string>(nullable: true),
                     SiteName = table.Column<string>(nullable: false),
@@ -191,6 +171,7 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                     SmtpServer = table.Column<string>(nullable: true),
                     SmtpUseSsl = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
                     SmtpUser = table.Column<string>(nullable: true),
+                    Theme = table.Column<string>(nullable: true),
                     TimeZoneId = table.Column<string>(nullable: true),
                     TwitterConsumerKey = table.Column<string>(nullable: true),
                     TwitterConsumerSecret = table.Column<string>(nullable: true),
@@ -199,14 +180,13 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SiteSettings", x => x.SiteID);
+                    table.PrimaryKey("PK_SiteSettings", x => x.SiteGuid);
                 });
             migrationBuilder.CreateTable(
                 name: "mp_Users",
                 columns: table => new
                 {
-                    UserID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    UserGuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
                     AccessFailedCount = table.Column<int>(nullable: false),
                     AccountApproved = table.Column<bool>(type: "bit", nullable: false, defaultValue: 1),
                     AuthorBio = table.Column<string>(nullable: true),
@@ -240,29 +220,26 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                     SecurityStamp = table.Column<string>(nullable: true),
                     Signature = table.Column<string>(nullable: true),
                     SiteGuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SiteID = table.Column<int>(type: "int", nullable: false),
                     State = table.Column<string>(nullable: true),
                     TimeZoneId = table.Column<string>(nullable: true),
                     Trusted = table.Column<bool>(nullable: false),
                     TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
-                    UserGuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
                     UserName = table.Column<string>(nullable: false),
                     WebSiteUrl = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SiteUser", x => x.UserID);
+                    table.PrimaryKey("PK_SiteUser", x => x.UserGuid);
                 });
             migrationBuilder.CreateTable(
                 name: "mp_UserClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true),
-                    SiteId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<string>(nullable: false)
+                    SiteGuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserGuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -298,30 +275,26 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                 name: "mp_UserLogins",
                 columns: table => new
                 {
+                    UserGuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SiteGuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     LoginProvider = table.Column<string>(nullable: false),
                     ProviderKey = table.Column<string>(nullable: false),
-                    UserId = table.Column<string>(nullable: false),
-                    ProviderDisplayName = table.Column<string>(nullable: true),
-                    SiteId = table.Column<int>(type: "int", nullable: false)
+                    ProviderDisplayName = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserLogin", x => new { x.LoginProvider, x.ProviderKey, x.UserId });
+                    table.PrimaryKey("PK_UserLogin", x => new { x.UserGuid, x.SiteGuid, x.LoginProvider, x.ProviderKey });
                 });
             migrationBuilder.CreateTable(
                 name: "mp_UserRoles",
                 columns: table => new
                 {
-                    ID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    RoleGuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    RoleID = table.Column<int>(type: "int", nullable: false),
                     UserGuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserID = table.Column<int>(type: "int", nullable: false)
+                    RoleGuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserRole", x => x.ID);
+                    table.PrimaryKey("PK_UserRole", x => new { x.UserGuid, x.RoleGuid });
                 });
             migrationBuilder.CreateIndex(
                 name: "IX_GeoCountry_ISOCode2",
@@ -331,6 +304,14 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                 name: "IX_GeoZone_CountryGuid",
                 table: "mp_GeoZone",
                 column: "CountryGuid");
+            migrationBuilder.CreateIndex(
+                name: "IX_SiteHost_HostName",
+                table: "mp_SiteHosts",
+                column: "HostName");
+            migrationBuilder.CreateIndex(
+                name: "IX_SiteHost_SiteGuid",
+                table: "mp_SiteHosts",
+                column: "SiteGuid");
             migrationBuilder.CreateIndex(
                 name: "IX_SiteRole_RoleGuid",
                 table: "mp_Roles",
@@ -345,18 +326,9 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                 table: "mp_Roles",
                 column: "SiteGuid");
             migrationBuilder.CreateIndex(
-                name: "IX_SiteRole_SiteId",
-                table: "mp_Roles",
-                column: "SiteID");
-            migrationBuilder.CreateIndex(
-                name: "IX_SiteSettings_SiteGuid",
+                name: "IX_SiteSettings_SiteFolderName",
                 table: "mp_Sites",
-                column: "SiteGuid",
-                unique: true);
-            migrationBuilder.CreateIndex(
-                name: "IX_SiteUser_Email",
-                table: "mp_Users",
-                column: "Email");
+                column: "SiteFolderName");
             migrationBuilder.CreateIndex(
                 name: "IX_SiteUser_NormalizedEmail",
                 table: "mp_Users",
@@ -370,30 +342,37 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
                 table: "mp_Users",
                 column: "SiteGuid");
             migrationBuilder.CreateIndex(
-                name: "IX_SiteUser_SiteId",
-                table: "mp_Users",
-                column: "SiteID");
-            migrationBuilder.CreateIndex(
-                name: "IX_SiteUser_UserGuid",
-                table: "mp_Users",
-                column: "UserGuid",
-                unique: true);
-            migrationBuilder.CreateIndex(
-                name: "IX_SiteUser_UserName",
-                table: "mp_Users",
-                column: "UserName");
-            migrationBuilder.CreateIndex(
-                name: "IX_UserClaim_SiteId",
+                name: "IX_UserClaim_ClaimType",
                 table: "mp_UserClaims",
-                column: "SiteId");
+                column: "ClaimType");
+            migrationBuilder.CreateIndex(
+                name: "IX_UserClaim_SiteGuid",
+                table: "mp_UserClaims",
+                column: "SiteGuid");
+            migrationBuilder.CreateIndex(
+                name: "IX_UserClaim_UserGuid",
+                table: "mp_UserClaims",
+                column: "UserGuid");
             migrationBuilder.CreateIndex(
                 name: "IX_UserLocation_UserGuid",
                 table: "mp_UserLocation",
                 column: "UserGuid");
             migrationBuilder.CreateIndex(
-                name: "IX_UserLogin_SiteId",
+                name: "IX_UserLogin_SiteGuid",
                 table: "mp_UserLogins",
-                column: "SiteId");
+                column: "SiteGuid");
+            migrationBuilder.CreateIndex(
+                name: "IX_UserLogin_UserGuid",
+                table: "mp_UserLogins",
+                column: "UserGuid");
+            migrationBuilder.CreateIndex(
+                name: "IX_UserRole_RoleGuid",
+                table: "mp_UserRoles",
+                column: "RoleGuid");
+            migrationBuilder.CreateIndex(
+                name: "IX_UserRole_UserGuid",
+                table: "mp_UserRoles",
+                column: "UserGuid");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -402,7 +381,6 @@ namespace cloudscribe.Core.Repositories.EF.Migrations
             migrationBuilder.DropTable("mp_GeoCountry");
             migrationBuilder.DropTable("mp_GeoZone");
             migrationBuilder.DropTable("mp_Language");
-            migrationBuilder.DropTable("mp_SiteFolders");
             migrationBuilder.DropTable("mp_SiteHosts");
             migrationBuilder.DropTable("mp_Roles");
             migrationBuilder.DropTable("mp_Sites");

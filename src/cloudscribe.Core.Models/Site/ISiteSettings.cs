@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2016-01-27
+// Last Modified:			2016-04-28
 // 
 
 using System;
@@ -16,8 +16,9 @@ namespace cloudscribe.Core.Models
     // lighter base version for lists
     public interface ISiteInfo
     {
-        int SiteId { get; set; }
+        //int SiteId { get; set; }
         Guid SiteGuid { get; set; }
+        string AliasId { get; set; }
         string SiteName { get; set; }
         string PreferredHostName { get; set; }
         string SiteFolderName { get; set; }
@@ -163,7 +164,7 @@ namespace cloudscribe.Core.Models
 
 
         string PrivacyPolicy { get; set; }
-        string Layout { get; set; } //TODO: rename as Theme
+        string Theme { get; set; } //TODO: rename as Theme
         string GoogleAnalyticsProfileId { get; set; }
         
         //social login stuff

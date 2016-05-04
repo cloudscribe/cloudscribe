@@ -1,4 +1,7 @@
 
+http://docs.asp.net/en/latest/fundamentals/middleware.html
+
+https://www.jeffogata.com/asp-net-core-middleware/
 
 https://github.com/ClintBailiff/MiddlewareDemo
 http://odetocode.com/blogs/scott/archive/2015/10/06/authorization-policies-and-middleware-in-asp-net-5.aspx
@@ -63,3 +66,13 @@ http://azure.microsoft.com/blog/2015/06/25/announcing-the-1-0-0-release-of-appli
 https://azure.microsoft.com/en-us/pricing/details/application-insights/
 
 https://azure.microsoft.com/en-us/documentation/articles/app-insights-start-monitoring-app-health-usage/
+
+
+
+http://stackoverflow.com/questions/19096723/login-request-validation-token-issue
+
+
+An unhandled exception occurred while processing the request.
+
+InvalidOperationException: The provided antiforgery token was meant for a different claims-based user than the current user.
+Microsoft.AspNet.Antiforgery.DefaultAntiforgeryTokenGenerator.ValidateTokens(HttpContext httpContext, AntiforgeryToken sessionToken, AntiforgeryToken fieldToken)

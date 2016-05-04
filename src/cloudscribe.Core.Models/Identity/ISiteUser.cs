@@ -16,9 +16,9 @@ namespace cloudscribe.Core.Models
     public interface IUserInfo
     {
         Guid UserGuid { get; set; }
-        int UserId { get; set; }
+        //int UserId { get; set; }
         Guid SiteGuid { get; set; }
-        int SiteId { get; set; }
+        //int SiteId { get; set; }
         string UserName { get; set; }
         string DisplayName { get; set; }
         string FirstName { get; set; }
@@ -51,7 +51,7 @@ namespace cloudscribe.Core.Models
 
     public interface ISiteUser : IUserInfo
     {
-        string Id { get; }
+        //string Id { get; }
        
         int AccessFailedCount { get; set; } // maps to FailedPasswordAttemptCount in ado data layers
         string PasswordHash { get; set; }

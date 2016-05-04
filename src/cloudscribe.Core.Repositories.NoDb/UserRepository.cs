@@ -58,15 +58,15 @@ namespace cloudscribe.Core.Repositories.NoDb
             CancellationToken cancellationToken = default(CancellationToken))
         {
             if (user == null) { return false; }
-            if (user.SiteId == -1) { throw new ArgumentException("user must have a siteid"); }
+            
             if (user.SiteGuid == Guid.Empty) { throw new ArgumentException("user must have a siteguid"); }
 
             await EnsureProjectId().ConfigureAwait(false);
 
             SiteUser siteUser = SiteUser.FromISiteUser(user);
-            if (siteUser.UserId == -1)
+            if (siteUser.UserGuid == Guid.Empty)
             {
-                siteUser.UserId = 0; //EF needs it to be zero in order to generate
+                siteUser.UserGuid = Guid.NewGuid(); 
                 //dbContext.Users.Add(siteUser);
             }
             else

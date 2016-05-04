@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:              Joe Audette
 // Created:             2016-02-04
-// Last Modified:       2016-03-05
+// Last Modified:       2016-04-27
 // 
 
 //  2016-02-04 found this blog post by Ben Foster
@@ -67,7 +67,7 @@ namespace cloudscribe.Core.Web.Components
             var cacheEntryOptions = new MemoryCacheEntryOptions()
                 .SetAbsoluteExpiration(cachingOptions.FolderListCacheDuration);
 
-            log.LogDebug("Caching folder lsit with keys \"{cacheKey}\".", listCacheKey);
+            log.LogDebug("Caching folder list with keys \"{cacheKey}\".", listCacheKey);
             cache.Set(listCacheKey, result, cacheEntryOptions);
 
             return result;
@@ -116,8 +116,7 @@ namespace cloudscribe.Core.Web.Components
                 }
             }
             var id =  context.Tenant.SiteGuid.ToString();
-            var id2 = "site-" + context.Tenant.SiteId.ToInvariantString();
-            cacheKeys.Add(id2);
+
             cacheKeys.Add(id);
 
             return cacheKeys;

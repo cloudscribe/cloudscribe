@@ -20,10 +20,10 @@ namespace cloudscribe.Core.Models
         { }
 
         
-        public int UserId { get; set; } = -1;
+        //public int UserId { get; set; } = -1;
         public Guid UserGuid { get; set; } = Guid.Empty;
         public Guid SiteGuid { get; set; } = Guid.Empty;
-        public int SiteId { get; set; } = -1;
+        //public int SiteId { get; set; } = -1;
 
         private string email = string.Empty;
         public string Email

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-04
-// Last Modified:			2015-06-10
+// Last Modified:			2016-04-27
 //
 
 using cloudscribe.Core.Models;
@@ -18,12 +18,10 @@ namespace cloudscribe.Core.Web.ViewModels.RoleAdmin
         {
             RoleViewModel model = new RoleViewModel();
             model.RoleGuid = siteRole.RoleGuid;
-            model.RoleId = siteRole.RoleId;
             model.RoleName = siteRole.RoleName;
             model.DisplayName = siteRole.DisplayName;
             model.SiteGuid = siteRole.SiteGuid;
-            model.SiteId = siteRole.SiteId;
-
+            
             return model;
 
         }
@@ -51,16 +49,7 @@ namespace cloudscribe.Core.Web.ViewModels.RoleAdmin
         }
 
         #region ISiteRole
-
-        private int roleID = -1;
-
-        [Display(Name = "RoleId")]
-        public int RoleId
-        {
-            get { return roleID; }
-            set { roleID = value; }
-        }
-
+        
         private Guid roleGuid = Guid.Empty;
 
         [Display(Name = "RoleGuid")]
@@ -69,16 +58,7 @@ namespace cloudscribe.Core.Web.ViewModels.RoleAdmin
             get { return roleGuid; }
             set { roleGuid = value; }
         }
-
-        private int siteID = -1;
-
-        [Display(Name = "SiteId")]
-        public int SiteId
-        {
-            get { return siteID; }
-            set { siteID = value; }
-        }
-
+        
         private Guid siteGuid = Guid.Empty;
 
         [Display(Name = "SiteGuid")]

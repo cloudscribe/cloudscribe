@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-22
-// Last Modified:		    2016-02-04
+// Last Modified:		    2016-04-27
 // 
 //
 
@@ -29,6 +29,7 @@ namespace cloudscribe.Core.Identity
         
         public SiteUserManager(
             SiteSettings currentSite,
+            IIdentityOptionsResolver identityResolver,
             IUserRepository userRepository,
             IUserStore<TUser> store,
             IOptions<IdentityOptions> optionsAccessor,
@@ -43,7 +44,8 @@ namespace cloudscribe.Core.Identity
             IHttpContextAccessor contextAccessor)
             : base(
                   store,
-                  optionsAccessor,
+                  ResolveOptions(identityResolver, optionsAccessor)
+                  ,
                   passwordHasher,
                   userValidators,
                   passwordValidators,
@@ -53,6 +55,7 @@ namespace cloudscribe.Core.Identity
                   logger,
                   contextAccessor)
         {
+            this.identityResolver = identityResolver;
             defaultIdentityOptions = optionsAccessor.Value;
             userStore = store;
             userRepo = userRepository;
@@ -62,6 +65,15 @@ namespace cloudscribe.Core.Identity
             _context = contextAccessor?.HttpContext;
         }
 
+        private static IOptions<IdentityOptions> ResolveOptions(
+            IIdentityOptionsResolver identityResolver,
+            IOptions<IdentityOptions> optionsAccessor)
+        {
+            var o = identityResolver.ResolveOptions(optionsAccessor.Value);
+            return new OptionsWrapper<IdentityOptions>(o);
+        }
+
+        private IIdentityOptionsResolver identityResolver;
         private IdentityOptions defaultIdentityOptions;
         private IUserStore<TUser> userStore;
         private IUserRepository userRepo;
@@ -114,90 +126,90 @@ namespace cloudscribe.Core.Identity
         //}
 
 
-        public Task<bool> LoginIsAvailable(int userId, string loginName)
+        public Task<bool> LoginIsAvailable(Guid userGuid, string loginName)
         {
-            int siteId = Site.SiteId;
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+            Guid siteGuid = Site.SiteGuid;
+            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
 
-            return userRepo.LoginIsAvailable(siteId, userId, loginName, CancellationToken);
+            return userRepo.LoginIsAvailable(siteGuid, userGuid, loginName, CancellationToken);
  
         }
 
-        public Task<string> GetUserNameFromEmail(int siteId, string email)
+        public Task<string> GetUserNameFromEmail(Guid siteGuid, string email)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
 
-            return userRepo.GetUserNameFromEmail(siteId, email, CancellationToken);
+            return userRepo.GetUserNameFromEmail(siteGuid, email, CancellationToken);
         }
 
-        public Task<List<IUserInfo>> GetPage(int siteId, int pageNumber, int pageSize, string userNameBeginsWith, int sortMode)
+        public Task<List<IUserInfo>> GetPage(Guid siteGuid, int pageNumber, int pageSize, string userNameBeginsWith, int sortMode)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
 
-            return userRepo.GetPage(siteId, pageNumber, pageSize, userNameBeginsWith, sortMode, CancellationToken);
+            return userRepo.GetPage(siteGuid, pageNumber, pageSize, userNameBeginsWith, sortMode, CancellationToken);
         }
 
-        public int GetCount(int siteId)
+        public int GetCount(Guid siteGuid)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
 
-            return userRepo.GetCount(siteId);
+            return userRepo.GetCount(siteGuid);
         }
 
-        public Task<int> CountUsers(int siteId, string userNameBeginsWith)
+        public Task<int> CountUsers(Guid siteGuid, string userNameBeginsWith)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
 
-            return userRepo.CountUsers(siteId, userNameBeginsWith, CancellationToken);
+            return userRepo.CountUsers(siteGuid, userNameBeginsWith, CancellationToken);
         }
 
-        public Task<int> CountLockedOutUsers(int siteId)
+        public Task<int> CountLockedOutUsers(Guid siteGuid)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
 
-            return userRepo.CountLockedByAdmin(siteId, CancellationToken);
+            return userRepo.CountLockedByAdmin(siteGuid, CancellationToken);
         }
 
         public Task<List<IUserInfo>> GetPageLockedUsers(
-            int siteId,
+            Guid siteGuid,
             int pageNumber,
             int pageSize)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
 
-            return userRepo.GetPageLockedByAdmin(siteId, pageNumber, pageSize, CancellationToken);
+            return userRepo.GetPageLockedByAdmin(siteGuid, pageNumber, pageSize, CancellationToken);
         }
 
-        public Task<List<IUserInfo>> GetUserAdminSearchPage(int siteId, int pageNumber, int pageSize, string searchInput, int sortMode)
+        public Task<List<IUserInfo>> GetUserAdminSearchPage(Guid siteGuid, int pageNumber, int pageSize, string searchInput, int sortMode)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
 
-            return userRepo.GetUserAdminSearchPage(siteId, pageNumber, pageSize, searchInput, sortMode, CancellationToken);
+            return userRepo.GetUserAdminSearchPage(siteGuid, pageNumber, pageSize, searchInput, sortMode, CancellationToken);
 
         }
 
-        public Task<int> CountUsersForAdminSearch(int siteId, string searchInput)
+        public Task<int> CountUsersForAdminSearch(Guid siteGuid, string searchInput)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
 
-            return userRepo.CountUsersForAdminSearch(siteId, searchInput, CancellationToken);
+            return userRepo.CountUsersForAdminSearch(siteGuid, searchInput, CancellationToken);
         }
 
-        public Task<int> CountNotApprovedUsers(int siteId)
+        public Task<int> CountNotApprovedUsers(Guid siteGuid)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
 
-            return userRepo.CountNotApprovedUsers(siteId, CancellationToken);
+            return userRepo.CountNotApprovedUsers(siteGuid, CancellationToken);
         }
 
         public Task<List<IUserInfo>> GetNotApprovedUsers(
-            int siteId,
+            Guid siteGuid,
             int pageNumber,
             int pageSize)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
 
-            return userRepo.GetNotApprovedUsers(siteId, pageNumber, pageSize, CancellationToken);
+            return userRepo.GetNotApprovedUsers(siteGuid, pageNumber, pageSize, CancellationToken);
 
         }
 
@@ -208,18 +220,18 @@ namespace cloudscribe.Core.Identity
             return userRepo.GetByIPAddress(siteGuid, ipv4Address, CancellationToken);
         }
 
-        public Task<ISiteUser> Fetch(int siteId, int userId)
+        //public Task<ISiteUser> Fetch(int siteId, int userId)
+        //{
+        //    if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+
+        //    return userRepo.Fetch(siteId, userId, CancellationToken);
+        //}
+
+        public Task<ISiteUser> Fetch(Guid siteGuid, Guid userGuid)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
 
-            return userRepo.Fetch(siteId, userId, CancellationToken);
-        }
-
-        public Task<ISiteUser> Fetch(int siteId, Guid userGuid)
-        {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
-
-            return userRepo.Fetch(siteId, userGuid, CancellationToken);
+            return userRepo.Fetch(siteGuid, userGuid, CancellationToken);
         }
 
         //public async Task<ISiteUser> FetchByConfirmationGuid(int siteId, Guid confirmGuid)
@@ -234,18 +246,18 @@ namespace cloudscribe.Core.Identity
             return userRepo.Save(user, CancellationToken);
         }
 
-        public Task<bool> EmailExistsInDB(int siteId, string email)
+        public Task<bool> EmailExistsInDB(Guid siteGuid, string email)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
 
-            return userRepo.EmailExistsInDB(siteId, email, CancellationToken);
+            return userRepo.EmailExistsInDB(siteGuid, email, CancellationToken);
         }
 
-        public Task<bool> EmailExistsInDB(int siteId, int userId, string email)
+        public Task<bool> EmailExistsInDB(Guid siteGuid, Guid userGuid, string email)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
 
-            return userRepo.EmailExistsInDB(siteId, userId, email, CancellationToken);
+            return userRepo.EmailExistsInDB(siteGuid, userGuid, email, CancellationToken);
 
         }
 

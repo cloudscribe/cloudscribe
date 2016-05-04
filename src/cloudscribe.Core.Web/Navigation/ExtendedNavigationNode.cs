@@ -20,7 +20,7 @@ namespace cloudscribe.Core.Web.Navigation
 
 
     public class ExtendedNavigationNode : NavigationNode, 
-        INavigationNodeSeoSettings, 
+        //INavigationNodeSeoSettings, 
         INavigationNodeEditPermissionMeta,
         INavigationNodeDesignMeta,
         INavigationNodePublisingMeta
@@ -29,8 +29,8 @@ namespace cloudscribe.Core.Web.Navigation
         // these props were migrated from mojoportal we may not need all of them and may remove some later
 
         //INavigationNodeSeoSettings
-        [JsonIgnore]
-        public PageChangeFrequency ChangeFrequency { get; set; } = PageChangeFrequency.Daily;
+        //[JsonIgnore]
+        //public PageChangeFrequency ChangeFrequency { get; set; } = PageChangeFrequency.Daily;
 
         [JsonIgnore]
         public string SiteMapPriority { get; set; } = "0.5";

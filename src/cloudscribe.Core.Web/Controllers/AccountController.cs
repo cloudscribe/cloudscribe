@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2016-03-18
+// Last Modified:			2016-04-27
 // 
 
 using cloudscribe.Core.Identity;
@@ -81,7 +81,7 @@ namespace cloudscribe.Core.Web.Controllers
         // POST: /Account/Login
         [HttpPost]
         [AllowAnonymous]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
         {
             ViewData["Title"] = "Log in";
@@ -337,7 +337,7 @@ namespace cloudscribe.Core.Web.Controllers
                     {
                         var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
                         var callbackUrl = Url.Action("ConfirmEmail", "Account", 
-                            new { userId = user.Id, code = code }, 
+                            new { userId = user.UserGuid.ToString(), code = code }, 
                             protocol: HttpContext.Request.Scheme);
 
                         emailSender.SendAccountConfirmationEmailAsync(
@@ -354,7 +354,7 @@ namespace cloudscribe.Core.Web.Controllers
                         }
                         else
                         {
-                            return RedirectToAction("EmailConfirmationRequired", new { userGuid = user.Id, didSend = true });
+                            return RedirectToAction("EmailConfirmationRequired", new { userGuid = user.UserGuid, didSend = true });
                         }
 
                     }
@@ -371,7 +371,7 @@ namespace cloudscribe.Core.Web.Controllers
                             //}
                             //else
                             //{
-                            return RedirectToAction("PendingApproval", new { userGuid = user.Id, didSend = true });
+                            return RedirectToAction("PendingApproval", new { userGuid = user.UserGuid, didSend = true });
                             //}
 
                         }
@@ -424,7 +424,7 @@ namespace cloudscribe.Core.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> VerifyEmail(Guid userGuid)
         {
-            var user = await userManager.Fetch(userManager.Site.SiteId,  userGuid);
+            var user = await userManager.Fetch(userManager.Site.SiteGuid,  userGuid);
 
             if(user == null)
             {
@@ -440,7 +440,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             var code = await userManager.GenerateEmailConfirmationTokenAsync((SiteUser)user);
             var callbackUrl = Url.Action("ConfirmEmail", "Account",
-                            new { userId = user.Id, code = code },
+                            new { userId = user.UserGuid.ToString(), code = code },
                             protocol: HttpContext.Request.Scheme);
 
             emailSender.SendAccountConfirmationEmailAsync(
@@ -451,7 +451,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             await ipAddressTracker.TackUserIpAddress(Site.SiteGuid, user.UserGuid);
 
-            return RedirectToAction("EmailConfirmationRequired", new { userGuid = user.Id, didSend = true });
+            return RedirectToAction("EmailConfirmationRequired", new { userGuid = user.UserGuid, didSend = true });
         }
 
         // GET: /Account/ConfirmEmail
@@ -475,7 +475,7 @@ namespace cloudscribe.Core.Web.Controllers
             {
                 emailSender.AccountPendingApprovalAdminNotification(Site, user).Forget();
 
-                return RedirectToAction("PendingApproval", new { userGuid = user.Id, didSend = true });
+                return RedirectToAction("PendingApproval", new { userGuid = user.UserGuid, didSend = true });
             }
 
             return View(result.Succeeded ? "ConfirmEmail" : "Error");
@@ -590,7 +590,6 @@ namespace cloudscribe.Core.Web.Controllers
                 }
                 var user = new SiteUser {
                     SiteGuid = Site.SiteGuid,
-                    SiteId = Site.SiteId,
                     UserName = model.Email,
                     Email = model.Email
                 };
@@ -637,14 +636,14 @@ namespace cloudscribe.Core.Web.Controllers
         }
 
 
-        public async Task<JsonResult> LoginNameAvailable(int? userId, string loginName)
+        public async Task<JsonResult> LoginNameAvailable(Guid? userGuid, string loginName)
         {
             // same validation is used when editing or creating a user
             // if editing then the loginname is valid if found attached to the selected user
             // otherwise if found it is not already in use and not available
-            int selectedUserId = -1;
-            if (userId.HasValue) { selectedUserId = userId.Value; }
-            bool available = await userManager.LoginIsAvailable(selectedUserId, loginName);
+            Guid selectedUserGuid = Guid.Empty;
+            if (userGuid.HasValue) { selectedUserGuid = userGuid.Value; }
+            bool available = await userManager.LoginIsAvailable(selectedUserGuid, loginName);
 
 
             return Json(available);
@@ -684,7 +683,7 @@ namespace cloudscribe.Core.Web.Controllers
                 // Send an email with this link
                 var code = await userManager.GeneratePasswordResetTokenAsync(user);
                 var resetUrl = Url.Action("ResetPassword", "Account", 
-                    new { userId = user.Id, code = code }, 
+                    new { userId = user.UserGuid.ToString(), code = code }, 
                     protocol: HttpContext.Request.Scheme);
 
                 // best security practice is to not disclose the existence of user accounts

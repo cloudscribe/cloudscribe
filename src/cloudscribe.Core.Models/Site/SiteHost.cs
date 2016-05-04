@@ -16,9 +16,9 @@ namespace cloudscribe.Core.Models
 {
     public interface ISiteHost
     {
-        int HostId { get; set; }
+        Guid HostGuid { get; set; }
         string HostName { get; set; }
-        int SiteId { get; set; }
+       // int SiteId { get; set; }
         Guid SiteGuid { get; set; }
         //bool IsDomain(IOwinContext context);
 
@@ -26,7 +26,7 @@ namespace cloudscribe.Core.Models
 
     public class SiteHost : ISiteHost
     {
-        public int HostId { get; set; }
+        public Guid HostGuid { get; set; }
 
         private string hostName = string.Empty;
         public string HostName
@@ -36,7 +36,7 @@ namespace cloudscribe.Core.Models
         }
 
 
-        public int SiteId { get; set; } = -1;
+        //public int SiteId { get; set; } = -1;
         public Guid SiteGuid { get; set; } = Guid.Empty;
         //public bool IsDomain(IOwinContext context)
         //{

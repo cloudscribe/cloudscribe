@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2016-03-03
+// Last Modified:			2016-04-29
 // 
 
 //using cloudscribe.Configuration.DataAnnotations;
@@ -23,14 +23,14 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
             availableLayouts = new List<SelectListItem>();
         }
 
-        private int siteID = -1;
+        //private int siteID = -1;
 
-        [Display(Name = "SiteId")]
-        public int SiteId
-        {
-            get { return siteID; }
-            set { siteID = value; }
-        }
+        //[Display(Name = "SiteId")]
+        //public int SiteId
+        //{
+        //    get { return siteID; }
+        //    set { siteID = value; }
+        //}
 
         private Guid siteGuid = Guid.Empty;
 
@@ -51,6 +51,20 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         {
             get { return siteName; }
             set { siteName = value; }
+        }
+
+        private string aliasId = string.Empty;
+        /// <summary>
+        /// no spaces, only chars that are good for folder names
+        /// this is an alternate identifier for a site whose main purpose
+        /// is so we don't have to use an ugly guid string for folder name
+        /// to host site specific files such as themes
+        /// </summary>
+        [RegularExpression(@"^[a-zA-Z0-9_-]+$", ErrorMessage ="only digits, numbers, - and _ allowed, no spaces allowed"), StringLength(36)]
+        public string AliasId
+        {
+            get { return aliasId; }
+            set { aliasId = value; }
         }
 
         private string siteFolderName = string.Empty;

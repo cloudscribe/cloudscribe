@@ -13,8 +13,7 @@
 }
 <form method="post" class="form-horizontal" role="form" asp-antiforgery="true">
 
-        <div asp-validation-summary="ValidationSummary.All" class="text-danger"></div>
-        <input asp-for="SiteId" type="hidden" />
+        <div asp-validation-summary="ValidationSummary.All" class="text-danger"></div> 
         <input asp-for="SiteGuid" type="hidden" />
         <input asp-for="ReturnPageNumber" type="hidden" />
         <div class="form-group">
@@ -24,6 +23,13 @@
                 <span asp-validation-for="SiteName" class="text-danger"></span> 
             </div>
         </div>
+    <div class="form-group">
+        <label asp-for="AliasId" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="AliasId" class="form-control" />
+            <span asp-validation-for="AliasId" class="text-danger"></span>
+        </div>
+    </div>
         @if (useFolderTenants)
         {
             <div class="form-group">
@@ -110,7 +116,6 @@
 {
     <form id="deleteform" class="form-inline" asp-controller="SiteAdmin"
           asp-action="SiteDelete">
-        <input asp-for="SiteId" type="hidden"/>
         <input asp-for="SiteGuid" type="hidden" />
         <input asp-for="ReturnPageNumber" type="hidden" />
     </form>       

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-27
-// Last Modified:		    2016-03-04
+// Last Modified:		    2016-04-27
 // 
 
 //TODO: we need to override many or most of the methods of the base class
@@ -29,7 +29,8 @@ namespace cloudscribe.Core.Identity
     public class SiteSignInManager<TUser> : SignInManager<TUser> where TUser : SiteUser
     {
         public SiteSignInManager(
-            SiteUserManager<TUser> userManager, 
+            SiteUserManager<TUser> userManager,
+            IIdentityOptionsResolver identityResolver,
             IHttpContextAccessor contextAccessor,
             //MultiTenantCookieOptionsResolver tenantResolver,
             IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
@@ -40,8 +41,10 @@ namespace cloudscribe.Core.Identity
             :base(userManager, 
                  contextAccessor,
                  claimsFactory,
-                 optionsAccessor,
-                 logger
+
+                 ResolveOptions(identityResolver,optionsAccessor)
+
+                 , logger
                  )
         {
 
@@ -52,9 +55,20 @@ namespace cloudscribe.Core.Identity
             log = logger;
             multiTenantOptions = multiTenantOptionsAccessor.Value;
             siteRepo = siteRepository;
-            Options = optionsAccessor.Value;
+            Options = identityResolver.ResolveOptions(optionsAccessor.Value);
+            //Options = tenantOptions;
 
         }
+
+        private static IOptions<IdentityOptions> ResolveOptions(
+            IIdentityOptionsResolver identityResolver,
+            IOptions<IdentityOptions> optionsAccessor)
+        {
+            var o = identityResolver.ResolveOptions(optionsAccessor.Value);
+            return new OptionsWrapper<IdentityOptions>(o);
+        }
+
+        //private IIdentityOptionsResolver identityResolver;
 
         private SiteUserManager<TUser> SiteUserManager { get; set; }
         private HttpContext context;
@@ -107,9 +121,33 @@ namespace cloudscribe.Core.Identity
             //await context.Authentication.SignOutAsync(AuthenticationScheme.Application);
             //await context.Authentication.SignOutAsync(AuthenticationScheme.External);
             //await context.Authentication.SignOutAsync(AuthenticationScheme.TwoFactorUserId);
-            await context.Authentication.SignOutAsync(Options.Cookies.ApplicationCookie.AuthenticationScheme);
-            await context.Authentication.SignOutAsync(Options.Cookies.ExternalCookie.AuthenticationScheme);
-            await context.Authentication.SignOutAsync(Options.Cookies.TwoFactorUserIdCookie.AuthenticationScheme);
+            try
+            {
+                await context.Authentication.SignOutAsync(Options.Cookies.ApplicationCookie.AuthenticationScheme);
+            }
+            catch(InvalidOperationException ex)
+            {
+                log.LogError("sign out error", ex);
+            }
+            try
+            {
+                await context.Authentication.SignOutAsync(Options.Cookies.ExternalCookie.AuthenticationScheme);
+            }
+            catch (InvalidOperationException ex)
+            {
+                log.LogError("", ex);
+            }
+            try
+            {
+                await context.Authentication.SignOutAsync(Options.Cookies.TwoFactorUserIdCookie.AuthenticationScheme);
+            }
+            catch (InvalidOperationException ex)
+            {
+                log.LogError("", ex);
+            }
+            
+            
+            
         }
 
         public override async Task<bool> IsTwoFactorClientRememberedAsync(TUser user)
@@ -168,7 +206,7 @@ namespace cloudscribe.Core.Identity
                 {
                     if(multiTenantOptions.UseRelatedSitesMode)
                     {
-                        ISiteSettings site = siteRepo.FetchNonAsync(multiTenantOptions.RelatedSiteId);
+                        ISiteSettings site = siteRepo.FetchNonAsync(multiTenantOptions.RelatedSiteGuid);
 
                         return BuildFilteredAuthList(site, all);
                     }

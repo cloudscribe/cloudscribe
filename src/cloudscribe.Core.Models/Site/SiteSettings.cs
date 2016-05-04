@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2016-02-01
+// Last Modified:			2016-04-27
 // 
 
 using System;
@@ -22,11 +22,11 @@ namespace cloudscribe.Core.Models
 
         
 
-        private string layout = string.Empty;
-        public string Layout
+        private string theme = string.Empty;
+        public string Theme
         {
-            get { return layout ?? string.Empty; }
-            set { layout = value; }
+            get { return theme ?? string.Empty; }
+            set { theme = value; }
         }
         
         
@@ -506,7 +506,7 @@ namespace cloudscribe.Core.Models
             s.GoogleClientSecret = i.GoogleClientSecret;
             s.IsDataProtected = i.IsDataProtected;
             s.IsServerAdminSite = i.IsServerAdminSite;
-            s.Layout = i.Layout;
+            s.Theme = i.Theme;
             s.LdapDomain = i.LdapDomain;
             s.LdapPort = i.LdapPort;
             s.LdapRootDN = i.LdapRootDN;
@@ -534,7 +534,7 @@ namespace cloudscribe.Core.Models
             s.SignEmailWithDkim = i.SignEmailWithDkim;
             s.SiteFolderName = i.SiteFolderName;
             s.SiteGuid = i.SiteGuid;
-            s.SiteId = i.SiteId;
+            s.AliasId = i.AliasId;
             s.SiteIsClosed = i.SiteIsClosed;
             s.SiteIsClosedMessage = i.SiteIsClosedMessage;
             s.SiteName = i.SiteName;

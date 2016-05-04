@@ -10,14 +10,14 @@
 }
 <h2>@ViewBag.Title</h2>
 <form class="form-horizontal" role="form" asp-controller="UserAdmin" asp-action="NewUser">
-    <input asp-for="UserId" type="hidden" />
+    <input asp-for="UserGuid" type="hidden" />
     <input asp-for="SiteGuid" type="hidden" />
-    @if (Model.UserId > -1)
+    @if (Model.UserGuid != Guid.Empty)
     {
         <div class="form-group">
-            <label asp-for="UserId" class="col-md-2 control-label"></label>
+            <label asp-for="UserGuid" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <label class="control-label">@Model.UserId.ToInvariantString()</label>
+                <label class="control-label">@Model.UserGuid.ToString()</label>
             </div>
         </div>
     }

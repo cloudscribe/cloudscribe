@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-06-27
-// Last Modified:			2016-03-03
+// Last Modified:			2016-04-27
 // 
 
 
@@ -23,15 +23,19 @@ namespace cloudscribe.Core.Identity
         public SiteUserClaimsPrincipalFactory(
             ISiteRepository siteRepository,
             SiteUserManager<TUser> userManager,
-            SiteRoleManager<TRole> roleManager, 
-            IOptions<IdentityOptions> optionsAccessor) : base(userManager, roleManager, optionsAccessor)
+            SiteRoleManager<TRole> roleManager,
+            IIdentityOptionsResolver identityResolver,
+            IOptions<IdentityOptions> optionsAccessor
+            ) : base(userManager, roleManager, optionsAccessor)
         {
             if (siteRepository == null) { throw new ArgumentNullException(nameof(siteRepository)); }
 
             siteRepo = siteRepository;
             options = optionsAccessor.Value;
+            this.identityResolver = identityResolver;
         }
 
+        private IIdentityOptionsResolver identityResolver;
         private ISiteRepository siteRepo;
         private IdentityOptions options;
 
@@ -47,6 +51,8 @@ namespace cloudscribe.Core.Identity
 
             var userId = await UserManager.GetUserIdAsync(user);
             var userName = await UserManager.GetUserNameAsync(user);
+
+            options = identityResolver.ResolveOptions(options);
 
             //var id = new ClaimsIdentity(
             //    tenantResolver.ResolveAuthScheme(AuthenticationScheme.Application),
@@ -109,7 +115,7 @@ namespace cloudscribe.Core.Identity
                     identity.AddClaim(emailClaim);
                 }
 
-                ISiteSettings site = await siteRepo.Fetch(user.SiteId, CancellationToken.None);
+                ISiteSettings site = await siteRepo.Fetch(user.SiteGuid, CancellationToken.None);
 
                 if (site != null)
                 {

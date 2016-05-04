@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //  Author:                     Joe Audette
 //  Created:                    2016-03-03
-//	Last Modified:              2016-03-03
+//	Last Modified:              2016-04-27
 //
 
 using cloudscribe.Core.Models;
@@ -22,10 +22,12 @@ namespace cloudscribe.Core.Web.Components
         public void PopulateValues(ViewLocationExpanderContext context)
         {
             context.Values[THEME_KEY]
-                = context.ActionContext.HttpContext.GetTenant<SiteSettings>()?.Layout;
+                = context.ActionContext.HttpContext.GetTenant<SiteSettings>()?.Theme;
 
-            context.Values[TENANT_KEY]
-                = "tenant-" + context.ActionContext.HttpContext.GetTenant<SiteSettings>()?.SiteId.ToInvariantString();
+            var tenantKey = context.ActionContext.HttpContext.GetTenant<SiteSettings>()?.AliasId;
+            //if(string.IsNullOrWhiteSpace(tenantKey)) tenantKey = "tenant-" + context.ActionContext.HttpContext.GetTenant<SiteSettings>()?.SiteGuid.ToString();
+
+            context.Values[TENANT_KEY] = tenantKey;
         }
 
         public IEnumerable<string> ExpandViewLocations(ViewLocationExpanderContext context, IEnumerable<string> viewLocations)

@@ -158,7 +158,7 @@ namespace cloudscribe.Core.Web.Components
                     ISiteSettings site = await siteManager.Fetch(contextAccessor.HttpContext.Request.Host.Value);
                     if (site != null)
                     {
-                        int roleCount = await siteManager.GetRoleCount(site.SiteId);
+                        int roleCount = await siteManager.GetRoleCount(site.SiteGuid);
                         bool roleResult = true;
                         if (roleCount == 0)
                         {
@@ -169,7 +169,7 @@ namespace cloudscribe.Core.Web.Components
 
                         if (roleResult)
                         {
-                            int userCount = await siteManager.GetUserCount(site.SiteId);
+                            int userCount = await siteManager.GetUserCount(site.SiteGuid);
                             if (userCount == 0)
                             {
                                 await output("CreatingAdminUser", true);
