@@ -25,11 +25,9 @@ namespace cloudscribe.Core.Identity
     /// </summary>
     /// <typeparam name="TUser"></typeparam>
     public class SiteUserManager<TUser> : UserManager<TUser> where TUser : SiteUser
-    {
-        
+    {        
         public SiteUserManager(
             SiteSettings currentSite,
-            IIdentityOptionsResolver identityResolver,
             IUserRepository userRepository,
             IUserStore<TUser> store,
             IOptions<IdentityOptions> optionsAccessor,
@@ -44,8 +42,7 @@ namespace cloudscribe.Core.Identity
             IHttpContextAccessor contextAccessor)
             : base(
                   store,
-                  ResolveOptions(identityResolver, optionsAccessor)
-                  ,
+                  optionsAccessor,
                   passwordHasher,
                   userValidators,
                   passwordValidators,
@@ -55,32 +52,23 @@ namespace cloudscribe.Core.Identity
                   logger,
                   contextAccessor)
         {
-            this.identityResolver = identityResolver;
-            defaultIdentityOptions = optionsAccessor.Value;
+            identityOptions = optionsAccessor.Value;
             userStore = store;
             userRepo = userRepository;
             siteSettings = currentSite;
             multiTenantOptions = multiTenantOptionsAccessor.Value;
             this.contextAccessor = contextAccessor;
-            _context = contextAccessor?.HttpContext;
+            httpContext = contextAccessor?.HttpContext;
         }
-
-        private static IOptions<IdentityOptions> ResolveOptions(
-            IIdentityOptionsResolver identityResolver,
-            IOptions<IdentityOptions> optionsAccessor)
-        {
-            var o = identityResolver.ResolveOptions(optionsAccessor.Value);
-            return new OptionsWrapper<IdentityOptions>(o);
-        }
-
-        private IIdentityOptionsResolver identityResolver;
-        private IdentityOptions defaultIdentityOptions;
+        
+        private IdentityOptions identityOptions;
         private IUserStore<TUser> userStore;
         private IUserRepository userRepo;
         private MultiTenantOptions multiTenantOptions;
         private IHttpContextAccessor contextAccessor;
-        private readonly HttpContext _context;
-        private CancellationToken CancellationToken => _context?.RequestAborted ?? CancellationToken.None;
+        private HttpContext httpContext;
+
+        private CancellationToken CancellationToken => httpContext?.RequestAborted ?? CancellationToken.None;
 
         private ISiteSettings siteSettings = null;
 
@@ -321,7 +309,7 @@ namespace cloudscribe.Core.Identity
             // TODO: should DefaultLockoutTimeSpan be promoted to a site setting?
             await store.SetLockoutEndDateAsync(
                 user, 
-                DateTimeOffset.UtcNow.Add(defaultIdentityOptions.Lockout.DefaultLockoutTimeSpan),
+                DateTimeOffset.UtcNow.Add(identityOptions.Lockout.DefaultLockoutTimeSpan),
                 CancellationToken);
 
             await store.ResetAccessFailedCountAsync(user, CancellationToken);
