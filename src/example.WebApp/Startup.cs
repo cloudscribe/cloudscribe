@@ -383,9 +383,9 @@ namespace example.WebApp
 
             // Add static files to the request pipeline.
             app.UseStaticFiles();
-            
+
             // the only thing we are using session for is Alerts
-            
+            app.UseSession();
             //app.UseInMemorySession(configure: s => s.IdleTimeout = TimeSpan.FromMinutes(20));
 
 
@@ -400,8 +400,7 @@ namespace example.WebApp
             // I can see the merits but wondered is that conventional
             app.UsePerTenant<SiteSettings>((ctx, builder) =>
             {
-                //app.UseSession();
-
+                
                 var folderPath = ctx.Tenant.SiteFolderName;
                 
                 var singletonIdentityOptions = app.ApplicationServices.GetRequiredService<IOptions<IdentityOptions>>().Value;
