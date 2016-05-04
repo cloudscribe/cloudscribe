@@ -67,7 +67,8 @@ namespace cloudscribe.Core.Web.Components
                 throw new ArgumentNullException(nameof(httpContext));
             }
 
-            var requestCookie = httpContext.Request.Cookies[_options.CookieName];
+            var tenant = httpContext.GetTenant<SiteSettings>();
+            var requestCookie = httpContext.Request.Cookies[_options.CookieName + tenant.SiteFolderName];
             if (string.IsNullOrEmpty(requestCookie))
             {
                 throw new InvalidOperationException(

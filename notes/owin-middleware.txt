@@ -72,6 +72,8 @@ https://azure.microsoft.com/en-us/documentation/articles/app-insights-start-moni
 http://stackoverflow.com/questions/19096723/login-request-validation-token-issue
 
 
+InvalidOperationException: The antiforgery cookie token and form field token do not match.
+
 An unhandled exception occurred while processing the request.
 
 InvalidOperationException: The provided antiforgery token was meant for a different claims-based user than the current user.
