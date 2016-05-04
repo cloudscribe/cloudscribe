@@ -31,21 +31,15 @@ namespace cloudscribe.Core.Web.Components
     public class SiteAuthCookieValidator
     {
         public SiteAuthCookieValidator(
-            IHttpContextAccessor contextAccessor,
-           // ITenantResolver<SiteSettings> siteResolver,
             ISecurityStampValidator securityStampValidator,
             ILogger<SiteAuthCookieValidator> logger)
         {
-            this.contextAccessor = contextAccessor;
             this.securityStampValidator = securityStampValidator;
-           // this.siteResolver = siteResolver;
-            log = logger;
+            this.logger = logger;
         }
 
         private ISecurityStampValidator securityStampValidator;
-        //private ITenantResolver<SiteSettings> siteResolver;
-        private ILogger log;
-        private IHttpContextAccessor contextAccessor;
+        private ILogger logger;
 
         public Task ValidatePrincipal(CookieValidatePrincipalContext context)
         {
@@ -55,7 +49,7 @@ namespace cloudscribe.Core.Web.Components
             // it needs to resolve options per tenant
             //await securityStampValidator.ValidateAsync(context);
             
-            var tenant = contextAccessor.HttpContext.GetTenant<SiteSettings>();
+            var tenant = context.HttpContext.GetTenant<SiteSettings>();
 
             if (tenant == null)
             {
@@ -66,7 +60,7 @@ namespace cloudscribe.Core.Web.Components
 
             if (!context.Principal.HasClaim(siteGuidClaim.Type, siteGuidClaim.Value))
             {
-                log.LogInformation("rejecting principal because it does not have siteguid");
+                logger.LogInformation("rejecting principal because it does not have siteguid");
                 context.RejectPrincipal();
             }
 

@@ -29,54 +29,33 @@ namespace cloudscribe.Core.Identity
     public class SiteSignInManager<TUser> : SignInManager<TUser> where TUser : SiteUser
     {
         public SiteSignInManager(
-            SiteUserManager<TUser> userManager,
-            IIdentityOptionsResolver identityResolver,
+            SiteUserManager<TUser> siteUserManager,
             IHttpContextAccessor contextAccessor,
-            //MultiTenantCookieOptionsResolver tenantResolver,
             IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
             ISiteRepository siteRepository,
             IUserClaimsPrincipalFactory<TUser> claimsFactory,
             IOptions<IdentityOptions> optionsAccessor,
             ILogger<SignInManager<TUser>> logger)
-            :base(userManager, 
+            :base(siteUserManager, 
                  contextAccessor,
                  claimsFactory,
-
-                 ResolveOptions(identityResolver,optionsAccessor)
-
-                 , logger
-                 )
+                 optionsAccessor, 
+                 logger)
         {
-
-            UserManager = userManager;
-            SiteUserManager = userManager;
-            this.context = contextAccessor.HttpContext;
-           // this.tenantResolver = tenantResolver;
-            log = logger;
+            this.siteUserManager = siteUserManager;
+            context = contextAccessor.HttpContext;
+            this.logger = logger;
             multiTenantOptions = multiTenantOptionsAccessor.Value;
             siteRepo = siteRepository;
-            Options = identityResolver.ResolveOptions(optionsAccessor.Value);
-            //Options = tenantOptions;
-
+            this.options = optionsAccessor.Value;
         }
-
-        private static IOptions<IdentityOptions> ResolveOptions(
-            IIdentityOptionsResolver identityResolver,
-            IOptions<IdentityOptions> optionsAccessor)
-        {
-            var o = identityResolver.ResolveOptions(optionsAccessor.Value);
-            return new OptionsWrapper<IdentityOptions>(o);
-        }
-
-        //private IIdentityOptionsResolver identityResolver;
-
-        private SiteUserManager<TUser> SiteUserManager { get; set; }
+        
+        private SiteUserManager<TUser> siteUserManager;
         private HttpContext context;
-        //private MultiTenantCookieOptionsResolver tenantResolver;
-        private ILogger<SignInManager<TUser>> log;
+        private ILogger<SignInManager<TUser>> logger;
         private MultiTenantOptions multiTenantOptions;
         private ISiteRepository siteRepo;
-        private IdentityOptions Options;
+        private IdentityOptions options;
 
 
         //https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity/SignInManager.cs
@@ -85,7 +64,7 @@ namespace cloudscribe.Core.Identity
 
         public override async Task SignInAsync(TUser user, AuthenticationProperties authenticationProperties, string authenticationMethod = null)
         {
-            log.LogInformation("SignInAsync called");
+            logger.LogInformation("SignInAsync called");
 
             var userPrincipal = await CreateUserPrincipalAsync(user);
 
@@ -94,21 +73,16 @@ namespace cloudscribe.Core.Identity
                 userPrincipal.Identities.First().AddClaim(new Claim(ClaimTypes.AuthenticationMethod, authenticationMethod));
             }
 
-
-            //await context.Authentication.SignInAsync(AuthenticationScheme.Application,
-            //    userPrincipal,
-            //    authenticationProperties ?? new AuthenticationProperties());
-
-            await context.Authentication.SignInAsync(Options.Cookies.ApplicationCookie.AuthenticationScheme,
+            await context.Authentication.SignInAsync(
+                options.Cookies.ApplicationCookie.AuthenticationScheme,
                 userPrincipal,
                 authenticationProperties ?? new AuthenticationProperties());
         }
 
         public override async Task RefreshSignInAsync(TUser user)
         {
-            log.LogInformation("SignInAsync called");
-            //var auth = new AuthenticateContext(tenantResolver.ResolveAuthScheme(AuthenticationScheme.Application));
-            var auth = new AuthenticateContext(Options.Cookies.ApplicationCookie.AuthenticationScheme);
+            logger.LogInformation("SignInAsync called");
+            var auth = new AuthenticateContext(options.Cookies.ApplicationCookie.AuthenticationScheme);
             await context.Authentication.AuthenticateAsync(auth);
             var authenticationMethod = auth.Principal?.FindFirstValue(ClaimTypes.AuthenticationMethod);
             await SignInAsync(user, new AuthenticationProperties(auth.Properties), authenticationMethod);
@@ -116,78 +90,66 @@ namespace cloudscribe.Core.Identity
 
         public override async Task SignOutAsync()
         {
-            log.LogInformation("SignOutAsync called");
+            logger.LogInformation("SignOutAsync called");
 
-            //await context.Authentication.SignOutAsync(AuthenticationScheme.Application);
-            //await context.Authentication.SignOutAsync(AuthenticationScheme.External);
-            //await context.Authentication.SignOutAsync(AuthenticationScheme.TwoFactorUserId);
             try
             {
-                await context.Authentication.SignOutAsync(Options.Cookies.ApplicationCookie.AuthenticationScheme);
+                await context.Authentication.SignOutAsync(options.Cookies.ApplicationCookie.AuthenticationScheme);
             }
             catch(InvalidOperationException ex)
             {
-                log.LogError("sign out error", ex);
+                logger.LogError("sign out error", ex);
             }
+
             try
             {
-                await context.Authentication.SignOutAsync(Options.Cookies.ExternalCookie.AuthenticationScheme);
+                await context.Authentication.SignOutAsync(options.Cookies.ExternalCookie.AuthenticationScheme);
             }
             catch (InvalidOperationException ex)
             {
-                log.LogError("", ex);
+                logger.LogError("", ex);
             }
+
             try
             {
-                await context.Authentication.SignOutAsync(Options.Cookies.TwoFactorUserIdCookie.AuthenticationScheme);
+                await context.Authentication.SignOutAsync(options.Cookies.TwoFactorUserIdCookie.AuthenticationScheme);
             }
             catch (InvalidOperationException ex)
             {
-                log.LogError("", ex);
+                logger.LogError("", ex);
             }
-            
-            
-            
         }
 
         public override async Task<bool> IsTwoFactorClientRememberedAsync(TUser user)
         {
-            log.LogInformation("IsTwoFactorClientRememberedAsync called");
+            logger.LogInformation("IsTwoFactorClientRememberedAsync called");
 
             var userId = await UserManager.GetUserIdAsync(user);
-            //var result = await context.Authentication.AuthenticateAsync(AuthenticationScheme.TwoFactorRememberMe);
-            var result = await context.Authentication.AuthenticateAsync(Options.Cookies.TwoFactorRememberMeCookie.AuthenticationScheme);
-
-
+            var result = await context.Authentication.AuthenticateAsync(options.Cookies.TwoFactorRememberMeCookie.AuthenticationScheme);
+            
             return (result != null && result.FindFirstValue(ClaimTypes.Name) == userId);
         }
 
         public override async Task RememberTwoFactorClientAsync(TUser user)
         {
-            log.LogInformation("RememberTwoFactorClientAsync called");
+            logger.LogInformation("RememberTwoFactorClientAsync called");
 
             var userId = await UserManager.GetUserIdAsync(user);
-
-            //var rememberBrowserIdentity = new ClaimsIdentity(tenantResolver.ResolveAuthScheme(AuthenticationScheme.TwoFactorRememberMe));
-            var rememberBrowserIdentity = new ClaimsIdentity(Options.Cookies.TwoFactorRememberMeCookie.AuthenticationScheme);
+            
+            var rememberBrowserIdentity = new ClaimsIdentity(options.Cookies.TwoFactorRememberMeCookie.AuthenticationScheme);
 
             rememberBrowserIdentity.AddClaim(new Claim(ClaimTypes.Name, userId));
 
-            //await context.Authentication.SignInAsync(AuthenticationScheme.TwoFactorRememberMe,
-            //    new ClaimsPrincipal(rememberBrowserIdentity),
-            //    new AuthenticationProperties { IsPersistent = true });
-
-            await context.Authentication.SignInAsync(Options.Cookies.TwoFactorRememberMeCookie.AuthenticationScheme,
+            await context.Authentication.SignInAsync(options.Cookies.TwoFactorRememberMeCookie.AuthenticationScheme,
                 new ClaimsPrincipal(rememberBrowserIdentity),
                 new AuthenticationProperties { IsPersistent = true });
         }
 
         public override Task ForgetTwoFactorClientAsync()
         {
-            log.LogInformation("ForgetTwoFactorClientAsync called");
-
-            //return context.Authentication.SignOutAsync(AuthenticationScheme.TwoFactorRememberMe);
-            return context.Authentication.SignOutAsync(Options.Cookies.TwoFactorRememberMeCookie.AuthenticationScheme);
+            logger.LogInformation("ForgetTwoFactorClientAsync called");
+            
+            return context.Authentication.SignOutAsync(options.Cookies.TwoFactorRememberMeCookie.AuthenticationScheme);
         }
 
         public override IEnumerable<AuthenticationDescription> GetExternalAuthenticationSchemes()
@@ -198,13 +160,12 @@ namespace cloudscribe.Core.Identity
 
             IEnumerable<AuthenticationDescription> all = context.Authentication.GetAuthenticationSchemes().Where(d => !string.IsNullOrEmpty(d.DisplayName));
             
-
             if (multiTenantOptions.Mode != MultiTenantMode.None)
             {
                 // here we need to filter the list to ones configured for the current tenant
-                if(multiTenantOptions.Mode == MultiTenantMode.FolderName)
+                if (multiTenantOptions.Mode == MultiTenantMode.FolderName)
                 {
-                    if(multiTenantOptions.UseRelatedSitesMode)
+                    if (multiTenantOptions.UseRelatedSitesMode)
                     {
                         ISiteSettings site = siteRepo.FetchNonAsync(multiTenantOptions.RelatedSiteGuid);
 
@@ -213,13 +174,10 @@ namespace cloudscribe.Core.Identity
 
                 }
 
-                return BuildFilteredAuthList(SiteUserManager.Site, all);
-
+                return BuildFilteredAuthList(siteUserManager.Site, all);
             }
-
-
+            
             return all;
-            //return context.Authentication.GetAuthenticationSchemes();
         }
 
         private IEnumerable<AuthenticationDescription> BuildFilteredAuthList(ISiteSettings site, IEnumerable<AuthenticationDescription> all)
@@ -289,32 +247,32 @@ namespace cloudscribe.Core.Identity
         /// for the sign-in attempt.</returns>
         public override async Task<ExternalLoginInfo> GetExternalLoginInfoAsync(string expectedXsrf = null)
         {
-            log.LogInformation("GetExternalLoginInfoAsync called " + LoginProviderKey);
+            logger.LogInformation("GetExternalLoginInfoAsync called " + LoginProviderKey);
 
             //var auth = new AuthenticateContext(IdentityOptions.ExternalCookieAuthenticationScheme);
             //https://github.com/aspnet/HttpAbstractions/blob/dev/src/Microsoft.AspNet.Http.Features/Authentication/AuthenticateContext.cs
             //var auth = new AuthenticateContext(AuthenticationScheme.External);
 
-            var auth = new AuthenticateContext(Options.Cookies.ExternalCookie.AuthenticationScheme);
+            var auth = new AuthenticateContext(options.Cookies.ExternalCookie.AuthenticationScheme);
             
             await context.Authentication.AuthenticateAsync(auth);
 
             if (auth.Principal == null)
             {
-                log.LogInformation("GetExternalLoginInfoAsync returning null because auth.Principal was null");
+                logger.LogInformation("GetExternalLoginInfoAsync returning null because auth.Principal was null");
                 return null;
             }
 
 
             if (auth.Properties == null )
             {
-                log.LogInformation("GetExternalLoginInfoAsync returning null because  auth.Properties was null");
+                logger.LogInformation("GetExternalLoginInfoAsync returning null because  auth.Properties was null");
                 return null;
             }
 
             if (!auth.Properties.ContainsKey(LoginProviderKey))
             {
-                log.LogInformation("GetExternalLoginInfoAsync returning null because loginproviderkey " + LoginProviderKey + " was not in auth.properties");
+                logger.LogInformation("GetExternalLoginInfoAsync returning null because loginproviderkey " + LoginProviderKey + " was not in auth.properties");
                 return null;
             }
 
@@ -324,13 +282,13 @@ namespace cloudscribe.Core.Identity
             {
                 if (!auth.Properties.ContainsKey(XsrfKey))
                 {
-                    log.LogInformation("GetExternalLoginInfoAsync returned null because auth.Properties did not contain XsfKey");
+                    logger.LogInformation("GetExternalLoginInfoAsync returned null because auth.Properties did not contain XsfKey");
                     return null;
                 }
                 var userId = auth.Properties[XsrfKey] as string;
                 if (userId != expectedXsrf)
                 {
-                    log.LogInformation("GetExternalLoginInfoAsync returning null because userId != auth.Properties[XsrfKey]");
+                    logger.LogInformation("GetExternalLoginInfoAsync returning null because userId != auth.Properties[XsrfKey]");
                     return null;
                 }
             }
@@ -339,7 +297,7 @@ namespace cloudscribe.Core.Identity
             var provider = auth.Properties[LoginProviderKey] as string;
             if (providerKey == null || provider == null)
             {
-                log.LogInformation("GetExternalLoginInfoAsync returning null because (providerKey == null || provider == null) ");
+                logger.LogInformation("GetExternalLoginInfoAsync returning null because (providerKey == null || provider == null) ");
                 return null;
             }
             // REVIEW: fix this wrap
@@ -348,7 +306,7 @@ namespace cloudscribe.Core.Identity
 
         public override async Task<SignInResult> ExternalLoginSignInAsync(string loginProvider, string providerKey, bool isPersistent)
         {
-            log.LogInformation("ExternalLoginSignInAsync called for " + loginProvider + " with key " + providerKey);
+            logger.LogInformation("ExternalLoginSignInAsync called for " + loginProvider + " with key " + providerKey);
 
             var user = await UserManager.FindByLoginAsync(loginProvider, providerKey);
             if (user == null)
@@ -366,7 +324,7 @@ namespace cloudscribe.Core.Identity
 
         private async Task<SignInResult> PreSignInCheck(TUser user)
         {
-            log.LogInformation("PreSignInCheck called");
+            logger.LogInformation("PreSignInCheck called");
 
             if (!await CanSignInAsync(user))
             {
@@ -392,7 +350,7 @@ namespace cloudscribe.Core.Identity
 
         private async Task<SignInResult> SignInOrTwoFactorAsync(TUser user, bool isPersistent, string loginProvider = null)
         {
-            log.LogDebug("SignInOrTwoFactorAsync called");
+            logger.LogDebug("SignInOrTwoFactorAsync called");
 
             if (UserManager.SupportsUserTwoFactor &&
                 await UserManager.GetTwoFactorEnabledAsync(user) &&
@@ -404,7 +362,7 @@ namespace cloudscribe.Core.Identity
                     var userId = await UserManager.GetUserIdAsync(user);
                     //var twoFactorScheme = Options.Cookies.TwoFactorUserIdCookieAuthenticationScheme;
                     // the above is not getting the value we set in startup though the external one below is working 
-                    var twoFactorScheme = Options.Cookies.TwoFactorUserIdCookie.AuthenticationScheme;
+                    var twoFactorScheme = options.Cookies.TwoFactorUserIdCookie.AuthenticationScheme;
                     await context.Authentication.SignInAsync(
                         twoFactorScheme, StoreTwoFactorInfo(userId, loginProvider));
                     return SignInResult.TwoFactorRequired;
@@ -414,7 +372,7 @@ namespace cloudscribe.Core.Identity
             if (loginProvider != null)
             {
                 //await context.Authentication.SignOutAsync(Options.Cookies.ExternalCookieAuthenticationScheme);
-                await context.Authentication.SignOutAsync(Options.Cookies.ExternalCookie.AuthenticationScheme);
+                await context.Authentication.SignOutAsync(options.Cookies.ExternalCookie.AuthenticationScheme);
             }
             await SignInAsync(user, isPersistent, loginProvider);
             return SignInResult.Success;
@@ -444,7 +402,7 @@ namespace cloudscribe.Core.Identity
 
         private async Task<TwoFactorAuthenticationInfo> RetrieveTwoFactorInfoAsync()
         {
-            var result = await context.Authentication.AuthenticateAsync(Options.Cookies.TwoFactorUserIdCookieAuthenticationScheme);
+            var result = await context.Authentication.AuthenticateAsync(options.Cookies.TwoFactorUserIdCookieAuthenticationScheme);
             if (result != null)
             {
                 return new TwoFactorAuthenticationInfo
@@ -513,7 +471,7 @@ namespace cloudscribe.Core.Identity
 
         internal ClaimsPrincipal StoreTwoFactorInfo(string userId, string loginProvider)
         {
-            var identity = new ClaimsIdentity(Options.Cookies.TwoFactorUserIdCookieAuthenticationScheme);
+            var identity = new ClaimsIdentity(options.Cookies.TwoFactorUserIdCookieAuthenticationScheme);
 
 
             identity.AddClaim(new Claim(ClaimTypes.Name, userId));
@@ -526,7 +484,7 @@ namespace cloudscribe.Core.Identity
 
         public override AuthenticationProperties ConfigureExternalAuthenticationProperties(string provider, string redirectUrl, string userId = null)
         {
-            log.LogInformation("ConfigureExternalAuthenticationProperties called for " + provider + " with redirectUrl " + redirectUrl);
+            logger.LogInformation("ConfigureExternalAuthenticationProperties called for " + provider + " with redirectUrl " + redirectUrl);
 
             var properties = new AuthenticationProperties { RedirectUri = redirectUrl };
             properties.Items[LoginProviderKey] = provider;
@@ -618,7 +576,7 @@ namespace cloudscribe.Core.Identity
                 // Cleanup external cookie
                 if (twoFactorInfo.LoginProvider != null)
                 {
-                    await context.Authentication.SignOutAsync(Options.Cookies.ExternalCookie.AuthenticationScheme);
+                    await context.Authentication.SignOutAsync(options.Cookies.ExternalCookie.AuthenticationScheme);
                 }
                 if (rememberClient)
                 {

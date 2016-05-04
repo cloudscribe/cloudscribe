@@ -24,26 +24,23 @@ namespace cloudscribe.Core.Identity
             ISiteRepository siteRepository,
             SiteUserManager<TUser> userManager,
             SiteRoleManager<TRole> roleManager,
-            IIdentityOptionsResolver identityResolver,
-            IOptions<IdentityOptions> optionsAccessor
-            ) : base(userManager, roleManager, optionsAccessor)
+            IOptions<IdentityOptions> optionsAccessor) 
+            : base(userManager, roleManager, optionsAccessor)
         {
-            if (siteRepository == null) { throw new ArgumentNullException(nameof(siteRepository)); }
+            if (siteRepository == null)
+            {
+                throw new ArgumentNullException(nameof(siteRepository));
+            }
 
             siteRepo = siteRepository;
             options = optionsAccessor.Value;
-            this.identityResolver = identityResolver;
         }
-
-        private IIdentityOptionsResolver identityResolver;
+        
         private ISiteRepository siteRepo;
         private IdentityOptions options;
 
         public override async Task<ClaimsPrincipal> CreateAsync(TUser user)
         {
-            // this one was using IdentityOptions.ApplicationCookieAuthenticationScheme
-            //ClaimsPrincipal principal = await base.CreateAsync(user);
-
             if (user == null)
             {
                 throw new ArgumentNullException("user");
@@ -52,19 +49,10 @@ namespace cloudscribe.Core.Identity
             var userId = await UserManager.GetUserIdAsync(user);
             var userName = await UserManager.GetUserNameAsync(user);
 
-            options = identityResolver.ResolveOptions(options);
-
-            //var id = new ClaimsIdentity(
-            //    tenantResolver.ResolveAuthScheme(AuthenticationScheme.Application),
-            //    Options.ClaimsIdentity.UserNameClaimType,
-            //    Options.ClaimsIdentity.RoleClaimType
-            //    );
-
             var id = new ClaimsIdentity(
                 options.Cookies.ApplicationCookie.AuthenticationScheme,
                 Options.ClaimsIdentity.UserNameClaimType,
-                Options.ClaimsIdentity.RoleClaimType
-                );
+                Options.ClaimsIdentity.RoleClaimType);
 
             id.AddClaim(new Claim(Options.ClaimsIdentity.UserIdClaimType, userId));
             id.AddClaim(new Claim(Options.ClaimsIdentity.UserNameClaimType, userName));
@@ -120,30 +108,24 @@ namespace cloudscribe.Core.Identity
                 if (site != null)
                 {
                     Claim siteGuidClaim = new Claim("SiteGuid", site.SiteGuid.ToString());
+
                     if (!identity.HasClaim(siteGuidClaim.Type, siteGuidClaim.Value))
                     {
                         identity.AddClaim(siteGuidClaim);
                     }
-
-                }
-                
+                }                
 
                 if (principal.IsInRole("Admins"))
                 {
                     if (site != null && site.IsServerAdminSite)
                     {
-                        // if the user is an admin of a server admin site
-                        // add ServerAdmins role
                         Claim serverAdminRoleClaim = new Claim(ClaimTypes.Role, "ServerAdmins");
                         identity.AddClaim(serverAdminRoleClaim);
-
                     }
                 }
-
             }
             
             return principal;
-
         }
     }
 }

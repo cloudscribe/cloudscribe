@@ -85,12 +85,13 @@ namespace cloudscribe.Core.Web.Components
         {
             if (multiTenantOptions.Mode == MultiTenantMode.FolderName)
             {
-                var siteFolderName = context.Request.Path.StartingSegment();
+                var fullPath = context.Request.PathBase + context.Request.Path;
+                var siteFolderName = fullPath.StartingSegment();
                 var folders = GetAllSiteFoldersFolders();
-                if(folders.Contains(siteFolderName)) { return siteFolderName; }
-                siteFolderName = "root"; 
-                return siteFolderName;
+
+                return folders.Contains(siteFolderName) ? siteFolderName : "root";
             }
+
             return context.Request.Host.Value.ToLower();
         }
 
@@ -103,23 +104,25 @@ namespace cloudscribe.Core.Web.Components
         /// <returns></returns>
         protected override IEnumerable<string> GetTenantIdentifiers(TenantContext<SiteSettings> context)
         {
-            List<string> cacheKeys = new List<string>();
+            var identifiers = new List<string>();
+
             if (multiTenantOptions.Mode == MultiTenantMode.FolderName)
             {
-                if(context.Tenant.SiteFolderName.Length > 0)
+                if (context.Tenant.SiteFolderName.Length > 0)
                 {
-                    cacheKeys.Add(context.Tenant.SiteFolderName);
+                    identifiers.Add(context.Tenant.SiteFolderName);
                 }
                 else
                 {
-                    cacheKeys.Add("root");
+                    identifiers.Add("root");
                 }
             }
-            var id =  context.Tenant.SiteGuid.ToString();
 
-            cacheKeys.Add(id);
+            var siteGuid = context.Tenant.SiteGuid.ToString();
 
-            return cacheKeys;
+            identifiers.Add(siteGuid);
+
+            return identifiers;
         }
 
         //Resolve a tenant context from the current request. This will only be executed on cache misses.
@@ -130,23 +133,18 @@ namespace cloudscribe.Core.Web.Components
                 return ResolveByFolderAsync(context);
             }
 
-            return ResolveByHostAsync(context);
-
-           
+            return ResolveByHostAsync(context);           
         }
 
         private async Task<TenantContext<SiteSettings>> ResolveByFolderAsync(HttpContext context)
         {
-            //var siteFolderName = context.Request.Path.StartingSegment();
-            // (siteFolderName.Length == 0) { siteFolderName = "root"; }
             var siteFolderName = GetContextIdentifier(context);
 
             TenantContext<SiteSettings> tenantContext = null;
 
             CancellationToken cancellationToken = context?.RequestAborted ?? CancellationToken.None;
 
-            ISiteSettings site
-                = await siteRepo.FetchByFolderName(siteFolderName, cancellationToken);
+            var site = await siteRepo.FetchByFolderName(siteFolderName, cancellationToken);
 
             if (site != null)
             {
@@ -156,8 +154,6 @@ namespace cloudscribe.Core.Web.Components
             }
 
             return tenantContext;
-
-
         }
 
         private async Task<TenantContext<SiteSettings>> ResolveByHostAsync(HttpContext context)
@@ -166,8 +162,7 @@ namespace cloudscribe.Core.Web.Components
 
             CancellationToken cancellationToken = context?.RequestAborted ?? CancellationToken.None;
 
-            ISiteSettings site
-                = await siteRepo.Fetch(context.Request.Host.Value, cancellationToken);
+            ISiteSettings site = await siteRepo.Fetch(context.Request.Host.Value, cancellationToken);
 
             if (site != null)
             {
@@ -178,7 +173,5 @@ namespace cloudscribe.Core.Web.Components
 
             return tenantContext;
         }
-
-
     }
 }
