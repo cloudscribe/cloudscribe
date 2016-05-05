@@ -21,7 +21,6 @@
         "cloudscribe.Web.Pagination": "1.0.0-*",
         "StructureMap.Dnx": "0.5.1-rc1-final",
         "SaasKit.Multitenancy": "1.1.1-*",
-        "SaasKit.Multitenancy.StructureMap": "1.1.1-*",
         "EntityFramework.Commands": "7.0.0-rc1-final",
         "EntityFramework.Core": "7.0.0-rc1-final",
         "EntityFramework.MicrosoftSqlServer": "7.0.0-rc1-final",
