@@ -5,8 +5,6 @@ using cloudscribe.Core.Models.Setup;
 using cloudscribe.Core.Repositories.EF;
 using cloudscribe.Core.Web;
 using cloudscribe.Core.Web.Components;
-using cloudscribe.Core.Web.Components.Editor;
-using cloudscribe.Core.Web.Components.Messaging;
 using cloudscribe.Core.Web.Navigation;
 using cloudscribe.Logging.EF;
 using cloudscribe.Logging.Web;
@@ -144,20 +142,57 @@ namespace example.WebApp
                 services.AddGlimpse();
             }
 
+            services.AddCaching();
+            // we currently only use session for alerts, so we can fire an alert on the next request
+            // if session is disabled this feature fails quietly with no errors
+            services.AddSession();
+
             ConfigureAuthPolicy(services);
 
-            ConfigureCloudscribeCore(services, Configuration);
+            services.AddOptions();
 
+            /* optional and only needed if you are using cloudscribe Logging  */
             services.AddScoped<LogManager>();
+
+            /* these are optional and only needed if using cloudscribe Setup */
+            services.Configure<SetupOptions>(Configuration.GetSection("SetupOptions"));
+            services.AddScoped<SetupManager, SetupManager>();
+            services.AddScoped<IVersionProvider, CloudscribeCoreVersionProvider>();
+            services.AddScoped<IVersionProviderFactory, VersionProviderFactory>();
+            services.AddScoped<IVersionProvider, SetupVersionProvider>();
+            services.AddScoped<IVersionProvider, CloudscribeLoggingVersionProvider>();
+            /* end cloudscribe Setup */
+
+            services.Configure<NavigationOptions>(Configuration.GetSection("NavigationOptions"));
+            services.AddScoped<ITreeCache, MemoryTreeCache>();
+            services.AddScoped<INavigationTreeBuilder, XmlNavigationTreeBuilder>();
+            services.AddScoped<NavigationTreeBuilderService, NavigationTreeBuilderService>();
+            services.AddScoped<INodeUrlPrefixProvider, FolderTenantNodeUrlPrefixProvider>();
+            services.AddScoped<INavigationNodePermissionResolver, NavigationNodePermissionResolver>();
+
+            services.AddCloudscribeCore(Configuration);
+            
+            services.AddMvc()
+                    .AddViewLocalization(options =>
+                    {
+                        options.ResourcesPath = "AppResources";
+                    })
+                    .AddRazorOptions(options =>
+                    {
+                        options.ViewLocationExpanders.Add(new SiteViewLocationExpander());
+                    });
+
+            services.AddSingleton<IRazorViewEngine, CoreViewEngine>();
+            services.AddSingleton<IAntiforgeryTokenStore, SiteAntiforgeryTokenStore>();
+
+            ConfigureDatabase(services, Configuration);
+
+            
 
             var container = new Container();
 
             container.Populate(services);
-
-            container.ConfigureTenants<SiteSettings>(c =>
-            {
-            });
-
+            
             return container.GetInstance<IServiceProvider>();
         }
 
@@ -165,7 +200,7 @@ namespace example.WebApp
             IApplicationBuilder app,
             IHostingEnvironment environment,
             ILoggerFactory loggerFactory,
-            IOptions<MultiTenantOptions> multiTenantOptions,
+            IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
             IServiceProvider serviceProvider,
             ILogRepository logRepository)
         {
@@ -176,6 +211,7 @@ namespace example.WebApp
                 app.UseGlimpse();
             }
 
+            /* optional and only needed if you are using cloudscribe Logging  */
             ConfigureLogging(loggerFactory, serviceProvider, logRepository);
             
             if (environment.IsDevelopment())
@@ -198,20 +234,27 @@ namespace example.WebApp
 
             app.UseMultitenancy<SiteSettings>();
 
-            app.UseTenantContainers<SiteSettings>();
+            //app.UseTenantContainers<SiteSettings>();
+            var multiTenantOptions = multiTenantOptionsAccessor.Value;
 
             app.UsePerTenant<SiteSettings>((ctx, builder) =>
             {
                 var tenantIdentityOptionsProvider = app.ApplicationServices.GetRequiredService<IOptions<IdentityOptions>>();
                 var cookieOptions = tenantIdentityOptionsProvider.Value.Cookies;
+                
+                var shouldUseFolder = !multiTenantOptions.UseRelatedSitesMode 
+                                        && multiTenantOptions.Mode == MultiTenantMode.FolderName 
+                                        && ctx.Tenant.SiteFolderName.Length > 0;
 
                 builder.UseCookieAuthentication(cookieOptions.ExternalCookie);
                 builder.UseCookieAuthentication(cookieOptions.TwoFactorRememberMeCookie);
                 builder.UseCookieAuthentication(cookieOptions.TwoFactorUserIdCookie);
                 builder.UseCookieAuthentication(cookieOptions.ApplicationCookie);
+
+                UseSocialAuth(builder, ctx.Tenant, cookieOptions, shouldUseFolder);
             });
 
-            AddMvc(app);
+            UseMvc(app, multiTenantOptions.Mode == MultiTenantMode.FolderName);
 
             var devOptions = Configuration.Get<DevOptions>("DevOptions");
             if (devOptions.DbPlatform == "ef7")
@@ -254,10 +297,10 @@ namespace example.WebApp
             loggerFactory.AddDbLogger(serviceProvider, logRepository, logFilter);
         }
               
-        private void AddSocialAuth(
+        private void UseSocialAuth(
             IApplicationBuilder app, 
             SiteSettings site, 
-            IdentityOptions identityOptions,
+            IdentityCookieOptions cookieOptions,
             bool shouldUseFolder)
         {
             // TODO: will this require a restart if the options are updated in the ui?
@@ -267,7 +310,7 @@ namespace example.WebApp
                 app.UseGoogleAuthentication(options =>
                 {
                     options.AuthenticationScheme = "Google";
-                    options.SignInScheme = identityOptions.Cookies.ExternalCookie.AuthenticationScheme;
+                    options.SignInScheme = cookieOptions.ExternalCookie.AuthenticationScheme;
 
                     options.ClientId = site.GoogleClientId;
                     options.ClientSecret = site.GoogleClientSecret;
@@ -284,7 +327,7 @@ namespace example.WebApp
                 app.UseFacebookAuthentication(options =>
                 {
                     options.AuthenticationScheme = "Facebook";
-                    options.SignInScheme = identityOptions.Cookies.ExternalCookie.AuthenticationScheme;
+                    options.SignInScheme = cookieOptions.ExternalCookie.AuthenticationScheme;
                     options.AppId = site.FacebookAppId;
                     options.AppSecret = site.FacebookAppSecret;
 
@@ -299,7 +342,7 @@ namespace example.WebApp
             {
                 app.UseMicrosoftAccountAuthentication(options =>
                 {
-                    options.SignInScheme = identityOptions.Cookies.ExternalCookie.AuthenticationScheme;
+                    options.SignInScheme = cookieOptions.ExternalCookie.AuthenticationScheme;
                     options.ClientId = site.MicrosoftClientId;
                     options.ClientSecret = site.MicrosoftClientSecret;
                     if (shouldUseFolder)
@@ -313,7 +356,7 @@ namespace example.WebApp
             {
                 app.UseTwitterAuthentication(options =>
                 {
-                    options.SignInScheme = identityOptions.Cookies.ExternalCookie.AuthenticationScheme;
+                    options.SignInScheme = cookieOptions.ExternalCookie.AuthenticationScheme;
                     options.ConsumerKey = site.TwitterConsumerKey;
                     options.ConsumerSecret = site.TwitterConsumerSecret;
 
@@ -325,15 +368,19 @@ namespace example.WebApp
             }
         }
 
-        private void AddMvc(IApplicationBuilder app)
+        private void UseMvc(IApplicationBuilder app, bool useFolders)
         {
             app.UseMvc(routes =>
             {
-                routes.MapRoute(
-                    name: "folderdefault",
-                    template: "{sitefolder}/{controller}/{action}/{id?}",
-                    defaults: new { controller = "Home", action = "Index" },
-                    constraints: new { name = new SiteFolderRouteConstraint() });
+                if(useFolders)
+                {
+                    routes.MapRoute(
+                        name: "folderdefault",
+                        template: "{sitefolder}/{controller}/{action}/{id?}",
+                        defaults: new { controller = "Home", action = "Index" },
+                        constraints: new { name = new SiteFolderRouteConstraint() });
+                }
+                
                 
                 routes.MapRoute(
                     name: "default",
@@ -345,99 +392,7 @@ namespace example.WebApp
         // Entry point for the application.
         public static void Main(string[] args) => WebApplication.Run<Startup>(args);
 
-        public IServiceCollection ConfigureCloudscribeCore(IServiceCollection services, IConfigurationRoot configuration)
-        {
-            ConfigureOptions(services, configuration);
-
-            ConfigureDatabase(services, configuration);
-
-            services.AddCaching();
-
-            services.AddSession();
-
-            services.AddScoped<ITimeZoneResolver, RequestTimeZoneResolver>();
-
-            services.AddMultitenancy<SiteSettings, CachingSiteResolver>();
-
-            services.AddSingleton<IOptions<IdentityOptions>, SiteIdentityOptionsProvider>();
-
-            services.AddScoped<SiteManager, SiteManager>();
-            services.AddScoped<SetupManager, SetupManager>();
-            services.AddScoped<GeoDataManager, GeoDataManager>();
-            services.AddScoped<SystemInfoManager, SystemInfoManager>();
-            services.AddScoped<IpAddressTracker, IpAddressTracker>();
-
-            services.AddScoped<SiteDataProtector>();
-
-            services.AddScoped<IVersionProvider, SetupVersionProvider>();
-            services.AddScoped<IVersionProvider, CloudscribeCoreVersionProvider>();
-            services.AddScoped<IVersionProvider, CloudscribeLoggingVersionProvider>();
-            services.AddScoped<IVersionProviderFactory, VersionProviderFactory>();
-
-            services.AddIdentity<SiteUser, SiteRole>()
-                .AddUserStore<UserStore<SiteUser>>()
-                .AddRoleStore<RoleStore<SiteRole>>()
-                .AddUserManager<SiteUserManager<SiteUser>>()
-                .AddRoleManager<SiteRoleManager<SiteRole>>();
-
-            AddCloudscribeIdentity<SiteUser, SiteRole>(services);
-
-            AddCloudscribeNavigation(services);
-
-            services.AddTransient<IBuildPaginationLinks, PaginationLinkBuilder>();
-
-            AddCloudscribeMessaging(services);
-
-            services.AddSingleton<IThemeListBuilder, SiteThemeListBuilder>();
-
-            #region MVC
-            {
-                services.AddSingleton<IRazorViewEngine, CoreViewEngine>();
-
-                services
-                    .AddMvc()
-                    .AddViewLocalization(options =>
-                    {
-                        options.ResourcesPath = "AppResources";
-                    })
-                    .AddRazorOptions(options =>
-                    {
-                        options.ViewLocationExpanders.Add(new SiteViewLocationExpander());
-                    });
-            }
-            #endregion
-
-            services.AddSingleton<IAntiforgeryTokenStore, SiteAntiforgeryTokenStore>();
-
-            return services;
-        }
-
-        public IServiceCollection AddCloudscribeIdentity<TUser, TRole>(IServiceCollection services)
-            where TUser : class
-            where TRole : class
-        {
-            services.AddSingleton<IOptions<IdentityOptions>, SiteIdentityOptionsProvider>();
-
-            services.AddScoped<IUserClaimsPrincipalFactory<SiteUser>, SiteUserClaimsPrincipalFactory<SiteUser, SiteRole>>();
-            services.AddScoped<IPasswordHasher<SiteUser>, SitePasswordHasher<SiteUser>>();
-            services.AddScoped<SiteSignInManager<SiteUser>, SiteSignInManager<SiteUser>>();
-            services.AddScoped<SiteAuthCookieValidator, SiteAuthCookieValidator>();
-            services.AddScoped<SiteCookieAuthenticationEvents, SiteCookieAuthenticationEvents>();
-
-            return services;
-        }
-
-        private void ConfigureOptions(IServiceCollection services, IConfiguration configuration)
-        {
-            services.AddOptions();
-
-            services.Configure<MultiTenantOptions>(configuration.GetSection("MultiTenantOptions"));
-            services.Configure<SiteConfigOptions>(configuration.GetSection("SiteConfigOptions"));
-            services.Configure<SetupOptions>(configuration.GetSection("SetupOptions"));
-            services.Configure<UIOptions>(configuration.GetSection("UIOptions"));
-            services.Configure<CkeditorOptions>(configuration.GetSection("CkeditorOptions"));
-            services.Configure<NavigationOptions>(configuration.GetSection("NavigationOptions"));
-        }
+        
 
         private void ConfigureDatabase(IServiceCollection services, IConfiguration configuration)
         {
@@ -474,20 +429,8 @@ namespace example.WebApp
             }
         }
 
-        private void AddCloudscribeNavigation(IServiceCollection services)
-        {
-            services.AddScoped<ITreeCache, MemoryTreeCache>();
-            services.AddScoped<INavigationTreeBuilder, XmlNavigationTreeBuilder>();
-            services.AddScoped<NavigationTreeBuilderService, NavigationTreeBuilderService>();
-            services.AddScoped<INodeUrlPrefixProvider, FolderTenantNodeUrlPrefixProvider>();
-            services.AddScoped<INavigationNodePermissionResolver, NavigationNodePermissionResolver>();
-        }
+        
 
-        private void AddCloudscribeMessaging(IServiceCollection services)
-        {
-            services.AddTransient<IEmailTemplateService, HardCodedEmailTemplateService>();
-            services.AddTransient<ISiteMessageEmailSender, SiteEmailMessageSender>();
-            services.AddTransient<ISmsSender, SiteSmsSender>();
-        }
+        
     }
 }
