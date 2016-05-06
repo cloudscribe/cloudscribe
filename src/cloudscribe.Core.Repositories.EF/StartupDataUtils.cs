@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-12-03
-// Last Modified:			2016-04-27
+// Last Modified:			2016-05-06
 // 
 
 
@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Repositories.EF
 {
-    public static class InitialData
+    public static class StartupDataUtils
     {
 
         public static async Task InitializeDatabaseAsync(IServiceProvider serviceProvider)
@@ -59,7 +59,7 @@ namespace cloudscribe.Core.Repositories.EF
             int count = await db.Countries.CountAsync<GeoCountry>();
             if(count == 0)
             {
-                foreach(GeoCountry c in cloudscribe.Core.Models.InitialData.BuildCountryList())
+                foreach(GeoCountry c in InitialData.BuildCountryList())
                 {
                     db.Countries.Add(c);
                 }
@@ -70,7 +70,7 @@ namespace cloudscribe.Core.Repositories.EF
             count = await db.States.CountAsync<GeoZone>();
             if (count == 0)
             {
-                foreach (GeoZone c in cloudscribe.Core.Models.InitialData.BuildStateList())
+                foreach (GeoZone c in InitialData.BuildStateList())
                 {
                     db.States.Add(c);
                 }
@@ -83,7 +83,7 @@ namespace cloudscribe.Core.Repositories.EF
             count = await db.Languages.CountAsync<Language>();
             if (count == 0)
             {
-                foreach (Language c in cloudscribe.Core.Models.InitialData.BuildLanguageList())
+                foreach (Language c in InitialData.BuildLanguageList())
                 {
                     db.Languages.Add(c);
                 }
@@ -94,7 +94,7 @@ namespace cloudscribe.Core.Repositories.EF
             count = await db.Currencies.CountAsync<Currency>();
             if (count == 0)
             {
-                foreach (Currency c in cloudscribe.Core.Models.InitialData.BuildCurrencyList())
+                foreach (Currency c in InitialData.BuildCurrencyList())
                 {
                     db.Currencies.Add(c);
                 }

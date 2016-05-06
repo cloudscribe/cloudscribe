@@ -12,7 +12,6 @@ using cloudscribe.Setup.Web;
 using cloudscribe.Web.Common.Razor;
 using cloudscribe.Web.Navigation;
 using cloudscribe.Web.Navigation.Caching;
-using cloudscribe.Web.Pagination;
 using example.WebApp;
 using Glimpse;
 using Microsoft.AspNet.Antiforgery;
@@ -31,7 +30,7 @@ using StructureMap;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using InitialData = cloudscribe.Core.Repositories.EF.InitialData;
+
 
 namespace example.WebApp
 {
@@ -251,7 +250,7 @@ namespace example.WebApp
                 builder.UseCookieAuthentication(cookieOptions.TwoFactorUserIdCookie);
                 builder.UseCookieAuthentication(cookieOptions.ApplicationCookie);
 
-                UseSocialAuth(builder, ctx.Tenant, cookieOptions, shouldUseFolder);
+                builder.UseSocialAuth(ctx.Tenant, cookieOptions, shouldUseFolder);
             });
 
             UseMvc(app, multiTenantOptions.Mode == MultiTenantMode.FolderName);
@@ -259,115 +258,14 @@ namespace example.WebApp
             var devOptions = Configuration.Get<DevOptions>("DevOptions");
             if (devOptions.DbPlatform == "ef7")
             {
-                InitialData.InitializeDatabaseAsync(app.ApplicationServices).Wait();
+                // this creates ensures the database is created and initial data
+                StartupDataUtils.InitializeDatabaseAsync(app.ApplicationServices).Wait();
+
+                // this one is only needed if using cloudscribe Logging with EF as the logging storage
                 DbInitializer.InitializeDatabaseAsync(app.ApplicationServices).Wait();
             }
         }
-
-        private void ConfigureLogging(ILoggerFactory loggerFactory, IServiceProvider serviceProvider, ILogRepository logRepository)
-        {
-            loggerFactory.AddConsole(minLevel: LogLevel.Warning);
-
-            // a customizable filter for logging
-            LogLevel minimumLevel = LogLevel.Warning;
-
-            // add exclusions to remove noise in the logs
-            var excludedLoggers = new List<string>
-            {
-                "Microsoft.Data.Entity.Storage.Internal.RelationalCommandBuilderFactory",
-                "Microsoft.Data.Entity.Query.Internal.QueryCompiler",
-                "Microsoft.Data.Entity.DbContext",
-            };
-
-            Func<string, LogLevel, bool> logFilter = (string loggerName, LogLevel logLevel) =>
-            {
-                if (logLevel < minimumLevel)
-                {
-                    return false;
-                }
-
-                if (excludedLoggers.Contains(loggerName))
-                {
-                    return false;
-                }
-
-                return true;
-            };
-
-            loggerFactory.AddDbLogger(serviceProvider, logRepository, logFilter);
-        }
-              
-        private void UseSocialAuth(
-            IApplicationBuilder app, 
-            SiteSettings site, 
-            IdentityCookieOptions cookieOptions,
-            bool shouldUseFolder)
-        {
-            // TODO: will this require a restart if the options are updated in the ui?
-            // no just need to clear the tenant cache after updating the settings
-            if (!string.IsNullOrWhiteSpace(site.GoogleClientId))
-            {
-                app.UseGoogleAuthentication(options =>
-                {
-                    options.AuthenticationScheme = "Google";
-                    options.SignInScheme = cookieOptions.ExternalCookie.AuthenticationScheme;
-
-                    options.ClientId = site.GoogleClientId;
-                    options.ClientSecret = site.GoogleClientSecret;
-
-                    if (shouldUseFolder)
-                    {
-                        options.CallbackPath = "/" + site.SiteFolderName + "/signin-google";
-                    }
-                });
-            }
-
-            if (!string.IsNullOrWhiteSpace(site.FacebookAppId))
-            {
-                app.UseFacebookAuthentication(options =>
-                {
-                    options.AuthenticationScheme = "Facebook";
-                    options.SignInScheme = cookieOptions.ExternalCookie.AuthenticationScheme;
-                    options.AppId = site.FacebookAppId;
-                    options.AppSecret = site.FacebookAppSecret;
-
-                    if (shouldUseFolder)
-                    {
-                        options.CallbackPath = "/" + site.SiteFolderName + "/signin-facebook";
-                    }
-                });
-            }
-
-            if (!string.IsNullOrWhiteSpace(site.MicrosoftClientId))
-            {
-                app.UseMicrosoftAccountAuthentication(options =>
-                {
-                    options.SignInScheme = cookieOptions.ExternalCookie.AuthenticationScheme;
-                    options.ClientId = site.MicrosoftClientId;
-                    options.ClientSecret = site.MicrosoftClientSecret;
-                    if (shouldUseFolder)
-                    {
-                        options.CallbackPath = "/" + site.SiteFolderName + "/signin-microsoft";
-                    }
-                });
-            }
-
-            if (!string.IsNullOrWhiteSpace(site.TwitterConsumerKey))
-            {
-                app.UseTwitterAuthentication(options =>
-                {
-                    options.SignInScheme = cookieOptions.ExternalCookie.AuthenticationScheme;
-                    options.ConsumerKey = site.TwitterConsumerKey;
-                    options.ConsumerSecret = site.TwitterConsumerSecret;
-
-                    if (shouldUseFolder)
-                    {
-                        options.CallbackPath = "/" + site.SiteFolderName + "/signin-twitter";
-                    }
-                });
-            }
-        }
-
+        
         private void UseMvc(IApplicationBuilder app, bool useFolders)
         {
             app.UseMvc(routes =>
@@ -388,12 +286,7 @@ namespace example.WebApp
                     defaults: new { controller = "Home", action = "Index" });
             });
         }
-
-        // Entry point for the application.
-        public static void Main(string[] args) => WebApplication.Run<Startup>(args);
-
         
-
         private void ConfigureDatabase(IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped<ISetupTask, EnsureInitialDataSetupTask>();
@@ -429,8 +322,41 @@ namespace example.WebApp
             }
         }
 
-        
+        private void ConfigureLogging(ILoggerFactory loggerFactory, IServiceProvider serviceProvider, ILogRepository logRepository)
+        {
+            loggerFactory.AddConsole(minLevel: LogLevel.Warning);
 
-        
+            // a customizable filter for logging
+            LogLevel minimumLevel = LogLevel.Warning;
+
+            // add exclusions to remove noise in the logs
+            var excludedLoggers = new List<string>
+            {
+                "Microsoft.Data.Entity.Storage.Internal.RelationalCommandBuilderFactory",
+                "Microsoft.Data.Entity.Query.Internal.QueryCompiler",
+                "Microsoft.Data.Entity.DbContext",
+            };
+
+            Func<string, LogLevel, bool> logFilter = (string loggerName, LogLevel logLevel) =>
+            {
+                if (logLevel < minimumLevel)
+                {
+                    return false;
+                }
+
+                if (excludedLoggers.Contains(loggerName))
+                {
+                    return false;
+                }
+
+                return true;
+            };
+
+            loggerFactory.AddDbLogger(serviceProvider, logRepository, logFilter);
+        }
+
+
+        // Entry point for the application.
+        public static void Main(string[] args) => WebApplication.Run<Startup>(args);
     }
 }
