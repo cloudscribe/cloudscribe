@@ -57,7 +57,8 @@ namespace cloudscribe.Core.Repositories.NoDb
             ISiteUser user,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (user == null) { return false; }
+            var result = false;
+            if (user == null) { return result; }
             
             if (user.SiteGuid == Guid.Empty) { throw new ArgumentException("user must have a siteguid"); }
 
@@ -66,33 +67,88 @@ namespace cloudscribe.Core.Repositories.NoDb
             SiteUser siteUser = SiteUser.FromISiteUser(user);
             if (siteUser.UserGuid == Guid.Empty)
             {
-                siteUser.UserGuid = Guid.NewGuid(); 
-                //dbContext.Users.Add(siteUser);
+                siteUser.UserGuid = Guid.NewGuid();
+                
+                result = await userCommands.CreateAsync(
+                    projectId, 
+                    siteUser.UserGuid.ToString(), 
+                    siteUser, 
+                    cancellationToken).ConfigureAwait(false);
             }
             else
             {
-                //bool tracking = dbContext.ChangeTracker.Entries<SiteUser>().Any(x => x.Entity.UserId == siteUser.UserId);
-                //if (!tracking)
-                //{
-                //    //dbContext.Users.Update(siteUser);
-                //}
+                result = await userCommands.UpdateAsync(
+                    projectId, 
+                    siteUser.UserGuid.ToString(), 
+                    siteUser, 
+                    cancellationToken).ConfigureAwait(false);
 
             }
+            
+            return result;
 
-            //int rowsAffected =
-            //    await dbContext.SaveChangesAsync(cancellationToken)
-            //    .ConfigureAwait(false)
-            //    ;
+        }
 
-            //if (user.UserId == -1)
-            //{
-            //    user.UserId = siteUser.UserId;
-            //    user.UserGuid = siteUser.UserGuid;
-            //}
+        public async Task<bool> Delete(
+            Guid siteGuid,
+            Guid userGuid,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var result = false;
 
-            //return rowsAffected > 0;
+            await EnsureProjectId().ConfigureAwait(false);
 
-            return false;
+            result = await userCommands.DeleteAsync(projectId, userGuid.ToString(), cancellationToken).ConfigureAwait(false);
+            
+            return result;
+
+        }
+
+        //public async Task<bool> DeleteUsersBySite(
+        //    Guid siteGuid,
+        //    CancellationToken cancellationToken = default(CancellationToken))
+        //{
+        //    bool result = await DeleteLoginsBySite(siteGuid);
+        //    result = await DeleteClaimsBySite(siteGuid);
+        //    result = await DeleteUserRolesBySite(siteGuid);
+
+        //    var query = from x in dbContext.Users.Where(x => x.SiteGuid == siteGuid)
+        //                select x;
+
+        //    dbContext.Users.RemoveRange(query);
+        //    int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
+        //        .ConfigureAwait(false);
+
+        //    result = rowsAffected > 0;
+
+        //    return result;
+        //}
+
+        public async Task<bool> FlagAsDeleted(
+            Guid userGuid,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var result = false;
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var item
+                = await userQueries.FetchAsync(
+                    projectId,
+                    userGuid.ToString(),
+                    cancellationToken).ConfigureAwait(false);
+
+            if (item == null) { return result; }
+
+            item.IsDeleted = true;
+
+            result = await userCommands.UpdateAsync(
+                    projectId,
+                    item.UserGuid.ToString(),
+                    item,
+                    cancellationToken).ConfigureAwait(false);
+
+            return result;
 
         }
 
