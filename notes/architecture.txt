@@ -1,4 +1,11 @@
 
+
+http://blog.ploeh.dk/2014/08/11/cqs-versus-server-generated-ids/
+
+http://blog.ploeh.dk/2016/05/06/cqs-and-server-generated-entity-ids/
+
+
+
 https://blog.rendle.io/do-one-thing-and-do-it-well/
 
 http://joeduffyblog.com/2010/09/06/the-premature-optimization-is-evil-myth/

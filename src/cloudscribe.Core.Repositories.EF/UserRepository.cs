@@ -1717,7 +1717,7 @@ namespace cloudscribe.Core.Repositories.EF
 
         }
 
-        public async Task<bool> DeleteClaimsByUser(
+        private async Task<bool> DeleteClaimsByUser(
             Guid siteGuid, 
             Guid userGuid, 
             bool saveChanges, 
@@ -1898,7 +1898,7 @@ namespace cloudscribe.Core.Repositories.EF
 
         }
 
-        public async Task<bool> DeleteLoginsByUser(
+        private async Task<bool> DeleteLoginsByUser(
             Guid siteGuid,
             Guid userGuid,
             bool saveChanges, 
@@ -2063,6 +2063,7 @@ namespace cloudscribe.Core.Repositories.EF
             cancellationToken.ThrowIfCancellationRequested();
 
             var result = false;
+            // TODO: this is a bug should get all by userguid not singleordefault
             var itemToRemove = await dbContext.UserLocations.SingleOrDefaultAsync(
                 x => x.UserGuid == userGuid
                 , cancellationToken)
@@ -2089,6 +2090,7 @@ namespace cloudscribe.Core.Repositories.EF
             cancellationToken.ThrowIfCancellationRequested();
 
             var result = false;
+            // TODO: this is a bug should get all by siteguid not singleordefault
             var itemToRemove = await dbContext.UserLocations.SingleOrDefaultAsync(
                 x => x.SiteGuid == siteGuid
                 , cancellationToken)
