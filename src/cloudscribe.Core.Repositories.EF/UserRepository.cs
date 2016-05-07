@@ -1313,7 +1313,7 @@ namespace cloudscribe.Core.Repositories.EF
             return DeleteUserRoles(userGuid, true, cancellationToken);
         }
 
-        public async Task<bool> DeleteUserRoles(
+        private async Task<bool> DeleteUserRoles(
             Guid userGuid,
             bool saveChanges, 
             CancellationToken cancellationToken = default(CancellationToken))

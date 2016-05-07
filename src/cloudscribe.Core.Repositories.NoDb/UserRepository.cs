@@ -186,6 +186,495 @@ namespace cloudscribe.Core.Repositories.NoDb
 
         #region Roles
 
+        public async Task<bool> SaveRole(
+            ISiteRole role,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var result = false;
+
+            if (role == null) { return result; }
+
+            await EnsureProjectId().ConfigureAwait(false);
+            
+            if (role.SiteGuid == Guid.Empty) { throw new ArgumentException("SiteGuid must be provided"); }
+
+            SiteRole siteRole = SiteRole.FromISiteRole(role);
+            if (siteRole.RoleGuid == Guid.Empty)
+            {
+                siteRole.RoleGuid = Guid.NewGuid();
+                if (siteRole.RoleName.Length == 0)
+                {
+                    siteRole.RoleName = siteRole.DisplayName;
+                }
+                result = await roleCommands.CreateAsync(
+                    projectId,
+                    siteRole.RoleGuid.ToString(),
+                    siteRole,
+                    cancellationToken).ConfigureAwait(false);
+            }
+            else
+            {
+                result = await roleCommands.UpdateAsync(
+                    projectId,
+                    siteRole.RoleGuid.ToString(),
+                    siteRole,
+                    cancellationToken).ConfigureAwait(false);
+
+            }
+
+            return result;
+
+        }
+
+        public async Task<bool> DeleteRole(
+            Guid roleGuid,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+            
+            await EnsureProjectId().ConfigureAwait(false);
+
+            return await roleCommands.DeleteAsync(
+                projectId,
+                roleGuid.ToString(),
+                cancellationToken).ConfigureAwait(false);
+        }
+
+        public async Task<bool> DeleteRolesBySite(
+            Guid siteGuid,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var result = false;
+            var all = await roleQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+            var filtered = all.Where(x => x.SiteGuid == siteGuid);
+
+            foreach (var item in filtered)
+            {
+                var tmpResult = await roleCommands.DeleteAsync(
+                    projectId,
+                    item.RoleGuid.ToString(),
+                    cancellationToken).ConfigureAwait(false);
+
+                if (tmpResult) result = true;
+            }
+
+            return result;
+            
+        }
+
+        public async Task<bool> AddUserToRole(
+            Guid roleGuid,
+            Guid userGuid,
+            CancellationToken cancellationToken = default(CancellationToken)
+            )
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            UserRole ur = new UserRole();
+            ur.RoleGuid = roleGuid;
+            ur.UserGuid = userGuid;
+
+            var key = userGuid.ToString() + "~" + roleGuid.ToString();
+
+            var result = await userRoleCommands.CreateAsync(
+                projectId,
+                key,
+                ur,
+                cancellationToken).ConfigureAwait(false);
+            
+            return result;
+
+        }
+
+        public async Task<bool> RemoveUserFromRole(
+            Guid roleGuid,
+            Guid userGuid,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+            
+            var key = userGuid.ToString() + "~" + roleGuid.ToString();
+
+            return await userRoleCommands.DeleteAsync(
+                projectId,
+                key,
+                cancellationToken).ConfigureAwait(false);
+        }
+
+        public async Task<bool> DeleteUserRoles(
+            Guid userGuid,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var result = false;
+            var all = await userRoleQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+            var filtered = all.Where(
+                x => x.UserGuid == userGuid 
+            );
+
+            foreach (var item in filtered)
+            {
+                var key = item.UserGuid.ToString() + "~" + item.RoleGuid.ToString();
+
+                var tmpResult = await roleCommands.DeleteAsync(
+                    projectId,
+                    key,
+                    cancellationToken).ConfigureAwait(false);
+
+                if (tmpResult) result = true;
+            }
+
+            return result;
+
+        }
+
+        public async Task<bool> DeleteUserRolesByRole(
+            Guid roleGuid,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var result = false;
+            var all = await userRoleQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+            var filtered = all.Where(
+                x => x.RoleGuid == roleGuid
+            );
+
+            foreach (var item in filtered)
+            {
+                var key = item.UserGuid.ToString() + "~" + item.RoleGuid.ToString();
+
+                var tmpResult = await roleCommands.DeleteAsync(
+                    projectId,
+                    key,
+                    cancellationToken).ConfigureAwait(false);
+
+                if (tmpResult) result = true;
+            }
+
+            return result;
+        }
+
+        public async Task<bool> DeleteUserRolesBySite(
+            Guid siteGuid,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+            
+            var allRoles = await roleQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+            var siteRoles = allRoles.Where(
+                x => x.SiteGuid == siteGuid
+            );
+
+            var allUserRoles = await userRoleQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+            
+            var result = false;
+            var query = from x in allUserRoles
+                        join y in siteRoles on x.RoleGuid equals y.RoleGuid
+                        select x;
+
+            foreach (var item in query)
+            {
+                var key = item.UserGuid.ToString() + "~" + item.RoleGuid.ToString();
+
+                var tmpResult = await roleCommands.DeleteAsync(
+                    projectId,
+                    key,
+                    cancellationToken).ConfigureAwait(false);
+
+                if (tmpResult) result = true;
+            }
+
+            return result;
+            
+        }
+
+        public async Task<bool> RoleExists(
+            Guid siteGuid,
+            string roleName,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var allRoles = await roleQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+            var filteredRoles = allRoles.Where(
+                x => x.SiteGuid == siteGuid
+                && x.RoleName == roleName
+            );
+            
+            return filteredRoles.ToList().Count > 0;
+        }
+
+        public async Task<ISiteRole> FetchRole(
+            Guid roleGuid,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            return await roleQueries.FetchAsync(
+                projectId,
+                roleGuid.ToString(),
+                cancellationToken).ConfigureAwait(false);
+            
+        }
+
+        public async Task<ISiteRole> FetchRole(
+            Guid siteGuid,
+            string roleName,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var allRoles = await roleQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+            var filteredRoles = allRoles.Where(
+                x => x.SiteGuid == siteGuid
+                && x.RoleName == roleName
+            );
+
+            return filteredRoles.FirstOrDefault();
+
+        }
+
+        public async Task<List<string>> GetUserRoles(
+            Guid siteGuid,
+            Guid userGuid,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var allRoles = await roleQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+            var filteredRoles = allRoles.Where(
+                x => x.SiteGuid == siteGuid
+            );
+
+            var allUserRoles = await userRoleQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+
+            var query = from x in filteredRoles
+                        join y in allUserRoles
+                        on x.RoleGuid equals y.RoleGuid
+                        where y.UserGuid == userGuid
+                        orderby x.RoleName
+                        select x.RoleName
+                        ;
+
+            return query.ToList<string>();
+
+        }
+
+        public async Task<int> CountOfRoles(
+            Guid siteGuid,
+            string searchInput,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var allRoles = await roleQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+            var filteredRoles = allRoles.Where(
+                x => x.SiteGuid == siteGuid
+                && (
+                 (searchInput == "")
+                        || x.DisplayName.Contains(searchInput)
+                        || x.RoleName.Contains(searchInput)
+                )
+            );
+
+            return filteredRoles.ToList().Count;
+            
+        }
+
+        public async Task<IList<ISiteRole>> GetRolesBySite(
+            Guid siteGuid,
+            string searchInput,
+            int pageNumber,
+            int pageSize,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var allRoles = await roleQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+            var filteredRoles = allRoles.Where(
+                x => x.SiteGuid == siteGuid
+                && (
+                 (searchInput == "")
+                        || x.DisplayName.Contains(searchInput)
+                        || x.RoleName.Contains(searchInput)
+                )
+            );
+
+            int offset = (pageSize * pageNumber) - pageSize;
+
+            var allUserRoles = await userRoleQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+
+            var listQuery = from x in filteredRoles
+                            orderby x.RoleName ascending
+                            select x;
+
+            return listQuery
+                .Skip(offset)
+                .Take(pageSize)
+                .ToList<ISiteRole>()
+                ;
+
+        }
+
+        public async Task<int> CountUsersInRole(
+            Guid siteGuid,
+            Guid roleGuid,
+            string searchInput,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var allUsers = await userQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+            var allUserRoles = await userRoleQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+
+            var query = from x in allUsers
+                        join y in allUserRoles
+                        on x.UserGuid equals y.UserGuid
+                        where (
+                            (x.SiteGuid.Equals(siteGuid) && y.RoleGuid.Equals(roleGuid))
+                            && (
+                                (searchInput == "")
+                                || x.Email.Contains(searchInput)
+                                || x.DisplayName.Contains(searchInput)
+                                || x.UserName.Contains(searchInput)
+                                || x.FirstName.Contains(searchInput)
+                                || x.LastName.Contains(searchInput)
+                            )
+                            )
+                        
+                        select x
+                        ;
+
+            return query.ToList().Count();
+
+        }
+
+        public async Task<IList<IUserInfo>> GetUsersInRole(
+            Guid siteGuid,
+            Guid roleGuid,
+            string searchInput,
+            int pageNumber,
+            int pageSize,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var allUsers = await userQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+            var allUserRoles = await userRoleQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+
+            
+
+            var query = from x in allUsers
+                        join y in allUserRoles
+                        on x.UserGuid equals y.UserGuid
+                        orderby x.DisplayName
+                        where (
+                            (x.SiteGuid.Equals(siteGuid) && y.RoleGuid.Equals(roleGuid))
+                            && (
+                                (searchInput == "")
+                                || x.Email.Contains(searchInput)
+                                || x.DisplayName.Contains(searchInput)
+                                || x.UserName.Contains(searchInput)
+                                || x.FirstName.Contains(searchInput)
+                                || x.LastName.Contains(searchInput)
+                            )
+                            )
+                        select x
+                        ;
+
+            int offset = (pageSize * pageNumber) - pageSize;
+
+            return query
+                .Skip(offset)
+                .Take(pageSize)
+                .ToList<IUserInfo>()
+                ;
+
+        }
+
+        public async Task<IList<ISiteUser>> GetUsersInRole(
+            Guid siteGuid,
+            string roleName,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var allUsers = await userQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+            var allUserRoles = await userRoleQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+            var allRoles = await roleQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+            var siteRoles = allRoles.Where(x => x.SiteGuid == siteGuid);
+
+            var query = from x in allUsers
+                        join y in allUserRoles
+                        on x.UserGuid equals y.UserGuid
+                        join z in siteRoles
+                        on y.RoleGuid equals z.RoleGuid
+                        orderby x.DisplayName
+                        where
+                            (x.SiteGuid.Equals(siteGuid) && z.RoleName.Equals(roleName))
+
+                        select x
+                        ;
+
+            var items = query
+                .ToList<ISiteUser>()
+                ;
+
+            return items;
+        }
 
 
         #endregion
