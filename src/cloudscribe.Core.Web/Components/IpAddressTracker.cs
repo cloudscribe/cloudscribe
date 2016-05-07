@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2016-01-31
-// Last Modified:		    2016-02-03
+// Last Modified:		    2016-05-07
 // 
 
 
@@ -44,7 +44,11 @@ namespace cloudscribe.Core.Web.Components
 
             try
             {
-                IPAddress ipv4 = context.Connection.RemoteIpAddress.MapToIPv4();
+                var connection = context.Connection;
+                if (connection == null) return false;
+                var ip = connection.RemoteIpAddress;
+                if (ip == null) return false;
+                var ipv4 = ip.MapToIPv4();
 
                 string ipv4Address = ipv4.ToString();
                 //Connection.RemoteIpAddress.MapToIPv4().ToLong()
