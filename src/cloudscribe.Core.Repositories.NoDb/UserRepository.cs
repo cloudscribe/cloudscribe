@@ -676,6 +676,100 @@ namespace cloudscribe.Core.Repositories.NoDb
             return items;
         }
 
+        public async Task<int> CountUsersNotInRole(
+            Guid siteGuid,
+            Guid roleGuid,
+            string searchInput,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var allUsers = await userQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+            var allUserRoles = await userRoleQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+            var allRoles = await roleQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+            var siteRoles = allRoles.Where(x => x.SiteGuid == siteGuid);
+
+            var query = from u in allUsers
+                        from r in siteRoles
+                        join ur in allUserRoles
+                        on new { r.RoleGuid, u.UserGuid } equals new { ur.RoleGuid, ur.UserGuid } into t
+                        from t2 in t.DefaultIfEmpty()
+                        where (
+                        u.SiteGuid == siteGuid
+                        && r.SiteGuid == siteGuid
+                        && r.RoleGuid == roleGuid
+                        && (
+                                (searchInput == "")
+                                || u.Email.Contains(searchInput)
+                                || u.DisplayName.Contains(searchInput)
+                                || u.UserName.Contains(searchInput)
+                                || u.FirstName.Contains(searchInput)
+                                || u.LastName.Contains(searchInput)
+                            )
+
+                        && t2 == null
+                        )
+
+                        select u;
+
+            return query.ToList().Count;
+
+        }
+
+        public async Task<IList<IUserInfo>> GetUsersNotInRole(
+            Guid siteGuid,
+            Guid roleGuid,
+            string searchInput,
+            int pageNumber,
+            int pageSize,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var allUsers = await userQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+            var allUserRoles = await userRoleQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+            var allRoles = await roleQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+            var siteRoles = allRoles.Where(x => x.SiteGuid == siteGuid);
+            
+            var query = from u in allUsers
+                        from r in siteRoles
+                        join ur in allUserRoles
+                        on new { r.RoleGuid, u.UserGuid } equals new { ur.RoleGuid, ur.UserGuid } into t
+                        from t2 in t.DefaultIfEmpty()
+                        where (
+                        u.SiteGuid == siteGuid
+                        && r.SiteGuid == siteGuid
+                        && r.RoleGuid == roleGuid
+                        && (
+                                (searchInput == "")
+                                || u.Email.Contains(searchInput)
+                                || u.DisplayName.Contains(searchInput)
+                                || u.UserName.Contains(searchInput)
+                                || u.FirstName.Contains(searchInput)
+                                || u.LastName.Contains(searchInput)
+                            )
+
+                        && t2 == null
+                        )
+                        orderby u.DisplayName
+                        select u;
+
+            int offset = (pageSize * pageNumber) - pageSize;
+
+            return query
+                .Skip(offset)
+                .Take(pageSize)
+                .ToList<IUserInfo>()
+                ;
+
+        }
+
 
         #endregion
 
