@@ -13,13 +13,13 @@ using Microsoft.Extensions.OptionsModel;
 
 namespace cloudscribe.Core.Identity
 {
-    public class SiteIdentityOptionsProvider : IOptions<IdentityOptions>
+    public class SiteIdentityOptionsResolver : IOptions<IdentityOptions>
     {
         private CookieAuthenticationEvents cookieEvents;
         private SiteAuthCookieValidator siteValidator;
         private IHttpContextAccessor httpContextAccessor;
 
-        public SiteIdentityOptionsProvider(
+        public SiteIdentityOptionsResolver(
             IHttpContextAccessor httpContextAccessor,
             CookieAuthenticationEvents cookieEvents,
             SiteAuthCookieValidator siteValidator

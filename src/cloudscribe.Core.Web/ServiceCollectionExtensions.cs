@@ -1,18 +1,24 @@
-﻿using cloudscribe.Core.Identity;
+﻿// Copyright (c) Source Tree Solutions, LLC. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+// Author:					Joe Audette
+// Created:					2016-05-07
+// Last Modified:			2016-05-08
+// 
+
+using cloudscribe.Core.Identity;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.Components.Editor;
 using cloudscribe.Core.Web.Components.Messaging;
+using cloudscribe.Core.Web.Navigation;
 using cloudscribe.Web.Common.Razor;
-using cloudscribe.Web.Pagination;
+using cloudscribe.Web.Navigation;
+using Microsoft.AspNet.Antiforgery;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.OptionsModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web
 {
@@ -29,7 +35,7 @@ namespace cloudscribe.Core.Web
 
             services.AddScoped<ITimeZoneResolver, RequestTimeZoneResolver>();
             services.AddMultitenancy<SiteSettings, CachingSiteResolver>();
-            services.AddSingleton<IOptions<IdentityOptions>, SiteIdentityOptionsProvider>();
+            services.AddSingleton<IOptions<IdentityOptions>, SiteIdentityOptionsResolver>();
 
             services.AddScoped<SiteManager, SiteManager>();
             
@@ -38,35 +44,33 @@ namespace cloudscribe.Core.Web
             services.AddScoped<IpAddressTracker, IpAddressTracker>();
 
             services.AddScoped<SiteDataProtector>();
-
             
-
             services.AddIdentity<SiteUser, SiteRole>()
                 .AddUserStore<UserStore<SiteUser>>()
                 .AddRoleStore<RoleStore<SiteRole>>()
                 .AddUserManager<SiteUserManager<SiteUser>>()
                 .AddRoleManager<SiteRoleManager<SiteRole>>();
 
-            services.AddSingleton<IOptions<IdentityOptions>, SiteIdentityOptionsProvider>();
+            services.AddSingleton<IOptions<IdentityOptions>, SiteIdentityOptionsResolver>();
 
             services.AddScoped<IUserClaimsPrincipalFactory<SiteUser>, SiteUserClaimsPrincipalFactory<SiteUser, SiteRole>>();
             services.AddScoped<IPasswordHasher<SiteUser>, SitePasswordHasher<SiteUser>>();
             services.AddScoped<SiteSignInManager<SiteUser>, SiteSignInManager<SiteUser>>();
             services.AddScoped<SiteAuthCookieValidator, SiteAuthCookieValidator>();
             services.AddScoped<SiteCookieAuthenticationEvents, SiteCookieAuthenticationEvents>();
-
-
-
-            services.AddTransient<IBuildPaginationLinks, PaginationLinkBuilder>();
+            services.AddSingleton<IAntiforgeryTokenStore, SiteAntiforgeryTokenStore>();
+            
+            services.AddCloudscribePagination();
 
             services.AddTransient<IEmailTemplateService, HardCodedEmailTemplateService>();
             services.AddTransient<ISiteMessageEmailSender, SiteEmailMessageSender>();
             services.AddTransient<ISmsSender, SiteSmsSender>();
 
             services.AddSingleton<IThemeListBuilder, SiteThemeListBuilder>();
+            services.AddSingleton<IRazorViewEngine, CoreViewEngine>();
 
-
-
+            services.AddScoped<INodeUrlPrefixProvider, FolderTenantNodeUrlPrefixProvider>();
+            services.AddCloudscribeNavigation(configuration);
 
             return services;
         }

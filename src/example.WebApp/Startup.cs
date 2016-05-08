@@ -161,14 +161,7 @@ namespace example.WebApp
             services.AddScoped<IVersionProvider, SetupVersionProvider>();
             services.AddScoped<IVersionProvider, CloudscribeLoggingVersionProvider>();
             /* end cloudscribe Setup */
-
-            services.Configure<NavigationOptions>(Configuration.GetSection("NavigationOptions"));
-            services.AddScoped<ITreeCache, MemoryTreeCache>();
-            services.AddScoped<INavigationTreeBuilder, XmlNavigationTreeBuilder>();
-            services.AddScoped<NavigationTreeBuilderService, NavigationTreeBuilderService>();
-            services.AddScoped<INodeUrlPrefixProvider, FolderTenantNodeUrlPrefixProvider>();
-            services.AddScoped<INavigationNodePermissionResolver, NavigationNodePermissionResolver>();
-
+            
             services.AddCloudscribeCore(Configuration);
             
             services.AddMvc()
@@ -180,16 +173,11 @@ namespace example.WebApp
                     {
                         options.ViewLocationExpanders.Add(new SiteViewLocationExpander());
                     });
-
-            services.AddSingleton<IRazorViewEngine, CoreViewEngine>();
-            services.AddSingleton<IAntiforgeryTokenStore, SiteAntiforgeryTokenStore>();
-
+            
             ConfigureDatabase(services, Configuration);
 
             
-
             var container = new Container();
-
             container.Populate(services);
             
             return container.GetInstance<IServiceProvider>();
@@ -200,6 +188,7 @@ namespace example.WebApp
             IHostingEnvironment environment,
             ILoggerFactory loggerFactory,
             IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
+            IOptions<IdentityOptions> identityOptionsAccessor,
             IServiceProvider serviceProvider,
             ILogRepository logRepository)
         {
@@ -238,9 +227,11 @@ namespace example.WebApp
 
             app.UsePerTenant<SiteSettings>((ctx, builder) =>
             {
-                var tenantIdentityOptionsProvider = app.ApplicationServices.GetRequiredService<IOptions<IdentityOptions>>();
-                var cookieOptions = tenantIdentityOptionsProvider.Value.Cookies;
-                
+                //var tenantIdentityOptionsProvider = app.ApplicationServices.GetRequiredService<IOptions<IdentityOptions>>();
+                //var cookieOptions = tenantIdentityOptionsProvider.Value.Cookies;
+                var cookieOptions = identityOptionsAccessor.Value.Cookies;
+
+
                 var shouldUseFolder = !multiTenantOptions.UseRelatedSitesMode 
                                         && multiTenantOptions.Mode == MultiTenantMode.FolderName 
                                         && ctx.Tenant.SiteFolderName.Length > 0;
