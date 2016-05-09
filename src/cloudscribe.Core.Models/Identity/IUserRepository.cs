@@ -52,11 +52,7 @@ namespace cloudscribe.Core.Models
             Guid userGuid, 
             CancellationToken cancellationToken);
 
-        //Task<ISiteUser> Fetch(
-        //    int siteId, 
-        //    int userId, 
-        //    CancellationToken cancellationToken);
-
+       
         Task<ISiteUser> Fetch(
             Guid siteGuid,
             string email, 
@@ -68,7 +64,7 @@ namespace cloudscribe.Core.Models
             bool allowEmailFallback, 
             CancellationToken cancellationToken);
 
-        //Task<ISiteUser> FetchNewest(int siteId);
+        
 
         Task<bool> Delete(
             Guid siteGuid,
@@ -79,8 +75,7 @@ namespace cloudscribe.Core.Models
             Guid siteGuid,
             CancellationToken cancellationToken);
 
-        //Task<bool> Delete(ISiteUser user);
-
+        
         Task<bool> FlagAsDeleted(
             Guid userGuid,
             CancellationToken cancellationToken);
