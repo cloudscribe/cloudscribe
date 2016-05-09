@@ -17,155 +17,155 @@ namespace cloudscribe.Core.Models
     {
         Task Create(
             ISiteUser user,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task Update(
             ISiteUser user,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task Delete(
             Guid siteGuid,
             Guid userGuid,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task DeleteUsersBySite(
             Guid siteGuid,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
 
         Task FlagAsDeleted(
             Guid userGuid,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task FlagAsNotDeleted(
             Guid userGuid,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task LockoutAccount(
             Guid userGuid,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task UnLockAccount(
             Guid userGuid,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task UpdateFailedPasswordAttemptCount(
             Guid userGuid,
             int failedPasswordAttemptCount,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task UpdateLastLoginTime(
             Guid userGuid,
             DateTime lastLoginTime,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         //roles
         Task AddUserToRole(
             Guid roleGuid,
             Guid userGuid,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task DeleteRole(
             Guid roleGuid,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task DeleteRolesBySite(
             Guid siteGuid,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task DeleteUserRoles(
             Guid userGuid,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task DeleteUserRolesByRole(
             Guid roleGuid,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task DeleteUserRolesBySite(
             Guid siteGuid,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task RemoveUserFromRole(
             Guid roleGuid,
             Guid userGuid,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task CreateRole(
             ISiteRole role,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task UpdateRole(
             ISiteRole role,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         //claims
         Task DeleteClaim(
             Guid id,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task DeleteClaimsBySite(
             Guid siteGuid,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task DeleteClaimsByUser(
             Guid siteGuid,
             Guid userGuid,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task DeleteClaimByUser(
             Guid siteGuid,
             Guid userGuid,
             string claimType,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task CreateClaim(
             IUserClaim userClaim,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task UpdateClaim(
             IUserClaim userClaim,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         //logins
         Task CreateLogin(
             IUserLogin userLogin,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task DeleteLogin(
             Guid siteGuid,
             Guid userGuid,
             string loginProvider,
             string providerKey,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task DeleteLoginsBySite(
             Guid siteGuid,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task DeleteLoginsByUser(
             Guid siteGuid,
             Guid userGuid,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task AddUserLocation(
             IUserLocation userLocation,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task UpdateUserLocation(
             IUserLocation userLocation,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task DeleteUserLocation(
             Guid rowGuid,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task DeleteUserLocationsByUser(
             Guid userGuid,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task DeleteUserLocationsBySite(
             Guid siteGuid,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
     }
 }

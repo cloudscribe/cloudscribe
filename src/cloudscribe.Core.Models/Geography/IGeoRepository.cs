@@ -19,17 +19,7 @@ namespace cloudscribe.Core.Models.Geography
         Task<bool> DeleteCountry(Guid guid, CancellationToken cancellationToken);
         Task<bool> DeleteGeoZone(Guid guid, CancellationToken cancellationToken);
         Task<bool> DeleteGeoZonesByCountry(Guid countryGuid, CancellationToken cancellationToken);
-        Task<IGeoCountry> FetchCountry(Guid guid, CancellationToken cancellationToken);
-        Task<IGeoCountry> FetchCountry(string isoCode2, CancellationToken cancellationToken);
-        Task<IGeoZone> FetchGeoZone(Guid guid, CancellationToken cancellationToken);
-        Task<List<IGeoCountry>> GetAllCountries(CancellationToken cancellationToken);
-        Task<List<IGeoCountry>> GetCountriesPage(int pageNumber, int pageSize, CancellationToken cancellationToken);
-        Task<int> GetCountryCount(CancellationToken cancellationToken);
-        Task<int> GetGeoZoneCount(Guid countryGuid, CancellationToken cancellationToken);
-        Task<List<IGeoZone>> GetGeoZonePage(Guid countryGuid, int pageNumber, int pageSize, CancellationToken cancellationToken);
-        Task<List<IGeoZone>> GetGeoZonesByCountry(Guid countryGuid, CancellationToken cancellationToken);
-        Task<List<IGeoCountry>> CountryAutoComplete(string query, int maxRows, CancellationToken cancellationToken);
-        Task<List<IGeoZone>> StateAutoComplete(Guid countryGuid, string query, int maxRows, CancellationToken cancellationToken);
+
         Task<bool> Add(IGeoCountry geoCountry, CancellationToken cancellationToken);
         Task<bool> Update(IGeoCountry geoCountry, CancellationToken cancellationToken);
         Task<bool> Add(IGeoZone geoZone, CancellationToken cancellationToken);
@@ -37,16 +27,32 @@ namespace cloudscribe.Core.Models.Geography
 
         Task<bool> Add(ILanguage language, CancellationToken cancellationToken);
         Task<bool> Update(ILanguage language, CancellationToken cancellationToken);
-        Task<ILanguage> FetchLanguage(Guid guid, CancellationToken cancellationToken);
         Task<bool> DeleteLanguage(Guid guid, CancellationToken cancellationToken);
-        Task<int> GetLanguageCount(CancellationToken cancellationToken);
-        Task<List<ILanguage>> GetAllLanguages(CancellationToken cancellationToken);
-        Task<List<ILanguage>> GetLanguagePage(int pageNumber, int pageSize, CancellationToken cancellationToken);
 
         Task<bool> Add(ICurrency currency, CancellationToken cancellationToken);
         Task<bool> Update(ICurrency currency, CancellationToken cancellationToken);
-        Task<ICurrency> FetchCurrency(Guid guid, CancellationToken cancellationToken);
         Task<bool> DeleteCurrency(Guid guid, CancellationToken cancellationToken);
+
+        Task<IGeoCountry> FetchCountry(Guid guid, CancellationToken cancellationToken);
+        Task<IGeoCountry> FetchCountry(string isoCode2, CancellationToken cancellationToken);
+        Task<List<IGeoCountry>> GetAllCountries(CancellationToken cancellationToken);
+        Task<List<IGeoCountry>> GetCountriesPage(int pageNumber, int pageSize, CancellationToken cancellationToken);
+        Task<List<IGeoCountry>> CountryAutoComplete(string query, int maxRows, CancellationToken cancellationToken);
+        Task<int> GetCountryCount(CancellationToken cancellationToken);
+
+        Task<IGeoZone> FetchGeoZone(Guid guid, CancellationToken cancellationToken);
+        
+        Task<int> GetGeoZoneCount(Guid countryGuid, CancellationToken cancellationToken);
+        Task<List<IGeoZone>> GetGeoZonePage(Guid countryGuid, int pageNumber, int pageSize, CancellationToken cancellationToken);
+        Task<List<IGeoZone>> GetGeoZonesByCountry(Guid countryGuid, CancellationToken cancellationToken);
+        Task<List<IGeoZone>> StateAutoComplete(Guid countryGuid, string query, int maxRows, CancellationToken cancellationToken);
+        
+        Task<ILanguage> FetchLanguage(Guid guid, CancellationToken cancellationToken);
+        Task<int> GetLanguageCount(CancellationToken cancellationToken);
+        Task<List<ILanguage>> GetAllLanguages(CancellationToken cancellationToken);
+        Task<List<ILanguage>> GetLanguagePage(int pageNumber, int pageSize, CancellationToken cancellationToken);
+        
+        Task<ICurrency> FetchCurrency(Guid guid, CancellationToken cancellationToken);
         Task<List<ICurrency>> GetAllCurrencies(CancellationToken cancellationToken);
     }
 }

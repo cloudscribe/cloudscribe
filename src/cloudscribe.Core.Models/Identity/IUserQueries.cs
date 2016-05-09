@@ -15,42 +15,45 @@ namespace cloudscribe.Core.Models
 {
     public interface IUserQueries
     {
+        // TODO: are these non-async methods needed/used anywhere?
+        bool LoginExistsInDB(Guid siteGuid, string loginName);
+        int GetCount(Guid siteGuid);
+
         Task<bool> EmailExistsInDB(
             Guid siteGuid,
             Guid userGuid,
             string email,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task<bool> EmailExistsInDB(
             Guid siteGuid,
             string email,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task<ISiteUser> Fetch(
             Guid siteGuid,
             Guid userGuid,
-            CancellationToken cancellationToken);
-
-
+            CancellationToken cancellationToken = default(CancellationToken));
+        
         Task<ISiteUser> Fetch(
             Guid siteGuid,
             string email,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task<ISiteUser> FetchByLoginName(
             Guid siteGuid,
             string userName,
             bool allowEmailFallback,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task<List<IUserInfo>> GetByIPAddress(
             Guid siteGuid,
             string ipv4Address,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task<List<IUserInfo>> GetCrossSiteUserListByEmail(
             string email,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
 
 
@@ -60,62 +63,62 @@ namespace cloudscribe.Core.Models
             int pageSize,
             string userNameBeginsWith,
             int sortMode,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task<int> CountUsers(
             Guid siteGuid,
             string userNameBeginsWith,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task<List<IUserInfo>> GetNotApprovedUsers(
             Guid siteGuid,
             int pageNumber,
             int pageSize,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task<int> CountNotApprovedUsers(
             Guid siteGuid,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task<List<IUserInfo>> GetPageUnconfirmedEmailUsers(
             Guid siteGuid,
             int pageNumber,
             int pageSize,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task<int> CountUnconfirmedEmail(
             Guid siteGuid,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task<List<IUserInfo>> GetPageUnconfirmedPhoneUsers(
             Guid siteGuid,
             int pageNumber,
             int pageSize,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task<int> CountUnconfirmedPhone(
             Guid siteGuid,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task<List<IUserInfo>> GetPageLockedByAdmin(
             Guid siteGuid,
             int pageNumber,
             int pageSize,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task<int> CountLockedByAdmin(
             Guid siteGuid,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task<List<IUserInfo>> GetPageFutureLockoutEndDate(
             Guid siteGuid,
             int pageNumber,
             int pageSize,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task<int> CountFutureLockoutEndDate(
             Guid siteGuid,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task<List<IUserInfo>> GetUserAdminSearchPage(
             Guid siteGuid,
@@ -123,65 +126,64 @@ namespace cloudscribe.Core.Models
             int pageSize,
             string searchInput,
             int sortMode,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task<int> CountUsersForAdminSearch(
             Guid siteGuid,
             string searchInput,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
         
         Task<string> GetUserNameFromEmail(
             Guid siteGuid,
             string email,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
         
-        bool LoginExistsInDB(Guid siteGuid, string loginName);
-        int GetCount(Guid siteGuid);
+        
 
         Task<bool> LoginIsAvailable(
             Guid siteGuid,
             Guid userGuid,
             string loginName,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         //roles
 
         Task<int> CountOfRoles(
             Guid siteGuid,
             string searchInput,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task<bool> RoleExists(
             Guid siteGuid,
             string roleName,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task<ISiteRole> FetchRole(
             Guid roleGuid,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task<ISiteRole> FetchRole(
             Guid siteGuid,
             string roleName,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task<IList<ISiteRole>> GetRolesBySite(
             Guid siteGuid,
             string searchInput,
             int pageNumber,
             int pageSize,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task<List<string>> GetUserRoles(
             Guid siteGuid,
             Guid userGuid,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         //IList<ISiteRole> GetRolesUserIsNotIn(int siteId, int userId);
         Task<IList<ISiteUser>> GetUsersInRole(
             Guid siteGuid,
             string roleName,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task<IList<IUserInfo>> GetUsersInRole(
             Guid siteGuid,
@@ -189,7 +191,7 @@ namespace cloudscribe.Core.Models
             string searchInput,
             int pageNumber,
             int pageSize,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task<IList<IUserInfo>> GetUsersNotInRole(
             Guid siteGuid,
@@ -197,32 +199,32 @@ namespace cloudscribe.Core.Models
             string searchInput,
             int pageNumber,
             int pageSize,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task<int> CountUsersInRole(
             Guid siteGuid,
             Guid roleGuid,
             string searchInput,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task<int> CountUsersNotInRole(
             Guid siteGuid,
             Guid roleGuid,
             string searchInput,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         // claims
 
         Task<IList<IUserClaim>> GetClaimsByUser(
             Guid siteGuid,
             Guid userGuid,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task<IList<ISiteUser>> GetUsersForClaim(
             Guid siteGuid,
             string claimType,
             string claimValue,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         // logins
 
@@ -230,27 +232,27 @@ namespace cloudscribe.Core.Models
             Guid siteGuid,
             string loginProvider,
             string providerKey,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task<IList<IUserLogin>> GetLoginsByUser(
             Guid siteGuid,
             Guid userGuid,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task<IUserLocation> FetchLocationByUserAndIpv4Address(
             Guid userGuid,
             long ipv4AddressAsLong,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task<int> CountUserLocationsByUser(
             Guid userGuid,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
         Task<IList<IUserLocation>> GetUserLocationsByUser(
             Guid userGuid,
             int pageNumber,
             int pageSize,
-            CancellationToken cancellationToken);
+            CancellationToken cancellationToken = default(CancellationToken));
 
     }
 }

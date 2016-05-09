@@ -16,6 +16,12 @@ namespace cloudscribe.Core.Models
 {
     public interface ISiteRepository : IDisposable
     {
+        Task<bool> Save(ISiteSettings site, CancellationToken cancellationToken);
+        Task<bool> Delete(Guid siteGuid, CancellationToken cancellationToken);
+        Task<bool> AddHost(Guid siteGuid, string hostName, CancellationToken cancellationToken);
+        Task<bool> DeleteHost(Guid hostGuid, CancellationToken cancellationToken);
+        Task<bool> DeleteHostsBySite(Guid siteGuid, CancellationToken cancellationToken);
+
         //TODO: review all places where these non async methods are used
         // and consider whether they could be changed to use async
         //ISiteSettings FetchNonAsync(int siteId);
@@ -37,8 +43,7 @@ namespace cloudscribe.Core.Models
             int pageSize,
             CancellationToken cancellationToken);
 
-        Task<bool> Save(ISiteSettings site, CancellationToken cancellationToken);
-        Task<bool> Delete(Guid siteGuid, CancellationToken cancellationToken);
+        
 
         Task<List<ISiteHost>> GetSiteHosts(Guid siteGuid, CancellationToken cancellationToken);
         Task<List<ISiteHost>> GetAllHosts(CancellationToken cancellationToken);
@@ -48,9 +53,7 @@ namespace cloudscribe.Core.Models
             int pageNumber,
             int pageSize,
             CancellationToken cancellationToken);
-        Task<bool> AddHost(Guid siteGuid, string hostName, CancellationToken cancellationToken);
-        Task<bool> DeleteHost(Guid hostGuid, CancellationToken cancellationToken);
-        Task<bool> DeleteHostsBySite(Guid siteGuid, CancellationToken cancellationToken);
+        
         //Task<int> GetSiteIdByHostName(string hostName, CancellationToken cancellationToken);
         List<ISiteHost> GetAllHostsNonAsync();
 
