@@ -128,25 +128,22 @@ namespace cloudscribe.Core.Web.Controllers
             {
                 return View(model);
             }
-            bool result;
+          
             string successFormat;
             if (model.Guid == Guid.Empty)
             {
                 successFormat = "The country <b>{0}</b> was successfully created.";
-                result = await dataManager.Add(model);
+                await dataManager.Add(model);
             }
             else
             {
                 successFormat = "The country <b>{0}</b> was successfully updated.";
-                result = await dataManager.Update(model);
+                await dataManager.Update(model);
             }
             
-            if (result)
-            {
-                this.AlertSuccess(string.Format(successFormat,
-                            model.Name), true);
-            }
-
+            this.AlertSuccess(string.Format(successFormat,
+                        model.Name), true);
+            
             return RedirectToAction("CountryListPage", new { pageNumber = returnPageNumber });
 
         }
@@ -158,18 +155,16 @@ namespace cloudscribe.Core.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CountryDelete(Guid countryGuid, int returnPageNumber = 1)
         {
-            IGeoCountry country = await dataManager.FetchCountry(countryGuid);
+            var country = await dataManager.FetchCountry(countryGuid);
             
             if (country != null)
             {
-                bool result = await dataManager.DeleteCountry(country);
-                if(result)
-                {
-                    this.AlertWarning(string.Format(
-                            "The country <b>{0}</b> was successfully deleted.",
-                            country.Name)
-                            , true);
-                }
+                await dataManager.DeleteCountry(country);
+                
+                this.AlertWarning(string.Format(
+                        "The country <b>{0}</b> was successfully deleted.",
+                        country.Name)
+                        , true);
                 
             }
 
@@ -191,15 +186,15 @@ namespace cloudscribe.Core.Web.Controllers
             }
 
             ViewBag.Title = "State List Administration";
-            int itemsPerPage = uiOptions.DefaultPageSize_StateList;
+            var itemsPerPage = uiOptions.DefaultPageSize_StateList;
             if (pageSize > 0)
             {
                 itemsPerPage = pageSize;
             }
 
-            StateListPageViewModel model = new StateListPageViewModel();
+            var model = new StateListPageViewModel();
 
-            IGeoCountry country = await dataManager.FetchCountry(countryGuid.Value);
+            var country = await dataManager.FetchCountry(countryGuid.Value);
             model.Country = GeoCountryViewModel.FromIGeoCountry(country);
             model.States = await dataManager.GetGeoZonePage(countryGuid.Value, pageNumber, itemsPerPage);
 
@@ -209,7 +204,7 @@ namespace cloudscribe.Core.Web.Controllers
             model.CountryListReturnPageNumber = crp;
 
             // below we are just manipiulating the bread crumbs
-            NavigationNodeAdjuster currentCrumbAdjuster = new NavigationNodeAdjuster(Request.HttpContext);
+            var currentCrumbAdjuster = new NavigationNodeAdjuster(Request.HttpContext);
             currentCrumbAdjuster.KeyToAdjust = "StateListPage";
             currentCrumbAdjuster.AdjustedText = model.Country.Name + " States";
             currentCrumbAdjuster.AdjustedUrl = Request.Path.ToString()
@@ -245,7 +240,7 @@ namespace cloudscribe.Core.Web.Controllers
            string query)
         {
 
-            List<IGeoCountry> matches = await dataManager.CountryAutoComplete(
+            var matches = await dataManager.CountryAutoComplete(
                 query,
                 10);
 
@@ -260,7 +255,7 @@ namespace cloudscribe.Core.Web.Controllers
            string countryCode,
            string query)
         {
-            IGeoCountry country = await dataManager.FetchCountry(countryCode);
+            var country = await dataManager.FetchCountry(countryCode);
             List<IGeoZone> states;
             if (country != null)
             {
@@ -283,7 +278,7 @@ namespace cloudscribe.Core.Web.Controllers
         public async Task<IActionResult> GetStatesJson(
            string countryCode)
         {
-            IGeoCountry country = await dataManager.FetchCountry(countryCode);
+            var country = await dataManager.FetchCountry(countryCode);
             List<IGeoZone> states;
             if (country != null)
             {
@@ -294,7 +289,7 @@ namespace cloudscribe.Core.Web.Controllers
                 states = new List<IGeoZone>(); //empty list
             }
 
-            SelectList selecteList = new SelectList(states, "Code", "Name");
+            var selecteList = new SelectList(states, "Code", "Name");
 
             return Json(selecteList);
 
@@ -322,7 +317,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             if ((guid.HasValue) && (guid.Value != Guid.Empty))
             {
-                IGeoZone state = await dataManager.FetchGeoZone(guid.Value);
+                var state = await dataManager.FetchGeoZone(guid.Value);
                 if ((state != null) && (state.CountryGuid == countryGuid))
                 {
                     model = GeoZoneViewModel.FromIGeoZone(state);
@@ -346,10 +341,10 @@ namespace cloudscribe.Core.Web.Controllers
             model.ReturnPageNumber = returnPageNumber;
             model.CountryListReturnPageNumber = crp;
 
-            IGeoCountry country = await dataManager.FetchCountry(countryGuid);
+            var country = await dataManager.FetchCountry(countryGuid);
             model.Country = GeoCountryViewModel.FromIGeoCountry(country);
 
-            NavigationNodeAdjuster currentCrumbAdjuster = new NavigationNodeAdjuster(Request.HttpContext);
+            var currentCrumbAdjuster = new NavigationNodeAdjuster(Request.HttpContext);
             currentCrumbAdjuster.KeyToAdjust = "StateEdit";
             currentCrumbAdjuster.AdjustedText = model.Heading;
             currentCrumbAdjuster.ViewFilterName = NamedNavigationFilters.Breadcrumbs; // this is default but showing here for readers of code 
@@ -383,25 +378,21 @@ namespace cloudscribe.Core.Web.Controllers
                 return PartialView(model);
             }
 
-            bool result;
             string successFormat;
             if (model.Guid == Guid.Empty)
             {
                 successFormat = "The state <b>{0}</b> was successfully created.";
-                result = await dataManager.Add(model);
+                await dataManager.Add(model);
             }
             else
             {
                 successFormat = "The state <b>{0}</b> was successfully updated.";
-                result = await dataManager.Update(model);
+                await dataManager.Update(model);
             }
-
             
-            if (result)
-            {
-                this.AlertSuccess(string.Format(successFormat,
-                            model.Name), true);
-            }
+            this.AlertSuccess(string.Format(successFormat,
+                        model.Name), true);
+            
 
             //IGeoCountry country = await geoRepo.FetchCountry(model.CountryGuid);
 
@@ -434,19 +425,16 @@ namespace cloudscribe.Core.Web.Controllers
             int crp = 1,
             int returnPageNumber = 1)
         {
-            IGeoZone state = await dataManager.FetchGeoZone(guid);
+            var state = await dataManager.FetchGeoZone(guid);
             
             if (state != null)
             {
-                bool result = await dataManager.DeleteGeoZone(state);
-                if(result)
-                {
-                    this.AlertWarning(string.Format(
-                            "The state <b>{0}</b> was successfully deleted.",
-                            state.Name)
-                            , true);
-                }
+                await dataManager.DeleteGeoZone(state);
                 
+                this.AlertWarning(string.Format(
+                        "The state <b>{0}</b> was successfully deleted.",
+                        state.Name)
+                        , true);
             }
 
             return RedirectToAction("StateListPage",
@@ -465,7 +453,7 @@ namespace cloudscribe.Core.Web.Controllers
             ViewBag.Title = "Currency Administration";
             ViewBag.Heading = "Currency Administration";
 
-            List<ICurrency> model = await dataManager.GetAllCurrencies();
+            var model = await dataManager.GetAllCurrencies();
 
             return View(model);
         }
@@ -476,11 +464,11 @@ namespace cloudscribe.Core.Web.Controllers
             ViewBag.Title = "Edit Currency";
             ViewBag.Heading = "Edit Currency";
 
-            CurrencyViewModel model = new CurrencyViewModel();
+            var model = new CurrencyViewModel();
 
             if (currencyGuid.HasValue)
             {
-                ICurrency currency = await dataManager.FetchCurrency(currencyGuid.Value);
+                var currency = await dataManager.FetchCurrency(currencyGuid.Value);
                 model.Guid = currency.Guid;
                 model.Title = currency.Title;
                 model.Code = currency.Code;
@@ -509,7 +497,6 @@ namespace cloudscribe.Core.Web.Controllers
                 return View(model);
             }
 
-            bool result;
             string successFormat;
             ICurrency currency = null;
             bool add = false;
@@ -530,21 +517,16 @@ namespace cloudscribe.Core.Web.Controllers
 
             if(add)
             {
-                result = await dataManager.Add(currency);
+                await dataManager.Add(currency);
             }
             else
             {
-                result = await dataManager.Update(currency);
+                await dataManager.Update(currency);
             }
-
             
-            if (result)
-            {
-                this.AlertSuccess(string.Format(successFormat,
-                            currency.Title), true);
-            }
-
-
+            this.AlertSuccess(string.Format(successFormat,
+                        currency.Title), true);
+            
             return RedirectToAction("CurrencyList");
 
         }
@@ -553,19 +535,16 @@ namespace cloudscribe.Core.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CurrencyDelete(Guid currencyGuid)
         {
-            ICurrency currency = await dataManager.FetchCurrency(currencyGuid);
+            var currency = await dataManager.FetchCurrency(currencyGuid);
             
             if (currency != null)
             {
-                bool result = await dataManager.DeleteCurrency(currency);
-                if(result)
-                {
-                    this.AlertWarning(string.Format(
-                            "The currency <b>{0}</b> was successfully deleted.",
-                            currency.Title)
-                            , true);
-                }
+                await dataManager.DeleteCurrency(currency);
                 
+                this.AlertWarning(string.Format(
+                        "The currency <b>{0}</b> was successfully deleted.",
+                        currency.Title)
+                        , true);
             }
 
             return RedirectToAction("CurrencyList");

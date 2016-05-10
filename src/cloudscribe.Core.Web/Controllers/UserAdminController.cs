@@ -495,12 +495,11 @@ namespace cloudscribe.Core.Web.Controllers
                             user.DateOfBirth = DateTime.MinValue;
                         }
 
-                        bool result = await UserManager.Save(user);
-                        if (result)
-                        {
-                            this.AlertSuccess(string.Format("user account for <b>{0}</b> was successfully updated.",
-                            user.DisplayName), true);
-                        }
+                        await UserManager.Save(user);
+                        
+                        this.AlertSuccess(string.Format("user account for <b>{0}</b> was successfully updated.",
+                             user.DisplayName), true);
+                        
 
 
                         return RedirectToAction("Index", "UserAdmin", new { siteGuid = selectedSite.SiteGuid });
@@ -533,19 +532,15 @@ namespace cloudscribe.Core.Web.Controllers
                 )
             {
 
-                ISiteUser user = await UserManager.Fetch(selectedSite.SiteGuid, userGuid);
+                var user = await UserManager.Fetch(selectedSite.SiteGuid, userGuid);
                 if(user != null)
                 {
                     user.AccountApproved = true;
-                    var result = await UserManager.Save((SiteUser)user);
+                    await UserManager.Save((SiteUser)user);
 
-                    if (result)
-                    {
-                        this.AlertSuccess(string.Format("user account for <b>{0}</b> was successfully approved.",
+                    this.AlertSuccess(string.Format("user account for <b>{0}</b> was successfully approved.",
                             user.DisplayName), true);
-
-                    }
-
+                    
                     if(sendEmailNotification)
                     {
                         var loginUrl = Url.Action("Login", "Account",

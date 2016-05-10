@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-06
-// Last Modified:			2016-04-27
+// Last Modified:			2016-05-10
 // 
 
 using cloudscribe.Core.Identity;
@@ -188,13 +188,11 @@ namespace cloudscribe.Core.Web.Controllers
                 successFormat = "The role <b>{0}</b> was successfully updated.";
             }
 
-            bool result = await RoleManager.SaveRole(model);
-
-            if (result)
-            {
-                this.AlertSuccess(string.Format(successFormat,
-                            model.DisplayName), true);
-            }
+            await RoleManager.SaveRole(model);
+            
+            this.AlertSuccess(string.Format(successFormat,
+                        model.DisplayName), true);
+            
 
             return RedirectToAction("Index", new { siteGuid = selectedSite.SiteGuid, pageNumber = returnPageNumber });
 
@@ -221,25 +219,20 @@ namespace cloudscribe.Core.Web.Controllers
                 
             }
 
-            ISiteRole role = await RoleManager.FetchRole(roleGuid);
+            var role = await RoleManager.FetchRole(roleGuid);
             if (role != null && role.SiteGuid == selectedSite.SiteGuid && role.IsDeletable(setupOptions.RolesThatCannotBeDeleted))
             {
-                bool result = await RoleManager.DeleteUserRolesByRole(roleGuid);
+                await RoleManager.DeleteUserRolesByRole(roleGuid);
+                await RoleManager.DeleteRole(roleGuid);
+                
+                string successFormat = "The role <b>{0}</b> was successfully deleted.";
 
-                result = await RoleManager.DeleteRole(roleGuid);
-
-                if (result)
-                {
-                    string successFormat = "The role <b>{0}</b> was successfully deleted.";
-
-                    this.AlertWarning(string.Format(
-                                successFormat,
-                                role.DisplayName)
-                                , true);
-                }
-
+                this.AlertWarning(string.Format(
+                            successFormat,
+                            role.DisplayName)
+                            , true);
+                
             }
-
 
             return RedirectToAction("Index", new { siteGuid = selectedSite.SiteGuid, pageNumber = returnPageNumber });
         }
@@ -417,21 +410,18 @@ namespace cloudscribe.Core.Web.Controllers
                 
             }
 
-            ISiteUser user = await UserManager.Fetch(selectedSite.SiteGuid, userGuid);
+            var user = await UserManager.Fetch(selectedSite.SiteGuid, userGuid);
 
             if (user != null)
             {
-                ISiteRole role = await RoleManager.FetchRole(roleGuid);
+                var role = await RoleManager.FetchRole(roleGuid);
                 if ((role != null) && (role.SiteGuid == selectedSite.SiteGuid))
                 {
-                    bool result = await RoleManager.AddUserToRole(user, role);
-                    if (result)
-                    {
-                        
-                        this.AlertSuccess(string.Format("<b>{0}</b> was successfully added to the role {1}.",
-                        user.DisplayName, role.DisplayName), true);
-                        
-                    }
+                    await RoleManager.AddUserToRole(user, role);
+                    
+                    this.AlertSuccess(string.Format("<b>{0}</b> was successfully added to the role {1}.",
+                    user.DisplayName, role.DisplayName), true);
+                       
                 }
 
             }
@@ -459,22 +449,18 @@ namespace cloudscribe.Core.Web.Controllers
 
             }
 
-            ISiteUser user = await UserManager.Fetch(selectedSite.SiteGuid, userGuid);
+            var user = await UserManager.Fetch(selectedSite.SiteGuid, userGuid);
             if (user != null)
             {
-                ISiteRole role = await RoleManager.FetchRole(roleGuid);
+                var role = await RoleManager.FetchRole(roleGuid);
                 if ((role != null) && (role.SiteGuid == selectedSite.SiteGuid))
                 {
-                    bool result = await RoleManager.RemoveUserFromRole(user, role);
-                    if (result)
-                    {
-                        this.AlertWarning(string.Format(
-                            "<b>{0}</b> was successfully removed from the role {1}.",
-                            user.DisplayName, role.DisplayName)
-                            , true);
+                    await RoleManager.RemoveUserFromRole(user, role);
+                    this.AlertWarning(string.Format(
+                        "<b>{0}</b> was successfully removed from the role {1}.",
+                        user.DisplayName, role.DisplayName)
+                        , true);
                        
-                    }
-
                 }
 
             }

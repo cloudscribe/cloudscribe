@@ -7,6 +7,7 @@
 
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Models;
+using cloudscribe.Core.Web;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.Components.Editor;
 using cloudscribe.Core.Web.Components.Messaging;
@@ -20,7 +21,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.OptionsModel;
 
-namespace cloudscribe.Core.Web
+namespace Microsoft.Extensions.DependencyInjection
 {
     public static class ServiceCollectionExtensions
     {

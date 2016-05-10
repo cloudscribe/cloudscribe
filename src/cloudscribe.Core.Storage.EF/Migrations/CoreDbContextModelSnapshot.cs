@@ -3,9 +3,9 @@ using Microsoft.Data.Entity;
 using Microsoft.Data.Entity.Infrastructure;
 using Microsoft.Data.Entity.Metadata;
 using Microsoft.Data.Entity.Migrations;
-using cloudscribe.Core.Repositories.EF;
+using cloudscribe.Core.Storage.EF;
 
-namespace cloudscribe.Core.Repositories.EF.Migrations
+namespace cloudscribe.Core.Storage.EF.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
     partial class CoreDbContextModelSnapshot : ModelSnapshot

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-06-27
-// Last Modified:			2016-04-27
+// Last Modified:			2016-05-10
 // 
 
 
@@ -21,22 +21,22 @@ namespace cloudscribe.Core.Identity
         where TRole : SiteRole
     {
         public SiteUserClaimsPrincipalFactory(
-            ISiteRepository siteRepository,
+            ISiteQueries siteQueries,
             SiteUserManager<TUser> userManager,
             SiteRoleManager<TRole> roleManager,
             IOptions<IdentityOptions> optionsAccessor) 
             : base(userManager, roleManager, optionsAccessor)
         {
-            if (siteRepository == null)
+            if (siteQueries == null)
             {
-                throw new ArgumentNullException(nameof(siteRepository));
+                throw new ArgumentNullException(nameof(siteQueries));
             }
 
-            siteRepo = siteRepository;
+            queries = siteQueries;
             options = optionsAccessor.Value;
         }
         
-        private ISiteRepository siteRepo;
+        private ISiteQueries queries;
         private IdentityOptions options;
 
         public override async Task<ClaimsPrincipal> CreateAsync(TUser user)
@@ -103,7 +103,7 @@ namespace cloudscribe.Core.Identity
                     identity.AddClaim(emailClaim);
                 }
 
-                ISiteSettings site = await siteRepo.Fetch(user.SiteGuid, CancellationToken.None);
+                ISiteSettings site = await queries.Fetch(user.SiteGuid, CancellationToken.None);
 
                 if (site != null)
                 {
