@@ -109,10 +109,10 @@ namespace cloudscribe.Core.Identity
         // again need to consolidate with RoleStore.UpdateAsync
         public async Task SaveRole(ISiteRole role)
         {
-            if(role.RoleGuid == Guid.Empty)
+            if(role.Id == Guid.Empty)
             {
                 // TODO: consider if this is the correct place to generate the id
-                role.RoleGuid = Guid.NewGuid();
+                role.Id = Guid.NewGuid();
                 await commands.CreateRole(role, CancellationToken);
             }
             else
@@ -171,9 +171,9 @@ namespace cloudscribe.Core.Identity
         {
             if (user == null) { throw new ArgumentNullException(nameof(user)); }
             if (role == null) { throw new ArgumentNullException(nameof(role)); }
-            if(role.SiteGuid != user.SiteGuid) { throw new ArgumentException("user and role must have the same siteid"); }
+            if(role.SiteId != user.SiteId) { throw new ArgumentException("user and role must have the same siteid"); }
 
-            await commands.AddUserToRole(role.RoleGuid, user.UserGuid, CancellationToken);
+            await commands.AddUserToRole(role.Id, user.Id, CancellationToken);
             
             user.RolesChanged = true;
             await commands.Update(user, CancellationToken);
@@ -186,7 +186,7 @@ namespace cloudscribe.Core.Identity
             if (user == null) { throw new ArgumentNullException(nameof(user)); }
             if (role == null) { throw new ArgumentNullException(nameof(role)); }
 
-            await commands.RemoveUserFromRole(role.RoleGuid, user.UserGuid, CancellationToken);
+            await commands.RemoveUserFromRole(role.Id, user.Id, CancellationToken);
             
             user.RolesChanged = true;
             await commands.Update(user, CancellationToken);

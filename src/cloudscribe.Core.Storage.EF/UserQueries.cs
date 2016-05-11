@@ -29,7 +29,7 @@ namespace cloudscribe.Core.Storage.EF
         
         public int GetCount(Guid siteGuid)
         {
-            return dbContext.Users.Count<SiteUser>(x => x.SiteGuid == siteGuid);
+            return dbContext.Users.Count<SiteUser>(x => x.SiteId == siteGuid);
         }
         
         public async Task<ISiteUser> Fetch(
@@ -41,7 +41,7 @@ namespace cloudscribe.Core.Storage.EF
             SiteUser item
                 = await dbContext.Users.AsNoTracking()
                 .SingleOrDefaultAsync(
-                    x => x.SiteGuid == siteGuid && x.UserGuid == userGuid
+                    x => x.SiteId == siteGuid && x.Id == userGuid
                     , cancellationToken)
                     .ConfigureAwait(false);
 
@@ -59,7 +59,7 @@ namespace cloudscribe.Core.Storage.EF
             SiteUser item
                 = await dbContext.Users.AsNoTracking()
                 .SingleOrDefaultAsync(
-                    x => x.SiteGuid == siteGuid && x.NormalizedEmail == loweredEmail
+                    x => x.SiteId == siteGuid && x.NormalizedEmail == loweredEmail
                     , cancellationToken)
                     .ConfigureAwait(false);
 
@@ -77,7 +77,7 @@ namespace cloudscribe.Core.Storage.EF
 
             SiteUser item
                 = await dbContext.Users.AsNoTracking().SingleOrDefaultAsync(
-                    x => x.SiteGuid == siteGuid
+                    x => x.SiteId == siteGuid
                     && (
                     (x.UserName == userName)
                     || (allowEmailFallback && x.NormalizedEmail == loweredUserName)
@@ -96,8 +96,8 @@ namespace cloudscribe.Core.Storage.EF
         {
             var query = from x in dbContext.Users
                         join y in dbContext.UserLocations
-                        on x.SiteGuid equals y.SiteGuid
-                        where x.UserGuid == y.UserGuid && y.IpAddress == ipv4Address
+                        on x.SiteId equals y.SiteId
+                        where x.Id == y.UserId && y.IpAddress == ipv4Address
                         select x
                         ;
 
@@ -138,7 +138,7 @@ namespace cloudscribe.Core.Storage.EF
             return await dbContext.Users.CountAsync<SiteUser>(
                 x =>
                 (
-                    x.SiteGuid == siteGuid
+                    x.SiteId == siteGuid
                     && x.IsDeleted == false
                     && x.AccountApproved == true
                     && (
@@ -237,7 +237,7 @@ namespace cloudscribe.Core.Storage.EF
 
                   where
                   (
-                      x.SiteGuid == siteGuid
+                      x.SiteId == siteGuid
                       && x.IsDeleted == false
                       && x.AccountApproved == true
                       && (
@@ -264,12 +264,12 @@ namespace cloudscribe.Core.Storage.EF
                       LastName = x.LastName,
                       PhoneNumber = x.PhoneNumber,
                       PhoneNumberConfirmed = x.PhoneNumberConfirmed,
-                      SiteGuid = x.SiteGuid,
+                      SiteId = x.SiteId,
                       // SiteId = x.SiteId,
                       State = x.State,
                       TimeZoneId = x.TimeZoneId,
                       Trusted = x.Trusted,
-                      UserGuid = x.UserGuid,
+                      Id = x.Id,
                       // UserId = x.UserId,
                       UserName = x.UserName,
                       WebSiteUrl = x.WebSiteUrl
@@ -287,7 +287,7 @@ namespace cloudscribe.Core.Storage.EF
 
                   where
                   (
-                      x.SiteGuid == siteGuid
+                      x.SiteId == siteGuid
                       && x.IsDeleted == false
                       && x.AccountApproved == true
                       && (
@@ -314,12 +314,12 @@ namespace cloudscribe.Core.Storage.EF
                       LastName = x.LastName,
                       PhoneNumber = x.PhoneNumber,
                       PhoneNumberConfirmed = x.PhoneNumberConfirmed,
-                      SiteGuid = x.SiteGuid,
+                      SiteId = x.SiteId,
                       // SiteId = x.SiteId,
                       State = x.State,
                       TimeZoneId = x.TimeZoneId,
                       Trusted = x.Trusted,
-                      UserGuid = x.UserGuid,
+                      Id = x.Id,
                       // UserId = x.UserId,
                       UserName = x.UserName,
                       WebSiteUrl = x.WebSiteUrl
@@ -338,7 +338,7 @@ namespace cloudscribe.Core.Storage.EF
 
                   where
                   (
-                      x.SiteGuid == siteGuid
+                      x.SiteId == siteGuid
                       && x.IsDeleted == false
                       && x.AccountApproved == true
                       && (
@@ -365,12 +365,12 @@ namespace cloudscribe.Core.Storage.EF
                       LastName = x.LastName,
                       PhoneNumber = x.PhoneNumber,
                       PhoneNumberConfirmed = x.PhoneNumberConfirmed,
-                      SiteGuid = x.SiteGuid,
+                      SiteId = x.SiteId,
                       //SiteId = x.SiteId,
                       State = x.State,
                       TimeZoneId = x.TimeZoneId,
                       Trusted = x.Trusted,
-                      UserGuid = x.UserGuid,
+                      Id = x.Id,
                       //UserId = x.UserId,
                       UserName = x.UserName,
                       WebSiteUrl = x.WebSiteUrl
@@ -401,7 +401,7 @@ namespace cloudscribe.Core.Storage.EF
             return await dbContext.Users.CountAsync<SiteUser>(
                 x =>
                 (
-                    x.SiteGuid == siteGuid
+                    x.SiteId == siteGuid
                     && (
                     searchInput == string.Empty
                     || x.Email.Contains(searchInput)
@@ -433,7 +433,7 @@ namespace cloudscribe.Core.Storage.EF
 
                   where
                   (
-                      x.SiteGuid == siteGuid
+                      x.SiteId == siteGuid
                         && (
                         searchInput == string.Empty
                         || x.Email.Contains(searchInput)
@@ -461,12 +461,12 @@ namespace cloudscribe.Core.Storage.EF
                       LastName = x.LastName,
                       PhoneNumber = x.PhoneNumber,
                       PhoneNumberConfirmed = x.PhoneNumberConfirmed,
-                      SiteGuid = x.SiteGuid,
+                      SiteId = x.SiteId,
                       // SiteId = x.SiteId,
                       State = x.State,
                       TimeZoneId = x.TimeZoneId,
                       Trusted = x.Trusted,
-                      UserGuid = x.UserGuid,
+                      Id = x.Id,
                       //  UserId = x.UserId,
                       UserName = x.UserName,
                       WebSiteUrl = x.WebSiteUrl
@@ -504,7 +504,7 @@ namespace cloudscribe.Core.Storage.EF
             CancellationToken cancellationToken = default(CancellationToken))
         {
             return await dbContext.Users.CountAsync<SiteUser>(
-                x => x.SiteGuid == siteGuid && x.IsLockedOut == true,
+                x => x.SiteId == siteGuid && x.IsLockedOut == true,
                 cancellationToken)
                 .ConfigureAwait(false);
         }
@@ -522,7 +522,7 @@ namespace cloudscribe.Core.Storage.EF
 
                   where
                   (
-                      x.SiteGuid == siteGuid
+                      x.SiteId == siteGuid
                       && x.IsLockedOut == true
                   )
                   orderby x.DisplayName
@@ -544,12 +544,12 @@ namespace cloudscribe.Core.Storage.EF
                       LastName = x.LastName,
                       PhoneNumber = x.PhoneNumber,
                       PhoneNumberConfirmed = x.PhoneNumberConfirmed,
-                      SiteGuid = x.SiteGuid,
+                      SiteId = x.SiteId,
                       // SiteId = x.SiteId,
                       State = x.State,
                       TimeZoneId = x.TimeZoneId,
                       Trusted = x.Trusted,
-                      UserGuid = x.UserGuid,
+                      Id = x.Id,
                       //UserId = x.UserId,
                       UserName = x.UserName,
                       WebSiteUrl = x.WebSiteUrl
@@ -571,7 +571,7 @@ namespace cloudscribe.Core.Storage.EF
             CancellationToken cancellationToken = default(CancellationToken))
         {
             return await dbContext.Users.CountAsync<SiteUser>(
-                x => x.SiteGuid == siteGuid
+                x => x.SiteId == siteGuid
                 && x.LockoutEndDateUtc.HasValue
                 && x.LockoutEndDateUtc.Value > DateTime.UtcNow
                 ,
@@ -592,7 +592,7 @@ namespace cloudscribe.Core.Storage.EF
 
                   where
                   (
-                      x.SiteGuid == siteGuid
+                      x.SiteId == siteGuid
                         && x.LockoutEndDateUtc.HasValue
                         && x.LockoutEndDateUtc.Value > DateTime.UtcNow
                   )
@@ -615,12 +615,12 @@ namespace cloudscribe.Core.Storage.EF
                       LastName = x.LastName,
                       PhoneNumber = x.PhoneNumber,
                       PhoneNumberConfirmed = x.PhoneNumberConfirmed,
-                      SiteGuid = x.SiteGuid,
+                      SiteId = x.SiteId,
                       //SiteId = x.SiteId,
                       State = x.State,
                       TimeZoneId = x.TimeZoneId,
                       Trusted = x.Trusted,
-                      UserGuid = x.UserGuid,
+                      Id = x.Id,
                       // UserId = x.UserId,
                       UserName = x.UserName,
                       WebSiteUrl = x.WebSiteUrl
@@ -642,7 +642,7 @@ namespace cloudscribe.Core.Storage.EF
             CancellationToken cancellationToken = default(CancellationToken))
         {
             return await dbContext.Users.CountAsync<SiteUser>(
-                x => x.SiteGuid == siteGuid
+                x => x.SiteId == siteGuid
                 && x.EmailConfirmed == false
                 ,
                 cancellationToken)
@@ -662,7 +662,7 @@ namespace cloudscribe.Core.Storage.EF
 
                   where
                   (
-                      x.SiteGuid == siteGuid
+                      x.SiteId == siteGuid
                       && x.EmailConfirmed == false
                   )
                   orderby x.DisplayName
@@ -684,12 +684,12 @@ namespace cloudscribe.Core.Storage.EF
                       LastName = x.LastName,
                       PhoneNumber = x.PhoneNumber,
                       PhoneNumberConfirmed = x.PhoneNumberConfirmed,
-                      SiteGuid = x.SiteGuid,
+                      SiteId = x.SiteId,
                       // SiteId = x.SiteId,
                       State = x.State,
                       TimeZoneId = x.TimeZoneId,
                       Trusted = x.Trusted,
-                      UserGuid = x.UserGuid,
+                      Id = x.Id,
                       // UserId = x.UserId,
                       UserName = x.UserName,
                       WebSiteUrl = x.WebSiteUrl
@@ -711,7 +711,7 @@ namespace cloudscribe.Core.Storage.EF
             CancellationToken cancellationToken = default(CancellationToken))
         {
             return await dbContext.Users.CountAsync<SiteUser>(
-                x => x.SiteGuid == siteGuid
+                x => x.SiteId == siteGuid
                 && x.PhoneNumberConfirmed == false
                 ,
                 cancellationToken)
@@ -731,7 +731,7 @@ namespace cloudscribe.Core.Storage.EF
 
                   where
                   (
-                      x.SiteGuid == siteGuid
+                      x.SiteId == siteGuid
                       && x.PhoneNumberConfirmed == false
                   )
                   orderby x.DisplayName
@@ -753,12 +753,12 @@ namespace cloudscribe.Core.Storage.EF
                       LastName = x.LastName,
                       PhoneNumber = x.PhoneNumber,
                       PhoneNumberConfirmed = x.PhoneNumberConfirmed,
-                      SiteGuid = x.SiteGuid,
+                      SiteId = x.SiteId,
                       // SiteId = x.SiteId,
                       State = x.State,
                       TimeZoneId = x.TimeZoneId,
                       Trusted = x.Trusted,
-                      UserGuid = x.UserGuid,
+                      Id = x.Id,
                       // UserId = x.UserId,
                       UserName = x.UserName,
                       WebSiteUrl = x.WebSiteUrl
@@ -780,7 +780,7 @@ namespace cloudscribe.Core.Storage.EF
             CancellationToken cancellationToken = default(CancellationToken))
         {
             return await dbContext.Users.CountAsync<SiteUser>(
-                x => x.SiteGuid == siteGuid && x.AccountApproved == false,
+                x => x.SiteId == siteGuid && x.AccountApproved == false,
                 cancellationToken)
                 .ConfigureAwait(false);
 
@@ -798,7 +798,7 @@ namespace cloudscribe.Core.Storage.EF
                 = from x in dbContext.Users
                   where
                   (
-                      x.SiteGuid == siteGuid
+                      x.SiteId == siteGuid
                       && x.AccountApproved == false
                   )
                   orderby x.DisplayName
@@ -820,12 +820,12 @@ namespace cloudscribe.Core.Storage.EF
                       LastName = x.LastName,
                       PhoneNumber = x.PhoneNumber,
                       PhoneNumberConfirmed = x.PhoneNumberConfirmed,
-                      SiteGuid = x.SiteGuid,
+                      SiteId = x.SiteId,
                       // SiteId = x.SiteId,
                       State = x.State,
                       TimeZoneId = x.TimeZoneId,
                       Trusted = x.Trusted,
-                      UserGuid = x.UserGuid,
+                      Id = x.Id,
                       // UserId = x.UserId,
                       UserName = x.UserName,
                       WebSiteUrl = x.WebSiteUrl
@@ -865,7 +865,7 @@ namespace cloudscribe.Core.Storage.EF
 
             var found = await Fetch(siteGuid, email);
             if (found == null) { return false; }
-            if (found.UserGuid != userGuid) { return false; }
+            if (found.Id != userGuid) { return false; }
             return true;
 
         }
@@ -874,7 +874,7 @@ namespace cloudscribe.Core.Storage.EF
         {
             SiteUser item
                 = dbContext.Users.SingleOrDefault(
-                    x => x.SiteGuid == siteGuid
+                    x => x.SiteId == siteGuid
                     && x.UserName == loginName
                     );
 
@@ -899,7 +899,7 @@ namespace cloudscribe.Core.Storage.EF
         {
             var found = await FetchByLoginName(siteGuid, loginName, false, cancellationToken);
             if (found == null) { return true; }
-            if (found.UserGuid == userGuid) { return true; }
+            if (found.Id == userGuid) { return true; }
             return false;
         }
 
@@ -926,7 +926,7 @@ namespace cloudscribe.Core.Storage.EF
             CancellationToken cancellationToken = default(CancellationToken))
         {
             int count = await dbContext.Roles.CountAsync<SiteRole>(
-                r => r.SiteGuid == siteGuid && r.RoleName == roleName
+                r => r.SiteId == siteGuid && r.RoleName == roleName
                 , cancellationToken)
                 .ConfigureAwait(false);
 
@@ -939,7 +939,7 @@ namespace cloudscribe.Core.Storage.EF
         {
             SiteRole item
                 = await dbContext.Roles.SingleOrDefaultAsync(
-                    x => x.RoleGuid == roleGuid
+                    x => x.Id == roleGuid
                     , cancellationToken)
                     .ConfigureAwait(false);
 
@@ -953,7 +953,7 @@ namespace cloudscribe.Core.Storage.EF
         {
             SiteRole item
                 = await dbContext.Roles.SingleOrDefaultAsync(
-                    x => x.SiteGuid == siteGuid && x.RoleName == roleName
+                    x => x.SiteId == siteGuid && x.RoleName == roleName
                     , cancellationToken)
                     .ConfigureAwait(false);
 
@@ -968,8 +968,8 @@ namespace cloudscribe.Core.Storage.EF
         {
             var query = from x in dbContext.Roles
                         join y in dbContext.UserRoles
-                        on x.RoleGuid equals y.RoleGuid
-                        where y.UserGuid == userGuid
+                        on x.Id equals y.RoleId
+                        where y.UserId == userGuid
                         orderby x.RoleName
                         select x.RoleName
                         ;
@@ -986,7 +986,7 @@ namespace cloudscribe.Core.Storage.EF
             CancellationToken cancellationToken = default(CancellationToken))
         {
             return await dbContext.Roles.CountAsync<SiteRole>(
-                x => x.SiteGuid.Equals(siteGuid)
+                x => x.SiteId.Equals(siteGuid)
                 && (
                  (searchInput == "")
                         || x.DisplayName.Contains(searchInput)
@@ -1008,19 +1008,19 @@ namespace cloudscribe.Core.Storage.EF
 
             var listQuery = from x in dbContext.Roles
                             where (
-                            x.SiteGuid.Equals(siteGuid) &&
+                            x.SiteId.Equals(siteGuid) &&
                             (searchInput == "" || x.DisplayName.Contains(searchInput) || x.RoleName.Contains(searchInput))
                             )
                             orderby x.RoleName ascending
                             select new SiteRole
                             {
                                 //RoleId = x.RoleId,
-                                RoleGuid = x.RoleGuid,
+                                Id = x.Id,
                                 // SiteId = x.SiteId,
-                                SiteGuid = x.SiteGuid,
+                                SiteId = x.SiteId,
                                 RoleName = x.RoleName,
                                 DisplayName = x.DisplayName,
-                                MemberCount = dbContext.UserRoles.Count<UserRole>(u => u.RoleGuid == x.RoleGuid)
+                                MemberCount = dbContext.UserRoles.Count<UserRole>(u => u.RoleId == x.Id)
                             };
 
             return await listQuery
@@ -1041,9 +1041,9 @@ namespace cloudscribe.Core.Storage.EF
         {
             var query = from x in dbContext.Users
                         join y in dbContext.UserRoles
-                        on x.UserGuid equals y.UserGuid
+                        on x.Id equals y.UserId
                         where (
-                            (x.SiteGuid.Equals(siteGuid) && y.RoleGuid.Equals(roleGuid))
+                            (x.SiteId.Equals(siteGuid) && y.RoleId.Equals(roleGuid))
                             && (
                                 (searchInput == "")
                                 || x.Email.Contains(searchInput)
@@ -1074,10 +1074,10 @@ namespace cloudscribe.Core.Storage.EF
 
             var query = from x in dbContext.Users
                         join y in dbContext.UserRoles
-                        on x.UserGuid equals y.UserGuid
+                        on x.Id equals y.UserId
                         orderby x.DisplayName
                         where (
-                            (x.SiteGuid.Equals(siteGuid) && y.RoleGuid.Equals(roleGuid))
+                            (x.SiteId.Equals(siteGuid) && y.RoleId.Equals(roleGuid))
                             && (
                                 (searchInput == "")
                                 || x.Email.Contains(searchInput)
@@ -1109,12 +1109,12 @@ namespace cloudscribe.Core.Storage.EF
         {
             var query = from x in dbContext.Users
                         join y in dbContext.UserRoles
-                        on x.UserGuid equals y.UserGuid
+                        on x.Id equals y.UserId
                         join z in dbContext.Roles
-                        on y.RoleGuid equals z.RoleGuid
+                        on y.RoleId equals z.Id
                         orderby x.DisplayName
                         where
-                            (x.SiteGuid.Equals(siteGuid) && z.RoleName.Equals(roleName))
+                            (x.SiteId.Equals(siteGuid) && z.RoleName.Equals(roleName))
 
                         select x
                         ;
@@ -1136,12 +1136,12 @@ namespace cloudscribe.Core.Storage.EF
             var query = from u in dbContext.Users
                         from r in dbContext.Roles
                         join ur in dbContext.UserRoles
-                        on new { r.RoleGuid, u.UserGuid } equals new { ur.RoleGuid, ur.UserGuid } into t
+                        on new { RoleId = r.Id, UserId = u.Id } equals new { ur.RoleId, ur.UserId } into t
                         from t2 in t.DefaultIfEmpty()
                         where (
-                        u.SiteGuid == siteGuid
-                        && r.SiteGuid == siteGuid
-                        && r.RoleGuid == roleGuid
+                        u.SiteId == siteGuid
+                        && r.SiteId == siteGuid
+                        && r.Id == roleGuid
                         && (
                                 (searchInput == "")
                                 || u.Email.Contains(searchInput)
@@ -1176,12 +1176,12 @@ namespace cloudscribe.Core.Storage.EF
             var query = from u in dbContext.Users
                         from r in dbContext.Roles
                         join ur in dbContext.UserRoles
-                        on new { r.RoleGuid, u.UserGuid } equals new { ur.RoleGuid, ur.UserGuid } into t
+                        on new { RoleId = r.Id, UserId = u.Id } equals new { ur.RoleId, ur.UserId } into t
                         from t2 in t.DefaultIfEmpty()
                         where (
-                        u.SiteGuid == siteGuid
-                        && r.SiteGuid == siteGuid
-                        && r.RoleGuid == roleGuid
+                        u.SiteId == siteGuid
+                        && r.SiteId == siteGuid
+                        && r.Id == roleGuid
                         && (
                                 (searchInput == "")
                                 || u.Email.Contains(searchInput)
@@ -1216,7 +1216,7 @@ namespace cloudscribe.Core.Storage.EF
             CancellationToken cancellationToken = default(CancellationToken))
         {
             var query = from l in dbContext.UserClaims
-                        where l.SiteGuid == siteGuid && l.UserGuid == userGuid
+                        where l.SiteId == siteGuid && l.UserId == userGuid
 
                         select l;
             var items = await query
@@ -1235,8 +1235,8 @@ namespace cloudscribe.Core.Storage.EF
         {
             var query = from x in dbContext.Users
                         join y in dbContext.UserClaims
-                        on x.UserGuid equals y.UserGuid
-                        where x.SiteGuid == siteGuid
+                        on x.Id equals y.UserId
+                        where x.SiteId == siteGuid
                         orderby x.DisplayName
                         select x
                         ;
@@ -1262,7 +1262,7 @@ namespace cloudscribe.Core.Storage.EF
         {
             var query = from l in dbContext.UserLogins
                         where (
-                        l.SiteGuid == siteGuid
+                        l.SiteId == siteGuid
                         && l.LoginProvider == loginProvider
                         && l.ProviderKey == providerKey
                         )
@@ -1283,8 +1283,8 @@ namespace cloudscribe.Core.Storage.EF
         {
             var query = from l in dbContext.UserLogins
                         where (
-                        l.SiteGuid == siteGuid
-                        && l.UserGuid == userGuid
+                        l.SiteId == siteGuid
+                        && l.UserId == userGuid
                         )
                         select l;
 
@@ -1309,7 +1309,7 @@ namespace cloudscribe.Core.Storage.EF
             cancellationToken.ThrowIfCancellationRequested();
 
             var query = from x in dbContext.UserLocations
-                        where x.UserGuid == userGuid
+                        where x.UserId == userGuid
                         && x.IpAddressLong == ipv4AddressAsLong
                         select x
                         ;
@@ -1349,7 +1349,7 @@ namespace cloudscribe.Core.Storage.EF
                 .Select(p => p)
                 .Skip(offset)
                 .Take(pageSize)
-                .Where(x => x.UserGuid == userGuid)
+                .Where(x => x.UserId == userGuid)
                 ;
 
 

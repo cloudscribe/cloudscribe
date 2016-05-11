@@ -16,7 +16,7 @@ namespace cloudscribe.Core.Models.Geography
         { }
 
         
-        public Guid Guid { get; set; } = Guid.Empty;
+        public Guid Id { get; set; } = Guid.Empty;
 
         private string title = string.Empty;
         public string Title
@@ -77,7 +77,7 @@ namespace cloudscribe.Core.Models.Geography
         public static Currency FromICurrency(ICurrency icurrency)
         {
             Currency c = new Currency();
-            c.Guid = icurrency.Guid;
+            c.Id = icurrency.Id;
             c.Title = icurrency.Title;
             c.Code = icurrency.Code;
 

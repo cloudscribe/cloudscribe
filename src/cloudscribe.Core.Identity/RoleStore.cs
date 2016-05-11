@@ -61,9 +61,9 @@ namespace cloudscribe.Core.Identity
                 throw new ArgumentNullException("role");
             }
 
-            if (role.SiteGuid == Guid.Empty)
+            if (role.SiteId == Guid.Empty)
             {
-                role.SiteGuid = Site.SiteGuid;
+                role.SiteId = Site.Id;
             }
             
             cancellationToken.ThrowIfCancellationRequested();
@@ -87,8 +87,8 @@ namespace cloudscribe.Core.Identity
             }
 
             // remove all users form the role
-            await commands.DeleteUserRolesByRole(role.RoleGuid, cancellationToken);
-            await commands.DeleteRole(role.RoleGuid, cancellationToken);
+            await commands.DeleteUserRolesByRole(role.Id, cancellationToken);
+            await commands.DeleteRole(role.Id, cancellationToken);
 
             return IdentityResult.Success; 
             
@@ -111,7 +111,7 @@ namespace cloudscribe.Core.Identity
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
 
-            Guid siteGuid = Site.SiteGuid;
+            Guid siteGuid = Site.Id;
             if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
 
             var role = await queries.FetchRole(siteGuid, normalizedRoleName, cancellationToken);
@@ -141,7 +141,7 @@ namespace cloudscribe.Core.Identity
                 throw new ArgumentNullException("role");
             }
 
-            return Task.FromResult(role.RoleGuid.ToString());
+            return Task.FromResult(role.Id.ToString());
         }
 
         public Task<string> GetRoleNameAsync(TRole role, CancellationToken cancellationToken)

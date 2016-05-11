@@ -17,10 +17,10 @@ namespace cloudscribe.Core.Web.ViewModels.RoleAdmin
         public static RoleViewModel FromISiteRole(ISiteRole siteRole)
         {
             RoleViewModel model = new RoleViewModel();
-            model.RoleGuid = siteRole.RoleGuid;
+            model.Id = siteRole.Id;
             model.RoleName = siteRole.RoleName;
             model.DisplayName = siteRole.DisplayName;
-            model.SiteGuid = siteRole.SiteGuid;
+            model.SiteId = siteRole.SiteId;
             
             return model;
 
@@ -53,7 +53,7 @@ namespace cloudscribe.Core.Web.ViewModels.RoleAdmin
         private Guid roleGuid = Guid.Empty;
 
         [Display(Name = "RoleGuid")]
-        public Guid RoleGuid
+        public Guid Id
         {
             get { return roleGuid; }
             set { roleGuid = value; }
@@ -62,7 +62,7 @@ namespace cloudscribe.Core.Web.ViewModels.RoleAdmin
         private Guid siteGuid = Guid.Empty;
 
         [Display(Name = "SiteGuid")]
-        public Guid SiteGuid
+        public Guid SiteId
         {
             get { return siteGuid; }
             set { siteGuid = value; }

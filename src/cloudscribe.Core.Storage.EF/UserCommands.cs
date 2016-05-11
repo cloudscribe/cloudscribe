@@ -35,8 +35,8 @@ namespace cloudscribe.Core.Storage.EF
             cancellationToken.ThrowIfCancellationRequested();
 
             if (user == null) { throw new ArgumentException("user can't be null"); }
-            if (user.SiteGuid == Guid.Empty) { throw new ArgumentException("user must have a siteid"); }
-            if (user.UserGuid == Guid.Empty) { throw new ArgumentException("user must have a non empty guid for id"); }
+            if (user.SiteId == Guid.Empty) { throw new ArgumentException("user must have a siteid"); }
+            if (user.Id == Guid.Empty) { throw new ArgumentException("user must have a non empty guid for id"); }
 
             SiteUser siteUser = SiteUser.FromISiteUser(user);
             
@@ -64,12 +64,12 @@ namespace cloudscribe.Core.Storage.EF
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null) { throw new ArgumentException("user can't be null"); }
-            if (user.SiteGuid == Guid.Empty) { throw new ArgumentException("user must have a siteguid"); }
-            if (user.UserGuid == Guid.Empty) { throw new ArgumentException("user must have a non empty guid for id"); }
+            if (user.SiteId == Guid.Empty) { throw new ArgumentException("user must have a siteguid"); }
+            if (user.Id == Guid.Empty) { throw new ArgumentException("user must have a non empty guid for id"); }
 
             SiteUser siteUser = SiteUser.FromISiteUser(user);
             
-            bool tracking = dbContext.ChangeTracker.Entries<SiteUser>().Any(x => x.Entity.UserGuid == siteUser.UserGuid);
+            bool tracking = dbContext.ChangeTracker.Entries<SiteUser>().Any(x => x.Entity.Id == siteUser.Id);
             if (!tracking)
             {
                 dbContext.Users.Update(siteUser);
@@ -108,14 +108,14 @@ namespace cloudscribe.Core.Storage.EF
             cancellationToken.ThrowIfCancellationRequested();
             var itemToRemove = await dbContext.Users
                 .AsNoTracking()
-                .SingleOrDefaultAsync(x => x.UserGuid == userGuid && x.SiteGuid == siteGuid, cancellationToken)
+                .SingleOrDefaultAsync(x => x.Id == userGuid && x.SiteId == siteGuid, cancellationToken)
                 .ConfigureAwait(false);
 
             if (itemToRemove != null)
             {
-                await DeleteLoginsByUser(itemToRemove.SiteGuid, itemToRemove.UserGuid, false);
-                await DeleteClaimsByUser(itemToRemove.SiteGuid, itemToRemove.UserGuid, false);
-                await DeleteUserRoles(itemToRemove.UserGuid, false);
+                await DeleteLoginsByUser(itemToRemove.SiteId, itemToRemove.Id, false);
+                await DeleteClaimsByUser(itemToRemove.SiteId, itemToRemove.Id, false);
+                await DeleteUserRoles(itemToRemove.Id, false);
 
 
                 dbContext.Users.Remove(itemToRemove);
@@ -138,7 +138,7 @@ namespace cloudscribe.Core.Storage.EF
             await DeleteClaimsBySite(siteGuid);
             await DeleteUserRolesBySite(siteGuid);
 
-            var query = from x in dbContext.Users.Where(x => x.SiteGuid == siteGuid)
+            var query = from x in dbContext.Users.Where(x => x.SiteId == siteGuid)
                         select x;
 
             dbContext.Users.RemoveRange(query);
@@ -155,7 +155,7 @@ namespace cloudscribe.Core.Storage.EF
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
             var item = await dbContext.Users.SingleOrDefaultAsync(
-                    x => x.UserGuid == userGuid,
+                    x => x.Id == userGuid,
                     cancellationToken)
                 .ConfigureAwait(false);
 
@@ -177,7 +177,7 @@ namespace cloudscribe.Core.Storage.EF
             cancellationToken.ThrowIfCancellationRequested();
 
             var item = await dbContext.Users.SingleOrDefaultAsync(
-                    x => x.UserGuid == userGuid,
+                    x => x.Id == userGuid,
                     cancellationToken)
                     .ConfigureAwait(false);
 
@@ -200,7 +200,7 @@ namespace cloudscribe.Core.Storage.EF
             cancellationToken.ThrowIfCancellationRequested();
 
             var item = await dbContext.Users.SingleOrDefaultAsync(
-                    x => x.UserGuid == userGuid
+                    x => x.Id == userGuid
                     , cancellationToken)
                     .ConfigureAwait(false);
 
@@ -221,7 +221,7 @@ namespace cloudscribe.Core.Storage.EF
             cancellationToken.ThrowIfCancellationRequested();
 
             var item = await dbContext.Users.SingleOrDefaultAsync(
-                    x => x.UserGuid == userGuid,
+                    x => x.Id == userGuid,
                     cancellationToken)
                     .ConfigureAwait(false);
 
@@ -245,7 +245,7 @@ namespace cloudscribe.Core.Storage.EF
             cancellationToken.ThrowIfCancellationRequested();
 
             var item = await dbContext.Users.SingleOrDefaultAsync(
-                    x => x.UserGuid == userGuid,
+                    x => x.Id == userGuid,
                     cancellationToken)
                     .ConfigureAwait(false);
 
@@ -267,7 +267,7 @@ namespace cloudscribe.Core.Storage.EF
             cancellationToken.ThrowIfCancellationRequested();
 
             var item = await dbContext.Users.SingleOrDefaultAsync(
-                    x => x.UserGuid == userGuid,
+                    x => x.Id == userGuid,
                     cancellationToken)
                     .ConfigureAwait(false);
 
@@ -307,8 +307,8 @@ namespace cloudscribe.Core.Storage.EF
             cancellationToken.ThrowIfCancellationRequested();
 
             if (role == null) { throw new ArgumentException("role cannot be null"); }
-            if (role.SiteGuid == Guid.Empty) { throw new ArgumentException("SiteId must be provided"); }
-            if (role.RoleGuid == Guid.Empty) { throw new ArgumentException("Id must be provided"); }
+            if (role.SiteId == Guid.Empty) { throw new ArgumentException("SiteId must be provided"); }
+            if (role.Id == Guid.Empty) { throw new ArgumentException("Id must be provided"); }
 
             var siteRole = SiteRole.FromISiteRole(role);
             
@@ -330,12 +330,12 @@ namespace cloudscribe.Core.Storage.EF
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
             if (role == null) { throw new ArgumentException("role cannot be null"); }
-            if (role.SiteGuid == Guid.Empty) { throw new ArgumentException("SiteId must be provided"); }
-            if (role.RoleGuid == Guid.Empty) { throw new ArgumentException("Id must be provided"); }
+            if (role.SiteId == Guid.Empty) { throw new ArgumentException("SiteId must be provided"); }
+            if (role.Id == Guid.Empty) { throw new ArgumentException("Id must be provided"); }
 
             var siteRole = SiteRole.FromISiteRole(role);
             
-            bool tracking = dbContext.ChangeTracker.Entries<SiteRole>().Any(x => x.Entity.RoleGuid == siteRole.RoleGuid);
+            bool tracking = dbContext.ChangeTracker.Entries<SiteRole>().Any(x => x.Entity.Id == siteRole.Id);
             if (!tracking)
             {
                 dbContext.Roles.Update(siteRole);
@@ -354,7 +354,7 @@ namespace cloudscribe.Core.Storage.EF
             cancellationToken.ThrowIfCancellationRequested();
 
             var itemToRemove = await dbContext.Roles.SingleOrDefaultAsync(
-                x => x.RoleGuid == roleGuid,
+                x => x.Id == roleGuid,
                 cancellationToken)
                 .ConfigureAwait(false);
 
@@ -373,7 +373,7 @@ namespace cloudscribe.Core.Storage.EF
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
-            var query = from r in dbContext.Roles.Where(x => x.SiteGuid == siteGuid)
+            var query = from r in dbContext.Roles.Where(x => x.SiteId == siteGuid)
                         select r;
 
             dbContext.Roles.RemoveRange(query);
@@ -392,8 +392,8 @@ namespace cloudscribe.Core.Storage.EF
             cancellationToken.ThrowIfCancellationRequested();
 
             var ur = new UserRole();
-            ur.RoleGuid = roleGuid;
-            ur.UserGuid = userGuid;
+            ur.RoleId = roleGuid;
+            ur.UserId = userGuid;
 
             dbContext.UserRoles.Add(ur);
             int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
@@ -410,7 +410,7 @@ namespace cloudscribe.Core.Storage.EF
             cancellationToken.ThrowIfCancellationRequested();
 
             var itemToRemove = await dbContext.UserRoles.SingleOrDefaultAsync(
-                x => x.UserGuid == userGuid && x.RoleGuid == roleGuid
+                x => x.UserId == userGuid && x.RoleId == roleGuid
                 , cancellationToken)
                 .ConfigureAwait(false);
 
@@ -440,7 +440,7 @@ namespace cloudscribe.Core.Storage.EF
             cancellationToken.ThrowIfCancellationRequested();
 
             var query = from x in dbContext.UserRoles
-                        where x.UserGuid == userGuid
+                        where x.UserId == userGuid
                         select x;
 
             dbContext.UserRoles.RemoveRange(query);
@@ -462,7 +462,7 @@ namespace cloudscribe.Core.Storage.EF
             cancellationToken.ThrowIfCancellationRequested();
 
             var query = from x in dbContext.UserRoles
-                        where x.RoleGuid == roleGuid
+                        where x.RoleId == roleGuid
                         select x;
 
             dbContext.UserRoles.RemoveRange(query);
@@ -479,8 +479,8 @@ namespace cloudscribe.Core.Storage.EF
             cancellationToken.ThrowIfCancellationRequested();
 
             var query = from x in dbContext.UserRoles
-                        join y in dbContext.Roles on x.RoleGuid equals y.RoleGuid
-                        where y.SiteGuid == siteGuid
+                        join y in dbContext.Roles on x.RoleId equals y.Id
+                        where y.SiteId == siteGuid
                         select x;
 
             dbContext.UserRoles.RemoveRange(query);
@@ -575,8 +575,8 @@ namespace cloudscribe.Core.Storage.EF
 
             var query = from x in dbContext.UserClaims
                         where (
-                        (siteGuid == Guid.Empty || x.SiteGuid == siteGuid)
-                        && x.UserGuid == userGuid
+                        (siteGuid == Guid.Empty || x.SiteId == siteGuid)
+                        && x.UserId == userGuid
                         )
                         select x;
 
@@ -602,8 +602,8 @@ namespace cloudscribe.Core.Storage.EF
 
             var query = from x in dbContext.UserClaims
                         where (
-                        (siteGuid == Guid.Empty || x.SiteGuid == siteGuid)
-                        && (x.UserGuid == userGuid && x.ClaimType == claimType)
+                        (siteGuid == Guid.Empty || x.SiteId == siteGuid)
+                        && (x.UserId == userGuid && x.ClaimType == claimType)
                         )
                         select x;
 
@@ -621,7 +621,7 @@ namespace cloudscribe.Core.Storage.EF
             cancellationToken.ThrowIfCancellationRequested();
 
             var query = from x in dbContext.UserClaims
-                        where x.SiteGuid == siteGuid
+                        where x.SiteId == siteGuid
                         select x;
 
             dbContext.UserClaims.RemoveRange(query);
@@ -644,7 +644,7 @@ namespace cloudscribe.Core.Storage.EF
             if (userLogin == null) { throw new ArgumentException("userLogin can't be null"); }
             if (userLogin.LoginProvider.Length == -1) { throw new ArgumentException("userLogin must have a loginprovider"); }
             if (userLogin.ProviderKey.Length == -1) { throw new ArgumentException("userLogin must have a providerkey"); }
-            if (userLogin.UserGuid == Guid.Empty) { throw new ArgumentException("userLogin must have a user id"); }
+            if (userLogin.UserId == Guid.Empty) { throw new ArgumentException("userLogin must have a user id"); }
 
             var login = UserLogin.FromIUserLogin(userLogin);
 
@@ -667,8 +667,8 @@ namespace cloudscribe.Core.Storage.EF
 
             var query = from l in dbContext.UserLogins
                         where (
-                        l.SiteGuid == siteGuid
-                        && l.UserGuid == userGuid
+                        l.SiteId == siteGuid
+                        && l.UserId == userGuid
                         && l.LoginProvider == loginProvider
                         && l.ProviderKey == providerKey
                         )
@@ -702,8 +702,8 @@ namespace cloudscribe.Core.Storage.EF
 
             var query = from l in dbContext.UserLogins
                         where (
-                        l.SiteGuid == siteGuid
-                        && l.UserGuid == userGuid
+                        l.SiteId == siteGuid
+                        && l.UserId == userGuid
                         )
                         select l;
 
@@ -726,7 +726,7 @@ namespace cloudscribe.Core.Storage.EF
             cancellationToken.ThrowIfCancellationRequested();
 
             var query = from l in dbContext.UserLogins
-                        where (l.SiteGuid == siteGuid)
+                        where (l.SiteId == siteGuid)
                         select l;
 
             dbContext.UserLogins.RemoveRange(query);
@@ -750,7 +750,7 @@ namespace cloudscribe.Core.Storage.EF
             if (userLocation == null) { throw new ArgumentException("userLocation can't be null"); }
 
             var ul = UserLocation.FromIUserLocation(userLocation);
-            if (ul.RowId == Guid.Empty) { ul.RowId = Guid.NewGuid(); }
+            if (ul.Id == Guid.Empty) { ul.Id = Guid.NewGuid(); }
             
             dbContext.UserLocations.Add(ul);
             
@@ -772,7 +772,7 @@ namespace cloudscribe.Core.Storage.EF
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            bool tracking = dbContext.ChangeTracker.Entries<UserLocation>().Any(x => x.Entity.RowId == ul.RowId);
+            bool tracking = dbContext.ChangeTracker.Entries<UserLocation>().Any(x => x.Entity.Id == ul.Id);
             if (!tracking)
             {
                 dbContext.UserLocations.Update(ul);
@@ -792,7 +792,7 @@ namespace cloudscribe.Core.Storage.EF
             cancellationToken.ThrowIfCancellationRequested();
 
             var itemToRemove = await dbContext.UserLocations.SingleOrDefaultAsync(
-                x => x.RowId == rowGuid
+                x => x.Id == rowGuid
                 , cancellationToken)
                 .ConfigureAwait(false);
 
@@ -813,7 +813,7 @@ namespace cloudscribe.Core.Storage.EF
             cancellationToken.ThrowIfCancellationRequested();
             
             var query = from l in dbContext.UserLocations
-                        where (l.UserGuid == userGuid)
+                        where (l.UserId == userGuid)
                         select l;
 
             dbContext.UserLocations.RemoveRange(query);
@@ -833,7 +833,7 @@ namespace cloudscribe.Core.Storage.EF
             cancellationToken.ThrowIfCancellationRequested();
 
             var query = from l in dbContext.UserLocations
-                        where (l.SiteGuid == siteGuid)
+                        where (l.SiteId == siteGuid)
                         select l;
 
             dbContext.UserLocations.RemoveRange(query);

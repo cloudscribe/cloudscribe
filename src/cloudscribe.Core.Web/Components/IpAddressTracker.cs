@@ -64,8 +64,8 @@ namespace cloudscribe.Core.Web.Components
                 if (userLocation == null)
                 {
                     userLocation = new UserLocation();
-                    userLocation.SiteGuid = siteGuid;
-                    userLocation.UserGuid = userGuid;
+                    userLocation.SiteId = siteGuid;
+                    userLocation.UserId = userGuid;
                     userLocation.IpAddress = ipv4Address;
                     userLocation.IpAddressLong = ip4aslong;
                     userLocation.FirstCaptureUtc = DateTime.UtcNow;

@@ -118,7 +118,7 @@ namespace cloudscribe.Core.Web.Components
                 }
             }
 
-            var siteGuid = context.Tenant.SiteGuid.ToString();
+            var siteGuid = context.Tenant.Id.ToString();
 
             identifiers.Add(siteGuid);
 

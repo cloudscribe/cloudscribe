@@ -82,7 +82,7 @@ namespace cloudscribe.Core.Storage.NoDb
 
             var allRoles = await roleQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
             var filteredRoles = allRoles.Where(
-                x => x.SiteGuid == siteGuid
+                x => x.SiteId == siteGuid
                 && x.RoleName == roleName
             );
 
@@ -117,7 +117,7 @@ namespace cloudscribe.Core.Storage.NoDb
 
             var allRoles = await roleQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
             var filteredRoles = allRoles.Where(
-                x => x.SiteGuid == siteGuid
+                x => x.SiteId == siteGuid
                 && x.RoleName == roleName
             );
 
@@ -137,15 +137,15 @@ namespace cloudscribe.Core.Storage.NoDb
 
             var allRoles = await roleQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
             var filteredRoles = allRoles.Where(
-                x => x.SiteGuid == siteGuid
+                x => x.SiteId == siteGuid
             );
 
             var allUserRoles = await userRoleQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
 
             var query = from x in filteredRoles
                         join y in allUserRoles
-                        on x.RoleGuid equals y.RoleGuid
-                        where y.UserGuid == userGuid
+                        on x.Id equals y.RoleId
+                        where y.UserId == userGuid
                         orderby x.RoleName
                         select x.RoleName
                         ;
@@ -166,7 +166,7 @@ namespace cloudscribe.Core.Storage.NoDb
 
             var allRoles = await roleQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
             var filteredRoles = allRoles.Where(
-                x => x.SiteGuid == siteGuid
+                x => x.SiteId == siteGuid
                 && (
                  (searchInput == "")
                         || x.DisplayName.Contains(searchInput)
@@ -192,7 +192,7 @@ namespace cloudscribe.Core.Storage.NoDb
 
             var allRoles = await roleQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
             var filteredRoles = allRoles.Where(
-                x => x.SiteGuid == siteGuid
+                x => x.SiteId == siteGuid
                 && (
                  (searchInput == "")
                         || x.DisplayName.Contains(searchInput)
@@ -232,9 +232,9 @@ namespace cloudscribe.Core.Storage.NoDb
 
             var query = from x in allUsers
                         join y in allUserRoles
-                        on x.UserGuid equals y.UserGuid
+                        on x.Id equals y.UserId
                         where (
-                            (x.SiteGuid.Equals(siteGuid) && y.RoleGuid.Equals(roleGuid))
+                            (x.SiteId.Equals(siteGuid) && y.RoleId.Equals(roleGuid))
                             && (
                                 (searchInput == "")
                                 || x.Email.Contains(searchInput)
@@ -272,10 +272,10 @@ namespace cloudscribe.Core.Storage.NoDb
 
             var query = from x in allUsers
                         join y in allUserRoles
-                        on x.UserGuid equals y.UserGuid
+                        on x.Id equals y.UserId
                         orderby x.DisplayName
                         where (
-                            (x.SiteGuid.Equals(siteGuid) && y.RoleGuid.Equals(roleGuid))
+                            (x.SiteId.Equals(siteGuid) && y.RoleId.Equals(roleGuid))
                             && (
                                 (searchInput == "")
                                 || x.Email.Contains(searchInput)
@@ -311,16 +311,16 @@ namespace cloudscribe.Core.Storage.NoDb
             var allUsers = await userQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
             var allUserRoles = await userRoleQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
             var allRoles = await roleQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
-            var siteRoles = allRoles.Where(x => x.SiteGuid == siteGuid);
+            var siteRoles = allRoles.Where(x => x.SiteId == siteGuid);
 
             var query = from x in allUsers
                         join y in allUserRoles
-                        on x.UserGuid equals y.UserGuid
+                        on x.Id equals y.UserId
                         join z in siteRoles
-                        on y.RoleGuid equals z.RoleGuid
+                        on y.RoleId equals z.Id
                         orderby x.DisplayName
                         where
-                            (x.SiteGuid.Equals(siteGuid) && z.RoleName.Equals(roleName))
+                            (x.SiteId.Equals(siteGuid) && z.RoleName.Equals(roleName))
 
                         select x
                         ;
@@ -346,17 +346,17 @@ namespace cloudscribe.Core.Storage.NoDb
             var allUsers = await userQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
             var allUserRoles = await userRoleQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
             var allRoles = await roleQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
-            var siteRoles = allRoles.Where(x => x.SiteGuid == siteGuid);
+            var siteRoles = allRoles.Where(x => x.SiteId == siteGuid);
 
             var query = from u in allUsers
                         from r in siteRoles
                         join ur in allUserRoles
-                        on new { r.RoleGuid, u.UserGuid } equals new { ur.RoleGuid, ur.UserGuid } into t
+                        on new { RoleId = r.Id, UserId = u.Id } equals new { ur.RoleId, ur.UserId } into t
                         from t2 in t.DefaultIfEmpty()
                         where (
-                        u.SiteGuid == siteGuid
-                        && r.SiteGuid == siteGuid
-                        && r.RoleGuid == roleGuid
+                        u.SiteId == siteGuid
+                        && r.SiteId == siteGuid
+                        && r.Id == roleGuid
                         && (
                                 (searchInput == "")
                                 || u.Email.Contains(searchInput)
@@ -391,17 +391,17 @@ namespace cloudscribe.Core.Storage.NoDb
             var allUsers = await userQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
             var allUserRoles = await userRoleQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
             var allRoles = await roleQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
-            var siteRoles = allRoles.Where(x => x.SiteGuid == siteGuid);
+            var siteRoles = allRoles.Where(x => x.SiteId == siteGuid);
 
             var query = from u in allUsers
                         from r in siteRoles
                         join ur in allUserRoles
-                        on new { r.RoleGuid, u.UserGuid } equals new { ur.RoleGuid, ur.UserGuid } into t
+                        on new { RoleId = r.Id, UserId = u.Id } equals new { ur.RoleId, ur.UserId } into t
                         from t2 in t.DefaultIfEmpty()
                         where (
-                        u.SiteGuid == siteGuid
-                        && r.SiteGuid == siteGuid
-                        && r.RoleGuid == roleGuid
+                        u.SiteId == siteGuid
+                        && r.SiteId == siteGuid
+                        && r.Id == roleGuid
                         && (
                                 (searchInput == "")
                                 || u.Email.Contains(searchInput)
@@ -443,8 +443,8 @@ namespace cloudscribe.Core.Storage.NoDb
 
             var all = await claimQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
             var filtered = all.Where(x =>
-                 x.SiteGuid == siteGuid
-                 && x.UserGuid == userGuid
+                 x.SiteId == siteGuid
+                 && x.UserId == userGuid
             );
 
             return filtered as IList<IUserClaim>;
@@ -465,7 +465,7 @@ namespace cloudscribe.Core.Storage.NoDb
 
             var allClaims = await claimQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
             var filteredClaims = allClaims.Where(x =>
-                 x.SiteGuid == siteGuid
+                 x.SiteId == siteGuid
                  && x.ClaimType == claimType
                  && x.ClaimValue == claimValue
             );
@@ -476,8 +476,8 @@ namespace cloudscribe.Core.Storage.NoDb
 
             var query = from x in allUsers
                         join y in filteredClaims
-                        on x.UserGuid equals y.UserGuid
-                        where x.SiteGuid == siteGuid
+                        on x.Id equals y.UserId
+                        where x.SiteId == siteGuid
                         orderby x.DisplayName
                         select x
                         ;
@@ -595,7 +595,7 @@ namespace cloudscribe.Core.Storage.NoDb
             var all = await locationQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
 
             var query = from x in all
-                        where x.UserGuid == userGuid
+                        where x.UserId == userGuid
                         && x.IpAddressLong == ipv4AddressAsLong
                         select x
                         ;
@@ -616,7 +616,7 @@ namespace cloudscribe.Core.Storage.NoDb
             await EnsureProjectId().ConfigureAwait(false);
 
             var all = await locationQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
-            var filtered = all.Where(x => x.UserGuid == userGuid);
+            var filtered = all.Where(x => x.UserId == userGuid);
             result = filtered.ToList().Count;
 
             return result;
@@ -644,7 +644,7 @@ namespace cloudscribe.Core.Storage.NoDb
                 .Select(p => p)
                 .Skip(offset)
                 .Take(pageSize)
-                .Where(x => x.UserGuid == userGuid)
+                .Where(x => x.UserId == userGuid)
                 ;
 
             return query.ToList() as IList<IUserLocation>;

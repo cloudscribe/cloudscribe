@@ -140,7 +140,7 @@ namespace cloudscribe.Core.Web.Components
             var matchingSite = await queries.FetchByFolderName(requestedFolderName, CancellationToken);
             if(matchingSite == null) { return true; }
             if(matchingSite.SiteFolderName != requestedFolderName) { return true; }
-            if(matchingSite.SiteGuid == requestingSite.SiteGuid) { return true; }
+            if(matchingSite.Id == requestingSite.Id) { return true; }
 
             return false;
 
@@ -156,7 +156,7 @@ namespace cloudscribe.Core.Web.Components
             {
                 if(s.AliasId == requestedAliasId)
                 {
-                    if ((requestingSiteGuid == s.SiteGuid)) return true;
+                    if ((requestingSiteGuid == s.Id)) return true;
 
                     return false;
 
@@ -170,9 +170,9 @@ namespace cloudscribe.Core.Web.Components
         public async Task Save(ISiteSettings site)
         {
             dataProtector.Protect(site);
-            if(site.SiteGuid == Guid.Empty)
+            if(site.Id == Guid.Empty)
             {
-                site.SiteGuid = Guid.NewGuid();
+                site.Id = Guid.NewGuid();
                 await commands.Update(site, CancellationToken.None);
             }
             else
@@ -192,10 +192,10 @@ namespace cloudscribe.Core.Web.Components
             // a way to use dependency injection?
 
             // delete users
-            await userCommands.DeleteUsersBySite(site.SiteGuid, CancellationToken.None); // this also deletes userroles claims logins
+            await userCommands.DeleteUsersBySite(site.Id, CancellationToken.None); // this also deletes userroles claims logins
 
-            await userCommands.DeleteRolesBySite(site.SiteGuid, CancellationToken.None);
-            await commands.DeleteHostsBySite(site.SiteGuid, CancellationToken.None);
+            await userCommands.DeleteRolesBySite(site.Id, CancellationToken.None);
+            await commands.DeleteHostsBySite(site.Id, CancellationToken.None);
             //resultStep = await siteRepo.DeleteFoldersBySite(site.SiteGuid, CancellationToken.None);
 
 
@@ -211,7 +211,7 @@ namespace cloudscribe.Core.Web.Components
             // mp_SiteSettingsEx
             // mp_Sites
 
-            await commands.Delete(site.SiteGuid, CancellationToken.None);
+            await commands.Delete(site.Id, CancellationToken.None);
         }
 
         public async Task<SiteSettings> CreateNewSite(bool isServerAdminSite)
@@ -220,7 +220,7 @@ namespace cloudscribe.Core.Web.Components
             //string templateFolder = templateFolderPath;
 
             var newSite = new SiteSettings();
-            newSite.SiteGuid = Guid.NewGuid();
+            newSite.Id = Guid.NewGuid();
             newSite.SiteName = "Sample Site";
             newSite.IsServerAdminSite = isServerAdminSite;
             var siteNumber = 1 + await queries.CountOtherSites(Guid.Empty);
@@ -265,7 +265,7 @@ namespace cloudscribe.Core.Web.Components
         public async Task CreateAdminUser(ISiteSettings site)
         {
 
-            var adminRole = await userQueries.FetchRole(site.SiteGuid, "Admins", CancellationToken);
+            var adminRole = await userQueries.FetchRole(site.Id, "Admins", CancellationToken);
 
             if(adminRole == null)
             {
@@ -294,8 +294,8 @@ namespace cloudscribe.Core.Web.Components
 
 
             var adminUser = new SiteUser();;
-            adminUser.UserGuid = Guid.NewGuid();
-            adminUser.SiteGuid = site.SiteGuid;
+            adminUser.Id = Guid.NewGuid();
+            adminUser.SiteId = site.Id;
             adminUser.Email = "admin" + siteDifferentiator + "@admin.com";
             adminUser.NormalizedEmail = adminUser.Email;
             adminUser.DisplayName = "Admin";
@@ -312,9 +312,9 @@ namespace cloudscribe.Core.Web.Components
             
             await userCommands.AddUserToRole(
                 //adminRole.RoleId,
-                adminRole.RoleGuid,
+                adminRole.Id,
                // adminUser.UserId,
-                adminUser.UserGuid,
+                adminUser.Id,
                 CancellationToken.None);
 
             
@@ -323,52 +323,52 @@ namespace cloudscribe.Core.Web.Components
 
         public async Task EnsureRequiredRoles(ISiteSettings site)
         {
-            bool exists = await userQueries.RoleExists(site.SiteGuid, "Admins", CancellationToken);
+            bool exists = await userQueries.RoleExists(site.Id, "Admins", CancellationToken);
 
             if(!exists)
             {
                 var adminRole = new SiteRole();
-                adminRole.RoleGuid = Guid.NewGuid();
+                adminRole.Id = Guid.NewGuid();
                 adminRole.DisplayName = "Admins";
-                adminRole.SiteGuid = site.SiteGuid;
+                adminRole.SiteId = site.Id;
                 await userCommands.CreateRole(adminRole, CancellationToken.None);
                 adminRole.DisplayName = "Administrators";
                 await userCommands.UpdateRole(adminRole, CancellationToken.None);
             }
 
-            exists = await userQueries.RoleExists(site.SiteGuid, "Role Admins", CancellationToken);
+            exists = await userQueries.RoleExists(site.Id, "Role Admins", CancellationToken);
 
             if (!exists)
             {
                 var roleAdminRole = new SiteRole();
-                roleAdminRole.RoleGuid = Guid.NewGuid();
+                roleAdminRole.Id = Guid.NewGuid();
                 roleAdminRole.DisplayName = "Role Admins";
-                roleAdminRole.SiteGuid = site.SiteGuid;
+                roleAdminRole.SiteId = site.Id;
                 await userCommands.CreateRole(roleAdminRole, CancellationToken.None);
 
                 roleAdminRole.DisplayName = "Role Administrators";
                 await userCommands.UpdateRole(roleAdminRole, CancellationToken.None);
             }
 
-            exists = await userQueries.RoleExists(site.SiteGuid, "Content Administrators", CancellationToken);
+            exists = await userQueries.RoleExists(site.Id, "Content Administrators", CancellationToken);
 
             if (!exists)
             {
                 var contentAdminRole = new SiteRole();
-                contentAdminRole.RoleGuid = Guid.NewGuid();
+                contentAdminRole.Id = Guid.NewGuid();
                 contentAdminRole.DisplayName = "Content Administrators";
-                contentAdminRole.SiteGuid = site.SiteGuid;
+                contentAdminRole.SiteId = site.Id;
                 await userCommands.CreateRole(contentAdminRole, CancellationToken.None);
             }
 
-            exists = await userQueries.RoleExists(site.SiteGuid, "Authenticated Users", CancellationToken);
+            exists = await userQueries.RoleExists(site.Id, "Authenticated Users", CancellationToken);
 
             if (!exists)
             {
                 var authenticatedUserRole = new SiteRole();
-                authenticatedUserRole.RoleGuid = Guid.NewGuid();
+                authenticatedUserRole.Id = Guid.NewGuid();
                 authenticatedUserRole.DisplayName = "Authenticated Users";
-                authenticatedUserRole.SiteGuid = site.SiteGuid;
+                authenticatedUserRole.SiteId = site.Id;
                 await userCommands.CreateRole(authenticatedUserRole, CancellationToken.None);
             }
             

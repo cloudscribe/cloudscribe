@@ -9,10 +9,10 @@ namespace cloudscribe.Core.Storage.EF.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "mp_Currency",
+                name: "cs_Currency",
                 columns: table => new
                 {
-                    Guid = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
                     Code = table.Column<string>(nullable: false),
                     Created = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "getutcdate()"),
                     DecimalPlaces = table.Column<string>(nullable: true),
@@ -26,77 +26,77 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Currency", x => x.Guid);
+                    table.PrimaryKey("PK_Currency", x => x.Id);
                 });
             migrationBuilder.CreateTable(
-                name: "mp_GeoCountry",
+                name: "cs_GeoCountry",
                 columns: table => new
                 {
-                    Guid = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
                     ISOCode2 = table.Column<string>(nullable: false),
                     ISOCode3 = table.Column<string>(nullable: false),
                     Name = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GeoCountry", x => x.Guid);
+                    table.PrimaryKey("PK_GeoCountry", x => x.Id);
                 });
             migrationBuilder.CreateTable(
-                name: "mp_GeoZone",
+                name: "cs_GeoZone",
                 columns: table => new
                 {
-                    Guid = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
                     Code = table.Column<string>(nullable: false),
-                    CountryGuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CountryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GeoZone", x => x.Guid);
+                    table.PrimaryKey("PK_GeoZone", x => x.Id);
                 });
             migrationBuilder.CreateTable(
-                name: "mp_Language",
+                name: "cs_Language",
                 columns: table => new
                 {
-                    Guid = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
                     Code = table.Column<string>(nullable: false),
                     Name = table.Column<string>(nullable: false),
                     Sort = table.Column<int>(type: "int", nullable: false, defaultValue: 1)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Language", x => x.Guid);
+                    table.PrimaryKey("PK_Language", x => x.Id);
                 });
             migrationBuilder.CreateTable(
-                name: "mp_SiteHosts",
+                name: "cs_SiteHost",
                 columns: table => new
                 {
-                    HostGuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
+                    HostId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
                     HostName = table.Column<string>(nullable: false),
                     SiteGuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SiteHost", x => x.HostGuid);
+                    table.PrimaryKey("PK_SiteHost", x => x.HostId);
                 });
             migrationBuilder.CreateTable(
-                name: "mp_Roles",
+                name: "cs_Role",
                 columns: table => new
                 {
-                    RoleGuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
                     DisplayName = table.Column<string>(nullable: false),
                     RoleName = table.Column<string>(nullable: false),
-                    SiteGuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    SiteId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SiteRole", x => x.RoleGuid);
+                    table.PrimaryKey("PK_SiteRole", x => x.Id);
                 });
             migrationBuilder.CreateTable(
-                name: "mp_Sites",
+                name: "cs_Site",
                 columns: table => new
                 {
-                    SiteGuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
                     AccountApprovalEmailCsv = table.Column<string>(nullable: true),
                     AddThisDotComUsername = table.Column<string>(nullable: true),
                     AliasId = table.Column<string>(nullable: true),
@@ -180,13 +180,13 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SiteSettings", x => x.SiteGuid);
+                    table.PrimaryKey("PK_SiteSettings", x => x.Id);
                 });
             migrationBuilder.CreateTable(
-                name: "mp_Users",
+                name: "cs_User",
                 columns: table => new
                 {
-                    UserGuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
                     AccessFailedCount = table.Column<int>(nullable: false),
                     AccountApproved = table.Column<bool>(type: "bit", nullable: false, defaultValue: 1),
                     AuthorBio = table.Column<string>(nullable: true),
@@ -219,7 +219,7 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                     RolesChanged = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
                     SecurityStamp = table.Column<string>(nullable: true),
                     Signature = table.Column<string>(nullable: true),
-                    SiteGuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SiteId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     State = table.Column<string>(nullable: true),
                     TimeZoneId = table.Column<string>(nullable: true),
                     Trusted = table.Column<bool>(nullable: false),
@@ -229,166 +229,170 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SiteUser", x => x.UserGuid);
+                    table.PrimaryKey("PK_SiteUser", x => x.Id);
                 });
             migrationBuilder.CreateTable(
-                name: "mp_UserClaims",
+                name: "cs_UserClaim",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true),
-                    SiteGuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserGuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    SiteId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_UserClaim", x => x.Id);
                 });
             migrationBuilder.CreateTable(
-                name: "mp_UserLocation",
+                name: "cs_UserLocation",
                 columns: table => new
                 {
-                    RowID = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
                     CaptureCount = table.Column<int>(nullable: false),
                     City = table.Column<string>(nullable: true),
                     Continent = table.Column<string>(nullable: true),
                     Country = table.Column<string>(nullable: true),
-                    FirstCaptureUTC = table.Column<DateTime>(nullable: false),
+                    FirstCaptureUtc = table.Column<DateTime>(nullable: false),
                     HostName = table.Column<string>(nullable: true),
-                    IPAddress = table.Column<string>(nullable: true),
-                    IPAddressLong = table.Column<long>(nullable: false),
-                    ISP = table.Column<string>(nullable: true),
-                    LastCaptureUTC = table.Column<DateTime>(nullable: false),
+                    IpAddress = table.Column<string>(nullable: true),
+                    IpAddressLong = table.Column<long>(nullable: false),
+                    Isp = table.Column<string>(nullable: true),
+                    LastCaptureUtc = table.Column<DateTime>(nullable: false),
                     Latitude = table.Column<double>(type: "float", nullable: false),
                     Longitude = table.Column<double>(type: "float", nullable: false),
                     Region = table.Column<string>(nullable: true),
-                    SiteGuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SiteId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TimeZone = table.Column<string>(nullable: true),
-                    UserGuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserLocation", x => x.RowID);
+                    table.PrimaryKey("PK_UserLocation", x => x.Id);
                 });
             migrationBuilder.CreateTable(
-                name: "mp_UserLogins",
+                name: "cs_UserLogin",
                 columns: table => new
                 {
-                    UserGuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SiteGuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SiteId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     LoginProvider = table.Column<string>(nullable: false),
                     ProviderKey = table.Column<string>(nullable: false),
                     ProviderDisplayName = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserLogin", x => new { x.UserGuid, x.SiteGuid, x.LoginProvider, x.ProviderKey });
+                    table.PrimaryKey("PK_UserLogin", x => new { x.UserId, x.SiteId, x.LoginProvider, x.ProviderKey });
                 });
             migrationBuilder.CreateTable(
-                name: "mp_UserRoles",
+                name: "cs_UserRole",
                 columns: table => new
                 {
-                    UserGuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    RoleGuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserRole", x => new { x.UserGuid, x.RoleGuid });
+                    table.PrimaryKey("PK_UserRole", x => new { x.UserId, x.RoleId });
                 });
             migrationBuilder.CreateIndex(
                 name: "IX_GeoCountry_ISOCode2",
-                table: "mp_GeoCountry",
+                table: "cs_GeoCountry",
                 column: "ISOCode2");
             migrationBuilder.CreateIndex(
-                name: "IX_GeoZone_CountryGuid",
-                table: "mp_GeoZone",
-                column: "CountryGuid");
+                name: "IX_GeoZone_CountryId",
+                table: "cs_GeoZone",
+                column: "CountryId");
             migrationBuilder.CreateIndex(
                 name: "IX_SiteHost_HostName",
-                table: "mp_SiteHosts",
+                table: "cs_SiteHost",
                 column: "HostName");
             migrationBuilder.CreateIndex(
                 name: "IX_SiteHost_SiteGuid",
-                table: "mp_SiteHosts",
+                table: "cs_SiteHost",
                 column: "SiteGuid");
             migrationBuilder.CreateIndex(
-                name: "IX_SiteRole_RoleGuid",
-                table: "mp_Roles",
-                column: "RoleGuid",
+                name: "IX_SiteRole_Id",
+                table: "cs_Role",
+                column: "Id",
                 unique: true);
             migrationBuilder.CreateIndex(
                 name: "IX_SiteRole_RoleName",
-                table: "mp_Roles",
+                table: "cs_Role",
                 column: "RoleName");
             migrationBuilder.CreateIndex(
-                name: "IX_SiteRole_SiteGuid",
-                table: "mp_Roles",
-                column: "SiteGuid");
+                name: "IX_SiteRole_SiteId",
+                table: "cs_Role",
+                column: "SiteId");
+            migrationBuilder.CreateIndex(
+                name: "IX_SiteSettings_AliasId",
+                table: "cs_Site",
+                column: "AliasId");
             migrationBuilder.CreateIndex(
                 name: "IX_SiteSettings_SiteFolderName",
-                table: "mp_Sites",
+                table: "cs_Site",
                 column: "SiteFolderName");
             migrationBuilder.CreateIndex(
                 name: "IX_SiteUser_NormalizedEmail",
-                table: "mp_Users",
+                table: "cs_User",
                 column: "NormalizedEmail");
             migrationBuilder.CreateIndex(
                 name: "IX_SiteUser_NormalizedUserName",
-                table: "mp_Users",
+                table: "cs_User",
                 column: "NormalizedUserName");
             migrationBuilder.CreateIndex(
-                name: "IX_SiteUser_SiteGuid",
-                table: "mp_Users",
-                column: "SiteGuid");
+                name: "IX_SiteUser_SiteId",
+                table: "cs_User",
+                column: "SiteId");
             migrationBuilder.CreateIndex(
                 name: "IX_UserClaim_ClaimType",
-                table: "mp_UserClaims",
+                table: "cs_UserClaim",
                 column: "ClaimType");
             migrationBuilder.CreateIndex(
-                name: "IX_UserClaim_SiteGuid",
-                table: "mp_UserClaims",
-                column: "SiteGuid");
+                name: "IX_UserClaim_SiteId",
+                table: "cs_UserClaim",
+                column: "SiteId");
             migrationBuilder.CreateIndex(
-                name: "IX_UserClaim_UserGuid",
-                table: "mp_UserClaims",
-                column: "UserGuid");
+                name: "IX_UserClaim_UserId",
+                table: "cs_UserClaim",
+                column: "UserId");
             migrationBuilder.CreateIndex(
-                name: "IX_UserLocation_UserGuid",
-                table: "mp_UserLocation",
-                column: "UserGuid");
+                name: "IX_UserLocation_UserId",
+                table: "cs_UserLocation",
+                column: "UserId");
             migrationBuilder.CreateIndex(
-                name: "IX_UserLogin_SiteGuid",
-                table: "mp_UserLogins",
-                column: "SiteGuid");
+                name: "IX_UserLogin_SiteId",
+                table: "cs_UserLogin",
+                column: "SiteId");
             migrationBuilder.CreateIndex(
-                name: "IX_UserLogin_UserGuid",
-                table: "mp_UserLogins",
-                column: "UserGuid");
+                name: "IX_UserLogin_UserId",
+                table: "cs_UserLogin",
+                column: "UserId");
             migrationBuilder.CreateIndex(
-                name: "IX_UserRole_RoleGuid",
-                table: "mp_UserRoles",
-                column: "RoleGuid");
+                name: "IX_UserRole_RoleId",
+                table: "cs_UserRole",
+                column: "RoleId");
             migrationBuilder.CreateIndex(
-                name: "IX_UserRole_UserGuid",
-                table: "mp_UserRoles",
-                column: "UserGuid");
+                name: "IX_UserRole_UserId",
+                table: "cs_UserRole",
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable("mp_Currency");
-            migrationBuilder.DropTable("mp_GeoCountry");
-            migrationBuilder.DropTable("mp_GeoZone");
-            migrationBuilder.DropTable("mp_Language");
-            migrationBuilder.DropTable("mp_SiteHosts");
-            migrationBuilder.DropTable("mp_Roles");
-            migrationBuilder.DropTable("mp_Sites");
-            migrationBuilder.DropTable("mp_Users");
-            migrationBuilder.DropTable("mp_UserClaims");
-            migrationBuilder.DropTable("mp_UserLocation");
-            migrationBuilder.DropTable("mp_UserLogins");
-            migrationBuilder.DropTable("mp_UserRoles");
+            migrationBuilder.DropTable("cs_Currency");
+            migrationBuilder.DropTable("cs_GeoCountry");
+            migrationBuilder.DropTable("cs_GeoZone");
+            migrationBuilder.DropTable("cs_Language");
+            migrationBuilder.DropTable("cs_SiteHost");
+            migrationBuilder.DropTable("cs_Role");
+            migrationBuilder.DropTable("cs_Site");
+            migrationBuilder.DropTable("cs_User");
+            migrationBuilder.DropTable("cs_UserClaim");
+            migrationBuilder.DropTable("cs_UserLocation");
+            migrationBuilder.DropTable("cs_UserLogin");
+            migrationBuilder.DropTable("cs_UserRole");
         }
     }
 }

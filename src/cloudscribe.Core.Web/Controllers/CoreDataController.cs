@@ -130,7 +130,7 @@ namespace cloudscribe.Core.Web.Controllers
             }
           
             string successFormat;
-            if (model.Guid == Guid.Empty)
+            if (model.Id == Guid.Empty)
             {
                 successFormat = "The country <b>{0}</b> was successfully created.";
                 await dataManager.Add(model);
@@ -208,7 +208,7 @@ namespace cloudscribe.Core.Web.Controllers
             currentCrumbAdjuster.KeyToAdjust = "StateListPage";
             currentCrumbAdjuster.AdjustedText = model.Country.Name + " States";
             currentCrumbAdjuster.AdjustedUrl = Request.Path.ToString()
-                + "?countryGuid=" + country.Guid.ToString()
+                + "?countryGuid=" + country.Id.ToString()
                 + "&crp=" + crp.ToInvariantString();
             currentCrumbAdjuster.ViewFilterName = NamedNavigationFilters.Breadcrumbs; // this is default but showing here for readers of code 
             currentCrumbAdjuster.AddToContext();
@@ -259,7 +259,7 @@ namespace cloudscribe.Core.Web.Controllers
             List<IGeoZone> states;
             if (country != null)
             {
-                states = await dataManager.StateAutoComplete(country.Guid, query, 10);
+                states = await dataManager.StateAutoComplete(country.Id, query, 10);
             }
             else
             {
@@ -282,7 +282,7 @@ namespace cloudscribe.Core.Web.Controllers
             List<IGeoZone> states;
             if (country != null)
             {
-                states = await dataManager.GetGeoZonesByCountry(country.Guid);
+                states = await dataManager.GetGeoZonesByCountry(country.Id);
             }
             else
             {
@@ -318,7 +318,7 @@ namespace cloudscribe.Core.Web.Controllers
             if ((guid.HasValue) && (guid.Value != Guid.Empty))
             {
                 var state = await dataManager.FetchGeoZone(guid.Value);
-                if ((state != null) && (state.CountryGuid == countryGuid))
+                if ((state != null) && (state.CountryId == countryGuid))
                 {
                     model = GeoZoneViewModel.FromIGeoZone(state);
                     model.Heading = "Edit State";
@@ -335,7 +335,7 @@ namespace cloudscribe.Core.Web.Controllers
             {
                 model = new GeoZoneViewModel();
                 model.Heading = "Create New State";
-                model.CountryGuid = countryGuid;
+                model.CountryId = countryGuid;
             }
 
             model.ReturnPageNumber = returnPageNumber;
@@ -379,7 +379,7 @@ namespace cloudscribe.Core.Web.Controllers
             }
 
             string successFormat;
-            if (model.Guid == Guid.Empty)
+            if (model.Id == Guid.Empty)
             {
                 successFormat = "The state <b>{0}</b> was successfully created.";
                 await dataManager.Add(model);
@@ -409,7 +409,7 @@ namespace cloudscribe.Core.Web.Controllers
             return RedirectToAction("StateListPage",
                 new
                 {
-                    countryGuid = model.CountryGuid,
+                    countryGuid = model.CountryId,
                     crp = model.CountryListReturnPageNumber,
                     pageNumber = model.ReturnPageNumber
                 });
@@ -469,7 +469,7 @@ namespace cloudscribe.Core.Web.Controllers
             if (currencyGuid.HasValue)
             {
                 var currency = await dataManager.FetchCurrency(currencyGuid.Value);
-                model.Guid = currency.Guid;
+                model.Guid = currency.Id;
                 model.Title = currency.Title;
                 model.Code = currency.Code;
 

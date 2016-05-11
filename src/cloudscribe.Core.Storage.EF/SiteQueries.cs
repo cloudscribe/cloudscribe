@@ -30,7 +30,7 @@ namespace cloudscribe.Core.Storage.EF
         {
             SiteSettings item
                 = await dbContext.Sites.AsNoTracking().SingleOrDefaultAsync(
-                    x => x.SiteGuid.Equals(siteGuid)
+                    x => x.Id.Equals(siteGuid)
                     , cancellationToken)
                     .ConfigureAwait(false);
 
@@ -40,7 +40,7 @@ namespace cloudscribe.Core.Storage.EF
         public ISiteSettings FetchNonAsync(Guid siteGuid)
         {
             SiteSettings item
-                = dbContext.Sites.AsNoTracking().SingleOrDefault(x => x.SiteGuid.Equals(siteGuid));
+                = dbContext.Sites.AsNoTracking().SingleOrDefault(x => x.Id.Equals(siteGuid));
 
             return item;
         }
@@ -70,7 +70,7 @@ namespace cloudscribe.Core.Storage.EF
             return await dbContext.Sites
                 .AsNoTracking()
                 .SingleOrDefaultAsync(
-                x => x.SiteGuid.Equals(host.SiteGuid)
+                x => x.Id.Equals(host.SiteGuid)
                 , cancellationToken)
                 .ConfigureAwait(false);
 
@@ -127,7 +127,7 @@ namespace cloudscribe.Core.Storage.EF
                 return query.AsNoTracking().SingleOrDefault<SiteSettings>();
             }
 
-            return dbContext.Sites.AsNoTracking().SingleOrDefault(x => x.SiteGuid == host.SiteGuid);
+            return dbContext.Sites.AsNoTracking().SingleOrDefault(x => x.Id == host.SiteGuid);
 
         }
 
@@ -163,7 +163,7 @@ namespace cloudscribe.Core.Storage.EF
                         select new SiteInfo
                         {
                             //SiteId = x.SiteId,
-                            SiteGuid = x.SiteGuid,
+                            Id = x.Id,
                             IsServerAdminSite = x.IsServerAdminSite,
                             PreferredHostName = x.PreferredHostName,
                             SiteFolderName = x.SiteFolderName,
@@ -184,7 +184,7 @@ namespace cloudscribe.Core.Storage.EF
             CancellationToken cancellationToken = default(CancellationToken))
         {
             return dbContext.Sites.CountAsync<SiteSettings>(
-                x => x.SiteGuid != currentSiteGuid
+                x => x.Id != currentSiteGuid
                 , cancellationToken);
         }
 
@@ -198,13 +198,13 @@ namespace cloudscribe.Core.Storage.EF
 
             var query = from x in dbContext.Sites
 
-                        where (x.SiteGuid != currentSiteGuid)
+                        where (x.Id != currentSiteGuid)
                         orderby x.SiteName ascending
                         //select x;
                         select new SiteInfo
                         {
                             //SiteId = x.SiteId,
-                            SiteGuid = x.SiteGuid,
+                            Id = x.Id,
                             IsServerAdminSite = x.IsServerAdminSite,
                             PreferredHostName = x.PreferredHostName,
                             SiteFolderName = x.SiteFolderName,

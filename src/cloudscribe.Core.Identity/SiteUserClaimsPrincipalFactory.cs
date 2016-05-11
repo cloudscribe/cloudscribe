@@ -103,11 +103,11 @@ namespace cloudscribe.Core.Identity
                     identity.AddClaim(emailClaim);
                 }
 
-                ISiteSettings site = await queries.Fetch(user.SiteGuid, CancellationToken.None);
+                ISiteSettings site = await queries.Fetch(user.SiteId, CancellationToken.None);
 
                 if (site != null)
                 {
-                    Claim siteGuidClaim = new Claim("SiteGuid", site.SiteGuid.ToString());
+                    Claim siteGuidClaim = new Claim("SiteGuid", site.Id.ToString());
 
                     if (!identity.HasClaim(siteGuidClaim.Type, siteGuidClaim.Value))
                     {

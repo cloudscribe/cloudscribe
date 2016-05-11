@@ -6,9 +6,9 @@ namespace cloudscribe.Core.Models.Geography
 {
     public interface IGeoZone
     {
-        string Code { get; set; }
-        Guid CountryGuid { get; set; }
-        Guid Guid { get; set; }
+        Guid Id { get; set; }
+        Guid CountryId { get; set; }
+        string Code { get; set; }  
         string Name { get; set; }
     }
 }

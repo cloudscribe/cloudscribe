@@ -53,7 +53,7 @@ namespace cloudscribe.Core.Identity
                 context.RejectPrincipal();
             }
 
-            var siteGuidClaim = new Claim("SiteGuid", tenant.SiteGuid.ToString());
+            var siteGuidClaim = new Claim("SiteGuid", tenant.Id.ToString());
 
             if (!context.Principal.HasClaim(siteGuidClaim.Type, siteGuidClaim.Value))
             {

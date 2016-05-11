@@ -124,7 +124,7 @@ namespace cloudscribe.Core.Identity
 
         public Task<bool> LoginIsAvailable(Guid userGuid, string loginName)
         {
-            Guid siteGuid = Site.SiteGuid;
+            Guid siteGuid = Site.Id;
             if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
 
             return queries.LoginIsAvailable(siteGuid, userGuid, loginName, CancellationToken);
@@ -239,10 +239,10 @@ namespace cloudscribe.Core.Identity
 
         public async Task Save(ISiteUser user)
         {
-            if(user.UserGuid == Guid.Empty)
+            if(user.Id == Guid.Empty)
             {
                 //TODO: review is this the best place to generate the new id?
-                user.UserGuid = Guid.NewGuid();
+                user.Id = Guid.NewGuid();
                 await commands.Create(user, CancellationToken);
             }
             else

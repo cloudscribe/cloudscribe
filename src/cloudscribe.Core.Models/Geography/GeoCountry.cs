@@ -16,7 +16,7 @@ namespace cloudscribe.Core.Models.Geography
         public GeoCountry()
         { }
 
-        public Guid Guid { get; set; } = Guid.Empty;
+        public Guid Id { get; set; } = Guid.Empty;
 
         private string name = string.Empty;
         public string Name
@@ -43,7 +43,7 @@ namespace cloudscribe.Core.Models.Geography
         public static GeoCountry FromIGeoCountry(IGeoCountry igeo)
         {
             GeoCountry country = new GeoCountry();
-            country.Guid = igeo.Guid;
+            country.Id = igeo.Id;
             country.ISOCode2 = igeo.ISOCode2;
             country.ISOCode3 = igeo.ISOCode3;
             country.Name = igeo.Name;

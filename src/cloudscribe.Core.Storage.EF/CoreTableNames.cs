@@ -11,18 +11,20 @@
         {
 
         }
-        public string TablePrefix { get; set; } = "mp_";
-        public string SitesTableName { get; set; } = "Sites";
-        public string SiteHostsTableName { get; set; } = "SiteHosts";
-        public string UsersTableName { get; set; } = "Users";
-        public string RolesTableName { get; set; } = "Roles";
-        public string UserClaimsTableName { get; set; } = "UserClaims";
-        public string UserLoginsTableName { get; set; } = "UserLogins";
+        public string TablePrefix { get; set; } = "cs_";
+        public string SiteTableName { get; set; } = "Site";
+        public string SiteHostTableName { get; set; } = "SiteHost";
+        public string UserTableName { get; set; } = "User";
+        public string RoleTableName { get; set; } = "Role";
+        public string UserClaimTableName { get; set; } = "UserClaim";
+        public string UserLoginTableName { get; set; } = "UserLogin";
+        public string UserLocationTableName { get; set; } = "UserLocation";
+        public string UserRoleTableName { get; set; } = "UserRole";
+
         public string GeoCountryTableName { get; set; } = "GeoCountry";
         public string GeoZoneTableName { get; set; } = "GeoZone";
         public string CurrencyTableName { get; set; } = "Currency";
         public string LanguageTableName { get; set; } = "Language";
-        public string UserLocationTableName { get; set; } = "UserLocation";
-        public string UserRolesTableName { get; set; } = "UserRoles";
+        
     }
 }

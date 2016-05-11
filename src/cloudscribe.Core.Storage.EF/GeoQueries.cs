@@ -30,7 +30,7 @@ namespace cloudscribe.Core.Storage.EF
             cancellationToken.ThrowIfCancellationRequested();
 
             var item = await dbContext.Countries.SingleOrDefaultAsync(
-                    x => x.Guid == guid,
+                    x => x.Id == guid,
                     cancellationToken)
                     .ConfigureAwait(false);
 
@@ -107,7 +107,7 @@ namespace cloudscribe.Core.Storage.EF
             cancellationToken.ThrowIfCancellationRequested();
 
             var item = await dbContext.States.SingleOrDefaultAsync(
-                    x => x.Guid == guid,
+                    x => x.Id == guid,
                     cancellationToken)
                     .ConfigureAwait(false);
 
@@ -121,7 +121,7 @@ namespace cloudscribe.Core.Storage.EF
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
             return dbContext.States.CountAsync<GeoZone>(
-                g => g.CountryGuid == countryGuid, cancellationToken);
+                g => g.CountryId == countryGuid, cancellationToken);
         }
 
         public async Task<List<IGeoZone>> GetGeoZonesByCountry(
@@ -136,7 +136,7 @@ namespace cloudscribe.Core.Storage.EF
             //            select l;
 
             var query = dbContext.States
-                        .Where(x => x.CountryGuid == countryGuid)
+                        .Where(x => x.CountryId == countryGuid)
                         .OrderByDescending(x => x.Name)
                         .Select(x => x);
 
@@ -202,7 +202,7 @@ namespace cloudscribe.Core.Storage.EF
 
             var listQuery = dbContext.States
                             .Where(x =>
-                           x.CountryGuid == countryGuid &&
+                           x.CountryId == countryGuid &&
                            (x.Name.Contains(query) || x.Code.Contains(query))
                             )
                             .OrderBy(x => x.Code)
@@ -228,7 +228,7 @@ namespace cloudscribe.Core.Storage.EF
             int offset = (pageSize * pageNumber) - pageSize;
 
             var query = dbContext.States
-               .Where(x => x.CountryGuid == countryGuid)
+               .Where(x => x.CountryId == countryGuid)
                .OrderBy(x => x.Name)
                .Skip(offset)
                .Take(pageSize)
@@ -250,7 +250,7 @@ namespace cloudscribe.Core.Storage.EF
             cancellationToken.ThrowIfCancellationRequested();
 
             var item = await dbContext.Languages.SingleOrDefaultAsync(
-                    x => x.Guid == guid,
+                    x => x.Id == guid,
                     cancellationToken)
                     .ConfigureAwait(false);
 
@@ -314,7 +314,7 @@ namespace cloudscribe.Core.Storage.EF
             cancellationToken.ThrowIfCancellationRequested();
 
             var item = await dbContext.Currencies.AsNoTracking().SingleOrDefaultAsync(
-                    x => x.Guid == guid,
+                    x => x.Id == guid,
                     cancellationToken)
                     .ConfigureAwait(false);
 

@@ -109,7 +109,7 @@ namespace cloudscribe.Core.Storage.EF
                 // create first site
                 SiteSettings newSite = new SiteSettings();
                 //newSite.SiteId = 0;
-                newSite.SiteGuid = Guid.NewGuid();
+                newSite.Id = Guid.NewGuid();
                 newSite.AliasId = "tenant-" + (count + 1).ToInvariantString();
                 newSite.SiteName = "Sample Site";
                 newSite.IsServerAdminSite = true;
@@ -149,46 +149,46 @@ namespace cloudscribe.Core.Storage.EF
             if (count == 0)
             {
                 SiteSettings site = await db.Sites.SingleOrDefaultAsync<SiteSettings>(
-                    s => s.SiteGuid != Guid.Empty && s.IsServerAdminSite == true);
+                    s => s.Id != Guid.Empty && s.IsServerAdminSite == true);
 
                 if(site != null)
                 {
                     SiteRole adminRole = new SiteRole();
                     //adminRole.RoleId = 0;
-                    adminRole.RoleGuid = Guid.NewGuid();
+                    adminRole.Id = Guid.NewGuid();
                     adminRole.RoleName = "Admins";
                     adminRole.DisplayName = "Administrators";
                     //adminRole.SiteId = site.SiteId;
-                    adminRole.SiteGuid = site.SiteGuid;
+                    adminRole.SiteId = site.Id;
                     db.Roles.Add(adminRole);
                     //rowsAffected = await db.SaveChangesAsync();
                         
                     SiteRole roleAdminRole = new SiteRole();
                     //roleAdminRole.RoleId = 0;
-                    roleAdminRole.RoleGuid = Guid.NewGuid();
+                    roleAdminRole.Id = Guid.NewGuid();
                     roleAdminRole.RoleName = "Role Admins";
                     roleAdminRole.DisplayName = "Role Administrators";
                    // roleAdminRole.SiteId = site.SiteId;
-                    roleAdminRole.SiteGuid = site.SiteGuid;
+                    roleAdminRole.SiteId = site.Id;
                     db.Roles.Add(roleAdminRole);
                     //rowsAffected = await db.SaveChangesAsync();
                     
                     SiteRole contentAdminRole = new SiteRole();
                     //contentAdminRole.RoleId = 0;
-                    contentAdminRole.RoleGuid = Guid.NewGuid();
+                    contentAdminRole.Id = Guid.NewGuid();
                     contentAdminRole.RoleName = "Content Administrators";
                     contentAdminRole.DisplayName = "Content Administrators";
                     //contentAdminRole.SiteId = site.SiteId;
-                    contentAdminRole.SiteGuid = site.SiteGuid;
+                    contentAdminRole.SiteId = site.Id;
                     db.Roles.Add(contentAdminRole);
 
                     SiteRole authenticatedUserRole = new SiteRole();
                     //authenticatedUserRole.RoleId = 0;
-                    authenticatedUserRole.RoleGuid = Guid.NewGuid();
+                    authenticatedUserRole.Id = Guid.NewGuid();
                     authenticatedUserRole.RoleName = "Authenticated Users";
                     authenticatedUserRole.DisplayName = "Authenticated Users";
                     //authenticatedUserRole.SiteId = site.SiteId;
-                    authenticatedUserRole.SiteGuid = site.SiteGuid;
+                    authenticatedUserRole.SiteId = site.Id;
                     db.Roles.Add(authenticatedUserRole);
 
                     
@@ -205,25 +205,25 @@ namespace cloudscribe.Core.Storage.EF
             if (count == 0)
             {
                 SiteSettings site = await db.Sites.SingleOrDefaultAsync<SiteSettings>(
-                    s => s.SiteGuid != Guid.Empty && s.IsServerAdminSite == true);
+                    s => s.Id != Guid.Empty && s.IsServerAdminSite == true);
                     
                 if (site != null)
                 {
                     SiteRole role
                         = await db.Roles.SingleOrDefaultAsync(
-                            x => x.SiteGuid == site.SiteGuid && x.RoleName == "Admins");
+                            x => x.SiteId == site.Id && x.RoleName == "Admins");
 
                     if(role != null)
                     {
                         SiteUser adminUser = new SiteUser();
                         //adminUser.SiteId = site.SiteId;
-                        adminUser.SiteGuid = site.SiteGuid;
+                        adminUser.SiteId = site.Id;
                         adminUser.Email = "admin@admin.com";
                         adminUser.NormalizedEmail = adminUser.Email;
                         adminUser.DisplayName = "Admin";
                         adminUser.UserName = "admin";
                         //adminUser.UserId = 0;
-                        adminUser.UserGuid = Guid.NewGuid();
+                        adminUser.Id = Guid.NewGuid();
 
                         adminUser.EmailConfirmed = true;
                         adminUser.AccountApproved = true;
@@ -236,13 +236,13 @@ namespace cloudscribe.Core.Storage.EF
                         
                         rowsAffected = await db.SaveChangesAsync();
                         
-                        if(rowsAffected > 0 && adminUser.UserGuid != Guid.Empty)
+                        if(rowsAffected > 0 && adminUser.Id != Guid.Empty)
                         {
                             UserRole ur = new UserRole();
                             //ur.Id = Guid.NewGuid();
-                            ur.RoleGuid = role.RoleGuid;
+                            ur.RoleId = role.Id;
                             //ur.RoleId = role.RoleId;
-                            ur.UserGuid = adminUser.UserGuid;
+                            ur.UserId = adminUser.Id;
                             //ur.UserId = adminUser.UserId;
 
                             db.UserRoles.Add(ur);

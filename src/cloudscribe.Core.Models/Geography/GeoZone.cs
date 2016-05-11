@@ -14,8 +14,8 @@ namespace cloudscribe.Core.Models.Geography
         public GeoZone()
         { }
         
-        public Guid Guid { get; set; } = Guid.Empty;
-        public Guid CountryGuid { get; set; } = Guid.Empty;
+        public Guid Id { get; set; } = Guid.Empty;
+        public Guid CountryId { get; set; } = Guid.Empty;
 
         private string name = string.Empty;
         public string Name
@@ -34,8 +34,8 @@ namespace cloudscribe.Core.Models.Geography
         public static GeoZone FromIGeoZone(IGeoZone igeo)
         {
             GeoZone state = new GeoZone();
-            state.Guid = igeo.Guid;
-            state.CountryGuid = igeo.CountryGuid;
+            state.Id = igeo.Id;
+            state.CountryId = igeo.CountryId;
             state.Code = igeo.Code;
             state.Name = igeo.Name;
 

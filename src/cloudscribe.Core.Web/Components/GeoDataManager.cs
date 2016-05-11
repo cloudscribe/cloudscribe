@@ -68,8 +68,8 @@ namespace cloudscribe.Core.Web.Components
 
         public async Task DeleteCountry(IGeoCountry country)
         {
-            await commands.DeleteGeoZonesByCountry(country.Guid, CancellationToken.None);
-            await commands.DeleteCountry(country.Guid, CancellationToken.None);
+            await commands.DeleteGeoZonesByCountry(country.Id, CancellationToken.None);
+            await commands.DeleteCountry(country.Id, CancellationToken.None);
             
         }
 
@@ -115,7 +115,7 @@ namespace cloudscribe.Core.Web.Components
 
         public async Task DeleteGeoZone(IGeoZone geoZone)
         {
-            await commands.DeleteGeoZone(geoZone.Guid, CancellationToken.None);
+            await commands.DeleteGeoZone(geoZone.Id, CancellationToken.None);
         }
 
 
@@ -142,7 +142,7 @@ namespace cloudscribe.Core.Web.Components
 
         public async Task DeleteCurrency(ICurrency currency)
         {
-            await commands.DeleteCurrency(currency.Guid, CancellationToken.None);
+            await commands.DeleteCurrency(currency.Id, CancellationToken.None);
         }
 
         public async Task Add(ILanguage language)

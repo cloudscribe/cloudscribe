@@ -6,8 +6,8 @@ namespace cloudscribe.Core.Models
 {
     public interface IUserLogin
     {
-        Guid SiteGuid { get; set; }
-        Guid UserGuid { get; set; }
+        Guid SiteId { get; set; }
+        Guid UserId { get; set; }
         string LoginProvider { get; set; }
         string ProviderKey { get; set; }
         string ProviderDisplayName { get; set; }

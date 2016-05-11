@@ -8,7 +8,7 @@ using cloudscribe.Core.Storage.EF;
 namespace cloudscribe.Core.Storage.EF.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    [Migration("20160510191819_Initial")]
+    [Migration("20160511112650_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -19,7 +19,7 @@ namespace cloudscribe.Core.Storage.EF.Migrations
 
             modelBuilder.Entity("cloudscribe.Core.Models.Geography.Currency", b =>
                 {
-                    b.Property<Guid>("Guid")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier")
                         .HasAnnotation("SqlServer:GeneratedValueSql", "newid()");
@@ -59,14 +59,14 @@ namespace cloudscribe.Core.Storage.EF.Migrations
 
                     b.Property<decimal>("Value");
 
-                    b.HasKey("Guid");
+                    b.HasKey("Id");
 
-                    b.HasAnnotation("Relational:TableName", "mp_Currency");
+                    b.HasAnnotation("Relational:TableName", "cs_Currency");
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.Geography.GeoCountry", b =>
                 {
-                    b.Property<Guid>("Guid")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier")
                         .HasAnnotation("SqlServer:GeneratedValueSql", "newid()");
@@ -83,16 +83,16 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                         .IsRequired()
                         .HasAnnotation("MaxLength", 255);
 
-                    b.HasKey("Guid");
+                    b.HasKey("Id");
 
                     b.HasIndex("ISOCode2");
 
-                    b.HasAnnotation("Relational:TableName", "mp_GeoCountry");
+                    b.HasAnnotation("Relational:TableName", "cs_GeoCountry");
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.Geography.GeoZone", b =>
                 {
-                    b.Property<Guid>("Guid")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier")
                         .HasAnnotation("SqlServer:GeneratedValueSql", "newid()");
@@ -101,23 +101,23 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                         .IsRequired()
                         .HasAnnotation("MaxLength", 255);
 
-                    b.Property<Guid>("CountryGuid")
+                    b.Property<Guid>("CountryId")
                         .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasAnnotation("MaxLength", 255);
 
-                    b.HasKey("Guid");
+                    b.HasKey("Id");
 
-                    b.HasIndex("CountryGuid");
+                    b.HasIndex("CountryId");
 
-                    b.HasAnnotation("Relational:TableName", "mp_GeoZone");
+                    b.HasAnnotation("Relational:TableName", "cs_GeoZone");
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.Geography.Language", b =>
                 {
-                    b.Property<Guid>("Guid")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier")
                         .HasAnnotation("SqlServer:GeneratedValueSql", "newid()");
@@ -135,14 +135,14 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                         .HasAnnotation("SqlServer:DefaultValue", "1")
                         .HasAnnotation("SqlServer:DefaultValueType", "System.Int32");
 
-                    b.HasKey("Guid");
+                    b.HasKey("Id");
 
-                    b.HasAnnotation("Relational:TableName", "mp_Language");
+                    b.HasAnnotation("Relational:TableName", "cs_Language");
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.SiteHost", b =>
                 {
-                    b.Property<Guid>("HostGuid")
+                    b.Property<Guid>("HostId")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier")
                         .HasAnnotation("SqlServer:GeneratedValueSql", "newid()");
@@ -155,18 +155,18 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                         .HasAnnotation("Relational:ColumnName", "SiteGuid")
                         .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier");
 
-                    b.HasKey("HostGuid");
+                    b.HasKey("HostId");
 
                     b.HasIndex("HostName");
 
                     b.HasIndex("SiteGuid");
 
-                    b.HasAnnotation("Relational:TableName", "mp_SiteHosts");
+                    b.HasAnnotation("Relational:TableName", "cs_SiteHost");
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.SiteRole", b =>
                 {
-                    b.Property<Guid>("RoleGuid")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier")
                         .HasAnnotation("SqlServer:GeneratedValueSql", "newid()");
@@ -179,24 +179,24 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                         .IsRequired()
                         .HasAnnotation("MaxLength", 50);
 
-                    b.Property<Guid>("SiteGuid")
+                    b.Property<Guid>("SiteId")
                         .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier");
 
-                    b.HasKey("RoleGuid");
+                    b.HasKey("Id");
 
-                    b.HasIndex("RoleGuid")
+                    b.HasIndex("Id")
                         .IsUnique();
 
                     b.HasIndex("RoleName");
 
-                    b.HasIndex("SiteGuid");
+                    b.HasIndex("SiteId");
 
-                    b.HasAnnotation("Relational:TableName", "mp_Roles");
+                    b.HasAnnotation("Relational:TableName", "cs_Role");
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.SiteSettings", b =>
                 {
-                    b.Property<Guid>("SiteGuid")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier")
                         .HasAnnotation("SqlServer:GeneratedValueSql", "newid()");
@@ -480,16 +480,18 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                         .HasAnnotation("SqlServer:DefaultValue", "0")
                         .HasAnnotation("SqlServer:DefaultValueType", "System.Int32");
 
-                    b.HasKey("SiteGuid");
+                    b.HasKey("Id");
+
+                    b.HasIndex("AliasId");
 
                     b.HasIndex("SiteFolderName");
 
-                    b.HasAnnotation("Relational:TableName", "mp_Sites");
+                    b.HasAnnotation("Relational:TableName", "cs_Site");
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.SiteUser", b =>
                 {
-                    b.Property<Guid>("UserGuid")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier")
                         .HasAnnotation("SqlServer:GeneratedValueSql", "newid()");
@@ -596,8 +598,7 @@ namespace cloudscribe.Core.Storage.EF.Migrations
 
                     b.Property<string>("Signature");
 
-                    b.Property<Guid>("SiteGuid")
-                        .HasAnnotation("Relational:ColumnName", "SiteGuid")
+                    b.Property<Guid>("SiteId")
                         .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier");
 
                     b.Property<string>("State");
@@ -618,15 +619,15 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                     b.Property<string>("WebSiteUrl")
                         .HasAnnotation("MaxLength", 100);
 
-                    b.HasKey("UserGuid");
+                    b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail");
 
                     b.HasIndex("NormalizedUserName");
 
-                    b.HasIndex("SiteGuid");
+                    b.HasIndex("SiteId");
 
-                    b.HasAnnotation("Relational:TableName", "mp_Users");
+                    b.HasAnnotation("Relational:TableName", "cs_User");
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.UserClaim", b =>
@@ -641,28 +642,27 @@ namespace cloudscribe.Core.Storage.EF.Migrations
 
                     b.Property<string>("ClaimValue");
 
-                    b.Property<Guid>("SiteGuid")
+                    b.Property<Guid>("SiteId")
                         .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier");
 
-                    b.Property<Guid>("UserGuid")
+                    b.Property<Guid>("UserId")
                         .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ClaimType");
 
-                    b.HasIndex("SiteGuid");
+                    b.HasIndex("SiteId");
 
-                    b.HasIndex("UserGuid");
+                    b.HasIndex("UserId");
 
-                    b.HasAnnotation("Relational:TableName", "mp_UserClaims");
+                    b.HasAnnotation("Relational:TableName", "cs_UserClaim");
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.UserLocation", b =>
                 {
-                    b.Property<Guid>("RowId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasAnnotation("Relational:ColumnName", "RowID")
                         .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier")
                         .HasAnnotation("SqlServer:GeneratedValueSql", "newid()");
 
@@ -677,25 +677,20 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                     b.Property<string>("Country")
                         .HasAnnotation("MaxLength", 255);
 
-                    b.Property<DateTime>("FirstCaptureUtc")
-                        .HasAnnotation("Relational:ColumnName", "FirstCaptureUTC");
+                    b.Property<DateTime>("FirstCaptureUtc");
 
                     b.Property<string>("HostName")
                         .HasAnnotation("MaxLength", 255);
 
                     b.Property<string>("IpAddress")
-                        .HasAnnotation("MaxLength", 50)
-                        .HasAnnotation("Relational:ColumnName", "IPAddress");
+                        .HasAnnotation("MaxLength", 50);
 
-                    b.Property<long>("IpAddressLong")
-                        .HasAnnotation("Relational:ColumnName", "IPAddressLong");
+                    b.Property<long>("IpAddressLong");
 
                     b.Property<string>("Isp")
-                        .HasAnnotation("MaxLength", 255)
-                        .HasAnnotation("Relational:ColumnName", "ISP");
+                        .HasAnnotation("MaxLength", 255);
 
-                    b.Property<DateTime>("LastCaptureUtc")
-                        .HasAnnotation("Relational:ColumnName", "LastCaptureUTC");
+                    b.Property<DateTime>("LastCaptureUtc");
 
                     b.Property<double>("Latitude")
                         .HasAnnotation("SqlServer:ColumnType", "float");
@@ -706,28 +701,28 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                     b.Property<string>("Region")
                         .HasAnnotation("MaxLength", 255);
 
-                    b.Property<Guid>("SiteGuid")
+                    b.Property<Guid>("SiteId")
                         .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier");
 
                     b.Property<string>("TimeZone")
                         .HasAnnotation("MaxLength", 255);
 
-                    b.Property<Guid>("UserGuid")
+                    b.Property<Guid>("UserId")
                         .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier");
 
-                    b.HasKey("RowId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("UserGuid");
+                    b.HasIndex("UserId");
 
-                    b.HasAnnotation("Relational:TableName", "mp_UserLocation");
+                    b.HasAnnotation("Relational:TableName", "cs_UserLocation");
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.UserLogin", b =>
                 {
-                    b.Property<Guid>("UserGuid")
+                    b.Property<Guid>("UserId")
                         .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier");
 
-                    b.Property<Guid>("SiteGuid")
+                    b.Property<Guid>("SiteId")
                         .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier");
 
                     b.Property<string>("LoginProvider")
@@ -739,30 +734,30 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                     b.Property<string>("ProviderDisplayName")
                         .HasAnnotation("MaxLength", 100);
 
-                    b.HasKey("UserGuid", "SiteGuid", "LoginProvider", "ProviderKey");
+                    b.HasKey("UserId", "SiteId", "LoginProvider", "ProviderKey");
 
-                    b.HasIndex("SiteGuid");
+                    b.HasIndex("SiteId");
 
-                    b.HasIndex("UserGuid");
+                    b.HasIndex("UserId");
 
-                    b.HasAnnotation("Relational:TableName", "mp_UserLogins");
+                    b.HasAnnotation("Relational:TableName", "cs_UserLogin");
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.UserRole", b =>
                 {
-                    b.Property<Guid>("UserGuid")
+                    b.Property<Guid>("UserId")
                         .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier");
 
-                    b.Property<Guid>("RoleGuid")
+                    b.Property<Guid>("RoleId")
                         .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier");
 
-                    b.HasKey("UserGuid", "RoleGuid");
+                    b.HasKey("UserId", "RoleId");
 
-                    b.HasIndex("RoleGuid");
+                    b.HasIndex("RoleId");
 
-                    b.HasIndex("UserGuid");
+                    b.HasIndex("UserId");
 
-                    b.HasAnnotation("Relational:TableName", "mp_UserRoles");
+                    b.HasAnnotation("Relational:TableName", "cs_UserRole");
                 });
         }
     }

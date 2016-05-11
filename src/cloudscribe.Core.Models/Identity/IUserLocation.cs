@@ -4,6 +4,10 @@ namespace cloudscribe.Core.Models
 {
     public interface IUserLocation
     {
+        Guid Id { get; set; }
+        Guid SiteId { get; set; }
+        Guid UserId { get; set; }
+
         int CaptureCount { get; set; }
         string City { get; set; }
         string Continent { get; set; }
@@ -22,9 +26,7 @@ namespace cloudscribe.Core.Models
         double Longitude { get; set; }
 
         string Region { get; set; }
-        Guid RowId { get; set; }
-        Guid SiteGuid { get; set; }
         string TimeZone { get; set; }
-        Guid UserGuid { get; set; }
+        
     }
 }

@@ -28,7 +28,7 @@ namespace cloudscribe.Core.Storage.EF
             CancellationToken cancellationToken = default(CancellationToken))
         {
             if (site == null) throw new ArgumentException("site must not be null");
-            if (site.SiteGuid == Guid.Empty) throw new ArgumentException("site must have a non-empty Id");
+            if (site.Id == Guid.Empty) throw new ArgumentException("site must have a non-empty Id");
 
             var siteSettings = SiteSettings.FromISiteSettings(site);
             dbContext.Sites.Add(siteSettings);
@@ -42,11 +42,11 @@ namespace cloudscribe.Core.Storage.EF
             CancellationToken cancellationToken = default(CancellationToken))
         {
             if (site == null) throw new ArgumentException("site must not be null");
-            if (site.SiteGuid == Guid.Empty) throw new ArgumentException("site must have a non-empty Id");
+            if (site.Id == Guid.Empty) throw new ArgumentException("site must have a non-empty Id");
 
             var siteSettings = SiteSettings.FromISiteSettings(site);
             
-            bool tracking = dbContext.ChangeTracker.Entries<SiteSettings>().Any(x => x.Entity.SiteGuid == siteSettings.SiteGuid);
+            bool tracking = dbContext.ChangeTracker.Entries<SiteSettings>().Any(x => x.Entity.Id == siteSettings.Id);
             if (!tracking)
             {
                 dbContext.Sites.Update(siteSettings);
@@ -64,7 +64,7 @@ namespace cloudscribe.Core.Storage.EF
             if (id == Guid.Empty) throw new ArgumentException("id must not be empty guid");
 
             var itemToRemove = await dbContext.Sites.SingleOrDefaultAsync(
-                x => x.SiteGuid == id
+                x => x.Id == id
                 , cancellationToken)
                 .ConfigureAwait(false);
 
@@ -99,7 +99,7 @@ namespace cloudscribe.Core.Storage.EF
         {
             if (hostId == Guid.Empty) throw new ArgumentException("hostId must not be empty guid");
 
-            var itemToRemove = await dbContext.SiteHosts.SingleOrDefaultAsync(x => x.HostGuid == hostId, cancellationToken);
+            var itemToRemove = await dbContext.SiteHosts.SingleOrDefaultAsync(x => x.HostId == hostId, cancellationToken);
             if (itemToRemove == null) throw new InvalidOperationException("host not found");
             
             dbContext.SiteHosts.Remove(itemToRemove);

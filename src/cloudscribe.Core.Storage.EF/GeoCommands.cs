@@ -32,7 +32,7 @@ namespace cloudscribe.Core.Storage.EF
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
             if (geoCountry == null) throw new ArgumentException("geoCountry must not be null");
-            if (geoCountry.Guid == Guid.Empty) throw new ArgumentException("geoCountry must have a non-empty id");
+            if (geoCountry.Id == Guid.Empty) throw new ArgumentException("geoCountry must have a non-empty id");
 
             var country = GeoCountry.FromIGeoCountry(geoCountry); // convert from IGeoCountry
             
@@ -50,11 +50,11 @@ namespace cloudscribe.Core.Storage.EF
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
             if (geoCountry == null) throw new ArgumentException("geoCountry must not be null");
-            if (geoCountry.Guid == Guid.Empty) throw new ArgumentException("geoCountry must have a non-empty id");
+            if (geoCountry.Id == Guid.Empty) throw new ArgumentException("geoCountry must have a non-empty id");
 
             var country = GeoCountry.FromIGeoCountry(geoCountry); // convert from IGeoCountry
 
-            bool tracking = dbContext.ChangeTracker.Entries<GeoCountry>().Any(x => x.Entity.Guid == country.Guid);
+            bool tracking = dbContext.ChangeTracker.Entries<GeoCountry>().Any(x => x.Entity.Id == country.Id);
             if (!tracking)
             {
                 dbContext.Countries.Update(country);
@@ -73,7 +73,7 @@ namespace cloudscribe.Core.Storage.EF
             cancellationToken.ThrowIfCancellationRequested();
             if (id == Guid.Empty) throw new ArgumentException("id must be a non-empty guid");
 
-            var itemToRemove = await dbContext.Countries.SingleOrDefaultAsync(x => x.Guid == id, cancellationToken);
+            var itemToRemove = await dbContext.Countries.SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
             if (itemToRemove == null) throw new InvalidOperationException("geoCountry not found");
             
             dbContext.Countries.Remove(itemToRemove);
@@ -88,7 +88,7 @@ namespace cloudscribe.Core.Storage.EF
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
             if (geoZone == null) throw new ArgumentException("geoZone must not be null");
-            if (geoZone.Guid == Guid.Empty) throw new ArgumentException("geoZone must have a non-empty id");
+            if (geoZone.Id == Guid.Empty) throw new ArgumentException("geoZone must have a non-empty id");
 
             var state = GeoZone.FromIGeoZone(geoZone); // convert from IGeoZone
             
@@ -106,12 +106,12 @@ namespace cloudscribe.Core.Storage.EF
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
             if (geoZone == null) throw new ArgumentException("geoZone must not be null");
-            if (geoZone.Guid == Guid.Empty) throw new ArgumentException("geoZone must have a non-empty id");
-            if (geoZone.CountryGuid == Guid.Empty) throw new ArgumentException("geoZone must have a non-empty CountryId");
+            if (geoZone.Id == Guid.Empty) throw new ArgumentException("geoZone must have a non-empty id");
+            if (geoZone.CountryId == Guid.Empty) throw new ArgumentException("geoZone must have a non-empty CountryId");
 
             var state = GeoZone.FromIGeoZone(geoZone); // convert from IGeoZone
 
-            bool tracking = dbContext.ChangeTracker.Entries<GeoZone>().Any(x => x.Entity.Guid == state.Guid);
+            bool tracking = dbContext.ChangeTracker.Entries<GeoZone>().Any(x => x.Entity.Id == state.Id);
             if (!tracking)
             {
                 dbContext.States.Update(state);
@@ -130,7 +130,7 @@ namespace cloudscribe.Core.Storage.EF
             cancellationToken.ThrowIfCancellationRequested();
             if (id == Guid.Empty) throw new ArgumentException("id must be a non-empty guid");
 
-            var itemToRemove = await dbContext.States.SingleOrDefaultAsync(x => x.Guid == id, cancellationToken);
+            var itemToRemove = await dbContext.States.SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
             if (itemToRemove == null) throw new InvalidOperationException("geoZone not found");
             
             dbContext.States.Remove(itemToRemove);
@@ -147,7 +147,7 @@ namespace cloudscribe.Core.Storage.EF
             if (countryId == Guid.Empty) throw new ArgumentException("countryId must be a non-empty guid");
 
             var query = from l in dbContext.States
-                        where l.CountryGuid == countryId
+                        where l.CountryId == countryId
                         select l;
 
             dbContext.States.RemoveRange(query);
@@ -163,7 +163,7 @@ namespace cloudscribe.Core.Storage.EF
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
             if (language == null) throw new ArgumentException("language must not be null");
-            if (language.Guid == Guid.Empty) throw new ArgumentException("language must have a non-empty id");
+            if (language.Id == Guid.Empty) throw new ArgumentException("language must have a non-empty id");
 
             var lang = Language.FromILanguage(language);
             
@@ -181,11 +181,11 @@ namespace cloudscribe.Core.Storage.EF
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
             if (language == null) throw new ArgumentException("language must not be null");
-            if (language.Guid == Guid.Empty) throw new ArgumentException("language must have a non-empty id");
+            if (language.Id == Guid.Empty) throw new ArgumentException("language must have a non-empty id");
 
             var lang = Language.FromILanguage(language);
 
-            bool tracking = dbContext.ChangeTracker.Entries<Language>().Any(x => x.Entity.Guid == lang.Guid);
+            bool tracking = dbContext.ChangeTracker.Entries<Language>().Any(x => x.Entity.Id == lang.Id);
             if (!tracking)
             {
                 dbContext.Languages.Update(lang);
@@ -205,7 +205,7 @@ namespace cloudscribe.Core.Storage.EF
             if (id == Guid.Empty) throw new ArgumentException("id must be a non-empty guid");
 
             var itemToRemove = await dbContext.Languages.SingleOrDefaultAsync(
-                x => x.Guid == id,
+                x => x.Id == id,
                 cancellationToken)
                 .ConfigureAwait(false);
 
@@ -224,7 +224,7 @@ namespace cloudscribe.Core.Storage.EF
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
             if (currency == null) throw new ArgumentException("currency must not be null");
-            if (currency.Guid == Guid.Empty) throw new ArgumentException("currency must have a non-empty id");
+            if (currency.Id == Guid.Empty) throw new ArgumentException("currency must have a non-empty id");
 
             var c = Currency.FromICurrency(currency);
             
@@ -242,11 +242,11 @@ namespace cloudscribe.Core.Storage.EF
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
             if (currency == null) throw new ArgumentException("currency must not be null");
-            if (currency.Guid == Guid.Empty) throw new ArgumentException("currency must have a non-empty id");
+            if (currency.Id == Guid.Empty) throw new ArgumentException("currency must have a non-empty id");
 
             var c = Currency.FromICurrency(currency);
 
-            bool tracking = dbContext.ChangeTracker.Entries<Currency>().Any(x => x.Entity.Guid == c.Guid);
+            bool tracking = dbContext.ChangeTracker.Entries<Currency>().Any(x => x.Entity.Id == c.Id);
             if (!tracking)
             {
                 dbContext.Currencies.Update(c);
@@ -265,7 +265,7 @@ namespace cloudscribe.Core.Storage.EF
             cancellationToken.ThrowIfCancellationRequested();
             if (id == Guid.Empty) throw new ArgumentException("id must be a non-empty guid");
 
-            var itemToRemove = await dbContext.Currencies.SingleOrDefaultAsync(x => x.Guid == id, cancellationToken);
+            var itemToRemove = await dbContext.Currencies.SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
 
             if (itemToRemove == null) throw new InvalidOperationException("currency not found");
 
