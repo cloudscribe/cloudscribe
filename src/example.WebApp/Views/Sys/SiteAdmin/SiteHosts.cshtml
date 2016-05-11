@@ -18,7 +18,7 @@
             </td>
             <td>
                 <form class="form-inline" asp-controller="SiteAdmin" asp-action="HostDelete">
-                    <input id="SiteGuid" name="SiteGuid" type="hidden" value="@Model.SiteGuid" />
+                    <input id="SiteId" name="SiteId" type="hidden" value="@Model.SiteId" />
                     <input id="hostName" name="hostName" type="hidden" value="@item.HostName" />
                     <input id="slp" name="slp" type="hidden" value="@Model.SiteListReturnPageNumber" />
                     <input type="submit" value="CommonResources.Delete"
@@ -31,7 +31,7 @@
     </table>
 <div class="form-group">
     <form class="form-inline" asp-controller="SiteAdmin" asp-action="HostAdd">
-        <input id="SiteGuid" name="SiteGuid" type="hidden" value="@Model.SiteGuid" />
+        <input id="SiteId" name="SiteId" type="hidden" value="@Model.SiteId" />
         <input id="slp" name="slp" type="hidden" value="@Model.SiteListReturnPageNumber" />
         <input type="text" id="hostName" name="hostName" class="form-control" />
         <button type="submit" value="CommonResources.AddHostMapping" class="btn btn-default">CommonResources.AddHostMapping</button>

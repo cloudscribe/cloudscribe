@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-05-05
-// Last Modified:			2016-04-27
+// Last Modified:			2016-05-11
 // 
 
 using cloudscribe.Core.Models;
@@ -29,12 +29,12 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
             set { siteListReturnPageNumber = value; }
         }
 
-        private Guid siteGuid = Guid.Empty;
+        private Guid id = Guid.Empty;
 
-        public Guid SiteGuid
+        public Guid SiteId
         {
-            get { return siteGuid; }
-            set { siteGuid = value; }
+            get { return id; }
+            set { id = value; }
         }
 
         

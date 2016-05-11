@@ -21,10 +21,10 @@
     <tr>
         <td>
             <form role="form" asp-controller="CoreData" asp-action="CurrencyDelete">
-                <input type="hidden" id="currencyGuid" name="currencyGuid" value="@item.Guid" />
+                <input type="hidden" id="currencyId" name="currencyId" value="@item.Id" />
                 <a class="btn btn-xs btn-default" asp-action="CurrencyEdit"
                    asp-controller="CoreData"
-                   asp-route-currencyguid="@item.Guid">CommonResources.Edit</a>
+                   asp-route-currencyid="@item.Id">CommonResources.Edit</a>
                 <input type="submit" value="CommonResources.Delete"
                        onclick="javascript: return confirm('@Html.FormatValue(item.Title, "Are you sure you want to delete {0}?")');"
                        class="btn btn-xs btn-default" />

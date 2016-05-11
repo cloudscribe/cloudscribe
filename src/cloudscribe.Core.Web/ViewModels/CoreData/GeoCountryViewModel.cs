@@ -15,13 +15,13 @@ namespace cloudscribe.Core.Web.ViewModels.CoreData
     public class GeoCountryViewModel : IGeoCountry
     {
 
-        private Guid guid = Guid.Empty;
+        private Guid id = Guid.Empty;
 
         //[Display(Name = "Guid")]
         public Guid Id
         {
-            get { return guid; }
-            set { guid = value; }
+            get { return id; }
+            set { id = value; }
         }
 
 

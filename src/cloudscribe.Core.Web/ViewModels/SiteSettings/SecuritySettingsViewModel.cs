@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-01-19
-// Last Modified:			2016-02-01
+// Last Modified:			2016-05-11
 // 
 
 using System;
@@ -15,11 +15,9 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
 {
     public class SecuritySettingsViewModel
     {
+        
         [Display(Name = "SiteId")]
-        public int SiteId { get; set; } = -1;
-
-        [Display(Name = "SiteGuid")]
-        public Guid SiteGuid { get; set; } = Guid.Empty;
+        public Guid SiteId { get; set; } = Guid.Empty;
 
         [Display(Name = "Use Email For Login")]
         public bool UseEmailForLogin { get; set; }

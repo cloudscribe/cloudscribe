@@ -11,14 +11,14 @@
 }
 <h2>@ViewBag.Title</h2>
 <form class="form-horizontal" role="form" asp-controller="UserAdmin" asp-action="UserEdit">
-    <input asp-for="UserGuid" type="hidden" />
-    <input asp-for="SiteGuid" type="hidden" />
-    @if (Model.UserGuid != Guid.Empty)
+    <input asp-for="UserId" type="hidden" />
+    <input asp-for="SiteId" type="hidden" />
+    @if (Model.UserId != Guid.Empty)
     {
     <div class="form-group">
-        <label asp-for="UserGuid" class="col-md-2 control-label"></label>
+        <label asp-for="UserId" class="col-md-2 control-label"></label>
         <div class="col-md-10">
-            <label class="control-label">@Model.UserGuid.ToString()</label>
+            <label class="control-label">@Model.UserId.ToString()</label>
         </div>
     </div>
     }
@@ -27,7 +27,7 @@
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
             <input type="submit" class="btn btn-default" value="CommonResources.Save" />
-            @if (Model.UserGuid != Guid.Empty)
+            @if (Model.UserId != Guid.Empty)
             {
                 <button name="button" type="button" class="btn btn-default"
                         onclick="javascript: if(confirm('@Html.FormatValue(Model.DisplayName, "Are you sure you want to delete the user {0}? You cannot undo this action.")')) {$('#deleteform').submit();}">
@@ -43,8 +43,8 @@
 @if (Model.UserGuid != Guid.Empty)
 {
     <form id="deleteform" class="form-inline" asp-controller="UserAdmin" asp-action="UserDelete"> 
-        <input asp-for="SiteGuid" type="hidden" />
-        <input asp-for="UserGuid" type="hidden" />
+        <input asp-for="SiteId" type="hidden" />
+        <input asp-for="UserId" type="hidden" />
     </form>
 }
 

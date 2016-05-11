@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-06
-// Last Modified:			2016-05-10
+// Last Modified:			2016-05-11
 // 
 
 using cloudscribe.Core.Identity;
@@ -47,16 +47,16 @@ namespace cloudscribe.Core.Web.Controllers
         [HttpGet]
         [Authorize(Policy = "RoleAdminPolicy")]
         public async Task<IActionResult> Index(
-            Guid? siteGuid,
+            Guid? siteId,
             string searchInput = "", 
             int pageNumber = 1, 
             int pageSize = -1)
         {
             ISiteSettings selectedSite;
             // only server admin site can edit other sites settings
-            if ((siteGuid.HasValue) && (siteGuid.Value != Guid.Empty) && (siteGuid.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
+            if ((siteId.HasValue) && (siteId.Value != Guid.Empty) && (siteId.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
             {
-                selectedSite = await siteManager.Fetch(siteGuid.Value);
+                selectedSite = await siteManager.Fetch(siteId.Value);
                 ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - Role Management", selectedSite.SiteName);
             }
             else
@@ -69,7 +69,7 @@ namespace cloudscribe.Core.Web.Controllers
             //ViewBag.Heading = "Role Management";
 
             RoleListViewModel model = new RoleListViewModel();
-            model.SiteGuid = selectedSite.Id;
+            model.SiteId = selectedSite.Id;
            // model.Heading = "Role Management";
 
             int itemsPerPage = uiOptions.DefaultPageSize_RoleList;
@@ -102,14 +102,14 @@ namespace cloudscribe.Core.Web.Controllers
         [Authorize(Policy = "RoleAdminPolicy")]
         //[MvcSiteMapNode(Title = "New Role", ParentKey = "Roles", Key = "RoleEdit")]
         public async Task<IActionResult> RoleEdit(
-            Guid? siteGuid,
-            Guid? roleGuid)
+            Guid? siteId,
+            Guid? roleId)
         {
             ISiteSettings selectedSite;
             // only server admin site can edit other sites settings
-            if ((siteGuid.HasValue) && (siteGuid.Value != Guid.Empty) && (siteGuid.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
+            if ((siteId.HasValue) && (siteId.Value != Guid.Empty) && (siteId.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
             {
-                selectedSite = await siteManager.Fetch(siteGuid.Value);
+                selectedSite = await siteManager.Fetch(siteId.Value);
                 ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - New Role", selectedSite.SiteName);
             }
             else
@@ -117,16 +117,14 @@ namespace cloudscribe.Core.Web.Controllers
                 selectedSite = siteManager.CurrentSite;
                 ViewBag.Title = "New Role";
             }
-
-           
-
-            RoleViewModel model = new RoleViewModel();
+            
+            var model = new RoleViewModel();
             model.SiteId = selectedSite.Id;
             model.Heading = "New Role";
 
-            if (roleGuid.HasValue)
+            if (roleId.HasValue)
             {
-                ISiteRole role = await RoleManager.FetchRole(roleGuid.Value);
+                var role = await RoleManager.FetchRole(roleId.Value);
                 if ((role != null) && (role.SiteId == selectedSite.Id))
                 {
                     model = RoleViewModel.FromISiteRole(role);
@@ -194,7 +192,7 @@ namespace cloudscribe.Core.Web.Controllers
                         model.DisplayName), true);
             
 
-            return RedirectToAction("Index", new { siteGuid = selectedSite.Id, pageNumber = returnPageNumber });
+            return RedirectToAction("Index", new { siteId = selectedSite.Id, pageNumber = returnPageNumber });
 
         }
 
@@ -202,15 +200,15 @@ namespace cloudscribe.Core.Web.Controllers
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "RoleAdminPolicy")]
         public async Task<IActionResult> RoleDelete(
-            Guid? siteGuid,
-            Guid roleGuid, 
+            Guid? siteId,
+            Guid roleId, 
             int returnPageNumber = 1)
         {
             ISiteSettings selectedSite;
             // only server admin site can edit other sites settings
-            if ((siteGuid.HasValue) && (siteGuid.Value != Guid.Empty) && (siteGuid.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
+            if ((siteId.HasValue) && (siteId.Value != Guid.Empty) && (siteId.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
             {
-                selectedSite = await siteManager.Fetch(siteGuid.Value);
+                selectedSite = await siteManager.Fetch(siteId.Value);
                 
             }
             else
@@ -219,11 +217,11 @@ namespace cloudscribe.Core.Web.Controllers
                 
             }
 
-            var role = await RoleManager.FetchRole(roleGuid);
+            var role = await RoleManager.FetchRole(roleId);
             if (role != null && role.SiteId == selectedSite.Id && role.IsDeletable(setupOptions.RolesThatCannotBeDeleted))
             {
-                await RoleManager.DeleteUserRolesByRole(roleGuid);
-                await RoleManager.DeleteRole(roleGuid);
+                await RoleManager.DeleteUserRolesByRole(roleId);
+                await RoleManager.DeleteRole(roleId);
                 
                 string successFormat = "The role <b>{0}</b> was successfully deleted.";
 
@@ -234,15 +232,15 @@ namespace cloudscribe.Core.Web.Controllers
                 
             }
 
-            return RedirectToAction("Index", new { siteGuid = selectedSite.Id, pageNumber = returnPageNumber });
+            return RedirectToAction("Index", new { siteId = selectedSite.Id, pageNumber = returnPageNumber });
         }
 
 
         [HttpGet]
         [Authorize(Policy = "RoleAdminPolicy")]
         public async Task<IActionResult> RoleMembers(
-            Guid? siteGuid,
-            Guid roleGuid,
+            Guid? siteId,
+            Guid roleId,
             string searchInput = "",
             int pageNumber = 1,
             int pageSize = -1)
@@ -250,9 +248,9 @@ namespace cloudscribe.Core.Web.Controllers
 
             ISiteSettings selectedSite;
             // only server admin site can edit other sites settings
-            if ((siteGuid.HasValue) && (siteGuid.Value != Guid.Empty) && (siteGuid.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
+            if ((siteId.HasValue) && (siteId.Value != Guid.Empty) && (siteId.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
             {
-                selectedSite = await siteManager.Fetch(siteGuid.Value);
+                selectedSite = await siteManager.Fetch(siteId.Value);
                 ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - Role Members", selectedSite.SiteName);
             }
             else
@@ -260,10 +258,8 @@ namespace cloudscribe.Core.Web.Controllers
                 selectedSite = siteManager.CurrentSite;
                 ViewBag.Title = "Role Members";
             }
-
             
-
-            ISiteRole role = await RoleManager.FetchRole(roleGuid);
+            var role = await RoleManager.FetchRole(roleId);
             if ((role == null) || (role.SiteId != selectedSite.Id))
             {
                 return RedirectToAction("Index");
@@ -277,7 +273,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             RoleMemberListViewModel model = new RoleMemberListViewModel();
             
-            model.SiteGuid = selectedSite.Id;
+            model.SiteId = selectedSite.Id;
             model.UseEmailForLogin = selectedSite.UseEmailForLogin;
       
 
@@ -318,8 +314,8 @@ namespace cloudscribe.Core.Web.Controllers
         [HttpGet]
         [Authorize(Policy = "RoleAdminPolicy")]
         public async Task<IActionResult> RoleNonMembers(
-            Guid? siteGuid,
-            Guid roleGuid,
+            Guid? siteId,
+            Guid roleId,
             string searchInput = "",
             int pageNumber = 1,
             int pageSize = 0,
@@ -327,9 +323,9 @@ namespace cloudscribe.Core.Web.Controllers
         {
             ISiteSettings selectedSite;
             // only server admin site can edit other sites settings
-            if ((siteGuid.HasValue) && (siteGuid.Value != Guid.Empty) && (siteGuid.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
+            if ((siteId.HasValue) && (siteId.Value != Guid.Empty) && (siteId.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
             {
-                selectedSite = await siteManager.Fetch(siteGuid.Value);
+                selectedSite = await siteManager.Fetch(siteId.Value);
                 ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - Non Role Members", selectedSite.SiteName);
             }
             else
@@ -337,10 +333,8 @@ namespace cloudscribe.Core.Web.Controllers
                 selectedSite = siteManager.CurrentSite;
                 ViewBag.Title = "Non Role Members";
             }
-
             
-
-            ISiteRole role = await RoleManager.FetchRole(roleGuid);
+            var role = await RoleManager.FetchRole(roleId);
             if ((role == null) || (role.SiteId != selectedSite.Id))
             {
                 return RedirectToAction("Index");
@@ -352,7 +346,7 @@ namespace cloudscribe.Core.Web.Controllers
                 itemsPerPage = pageSize;
             }
 
-            RoleMemberListViewModel model = new RoleMemberListViewModel();
+            var model = new RoleMemberListViewModel();
 
             model.Role = RoleViewModel.FromISiteRole(role);
             if (selectedSite.Id != siteManager.CurrentSite.Id)
@@ -393,15 +387,15 @@ namespace cloudscribe.Core.Web.Controllers
         [HttpPost]
         [Authorize(Policy = "RoleAdminPolicy")]
         public async Task<IActionResult> AddUser(
-            Guid? siteGuid, 
-            Guid roleGuid, 
-            Guid userGuid)
+            Guid? siteId, 
+            Guid roleId, 
+            Guid userId)
         {
             ISiteSettings selectedSite;
             // only server admin site can edit other sites settings
-            if ((siteGuid.HasValue) && (siteGuid.Value != Guid.Empty) && (siteGuid.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
+            if ((siteId.HasValue) && (siteId.Value != Guid.Empty) && (siteId.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
             {
-                selectedSite = await siteManager.Fetch(siteGuid.Value);
+                selectedSite = await siteManager.Fetch(siteId.Value);
                 
             }
             else
@@ -410,11 +404,11 @@ namespace cloudscribe.Core.Web.Controllers
                 
             }
 
-            var user = await UserManager.Fetch(selectedSite.Id, userGuid);
+            var user = await UserManager.Fetch(selectedSite.Id, userId);
 
             if (user != null)
             {
-                var role = await RoleManager.FetchRole(roleGuid);
+                var role = await RoleManager.FetchRole(roleId);
                 if ((role != null) && (role.SiteId == selectedSite.Id))
                 {
                     await RoleManager.AddUserToRole(user, role);
@@ -426,21 +420,21 @@ namespace cloudscribe.Core.Web.Controllers
 
             }
 
-            return RedirectToAction("RoleMembers", new { siteGuid = selectedSite.Id, roleGuid = roleGuid });
+            return RedirectToAction("RoleMembers", new { siteId = selectedSite.Id, roleId = roleId });
         }
 
         [HttpPost]
         [Authorize(Policy = "RoleAdminPolicy")]
         public async Task<IActionResult> RemoveUser(
-            Guid? siteGuid,
-            Guid roleGuid, 
-            Guid userGuid)
+            Guid? siteId,
+            Guid roleId, 
+            Guid userId)
         {
             ISiteSettings selectedSite;
             // only server admin site can edit other sites settings
-            if ((siteGuid.HasValue) && (siteGuid.Value != Guid.Empty) && (siteGuid.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
+            if ((siteId.HasValue) && (siteId.Value != Guid.Empty) && (siteId.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
             {
-                selectedSite = await siteManager.Fetch(siteGuid.Value);
+                selectedSite = await siteManager.Fetch(siteId.Value);
 
             }
             else
@@ -449,10 +443,10 @@ namespace cloudscribe.Core.Web.Controllers
 
             }
 
-            var user = await UserManager.Fetch(selectedSite.Id, userGuid);
+            var user = await UserManager.Fetch(selectedSite.Id, userId);
             if (user != null)
             {
-                var role = await RoleManager.FetchRole(roleGuid);
+                var role = await RoleManager.FetchRole(roleId);
                 if ((role != null) && (role.SiteId == selectedSite.Id))
                 {
                     await RoleManager.RemoveUserFromRole(user, role);
@@ -465,7 +459,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             }
 
-            return RedirectToAction("RoleMembers", new { siteGuid = selectedSite.Id, roleGuid = roleGuid });
+            return RedirectToAction("RoleMembers", new { siteId = selectedSite.Id, roleId = roleId });
         }
 
     }

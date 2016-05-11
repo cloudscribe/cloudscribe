@@ -21,7 +21,7 @@ namespace cloudscribe.Core.Web.ViewModels.UserAdmin
             Paging = new PaginationSettings();
         }
 
-        public Guid SiteGuid { get; set; } = Guid.Empty;
+        public Guid SiteId { get; set; } = Guid.Empty;
         public string Heading { get; set; }
         public IList<IUserInfo> UserList { get; set; }
         public PaginationSettings Paging { get; set; }

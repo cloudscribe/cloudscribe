@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-04
-// Last Modified:			2016-04-27
+// Last Modified:			2016-05-11
 //
 
 using cloudscribe.Core.Models;
@@ -50,22 +50,22 @@ namespace cloudscribe.Core.Web.ViewModels.RoleAdmin
 
         #region ISiteRole
         
-        private Guid roleGuid = Guid.Empty;
+        private Guid id = Guid.Empty;
 
-        [Display(Name = "RoleGuid")]
+        [Display(Name = "RoleId")]
         public Guid Id
         {
-            get { return roleGuid; }
-            set { roleGuid = value; }
+            get { return id; }
+            set { id = value; }
         }
         
-        private Guid siteGuid = Guid.Empty;
+        private Guid siteId = Guid.Empty;
 
-        [Display(Name = "SiteGuid")]
+        [Display(Name = "SiteId")]
         public Guid SiteId
         {
-            get { return siteGuid; }
-            set { siteGuid = value; }
+            get { return siteId; }
+            set { siteId = value; }
         }
 
         /// <summary>

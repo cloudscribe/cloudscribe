@@ -22,16 +22,10 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
             AvailableCountries = new List<SelectListItem>();
             AvailableStates = new List<SelectListItem>();
         }
-
+        
         [Display(Name = "SiteId")]
-        public int SiteId { get; set; } = -1;
-        
-        [Display(Name = "SiteGuid")]
-        public Guid SiteGuid { get; set; } = Guid.Empty;
-        
-        
-        
-        //[Display(Name = "CompanyName", ResourceType = typeof(CommonResources))]
+        public Guid SiteId { get; set; } = Guid.Empty;
+                //[Display(Name = "CompanyName", ResourceType = typeof(CommonResources))]
         [Display (Name = "Name")]
         public string CompanyName { get; set; } = string.Empty;
 

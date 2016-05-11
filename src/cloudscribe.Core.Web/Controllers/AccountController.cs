@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2016-04-27
+// Last Modified:			2016-05-11
 // 
 
 using cloudscribe.Core.Identity;
@@ -224,7 +224,7 @@ namespace cloudscribe.Core.Web.Controllers
             ViewData["Title"] = "Register";
             
             RegisterViewModel model = new RegisterViewModel();
-            model.SiteGuid = Site.Id;
+            model.SiteId = Site.Id;
             if ((Site.CaptchaOnRegistration)&& (Site.RecaptchaPublicKey.Length > 0))
             {
                 model.RecaptchaSiteKey = Site.RecaptchaPublicKey;  
@@ -354,7 +354,7 @@ namespace cloudscribe.Core.Web.Controllers
                         }
                         else
                         {
-                            return RedirectToAction("EmailConfirmationRequired", new { userGuid = user.Id, didSend = true });
+                            return RedirectToAction("EmailConfirmationRequired", new { userId = user.Id, didSend = true });
                         }
 
                     }
@@ -371,7 +371,7 @@ namespace cloudscribe.Core.Web.Controllers
                             //}
                             //else
                             //{
-                            return RedirectToAction("PendingApproval", new { userGuid = user.Id, didSend = true });
+                            return RedirectToAction("PendingApproval", new { userId = user.Id, didSend = true });
                             //}
 
                         }
@@ -399,10 +399,10 @@ namespace cloudscribe.Core.Web.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult PendingApproval(Guid userGuid, bool didSend = false)
+        public IActionResult PendingApproval(Guid userId, bool didSend = false)
         {
             PendingNotificationViewModel model = new PendingNotificationViewModel();
-            model.UserGuid = userGuid;
+            model.UserId = userId;
             model.DidSend = didSend;
 
             return View("PendingApproval", model);
@@ -410,10 +410,10 @@ namespace cloudscribe.Core.Web.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult EmailConfirmationRequired(Guid userGuid, bool didSend = false)
+        public IActionResult EmailConfirmationRequired(Guid userId, bool didSend = false)
         {
             PendingNotificationViewModel model = new PendingNotificationViewModel();
-            model.UserGuid = userGuid;
+            model.UserId = userId;
             model.DidSend = didSend;
 
             return View("EmailConfirmationRequired", model);
@@ -422,9 +422,9 @@ namespace cloudscribe.Core.Web.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> VerifyEmail(Guid userGuid)
+        public async Task<IActionResult> VerifyEmail(Guid userId)
         {
-            var user = await userManager.Fetch(userManager.Site.Id,  userGuid);
+            var user = await userManager.Fetch(userManager.Site.Id,  userId);
 
             if(user == null)
             {
@@ -451,7 +451,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             await ipAddressTracker.TackUserIpAddress(Site.Id, user.Id);
 
-            return RedirectToAction("EmailConfirmationRequired", new { userGuid = user.Id, didSend = true });
+            return RedirectToAction("EmailConfirmationRequired", new { userId = user.Id, didSend = true });
         }
 
         // GET: /Account/ConfirmEmail
@@ -475,7 +475,7 @@ namespace cloudscribe.Core.Web.Controllers
             {
                 emailSender.AccountPendingApprovalAdminNotification(Site, user).Forget();
 
-                return RedirectToAction("PendingApproval", new { userGuid = user.Id, didSend = true });
+                return RedirectToAction("PendingApproval", new { userId = user.Id, didSend = true });
             }
 
             return View(result.Succeeded ? "ConfirmEmail" : "Error");
@@ -636,13 +636,13 @@ namespace cloudscribe.Core.Web.Controllers
         }
 
 
-        public async Task<JsonResult> LoginNameAvailable(Guid? userGuid, string loginName)
+        public async Task<JsonResult> LoginNameAvailable(Guid? userId, string loginName)
         {
             // same validation is used when editing or creating a user
             // if editing then the loginname is valid if found attached to the selected user
             // otherwise if found it is not already in use and not available
             Guid selectedUserGuid = Guid.Empty;
-            if (userGuid.HasValue) { selectedUserGuid = userGuid.Value; }
+            if (userId.HasValue) { selectedUserGuid = userId.Value; }
             bool available = await userManager.LoginIsAvailable(selectedUserGuid, loginName);
 
 

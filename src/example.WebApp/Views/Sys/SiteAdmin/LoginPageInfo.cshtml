@@ -11,7 +11,7 @@
         <h2>@ViewBag.Title</h2>
         <form method="post" role="form" asp-antiforgery="true">
             <div asp-validation-summary="ValidationSummary.All" class="text-danger"></div>
-            <input asp-for="SiteGuid" type="hidden" />
+            <input asp-for="SiteId" type="hidden" />
             <div class="form-group">
                 <label asp-for="LoginInfoTop" class="control-label"></label>
                 <textarea class="form-control" rows="5" asp-for="LoginInfoTop"

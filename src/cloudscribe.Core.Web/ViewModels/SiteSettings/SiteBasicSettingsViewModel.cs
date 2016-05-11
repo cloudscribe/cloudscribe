@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2016-04-29
+// Last Modified:			2016-05-11
 // 
 
 //using cloudscribe.Configuration.DataAnnotations;
@@ -32,13 +32,13 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         //    set { siteID = value; }
         //}
 
-        private Guid siteGuid = Guid.Empty;
+        private Guid id = Guid.Empty;
 
-        [Display(Name = "SiteGuid")]
-        public Guid SiteGuid
+        [Display(Name = "SiteId")]
+        public Guid SiteId
         {
-            get { return siteGuid; }
-            set { siteGuid = value; }
+            get { return id; }
+            set { id = value; }
 
         }
 

@@ -15,11 +15,9 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
 {
     public class SmsSettingsViewModel
     {
+        
         [Display(Name = "SiteId")]
-        public int SiteId { get; set; } = -1;
-
-        [Display(Name = "SiteGuid")]
-        public Guid SiteGuid { get; set; } = Guid.Empty;
+        public Guid SiteId { get; set; } = Guid.Empty;
 
         [Display(Name = "Sms From")]
         public string SmsFrom { get; set; } = string.Empty;

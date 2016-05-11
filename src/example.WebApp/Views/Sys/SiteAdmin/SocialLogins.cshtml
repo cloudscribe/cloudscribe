@@ -9,7 +9,7 @@
         <h2>@ViewBag.Title</h2>
         <form method="post" class="form-horizontal" role="form" asp-antiforgery="true">
             <div asp-validation-summary="ValidationSummary.All" class="text-danger"></div>
-            <input asp-for="SiteGuid" type="hidden" />
+            <input asp-for="SiteId" type="hidden" />
             <div class="form-group">
                 <label asp-for="MicrosoftClientId" class="col-md-3 control-label"></label>
                 <div class="col-md-9">

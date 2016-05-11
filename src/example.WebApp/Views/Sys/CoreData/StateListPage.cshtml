@@ -11,7 +11,7 @@
     <tr>
         <th>
             <a class="btn btn-xs btn-default" asp-action="StateEdit" asp-controller="CoreData"
-               asp-route-countryGuid="@Model.Country.Guid"
+               asp-route-countryId="@Model.Country.Id"
                asp-route-crp="@Model.CountryListReturnPageNumber"
                asp-route-returnPageNumber="@Model.Paging.CurrentPage">CommonResources.NewState</a> 
         </th>
@@ -28,13 +28,13 @@
         <td>
             <form asp-controller="CoreData" asp-action="StateDelete">
                 <a class="btn btn-xs btn-default" asp-action="StateEdit" asp-controller="CoreData"
-                   asp-route-countryguid="@Model.Country.Guid"
-                   asp-route-guid="@item.Guid"
+                   asp-route-countryId="@Model.Country.Id"
+                   asp-route-stateId="@item.Id"
                    asp-route-crp="@Model.CountryListReturnPageNumber"
                    asp-route-returnpagenumber="@Model.Paging.CurrentPage">CommonResources.Edit</a>
 
-                <input type="hidden" name="countryGuid" value="@item.CountryGuid" />
-                <input type="hidden" name="guid" value="@item.Guid" />
+                <input type="hidden" name="countryId" value="@item.CountryId" />
+                <input type="hidden" name="stateId" value="@item.Id" />
                 <input type="hidden" name="crp" value="@Model.CountryListReturnPageNumber" />
                 <input type="hidden" name="returnPageNumber" value="@Model.Paging.CurrentPage" />
                 <input type="submit" value="CommonResources.Delete"
@@ -54,7 +54,7 @@
 <div>
     <cs-pager cs-paging-info="@Model.Paging"
               asp-action="StateListPage" asp-controller="CoreData"
-              asp-route-countryGuid="@Model.Country.Guid"
+              asp-route-countryId="@Model.Country.Id"
               asp-route-crp="@Model.CountryListReturnPageNumber"
               asp-route-pagesize="@Model.Paging.ItemsPerPage"></cs-pager>
 </div>
