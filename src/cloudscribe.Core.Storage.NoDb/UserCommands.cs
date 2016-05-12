@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:                  Joe Audette
 // Created:                 2016-04-26
-// Last Modified:           2016-05-09
+// Last Modified:           2016-05-12
 // 
 
 using cloudscribe.Core.Models;
@@ -119,14 +119,14 @@ namespace cloudscribe.Core.Storage.NoDb
         }
 
         public async Task Delete(
-            Guid siteGuid,
-            Guid userGuid,
+            Guid siteId,
+            Guid userId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             
             await EnsureProjectId().ConfigureAwait(false);
 
-            await userCommands.DeleteAsync(projectId, userGuid.ToString(), cancellationToken).ConfigureAwait(false);
+            await userCommands.DeleteAsync(projectId, userId.ToString(), cancellationToken).ConfigureAwait(false);
  
         }
 
@@ -151,7 +151,7 @@ namespace cloudscribe.Core.Storage.NoDb
         //}
 
         public async Task FlagAsDeleted(
-            Guid userGuid,
+            Guid userId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             ThrowIfDisposed();
@@ -162,7 +162,7 @@ namespace cloudscribe.Core.Storage.NoDb
             var item
                 = await userQueries.FetchAsync(
                     projectId,
-                    userGuid.ToString(),
+                    userId.ToString(),
                     cancellationToken).ConfigureAwait(false);
 
             if (item == null) { throw new InvalidOperationException("user not found"); }
@@ -233,19 +233,19 @@ namespace cloudscribe.Core.Storage.NoDb
         }
 
         public async Task DeleteRole(
-            Guid id,
+            Guid roleId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
-            if (id == Guid.Empty) { throw new ArgumentException("Id must be provided"); }
+            if (roleId == Guid.Empty) { throw new ArgumentException("Id must be provided"); }
 
             await EnsureProjectId().ConfigureAwait(false);
 
             await roleCommands.DeleteAsync(
                 projectId,
-                id.ToString(),
+                roleId.ToString(),
                 cancellationToken).ConfigureAwait(false);
         }
 
@@ -473,19 +473,19 @@ namespace cloudscribe.Core.Storage.NoDb
         }
 
         public async Task DeleteClaim(
-            Guid id,
+            Guid claimId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
-            if (id == Guid.Empty) { throw new ArgumentException("id must be provided"); }
+            if (claimId == Guid.Empty) { throw new ArgumentException("id must be provided"); }
 
             await EnsureProjectId().ConfigureAwait(false);
 
             await claimCommands.DeleteAsync(
                 projectId,
-                id.ToString(),
+                claimId.ToString(),
                 cancellationToken).ConfigureAwait(false);
 
         }
@@ -782,7 +782,7 @@ namespace cloudscribe.Core.Storage.NoDb
         }
 
         public async Task DeleteUserLocation(
-            Guid id,
+            Guid userLocationId,
             CancellationToken cancellationToken = default(CancellationToken)
             )
         {
@@ -793,7 +793,7 @@ namespace cloudscribe.Core.Storage.NoDb
 
             await locationCommands.DeleteAsync(
                 projectId,
-                id.ToString(),
+                userLocationId.ToString(),
                 cancellationToken).ConfigureAwait(false);
             
         }
