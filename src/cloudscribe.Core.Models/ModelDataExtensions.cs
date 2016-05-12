@@ -43,11 +43,11 @@ namespace cloudscribe.Core.Models.DataExtensions
 
         public static void LoadFromReader(this IUserInfo user, DbDataReader reader)
         {
-           
-            if (reader["UserGuid"] != DBNull.Value)
-            {
-                user.Id = new Guid(reader["UserGuid"].ToString());
-            }
+           //TODO: this got broken by the change to require id passed in the constructor of SuteUser
+            //if (reader["UserGuid"] != DBNull.Value)
+            //{
+            //    user.Id = new Guid(reader["UserGuid"].ToString());
+            //}
             
             user.SiteId = new Guid(reader["SiteGuid"].ToString());
             user.DisplayName = reader["Name"].ToString();
@@ -111,7 +111,12 @@ namespace cloudscribe.Core.Models.DataExtensions
 
         public static void LoadFromReader(this SiteUser user, DbDataReader reader)
         {
-           
+            //TODO: this is broken because SiteUser must nnow have id in consrtructor
+            //if (reader["UserGuid"] != DBNull.Value)
+            //{
+            //    user.Id = new Guid(reader["UserGuid"].ToString());
+            //}
+
             user.DisplayName = reader["Name"].ToString();
             user.UserName = reader["LoginName"].ToString();
 
@@ -144,10 +149,7 @@ namespace cloudscribe.Core.Models.DataExtensions
             {
                 user.CreatedUtc = Convert.ToDateTime(reader["DateCreated"]);
             }
-            if (reader["UserGuid"] != DBNull.Value)
-            {
-                user.Id = new Guid(reader["UserGuid"].ToString());
-            }
+            
             
             if (reader["IsDeleted"] != DBNull.Value)
             {

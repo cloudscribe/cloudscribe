@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-17
-// Last Modified:			2016-02-01
+// Last Modified:			2016-05-12
 // 
 
 //using Microsoft.AspNet.Identity;
@@ -14,8 +14,6 @@ namespace cloudscribe.Core.Models
     //[Serializable]
     public class SiteUser : UserInfo, ISiteUser
     {
-        public SiteUser()
-        { }
         
         private string authorBio = string.Empty;
         public string AuthorBio
@@ -98,6 +96,10 @@ namespace cloudscribe.Core.Models
         public static SiteUser FromISiteUser(ISiteUser user)
         {
             SiteUser u = new SiteUser();
+            //Guid id = user.Id;
+            if (user.Id != Guid.Empty) u.Id = user.Id;
+            //SiteUser u = new SiteUser(id);
+            
             u.AccessFailedCount = user.AccessFailedCount;
             u.AccountApproved = user.AccountApproved;
             u.AuthorBio = user.AuthorBio;
@@ -152,7 +154,6 @@ namespace cloudscribe.Core.Models
             u.TimeZoneId = user.TimeZoneId;
             u.Trusted = user.Trusted;
             u.TwoFactorEnabled = user.TwoFactorEnabled;
-            u.Id = user.Id;
             
             u.UserName = user.UserName;
             u.WebSiteUrl = user.WebSiteUrl;

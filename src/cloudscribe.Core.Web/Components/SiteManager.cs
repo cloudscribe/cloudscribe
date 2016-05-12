@@ -293,8 +293,7 @@ namespace cloudscribe.Core.Web.Components
             }
 
 
-            var adminUser = new SiteUser();;
-            adminUser.Id = Guid.NewGuid();
+            var adminUser = new SiteUser();
             adminUser.SiteId = site.Id;
             adminUser.Email = "admin" + siteDifferentiator + "@admin.com";
             adminUser.NormalizedEmail = adminUser.Email;

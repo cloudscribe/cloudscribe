@@ -335,7 +335,7 @@ namespace cloudscribe.Core.Web.Controllers
             if (ModelState.IsValid)
             {
                 
-                    var user = new SiteUser
+                    var user = new SiteUser()
                     {
                         SiteId = selectedSite.Id,
                         UserName = model.LoginName,
@@ -488,7 +488,7 @@ namespace cloudscribe.Core.Web.Controllers
                             user.DateOfBirth = DateTime.MinValue;
                         }
 
-                        await UserManager.Save(user);
+                        await UserManager.Update(user);
                         
                         this.AlertSuccess(string.Format("user account for <b>{0}</b> was successfully updated.",
                              user.DisplayName), true);
@@ -529,7 +529,7 @@ namespace cloudscribe.Core.Web.Controllers
                 if(user != null)
                 {
                     user.AccountApproved = true;
-                    await UserManager.Save((SiteUser)user);
+                    await UserManager.Update((SiteUser)user);
 
                     this.AlertSuccess(string.Format("user account for <b>{0}</b> was successfully approved.",
                             user.DisplayName), true);

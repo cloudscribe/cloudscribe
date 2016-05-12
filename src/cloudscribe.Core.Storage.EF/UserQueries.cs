@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2016-05-09
+// Last Modified:			2016-05-12
 // 
 
 
@@ -38,7 +38,7 @@ namespace cloudscribe.Core.Storage.EF
             CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            SiteUser item
+            var item
                 = await dbContext.Users.AsNoTracking()
                 .SingleOrDefaultAsync(
                     x => x.SiteId == siteGuid && x.Id == userGuid
@@ -248,6 +248,7 @@ namespace cloudscribe.Core.Storage.EF
                   orderby x.LastName, x.FirstName
                   select new UserInfo
                   {
+                      Id = x.Id,
                       AvatarUrl = x.AvatarUrl,
                       AccountApproved = x.AccountApproved,
                       Country = x.Country,
@@ -265,12 +266,9 @@ namespace cloudscribe.Core.Storage.EF
                       PhoneNumber = x.PhoneNumber,
                       PhoneNumberConfirmed = x.PhoneNumberConfirmed,
                       SiteId = x.SiteId,
-                      // SiteId = x.SiteId,
                       State = x.State,
                       TimeZoneId = x.TimeZoneId,
                       Trusted = x.Trusted,
-                      Id = x.Id,
-                      // UserId = x.UserId,
                       UserName = x.UserName,
                       WebSiteUrl = x.WebSiteUrl
 
@@ -298,6 +296,7 @@ namespace cloudscribe.Core.Storage.EF
                   orderby x.CreatedUtc descending
                   select new UserInfo
                   {
+                      Id = x.Id,
                       AvatarUrl = x.AvatarUrl,
                       AccountApproved = x.AccountApproved,
                       Country = x.Country,
@@ -315,12 +314,9 @@ namespace cloudscribe.Core.Storage.EF
                       PhoneNumber = x.PhoneNumber,
                       PhoneNumberConfirmed = x.PhoneNumberConfirmed,
                       SiteId = x.SiteId,
-                      // SiteId = x.SiteId,
                       State = x.State,
                       TimeZoneId = x.TimeZoneId,
                       Trusted = x.Trusted,
-                      Id = x.Id,
-                      // UserId = x.UserId,
                       UserName = x.UserName,
                       WebSiteUrl = x.WebSiteUrl
 
@@ -349,6 +345,7 @@ namespace cloudscribe.Core.Storage.EF
                   orderby x.DisplayName
                   select new UserInfo
                   {
+                      Id = x.Id,
                       AvatarUrl = x.AvatarUrl,
                       AccountApproved = x.AccountApproved,
                       Country = x.Country,
@@ -366,12 +363,9 @@ namespace cloudscribe.Core.Storage.EF
                       PhoneNumber = x.PhoneNumber,
                       PhoneNumberConfirmed = x.PhoneNumberConfirmed,
                       SiteId = x.SiteId,
-                      //SiteId = x.SiteId,
                       State = x.State,
                       TimeZoneId = x.TimeZoneId,
                       Trusted = x.Trusted,
-                      Id = x.Id,
-                      //UserId = x.UserId,
                       UserName = x.UserName,
                       WebSiteUrl = x.WebSiteUrl
 
@@ -445,6 +439,7 @@ namespace cloudscribe.Core.Storage.EF
                   )
                   select new UserInfo
                   {
+                      Id = x.Id,
                       AvatarUrl = x.AvatarUrl,
                       AccountApproved = x.AccountApproved,
                       Country = x.Country,
@@ -462,12 +457,9 @@ namespace cloudscribe.Core.Storage.EF
                       PhoneNumber = x.PhoneNumber,
                       PhoneNumberConfirmed = x.PhoneNumberConfirmed,
                       SiteId = x.SiteId,
-                      // SiteId = x.SiteId,
                       State = x.State,
                       TimeZoneId = x.TimeZoneId,
                       Trusted = x.Trusted,
-                      Id = x.Id,
-                      //  UserId = x.UserId,
                       UserName = x.UserName,
                       WebSiteUrl = x.WebSiteUrl
 
@@ -528,6 +520,7 @@ namespace cloudscribe.Core.Storage.EF
                   orderby x.DisplayName
                   select new UserInfo
                   {
+                      Id = x.Id,
                       AvatarUrl = x.AvatarUrl,
                       AccountApproved = x.AccountApproved,
                       Country = x.Country,
@@ -545,12 +538,9 @@ namespace cloudscribe.Core.Storage.EF
                       PhoneNumber = x.PhoneNumber,
                       PhoneNumberConfirmed = x.PhoneNumberConfirmed,
                       SiteId = x.SiteId,
-                      // SiteId = x.SiteId,
                       State = x.State,
                       TimeZoneId = x.TimeZoneId,
                       Trusted = x.Trusted,
-                      Id = x.Id,
-                      //UserId = x.UserId,
                       UserName = x.UserName,
                       WebSiteUrl = x.WebSiteUrl
 
@@ -599,6 +589,7 @@ namespace cloudscribe.Core.Storage.EF
                   orderby x.DisplayName
                   select new UserInfo
                   {
+                      Id = x.Id,
                       AvatarUrl = x.AvatarUrl,
                       AccountApproved = x.AccountApproved,
                       Country = x.Country,
@@ -616,12 +607,9 @@ namespace cloudscribe.Core.Storage.EF
                       PhoneNumber = x.PhoneNumber,
                       PhoneNumberConfirmed = x.PhoneNumberConfirmed,
                       SiteId = x.SiteId,
-                      //SiteId = x.SiteId,
                       State = x.State,
                       TimeZoneId = x.TimeZoneId,
                       Trusted = x.Trusted,
-                      Id = x.Id,
-                      // UserId = x.UserId,
                       UserName = x.UserName,
                       WebSiteUrl = x.WebSiteUrl
 
@@ -668,6 +656,7 @@ namespace cloudscribe.Core.Storage.EF
                   orderby x.DisplayName
                   select new UserInfo
                   {
+                      Id = x.Id,
                       AvatarUrl = x.AvatarUrl,
                       AccountApproved = x.AccountApproved,
                       Country = x.Country,
@@ -685,12 +674,9 @@ namespace cloudscribe.Core.Storage.EF
                       PhoneNumber = x.PhoneNumber,
                       PhoneNumberConfirmed = x.PhoneNumberConfirmed,
                       SiteId = x.SiteId,
-                      // SiteId = x.SiteId,
                       State = x.State,
                       TimeZoneId = x.TimeZoneId,
                       Trusted = x.Trusted,
-                      Id = x.Id,
-                      // UserId = x.UserId,
                       UserName = x.UserName,
                       WebSiteUrl = x.WebSiteUrl
 
@@ -737,6 +723,7 @@ namespace cloudscribe.Core.Storage.EF
                   orderby x.DisplayName
                   select new UserInfo
                   {
+                      Id = x.Id,
                       AvatarUrl = x.AvatarUrl,
                       AccountApproved = x.AccountApproved,
                       Country = x.Country,
@@ -754,12 +741,9 @@ namespace cloudscribe.Core.Storage.EF
                       PhoneNumber = x.PhoneNumber,
                       PhoneNumberConfirmed = x.PhoneNumberConfirmed,
                       SiteId = x.SiteId,
-                      // SiteId = x.SiteId,
                       State = x.State,
                       TimeZoneId = x.TimeZoneId,
                       Trusted = x.Trusted,
-                      Id = x.Id,
-                      // UserId = x.UserId,
                       UserName = x.UserName,
                       WebSiteUrl = x.WebSiteUrl
 
@@ -804,6 +788,7 @@ namespace cloudscribe.Core.Storage.EF
                   orderby x.DisplayName
                   select new UserInfo
                   {
+                      Id = x.Id,
                       AvatarUrl = x.AvatarUrl,
                       AccountApproved = x.AccountApproved,
                       Country = x.Country,
@@ -821,12 +806,9 @@ namespace cloudscribe.Core.Storage.EF
                       PhoneNumber = x.PhoneNumber,
                       PhoneNumberConfirmed = x.PhoneNumberConfirmed,
                       SiteId = x.SiteId,
-                      // SiteId = x.SiteId,
                       State = x.State,
                       TimeZoneId = x.TimeZoneId,
                       Trusted = x.Trusted,
-                      Id = x.Id,
-                      // UserId = x.UserId,
                       UserName = x.UserName,
                       WebSiteUrl = x.WebSiteUrl
 
@@ -872,8 +854,7 @@ namespace cloudscribe.Core.Storage.EF
 
         public bool LoginExistsInDB(Guid siteGuid, string loginName)
         {
-            SiteUser item
-                = dbContext.Users.SingleOrDefault(
+            var item = dbContext.Users.SingleOrDefault(
                     x => x.SiteId == siteGuid
                     && x.UserName == loginName
                     );

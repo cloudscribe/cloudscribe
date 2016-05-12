@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-10
-// Last Modified:			2016-05-11
+// Last Modified:			2016-05-12
 // 
 
 using System;
@@ -13,7 +13,9 @@ namespace cloudscribe.Core.Models
     {
 
         public UserClaim()
-        { }
+        {
+            Id = Guid.NewGuid();
+        }
 
         
         public Guid Id { get; set; } = Guid.Empty;

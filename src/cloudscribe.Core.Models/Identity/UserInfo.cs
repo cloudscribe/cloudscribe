@@ -17,9 +17,11 @@ namespace cloudscribe.Core.Models
     public class UserInfo : IUserInfo
     {
         public UserInfo()
-        { }
+        {
+            this.Id = Guid.NewGuid();
+        }
 
-        public Guid Id { get; set; } = Guid.Empty;
+        public Guid Id { get; set; } 
         public Guid SiteId { get; set; } = Guid.Empty;
         
         private string email = string.Empty;

@@ -15,7 +15,7 @@ namespace cloudscribe.Core.Models
     // we can add more to IUserInfo, but only fields that exist in mp_Users
     public interface IUserInfo
     {
-        Guid Id { get; set; }
+        Guid Id { get; }
         Guid SiteId { get; set; }
         string UserName { get; set; }
         string DisplayName { get; set; }

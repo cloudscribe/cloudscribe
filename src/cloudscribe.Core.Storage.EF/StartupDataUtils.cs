@@ -209,22 +209,19 @@ namespace cloudscribe.Core.Storage.EF
                     
                 if (site != null)
                 {
-                    SiteRole role
-                        = await db.Roles.SingleOrDefaultAsync(
+                    var role = await db.Roles.SingleOrDefaultAsync(
                             x => x.SiteId == site.Id && x.RoleName == "Admins");
 
                     if(role != null)
                     {
+                        //SiteUser adminUser = new SiteUser(Guid.NewGuid());
                         SiteUser adminUser = new SiteUser();
-                        //adminUser.SiteId = site.SiteId;
                         adminUser.SiteId = site.Id;
                         adminUser.Email = "admin@admin.com";
                         adminUser.NormalizedEmail = adminUser.Email;
                         adminUser.DisplayName = "Admin";
                         adminUser.UserName = "admin";
-                        //adminUser.UserId = 0;
-                        adminUser.Id = Guid.NewGuid();
-
+                        
                         adminUser.EmailConfirmed = true;
                         adminUser.AccountApproved = true;
 
@@ -238,15 +235,24 @@ namespace cloudscribe.Core.Storage.EF
                         
                         if(rowsAffected > 0 && adminUser.Id != Guid.Empty)
                         {
-                            UserRole ur = new UserRole();
-                            //ur.Id = Guid.NewGuid();
+                            var ur = new UserRole();
                             ur.RoleId = role.Id;
-                            //ur.RoleId = role.RoleId;
                             ur.UserId = adminUser.Id;
-                            //ur.UserId = adminUser.UserId;
-
                             db.UserRoles.Add(ur);
-                            rowsAffected = await db.SaveChangesAsync();
+                            await db.SaveChangesAsync();
+
+                            role = await db.Roles.SingleOrDefaultAsync(
+                                 x => x.SiteId == site.Id && x.RoleName == "Authenticated Users");
+
+                            if(role != null)
+                            {
+                                ur = new UserRole();
+                                ur.RoleId = role.Id;
+                                ur.UserId = adminUser.Id;
+                                db.UserRoles.Add(ur);
+                                await db.SaveChangesAsync();
+                            }
+                            
 
                         }
                     }

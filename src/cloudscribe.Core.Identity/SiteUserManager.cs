@@ -237,20 +237,30 @@ namespace cloudscribe.Core.Identity
         //    return await userRepo.FetchByConfirmationGuid(siteId, confirmGuid, CancellationToken);
         //}
 
-        public async Task Save(ISiteUser user)
-        {
-            if(user.Id == Guid.Empty)
-            {
-                //TODO: review is this the best place to generate the new id?
-                user.Id = Guid.NewGuid();
-                await commands.Create(user, CancellationToken);
-            }
-            else
-            {
-                await commands.Update(user, CancellationToken);
-            }
+        //public async Task Save(ISiteUser user)
+        //{
+        //    if(user.Id == Guid.Empty)
+        //    {
+        //        //TODO: review is this the best place to generate the new id?
+        //        user.Id = Guid.NewGuid();
+        //        await commands.Create(user, CancellationToken);
+        //    }
+        //    else
+        //    {
+        //        await commands.Update(user, CancellationToken);
+        //    }
 
              
+        //}
+
+        public async Task Update(ISiteUser user)
+        {
+            if (user.Id == Guid.Empty) throw new ArgumentException("can't update a user with em[ty guid id");
+            
+            await commands.Update(user, CancellationToken);
+            
+
+
         }
 
         public Task<bool> EmailExistsInDB(Guid siteGuid, string email)

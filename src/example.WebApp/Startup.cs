@@ -253,7 +253,7 @@ namespace example.WebApp
                 StartupDataUtils.InitializeDatabaseAsync(app.ApplicationServices).Wait();
 
                 // this one is only needed if using cloudscribe Logging with EF as the logging storage
-                DbInitializer.InitializeDatabaseAsync(app.ApplicationServices).Wait();
+                LoggingDbInitializer.InitializeDatabaseAsync(app.ApplicationServices).Wait();
             }
         }
         
@@ -290,21 +290,8 @@ namespace example.WebApp
                     var connectionString = configuration["Data:EF7ConnectionOptions:ConnectionString"];
                     services.AddCloudscribeCoreEFStorage(connectionString);
 
-                    services
-                        .AddEntityFramework()
-                        //.AddSqlServer()
-                        //.AddDbContext<CoreDbContext>(options =>
-                        //{
-                        //    options.UseSqlServer(configuration["Data:EF7ConnectionOptions:ConnectionString"]);
-                        //})
-                        .AddDbContext<LoggingDbContext>(options =>
-                        {
-                            options.UseSqlServer(connectionString);
-                        });
-
-                    
-                    services.AddScoped<ILogModelMapper, SqlServerLogModelMapper>();
-                    services.AddScoped<ILogRepository, LogRepository>();
+                    // only needed if using cloudscribe logging with EF storage
+                    services.AddCloudscribeLoggingEFStorage(connectionString);
                     
 
                     break;
