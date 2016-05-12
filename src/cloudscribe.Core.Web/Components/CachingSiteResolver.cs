@@ -87,6 +87,8 @@ namespace cloudscribe.Core.Web.Components
             {
                 var fullPath = context.Request.PathBase + context.Request.Path;
                 var siteFolderName = fullPath.StartingSegment();
+                // I really want this to be async
+                // checking with Ben if he will make the base class method async
                 var folders = GetAllSiteFoldersFolders();
 
                 return folders.Contains(siteFolderName) ? siteFolderName : "root";

@@ -101,19 +101,19 @@ namespace cloudscribe.Core.Web.Components
             return site;
         }
 
-        public ISiteSettings FetchNonAsync(Guid siteGuid)
-        {
-            var  site = queries.FetchNonAsync(siteGuid);
-            dataProtector.UnProtect(site);
-            return site;
-        }
+        //public ISiteSettings FetchNonAsync(Guid siteGuid)
+        //{
+        //    var  site = queries.FetchNonAsync(siteGuid);
+        //    dataProtector.UnProtect(site);
+        //    return site;
+        //}
 
-        public ISiteSettings FetchNonAsync(string host)
-        {
-            var site = queries.FetchNonAsync(host);
-            dataProtector.UnProtect(site);
-            return site;
-        }
+        //public ISiteSettings FetchNonAsync(string host)
+        //{
+        //    var site = queries.FetchNonAsync(host);
+        //    dataProtector.UnProtect(site);
+        //    return site;
+        //}
 
         //public async Task<ISiteSettings> Fetch(Guid siteGuid)
         //{

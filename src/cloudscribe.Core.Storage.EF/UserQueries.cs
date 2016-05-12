@@ -27,10 +27,10 @@ namespace cloudscribe.Core.Storage.EF
 
         #region User
         
-        public int GetCount(Guid siteGuid)
-        {
-            return dbContext.Users.Count<SiteUser>(x => x.SiteId == siteGuid);
-        }
+        //public int GetCount(Guid siteId)
+        //{
+        //    return dbContext.Users.Count<SiteUser>(x => x.SiteId == siteId);
+        //}
         
         public async Task<ISiteUser> Fetch(
             Guid siteId,
@@ -852,12 +852,16 @@ namespace cloudscribe.Core.Storage.EF
 
         }
 
-        public bool LoginExistsInDB(Guid siteId, string loginName)
+        public async Task<bool> LoginExistsInDB(
+            Guid siteId, 
+            string loginName,
+            CancellationToken cancellationToken = default(CancellationToken)
+            )
         {
-            var item = dbContext.Users.SingleOrDefault(
+            var item = await dbContext.Users.SingleOrDefaultAsync(
                     x => x.SiteId == siteId
                     && x.UserName == loginName
-                    );
+                    ).ConfigureAwait(false);
 
             if (item == null) { return false; }
             return true;

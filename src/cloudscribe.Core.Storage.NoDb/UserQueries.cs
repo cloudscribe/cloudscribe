@@ -61,6 +61,14 @@ namespace cloudscribe.Core.Storage.NoDb
 
         #region User
 
+        //public int GetCount(Guid siteId)
+        //{
+        //    ThrowIfDisposed();
+            
+        //    await EnsureProjectId().ConfigureAwait(false);
+
+        //    var allRoles = await roleQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+        //}
 
 
 
@@ -69,7 +77,7 @@ namespace cloudscribe.Core.Storage.NoDb
 
         #region Roles
 
-        
+
         public async Task<bool> RoleExists(
             Guid siteId,
             string roleName,

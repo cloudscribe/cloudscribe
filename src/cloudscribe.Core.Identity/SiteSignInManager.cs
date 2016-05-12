@@ -164,25 +164,30 @@ namespace cloudscribe.Core.Identity
             //https://github.com/aspnet/HttpAbstractions/blob/dev/src/Microsoft.AspNet.Http/Authentication/DefaultAuthenticationManager.cs
 
             IEnumerable<AuthenticationDescription> all = context.Authentication.GetAuthenticationSchemes().Where(d => !string.IsNullOrEmpty(d.DisplayName));
-            
-            if (multiTenantOptions.Mode != MultiTenantMode.None)
-            {
-                // here we need to filter the list to ones configured for the current tenant
-                if (multiTenantOptions.Mode == MultiTenantMode.FolderName)
-                {
-                    if (multiTenantOptions.UseRelatedSitesMode)
-                    {
-                        ISiteSettings site = queries.FetchNonAsync(multiTenantOptions.RelatedSiteGuid);
 
-                        return BuildFilteredAuthList(site, all);
-                    }
+            //TODO: commenting this out 2016-05-12
+            // review if we need this 
+            // it is the only place where we need to lookup a site non-async
+            // for now I'm just going to get the site from the context via saaskit
+            //if (multiTenantOptions.Mode != MultiTenantMode.None)
+            //{
+            //    // here we need to filter the list to ones configured for the current tenant
+            //    if (multiTenantOptions.Mode == MultiTenantMode.FolderName)
+            //    {
+            //        if (multiTenantOptions.UseRelatedSitesMode)
+            //        {
+            //            ISiteSettings site = queries.FetchNonAsync(multiTenantOptions.RelatedSiteGuid);
 
-                }
+            //            return BuildFilteredAuthList(site, all);
+            //        }
+
+            //    }
 
                 return BuildFilteredAuthList(siteUserManager.Site, all);
-            }
-            
-            return all;
+            //}
+
+
+            //return all;
         }
 
         private IEnumerable<AuthenticationDescription> BuildFilteredAuthList(ISiteSettings site, IEnumerable<AuthenticationDescription> all)

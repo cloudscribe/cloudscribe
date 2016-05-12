@@ -17,9 +17,9 @@ namespace cloudscribe.Core.Models
         //TODO: review all places where these non async methods are used
         // and consider whether they could be changed to use async
 
-        ISiteSettings FetchNonAsync(Guid siteId);
-        ISiteSettings FetchNonAsync(string hostName);
-        ISiteSettings FetchByFolderNameNonAsync(string folderName);
+        //ISiteSettings FetchNonAsync(Guid siteId);
+        //ISiteSettings FetchNonAsync(string hostName);
+        //ISiteSettings FetchByFolderNameNonAsync(string folderName);
 
         //Task<ISiteSettings> Fetch(int siteId, CancellationToken cancellationToken);
         Task<ISiteSettings> Fetch(Guid siteId, CancellationToken cancellationToken = default(CancellationToken));
@@ -47,7 +47,7 @@ namespace cloudscribe.Core.Models
             CancellationToken cancellationToken = default(CancellationToken));
 
         //Task<int> GetSiteIdByHostName(string hostName, CancellationToken cancellationToken);
-        List<ISiteHost> GetAllHostsNonAsync();
+        //List<ISiteHost> GetAllHostsNonAsync();
 
         // we don't need multiple folders to map to a single site
         // we have foldername on the sitesettings object and on't need this extra table

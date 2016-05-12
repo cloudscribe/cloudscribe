@@ -36,13 +36,13 @@ namespace cloudscribe.Core.Storage.EF
             return item;
         }
 
-        public ISiteSettings FetchNonAsync(Guid siteId)
-        {
-            SiteSettings item
-                = dbContext.Sites.AsNoTracking().SingleOrDefault(x => x.Id.Equals(siteId));
+        //public ISiteSettings FetchNonAsync(Guid siteId)
+        //{
+        //    SiteSettings item
+        //        = dbContext.Sites.AsNoTracking().SingleOrDefault(x => x.Id.Equals(siteId));
 
-            return item;
-        }
+        //    return item;
+        //}
 
         public async Task<ISiteSettings> Fetch(
             string hostName,
@@ -113,42 +113,42 @@ namespace cloudscribe.Core.Storage.EF
 
         }
 
-        public ISiteSettings FetchNonAsync(string hostName)
-        {
-            var host = dbContext.SiteHosts.FirstOrDefault(x => x.HostName == hostName);
-            if (host == null)
-            {
-                var query = from s in dbContext.Sites
-                            .Take(1)
-                            orderby s.CreatedUtc ascending
-                            select s;
+        //public ISiteSettings FetchNonAsync(string hostName)
+        //{
+        //    var host = dbContext.SiteHosts.FirstOrDefault(x => x.HostName == hostName);
+        //    if (host == null)
+        //    {
+        //        var query = from s in dbContext.Sites
+        //                    .Take(1)
+        //                    orderby s.CreatedUtc ascending
+        //                    select s;
 
-                return query.AsNoTracking().SingleOrDefault<SiteSettings>();
-            }
+        //        return query.AsNoTracking().SingleOrDefault<SiteSettings>();
+        //    }
 
-            return dbContext.Sites.AsNoTracking().SingleOrDefault(x => x.Id == host.SiteGuid);
+        //    return dbContext.Sites.AsNoTracking().SingleOrDefault(x => x.Id == host.SiteGuid);
 
-        }
+        //}
 
-        public ISiteSettings FetchByFolderNameNonAsync(string folderName)
-        {
-            var site = dbContext.Sites
-                .AsNoTracking()
-                .FirstOrDefault(x => x.SiteFolderName == folderName);
+        //public ISiteSettings FetchByFolderNameNonAsync(string folderName)
+        //{
+        //    var site = dbContext.Sites
+        //        .AsNoTracking()
+        //        .FirstOrDefault(x => x.SiteFolderName == folderName);
 
-            if (site == null)
-            {
-                var query = from s in dbContext.Sites
-                            .Take(1)
-                            orderby s.CreatedUtc ascending
-                            select s;
+        //    if (site == null)
+        //    {
+        //        var query = from s in dbContext.Sites
+        //                    .Take(1)
+        //                    orderby s.CreatedUtc ascending
+        //                    select s;
 
-                site = query.AsNoTracking().FirstOrDefault<SiteSettings>();
-            }
+        //        site = query.AsNoTracking().FirstOrDefault<SiteSettings>();
+        //    }
 
-            return site;
+        //    return site;
 
-        }
+        //}
 
         public Task<int> GetCount(CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -235,16 +235,16 @@ namespace cloudscribe.Core.Storage.EF
             return items;
         }
 
-        public List<ISiteHost> GetAllHostsNonAsync()
-        {
-            var query = from x in dbContext.SiteHosts
-                        orderby x.HostName ascending
-                        select x;
+        //public List<ISiteHost> GetAllHostsNonAsync()
+        //{
+        //    var query = from x in dbContext.SiteHosts
+        //                orderby x.HostName ascending
+        //                select x;
 
-            var items = query.AsNoTracking().ToList<ISiteHost>();
+        //    var items = query.AsNoTracking().ToList<ISiteHost>();
 
-            return items;
-        }
+        //    return items;
+        //}
 
         public Task<int> GetHostCount(CancellationToken cancellationToken = default(CancellationToken))
         {

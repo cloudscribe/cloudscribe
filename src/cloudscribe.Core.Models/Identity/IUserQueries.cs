@@ -16,9 +16,11 @@ namespace cloudscribe.Core.Models
     public interface IUserQueries
     {
         // TODO: are these non-async methods needed/used anywhere?
-        bool LoginExistsInDB(Guid siteId, string loginName);
-        int GetCount(Guid siteId);
-
+        Task<bool> LoginExistsInDB(
+            Guid siteId, 
+            string loginName,
+            CancellationToken cancellationToken = default(CancellationToken));
+        
         Task<bool> EmailExistsInDB(
             Guid siteId,
             Guid userId,

@@ -145,12 +145,12 @@ namespace cloudscribe.Core.Identity
             return queries.GetPage(siteGuid, pageNumber, pageSize, userNameBeginsWith, sortMode, CancellationToken);
         }
 
-        public int GetCount(Guid siteGuid)
-        {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
+        //public int GetCount(Guid siteId)
+        //{
+        //    if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteGuid; }
 
-            return queries.GetCount(siteGuid);
-        }
+        //    return queries.GetCount(siteId);
+        //}
 
         public Task<int> CountUsers(Guid siteGuid, string userNameBeginsWith)
         {

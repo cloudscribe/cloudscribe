@@ -98,12 +98,12 @@ namespace cloudscribe.Core.Identity
 
             if (user.UserName.Length == 0)
             {
-                user.UserName = SuggestLoginNameFromEmail(siteSettings.Id, user.Email);
+                user.UserName = await SuggestLoginNameFromEmail(siteSettings.Id, user.Email);
             }
 
             if (user.DisplayName.Length == 0)
             {
-                user.DisplayName = SuggestLoginNameFromEmail(siteSettings.Id, user.Email);
+                user.DisplayName = await SuggestLoginNameFromEmail(siteSettings.Id, user.Email);
             }
 
             cancellationToken.ThrowIfCancellationRequested();
@@ -1311,14 +1311,14 @@ namespace cloudscribe.Core.Identity
 
         #region Helpers
 
-        public string SuggestLoginNameFromEmail(Guid siteGuid, string email)
+        public async Task<string> SuggestLoginNameFromEmail(Guid siteGuid, string email)
         {
             if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
 
             var login = email.Substring(0, email.IndexOf("@"));
             var offset = 1;
             // don't think we should make this async inside a loop
-            while (queries.LoginExistsInDB(siteGuid, login))
+            while (await queries.LoginExistsInDB(siteGuid, login).ConfigureAwait(false))
             {
                 offset += 1;
                 login = email.Substring(0, email.IndexOf("@")) + offset.ToInvariantString();
