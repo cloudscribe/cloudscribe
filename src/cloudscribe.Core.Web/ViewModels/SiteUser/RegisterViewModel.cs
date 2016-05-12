@@ -14,14 +14,12 @@ namespace cloudscribe.Core.Web.ViewModels.Account
 {
     public class RegisterViewModel
     {
+        
         [Display(Name = "UserId")]
-        public int UserId { get; set; } = -1;
+        public Guid UserId { get; set; } = Guid.Empty;
 
-        [Display(Name = "UserGuid")]
-        public Guid UserGuid { get; set; } = Guid.Empty;
-
-        [Display(Name = "SiteGuid")]
-        public Guid SiteGuid { get; set; } = Guid.Empty;
+        [Display(Name = "SiteId")]
+        public Guid SiteId { get; set; } = Guid.Empty;
 
         [Required]
         [EmailAddress(ErrorMessage = "invalid email format")]

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:              Joe Audette
 // Created:             2016-02-04
-// Last Modified:       2016-02-04
+// Last Modified:       2016-05-10
 // 
 
 //  2016-02-04 found this blog post by Ben Foster
@@ -29,7 +29,7 @@ namespace cloudscribe.Core.Web.Components
     public class SiteResolver : ITenantResolver<SiteSettings>
     {
         public SiteResolver(
-            ISiteRepository siteRepository,
+            ISiteQueries siteRepository,
             SiteDataProtector dataProtector,
             IOptions<MultiTenantOptions> multiTenantOptions)
         {
@@ -39,7 +39,7 @@ namespace cloudscribe.Core.Web.Components
         }
 
         private MultiTenantOptions multiTenantOptions;
-        private ISiteRepository siteRepo;
+        private ISiteQueries siteRepo;
         private SiteDataProtector dataProtector;
 
         public Task<TenantContext<SiteSettings>> ResolveAsync(HttpContext context)

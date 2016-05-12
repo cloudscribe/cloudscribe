@@ -138,7 +138,7 @@ namespace cloudscribe.Core.Web.Components
 
                 await output("CreatingRolesAndAdminUser", true);
 
-                bool result = await siteManager.CreateRequiredRolesAndAdminUser(newSite);
+                await siteManager.CreateRequiredRolesAndAdminUser(newSite);
 
                 existingSiteCount = await siteManager.ExistingSiteCount();
                 if(existingSiteCount > 0)
@@ -155,27 +155,23 @@ namespace cloudscribe.Core.Web.Components
                 // ie create an admin user if no users exist
                 if (contextAccessor.HttpContext.Request.Host.HasValue)
                 {
-                    ISiteSettings site = await siteManager.Fetch(contextAccessor.HttpContext.Request.Host.Value);
+                    var site = await siteManager.Fetch(contextAccessor.HttpContext.Request.Host.Value);
                     if (site != null)
                     {
-                        int roleCount = await siteManager.GetRoleCount(site.SiteGuid);
-                        bool roleResult = true;
+                        int roleCount = await siteManager.GetRoleCount(site.Id);
                         if (roleCount == 0)
                         {
                             await output("CreatingRoles", true);
-
-                            roleResult = await siteManager.EnsureRequiredRoles(site);
+                            await siteManager.EnsureRequiredRoles(site);
                         }
-
-                        if (roleResult)
+ 
+                        int userCount = await siteManager.GetUserCount(site.Id);
+                        if (userCount == 0)
                         {
-                            int userCount = await siteManager.GetUserCount(site.SiteGuid);
-                            if (userCount == 0)
-                            {
-                                await output("CreatingAdminUser", true);
-                                await siteManager.CreateAdminUser(site);
-                            }
+                            await output("CreatingAdminUser", true);
+                            await siteManager.CreateAdminUser(site);
                         }
+                        
                     }
                 }
                 

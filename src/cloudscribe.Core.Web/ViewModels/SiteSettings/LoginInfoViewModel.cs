@@ -12,7 +12,7 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
 {
     public class LoginInfoViewModel
     {
-        public Guid SiteGuid { get; set; } = Guid.Empty;
+        public Guid SiteId { get; set; } = Guid.Empty;
 
         public string LoginInfoTop { get; set; } = string.Empty;
 

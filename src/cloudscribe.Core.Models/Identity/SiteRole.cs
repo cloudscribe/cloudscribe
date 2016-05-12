@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-20
-// Last Modified:			2016-04-27
+// Last Modified:			2016-05-12
 // 
 // You must not remove this notice, or any other, from this software.
 
@@ -15,13 +15,13 @@ namespace cloudscribe.Core.Models
     {
 
         public SiteRole()
-        { }
+        {
+            Id = Guid.NewGuid();
+        }
 
         
-        //public int RoleId { get; set; } = -1;
-        public Guid RoleGuid { get; set; } = Guid.Empty;
-        //public int SiteId { get; set; } = -1;
-        public Guid SiteGuid { get; set; } = Guid.Empty;
+        public Guid Id { get; set; } = Guid.Empty;
+        public Guid SiteId { get; set; } = Guid.Empty;
 
         private string roleName = string.Empty;
         public string RoleName
@@ -49,10 +49,10 @@ namespace cloudscribe.Core.Models
             SiteRole r = new SiteRole();
             r.DisplayName = i.DisplayName;
             r.MemberCount = i.MemberCount;
-            r.RoleGuid = i.RoleGuid;
+            r.Id = i.Id;
            // r.RoleId = i.RoleId;
             r.RoleName = i.RoleName;
-            r.SiteGuid = i.SiteGuid;
+            r.SiteId = i.SiteId;
             //r.SiteId = i.SiteId;
 
 

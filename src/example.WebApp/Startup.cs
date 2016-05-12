@@ -2,7 +2,7 @@
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Geography;
 using cloudscribe.Core.Models.Setup;
-using cloudscribe.Core.Repositories.EF;
+using cloudscribe.Core.Storage.EF;
 using cloudscribe.Core.Web;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.Navigation;
@@ -253,7 +253,7 @@ namespace example.WebApp
                 StartupDataUtils.InitializeDatabaseAsync(app.ApplicationServices).Wait();
 
                 // this one is only needed if using cloudscribe Logging with EF as the logging storage
-                DbInitializer.InitializeDatabaseAsync(app.ApplicationServices).Wait();
+                LoggingDbInitializer.InitializeDatabaseAsync(app.ApplicationServices).Wait();
             }
         }
         
@@ -287,27 +287,12 @@ namespace example.WebApp
             switch (devOptions.DbPlatform)
             {
                 case "ef7":
+                    var connectionString = configuration["Data:EF7ConnectionOptions:ConnectionString"];
+                    services.AddCloudscribeCoreEFStorage(connectionString);
 
-                    services
-                        .AddEntityFramework()
-                        .AddSqlServer()
-                        .AddDbContext<CoreDbContext>(options =>
-                        {
-                            options.UseSqlServer(configuration["Data:EF7ConnectionOptions:ConnectionString"]);
-                        })
-                        .AddDbContext<LoggingDbContext>(options =>
-                        {
-                            options.UseSqlServer(configuration["Data:EF7ConnectionOptions:ConnectionString"]);
-                        });
-
-                    services.AddScoped<ICoreModelMapper, SqlServerCoreModelMapper>();
-                    services.AddScoped<ILogModelMapper, SqlServerLogModelMapper>();
-
-                    services.AddScoped<ISiteRepository, SiteRepository>();
-                    services.AddScoped<IUserRepository, UserRepository>();
-                    services.AddScoped<IGeoRepository, GeoRepository>();
-                    services.AddScoped<IDataPlatformInfo, DataPlatformInfo>();
-                    services.AddScoped<ILogRepository, LogRepository>();
+                    // only needed if using cloudscribe logging with EF storage
+                    services.AddCloudscribeLoggingEFStorage(connectionString);
+                    
 
                     break;
             }

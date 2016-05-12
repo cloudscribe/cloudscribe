@@ -6,11 +6,11 @@ namespace cloudscribe.Core.Models.Geography
 {
     public interface ICurrency
     {
+        Guid Id { get; set; }
         string Code { get; set; }
         DateTime Created { get; set; }
         string DecimalPlaces { get; set; }
         string DecimalPointChar { get; set; }
-        Guid Guid { get; set; }
         DateTime LastModified { get; set; }
         string SymbolLeft { get; set; }
         string SymbolRight { get; set; }

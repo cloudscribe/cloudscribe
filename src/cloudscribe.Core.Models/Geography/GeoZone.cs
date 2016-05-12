@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-11-02
-// Last Modified:			2015-12-08
+// Last Modified:			2016-05-12
 // 
 
 using System;
@@ -12,10 +12,12 @@ namespace cloudscribe.Core.Models.Geography
     public class GeoZone : IGeoZone
     {
         public GeoZone()
-        { }
+        {
+            Id = Guid.NewGuid();
+        }
         
-        public Guid Guid { get; set; } = Guid.Empty;
-        public Guid CountryGuid { get; set; } = Guid.Empty;
+        public Guid Id { get; set; } = Guid.Empty;
+        public Guid CountryId { get; set; } = Guid.Empty;
 
         private string name = string.Empty;
         public string Name
@@ -34,8 +36,8 @@ namespace cloudscribe.Core.Models.Geography
         public static GeoZone FromIGeoZone(IGeoZone igeo)
         {
             GeoZone state = new GeoZone();
-            state.Guid = igeo.Guid;
-            state.CountryGuid = igeo.CountryGuid;
+            state.Id = igeo.Id;
+            state.CountryId = igeo.CountryId;
             state.Code = igeo.Code;
             state.Name = igeo.Name;
 

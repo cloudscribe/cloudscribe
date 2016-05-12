@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-17
-// Last Modified:		    2016-04-27
+// Last Modified:		    2016-05-10
 // 
 //
 
@@ -27,7 +27,8 @@ namespace cloudscribe.Core.Identity
     {
         public SiteRoleManager(
             SiteSettings currentSite,
-            IUserRepository userRepository,
+            IUserCommands userCommands,
+            IUserQueries userQueries,
             IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
             IRoleStore<TRole> roleStore,
             IEnumerable<IRoleValidator<TRole>> roleValidators,
@@ -44,11 +45,14 @@ namespace cloudscribe.Core.Identity
                 contextAccessor)
         {
             if (currentSite == null) { throw new ArgumentNullException(nameof(currentSite)); }
-            if (userRepository == null) { throw new ArgumentNullException(nameof(userRepository)); }
             if (roleStore == null) { throw new ArgumentNullException(nameof(roleStore)); }
+            if (userCommands == null) { throw new ArgumentNullException(nameof(userCommands)); }
+            commands = userCommands;
+
+            if (userQueries == null) { throw new ArgumentNullException(nameof(userQueries)); }
+            queries = userQueries;
 
             siteSettings = currentSite;
-            userRepo = userRepository;
             this.logger = logger;
             multiTenantOptions = multiTenantOptionsAccessor.Value;
             _context = contextAccessor?.HttpContext;
@@ -59,7 +63,8 @@ namespace cloudscribe.Core.Identity
         private CancellationToken CancellationToken => _context?.RequestAborted ?? CancellationToken.None;
 
         private MultiTenantOptions multiTenantOptions;
-        private IUserRepository userRepo;
+        private IUserCommands commands;
+        private IUserQueries queries;
         private ILogger logger;
         private ISiteSettings siteSettings = null;
         private ISiteSettings Site
@@ -75,7 +80,7 @@ namespace cloudscribe.Core.Identity
         {
             if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
 
-            return await userRepo.CountOfRoles(siteGuid, searchInput, CancellationToken);
+            return await queries.CountOfRoles(siteGuid, searchInput, CancellationToken);
         }
 
         public async Task<IList<ISiteRole>> GetRolesBySite(
@@ -86,7 +91,7 @@ namespace cloudscribe.Core.Identity
         {
             if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
 
-            return await userRepo.GetRolesBySite(siteGuid, searchInput, pageNumber, pageSize, CancellationToken);
+            return await queries.GetRolesBySite(siteGuid, searchInput, pageNumber, pageSize, CancellationToken);
 
         }
 
@@ -98,92 +103,94 @@ namespace cloudscribe.Core.Identity
         /// <returns></returns>
         public async Task<ISiteRole> FetchRole(Guid roleGuid)
         {
-            return await userRepo.FetchRole(roleGuid, CancellationToken);
+            return await queries.FetchRole(roleGuid, CancellationToken);
         }
 
         // again need to consolidate with RoleStore.UpdateAsync
-        public async Task<bool> SaveRole(ISiteRole role)
+        public async Task SaveRole(ISiteRole role)
         {
-            return await userRepo.SaveRole(role, CancellationToken);
+            if(role.Id == Guid.Empty)
+            {
+                // TODO: consider if this is the correct place to generate the id
+                role.Id = Guid.NewGuid();
+                await commands.CreateRole(role, CancellationToken);
+            }
+            else
+            {
+                await commands.UpdateRole(role, CancellationToken);
+            }
+            
         }
 
-        public async Task<bool> DeleteUserRolesByRole(Guid roleGuid)
+        public async Task DeleteUserRolesByRole(Guid roleGuid)
         {
-            return await userRepo.DeleteUserRolesByRole(roleGuid, CancellationToken);
+            await commands.DeleteUserRolesByRole(roleGuid, CancellationToken);
         }
 
-        public async Task<bool> DeleteRole(Guid roleGuid)
+        public async Task DeleteRole(Guid roleGuid)
         {
-            return await userRepo.DeleteRole(roleGuid, CancellationToken);
+            await commands.DeleteRole(roleGuid, CancellationToken);
         }
 
         public async Task<bool> RoleExists(Guid siteGuid, string roleName)
         {
             if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
 
-            return await userRepo.RoleExists(siteGuid, roleName, CancellationToken);
+            return await queries.RoleExists(siteGuid, roleName, CancellationToken);
         }
 
         public async Task<IList<IUserInfo>> GetUsersInRole(Guid siteGuid, Guid roleGuid, string searchInput, int pageNumber, int pageSize)
         {
             if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
 
-            return await userRepo.GetUsersInRole(siteGuid, roleGuid, searchInput, pageNumber, pageSize, CancellationToken);
+            return await queries.GetUsersInRole(siteGuid, roleGuid, searchInput, pageNumber, pageSize, CancellationToken);
         }
 
         public async Task<int> CountUsersInRole(Guid siteGuid, Guid roleGuid, string searchInput)
         {
             if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
 
-            return await userRepo.CountUsersInRole(siteGuid, roleGuid, searchInput, CancellationToken);
+            return await queries.CountUsersInRole(siteGuid, roleGuid, searchInput, CancellationToken);
         }
 
         public async Task<IList<IUserInfo>> GetUsersNotInRole(Guid siteGuid, Guid roleGuid, string searchInput, int pageNumber, int pageSize)
         {
             if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
 
-            return await userRepo.GetUsersNotInRole(siteGuid, roleGuid, searchInput, pageNumber, pageSize, CancellationToken);
+            return await queries.GetUsersNotInRole(siteGuid, roleGuid, searchInput, pageNumber, pageSize, CancellationToken);
         }
 
         public async Task<int> CountUsersNotInRole(Guid siteGuid, Guid roleGuid, string searchInput)
         {
             if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
 
-            return await userRepo.CountUsersNotInRole(siteGuid, roleGuid, searchInput, CancellationToken);
+            return await queries.CountUsersNotInRole(siteGuid, roleGuid, searchInput, CancellationToken);
         }
 
-        public async Task<bool> AddUserToRole(ISiteUser user, ISiteRole role)
+        public async Task AddUserToRole(ISiteUser user, ISiteRole role)
         {
             if (user == null) { throw new ArgumentNullException(nameof(user)); }
             if (role == null) { throw new ArgumentNullException(nameof(role)); }
-            if(role.SiteGuid != user.SiteGuid) { throw new ArgumentException("user and role must have the same siteid"); }
+            if(role.SiteId != user.SiteId) { throw new ArgumentException("user and role must have the same siteid"); }
 
-            bool result = await userRepo.AddUserToRole(role.RoleGuid, user.UserGuid, CancellationToken);
-            if (result)
-            {
-                user.RolesChanged = true;
-                bool result2 = await userRepo.Save(user, CancellationToken);
-            }
-
-            return result;
-
+            await commands.AddUserToRole(role.Id, user.Id, CancellationToken);
+            
+            user.RolesChanged = true;
+            await commands.Update(user, CancellationToken);
+            
+            
         }
 
-        public async Task<bool> RemoveUserFromRole(ISiteUser user, ISiteRole role)
+        public async Task RemoveUserFromRole(ISiteUser user, ISiteRole role)
         {
             if (user == null) { throw new ArgumentNullException(nameof(user)); }
             if (role == null) { throw new ArgumentNullException(nameof(role)); }
 
-            bool result = await userRepo.RemoveUserFromRole(role.RoleGuid, user.UserGuid, CancellationToken);
-
-            if (result)
-            {
-                user.RolesChanged = true;
-                bool result2 = await userRepo.Save(user, CancellationToken);
-            }
-
-            return result;
-
+            await commands.RemoveUserFromRole(role.Id, user.Id, CancellationToken);
+            
+            user.RolesChanged = true;
+            await commands.Update(user, CancellationToken);
+           
         }
 
     }

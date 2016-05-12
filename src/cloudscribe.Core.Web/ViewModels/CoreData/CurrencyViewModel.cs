@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-11-24
-// Last Modified:			2014-11-25
+// Last Modified:			2016-05-11
 //
 
 //using cloudscribe.Resources;
@@ -14,12 +14,12 @@ namespace cloudscribe.Core.Web.ViewModels.CoreData
 {
     public class CurrencyViewModel
     {
-        private Guid guid = Guid.Empty;
+        private Guid id = Guid.Empty;
 
-        public Guid Guid
+        public Guid CurrencyId
         {
-            get { return guid; }
-            set { guid = value; }
+            get { return id; }
+            set { id = value; }
         }
 
         private string title = string.Empty;

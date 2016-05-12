@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-12-01
-// Last Modified:			2016-01-30
+// Last Modified:			2016-05-12
 // 
 
 using System;
@@ -11,9 +11,13 @@ namespace cloudscribe.Core.Models
 {
     public class UserLocation : IUserLocation
     {
-        public Guid RowId { get; set; } = Guid.Empty;
-        public Guid UserGuid { get; set; } = Guid.Empty;
-        public Guid SiteGuid { get; set; } = Guid.Empty;
+        public UserLocation()
+        {
+            Id = Guid.NewGuid();
+        }
+        public Guid Id { get; set; } = Guid.Empty;
+        public Guid UserId { get; set; } = Guid.Empty;
+        public Guid SiteId { get; set; } = Guid.Empty;
 
         private string ipAddress = string.Empty;
         public string IpAddress
@@ -96,10 +100,10 @@ namespace cloudscribe.Core.Models
             l.Latitude = i.Latitude;
             l.Longitude = i.Longitude;
             l.Region = i.Region;
-            l.RowId = i.RowId;
-            l.SiteGuid = i.SiteGuid;
+            l.Id = i.Id;
+            l.SiteId = i.SiteId;
             l.TimeZone = i.TimeZone;
-            l.UserGuid = i.UserGuid;
+            l.UserId = i.UserId;
 
             return l;
         }

@@ -533,7 +533,7 @@ namespace cloudscribe.Core.Models
             s.RequiresQuestionAndAnswer = i.RequiresQuestionAndAnswer;
             s.SignEmailWithDkim = i.SignEmailWithDkim;
             s.SiteFolderName = i.SiteFolderName;
-            s.SiteGuid = i.SiteGuid;
+            s.Id = i.Id;
             s.AliasId = i.AliasId;
             s.SiteIsClosed = i.SiteIsClosed;
             s.SiteIsClosedMessage = i.SiteIsClosedMessage;

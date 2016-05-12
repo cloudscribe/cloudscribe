@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-27
-// Last Modified:		    2016-04-27
+// Last Modified:		    2016-05-10
 // 
 
 //TODO: we need to override many or most of the methods of the base class
@@ -32,7 +32,7 @@ namespace cloudscribe.Core.Identity
             SiteUserManager<TUser> siteUserManager,
             IHttpContextAccessor contextAccessor,
             IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
-            ISiteRepository siteRepository,
+            ISiteQueries siteQueries,
             IUserClaimsPrincipalFactory<TUser> claimsFactory,
             IOptions<IdentityOptions> optionsAccessor,
             ILogger<SignInManager<TUser>> logger)
@@ -45,8 +45,12 @@ namespace cloudscribe.Core.Identity
             this.siteUserManager = siteUserManager;
             context = contextAccessor.HttpContext;
             this.logger = logger;
+
             multiTenantOptions = multiTenantOptionsAccessor.Value;
-            siteRepo = siteRepository;
+            
+            if (siteQueries == null) { throw new ArgumentNullException(nameof(siteQueries)); }
+            queries = siteQueries;
+
             this.options = optionsAccessor.Value;
         }
         
@@ -54,13 +58,14 @@ namespace cloudscribe.Core.Identity
         private HttpContext context;
         private ILogger<SignInManager<TUser>> logger;
         private MultiTenantOptions multiTenantOptions;
-        private ISiteRepository siteRepo;
+        private ISiteQueries queries;
         private IdentityOptions options;
 
 
         //https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNet.Identity/SignInManager.cs
 
         //here we need to override the authenticationscheme per site 
+        //TODO: this problem got solved so need to comment out these overides one at a time and verify we don't need them anymore
 
         public override async Task SignInAsync(TUser user, AuthenticationProperties authenticationProperties, string authenticationMethod = null)
         {
@@ -167,7 +172,7 @@ namespace cloudscribe.Core.Identity
                 {
                     if (multiTenantOptions.UseRelatedSitesMode)
                     {
-                        ISiteSettings site = siteRepo.FetchNonAsync(multiTenantOptions.RelatedSiteGuid);
+                        ISiteSettings site = queries.FetchNonAsync(multiTenantOptions.RelatedSiteGuid);
 
                         return BuildFilteredAuthList(site, all);
                     }

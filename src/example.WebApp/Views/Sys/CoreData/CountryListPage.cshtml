@@ -11,14 +11,14 @@
             @if (Model.UseModals)
             {
                 <a class="btn btn-xs btn-default" asp-action="CountryEdit" asp-controller="CoreData"
-                   asp-route-guid="@Guid.Empty"
+                   asp-route-countryid="@Guid.Empty"
                    asp-route-returnPageNumber="@Model.Paging.CurrentPage"
                    bs-modal-link="true">CommonResources.NewCountry</a>
             }
             else
             {
                 <a class="btn btn-xs btn-default" asp-action="CountryEdit" asp-controller="CoreData"
-                   asp-route-guid="@Guid.Empty"
+                   asp-route-countryid="@Guid.Empty"
                    asp-route-pagenumber="@Model.Paging.CurrentPage">CommonResources.NewCountry</a>
             }
             
@@ -39,13 +39,13 @@
  @if (Model.UseModals)
  {
     <a class="btn btn-xs btn-default" asp-action="CountryEdit" asp-controller="CoreData"
-       asp-route-guid="@c.Guid"
+       asp-route-countryId="@c.Id"
        asp-route-partial="true"
        asp-route-returnpagenumber="@Model.Paging.CurrentPage"
        bs-modal-link="true">CommonResources.Edit</a>
 
     <a class="btn btn-xs btn-default" asp-action="StateListPage" asp-controller="CoreData"
-       asp-route-countryGuid="@c.Guid"
+       asp-route-countryId="@c.Id"
        asp-route-partial="true"
        asp-route-pageNumber="1"
        asp-route-pageSize="-1"
@@ -57,11 +57,11 @@
  else
  {
     <a class="btn btn-xs btn-default" asp-action="CountryEdit" asp-controller="CoreData"
-       asp-route-guid="@c.Guid"
+       asp-route-countryId="@c.Id"
        asp-route-returnPageNumber="@Model.Paging.CurrentPage">CommonResources.Edit</a>
 
     <a class="btn btn-xs btn-default" asp-action="StateListPage" asp-controller="CoreData"
-       asp-route-countryGuid="@c.Guid"
+       asp-route-countryId="@c.Id"
        asp-route-crp="@Model.Paging.CurrentPage">CommonResources.States</a>
 
  }

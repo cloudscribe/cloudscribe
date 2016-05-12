@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2015-09-11
+// Last Modified:			2016-05-11
 // 
 
 //using cloudscribe.Configuration.DataAnnotations;
@@ -17,11 +17,9 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
 {
     public class SocialLoginSettingsViewModel
     {
+        
         [Display(Name = "SiteId")]
-        public int SiteId { get; set; } = -1;
-
-        [Display(Name = "SiteGuid")]
-        public Guid SiteGuid { get; set; } = Guid.Empty;
+        public Guid SiteId { get; set; } = Guid.Empty;
 
         //[Required(ErrorMessageResourceName = "SiteNameRequired", ErrorMessageResourceType = typeof(CommonResources))]
         //[StringLengthWithConfig(MinimumLength = 3, MaximumLength = 255, MinLengthKey = "SiteNameMinLength", MaxLengthKey = "SiteNameMaxLength", ErrorMessageResourceName = "SiteNameLengthErrorFormat", ErrorMessageResourceType = typeof(CommonResources))]

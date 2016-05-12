@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-11-02
-// Last Modified:			2015-12-08
+// Last Modified:			2016-05-12
 // 
 
 
@@ -14,9 +14,11 @@ namespace cloudscribe.Core.Models.Geography
     {
 
         public GeoCountry()
-        { }
+        {
+            Id = Guid.NewGuid();
+        }
 
-        public Guid Guid { get; set; } = Guid.Empty;
+        public Guid Id { get; set; } = Guid.Empty;
 
         private string name = string.Empty;
         public string Name
@@ -43,7 +45,7 @@ namespace cloudscribe.Core.Models.Geography
         public static GeoCountry FromIGeoCountry(IGeoCountry igeo)
         {
             GeoCountry country = new GeoCountry();
-            country.Guid = igeo.Guid;
+            country.Id = igeo.Id;
             country.ISOCode2 = igeo.ISOCode2;
             country.ISOCode3 = igeo.ISOCode3;
             country.Name = igeo.Name;

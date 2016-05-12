@@ -15,13 +15,13 @@ namespace cloudscribe.Core.Web.ViewModels.CoreData
     public class GeoCountryViewModel : IGeoCountry
     {
 
-        private Guid guid = Guid.Empty;
+        private Guid id = Guid.Empty;
 
         //[Display(Name = "Guid")]
-        public Guid Guid
+        public Guid Id
         {
-            get { return guid; }
-            set { guid = value; }
+            get { return id; }
+            set { id = value; }
         }
 
 
@@ -67,7 +67,7 @@ namespace cloudscribe.Core.Web.ViewModels.CoreData
         public static GeoCountryViewModel FromIGeoCountry(IGeoCountry geoCountry)
         {
             GeoCountryViewModel model = new GeoCountryViewModel();
-            model.Guid = geoCountry.Guid;
+            model.Id = geoCountry.Id;
             model.Name = geoCountry.Name;
             model.ISOCode2 = geoCountry.ISOCode2;
             model.ISOCode3 = geoCountry.ISOCode3;

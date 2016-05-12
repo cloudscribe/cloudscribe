@@ -2,14 +2,13 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-22
-// Last Modified:			2016-04-29
+// Last Modified:			2016-05-10
 // 
 
 using cloudscribe.Core.Models;
+using Microsoft.AspNet.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.OptionsModel;
-using Microsoft.AspNet.Http;
-using Microsoft.AspNet.DataProtection;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -22,8 +21,10 @@ namespace cloudscribe.Core.Web.Components
 
         public SiteManager(
             SiteSettings currentSite,
-            ISiteRepository siteRepository,
-            IUserRepository userRepository,
+            ISiteCommands siteCommands,
+            ISiteQueries siteQueries,
+            IUserCommands userCommands,
+            IUserQueries userQueries,
             SiteDataProtector dataProtector,
             IHttpContextAccessor contextAccessor,
             ILogger<SiteManager> logger,
@@ -31,9 +32,11 @@ namespace cloudscribe.Core.Web.Components
             IOptions<SiteConfigOptions> setupOptionsAccessor
             )
         {
-            
-            siteRepo = siteRepository;
-            userRepo = userRepository;
+
+            commands = siteCommands;
+            queries = siteQueries;
+            this.userCommands = userCommands;
+            this.userQueries = userQueries;
             multiTenantOptions = multiTenantOptionsAccessor.Value;
             setupOptions = setupOptionsAccessor.Value;
             _context = contextAccessor?.HttpContext;
@@ -51,8 +54,10 @@ namespace cloudscribe.Core.Web.Components
         
         private MultiTenantOptions multiTenantOptions;
         private SiteConfigOptions setupOptions;
-        private ISiteRepository siteRepo;
-        private IUserRepository userRepo;
+        private ISiteCommands commands;
+        private ISiteQueries queries;
+        private IUserQueries userQueries;
+        private IUserCommands userCommands;
         private ISiteSettings siteSettings = null;
         private ISiteSettings Site
         {
@@ -75,13 +80,13 @@ namespace cloudscribe.Core.Web.Components
             int pageNumber,
             int pageSize)
         {
-            return siteRepo.GetPageOtherSites(currentSiteGuid, pageNumber, pageSize, CancellationToken);
+            return queries.GetPageOtherSites(currentSiteGuid, pageNumber, pageSize, CancellationToken);
 
         }
 
         public Task<int> CountOtherSites(Guid currentSiteGuid)
         {
-            return siteRepo.CountOtherSites(currentSiteGuid, CancellationToken);
+            return queries.CountOtherSites(currentSiteGuid, CancellationToken);
         }
 
         //public int GetSiteIdByFolderNonAsync(string folderName)
@@ -91,21 +96,21 @@ namespace cloudscribe.Core.Web.Components
 
         public async Task<ISiteSettings> Fetch(Guid siteGuid)
         {
-            ISiteSettings site = await siteRepo.Fetch(siteGuid, CancellationToken);
+            var site = await queries.Fetch(siteGuid, CancellationToken);
             dataProtector.UnProtect(site);
             return site;
         }
 
         public ISiteSettings FetchNonAsync(Guid siteGuid)
         {
-            ISiteSettings  site = siteRepo.FetchNonAsync(siteGuid);
+            var  site = queries.FetchNonAsync(siteGuid);
             dataProtector.UnProtect(site);
             return site;
         }
 
         public ISiteSettings FetchNonAsync(string host)
         {
-            ISiteSettings site = siteRepo.FetchNonAsync(host);
+            var site = queries.FetchNonAsync(host);
             dataProtector.UnProtect(site);
             return site;
         }
@@ -119,7 +124,7 @@ namespace cloudscribe.Core.Web.Components
 
         public async Task<ISiteSettings> Fetch(string hostname)
         {
-            ISiteSettings site = await siteRepo.Fetch(hostname, CancellationToken);
+            var site = await queries.Fetch(hostname, CancellationToken);
             dataProtector.UnProtect(site);
             return site;
         }
@@ -132,10 +137,10 @@ namespace cloudscribe.Core.Web.Components
         /// <returns></returns>
         public async Task<bool> FolderNameIsAvailable(ISiteSettings requestingSite, string requestedFolderName)
         {
-            var matchingSite = await siteRepo.FetchByFolderName(requestedFolderName, CancellationToken);
+            var matchingSite = await queries.FetchByFolderName(requestedFolderName, CancellationToken);
             if(matchingSite == null) { return true; }
             if(matchingSite.SiteFolderName != requestedFolderName) { return true; }
-            if(matchingSite.SiteGuid == requestingSite.SiteGuid) { return true; }
+            if(matchingSite.Id == requestingSite.Id) { return true; }
 
             return false;
 
@@ -145,13 +150,13 @@ namespace cloudscribe.Core.Web.Components
         {
             if (string.IsNullOrWhiteSpace(requestedAliasId)) return false;
             if (requestedAliasId.Length > 36) return false;
-            var list = await siteRepo.GetList(CancellationToken).ConfigureAwait(false);
+            var list = await queries.GetList(CancellationToken).ConfigureAwait(false);
             
             foreach(var s in list)
             {
                 if(s.AliasId == requestedAliasId)
                 {
-                    if ((requestingSiteGuid == s.SiteGuid)) return true;
+                    if ((requestingSiteGuid == s.Id)) return true;
 
                     return false;
 
@@ -162,13 +167,22 @@ namespace cloudscribe.Core.Web.Components
 
         }
 
-        public async Task<bool> Save(ISiteSettings site)
+        public async Task Save(ISiteSettings site)
         {
             dataProtector.Protect(site);
-            return await siteRepo.Save(site, CancellationToken.None);
+            if(site.Id == Guid.Empty)
+            {
+                site.Id = Guid.NewGuid();
+                await commands.Update(site, CancellationToken.None);
+            }
+            else
+            {
+                await commands.Update(site, CancellationToken.None);
+            }
+            
         }
 
-        public async Task<bool> Delete(ISiteSettings site)
+        public async Task Delete(ISiteSettings site)
         {
             // we will need a provider model or something similar here to
             // allow other features and 3rd party features to delete
@@ -178,10 +192,10 @@ namespace cloudscribe.Core.Web.Components
             // a way to use dependency injection?
 
             // delete users
-            bool resultStep = await userRepo.DeleteUsersBySite(site.SiteGuid, CancellationToken.None); // this also deletes userroles claims logins
+            await userCommands.DeleteUsersBySite(site.Id, CancellationToken.None); // this also deletes userroles claims logins
 
-            resultStep = await userRepo.DeleteRolesBySite(site.SiteGuid, CancellationToken.None);
-            resultStep = await siteRepo.DeleteHostsBySite(site.SiteGuid, CancellationToken.None);
+            await userCommands.DeleteRolesBySite(site.Id, CancellationToken.None);
+            await commands.DeleteHostsBySite(site.Id, CancellationToken.None);
             //resultStep = await siteRepo.DeleteFoldersBySite(site.SiteGuid, CancellationToken.None);
 
 
@@ -197,7 +211,7 @@ namespace cloudscribe.Core.Web.Components
             // mp_SiteSettingsEx
             // mp_Sites
 
-            return await siteRepo.Delete(site.SiteGuid, CancellationToken.None);
+            await commands.Delete(site.Id, CancellationToken.None);
         }
 
         public async Task<SiteSettings> CreateNewSite(bool isServerAdminSite)
@@ -205,22 +219,25 @@ namespace cloudscribe.Core.Web.Components
             //string templateFolderPath = GetMessageTemplateFolder();
             //string templateFolder = templateFolderPath;
 
-            SiteSettings newSite = new SiteSettings();
+            var newSite = new SiteSettings();
+            newSite.Id = Guid.NewGuid();
             newSite.SiteName = "Sample Site";
             newSite.IsServerAdminSite = isServerAdminSite;
+            var siteNumber = 1 + await queries.CountOtherSites(Guid.Empty);
+            newSite.AliasId = $"tenant-{siteNumber}";
 
-            bool result = await CreateNewSite(newSite);
+            await CreateNewSite(newSite);
 
             return newSite;
 
 
         }
 
-        public async Task<bool> CreateNewSite(ISiteSettings newSite)
+        public async Task CreateNewSite(ISiteSettings newSite)
         {
-            if (siteRepo == null) { throw new ArgumentNullException("you must pass in an instance of ISiteRepository"); }
+            
             if (newSite == null) { throw new ArgumentNullException("you must pass in an instance of ISiteSettings"); }
-            if (newSite.SiteGuid != Guid.Empty) { throw new ArgumentException("newSite should not already have a site guid"); }
+            //if (newSite.SiteGuid != Guid.Empty) { throw new ArgumentException("newSite should not already have a site guid"); }
 
             //string templateFolderPath = GetMessageTemplateFolder();
             //string templateFolder = templateFolderPath;
@@ -231,26 +248,24 @@ namespace cloudscribe.Core.Web.Components
             // TODO: more configurable options?
             
             
-            bool result = await siteRepo.Save(newSite, CancellationToken.None);
+            await commands.Create(newSite, CancellationToken.None);
 
 
-            return result;
-
-        }
-
-        public async Task<bool> CreateRequiredRolesAndAdminUser(SiteSettings site)
-        {
-            bool result = await EnsureRequiredRoles(site);
-            result = await CreateAdminUser(site);
-
-            return result;
+            
 
         }
 
-        public async Task<bool> CreateAdminUser(ISiteSettings site)
+        public async Task CreateRequiredRolesAndAdminUser(SiteSettings site)
+        {
+            await EnsureRequiredRoles(site);
+            await CreateAdminUser(site);
+            
+        }
+
+        public async Task CreateAdminUser(ISiteSettings site)
         {
 
-            ISiteRole adminRole = await userRepo.FetchRole(site.SiteGuid, "Admins", CancellationToken);
+            var adminRole = await userQueries.FetchRole(site.Id, "Admins", CancellationToken);
 
             if(adminRole == null)
             {
@@ -263,8 +278,8 @@ namespace cloudscribe.Core.Web.Components
             // we could just skip creating this user since in related sites mode all users come from the first site
             // but then if the config were changed to not related sites mode there would be no admin user
             // so in related sites mode we create one only as a backup in case settings are changed later
-            int countOfSites = await siteRepo.GetCount(CancellationToken);
-            string siteDifferentiator = string.Empty;
+            var countOfSites = await queries.GetCount(CancellationToken);
+            var siteDifferentiator = string.Empty;
             if (
                 (countOfSites >= 1)
                 && (multiTenantOptions.UseRelatedSitesMode)
@@ -278,9 +293,8 @@ namespace cloudscribe.Core.Web.Components
             }
 
 
-            SiteUser adminUser = new SiteUser();
-            //adminUser.SiteId = site.SiteId;
-            adminUser.SiteGuid = site.SiteGuid;
+            var adminUser = new SiteUser();
+            adminUser.SiteId = site.Id;
             adminUser.Email = "admin" + siteDifferentiator + "@admin.com";
             adminUser.NormalizedEmail = adminUser.Email;
             adminUser.DisplayName = "Admin";
@@ -292,78 +306,71 @@ namespace cloudscribe.Core.Web.Components
             // clear text password will be hashed upon login
             // this format allows migrating from mojoportal
             adminUser.PasswordHash = "admin||0"; //pwd/salt/format 
-
-
-            bool result = await userRepo.Save(adminUser, CancellationToken.None);
             
-            result = await userRepo.AddUserToRole(
+            await userCommands.Create(adminUser, CancellationToken.None);
+            
+            await userCommands.AddUserToRole(
                 //adminRole.RoleId,
-                adminRole.RoleGuid,
+                adminRole.Id,
                // adminUser.UserId,
-                adminUser.UserGuid,
+                adminUser.Id,
                 CancellationToken.None);
 
-            return result;
+            
 
         }
 
-        public async Task<bool> EnsureRequiredRoles(ISiteSettings site)
+        public async Task EnsureRequiredRoles(ISiteSettings site)
         {
-            bool result = true;
-
-            bool exists = await userRepo.RoleExists(site.SiteGuid, "Admins", CancellationToken);
+            bool exists = await userQueries.RoleExists(site.Id, "Admins", CancellationToken);
 
             if(!exists)
             {
-                SiteRole adminRole = new SiteRole();
+                var adminRole = new SiteRole();
+                adminRole.Id = Guid.NewGuid();
                 adminRole.DisplayName = "Admins";
-                //adminRole.DisplayName = "Administrators";
-                //adminRole.SiteId = site.SiteId;
-                adminRole.SiteGuid = site.SiteGuid;
-                result = await userRepo.SaveRole(adminRole, CancellationToken.None);
+                adminRole.SiteId = site.Id;
+                await userCommands.CreateRole(adminRole, CancellationToken.None);
                 adminRole.DisplayName = "Administrators";
-                result = await userRepo.SaveRole(adminRole, CancellationToken.None);
+                await userCommands.UpdateRole(adminRole, CancellationToken.None);
             }
 
-            exists = await userRepo.RoleExists(site.SiteGuid, "Role Admins", CancellationToken);
+            exists = await userQueries.RoleExists(site.Id, "Role Admins", CancellationToken);
 
             if (!exists)
             {
-                SiteRole roleAdminRole = new SiteRole();
+                var roleAdminRole = new SiteRole();
+                roleAdminRole.Id = Guid.NewGuid();
                 roleAdminRole.DisplayName = "Role Admins";
-                //roleAdminRole.SiteId = site.SiteId;
-                roleAdminRole.SiteGuid = site.SiteGuid;
-                result = await userRepo.SaveRole(roleAdminRole, CancellationToken.None);
+                roleAdminRole.SiteId = site.Id;
+                await userCommands.CreateRole(roleAdminRole, CancellationToken.None);
 
                 roleAdminRole.DisplayName = "Role Administrators";
-                result = await userRepo.SaveRole(roleAdminRole, CancellationToken.None);
+                await userCommands.UpdateRole(roleAdminRole, CancellationToken.None);
             }
 
-            exists = await userRepo.RoleExists(site.SiteGuid, "Content Administrators", CancellationToken);
+            exists = await userQueries.RoleExists(site.Id, "Content Administrators", CancellationToken);
 
             if (!exists)
             {
-                SiteRole contentAdminRole = new SiteRole();
+                var contentAdminRole = new SiteRole();
+                contentAdminRole.Id = Guid.NewGuid();
                 contentAdminRole.DisplayName = "Content Administrators";
-                //contentAdminRole.SiteId = site.SiteId;
-                contentAdminRole.SiteGuid = site.SiteGuid;
-                result = await userRepo.SaveRole(contentAdminRole, CancellationToken.None);
+                contentAdminRole.SiteId = site.Id;
+                await userCommands.CreateRole(contentAdminRole, CancellationToken.None);
             }
 
-            exists = await userRepo.RoleExists(site.SiteGuid, "Authenticated Users", CancellationToken);
+            exists = await userQueries.RoleExists(site.Id, "Authenticated Users", CancellationToken);
 
             if (!exists)
             {
-                SiteRole authenticatedUserRole = new SiteRole();
+                var authenticatedUserRole = new SiteRole();
+                authenticatedUserRole.Id = Guid.NewGuid();
                 authenticatedUserRole.DisplayName = "Authenticated Users";
-               // authenticatedUserRole.SiteId = site.SiteId;
-                authenticatedUserRole.SiteGuid = site.SiteGuid;
-                result = await userRepo.SaveRole(authenticatedUserRole, CancellationToken.None);
+                authenticatedUserRole.SiteId = site.Id;
+                await userCommands.CreateRole(authenticatedUserRole, CancellationToken.None);
             }
-
             
-
-            return result;
 
         }
 
@@ -400,48 +407,48 @@ namespace cloudscribe.Core.Web.Components
 
         public Task<ISiteHost> GetSiteHost(string hostName)
         {
-            return siteRepo.GetSiteHost(hostName, CancellationToken);
+            return queries.GetSiteHost(hostName, CancellationToken);
         }
 
         public Task<List<ISiteHost>> GetSiteHosts(Guid siteGuid)
         {
-            return siteRepo.GetSiteHosts(siteGuid, CancellationToken);
+            return queries.GetSiteHosts(siteGuid, CancellationToken);
         }
 
-        public Task<bool> AddHost(Guid siteGuid, string hostName)
+        public async Task AddHost(Guid siteGuid, string hostName)
         {
-            return siteRepo.AddHost(siteGuid, hostName, CancellationToken);
+            await commands.AddHost(siteGuid, hostName, CancellationToken);
         }
 
-        public Task<bool> DeleteHost(Guid hostGuid)
+        public async Task DeleteHost(Guid hostGuid)
         {
-            return siteRepo.DeleteHost(hostGuid, CancellationToken);
+            await commands.DeleteHost(hostGuid, CancellationToken);
         }
 
         public Task<int> GetUserCount(Guid siteGuid)
         {
             // this is only used on setup controller
             // to make sure admin user was created
-            return userRepo.CountUsers(siteGuid, string.Empty, CancellationToken);
+            return userQueries.CountUsers(siteGuid, string.Empty, CancellationToken);
         }
 
         public Task<int> GetRoleCount(Guid siteGuid)
         {
             // this is only used on setup controller
             // to make sure admin user and role was created
-            return userRepo.CountOfRoles(siteGuid, string.Empty, CancellationToken);
+            return userQueries.CountOfRoles(siteGuid, string.Empty, CancellationToken);
         }
 
-        public Task<int> ExistingSiteCount()
+        public async Task<int> ExistingSiteCount()
         {
             try
             {
-                return siteRepo.GetCount(CancellationToken);
+                return await queries.GetCount(CancellationToken);
             }
             catch { }
             // errors are expected here before the db is initialized
             // so just return 0 if error here
-            return Task.FromResult(0);
+            return 0;
             
         }
 

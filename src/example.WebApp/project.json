@@ -8,9 +8,8 @@
     "dependencies": {
         "cloudscribe.Core.Identity": "1.0.0-*",
         "cloudscribe.Core.Models": "1.0.0-*",
-        "cloudscribe.Core.Repositories.EF": "1.0.0-*",
+        "cloudscribe.Core.Storage.EF": "1.0.0-*",
         "cloudscribe.Core.Web": "1.0.0-*",
-        "cloudscribe.Logging.MSSQL": "1.0.0-*",
         "cloudscribe.Logging.EF": "1.0.0-*",
         "cloudscribe.Logging.Web": "1.0.0-*",
         "cloudscribe.Setup.Web": "1.0.0-*",

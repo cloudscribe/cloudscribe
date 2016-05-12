@@ -21,7 +21,7 @@ namespace cloudscribe.Core.Web.ViewModels.RoleAdmin
             Paging = new PaginationSettings();
         }
 
-        public Guid SiteGuid { get; set; } = Guid.Empty;
+        public Guid SiteId { get; set; } = Guid.Empty;
         public bool UseEmailForLogin { get; set; } = true;
         public string Heading1 { get; set; }
         public string Heading2 { get; set; }

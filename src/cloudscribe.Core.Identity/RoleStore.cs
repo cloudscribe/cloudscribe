@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-06-19
-// Last Modified:		    2016-04-27
+// Last Modified:		    2016-05-10
 // 
 
 using cloudscribe.Core.Models;
@@ -21,18 +21,23 @@ namespace cloudscribe.Core.Identity
             SiteSettings currentSite,
             ILogger<RoleStore<TRole>> logger,
             IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
-            IUserRepository userRepository
+            IUserCommands userCommands,
+            IUserQueries userQueries
             )
         {
             if (logger == null) { throw new ArgumentNullException(nameof(logger)); }
             if (currentSite == null) { throw new ArgumentNullException(nameof(currentSite)); }
-            if (userRepository == null) { throw new ArgumentNullException(nameof(userRepository)); }
-           
+            if (userCommands == null) { throw new ArgumentNullException(nameof(userCommands)); }
+            commands = userCommands;
+
+            if (userQueries == null) { throw new ArgumentNullException(nameof(userQueries)); }
+            queries = userQueries;
+
             log = logger;
             siteSettings = currentSite;
 
             multiTenantOptions = multiTenantOptionsAccessor.Value;
-            userRepo = userRepository;
+            
 
             //if (debugLog) { log.LogInformation("constructor"); }
         }
@@ -40,7 +45,8 @@ namespace cloudscribe.Core.Identity
         private MultiTenantOptions multiTenantOptions;
         private ILogger log;
         //private bool debugLog = false;
-        private IUserRepository userRepo;
+        private IUserCommands commands;
+        private IUserQueries queries;
         private ISiteSettings siteSettings = null;
         
         private ISiteSettings Site
@@ -55,19 +61,19 @@ namespace cloudscribe.Core.Identity
                 throw new ArgumentNullException("role");
             }
 
-            if (role.SiteGuid == Guid.Empty)
+            if (role.SiteId == Guid.Empty)
             {
-                role.SiteGuid = Site.SiteGuid;
+                role.SiteId = Site.Id;
             }
             
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
 
-            bool result = await userRepo.SaveRole(role, cancellationToken);
+            await commands.CreateRole(role, cancellationToken);
 
-            if(result) { return IdentityResult.Success; }
+            return IdentityResult.Success;
 
-            return IdentityResult.Failed(null);
+         
         }
 
         public async Task<IdentityResult> DeleteAsync(TRole role, CancellationToken cancellationToken)
@@ -81,12 +87,11 @@ namespace cloudscribe.Core.Identity
             }
 
             // remove all users form the role
-            bool result = await userRepo.DeleteUserRolesByRole(role.RoleGuid, cancellationToken);
-            result = await userRepo.DeleteRole(role.RoleGuid, cancellationToken);
+            await commands.DeleteUserRolesByRole(role.Id, cancellationToken);
+            await commands.DeleteRole(role.Id, cancellationToken);
 
-            if (result) { return IdentityResult.Success; }
-
-            return IdentityResult.Failed(null);
+            return IdentityResult.Success; 
+            
         }
 
         public async Task<TRole> FindByIdAsync(string roleId, CancellationToken cancellationToken)
@@ -95,8 +100,8 @@ namespace cloudscribe.Core.Identity
             ThrowIfDisposed();
             if (string.IsNullOrWhiteSpace(roleId)) throw new ArgumentException("invalid roleid");
             if(roleId.Length != 36) throw new ArgumentException("invalid roleid");
-            Guid roleGuid = new Guid(roleId);
-            ISiteRole role = await userRepo.FetchRole(roleGuid, cancellationToken);
+            var roleGuid = new Guid(roleId);
+            var role = await queries.FetchRole(roleGuid, cancellationToken);
 
             return (TRole)role;
         }
@@ -106,10 +111,10 @@ namespace cloudscribe.Core.Identity
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
 
-            Guid siteGuid = Site.SiteGuid;
+            Guid siteGuid = Site.Id;
             if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
 
-            ISiteRole role = await userRepo.FetchRole(siteGuid, normalizedRoleName, cancellationToken);
+            var role = await queries.FetchRole(siteGuid, normalizedRoleName, cancellationToken);
 
             return (TRole)role;
         }
@@ -136,7 +141,7 @@ namespace cloudscribe.Core.Identity
                 throw new ArgumentNullException("role");
             }
 
-            return Task.FromResult(role.RoleGuid.ToString());
+            return Task.FromResult(role.Id.ToString());
         }
 
         public Task<string> GetRoleNameAsync(TRole role, CancellationToken cancellationToken)
@@ -189,11 +194,11 @@ namespace cloudscribe.Core.Identity
                 throw new ArgumentNullException("role");
             }
 
-            bool result = await userRepo.SaveRole(role, cancellationToken);
+            await commands.UpdateRole(role, cancellationToken);
 
-            if (result) { return IdentityResult.Success; }
+            return IdentityResult.Success; 
 
-            return IdentityResult.Failed(null);
+            
         }
 
         private void ThrowIfDisposed()

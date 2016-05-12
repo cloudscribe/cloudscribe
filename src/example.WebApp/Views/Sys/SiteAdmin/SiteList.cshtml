@@ -40,19 +40,19 @@
         <td>
             <a class="btn btn-xs btn-default" asp-action="SiteInfo"
                asp-controller="SiteAdmin"
-               asp-route-siteguid="@item.SiteGuid"
+               asp-route-siteid="@item.Id"
                asp-route-slp="@Model.Paging.CurrentPage">CommonResources.Settings</a>
 
 @if (!(options.Mode == MultiTenantMode.FolderName))
 {
     <a class="btn btn-xs btn-default hostmap" asp-action="SiteHostMappings"
        asp-controller="SiteAdmin"
-       asp-route-siteguid="@item.SiteGuid"
+       asp-route-siteid="@item.Id"
        asp-route-slp="@Model.Paging.CurrentPage">CommonResources.DomainMappings</a>
 }
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.SiteName) SiteGuid:@item.SiteGuid
+            @Html.DisplayFor(modelItem => item.SiteName) SiteGuid:@item.Id
         </td>
         <td>
             @if (options.Mode == MultiTenantMode.FolderName)

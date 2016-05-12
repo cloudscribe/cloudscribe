@@ -29,19 +29,19 @@ namespace cloudscribe.Core.Web.ViewModels.CoreData
 
         public GeoCountryViewModel Country { get; set; }
 
-        private Guid guid = Guid.Empty;
+        private Guid id = Guid.Empty;
 
         [Display(Name = "Guid")]
-        public Guid Guid
+        public Guid Id
         {
-            get { return guid; }
-            set { guid = value; }
+            get { return id; }
+            set { id = value; }
         }
 
         private Guid countryGuid = Guid.Empty;
 
         [Display(Name = "CountryGuid")]
-        public Guid CountryGuid
+        public Guid CountryId
         {
             get { return countryGuid; }
             set { countryGuid = value; }
@@ -86,8 +86,8 @@ namespace cloudscribe.Core.Web.ViewModels.CoreData
         public static GeoZoneViewModel FromIGeoZone(IGeoZone geoZone)
         {
             GeoZoneViewModel model = new GeoZoneViewModel();
-            model.Guid = geoZone.Guid;
-            model.CountryGuid = geoZone.CountryGuid;
+            model.Id = geoZone.Id;
+            model.CountryId = geoZone.CountryId;
             model.Name = geoZone.Name;
             model.Code = geoZone.Code;
 

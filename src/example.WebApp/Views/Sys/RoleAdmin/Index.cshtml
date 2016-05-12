@@ -8,7 +8,7 @@
     <div class="col-md-10 col-md-push-2">
         <h2>@ViewData["Title"]</h2>
         <p>
-            <a class="btn btn-sm btn-default" asp-action="RoleEdit" asp-controller="RoleAdmin" asp-route-siteGuid="@Model.SiteGuid">CommonResources.NewRole</a>
+            <a class="btn btn-sm btn-default" asp-action="RoleEdit" asp-controller="RoleAdmin" asp-route-siteId="@Model.SiteId">CommonResources.NewRole</a>
         </p>
         <ul class="btn-group list-group">
             @foreach (var item in Model.SiteRoles)
@@ -20,18 +20,18 @@
                     </span>
                     <div class="btn-group pull-right" role="group">
                         <form class="form-inline" asp-controller="RoleAdmin" asp-action="RoleDelete">
-                            <input name="SiteGuid" value="@item.SiteGuid" type="hidden" />
-                            <input id="roleGuid" name="roleGuid" type="hidden" value="@item.RoleGuid" />
+                            <input name="SiteId" value="@item.SiteId" type="hidden" />
+                            <input id="roleId" name="roleId" type="hidden" value="@item.Id" />
                             <span class="btn btn-default btn-xs">
                                 <a asp-action="RoleMembers"
                                    asp-controller="RoleAdmin"
-                                   asp-route-siteGuid="@item.SiteGuid"
-                                   asp-route-roleGuid="@item.RoleGuid">CommonResources.Members</a>
+                                   asp-route-siteId="@item.SiteId"
+                                   asp-route-roleId="@item.Id">CommonResources.Members</a>
                                 <span class="badge">@Html.DisplayFor(modelItem => item.MemberCount)</span>
                             </span>
                             <a class="btn btn-xs btn-default" asp-action="RoleEdit" asp-controller="RoleAdmin"
-                               asp-route-siteGuid="@Model.SiteGuid"
-                               asp-route-roleGuid="@item.RoleGuid">CommonResources.Edit</a>
+                               asp-route-siteId="@Model.SiteId"
+                               asp-route-roleId="@item.Id">CommonResources.Edit</a>
                             @if (item.IsDeletable(setupOptions.RolesThatCannotBeDeleted))
                             {
                                 <button type="submit"
@@ -48,7 +48,7 @@
         <div>
             <cs-pager cs-paging-info="@Model.Paging"
                       asp-action="Index" asp-controller="RoleAdmin"
-                      asp-route-siteGuid="@Model.SiteGuid"
+                      asp-route-siteId="@Model.SiteId"
                       asp-route-pageSize="@Model.Paging.ItemsPerPage"></cs-pager>
         </div>
     </div>

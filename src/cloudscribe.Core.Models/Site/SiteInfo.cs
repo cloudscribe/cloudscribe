@@ -19,7 +19,7 @@ namespace cloudscribe.Core.Models
     {
         
         //public int SiteId { get; set; } = -1;
-        public Guid SiteGuid { get; set; } = Guid.Empty;
+        public Guid Id { get; set; } = Guid.Empty;
 
         private string aliasId = null;
         /// <summary>
@@ -32,9 +32,9 @@ namespace cloudscribe.Core.Models
         /// </summary>
         public string AliasId
         {
-            get { return aliasId ?? SiteGuid.ToString(); }
+            get { return aliasId ?? Id.ToString(); }
             set {
-                if (value != SiteGuid.ToString())
+                if (value != Id.ToString())
                 {
                     aliasId = value;
                 }  

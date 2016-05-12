@@ -1,0 +1,44 @@
+﻿{
+    "version": "1.0.0-*",
+    "description": "Entity Framework Core implementation of cloudscribe core commands and queries",
+    "authors": [ "Joe Audette" ],
+    "owners": [ "Source Tree Solutions" ],
+    "tags": [ "cloudscribe", "commands", "queries", "ef" ],
+    "projectUrl": "https://github.com/joeaudette/cloudscribe",
+    "licenseUrl": "http://www.apache.org/licenses/LICENSE-2.0",
+    "copyright": "Source Tree Solutions",
+    "iconUrl": "https://raw.githubusercontent.com/joeaudette/cloudscribe/master/cloudscribe-icon-32.png",
+    "requireLicenseAcceptance": false,
+    "releaseNotes": "",
+
+    "commands": {
+        "ef": "EntityFramework.Commands"
+    },
+
+    "dependencies": {
+        "cloudscribe.Core.Models": "1.0.0-*",
+        "EntityFramework.Core": "7.0.0-rc1-final",
+        "EntityFramework.Commands": "7.0.0-rc1-final",
+        "EntityFramework.MicrosoftSqlServer": "7.0.0-rc1-final",
+        "EntityFramework.Relational": "7.0.0-rc1-final",
+        "Microsoft.Extensions.Logging.Abstractions": "1.0.0-rc1-final",
+        "Microsoft.Extensions.DependencyInjection.Abstractions": "1.0.0-rc1-final",
+        "Microsoft.Extensions.Configuration": "1.0.0-rc1-final",
+        "Microsoft.Extensions.Configuration.Json": "1.0.0-rc1-final"
+    },
+
+    "frameworks": {
+        "net451": { },
+        "dnxcore50": {
+            "dependencies": {
+                "Microsoft.CSharp": "4.0.1-beta-23516",
+                "System.Collections": "4.0.11-beta-23516",
+                "System.Linq": "4.0.1-beta-23516",
+
+                "System.Runtime": "4.0.21-beta-23516",
+                "System.Threading": "4.0.11-beta-23516"
+            }
+        }
+    }
+}
+

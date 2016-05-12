@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:              Joe Audette
 // Created:             2016-02-04
-// Last Modified:       2016-04-27
+// Last Modified:       2016-05-10
 // 
 
 //  2016-02-04 found this blog post by Ben Foster
@@ -33,7 +33,7 @@ namespace cloudscribe.Core.Web.Components
         public CachingSiteResolver(
             IMemoryCache cache,
             ILoggerFactory loggerFactory,
-            ISiteRepository siteRepository,
+            ISiteQueries siteRepository,
             SiteDataProtector dataProtector,
             IOptions<MultiTenantOptions> multiTenantOptions,
             IOptions<CachingSiteResolverOptions> cachingOptionsAccessor = null
@@ -49,7 +49,7 @@ namespace cloudscribe.Core.Web.Components
         }
 
         private MultiTenantOptions multiTenantOptions;
-        private ISiteRepository siteRepo;
+        private ISiteQueries siteRepo;
         private SiteDataProtector dataProtector;
         private CachingSiteResolverOptions cachingOptions;
 
@@ -118,7 +118,7 @@ namespace cloudscribe.Core.Web.Components
                 }
             }
 
-            var siteGuid = context.Tenant.SiteGuid.ToString();
+            var siteGuid = context.Tenant.Id.ToString();
 
             identifiers.Add(siteGuid);
 

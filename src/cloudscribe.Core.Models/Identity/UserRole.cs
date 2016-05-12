@@ -15,17 +15,9 @@ namespace cloudscribe.Core.Models
     /// </summary>
     public class UserRole
     {
-        public Guid RoleGuid { get; set; }
+        public Guid RoleId { get; set; }
+        public Guid UserId { get; set; }
 
-        // need to verify if these object properties are required for EF
-        // would rather not have them
-        // ignore these properties if serializing to json ie using NoDb for storage
-        //[JsonIgnore]
-        //public SiteRole Role { get; set; }
-
-        public Guid UserGuid { get; set; }
-
-        //[JsonIgnore]
-        //public SiteUser User { get; set; }
+        
     }
 }

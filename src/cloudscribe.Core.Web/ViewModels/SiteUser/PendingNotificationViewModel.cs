@@ -15,8 +15,8 @@ namespace cloudscribe.Core.Web.ViewModels.SiteUser
 {
     public class PendingNotificationViewModel
     {
-        [Display(Name = "UserGuid")]
-        public Guid UserGuid { get; set; } = Guid.Empty;
+        [Display(Name = "UserId")]
+        public Guid UserId { get; set; } = Guid.Empty;
 
         public bool DidSend { get; set; } = false;
 

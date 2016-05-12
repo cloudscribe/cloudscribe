@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-31
-// Last Modified:		    2016-01-28
+// Last Modified:		    2016-05-11
 // 
 // TODO: support custom profile properties that are required for registration
 
@@ -16,11 +16,11 @@ namespace cloudscribe.Core.Web.ViewModels.Account
     public class EditUserViewModel
     {
        
-        [Display(Name = "UserGuid")]
-        public Guid UserGuid { get; set; } = Guid.Empty;
+        [Display(Name = "UserId")]
+        public Guid UserId { get; set; } = Guid.Empty;
         
-        [Display(Name = "SiteGuid")]
-        public Guid SiteGuid { get; set; } = Guid.Empty;
+        [Display(Name = "SiteId")]
+        public Guid SiteId { get; set; } = Guid.Empty;
         
         [Required]
         [EmailAddress(ErrorMessage = "invalid email format")]

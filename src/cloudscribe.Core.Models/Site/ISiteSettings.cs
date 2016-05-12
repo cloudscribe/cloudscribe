@@ -2,22 +2,18 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2016-04-28
+// Last Modified:			2016-05-11
 // 
 
 using System;
 
 namespace cloudscribe.Core.Models
 {
-    // this interface is based on mojoportal and is what it is for historical reasons
-    // and for compatibility with mojoportal data, but refactored a bit for cloudscribe
-    // and the only concrete repositories we ship use mojoportal data access code and schema
-
+    
     // lighter base version for lists
     public interface ISiteInfo
     {
-        //int SiteId { get; set; }
-        Guid SiteGuid { get; set; }
+        Guid Id { get; set; }
         string AliasId { get; set; }
         string SiteName { get; set; }
         string PreferredHostName { get; set; }

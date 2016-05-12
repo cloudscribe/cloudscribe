@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-11-03
-// Last Modified:			2015-12-08
+// Last Modified:			2016-05-12
 // 
 
 using System;
@@ -13,9 +13,11 @@ namespace cloudscribe.Core.Models.Geography
     {
 
         public Language()
-        { }
+        {
+            Id = Guid.NewGuid();
+        }
         
-        public Guid Guid { get; set; } = Guid.Empty;
+        public Guid Id { get; set; } = Guid.Empty;
 
         private string name = string.Empty;
         public string Name
@@ -36,7 +38,7 @@ namespace cloudscribe.Core.Models.Geography
         public static Language FromILanguage(ILanguage ilang)
         {
             Language lang = new Language();
-            lang.Guid = ilang.Guid;
+            lang.Id = ilang.Id;
             lang.Sort = ilang.Sort;
             lang.Code = ilang.Code;
             lang.Name = ilang.Name;

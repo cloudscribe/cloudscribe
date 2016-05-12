@@ -14,7 +14,7 @@ namespace cloudscribe.Core.Models
         public UserLogin()
         { }
 
-        public Guid SiteGuid { get; set; } = Guid.Empty;
+        public Guid SiteId { get; set; } = Guid.Empty;
 
         private string loginProvider = string.Empty;
         public string LoginProvider
@@ -38,7 +38,7 @@ namespace cloudscribe.Core.Models
         }
 
         private Guid userGuid = Guid.Empty;
-        public Guid UserGuid
+        public Guid UserId
         {
             get { return userGuid; }
             set { userGuid = value; }
@@ -52,8 +52,8 @@ namespace cloudscribe.Core.Models
             l.LoginProvider = i.LoginProvider;
             l.ProviderDisplayName = i.ProviderDisplayName;
             l.ProviderKey = i.ProviderKey;
-            l.SiteGuid = i.SiteGuid;
-            l.UserGuid = i.UserGuid;
+            l.SiteId = i.SiteId;
+            l.UserId = i.UserId;
 
             return l;
         }
