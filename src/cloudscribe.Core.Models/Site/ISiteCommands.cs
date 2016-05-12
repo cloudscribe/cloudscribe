@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2016-05-09
+// Last Modified:			2016-05-12
 // 
 
 using System;
@@ -16,9 +16,9 @@ namespace cloudscribe.Core.Models
     {
         Task Create(ISiteSettings site, CancellationToken cancellationToken = default(CancellationToken));
         Task Update(ISiteSettings site, CancellationToken cancellationToken = default(CancellationToken));
-        Task Delete(Guid siteGuid, CancellationToken cancellationToken = default(CancellationToken));
-        Task AddHost(Guid siteGuid, string hostName, CancellationToken cancellationToken = default(CancellationToken));
-        Task DeleteHost(Guid hostGuid, CancellationToken cancellationToken = default(CancellationToken));
-        Task DeleteHostsBySite(Guid siteGuid, CancellationToken cancellationToken = default(CancellationToken));
+        Task Delete(Guid siteId, CancellationToken cancellationToken = default(CancellationToken));
+        Task AddHost(Guid siteId, string hostName, CancellationToken cancellationToken = default(CancellationToken));
+        Task DeleteHost(Guid hostId, CancellationToken cancellationToken = default(CancellationToken));
+        Task DeleteHostsBySite(Guid siteId, CancellationToken cancellationToken = default(CancellationToken));
     }
 }

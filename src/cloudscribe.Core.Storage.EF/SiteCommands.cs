@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2016-05-09
+// Last Modified:			2016-05-12
 // 
 
 using cloudscribe.Core.Models;
@@ -58,13 +58,13 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task Delete(
-            Guid id,
+            Guid siteId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (id == Guid.Empty) throw new ArgumentException("id must not be empty guid");
+            if (siteId == Guid.Empty) throw new ArgumentException("id must not be empty guid");
 
             var itemToRemove = await dbContext.Sites.SingleOrDefaultAsync(
-                x => x.Id == id
+                x => x.Id == siteId
                 , cancellationToken)
                 .ConfigureAwait(false);
 

@@ -24,13 +24,13 @@ namespace cloudscribe.Core.Storage.EF
 
         private CoreDbContext dbContext;
 
-        public async Task<IGeoCountry> FetchCountry(Guid guid, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<IGeoCountry> FetchCountry(Guid countryId, CancellationToken cancellationToken = default(CancellationToken))
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
             var item = await dbContext.Countries.SingleOrDefaultAsync(
-                    x => x.Id == guid,
+                    x => x.Id == countryId,
                     cancellationToken)
                     .ConfigureAwait(false);
 
@@ -100,14 +100,14 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task<IGeoZone> FetchGeoZone(
-            Guid guid,
+            Guid stateId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
             var item = await dbContext.States.SingleOrDefaultAsync(
-                    x => x.Id == guid,
+                    x => x.Id == stateId,
                     cancellationToken)
                     .ConfigureAwait(false);
 
@@ -115,17 +115,17 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public Task<int> GetGeoZoneCount(
-            Guid countryGuid,
+            Guid countryId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
             return dbContext.States.CountAsync<GeoZone>(
-                g => g.CountryId == countryGuid, cancellationToken);
+                g => g.CountryId == countryId, cancellationToken);
         }
 
         public async Task<List<IGeoZone>> GetGeoZonesByCountry(
-            Guid countryGuid,
+            Guid countryId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             ThrowIfDisposed();
@@ -136,7 +136,7 @@ namespace cloudscribe.Core.Storage.EF
             //            select l;
 
             var query = dbContext.States
-                        .Where(x => x.CountryId == countryGuid)
+                        .Where(x => x.CountryId == countryId)
                         .OrderByDescending(x => x.Name)
                         .Select(x => x);
 
@@ -183,7 +183,7 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task<List<IGeoZone>> StateAutoComplete(
-            Guid countryGuid,
+            Guid countryId,
             string query,
             int maxRows,
             CancellationToken cancellationToken = default(CancellationToken))
@@ -202,7 +202,7 @@ namespace cloudscribe.Core.Storage.EF
 
             var listQuery = dbContext.States
                             .Where(x =>
-                           x.CountryId == countryGuid &&
+                           x.CountryId == countryId &&
                            (x.Name.Contains(query) || x.Code.Contains(query))
                             )
                             .OrderBy(x => x.Code)
@@ -217,7 +217,7 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task<List<IGeoZone>> GetGeoZonePage(
-            Guid countryGuid,
+            Guid countryId,
             int pageNumber,
             int pageSize,
             CancellationToken cancellationToken = default(CancellationToken))
@@ -228,7 +228,7 @@ namespace cloudscribe.Core.Storage.EF
             int offset = (pageSize * pageNumber) - pageSize;
 
             var query = dbContext.States
-               .Where(x => x.CountryId == countryGuid)
+               .Where(x => x.CountryId == countryId)
                .OrderBy(x => x.Name)
                .Skip(offset)
                .Take(pageSize)
@@ -243,14 +243,14 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task<ILanguage> FetchLanguage(
-            Guid guid,
+            Guid languageId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
             var item = await dbContext.Languages.SingleOrDefaultAsync(
-                    x => x.Id == guid,
+                    x => x.Id == languageId,
                     cancellationToken)
                     .ConfigureAwait(false);
 
@@ -307,14 +307,14 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task<ICurrency> FetchCurrency(
-            Guid guid,
+            Guid currencyId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
             var item = await dbContext.Currencies.AsNoTracking().SingleOrDefaultAsync(
-                    x => x.Id == guid,
+                    x => x.Id == currencyId,
                     cancellationToken)
                     .ConfigureAwait(false);
 

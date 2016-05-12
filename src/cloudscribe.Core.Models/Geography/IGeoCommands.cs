@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-11-03
-// Last Modified:			2016-05-09
+// Last Modified:			2016-05-12
 // 
 
 using System;
@@ -13,9 +13,9 @@ namespace cloudscribe.Core.Models.Geography
 {
     public interface IGeoCommands : IDisposable
     {
-        Task DeleteCountry(Guid guid, CancellationToken cancellationToken = default(CancellationToken));
-        Task DeleteGeoZone(Guid guid, CancellationToken cancellationToken = default(CancellationToken));
-        Task DeleteGeoZonesByCountry(Guid countryGuid, CancellationToken cancellationToken = default(CancellationToken));
+        Task DeleteCountry(Guid id, CancellationToken cancellationToken = default(CancellationToken));
+        Task DeleteGeoZone(Guid id, CancellationToken cancellationToken = default(CancellationToken));
+        Task DeleteGeoZonesByCountry(Guid countryId, CancellationToken cancellationToken = default(CancellationToken));
 
         Task Add(IGeoCountry geoCountry, CancellationToken cancellationToken = default(CancellationToken));
         Task Update(IGeoCountry geoCountry, CancellationToken cancellationToken = default(CancellationToken));
@@ -24,10 +24,10 @@ namespace cloudscribe.Core.Models.Geography
 
         Task Add(ILanguage language, CancellationToken cancellationToken = default(CancellationToken));
         Task Update(ILanguage language, CancellationToken cancellationToken = default(CancellationToken));
-        Task DeleteLanguage(Guid guid, CancellationToken cancellationToken = default(CancellationToken));
+        Task DeleteLanguage(Guid id, CancellationToken cancellationToken = default(CancellationToken));
 
         Task Add(ICurrency currency, CancellationToken cancellationToken = default(CancellationToken));
         Task Update(ICurrency currency, CancellationToken cancellationToken = default(CancellationToken));
-        Task DeleteCurrency(Guid guid, CancellationToken cancellationToken = default(CancellationToken));
+        Task DeleteCurrency(Guid id, CancellationToken cancellationToken = default(CancellationToken));
     }
 }

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2016-05-09
+// Last Modified:			2016-05-12
 // 
 
 
@@ -100,15 +100,15 @@ namespace cloudscribe.Core.Storage.EF
         //}
 
         public async Task Delete(
-            Guid siteGuid,
-            Guid userGuid,
+            Guid siteId,
+            Guid userId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
             var itemToRemove = await dbContext.Users
                 .AsNoTracking()
-                .SingleOrDefaultAsync(x => x.Id == userGuid && x.SiteId == siteGuid, cancellationToken)
+                .SingleOrDefaultAsync(x => x.Id == userId && x.SiteId == siteId, cancellationToken)
                 .ConfigureAwait(false);
 
             if (itemToRemove != null)
@@ -129,16 +129,16 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task DeleteUsersBySite(
-            Guid siteGuid,
+            Guid siteId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            await DeleteLoginsBySite(siteGuid);
-            await DeleteClaimsBySite(siteGuid);
-            await DeleteUserRolesBySite(siteGuid);
+            await DeleteLoginsBySite(siteId);
+            await DeleteClaimsBySite(siteId);
+            await DeleteUserRolesBySite(siteId);
 
-            var query = from x in dbContext.Users.Where(x => x.SiteId == siteGuid)
+            var query = from x in dbContext.Users.Where(x => x.SiteId == siteId)
                         select x;
 
             dbContext.Users.RemoveRange(query);
@@ -149,13 +149,13 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task FlagAsDeleted(
-            Guid userGuid,
+            Guid userId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
             var item = await dbContext.Users.SingleOrDefaultAsync(
-                    x => x.Id == userGuid,
+                    x => x.Id == userId,
                     cancellationToken)
                 .ConfigureAwait(false);
 
@@ -170,14 +170,14 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task FlagAsNotDeleted(
-            Guid userGuid,
+            Guid userId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
             var item = await dbContext.Users.SingleOrDefaultAsync(
-                    x => x.Id == userGuid,
+                    x => x.Id == userId,
                     cancellationToken)
                     .ConfigureAwait(false);
 
@@ -193,14 +193,14 @@ namespace cloudscribe.Core.Storage.EF
 
 
         public async Task LockoutAccount(
-            Guid userGuid,
+            Guid userId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
             var item = await dbContext.Users.SingleOrDefaultAsync(
-                    x => x.Id == userGuid
+                    x => x.Id == userId
                     , cancellationToken)
                     .ConfigureAwait(false);
 
@@ -214,14 +214,14 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task UnLockAccount(
-            Guid userGuid,
+            Guid userId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
             var item = await dbContext.Users.SingleOrDefaultAsync(
-                    x => x.Id == userGuid,
+                    x => x.Id == userId,
                     cancellationToken)
                     .ConfigureAwait(false);
 
@@ -237,7 +237,7 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task UpdateFailedPasswordAttemptCount(
-            Guid userGuid,
+            Guid userId,
             int failedPasswordAttemptCount,
             CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -245,7 +245,7 @@ namespace cloudscribe.Core.Storage.EF
             cancellationToken.ThrowIfCancellationRequested();
 
             var item = await dbContext.Users.SingleOrDefaultAsync(
-                    x => x.Id == userGuid,
+                    x => x.Id == userId,
                     cancellationToken)
                     .ConfigureAwait(false);
 
@@ -259,7 +259,7 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task UpdateLastLoginTime(
-            Guid userGuid,
+            Guid userId,
             DateTime lastLoginTime,
             CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -267,7 +267,7 @@ namespace cloudscribe.Core.Storage.EF
             cancellationToken.ThrowIfCancellationRequested();
 
             var item = await dbContext.Users.SingleOrDefaultAsync(
-                    x => x.Id == userGuid,
+                    x => x.Id == userId,
                     cancellationToken)
                     .ConfigureAwait(false);
 
@@ -347,14 +347,14 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task DeleteRole(
-            Guid roleGuid,
+            Guid roleId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
             var itemToRemove = await dbContext.Roles.SingleOrDefaultAsync(
-                x => x.Id == roleGuid,
+                x => x.Id == roleId,
                 cancellationToken)
                 .ConfigureAwait(false);
 
@@ -367,13 +367,13 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task DeleteRolesBySite(
-            Guid siteGuid,
+            Guid siteId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
-            var query = from r in dbContext.Roles.Where(x => x.SiteId == siteGuid)
+            var query = from r in dbContext.Roles.Where(x => x.SiteId == siteId)
                         select r;
 
             dbContext.Roles.RemoveRange(query);
@@ -383,8 +383,8 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task AddUserToRole(
-            Guid roleGuid,
-            Guid userGuid,
+            Guid roleId,
+            Guid userId,
             CancellationToken cancellationToken = default(CancellationToken)
             )
         {
@@ -392,8 +392,8 @@ namespace cloudscribe.Core.Storage.EF
             cancellationToken.ThrowIfCancellationRequested();
 
             var ur = new UserRole();
-            ur.RoleId = roleGuid;
-            ur.UserId = userGuid;
+            ur.RoleId = roleId;
+            ur.UserId = userId;
 
             dbContext.UserRoles.Add(ur);
             int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
@@ -402,15 +402,15 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task RemoveUserFromRole(
-            Guid roleGuid,
-            Guid userGuid,
+            Guid roleId,
+            Guid userId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
             var itemToRemove = await dbContext.UserRoles.SingleOrDefaultAsync(
-                x => x.UserId == userGuid && x.RoleId == roleGuid
+                x => x.UserId == userId && x.RoleId == roleId
                 , cancellationToken)
                 .ConfigureAwait(false);
 
@@ -423,16 +423,16 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task DeleteUserRoles(
-            Guid userGuid,
+            Guid userId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            await DeleteUserRoles(userGuid, true, cancellationToken).ConfigureAwait(false) ;
+            await DeleteUserRoles(userId, true, cancellationToken).ConfigureAwait(false) ;
         }
 
         private async Task DeleteUserRoles(
-            Guid userGuid,
+            Guid userId,
             bool saveChanges,
             CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -440,7 +440,7 @@ namespace cloudscribe.Core.Storage.EF
             cancellationToken.ThrowIfCancellationRequested();
 
             var query = from x in dbContext.UserRoles
-                        where x.UserId == userGuid
+                        where x.UserId == userId
                         select x;
 
             dbContext.UserRoles.RemoveRange(query);
@@ -455,14 +455,14 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task DeleteUserRolesByRole(
-            Guid roleGuid,
+            Guid roleId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
             var query = from x in dbContext.UserRoles
-                        where x.RoleId == roleGuid
+                        where x.RoleId == roleId
                         select x;
 
             dbContext.UserRoles.RemoveRange(query);
@@ -472,7 +472,7 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task DeleteUserRolesBySite(
-            Guid siteGuid,
+            Guid siteId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             ThrowIfDisposed();
@@ -480,7 +480,7 @@ namespace cloudscribe.Core.Storage.EF
 
             var query = from x in dbContext.UserRoles
                         join y in dbContext.Roles on x.RoleId equals y.Id
-                        where y.SiteId == siteGuid
+                        where y.SiteId == siteId
                         select x;
 
             dbContext.UserRoles.RemoveRange(query);
@@ -538,13 +538,13 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task DeleteClaim(
-            Guid id,
+            Guid claimId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
-            var itemToRemove = await dbContext.UserClaims.SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
+            var itemToRemove = await dbContext.UserClaims.SingleOrDefaultAsync(x => x.Id == claimId, cancellationToken);
             if (itemToRemove == null) { throw new InvalidOperationException("claim not found"); }
             
             dbContext.UserClaims.Remove(itemToRemove);
@@ -554,19 +554,19 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task DeleteClaimsByUser(
-            Guid siteGuid,
-            Guid userGuid,
+            Guid siteId,
+            Guid userId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            await DeleteClaimsByUser(siteGuid, userGuid, true, cancellationToken);
+            await DeleteClaimsByUser(siteId, userId, true, cancellationToken);
 
         }
 
         private async Task DeleteClaimsByUser(
-            Guid siteGuid,
-            Guid userGuid,
+            Guid siteId,
+            Guid userId,
             bool saveChanges,
             CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -575,8 +575,8 @@ namespace cloudscribe.Core.Storage.EF
 
             var query = from x in dbContext.UserClaims
                         where (
-                        (siteGuid == Guid.Empty || x.SiteId == siteGuid)
-                        && x.UserId == userGuid
+                        (siteId == Guid.Empty || x.SiteId == siteId)
+                        && x.UserId == userId
                         )
                         select x;
 
@@ -592,8 +592,8 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task DeleteClaimByUser(
-            Guid siteGuid,
-            Guid userGuid,
+            Guid siteId,
+            Guid userId,
             string claimType,
             CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -602,8 +602,8 @@ namespace cloudscribe.Core.Storage.EF
 
             var query = from x in dbContext.UserClaims
                         where (
-                        (siteGuid == Guid.Empty || x.SiteId == siteGuid)
-                        && (x.UserId == userGuid && x.ClaimType == claimType)
+                        (siteId == Guid.Empty || x.SiteId == siteId)
+                        && (x.UserId == userId && x.ClaimType == claimType)
                         )
                         select x;
 
@@ -614,14 +614,14 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task DeleteClaimsBySite(
-            Guid siteGuid,
+            Guid siteId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
             var query = from x in dbContext.UserClaims
-                        where x.SiteId == siteGuid
+                        where x.SiteId == siteId
                         select x;
 
             dbContext.UserClaims.RemoveRange(query);
@@ -656,8 +656,8 @@ namespace cloudscribe.Core.Storage.EF
         }
         
         public async Task DeleteLogin(
-            Guid siteGuid,
-            Guid userGuid,
+            Guid siteId,
+            Guid userId,
             string loginProvider,
             string providerKey,
             CancellationToken cancellationToken = default(CancellationToken))
@@ -667,8 +667,8 @@ namespace cloudscribe.Core.Storage.EF
 
             var query = from l in dbContext.UserLogins
                         where (
-                        l.SiteId == siteGuid
-                        && l.UserId == userGuid
+                        l.SiteId == siteId
+                        && l.UserId == userId
                         && l.LoginProvider == loginProvider
                         && l.ProviderKey == providerKey
                         )
@@ -681,19 +681,19 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task DeleteLoginsByUser(
-            Guid siteGuid,
-            Guid userGuid,
+            Guid siteId,
+            Guid userId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            await DeleteLoginsByUser(siteGuid, userGuid, true, cancellationToken);
+            await DeleteLoginsByUser(siteId, userId, true, cancellationToken);
 
         }
 
         private async Task DeleteLoginsByUser(
-            Guid siteGuid,
-            Guid userGuid,
+            Guid siteId,
+            Guid userId,
             bool saveChanges,
             CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -702,8 +702,8 @@ namespace cloudscribe.Core.Storage.EF
 
             var query = from l in dbContext.UserLogins
                         where (
-                        l.SiteId == siteGuid
-                        && l.UserId == userGuid
+                        l.SiteId == siteId
+                        && l.UserId == userId
                         )
                         select l;
 
@@ -719,14 +719,14 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task DeleteLoginsBySite(
-            Guid siteGuid,
+            Guid siteId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
             var query = from l in dbContext.UserLogins
-                        where (l.SiteId == siteGuid)
+                        where (l.SiteId == siteId)
                         select l;
 
             dbContext.UserLogins.RemoveRange(query);
@@ -784,7 +784,7 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task DeleteUserLocation(
-            Guid rowGuid,
+            Guid userLocationId,
             CancellationToken cancellationToken = default(CancellationToken)
             )
         {
@@ -792,7 +792,7 @@ namespace cloudscribe.Core.Storage.EF
             cancellationToken.ThrowIfCancellationRequested();
 
             var itemToRemove = await dbContext.UserLocations.SingleOrDefaultAsync(
-                x => x.Id == rowGuid
+                x => x.Id == userLocationId
                 , cancellationToken)
                 .ConfigureAwait(false);
 
@@ -805,7 +805,7 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task DeleteUserLocationsByUser(
-            Guid userGuid,
+            Guid userId,
             CancellationToken cancellationToken = default(CancellationToken)
             )
         {
@@ -813,7 +813,7 @@ namespace cloudscribe.Core.Storage.EF
             cancellationToken.ThrowIfCancellationRequested();
             
             var query = from l in dbContext.UserLocations
-                        where (l.UserId == userGuid)
+                        where (l.UserId == userId)
                         select l;
 
             dbContext.UserLocations.RemoveRange(query);
@@ -825,7 +825,7 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task DeleteUserLocationsBySite(
-            Guid siteGuid,
+            Guid siteId,
             CancellationToken cancellationToken = default(CancellationToken)
             )
         {
@@ -833,7 +833,7 @@ namespace cloudscribe.Core.Storage.EF
             cancellationToken.ThrowIfCancellationRequested();
 
             var query = from l in dbContext.UserLocations
-                        where (l.SiteId == siteGuid)
+                        where (l.SiteId == siteId)
                         select l;
 
             dbContext.UserLocations.RemoveRange(query);

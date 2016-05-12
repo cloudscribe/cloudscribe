@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2016-05-09
+// Last Modified:			2016-05-12
 // 
 
 using System;
@@ -17,12 +17,12 @@ namespace cloudscribe.Core.Models
         //TODO: review all places where these non async methods are used
         // and consider whether they could be changed to use async
 
-        ISiteSettings FetchNonAsync(Guid siteGuid);
+        ISiteSettings FetchNonAsync(Guid siteId);
         ISiteSettings FetchNonAsync(string hostName);
         ISiteSettings FetchByFolderNameNonAsync(string folderName);
 
         //Task<ISiteSettings> Fetch(int siteId, CancellationToken cancellationToken);
-        Task<ISiteSettings> Fetch(Guid siteGuid, CancellationToken cancellationToken = default(CancellationToken));
+        Task<ISiteSettings> Fetch(Guid siteId, CancellationToken cancellationToken = default(CancellationToken));
         Task<ISiteSettings> Fetch(string hostName, CancellationToken cancellationToken = default(CancellationToken));
         Task<ISiteSettings> FetchByFolderName(string folderName, CancellationToken cancellationToken = default(CancellationToken));
 
@@ -30,14 +30,14 @@ namespace cloudscribe.Core.Models
         Task<int> CountOtherSites(Guid currentSiteGuid, CancellationToken cancellationToken = default(CancellationToken));
         Task<List<ISiteInfo>> GetList(CancellationToken cancellationToken = default(CancellationToken));
         Task<List<ISiteInfo>> GetPageOtherSites(
-            Guid currentSiteGuid,
+            Guid currentSiteId,
             int pageNumber,
             int pageSize,
             CancellationToken cancellationToken = default(CancellationToken));
 
 
 
-        Task<List<ISiteHost>> GetSiteHosts(Guid siteGuid, CancellationToken cancellationToken = default(CancellationToken));
+        Task<List<ISiteHost>> GetSiteHosts(Guid siteId, CancellationToken cancellationToken = default(CancellationToken));
         Task<List<ISiteHost>> GetAllHosts(CancellationToken cancellationToken = default(CancellationToken));
         Task<ISiteHost> GetSiteHost(string hostName, CancellationToken cancellationToken = default(CancellationToken));
         Task<int> GetHostCount(CancellationToken cancellationToken = default(CancellationToken));

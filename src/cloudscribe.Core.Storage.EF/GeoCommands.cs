@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2016-05-09
+// Last Modified:			2016-05-12
 // 
 
 using cloudscribe.Core.Models.Geography;
@@ -66,14 +66,14 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task DeleteCountry(
-            Guid id,
+            Guid countryId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            if (id == Guid.Empty) throw new ArgumentException("id must be a non-empty guid");
+            if (countryId == Guid.Empty) throw new ArgumentException("id must be a non-empty guid");
 
-            var itemToRemove = await dbContext.Countries.SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
+            var itemToRemove = await dbContext.Countries.SingleOrDefaultAsync(x => x.Id == countryId, cancellationToken);
             if (itemToRemove == null) throw new InvalidOperationException("geoCountry not found");
             
             dbContext.Countries.Remove(itemToRemove);
@@ -123,14 +123,14 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task DeleteGeoZone(
-            Guid id,
+            Guid stateId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            if (id == Guid.Empty) throw new ArgumentException("id must be a non-empty guid");
+            if (stateId == Guid.Empty) throw new ArgumentException("id must be a non-empty guid");
 
-            var itemToRemove = await dbContext.States.SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
+            var itemToRemove = await dbContext.States.SingleOrDefaultAsync(x => x.Id == stateId, cancellationToken);
             if (itemToRemove == null) throw new InvalidOperationException("geoZone not found");
             
             dbContext.States.Remove(itemToRemove);
@@ -197,15 +197,15 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task DeleteLanguage(
-            Guid id,
+            Guid languageId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            if (id == Guid.Empty) throw new ArgumentException("id must be a non-empty guid");
+            if (languageId == Guid.Empty) throw new ArgumentException("id must be a non-empty guid");
 
             var itemToRemove = await dbContext.Languages.SingleOrDefaultAsync(
-                x => x.Id == id,
+                x => x.Id == languageId,
                 cancellationToken)
                 .ConfigureAwait(false);
 
@@ -258,14 +258,14 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task DeleteCurrency(
-            Guid id,
+            Guid currencyId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            if (id == Guid.Empty) throw new ArgumentException("id must be a non-empty guid");
+            if (currencyId == Guid.Empty) throw new ArgumentException("id must be a non-empty guid");
 
-            var itemToRemove = await dbContext.Currencies.SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
+            var itemToRemove = await dbContext.Currencies.SingleOrDefaultAsync(x => x.Id == currencyId, cancellationToken);
 
             if (itemToRemove == null) throw new InvalidOperationException("currency not found");
 

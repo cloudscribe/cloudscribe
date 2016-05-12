@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2016-05-09
+// Last Modified:			2016-05-12
 // 
 
 using cloudscribe.Core.Models;
@@ -25,22 +25,21 @@ namespace cloudscribe.Core.Storage.EF
         private CoreDbContext dbContext;
 
         public async Task<ISiteSettings> Fetch(
-            Guid siteGuid,
+            Guid siteId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            SiteSettings item
-                = await dbContext.Sites.AsNoTracking().SingleOrDefaultAsync(
-                    x => x.Id.Equals(siteGuid)
+            var item = await dbContext.Sites.AsNoTracking().SingleOrDefaultAsync(
+                    x => x.Id.Equals(siteId)
                     , cancellationToken)
                     .ConfigureAwait(false);
 
             return item;
         }
 
-        public ISiteSettings FetchNonAsync(Guid siteGuid)
+        public ISiteSettings FetchNonAsync(Guid siteId)
         {
             SiteSettings item
-                = dbContext.Sites.AsNoTracking().SingleOrDefault(x => x.Id.Equals(siteGuid));
+                = dbContext.Sites.AsNoTracking().SingleOrDefault(x => x.Id.Equals(siteId));
 
             return item;
         }
@@ -49,7 +48,7 @@ namespace cloudscribe.Core.Storage.EF
             string hostName,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            SiteHost host = await dbContext.SiteHosts.AsNoTracking().FirstOrDefaultAsync(
+            var host = await dbContext.SiteHosts.AsNoTracking().FirstOrDefaultAsync(
                 x => x.HostName.Equals(hostName)
                 , cancellationToken)
                 .ConfigureAwait(false);
@@ -116,7 +115,7 @@ namespace cloudscribe.Core.Storage.EF
 
         public ISiteSettings FetchNonAsync(string hostName)
         {
-            SiteHost host = dbContext.SiteHosts.FirstOrDefault(x => x.HostName == hostName);
+            var host = dbContext.SiteHosts.FirstOrDefault(x => x.HostName == hostName);
             if (host == null)
             {
                 var query = from s in dbContext.Sites
@@ -133,7 +132,7 @@ namespace cloudscribe.Core.Storage.EF
 
         public ISiteSettings FetchByFolderNameNonAsync(string folderName)
         {
-            ISiteSettings site = dbContext.Sites
+            var site = dbContext.Sites
                 .AsNoTracking()
                 .FirstOrDefault(x => x.SiteFolderName == folderName);
 
@@ -180,16 +179,16 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public Task<int> CountOtherSites(
-            Guid currentSiteGuid,
+            Guid currentSiteId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             return dbContext.Sites.CountAsync<SiteSettings>(
-                x => x.Id != currentSiteGuid
+                x => x.Id != currentSiteId
                 , cancellationToken);
         }
 
         public async Task<List<ISiteInfo>> GetPageOtherSites(
-            Guid currentSiteGuid,
+            Guid currentSiteId,
             int pageNumber,
             int pageSize,
             CancellationToken cancellationToken = default(CancellationToken))
@@ -198,7 +197,7 @@ namespace cloudscribe.Core.Storage.EF
 
             var query = from x in dbContext.Sites
 
-                        where (x.Id != currentSiteGuid)
+                        where (x.Id != currentSiteId)
                         orderby x.SiteName ascending
                         //select x;
                         select new SiteInfo
@@ -276,11 +275,11 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task<List<ISiteHost>> GetSiteHosts(
-            Guid siteGuid,
+            Guid siteId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             var query = from x in dbContext.SiteHosts
-                        where x.SiteGuid == siteGuid
+                        where x.SiteGuid == siteId
                         orderby x.HostName ascending
                         select x
                         ;

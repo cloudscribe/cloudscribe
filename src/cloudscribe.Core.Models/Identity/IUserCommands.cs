@@ -2,12 +2,10 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-18
-// Last Modified:			2016-05-09
+// Last Modified:			2016-05-12
 // 
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -24,70 +22,70 @@ namespace cloudscribe.Core.Models
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task Delete(
-            Guid siteGuid,
-            Guid userGuid,
+            Guid siteId,
+            Guid userId,
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task DeleteUsersBySite(
-            Guid siteGuid,
+            Guid siteId,
             CancellationToken cancellationToken = default(CancellationToken));
 
 
         Task FlagAsDeleted(
-            Guid userGuid,
+            Guid userId,
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task FlagAsNotDeleted(
-            Guid userGuid,
+            Guid userId,
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task LockoutAccount(
-            Guid userGuid,
+            Guid userId,
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task UnLockAccount(
-            Guid userGuid,
+            Guid userId,
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task UpdateFailedPasswordAttemptCount(
-            Guid userGuid,
+            Guid userId,
             int failedPasswordAttemptCount,
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task UpdateLastLoginTime(
-            Guid userGuid,
+            Guid userId,
             DateTime lastLoginTime,
             CancellationToken cancellationToken = default(CancellationToken));
 
         //roles
         Task AddUserToRole(
-            Guid roleGuid,
-            Guid userGuid,
+            Guid roleId,
+            Guid userId,
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task DeleteRole(
-            Guid roleGuid,
+            Guid roleId,
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task DeleteRolesBySite(
-            Guid siteGuid,
+            Guid siteId,
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task DeleteUserRoles(
-            Guid userGuid,
+            Guid userId,
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task DeleteUserRolesByRole(
-            Guid roleGuid,
+            Guid roleId,
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task DeleteUserRolesBySite(
-            Guid siteGuid,
+            Guid siteId,
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task RemoveUserFromRole(
-            Guid roleGuid,
-            Guid userGuid,
+            Guid roleId,
+            Guid userId,
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task CreateRole(
@@ -100,21 +98,21 @@ namespace cloudscribe.Core.Models
 
         //claims
         Task DeleteClaim(
-            Guid id,
+            Guid claimId,
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task DeleteClaimsBySite(
-            Guid siteGuid,
+            Guid siteId,
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task DeleteClaimsByUser(
-            Guid siteGuid,
-            Guid userGuid,
+            Guid siteId,
+            Guid userId,
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task DeleteClaimByUser(
-            Guid siteGuid,
-            Guid userGuid,
+            Guid siteId,
+            Guid userId,
             string claimType,
             CancellationToken cancellationToken = default(CancellationToken));
 
@@ -132,19 +130,19 @@ namespace cloudscribe.Core.Models
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task DeleteLogin(
-            Guid siteGuid,
-            Guid userGuid,
+            Guid siteId,
+            Guid userId,
             string loginProvider,
             string providerKey,
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task DeleteLoginsBySite(
-            Guid siteGuid,
+            Guid siteId,
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task DeleteLoginsByUser(
-            Guid siteGuid,
-            Guid userGuid,
+            Guid siteId,
+            Guid userId,
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task AddUserLocation(
@@ -156,15 +154,15 @@ namespace cloudscribe.Core.Models
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task DeleteUserLocation(
-            Guid rowGuid,
+            Guid userLocationId,
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task DeleteUserLocationsByUser(
-            Guid userGuid,
+            Guid userId,
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task DeleteUserLocationsBySite(
-            Guid siteGuid,
+            Guid siteId,
             CancellationToken cancellationToken = default(CancellationToken));
 
     }
