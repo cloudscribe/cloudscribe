@@ -13,7 +13,7 @@
 <h3>@Model.Heading2</h3>
 <form class="form-inline" role="form" asp-controller="RoleAdmin" asp-action="RoleMembers" method="get">
     <input asp-for="Role.SiteId" type="hidden" />
-    <input asp-for="Role.RoleId" type="hidden" />
+    <input asp-for="Role.Id" type="hidden" />
     <div class="input-group">
         <input name="searchInput" type="search" value="@Model.SearchQuery" class="form-control" />
         <span class="input-group-btn">
@@ -28,7 +28,7 @@
                 <th>
                     <a class="btn btn-xs btn-default" asp-action="RoleNonMembers" asp-controller="RoleAdmin"
                        asp-route-siteId="@Model.Role.SiteId"
-                       asp-route-roleId="@Model.Role.RoleId"
+                       asp-route-roleId="@Model.Role.Id"
                        bs-modal-link="true">CommonResources.AddUser</a>
                 </th>
                 <th>
@@ -57,7 +57,7 @@
                     <td>
                         <form asp-controller="RoleAdmin" asp-action="RemoveUser">
                             <input name="SiteId" value="@Model.SiteId" type="hidden" />
-                            <input name="roleId" value="@Model.Role.RoleId" type="hidden" />
+                            <input name="roleId" value="@Model.Role.Id" type="hidden" />
                             <input name="userId" value="@item.Id" type="hidden" />
                             <button type="submit"
                                     class="btn btn-danger btn-xs"
@@ -91,7 +91,7 @@
             <cs-pager cs-paging-info="@Model.Paging"
                       asp-action="RoleMembers" asp-controller="RoleAdmin"
                       asp-route-siteId="@Model.Role.SiteId"
-                      asp-route-roleId="@Model.Role.RoleId"
+                      asp-route-roleId="@Model.Role.Id"
                       asp-route-searchinput="@Model.SearchQuery"
                       asp-route-pagesize="@Model.Paging.ItemsPerPage"></cs-pager>
         </div>

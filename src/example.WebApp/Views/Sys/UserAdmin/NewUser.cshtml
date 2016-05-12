@@ -54,7 +54,7 @@
             <input asp-for="LastName" class="form-control" />
         </div>
     </div>
-    @if (Model.UserId == -1)
+    @if (Model.UserId == Guid.Empty)
     {
         <div class="form-group">
             <label asp-for="Password" class="col-md-2 control-label"></label>

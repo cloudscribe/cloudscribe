@@ -40,7 +40,7 @@
     <div asp-validation-summary="ValidationSummary.All" class="text-danger"></div>
    
 </form>
-@if (Model.UserGuid != Guid.Empty)
+@if (Model.UserId != Guid.Empty)
 {
     <form id="deleteform" class="form-inline" asp-controller="UserAdmin" asp-action="UserDelete"> 
         <input asp-for="SiteId" type="hidden" />
