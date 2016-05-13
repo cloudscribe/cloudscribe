@@ -56,8 +56,7 @@ namespace cloudscribe.Core.Storage.EF
         {
             cancellationToken.ThrowIfCancellationRequested();
             string loweredEmail = email.ToLowerInvariant();
-            SiteUser item
-                = await dbContext.Users.AsNoTracking()
+            var item = await dbContext.Users.AsNoTracking()
                 .SingleOrDefaultAsync(
                     x => x.SiteId == siteId && x.NormalizedEmail == loweredEmail
                     , cancellationToken)
@@ -75,8 +74,7 @@ namespace cloudscribe.Core.Storage.EF
             cancellationToken.ThrowIfCancellationRequested();
             string loweredUserName = userName.ToLowerInvariant();
 
-            SiteUser item
-                = await dbContext.Users.AsNoTracking().SingleOrDefaultAsync(
+            var item = await dbContext.Users.AsNoTracking().SingleOrDefaultAsync(
                     x => x.SiteId == siteId
                     && (
                     (x.UserName == userName)

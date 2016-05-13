@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:                  Joe Audette
 // Created:                 2016-04-26
-// Last Modified:           2016-05-12
+// Last Modified:           2016-05-13
 // 
 
 using cloudscribe.Core.Models;
@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Storage.NoDb
 {
-    public class UserQueries
+    public class UserQueries : IUserQueries
     {
         public UserQueries(
             IProjectResolver projectResolver,
@@ -61,17 +61,919 @@ namespace cloudscribe.Core.Storage.NoDb
 
         #region User
 
-        //public int GetCount(Guid siteId)
-        //{
-        //    ThrowIfDisposed();
+        public async Task<ISiteUser> Fetch(
+            Guid siteId,
+            Guid userId,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var item = await userQueries.FetchAsync(
+                projectId, 
+                userId.ToString(), 
+                cancellationToken).ConfigureAwait(false);
+
+            if (item.SiteId != siteId) return null;
+
+            return item;
+        }
+
+        public async Task<ISiteUser> Fetch(
+            Guid siteId,
+            string email,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
             
-        //    await EnsureProjectId().ConfigureAwait(false);
+            var allUsers = await userQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
 
-        //    var allRoles = await roleQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
-        //}
+            string loweredEmail = email.ToLowerInvariant();
+
+            return allUsers.Where(
+                x => x.SiteId == siteId && x.NormalizedEmail == loweredEmail
+                ).FirstOrDefault(null);
+        }
+
+        public async Task<ISiteUser> FetchByLoginName(
+            Guid siteId,
+            string userName,
+            bool allowEmailFallback,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var allUsers = await userQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+
+            string loweredUserName = userName.ToLowerInvariant();
+
+            return allUsers.Where(
+                x => x.SiteId == siteId
+                && (
+                    (x.UserName == userName)
+                    || (allowEmailFallback && x.NormalizedEmail == loweredUserName)
+                    )
+                ).FirstOrDefault(null);
+        }
+
+        public async Task<List<IUserInfo>> GetByIPAddress(
+            Guid siteId,
+            string ipv4Address,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var allUsers = await userQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+            var allLocations = await locationQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+
+            var query = from x in allUsers
+                        join y in allLocations
+                        on x.SiteId equals y.SiteId
+                        where x.Id == y.UserId && y.IpAddress == ipv4Address
+                        select x
+                        ;
+
+            var items = query.ToList<IUserInfo>();
+
+            return items;
+
+        }
+
+        public async Task<List<IUserInfo>> GetCrossSiteUserListByEmail(
+            string email,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var allUsers = await userQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+
+            string loweredEmail = email.ToLowerInvariant();
+
+            var query = from c in allUsers
+                        where c.NormalizedEmail == loweredEmail
+                        orderby c.DisplayName ascending
+                        select c;
+
+            var items = query.ToList<IUserInfo>();
+
+            return items;
+
+        }
+
+        public async Task<int> CountUsers(
+            Guid siteId,
+            string userNameBeginsWith,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var allUsers = await userQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+
+            return allUsers.Where(
+                x =>
+                (
+                    x.SiteId == siteId
+                    && x.IsDeleted == false
+                    && x.AccountApproved == true
+                    && (
+                    userNameBeginsWith == string.Empty
+                    || x.DisplayName.StartsWith(userNameBeginsWith)
+                    )
+                )
+                ).ToList().Count;
+
+        }
+
+        public async Task<List<IUserInfo>> GetPage(
+            Guid siteId,
+            int pageNumber,
+            int pageSize,
+            string userNameBeginsWith,
+            int sortMode,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var allUsers = await userQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+            var users = allUsers.ToList().AsQueryable();
+
+            //sortMode: 0 = DisplayName asc, 1 = JoinDate desc, 2 = Last, First
+
+            int offset = (pageSize * pageNumber) - pageSize;
+
+           
+
+            IQueryable<IUserInfo> query;
+            switch (sortMode)
+            {
+                case 2:
+                    //query = query.OrderBy(sl => sl.LastName).ThenBy(s2 => s2.FirstName).AsQueryable();
+                    query
+                = from x in users
+
+                  where
+                  (
+                      x.SiteId == siteId
+                      && x.IsDeleted == false
+                      && x.AccountApproved == true
+                      && (
+                      userNameBeginsWith == string.Empty
+                      || x.DisplayName.StartsWith(userNameBeginsWith)
+                      )
+                  )
+                  orderby x.LastName, x.FirstName
+                  select new UserInfo
+                  {
+                      Id = x.Id,
+                      AvatarUrl = x.AvatarUrl,
+                      AccountApproved = x.AccountApproved,
+                      Country = x.Country,
+                      CreatedUtc = x.CreatedUtc,
+                      DateOfBirth = x.DateOfBirth,
+                      DisplayInMemberList = x.DisplayInMemberList,
+                      DisplayName = x.DisplayName,
+                      Email = x.Email,
+                      FirstName = x.FirstName,
+                      Gender = x.Gender,
+                      IsDeleted = x.IsDeleted,
+                      IsLockedOut = x.IsLockedOut,
+                      LastLoginDate = x.LastLoginDate,
+                      LastName = x.LastName,
+                      PhoneNumber = x.PhoneNumber,
+                      PhoneNumberConfirmed = x.PhoneNumberConfirmed,
+                      SiteId = x.SiteId,
+                      State = x.State,
+                      TimeZoneId = x.TimeZoneId,
+                      Trusted = x.Trusted,
+                      UserName = x.UserName,
+                      WebSiteUrl = x.WebSiteUrl
+
+                  };
 
 
 
+                    break;
+                case 1:
+                    //query = query.OrderByDescending(sl => sl.CreatedUtc).AsQueryable();
+
+                    query
+                = from x in users
+
+                  where
+                  (
+                      x.SiteId == siteId
+                      && x.IsDeleted == false
+                      && x.AccountApproved == true
+                      && (
+                      userNameBeginsWith == string.Empty
+                      || x.DisplayName.StartsWith(userNameBeginsWith)
+                      )
+                  )
+                  orderby x.CreatedUtc descending
+                  select new UserInfo
+                  {
+                      Id = x.Id,
+                      AvatarUrl = x.AvatarUrl,
+                      AccountApproved = x.AccountApproved,
+                      Country = x.Country,
+                      CreatedUtc = x.CreatedUtc,
+                      DateOfBirth = x.DateOfBirth,
+                      DisplayInMemberList = x.DisplayInMemberList,
+                      DisplayName = x.DisplayName,
+                      Email = x.Email,
+                      FirstName = x.FirstName,
+                      Gender = x.Gender,
+                      IsDeleted = x.IsDeleted,
+                      IsLockedOut = x.IsLockedOut,
+                      LastLoginDate = x.LastLoginDate,
+                      LastName = x.LastName,
+                      PhoneNumber = x.PhoneNumber,
+                      PhoneNumberConfirmed = x.PhoneNumberConfirmed,
+                      SiteId = x.SiteId,
+                      State = x.State,
+                      TimeZoneId = x.TimeZoneId,
+                      Trusted = x.Trusted,
+                      UserName = x.UserName,
+                      WebSiteUrl = x.WebSiteUrl
+
+                  };
+
+
+                    break;
+
+                case 0:
+                default:
+                    //query = query.OrderBy(sl => sl.DisplayName).AsQueryable();
+
+                    query
+                = from x in users
+
+                  where
+                  (
+                      x.SiteId == siteId
+                      && x.IsDeleted == false
+                      && x.AccountApproved == true
+                      && (
+                      userNameBeginsWith == string.Empty
+                      || x.DisplayName.StartsWith(userNameBeginsWith)
+                      )
+                  )
+                  orderby x.DisplayName
+                  select new UserInfo
+                  {
+                      Id = x.Id,
+                      AvatarUrl = x.AvatarUrl,
+                      AccountApproved = x.AccountApproved,
+                      Country = x.Country,
+                      CreatedUtc = x.CreatedUtc,
+                      DateOfBirth = x.DateOfBirth,
+                      DisplayInMemberList = x.DisplayInMemberList,
+                      DisplayName = x.DisplayName,
+                      Email = x.Email,
+                      FirstName = x.FirstName,
+                      Gender = x.Gender,
+                      IsDeleted = x.IsDeleted,
+                      IsLockedOut = x.IsLockedOut,
+                      LastLoginDate = x.LastLoginDate,
+                      LastName = x.LastName,
+                      PhoneNumber = x.PhoneNumber,
+                      PhoneNumberConfirmed = x.PhoneNumberConfirmed,
+                      SiteId = x.SiteId,
+                      State = x.State,
+                      TimeZoneId = x.TimeZoneId,
+                      Trusted = x.Trusted,
+                      UserName = x.UserName,
+                      WebSiteUrl = x.WebSiteUrl
+
+                  };
+
+
+
+                    break;
+            }
+
+
+            return query
+                .Skip(offset)
+                .Take(pageSize)
+                .ToList<IUserInfo>()
+                ;
+
+
+        }
+
+
+        public async Task<int> CountUsersForAdminSearch(
+            Guid siteId,
+            string searchInput,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var allUsers = await userQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+
+            return allUsers.Where(
+                x =>
+                (
+                    x.SiteId == siteId
+                    && (
+                    searchInput == string.Empty
+                    || x.Email.Contains(searchInput)
+                    || x.UserName.Contains(searchInput)
+                    || x.FirstName.Contains(searchInput)
+                    || x.LastName.Contains(searchInput)
+                    || x.DisplayName.Contains(searchInput)
+                    )
+                )
+
+                )
+                .ToList().Count;
+        }
+
+        public async Task<List<IUserInfo>> GetUserAdminSearchPage(
+            Guid siteId,
+            int pageNumber,
+            int pageSize,
+            string searchInput,
+            int sortMode,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var allUsers = await userQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+            var users = allUsers.ToList().AsQueryable();
+
+            //sortMode: 0 = DisplayName asc, 1 = JoinDate desc, 2 = Last, First
+
+            int offset = (pageSize * pageNumber) - pageSize;
+
+            IQueryable<IUserInfo> query
+                = from x in users
+
+                  where
+                  (
+                      x.SiteId == siteId
+                        && (
+                        searchInput == string.Empty
+                        || x.Email.Contains(searchInput)
+                        || x.UserName.Contains(searchInput)
+                        || x.FirstName.Contains(searchInput)
+                        || x.LastName.Contains(searchInput)
+                        || x.DisplayName.Contains(searchInput)
+                        )
+                  )
+                  select new UserInfo
+                  {
+                      Id = x.Id,
+                      AvatarUrl = x.AvatarUrl,
+                      AccountApproved = x.AccountApproved,
+                      Country = x.Country,
+                      CreatedUtc = x.CreatedUtc,
+                      DateOfBirth = x.DateOfBirth,
+                      DisplayInMemberList = x.DisplayInMemberList,
+                      DisplayName = x.DisplayName,
+                      Email = x.Email,
+                      FirstName = x.FirstName,
+                      Gender = x.Gender,
+                      IsDeleted = x.IsDeleted,
+                      IsLockedOut = x.IsLockedOut,
+                      LastLoginDate = x.LastLoginDate,
+                      LastName = x.LastName,
+                      PhoneNumber = x.PhoneNumber,
+                      PhoneNumberConfirmed = x.PhoneNumberConfirmed,
+                      SiteId = x.SiteId,
+                      State = x.State,
+                      TimeZoneId = x.TimeZoneId,
+                      Trusted = x.Trusted,
+                      UserName = x.UserName,
+                      WebSiteUrl = x.WebSiteUrl
+
+                  };
+
+
+            switch (sortMode)
+            {
+                case 2:
+                    query = query.OrderBy(sl => sl.LastName).ThenBy(s2 => s2.FirstName).AsQueryable();
+                    break;
+                case 1:
+                    query = query.OrderByDescending(sl => sl.CreatedUtc).AsQueryable();
+                    break;
+
+                case 0:
+                default:
+                    query = query.OrderBy(sl => sl.DisplayName).AsQueryable();
+                    break;
+            }
+
+            return query
+                .Skip(offset)
+                .Take(pageSize)
+                .ToList<IUserInfo>()
+                ;
+
+
+        }
+
+        public async Task<int> CountLockedByAdmin(
+            Guid siteId,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var allUsers = await userQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+            
+            return allUsers.Where(
+                x => x.SiteId == siteId && x.IsLockedOut == true
+                )
+                .ToList().Count;
+        }
+
+        public async Task<List<IUserInfo>> GetPageLockedByAdmin(
+            Guid siteId,
+            int pageNumber,
+            int pageSize,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var allUsers = await userQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+            var users = allUsers.ToList().AsQueryable();
+
+            int offset = (pageSize * pageNumber) - pageSize;
+
+            IQueryable<IUserInfo> query
+                = from x in users
+
+                  where
+                  (
+                      x.SiteId == siteId
+                      && x.IsLockedOut == true
+                  )
+                  orderby x.DisplayName
+                  select new UserInfo
+                  {
+                      Id = x.Id,
+                      AvatarUrl = x.AvatarUrl,
+                      AccountApproved = x.AccountApproved,
+                      Country = x.Country,
+                      CreatedUtc = x.CreatedUtc,
+                      DateOfBirth = x.DateOfBirth,
+                      DisplayInMemberList = x.DisplayInMemberList,
+                      DisplayName = x.DisplayName,
+                      Email = x.Email,
+                      FirstName = x.FirstName,
+                      Gender = x.Gender,
+                      IsDeleted = x.IsDeleted,
+                      IsLockedOut = x.IsLockedOut,
+                      LastLoginDate = x.LastLoginDate,
+                      LastName = x.LastName,
+                      PhoneNumber = x.PhoneNumber,
+                      PhoneNumberConfirmed = x.PhoneNumberConfirmed,
+                      SiteId = x.SiteId,
+                      State = x.State,
+                      TimeZoneId = x.TimeZoneId,
+                      Trusted = x.Trusted,
+                      UserName = x.UserName,
+                      WebSiteUrl = x.WebSiteUrl
+
+                  };
+
+
+            return query
+                .Skip(offset)
+                .Take(pageSize)
+                .ToList<IUserInfo>()
+                ;
+
+        }
+
+        public async Task<int> CountFutureLockoutEndDate(
+            Guid siteId,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var allUsers = await userQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+
+            return allUsers.Where(
+                x => x.SiteId == siteId
+                && x.LockoutEndDateUtc.HasValue
+                && x.LockoutEndDateUtc.Value > DateTime.UtcNow
+                )
+                .ToList().Count;
+        }
+
+
+        public async Task<List<IUserInfo>> GetPageFutureLockoutEndDate(
+            Guid siteId,
+            int pageNumber,
+            int pageSize,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var allUsers = await userQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+            var users = allUsers.ToList().AsQueryable();
+
+            int offset = (pageSize * pageNumber) - pageSize;
+
+            IQueryable<IUserInfo> query
+                = from x in users
+
+                  where
+                  (
+                      x.SiteId == siteId
+                        && x.LockoutEndDateUtc.HasValue
+                        && x.LockoutEndDateUtc.Value > DateTime.UtcNow
+                  )
+                  orderby x.DisplayName
+                  select new UserInfo
+                  {
+                      Id = x.Id,
+                      AvatarUrl = x.AvatarUrl,
+                      AccountApproved = x.AccountApproved,
+                      Country = x.Country,
+                      CreatedUtc = x.CreatedUtc,
+                      DateOfBirth = x.DateOfBirth,
+                      DisplayInMemberList = x.DisplayInMemberList,
+                      DisplayName = x.DisplayName,
+                      Email = x.Email,
+                      FirstName = x.FirstName,
+                      Gender = x.Gender,
+                      IsDeleted = x.IsDeleted,
+                      IsLockedOut = x.IsLockedOut,
+                      LastLoginDate = x.LastLoginDate,
+                      LastName = x.LastName,
+                      PhoneNumber = x.PhoneNumber,
+                      PhoneNumberConfirmed = x.PhoneNumberConfirmed,
+                      SiteId = x.SiteId,
+                      State = x.State,
+                      TimeZoneId = x.TimeZoneId,
+                      Trusted = x.Trusted,
+                      UserName = x.UserName,
+                      WebSiteUrl = x.WebSiteUrl
+
+                  };
+
+
+            return query
+                .Skip(offset)
+                .Take(pageSize)
+                .ToList<IUserInfo>()
+                ;
+
+        }
+
+        public async Task<int> CountUnconfirmedEmail(
+            Guid siteId,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var allUsers = await userQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+
+            return allUsers.Where(
+                x => x.SiteId == siteId
+                && x.EmailConfirmed == false
+                )
+                .ToList().Count;
+        }
+
+        public async Task<List<IUserInfo>> GetPageUnconfirmedEmailUsers(
+            Guid siteId,
+            int pageNumber,
+            int pageSize,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var allUsers = await userQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+            var users = allUsers.ToList().AsQueryable();
+
+            int offset = (pageSize * pageNumber) - pageSize;
+
+            IQueryable<IUserInfo> query
+                = from x in users
+
+                  where
+                  (
+                      x.SiteId == siteId
+                      && x.EmailConfirmed == false
+                  )
+                  orderby x.DisplayName
+                  select new UserInfo
+                  {
+                      Id = x.Id,
+                      AvatarUrl = x.AvatarUrl,
+                      AccountApproved = x.AccountApproved,
+                      Country = x.Country,
+                      CreatedUtc = x.CreatedUtc,
+                      DateOfBirth = x.DateOfBirth,
+                      DisplayInMemberList = x.DisplayInMemberList,
+                      DisplayName = x.DisplayName,
+                      Email = x.Email,
+                      FirstName = x.FirstName,
+                      Gender = x.Gender,
+                      IsDeleted = x.IsDeleted,
+                      IsLockedOut = x.IsLockedOut,
+                      LastLoginDate = x.LastLoginDate,
+                      LastName = x.LastName,
+                      PhoneNumber = x.PhoneNumber,
+                      PhoneNumberConfirmed = x.PhoneNumberConfirmed,
+                      SiteId = x.SiteId,
+                      State = x.State,
+                      TimeZoneId = x.TimeZoneId,
+                      Trusted = x.Trusted,
+                      UserName = x.UserName,
+                      WebSiteUrl = x.WebSiteUrl
+
+                  };
+
+
+            return query
+                .Skip(offset)
+                .Take(pageSize)
+                .ToList<IUserInfo>()
+                ;
+
+        }
+
+        public async Task<int> CountUnconfirmedPhone(
+            Guid siteId,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var allUsers = await userQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+
+            return allUsers.Where(
+                x => x.SiteId == siteId
+                && x.PhoneNumberConfirmed == false
+                )
+                .ToList().Count;
+        }
+
+        public async Task<List<IUserInfo>> GetPageUnconfirmedPhoneUsers(
+            Guid siteId,
+            int pageNumber,
+            int pageSize,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var allUsers = await userQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+            var users = allUsers.ToList().AsQueryable();
+
+            int offset = (pageSize * pageNumber) - pageSize;
+
+            IQueryable<IUserInfo> query
+                = from x in users
+
+                  where
+                  (
+                      x.SiteId == siteId
+                      && x.PhoneNumberConfirmed == false
+                  )
+                  orderby x.DisplayName
+                  select new UserInfo
+                  {
+                      Id = x.Id,
+                      AvatarUrl = x.AvatarUrl,
+                      AccountApproved = x.AccountApproved,
+                      Country = x.Country,
+                      CreatedUtc = x.CreatedUtc,
+                      DateOfBirth = x.DateOfBirth,
+                      DisplayInMemberList = x.DisplayInMemberList,
+                      DisplayName = x.DisplayName,
+                      Email = x.Email,
+                      FirstName = x.FirstName,
+                      Gender = x.Gender,
+                      IsDeleted = x.IsDeleted,
+                      IsLockedOut = x.IsLockedOut,
+                      LastLoginDate = x.LastLoginDate,
+                      LastName = x.LastName,
+                      PhoneNumber = x.PhoneNumber,
+                      PhoneNumberConfirmed = x.PhoneNumberConfirmed,
+                      SiteId = x.SiteId,
+                      State = x.State,
+                      TimeZoneId = x.TimeZoneId,
+                      Trusted = x.Trusted,
+                      UserName = x.UserName,
+                      WebSiteUrl = x.WebSiteUrl
+
+                  };
+
+
+            return query
+                .Skip(offset)
+                .Take(pageSize)
+                .ToList<IUserInfo>()
+                ;
+
+        }
+
+        public async Task<int> CountNotApprovedUsers(
+            Guid siteId,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var allUsers = await userQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+
+            return allUsers.Where(
+                x => x.SiteId == siteId && x.AccountApproved == false
+                )
+                .ToList().Count;
+
+        }
+
+        public async Task<List<IUserInfo>> GetNotApprovedUsers(
+            Guid siteId,
+            int pageNumber,
+            int pageSize,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var allUsers = await userQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+            var users = allUsers.ToList().AsQueryable();
+
+            int offset = (pageSize * pageNumber) - pageSize;
+
+            IQueryable<IUserInfo> query
+                = from x in users
+                  where
+                  (
+                      x.SiteId == siteId
+                      && x.AccountApproved == false
+                  )
+                  orderby x.DisplayName
+                  select new UserInfo
+                  {
+                      Id = x.Id,
+                      AvatarUrl = x.AvatarUrl,
+                      AccountApproved = x.AccountApproved,
+                      Country = x.Country,
+                      CreatedUtc = x.CreatedUtc,
+                      DateOfBirth = x.DateOfBirth,
+                      DisplayInMemberList = x.DisplayInMemberList,
+                      DisplayName = x.DisplayName,
+                      Email = x.Email,
+                      FirstName = x.FirstName,
+                      Gender = x.Gender,
+                      IsDeleted = x.IsDeleted,
+                      IsLockedOut = x.IsLockedOut,
+                      LastLoginDate = x.LastLoginDate,
+                      LastName = x.LastName,
+                      PhoneNumber = x.PhoneNumber,
+                      PhoneNumberConfirmed = x.PhoneNumberConfirmed,
+                      SiteId = x.SiteId,
+                      State = x.State,
+                      TimeZoneId = x.TimeZoneId,
+                      Trusted = x.Trusted,
+                      UserName = x.UserName,
+                      WebSiteUrl = x.WebSiteUrl
+
+                  };
+
+
+            return query
+                .Skip(offset)
+                .Take(pageSize)
+                .ToList<IUserInfo>()
+                ;
+
+        }
+
+        public async Task<bool> EmailExistsInDB(
+            Guid siteId,
+            string email,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var found = await Fetch(siteId, email);
+            if (found == null) { return false; }
+            return true;
+
+        }
+
+        public async Task<bool> EmailExistsInDB(
+            Guid siteId,
+            Guid userId,
+            string email,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var found = await Fetch(siteId, email);
+            if (found == null) { return false; }
+            if (found.Id != userId) { return false; }
+            return true;
+
+        }
+
+        public async Task<bool> LoginExistsInDB(
+            Guid siteId,
+            string loginName,
+            CancellationToken cancellationToken = default(CancellationToken)
+            )
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var allUsers = await userQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+
+            var item = allUsers.Where(
+                    x => x.SiteId == siteId
+                    && x.UserName == loginName
+                    ).SingleOrDefault();
+
+            if (item == null) { return false; }
+            return true;
+        }
+
+        public async Task<bool> LoginIsAvailable(
+            Guid siteId,
+            Guid userId,
+            string loginName,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var found = await FetchByLoginName(siteId, loginName, false, cancellationToken);
+            if (found == null) { return true; }
+            if (found.Id == userId) { return true; }
+            return false;
+        }
+
+
+        public async Task<string> GetUserNameFromEmail(
+            Guid siteId,
+            string email,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var found = await Fetch(siteId, email, cancellationToken);
+            if (found == null) { return string.Empty; }
+            return found.UserName;
+        }
 
         #endregion
 
