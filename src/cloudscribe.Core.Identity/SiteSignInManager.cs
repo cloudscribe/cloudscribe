@@ -67,6 +67,8 @@ namespace cloudscribe.Core.Identity
         //here we need to override the authenticationscheme per site 
         //TODO: this problem got solved so need to comment out these overides one at a time and verify we don't need them anymore
 
+        // if thisone is commentedout I get error:
+        //InvalidOperationException: No authentication handler is configured to handle the scheme: Microsoft.AspNet.Identity.Application
         public override async Task SignInAsync(TUser user, AuthenticationProperties authenticationProperties, string authenticationMethod = null)
         {
             logger.LogInformation("SignInAsync called");
@@ -84,14 +86,15 @@ namespace cloudscribe.Core.Identity
                 authenticationProperties ?? new AuthenticationProperties());
         }
 
-        public override async Task RefreshSignInAsync(TUser user)
-        {
-            logger.LogInformation("SignInAsync called");
-            var auth = new AuthenticateContext(options.Cookies.ApplicationCookie.AuthenticationScheme);
-            await context.Authentication.AuthenticateAsync(auth);
-            var authenticationMethod = auth.Principal?.FindFirstValue(ClaimTypes.AuthenticationMethod);
-            await SignInAsync(user, new AuthenticationProperties(auth.Properties), authenticationMethod);
-        }
+        // 2016-05-13 commented this one out and it still seems to work ok
+        //public override async Task RefreshSignInAsync(TUser user)
+        //{
+        //    logger.LogInformation("SignInAsync called");
+        //    var auth = new AuthenticateContext(options.Cookies.ApplicationCookie.AuthenticationScheme);
+        //    await context.Authentication.AuthenticateAsync(auth);
+        //    var authenticationMethod = auth.Principal?.FindFirstValue(ClaimTypes.AuthenticationMethod);
+        //    await SignInAsync(user, new AuthenticationProperties(auth.Properties), authenticationMethod);
+        //}
 
         public override async Task SignOutAsync()
         {
@@ -163,7 +166,8 @@ namespace cloudscribe.Core.Identity
             //https://github.com/aspnet/HttpAbstractions/blob/dev/src/Microsoft.AspNet.Http.Abstractions/Authentication/AuthenticationManager.cs
             //https://github.com/aspnet/HttpAbstractions/blob/dev/src/Microsoft.AspNet.Http/Authentication/DefaultAuthenticationManager.cs
 
-            IEnumerable<AuthenticationDescription> all = context.Authentication.GetAuthenticationSchemes().Where(d => !string.IsNullOrEmpty(d.DisplayName));
+            IEnumerable<AuthenticationDescription> all = 
+                context.Authentication.GetAuthenticationSchemes().Where(d => !string.IsNullOrEmpty(d.DisplayName));
 
             //TODO: commenting this out 2016-05-12
             // review if we need this 

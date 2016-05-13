@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette/Derek Gray
 // Created:				    2016-05-04
-// Last Modified:		    2016-05-05
+// Last Modified:		    2016-05-13
 // 
 
 using cloudscribe.Core.Models;
@@ -40,9 +40,9 @@ namespace cloudscribe.Core.Identity
                 var tenantPathBase = string.IsNullOrEmpty(tenant.SiteFolderName)
                     ? PathString.Empty
                     : new PathString("/" + tenant.SiteFolderName);
-
-                cookieEvents.OnValidatePrincipal = siteValidator.ValidatePrincipal;
-
+                
+                // TODO: I'm not sure newing this up here is agood idea
+                // are we missing any default configuration thast would normally be set for identity?
                 var identityOptions = new IdentityOptions();
 
                 /*
@@ -56,32 +56,45 @@ namespace cloudscribe.Core.Identity
                 identityOptions.User = singletonOptions.User;
                 */
 
-                Setup(identityOptions.Cookies.ApplicationCookie, AuthenticationScheme.Application, tenant);
-                Setup(identityOptions.Cookies.ExternalCookie, AuthenticationScheme.External, tenant);
-                Setup(identityOptions.Cookies.TwoFactorRememberMeCookie, AuthenticationScheme.TwoFactorRememberMe, tenant);
-                Setup(identityOptions.Cookies.TwoFactorUserIdCookie, AuthenticationScheme.TwoFactorUserId, tenant);
-                
-                var application = identityOptions.Cookies.ApplicationCookie;
-
-                application.AutomaticAuthenticate = true;
-                application.AutomaticChallenge = true;
+                SetupAppCookie(identityOptions.Cookies.ApplicationCookie, AuthenticationScheme.Application, tenant);
+                SetupOtherCookies(identityOptions.Cookies.ExternalCookie, AuthenticationScheme.External, tenant);
+                SetupOtherCookies(identityOptions.Cookies.TwoFactorRememberMeCookie, AuthenticationScheme.TwoFactorRememberMe, tenant);
+                SetupOtherCookies(identityOptions.Cookies.TwoFactorUserIdCookie, AuthenticationScheme.TwoFactorUserId, tenant);
                 
                 return identityOptions;
             }
         }
 
-        private void Setup(CookieAuthenticationOptions options, string scheme, SiteSettings tenant)
+        private void SetupAppCookie(CookieAuthenticationOptions options, string scheme, SiteSettings tenant)
         {
+            options.AuthenticationScheme = $"{scheme}-{tenant.SiteFolderName}";
+            options.CookieName = $"{scheme}-{tenant.SiteFolderName}";
+            options.CookiePath = "/" + tenant.SiteFolderName;
+
             var tenantPathBase = string.IsNullOrEmpty(tenant.SiteFolderName)
                 ? PathString.Empty
                 : new PathString("/" + tenant.SiteFolderName);
 
-            options.CookieName = $"{scheme}-{tenant.SiteFolderName}";
-            options.AuthenticationScheme = $"{scheme}-{tenant.SiteFolderName}";
             options.LoginPath = tenantPathBase + "/account/login";
             options.LogoutPath = tenantPathBase + "/account/logoff";
-            options.CookiePath = "/" + tenant.SiteFolderName;
+
+            cookieEvents.OnValidatePrincipal = siteValidator.ValidatePrincipal;
             options.Events = cookieEvents;
+
+            options.AutomaticAuthenticate = true;
+            options.AutomaticChallenge = true;
+        }
+
+        private void SetupOtherCookies(CookieAuthenticationOptions options, string scheme, SiteSettings tenant)
+        {
+            //var tenantPathBase = string.IsNullOrEmpty(tenant.SiteFolderName)
+            //    ? PathString.Empty
+            //    : new PathString("/" + tenant.SiteFolderName);
+
+            options.AuthenticationScheme = $"{scheme}-{tenant.SiteFolderName}";
+            options.CookieName = $"{scheme}-{tenant.SiteFolderName}";
+            options.CookiePath = "/" + tenant.SiteFolderName;
+            
         }
     }
 }

@@ -2,9 +2,11 @@
 
 using cloudscribe.Core.Models;
 using Microsoft.AspNet.Builder;
+using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Identity;
+using System;
 
-namespace cloudscribe.Core.Web
+namespace Microsoft.AspNet.Builder
 {
     public static class BuilderExtensions
     {
@@ -63,6 +65,20 @@ namespace cloudscribe.Core.Web
                 });
             }
 
+            //app.Use()
+
+            //Func<HttpContext, bool> hasTwitterKeys = (HttpContext context) =>
+            //{
+            //    var tenant = context.GetTenant<SiteSettings>();
+            //    if (tenant == null) return false;
+            //    if (string.IsNullOrWhiteSpace(tenant.TwitterConsumerKey)) return false;
+            //    if (string.IsNullOrWhiteSpace(tenant.TwitterConsumerSecret)) return false;
+
+            //    return true;
+            //};
+
+            //app.UseWhen(context => hasTwitterKeys(context), appBuilder =>
+            //{
             if (!string.IsNullOrWhiteSpace(site.TwitterConsumerKey))
             {
                 app.UseTwitterAuthentication(options =>
@@ -78,7 +94,49 @@ namespace cloudscribe.Core.Web
                 });
             }
 
+            //});
+
+
+
             return app;
+        }
+
+        public static IApplicationBuilder UseWhen(this IApplicationBuilder app
+            , Func<HttpContext, bool> condition
+            , Action<IApplicationBuilder> configuration)
+        {
+            if (app == null)
+            {
+                throw new ArgumentNullException(nameof(app));
+            }
+
+            if (condition == null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            if (configuration == null)
+            {
+                throw new ArgumentNullException(nameof(configuration));
+            }
+
+            var builder = app.New();
+            configuration(builder);
+
+            return app.Use(next => {
+                builder.Run(next);
+
+                var branch = builder.Build();
+
+                return context => {
+                    if (condition(context))
+                    {
+                        return branch(context);
+                    }
+
+                    return next(context);
+                };
+            });
         }
 
     }

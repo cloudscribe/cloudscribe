@@ -154,12 +154,12 @@ namespace example.WebApp
             services.AddScoped<LogManager>();
 
             /* these are optional and only needed if using cloudscribe Setup */
-            services.Configure<SetupOptions>(Configuration.GetSection("SetupOptions"));
-            services.AddScoped<SetupManager, SetupManager>();
-            services.AddScoped<IVersionProvider, CloudscribeCoreVersionProvider>();
-            services.AddScoped<IVersionProviderFactory, VersionProviderFactory>();
-            services.AddScoped<IVersionProvider, SetupVersionProvider>();
-            services.AddScoped<IVersionProvider, CloudscribeLoggingVersionProvider>();
+            //services.Configure<SetupOptions>(Configuration.GetSection("SetupOptions"));
+            //services.AddScoped<SetupManager, SetupManager>();
+            //services.AddScoped<IVersionProvider, CloudscribeCoreVersionProvider>();
+            //services.AddScoped<IVersionProviderFactory, VersionProviderFactory>();
+            //services.AddScoped<IVersionProvider, SetupVersionProvider>();
+            //services.AddScoped<IVersionProvider, CloudscribeLoggingVersionProvider>();
             /* end cloudscribe Setup */
             
             services.AddCloudscribeCore(Configuration);
@@ -244,6 +244,7 @@ namespace example.WebApp
                 builder.UseSocialAuth(ctx.Tenant, cookieOptions, shouldUseFolder);
             });
 
+            
             UseMvc(app, multiTenantOptions.Mode == MultiTenantMode.FolderName);
 
             var devOptions = Configuration.Get<DevOptions>("DevOptions");

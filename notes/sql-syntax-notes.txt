@@ -1,3 +1,8 @@
+
+https://www.upwork.com/hiring/data/sql-vs-nosql-databases-whats-the-difference/
+
+
+
 ## MSSQL Syntax
 
 ALTER TABLE [dbo].mp_Sites DROP COLUMN Logo
