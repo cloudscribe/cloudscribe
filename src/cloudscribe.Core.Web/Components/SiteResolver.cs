@@ -16,9 +16,6 @@ using cloudscribe.Core.Models;
 using Microsoft.AspNet.Http;
 using Microsoft.Extensions.OptionsModel;
 using SaasKit.Multitenancy;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -61,8 +58,7 @@ namespace cloudscribe.Core.Web.Components
 
             CancellationToken cancellationToken = context?.RequestAborted ?? CancellationToken.None;
 
-            ISiteSettings site 
-                = await siteRepo.FetchByFolderName(siteFolderName, cancellationToken);
+            var site  = await siteRepo.FetchByFolderName(siteFolderName, cancellationToken);
 
             if (site != null)
             {
@@ -82,8 +78,7 @@ namespace cloudscribe.Core.Web.Components
 
             CancellationToken cancellationToken = context?.RequestAborted ?? CancellationToken.None;
 
-            ISiteSettings site
-                = await siteRepo.Fetch(context.Request.Host.Value, cancellationToken);
+            var site = await siteRepo.Fetch(context.Request.Host.Value, cancellationToken);
 
             if (site != null)
             {

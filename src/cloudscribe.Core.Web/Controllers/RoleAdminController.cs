@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-06
-// Last Modified:			2016-05-11
+// Last Modified:			2016-05-13
 // 
 
 using cloudscribe.Core.Identity;
@@ -176,17 +176,20 @@ namespace cloudscribe.Core.Web.Controllers
 
             string successFormat;
 
-            if (model.SiteId == Guid.Empty)
+            if (model.Id == Guid.Empty)
             {
+                model.Id = Guid.NewGuid();
                 model.SiteId = selectedSite.Id;
                 successFormat = "The role <b>{0}</b> was successfully created.";
+                await RoleManager.CreateRole(model);
             }
             else
             {
                 successFormat = "The role <b>{0}</b> was successfully updated.";
+                await RoleManager.UpdateRole(model);
             }
 
-            await RoleManager.SaveRole(model);
+            
             
             this.AlertSuccess(string.Format(successFormat,
                         model.DisplayName), true);

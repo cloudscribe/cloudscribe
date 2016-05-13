@@ -35,7 +35,8 @@ namespace Microsoft.Extensions.DependencyInjection
             
 
             services.AddScoped<ITimeZoneResolver, RequestTimeZoneResolver>();
-            services.AddMultitenancy<SiteSettings, CachingSiteResolver>();
+            services.AddMultitenancy<SiteSettings, SiteResolver>();
+            //services.AddMultitenancy<SiteSettings, CachingSiteResolver>();
             services.AddSingleton<IOptions<IdentityOptions>, SiteIdentityOptionsResolver>();
 
             services.AddScoped<SiteManager, SiteManager>();

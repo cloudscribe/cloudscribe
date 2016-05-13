@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-22
-// Last Modified:			2016-05-10
+// Last Modified:			2016-05-13
 // 
 
 using cloudscribe.Core.Models;
@@ -76,17 +76,17 @@ namespace cloudscribe.Core.Web.Components
            
 
         public Task<List<ISiteInfo>> GetPageOtherSites(
-            Guid currentSiteGuid,
+            Guid currentSiteId,
             int pageNumber,
             int pageSize)
         {
-            return queries.GetPageOtherSites(currentSiteGuid, pageNumber, pageSize, CancellationToken);
+            return queries.GetPageOtherSites(currentSiteId, pageNumber, pageSize, CancellationToken);
 
         }
 
-        public Task<int> CountOtherSites(Guid currentSiteGuid)
+        public Task<int> CountOtherSites(Guid currentSiteId)
         {
-            return queries.CountOtherSites(currentSiteGuid, CancellationToken);
+            return queries.CountOtherSites(currentSiteId, CancellationToken);
         }
 
         //public int GetSiteIdByFolderNonAsync(string folderName)
@@ -94,9 +94,9 @@ namespace cloudscribe.Core.Web.Components
         //    return siteRepo.GetSiteIdByFolderNonAsync(folderName);
         //}
 
-        public async Task<ISiteSettings> Fetch(Guid siteGuid)
+        public async Task<ISiteSettings> Fetch(Guid siteId)
         {
-            var site = await queries.Fetch(siteGuid, CancellationToken);
+            var site = await queries.Fetch(siteId, CancellationToken);
             dataProtector.UnProtect(site);
             return site;
         }
@@ -146,7 +146,7 @@ namespace cloudscribe.Core.Web.Components
 
         }
 
-        public async Task<bool> AliasIdIsAvailable(Guid requestingSiteGuid, string requestedAliasId)
+        public async Task<bool> AliasIdIsAvailable(Guid requestingSiteId, string requestedAliasId)
         {
             if (string.IsNullOrWhiteSpace(requestedAliasId)) return false;
             if (requestedAliasId.Length > 36) return false;
@@ -156,7 +156,7 @@ namespace cloudscribe.Core.Web.Components
             {
                 if(s.AliasId == requestedAliasId)
                 {
-                    if ((requestingSiteGuid == s.Id)) return true;
+                    if ((requestingSiteId == s.Id)) return true;
 
                     return false;
 
@@ -410,33 +410,33 @@ namespace cloudscribe.Core.Web.Components
             return queries.GetSiteHost(hostName, CancellationToken);
         }
 
-        public Task<List<ISiteHost>> GetSiteHosts(Guid siteGuid)
+        public Task<List<ISiteHost>> GetSiteHosts(Guid siteId)
         {
-            return queries.GetSiteHosts(siteGuid, CancellationToken);
+            return queries.GetSiteHosts(siteId, CancellationToken);
         }
 
-        public async Task AddHost(Guid siteGuid, string hostName)
+        public async Task AddHost(Guid siteId, string hostName)
         {
-            await commands.AddHost(siteGuid, hostName, CancellationToken);
+            await commands.AddHost(siteId, hostName, CancellationToken);
         }
 
-        public async Task DeleteHost(Guid hostGuid)
+        public async Task DeleteHost(Guid hostId)
         {
-            await commands.DeleteHost(hostGuid, CancellationToken);
+            await commands.DeleteHost(hostId, CancellationToken);
         }
 
-        public Task<int> GetUserCount(Guid siteGuid)
+        public Task<int> GetUserCount(Guid siteId)
         {
             // this is only used on setup controller
             // to make sure admin user was created
-            return userQueries.CountUsers(siteGuid, string.Empty, CancellationToken);
+            return userQueries.CountUsers(siteId, string.Empty, CancellationToken);
         }
 
-        public Task<int> GetRoleCount(Guid siteGuid)
+        public Task<int> GetRoleCount(Guid siteId)
         {
             // this is only used on setup controller
             // to make sure admin user and role was created
-            return userQueries.CountOfRoles(siteGuid, string.Empty, CancellationToken);
+            return userQueries.CountOfRoles(siteId, string.Empty, CancellationToken);
         }
 
         public async Task<int> ExistingSiteCount()

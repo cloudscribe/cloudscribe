@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-17
-// Last Modified:		    2016-05-10
+// Last Modified:		    2016-05-13
 // 
 //
 
@@ -76,22 +76,22 @@ namespace cloudscribe.Core.Identity
             }
         }
 
-        public async Task<int> CountOfRoles(Guid siteGuid, string searchInput)
+        public async Task<int> CountOfRoles(Guid siteId, string searchInput)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteGuid; }
 
-            return await queries.CountOfRoles(siteGuid, searchInput, CancellationToken);
+            return await queries.CountOfRoles(siteId, searchInput, CancellationToken);
         }
 
         public async Task<IList<ISiteRole>> GetRolesBySite(
-            Guid siteGuid,
+            Guid siteId,
             string searchInput,
             int pageNumber,
             int pageSize)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteGuid; }
 
-            return await queries.GetRolesBySite(siteGuid, searchInput, pageNumber, pageSize, CancellationToken);
+            return await queries.GetRolesBySite(siteId, searchInput, pageNumber, pageSize, CancellationToken);
 
         }
 
@@ -101,70 +101,86 @@ namespace cloudscribe.Core.Identity
         /// </summary>
         /// <param name="roleId"></param>
         /// <returns></returns>
-        public async Task<ISiteRole> FetchRole(Guid roleGuid)
+        public async Task<ISiteRole> FetchRole(Guid roleId)
         {
-            return await queries.FetchRole(roleGuid, CancellationToken);
+            return await queries.FetchRole(roleId, CancellationToken);
         }
 
         // again need to consolidate with RoleStore.UpdateAsync
-        public async Task SaveRole(ISiteRole role)
+        public async Task CreateRole(ISiteRole role)
         {
-            if(role.Id == Guid.Empty)
-            {
-                // TODO: consider if this is the correct place to generate the id
-                role.Id = Guid.NewGuid();
-                await commands.CreateRole(role, CancellationToken);
-            }
-            else
-            {
-                await commands.UpdateRole(role, CancellationToken);
-            }
+            if(role.Id == Guid.Empty) role.Id = Guid.NewGuid();
+                
+            await commands.CreateRole(role, CancellationToken);
+
+        }
+
+        public async Task UpdateRole(ISiteRole role)
+        {
+            if (role.Id == Guid.Empty) throw new ArgumentException("role id cannot be empty guid");
             
+            await commands.UpdateRole(role, CancellationToken);
         }
 
-        public async Task DeleteUserRolesByRole(Guid roleGuid)
+        public async Task DeleteUserRolesByRole(Guid roleId)
         {
-            await commands.DeleteUserRolesByRole(roleGuid, CancellationToken);
+            await commands.DeleteUserRolesByRole(roleId, CancellationToken);
         }
 
-        public async Task DeleteRole(Guid roleGuid)
+        public async Task DeleteRole(Guid roleId)
         {
-            await commands.DeleteRole(roleGuid, CancellationToken);
+            await commands.DeleteRole(roleId, CancellationToken);
         }
 
-        public async Task<bool> RoleExists(Guid siteGuid, string roleName)
+        public async Task<bool> RoleExists(Guid siteId, string roleName)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteGuid; }
 
-            return await queries.RoleExists(siteGuid, roleName, CancellationToken);
+            return await queries.RoleExists(siteId, roleName, CancellationToken);
         }
 
-        public async Task<IList<IUserInfo>> GetUsersInRole(Guid siteGuid, Guid roleGuid, string searchInput, int pageNumber, int pageSize)
+        public async Task<IList<IUserInfo>> GetUsersInRole(
+            Guid siteId, 
+            Guid roleId, 
+            string searchInput, 
+            int pageNumber, 
+            int pageSize)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteGuid; }
 
-            return await queries.GetUsersInRole(siteGuid, roleGuid, searchInput, pageNumber, pageSize, CancellationToken);
+            return await queries.GetUsersInRole(siteId, roleId, searchInput, pageNumber, pageSize, CancellationToken);
         }
 
-        public async Task<int> CountUsersInRole(Guid siteGuid, Guid roleGuid, string searchInput)
+        public async Task<int> CountUsersInRole(
+            Guid siteId, 
+            Guid roleId, 
+            string searchInput)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteGuid; }
 
-            return await queries.CountUsersInRole(siteGuid, roleGuid, searchInput, CancellationToken);
+            return await queries.CountUsersInRole(siteId, roleId, searchInput, CancellationToken);
         }
 
-        public async Task<IList<IUserInfo>> GetUsersNotInRole(Guid siteGuid, Guid roleGuid, string searchInput, int pageNumber, int pageSize)
+        public async Task<IList<IUserInfo>> GetUsersNotInRole(
+            Guid siteId, 
+            Guid roleId, 
+            string searchInput, 
+            int pageNumber, 
+            int pageSize)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteGuid; }
 
-            return await queries.GetUsersNotInRole(siteGuid, roleGuid, searchInput, pageNumber, pageSize, CancellationToken);
+            return await queries.GetUsersNotInRole(siteId, roleId, searchInput, pageNumber, pageSize, CancellationToken);
         }
 
-        public async Task<int> CountUsersNotInRole(Guid siteGuid, Guid roleGuid, string searchInput)
+        public async Task<int> CountUsersNotInRole(
+            Guid siteId, 
+            Guid roleId, 
+            string searchInput)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteGuid; }
 
-            return await queries.CountUsersNotInRole(siteGuid, roleGuid, searchInput, CancellationToken);
+            return await queries.CountUsersNotInRole(siteId, roleId, searchInput, CancellationToken);
         }
 
         public async Task AddUserToRole(ISiteUser user, ISiteRole role)

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-27
-// Last Modified:		    2016-05-10
+// Last Modified:		    2016-05-13
 // 
 
 //TODO: we need to override many or most of the methods of the base class
@@ -253,6 +253,9 @@ namespace cloudscribe.Core.Identity
 
         private const string LoginProviderKey = "LoginProvider";
         private const string XsrfKey = "XsrfId";
+
+        // commenting out this overide breaks social auth
+
         /// <summary>
         /// Gets the external login information for the current login, as an asynchronous operation.
         /// </summary>
@@ -318,6 +321,7 @@ namespace cloudscribe.Core.Identity
             return new ExternalLoginInfo(auth.Principal, provider, providerKey, new AuthenticationDescription(auth.Description).DisplayName);
         }
 
+        //commenting this overide out breaks social auth
         public override async Task<SignInResult> ExternalLoginSignInAsync(string loginProvider, string providerKey, bool isPersistent)
         {
             logger.LogInformation("ExternalLoginSignInAsync called for " + loginProvider + " with key " + providerKey);

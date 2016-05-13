@@ -101,43 +101,44 @@ namespace Microsoft.AspNet.Builder
             return app;
         }
 
-        public static IApplicationBuilder UseWhen(this IApplicationBuilder app
-            , Func<HttpContext, bool> condition
-            , Action<IApplicationBuilder> configuration)
-        {
-            if (app == null)
-            {
-                throw new ArgumentNullException(nameof(app));
-            }
 
-            if (condition == null)
-            {
-                throw new ArgumentNullException(nameof(condition));
-            }
+        //public static IApplicationBuilder UseWhen(this IApplicationBuilder app
+        //    , Func<HttpContext, bool> condition
+        //    , Action<IApplicationBuilder> configuration)
+        //{
+        //    if (app == null)
+        //    {
+        //        throw new ArgumentNullException(nameof(app));
+        //    }
 
-            if (configuration == null)
-            {
-                throw new ArgumentNullException(nameof(configuration));
-            }
+        //    if (condition == null)
+        //    {
+        //        throw new ArgumentNullException(nameof(condition));
+        //    }
 
-            var builder = app.New();
-            configuration(builder);
+        //    if (configuration == null)
+        //    {
+        //        throw new ArgumentNullException(nameof(configuration));
+        //    }
 
-            return app.Use(next => {
-                builder.Run(next);
+        //    var builder = app.New();
+        //    configuration(builder);
 
-                var branch = builder.Build();
+        //    return app.Use(next => {
+        //        builder.Run(next);
 
-                return context => {
-                    if (condition(context))
-                    {
-                        return branch(context);
-                    }
+        //        var branch = builder.Build();
 
-                    return next(context);
-                };
-            });
-        }
+        //        return context => {
+        //            if (condition(context))
+        //            {
+        //                return branch(context);
+        //            }
+
+        //            return next(context);
+        //        };
+        //    });
+        //}
 
     }
 }
