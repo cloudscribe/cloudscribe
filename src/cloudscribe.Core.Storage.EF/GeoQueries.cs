@@ -24,7 +24,9 @@ namespace cloudscribe.Core.Storage.EF
 
         private CoreDbContext dbContext;
 
-        public async Task<IGeoCountry> FetchCountry(Guid countryId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<IGeoCountry> FetchCountry(
+            Guid countryId, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
@@ -114,13 +116,13 @@ namespace cloudscribe.Core.Storage.EF
             return item;
         }
 
-        public Task<int> GetGeoZoneCount(
+        public async Task<int> GetGeoZoneCount(
             Guid countryId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            return dbContext.States.CountAsync<GeoZone>(
+            return await dbContext.States.CountAsync<GeoZone>(
                 g => g.CountryId == countryId, cancellationToken);
         }
 
@@ -257,11 +259,11 @@ namespace cloudscribe.Core.Storage.EF
             return item;
         }
 
-        public Task<int> GetLanguageCount(CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<int> GetLanguageCount(CancellationToken cancellationToken = default(CancellationToken))
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            return dbContext.Languages.CountAsync<Language>(cancellationToken);
+            return await dbContext.Languages.CountAsync<Language>(cancellationToken);
 
         }
 

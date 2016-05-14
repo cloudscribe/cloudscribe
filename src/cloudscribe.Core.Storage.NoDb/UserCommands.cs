@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:                  Joe Audette
 // Created:                 2016-04-26
-// Last Modified:           2016-05-12
+// Last Modified:           2016-05-14
 // 
 
 using cloudscribe.Core.Models;
@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Storage.NoDb
 {
-    public class UserCommands
+    public class UserCommands : IUserCommands
     {
         public UserCommands(
             IProjectResolver projectResolver,
@@ -130,25 +130,30 @@ namespace cloudscribe.Core.Storage.NoDb
  
         }
 
-        //public async Task<bool> DeleteUsersBySite(
-        //    Guid siteGuid,
-        //    CancellationToken cancellationToken = default(CancellationToken))
-        //{
-        //    bool result = await DeleteLoginsBySite(siteGuid);
-        //    result = await DeleteClaimsBySite(siteGuid);
-        //    result = await DeleteUserRolesBySite(siteGuid);
+        public async Task DeleteUsersBySite(
+            Guid siteId,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            await EnsureProjectId().ConfigureAwait(false);
+            await DeleteLoginsBySite(siteId);
+            await DeleteClaimsBySite(siteId);
+            await DeleteUserRolesBySite(siteId);
 
-        //    var query = from x in dbContext.Users.Where(x => x.SiteGuid == siteGuid)
-        //                select x;
+            var all = await userQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+            var users = all.ToList().AsQueryable();
 
-        //    dbContext.Users.RemoveRange(query);
-        //    int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
-        //        .ConfigureAwait(false);
+            var query = from x in users.Where(x => x.SiteId == siteId)
+                        select x;
 
-        //    result = rowsAffected > 0;
+            foreach(var u in query)
+            {
+                await userCommands.DeleteAsync(
+                    projectId,
+                    u.Id.ToString(),
+                    cancellationToken).ConfigureAwait(false);
+            }
 
-        //    return result;
-        //}
+        }
 
         public async Task FlagAsDeleted(
             Guid userId,
@@ -175,6 +180,145 @@ namespace cloudscribe.Core.Storage.NoDb
                     item,
                     cancellationToken).ConfigureAwait(false);
             
+        }
+
+        public async Task FlagAsNotDeleted(
+            Guid userId,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var item
+                = await userQueries.FetchAsync(
+                    projectId,
+                    userId.ToString(),
+                    cancellationToken).ConfigureAwait(false);
+
+            if (item == null) { throw new InvalidOperationException("user not found"); }
+
+            item.IsDeleted = false;
+
+            await userCommands.UpdateAsync(
+                    projectId,
+                    item.Id.ToString(),
+                    item,
+                    cancellationToken).ConfigureAwait(false);
+
+        }
+
+        public async Task LockoutAccount(
+            Guid userId,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var item
+                = await userQueries.FetchAsync(
+                    projectId,
+                    userId.ToString(),
+                    cancellationToken).ConfigureAwait(false);
+
+            if (item == null) { throw new InvalidOperationException("user not found"); }
+
+            item.IsLockedOut = true;
+
+            await userCommands.UpdateAsync(
+                    projectId,
+                    item.Id.ToString(),
+                    item,
+                    cancellationToken).ConfigureAwait(false);
+
+        }
+
+        public async Task UnLockAccount(
+            Guid userId,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var item
+                = await userQueries.FetchAsync(
+                    projectId,
+                    userId.ToString(),
+                    cancellationToken).ConfigureAwait(false);
+
+            if (item == null) { throw new InvalidOperationException("user not found"); }
+
+            item.IsLockedOut = true;
+            item.AccessFailedCount = 0;
+
+            await userCommands.UpdateAsync(
+                    projectId,
+                    item.Id.ToString(),
+                    item,
+                    cancellationToken).ConfigureAwait(false);
+
+        }
+
+        public async Task UpdateFailedPasswordAttemptCount(
+            Guid userId,
+            int failedPasswordAttemptCount,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var item
+                = await userQueries.FetchAsync(
+                    projectId,
+                    userId.ToString(),
+                    cancellationToken).ConfigureAwait(false);
+
+            if (item == null) { throw new InvalidOperationException("user not found"); }
+
+            item.AccessFailedCount = failedPasswordAttemptCount;
+
+            await userCommands.UpdateAsync(
+                    projectId,
+                    item.Id.ToString(),
+                    item,
+                    cancellationToken).ConfigureAwait(false);
+
+        }
+
+        public async Task UpdateLastLoginTime(
+            Guid userId,
+            DateTime lastLoginTime,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var item
+                = await userQueries.FetchAsync(
+                    projectId,
+                    userId.ToString(),
+                    cancellationToken).ConfigureAwait(false);
+
+            if (item == null) { throw new InvalidOperationException("user not found"); }
+
+            item.LastLoginDate = lastLoginTime;
+
+            await userCommands.UpdateAsync(
+                    projectId,
+                    item.Id.ToString(),
+                    item,
+                    cancellationToken).ConfigureAwait(false);
+
+
         }
 
         #endregion

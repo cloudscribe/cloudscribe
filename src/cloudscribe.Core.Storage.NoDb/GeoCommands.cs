@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Storage.NoDb
 {
-    public class GeoCommands
+    public class GeoCommands : IGeoCommands
     {
         public GeoCommands(
             IProjectResolver projectResolver,
@@ -26,7 +26,6 @@ namespace cloudscribe.Core.Storage.NoDb
             IBasicQueries<GeoZone> stateQueries,
             IBasicCommands<GeoZone> stateCommands,
             IBasicCommands<Language> langCommands,
-            IBasicQueries<Currency> currencyQueries,
             IBasicCommands<Currency> currencyCommands
             )
         {
@@ -36,7 +35,6 @@ namespace cloudscribe.Core.Storage.NoDb
             this.stateQueries = stateQueries;
             this.stateCommands = stateCommands;
             this.langCommands = langCommands;
-            this.currencyQueries = currencyQueries;
             this.currencyCommands = currencyCommands;
 
         }
@@ -47,7 +45,6 @@ namespace cloudscribe.Core.Storage.NoDb
         private IBasicQueries<GeoZone> stateQueries;
         private IBasicCommands<GeoZone> stateCommands;
         private IBasicCommands<Language> langCommands;
-        private IBasicQueries<Currency> currencyQueries;
         private IBasicCommands<Currency> currencyCommands;
 
         protected string projectId;
@@ -259,6 +256,63 @@ namespace cloudscribe.Core.Storage.NoDb
             await langCommands.DeleteAsync(
                 projectId,
                 languageId.ToString(),
+                cancellationToken).ConfigureAwait(false);
+            
+        }
+
+        public async Task Add(
+            ICurrency currency,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+            if (currency == null) throw new ArgumentException("currency must not be null");
+            if (currency.Id == Guid.Empty) throw new ArgumentException("currency must have a non-empty id");
+
+            var c = Currency.FromICurrency(currency);
+
+            await EnsureProjectId().ConfigureAwait(false);
+            await currencyCommands.CreateAsync(
+                projectId,
+                c.Id.ToString(),
+                c,
+                cancellationToken).ConfigureAwait(false);
+
+        }
+
+        public async Task Update(
+            ICurrency currency,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+            if (currency == null) throw new ArgumentException("currency must not be null");
+            if (currency.Id == Guid.Empty) throw new ArgumentException("currency must have a non-empty id");
+
+            var c = Currency.FromICurrency(currency);
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            await currencyCommands.UpdateAsync(
+                projectId,
+                c.Id.ToString(),
+                c,
+                cancellationToken).ConfigureAwait(false);
+        }
+
+        public async Task DeleteCurrency(
+            Guid currencyId,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+            if (currencyId == Guid.Empty) throw new ArgumentException("id must be a non-empty guid");
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            await currencyCommands.DeleteAsync(
+                projectId,
+                currencyId.ToString(),
                 cancellationToken).ConfigureAwait(false);
             
         }

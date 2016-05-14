@@ -1,18 +1,10 @@
-﻿using cloudscribe.Core.Identity;
+﻿
 using cloudscribe.Core.Models;
-using cloudscribe.Core.Models.Geography;
 using cloudscribe.Core.Models.Setup;
 using cloudscribe.Core.Storage.EF;
-using cloudscribe.Core.Web;
 using cloudscribe.Core.Web.Components;
-using cloudscribe.Core.Web.Navigation;
 using cloudscribe.Logging.EF;
 using cloudscribe.Logging.Web;
-using cloudscribe.Setup.Web;
-using cloudscribe.Web.Common.Razor;
-using cloudscribe.Web.Navigation;
-using cloudscribe.Web.Navigation.Caching;
-using example.WebApp;
 using Glimpse;
 using Microsoft.AspNet.Antiforgery;
 using Microsoft.AspNet.Builder;
@@ -30,6 +22,7 @@ using StructureMap;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using example.WebApp;
 
 
 namespace example.WebApp
@@ -290,7 +283,12 @@ namespace example.WebApp
 
             switch (devOptions.DbPlatform)
             {
+                case "NoDb":
+                    services.AddCloudscribeCoreNoDbStorage();
+                    break;
+
                 case "ef7":
+                default:
                     var connectionString = configuration["Data:EF7ConnectionOptions:ConnectionString"];
                     services.AddCloudscribeCoreEFStorage(connectionString);
 
