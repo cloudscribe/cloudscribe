@@ -14,14 +14,6 @@ namespace cloudscribe.Core.Models
 {
     public interface ISiteQueries : IDisposable
     {
-        //TODO: review all places where these non async methods are used
-        // and consider whether they could be changed to use async
-
-        //ISiteSettings FetchNonAsync(Guid siteId);
-        //ISiteSettings FetchNonAsync(string hostName);
-        //ISiteSettings FetchByFolderNameNonAsync(string folderName);
-
-        //Task<ISiteSettings> Fetch(int siteId, CancellationToken cancellationToken);
         Task<ISiteSettings> Fetch(Guid siteId, CancellationToken cancellationToken = default(CancellationToken));
         Task<ISiteSettings> Fetch(string hostName, CancellationToken cancellationToken = default(CancellationToken));
         Task<ISiteSettings> FetchByFolderName(string folderName, CancellationToken cancellationToken = default(CancellationToken));
@@ -34,9 +26,7 @@ namespace cloudscribe.Core.Models
             int pageNumber,
             int pageSize,
             CancellationToken cancellationToken = default(CancellationToken));
-
-
-
+        
         Task<List<ISiteHost>> GetSiteHosts(Guid siteId, CancellationToken cancellationToken = default(CancellationToken));
         Task<List<ISiteHost>> GetAllHosts(CancellationToken cancellationToken = default(CancellationToken));
         Task<ISiteHost> GetSiteHost(string hostName, CancellationToken cancellationToken = default(CancellationToken));
@@ -46,13 +36,7 @@ namespace cloudscribe.Core.Models
             int pageSize,
             CancellationToken cancellationToken = default(CancellationToken));
 
-        //Task<int> GetSiteIdByHostName(string hostName, CancellationToken cancellationToken);
-        //List<ISiteHost> GetAllHostsNonAsync();
-
-        // we don't need multiple folders to map to a single site
-        // we have foldername on the sitesettings object and on't need this extra table
-        //Task<List<ISiteFolder>> GetSiteFoldersBySite(Guid siteGuid, CancellationToken cancellationToken);
-        List<string> GetAllSiteFolders();
+        Task<List<string>> GetAllSiteFolders(CancellationToken cancellationToken = default(CancellationToken));
 
     }
 }

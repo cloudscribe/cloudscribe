@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Storage.NoDb
 {
-    public class SiteQueries
+    public class SiteQueries : ISiteQueries
     {
         public SiteQueries(
             IProjectResolver projectResolver,
@@ -80,7 +80,6 @@ namespace cloudscribe.Core.Storage.NoDb
 
             if (host == null)
             {
-
                 var allSites = await queries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
                 var query = from s in allSites
                             .Take(1)
@@ -94,11 +93,245 @@ namespace cloudscribe.Core.Storage.NoDb
                 projectId,
                 host.SiteId.ToString(),
                 cancellationToken).ConfigureAwait(false);
-                
+            
+        }
 
+        public async Task<ISiteSettings> FetchByFolderName(
+            string folderName,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var allSites = await queries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+
+            ISiteSettings site = null;
+            if (!string.IsNullOrEmpty(folderName) && folderName != "root")
+            {
+                site = allSites.Where(
+                    x => x.SiteFolderName == folderName
+                    ).SingleOrDefault();
+                
+            }
+
+            if (site == null)
+            {
+                var query = from s in allSites
+                            where string.IsNullOrEmpty(s.SiteFolderName)
+                            orderby s.CreatedUtc ascending
+                            select s;
+
+                site = query.Take(1).SingleOrDefault();
+            }
+
+            return site;
 
         }
 
+        public async Task<int> GetCount(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var allSites = await queries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+            return allSites.ToList().Count;
+        }
+
+        public async Task<List<ISiteInfo>> GetList(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var allSites = await queries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+
+            var query = from x in allSites
+                        orderby x.SiteName ascending
+                        select new SiteInfo
+                        {
+                            Id = x.Id,
+                            IsServerAdminSite = x.IsServerAdminSite,
+                            PreferredHostName = x.PreferredHostName,
+                            SiteFolderName = x.SiteFolderName,
+                            SiteName = x.SiteName
+                        }
+                        ;
+
+            return query.ToList<ISiteInfo>();
+            
+        }
+
+        public async Task<int> CountOtherSites(
+            Guid currentSiteId,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var allSites = await queries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+
+            return allSites.Where(x => x.Id != currentSiteId).ToList().Count;
+        }
+
+        public async Task<List<ISiteInfo>> GetPageOtherSites(
+            Guid currentSiteId,
+            int pageNumber,
+            int pageSize,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var allSites = await queries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+
+            int offset = (pageSize * pageNumber) - pageSize;
+
+            var query = from x in allSites
+                        where (x.Id != currentSiteId)
+                        orderby x.SiteName ascending
+                        select new SiteInfo
+                        {
+                            Id = x.Id,
+                            IsServerAdminSite = x.IsServerAdminSite,
+                            PreferredHostName = x.PreferredHostName,
+                            SiteFolderName = x.SiteFolderName,
+                            SiteName = x.SiteName
+                        };
+
+            return query
+                .Skip(offset)
+                .Take(pageSize)
+                .ToList<ISiteInfo>()
+                ;
+        }
+
+        public async Task<List<ISiteHost>> GetAllHosts(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var allHosts = await hostQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+
+            var query = from x in allHosts
+                        orderby x.HostName ascending
+                        select x;
+
+            return query.ToList<ISiteHost>();
+
+        }
+
+        public async Task<int> GetHostCount(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var allHosts = await hostQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+            return allHosts.ToList().Count;
+        }
+
+        public async Task<List<ISiteHost>> GetPageHosts(
+            int pageNumber,
+            int pageSize,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var allHosts = await hostQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+
+            int offset = (pageSize * pageNumber) - pageSize;
+
+            var query = from x in allHosts
+                        orderby x.HostName ascending
+                        select x
+                        ;
+
+            return query
+                .Skip(offset)
+                .Take(pageSize)
+                .ToList<ISiteHost>()
+                ;
+        }
+
+        public async Task<List<ISiteHost>> GetSiteHosts(
+            Guid siteId,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var allHosts = await hostQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+
+            var query = from x in allHosts
+                        where x.SiteId == siteId
+                        orderby x.HostName ascending
+                        select x
+                        ;
+
+            return query.ToList<ISiteHost>();
+
+        }
+
+        public async Task<ISiteHost> GetSiteHost(
+            string hostName,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var allHosts = await hostQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+
+            var query = from x in allHosts
+                        where x.HostName == hostName
+                        orderby x.HostName ascending
+                        select x
+                        ;
+
+            return query.SingleOrDefault<SiteHost>();
+
+        }
+
+        public async Task<List<string>> GetAllSiteFolders(
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var allSites = await queries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+
+            var query = from x in allSites
+                        where x.SiteFolderName != null && x.SiteFolderName != ""
+                        orderby x.SiteFolderName ascending
+                        select x.SiteFolderName;
+
+            var items = query.ToList<string>();
+
+            return items;
+
+        }
+
+        
 
 
         #region IDisposable Support

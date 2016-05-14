@@ -99,6 +99,7 @@ namespace cloudscribe.Core.Storage.EF
             if (site == null)
             {
                 var query = from s in dbContext.Sites
+                            where string.IsNullOrEmpty(s.SiteFolderName)
                             orderby s.CreatedUtc ascending
                             select s;
 
@@ -150,9 +151,9 @@ namespace cloudscribe.Core.Storage.EF
 
         //}
 
-        public Task<int> GetCount(CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<int> GetCount(CancellationToken cancellationToken = default(CancellationToken))
         {
-            return dbContext.Sites.CountAsync<SiteSettings>(cancellationToken);
+            return await dbContext.Sites.CountAsync<SiteSettings>(cancellationToken).ConfigureAwait(false);
         }
 
         public async Task<List<ISiteInfo>> GetList(CancellationToken cancellationToken = default(CancellationToken))
@@ -178,11 +179,11 @@ namespace cloudscribe.Core.Storage.EF
             return items;
         }
 
-        public Task<int> CountOtherSites(
+        public async Task<int> CountOtherSites(
             Guid currentSiteId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            return dbContext.Sites.CountAsync<SiteSettings>(
+            return await dbContext.Sites.CountAsync<SiteSettings>(
                 x => x.Id != currentSiteId
                 , cancellationToken);
         }
@@ -246,9 +247,9 @@ namespace cloudscribe.Core.Storage.EF
         //    return items;
         //}
 
-        public Task<int> GetHostCount(CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<int> GetHostCount(CancellationToken cancellationToken = default(CancellationToken))
         {
-            return dbContext.SiteHosts.CountAsync<SiteHost>(cancellationToken);
+            return await dbContext.SiteHosts.CountAsync<SiteHost>(cancellationToken);
         }
 
         public async Task<List<ISiteHost>> GetPageHosts(
@@ -270,8 +271,6 @@ namespace cloudscribe.Core.Storage.EF
                 .Take(pageSize)
                 .ToListAsync<ISiteHost>(cancellationToken)
                 .ConfigureAwait(false);
-
-
         }
 
         public async Task<List<ISiteHost>> GetSiteHosts(
@@ -307,14 +306,15 @@ namespace cloudscribe.Core.Storage.EF
 
         }
 
-        public List<string> GetAllSiteFolders()
+        public async Task<List<string>> GetAllSiteFolders(
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             var query = from x in dbContext.Sites
                         where x.SiteFolderName != null && x.SiteFolderName != ""
                         orderby x.SiteFolderName ascending
                         select x.SiteFolderName;
 
-            var items = query.ToList<string>();
+            var items = await query.ToListAsync<string>();
 
             return items;
 

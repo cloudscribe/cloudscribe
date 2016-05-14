@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:              Joe Audette
 // Created:             2016-02-04
-// Last Modified:       2016-05-10
+// Last Modified:       2016-05-14
 // 
 
 //  2016-02-04 found this blog post by Ben Foster
@@ -26,7 +26,7 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Components
 {
-    public class CachingSiteResolver : MemoryCacheTenantResolver<SiteSettings>
+    public class CachingSiteResolver : MemoryCacheTenantResolverBase<SiteSettings>
     {
         //private readonly IEnumerable<SiteSettings> tenants;
 
@@ -53,7 +53,7 @@ namespace cloudscribe.Core.Web.Components
         private SiteDataProtector dataProtector;
         private CachingSiteResolverOptions cachingOptions;
 
-        private List<string> GetAllSiteFoldersFolders()
+        private async Task<List<string>> GetAllSiteFoldersFolders()
         {
             var listCacheKey = "folderList";
             var result = cache.Get(listCacheKey) as List<string>;
@@ -63,7 +63,7 @@ namespace cloudscribe.Core.Web.Components
                 return result;
             }
 
-            result = siteRepo.GetAllSiteFolders();
+            result = await siteRepo.GetAllSiteFolders();
             var cacheEntryOptions = new MemoryCacheEntryOptions()
                 .SetAbsoluteExpiration(cachingOptions.FolderListCacheDuration);
 
@@ -81,7 +81,7 @@ namespace cloudscribe.Core.Web.Components
         }
 
         // Determines what information in the current request should be used to do a cache lookup e.g.the hostname.
-        protected override string GetContextIdentifier(HttpContext context)
+        protected override async Task<string> GetContextIdentifier(HttpContext context)
         {
             if (multiTenantOptions.Mode == MultiTenantMode.FolderName)
             {
@@ -89,7 +89,7 @@ namespace cloudscribe.Core.Web.Components
                 var siteFolderName = fullPath.StartingSegment();
                 // I really want this to be async
                 // checking with Ben if he will make the base class method async
-                var folders = GetAllSiteFoldersFolders();
+                var folders = await GetAllSiteFoldersFolders();
 
                 return folders.Contains(siteFolderName) ? siteFolderName : "root";
             }
@@ -140,7 +140,7 @@ namespace cloudscribe.Core.Web.Components
 
         private async Task<TenantContext<SiteSettings>> ResolveByFolderAsync(HttpContext context)
         {
-            var siteFolderName = GetContextIdentifier(context);
+            var siteFolderName = await GetContextIdentifier(context);
 
             TenantContext<SiteSettings> tenantContext = null;
 
