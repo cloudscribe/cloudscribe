@@ -37,7 +37,11 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddNoDb<GeoZone>();
             services.AddNoDb<Language>();
             services.AddNoDb<Currency>();
-            
+
+            services.AddScoped<IDataPlatformInfo, DataPlatformInfo>();
+
+            services.AddScoped<IProjectRequestMap, DefaultProjectRequestMap>();
+            services.AddScoped<IProjectResolver, DefaultProjectResolver>();
             services.AddScoped<ISiteCommands, SiteCommands>();
             services.AddScoped<ISiteQueries, SiteQueries>();
 

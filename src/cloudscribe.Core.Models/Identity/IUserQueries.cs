@@ -7,7 +7,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,7 +14,7 @@ namespace cloudscribe.Core.Models
 {
     public interface IUserQueries
     {
-        // TODO: are these non-async methods needed/used anywhere?
+        
         Task<bool> LoginExistsInDB(
             Guid siteId, 
             string loginName,
