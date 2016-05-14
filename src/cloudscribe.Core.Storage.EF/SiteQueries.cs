@@ -69,7 +69,7 @@ namespace cloudscribe.Core.Storage.EF
             return await dbContext.Sites
                 .AsNoTracking()
                 .SingleOrDefaultAsync(
-                x => x.Id.Equals(host.SiteGuid)
+                x => x.Id.Equals(host.SiteId)
                 , cancellationToken)
                 .ConfigureAwait(false);
 
@@ -279,7 +279,7 @@ namespace cloudscribe.Core.Storage.EF
             CancellationToken cancellationToken = default(CancellationToken))
         {
             var query = from x in dbContext.SiteHosts
-                        where x.SiteGuid == siteId
+                        where x.SiteId == siteId
                         orderby x.HostName ascending
                         select x
                         ;

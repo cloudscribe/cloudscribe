@@ -11,7 +11,7 @@ namespace cloudscribe.Core.Models
 {
     public class SiteHost : ISiteHost
     {
-        public Guid HostId { get; set; }
+        public Guid Id { get; set; }
 
         private string hostName = string.Empty;
         public string HostName
@@ -20,7 +20,7 @@ namespace cloudscribe.Core.Models
             set { hostName = value; }
         }
 
-        public Guid SiteGuid { get; set; } = Guid.Empty;
+        public Guid SiteId { get; set; }
         
     }
 }

@@ -84,7 +84,7 @@ namespace cloudscribe.Core.Storage.EF
             if (siteId == Guid.Empty) throw new ArgumentException("siteId must not be empty guid");
 
             var host = new SiteHost();
-            host.SiteGuid = siteId;
+            host.SiteId = siteId;
             host.HostName = hostName;
 
             dbContext.SiteHosts.Add(host);
@@ -99,7 +99,7 @@ namespace cloudscribe.Core.Storage.EF
         {
             if (hostId == Guid.Empty) throw new ArgumentException("hostId must not be empty guid");
 
-            var itemToRemove = await dbContext.SiteHosts.SingleOrDefaultAsync(x => x.HostId == hostId, cancellationToken);
+            var itemToRemove = await dbContext.SiteHosts.SingleOrDefaultAsync(x => x.Id == hostId, cancellationToken);
             if (itemToRemove == null) throw new InvalidOperationException("host not found");
             
             dbContext.SiteHosts.Remove(itemToRemove);
@@ -114,7 +114,7 @@ namespace cloudscribe.Core.Storage.EF
         {
             if (siteId == Guid.Empty) throw new ArgumentException("siteId must not be empty guid");
 
-            var query = from x in dbContext.SiteHosts.Where(x => x.SiteGuid == siteId)
+            var query = from x in dbContext.SiteHosts.Where(x => x.SiteId == siteId)
                         select x;
 
             dbContext.SiteHosts.RemoveRange(query);

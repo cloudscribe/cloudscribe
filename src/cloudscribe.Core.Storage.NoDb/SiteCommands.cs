@@ -124,12 +124,12 @@ namespace cloudscribe.Core.Storage.NoDb
             await EnsureProjectId().ConfigureAwait(false);
 
             var host = new SiteHost();
-            host.SiteGuid = siteId;
+            host.SiteId = siteId;
             host.HostName = hostName;
 
             await hostCommands.CreateAsync(
                 projectId, 
-                host.HostId.ToString(), 
+                host.Id.ToString(), 
                 host, 
                 cancellationToken).ConfigureAwait(false);
             
@@ -168,14 +168,14 @@ namespace cloudscribe.Core.Storage.NoDb
                 projectId,
                 cancellationToken).ConfigureAwait(false);
 
-            var query = from x in allHosts.Where(x => x.SiteGuid == siteId)
+            var query = from x in allHosts.Where(x => x.SiteId == siteId)
                         select x;
 
             foreach(var h in query)
             {
                 await hostCommands.DeleteAsync(
                     projectId,
-                    h.HostId.ToString(),
+                    h.Id.ToString(),
                     cancellationToken).ConfigureAwait(false);
             }
 

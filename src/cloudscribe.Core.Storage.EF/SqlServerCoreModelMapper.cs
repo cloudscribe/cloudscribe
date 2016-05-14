@@ -402,19 +402,18 @@ namespace cloudscribe.Core.Storage.EF
         public void Map(EntityTypeBuilder<SiteHost> entity)
         {
             entity.ToTable(tableNames.TablePrefix + tableNames.SiteHostTableName);
-            entity.HasKey(p => p.HostId);
+            entity.HasKey(p => p.Id);
 
-            entity.Property(p => p.HostId)
+            entity.Property(p => p.Id)
            .ForSqlServerHasColumnType("uniqueidentifier")
            .ForSqlServerHasDefaultValueSql("newid()")
            ;
             
-            entity.Property(p => p.SiteGuid)
-            .HasColumnName("SiteGuid")
+            entity.Property(p => p.SiteId)
             .ForSqlServerHasColumnType("uniqueidentifier")
             .IsRequired()
             ;
-            entity.HasIndex(p => p.SiteGuid);
+            entity.HasIndex(p => p.SiteId);
 
             entity.Property(p => p.HostName)
             .IsRequired()

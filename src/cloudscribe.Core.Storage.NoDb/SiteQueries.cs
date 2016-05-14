@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:                  Joe Audette
 // Created:                 2016-05-13
-// Last Modified:           2016-05-13
+// Last Modified:           2016-05-14
 // 
 
 using cloudscribe.Core.Models;
@@ -20,15 +20,19 @@ namespace cloudscribe.Core.Storage.NoDb
     {
         public SiteQueries(
             IProjectResolver projectResolver,
-            IBasicQueries<SiteSettings> queries)
+            IBasicQueries<SiteSettings> queries,
+            IBasicQueries<SiteHost> hostQueries
+            )
         {
             this.projectResolver = projectResolver;
             this.queries = queries;
+            this.hostQueries = hostQueries;
 
         }
 
         private IProjectResolver projectResolver;
         private IBasicQueries<SiteSettings> queries;
+        private IBasicQueries<SiteHost> hostQueries;
 
         protected string projectId;
 
@@ -41,6 +45,59 @@ namespace cloudscribe.Core.Storage.NoDb
 
         }
 
+
+        public async Task<ISiteSettings> Fetch(
+            Guid siteId,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            return await queries.FetchAsync(
+                projectId,
+                siteId.ToString(),
+                cancellationToken).ConfigureAwait(false);
+
+        }
+
+        public async Task<ISiteSettings> Fetch(
+            string hostName,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var allHosts = await hostQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+
+            var host = allHosts.Where(
+                x => x.HostName.Equals(hostName)
+                ).SingleOrDefault()
+                ;
+
+            if (host == null)
+            {
+
+                var allSites = await queries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+                var query = from s in allSites
+                            .Take(1)
+                            orderby s.CreatedUtc ascending
+                            select s;
+
+                return query.SingleOrDefault();
+            }
+
+            return await queries.FetchAsync(
+                projectId,
+                host.SiteId.ToString(),
+                cancellationToken).ConfigureAwait(false);
+                
+
+
+        }
 
 
 

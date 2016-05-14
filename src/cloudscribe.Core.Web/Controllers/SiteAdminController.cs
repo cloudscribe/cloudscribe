@@ -306,7 +306,7 @@ namespace cloudscribe.Core.Web.Controllers
 
                     if (host != null)
                     {
-                        if (host.SiteGuid != selectedSite.Id)
+                        if (host.SiteId != selectedSite.Id)
                         {
                             ModelState.AddModelError("hosterror", "The selected host/domain name is already in use on another site.");
 
@@ -1433,7 +1433,7 @@ namespace cloudscribe.Core.Web.Controllers
 
                 if (host != null)
                 {
-                    if (host.SiteGuid != selectedSite.Id)
+                    if (host.SiteId != selectedSite.Id)
                     {
                         this.AlertWarning(
                         "failed to add the requested host name mapping becuase it is already mapped to another site.",
@@ -1480,7 +1480,7 @@ namespace cloudscribe.Core.Web.Controllers
             
             if (host != null)
             {
-                if (host.SiteGuid == selectedSite.Id)
+                if (host.SiteId == selectedSite.Id)
                 {
                     if (selectedSite.PreferredHostName == host.HostName)
                     {
@@ -1488,7 +1488,7 @@ namespace cloudscribe.Core.Web.Controllers
                         await siteManager.Save(selectedSite);
                     }
 
-                    await siteManager.DeleteHost(host.HostId);
+                    await siteManager.DeleteHost(host.Id);
                     
                     this.AlertSuccess(string.Format("Host/domain mapping for <b>{0}</b> was successfully removed.",
                                 selectedSite.SiteName), true);

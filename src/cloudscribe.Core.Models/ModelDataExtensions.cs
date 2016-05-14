@@ -338,9 +338,9 @@ namespace cloudscribe.Core.Models.DataExtensions
 
         public static void LoadFromReader(this ISiteHost host, DbDataReader reader)
         {
-            host.HostId = new Guid(reader["HostGuid"].ToString());
+            host.Id = new Guid(reader["HostGuid"].ToString());
             host.HostName = reader["HostName"].ToString();
-            host.SiteGuid = new Guid(reader["SiteGuid"].ToString());
+            host.SiteId = new Guid(reader["SiteGuid"].ToString());
            
         }
 

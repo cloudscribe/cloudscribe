@@ -71,13 +71,13 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                 name: "cs_SiteHost",
                 columns: table => new
                 {
-                    HostId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
                     HostName = table.Column<string>(nullable: false),
-                    SiteGuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    SiteId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SiteHost", x => x.HostId);
+                    table.PrimaryKey("PK_SiteHost", x => x.Id);
                 });
             migrationBuilder.CreateTable(
                 name: "cs_Role",
@@ -309,9 +309,9 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                 table: "cs_SiteHost",
                 column: "HostName");
             migrationBuilder.CreateIndex(
-                name: "IX_SiteHost_SiteGuid",
+                name: "IX_SiteHost_SiteId",
                 table: "cs_SiteHost",
-                column: "SiteGuid");
+                column: "SiteId");
             migrationBuilder.CreateIndex(
                 name: "IX_SiteRole_Id",
                 table: "cs_Role",

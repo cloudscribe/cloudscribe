@@ -8,7 +8,7 @@ using cloudscribe.Core.Storage.EF;
 namespace cloudscribe.Core.Storage.EF.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    [Migration("20160511112650_Initial")]
+    [Migration("20160514133308_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -142,7 +142,7 @@ namespace cloudscribe.Core.Storage.EF.Migrations
 
             modelBuilder.Entity("cloudscribe.Core.Models.SiteHost", b =>
                 {
-                    b.Property<Guid>("HostId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier")
                         .HasAnnotation("SqlServer:GeneratedValueSql", "newid()");
@@ -151,15 +151,14 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                         .IsRequired()
                         .HasAnnotation("MaxLength", 255);
 
-                    b.Property<Guid>("SiteGuid")
-                        .HasAnnotation("Relational:ColumnName", "SiteGuid")
+                    b.Property<Guid>("SiteId")
                         .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier");
 
-                    b.HasKey("HostId");
+                    b.HasKey("Id");
 
                     b.HasIndex("HostName");
 
-                    b.HasIndex("SiteGuid");
+                    b.HasIndex("SiteId");
 
                     b.HasAnnotation("Relational:TableName", "cs_SiteHost");
                 });

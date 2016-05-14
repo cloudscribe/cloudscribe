@@ -7,9 +7,9 @@ namespace cloudscribe.Core.Models
 {
     public interface ISiteHost
     {
-        Guid HostId { get; set; }
+        Guid Id { get; set; }
         string HostName { get; set; }
-        Guid SiteGuid { get; set; }
+        Guid SiteId { get; set; }
 
     }
 }
