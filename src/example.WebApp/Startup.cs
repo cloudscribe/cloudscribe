@@ -145,8 +145,6 @@ namespace example.WebApp
             /* these are optional and only needed if using cloudscribe Setup */
             //services.Configure<SetupOptions>(Configuration.GetSection("SetupOptions"));
             //services.AddScoped<SetupManager, SetupManager>();
-            //services.AddScoped<IVersionProvider, CloudscribeCoreVersionProvider>();
-            //
             //services.AddScoped<IVersionProvider, SetupVersionProvider>();
             //services.AddScoped<IVersionProvider, CloudscribeLoggingVersionProvider>();
             /* end cloudscribe Setup */

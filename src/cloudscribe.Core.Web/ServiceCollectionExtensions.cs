@@ -30,7 +30,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services.Configure<MultiTenantOptions>(configuration.GetSection("MultiTenantOptions"));
             services.Configure<SiteConfigOptions>(configuration.GetSection("SiteConfigOptions"));
-            services.AddScoped<IVersionProviderFactory, VersionProviderFactory>();
+            
             services.Configure<UIOptions>(configuration.GetSection("UIOptions"));
             services.Configure<CkeditorOptions>(configuration.GetSection("CkeditorOptions"));
             
@@ -64,6 +64,9 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton<IAntiforgeryTokenStore, SiteAntiforgeryTokenStore>();
             
             services.AddCloudscribePagination();
+
+            services.AddScoped<IVersionProviderFactory, VersionProviderFactory>();
+            services.AddScoped<IVersionProvider, CloudscribeCoreVersionProvider>();
 
             services.AddTransient<IEmailTemplateService, HardCodedEmailTemplateService>();
             services.AddTransient<ISiteMessageEmailSender, SiteEmailMessageSender>();

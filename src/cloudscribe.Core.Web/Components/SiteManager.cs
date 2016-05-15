@@ -265,11 +265,11 @@ namespace cloudscribe.Core.Web.Components
         public async Task CreateAdminUser(ISiteSettings site)
         {
 
-            var adminRole = await userQueries.FetchRole(site.Id, "Admins", CancellationToken);
+            var adminRole = await userQueries.FetchRole(site.Id, "Administrators", CancellationToken);
 
             if(adminRole == null)
             {
-                throw new InvalidOperationException("Admins role could nto be found so cannot create admin user");
+                throw new InvalidOperationException("Administrators role could nto be found so cannot create admin user");
             }
             
 
@@ -293,69 +293,48 @@ namespace cloudscribe.Core.Web.Components
             }
 
 
-            var adminUser = new SiteUser();
+            var adminUser = InitialData.BuildInitialAdmin();
             adminUser.SiteId = site.Id;
             adminUser.Email = "admin" + siteDifferentiator + "@admin.com";
-            adminUser.NormalizedEmail = adminUser.Email;
-            adminUser.DisplayName = "Admin";
+            adminUser.NormalizedEmail = adminUser.Email.ToUpperInvariant();
             adminUser.UserName = "admin" + siteDifferentiator;
-
-            adminUser.EmailConfirmed = true;
-            adminUser.AccountApproved = true;
-
-            // clear text password will be hashed upon login
-            // this format allows migrating from mojoportal
-            adminUser.PasswordHash = "admin||0"; //pwd/salt/format 
             
             await userCommands.Create(adminUser, CancellationToken.None);
             
             await userCommands.AddUserToRole(
-                //adminRole.RoleId,
                 adminRole.Id,
-               // adminUser.UserId,
                 adminUser.Id,
                 CancellationToken.None);
 
             
-
         }
 
         public async Task EnsureRequiredRoles(ISiteSettings site)
         {
-            bool exists = await userQueries.RoleExists(site.Id, "Admins", CancellationToken);
+            bool exists = await userQueries.RoleExists(site.Id, "Administrators", CancellationToken);
 
             if(!exists)
             {
-                var adminRole = new SiteRole();
-                adminRole.Id = Guid.NewGuid();
-                adminRole.RoleName = "Admins";
+                var adminRole = InitialData.BuildAdminRole();
                 adminRole.SiteId = site.Id;
                 await userCommands.CreateRole(adminRole, CancellationToken.None);
-                adminRole.RoleName = "Administrators";
-                await userCommands.UpdateRole(adminRole, CancellationToken.None);
             }
 
-            exists = await userQueries.RoleExists(site.Id, "Role Admins", CancellationToken);
+            exists = await userQueries.RoleExists(site.Id, "Role Administrators", CancellationToken);
 
             if (!exists)
             {
-                var roleAdminRole = new SiteRole();
-                roleAdminRole.Id = Guid.NewGuid();
-                roleAdminRole.RoleName = "Role Admins";
+                var roleAdminRole = InitialData.BuildRoleAdminRole();
                 roleAdminRole.SiteId = site.Id;
                 await userCommands.CreateRole(roleAdminRole, CancellationToken.None);
-
-                roleAdminRole.RoleName = "Role Administrators";
-                await userCommands.UpdateRole(roleAdminRole, CancellationToken.None);
+                
             }
 
             exists = await userQueries.RoleExists(site.Id, "Content Administrators", CancellationToken);
 
             if (!exists)
             {
-                var contentAdminRole = new SiteRole();
-                contentAdminRole.Id = Guid.NewGuid();
-                contentAdminRole.RoleName = "Content Administrators";
+                var contentAdminRole = InitialData.BuildContentAdminsRole();
                 contentAdminRole.SiteId = site.Id;
                 await userCommands.CreateRole(contentAdminRole, CancellationToken.None);
             }
@@ -364,9 +343,7 @@ namespace cloudscribe.Core.Web.Components
 
             if (!exists)
             {
-                var authenticatedUserRole = new SiteRole();
-                authenticatedUserRole.Id = Guid.NewGuid();
-                authenticatedUserRole.RoleName = "Authenticated Users";
+                var authenticatedUserRole = InitialData.BuildAuthenticatedRole();
                 authenticatedUserRole.SiteId = site.Id;
                 await userCommands.CreateRole(authenticatedUserRole, CancellationToken.None);
             }
@@ -374,36 +351,7 @@ namespace cloudscribe.Core.Web.Components
 
         }
 
-
-
-
-        //public async Task<ISiteFolder> GetSiteFolder(string folderName)
-        //{
-        //    return await siteRepo.GetSiteFolder(folderName, CancellationToken);
-        //}
-
-        //public async Task<bool> EnsureSiteFolder(ISiteSettings site)
-        //{
-        //    bool folderExists = await siteRepo.FolderExists(site.SiteFolderName, CancellationToken);
-
-        //    if (!folderExists)
-        //    {
-        //        List<ISiteFolder> siteFolders = await siteRepo.GetSiteFoldersBySite(site.SiteGuid, CancellationToken);
-        //        //delete any existing folders before creating a new one
-        //        foreach (ISiteFolder f in siteFolders)
-        //        {
-        //            bool deleted = await siteRepo.DeleteFolder(f.Guid, CancellationToken);
-        //        }
-
-        //        //ensure the current folder mapping
-        //        SiteFolder folder = new SiteFolder();
-        //        folder.FolderName = site.SiteFolderName;
-        //        folder.SiteGuid = site.SiteGuid;
-        //        folderExists = await siteRepo.Save(folder, CancellationToken);
-        //    }
-
-        //    return folderExists;
-        //}
+        
 
         public Task<ISiteHost> GetSiteHost(string hostName)
         {

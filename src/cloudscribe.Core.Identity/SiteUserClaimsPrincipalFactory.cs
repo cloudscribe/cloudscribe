@@ -115,7 +115,7 @@ namespace cloudscribe.Core.Identity
                     }
                 }                
 
-                if (principal.IsInRole("Admins"))
+                if (principal.IsInRole("Administrators"))
                 {
                     if (site != null && site.IsServerAdminSite)
                     {

@@ -29,7 +29,8 @@ namespace Microsoft.AspNet.Hosting // so it will show up in startup without a us
                 var geoCommands = serviceScope.ServiceProvider.GetService<IGeoCommands>();
                 var roleQueries = serviceScope.ServiceProvider.GetService<IBasicQueries<SiteRole>>();
                 var projectResolver = serviceScope.ServiceProvider.GetService<IProjectResolver>();
-                
+                var userBasic = serviceScope.ServiceProvider.GetService<IBasicQueries<SiteUser>>();
+
                 await EnsureData(
                     siteQueries,
                     siteCommands,
@@ -38,6 +39,7 @@ namespace Microsoft.AspNet.Hosting // so it will show up in startup without a us
                     geoQueries,
                     geoCommands,
                     roleQueries,
+                    userBasic,
                     projectResolver
                     );
 
@@ -53,6 +55,7 @@ namespace Microsoft.AspNet.Hosting // so it will show up in startup without a us
             IGeoQueries geoQueries,
             IGeoCommands geoCommands,
             IBasicQueries<SiteRole> roleQueries,
+            IBasicQueries<SiteUser> userBasic,
             IProjectResolver projectResolver
             )
         {
@@ -124,11 +127,11 @@ namespace Microsoft.AspNet.Hosting // so it will show up in startup without a us
             }
 
             // ensure admin user
-            count = await userQueries.CountUsers(newSite.Id, string.Empty);
+            count = await userBasic.GetCountAsync(projectId);
 
             if (count == 0)
             {
-                var role = await userQueries.FetchRole(newSite.Id, "Administrators".ToUpperInvariant());
+                var role = await userQueries.FetchRole(newSite.Id, "Administrators");
                 
                 if (role != null)
                 {
@@ -138,7 +141,7 @@ namespace Microsoft.AspNet.Hosting // so it will show up in startup without a us
                     
                     await userCommands.AddUserToRole(role.Id, adminUser.Id);
 
-                    role = await userQueries.FetchRole(newSite.Id, "Authenticated Users".ToUpperInvariant());
+                    role = await userQueries.FetchRole(newSite.Id, "Authenticated Users");
                     
                     if (role != null)
                     {

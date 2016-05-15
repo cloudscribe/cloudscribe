@@ -15,7 +15,7 @@ namespace cloudscribe.Core.Models
 
         public SiteSettings()
         {
-
+            this.Id = Guid.NewGuid();
         }
 
 
