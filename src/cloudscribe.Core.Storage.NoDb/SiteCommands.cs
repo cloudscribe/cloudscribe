@@ -45,7 +45,7 @@ namespace cloudscribe.Core.Storage.NoDb
         {
             if (string.IsNullOrEmpty(projectId))
             {
-                projectId = await projectResolver.ResolveProjectId().ConfigureAwait(false);
+                await projectResolver.ResolveProjectId().ConfigureAwait(false);
             }
 
         }
