@@ -8,14 +8,16 @@
 
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Geography;
+using cloudscribe.Core.Storage.EF;
 using Microsoft.Data.Entity;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
 
-namespace cloudscribe.Core.Storage.EF
+
+namespace Microsoft.AspNet.Hosting // so it will show up in startup without a using
 {
-    public static class StartupDataUtils
+    public static class CoreEFStartup
     {
 
         public static async Task InitializeDatabaseAsync(IServiceProvider serviceProvider)
@@ -214,7 +216,6 @@ namespace cloudscribe.Core.Storage.EF
 
                     if(role != null)
                     {
-                        //SiteUser adminUser = new SiteUser(Guid.NewGuid());
                         SiteUser adminUser = new SiteUser();
                         adminUser.SiteId = site.Id;
                         adminUser.Email = "admin@admin.com";

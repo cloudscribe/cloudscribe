@@ -54,7 +54,7 @@ namespace cloudscribe.Core.Storage.NoDb
         {
             if (string.IsNullOrEmpty(projectId))
             {
-                await projectResolver.ResolveProjectId().ConfigureAwait(false);
+                projectId = await projectResolver.ResolveProjectId().ConfigureAwait(false);
             }
 
         }
@@ -93,11 +93,11 @@ namespace cloudscribe.Core.Storage.NoDb
             
             var allUsers = await userQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
 
-            string loweredEmail = email.ToLowerInvariant();
+           // string loweredEmail = email.ToLowerInvariant();
 
             return allUsers.Where(
-                x => x.SiteId == siteId && x.NormalizedEmail == loweredEmail
-                ).FirstOrDefault(null);
+                x => x.SiteId == siteId && x.NormalizedEmail == email
+                ).FirstOrDefault();
         }
 
         public async Task<ISiteUser> FetchByLoginName(
@@ -113,15 +113,15 @@ namespace cloudscribe.Core.Storage.NoDb
 
             var allUsers = await userQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
 
-            string loweredUserName = userName.ToLowerInvariant();
+            //string loweredUserName = userName.ToLowerInvariant();
 
             return allUsers.Where(
                 x => x.SiteId == siteId
                 && (
                     (x.UserName == userName)
-                    || (allowEmailFallback && x.NormalizedEmail == loweredUserName)
+                    || (allowEmailFallback && x.NormalizedEmail == userName)
                     )
-                ).FirstOrDefault(null);
+                ).FirstOrDefault();
         }
 
         public async Task<List<IUserInfo>> GetByIPAddress(
@@ -161,10 +161,10 @@ namespace cloudscribe.Core.Storage.NoDb
 
             var allUsers = await userQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
 
-            string loweredEmail = email.ToLowerInvariant();
+            //string loweredEmail = email.ToLowerInvariant();
 
             var query = from c in allUsers
-                        where c.NormalizedEmail == loweredEmail
+                        where c.NormalizedEmail == email
                         orderby c.DisplayName ascending
                         select c;
 
@@ -1352,12 +1352,13 @@ namespace cloudscribe.Core.Storage.NoDb
             await EnsureProjectId().ConfigureAwait(false);
 
             var all = await claimQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
-            var filtered = all.Where(x =>
+
+            return all.Where(x =>
                  x.SiteId == siteId
                  && x.UserId == userId
-            );
+            ).ToList<IUserClaim>();
 
-            return filtered as IList<IUserClaim>;
+            //return filtered as IList<IUserClaim>;
 
         }
 
