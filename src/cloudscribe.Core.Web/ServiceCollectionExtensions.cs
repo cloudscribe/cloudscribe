@@ -7,6 +7,7 @@
 
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Models;
+using cloudscribe.Core.Models.Setup;
 using cloudscribe.Core.Web;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.Components.Editor;
@@ -29,7 +30,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services.Configure<MultiTenantOptions>(configuration.GetSection("MultiTenantOptions"));
             services.Configure<SiteConfigOptions>(configuration.GetSection("SiteConfigOptions"));
-            
+            services.AddScoped<IVersionProviderFactory, VersionProviderFactory>();
             services.Configure<UIOptions>(configuration.GetSection("UIOptions"));
             services.Configure<CkeditorOptions>(configuration.GetSection("CkeditorOptions"));
             

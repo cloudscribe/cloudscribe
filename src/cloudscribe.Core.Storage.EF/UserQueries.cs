@@ -936,7 +936,7 @@ namespace cloudscribe.Core.Storage.EF
         {
             SiteRole item
                 = await dbContext.Roles.SingleOrDefaultAsync(
-                    x => x.SiteId == siteId && x.NormalizedRoleName == roleName
+                    x => x.SiteId == siteId && x.RoleName == roleName
                     , cancellationToken)
                     .ConfigureAwait(false);
 
@@ -953,8 +953,8 @@ namespace cloudscribe.Core.Storage.EF
                         join y in dbContext.UserRoles
                         on x.Id equals y.RoleId
                         where y.UserId == userId
-                        orderby x.NormalizedRoleName
-                        select x.NormalizedRoleName
+                        orderby x.RoleName
+                        select x.RoleName
                         ;
             return await query
                 .AsNoTracking()

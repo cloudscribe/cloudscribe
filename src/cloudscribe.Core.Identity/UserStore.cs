@@ -371,7 +371,6 @@ namespace cloudscribe.Core.Identity
 
         #endregion
 
-
         #region IUserEmailStore
 
 

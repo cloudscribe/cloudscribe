@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-22
-// Last Modified:		    2016-05-13
+// Last Modified:		    2016-05-15
 // 
 //
 
@@ -89,39 +89,9 @@ namespace cloudscribe.Core.Identity
             }
             return cast;
         }
-
-
-
-        public ISiteSettings Site
-        {
-            get
-            {
-                //if (siteSettings == null) { siteSettings = siteResolver.Resolve(); }
-                return siteSettings;
-            }
-        }
-        //private ILogger<UserManager<TUser>> logger;
-
-        //public virtual Task<TUser> GetUserAsync(ClaimsPrincipal principal)
-        //{
-        //    if (principal == null)
-        //    {
-        //        throw new ArgumentNullException(nameof(principal));
-        //    }
-        //    var id = GetUserId(principal);
-        //    return id == null ? Task.FromResult<TUser>(null) : FindByIdAsync(id);
-        //}
-
-        //public virtual string GetUserId(ClaimsPrincipal principal)
-        //{
-        //    if (principal == null)
-        //    {
-        //        throw new ArgumentNullException(nameof(principal));
-        //    }
-        //    return principal.FindFirstValue(Options.ClaimsIdentity.UserIdClaimType);
-        //}
-
-
+        
+        public ISiteSettings Site { get { return siteSettings; } }
+        
         public Task<bool> LoginIsAvailable(Guid userId, string loginName)
         {
             Guid siteId = Site.Id;
@@ -131,27 +101,14 @@ namespace cloudscribe.Core.Identity
  
         }
 
-        //public Task<string> GetUserNameFromEmail(Guid siteId, string email)
-        //{
-        //    if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteGuid; }
-
-        //    return queries.GetUserNameFromEmail(siteId, email, CancellationToken);
-        //}
-
+        
         public Task<List<IUserInfo>> GetPage(Guid siteId, int pageNumber, int pageSize, string userNameBeginsWith, int sortMode)
         {
             if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteGuid; }
 
             return queries.GetPage(siteId, pageNumber, pageSize, userNameBeginsWith, sortMode, CancellationToken);
         }
-
-        //public int GetCount(Guid siteId)
-        //{
-        //    if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteGuid; }
-
-        //    return queries.GetCount(siteId);
-        //}
-
+        
         public Task<int> CountUsers(Guid siteId, string userNameBeginsWith)
         {
             if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteGuid; }
@@ -215,14 +172,7 @@ namespace cloudscribe.Core.Identity
 
             return queries.GetByIPAddress(siteId, ipv4Address, CancellationToken);
         }
-
-        //public Task<ISiteUser> Fetch(int siteId, int userId)
-        //{
-        //    if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
-
-        //    return userRepo.Fetch(siteId, userId, CancellationToken);
-        //}
-
+        
         public Task<ISiteUser> Fetch(Guid siteId, Guid userId)
         {
             if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteGuid; }
@@ -230,39 +180,7 @@ namespace cloudscribe.Core.Identity
             return queries.Fetch(siteId, userId, CancellationToken);
         }
 
-        //public async Task<ISiteUser> FetchByConfirmationGuid(int siteId, Guid confirmGuid)
-        //{
-        //    if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
-
-        //    return await userRepo.FetchByConfirmationGuid(siteId, confirmGuid, CancellationToken);
-        //}
-
-        //public async Task Save(ISiteUser user)
-        //{
-        //    if(user.Id == Guid.Empty)
-        //    {
-        //        //TODO: review is this the best place to generate the new id?
-        //        user.Id = Guid.NewGuid();
-        //        await commands.Create(user, CancellationToken);
-        //    }
-        //    else
-        //    {
-        //        await commands.Update(user, CancellationToken);
-        //    }
-
-             
-        //}
-
-        //public async Task Update(ISiteUser user)
-        //{
-        //    if (user.Id == Guid.Empty) throw new ArgumentException("can't update a user with em[ty guid id");
-            
-        //    await commands.Update(user, CancellationToken);
-            
-
-
-        //}
-
+        
         public Task<bool> EmailExistsInDB(Guid siteId, string email)
         {
             if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteGuid; }

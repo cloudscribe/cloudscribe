@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-12-03
-// Last Modified:			2016-05-06
+// Last Modified:			2016-05-15
 // 
 
 
@@ -106,40 +106,12 @@ namespace Microsoft.AspNet.Hosting // so it will show up in startup without a us
 
                 
             count = await db.Sites.CountAsync<SiteSettings>();
+            SiteSettings newSite = null;
             if (count == 0)
             {
                 // create first site
-                SiteSettings newSite = new SiteSettings();
-                //newSite.SiteId = 0;
-                newSite.Id = Guid.NewGuid();
-                newSite.AliasId = "tenant-" + (count + 1).ToInvariantString();
-                newSite.SiteName = "Sample Site";
-                newSite.IsServerAdminSite = true;
-
-                newSite.Theme = "default";
-
-                newSite.AllowNewRegistration = true;
-                //newSite.AllowUserFullNameChange = false;
-                newSite.AutoCreateLdapUserOnFirstLogin = true;
-                newSite.ReallyDeleteUsers = true;
-                newSite.LdapPort = 389;
-                newSite.LdapRootDN = string.Empty;
-                newSite.LdapServer = string.Empty;
-                newSite.UseEmailForLogin = true;
-                newSite.UseLdapAuth = false;
-                newSite.RequireConfirmedEmail = false;
-                //newSite.UseSslOnAllPages = false;
-
-
-                //0 = clear, 1= hashed, 2= encrypted
-                //newSite.PasswordFormat = 1;
-
-                newSite.RequiresQuestionAndAnswer = false;
-                newSite.MaxInvalidPasswordAttempts = 10;
-                //newSite.PasswordAttemptWindowMinutes = 5;
-                //newSite.MinReqNonAlphaChars = 0;
-                newSite.MinRequiredPasswordLength = 7;
-
+                newSite = InitialData.BuildInitialSite();
+                
                 db.Sites.Add(newSite);
                 
                 rowsAffected = await db.SaveChangesAsync();
@@ -150,53 +122,34 @@ namespace Microsoft.AspNet.Hosting // so it will show up in startup without a us
             count = await db.Roles.CountAsync<SiteRole>();
             if (count == 0)
             {
-                SiteSettings site = await db.Sites.SingleOrDefaultAsync<SiteSettings>(
-                    s => s.Id != Guid.Empty && s.IsServerAdminSite == true);
+                var site = newSite;
+                if(site == null)
+                {
+                    site = await db.Sites.SingleOrDefaultAsync<SiteSettings>(
+                        s => s.Id != Guid.Empty && s.IsServerAdminSite == true);
+                }
+                
 
                 if(site != null)
                 {
-                    SiteRole adminRole = new SiteRole();
-                    //adminRole.RoleId = 0;
-                    adminRole.Id = Guid.NewGuid();
-                    adminRole.NormalizedRoleName = "Admins";
-                    adminRole.RoleName = "Administrators";
-                    //adminRole.SiteId = site.SiteId;
+                    var adminRole = InitialData.BuildAdminRole();
                     adminRole.SiteId = site.Id;
                     db.Roles.Add(adminRole);
-                    //rowsAffected = await db.SaveChangesAsync();
-                        
-                    SiteRole roleAdminRole = new SiteRole();
-                    //roleAdminRole.RoleId = 0;
-                    roleAdminRole.Id = Guid.NewGuid();
-                    roleAdminRole.NormalizedRoleName = "Role Admins";
-                    roleAdminRole.RoleName = "Role Administrators";
-                   // roleAdminRole.SiteId = site.SiteId;
+
+                    var roleAdminRole = InitialData.BuildRoleAdminRole();
                     roleAdminRole.SiteId = site.Id;
                     db.Roles.Add(roleAdminRole);
-                    //rowsAffected = await db.SaveChangesAsync();
-                    
-                    SiteRole contentAdminRole = new SiteRole();
-                    //contentAdminRole.RoleId = 0;
-                    contentAdminRole.Id = Guid.NewGuid();
-                    contentAdminRole.NormalizedRoleName = "Content Administrators";
-                    contentAdminRole.RoleName = "Content Administrators";
-                    //contentAdminRole.SiteId = site.SiteId;
+
+                    var contentAdminRole = InitialData.BuildContentAdminsRole();
                     contentAdminRole.SiteId = site.Id;
                     db.Roles.Add(contentAdminRole);
 
-                    SiteRole authenticatedUserRole = new SiteRole();
-                    //authenticatedUserRole.RoleId = 0;
-                    authenticatedUserRole.Id = Guid.NewGuid();
-                    authenticatedUserRole.NormalizedRoleName = "Authenticated Users";
-                    authenticatedUserRole.RoleName = "Authenticated Users";
-                    //authenticatedUserRole.SiteId = site.SiteId;
+                    var authenticatedUserRole = InitialData.BuildAuthenticatedRole();
                     authenticatedUserRole.SiteId = site.Id;
                     db.Roles.Add(authenticatedUserRole);
-
                     
                     rowsAffected = await db.SaveChangesAsync();
                     
-                   
                 }
 
             }
@@ -212,24 +165,12 @@ namespace Microsoft.AspNet.Hosting // so it will show up in startup without a us
                 if (site != null)
                 {
                     var role = await db.Roles.SingleOrDefaultAsync(
-                            x => x.SiteId == site.Id && x.NormalizedRoleName == "Admins");
+                            x => x.SiteId == site.Id && x.NormalizedRoleName == "Administrators".ToUpperInvariant());
 
                     if(role != null)
                     {
-                        SiteUser adminUser = new SiteUser();
+                        var adminUser = InitialData.BuildInitialAdmin();
                         adminUser.SiteId = site.Id;
-                        adminUser.Email = "admin@admin.com";
-                        adminUser.NormalizedEmail = adminUser.Email;
-                        adminUser.DisplayName = "Admin";
-                        adminUser.UserName = "admin";
-                        
-                        adminUser.EmailConfirmed = true;
-                        adminUser.AccountApproved = true;
-
-                        // clear text password will be hashed upon login
-                        // this format allows migrating from mojoportal
-                        adminUser.PasswordHash = "admin||0"; //pwd/salt/format 
-
                         db.Users.Add(adminUser);
                         
                         rowsAffected = await db.SaveChangesAsync();
@@ -243,7 +184,7 @@ namespace Microsoft.AspNet.Hosting // so it will show up in startup without a us
                             await db.SaveChangesAsync();
 
                             role = await db.Roles.SingleOrDefaultAsync(
-                                 x => x.SiteId == site.Id && x.NormalizedRoleName == "Authenticated Users");
+                                 x => x.SiteId == site.Id && x.NormalizedRoleName == "Authenticated Users".ToUpperInvariant());
 
                             if(role != null)
                             {

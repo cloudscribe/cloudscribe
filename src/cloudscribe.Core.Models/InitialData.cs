@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-12-03
-// Last Modified:			2015-12-03
+// Last Modified:			2016-05-15
 // 
 
 using System;
@@ -15,6 +15,83 @@ namespace cloudscribe.Core.Models
 {
     public static class InitialData
     {
+        public static SiteSettings BuildInitialSite()
+        {
+            var newSite = new SiteSettings();
+            newSite.SiteName = "Sample Site";
+            newSite.AliasId = "tenant-1";
+            newSite.IsServerAdminSite = true;
+            newSite.Theme = "default";
+            newSite.AllowNewRegistration = true;
+            newSite.AutoCreateLdapUserOnFirstLogin = true;
+            newSite.ReallyDeleteUsers = true;
+            newSite.LdapPort = 389;
+            newSite.LdapRootDN = string.Empty;
+            newSite.LdapServer = string.Empty;
+            newSite.UseEmailForLogin = true;
+            newSite.UseLdapAuth = false;
+            newSite.RequireConfirmedEmail = false;
+            newSite.RequiresQuestionAndAnswer = false;
+            newSite.MaxInvalidPasswordAttempts = 10;
+            newSite.MinRequiredPasswordLength = 7;
+
+            return newSite;
+        }
+
+        public static SiteUser BuildInitialAdmin()
+        {
+            var adminUser = new SiteUser();
+            adminUser.Email = "admin@admin.com";
+            adminUser.NormalizedEmail = adminUser.Email.ToUpperInvariant();
+            adminUser.DisplayName = "Admin";
+            adminUser.UserName = "admin";
+
+            adminUser.EmailConfirmed = true;
+            adminUser.AccountApproved = true;
+
+            // clear text password will be hashed upon login
+            // this format allows migrating from mojoportal
+            adminUser.PasswordHash = "admin||0"; //pwd/salt/format 
+
+            return adminUser;
+        }
+
+        public static SiteRole BuildAdminRole()
+        {
+            var role = new SiteRole();
+            role.RoleName = "Administrators";
+            role.NormalizedRoleName = role.RoleName.ToUpperInvariant();
+
+            return role;
+        }
+
+        public static SiteRole BuildRoleAdminRole()
+        {
+            var role = new SiteRole();
+            role.RoleName = "Role Administrators";
+            role.NormalizedRoleName = role.RoleName.ToUpperInvariant();
+
+            return role;
+        }
+
+        public static SiteRole BuildAuthenticatedRole()
+        {
+            var role = new SiteRole();
+            role.RoleName = "Authenticated Users";
+            role.NormalizedRoleName = role.RoleName.ToUpperInvariant();
+
+            return role;
+        }
+
+        public static SiteRole BuildContentAdminsRole()
+        {
+            var role = new SiteRole();
+            role.RoleName = "Content Administrators";
+            role.NormalizedRoleName = role.RoleName.ToUpperInvariant();
+
+            return role;
+        }
+
         public static List<Currency> BuildCurrencyList()
         {
             List<Currency> list = new List<Currency>();
@@ -79,7 +156,6 @@ namespace cloudscribe.Core.Models
             return list;
 
         }
-
 
         public static List<GeoCountry> BuildCountryList()
         {

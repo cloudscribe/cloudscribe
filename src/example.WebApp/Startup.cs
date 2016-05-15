@@ -1,18 +1,14 @@
 ﻿
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Setup;
-using cloudscribe.Core.Storage.EF;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Logging.EF;
 using cloudscribe.Logging.Web;
 using Glimpse;
-using Microsoft.AspNet.Antiforgery;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Mvc.Razor;
-using Microsoft.Data.Entity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -84,21 +80,21 @@ namespace example.WebApp
                     "AdminPolicy",
                     authBuilder =>
                     {
-                        authBuilder.RequireRole("ServerAdmins", "Admins");
+                        authBuilder.RequireRole("ServerAdmins", "Administrators");
                     });
 
                 options.AddPolicy(
                     "UserManagementPolicy",
                     authBuilder =>
                     {
-                        authBuilder.RequireRole("ServerAdmins", "Admins");
+                        authBuilder.RequireRole("ServerAdmins", "Administrators");
                     });
 
                 options.AddPolicy(
                     "RoleAdminPolicy",
                     authBuilder =>
                     {
-                        authBuilder.RequireRole("Role Admins", "Admins");
+                        authBuilder.RequireRole("Role Administrators", "Administrators");
                     });
 
                 options.AddPolicy(
@@ -112,7 +108,7 @@ namespace example.WebApp
                     "SetupSystemPolicy",
                     authBuilder =>
                     {
-                        authBuilder.RequireRole("ServerAdmins, Admins");
+                        authBuilder.RequireRole("ServerAdmins, Administrators");
                     });
 
             });
@@ -150,7 +146,7 @@ namespace example.WebApp
             //services.Configure<SetupOptions>(Configuration.GetSection("SetupOptions"));
             //services.AddScoped<SetupManager, SetupManager>();
             //services.AddScoped<IVersionProvider, CloudscribeCoreVersionProvider>();
-            //services.AddScoped<IVersionProviderFactory, VersionProviderFactory>();
+            //
             //services.AddScoped<IVersionProvider, SetupVersionProvider>();
             //services.AddScoped<IVersionProvider, CloudscribeLoggingVersionProvider>();
             /* end cloudscribe Setup */

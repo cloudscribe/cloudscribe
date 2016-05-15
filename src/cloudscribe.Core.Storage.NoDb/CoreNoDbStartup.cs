@@ -1,11 +1,16 @@
-﻿
+﻿// Copyright (c) Source Tree Solutions, LLC. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+// Author:					Joe Audette
+// Created:					2016-05-15
+// Last Modified:			2016-05-15
+// 
 
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Geography;
+using cloudscribe.Core.Storage.NoDb;
 using Microsoft.Extensions.DependencyInjection;
+using NoDb;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Microsoft.AspNet.Hosting // so it will show up in startup without a using
@@ -22,14 +27,18 @@ namespace Microsoft.AspNet.Hosting // so it will show up in startup without a us
                 var userCommands = serviceScope.ServiceProvider.GetService<IUserCommands>();
                 var geoQueries = serviceScope.ServiceProvider.GetService<IGeoQueries>();
                 var geoCommands = serviceScope.ServiceProvider.GetService<IGeoCommands>();
-
+                var roleQueries = serviceScope.ServiceProvider.GetService<IBasicQueries<SiteRole>>();
+                var projectResolver = serviceScope.ServiceProvider.GetService<IProjectResolver>();
+                
                 await EnsureData(
                     siteQueries,
                     siteCommands,
                     userQueries,
                     userCommands,
                     geoQueries,
-                    geoCommands
+                    geoCommands,
+                    roleQueries,
+                    projectResolver
                     );
 
             }
@@ -42,7 +51,9 @@ namespace Microsoft.AspNet.Hosting // so it will show up in startup without a us
             IUserQueries userQueries,
             IUserCommands userCommands,
             IGeoQueries geoQueries,
-            IGeoCommands geoCommands
+            IGeoCommands geoCommands,
+            IBasicQueries<SiteRole> roleQueries,
+            IProjectResolver projectResolver
             )
         {
             
@@ -59,9 +70,7 @@ namespace Microsoft.AspNet.Hosting // so it will show up in startup without a us
                     await geoCommands.Add(c);
                 }
             }
-
-
-
+            
             count = await geoQueries.GetLanguageCount();
             if (count == 0)
             {
@@ -69,8 +78,6 @@ namespace Microsoft.AspNet.Hosting // so it will show up in startup without a us
                 {
                     await geoCommands.Add(c);
                 }
-
-               
             }
 
             var all = await geoQueries.GetAllCurrencies();
@@ -81,80 +88,36 @@ namespace Microsoft.AspNet.Hosting // so it will show up in startup without a us
                 {
                     await geoCommands.Add(c);
                 }
-                
             }
-
-
+            
             count = await siteQueries.GetCount();
             SiteSettings newSite = null;
             if (count == 0)
             {
                 // create first site
-                newSite = new SiteSettings();
-                //newSite.SiteId = 0;
-                newSite.Id = Guid.NewGuid();
-                newSite.AliasId = "tenant-" + (count + 1).ToInvariantString();
-                newSite.SiteName = "Sample Site";
-                newSite.IsServerAdminSite = true;
-
-                newSite.Theme = "default";
-
-                newSite.AllowNewRegistration = true;
-                //newSite.AllowUserFullNameChange = false;
-                newSite.AutoCreateLdapUserOnFirstLogin = true;
-                newSite.ReallyDeleteUsers = true;
-                newSite.LdapPort = 389;
-                newSite.LdapRootDN = string.Empty;
-                newSite.LdapServer = string.Empty;
-                newSite.UseEmailForLogin = true;
-                newSite.UseLdapAuth = false;
-                newSite.RequireConfirmedEmail = false;
-                //newSite.UseSslOnAllPages = false;
-
-
-                //0 = clear, 1= hashed, 2= encrypted
-                //newSite.PasswordFormat = 1;
-
-                newSite.RequiresQuestionAndAnswer = false;
-                newSite.MaxInvalidPasswordAttempts = 10;
-                //newSite.PasswordAttemptWindowMinutes = 5;
-                //newSite.MinReqNonAlphaChars = 0;
-                newSite.MinRequiredPasswordLength = 7;
-
+                newSite = InitialData.BuildInitialSite();
                 await siteCommands.Create(newSite);
-                
-
             }
 
             // ensure roles
-            if (newSite == null) return;
-
-            count = await userQueries.CountOfRoles(newSite.Id, string.Empty);
+            var projectId = await projectResolver.ResolveProjectId();
+            
+            count = await roleQueries.GetCountAsync(projectId);
             if (count == 0)
             {
-                SiteRole adminRole = new SiteRole();
-                adminRole.NormalizedRoleName = "Admins";
-                adminRole.RoleName = "Administrators";
+                var adminRole = InitialData.BuildAdminRole();
                 adminRole.SiteId = newSite.Id;
                 await userCommands.CreateRole(adminRole);
                 
-
-                SiteRole roleAdminRole = new SiteRole();
-                roleAdminRole.NormalizedRoleName = "Role Admins";
-                roleAdminRole.RoleName = "Role Administrators";
+                var roleAdminRole = InitialData.BuildRoleAdminRole();
                 roleAdminRole.SiteId = newSite.Id;
                 await userCommands.CreateRole(roleAdminRole);
                 
-
-                SiteRole contentAdminRole = new SiteRole();
-                contentAdminRole.NormalizedRoleName = "Content Administrators";
-                contentAdminRole.RoleName = "Content Administrators";
+                var contentAdminRole = InitialData.BuildContentAdminsRole();
                 contentAdminRole.SiteId = newSite.Id;
                 await userCommands.CreateRole(contentAdminRole);
 
-                SiteRole authenticatedUserRole = new SiteRole();
-                authenticatedUserRole.NormalizedRoleName = "Authenticated Users";
-                authenticatedUserRole.RoleName = "Authenticated Users";
+                var authenticatedUserRole = InitialData.BuildAuthenticatedRole();
                 authenticatedUserRole.SiteId = newSite.Id;
                 await userCommands.CreateRole(authenticatedUserRole);
                 
@@ -165,41 +128,24 @@ namespace Microsoft.AspNet.Hosting // so it will show up in startup without a us
 
             if (count == 0)
             {
-                var role = await userQueries.FetchRole(newSite.Id, "Admins");
+                var role = await userQueries.FetchRole(newSite.Id, "Administrators".ToUpperInvariant());
                 
                 if (role != null)
                 {
-                    SiteUser adminUser = new SiteUser();
+                    var adminUser = InitialData.BuildInitialAdmin();
                     adminUser.SiteId = newSite.Id;
-                    adminUser.Email = "admin@admin.com";
-                    adminUser.NormalizedEmail = adminUser.Email;
-                    adminUser.DisplayName = "Admin";
-                    adminUser.UserName = "admin";
-
-                    adminUser.EmailConfirmed = true;
-                    adminUser.AccountApproved = true;
-
-                    // clear text password will be hashed upon login
-                    // this format allows migrating from mojoportal
-                    adminUser.PasswordHash = "admin||0"; //pwd/salt/format 
-
                     await userCommands.Create(adminUser);
                     
                     await userCommands.AddUserToRole(role.Id, adminUser.Id);
 
-                    role = await userQueries.FetchRole(newSite.Id, "Authenticated Users");
+                    role = await userQueries.FetchRole(newSite.Id, "Authenticated Users".ToUpperInvariant());
                     
                     if (role != null)
                     {
                         await userCommands.AddUserToRole(role.Id, adminUser.Id);
                     }
-
-
-                    
                 }
-
                 
-
             }
 
         }

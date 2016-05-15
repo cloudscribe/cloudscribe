@@ -1028,7 +1028,7 @@ namespace cloudscribe.Core.Storage.NoDb
             var allRoles = await roleQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
             var filteredRoles = allRoles.Where(
                 x => x.SiteId == siteId
-                && x.NormalizedRoleName == roleName
+                && x.RoleName == roleName
             );
 
             return filteredRoles.FirstOrDefault();
@@ -1056,8 +1056,8 @@ namespace cloudscribe.Core.Storage.NoDb
                         join y in allUserRoles
                         on x.Id equals y.RoleId
                         where y.UserId == userId
-                        orderby x.NormalizedRoleName
-                        select x.NormalizedRoleName
+                        orderby x.RoleName
+                        select x.RoleName
                         ;
 
             return query.ToList<string>();
