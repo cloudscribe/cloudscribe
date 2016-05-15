@@ -8,8 +8,9 @@ namespace cloudscribe.Core.Models
     {
         Guid Id { get; set; }
         Guid SiteId { get; set; }
-        string DisplayName { get; set; }  
-        string RoleName { get; set; } 
+        string RoleName { get; set; }  
+        string NormalizedRoleName { get; set; } 
+        string ConcurrencyStamp { get; set; }
         int MemberCount { get; set; }
     }
 }

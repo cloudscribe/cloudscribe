@@ -91,11 +91,12 @@ namespace cloudscribe.Core.Models
         
         public bool TwoFactorEnabled { get; set; } = false;
 
-
+        public string ConcurrencyStamp { get; set; } = Guid.NewGuid().ToString();
 
         public static SiteUser FromISiteUser(ISiteUser user)
         {
             SiteUser u = new SiteUser();
+            u.ConcurrencyStamp = user.ConcurrencyStamp;
             //Guid id = user.Id;
             if (user.Id != Guid.Empty) u.Id = user.Id;
             //SiteUser u = new SiteUser(id);

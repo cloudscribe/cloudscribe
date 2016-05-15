@@ -36,7 +36,7 @@ namespace cloudscribe.Core.Identity
             IPasswordHasher<TUser> passwordHasher,
             IEnumerable<IUserValidator<TUser>> userValidators,
             IEnumerable<IPasswordValidator<TUser>> passwordValidators,
-            ILookupNormalizer keyNormalizer,
+            ILookupNormalizer lookupNormalizer,
             IdentityErrorDescriber errors,
             IServiceProvider serviceProvider,
             ILogger<UserManager<TUser>> logger,
@@ -47,7 +47,7 @@ namespace cloudscribe.Core.Identity
                   passwordHasher,
                   userValidators,
                   passwordValidators,
-                  keyNormalizer,
+                  lookupNormalizer,
                   errors,
                   serviceProvider,
                   logger,
@@ -131,12 +131,12 @@ namespace cloudscribe.Core.Identity
  
         }
 
-        public Task<string> GetUserNameFromEmail(Guid siteId, string email)
-        {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteGuid; }
+        //public Task<string> GetUserNameFromEmail(Guid siteId, string email)
+        //{
+        //    if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteGuid; }
 
-            return queries.GetUserNameFromEmail(siteId, email, CancellationToken);
-        }
+        //    return queries.GetUserNameFromEmail(siteId, email, CancellationToken);
+        //}
 
         public Task<List<IUserInfo>> GetPage(Guid siteId, int pageNumber, int pageSize, string userNameBeginsWith, int sortMode)
         {
@@ -253,15 +253,15 @@ namespace cloudscribe.Core.Identity
              
         //}
 
-        public async Task Update(ISiteUser user)
-        {
-            if (user.Id == Guid.Empty) throw new ArgumentException("can't update a user with em[ty guid id");
+        //public async Task Update(ISiteUser user)
+        //{
+        //    if (user.Id == Guid.Empty) throw new ArgumentException("can't update a user with em[ty guid id");
             
-            await commands.Update(user, CancellationToken);
+        //    await commands.Update(user, CancellationToken);
             
 
 
-        }
+        //}
 
         public Task<bool> EmailExistsInDB(Guid siteId, string email)
         {

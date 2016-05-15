@@ -312,9 +312,9 @@ namespace cloudscribe.Core.Storage.EF
 
             var siteRole = SiteRole.FromISiteRole(role);
             
-            if (siteRole.RoleName.Length == 0)
+            if (siteRole.NormalizedRoleName.Length == 0)
             {
-                siteRole.RoleName = siteRole.DisplayName;
+                siteRole.NormalizedRoleName = siteRole.RoleName;
             }
             dbContext.Roles.Add(siteRole);
             

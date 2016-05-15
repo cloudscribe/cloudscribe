@@ -328,10 +328,10 @@ namespace cloudscribe.Core.Web.Components
             {
                 var adminRole = new SiteRole();
                 adminRole.Id = Guid.NewGuid();
-                adminRole.DisplayName = "Admins";
+                adminRole.RoleName = "Admins";
                 adminRole.SiteId = site.Id;
                 await userCommands.CreateRole(adminRole, CancellationToken.None);
-                adminRole.DisplayName = "Administrators";
+                adminRole.RoleName = "Administrators";
                 await userCommands.UpdateRole(adminRole, CancellationToken.None);
             }
 
@@ -341,11 +341,11 @@ namespace cloudscribe.Core.Web.Components
             {
                 var roleAdminRole = new SiteRole();
                 roleAdminRole.Id = Guid.NewGuid();
-                roleAdminRole.DisplayName = "Role Admins";
+                roleAdminRole.RoleName = "Role Admins";
                 roleAdminRole.SiteId = site.Id;
                 await userCommands.CreateRole(roleAdminRole, CancellationToken.None);
 
-                roleAdminRole.DisplayName = "Role Administrators";
+                roleAdminRole.RoleName = "Role Administrators";
                 await userCommands.UpdateRole(roleAdminRole, CancellationToken.None);
             }
 
@@ -355,7 +355,7 @@ namespace cloudscribe.Core.Web.Components
             {
                 var contentAdminRole = new SiteRole();
                 contentAdminRole.Id = Guid.NewGuid();
-                contentAdminRole.DisplayName = "Content Administrators";
+                contentAdminRole.RoleName = "Content Administrators";
                 contentAdminRole.SiteId = site.Id;
                 await userCommands.CreateRole(contentAdminRole, CancellationToken.None);
             }
@@ -366,7 +366,7 @@ namespace cloudscribe.Core.Web.Components
             {
                 var authenticatedUserRole = new SiteRole();
                 authenticatedUserRole.Id = Guid.NewGuid();
-                authenticatedUserRole.DisplayName = "Authenticated Users";
+                authenticatedUserRole.RoleName = "Authenticated Users";
                 authenticatedUserRole.SiteId = site.Id;
                 await userCommands.CreateRole(authenticatedUserRole, CancellationToken.None);
             }

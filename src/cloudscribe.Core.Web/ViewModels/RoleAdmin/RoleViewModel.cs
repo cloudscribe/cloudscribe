@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-04
-// Last Modified:			2016-05-11
+// Last Modified:			2016-05-15
 //
 
 using cloudscribe.Core.Models;
@@ -18,9 +18,10 @@ namespace cloudscribe.Core.Web.ViewModels.RoleAdmin
         {
             RoleViewModel model = new RoleViewModel();
             model.Id = siteRole.Id;
+            model.NormalizedRoleName = siteRole.NormalizedRoleName;
             model.RoleName = siteRole.RoleName;
-            model.DisplayName = siteRole.DisplayName;
             model.SiteId = siteRole.SiteId;
+            model.ConcurrencyStamp = siteRole.ConcurrencyStamp;
             
             return model;
 
@@ -68,6 +69,8 @@ namespace cloudscribe.Core.Web.ViewModels.RoleAdmin
             set { siteId = value; }
         }
 
+        public string ConcurrencyStamp { get; set; }
+
         /// <summary>
         /// role name is the actual role name usedin the role cookie
         /// once a role is created the rolename cannot be edited
@@ -80,7 +83,7 @@ namespace cloudscribe.Core.Web.ViewModels.RoleAdmin
         /// </summary>
         private string roleName = string.Empty;
         [Display(Name = "RoleName")]
-        public string RoleName
+        public string NormalizedRoleName
         {
             get { return roleName; }
             set { roleName = value; }
@@ -91,7 +94,7 @@ namespace cloudscribe.Core.Web.ViewModels.RoleAdmin
         //[Display(Name = "RoleName", ResourceType = typeof(CommonResources))]
         //[Required(ErrorMessageResourceName = "RoleNameRequired", ErrorMessageResourceType = typeof(CommonResources))]
         //[StringLength(50, ErrorMessageResourceName = "RoleNameLengthError", ErrorMessageResourceType = typeof(CommonResources), MinimumLength = 3)]
-        public string DisplayName
+        public string RoleName
         {
             get { return displayName; }
             set { displayName = value; }

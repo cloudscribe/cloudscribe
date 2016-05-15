@@ -118,7 +118,7 @@ namespace cloudscribe.Core.Storage.NoDb
             return allUsers.Where(
                 x => x.SiteId == siteId
                 && (
-                    (x.UserName == userName)
+                    (x.NormalizedUserName == userName)
                     || (allowEmailFallback && x.NormalizedEmail == userName)
                     )
                 ).FirstOrDefault();
@@ -993,7 +993,7 @@ namespace cloudscribe.Core.Storage.NoDb
             var allRoles = await roleQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
             var filteredRoles = allRoles.Where(
                 x => x.SiteId == siteId
-                && x.RoleName == roleName
+                && x.NormalizedRoleName == roleName
             );
 
             return filteredRoles.ToList().Count > 0;
@@ -1028,7 +1028,7 @@ namespace cloudscribe.Core.Storage.NoDb
             var allRoles = await roleQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
             var filteredRoles = allRoles.Where(
                 x => x.SiteId == siteId
-                && x.RoleName == roleName
+                && x.NormalizedRoleName == roleName
             );
 
             return filteredRoles.FirstOrDefault();
@@ -1056,8 +1056,8 @@ namespace cloudscribe.Core.Storage.NoDb
                         join y in allUserRoles
                         on x.Id equals y.RoleId
                         where y.UserId == userId
-                        orderby x.RoleName
-                        select x.RoleName
+                        orderby x.NormalizedRoleName
+                        select x.NormalizedRoleName
                         ;
 
             return query.ToList<string>();
@@ -1079,8 +1079,8 @@ namespace cloudscribe.Core.Storage.NoDb
                 x => x.SiteId == siteId
                 && (
                  (searchInput == "")
-                        || x.DisplayName.Contains(searchInput)
                         || x.RoleName.Contains(searchInput)
+                        || x.NormalizedRoleName.Contains(searchInput)
                 )
             );
 
@@ -1105,8 +1105,8 @@ namespace cloudscribe.Core.Storage.NoDb
                 x => x.SiteId == siteId
                 && (
                  (searchInput == "")
-                        || x.DisplayName.Contains(searchInput)
                         || x.RoleName.Contains(searchInput)
+                        || x.NormalizedRoleName.Contains(searchInput)
                 )
             );
 
@@ -1115,7 +1115,7 @@ namespace cloudscribe.Core.Storage.NoDb
             var allUserRoles = await userRoleQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
 
             var listQuery = from x in filteredRoles
-                            orderby x.RoleName ascending
+                            orderby x.NormalizedRoleName ascending
                             select x;
 
             return listQuery
@@ -1230,7 +1230,7 @@ namespace cloudscribe.Core.Storage.NoDb
                         on y.RoleId equals z.Id
                         orderby x.DisplayName
                         where
-                            (x.SiteId.Equals(siteId) && z.RoleName.Equals(roleName))
+                            (x.SiteId.Equals(siteId) && z.NormalizedRoleName.Equals(roleName))
 
                         select x
                         ;

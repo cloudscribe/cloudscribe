@@ -64,6 +64,8 @@ namespace cloudscribe.Core.Storage.EF
             .HasMaxLength(36)
             ;
 
+            entity.Property(u => u.ConcurrencyStamp).IsConcurrencyToken();
+
             entity.HasIndex(p => p.AliasId);
 
             entity.Property(p => p.SiteName)
@@ -445,6 +447,8 @@ namespace cloudscribe.Core.Storage.EF
 
             entity.HasIndex(p => p.SiteId);
 
+            entity.Property(u => u.ConcurrencyStamp).IsConcurrencyToken();
+
             entity.Property(p => p.AccountApproved)
             .IsRequired()
             .ForSqlServerHasColumnType("bit")
@@ -570,14 +574,16 @@ namespace cloudscribe.Core.Storage.EF
 
             entity.HasIndex(p => p.SiteId);
 
-            entity.Property(p => p.RoleName)
+            entity.Property(u => u.ConcurrencyStamp).IsConcurrencyToken();
+
+            entity.Property(p => p.NormalizedRoleName)
             .IsRequired()
             .HasMaxLength(50);
             ;
 
-            entity.HasIndex(p => p.RoleName);
+            entity.HasIndex(p => p.NormalizedRoleName);
 
-            entity.Property(p => p.DisplayName)
+            entity.Property(p => p.RoleName)
             .IsRequired()
             .HasMaxLength(50);
             ;

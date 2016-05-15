@@ -84,7 +84,8 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
-                    DisplayName = table.Column<string>(nullable: false),
+                    ConcurrencyStamp = table.Column<string>(nullable: true),
+                    NormalizedRoleName = table.Column<string>(nullable: false),
                     RoleName = table.Column<string>(nullable: false),
                     SiteId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
@@ -116,6 +117,7 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                     CompanyRegion = table.Column<string>(nullable: true),
                     CompanyStreetAddress = table.Column<string>(nullable: true),
                     CompanyStreetAddress2 = table.Column<string>(nullable: true),
+                    ConcurrencyStamp = table.Column<string>(nullable: true),
                     CreatedUtc = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "getutcdate()"),
                     DefaultEmailFromAddress = table.Column<string>(nullable: true),
                     DefaultEmailFromAlias = table.Column<string>(nullable: true),
@@ -193,6 +195,7 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                     AvatarUrl = table.Column<string>(nullable: true),
                     CanAutoLockout = table.Column<bool>(type: "bit", nullable: false, defaultValue: 1),
                     Comment = table.Column<string>(nullable: true),
+                    ConcurrencyStamp = table.Column<string>(nullable: true),
                     Country = table.Column<string>(nullable: true),
                     CreatedUtc = table.Column<DateTime>(nullable: false),
                     DateOfBirth = table.Column<DateTime>(nullable: true),
@@ -318,9 +321,9 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                 column: "Id",
                 unique: true);
             migrationBuilder.CreateIndex(
-                name: "IX_SiteRole_RoleName",
+                name: "IX_SiteRole_NormalizedRoleName",
                 table: "cs_Role",
-                column: "RoleName");
+                column: "NormalizedRoleName");
             migrationBuilder.CreateIndex(
                 name: "IX_SiteRole_SiteId",
                 table: "cs_Role",

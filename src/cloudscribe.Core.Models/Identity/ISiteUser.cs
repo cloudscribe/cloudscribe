@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-17
-// Last Modified:			2016-05-11
+// Last Modified:			2016-05-15
 // 
 
 using System;
@@ -110,16 +110,9 @@ namespace cloudscribe.Core.Models
         string Signature { get; set; }
         string AuthorBio { get; set; }
         string Comment { get; set; }
+        string ConcurrencyStamp { get; set; }
 
-        // TODO: remove 
-        //Guid EmailChangeGuid { get; set; }
-        //Guid RegisterConfirmGuid { get; }
-        //Guid PasswordResetGuid { get; set; }
-        //int FailedPasswordAnswerAttemptCount { get; set; }
-        //DateTime FailedPasswordAnswerAttemptWindowStart { get; set; }
-        //DateTime FailedPasswordAttemptWindowStart { get; set; }
-        //DateTime LastLockoutDate { get; set; }
-        //DateTime LastActivityDate { get; set; }
+       
 
     }
 }

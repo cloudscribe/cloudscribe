@@ -77,7 +77,7 @@ namespace cloudscribe.Core.Storage.EF
             var item = await dbContext.Users.AsNoTracking().SingleOrDefaultAsync(
                     x => x.SiteId == siteId
                     && (
-                    (x.UserName == userName)
+                    (x.NormalizedUserName == userName)
                     || (allowEmailFallback && x.NormalizedEmail == userName)
                     ),
                     cancellationToken
@@ -909,7 +909,7 @@ namespace cloudscribe.Core.Storage.EF
             CancellationToken cancellationToken = default(CancellationToken))
         {
             int count = await dbContext.Roles.CountAsync<SiteRole>(
-                r => r.SiteId == siteId && r.RoleName == roleName
+                r => r.SiteId == siteId && r.NormalizedRoleName == roleName
                 , cancellationToken)
                 .ConfigureAwait(false);
 
@@ -936,7 +936,7 @@ namespace cloudscribe.Core.Storage.EF
         {
             SiteRole item
                 = await dbContext.Roles.SingleOrDefaultAsync(
-                    x => x.SiteId == siteId && x.RoleName == roleName
+                    x => x.SiteId == siteId && x.NormalizedRoleName == roleName
                     , cancellationToken)
                     .ConfigureAwait(false);
 
@@ -953,8 +953,8 @@ namespace cloudscribe.Core.Storage.EF
                         join y in dbContext.UserRoles
                         on x.Id equals y.RoleId
                         where y.UserId == userId
-                        orderby x.RoleName
-                        select x.RoleName
+                        orderby x.NormalizedRoleName
+                        select x.NormalizedRoleName
                         ;
             return await query
                 .AsNoTracking()
@@ -972,8 +972,8 @@ namespace cloudscribe.Core.Storage.EF
                 x => x.SiteId.Equals(siteId)
                 && (
                  (searchInput == "")
-                        || x.DisplayName.Contains(searchInput)
                         || x.RoleName.Contains(searchInput)
+                        || x.NormalizedRoleName.Contains(searchInput)
                 ),
                 cancellationToken
                 ).ConfigureAwait(false);
@@ -992,17 +992,17 @@ namespace cloudscribe.Core.Storage.EF
             var listQuery = from x in dbContext.Roles
                             where (
                             x.SiteId.Equals(siteId) &&
-                            (searchInput == "" || x.DisplayName.Contains(searchInput) || x.RoleName.Contains(searchInput))
+                            (searchInput == "" || x.RoleName.Contains(searchInput) || x.NormalizedRoleName.Contains(searchInput))
                             )
-                            orderby x.RoleName ascending
+                            orderby x.NormalizedRoleName ascending
                             select new SiteRole
                             {
                                 //RoleId = x.RoleId,
                                 Id = x.Id,
                                 // SiteId = x.SiteId,
                                 SiteId = x.SiteId,
+                                NormalizedRoleName = x.NormalizedRoleName,
                                 RoleName = x.RoleName,
-                                DisplayName = x.DisplayName,
                                 MemberCount = dbContext.UserRoles.Count<UserRole>(u => u.RoleId == x.Id)
                             };
 
@@ -1097,7 +1097,7 @@ namespace cloudscribe.Core.Storage.EF
                         on y.RoleId equals z.Id
                         orderby x.DisplayName
                         where
-                            (x.SiteId.Equals(siteId) && z.RoleName.Equals(roleName))
+                            (x.SiteId.Equals(siteId) && z.NormalizedRoleName.Equals(roleName))
 
                         select x
                         ;

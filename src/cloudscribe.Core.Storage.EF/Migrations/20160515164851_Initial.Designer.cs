@@ -8,7 +8,7 @@ using cloudscribe.Core.Storage.EF;
 namespace cloudscribe.Core.Storage.EF.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    [Migration("20160514133308_Initial")]
+    [Migration("20160515164851_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -170,7 +170,10 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                         .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier")
                         .HasAnnotation("SqlServer:GeneratedValueSql", "newid()");
 
-                    b.Property<string>("DisplayName")
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken();
+
+                    b.Property<string>("NormalizedRoleName")
                         .IsRequired()
                         .HasAnnotation("MaxLength", 50);
 
@@ -186,7 +189,7 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                     b.HasIndex("Id")
                         .IsUnique();
 
-                    b.HasIndex("RoleName");
+                    b.HasIndex("NormalizedRoleName");
 
                     b.HasIndex("SiteId");
 
@@ -267,6 +270,9 @@ namespace cloudscribe.Core.Storage.EF.Migrations
 
                     b.Property<string>("CompanyStreetAddress2")
                         .HasAnnotation("MaxLength", 250);
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken();
 
                     b.Property<DateTime>("CreatedUtc")
                         .ValueGeneratedOnAdd()
@@ -513,6 +519,9 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                         .HasAnnotation("SqlServer:DefaultValueType", "System.Int32");
 
                     b.Property<string>("Comment");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken();
 
                     b.Property<string>("Country");
 

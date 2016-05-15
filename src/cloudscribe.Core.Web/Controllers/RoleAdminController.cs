@@ -124,7 +124,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             if (roleId.HasValue)
             {
-                var role = await RoleManager.FetchRole(roleId.Value);
+                var role = await RoleManager.FindByIdAsync(roleId.Value.ToString());
                 if ((role != null) && (role.SiteId == selectedSite.Id))
                 {
                     model = RoleViewModel.FromISiteRole(role);
@@ -175,24 +175,21 @@ namespace cloudscribe.Core.Web.Controllers
             }
 
             string successFormat;
-
+            var role = SiteRole.FromISiteRole(model);
             if (model.Id == Guid.Empty)
             {
-                model.Id = Guid.NewGuid();
-                model.SiteId = selectedSite.Id;
+                role.SiteId = selectedSite.Id;
                 successFormat = "The role <b>{0}</b> was successfully created.";
-                await RoleManager.CreateRole(model);
+                await RoleManager.CreateAsync(role);
             }
             else
             {
                 successFormat = "The role <b>{0}</b> was successfully updated.";
-                await RoleManager.UpdateRole(model);
+                await RoleManager.UpdateAsync(role);
             }
-
-            
             
             this.AlertSuccess(string.Format(successFormat,
-                        model.DisplayName), true);
+                        role.RoleName), true);
             
 
             return RedirectToAction("Index", new { siteId = selectedSite.Id, pageNumber = returnPageNumber });
@@ -220,7 +217,7 @@ namespace cloudscribe.Core.Web.Controllers
                 
             }
 
-            var role = await RoleManager.FetchRole(roleId);
+            var role = await RoleManager.FindByIdAsync(roleId.ToString());
             if (role != null && role.SiteId == selectedSite.Id && role.IsDeletable(setupOptions.RolesThatCannotBeDeleted))
             {
                 await RoleManager.DeleteUserRolesByRole(roleId);
@@ -230,7 +227,7 @@ namespace cloudscribe.Core.Web.Controllers
 
                 this.AlertWarning(string.Format(
                             successFormat,
-                            role.DisplayName)
+                            role.RoleName)
                             , true);
                 
             }
@@ -262,7 +259,7 @@ namespace cloudscribe.Core.Web.Controllers
                 ViewBag.Title = "Role Members";
             }
             
-            var role = await RoleManager.FetchRole(roleId);
+            var role = await RoleManager.FindByIdAsync(roleId.ToString());
             if ((role == null) || (role.SiteId != selectedSite.Id))
             {
                 return RedirectToAction("Index");
@@ -283,11 +280,11 @@ namespace cloudscribe.Core.Web.Controllers
             model.Role = RoleViewModel.FromISiteRole(role);
             if(selectedSite.Id != siteManager.CurrentSite.Id)
             {
-                model.Heading1 = string.Format(CultureInfo.CurrentUICulture, "{0} - {1}", selectedSite.SiteName, role.DisplayName);
+                model.Heading1 = string.Format(CultureInfo.CurrentUICulture, "{0} - {1}", selectedSite.SiteName, role.RoleName);
             }
             else
             {
-                model.Heading1 = role.DisplayName;
+                model.Heading1 = role.RoleName;
             }
             
             model.Heading2 = "Role Members";
@@ -337,7 +334,7 @@ namespace cloudscribe.Core.Web.Controllers
                 ViewBag.Title = "Non Role Members";
             }
             
-            var role = await RoleManager.FetchRole(roleId);
+            var role = await RoleManager.FindByIdAsync(roleId.ToString());
             if ((role == null) || (role.SiteId != selectedSite.Id))
             {
                 return RedirectToAction("Index");
@@ -354,11 +351,11 @@ namespace cloudscribe.Core.Web.Controllers
             model.Role = RoleViewModel.FromISiteRole(role);
             if (selectedSite.Id != siteManager.CurrentSite.Id)
             {
-                model.Heading1 = string.Format(CultureInfo.CurrentUICulture, "{0} - {1}", selectedSite.SiteName, role.DisplayName);
+                model.Heading1 = string.Format(CultureInfo.CurrentUICulture, "{0} - {1}", selectedSite.SiteName, role.RoleName);
             }
             else
             {
-                model.Heading1 = role.DisplayName;
+                model.Heading1 = role.RoleName;
             }
 
             model.Heading2 = "Non Role Members";
@@ -411,13 +408,13 @@ namespace cloudscribe.Core.Web.Controllers
 
             if (user != null)
             {
-                var role = await RoleManager.FetchRole(roleId);
+                var role = await RoleManager.FindByIdAsync(roleId.ToString());
                 if ((role != null) && (role.SiteId == selectedSite.Id))
                 {
                     await RoleManager.AddUserToRole(user, role);
                     
                     this.AlertSuccess(string.Format("<b>{0}</b> was successfully added to the role {1}.",
-                    user.DisplayName, role.DisplayName), true);
+                    user.DisplayName, role.RoleName), true);
                        
                 }
 
@@ -449,13 +446,13 @@ namespace cloudscribe.Core.Web.Controllers
             var user = await UserManager.Fetch(selectedSite.Id, userId);
             if (user != null)
             {
-                var role = await RoleManager.FetchRole(roleId);
+                var role = await RoleManager.FindByIdAsync(roleId.ToString());
                 if ((role != null) && (role.SiteId == selectedSite.Id))
                 {
                     await RoleManager.RemoveUserFromRole(user, role);
                     this.AlertWarning(string.Format(
                         "<b>{0}</b> was successfully removed from the role {1}.",
-                        user.DisplayName, role.DisplayName)
+                        user.DisplayName, role.RoleName)
                         , true);
                        
                 }

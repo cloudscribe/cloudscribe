@@ -23,6 +23,13 @@ namespace cloudscribe.Core.Models
         public Guid Id { get; set; } = Guid.Empty;
         public Guid SiteId { get; set; } = Guid.Empty;
 
+        private string normalizedRoleName = string.Empty;
+        public string NormalizedRoleName
+        {
+            get { return normalizedRoleName ?? string.Empty; }
+            set { normalizedRoleName = value; }
+        }
+
         private string roleName = string.Empty;
         public string RoleName
         {
@@ -30,14 +37,9 @@ namespace cloudscribe.Core.Models
             set { roleName = value; }
         }
 
-        private string displayName = string.Empty;
-        public string DisplayName
-        {
-            get { return displayName ?? string.Empty; }
-            set { displayName = value; }
-        }
+        public string ConcurrencyStamp { get; set; } = Guid.NewGuid().ToString();
 
-        
+
         /// <summary>
         /// note that MemberCount is only populated in some role list retrieval scenarios
         /// if the value is -1 then it has not been populated
@@ -47,13 +49,12 @@ namespace cloudscribe.Core.Models
         public static SiteRole FromISiteRole(ISiteRole i)
         {
             SiteRole r = new SiteRole();
-            r.DisplayName = i.DisplayName;
+            r.RoleName = i.RoleName;
             r.MemberCount = i.MemberCount;
             r.Id = i.Id;
-           // r.RoleId = i.RoleId;
-            r.RoleName = i.RoleName;
+            r.NormalizedRoleName = i.NormalizedRoleName;
             r.SiteId = i.SiteId;
-            //r.SiteId = i.SiteId;
+            r.ConcurrencyStamp = i.ConcurrencyStamp;
 
 
             return r;

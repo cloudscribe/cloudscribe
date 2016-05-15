@@ -158,8 +158,8 @@ namespace Microsoft.AspNet.Hosting // so it will show up in startup without a us
                     SiteRole adminRole = new SiteRole();
                     //adminRole.RoleId = 0;
                     adminRole.Id = Guid.NewGuid();
-                    adminRole.RoleName = "Admins";
-                    adminRole.DisplayName = "Administrators";
+                    adminRole.NormalizedRoleName = "Admins";
+                    adminRole.RoleName = "Administrators";
                     //adminRole.SiteId = site.SiteId;
                     adminRole.SiteId = site.Id;
                     db.Roles.Add(adminRole);
@@ -168,8 +168,8 @@ namespace Microsoft.AspNet.Hosting // so it will show up in startup without a us
                     SiteRole roleAdminRole = new SiteRole();
                     //roleAdminRole.RoleId = 0;
                     roleAdminRole.Id = Guid.NewGuid();
-                    roleAdminRole.RoleName = "Role Admins";
-                    roleAdminRole.DisplayName = "Role Administrators";
+                    roleAdminRole.NormalizedRoleName = "Role Admins";
+                    roleAdminRole.RoleName = "Role Administrators";
                    // roleAdminRole.SiteId = site.SiteId;
                     roleAdminRole.SiteId = site.Id;
                     db.Roles.Add(roleAdminRole);
@@ -178,8 +178,8 @@ namespace Microsoft.AspNet.Hosting // so it will show up in startup without a us
                     SiteRole contentAdminRole = new SiteRole();
                     //contentAdminRole.RoleId = 0;
                     contentAdminRole.Id = Guid.NewGuid();
+                    contentAdminRole.NormalizedRoleName = "Content Administrators";
                     contentAdminRole.RoleName = "Content Administrators";
-                    contentAdminRole.DisplayName = "Content Administrators";
                     //contentAdminRole.SiteId = site.SiteId;
                     contentAdminRole.SiteId = site.Id;
                     db.Roles.Add(contentAdminRole);
@@ -187,8 +187,8 @@ namespace Microsoft.AspNet.Hosting // so it will show up in startup without a us
                     SiteRole authenticatedUserRole = new SiteRole();
                     //authenticatedUserRole.RoleId = 0;
                     authenticatedUserRole.Id = Guid.NewGuid();
+                    authenticatedUserRole.NormalizedRoleName = "Authenticated Users";
                     authenticatedUserRole.RoleName = "Authenticated Users";
-                    authenticatedUserRole.DisplayName = "Authenticated Users";
                     //authenticatedUserRole.SiteId = site.SiteId;
                     authenticatedUserRole.SiteId = site.Id;
                     db.Roles.Add(authenticatedUserRole);
@@ -212,7 +212,7 @@ namespace Microsoft.AspNet.Hosting // so it will show up in startup without a us
                 if (site != null)
                 {
                     var role = await db.Roles.SingleOrDefaultAsync(
-                            x => x.SiteId == site.Id && x.RoleName == "Admins");
+                            x => x.SiteId == site.Id && x.NormalizedRoleName == "Admins");
 
                     if(role != null)
                     {
@@ -243,7 +243,7 @@ namespace Microsoft.AspNet.Hosting // so it will show up in startup without a us
                             await db.SaveChangesAsync();
 
                             role = await db.Roles.SingleOrDefaultAsync(
-                                 x => x.SiteId == site.Id && x.RoleName == "Authenticated Users");
+                                 x => x.SiteId == site.Id && x.NormalizedRoleName == "Authenticated Users");
 
                             if(role != null)
                             {

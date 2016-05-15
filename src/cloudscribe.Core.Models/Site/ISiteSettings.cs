@@ -36,6 +36,8 @@ namespace cloudscribe.Core.Models
         string LdapRootDN { get; set; }
         string LdapUserDNKey { get; set; }
 
+        string ConcurrencyStamp { get; set; }
+
         // TODO use this to force ONLY social logins or ldap option?
         bool DisableDbAuth { get; set; }
     

@@ -340,7 +340,6 @@ namespace cloudscribe.Core.Web.Controllers
                         SiteId = selectedSite.Id,
                         UserName = model.LoginName,
                         Email = model.Email,
-                        NormalizedEmail = model.Email.ToLowerInvariant(),
                         FirstName = model.FirstName,
                         LastName = model.LastName,
                         DisplayName = model.DisplayName
@@ -455,11 +454,7 @@ namespace cloudscribe.Core.Web.Controllers
                     var user = await UserManager.Fetch(selectedSite.Id, model.UserId);
                     if (user != null)
                     {
-                        if(user.NormalizedEmail != model.Email.ToLowerInvariant())
-                        {
-                            user.NormalizedEmail = model.Email.ToLowerInvariant();
-                        }
-
+                        
                         user.Email = model.Email;
                         user.FirstName = model.FirstName;
                         user.LastName = model.LastName;
@@ -488,7 +483,7 @@ namespace cloudscribe.Core.Web.Controllers
                             user.DateOfBirth = DateTime.MinValue;
                         }
 
-                        await UserManager.Update(user);
+                        await UserManager.UpdateAsync((SiteUser)user);
                         
                         this.AlertSuccess(string.Format("user account for <b>{0}</b> was successfully updated.",
                              user.DisplayName), true);
@@ -529,7 +524,7 @@ namespace cloudscribe.Core.Web.Controllers
                 if(user != null)
                 {
                     user.AccountApproved = true;
-                    await UserManager.Update((SiteUser)user);
+                    await UserManager.UpdateAsync((SiteUser)user);
 
                     this.AlertSuccess(string.Format("user account for <b>{0}</b> was successfully approved.",
                             user.DisplayName), true);

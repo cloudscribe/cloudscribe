@@ -95,33 +95,7 @@ namespace cloudscribe.Core.Identity
 
         }
 
-        /// <summary>
-        /// TODO: this replicates RoleStore.FindByIdAsync except this takes int as it should
-        /// I think there is a way to fix FindByIdAsync so it takes int then get rid of this one
-        /// </summary>
-        /// <param name="roleId"></param>
-        /// <returns></returns>
-        public async Task<ISiteRole> FetchRole(Guid roleId)
-        {
-            return await queries.FetchRole(roleId, CancellationToken);
-        }
-
-        // again need to consolidate with RoleStore.UpdateAsync
-        public async Task CreateRole(ISiteRole role)
-        {
-            if(role.Id == Guid.Empty) role.Id = Guid.NewGuid();
-                
-            await commands.CreateRole(role, CancellationToken);
-
-        }
-
-        public async Task UpdateRole(ISiteRole role)
-        {
-            if (role.Id == Guid.Empty) throw new ArgumentException("role id cannot be empty guid");
-            
-            await commands.UpdateRole(role, CancellationToken);
-        }
-
+        
         public async Task DeleteUserRolesByRole(Guid roleId)
         {
             await commands.DeleteUserRolesByRole(roleId, CancellationToken);
@@ -132,12 +106,12 @@ namespace cloudscribe.Core.Identity
             await commands.DeleteRole(roleId, CancellationToken);
         }
 
-        public async Task<bool> RoleExists(Guid siteId, string roleName)
-        {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteGuid; }
+        //public async Task<bool> RoleExists(Guid siteId, string roleName)
+        //{
+        //    if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteGuid; }
 
-            return await queries.RoleExists(siteId, roleName, CancellationToken);
-        }
+        //    return await queries.RoleExists(siteId, roleName, CancellationToken);
+        //}
 
         public async Task<IList<IUserInfo>> GetUsersInRole(
             Guid siteId, 

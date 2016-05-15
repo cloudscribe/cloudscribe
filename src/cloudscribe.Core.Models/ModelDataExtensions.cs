@@ -17,8 +17,8 @@ namespace cloudscribe.Core.Models.DataExtensions
     {
         public static void LoadFromReader(this ISiteRole role, DbDataReader reader)
         {
-            role.RoleName = reader["RoleName"].ToString();
-            role.DisplayName = reader["DisplayName"].ToString();
+            role.NormalizedRoleName = reader["RoleName"].ToString();
+            role.RoleName = reader["DisplayName"].ToString();
             role.SiteId = new Guid(reader["SiteGuid"].ToString());
             role.Id = new Guid(reader["RoleGuid"].ToString());
         }

@@ -133,28 +133,28 @@ namespace Microsoft.AspNet.Hosting // so it will show up in startup without a us
             if (count == 0)
             {
                 SiteRole adminRole = new SiteRole();
-                adminRole.RoleName = "Admins";
-                adminRole.DisplayName = "Administrators";
+                adminRole.NormalizedRoleName = "Admins";
+                adminRole.RoleName = "Administrators";
                 adminRole.SiteId = newSite.Id;
                 await userCommands.CreateRole(adminRole);
                 
 
                 SiteRole roleAdminRole = new SiteRole();
-                roleAdminRole.RoleName = "Role Admins";
-                roleAdminRole.DisplayName = "Role Administrators";
+                roleAdminRole.NormalizedRoleName = "Role Admins";
+                roleAdminRole.RoleName = "Role Administrators";
                 roleAdminRole.SiteId = newSite.Id;
                 await userCommands.CreateRole(roleAdminRole);
                 
 
                 SiteRole contentAdminRole = new SiteRole();
+                contentAdminRole.NormalizedRoleName = "Content Administrators";
                 contentAdminRole.RoleName = "Content Administrators";
-                contentAdminRole.DisplayName = "Content Administrators";
                 contentAdminRole.SiteId = newSite.Id;
                 await userCommands.CreateRole(contentAdminRole);
 
                 SiteRole authenticatedUserRole = new SiteRole();
+                authenticatedUserRole.NormalizedRoleName = "Authenticated Users";
                 authenticatedUserRole.RoleName = "Authenticated Users";
-                authenticatedUserRole.DisplayName = "Authenticated Users";
                 authenticatedUserRole.SiteId = newSite.Id;
                 await userCommands.CreateRole(authenticatedUserRole);
                 

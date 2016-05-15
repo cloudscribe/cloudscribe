@@ -128,7 +128,7 @@ namespace cloudscribe.Core.Identity
                 throw new ArgumentNullException("role");
             }
 
-            return Task.FromResult(role.RoleName);
+            return Task.FromResult(role.NormalizedRoleName);
         }
 
         public Task<string> GetRoleIdAsync(TRole role, CancellationToken cancellationToken)
@@ -154,7 +154,7 @@ namespace cloudscribe.Core.Identity
                 throw new ArgumentNullException("role");
             }
 
-            return Task.FromResult(role.RoleName);
+            return Task.FromResult(role.NormalizedRoleName);
         }
 
         public Task SetNormalizedRoleNameAsync(TRole role, string normalizedName, CancellationToken cancellationToken)
@@ -166,8 +166,9 @@ namespace cloudscribe.Core.Identity
             {
                 throw new ArgumentNullException("role");
             }
-
-            role.RoleName = normalizedName;
+            // we are not allowing RoleName to ever be updated
+            // only DisplayName can be updated for an existing role
+            role.NormalizedRoleName = normalizedName;
             return Task.FromResult(0);
         }
 

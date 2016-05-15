@@ -447,7 +447,7 @@ namespace cloudscribe.Core.Identity
             return Task.FromResult(0);
         }
 
-        public Task SetNormalizedEmailAsync(TUser user, string email, CancellationToken cancellationToken)
+        public Task SetNormalizedEmailAsync(TUser user, string normalizedEmail, CancellationToken cancellationToken)
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
@@ -464,7 +464,7 @@ namespace cloudscribe.Core.Identity
             }
             
             //user.Email = email;
-            user.NormalizedEmail = email;
+            user.NormalizedEmail = normalizedEmail;
 
             //cancellationToken.ThrowIfCancellationRequested();
 

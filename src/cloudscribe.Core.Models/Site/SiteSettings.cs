@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2016-04-27
+// Last Modified:			2016-05-15
 // 
 
 using System;
@@ -18,9 +18,9 @@ namespace cloudscribe.Core.Models
 
         }
 
-        
 
-        
+        public string ConcurrencyStamp { get; set; } = Guid.NewGuid().ToString();
+
 
         private string theme = string.Empty;
         public string Theme
@@ -472,6 +472,7 @@ namespace cloudscribe.Core.Models
             if(i == null) { return null; }
 
             SiteSettings s = new SiteSettings();
+            s.ConcurrencyStamp = i.ConcurrencyStamp;
             s.AccountApprovalEmailCsv = i.AccountApprovalEmailCsv;
             s.AddThisDotComUsername = i.AddThisDotComUsername;
             s.AllowDbFallbackWithLdap = i.AllowDbFallbackWithLdap;
