@@ -195,6 +195,7 @@ src/example.WebApp/appsettings.local.overrides.json
 
 src/example.WebApp/cloudscribe_config/firebirddb/*
 src/example.WebApp/cloudscribe_config/sqlitedb/*
+src/example.WebApp/nodb_storage/*
 
 .vscode/launch.json
 src/cloudscribe.Core.Repositories.EF/appsettings.local.overrides.json
