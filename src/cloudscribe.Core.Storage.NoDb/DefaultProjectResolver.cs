@@ -22,8 +22,15 @@ namespace cloudscribe.Core.Storage.NoDb
 
         public Task<string> ResolveProjectId(CancellationToken cancellationToken = default(CancellationToken))
         {
-            var folder = contextAccesor.HttpContext.Request.Path.StartingSegment();
-            var host = contextAccesor.HttpContext.Request.Host.Value;
+            var result = "default";
+
+            var context = contextAccesor.HttpContext;
+            if (context == null) return Task.FromResult(result);
+            var request = context.Request;
+            if (request == null) return Task.FromResult(result);
+
+            var folder = request.Path.StartingSegment();
+            var host = request.Host.Value;
             foreach(var map in projectMaps)
             {
                 if(!string.IsNullOrEmpty(map.FirstFolderSegment))
@@ -43,7 +50,7 @@ namespace cloudscribe.Core.Storage.NoDb
                 }
             }
 
-            var result = "default";
+            
             return Task.FromResult(result);
         }
     }

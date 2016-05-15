@@ -55,10 +55,10 @@ namespace cloudscribe.Core.Storage.EF
             CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            string loweredEmail = email.ToLowerInvariant();
+            //string loweredEmail = email.ToLowerInvariant();
             var item = await dbContext.Users.AsNoTracking()
                 .SingleOrDefaultAsync(
-                    x => x.SiteId == siteId && x.NormalizedEmail == loweredEmail
+                    x => x.SiteId == siteId && x.NormalizedEmail == email
                     , cancellationToken)
                     .ConfigureAwait(false);
 
@@ -72,13 +72,13 @@ namespace cloudscribe.Core.Storage.EF
             CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            string loweredUserName = userName.ToLowerInvariant();
+            //string loweredUserName = userName.ToLowerInvariant();
 
             var item = await dbContext.Users.AsNoTracking().SingleOrDefaultAsync(
                     x => x.SiteId == siteId
                     && (
                     (x.UserName == userName)
-                    || (allowEmailFallback && x.NormalizedEmail == loweredUserName)
+                    || (allowEmailFallback && x.NormalizedEmail == userName)
                     ),
                     cancellationToken
                     )
@@ -112,10 +112,10 @@ namespace cloudscribe.Core.Storage.EF
             string email,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            string loweredEmail = email.ToLowerInvariant();
+            //string loweredEmail = email.ToLowerInvariant();
 
             var query = from c in dbContext.Users
-                        where c.NormalizedEmail == loweredEmail
+                        where c.NormalizedEmail == email
                         orderby c.DisplayName ascending
                         select c;
 

@@ -8,12 +8,7 @@
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Geography;
 using cloudscribe.Core.Storage.NoDb;
-using Microsoft.Extensions.DependencyInjection;
 using NoDb;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -23,7 +18,6 @@ namespace Microsoft.Extensions.DependencyInjection
             this IServiceCollection services
             )
         {
-
             services.AddNoDb<SiteSettings>();
             services.AddNoDb<SiteHost>();
             services.AddNoDb<SiteUser>();

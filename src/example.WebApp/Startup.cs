@@ -182,8 +182,8 @@ namespace example.WebApp
             ILoggerFactory loggerFactory,
             IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
             IOptions<IdentityOptions> identityOptionsAccessor,
-            IServiceProvider serviceProvider,
-            ILogRepository logRepository)
+            IServiceProvider serviceProvider
+            )
         {
             var enableGlimpse = Configuration.Get("DiagnosticOptions:EnableGlimpse", false);
 
@@ -193,7 +193,7 @@ namespace example.WebApp
             }
 
             /* optional and only needed if you are using cloudscribe Logging  */
-            ConfigureLogging(loggerFactory, serviceProvider, logRepository);
+            //ConfigureLogging(loggerFactory, serviceProvider);
             
             if (environment.IsDevelopment())
             {
@@ -244,13 +244,21 @@ namespace example.WebApp
             UseMvc(app, multiTenantOptions.Mode == MultiTenantMode.FolderName);
 
             var devOptions = Configuration.Get<DevOptions>("DevOptions");
-            if (devOptions.DbPlatform == "ef7")
+            switch (devOptions.DbPlatform)
             {
+                case "NoDb":
+                    CoreNoDbStartup.InitializeDataAsync(app.ApplicationServices).Wait();
+                    break;
+
+                case "ef":
+                default:
                 // this creates ensures the database is created and initial data
-                StartupDataUtils.InitializeDatabaseAsync(app.ApplicationServices).Wait();
+                CoreEFStartup.InitializeDatabaseAsync(app.ApplicationServices).Wait();
 
                 // this one is only needed if using cloudscribe Logging with EF as the logging storage
                 LoggingDbInitializer.InitializeDatabaseAsync(app.ApplicationServices).Wait();
+
+                    break;
             }
         }
         
@@ -287,7 +295,7 @@ namespace example.WebApp
                     services.AddCloudscribeCoreNoDbStorage();
                     break;
 
-                case "ef7":
+                case "ef":
                 default:
                     var connectionString = configuration["Data:EF7ConnectionOptions:ConnectionString"];
                     services.AddCloudscribeCoreEFStorage(connectionString);
@@ -300,8 +308,10 @@ namespace example.WebApp
             }
         }
 
-        private void ConfigureLogging(ILoggerFactory loggerFactory, IServiceProvider serviceProvider, ILogRepository logRepository)
+        private void ConfigureLogging(ILoggerFactory loggerFactory, IServiceProvider serviceProvider)
         {
+            var logRepository = serviceProvider.GetService<ILogRepository>();
+
             loggerFactory.AddConsole(minLevel: LogLevel.Warning);
 
             // a customizable filter for logging
