@@ -51,7 +51,7 @@ namespace SaasKit.Multitenancy
             Ensure.Argument.NotNull(context, nameof(context));
 
             // Obtain the key used to identify cached tenants from the current request
-            var cacheKey = GetContextIdentifier(context);
+            var cacheKey = await GetContextIdentifier(context);
 
             var tenantContext = cache.Get(cacheKey) as TenantContext<TTenant>;
 

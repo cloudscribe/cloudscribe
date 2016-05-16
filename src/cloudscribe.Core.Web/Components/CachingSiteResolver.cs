@@ -28,24 +28,21 @@ namespace cloudscribe.Core.Web.Components
 {
     public class CachingSiteResolver : MemoryCacheTenantResolverBase<SiteSettings>
     {
-        //private readonly IEnumerable<SiteSettings> tenants;
-
+        
         public CachingSiteResolver(
             IMemoryCache cache,
             ILoggerFactory loggerFactory,
             ISiteQueries siteRepository,
             SiteDataProtector dataProtector,
             IOptions<MultiTenantOptions> multiTenantOptions,
-            IOptions<CachingSiteResolverOptions> cachingOptionsAccessor = null
-            //,IOptions<MultiTenancyOptions> options
+            IOptions<CachingSiteResolverOptions> cachingOptionsAccessor
             )
             : base(cache, loggerFactory)
         {
-            //this.tenants = options.Value.Tenants;
             siteRepo = siteRepository;
             this.multiTenantOptions = multiTenantOptions.Value;
             this.dataProtector = dataProtector;
-            cachingOptions = cachingOptionsAccessor?.Value ?? new CachingSiteResolverOptions();
+            cachingOptions = cachingOptionsAccessor.Value;
         }
 
         private MultiTenantOptions multiTenantOptions;
