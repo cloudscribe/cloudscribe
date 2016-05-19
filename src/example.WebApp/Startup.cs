@@ -84,7 +84,7 @@ namespace example.WebApp
             services.AddOptions();
 
             /* optional and only needed if you are using cloudscribe Logging  */
-            services.AddScoped<cloudscribe.Logging.Web.LogManager>();
+            //services.AddScoped<cloudscribe.Logging.Web.LogManager>();
 
             /* these are optional and only needed if using cloudscribe Setup */
             //services.Configure<SetupOptions>(Configuration.GetSection("SetupOptions"));
@@ -119,7 +119,7 @@ namespace example.WebApp
             IHostingEnvironment env, 
             ILoggerFactory loggerFactory,
             IOptions<cloudscribe.Core.Models.MultiTenantOptions> multiTenantOptionsAccessor,
-            //IOptions<IdentityOptions> identityOptionsAccessor,
+            IOptions<IdentityOptions> identityOptionsAccessor,
             IServiceProvider serviceProvider
             )
         {
@@ -149,9 +149,9 @@ namespace example.WebApp
             app.UsePerTenant<cloudscribe.Core.Models.SiteSettings>((ctx, builder) =>
             {
                
-                var tenantIdentityOptionsProvider = app.ApplicationServices.GetRequiredService<IOptions<IdentityOptions>>();
-                var cookieOptions = tenantIdentityOptionsProvider.Value.Cookies;
-                //var cookieOptions = identityOptionsAccessor.Value.Cookies;
+                //var tenantIdentityOptionsProvider = app.ApplicationServices.GetRequiredService<IOptions<IdentityOptions>>();
+                //var cookieOptions = tenantIdentityOptionsProvider.Value.Cookies;
+                var cookieOptions = identityOptionsAccessor.Value.Cookies;
 
 
                 var shouldUseFolder = !multiTenantOptions.UseRelatedSitesMode

@@ -41,14 +41,11 @@ namespace Microsoft.Extensions.DependencyInjection
             services.Configure<UIOptions>(configuration.GetSection("UIOptions"));
             services.Configure<CkeditorOptions>(configuration.GetSection("CkeditorOptions"));
             services.Configure<CachingSiteResolverOptions>(configuration.GetSection("CachingSiteResolverOptions"));
-
             
-
-
             services.AddScoped<ITimeZoneResolver, RequestTimeZoneResolver>();
-            //services.AddMultitenancy<SiteSettings, SiteResolver>();
+            services.AddMultitenancy<SiteSettings, SiteResolver>();
             
-            services.AddMultitenancy<SiteSettings, CachingSiteResolver>();
+            //services.AddMultitenancy<SiteSettings, CachingSiteResolver>();
             
 
             services.AddScoped<SiteManager, SiteManager>();
@@ -58,12 +55,16 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IpAddressTracker, IpAddressTracker>();
 
             services.AddScoped<SiteDataProtector>();
-            
+
+            services.AddSingleton<IOptions<IdentityOptions>, SiteIdentityOptionsResolver>();
             services.AddIdentity<SiteUser, SiteRole>()
                 .AddUserStore<UserStore<SiteUser>>()
                 .AddRoleStore<RoleStore<SiteRole>>()
                 .AddUserManager<SiteUserManager<SiteUser>>()
-                .AddRoleManager<SiteRoleManager<SiteRole>>();
+                .AddRoleManager<SiteRoleManager<SiteRole>>()
+                .AddDefaultTokenProviders()
+                ;
+
 
             
 
@@ -74,7 +75,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<SiteCookieAuthenticationEvents, SiteCookieAuthenticationEvents>();
             services.AddSingleton<IAntiforgeryTokenStore, SiteAntiforgeryTokenStore>();
 
-            services.AddSingleton<IOptions<IdentityOptions>, SiteIdentityOptionsResolver>();
+            
 
             services.AddCloudscribePagination();
 
