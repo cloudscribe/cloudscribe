@@ -2,43 +2,58 @@
     "version": "1.0.0-*",
     "description": "Entity Framework Core implementation of cloudscribe core commands and queries",
     "authors": [ "Joe Audette" ],
-    "owners": [ "Source Tree Solutions" ],
-    "tags": [ "cloudscribe", "commands", "queries", "ef" ],
-    "projectUrl": "https://github.com/joeaudette/cloudscribe",
-    "licenseUrl": "http://www.apache.org/licenses/LICENSE-2.0",
-    "copyright": "Source Tree Solutions",
-    "iconUrl": "https://raw.githubusercontent.com/joeaudette/cloudscribe/master/cloudscribe-icon-32.png",
-    "requireLicenseAcceptance": false,
-    "releaseNotes": "",
-
-    "commands": {
-        "ef": "EntityFramework.Commands"
+    "buildOptions": {
+        "emitEntryPoint": true
     },
 
+    "packOptions": {
+        "tags": [ "cloudscribe", "commands", "queries", "ef" ],
+        "owners": [ "Source Tree Solutions" ],
+        "projectUrl": "https://github.com/joeaudette/cloudscribe",
+        "licenseUrl": "http://www.apache.org/licenses/LICENSE-2.0",
+        "copyright": "Source Tree Solutions",
+        "iconUrl": "https://raw.githubusercontent.com/joeaudette/cloudscribe/master/cloudscribe-icon-32.png",
+        "requireLicenseAcceptance": false,
+        "releaseNotes": ""
+    },
+
+
     "dependencies": {
+        "NETStandard.Library": "1.5.0-rc2-24027",
+        "Microsoft.Extensions.Configuration.Json": "1.0.0-rc2-final",
+        "Microsoft.Extensions.Configuration": "1.0.0-rc2-final",
+        "Microsoft.EntityFrameworkCore.SqlServer": "1.0.0-rc2-final",
         "cloudscribe.Core.Models": "1.0.0-*",
-        "EntityFramework.Core": "7.0.0-rc1-final",
-        "EntityFramework.Commands": "7.0.0-rc1-final",
-        "EntityFramework.MicrosoftSqlServer": "7.0.0-rc1-final",
-        "EntityFramework.Relational": "7.0.0-rc1-final",
-        "Microsoft.Extensions.Logging.Abstractions": "1.0.0-rc1-final",
-        "Microsoft.Extensions.DependencyInjection.Abstractions": "1.0.0-rc1-final",
-        "Microsoft.Extensions.Configuration": "1.0.0-rc1-final",
-        "Microsoft.Extensions.Configuration.Json": "1.0.0-rc1-final"
+        "Microsoft.EntityFrameworkCore.Tools": {
+            "version": "1.0.0-preview1-final",
+            "type": "build"
+        },
+        "Microsoft.AspNetCore.Server.Kestrel": "1.0.0-rc2-final",
+        "Microsoft.AspNetCore.Mvc": "1.0.0-rc2-final"
+    },
+
+    "tools": {
+        "Microsoft.EntityFrameworkCore.Tools": {
+            "version": "1.0.0-preview1-final",
+            "imports": [
+                "portable-net45+win8+dnxcore50",
+                "portable-net45+win8"
+            ]
+        }
     },
 
     "frameworks": {
-        "net451": { },
-        "dnxcore50": {
+        "netcoreapp1.0": {
+            "imports": [ "portable-net451+win8" ],
+            "buildOptions": {
+                "emitEntryPoint": true
+            },
             "dependencies": {
-                "Microsoft.CSharp": "4.0.1-beta-23516",
-                "System.Collections": "4.0.11-beta-23516",
-                "System.Linq": "4.0.1-beta-23516",
-
-                "System.Runtime": "4.0.21-beta-23516",
-                "System.Threading": "4.0.11-beta-23516"
+                "Microsoft.NETCore.App": {
+                    "type": "platform",
+                    "version": "1.0.0-*"
+                }
             }
         }
     }
 }
-

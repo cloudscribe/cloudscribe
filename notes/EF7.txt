@@ -131,8 +131,24 @@ Options:
   -v|--verbose                    Show verbose output
   -?|-h|--help                    Show help information
 
-dnx ef migrations add Initial -c CoreDbContext
-dnx ef migrations add Initial -c LoggingDbContext
+dotnet ef migrations add Initial -c CoreDbContext
+dotnet ef migrations add Initial -c LoggingDbContext
+
+
+
+No parameterless constructor was found on 'LoggingDbContext'. Either add a parameterless constructor to 'LoggingDbContext' or add an impleme
+ntation of 'IDbContextFactory<LoggingDbContext>' in the same assembly as 'LoggingDbContext'.
+
+C:\_joe\__projects\__cloudscribe\rc2\cloudscribe.Logging\src\cloudscribe.Logging.EF>
+
+
+C:\_joe\__projects\__cloudscribe\rc2\cloudscribe.Logging\src\cloudscribe.Logging.EF>dotnet ef migrations add Initial -c LoggingDbContext
+Project cloudscribe.Logging.Web (.NETStandard,Version=v1.5) was previously compiled. Skipping compilation.
+Project cloudscribe.Logging.EF (.NETStandard,Version=v1.5) was previously compiled. Skipping compilation.
+This preview of Entity Framework tools does not support targeting class library projects in ASP.NET Core and .NET Core applications. See htt
+p://go.microsoft.com/fwlink/?LinkId=798221 for details and workarounds.
+
+C:\_joe\__projects\__cloudscribe\rc2\cloudscribe.Logging\src\cloudscribe.Logging.EF>
 
 
 
@@ -163,3 +179,91 @@ Options:
   -v|--verbose                    Show verbose output
   -?|-h|--help                    Show help information
 
+
+ 
+C:\_joe\__projects\__cloudscribe\rc2\cloudscribe.Logging\src\cloudscribe.Logging.EF>dotnet build
+Project cloudscribe.Logging.Web (.NETStandard,Version=v1.5) was previously compiled. Skipping compilation.
+Project cloudscribe.Logging.EF (.NETCoreApp,Version=v1.0) will be compiled because inputs were modified
+Compiling cloudscribe.Logging.EF for .NETCoreApp,Version=v1.0
+
+Compilation succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time elapsed 00:00:01.8645724
+
+
+
+C:\_joe\__projects\__cloudscribe\rc2\cloudscribe.Logging\src\cloudscribe.Logging.EF>dotnet ef migrations add Initial -c LoggingDbContext
+Project cloudscribe.Logging.Web (.NETStandard,Version=v1.5) was previously compiled. Skipping compilation.
+Project cloudscribe.Logging.EF (.NETCoreApp,Version=v1.0) was previously compiled. Skipping compilation.
+System.IO.FileNotFoundException: The configuration file 'appsettings.json' was not found and is not optional.
+   at Microsoft.Extensions.Configuration.FileConfigurationProvider.Load()
+   at Microsoft.Extensions.Configuration.ConfigurationBuilder.Build()
+   at cloudscribe.Logging.EF.Startup..ctor(IHostingEnvironment env) in C:\_joe\__projects\__cloudscribe\rc2\cloudscribe.Logging\src\cloudscr
+ibe.Logging.EF\Startup.cs:line 35
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.Extensions.Internal.ActivatorUtilities.ConstructorMatcher.CreateInstance(IServiceProvider provider)
+   at Microsoft.EntityFrameworkCore.Design.Internal.StartupInvoker.Invoke(Type type, String[] methodNames, IServiceCollection services)
+   at Microsoft.EntityFrameworkCore.Design.Internal.StartupInvoker.ConfigureServices()
+   at Microsoft.EntityFrameworkCore.Design.DbContextOperations..ctor(ILoggerProvider loggerProvider, Assembly assembly, Assembly startupAsse
+mbly, String environment, String startupProjectDir)
+   at Microsoft.EntityFrameworkCore.Design.MigrationsOperations..ctor(ILoggerProvider loggerProvider, Assembly assembly, AssemblyLoader star
+tupAssemblyLoader, Assembly startupAssembly, String environment, String projectDir, String startupProjectDir, String rootNamespace)
+   at Microsoft.EntityFrameworkCore.Tools.Cli.OperationExecutor.<>c__DisplayClass4_0.<.ctor>b__4()
+   at Microsoft.EntityFrameworkCore.Internal.LazyRef`1.get_Value()
+   at Microsoft.EntityFrameworkCore.Tools.Cli.OperationExecutor.AddMigration(String name, String outputDir, String contextType)
+   at Microsoft.EntityFrameworkCore.Tools.Cli.MigrationsAddCommand.Execute(CommonOptions commonOptions, String name, String outputDir, Strin
+g context, String environment, Action`1 reporter)
+   at Microsoft.EntityFrameworkCore.Tools.Cli.MigrationsAddCommand.<>c__DisplayClass0_0.<Configure>b__0()
+   at Microsoft.Extensions.CommandLineUtils.CommandLineApplication.Execute(String[] args)
+   at Microsoft.EntityFrameworkCore.Tools.Cli.Program.Main(String[] args)
+The configuration file 'appsettings.json' was not found and is not optional.
+
+C:\_joe\__projects\__cloudscribe\rc2\cloudscribe.Logging\src\cloudscribe.Logging.EF>
+
+
+C:\_joe\__projects\__cloudscribe\rc2\cloudscribe.Logging\src\cloudscribe.Logging.EF>dotnet ef migrations add Initial -c LoggingDbContext
+Project cloudscribe.Logging.Web (.NETStandard,Version=v1.5) was previously compiled. Skipping compilation.
+Project cloudscribe.Logging.EF (.NETCoreApp,Version=v1.0) was previously compiled. Skipping compilation.
+System.InvalidOperationException: No database provider has been configured for this DbContext. A provider can be configured by overriding th
+e DbContext.OnConfiguring method or by using AddDbContext on the application service provider. If AddDbContext is used, then also ensure tha
+t your DbContext type accepts a DbContextOptions<TContext> object in its constructor and passes it to the base constructor for DbContext.
+   at Microsoft.EntityFrameworkCore.Infrastructure.AccessorExtensions.GetService[TService](IInfrastructure`1 accessor)
+   at cloudscribe.Logging.EF.LoggingDbContext.OnModelCreating(ModelBuilder modelBuilder) in C:\_joe\__projects\__cloudscribe\rc2\cloudscribe
+.Logging\src\cloudscribe.Logging.EF\LoggingDbContext.cs:line 41
+   at Microsoft.EntityFrameworkCore.Infrastructure.ModelSource.CreateModel(DbContext context, IConventionSetBuilder conventionSetBuilder, IM
+odelValidator validator)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at Microsoft.EntityFrameworkCore.Internal.DbContextServices.CreateModel()
+   at Microsoft.EntityFrameworkCore.Internal.LazyRef`1.get_Value()
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.ScopedCallSite.Invoke(ServiceProvider provider)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ConstructorCallSite.Invoke(ServiceProvider provider)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.ScopedCallSite.Invoke(ServiceProvider provider)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ConstructorCallSite.Invoke(ServiceProvider provider)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.ScopedCallSite.Invoke(ServiceProvider provider)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderExtensions.GetRequiredService(IServiceProvider provider, Type serviceType)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderExtensions.GetRequiredService[T](IServiceProvider provider)
+   at Microsoft.EntityFrameworkCore.DbContext.get_ChangeTracker()
+   at cloudscribe.Logging.EF.LoggingDbContext..ctor(DbContextOptions`1 options) in C:\_joe\__projects\__cloudscribe\rc2\cloudscribe.Logging\
+src\cloudscribe.Logging.EF\LoggingDbContext.cs:line 31
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ConstructorCallSite.Invoke(ServiceProvider provider)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.ScopedCallSite.Invoke(ServiceProvider provider)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderExtensions.GetRequiredService(IServiceProvider provider, Type serviceType)
+   at Microsoft.EntityFrameworkCore.Design.DbContextOperations.<>c__DisplayClass11_2.<FindContextTypes>b__6()
+   at Microsoft.EntityFrameworkCore.Design.DbContextOperations.CreateContext(Func`1 factory)
+   at Microsoft.EntityFrameworkCore.Design.DbContextOperations.CreateContext(String contextType)
+   at Microsoft.EntityFrameworkCore.Design.MigrationsOperations.AddMigration(String name, String outputDir, String contextType)
+   at Microsoft.EntityFrameworkCore.Tools.Cli.MigrationsAddCommand.Execute(CommonOptions commonOptions, String name, String outputDir, Strin
+g context, String environment, Action`1 reporter)
+   at Microsoft.EntityFrameworkCore.Tools.Cli.MigrationsAddCommand.<>c__DisplayClass0_0.<Configure>b__0()
+   at Microsoft.Extensions.CommandLineUtils.CommandLineApplication.Execute(String[] args)
+   at Microsoft.EntityFrameworkCore.Tools.Cli.Program.Main(String[] args)
+No database provider has been configured for this DbContext. A provider can be configured by overriding the DbContext.OnConfiguring method o
+r by using AddDbContext on the application service provider. If AddDbContext is used, then also ensure that your DbContext type accepts a Db
+ContextOptions<TContext> object in its constructor and passes it to the base constructor for DbContext.
+
+C:\_joe\__projects\__cloudscribe\rc2\cloudscribe.Logging\src\cloudscribe.Logging.EF>

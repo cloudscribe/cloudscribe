@@ -2,12 +2,12 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-11
-// Last Modified:			2016-02-19
+// Last Modified:			2016-05-18
 // 
 
 using System;
 using System.Security.Claims;
-using Microsoft.AspNet.Identity;
+using Microsoft.AspNetCore.Identity;
 
 namespace cloudscribe.Core.Identity
 {
@@ -32,7 +32,7 @@ namespace cloudscribe.Core.Identity
 
             if(roles.Length == 0) { return true; }
 
-            if (!principal.IsSignedIn()) { return false; } 
+            if (!principal.Identity.IsAuthenticated) { return false; } 
 
             foreach(string role in roles)
             {
@@ -66,14 +66,14 @@ namespace cloudscribe.Core.Identity
             return claim != null ? claim.Value : null;
         }
 
-        //public static string GetUserId(this ClaimsPrincipal principal)
-        //{
-        //    if (principal == null)
-        //    {
-        //        throw new ArgumentNullException(nameof(principal));
-        //    }
-        //    var claim = principal.FindFirst(ClaimTypes.NameIdentifier);
-        //    return claim != null ? claim.Value : null;
-        //}
+        public static string GetUserId(this ClaimsPrincipal principal)
+        {
+            if (principal == null)
+            {
+                throw new ArgumentNullException(nameof(principal));
+            }
+            var claim = principal.FindFirst(ClaimTypes.NameIdentifier);
+            return claim != null ? claim.Value : null;
+        }
     }
 }

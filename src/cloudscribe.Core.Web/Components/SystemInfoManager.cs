@@ -2,12 +2,12 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //	Author:                 Joe Audette
 //  Created:			    2011-08-21
-//	Last Modified:		    2016-01-06
+//	Last Modified:		    2016-05-19
 // 
 
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Setup;
-using Microsoft.AspNet.Hosting;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.PlatformAbstractions;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -17,24 +17,19 @@ namespace cloudscribe.Core.Web.Components
     public class SystemInfoManager
     {
         public SystemInfoManager(
-            IRuntimeEnvironment runtimeEnvironment,
             IHostingEnvironment hostingEnvironment,
-            IApplicationEnvironment appEnvironment,
             IVersionProviderFactory versionProviderFactory,
             IDataPlatformInfo databaseInfo)
         {
-            runtimeInfo = runtimeEnvironment;
-            appInfo = appEnvironment;
             hostingInfo = hostingEnvironment;
             dbInfo = databaseInfo;
             versionProviders = versionProviderFactory;
             cloudscribeVersionProvider = versionProviders.Get("cloudscribe-core");
 
-
+            runtimeInfo = PlatformServices.Default.Runtime;
         }
 
-        private IRuntimeEnvironment runtimeInfo;
-        private IApplicationEnvironment appInfo;
+        private RuntimeEnvironment runtimeInfo;
         private IHostingEnvironment hostingInfo;
         private IVersionProviderFactory versionProviders;
         IVersionProvider cloudscribeVersionProvider = null;

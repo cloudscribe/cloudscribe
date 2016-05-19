@@ -1,4 +1,7 @@
 
+Simplifying MVC Link Generation - Guidance for Routing with Areas
+https://github.com/aspnet/Announcements/issues/120
+
 http://shazwazza.com/post/isolated-aspnet-attribute-routing/
 
 http://www.inversionofcontrol.co.uk/asp-net-core-1-0-routing-under-the-hood/

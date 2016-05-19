@@ -2,18 +2,12 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-06-19
-// Last Modified:			2016-03-03
+// Last Modified:			2016-05-18
 // 
 
 using cloudscribe.Core.Models;
-using Microsoft.AspNet.Http;
-using Microsoft.AspNet.Routing;
-using Microsoft.Extensions.DependencyInjection;
-using SaasKit.Multitenancy;
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 
 namespace cloudscribe.Core.Web.Components
 {
@@ -28,30 +22,27 @@ namespace cloudscribe.Core.Web.Components
         {
             
         }
-        
-        // TODO: is this getting called on requests for static resources?
-        // want to make sure it is not, we don't want to hit the db on requests for static files
-        // though tenants should be cached
 
         public bool Match(
-            HttpContext httpContext,
-            IRouter route,
-            string parameterName,
-            IDictionary<string,object> values,
+            HttpContext httpContext, 
+            IRouter route, 
+            string routeKey, 
+            RouteValueDictionary values, 
             RouteDirection routeDirection)
         {
-            
             string requestFolder = httpContext.Request.Path.StartingSegment();
-            
+
             var tenant = httpContext.GetTenant<SiteSettings>();
 
             if (tenant != null)
             {
-                if(tenant.SiteFolderName == requestFolder) { return true; }
-               
+                if (tenant.SiteFolderName == requestFolder) { return true; }
+
             }
 
             return false;
         }
+        
+        
     }
 }

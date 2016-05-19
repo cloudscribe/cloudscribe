@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNet.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using System;

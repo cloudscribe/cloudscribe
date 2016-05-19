@@ -2,11 +2,11 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:                  Joe Audette
 // Created:                 2016-02-19
-// Last Modified:           2016-02-19
+// Last Modified:           2016-05-18
 // 
 
-using Microsoft.AspNet.Http;
-using Microsoft.AspNet.Razor.TagHelpers;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
@@ -84,7 +84,8 @@ namespace cloudscribe.Web.Common.TagHelpers
                 Rating
                 );
 
-            output.Attributes.Remove("gravatar-email");
+            var att = new TagHelperAttribute("gravatar-email");
+            output.Attributes.Remove(att);
 
             output.Attributes.Add("src", url);
         }

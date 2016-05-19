@@ -8,7 +8,7 @@
 // You must not remove this notice, or any other, from this software.
 
 
-using Microsoft.AspNet.Identity;
+using Microsoft.AspNetCore.Identity;
 using System;
 using cloudscribe.Core.Models;
 

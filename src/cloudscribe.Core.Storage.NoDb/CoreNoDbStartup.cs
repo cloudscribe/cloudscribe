@@ -13,7 +13,7 @@ using NoDb;
 using System;
 using System.Threading.Tasks;
 
-namespace Microsoft.AspNet.Hosting // so it will show up in startup without a using
+namespace Microsoft.AspNetCore.Hosting // so it will show up in startup without a using
 {
     public static class CoreNoDbStartup
     {

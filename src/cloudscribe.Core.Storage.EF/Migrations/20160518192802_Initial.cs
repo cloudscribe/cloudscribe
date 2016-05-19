@@ -1,6 +1,7 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using Microsoft.Data.Entity.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace cloudscribe.Core.Storage.EF.Migrations
 {
@@ -26,8 +27,9 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Currency", x => x.Id);
+                    table.PrimaryKey("PK_cs_Currency", x => x.Id);
                 });
+
             migrationBuilder.CreateTable(
                 name: "cs_GeoCountry",
                 columns: table => new
@@ -39,8 +41,9 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GeoCountry", x => x.Id);
+                    table.PrimaryKey("PK_cs_GeoCountry", x => x.Id);
                 });
+
             migrationBuilder.CreateTable(
                 name: "cs_GeoZone",
                 columns: table => new
@@ -52,8 +55,9 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GeoZone", x => x.Id);
+                    table.PrimaryKey("PK_cs_GeoZone", x => x.Id);
                 });
+
             migrationBuilder.CreateTable(
                 name: "cs_Language",
                 columns: table => new
@@ -62,11 +66,13 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                     Code = table.Column<string>(nullable: false),
                     Name = table.Column<string>(nullable: false),
                     Sort = table.Column<int>(type: "int", nullable: false, defaultValue: 1)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Language", x => x.Id);
+                    table.PrimaryKey("PK_cs_Language", x => x.Id);
                 });
+
             migrationBuilder.CreateTable(
                 name: "cs_SiteHost",
                 columns: table => new
@@ -77,8 +83,9 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SiteHost", x => x.Id);
+                    table.PrimaryKey("PK_cs_SiteHost", x => x.Id);
                 });
+
             migrationBuilder.CreateTable(
                 name: "cs_Role",
                 columns: table => new
@@ -91,8 +98,9 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SiteRole", x => x.Id);
+                    table.PrimaryKey("PK_cs_Role", x => x.Id);
                 });
+
             migrationBuilder.CreateTable(
                 name: "cs_Site",
                 columns: table => new
@@ -101,12 +109,12 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                     AccountApprovalEmailCsv = table.Column<string>(nullable: true),
                     AddThisDotComUsername = table.Column<string>(nullable: true),
                     AliasId = table.Column<string>(nullable: true),
-                    AllowDbFallbackWithLdap = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
-                    AllowNewRegistration = table.Column<bool>(type: "bit", nullable: false, defaultValue: 1),
-                    AllowPersistentLogin = table.Column<bool>(type: "bit", nullable: false, defaultValue: 1),
-                    AutoCreateLdapUserOnFirstLogin = table.Column<bool>(type: "bit", nullable: false, defaultValue: 1),
-                    CaptchaOnLogin = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
-                    CaptchaOnRegistration = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
+                    AllowDbFallbackWithLdap = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    AllowNewRegistration = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
+                    AllowPersistentLogin = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    AutoCreateLdapUserOnFirstLogin = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
+                    CaptchaOnLogin = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    CaptchaOnRegistration = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     CompanyCountry = table.Column<string>(nullable: true),
                     CompanyFax = table.Column<string>(nullable: true),
                     CompanyLocality = table.Column<string>(nullable: true),
@@ -121,119 +129,125 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                     CreatedUtc = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "getutcdate()"),
                     DefaultEmailFromAddress = table.Column<string>(nullable: true),
                     DefaultEmailFromAlias = table.Column<string>(nullable: true),
-                    DisableDbAuth = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
+                    DisableDbAuth = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     DkimDomain = table.Column<string>(nullable: true),
                     DkimPrivateKey = table.Column<string>(nullable: true),
                     DkimPublicKey = table.Column<string>(nullable: true),
                     DkimSelector = table.Column<string>(nullable: true),
-                    EmailLdapDbFallback = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
+                    EmailLdapDbFallback = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     FacebookAppId = table.Column<string>(nullable: true),
                     FacebookAppSecret = table.Column<string>(nullable: true),
                     GoogleAnalyticsProfileId = table.Column<string>(nullable: true),
                     GoogleClientId = table.Column<string>(nullable: true),
                     GoogleClientSecret = table.Column<string>(nullable: true),
-                    IsDataProtected = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
-                    IsServerAdminSite = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
+                    IsDataProtected = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    IsServerAdminSite = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     LdapDomain = table.Column<string>(nullable: true),
-                    LdapPort = table.Column<int>(type: "int", nullable: false, defaultValue: 389),
+                    LdapPort = table.Column<int>(type: "int", nullable: false, defaultValue: 389)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     LdapRootDN = table.Column<string>(nullable: true),
                     LdapServer = table.Column<string>(nullable: true),
                     LdapUserDNKey = table.Column<string>(nullable: true),
                     LoginInfoBottom = table.Column<string>(nullable: true),
                     LoginInfoTop = table.Column<string>(nullable: true),
-                    MaxInvalidPasswordAttempts = table.Column<int>(type: "int", nullable: false, defaultValue: 5),
+                    MaxInvalidPasswordAttempts = table.Column<int>(type: "int", nullable: false, defaultValue: 5)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     MicrosoftClientId = table.Column<string>(nullable: true),
                     MicrosoftClientSecret = table.Column<string>(nullable: true),
-                    MinRequiredPasswordLength = table.Column<int>(type: "int", nullable: false, defaultValue: 5),
+                    MinRequiredPasswordLength = table.Column<int>(type: "int", nullable: false, defaultValue: 5)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     OidConnectAppId = table.Column<string>(nullable: true),
                     OidConnectAppSecret = table.Column<string>(nullable: true),
                     PreferredHostName = table.Column<string>(nullable: true),
                     PrivacyPolicy = table.Column<string>(nullable: true),
-                    ReallyDeleteUsers = table.Column<bool>(type: "bit", nullable: false, defaultValue: 1),
+                    ReallyDeleteUsers = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
                     RecaptchaPrivateKey = table.Column<string>(nullable: true),
                     RecaptchaPublicKey = table.Column<string>(nullable: true),
                     RegistrationAgreement = table.Column<string>(nullable: true),
                     RegistrationPreamble = table.Column<string>(nullable: true),
-                    RequireApprovalBeforeLogin = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
-                    RequireConfirmedEmail = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
-                    RequireConfirmedPhone = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
-                    RequiresQuestionAndAnswer = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
-                    SignEmailWithDkim = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
+                    RequireApprovalBeforeLogin = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    RequireConfirmedEmail = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    RequireConfirmedPhone = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    RequiresQuestionAndAnswer = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    SignEmailWithDkim = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     SiteFolderName = table.Column<string>(nullable: true, defaultValue: ""),
-                    SiteIsClosed = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
+                    SiteIsClosed = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     SiteIsClosedMessage = table.Column<string>(nullable: true),
                     SiteName = table.Column<string>(nullable: false),
                     SmsClientId = table.Column<string>(nullable: true),
                     SmsFrom = table.Column<string>(nullable: true),
                     SmsSecureToken = table.Column<string>(nullable: true),
                     SmtpPassword = table.Column<string>(nullable: true),
-                    SmtpPort = table.Column<int>(type: "int", nullable: false, defaultValue: 25),
+                    SmtpPort = table.Column<int>(type: "int", nullable: false, defaultValue: 25)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     SmtpPreferredEncoding = table.Column<string>(nullable: true),
-                    SmtpRequiresAuth = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
+                    SmtpRequiresAuth = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     SmtpServer = table.Column<string>(nullable: true),
-                    SmtpUseSsl = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
+                    SmtpUseSsl = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     SmtpUser = table.Column<string>(nullable: true),
                     Theme = table.Column<string>(nullable: true),
                     TimeZoneId = table.Column<string>(nullable: true),
                     TwitterConsumerKey = table.Column<string>(nullable: true),
                     TwitterConsumerSecret = table.Column<string>(nullable: true),
-                    UseEmailForLogin = table.Column<bool>(type: "bit", nullable: false, defaultValue: 1),
-                    UseLdapAuth = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0)
+                    UseEmailForLogin = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
+                    UseLdapAuth = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SiteSettings", x => x.Id);
+                    table.PrimaryKey("PK_cs_Site", x => x.Id);
                 });
+
             migrationBuilder.CreateTable(
                 name: "cs_User",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
                     AccessFailedCount = table.Column<int>(nullable: false),
-                    AccountApproved = table.Column<bool>(type: "bit", nullable: false, defaultValue: 1),
+                    AccountApproved = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     AuthorBio = table.Column<string>(nullable: true),
                     AvatarUrl = table.Column<string>(nullable: true),
-                    CanAutoLockout = table.Column<bool>(type: "bit", nullable: false, defaultValue: 1),
+                    CanAutoLockout = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
                     Comment = table.Column<string>(nullable: true),
                     ConcurrencyStamp = table.Column<string>(nullable: true),
                     Country = table.Column<string>(nullable: true),
                     CreatedUtc = table.Column<DateTime>(nullable: false),
                     DateOfBirth = table.Column<DateTime>(nullable: true),
-                    DisplayInMemberList = table.Column<bool>(type: "bit", nullable: false, defaultValue: 1),
+                    DisplayInMemberList = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     DisplayName = table.Column<string>(nullable: true),
                     Email = table.Column<string>(nullable: false),
-                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
+                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     FirstName = table.Column<string>(nullable: true),
                     Gender = table.Column<string>(nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
-                    IsLockedOut = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    IsLockedOut = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     LastLoginDate = table.Column<DateTime>(nullable: true),
                     LastName = table.Column<string>(nullable: true),
                     LastPasswordChangedDate = table.Column<DateTime>(nullable: true),
                     LockoutEndDateUtc = table.Column<DateTime>(nullable: true),
-                    MustChangePwd = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
+                    MustChangePwd = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     NewEmail = table.Column<string>(nullable: true),
-                    NewEmailApproved = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
+                    NewEmailApproved = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     NormalizedEmail = table.Column<string>(nullable: false),
                     NormalizedUserName = table.Column<string>(nullable: false),
                     PasswordHash = table.Column<string>(nullable: true),
                     PhoneNumber = table.Column<string>(nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
-                    RolesChanged = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    RolesChanged = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     SecurityStamp = table.Column<string>(nullable: true),
                     Signature = table.Column<string>(nullable: true),
                     SiteId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     State = table.Column<string>(nullable: true),
                     TimeZoneId = table.Column<string>(nullable: true),
                     Trusted = table.Column<bool>(nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false, defaultValue: 0),
+                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     UserName = table.Column<string>(nullable: false),
                     WebSiteUrl = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SiteUser", x => x.Id);
+                    table.PrimaryKey("PK_cs_User", x => x.Id);
                 });
+
             migrationBuilder.CreateTable(
                 name: "cs_UserClaim",
                 columns: table => new
@@ -246,8 +260,9 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserClaim", x => x.Id);
+                    table.PrimaryKey("PK_cs_UserClaim", x => x.Id);
                 });
+
             migrationBuilder.CreateTable(
                 name: "cs_UserLocation",
                 columns: table => new
@@ -272,8 +287,9 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserLocation", x => x.Id);
+                    table.PrimaryKey("PK_cs_UserLocation", x => x.Id);
                 });
+
             migrationBuilder.CreateTable(
                 name: "cs_UserLogin",
                 columns: table => new
@@ -286,8 +302,9 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserLogin", x => new { x.UserId, x.SiteId, x.LoginProvider, x.ProviderKey });
+                    table.PrimaryKey("PK_cs_UserLogin", x => new { x.UserId, x.SiteId, x.LoginProvider, x.ProviderKey });
                 });
+
             migrationBuilder.CreateTable(
                 name: "cs_UserRole",
                 columns: table => new
@@ -297,105 +314,148 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserRole", x => new { x.UserId, x.RoleId });
+                    table.PrimaryKey("PK_cs_UserRole", x => new { x.UserId, x.RoleId });
                 });
+
             migrationBuilder.CreateIndex(
-                name: "IX_GeoCountry_ISOCode2",
+                name: "IX_cs_GeoCountry_ISOCode2",
                 table: "cs_GeoCountry",
                 column: "ISOCode2");
+
             migrationBuilder.CreateIndex(
-                name: "IX_GeoZone_CountryId",
+                name: "IX_cs_GeoZone_CountryId",
                 table: "cs_GeoZone",
                 column: "CountryId");
+
             migrationBuilder.CreateIndex(
-                name: "IX_SiteHost_HostName",
+                name: "IX_cs_SiteHost_HostName",
                 table: "cs_SiteHost",
                 column: "HostName");
+
             migrationBuilder.CreateIndex(
-                name: "IX_SiteHost_SiteId",
+                name: "IX_cs_SiteHost_SiteId",
                 table: "cs_SiteHost",
                 column: "SiteId");
+
             migrationBuilder.CreateIndex(
-                name: "IX_SiteRole_Id",
+                name: "IX_cs_Role_Id",
                 table: "cs_Role",
                 column: "Id",
                 unique: true);
+
             migrationBuilder.CreateIndex(
-                name: "IX_SiteRole_NormalizedRoleName",
+                name: "IX_cs_Role_NormalizedRoleName",
                 table: "cs_Role",
                 column: "NormalizedRoleName");
+
             migrationBuilder.CreateIndex(
-                name: "IX_SiteRole_SiteId",
+                name: "IX_cs_Role_SiteId",
                 table: "cs_Role",
                 column: "SiteId");
+
             migrationBuilder.CreateIndex(
-                name: "IX_SiteSettings_AliasId",
+                name: "IX_cs_Site_AliasId",
                 table: "cs_Site",
                 column: "AliasId");
+
             migrationBuilder.CreateIndex(
-                name: "IX_SiteSettings_SiteFolderName",
+                name: "IX_cs_Site_SiteFolderName",
                 table: "cs_Site",
                 column: "SiteFolderName");
+
             migrationBuilder.CreateIndex(
-                name: "IX_SiteUser_NormalizedEmail",
+                name: "IX_cs_User_NormalizedEmail",
                 table: "cs_User",
                 column: "NormalizedEmail");
+
             migrationBuilder.CreateIndex(
-                name: "IX_SiteUser_NormalizedUserName",
+                name: "IX_cs_User_NormalizedUserName",
                 table: "cs_User",
                 column: "NormalizedUserName");
+
             migrationBuilder.CreateIndex(
-                name: "IX_SiteUser_SiteId",
+                name: "IX_cs_User_SiteId",
                 table: "cs_User",
                 column: "SiteId");
+
             migrationBuilder.CreateIndex(
-                name: "IX_UserClaim_ClaimType",
+                name: "IX_cs_UserClaim_ClaimType",
                 table: "cs_UserClaim",
                 column: "ClaimType");
+
             migrationBuilder.CreateIndex(
-                name: "IX_UserClaim_SiteId",
+                name: "IX_cs_UserClaim_SiteId",
                 table: "cs_UserClaim",
                 column: "SiteId");
+
             migrationBuilder.CreateIndex(
-                name: "IX_UserClaim_UserId",
+                name: "IX_cs_UserClaim_UserId",
                 table: "cs_UserClaim",
                 column: "UserId");
+
             migrationBuilder.CreateIndex(
-                name: "IX_UserLocation_UserId",
+                name: "IX_cs_UserLocation_UserId",
                 table: "cs_UserLocation",
                 column: "UserId");
+
             migrationBuilder.CreateIndex(
-                name: "IX_UserLogin_SiteId",
+                name: "IX_cs_UserLogin_SiteId",
                 table: "cs_UserLogin",
                 column: "SiteId");
+
             migrationBuilder.CreateIndex(
-                name: "IX_UserLogin_UserId",
+                name: "IX_cs_UserLogin_UserId",
                 table: "cs_UserLogin",
                 column: "UserId");
+
             migrationBuilder.CreateIndex(
-                name: "IX_UserRole_RoleId",
+                name: "IX_cs_UserRole_RoleId",
                 table: "cs_UserRole",
                 column: "RoleId");
+
             migrationBuilder.CreateIndex(
-                name: "IX_UserRole_UserId",
+                name: "IX_cs_UserRole_UserId",
                 table: "cs_UserRole",
                 column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable("cs_Currency");
-            migrationBuilder.DropTable("cs_GeoCountry");
-            migrationBuilder.DropTable("cs_GeoZone");
-            migrationBuilder.DropTable("cs_Language");
-            migrationBuilder.DropTable("cs_SiteHost");
-            migrationBuilder.DropTable("cs_Role");
-            migrationBuilder.DropTable("cs_Site");
-            migrationBuilder.DropTable("cs_User");
-            migrationBuilder.DropTable("cs_UserClaim");
-            migrationBuilder.DropTable("cs_UserLocation");
-            migrationBuilder.DropTable("cs_UserLogin");
-            migrationBuilder.DropTable("cs_UserRole");
+            migrationBuilder.DropTable(
+                name: "cs_Currency");
+
+            migrationBuilder.DropTable(
+                name: "cs_GeoCountry");
+
+            migrationBuilder.DropTable(
+                name: "cs_GeoZone");
+
+            migrationBuilder.DropTable(
+                name: "cs_Language");
+
+            migrationBuilder.DropTable(
+                name: "cs_SiteHost");
+
+            migrationBuilder.DropTable(
+                name: "cs_Role");
+
+            migrationBuilder.DropTable(
+                name: "cs_Site");
+
+            migrationBuilder.DropTable(
+                name: "cs_User");
+
+            migrationBuilder.DropTable(
+                name: "cs_UserClaim");
+
+            migrationBuilder.DropTable(
+                name: "cs_UserLocation");
+
+            migrationBuilder.DropTable(
+                name: "cs_UserLogin");
+
+            migrationBuilder.DropTable(
+                name: "cs_UserRole");
         }
     }
 }

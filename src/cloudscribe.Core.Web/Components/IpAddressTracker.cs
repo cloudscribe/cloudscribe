@@ -7,7 +7,7 @@
 
 
 using cloudscribe.Core.Models;
-using Microsoft.AspNet.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading;

@@ -2,14 +2,14 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-31
-// Last Modified:			2016-03-02
+// Last Modified:			2016-05-18
 // 
 
 
-using Microsoft.AspNet.Builder;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNet.Identity;
-using Microsoft.Extensions.OptionsModel;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 using System;
 
 namespace cloudscribe.Core.Identity

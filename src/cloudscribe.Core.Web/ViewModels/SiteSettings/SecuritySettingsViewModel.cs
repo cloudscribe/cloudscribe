@@ -2,14 +2,14 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-01-19
-// Last Modified:			2016-05-11
+// Last Modified:			2016-05-19
 // 
 
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNet.Mvc.Rendering;
+
 
 namespace cloudscribe.Core.Web.ViewModels.SiteSettings
 {

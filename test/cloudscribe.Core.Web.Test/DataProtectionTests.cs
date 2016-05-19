@@ -1,11 +1,11 @@
 ﻿// Copyright (c) Source Tree Solutions, LLC. All rights reserved.
 // Author:					Joe Audette
 // Created:				    2016-01-16
-// Last Modified:		    2016-01-16
+// Last Modified:		    2016-05-19
 // 
 
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNet.DataProtection;
+using Microsoft.AspNetCore.DataProtection;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -33,8 +33,8 @@ namespace cloudscribe.Core.Web.Tests
             //http://docs.asp.net/en/latest/security/data-protection/configuration/overview.html
             //If you change the key persistence location, the system will no longer automatically encrypt keys 
             // at rest since it doesn’t know whether DPAPI is an appropriate encryption mechanism.
-            services.ConfigureDataProtection(configure =>
-            {
+            //services.ConfigureDataProtection(configure =>
+            //{
                
                 //string pathToCryptoKeys = @"C:\_joe\__projects\__cloudscribe\_code\cloudscribe\src\example.WebApp\dp_keys\";
 
@@ -51,7 +51,7 @@ namespace cloudscribe.Core.Web.Tests
                 //configure.ProtectKeysWithCertificate("thumbprint");
                 //configure.SetDefaultKeyLifetime(TimeSpan.FromDays(14));
                 ///configure.
-            });
+            //});
 
             //IDataProtectionProvider dataProtectionProvider
 

@@ -2,20 +2,21 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2016-05-11
+// Last Modified:			2016-05-18
 // 
 
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Models;
-using cloudscribe.Web.Common.Extensions;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.Components.Messaging;
 using cloudscribe.Core.Web.ViewModels.Account;
 using cloudscribe.Core.Web.ViewModels.SiteUser;
-using Microsoft.AspNet.Authorization;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Mvc;
-using Microsoft.AspNet.Mvc.Rendering;
+using cloudscribe.Web.Common.Extensions;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
@@ -23,11 +24,10 @@ using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
-
 namespace cloudscribe.Core.Web.Controllers
 {
     [Authorize]
-    public class AccountController : CloudscribeBaseController
+    public class AccountController : Controller
     {
 
         public AccountController(
@@ -332,13 +332,17 @@ namespace cloudscribe.Core.Web.Controllers
                 if (result.Succeeded)
                 {
                     await ipAddressTracker.TackUserIpAddress(Site.Id, user.Id);
-                    
+
                     if (Site.RequireConfirmedEmail) // require email confirmation
                     {
                         var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
-                        var callbackUrl = Url.Action("ConfirmEmail", "Account", 
-                            new { userId = user.Id.ToString(), code = code }, 
-                            protocol: HttpContext.Request.Scheme);
+
+                        var callbackUrl = Url.Action(new UrlActionContext {
+                            Action ="ConfirmEmail",
+                            Controller = "Account",
+                            Values = new { userId = user.Id.ToString(), code = code },
+                            Protocol= HttpContext.Request.Scheme
+                            });
 
                         emailSender.SendAccountConfirmationEmailAsync(
                             Site,
@@ -561,7 +565,7 @@ namespace cloudscribe.Core.Web.Controllers
                 // If the user does not have an account, then ask the user to create an account.
                 ViewData["ReturnUrl"] = returnUrl;
                 ViewData["LoginProvider"] = info.LoginProvider;
-                var email = info.ExternalPrincipal.FindFirstValue(ClaimTypes.Email);
+                var email = info.Principal.FindFirstValue(ClaimTypes.Email);
                 return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = email });
             }
 
@@ -575,7 +579,7 @@ namespace cloudscribe.Core.Web.Controllers
         {
             log.LogInformation("ExternalLoginConfirmation called with returnurl " + returnUrl);
 
-            if (User.IsSignedIn())
+            if (signInManager.IsSignedIn(User))
             {
                 return RedirectToAction("Index", "Manage");
             }

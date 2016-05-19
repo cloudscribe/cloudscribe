@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2015-12-10
+// Last Modified:			2016-05-18
 // 
 
 using System;
@@ -10,12 +10,12 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Data.Entity;
-using Microsoft.Data.Entity.Infrastructure;
-using Microsoft.Data.Entity.Metadata;
-using Microsoft.Data.Entity.Metadata.Conventions;
-using Microsoft.Data.Entity.Metadata.Builders;
-using Microsoft.Data.Entity.Migrations;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Migrations;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Geography;
 
@@ -50,6 +50,11 @@ namespace cloudscribe.Core.Storage.EF
 {
     public class CoreDbContext : DbContext
     {
+        public CoreDbContext(DbContextOptions<CoreDbContext> options) : base(options)
+        {
+
+        }
+
         public DbSet<GeoCountry> Countries { get; set; }
         public DbSet<GeoZone> States { get; set; }
         public DbSet<Language> Languages { get; set; }

@@ -2,21 +2,20 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-22
-// Last Modified:		    2016-05-15
+// Last Modified:		    2016-05-18
 // 
 //
 
 using cloudscribe.Core.Models;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.OptionsModel;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
-using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
-
+using Microsoft.AspNetCore.Builder;
 
 namespace cloudscribe.Core.Identity
 {
@@ -50,8 +49,7 @@ namespace cloudscribe.Core.Identity
                   lookupNormalizer,
                   errors,
                   serviceProvider,
-                  logger,
-                  contextAccessor)
+                  logger)
         {
             identityOptions = optionsAccessor.Value;
             userStore = store;

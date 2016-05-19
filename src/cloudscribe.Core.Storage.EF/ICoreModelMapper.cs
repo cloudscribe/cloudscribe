@@ -2,12 +2,12 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-17
-// Last Modified:			2016-01-31
+// Last Modified:			2016-05-18
 // 
 
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Geography;
-using Microsoft.Data.Entity.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace cloudscribe.Core.Storage.EF
 {

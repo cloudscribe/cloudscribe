@@ -2,16 +2,16 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-01-02
-// Last Modified:			2016-02-12
+// Last Modified:			2016-05-19
 // 
 
 //using cloudscribe.Core.Models;
 using cloudscribe.Web.Common.Models;
 //using cloudscribe.Core.Web.ViewModels.Common;
-using Microsoft.AspNet.Http;
-using Microsoft.AspNet.Http.Features;
-using Microsoft.AspNet.Mvc;
-using Microsoft.AspNet.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

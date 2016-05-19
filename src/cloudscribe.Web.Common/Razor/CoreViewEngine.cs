@@ -2,14 +2,15 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //  Author:                     Joe Audette
 //  Created:                    2014-10-13
-//	Last Modified:              2015-11-18
+//	Last Modified:              2015-05-18
 // 
 
-using Microsoft.AspNet.Mvc.Razor;
-using Microsoft.AspNet.Razor.Runtime;
-using Microsoft.Extensions.OptionsModel;
-//using Microsoft.AspNet.Mvc.Razor.OptionDescriptors;
+
+using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System.Collections.Generic;
+using System.Text.Encodings.Web;
 
 namespace cloudscribe.Web.Common.Razor
 {
@@ -36,10 +37,12 @@ namespace cloudscribe.Web.Common.Razor
     {
         //IRazorViewEngine
         public CoreViewEngine(
-            IRazorPageFactory pageFactory, 
-            IRazorViewFactory viewFactory,
+            IRazorPageFactoryProvider pageFactory,
+            IRazorPageActivator pageActivator,
+            HtmlEncoder htmlEncoder,
             IOptions<RazorViewEngineOptions> optionsAccessor,
-            IViewLocationCache viewLocationCache):base(pageFactory, viewFactory, optionsAccessor, viewLocationCache)
+            ILoggerFactory loggerFactory
+            ) :base(pageFactory, pageActivator, htmlEncoder, optionsAccessor, loggerFactory)
         {
             //https://github.com/aspnet/Mvc/blob/dev/src/Microsoft.AspNet.Mvc.Razor/RazorViewEngine.cs
 

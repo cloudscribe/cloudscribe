@@ -6,7 +6,7 @@
 // 
 
 using Microsoft.Extensions.Localization;
-using Microsoft.AspNet.Mvc.ModelBinding.Validation;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -112,43 +112,43 @@ namespace cloudscribe.Web.Common.DataAnnotations
 
     }
 
-    public class CompareWhenAttributeAdapter : DataAnnotationsClientModelValidator<CompareWhenAttribute>
-    {
-        public CompareWhenAttributeAdapter(CompareWhenAttribute attribute, IStringLocalizer stringLocalizer)
-            : base(attribute, stringLocalizer)
-        {
-        }
+    //public class CompareWhenAttributeAdapter : DataAnnotationsClientModelValidator<CompareWhenAttribute>
+    //{
+    //    public CompareWhenAttributeAdapter(CompareWhenAttribute attribute, IStringLocalizer stringLocalizer)
+    //        : base(attribute, stringLocalizer)
+    //    {
+    //    }
 
-        public override IEnumerable<ModelClientValidationRule> GetClientValidationRules(
-           ClientModelValidationContext context)
-        {
-            if (context == null) { throw new InvalidOperationException("ClientModelValidationContext cannot be null"); }
+    //    public override IEnumerable<ModelClientValidationRule> GetClientValidationRules(
+    //       ClientModelValidationContext context)
+    //    {
+    //        if (context == null) { throw new InvalidOperationException("ClientModelValidationContext cannot be null"); }
 
-            var errorMessage = GetErrorMessage(context.ModelMetadata);
+    //        var errorMessage = GetErrorMessage(context.ModelMetadata);
             
-            return new[] { new ModelClientValidationCompareWhenRule(
-                this.Attribute.CompareProperty,
-                this.Attribute.WhenProperty, 
-                this.Attribute.WhenValue, 
-                errorMessage)  };
-        }
-    }
+    //        return new[] { new ModelClientValidationCompareWhenRule(
+    //            this.Attribute.CompareProperty,
+    //            this.Attribute.WhenProperty, 
+    //            this.Attribute.WhenValue, 
+    //            errorMessage)  };
+    //    }
+    //}
 
-    public class ModelClientValidationCompareWhenRule : ModelClientValidationRule
-    {
-        private const string CompareWhenValidationType = "comparewhen";
+    //public class ModelClientValidationCompareWhenRule : ModelClientValidationRule
+    //{
+    //    private const string CompareWhenValidationType = "comparewhen";
 
-        public ModelClientValidationCompareWhenRule(
-            string compareProperty,
-            string whenProperty,
-            object whenValue,
-            string errorMessage) :
-            base(CompareWhenValidationType, errorMessage)
-        {
-            this.ValidationParameters.Add("compareproperty", compareProperty);
-            this.ValidationParameters.Add("whenproperty", whenProperty);
-            this.ValidationParameters.Add("whenvalue", whenValue.ToString());         
-        }
-    }
+    //    public ModelClientValidationCompareWhenRule(
+    //        string compareProperty,
+    //        string whenProperty,
+    //        object whenValue,
+    //        string errorMessage) :
+    //        base(CompareWhenValidationType, errorMessage)
+    //    {
+    //        this.ValidationParameters.Add("compareproperty", compareProperty);
+    //        this.ValidationParameters.Add("whenproperty", whenProperty);
+    //        this.ValidationParameters.Add("whenvalue", whenValue.ToString());         
+    //    }
+    //}
 
 }
