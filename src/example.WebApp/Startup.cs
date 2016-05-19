@@ -187,7 +187,7 @@ namespace example.WebApp
                     CoreEFStartup.InitializeDatabaseAsync(app.ApplicationServices).Wait();
 
                     // this one is only needed if using cloudscribe Logging with EF as the logging storage
-                    cloudscribe.Logging.EF.LoggingDbInitializer.InitializeDatabaseAsync(app.ApplicationServices).Wait();
+                    //cloudscribe.Logging.EF.LoggingDbInitializer.InitializeDatabaseAsync(app.ApplicationServices).Wait();
 
                     break;
             }

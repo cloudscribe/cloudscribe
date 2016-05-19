@@ -60,7 +60,9 @@ namespace cloudscribe.Core.Storage.EF.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("cs_Currency");
+                    b.ToTable("Currencies");
+
+                    b.HasAnnotation("SqlServer:TableName", "cs_Currency");
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.Geography.GeoCountry", b =>
@@ -86,7 +88,9 @@ namespace cloudscribe.Core.Storage.EF.Migrations
 
                     b.HasIndex("ISOCode2");
 
-                    b.ToTable("cs_GeoCountry");
+                    b.ToTable("Countries");
+
+                    b.HasAnnotation("SqlServer:TableName", "cs_GeoCountry");
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.Geography.GeoZone", b =>
@@ -111,7 +115,9 @@ namespace cloudscribe.Core.Storage.EF.Migrations
 
                     b.HasIndex("CountryId");
 
-                    b.ToTable("cs_GeoZone");
+                    b.ToTable("States");
+
+                    b.HasAnnotation("SqlServer:TableName", "cs_GeoZone");
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.Geography.Language", b =>
@@ -129,14 +135,13 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                         .IsRequired()
                         .HasAnnotation("MaxLength", 255);
 
-                    b.Property<int>("Sort")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "int")
-                        .HasAnnotation("SqlServer:DefaultValue", 1);
+                    b.Property<int>("Sort");
 
                     b.HasKey("Id");
 
-                    b.ToTable("cs_Language");
+                    b.ToTable("Languages");
+
+                    b.HasAnnotation("SqlServer:TableName", "cs_Language");
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.SiteHost", b =>
@@ -159,7 +164,9 @@ namespace cloudscribe.Core.Storage.EF.Migrations
 
                     b.HasIndex("SiteId");
 
-                    b.ToTable("cs_SiteHost");
+                    b.ToTable("SiteHosts");
+
+                    b.HasAnnotation("SqlServer:TableName", "cs_SiteHost");
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.SiteRole", b =>
@@ -192,7 +199,9 @@ namespace cloudscribe.Core.Storage.EF.Migrations
 
                     b.HasIndex("SiteId");
 
-                    b.ToTable("cs_Role");
+                    b.ToTable("Roles");
+
+                    b.HasAnnotation("SqlServer:TableName", "cs_Role");
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.SiteSettings", b =>
@@ -330,10 +339,7 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                     b.Property<string>("LdapDomain")
                         .HasAnnotation("MaxLength", 255);
 
-                    b.Property<int>("LdapPort")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "int")
-                        .HasAnnotation("SqlServer:DefaultValue", 389);
+                    b.Property<int>("LdapPort");
 
                     b.Property<string>("LdapRootDN")
                         .HasAnnotation("MaxLength", 255);
@@ -348,20 +354,14 @@ namespace cloudscribe.Core.Storage.EF.Migrations
 
                     b.Property<string>("LoginInfoTop");
 
-                    b.Property<int>("MaxInvalidPasswordAttempts")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "int")
-                        .HasAnnotation("SqlServer:DefaultValue", 5);
+                    b.Property<int>("MaxInvalidPasswordAttempts");
 
                     b.Property<string>("MicrosoftClientId")
                         .HasAnnotation("MaxLength", 100);
 
                     b.Property<string>("MicrosoftClientSecret");
 
-                    b.Property<int>("MinRequiredPasswordLength")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "int")
-                        .HasAnnotation("SqlServer:DefaultValue", 5);
+                    b.Property<int>("MinRequiredPasswordLength");
 
                     b.Property<string>("OidConnectAppId")
                         .HasAnnotation("MaxLength", 255);
@@ -439,10 +439,7 @@ namespace cloudscribe.Core.Storage.EF.Migrations
 
                     b.Property<string>("SmtpPassword");
 
-                    b.Property<int>("SmtpPort")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "int")
-                        .HasAnnotation("SqlServer:DefaultValue", 25);
+                    b.Property<int>("SmtpPort");
 
                     b.Property<string>("SmtpPreferredEncoding")
                         .HasAnnotation("MaxLength", 20);
@@ -490,7 +487,9 @@ namespace cloudscribe.Core.Storage.EF.Migrations
 
                     b.HasIndex("SiteFolderName");
 
-                    b.ToTable("cs_Site");
+                    b.ToTable("Sites");
+
+                    b.HasAnnotation("SqlServer:TableName", "cs_Site");
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.SiteUser", b =>
@@ -634,7 +633,9 @@ namespace cloudscribe.Core.Storage.EF.Migrations
 
                     b.HasIndex("SiteId");
 
-                    b.ToTable("cs_User");
+                    b.ToTable("Users");
+
+                    b.HasAnnotation("SqlServer:TableName", "cs_User");
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.UserClaim", b =>
@@ -663,7 +664,9 @@ namespace cloudscribe.Core.Storage.EF.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("cs_UserClaim");
+                    b.ToTable("UserClaims");
+
+                    b.HasAnnotation("SqlServer:TableName", "cs_UserClaim");
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.UserLocation", b =>
@@ -721,7 +724,9 @@ namespace cloudscribe.Core.Storage.EF.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("cs_UserLocation");
+                    b.ToTable("UserLocations");
+
+                    b.HasAnnotation("SqlServer:TableName", "cs_UserLocation");
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.UserLogin", b =>
@@ -747,7 +752,9 @@ namespace cloudscribe.Core.Storage.EF.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("cs_UserLogin");
+                    b.ToTable("UserLogins");
+
+                    b.HasAnnotation("SqlServer:TableName", "cs_UserLogin");
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.UserRole", b =>
@@ -764,7 +771,9 @@ namespace cloudscribe.Core.Storage.EF.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("cs_UserRole");
+                    b.ToTable("UserRoles");
+
+                    b.HasAnnotation("SqlServer:TableName", "cs_UserRole");
                 });
         }
     }

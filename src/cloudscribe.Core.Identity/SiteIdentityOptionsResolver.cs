@@ -21,12 +21,12 @@ namespace cloudscribe.Core.Identity
 
         public SiteIdentityOptionsResolver(
             IHttpContextAccessor httpContextAccessor,
-            CookieAuthenticationEvents cookieEvents,
+           // CookieAuthenticationEvents cookieEvents,
             SiteAuthCookieValidator siteValidator
             )
         {
             this.httpContextAccessor = httpContextAccessor;
-            this.cookieEvents = cookieEvents;
+            this.cookieEvents = new CookieAuthenticationEvents();
             this.siteValidator = siteValidator;
         }
 

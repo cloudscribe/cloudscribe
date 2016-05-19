@@ -42,7 +42,7 @@ namespace cloudscribe.Core.Storage.EF
             services.AddEntityFrameworkSqlServer()
               .AddDbContext<CoreDbContext>((serviceProvider, options) =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
-                       //.UseInternalServiceProvider(serviceProvider)
+                       .UseInternalServiceProvider(serviceProvider)
                        );
 
             //services.AddDbContext<CoreDbContext>(options =>

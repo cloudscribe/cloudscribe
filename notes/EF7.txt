@@ -267,3 +267,48 @@ r by using AddDbContext on the application service provider. If AddDbContext is 
 ContextOptions<TContext> object in its constructor and passes it to the base constructor for DbContext.
 
 C:\_joe\__projects\__cloudscribe\rc2\cloudscribe.Logging\src\cloudscribe.Logging.EF>
+
+
+
+public void Map(EntityTypeBuilder<Language> entity)
+        {
+            //entity.ToTable(tableNames.TablePrefix + tableNames.LanguageTableName);
+            entity.ForSqlServerToTable(tableNames.TablePrefix + tableNames.LanguageTableName);
+
+            entity.HasKey(p => p.Id);
+
+            entity.Property(p => p.Id)
+               .ForSqlServerHasColumnType("uniqueidentifier")
+               .ForSqlServerHasDefaultValueSql("newid()")
+               ;
+
+            entity.Property(p => p.Name)
+            .HasMaxLength(255)
+            .IsRequired()
+            ;
+
+            entity.Property(p => p.Code)
+            .HasMaxLength(2)
+            .IsRequired()
+            ;
+
+            entity.Property(p => p.Sort)
+            .HasDefaultValue(1)
+            ;
+
+        }
+
+ migrationBuilder.CreateTable(
+                name: "cs_Language",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
+                    Code = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
+                    Sort = table.Column<int>(nullable: false, defaultValue: 1)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_cs_Language", x => x.Id);
+                });

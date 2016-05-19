@@ -119,9 +119,10 @@ namespace cloudscribe.Core.Storage.EF
             ;
 
             entity.Property(p => p.LdapPort)
-            .IsRequired()
-            .ForSqlServerHasColumnType("int")
-            .ForSqlServerHasDefaultValue(389)
+            //.IsRequired()
+            //.ForSqlServerHasColumnType("int")
+           // .HasDefaultValue(389)
+            //.ValueGeneratedNever()
             ;
 
             entity.Property(p => p.LdapDomain)
@@ -155,16 +156,18 @@ namespace cloudscribe.Core.Storage.EF
             ;
 
             entity.Property(p => p.MaxInvalidPasswordAttempts)
-            .IsRequired()
-            .ForSqlServerHasColumnType("int")
-            .ForSqlServerHasDefaultValue(5)
+            //.IsRequired()
+            //.ForSqlServerHasColumnType("int")
+            //.ValueGeneratedNever()
+           // .HasDefaultValue(5)
             ;
 
             
             entity.Property(p => p.MinRequiredPasswordLength)
-            .IsRequired()
-            .ForSqlServerHasColumnType("int")
-            .ForSqlServerHasDefaultValue(5)
+           // .IsRequired()
+           // .ForSqlServerHasColumnType("int")
+            //.HasDefaultValue(5)
+            //.ValueGeneratedNever()
             ;
             
             entity.Property(p => p.DefaultEmailFromAddress)
@@ -341,9 +344,10 @@ namespace cloudscribe.Core.Storage.EF
             ;
 
             entity.Property(p => p.SmtpPort)
-            .IsRequired()
-            .ForSqlServerHasColumnType("int")
-            .ForSqlServerHasDefaultValue(25)
+            //.IsRequired()
+            //.ForSqlServerHasColumnType("int")
+            //.HasDefaultValue(25)
+            //.ValueGeneratedNever()
             ;
 
             entity.Property(p => p.SmtpUser)
@@ -809,7 +813,6 @@ namespace cloudscribe.Core.Storage.EF
             entity.Property(p => p.Id)
                .ForSqlServerHasColumnType("uniqueidentifier")
                .ForSqlServerHasDefaultValueSql("newid()")
-               .IsRequired()
                ;
 
             entity.Property(p => p.Name)
@@ -823,9 +826,9 @@ namespace cloudscribe.Core.Storage.EF
             ;
 
             entity.Property(p => p.Sort)
-            .ForSqlServerHasColumnType("int")
-            .ForSqlServerHasDefaultValue(1)
-            .IsRequired()
+            //.HasDefaultValue(1)
+            //.ValueGeneratedNever()
+            
             ;
 
         }

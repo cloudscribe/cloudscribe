@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace cloudscribe.Core.Storage.EF.Migrations
 {
@@ -65,8 +64,7 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
                     Code = table.Column<string>(nullable: false),
                     Name = table.Column<string>(nullable: false),
-                    Sort = table.Column<int>(type: "int", nullable: false, defaultValue: 1)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn)
+                    Sort = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -143,19 +141,16 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                     IsDataProtected = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     IsServerAdminSite = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     LdapDomain = table.Column<string>(nullable: true),
-                    LdapPort = table.Column<int>(type: "int", nullable: false, defaultValue: 389)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    LdapPort = table.Column<int>(nullable: false),
                     LdapRootDN = table.Column<string>(nullable: true),
                     LdapServer = table.Column<string>(nullable: true),
                     LdapUserDNKey = table.Column<string>(nullable: true),
                     LoginInfoBottom = table.Column<string>(nullable: true),
                     LoginInfoTop = table.Column<string>(nullable: true),
-                    MaxInvalidPasswordAttempts = table.Column<int>(type: "int", nullable: false, defaultValue: 5)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    MaxInvalidPasswordAttempts = table.Column<int>(nullable: false),
                     MicrosoftClientId = table.Column<string>(nullable: true),
                     MicrosoftClientSecret = table.Column<string>(nullable: true),
-                    MinRequiredPasswordLength = table.Column<int>(type: "int", nullable: false, defaultValue: 5)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    MinRequiredPasswordLength = table.Column<int>(nullable: false),
                     OidConnectAppId = table.Column<string>(nullable: true),
                     OidConnectAppSecret = table.Column<string>(nullable: true),
                     PreferredHostName = table.Column<string>(nullable: true),
@@ -178,8 +173,7 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                     SmsFrom = table.Column<string>(nullable: true),
                     SmsSecureToken = table.Column<string>(nullable: true),
                     SmtpPassword = table.Column<string>(nullable: true),
-                    SmtpPort = table.Column<int>(type: "int", nullable: false, defaultValue: 25)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    SmtpPort = table.Column<int>(nullable: false),
                     SmtpPreferredEncoding = table.Column<string>(nullable: true),
                     SmtpRequiresAuth = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     SmtpServer = table.Column<string>(nullable: true),
