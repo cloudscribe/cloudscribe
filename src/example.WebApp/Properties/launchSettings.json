@@ -3,7 +3,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:57959/",
+      "applicationUrl": "http://localhost:55251/",
       "sslPort": 0
     }
   },
@@ -12,16 +12,16 @@
       "commandName": "IISExpress",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNET_ENV": "Development"
-      },
-      "sdkVersion": "dnx-coreclr-win-x86.1.0.0-rc1-update1"
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
     },
-    "web": {
-      "commandName": "web",
+    "example.WebApp": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "http://localhost:5000",
       "environmentVariables": {
-        "Hosting:Environment": "Development"
-      },
-      "sdkVersion": "dnx-coreclr-win-x86.1.0.0-rc1-update1"
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
     }
   }
 }

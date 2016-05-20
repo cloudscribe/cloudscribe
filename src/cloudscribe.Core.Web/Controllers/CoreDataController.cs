@@ -11,10 +11,10 @@ using cloudscribe.Core.Models.Geography;
 using cloudscribe.Core.Web.ViewModels.CoreData;
 using cloudscribe.Web.Common.Extensions;
 using cloudscribe.Web.Navigation;
-using Microsoft.AspNet.Authorization;
-using Microsoft.AspNet.Mvc;
-using Microsoft.AspNet.Mvc.Rendering;
-using Microsoft.Extensions.OptionsModel;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -23,7 +23,7 @@ using System.Threading.Tasks;
 namespace cloudscribe.Core.Web.Controllers
 {
     [Authorize(Policy = "CoreDataPolicy")]
-    public class CoreDataController : CloudscribeBaseController
+    public class CoreDataController : Controller
     {
         public CoreDataController(
             SiteSettings currentSite,

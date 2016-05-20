@@ -2,17 +2,17 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:                  Joe Audette
 // Created:                 2016-04-22
-// Last Modified:           2016-04-22
+// Last Modified:           2016-05-18
 // 
 
-using Microsoft.AspNet.Http;
-using Microsoft.AspNet.Mvc;
-using Microsoft.AspNet.Mvc.Abstractions;
-using Microsoft.AspNet.Mvc.ModelBinding;
-using Microsoft.AspNet.Mvc.Rendering;
-using Microsoft.AspNet.Mvc.ViewEngines;
-using Microsoft.AspNet.Mvc.ViewFeatures;
-using Microsoft.AspNet.Routing;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Abstractions;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Routing;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -50,12 +50,12 @@ namespace cloudscribe.Web.Common.Razor
             };
 
             var actionContext = new ActionContext(contextAccesor.HttpContext, new RouteData(), new ActionDescriptor());
-            var tempData = new TempDataDictionary(contextAccesor, tempDataProvider);
+            var tempData = new TempDataDictionary(contextAccesor.HttpContext, tempDataProvider);
             
             using (StringWriter output = new StringWriter())
             {
 
-                ViewEngineResult viewResult = viewEngine.FindView(actionContext, viewName);
+                ViewEngineResult viewResult = viewEngine.FindView(actionContext, viewName, true);
 
                 ViewContext viewContext = new ViewContext(
                     actionContext,

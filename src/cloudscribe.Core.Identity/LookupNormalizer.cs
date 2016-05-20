@@ -2,10 +2,10 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-18
-// Last Modified:		    2015-07-18
+// Last Modified:		    2016-05-18
 // 
 
-using Microsoft.AspNet.Identity;
+using Microsoft.AspNetCore.Identity;
 
 namespace cloudscribe.Core.Identity
 {

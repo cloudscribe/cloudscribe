@@ -1,49 +1,25 @@
-﻿/// <binding AfterBuild='min:js' Clean='clean' />
+﻿/// <binding Clean='clean' />
+"use strict";
 
 var gulp = require("gulp"),
-  rimraf = require("rimraf"),
-  concat = require("gulp-concat"),
-  cssmin = require("gulp-cssmin"),
-  uglify = require("gulp-uglify"),
-  project = require("./project.json");
+    rimraf = require("rimraf"),
+    concat = require("gulp-concat"),
+    cssmin = require("gulp-cssmin"),
+    uglify = require("gulp-uglify");
 
+var webroot = "./wwwroot/";
 
 var paths = {
-    webroot: "./" + project.webroot + "/"
+    js: webroot + "js/**/*.js",
+    minJs: webroot + "js/**/*.min.js",
+    css: webroot + "css/**/*.css",
+    minCss: webroot + "css/**/*.min.css",
+    concatJsDest: webroot + "js/site.min.js",
+    concatCssDest: webroot + "css/site.min.css"
 };
 
-paths.devJs = paths.webroot + "devjs/**/*.js";
-//paths.js = paths.webroot + "js/*.js";
-//paths.minJs = paths.webroot + "js/*.min.js";
-paths.minJs = paths.webroot + "js/**/*.min.js";
-paths.css = paths.webroot + "css/**/*.css";
-paths.minCss = paths.webroot + "css/**/*.min.css";
-//paths.concatJsDest = paths.webroot + "js/site.min.js";
-paths.concatCssDest = paths.webroot + "css/site.min.css";
-paths.lib = paths.webroot + "lib/";
-paths.productionJs = paths.webroot + "js/";
-
-
 gulp.task("clean:js", function (cb) {
-    //rimraf(paths.concatJsDest, cb);
-    //rimraf(paths.productionJs, cb);
-
-    rimraf(paths.productionJs + "ckeditor/", function (err) {
-        if (err) { throw err; }
-        // done
-    });
-
-    rimraf(paths.productionJs + "metisMenu/", function (err) {
-        if (err) { throw err; }
-        // done
-    });
-
-    rimraf(paths.productionJs, function (err) {
-        if (err) { throw err; }
-        // done
-    });
-
-
+    rimraf(paths.concatJsDest, cb);
 });
 
 gulp.task("clean:css", function (cb) {
@@ -53,72 +29,17 @@ gulp.task("clean:css", function (cb) {
 gulp.task("clean", ["clean:js", "clean:css"]);
 
 gulp.task("min:js", function () {
-    //gulp.src([paths.js, "!" + paths.minJs], { base: "." })
-        //.pipe(concat(paths.concatJsDest))
-     //   .pipe(uglify())
-     //   .pipe(gulp.dest("."));
-    /*
-    gulp.src(paths.appJsSrc + '**.js')
+    return gulp.src([paths.js, "!" + paths.minJs], { base: "." })
+        .pipe(concat(paths.concatJsDest))
         .pipe(uglify())
-        .pipe(gulp.dest(paths.appJsDest));
-        */
-    gulp.src(paths.devJs)
-        .pipe(uglify())
-        .pipe(gulp.dest(paths.productionJs));
-
-
-});
-
-gulp.task("copy:jslibs", function (cb) {
-    gulp.src(paths.lib + "ckeditor/**")
-        //.pipe(uglify())
-        .pipe(gulp.dest(paths.productionJs + "ckeditor"));
-
-    gulp.src(paths.lib + "metisMenu/**")
-        //.pipe(uglify())
-        .pipe(gulp.dest(paths.productionJs + "metisMenu"));
-
-    // remove some files we don't want
-    // probably there is a better way to only copy the ones we want
-    /*
-    rimraf(paths.productionJs + "ckeditor/samples/", function (err) {
-        if (err) { throw err; }
-       
-    });
-    */
-    /*
-    rimraf(paths.productionJs + "ckeditor/plugins/scayt/dialogs/", function (err) {
-        if (err) { throw err; }
-
-    });
-
-    rimraf(paths.productionJs + "ckeditor/plugins/scayt/", function (err) {
-        if (err) { throw err; }
-        
-    });
-
-    rimraf(paths.productionJs + "ckeditor/plugins/wsc/dialogs/", function (err) {
-        if (err) { throw err; }
-
-    });
-
-    rimraf(paths.productionJs + "ckeditor/plugins/wsc/", function (err) {
-        if (err) { throw err; }
-        
-    });
-
-    */
-
-    
-
+        .pipe(gulp.dest("."));
 });
 
 gulp.task("min:css", function () {
-    gulp.src([paths.css, "!" + paths.minCss])
+    return gulp.src([paths.css, "!" + paths.minCss])
         .pipe(concat(paths.concatCssDest))
         .pipe(cssmin())
         .pipe(gulp.dest("."));
 });
 
 gulp.task("min", ["min:js", "min:css"]);
-

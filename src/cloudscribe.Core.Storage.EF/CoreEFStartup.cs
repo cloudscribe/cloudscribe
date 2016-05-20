@@ -2,20 +2,20 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-12-03
-// Last Modified:			2016-05-15
+// Last Modified:			2016-05-18
 // 
 
 
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Geography;
 using cloudscribe.Core.Storage.EF;
-using Microsoft.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
 
 
-namespace Microsoft.AspNet.Hosting // so it will show up in startup without a using
+namespace Microsoft.AspNetCore.Hosting // so it will show up in startup without a using
 {
     public static class CoreEFStartup
     {
@@ -35,11 +35,11 @@ namespace Microsoft.AspNet.Hosting // so it will show up in startup without a us
                 // the database each time. If you are using migrations and want to have them automatically applied on app start, 
                 // then you can use context.Database.Migrate() instead.
                 
-                try
-                {
+                //try
+                //{
                     await db.Database.MigrateAsync();
-                }
-                catch { }
+                //}
+                //catch { }
                     
               
                 

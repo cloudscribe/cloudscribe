@@ -2,9 +2,8 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Http.Authentication;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http.Authentication;
 
 namespace cloudscribe.Core.Web.ViewModels.SiteUser
 {

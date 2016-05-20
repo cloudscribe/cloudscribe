@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-27
-// Last Modified:		    2016-05-13
+// Last Modified:		    2016-05-18
 // 
 
 //TODO: we need to override many or most of the methods of the base class
@@ -10,17 +10,16 @@
 // specifically wherever it is using IdentityOptions
 
 using cloudscribe.Core.Models;
-using cloudscribe.Core.Models.Identity;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Hosting;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Authentication;
+using Microsoft.AspNetCore.Http.Features.Authentication;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.OptionsModel;
-using Microsoft.AspNet.Http;
-using Microsoft.AspNet.Http.Authentication;
-using Microsoft.AspNet.Http.Features.Authentication;
+using Microsoft.Extensions.Options;
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 

@@ -2,18 +2,17 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-12-03
-// Last Modified:			2015-12-26
+// Last Modified:			2016-05-18
 // 
 
 //http://www.jerriepelser.com/blog/moving-entity-framework-7-models-to-external-project
 
-using Microsoft.AspNet.Builder;
-using Microsoft.AspNet.Hosting;
-using Microsoft.Data.Entity;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.PlatformAbstractions;
 
 namespace cloudscribe.Core.Storage.EF
 {
@@ -22,9 +21,10 @@ namespace cloudscribe.Core.Storage.EF
         
         public IConfigurationRoot Configuration { get; set; }
 
-        public Startup(IHostingEnvironment env, IApplicationEnvironment appEnv)
+        public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json");
 
             // this file name is ignored by gitignore
@@ -39,11 +39,15 @@ namespace cloudscribe.Core.Storage.EF
         {
             services.TryAddScoped<ICoreModelMapper, SqlServerCoreModelMapper>();
 
-            services.AddEntityFramework()
-                .AddSqlServer()
-                .AddDbContext<CoreDbContext>(options =>
-                    options.UseSqlServer(Configuration["Data:EF7ConnectionOptions:ConnectionString"])
-                    );
+            services.AddEntityFrameworkSqlServer()
+              .AddDbContext<CoreDbContext>((serviceProvider, options) =>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
+                       .UseInternalServiceProvider(serviceProvider)
+                       );
+
+            //services.AddDbContext<CoreDbContext>(options =>
+            //        options.UseSqlServer(Configuration["Data:EF7ConnectionOptions:ConnectionString"])
+            //        );
         }
 
 

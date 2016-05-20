@@ -1,3 +1,14 @@
+
+https://blogs.msdn.microsoft.com/webdev/2016/05/16/announcing-asp-net-core-rc2/
+RC2 breaking changes
+https://github.com/aspnet/announcements/issues?q=is%3Aissue+milestone%3A1.0.0-rc2
+
+Updates to project.json schema #175 RC2
+https://github.com/aspnet/Announcements/issues/175
+
+
+
+
 It seems in the latest nuget used with VS 2015 and beta8 tooling, we can now package content files in the .npkg file created by VS 2015 when a project is built.
 However, it seems also that the content files do NOT currently get installed in the consuming web app project.
 This is a problem because we want to package cloudscribe.Web.Navigation with some views that are needed to use it.

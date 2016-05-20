@@ -7,9 +7,9 @@
 
 using cloudscribe.Core.Models;
 using cloudscribe.Web.Common.Razor;
-using Microsoft.AspNet.Http;
-using Microsoft.AspNet.Mvc.Rendering;
-using Microsoft.Extensions.PlatformAbstractions;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,14 +19,14 @@ namespace cloudscribe.Core.Web.Components
     public class SiteThemeListBuilder : IThemeListBuilder
     {
         public SiteThemeListBuilder(
-            IApplicationEnvironment appEnvironment,
+            IHostingEnvironment hostingEnvironment,
             IHttpContextAccessor contextAccessor
             )
         {
-            if (appEnvironment == null) { throw new ArgumentNullException(nameof(appEnvironment)); }
+            if (hostingEnvironment == null) { throw new ArgumentNullException(nameof(hostingEnvironment)); }
             if (contextAccessor == null) { throw new ArgumentNullException(nameof(contextAccessor)); }
            
-            appBasePath = appEnvironment.ApplicationBasePath;
+            appBasePath = hostingEnvironment.ContentRootPath;
             this.contextAccessor = contextAccessor;
             
         }

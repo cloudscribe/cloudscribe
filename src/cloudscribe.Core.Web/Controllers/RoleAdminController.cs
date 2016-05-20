@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-06
-// Last Modified:			2016-05-13
+// Last Modified:			2016-05-19
 // 
 
 using cloudscribe.Core.Identity;
@@ -10,9 +10,9 @@ using cloudscribe.Core.Models;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.ViewModels.RoleAdmin;
 using cloudscribe.Web.Common.Extensions;
-using Microsoft.AspNet.Authorization;
-using Microsoft.AspNet.Mvc;
-using Microsoft.Extensions.OptionsModel;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using System;
 using System.Globalization;
 using System.Threading.Tasks;
@@ -20,7 +20,7 @@ using System.Threading.Tasks;
 namespace cloudscribe.Core.Web.Controllers
 {
     [Authorize(Policy = "RoleAdminPolicy")]
-    public class RoleAdminController : CloudscribeBaseController
+    public class RoleAdminController : Controller
     {
 
         public RoleAdminController(

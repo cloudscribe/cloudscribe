@@ -1,12 +1,4 @@
-﻿
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Data.Entity;
-using Microsoft.Data.Entity.Metadata.Builders;
-using Microsoft.Data.Entity.Scaffolding.Metadata;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace cloudscribe.Core.Storage.EF
 {

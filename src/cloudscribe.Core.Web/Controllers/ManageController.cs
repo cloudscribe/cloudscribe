@@ -10,9 +10,9 @@ using cloudscribe.Core.Identity;
 using cloudscribe.Core.Web.ViewModels.SiteUser;
 using cloudscribe.Messaging.Email;
 using cloudscribe.Web.Common.Extensions;
-using Microsoft.AspNet.Authorization;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -21,7 +21,7 @@ using System.Threading.Tasks;
 namespace cloudscribe.Core.Web.Controllers
 {
     [Authorize]
-    public class ManageController : CloudscribeBaseController
+    public class ManageController : Controller
     {
         public ManageController(
             SiteSettings currentSite,

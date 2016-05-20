@@ -1,8 +1,8 @@
 ﻿using cloudscribe.Core.Models;
-using Microsoft.AspNet.Http.Internal;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace cloudscribe.Core.Storage.NoDb
 {

@@ -3,8 +3,7 @@
 // https://github.com/saaskit/saaskit/blob/master/samples/AspNetMvcSample/TenantViewLocationExpander.cs
 // added here 2016-02-12 by Joe Audette
 
-using Microsoft.AspNet.Http;
-using Microsoft.AspNet.Mvc.Razor;
+using Microsoft.AspNetCore.Mvc.Razor;
 using System;
 using System.Collections.Generic;
 using System.Linq;

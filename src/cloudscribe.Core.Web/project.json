@@ -1,17 +1,21 @@
 {
-  "version": "1.0.0-*",
-  "title": "cloudscribe.Core.Web",
-  "description": "Multi-tenant MVC and WebApi application foundation with management for sites, users, roles, and geographic data.  You should only install this into an empty web application project that does not already have startup code or AspNet Identity installed. This is the main library for cloudscribe. Typically you should not install this directly but instead install the package cloudscribe.Core.Web.Integration which will also install cloudscribe.Web.Core along with the integration code needed to wire it up in your empty web application project. You are allowed to modify the integration code after it is added to your project.",
-  "summary": "Multi-tenant MVC and WebApi application foundation with management for sites, users, roles, and geographic data",
-  "authors": [ "Joe Audette" ],
-  "owners": [ "Source Tree Solutions" ],
-  "tags": [ "cloudscribe","multi-tenant","mvc6","site management" ],
-  "projectUrl": "https://github.com/joeaudette/cloudscribe",
-  "licenseUrl": "http://www.apache.org/licenses/LICENSE-2.0",
-  "copyright": "2015 Source Tree Solutions",
-  "iconUrl": "https://raw.githubusercontent.com/joeaudette/cloudscribe/master/cloudscribe-icon-32.png",
-  "requireLicenseAcceptance": false,
-  "releaseNotes": "",
+    "version": "1.0.0-*",
+    "description": "Multi-tenant MVC and WebApi application foundation with management for sites, users, roles, and geographic data.  You should only install this into an empty web application project that does not already have startup code or AspNet Identity installed. This is the main library for cloudscribe. Typically you should not install this directly but instead install the package cloudscribe.Core.Web.Integration which will also install cloudscribe.Web.Core along with the integration code needed to wire it up in your empty web application project. You are allowed to modify the integration code after it is added to your project.",
+    
+    "authors": [ "Joe Audette" ],
+    "packOptions": {
+        "owners": [ "Source Tree Solutions" ],
+        "tags": [ "cloudscribe", "multi-tenant", "mvc6", "site management" ],
+        "projectUrl": "https://github.com/joeaudette/cloudscribe",
+        "licenseUrl": "http://www.apache.org/licenses/LICENSE-2.0",
+        "copyright": "2015 Source Tree Solutions",
+        "iconUrl": "https://raw.githubusercontent.com/joeaudette/cloudscribe/master/cloudscribe-icon-32.png",
+        "requireLicenseAcceptance": false,
+        "summary": "Multi-tenant MVC and WebApi application foundation with management for sites, users, roles, and geographic data",
+        "releaseNotes": ""
+    },
+
+
 
     "dependencies": {
         "cloudscribe.Core.Identity": "1.0.0-*",
@@ -21,44 +25,24 @@
         "cloudscribe.Web.Common": "1.0.0-*",
         "cloudscribe.Web.Navigation": "1.0.1-*",
         "cloudscribe.Web.Pagination": "1.0.1-*",
-        "Microsoft.AspNet.Authentication": "1.0.0-rc1-final",
-        "Microsoft.AspNet.Authentication.Cookies": "1.0.0-rc1-final",
-        "Microsoft.AspNet.Authentication.Facebook": "1.0.0-rc1-final",
-        "Microsoft.AspNet.Authentication.Google": "1.0.0-rc1-final",
-        "Microsoft.AspNet.Authentication.MicrosoftAccount": "1.0.0-rc1-final",
-        "Microsoft.AspNet.Authentication.Twitter": "1.0.0-rc1-final",
-        "Microsoft.AspNet.Authorization": "1.0.0-rc1-final",
-        "Microsoft.AspNet.Diagnostics": "1.0.0-rc1-final",
-        "Microsoft.AspNet.Http": "1.0.0-rc1-final",
-        "Microsoft.AspNet.Http.Abstractions": "1.0.0-rc1-final",
-        "Microsoft.AspNet.Http.Extensions": "1.0.0-rc1-final",
-        "Microsoft.AspNet.Http.Features": "1.0.0-rc1-final",
-        "Microsoft.AspNet.Mvc": "6.0.0-rc1-final",
-        "Microsoft.AspNet.Mvc.TagHelpers": "6.0.0-rc1-final",
-        "Microsoft.AspNet.Mvc.ViewFeatures": "6.0.0-rc1-final",
-        "Microsoft.AspNet.Razor": "4.0.0-rc1-final",
-        "Microsoft.Extensions.Logging.Abstractions": "1.0.0-rc1-final",
-        "Microsoft.Extensions.OptionsModel": "1.0.0-rc1-final",
-        "Microsoft.Extensions.PlatformAbstractions": "1.0.0-rc1-final",
-        "Newtonsoft.Json": "7.0.1",
-        "SaasKit.Multitenancy": "1.1.1-*"
+        "Microsoft.AspNetCore.Antiforgery": "1.0.0-rc2-final",
+        "Microsoft.AspNetCore.Authentication.Facebook": "1.0.0-rc2-final",
+        "Microsoft.AspNetCore.Authentication.Google": "1.0.0-rc2-final",
+        "Microsoft.AspNetCore.Authentication.MicrosoftAccount": "1.0.0-rc2-final",
+        "Microsoft.AspNetCore.Authentication.Twitter": "1.0.0-rc2-final",
+        "Microsoft.AspNetCore.Diagnostics": "1.0.0-rc2-final",
+        "Microsoft.AspNetCore.Hosting.Abstractions": "1.0.0-rc2-final",
+        "Microsoft.AspNetCore.Http.Abstractions": "1.0.0-rc2-final",
+        "Microsoft.AspNetCore.Identity": "1.0.0-rc2-final",
+        "Microsoft.Extensions.Configuration.Abstractions": "1.0.0-rc2-final",
+        "Microsoft.Extensions.Options": "1.0.0-rc2-final",
+        "Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0-rc2-final",
+        "NETStandard.Library": "1.5.0-rc2-24027"
     },
 
-  "frameworks": {
-    "net451": {
-      "frameworkAssemblies": {
-        "System.ComponentModel": ""
-      }
-    },
-    "dnxcore50": {
-      "dependencies": {
-        "System.Collections": "4.0.11-beta-23516",
-        "System.Net.Http": "4.0.1-beta-23516",
-        "System.Linq": "4.0.1-beta-23516",
-        "System.Runtime": "4.0.21-beta-23516",
-        "System.Xml.XmlDocument": "4.0.1-beta-23516",
-        "Microsoft.CSharp": "4.0.1-beta-23516"
-      }
+    "frameworks": {
+        "netstandard1.5": {
+            "imports": "dnxcore50"
+        }
     }
-  }
 }

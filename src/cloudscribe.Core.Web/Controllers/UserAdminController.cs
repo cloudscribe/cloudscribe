@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-08
-// Last Modified:			2016-05-11
+// Last Modified:			2016-05-18
 // 
 
 using cloudscribe.Core.Identity;
@@ -13,13 +13,13 @@ using cloudscribe.Core.Web.Components.Messaging;
 using cloudscribe.Core.Web.ViewModels.Account;
 using cloudscribe.Core.Web.ViewModels.UserAdmin;
 using cloudscribe.Web.Navigation;
-using Microsoft.AspNet.Authorization;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Mvc;
-using Microsoft.AspNet.Mvc.Localization;
-using Microsoft.AspNet.Localization;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Localization;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Localization;
-using Microsoft.Extensions.OptionsModel;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -29,7 +29,7 @@ using System.Threading.Tasks;
 namespace cloudscribe.Core.Web.Controllers
 {
     [Authorize(Policy = "UserManagementPolicy")]
-    public class UserAdminController : CloudscribeBaseController
+    public class UserAdminController : Controller
     {
         public UserAdminController(
             SiteManager siteManager,

@@ -1,42 +1,34 @@
-﻿
-using cloudscribe.Core.Models;
-using cloudscribe.Core.Models.Setup;
-using cloudscribe.Core.Web.Components;
-using cloudscribe.Logging.EF;
-using cloudscribe.Logging.Web;
-using Glimpse;
-using Microsoft.AspNet.Builder;
-using Microsoft.AspNet.Hosting;
-using Microsoft.AspNet.Http;
-using Microsoft.AspNet.Identity;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.OptionsModel;
-using Microsoft.Extensions.PlatformAbstractions;
-using StructureMap;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using example.WebApp;
-
+using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using cloudscribe.Core.Web.Controllers;
 
 namespace example.WebApp
 {
     public class Startup
-    {        
-        private string appBasePath;
-
-        public Startup(IHostingEnvironment env, IApplicationEnvironment appEnv)
+    {
+        public Startup(IHostingEnvironment env)
         {
-            // Setup configuration sources.
             var builder = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
 
-            if (env.IsEnvironment("Development"))
+            appBasePath = env.ContentRootPath;
+
+            if (env.IsDevelopment())
             {
-                // This reads the configuration keys from the secret store.
                 // For more details on using the user secret store see http://go.microsoft.com/fwlink/?LinkID=532709
                 builder.AddUserSecrets();
             }
@@ -51,12 +43,274 @@ namespace example.WebApp
             // so no risk of messing up settings if deploying a new version to azure
             builder.AddEnvironmentVariables();
             Configuration = builder.Build();
-
-            //env.MapPath
-            appBasePath = appEnv.ApplicationBasePath;
         }
 
-        public IConfigurationRoot Configuration { get; set; }
+        private string appBasePath;
+        public IConfigurationRoot Configuration { get; }
+
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureServices(IServiceCollection services)
+        {
+            // Add framework services.
+            //services.AddDbContext<ApplicationDbContext>(options =>
+            //    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            //services.AddIdentity<ApplicationUser, IdentityRole>()
+            //    .AddEntityFrameworkStores<ApplicationDbContext>()
+            //    .AddDefaultTokenProviders();
+
+            //services.AddDataProtection(configure =>
+            //{
+            //    string pathToCryptoKeys = appBasePath + System.IO.Path.DirectorySeparatorChar + "dp_keys" + System.IO.Path.DirectorySeparatorChar;
+            //    configure.PersistKeysToFileSystem(new System.IO.DirectoryInfo(pathToCryptoKeys));
+                
+
+            //});
+
+            //bool enableGlimpse = Configuration.GetValue("DiagnosticOptions:EnableGlimpse", false);
+
+            //if (enableGlimpse)
+            //{
+            //    services.AddGlimpse();
+            //}
+
+            //services.AddCaching();
+            services.AddMemoryCache();
+            // we currently only use session for alerts, so we can fire an alert on the next request
+            // if session is disabled this feature fails quietly with no errors
+            services.AddSession();
+            
+
+            ConfigureAuthPolicy(services);
+
+            services.AddOptions();
+
+            /* optional and only needed if you are using cloudscribe Logging  */
+            //services.AddScoped<cloudscribe.Logging.Web.LogManager>();
+
+            /* these are optional and only needed if using cloudscribe Setup */
+            //services.Configure<SetupOptions>(Configuration.GetSection("SetupOptions"));
+            //services.AddScoped<SetupManager, SetupManager>();
+            //services.AddScoped<IVersionProvider, SetupVersionProvider>();
+            //services.AddScoped<IVersionProvider, CloudscribeLoggingVersionProvider>();
+            /* end cloudscribe Setup */
+            
+            services.AddCloudscribeCore(Configuration);
+
+            services.AddCloudscribeIdentity(options => {
+
+                options.Cookies.ApplicationCookie.AuthenticationScheme 
+                    = cloudscribe.Core.Identity.AuthenticationScheme.Application;
+                
+                options.Cookies.ApplicationCookie.CookieName 
+                    = cloudscribe.Core.Identity.AuthenticationScheme.Application;
+
+                //options.Cookies.ApplicationCookie.DataProtectionProvider = 
+                //DataProtectionProvider.Create(new DirectoryInfo("C:\\Github\\Identity\\artifacts"));
+            });
+
+            services.AddMvc()
+                    .AddViewLocalization(options =>
+                    {
+                        options.ResourcesPath = "AppResources";
+                    })
+                    .AddRazorOptions(options =>
+                    {
+                        options.ViewLocationExpanders.Add(new cloudscribe.Core.Web.Components.SiteViewLocationExpander());
+                    });
+
+            ConfigureDataStorage(services);
+
+            //var container = new Container();
+            //container.Populate(services);
+
+            //return container.GetInstance<IServiceProvider>();
+        }
+
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(
+            IApplicationBuilder app, 
+            IHostingEnvironment env, 
+            ILoggerFactory loggerFactory,
+            IOptions<cloudscribe.Core.Models.MultiTenantOptions> multiTenantOptionsAccessor,
+            //IOptions<IdentityOptions> identityOptionsAccessor,
+            //cloudscribe.Core.Identity.SiteAuthCookieValidator cookieValidator,
+            //Microsoft.AspNetCore.Identity.ISecurityStampValidator securityStampValidator,
+            ILogger<cloudscribe.Core.Identity.SiteAuthCookieValidator> logger,
+            IServiceProvider serviceProvider
+            )
+        {
+            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+            loggerFactory.AddDebug();
+
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+                app.UseDatabaseErrorPage();
+                app.UseBrowserLink();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Home/Error");
+            }
+
+            app.UseStaticFiles();
+
+            app.UseSession();
+
+            app.UseMultitenancy<cloudscribe.Core.Models.SiteSettings>();
+
+            //app.UseTenantContainers<SiteSettings>();
+            var multiTenantOptions = multiTenantOptionsAccessor.Value;
+
+            app.UsePerTenant<cloudscribe.Core.Models.SiteSettings>((ctx, builder) =>
+            {
+
+                //var tenantIdentityOptionsProvider = app.ApplicationServices.GetRequiredService<IOptions<IdentityOptions>>();
+                //var cookieOptions = tenantIdentityOptionsProvider.Value.Cookies;
+                //var cookieOptions = identityOptionsAccessor.Value.Cookies;
+                var tenant = ctx.Tenant;
+
+                var shouldUseFolder = !multiTenantOptions.UseRelatedSitesMode
+                                        && multiTenantOptions.Mode == cloudscribe.Core.Models.MultiTenantMode.FolderName
+                                        && ctx.Tenant.SiteFolderName.Length > 0;
+
+                //var tenantPathBase = string.IsNullOrEmpty(tenant.SiteFolderName)
+                //    ? PathString.Empty
+                //    : new PathString("/" + tenant.SiteFolderName);
+
+                // TODO: I'm not sure newing this up here is agood idea
+                // are we missing any default configuration thast would normally be set for identity?
+                var identityOptions = new IdentityOptions();
+
+                var cookieEvents = new CookieAuthenticationEvents();
+                //var cookieValidator = new cloudscribe.Core.Identity.SiteAuthCookieValidator(securityStampValidator, logger);
+                var cookieValidator = new cloudscribe.Core.Identity.SiteAuthCookieValidator(logger);
+
+                SetupAppCookie(
+                    identityOptions.Cookies.ApplicationCookie, 
+                    cookieEvents,
+                    cookieValidator,
+                    cloudscribe.Core.Identity.AuthenticationScheme.Application, 
+                    tenant
+                    );
+                SetupOtherCookies(identityOptions.Cookies.ExternalCookie, cloudscribe.Core.Identity.AuthenticationScheme.External, tenant);
+                SetupOtherCookies(identityOptions.Cookies.TwoFactorRememberMeCookie, cloudscribe.Core.Identity.AuthenticationScheme.TwoFactorRememberMe, tenant);
+                SetupOtherCookies(identityOptions.Cookies.TwoFactorUserIdCookie, cloudscribe.Core.Identity.AuthenticationScheme.TwoFactorUserId, tenant);
+
+                var cookieOptions = identityOptions.Cookies;
+
+                builder.UseCookieAuthentication(cookieOptions.ExternalCookie);
+                builder.UseCookieAuthentication(cookieOptions.TwoFactorRememberMeCookie);
+                builder.UseCookieAuthentication(cookieOptions.TwoFactorUserIdCookie);
+                builder.UseCookieAuthentication(cookieOptions.ApplicationCookie);
+
+                // known issue here is if a site is updated to populate the
+                // social auth keys, it currently requires a restart so that the middleware gets registered
+                // in order for it to work or for the social auth buttons to appear 
+                //builder.UseSocialAuth(ctx.Tenant, cookieOptions, shouldUseFolder);
+                
+            });
+
+
+            UseMvc(app, multiTenantOptions.Mode == cloudscribe.Core.Models.MultiTenantMode.FolderName);
+
+            // this doesn't seem to be getting it from appsettings.json after rc2
+            var devOptions = Configuration.GetValue<DevOptions>("DevOptions", new DevOptions { DbPlatform = "ef" });
+
+            switch (devOptions.DbPlatform)
+            {
+                case "NoDb":
+                    CoreNoDbStartup.InitializeDataAsync(app.ApplicationServices).Wait();
+                    break;
+
+                case "ef":
+                default:
+                    // this creates ensures the database is created and initial data
+                    CoreEFStartup.InitializeDatabaseAsync(app.ApplicationServices).Wait();
+
+                    // this one is only needed if using cloudscribe Logging with EF as the logging storage
+                    //cloudscribe.Logging.EF.LoggingDbInitializer.InitializeDatabaseAsync(app.ApplicationServices).Wait();
+
+                    break;
+            }
+
+            //app.UseIdentity();
+
+            // Add external authentication middleware below. To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
+
+            //app.UseMvc(routes =>
+            //{
+            //    routes.MapRoute(
+            //        name: "default",
+            //        template: "{controller=Home}/{action=Index}/{id?}");
+            //});
+        }
+
+        private void SetupAppCookie(
+            CookieAuthenticationOptions options,
+            CookieAuthenticationEvents cookieEvents,
+            cloudscribe.Core.Identity.SiteAuthCookieValidator siteValidator,
+            string scheme, 
+            cloudscribe.Core.Models.SiteSettings tenant
+            )
+        {
+            options.AuthenticationScheme = $"{scheme}-{tenant.SiteFolderName}";
+            options.CookieName = $"{scheme}-{tenant.SiteFolderName}";
+            options.CookiePath = "/" + tenant.SiteFolderName;
+
+            var tenantPathBase = string.IsNullOrEmpty(tenant.SiteFolderName)
+                ? PathString.Empty
+                : new PathString("/" + tenant.SiteFolderName);
+
+            options.LoginPath = tenantPathBase + "/account/login";
+            options.LogoutPath = tenantPathBase + "/account/logoff";
+
+            cookieEvents.OnValidatePrincipal = siteValidator.ValidatePrincipal;
+            options.Events = cookieEvents;
+
+            options.AutomaticAuthenticate = true;
+            options.AutomaticChallenge = true;
+        }
+
+        private void SetupOtherCookies(
+            CookieAuthenticationOptions options, 
+            string scheme, 
+            cloudscribe.Core.Models.SiteSettings tenant
+            )
+        {
+            //var tenantPathBase = string.IsNullOrEmpty(tenant.SiteFolderName)
+            //    ? PathString.Empty
+            //    : new PathString("/" + tenant.SiteFolderName);
+
+            options.AuthenticationScheme = $"{scheme}-{tenant.SiteFolderName}";
+            options.CookieName = $"{scheme}-{tenant.SiteFolderName}";
+            options.CookiePath = "/" + tenant.SiteFolderName;
+
+        }
+
+        private void UseMvc(IApplicationBuilder app, bool useFolders)
+        {
+            app.UseMvc(routes =>
+            {
+                if (useFolders)
+                {
+                    routes.MapRoute(
+                        name: "folderdefault",
+                        template: "{sitefolder}/{controller}/{action}/{id?}",
+                        defaults: new { controller = "Home", action = "Index" },
+                        constraints: new { name = new cloudscribe.Core.Web.Components.SiteFolderRouteConstraint() });
+                }
+
+
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Home}/{action=Index}/{id?}"
+                    //,defaults: new { controller = "Home", action = "Index" }
+                    );
+            });
+        }
+
 
         private void ConfigureAuthPolicy(IServiceCollection services)
         {
@@ -114,174 +368,14 @@ namespace example.WebApp
             });
 
         }
-        
-        public IServiceProvider ConfigureServices(IServiceCollection services)
+
+        private void ConfigureDataStorage(IServiceCollection services)
         {
-            services.ConfigureDataProtection(configure =>
-            {
-                string pathToCryptoKeys = appBasePath + Path.DirectorySeparatorChar + "dp_keys" + Path.DirectorySeparatorChar;
-                configure.PersistKeysToFileSystem(new DirectoryInfo(pathToCryptoKeys));
-            });
-            
-            bool enableGlimpse = Configuration.Get("DiagnosticOptions:EnableGlimpse", false);
+            services.AddScoped<cloudscribe.Core.Models.Setup.ISetupTask, cloudscribe.Core.Web.Components.EnsureInitialDataSetupTask>();
 
-            if (enableGlimpse)
-            {
-                services.AddGlimpse();
-            }
-
-            services.AddCaching();
-            // we currently only use session for alerts, so we can fire an alert on the next request
-            // if session is disabled this feature fails quietly with no errors
-            services.AddSession();
-
-            ConfigureAuthPolicy(services);
-
-            services.AddOptions();
-
-            /* optional and only needed if you are using cloudscribe Logging  */
-            services.AddScoped<LogManager>();
-
-            /* these are optional and only needed if using cloudscribe Setup */
-            //services.Configure<SetupOptions>(Configuration.GetSection("SetupOptions"));
-            //services.AddScoped<SetupManager, SetupManager>();
-            //services.AddScoped<IVersionProvider, SetupVersionProvider>();
-            //services.AddScoped<IVersionProvider, CloudscribeLoggingVersionProvider>();
-            /* end cloudscribe Setup */
-            
-            services.AddCloudscribeCore(Configuration);
-            
-            services.AddMvc()
-                    .AddViewLocalization(options =>
-                    {
-                        options.ResourcesPath = "AppResources";
-                    })
-                    .AddRazorOptions(options =>
-                    {
-                        options.ViewLocationExpanders.Add(new SiteViewLocationExpander());
-                    });
-            
-            ConfigureDatabase(services, Configuration);
-
-            
-            var container = new Container();
-            container.Populate(services);
-            
-            return container.GetInstance<IServiceProvider>();
-        }
-
-        public void Configure(
-            IApplicationBuilder app,
-            IHostingEnvironment environment,
-            ILoggerFactory loggerFactory,
-            IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
-            IOptions<IdentityOptions> identityOptionsAccessor,
-            IServiceProvider serviceProvider
-            )
-        {
-            var enableGlimpse = Configuration.Get("DiagnosticOptions:EnableGlimpse", false);
-
-            if (enableGlimpse)
-            {
-                app.UseGlimpse();
-            }
-
-            /* optional and only needed if you are using cloudscribe Logging  */
-            //ConfigureLogging(loggerFactory, serviceProvider);
-            
-            if (environment.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {                
-                app.UseExceptionHandler("/Home/Error");
-            }
-
-            app.UseIISPlatformHandler(options =>
-            {
-                options.AuthenticationDescriptions.Clear();
-            });
-
-            app.UseStaticFiles();
-
-            app.UseSession();
-
-            app.UseMultitenancy<SiteSettings>();
-
-            //app.UseTenantContainers<SiteSettings>();
-            var multiTenantOptions = multiTenantOptionsAccessor.Value;
-
-            app.UsePerTenant<SiteSettings>((ctx, builder) =>
-            {
-                //var tenantIdentityOptionsProvider = app.ApplicationServices.GetRequiredService<IOptions<IdentityOptions>>();
-                //var cookieOptions = tenantIdentityOptionsProvider.Value.Cookies;
-                var cookieOptions = identityOptionsAccessor.Value.Cookies;
-
-
-                var shouldUseFolder = !multiTenantOptions.UseRelatedSitesMode 
-                                        && multiTenantOptions.Mode == MultiTenantMode.FolderName 
-                                        && ctx.Tenant.SiteFolderName.Length > 0;
-
-                builder.UseCookieAuthentication(cookieOptions.ExternalCookie);
-                builder.UseCookieAuthentication(cookieOptions.TwoFactorRememberMeCookie);
-                builder.UseCookieAuthentication(cookieOptions.TwoFactorUserIdCookie);
-                builder.UseCookieAuthentication(cookieOptions.ApplicationCookie);
-
-                // known issue here is if a site is updated to populate the
-                // social auth keys, it currently requires a restart so that the middleware gets registered
-                // in order for it to work or for the social auth buttons to appear 
-                builder.UseSocialAuth(ctx.Tenant, cookieOptions, shouldUseFolder);
-            });
-
-            
-            UseMvc(app, multiTenantOptions.Mode == MultiTenantMode.FolderName);
-
-            var devOptions = Configuration.Get<DevOptions>("DevOptions");
-            switch (devOptions.DbPlatform)
-            {
-                case "NoDb":
-                    CoreNoDbStartup.InitializeDataAsync(app.ApplicationServices).Wait();
-                    break;
-
-                case "ef":
-                default:
-                // this creates ensures the database is created and initial data
-                CoreEFStartup.InitializeDatabaseAsync(app.ApplicationServices).Wait();
-
-                // this one is only needed if using cloudscribe Logging with EF as the logging storage
-                LoggingDbInitializer.InitializeDatabaseAsync(app.ApplicationServices).Wait();
-
-                    break;
-            }
-        }
-        
-        private void UseMvc(IApplicationBuilder app, bool useFolders)
-        {
-            app.UseMvc(routes =>
-            {
-                if(useFolders)
-                {
-                    routes.MapRoute(
-                        name: "folderdefault",
-                        template: "{sitefolder}/{controller}/{action}/{id?}",
-                        defaults: new { controller = "Home", action = "Index" },
-                        constraints: new { name = new SiteFolderRouteConstraint() });
-                }
-                
-                
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller}/{action}/{id?}",
-                    defaults: new { controller = "Home", action = "Index" });
-            });
-        }
-        
-        private void ConfigureDatabase(IServiceCollection services, IConfiguration configuration)
-        {
-            services.AddScoped<ISetupTask, EnsureInitialDataSetupTask>();
-
-            var devOptions = configuration.Get<DevOptions>("DevOptions");
+            //var devOptions = configuration.Get<DevOptions>("DevOptions");
+            // this doesn't seem to be getting it from appsettings.json after rc2
+            var devOptions = Configuration.GetValue<DevOptions>("DevOptions", new DevOptions { DbPlatform = "ef" });
 
             switch (devOptions.DbPlatform)
             {
@@ -291,12 +385,12 @@ namespace example.WebApp
 
                 case "ef":
                 default:
-                    var connectionString = configuration["Data:EF7ConnectionOptions:ConnectionString"];
+                    var connectionString = Configuration.GetConnectionString("EntityFrameworkConnectionString");
                     services.AddCloudscribeCoreEFStorage(connectionString);
 
                     // only needed if using cloudscribe logging with EF storage
-                    services.AddCloudscribeLoggingEFStorage(connectionString);
-                    
+                    //services.AddCloudscribeLoggingEFStorage(connectionString);
+
 
                     break;
             }
@@ -304,41 +398,37 @@ namespace example.WebApp
 
         private void ConfigureLogging(ILoggerFactory loggerFactory, IServiceProvider serviceProvider)
         {
-            var logRepository = serviceProvider.GetService<ILogRepository>();
+            //var logRepository = serviceProvider.GetService<cloudscribe.Logging.Web.ILogRepository>();
 
             loggerFactory.AddConsole(minLevel: LogLevel.Warning);
 
             // a customizable filter for logging
-            LogLevel minimumLevel = LogLevel.Warning;
+            //LogLevel minimumLevel = LogLevel.Warning;
 
-            // add exclusions to remove noise in the logs
-            var excludedLoggers = new List<string>
-            {
-                "Microsoft.Data.Entity.Storage.Internal.RelationalCommandBuilderFactory",
-                "Microsoft.Data.Entity.Query.Internal.QueryCompiler",
-                "Microsoft.Data.Entity.DbContext",
-            };
+            //// add exclusions to remove noise in the logs
+            //var excludedLoggers = new List<string>
+            //{
+            //    "Microsoft.Data.Entity.Storage.Internal.RelationalCommandBuilderFactory",
+            //    "Microsoft.Data.Entity.Query.Internal.QueryCompiler",
+            //    "Microsoft.Data.Entity.DbContext",
+            //};
 
-            Func<string, LogLevel, bool> logFilter = (string loggerName, LogLevel logLevel) =>
-            {
-                if (logLevel < minimumLevel)
-                {
-                    return false;
-                }
+            //Func<string, LogLevel, bool> logFilter = (string loggerName, LogLevel logLevel) =>
+            //{
+            //    if (logLevel < minimumLevel)
+            //    {
+            //        return false;
+            //    }
 
-                if (excludedLoggers.Contains(loggerName))
-                {
-                    return false;
-                }
+            //    if (excludedLoggers.Contains(loggerName))
+            //    {
+            //        return false;
+            //    }
 
-                return true;
-            };
+            //    return true;
+            //};
 
-            loggerFactory.AddDbLogger(serviceProvider, logRepository, logFilter);
+            //loggerFactory.AddDbLogger(serviceProvider, logRepository, logFilter);
         }
-
-
-        // Entry point for the application.
-        public static void Main(string[] args) => WebApplication.Run<Startup>(args);
     }
 }

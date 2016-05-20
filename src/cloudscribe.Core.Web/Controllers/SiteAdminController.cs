@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2016-05-11
+// Last Modified:			2016-05-18
 // 
 
 using cloudscribe.Core.Models;
@@ -11,11 +11,11 @@ using cloudscribe.Core.Web.Helpers;
 using cloudscribe.Core.Web.ViewModels.SiteSettings;
 using cloudscribe.Web.Common.Extensions;
 using cloudscribe.Web.Common.Razor;
-using Microsoft.AspNet.Authorization;
-using Microsoft.AspNet.Mvc;
-using Microsoft.AspNet.Mvc.Localization;
-using Microsoft.AspNet.Mvc.Rendering;
-using Microsoft.Extensions.OptionsModel;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Localization;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Options;
 using System;
 using System.Linq;
 using System.Globalization;
@@ -25,7 +25,7 @@ using System.Threading.Tasks;
 namespace cloudscribe.Core.Web.Controllers
 {
     [Authorize(Policy = "AdminPolicy")]
-    public class SiteAdminController : CloudscribeBaseController
+    public class SiteAdminController : Controller
     {
         public SiteAdminController(
             SiteManager siteManager,

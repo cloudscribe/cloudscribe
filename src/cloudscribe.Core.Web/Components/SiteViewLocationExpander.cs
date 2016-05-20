@@ -2,16 +2,17 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //  Author:                     Joe Audette
 //  Created:                    2016-03-03
-//	Last Modified:              2016-04-27
+//	Last Modified:              2016-05-19
 //
 
 using cloudscribe.Core.Models;
-using Microsoft.AspNet.Http;
-using Microsoft.AspNet.Mvc.Razor;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Razor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
 
 namespace cloudscribe.Core.Web.Components
 {

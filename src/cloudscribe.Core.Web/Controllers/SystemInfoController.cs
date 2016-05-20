@@ -2,21 +2,21 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //	Author:                 Joe Audette
 //  Created:			    2011-08-19
-//	Last Modified:		    2015-12-19
+//	Last Modified:		    2016-05-19
 // 
 
 
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.ViewModels.SystemInfo;
-using Microsoft.AspNet.Authorization;
-using Microsoft.AspNet.Mvc;
-using Microsoft.Extensions.OptionsModel;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Controllers
 {
-    public class SystemInfoController : CloudscribeBaseController
+    public class SystemInfoController : Controller
     {
         public SystemInfoController(
             SystemInfoManager systemInfoManager,

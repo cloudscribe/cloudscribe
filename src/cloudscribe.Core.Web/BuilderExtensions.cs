@@ -1,12 +1,12 @@
 ﻿
 
 using cloudscribe.Core.Models;
-using Microsoft.AspNet.Builder;
-using Microsoft.AspNet.Http;
-using Microsoft.AspNet.Identity;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using System;
 
-namespace Microsoft.AspNet.Builder
+namespace Microsoft.AspNetCore.Builder
 {
     public static class BuilderExtensions
     {
@@ -20,49 +20,47 @@ namespace Microsoft.AspNet.Builder
             // no just need to clear the tenant cache after updating the settings
             if (!string.IsNullOrWhiteSpace(site.GoogleClientId))
             {
-                app.UseGoogleAuthentication(options =>
+                var googleOptions = new GoogleOptions();
+                googleOptions.AuthenticationScheme = "Google";
+                googleOptions.SignInScheme = cookieOptions.ExternalCookie.AuthenticationScheme;
+                googleOptions.ClientId = site.GoogleClientId;
+                googleOptions.ClientSecret = site.GoogleClientSecret;
+                if (shouldUseFolder)
                 {
-                    options.AuthenticationScheme = "Google";
-                    options.SignInScheme = cookieOptions.ExternalCookie.AuthenticationScheme;
+                    googleOptions.CallbackPath = "/" + site.SiteFolderName + "/signin-google";
+                }
 
-                    options.ClientId = site.GoogleClientId;
-                    options.ClientSecret = site.GoogleClientSecret;
-
-                    if (shouldUseFolder)
-                    {
-                        options.CallbackPath = "/" + site.SiteFolderName + "/signin-google";
-                    }
-                });
+                app.UseGoogleAuthentication(googleOptions);
             }
 
             if (!string.IsNullOrWhiteSpace(site.FacebookAppId))
             {
-                app.UseFacebookAuthentication(options =>
-                {
-                    options.AuthenticationScheme = "Facebook";
-                    options.SignInScheme = cookieOptions.ExternalCookie.AuthenticationScheme;
-                    options.AppId = site.FacebookAppId;
-                    options.AppSecret = site.FacebookAppSecret;
+                var facebookOptions = new FacebookOptions();
+                facebookOptions.AuthenticationScheme = "Facebook";
+                facebookOptions.SignInScheme = cookieOptions.ExternalCookie.AuthenticationScheme;
+                facebookOptions.AppId = site.FacebookAppId;
+                facebookOptions.AppSecret = site.FacebookAppSecret;
 
-                    if (shouldUseFolder)
-                    {
-                        options.CallbackPath = "/" + site.SiteFolderName + "/signin-facebook";
-                    }
-                });
+                if (shouldUseFolder)
+                {
+                    facebookOptions.CallbackPath = "/" + site.SiteFolderName + "/signin-facebook";
+                }
+
+                app.UseFacebookAuthentication(facebookOptions);
             }
 
             if (!string.IsNullOrWhiteSpace(site.MicrosoftClientId))
             {
-                app.UseMicrosoftAccountAuthentication(options =>
+                var microsoftOptions = new MicrosoftAccountOptions();
+                microsoftOptions.SignInScheme = cookieOptions.ExternalCookie.AuthenticationScheme;
+                microsoftOptions.ClientId = site.MicrosoftClientId;
+                microsoftOptions.ClientSecret = site.MicrosoftClientSecret;
+                if (shouldUseFolder)
                 {
-                    options.SignInScheme = cookieOptions.ExternalCookie.AuthenticationScheme;
-                    options.ClientId = site.MicrosoftClientId;
-                    options.ClientSecret = site.MicrosoftClientSecret;
-                    if (shouldUseFolder)
-                    {
-                        options.CallbackPath = "/" + site.SiteFolderName + "/signin-microsoft";
-                    }
-                });
+                    microsoftOptions.CallbackPath = "/" + site.SiteFolderName + "/signin-microsoft";
+                }
+
+                app.UseMicrosoftAccountAuthentication(microsoftOptions);
             }
 
             //app.Use()
@@ -81,17 +79,17 @@ namespace Microsoft.AspNet.Builder
             //{
             if (!string.IsNullOrWhiteSpace(site.TwitterConsumerKey))
             {
-                app.UseTwitterAuthentication(options =>
-                {
-                    options.SignInScheme = cookieOptions.ExternalCookie.AuthenticationScheme;
-                    options.ConsumerKey = site.TwitterConsumerKey;
-                    options.ConsumerSecret = site.TwitterConsumerSecret;
+                var twitterOptions = new TwitterOptions();
+                twitterOptions.SignInScheme = cookieOptions.ExternalCookie.AuthenticationScheme;
+                twitterOptions.ConsumerKey = site.TwitterConsumerKey;
+                twitterOptions.ConsumerSecret = site.TwitterConsumerSecret;
 
-                    if (shouldUseFolder)
-                    {
-                        options.CallbackPath = "/" + site.SiteFolderName + "/signin-twitter";
-                    }
-                });
+                if (shouldUseFolder)
+                {
+                    twitterOptions.CallbackPath = "/" + site.SiteFolderName + "/signin-twitter";
+                }
+
+                app.UseTwitterAuthentication(twitterOptions);
             }
 
             //});

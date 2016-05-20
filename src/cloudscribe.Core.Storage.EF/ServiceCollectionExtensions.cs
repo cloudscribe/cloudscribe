@@ -3,7 +3,7 @@
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Geography;
 using cloudscribe.Core.Storage.EF;
-using Microsoft.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -14,12 +14,16 @@ namespace Microsoft.Extensions.DependencyInjection
             string connectionString
             )
         {
-            services.AddEntityFramework()
-                        .AddSqlServer()
-                        .AddDbContext<CoreDbContext>(options =>
-                        {
-                            options.UseSqlServer(connectionString);
-                        });
+            services.AddEntityFrameworkSqlServer()
+                .AddDbContext<CoreDbContext>((serviceProvider, options) =>
+                options.UseSqlServer(connectionString)
+                       .UseInternalServiceProvider(serviceProvider)
+                       );
+
+            //services.AddDbContext<CoreDbContext>(options =>
+            //{
+            //    options.UseSqlServer(connectionString) ;
+            //});
 
             services.AddScoped<ICoreModelMapper, SqlServerCoreModelMapper>();
             services.AddScoped<IDataPlatformInfo, DataPlatformInfo>();
