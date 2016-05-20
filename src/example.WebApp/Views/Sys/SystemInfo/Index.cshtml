@@ -57,4 +57,4 @@
         </div>
     </li>
 </ul>
-@await Component.InvokeAsync("Navigation", "ChildTree", NamedNavigationFilters.ChildTree)
+@await Component.InvokeAsync("Navigation", new { viewName = "ChildTree", filterName = NamedNavigationFilters.ChildTree, startingNodeKey = "" })

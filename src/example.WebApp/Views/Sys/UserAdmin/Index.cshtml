@@ -1,6 +1,7 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.UserAdmin.UserListViewModel
 @using cloudscribe.Core.Web.Components
-@inject IHtmlLocalizer<CoreResources> sr
+
+@* @inject IHtmlLocalizer<CoreResources> sr *@
 
 @{
 
@@ -27,7 +28,7 @@
                     <div class="input-group">
                         <input asp-for="IpQuery" name="ipquery" class="form-control" />
                         <span class="input-group-btn">
-                            <button type="submit"  class="btn btn-default">@sr["SearchByIPAddress"]</button>
+                            <button type="submit"  class="btn btn-default">SearchByIPAddress</button>
                         </span>
                     </div>
                 </form>
@@ -38,7 +39,7 @@
         </div>
     </div>
     <div class="col-md-2 col-md-pull-10">
-        @await Component.InvokeAsync("Navigation", "SideNav", NamedNavigationFilters.ParentTree, "SiteAdmin")
+        @await Component.InvokeAsync("Navigation", new { viewName = "SideNav", filterName = NamedNavigationFilters.ParentTree, startingNodeKey = "SiteAdmin" })
     </div>
 </div>
 @section scripts {

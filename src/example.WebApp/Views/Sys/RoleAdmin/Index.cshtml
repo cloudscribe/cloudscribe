@@ -15,7 +15,7 @@
             {
                 <li class="list-group-item">
                     <span>
-                        @Html.DisplayFor(modelItem => item.DisplayName)
+                        @Html.DisplayFor(modelItem => item.RoleName)
                         &nbsp;
                     </span>
                     <div class="btn-group pull-right" role="group">
@@ -35,7 +35,7 @@
                             @if (item.IsDeletable(setupOptions.RolesThatCannotBeDeleted))
                             {
                                 <button type="submit"
-                                        onclick="javascript: return confirm('@Html.FormatValue(item.DisplayName, "Are you sure you want to delete {0}?")');"
+                                        onclick="javascript: return confirm('@Html.FormatValue(item.RoleName, "Are you sure you want to delete {0}?")');"
                                         class="btn btn-default btn-xs">
                                     CommonResources.Delete
                                 </button>
@@ -53,7 +53,7 @@
         </div>
     </div>
     <div class="col-md-2 col-md-pull-10">
-        @await Component.InvokeAsync("Navigation", "SideNav", NamedNavigationFilters.ParentTree, "SiteAdmin")
+        @await Component.InvokeAsync("Navigation", new { viewName = "SideNav", filterName = NamedNavigationFilters.ParentTree, startingNodeKey = "SiteAdmin" })
     </div>
 </div>
 

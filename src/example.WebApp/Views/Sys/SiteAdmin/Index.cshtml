@@ -1,4 +1,4 @@
 ﻿@using cloudscribe.Core.Web.Navigation;
 
 <h2>@ViewBag.Heading</h2>
-@await Component.InvokeAsync("Navigation", "ChildTree", NamedNavigationFilters.ChildTree)
+@await Component.InvokeAsync("Navigation", new { viewName = "ChildTree", filterName = NamedNavigationFilters.ChildTree, startingNodeKey = "" })

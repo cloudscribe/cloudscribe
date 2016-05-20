@@ -55,16 +55,16 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddSingleton<IdentityMarkerService>();
             services.TryAddScoped<IUserValidator<SiteUser>, UserValidator<SiteUser>>();
             services.TryAddScoped<IPasswordValidator<SiteUser>, PasswordValidator<SiteUser>>();
-            services.TryAddScoped<IPasswordHasher<SiteUser>, PasswordHasher<SiteUser>>();
+            //services.TryAddScoped<IPasswordHasher<SiteUser>, PasswordHasher<SiteUser>>();
             services.TryAddScoped<ILookupNormalizer, UpperInvariantLookupNormalizer>();
             services.TryAddScoped<IRoleValidator<SiteRole>, RoleValidator<SiteRole>>();
             // No interface for the error describer so we can add errors without rev'ing the interface
             services.TryAddScoped<IdentityErrorDescriber>();
             services.TryAddScoped<ISecurityStampValidator, SecurityStampValidator<SiteUser>>();
-            services.TryAddScoped<IUserClaimsPrincipalFactory<SiteUser>, UserClaimsPrincipalFactory<SiteUser, SiteRole>>();
-            services.TryAddScoped<UserManager<SiteUser>, UserManager<SiteUser>>();
-            services.TryAddScoped<SignInManager<SiteUser>, SignInManager<SiteUser>>();
-            services.TryAddScoped<RoleManager<SiteRole>, RoleManager<SiteRole>>();
+            //services.TryAddScoped<IUserClaimsPrincipalFactory<SiteUser>, UserClaimsPrincipalFactory<SiteUser, SiteRole>>();
+            //services.TryAddScoped<UserManager<SiteUser>, UserManager<SiteUser>>();
+            //services.TryAddScoped<SignInManager<SiteUser>, SignInManager<SiteUser>>();
+            //services.TryAddScoped<RoleManager<SiteRole>, RoleManager<SiteRole>>();
 
             if (setupAction != null)
             {

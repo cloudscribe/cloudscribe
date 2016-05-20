@@ -31,13 +31,13 @@
         <a href="~/@(Tenant?.SiteFolderName ?? "")" class="navbar-brand">@(Tenant?.SiteName ?? "Sample")</a>
       </div>
       <nav class="navbar-collapse collapse">
-          @await Component.InvokeAsync("Navigation", "BootstrapTopNav", NamedNavigationFilters.TopNav)
+          @await Component.InvokeAsync("Navigation", new { viewName = "BootstrapTopNav", filterName = NamedNavigationFilters.TopNav, startingNodeKey = "" })
           @await Html.PartialAsync("_LoginPartial")
       </nav>
     </div>
   </header>
   <div class="container body-content">
-    @await Component.InvokeAsync("Navigation", "BootstrapBreadcrumbs", NamedNavigationFilters.Breadcrumbs)
+    @await Component.InvokeAsync("Navigation", new { viewName = "BootstrapBreadcrumbs", filterName = NamedNavigationFilters.Breadcrumbs, startingNodeKey = "" })
     @RenderBody()   
   </div>
   <footer class="text-center" role="contentinfo" itemscope itemtype="http://schema.org/Person" itemprop="author">

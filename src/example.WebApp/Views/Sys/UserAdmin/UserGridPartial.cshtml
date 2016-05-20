@@ -1,5 +1,5 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.UserAdmin.UserListViewModel
-@inject IViewLocalizer Localizer
+@*  @inject IViewLocalizer Localizer *@
 @{
 
 }
@@ -10,7 +10,7 @@
             <a class="btn btn-xs btn-default" asp-action="NewUser" asp-controller="UserAdmin" asp-route-siteId="@Model.SiteId">CommonResources.NewUser</a>
         </th>
         <th>
-            @Localizer["Email"]
+            Email
 
         </th>
         <th>

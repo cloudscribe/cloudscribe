@@ -208,7 +208,7 @@ namespace example.WebApp
                 // known issue here is if a site is updated to populate the
                 // social auth keys, it currently requires a restart so that the middleware gets registered
                 // in order for it to work or for the social auth buttons to appear 
-                //builder.UseSocialAuth(ctx.Tenant, cookieOptions, shouldUseFolder);
+                builder.UseSocialAuth(ctx.Tenant, cookieOptions, shouldUseFolder);
                 
             });
 
