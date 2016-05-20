@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using cloudscribe.Core.Web.Controllers;
 
 namespace example.WebApp
 {
@@ -174,9 +175,9 @@ namespace example.WebApp
                                         && multiTenantOptions.Mode == cloudscribe.Core.Models.MultiTenantMode.FolderName
                                         && ctx.Tenant.SiteFolderName.Length > 0;
 
-                var tenantPathBase = string.IsNullOrEmpty(tenant.SiteFolderName)
-                    ? PathString.Empty
-                    : new PathString("/" + tenant.SiteFolderName);
+                //var tenantPathBase = string.IsNullOrEmpty(tenant.SiteFolderName)
+                //    ? PathString.Empty
+                //    : new PathString("/" + tenant.SiteFolderName);
 
                 // TODO: I'm not sure newing this up here is agood idea
                 // are we missing any default configuration thast would normally be set for identity?
@@ -207,7 +208,8 @@ namespace example.WebApp
                 // known issue here is if a site is updated to populate the
                 // social auth keys, it currently requires a restart so that the middleware gets registered
                 // in order for it to work or for the social auth buttons to appear 
-                builder.UseSocialAuth(ctx.Tenant, cookieOptions, shouldUseFolder);
+                //builder.UseSocialAuth(ctx.Tenant, cookieOptions, shouldUseFolder);
+                
             });
 
 
