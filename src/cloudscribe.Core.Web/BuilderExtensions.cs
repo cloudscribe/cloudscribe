@@ -1,10 +1,6 @@
 ﻿
 
 using cloudscribe.Core.Models;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using System;
 
 namespace Microsoft.AspNetCore.Builder
 {
@@ -13,7 +9,7 @@ namespace Microsoft.AspNetCore.Builder
         public static IApplicationBuilder UseSocialAuth(
             this IApplicationBuilder app,
             SiteSettings site,
-            IdentityCookieOptions cookieOptions,
+            CookieAuthenticationOptions externalCookieOptions,
             bool shouldUseFolder)
         {
             // TODO: will this require a restart if the options are updated in the ui?
@@ -22,7 +18,7 @@ namespace Microsoft.AspNetCore.Builder
             {
                 var googleOptions = new GoogleOptions();
                 googleOptions.AuthenticationScheme = "Google";
-                googleOptions.SignInScheme = cookieOptions.ExternalCookie.AuthenticationScheme;
+                googleOptions.SignInScheme = externalCookieOptions.AuthenticationScheme;
                 googleOptions.ClientId = site.GoogleClientId;
                 googleOptions.ClientSecret = site.GoogleClientSecret;
                 if (shouldUseFolder)
@@ -37,7 +33,7 @@ namespace Microsoft.AspNetCore.Builder
             {
                 var facebookOptions = new FacebookOptions();
                 facebookOptions.AuthenticationScheme = "Facebook";
-                facebookOptions.SignInScheme = cookieOptions.ExternalCookie.AuthenticationScheme;
+                facebookOptions.SignInScheme = externalCookieOptions.AuthenticationScheme;
                 facebookOptions.AppId = site.FacebookAppId;
                 facebookOptions.AppSecret = site.FacebookAppSecret;
 
@@ -52,7 +48,7 @@ namespace Microsoft.AspNetCore.Builder
             if (!string.IsNullOrWhiteSpace(site.MicrosoftClientId))
             {
                 var microsoftOptions = new MicrosoftAccountOptions();
-                microsoftOptions.SignInScheme = cookieOptions.ExternalCookie.AuthenticationScheme;
+                microsoftOptions.SignInScheme = externalCookieOptions.AuthenticationScheme;
                 microsoftOptions.ClientId = site.MicrosoftClientId;
                 microsoftOptions.ClientSecret = site.MicrosoftClientSecret;
                 if (shouldUseFolder)
@@ -80,7 +76,7 @@ namespace Microsoft.AspNetCore.Builder
             if (!string.IsNullOrWhiteSpace(site.TwitterConsumerKey))
             {
                 var twitterOptions = new TwitterOptions();
-                twitterOptions.SignInScheme = cookieOptions.ExternalCookie.AuthenticationScheme;
+                twitterOptions.SignInScheme = externalCookieOptions.AuthenticationScheme;
                 twitterOptions.ConsumerKey = site.TwitterConsumerKey;
                 twitterOptions.ConsumerSecret = site.TwitterConsumerSecret;
 

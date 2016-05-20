@@ -41,7 +41,7 @@
         @await Component.InvokeAsync("Navigation", new { viewName = "BootstrapBreadcrumbs", filterName = NamedNavigationFilters.Breadcrumbs, startingNodeKey = "" })
         @RenderBody()
         <hr />
-        <footer>
+        <footer class="text-center" role="contentinfo" itemscope itemtype="http://schema.org/Person" itemprop="author">
             <small>Copyright &copy; @DateTime.Now.Year - @(Tenant?.SiteName ?? "Sample")</small>
         </footer>
     </div>

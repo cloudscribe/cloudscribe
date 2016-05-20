@@ -7,6 +7,6 @@ namespace example.WebApp
 {
     public class DevOptions
     {
-        public string DbPlatform { get; set; } = "mssql"; // or pgsql mysql sqlite sqlce firebird
+        public string DbPlatform { get; set; } = "ef"; // or NoDb mssql pgsql mysql sqlite sqlce firebird
     }
 }

@@ -9,7 +9,7 @@ namespace cloudscribe.Core.Storage.NoDb
     public class DefaultProjectResolver : IProjectResolver
     {
         public DefaultProjectResolver(
-            HttpContextAccessor contextAccesor,
+            IHttpContextAccessor contextAccesor,
             IEnumerable<IProjectRequestMap> projectMaps
             )
         {
@@ -17,7 +17,7 @@ namespace cloudscribe.Core.Storage.NoDb
             this.projectMaps = projectMaps;
         }
 
-        private HttpContextAccessor contextAccesor;
+        private IHttpContextAccessor contextAccesor;
         private IEnumerable<IProjectRequestMap> projectMaps;
 
         public Task<string> ResolveProjectId(CancellationToken cancellationToken = default(CancellationToken))

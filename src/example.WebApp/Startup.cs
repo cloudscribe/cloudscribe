@@ -51,14 +51,7 @@ namespace example.WebApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Add framework services.
-            //services.AddDbContext<ApplicationDbContext>(options =>
-            //    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
-            //services.AddIdentity<ApplicationUser, IdentityRole>()
-            //    .AddEntityFrameworkStores<ApplicationDbContext>()
-            //    .AddDefaultTokenProviders();
-
+            // TODO: this changed in rc2, how do we configure file storage now?
             //services.AddDataProtection(configure =>
             //{
             //    string pathToCryptoKeys = appBasePath + System.IO.Path.DirectorySeparatorChar + "dp_keys" + System.IO.Path.DirectorySeparatorChar;
@@ -67,6 +60,7 @@ namespace example.WebApp
 
             //});
 
+            // waiting for rc2 compatible glimpse
             //bool enableGlimpse = Configuration.GetValue("DiagnosticOptions:EnableGlimpse", false);
 
             //if (enableGlimpse)
@@ -74,13 +68,12 @@ namespace example.WebApp
             //    services.AddGlimpse();
             //}
 
-            //services.AddCaching();
             services.AddMemoryCache();
             // we currently only use session for alerts, so we can fire an alert on the next request
             // if session is disabled this feature fails quietly with no errors
             services.AddSession();
             
-
+            // add authorization policies 
             ConfigureAuthPolicy(services);
 
             services.AddOptions();
@@ -133,10 +126,6 @@ namespace example.WebApp
             IHostingEnvironment env, 
             ILoggerFactory loggerFactory,
             IOptions<cloudscribe.Core.Models.MultiTenantOptions> multiTenantOptionsAccessor,
-            //IOptions<IdentityOptions> identityOptionsAccessor,
-            //cloudscribe.Core.Identity.SiteAuthCookieValidator cookieValidator,
-            //Microsoft.AspNetCore.Identity.ISecurityStampValidator securityStampValidator,
-            ILogger<cloudscribe.Core.Identity.SiteAuthCookieValidator> logger,
             IServiceProvider serviceProvider
             )
         {
@@ -165,60 +154,45 @@ namespace example.WebApp
 
             app.UsePerTenant<cloudscribe.Core.Models.SiteSettings>((ctx, builder) =>
             {
-
-                //var tenantIdentityOptionsProvider = app.ApplicationServices.GetRequiredService<IOptions<IdentityOptions>>();
-                //var cookieOptions = tenantIdentityOptionsProvider.Value.Cookies;
-                //var cookieOptions = identityOptionsAccessor.Value.Cookies;
                 var tenant = ctx.Tenant;
 
                 var shouldUseFolder = !multiTenantOptions.UseRelatedSitesMode
                                         && multiTenantOptions.Mode == cloudscribe.Core.Models.MultiTenantMode.FolderName
-                                        && ctx.Tenant.SiteFolderName.Length > 0;
+                                        && tenant.SiteFolderName.Length > 0;
+                
+                var externalCookieOptions = SetupOtherCookies(cloudscribe.Core.Identity.AuthenticationScheme.External, tenant);
+                builder.UseCookieAuthentication(externalCookieOptions);
 
-                //var tenantPathBase = string.IsNullOrEmpty(tenant.SiteFolderName)
-                //    ? PathString.Empty
-                //    : new PathString("/" + tenant.SiteFolderName);
+                var twoFactorRememberMeCookieOptions = SetupOtherCookies(cloudscribe.Core.Identity.AuthenticationScheme.TwoFactorRememberMe, tenant);
+                builder.UseCookieAuthentication(twoFactorRememberMeCookieOptions);
 
-                // TODO: I'm not sure newing this up here is agood idea
-                // are we missing any default configuration thast would normally be set for identity?
-                var identityOptions = new IdentityOptions();
+                var twoFactorUserIdCookie = SetupOtherCookies(cloudscribe.Core.Identity.AuthenticationScheme.TwoFactorUserId, tenant);
+                builder.UseCookieAuthentication(twoFactorUserIdCookie);
 
                 var cookieEvents = new CookieAuthenticationEvents();
-                //var cookieValidator = new cloudscribe.Core.Identity.SiteAuthCookieValidator(securityStampValidator, logger);
+                var logger = loggerFactory.CreateLogger<cloudscribe.Core.Identity.SiteAuthCookieValidator>();
                 var cookieValidator = new cloudscribe.Core.Identity.SiteAuthCookieValidator(logger);
-
-                SetupAppCookie(
-                    identityOptions.Cookies.ApplicationCookie, 
+                var appCookieOptions = SetupAppCookie(
                     cookieEvents,
                     cookieValidator,
-                    cloudscribe.Core.Identity.AuthenticationScheme.Application, 
+                    cloudscribe.Core.Identity.AuthenticationScheme.Application,
                     tenant
                     );
-                SetupOtherCookies(identityOptions.Cookies.ExternalCookie, cloudscribe.Core.Identity.AuthenticationScheme.External, tenant);
-                SetupOtherCookies(identityOptions.Cookies.TwoFactorRememberMeCookie, cloudscribe.Core.Identity.AuthenticationScheme.TwoFactorRememberMe, tenant);
-                SetupOtherCookies(identityOptions.Cookies.TwoFactorUserIdCookie, cloudscribe.Core.Identity.AuthenticationScheme.TwoFactorUserId, tenant);
-
-                var cookieOptions = identityOptions.Cookies;
-
-                builder.UseCookieAuthentication(cookieOptions.ExternalCookie);
-                builder.UseCookieAuthentication(cookieOptions.TwoFactorRememberMeCookie);
-                builder.UseCookieAuthentication(cookieOptions.TwoFactorUserIdCookie);
-                builder.UseCookieAuthentication(cookieOptions.ApplicationCookie);
+                builder.UseCookieAuthentication(appCookieOptions);
 
                 // known issue here is if a site is updated to populate the
                 // social auth keys, it currently requires a restart so that the middleware gets registered
                 // in order for it to work or for the social auth buttons to appear 
-                builder.UseSocialAuth(ctx.Tenant, cookieOptions, shouldUseFolder);
-                
+                builder.UseSocialAuth(ctx.Tenant, externalCookieOptions, shouldUseFolder);
+
             });
 
 
             UseMvc(app, multiTenantOptions.Mode == cloudscribe.Core.Models.MultiTenantMode.FolderName);
+            
+            var storage = Configuration["DevOptions:DbPlatform"];
 
-            // this doesn't seem to be getting it from appsettings.json after rc2
-            var devOptions = Configuration.GetValue<DevOptions>("DevOptions", new DevOptions { DbPlatform = "ef" });
-
-            switch (devOptions.DbPlatform)
+            switch (storage)
             {
                 case "NoDb":
                     CoreNoDbStartup.InitializeDataAsync(app.ApplicationServices).Wait();
@@ -235,26 +209,18 @@ namespace example.WebApp
                     break;
             }
 
-            //app.UseIdentity();
-
-            // Add external authentication middleware below. To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
-
-            //app.UseMvc(routes =>
-            //{
-            //    routes.MapRoute(
-            //        name: "default",
-            //        template: "{controller=Home}/{action=Index}/{id?}");
-            //});
+           
         }
 
-        private void SetupAppCookie(
-            CookieAuthenticationOptions options,
+        private CookieAuthenticationOptions SetupAppCookie(
+           // CookieAuthenticationOptions options,
             CookieAuthenticationEvents cookieEvents,
             cloudscribe.Core.Identity.SiteAuthCookieValidator siteValidator,
             string scheme, 
             cloudscribe.Core.Models.SiteSettings tenant
             )
         {
+            var options = new CookieAuthenticationOptions();
             options.AuthenticationScheme = $"{scheme}-{tenant.SiteFolderName}";
             options.CookieName = $"{scheme}-{tenant.SiteFolderName}";
             options.CookiePath = "/" + tenant.SiteFolderName;
@@ -271,14 +237,17 @@ namespace example.WebApp
 
             options.AutomaticAuthenticate = true;
             options.AutomaticChallenge = true;
+
+            return options;
         }
 
-        private void SetupOtherCookies(
-            CookieAuthenticationOptions options, 
+        private CookieAuthenticationOptions SetupOtherCookies(
+            //CookieAuthenticationOptions options, 
             string scheme, 
             cloudscribe.Core.Models.SiteSettings tenant
             )
         {
+            var options = new CookieAuthenticationOptions();
             //var tenantPathBase = string.IsNullOrEmpty(tenant.SiteFolderName)
             //    ? PathString.Empty
             //    : new PathString("/" + tenant.SiteFolderName);
@@ -286,6 +255,8 @@ namespace example.WebApp
             options.AuthenticationScheme = $"{scheme}-{tenant.SiteFolderName}";
             options.CookieName = $"{scheme}-{tenant.SiteFolderName}";
             options.CookiePath = "/" + tenant.SiteFolderName;
+
+            return options;
 
         }
 
@@ -372,12 +343,10 @@ namespace example.WebApp
         private void ConfigureDataStorage(IServiceCollection services)
         {
             services.AddScoped<cloudscribe.Core.Models.Setup.ISetupTask, cloudscribe.Core.Web.Components.EnsureInitialDataSetupTask>();
+            
+            var storage = Configuration["DevOptions:DbPlatform"];
 
-            //var devOptions = configuration.Get<DevOptions>("DevOptions");
-            // this doesn't seem to be getting it from appsettings.json after rc2
-            var devOptions = Configuration.GetValue<DevOptions>("DevOptions", new DevOptions { DbPlatform = "ef" });
-
-            switch (devOptions.DbPlatform)
+            switch (storage)
             {
                 case "NoDb":
                     services.AddCloudscribeCoreNoDbStorage();
