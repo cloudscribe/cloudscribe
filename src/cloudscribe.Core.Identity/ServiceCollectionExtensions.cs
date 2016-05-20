@@ -72,7 +72,12 @@ namespace Microsoft.Extensions.DependencyInjection
             }
 
             var builder = new IdentityBuilder(typeof(SiteUser), typeof(SiteRole), services);
-            builder.AddDefaultTokenProviders();
+
+            builder.AddUserStore<UserStore<SiteUser>>()
+             .AddRoleStore<RoleStore<SiteRole>>()
+             .AddUserManager<SiteUserManager<SiteUser>>()
+             .AddRoleManager<SiteRoleManager<SiteRole>>()
+             .AddDefaultTokenProviders();
             return builder;
 
             //return services;

@@ -10,12 +10,12 @@
     <input asp-for="SiteId" type="hidden" />
     <input asp-for="RoleName" type="hidden" />
     <div class="form-horizontal">
-        <div asp-validation-summary="ValidationSummary.All" class="text-danger"></div>
+        <div asp-validation-summary="All" class="text-danger"></div>
         <div class="form-group">
-            <label asp-for="DisplayName" class="col-md-2 control-label"></label>
+            <label asp-for="RoleName" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="DisplayName" class="form-control" />
-                <span asp-validation-for="DisplayName" class="text-danger"></span>
+                <input asp-for="RoleName" class="form-control" />
+                <span asp-validation-for="RoleName" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
