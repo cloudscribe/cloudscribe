@@ -1,4 +1,14 @@
 
+
+
+http://dotnet.github.io/docs/core-concepts/index.html
+http://dotnet.github.io/docs/core-concepts/dnx-migration.html
+https://docs.asp.net/en/latest/migration/rc1-to-rc2.html
+
+http://xunit.github.io/docs/getting-started-dotnet-core.html
+
+
+
 http://www.strathweb.com/2016/04/request-islocal-in-asp-net-core/
 https://github.com/aspnet/BasicMiddleware/blob/dev/src/Microsoft.AspNetCore.HttpOverrides/ForwardedHeadersMiddleware.cs#L18
 

@@ -11,11 +11,13 @@
 }
 
 /* Set widths on the form inputs since otherwise they're 100% wide */
+/*
 input,
 select,
 textarea {
     max-width: 280px;
 }
+*/
 
 /* Carousel */
 .carousel-caption p {
@@ -42,3 +44,68 @@ textarea {
     display: none
   }
 }
+
+h2.logitem { font-size: 1.1em;  }
+
+.sidebar .sidebar-search {
+    padding: 15px;
+}
+
+.sidebar ul li {
+    border-bottom: 1px solid #e7e7e7;
+}
+
+.sidebar ul li a.active {
+    background-color: #eee;
+}
+
+.sidebar .arrow {
+    float: right;
+}
+
+.sidebar .fa.arrow:before {
+    content: "\f104";
+}
+
+.sidebar .active>a>.fa.arrow:before {
+    content: "\f107";
+}
+
+.sidebar .nav-second-level li,
+.sidebar .nav-third-level li {
+    border-bottom: 0!important;
+}
+
+.sidebar .nav-second-level li a {
+    padding-left: 37px;
+}
+
+.sidebar .nav-third-level li a {
+    padding-left: 52px;
+}
+
+ul.breadcrumb {margin-bottom:0;}
+
+@media(min-width:768px) {
+    .sidebar {
+        z-index: 1;
+        position: absolute;
+        /* width: 250px; */
+        /* margin-top: 51px; */
+    }
+    .sidebar-nav.navbar-collapse { padding: 0 0 0 0;}
+}
+
+.agreementcontainer { overflow:auto; border:1px solid #CCC; height:300px; }
+
+div.navbar-gravatar { margin: 10px 0 0 0; }
+    
+.navbar-text img {
+  max-height:30px;
+  width:auto;
+  vertical-align:middle;
+  padding:0;
+  margin:0;
+}
+    
+
