@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace example.WebApp
 {
@@ -95,6 +96,18 @@ namespace example.WebApp
             
             services.AddCloudscribeCore(Configuration);
 
+            services.AddCloudscribeIdentity(options => {
+
+                options.Cookies.ApplicationCookie.AuthenticationScheme 
+                    = cloudscribe.Core.Identity.AuthenticationScheme.Application;
+                
+                options.Cookies.ApplicationCookie.CookieName 
+                    = cloudscribe.Core.Identity.AuthenticationScheme.Application;
+
+                //options.Cookies.ApplicationCookie.DataProtectionProvider = 
+                //DataProtectionProvider.Create(new DirectoryInfo("C:\\Github\\Identity\\artifacts"));
+            });
+
             services.AddMvc()
                     .AddViewLocalization(options =>
                     {
@@ -119,7 +132,10 @@ namespace example.WebApp
             IHostingEnvironment env, 
             ILoggerFactory loggerFactory,
             IOptions<cloudscribe.Core.Models.MultiTenantOptions> multiTenantOptionsAccessor,
-            IOptions<IdentityOptions> identityOptionsAccessor,
+            //IOptions<IdentityOptions> identityOptionsAccessor,
+            //cloudscribe.Core.Identity.SiteAuthCookieValidator cookieValidator,
+            //Microsoft.AspNetCore.Identity.ISecurityStampValidator securityStampValidator,
+            ILogger<cloudscribe.Core.Identity.SiteAuthCookieValidator> logger,
             IServiceProvider serviceProvider
             )
         {
@@ -148,15 +164,40 @@ namespace example.WebApp
 
             app.UsePerTenant<cloudscribe.Core.Models.SiteSettings>((ctx, builder) =>
             {
-               
+
                 //var tenantIdentityOptionsProvider = app.ApplicationServices.GetRequiredService<IOptions<IdentityOptions>>();
                 //var cookieOptions = tenantIdentityOptionsProvider.Value.Cookies;
-                var cookieOptions = identityOptionsAccessor.Value.Cookies;
-
+                //var cookieOptions = identityOptionsAccessor.Value.Cookies;
+                var tenant = ctx.Tenant;
 
                 var shouldUseFolder = !multiTenantOptions.UseRelatedSitesMode
                                         && multiTenantOptions.Mode == cloudscribe.Core.Models.MultiTenantMode.FolderName
                                         && ctx.Tenant.SiteFolderName.Length > 0;
+
+                var tenantPathBase = string.IsNullOrEmpty(tenant.SiteFolderName)
+                    ? PathString.Empty
+                    : new PathString("/" + tenant.SiteFolderName);
+
+                // TODO: I'm not sure newing this up here is agood idea
+                // are we missing any default configuration thast would normally be set for identity?
+                var identityOptions = new IdentityOptions();
+
+                var cookieEvents = new CookieAuthenticationEvents();
+                //var cookieValidator = new cloudscribe.Core.Identity.SiteAuthCookieValidator(securityStampValidator, logger);
+                var cookieValidator = new cloudscribe.Core.Identity.SiteAuthCookieValidator(logger);
+
+                SetupAppCookie(
+                    identityOptions.Cookies.ApplicationCookie, 
+                    cookieEvents,
+                    cookieValidator,
+                    cloudscribe.Core.Identity.AuthenticationScheme.Application, 
+                    tenant
+                    );
+                SetupOtherCookies(identityOptions.Cookies.ExternalCookie, cloudscribe.Core.Identity.AuthenticationScheme.External, tenant);
+                SetupOtherCookies(identityOptions.Cookies.TwoFactorRememberMeCookie, cloudscribe.Core.Identity.AuthenticationScheme.TwoFactorRememberMe, tenant);
+                SetupOtherCookies(identityOptions.Cookies.TwoFactorUserIdCookie, cloudscribe.Core.Identity.AuthenticationScheme.TwoFactorUserId, tenant);
+
+                var cookieOptions = identityOptions.Cookies;
 
                 builder.UseCookieAuthentication(cookieOptions.ExternalCookie);
                 builder.UseCookieAuthentication(cookieOptions.TwoFactorRememberMeCookie);
@@ -204,6 +245,48 @@ namespace example.WebApp
             //});
         }
 
+        private void SetupAppCookie(
+            CookieAuthenticationOptions options,
+            CookieAuthenticationEvents cookieEvents,
+            cloudscribe.Core.Identity.SiteAuthCookieValidator siteValidator,
+            string scheme, 
+            cloudscribe.Core.Models.SiteSettings tenant
+            )
+        {
+            options.AuthenticationScheme = $"{scheme}-{tenant.SiteFolderName}";
+            options.CookieName = $"{scheme}-{tenant.SiteFolderName}";
+            options.CookiePath = "/" + tenant.SiteFolderName;
+
+            var tenantPathBase = string.IsNullOrEmpty(tenant.SiteFolderName)
+                ? PathString.Empty
+                : new PathString("/" + tenant.SiteFolderName);
+
+            options.LoginPath = tenantPathBase + "/account/login";
+            options.LogoutPath = tenantPathBase + "/account/logoff";
+
+            cookieEvents.OnValidatePrincipal = siteValidator.ValidatePrincipal;
+            options.Events = cookieEvents;
+
+            options.AutomaticAuthenticate = true;
+            options.AutomaticChallenge = true;
+        }
+
+        private void SetupOtherCookies(
+            CookieAuthenticationOptions options, 
+            string scheme, 
+            cloudscribe.Core.Models.SiteSettings tenant
+            )
+        {
+            //var tenantPathBase = string.IsNullOrEmpty(tenant.SiteFolderName)
+            //    ? PathString.Empty
+            //    : new PathString("/" + tenant.SiteFolderName);
+
+            options.AuthenticationScheme = $"{scheme}-{tenant.SiteFolderName}";
+            options.CookieName = $"{scheme}-{tenant.SiteFolderName}";
+            options.CookiePath = "/" + tenant.SiteFolderName;
+
+        }
+
         private void UseMvc(IApplicationBuilder app, bool useFolders)
         {
             app.UseMvc(routes =>
@@ -220,8 +303,9 @@ namespace example.WebApp
 
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller}/{action}/{id?}",
-                    defaults: new { controller = "Home", action = "Index" });
+                    template: "{controller=Home}/{action=Index}/{id?}"
+                    //,defaults: new { controller = "Home", action = "Index" }
+                    );
             });
         }
 

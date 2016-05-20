@@ -26,6 +26,7 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Controllers
 {
+    [Controller]
     [Authorize]
     public class AccountController : Controller
     {

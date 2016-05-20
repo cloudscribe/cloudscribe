@@ -28,14 +28,14 @@ namespace cloudscribe.Core.Identity
     public class SiteAuthCookieValidator
     {
         public SiteAuthCookieValidator(
-            ISecurityStampValidator securityStampValidator,
+            //ISecurityStampValidator securityStampValidator,
             ILogger<SiteAuthCookieValidator> logger)
         {
-            this.securityStampValidator = securityStampValidator;
+            //this.securityStampValidator = securityStampValidator;
             this.logger = logger;
         }
 
-        private ISecurityStampValidator securityStampValidator;
+        //private ISecurityStampValidator securityStampValidator;
         private ILogger logger;
 
         public Task ValidatePrincipal(CookieValidatePrincipalContext context)

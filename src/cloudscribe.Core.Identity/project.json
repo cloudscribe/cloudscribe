@@ -1,4 +1,4 @@
-﻿{
+{
     "version": "1.0.0-*",
     "description": "asp.net identity implementation for cloudscribe web application foundation",
     "authors": [ "Joe Audette" ],
@@ -21,7 +21,8 @@
         "Microsoft.AspNetCore.Identity": "1.0.0-rc2-final",
         "Microsoft.AspNetCore.Antiforgery": "1.0.0-rc2-final",
         "SaasKit.Multitenancy": "1.1.1-*",
-        "Microsoft.Extensions.Primitives": "1.0.0-rc2-final"
+        "Microsoft.Extensions.Primitives": "1.0.0-rc2-final",
+        "Microsoft.AspNetCore.Http.Abstractions": "1.0.0-rc2-final"
     },
 
     "frameworks": {
