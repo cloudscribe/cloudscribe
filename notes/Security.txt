@@ -1,4 +1,9 @@
 
+ssl example
+https://github.com/aspnet/Security/blob/dev/samples/SocialSample/Program.cs
+
+http://moneyandstate.com/looting-of-the-fox/
+
 https://medium.com/@jitbit/target-blank-the-most-underestimated-vulnerability-ever-96e328301f4c#.disn238f9
 
 http://jameschambers.com/2016/04/github-authentication-asp-net-core/

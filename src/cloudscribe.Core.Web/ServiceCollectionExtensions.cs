@@ -56,8 +56,8 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IVersionProvider, CloudscribeCoreVersionProvider>();
 
             services.AddTransient<IEmailTemplateService, HardCodedEmailTemplateService>();
-            //services.AddTransient<ISiteMessageEmailSender, SiteEmailMessageSender>();
-            services.AddTransient<ISiteMessageEmailSender, FakeSiteEmailSender>();
+            services.AddTransient<ISiteMessageEmailSender, SiteEmailMessageSender>();
+            //services.AddTransient<ISiteMessageEmailSender, FakeSiteEmailSender>();
             
             services.AddTransient<ISmsSender, SiteSmsSender>();
 
