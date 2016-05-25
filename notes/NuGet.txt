@@ -1,4 +1,13 @@
 
+
+not true
+http://blog.nuget.org/20160126/nuget-contentFiles-demystified.html
+https://github.com/NuGet/Home/issues/2262
+https://github.com/NuGet/Home/issues/1908
+
+https://github.com/aspnet/Mvc/issues/3750
+
+
 https://blogs.msdn.microsoft.com/webdev/2016/05/16/announcing-asp-net-core-rc2/
 RC2 breaking changes
 https://github.com/aspnet/announcements/issues?q=is%3Aissue+milestone%3A1.0.0-rc2

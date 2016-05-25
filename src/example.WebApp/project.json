@@ -52,7 +52,7 @@
         "cloudscribe.Messaging.Email": "1.0.0-*",
         "cloudscribe.Web.Navigation": "1.0.1-*",
         "cloudscribe.Web.Pagination": "1.0.1-*",
-        "SaasKit.Multitenancy": "1.1.1-*"
+        "SaasKit.Multitenancy": "1.1.2-rc2"
 
 
 

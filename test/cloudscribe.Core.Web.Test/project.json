@@ -8,7 +8,6 @@
     "testRunner": "xunit",
 
     "dependencies": {
-        "cloudscribe.MetaWeblog": "1.0.0-*",
         "xunit": "2.1.0-rc2-build3176",
         "dotnet-test-xunit": {
             "version": "1.0.0-rc2-*",
