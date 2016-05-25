@@ -102,6 +102,7 @@ namespace example.WebApp
                 //DataProtectionProvider.Create(new DirectoryInfo("C:\\Github\\Identity\\artifacts"));
             });
 
+            
             services.AddMvc()
                     .AddViewLocalization(options =>
                     {
@@ -109,6 +110,7 @@ namespace example.WebApp
                     })
                     .AddRazorOptions(options =>
                     {
+                        options.AddEmbeddedViewsForNavigation();
                         options.ViewLocationExpanders.Add(new cloudscribe.Core.Web.Components.SiteViewLocationExpander());
                     });
 

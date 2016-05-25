@@ -7,6 +7,21 @@ https://github.com/NuGet/Home/issues/1908
 
 https://github.com/aspnet/Mvc/issues/3750
 
+"files": {
+            "mappings": {
+                "content/Views/Foo/": "Views/**"
+            }
+        }
+
+"publishOptions": {
+        "includeFiles": [
+            "content/Views/Foo/Index.cshtml"
+        ],
+        "mappings": {
+            "Views/Foo/Index.cshtml": "content/Views/Foo/Index.cshtml"
+        }
+    },
+
 
 https://blogs.msdn.microsoft.com/webdev/2016/05/16/announcing-asp-net-core-rc2/
 RC2 breaking changes
@@ -15,7 +30,8 @@ https://github.com/aspnet/announcements/issues?q=is%3Aissue+milestone%3A1.0.0-rc
 Updates to project.json schema #175 RC2
 https://github.com/aspnet/Announcements/issues/175
 
-
+"The contentFiles section of the nuspec is consumed by the client during restore, not during pack time."
+"Items inside metadata are used by the client, items outside such as files are used at pack time."
 
 
 It seems in the latest nuget used with VS 2015 and beta8 tooling, we can now package content files in the .npkg file created by VS 2015 when a project is built.
