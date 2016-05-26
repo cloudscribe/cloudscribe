@@ -111,6 +111,7 @@ namespace example.WebApp
                     .AddRazorOptions(options =>
                     {
                         options.AddEmbeddedViewsForNavigation();
+                        options.AddEmbeddedViewsForCloudscribeCore();
                         options.ViewLocationExpanders.Add(new cloudscribe.Core.Web.Components.SiteViewLocationExpander());
                     });
 

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-05-07
-// Last Modified:			2016-05-20
+// Last Modified:			2016-05-26
 // 
 
 
@@ -19,6 +19,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.FileProviders;
+using System.Reflection;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -68,6 +70,23 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddCloudscribeNavigation(configuration);
 
             return services;
+        }
+
+        /// <summary>
+        /// This method adds an embedded file provider to the RazorViewOptions to be able to load the cloudscribe Core related views.
+        /// If you download and install the views below your view folder you don't need this method and you can customize the views.
+        /// You can get the views from https://github.com/joeaudette/cloudscribe/tree/master/src/cloudscribe.Core.Web/Views
+        /// </summary>
+        /// <param name="options"></param>
+        /// <returns>RazorViewEngineOptions</returns>
+        public static RazorViewEngineOptions AddEmbeddedViewsForCloudscribeCore(this RazorViewEngineOptions options)
+        {
+            options.FileProviders.Add(new EmbeddedFileProvider(
+                    typeof(SiteManager).GetTypeInfo().Assembly,
+                    "cloudscribe.Core.Web"
+                ));
+
+            return options;
         }
     }
 }
