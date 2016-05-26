@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
+
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -51,14 +52,18 @@ namespace example.WebApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // TODO: this changed in rc2, how do we configure file storage now?
-            //services.AddDataProtection(configure =>
-            //{
-            //    string pathToCryptoKeys = appBasePath + System.IO.Path.DirectorySeparatorChar + "dp_keys" + System.IO.Path.DirectorySeparatorChar;
-            //    configure.PersistKeysToFileSystem(new System.IO.DirectoryInfo(pathToCryptoKeys));
-                
 
-            //});
+            // since we are protecting some data such as social auth secrets in the db
+            // we need our data protection keys to be located on disk where we can find them if 
+            // we need to move to different hosting, without those key on the new host it would not be possible to decrypt
+            // but it is perhaps a little risky storing these keys below the appRoot folder
+            // for your own production envrionments store them outside of that if possible
+            string pathToCryptoKeys = appBasePath + System.IO.Path.DirectorySeparatorChar + "dp_keys" + System.IO.Path.DirectorySeparatorChar;
+            services.AddDataProtection()
+                .PersistKeysToFileSystem(new System.IO.DirectoryInfo(pathToCryptoKeys));
+            
+
+
 
             // waiting for rc2 compatible glimpse
             //bool enableGlimpse = Configuration.GetValue("DiagnosticOptions:EnableGlimpse", false);
