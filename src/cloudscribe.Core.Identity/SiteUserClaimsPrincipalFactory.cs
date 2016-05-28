@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-06-27
-// Last Modified:			2016-05-18
+// Last Modified:			2016-05-28
 // 
 
 
@@ -85,30 +85,29 @@ namespace cloudscribe.Core.Identity
                 id.AddClaims(await UserManager.GetClaimsAsync(user));
             }
 
-            ClaimsPrincipal principal = new ClaimsPrincipal(id);
-
-
+            var principal = new ClaimsPrincipal(id);
+            
             if (principal.Identity is ClaimsIdentity)
             {
-                ClaimsIdentity identity = (ClaimsIdentity)principal.Identity;
+                var identity = (ClaimsIdentity)principal.Identity;
 
-                Claim displayNameClaim = new Claim("DisplayName", user.DisplayName);
+                var displayNameClaim = new Claim("DisplayName", user.DisplayName);
                 if (!identity.HasClaim(displayNameClaim.Type, displayNameClaim.Value))
                 {
                     identity.AddClaim(displayNameClaim);
                 }
 
-                Claim emailClaim = new Claim(ClaimTypes.Email, user.Email);
+                var emailClaim = new Claim(ClaimTypes.Email, user.Email);
                 if (!identity.HasClaim(emailClaim.Type, emailClaim.Value))
                 {
                     identity.AddClaim(emailClaim);
                 }
 
-                ISiteSettings site = await queries.Fetch(user.SiteId, CancellationToken.None);
+                var site = await queries.Fetch(user.SiteId, CancellationToken.None);
 
                 if (site != null)
                 {
-                    Claim siteGuidClaim = new Claim("SiteGuid", site.Id.ToString());
+                    var siteGuidClaim = new Claim("SiteGuid", site.Id.ToString());
 
                     if (!identity.HasClaim(siteGuidClaim.Type, siteGuidClaim.Value))
                     {

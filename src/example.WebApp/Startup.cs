@@ -4,17 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
-
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using cloudscribe.Core.Web.Controllers;
-using cloudscribe.Logging.Web;
+
 
 namespace example.WebApp
 {
@@ -219,7 +216,7 @@ namespace example.WebApp
                     CoreEFStartup.InitializeDatabaseAsync(app.ApplicationServices).Wait();
 
                     // this one is only needed if using cloudscribe Logging with EF as the logging storage
-                    cloudscribe.Logging.EF.LoggingDbInitializer.InitializeDatabaseAsync(app.ApplicationServices).Wait();
+                    LoggingDbInitializer.InitializeDatabaseAsync(app.ApplicationServices).Wait();
 
                     break;
             }
