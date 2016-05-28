@@ -38,9 +38,9 @@ namespace Microsoft.Extensions.DependencyInjection
             services.Configure<CachingSiteResolverOptions>(configuration.GetSection("CachingSiteResolverOptions"));
             
             services.AddScoped<ITimeZoneResolver, RequestTimeZoneResolver>();
-            services.AddMultitenancy<SiteSettings, SiteResolver>();
+            //services.AddMultitenancy<SiteSettings, SiteResolver>();
             
-            //services.AddMultitenancy<SiteSettings, CachingSiteResolver>();
+            services.AddMultitenancy<SiteSettings, CachingSiteResolver>();
             
             services.AddScoped<SiteManager, SiteManager>();
             services.AddScoped<GeoDataManager, GeoDataManager>();

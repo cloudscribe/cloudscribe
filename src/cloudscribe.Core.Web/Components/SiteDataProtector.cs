@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-01-18
-// Last Modified:			2016-05-19
+// Last Modified:			2016-05-28
 // 
 
 
@@ -36,11 +36,14 @@ namespace cloudscribe.Core.Web.Components
             if (site.IsDataProtected) { return; }
             if (dataProtector == null) { return; }
 
+            var countOfProtectedItems = 0;
+
             if (site.FacebookAppSecret.Length > 0)
             {
                 try
                 {
                     site.FacebookAppSecret = dataProtector.PersistentProtect(site.FacebookAppSecret);
+                    countOfProtectedItems += 1;
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
@@ -54,6 +57,7 @@ namespace cloudscribe.Core.Web.Components
                 try
                 {
                     site.GoogleClientSecret = dataProtector.PersistentProtect(site.GoogleClientSecret);
+                    countOfProtectedItems += 1;
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
@@ -67,6 +71,7 @@ namespace cloudscribe.Core.Web.Components
                 try
                 {
                     site.MicrosoftClientSecret = dataProtector.PersistentProtect(site.MicrosoftClientSecret);
+                    countOfProtectedItems += 1;
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
@@ -80,6 +85,7 @@ namespace cloudscribe.Core.Web.Components
                 try
                 {
                     site.TwitterConsumerSecret = dataProtector.PersistentProtect(site.TwitterConsumerSecret);
+                    countOfProtectedItems += 1;
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
@@ -93,6 +99,7 @@ namespace cloudscribe.Core.Web.Components
                 try
                 {
                     site.SmtpPassword = dataProtector.PersistentProtect(site.SmtpPassword);
+                    countOfProtectedItems += 1;
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
@@ -106,6 +113,7 @@ namespace cloudscribe.Core.Web.Components
                 try
                 {
                     site.OidConnectAppSecret = dataProtector.PersistentProtect(site.OidConnectAppSecret);
+                    countOfProtectedItems += 1;
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
@@ -119,6 +127,7 @@ namespace cloudscribe.Core.Web.Components
                 try
                 {
                     site.DkimPrivateKey = dataProtector.PersistentProtect(site.DkimPrivateKey);
+                    countOfProtectedItems += 1;
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
@@ -132,6 +141,7 @@ namespace cloudscribe.Core.Web.Components
                 try
                 {
                     site.SmsSecureToken = dataProtector.PersistentProtect(site.SmsSecureToken);
+                    countOfProtectedItems += 1;
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
@@ -140,7 +150,7 @@ namespace cloudscribe.Core.Web.Components
 
             }
 
-            site.IsDataProtected = true;
+            site.IsDataProtected = countOfProtectedItems > 0;
 
             
         }

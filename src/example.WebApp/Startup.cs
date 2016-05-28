@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using cloudscribe.Core.Web.Controllers;
+using cloudscribe.Logging.Web;
 
 namespace example.WebApp
 {
@@ -84,7 +85,7 @@ namespace example.WebApp
             services.AddOptions();
 
             /* optional and only needed if you are using cloudscribe Logging  */
-            //services.AddScoped<cloudscribe.Logging.Web.LogManager>();
+            services.AddScoped<cloudscribe.Logging.Web.LogManager>();
 
             /* these are optional and only needed if using cloudscribe Setup */
             //services.Configure<SetupOptions>(Configuration.GetSection("SetupOptions"));
@@ -139,6 +140,12 @@ namespace example.WebApp
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+            var storage = Configuration["DevOptions:DbPlatform"];
+            if(storage != "NoDb")
+            {   
+                ConfigureLogging(loggerFactory, serviceProvider);
+            }
+            
 
             if (env.IsDevelopment())
             {
@@ -198,7 +205,7 @@ namespace example.WebApp
 
             UseMvc(app, multiTenantOptions.Mode == cloudscribe.Core.Models.MultiTenantMode.FolderName);
             
-            var storage = Configuration["DevOptions:DbPlatform"];
+            
 
             switch (storage)
             {
@@ -212,7 +219,7 @@ namespace example.WebApp
                     CoreEFStartup.InitializeDatabaseAsync(app.ApplicationServices).Wait();
 
                     // this one is only needed if using cloudscribe Logging with EF as the logging storage
-                    //cloudscribe.Logging.EF.LoggingDbInitializer.InitializeDatabaseAsync(app.ApplicationServices).Wait();
+                    cloudscribe.Logging.EF.LoggingDbInitializer.InitializeDatabaseAsync(app.ApplicationServices).Wait();
 
                     break;
             }
@@ -366,7 +373,7 @@ namespace example.WebApp
                     services.AddCloudscribeCoreEFStorage(connectionString);
 
                     // only needed if using cloudscribe logging with EF storage
-                    //services.AddCloudscribeLoggingEFStorage(connectionString);
+                    services.AddCloudscribeLoggingEFStorage(connectionString);
 
 
                     break;
@@ -380,32 +387,32 @@ namespace example.WebApp
             loggerFactory.AddConsole(minLevel: LogLevel.Warning);
 
             // a customizable filter for logging
-            //LogLevel minimumLevel = LogLevel.Warning;
+            LogLevel minimumLevel = LogLevel.Warning;
 
-            //// add exclusions to remove noise in the logs
-            //var excludedLoggers = new List<string>
-            //{
-            //    "Microsoft.Data.Entity.Storage.Internal.RelationalCommandBuilderFactory",
-            //    "Microsoft.Data.Entity.Query.Internal.QueryCompiler",
-            //    "Microsoft.Data.Entity.DbContext",
-            //};
+            // add exclusions to remove noise in the logs
+            var excludedLoggers = new List<string>
+            {
+                "Microsoft.Data.Entity.Storage.Internal.RelationalCommandBuilderFactory",
+                "Microsoft.Data.Entity.Query.Internal.QueryCompiler",
+                "Microsoft.Data.Entity.DbContext",
+            };
 
-            //Func<string, LogLevel, bool> logFilter = (string loggerName, LogLevel logLevel) =>
-            //{
-            //    if (logLevel < minimumLevel)
-            //    {
-            //        return false;
-            //    }
+            Func<string, LogLevel, bool> logFilter = (string loggerName, LogLevel logLevel) =>
+            {
+                if (logLevel < minimumLevel)
+                {
+                    return false;
+                }
 
-            //    if (excludedLoggers.Contains(loggerName))
-            //    {
-            //        return false;
-            //    }
+                if (excludedLoggers.Contains(loggerName))
+                {
+                    return false;
+                }
 
-            //    return true;
-            //};
-
-            //loggerFactory.AddDbLogger(serviceProvider, logRepository, logFilter);
+                return true;
+            };
+            
+            loggerFactory.AddDbLogger(serviceProvider, logFilter);
         }
     }
 }

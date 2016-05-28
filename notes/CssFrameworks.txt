@@ -5,6 +5,11 @@ http://www.csspurge.com/
 
 https://picturepan2.github.io/spectre/
 
+css minifier
+http://css.github.io/csso/csso.html
+js minifier
+http://lisperator.net/uglifyjs/#demo
+
 http://tachyons.io/
 
 http://www.flexboxpatterns.com/home

@@ -23,7 +23,8 @@ namespace example.WebApp.Controllers
         public IActionResult Contact()
         {
             ViewData["Message"] = "Your contact page.";
-
+            // was just testing the error log here
+            //throw new ArgumentException("just for the sake of argument");
             return View();
         }
 

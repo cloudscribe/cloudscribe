@@ -20,7 +20,7 @@ using System;
 using System.Linq;
 using System.Globalization;
 using System.Threading.Tasks;
-
+using Microsoft.Extensions.Caching.Memory;
 
 namespace cloudscribe.Core.Web.Controllers
 {
@@ -33,7 +33,8 @@ namespace cloudscribe.Core.Web.Controllers
             IOptions<MultiTenantOptions> multiTenantOptions,
             IOptions<UIOptions> uiOptionsAccessor,
            // IOptions<LayoutSelectorOptions> layoutSeletorOptionsAccessor,
-            IThemeListBuilder layoutListBuilder
+            IThemeListBuilder layoutListBuilder,
+            IMemoryCache cache
             )
         {
             if (siteManager == null) { throw new ArgumentNullException(nameof(siteManager)); }
@@ -46,6 +47,7 @@ namespace cloudscribe.Core.Web.Controllers
             this.geoDataManager = geoDataManager;
             uiOptions = uiOptionsAccessor.Value;
             this.layoutListBuilder = layoutListBuilder;
+            this.cache = cache;
             //layoutOptions = layoutSeletorOptionsAccessor.Value;
 
             //startup = startupTrigger;
@@ -58,6 +60,7 @@ namespace cloudscribe.Core.Web.Controllers
         //private LayoutSelectorOptions layoutOptions;
         private IThemeListBuilder layoutListBuilder;
         private UIOptions uiOptions;
+        private IMemoryCache cache;
 
         //disable warning about not really being async
         // we know it is not, it is not needed to hit the db in these
@@ -1137,6 +1140,8 @@ namespace cloudscribe.Core.Web.Controllers
             selectedSite.TwitterConsumerSecret = model.TwitterConsumerSecret;
 
             await siteManager.Save(selectedSite);
+
+            cache.Remove("root");
             
             this.AlertSuccess(string.Format("Social Login Settings for <b>{0}</b> was successfully updated.",
                         selectedSite.SiteName), true);
