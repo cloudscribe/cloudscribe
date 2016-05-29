@@ -48,7 +48,7 @@
         "cloudscribe.Core.Storage.NoDb": "1.0.0-*",
         "cloudscribe.Core.Web": "1.0.0-*",
         "cloudscribe.Logging.EF": "1.0.1-*",
-        "cloudscribe.Logging.Web": "1.0.0-*",
+        "cloudscribe.Logging.Web": "1.0.1-*",
         "cloudscribe.Messaging.Email": "1.0.0-*",
         "cloudscribe.Web.Navigation": "1.0.1-*",
         "cloudscribe.Web.Pagination": "1.0.1-*",
