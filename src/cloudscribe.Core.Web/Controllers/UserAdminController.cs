@@ -36,7 +36,7 @@ namespace cloudscribe.Core.Web.Controllers
             SiteUserManager<SiteUser> userManager,
             ISiteMessageEmailSender emailSender,
             IOptions<UIOptions> uiOptionsAccessor,
-            IHtmlLocalizer<CoreResources> localizer
+            IStringLocalizer<CloudscribeCore> localizer
             )
         {
            
@@ -52,7 +52,7 @@ namespace cloudscribe.Core.Web.Controllers
         public SiteUserManager<SiteUser> UserManager { get; private set; }
         private ISiteMessageEmailSender emailSender;
         private UIOptions uiOptions;
-        private IHtmlLocalizer localizer;
+        private IStringLocalizer localizer;
 
         [HttpGet]
         public async Task<IActionResult> Index(

@@ -34,7 +34,7 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
 
         private Guid id = Guid.Empty;
 
-        [Display(Name = "SiteId")]
+        //[Display(Name = "SiteId")]
         public Guid SiteId
         {
             get { return id; }
@@ -44,9 +44,9 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
 
         private string siteName = string.Empty;
 
-        //[Required(ErrorMessageResourceName = "SiteNameRequired", ErrorMessageResourceType = typeof(CommonResources))]
+        [Required(ErrorMessage = "Site Name is required")]
         //[StringLengthWithConfig(MinimumLength = 3, MaximumLength = 255, MinLengthKey = "SiteNameMinLength", MaxLengthKey = "SiteNameMaxLength", ErrorMessageResourceName = "SiteNameLengthErrorFormat", ErrorMessageResourceType = typeof(CommonResources))]
-        //[Display(Name = "SiteName", ResourceType = typeof(CommonResources))]
+        //[Display(Name = "Site Name")]
         public string SiteName
         {
             get { return siteName; }
@@ -69,7 +69,7 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
 
         private string siteFolderName = string.Empty;
 
-        //[Display(Name = "SiteFolderName", ResourceType = typeof(CommonResources))]
+        //[Display(Name = "Site Folder Name", ResourceType = typeof(CloudscribeCore))]
         public string SiteFolderName
         {
             get { return siteFolderName; }

@@ -6,12 +6,15 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Authentication.Cookies;
-
+using Microsoft.AspNetCore.Mvc.Razor;
+using System.Globalization;
 
 namespace example.WebApp
 {
@@ -105,12 +108,49 @@ namespace example.WebApp
                 //DataProtectionProvider.Create(new DirectoryInfo("C:\\Github\\Identity\\artifacts"));
             });
 
+            services.Configure<GlobalResourceOptions>(Configuration.GetSection("GlobalResourceOptions"));
+            services.AddSingleton<IStringLocalizerFactory, GlobalResourceManagerStringLocalizerFactory>();
             
+            services.AddLocalization(options => options.ResourcesPath = "GlobalResources");
+
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                var supportedCultures = new[]
+                {
+                    new CultureInfo("en-US"),
+                    new CultureInfo("en"),
+                    new CultureInfo("fr-FR"),
+                    new CultureInfo("fr"),
+                };
+
+                // State what the default culture for your application is. This will be used if no specific culture
+                // can be determined for a given request.
+                options.DefaultRequestCulture = new RequestCulture(culture: "en-US", uiCulture: "en-US");
+
+                // You must explicitly state which cultures your application supports.
+                // These are the cultures the app supports for formatting numbers, dates, etc.
+                options.SupportedCultures = supportedCultures;
+
+                // These are the cultures the app supports for UI strings, i.e. we have localized resources for.
+                options.SupportedUICultures = supportedCultures;
+
+                // You can change which providers are configured to determine the culture for requests, or even add a custom
+                // provider with your own logic. The providers will be asked in order to provide a culture for each request,
+                // and the first to provide a non-null result that is in the configured supported cultures list will be used.
+                // By default, the following built-in providers are configured:
+                // - QueryStringRequestCultureProvider, sets culture via "culture" and "ui-culture" query string values, useful for testing
+                // - CookieRequestCultureProvider, sets culture via "ASPNET_CULTURE" cookie
+                // - AcceptLanguageHeaderRequestCultureProvider, sets culture via the "Accept-Language" request header
+                //options.RequestCultureProviders.Insert(0, new CustomRequestCultureProvider(async context =>
+                //{
+                //  // My custom request culture logic
+                //  return new ProviderCultureResult("en");
+                //}));
+            });
+
             services.AddMvc()
-                    .AddViewLocalization(options =>
-                    {
-                        options.ResourcesPath = "AppResources";
-                    })
+                    .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+                    .AddDataAnnotationsLocalization()
                     .AddRazorOptions(options =>
                     {
                         options.AddEmbeddedViewsForNavigation();
@@ -158,6 +198,9 @@ namespace example.WebApp
             app.UseStaticFiles();
 
             app.UseSession();
+
+            var locOptions = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
+            app.UseRequestLocalization(locOptions.Value);
 
             app.UseMultitenancy<cloudscribe.Core.Models.SiteSettings>();
 

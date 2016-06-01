@@ -28,6 +28,7 @@
         "Microsoft.Extensions.Configuration.Json": "1.0.0-rc2-final",
         "Microsoft.Extensions.Configuration.UserSecrets": "1.0.0-rc2-final",
         "Microsoft.Extensions.DependencyInjection": "1.0.0-rc2-final",
+        "Microsoft.Extensions.Localization": "1.0.0-rc2-final",
         "Microsoft.Extensions.Logging": "1.0.0-rc2-final",
         "Microsoft.Extensions.Logging.Console": "1.0.0-rc2-final",
         "Microsoft.Extensions.Logging.Debug": "1.0.0-rc2-final",
@@ -50,6 +51,7 @@
         "cloudscribe.Logging.EF": "1.0.1-*",
         "cloudscribe.Logging.Web": "1.0.1-*",
         "cloudscribe.Messaging.Email": "1.0.0-*",
+        "cloudscribe.Web.Localization": "1.0.0-*",
         "cloudscribe.Web.Navigation": "1.0.1-*",
         "cloudscribe.Web.Pagination": "1.0.1-*",
         "SaasKit.Multitenancy": "1.1.2-rc2"

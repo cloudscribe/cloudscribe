@@ -18,6 +18,7 @@ http://www.richcss.com/
 
 http://benfoster.io/blog/asp-net-core-themes-and-multi-tenancy
 
+https://begriffs.com/posts/2016-05-28-rss-responsive-design.html?hn=1
 
 http://www.sitepoint.com/understanding-bootstraps-affix-scrollspy-plugins/
 nav bar stuff

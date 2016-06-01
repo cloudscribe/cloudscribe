@@ -2,6 +2,8 @@
 
 http://dotnet.github.io/docs/core-concepts/libraries/libraries-with-cli.html
 
+https://github.com/dotnet/corefx/blob/master/Documentation/architecture/net-platform-standard.md
+
 
 http://dotnet.github.io/docs/core-concepts/index.html
 http://dotnet.github.io/docs/core-concepts/dnx-migration.html

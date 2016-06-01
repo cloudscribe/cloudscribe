@@ -5,6 +5,8 @@ http://blog.nuget.org/20160126/nuget-contentFiles-demystified.html
 https://github.com/NuGet/Home/issues/2262
 https://github.com/NuGet/Home/issues/1908
 
+https://github.com/aspnet/Home/issues/1519#issuecomment-223031744
+
 https://github.com/aspnet/Mvc/issues/3750
 
 "files": {
