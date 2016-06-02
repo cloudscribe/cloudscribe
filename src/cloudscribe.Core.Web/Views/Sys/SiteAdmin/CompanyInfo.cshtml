@@ -1,9 +1,9 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.CompanyInfoViewModel
-
-@{
-   
-}
-
+@using cloudscribe.Core.Web
+@using cloudscribe.Web.Navigation
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCore> sr
 <div class="row">
     <div class="col-md-10 col-md-push-2">
         <h2>@ViewBag.Title</h2>
@@ -11,35 +11,35 @@
                 <div asp-validation-summary="All" class="text-danger"></div>
                 <input asp-for="SiteId" type="hidden" />
                 <div class="form-group">
-                    <label asp-for="CompanyName" class="col-md-2 control-label"></label>
+                    <label asp-for="CompanyName" class="col-md-2 control-label">@sr["Name"]</label>
                     <div class="col-md-10">
                         <input asp-for="CompanyName" class="form-control" />
                         <span asp-validation-for="CompanyName" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label asp-for="CompanyStreetAddress" class="col-md-2 control-label"></label>
+                    <label asp-for="CompanyStreetAddress" class="col-md-2 control-label">@sr["Address1"]</label>
                     <div class="col-md-10">
                         <input asp-for="CompanyStreetAddress" class="form-control" />
                         <span asp-validation-for="CompanyStreetAddress" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label asp-for="CompanyStreetAddress2" class="col-md-2 control-label"></label>
+                    <label asp-for="CompanyStreetAddress2" class="col-md-2 control-label">@sr["Address2"]</label>
                     <div class="col-md-10">
                         <input asp-for="CompanyStreetAddress2" class="form-control" />
                         <span asp-validation-for="CompanyStreetAddress2" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label asp-for="CompanyLocality" class="col-md-2 control-label"></label>
+                    <label asp-for="CompanyLocality" class="col-md-2 control-label">@sr["City"]</label>
                     <div class="col-md-10">
                         <input asp-for="CompanyLocality" class="form-control" />
                         <span asp-validation-for="CompanyLocality" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label asp-for="CompanyCountry" class="col-md-2 control-label"></label>
+                    <label asp-for="CompanyCountry" class="col-md-2 control-label">@sr["Country"]</label>
                     <div class="col-md-10">
                         <select id="CompanyCountry" asp-for="CompanyCountry"
                                 asp-items="Model.AvailableCountries" class="form-control"></select>
@@ -47,7 +47,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label asp-for="CompanyRegion" class="col-md-2 control-label"></label>
+                    <label asp-for="CompanyRegion" class="col-md-2 control-label">@sr["State"]</label>
                     <div class="col-md-10">
                         <select id="CompanyRegion" class="form-control"
                                 asp-for="CompanyRegion"
@@ -60,28 +60,28 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label asp-for="CompanyPostalCode" class="col-md-2 control-label"></label>
+                    <label asp-for="CompanyPostalCode" class="col-md-2 control-label">@sr["Postal Code"]</label>
                     <div class="col-md-10">
                         <input asp-for="CompanyPostalCode" class="form-control" />
                         <span asp-validation-for="CompanyPostalCode" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label asp-for="CompanyPhone" class="col-md-2 control-label"></label>
+                    <label asp-for="CompanyPhone" class="col-md-2 control-label">@sr["Phone"]</label>
                     <div class="col-md-10">
                         <input asp-for="CompanyPhone" class="form-control" />
                         <span asp-validation-for="CompanyPhone" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label asp-for="CompanyFax" class="col-md-2 control-label"></label>
+                    <label asp-for="CompanyFax" class="col-md-2 control-label">@sr["Fax"]</label>
                     <div class="col-md-10">
                         <input asp-for="CompanyFax" class="form-control" />
                         <span asp-validation-for="CompanyFax" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label asp-for="CompanyPublicEmail" class="col-md-2 control-label"></label>
+                    <label asp-for="CompanyPublicEmail" class="col-md-2 control-label">@sr["Public Email"]</label>
                     <div class="col-md-10">
                         <input asp-for="CompanyPublicEmail" class="form-control" />
                         <span asp-validation-for="CompanyPublicEmail" class="text-danger"></span>
@@ -89,7 +89,7 @@
                 </div>
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
-                        <input type="submit" value="Save" class="btn btn-default" />
+                        <button name="submit" type="submit" class="btn btn-default">@sr["Save"]</button>
                     </div>
                 </div> 
         </form>
@@ -98,8 +98,6 @@
         @await Component.InvokeAsync("Navigation", new { viewName = "SideNav", filterName = NamedNavigationFilters.ParentTree, startingNodeKey = "SiteAdmin" })
     </div>
 </div>
-
-
 @section Scripts {
 <environment names="Development">
     <script src="~/jsdev/cloudscribe-cascade-unobtrusive.js"></script>

@@ -5,20 +5,14 @@
 // Last Modified:			2016-05-11
 //
 
-
 using System;
 
 namespace cloudscribe.Core.Web.ViewModels.SiteSettings
 {
     public class RegisterInfoViewModel
     {
-
         public Guid SiteId { get; set; } = Guid.Empty;
-
         public string RegistrationPreamble { get; set; } = string.Empty;
-
-        public string RegistrationAgreement { get; set; } = string.Empty;
-
-        
+        public string RegistrationAgreement { get; set; } = string.Empty;  
     }
 }

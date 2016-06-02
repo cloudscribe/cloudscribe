@@ -129,9 +129,6 @@
   <data name="Domain Mappings" xml:space="preserve">
     <value>Domaine Mappages</value>
   </data>
-  <data name="only digits, numbers, - and _ allowed, no spaces allowed" xml:space="preserve">
-    <value>seuls les chiffres , les nombres, - et _ autorisés , sans espace</value>
-  </data>
   <data name="Save" xml:space="preserve">
     <value>Sauvegarder</value>
   </data>
@@ -143,5 +140,11 @@
   </data>
   <data name="TimeZone" xml:space="preserve">
     <value>Fuseau horaire</value>
+  </data>
+  <data name="Require Captcha On Login?" xml:space="preserve">
+    <value>Exiger Captcha Sur Login?</value>
+  </data>
+  <data name="Require Captcha On Registration?" xml:space="preserve">
+    <value>Exiger Captcha sur l'enregistrement ?</value>
   </data>
 </root>

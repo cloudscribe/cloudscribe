@@ -1,9 +1,9 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.SecuritySettingsViewModel
-
-
-@{
-
-}
+@using cloudscribe.Core.Web
+@using cloudscribe.Web.Navigation
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCore> sr
 <div class="row">
     <div class="col-md-10 col-md-push-2">
         <h2>@ViewBag.Title</h2>
@@ -14,7 +14,7 @@
                 <div class="col-md-12">
                     <div class="checkbox">
                         <label>
-                            <input asp-for="UseEmailForLogin" /> Use Email For Login
+                            <input asp-for="UseEmailForLogin" /> @sr["Use Email For Login"]
                         </label>
                     </div>
                 </div>
@@ -23,7 +23,7 @@
                 <div class="col-md-12">
                     <div class="checkbox">
                         <label>
-                            <input asp-for="AllowNewRegistration" /> Allow New Registrations
+                            <input asp-for="AllowNewRegistration" /> @sr["Allow New Registrations"]
                         </label>
                     </div>
                 </div>
@@ -32,7 +32,7 @@
                 <div class="col-md-12">
                     <div class="checkbox">
                         <label>
-                            <input asp-for="RequireConfirmedEmail" /> Require Confirmed Email
+                            <input asp-for="RequireConfirmedEmail" /> @sr["Require Confirmed Email"]
                         </label>
                     </div>
                 </div>
@@ -41,7 +41,7 @@
                 <div class="col-md-12">
                     <div class="checkbox">
                         <label>
-                            <input asp-for="RequireConfirmedPhone" /> Require Confirmed Phone - if you check this, you need to configure SMS Settings
+                            <input asp-for="RequireConfirmedPhone" /> @sr["Require Confirmed Phone - if you check this, you need to configure SMS Settings"]
                         </label>
                     </div>
                 </div>
@@ -50,7 +50,7 @@
                 <div class="col-md-12">
                     <div class="checkbox">
                         <label>
-                            <input asp-for="RequireApprovalBeforeLogin" /> Require Approval Before Login
+                            <input asp-for="RequireApprovalBeforeLogin" /> @sr["Require Approval Before Login"]
                         </label>
                     </div>
                 </div>
@@ -58,7 +58,7 @@
             <div class="form-group">
                 
                 <div class="col-md-12">
-                    <label asp-for="AccountApprovalEmailCsv" class="control-label"></label>
+                    <label asp-for="AccountApprovalEmailCsv" class="control-label">@sr["Email addresses (csv) to notify of new unapproved users"]</label>
                     <input asp-for="AccountApprovalEmailCsv" class="form-control" />
                     <span asp-validation-for="AccountApprovalEmailCsv" class="text-danger"></span>
                 </div>
@@ -67,7 +67,7 @@
                 <div class="col-md-12">
                     <div class="checkbox">
                         <label>
-                            <input asp-for="AllowPersistentLogin" /> Allow Persistent Login
+                            <input asp-for="AllowPersistentLogin" /> @sr["Allow Persistent Login"]
                         </label>
                     </div>
                 </div>
@@ -76,7 +76,7 @@
                 <div class="col-md-12">
                     <div class="checkbox">
                         <label>
-                            <input asp-for="DisableDbAuth" /> Only Use Social Authentication
+                            <input asp-for="DisableDbAuth" /> @sr["Only Use Social Authentication"]
                         </label>
                     </div>
                 </div>
@@ -85,14 +85,14 @@
                 <div class="col-md-12">
                     <div class="checkbox">
                         <label>
-                            <input asp-for="ReallyDeleteUsers" /> Really Delete Users
+                            <input asp-for="ReallyDeleteUsers" /> @sr["Really Delete Users"]
                         </label>
                     </div>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-12">
-                    <input type="submit" value="Save" class="btn btn-default" />
+                    <button name="submit" type="submit" class="btn btn-default">@sr["Save"]</button>
                 </div>
             </div>
         </form>

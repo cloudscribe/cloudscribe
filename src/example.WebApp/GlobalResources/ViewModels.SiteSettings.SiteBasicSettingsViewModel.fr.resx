@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="only digits, numbers, - and _ allowed, no spaces allowed" xml:space="preserve">
+    <value>seuls les chiffres , les nombres, - et _ autorisés , sans espace</value>
+  </data>
   <data name="Site Name is required" xml:space="preserve">
     <value>Nom du site est nécessaire</value>
   </data>

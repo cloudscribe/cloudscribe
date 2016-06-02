@@ -1,9 +1,9 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.SmsSettingsViewModel
-
-
-@{
-
-}
+@using cloudscribe.Core.Web
+@using cloudscribe.Web.Navigation
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCore> sr
 <div class="row">
     <div class="col-md-10 col-md-push-2">
         <h2>@ViewBag.Title</h2>
@@ -11,21 +11,21 @@
             <div asp-validation-summary="All" class="text-danger"></div>
             <input asp-for="SiteId" type="hidden" />
             <div class="form-group">
-                <label asp-for="SmsFrom" class="col-md-2 control-label"></label>
+                <label asp-for="SmsFrom" class="col-md-2 control-label">@sr["Sms From"]</label>
                 <div class="col-md-10">
                     <input asp-for="SmsFrom" class="form-control" />
                     <span asp-validation-for="SmsFrom" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group">
-                <label asp-for="SmsClientId" class="col-md-2 control-label"></label>
+                <label asp-for="SmsClientId" class="col-md-2 control-label">@sr["Sms Client Id"]</label>
                 <div class="col-md-10">
                     <input asp-for="SmsClientId" class="form-control" />
                     <span asp-validation-for="SmsClientId" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group">
-                <label asp-for="SmsSecureToken" class="col-md-2 control-label"></label>
+                <label asp-for="SmsSecureToken" class="col-md-2 control-label">@sr["Sms Secure Token"]</label>
                 <div class="col-md-10">
                     <input asp-for="SmsSecureToken" class="form-control" />
                     <span asp-validation-for="SmsSecureToken" class="text-danger"></span>
@@ -33,8 +33,7 @@
             </div>
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="Save" class="btn btn-default" />
-
+                    <button name="submit" type="submit" class="btn btn-default">@sr["Save"]</button>
                 </div>
             </div>
         </form>

@@ -1,8 +1,11 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.LoginInfoViewModel
 @using cloudscribe.Core.Web.Components.Editor
+@using cloudscribe.Core.Web
+@using cloudscribe.Web.Navigation
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCore> sr
 @inject IOptions<CkeditorOptions> ckOptionsAccessor
-
-
 @{
     CkeditorOptions ckOptions = ckOptionsAccessor.Value;
 }
@@ -13,7 +16,7 @@
             <div asp-validation-summary="All" class="text-danger"></div>
             <input asp-for="SiteId" type="hidden" />
             <div class="form-group">
-                <label asp-for="LoginInfoTop" class="control-label"></label>
+                <label asp-for="LoginInfoTop" class="control-label">@sr["Login Info Top"]</label>
                 <textarea class="form-control" rows="5" asp-for="LoginInfoTop"
                           data-ckeditor-unobtrusive=""
                           data-ckeditor-unobtrusive-config-url="@Url.Content(ckOptions.CustomConfigPath)"
@@ -22,7 +25,7 @@
                 <span asp-validation-for="LoginInfoTop" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="LoginInfoBottom" class="control-label"></label>
+                <label asp-for="LoginInfoBottom" class="control-label">@sr["Login Info Bottom"]</label>
                 <textarea class="form-control" rows="5" asp-for="LoginInfoBottom"
                           data-ckeditor-unobtrusive=""
                           data-ckeditor-unobtrusive-config-url="@Url.Content(ckOptions.CustomConfigPath)"
@@ -31,7 +34,7 @@
                 <span asp-validation-for="LoginInfoBottom" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <button name="submit" type="submit" class="btn btn-default">@sr["Save"]</button>
             </div>
         </form>
     </div>

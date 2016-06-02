@@ -153,4 +153,187 @@
   <data name="TimeZone" xml:space="preserve">
     <value>TimeZone</value>
   </data>
+  <data name="Add Host Mapping" xml:space="preserve">
+    <value>Add Host Mapping</value>
+  </data>
+  <data name="Address1" xml:space="preserve">
+    <value>Address1</value>
+  </data>
+  <data name="Address2" xml:space="preserve">
+    <value>Address2</value>
+  </data>
+  <data name="Allow New Registrations" xml:space="preserve">
+    <value>Allow New Registrations</value>
+  </data>
+  <data name="Allow Persistent Login" xml:space="preserve">
+    <value>Allow Persistent Login</value>
+  </data>
+  <data name="Are you sure you want to delete the host/domain name mapping {0}" xml:space="preserve">
+    <value>Are you sure you want to delete the host/domain name mapping {0}</value>
+  </data>
+  <data name="Back to site list" xml:space="preserve">
+    <value>Back to site list</value>
+  </data>
+  <data name="Before you can Log in, we need to confirm that the email address you provided is valid. We sent an email to the address you provided with a link that you need to click in order to confirm your email address is valid." xml:space="preserve">
+    <value>Before you can Log in, we need to confirm that the email address you provided is valid. We sent an email to the address you provided with a link that you need to click in order to confirm your email address is valid.</value>
+  </data>
+  <data name="City" xml:space="preserve">
+    <value>City</value>
+  </data>
+  <data name="Country" xml:space="preserve">
+    <value>Country</value>
+  </data>
+  <data name="Default Email From Address" xml:space="preserve">
+    <value>Default Email From Address</value>
+  </data>
+  <data name="Default Email From Name" xml:space="preserve">
+    <value>Default Email From Name</value>
+  </data>
+  <data name="Email addresses (csv) to notify of new unapproved users" xml:space="preserve">
+    <value>Email addresses (csv) to notify of new unapproved users</value>
+  </data>
+  <data name="Email Confirmed" xml:space="preserve">
+    <value>Email Confirmed</value>
+  </data>
+  <data name="Facebook App Id" xml:space="preserve">
+    <value>Facebook App Id</value>
+  </data>
+  <data name="Facebook App Secret" xml:space="preserve">
+    <value>Facebook App Secret</value>
+  </data>
+  <data name="Fax" xml:space="preserve">
+    <value>Fax</value>
+  </data>
+  <data name="Folder" xml:space="preserve">
+    <value>Folder</value>
+  </data>
+  <data name="Google Client Id" xml:space="preserve">
+    <value>Google Client Id</value>
+  </data>
+  <data name="Google Client Secret" xml:space="preserve">
+    <value>Google Client Secret</value>
+  </data>
+  <data name="Host Name" xml:space="preserve">
+    <value>Host Name</value>
+  </data>
+  <data name="Id:" xml:space="preserve">
+    <value>Id:</value>
+  </data>
+  <data name="Login Info Bottom" xml:space="preserve">
+    <value>Login Info Bottom</value>
+  </data>
+  <data name="Login Info Top" xml:space="preserve">
+    <value>Login Info Top</value>
+  </data>
+  <data name="Microsoft Client Id" xml:space="preserve">
+    <value>Microsoft Client Id</value>
+  </data>
+  <data name="Microsoft Client Secret" xml:space="preserve">
+    <value>Microsoft Client Secret</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="New Site" xml:space="preserve">
+    <value>New Site</value>
+  </data>
+  <data name="Only Use Social Authentication" xml:space="preserve">
+    <value>Only Use Social Authentication</value>
+  </data>
+  <data name="Phone" xml:space="preserve">
+    <value>Phone</value>
+  </data>
+  <data name="Please Click here to Log in" xml:space="preserve">
+    <value>Please Click here to Log in</value>
+  </data>
+  <data name="Please Confirm Email Address" xml:space="preserve">
+    <value>Please Confirm Email Address</value>
+  </data>
+  <data name="Port" xml:space="preserve">
+    <value>Port</value>
+  </data>
+  <data name="Postal Code" xml:space="preserve">
+    <value>Postal Code</value>
+  </data>
+  <data name="Preferred Host Name" xml:space="preserve">
+    <value>Preferred Host Name</value>
+  </data>
+  <data name="Public Email" xml:space="preserve">
+    <value>Public Email</value>
+  </data>
+  <data name="Re-Send Verification Email" xml:space="preserve">
+    <value>Re-Send Verification Email</value>
+  </data>
+  <data name="Really Delete Users" xml:space="preserve">
+    <value>Really Delete Users</value>
+  </data>
+  <data name="Recaptcha Private Key" xml:space="preserve">
+    <value>Recaptcha Private Key</value>
+  </data>
+  <data name="Recaptcha Public Key" xml:space="preserve">
+    <value>Recaptcha Public Key</value>
+  </data>
+  <data name="Registration Agreement" xml:space="preserve">
+    <value>Registration Agreement</value>
+  </data>
+  <data name="Registration Preamble" xml:space="preserve">
+    <value>Registration Preamble</value>
+  </data>
+  <data name="Require Approval Before Login" xml:space="preserve">
+    <value>Require Approval Before Login</value>
+  </data>
+  <data name="Require Captcha On Login?" xml:space="preserve">
+    <value>Require Captcha On Login?</value>
+  </data>
+  <data name="Require Captcha On Registration?" xml:space="preserve">
+    <value>Require Captcha On Registration?</value>
+  </data>
+  <data name="Require Confirmed Email" xml:space="preserve">
+    <value>Require Confirmed Email</value>
+  </data>
+  <data name="Require Confirmed Phone - if you check this, you need to configure SMS Settings" xml:space="preserve">
+    <value>Require Confirmed Phone - if you check this, you need to configure SMS Settings</value>
+  </data>
+  <data name="Requires Authentication?" xml:space="preserve">
+    <value>Requires Authentication?</value>
+  </data>
+  <data name="Requires SSL?" xml:space="preserve">
+    <value>Requires SSL?</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="Sms Client Id" xml:space="preserve">
+    <value>Sms Client Id</value>
+  </data>
+  <data name="Sms From" xml:space="preserve">
+    <value>Sms From</value>
+  </data>
+  <data name="Sms Secure Token" xml:space="preserve">
+    <value>Sms Secure Token</value>
+  </data>
+  <data name="Smtp Password" xml:space="preserve">
+    <value>Smtp Password</value>
+  </data>
+  <data name="Smtp Server" xml:space="preserve">
+    <value>Smtp Server</value>
+  </data>
+  <data name="Smtp User" xml:space="preserve">
+    <value>Smtp User</value>
+  </data>
+  <data name="State" xml:space="preserve">
+    <value>State</value>
+  </data>
+  <data name="Thank you for confirming your email." xml:space="preserve">
+    <value>Thank you for confirming your email.</value>
+  </data>
+  <data name="Twitter Consumer Key" xml:space="preserve">
+    <value>Twitter Consumer Key</value>
+  </data>
+  <data name="Twitter Consumer Secret" xml:space="preserve">
+    <value>Twitter Consumer Secret</value>
+  </data>
+  <data name="Use Email For Login" xml:space="preserve">
+    <value>Use Email For Login</value>
+  </data>
 </root>

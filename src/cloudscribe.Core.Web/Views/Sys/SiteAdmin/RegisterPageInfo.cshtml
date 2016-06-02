@@ -1,8 +1,11 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.RegisterInfoViewModel
 @using cloudscribe.Core.Web.Components.Editor
+@using cloudscribe.Core.Web
+@using cloudscribe.Web.Navigation
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCore> sr
 @inject IOptions<CkeditorOptions> ckOptionsAccessor
-
-
 @{
     CkeditorOptions ckOptions = ckOptionsAccessor.Value;
 }
@@ -13,7 +16,7 @@
             <div asp-validation-summary="All" class="text-danger"></div>
             <input asp-for="SiteId" type="hidden" />
             <div class="form-group">
-                <label asp-for="RegistrationPreamble" class="control-label"></label>
+                <label asp-for="RegistrationPreamble" class="control-label">@sr["Registration Preamble"]</label>
                 <textarea class="form-control" rows="5" asp-for="RegistrationPreamble"
                           data-ckeditor-unobtrusive=""
                           data-ckeditor-unobtrusive-config-url="@Url.Content(ckOptions.CustomConfigPath)"
@@ -22,7 +25,7 @@
                 <span asp-validation-for="RegistrationPreamble" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="RegistrationAgreement" class="control-label"></label>
+                <label asp-for="RegistrationAgreement" class="control-label">@sr["Registration Agreement"]</label>
                 <textarea class="form-control" rows="5" asp-for="RegistrationAgreement"
                           data-ckeditor-unobtrusive=""
                           data-ckeditor-unobtrusive-config-url="@Url.Content(ckOptions.CustomConfigPath)"
@@ -31,7 +34,7 @@
                 <span asp-validation-for="RegistrationAgreement" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <button name="submit" type="submit" class="btn btn-default">@sr["Save"]</button>
             </div>
         </form>
     </div>

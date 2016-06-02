@@ -1,9 +1,9 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.CaptchaSettingsViewModel
-
-
-@{
-
-}
+@using cloudscribe.Core.Web
+@using cloudscribe.Web.Navigation
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCore> sr
 <div class="row">
     <div class="col-md-10 col-md-push-2">
         <h2>@ViewBag.Title</h2>
@@ -11,14 +11,14 @@
             <div asp-validation-summary="All" class="text-danger"></div>
             <input asp-for="SiteId" type="hidden" />
             <div class="form-group">
-                <label asp-for="RecaptchaPublicKey" class="col-md-2 control-label"></label>
+                <label asp-for="RecaptchaPublicKey" class="col-md-2 control-label">@sr["Recaptcha Public Key"]</label>
                 <div class="col-md-10">
                     <input asp-for="RecaptchaPublicKey" class="form-control" />
                     <span asp-validation-for="RecaptchaPublicKey" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group">
-                <label asp-for="RecaptchaPrivateKey" class="col-md-2 control-label"></label>
+                <label asp-for="RecaptchaPrivateKey" class="col-md-2 control-label">@sr["Recaptcha Private Key"]</label>
                 <div class="col-md-10">
                     <input asp-for="RecaptchaPrivateKey" class="form-control" />
                     <span asp-validation-for="RecaptchaPrivateKey" class="text-danger"></span>
@@ -28,7 +28,7 @@
                 <div class="col-md-offset-2 col-md-10">
                     <div class="checkbox">
                         <label>
-                            <input asp-for="RequireCaptchaOnRegistration" /> Require Captcha On Registration?
+                            <input asp-for="RequireCaptchaOnRegistration" /> @sr["Require Captcha On Registration?"]
                         </label>
                     </div>
                 </div>
@@ -37,15 +37,14 @@
                 <div class="col-md-offset-2 col-md-10">
                     <div class="checkbox">
                         <label>
-                            <input asp-for="RequireCaptchaOnLogin" /> Require Captcha On Login?
+                            <input asp-for="RequireCaptchaOnLogin" /> @sr["Require Captcha On Login?"]
                         </label>
                     </div>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="Save" class="btn btn-default" />
-
+                    <button name="submit" type="submit" class="btn btn-default">@sr["Save"]</button>
                 </div>
             </div>
         </form>

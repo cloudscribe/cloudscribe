@@ -22,14 +22,14 @@
         <input asp-for="SiteId" type="hidden" />
         <input asp-for="ReturnPageNumber" type="hidden" />
         <div class="form-group">
-            <label class="col-md-2 control-label">@sr["Site Name"]</label>
+            <label asp-for="SiteName" class="col-md-2 control-label">@sr["Site Name"]</label>
             <div class="col-md-10">
                 <input asp-for="SiteName" class="form-control" />
                 <span asp-validation-for="SiteName" class="text-danger"></span> 
             </div>
         </div>
     <div class="form-group">
-        <label class="col-md-2 control-label">@sr["AliasId"]</label>
+        <label asp-for="AliasId" class="col-md-2 control-label">@sr["AliasId"]</label>
         <div class="col-md-10">
             <input asp-for="AliasId" class="form-control" />
             <span asp-validation-for="AliasId" class="text-danger"></span>
@@ -38,7 +38,7 @@
         @if (useFolderTenants)
         {
             <div class="form-group">
-                <label class="col-md-2 control-label">@sr["Site Folder Name"]</label>
+                <label asp-for="SiteFolderName" class="col-md-2 control-label">@sr["Site Folder Name"]</label>
                 <div class="col-md-10">
                     <input asp-for="SiteFolderName" class="form-control" />
                     <span asp-validation-for="SiteFolderName" class="text-danger"></span> 
@@ -49,7 +49,7 @@
         else if(useHostTenants)
         {
             <div class="form-group">
-                <label asp-for="HostName" class="col-md-2 control-label"></label>
+                <label asp-for="HostName" class="col-md-2 control-label">@sr["Host Name"]</label>
                 <div class="col-md-10">
                     <input asp-for="HostName" class="form-control" />
                     <span asp-validation-for="HostName" class="text-danger"></span> 
@@ -62,7 +62,7 @@
             </div>
         }
         <div class="form-group">
-            <label class="col-md-2 control-label">@sr["TimeZone"]</label>
+            <label asp-for="TimeZoneId" class="col-md-2 control-label">@sr["TimeZone"]</label>
             <div class="col-md-10">
                 <select asp-for="TimeZoneId"
                         asp-items="Model.AllTimeZones" class="form-control"></select>
@@ -72,7 +72,7 @@
         @if (Model.AvailableLayouts.Count > 0)
         {
             <div class="form-group">
-                <label class="col-md-2 control-label">@sr["Theme"]</label>
+                <label asp-for="Theme" class="col-md-2 control-label">@sr["Theme"]</label>
                 <div class="col-md-10">
                     <select id="Layout" asp-for="Theme"
                             asp-items="Model.AvailableLayouts" class="form-control"></select>
@@ -90,7 +90,7 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="col-md-2 control-label">@sr["Closed Message"]</label>
+            <label asp-for="ClosedMessage" class="col-md-2 control-label">@sr["Closed Message"]</label>
             <div class="col-md-10">
                 <textarea class="form-control" rows="5" asp-for="ClosedMessage"
                           data-ckeditor-unobtrusive="" 

@@ -2,19 +2,24 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2016-05-19
+// Last Modified:			2016-06-02
 // 
 
-//using cloudscribe.Configuration.DataAnnotations;
-//using cloudscribe.Resources;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace cloudscribe.Core.Web.ViewModels.SiteSettings
 {
+    // https://docs.asp.net/en/latest/fundamentals/localization.html#dataannotations-localization
+    // validation error messages can be localized by adding
+    // ViewModels.SiteSetting.SiteBasicSettingsViewModel.fr.resx
+    // but DisplayName cannot for some reason
+    // so my advice is just use IStringLocalizer within the views to localize labels
+    // it would be possible to use static resources with resource type but then it would be difficult 
+    // for people to override or add their own translation resx files
+
     public class SiteBasicSettingsViewModel
     {
         public SiteBasicSettingsViewModel()
@@ -23,15 +28,7 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
             availableLayouts = new List<SelectListItem>();
         }
 
-        //private int siteID = -1;
-
-        //[Display(Name = "SiteId")]
-        //public int SiteId
-        //{
-        //    get { return siteID; }
-        //    set { siteID = value; }
-        //}
-
+        
         private Guid id = Guid.Empty;
 
         //[Display(Name = "SiteId")]

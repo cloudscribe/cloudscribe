@@ -1,34 +1,30 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.SiteListViewModel
+@using cloudscribe.Core.Web
+@using cloudscribe.Core.Models
+@using cloudscribe.Web.Navigation
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCore> sr
 @inject IOptions<MultiTenantOptions> multiTenantOptions
-
 @{
-    var FolderHostLabel = "Preferred Host Name";
+    var FolderHostLabel = sr["Preferred Host Name"];
     var options = multiTenantOptions.Value;
     if (options.Mode == MultiTenantMode.FolderName)
     {
-        FolderHostLabel = "Folder";
+        FolderHostLabel = sr["Folder"];
     }
     
 }
-@*
-    @section Styles {
-
-
-        @Styles.Render("~/Content/themes/base/all.css")
-        @Styles.Render("~/Content/themes/base/dialog.css")
-
-    }
-*@
 <h2>@Model.Heading</h2>
 <table class="table table-striped table-bordered">
     <tr>
         <th>
             <a class="btn btn-xs btn-default" asp-action="NewSite"
                asp-controller="SiteAdmin"
-               asp-route-slp="@Model.Paging.CurrentPage">CommonResources.NewSite</a>
+               asp-route-slp="@Model.Paging.CurrentPage">@sr["New Site"]</a>
         </th>
         <th>
-            CommonResources.SiteName
+            @sr["Site Name"]
         </th>
         <th>
             @FolderHostLabel
@@ -41,18 +37,18 @@
             <a class="btn btn-xs btn-default" asp-action="SiteInfo"
                asp-controller="SiteAdmin"
                asp-route-siteid="@item.Id"
-               asp-route-slp="@Model.Paging.CurrentPage">CommonResources.Settings</a>
+               asp-route-slp="@Model.Paging.CurrentPage">@sr["Settings"]</a>
 
 @if (!(options.Mode == MultiTenantMode.FolderName))
 {
     <a class="btn btn-xs btn-default hostmap" asp-action="SiteHostMappings"
        asp-controller="SiteAdmin"
        asp-route-siteid="@item.Id"
-       asp-route-slp="@Model.Paging.CurrentPage">CommonResources.DomainMappings</a>
+       asp-route-slp="@Model.Paging.CurrentPage">@sr["Domain Mappings"]</a>
 }
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.SiteName) SiteGuid:@item.Id
+            @Html.DisplayFor(modelItem => item.SiteName) @sr["Id:"] @item.Id
         </td>
         <td>
             @if (options.Mode == MultiTenantMode.FolderName)

@@ -1,10 +1,13 @@
-﻿@{
-    ViewBag.Title = "Email Confirmed";
+﻿@using cloudscribe.Core.Web
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCore> sr
+@{
+    ViewData["Title"] = sr["Email Confirmed"];
 }
-
-<h2>@ViewBag.Title.</h2>
+<h2>@ViewData["Title"]</h2>
 <div>
     <p>
-        Thank you for confirming your email. Please <a asp-controller="Account" asp-action="Login">Click here to Log in</a>.
+        @sr["Thank you for confirming your email."] <a asp-controller="Account" asp-action="Login">@sr["Please Click here to Log in"]</a>.
     </p>
 </div>
