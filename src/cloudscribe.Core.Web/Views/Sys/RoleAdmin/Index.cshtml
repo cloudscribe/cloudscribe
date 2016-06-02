@@ -1,6 +1,10 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.RoleAdmin.RoleListViewModel
+@using cloudscribe.Core.Models
+@using cloudscribe.Core.Web
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCore> sr
 @inject IOptions<SiteConfigOptions> setupOptionsAccessor
-
 @{
     var setupOptions = setupOptionsAccessor.Value;
 }
@@ -8,7 +12,7 @@
     <div class="col-md-10 col-md-push-2">
         <h2>@ViewData["Title"]</h2>
         <p>
-            <a class="btn btn-sm btn-default" asp-action="RoleEdit" asp-controller="RoleAdmin" asp-route-siteId="@Model.SiteId">CommonResources.NewRole</a>
+            <a class="btn btn-sm btn-default" asp-action="RoleEdit" asp-controller="RoleAdmin" asp-route-siteId="@Model.SiteId">@sr["New Role"]</a>
         </p>
         <ul class="btn-group list-group">
             @foreach (var item in Model.SiteRoles)
@@ -26,18 +30,18 @@
                                 <a asp-action="RoleMembers"
                                    asp-controller="RoleAdmin"
                                    asp-route-siteId="@item.SiteId"
-                                   asp-route-roleId="@item.Id">CommonResources.Members</a>
+                                   asp-route-roleId="@item.Id">@sr["Members"]</a>
                                 <span class="badge">@Html.DisplayFor(modelItem => item.MemberCount)</span>
                             </span>
                             <a class="btn btn-xs btn-default" asp-action="RoleEdit" asp-controller="RoleAdmin"
                                asp-route-siteId="@Model.SiteId"
-                               asp-route-roleId="@item.Id">CommonResources.Edit</a>
+                               asp-route-roleId="@item.Id">@sr["Edit"]</a>
                             @if (item.IsDeletable(setupOptions.RolesThatCannotBeDeleted))
                             {
                                 <button type="submit"
-                                        onclick="javascript: return confirm('@Html.FormatValue(item.RoleName, "Are you sure you want to delete {0}?")');"
+                                        onclick="javascript: return confirm('@Html.FormatValue(item.RoleName, sr["Are you sure you want to delete {0}?"])');"
                                         class="btn btn-default btn-xs">
-                                    CommonResources.Delete
+                                    @sr["Delete"]
                                 </button>
                             }
                         </form>
@@ -56,5 +60,3 @@
         @await Component.InvokeAsync("Navigation", new { viewName = "SideNav", filterName = NamedNavigationFilters.ParentTree, startingNodeKey = "SiteAdmin" })
     </div>
 </div>
-
-

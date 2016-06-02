@@ -1,8 +1,8 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.RoleAdmin.RoleMemberListViewModel
-
-@{
-    
-}
+@using cloudscribe.Core.Web
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCore> sr
     <form role="form" method="get" class="form-inline" asp-controller="RoleAdmin" asp-action="RoleNonMembers" asp-antiforgery="false"
         data-ajax="true" 
         data-ajax-method="GET" 
@@ -14,7 +14,7 @@
         <div class="input-group">
             <input type="search" name="searchInput" value="@Model.SearchQuery" class="form-control" />
             <span class="input-group-btn">
-                <button type="submit" value="CommonResources.Search" class="btn btn-default">CommonResources.Search</button>
+                <button type="submit" name='submit' class="btn btn-default">@sr["Search"]</button>
             </span>
         </div>
     </form>
@@ -23,27 +23,22 @@
         <th>
         </th>
         <th>
-            CommonResources
-            .Email
+            @sr["Email"]
         </th>
         @if (!Model.UseEmailForLogin)
         {
             <th>
-                CommonResources
-                .LoginName
+                @sr["Login Name"]
             </th>
         }
         <th>
-            CommonResources
-            .DisplayName
+            @sr["Display Name"]
         </th>
         <th>
-            CommonResources
-            .FirstName
+            @sr["First Name"]
         </th>
         <th>
-            CommonResources
-            .LastName
+            @sr["Last Name"]
         </th>
     </tr>
     @foreach (var item in Model.Members)
@@ -56,11 +51,10 @@
                     <input name="UserId" type="hidden" value="@item.Id" />
                     <button type="submit"
                             class="btn btn-success"
-                            onclick="javascript: return confirm('@Html.FormatValue(item.DisplayName, "Are you sure you want to add {0}?")');">
-                        CommonResources.Add
+                            onclick="javascript: return confirm('@Html.FormatValue(item.DisplayName, sr["Are you sure you want to add {0}?"])');">
+                        @sr["Add"]
                     </button>
                 </form>
-                
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Email)

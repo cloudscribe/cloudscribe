@@ -1,6 +1,12 @@
 ﻿@using cloudscribe.Core.Identity
 @using cloudscribe.Web.Common.Extensions
-
+@using cloudscribe.Core.Web
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCore> sr
+@{ 
+    var helloFormat = sr["Hello {0}!"];
+}
 @if (User.Identity.IsAuthenticated)
 {
     <form asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm" class="navbar-right">
@@ -12,16 +18,16 @@
                 </div>
             </li>
             <li> 
-                    <a asp-controller="Manage" asp-action="Index" title="Manage">Hello @User.GetDisplayName()!</a>
+                <a asp-controller="Manage" asp-action="Index" title='@sr["Manage"]'>@string.Format(helloFormat,User.GetDisplayName())</a>
             </li> 
-            <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+            <li><a href="javascript:document.getElementById('logoutForm').submit()">@sr["Log off"]</a></li>
         </ul>
     </form>
 }
 else
 {
     <ul class="nav navbar-nav navbar-right">
-        <li><a id="registerLink" asp-controller="Account" asp-action="Register">Register</a></li>
-        <li><a id="loginLink" asp-controller="Account" asp-action="Login" asp-route-returnurl="@Context.Request.PathAndQuery()">Log in</a></li>
+        <li><a id="registerLink" asp-controller="Account" asp-action="Register">@sr["Register"]</a></li>
+        <li><a id="loginLink" asp-controller="Account" asp-action="Login" asp-route-returnurl="@Context.Request.PathAndQuery()">@sr["Log in"]</a></li>
     </ul>
 }

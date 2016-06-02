@@ -1,45 +1,46 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.Account.EditUserViewModel
 @using cloudscribe.Core.Web.Components.Editor
+@using cloudscribe.Core.Web
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCore> sr
 @inject IOptions<CkeditorOptions> ckOptionsAccessor
-
 @{
     CkeditorOptions ckOptions = ckOptionsAccessor.Value;
 }
-
 <div class="form-group">
-    <label asp-for="Email" class="col-md-2 control-label"></label>
+    <label asp-for="Email" class="col-md-2 control-label">@sr["Email"]</label>
     <div class="col-md-10">
         <input asp-for="Email" class="form-control" />
         <span asp-validation-for="Email" class="text-danger"></span>
     </div>
 </div>
 <div class="form-group">
-    <label asp-for="LoginName" class="col-md-2 control-label"></label>
+    <label asp-for="LoginName" class="col-md-2 control-label">@sr["Login Name"]</label>
     <div class="col-md-10">
         <input asp-for="LoginName" class="form-control" />
         <span asp-validation-for="LoginName" class="text-danger"></span>
     </div>
 </div>
 <div class="form-group">
-    <label asp-for="DisplayName" class="col-md-2 control-label"></label>
+    <label asp-for="DisplayName" class="col-md-2 control-label">@sr["Display Name"]</label>
     <div class="col-md-10">
         <input asp-for="DisplayName" class="form-control" />
         <span asp-validation-for="DisplayName" class="text-danger"></span>
     </div>
 </div>
 <div class="form-group">
-    <label asp-for="FirstName" class="col-md-2 control-label"></label>
+    <label asp-for="FirstName" class="col-md-2 control-label">@sr["First Name"]</label>
     <div class="col-md-10">
         <input asp-for="FirstName" class="form-control" />
     </div>
 </div>
 <div class="form-group">
-    <label asp-for="LastName" class="col-md-2 control-label"></label>
+    <label asp-for="LastName" class="col-md-2 control-label">@sr["Last Name"]</label>
     <div class="col-md-10">
         <input asp-for="LastName" class="form-control" />
     </div>
 </div>
-    
 <div class="form-group">
     <label asp-for="DateOfBirth" class="col-md-2 control-label"></label>
     <div class="col-md-10">
@@ -55,14 +56,13 @@
                data-cs-datepicker-timeformat="@ViewBag.TimeFormat"
                />
         <span asp-validation-for="DateOfBirth" class="text-danger"></span>
-
     </div>
 </div>
 <div class="form-group">
     <div class="col-md-offset-2 col-md-10">
         <div class="checkbox">
             <label>
-                <input asp-for="AccountApproved" /> Account Approved
+                <input asp-for="AccountApproved" /> @sr["Account Approved"]
             </label>
         </div>
     </div>
@@ -71,7 +71,7 @@
     <div class="col-md-offset-2 col-md-12">
         <div class="checkbox">
             <label>
-                <input asp-for="EmailConfirmed" /> Email Confirmed
+                <input asp-for="EmailConfirmed" /> @sr["Email Confirmed"]
             </label>
         </div>
     </div>
@@ -80,7 +80,7 @@
     <div class="col-md-offset-2 col-md-12">
         <div class="checkbox">
             <label>
-                <input asp-for="IsLockedOut" /> Account Locked
+                <input asp-for="IsLockedOut" /> @sr["Account Locked"]
             </label>
         </div>
     </div>
@@ -92,8 +92,6 @@
                   data-ckeditor-unobtrusive=""
                   data-ckeditor-unobtrusive-config-url="@Url.Content(ckOptions.CustomConfigPath)"
                   data-ckeditor-unobtrusive-config-toolbar="Full"
-                  data-ckeditor-unobtrusive-config-language="@System.Globalization.CultureInfo.CurrentUICulture.Name"></textarea>
-        
+                  data-ckeditor-unobtrusive-config-language="@System.Globalization.CultureInfo.CurrentUICulture.Name"></textarea>  
     </div>
 </div>
-

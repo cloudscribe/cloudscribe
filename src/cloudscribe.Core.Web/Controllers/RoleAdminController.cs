@@ -62,7 +62,7 @@ namespace cloudscribe.Core.Web.Controllers
             else
             {
                 selectedSite = siteManager.CurrentSite;
-                ViewBag.Title = "Role Management";
+                ViewData["Title"] = "Role Management";
             }
 
             

@@ -1,15 +1,19 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.SiteUser.ManageLoginsViewModel
 @using Microsoft.AspNetCore.Http.Authentication
+@using cloudscribe.Core.Web
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCore> sr
 @{
-    ViewBag.Title = "Manage your external logins";
+    ViewData["Title"] = sr["Manage your external logins"];
+    var removeFormat = sr["Remove this {0} login from your account"];
+    var loginFormat = sr["Log in using your {0} account"]
 }
-
-<h2>@ViewBag.Title.</h2>
-
-<p class="text-success">@ViewBag.StatusMessage</p>
+<h2>@ViewData["Title"]</h2>
+<p class="text-success">@ViewData["StatusMessage"]</p>
 @if (Model.CurrentLogins.Count > 0)
 {
-    <h4>Registered Logins</h4>
+    <h4>@sr["Registered Logins"]</h4>
     <table class="table">
         <tbody>
             @foreach (var account in Model.CurrentLogins)
@@ -23,7 +27,7 @@
                                 <div>
                                     <input asp-for="@account.LoginProvider" type="hidden" />
                                     <input asp-for="@account.ProviderKey" type="hidden" />
-                                    <input type="submit" class="btn btn-default" value="Remove" title="Remove this @account.LoginProvider login from your account" />
+                                    <input type="submit" class="btn btn-default" value='@sr["Remove"]' title="@string.Format(removeFormat, @account.LoginProvider)" />
                                 </div>
                             </form>
                         }
@@ -39,14 +43,14 @@
 }
 @if (Model.OtherLogins.Count > 0)
 {
-    <h4>Add another service to log in.</h4>
+    <h4>@sr["Add another service to log in."]</h4>
     <hr />
     <form asp-controller="Manage" asp-action="LinkLogin" method="post" class="form-horizontal" role="form">
         <div id="socialLoginList">
             <p>
                 @foreach (AuthenticationDescription p in Model.OtherLogins)
                 {
-                    <button type="submit" class="btn btn-default" id="@p.AuthenticationScheme" name="provider" value="@p.AuthenticationScheme" title="Log in using your @p.DisplayName account">@p.AuthenticationScheme</button>
+                    <button type="submit" class="btn btn-default" id="@p.AuthenticationScheme" name="provider" value="@p.AuthenticationScheme" title="@string.Format(loginFormat, @p.DisplayName)">@p.AuthenticationScheme</button>
                 }
             </p>
         </div>

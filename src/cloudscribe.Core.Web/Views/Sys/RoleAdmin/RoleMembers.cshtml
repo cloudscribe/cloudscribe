@@ -1,14 +1,12 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.RoleAdmin.RoleMemberListViewModel
-
-@{
-   
-}
-    @section Styles {
+@using cloudscribe.Core.Web
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCore> sr
+@section Styles {
 <link rel="stylesheet" href="~/lib/jquery-ui/themes/base/all.css" />
 <link rel="stylesheet" href="~/lib/jquery-ui/themes/base/dialog.css" />
-  
     }
-
 <h2>@Model.Heading1</h2>
 <h3>@Model.Heading2</h3>
 <form class="form-inline" role="form" asp-controller="RoleAdmin" asp-action="RoleMembers" method="get">
@@ -17,11 +15,10 @@
     <div class="input-group">
         <input name="searchInput" type="search" value="@Model.SearchQuery" class="form-control" />
         <span class="input-group-btn">
-            <button type="submit" value="CommonResources.Search" class="btn btn-default">CommonResources.Search</button>
+            <button type="submit" value="CommonResources.Search" class="btn btn-default">@sr["Search"]</button>
         </span>
     </div>
 </form>
-
     <div>
         <table class="table table-striped">
             <tr>
@@ -29,27 +26,26 @@
                     <a class="btn btn-xs btn-default" asp-action="RoleNonMembers" asp-controller="RoleAdmin"
                        asp-route-siteId="@Model.Role.SiteId"
                        asp-route-roleId="@Model.Role.Id"
-                       bs-modal-link="true">CommonResources.AddUser</a>
+                       bs-modal-link="true">@sr["Add User"]</a>
                 </th>
                 <th>
-                    CommonResources.Email
+                   @sr["Email"]
                 </th>
                 @if (!Model.UseEmailForLogin)
             {
                     <th>
-                        CommonResources.LoginName
+                        @sr["Login Name"]
                     </th>
                 }
                 <th>
-                    CommonResources.DisplayName
+                    @sr["Display Name"]
                 </th>
                 <th>
-                    CommonResources.FirstName
+                    @sr["First Name"]
                 </th>
                 <th>
-                    CommonResources.LastName
+                    @sr["Last Name"]
                 </th>
-
             </tr>
             @foreach (var item in Model.Members)
             {
@@ -61,8 +57,8 @@
                             <input name="userId" value="@item.Id" type="hidden" />
                             <button type="submit"
                                     class="btn btn-danger btn-xs"
-                                    onclick="javascript: return confirm('@Html.FormatValue(item.DisplayName, "Are you sure you want to remove {0}?")');">
-                                CommonResources.Remove
+                                    onclick="javascript: return confirm('@Html.FormatValue(item.DisplayName, sr["Are you sure you want to remove {0}?"])');">
+                                @sr["Remove"]
                             </button>
                         </form>                      
                     </td>
@@ -96,9 +92,7 @@
                       asp-route-pagesize="@Model.Paging.ItemsPerPage"></cs-pager>
         </div>
     </div>
-
  @section Scripts {
-
 <environment names="Development">
     <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.js"></script>
     <script src="~/lib/jquery-ui/jquery-ui.js"></script>
@@ -112,6 +106,4 @@
     </script>
     <script src="~/jsdev/cloudscribe-modaldialog-bootstrap.js"></script>
 </environment>
-
-
  }
