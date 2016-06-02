@@ -1,14 +1,13 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.CoreData.GeoCountryViewModel
-
+@using cloudscribe.Core.Web
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCore> sr
 @{
-    ViewBag.Title = "CountryDetail";
+    ViewData["Title"] = sr["Country Detail"];
 }
-
-<h2>CountryDetail</h2>
-
+<h2>@ViewData["Title"]</h2>
 <div>
-    <h4>GeoCountryViewModel</h4>
-    <hr />
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.Id)
@@ -45,6 +44,5 @@
     </dl>
 </div>
 <p>
-    <a  asp-action="Index">BackToList</a>  
-   
+    <a  asp-action="Index">@sr["Back To List"]</a>  
 </p>

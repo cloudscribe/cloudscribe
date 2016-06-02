@@ -45,9 +45,6 @@ namespace cloudscribe.Core.Web.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            ViewBag.Title = "Core Data Administration";
-            ViewBag.Heading = "Core Data Administration";
- 
             return View();
         }
 
@@ -57,7 +54,7 @@ namespace cloudscribe.Core.Web.Controllers
             int pageNumber = 1,
             int pageSize = -1)
         {
-            ViewBag.Title = "Country List Administration";
+            //ViewBag.Title = "Country List Administration";
             int itemsPerPage = uiOptions.DefaultPageSize_CountryList;
             if (pageSize > 0)
             {
@@ -66,7 +63,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             CountryListPageViewModel model = new CountryListPageViewModel();
             model.Countries = await dataManager.GetCountriesPage(pageNumber, itemsPerPage);
-            model.Heading = "Country List Administration";
+            //model.Heading = "Country List Administration";
             model.Paging.CurrentPage = pageNumber;
             model.Paging.ItemsPerPage = itemsPerPage;
             model.Paging.TotalItems = await dataManager.GetCountryCount();
@@ -78,8 +75,9 @@ namespace cloudscribe.Core.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> CountryEdit(
             Guid? countryId,
-            int returnPageNumber = 1,
-            bool partial = false)
+            int returnPageNumber = 1//,
+           // bool partial = false
+            )
         {
             ViewBag.Title = "Edit Country";
 
@@ -107,10 +105,10 @@ namespace cloudscribe.Core.Web.Controllers
             model.ReturnPageNumber = returnPageNumber;
 
 
-            if (partial)
-            {
-                return PartialView("CountryEditPartial", model);
-            }
+            //if (partial)
+            //{
+            //    return PartialView("CountryEditPartial", model);
+            //}
 
             return View(model);
 
@@ -176,16 +174,17 @@ namespace cloudscribe.Core.Web.Controllers
             Guid? countryId,
             int pageNumber = 1,
             int pageSize = -1,
-            int crp = 1,
-            bool ajaxGrid = false,
-            bool partial = false)
+            int crp = 1 //,
+            //bool ajaxGrid = false,
+            //bool partial = false
+            )
         {
             if (!countryId.HasValue)
             {
                 return RedirectToAction("CountryListPage");
             }
 
-            ViewBag.Title = "State List Administration";
+           
             var itemsPerPage = uiOptions.DefaultPageSize_StateList;
             if (pageSize > 0)
             {
@@ -219,15 +218,15 @@ namespace cloudscribe.Core.Web.Controllers
                 + "?pageNumber=" + crp.ToInvariantString(); 
             countryListCrumbAdjuster.AddToContext();
             
-            if (ajaxGrid)
-            {
-                return PartialView("StateListGridPartial", model);
-            }
+            //if (ajaxGrid)
+            //{
+            //    return PartialView("StateListGridPartial", model);
+            //}
 
-            if (partial)
-            {
-                return PartialView("StateListPagePartial", model);
-            }
+            //if (partial)
+            //{
+            //    return PartialView("StateListPagePartial", model);
+            //}
 
 
             return View(model);
@@ -311,7 +310,7 @@ namespace cloudscribe.Core.Web.Controllers
             //int returnPage = 1;
             //if (returnPageNumber.HasValue) { returnPage = returnPageNumber.Value; }
 
-            ViewBag.Title = "Edit State";
+            
 
             GeoZoneViewModel model;
 
@@ -321,7 +320,7 @@ namespace cloudscribe.Core.Web.Controllers
                 if ((state != null) && (state.CountryId == countryId))
                 {
                     model = GeoZoneViewModel.FromIGeoZone(state);
-                    model.Heading = "Edit State";
+                   // model.Heading = "Edit State";
 
                 }
                 else
@@ -334,7 +333,7 @@ namespace cloudscribe.Core.Web.Controllers
             else
             {
                 model = new GeoZoneViewModel();
-                model.Heading = "Create New State";
+                //model.Heading = "Create New State";
                 model.CountryId = countryId;
             }
 
@@ -371,8 +370,7 @@ namespace cloudscribe.Core.Web.Controllers
         public async Task<IActionResult> StateEdit(
             GeoZoneViewModel model)
         {
-            ViewBag.Title = "Edit State";
-
+           
             if (!ModelState.IsValid)
             {
                 return PartialView(model);
@@ -450,9 +448,6 @@ namespace cloudscribe.Core.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> CurrencyList()
         {
-            ViewBag.Title = "Currency Administration";
-            ViewBag.Heading = "Currency Administration";
-
             var model = await dataManager.GetAllCurrencies();
 
             return View(model);

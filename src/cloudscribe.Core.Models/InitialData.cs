@@ -386,7 +386,6 @@ namespace cloudscribe.Core.Models
             list.Add(new GeoCountry { Id = new Guid("8C982139-3609-48D3-B145-B5CEB484C414"), Name = "United States Minor Outlying Islands", ISOCode2 = "UM", ISOCode3 = "UMI" });
             list.Add(new GeoCountry { Id = new Guid("AEBD8175-FFFE-4EE2-B208-C0BBBD049664"), Name = "Uruguay", ISOCode2 = "UY", ISOCode3 = "URY" });
             list.Add(new GeoCountry { Id = new Guid("B5EE8DA7-5CC3-44F3-BD63-094CB93B4674"), Name = "Uzbekistan", ISOCode2 = "UZ", ISOCode3 = "UZB" });
-            list.Add(new GeoCountry { Id = new Guid("4E529155-CCBF-4A95-9E4C-507F3FABB878"), Name = "Uzzuzzu", ISOCode2 = "UZ", ISOCode3 = "UZZ" });
             list.Add(new GeoCountry { Id = new Guid("B3732BD9-C3D6-4861-8DBE-EB2884557F34"), Name = "Vanuatu", ISOCode2 = "VU", ISOCode3 = "VUT" });
             list.Add(new GeoCountry { Id = new Guid("FBEA6604-4E57-46B6-A3F2-E5DE8514C7B0"), Name = "Vatican City State (Holy See)", ISOCode2 = "VA", ISOCode3 = "VAT" });
             list.Add(new GeoCountry { Id = new Guid("F015E45E-D93A-4D3A-A010-648CA65B47BE"), Name = "Venezuela", ISOCode2 = "VE", ISOCode3 = "VEN" });

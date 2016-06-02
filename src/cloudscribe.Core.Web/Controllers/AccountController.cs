@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
@@ -38,7 +39,9 @@ namespace cloudscribe.Core.Web.Controllers
             IpAddressTracker ipAddressTracker,
             ISiteMessageEmailSender emailSender,
             ISmsSender smsSender,
-            ILogger<AccountController> logger)
+            IStringLocalizer<CloudscribeCore> localizer,
+            ILogger<AccountController> logger
+            )
         {
             Site = currentSite; 
             this.userManager = userManager;
@@ -46,6 +49,7 @@ namespace cloudscribe.Core.Web.Controllers
             this.emailSender = emailSender;
             this.smsSender = smsSender;
             this.ipAddressTracker = ipAddressTracker;
+            sr = localizer;
             log = logger;
         }
 
@@ -56,7 +60,7 @@ namespace cloudscribe.Core.Web.Controllers
         private readonly ISmsSender smsSender;
         private IpAddressTracker ipAddressTracker;
         private ILogger log;
-
+        private IStringLocalizer sr;
 
         // GET: /Account/Login
         [HttpGet]

@@ -1,10 +1,13 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.CoreData.StateListPageViewModel
-
+@using cloudscribe.Core.Web
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCore> sr
 @{
-    
+    ViewData["Title"] = sr["State List Administration"];
 }
 
-<h2>@Model.Heading</h2>
+<h2>@ViewData["Title"]</h2>
 <h3>@Model.Country.Name</h3>
 
 <table class="table table-striped">
@@ -13,13 +16,13 @@
             <a class="btn btn-xs btn-default" asp-action="StateEdit" asp-controller="CoreData"
                asp-route-countryId="@Model.Country.Id"
                asp-route-crp="@Model.CountryListReturnPageNumber"
-               asp-route-returnPageNumber="@Model.Paging.CurrentPage">CommonResources.NewState</a> 
+               asp-route-returnPageNumber="@Model.Paging.CurrentPage">@sr["New State"]</a> 
         </th>
         <th>
-            CommonResources.Name
+            @sr["Name"]
         </th>
         <th>
-            CommonResources.Code
+            @sr["Code"]
         </th>
     </tr>
 
@@ -31,15 +34,15 @@
                    asp-route-countryId="@Model.Country.Id"
                    asp-route-stateId="@item.Id"
                    asp-route-crp="@Model.CountryListReturnPageNumber"
-                   asp-route-returnpagenumber="@Model.Paging.CurrentPage">CommonResources.Edit</a>
+                   asp-route-returnpagenumber="@Model.Paging.CurrentPage">@sr["Edit"]</a>
 
                 <input type="hidden" name="countryId" value="@item.CountryId" />
                 <input type="hidden" name="stateId" value="@item.Id" />
                 <input type="hidden" name="crp" value="@Model.CountryListReturnPageNumber" />
                 <input type="hidden" name="returnPageNumber" value="@Model.Paging.CurrentPage" />
-                <input type="submit" value="CommonResources.Delete"
-                       onclick="javascript: return confirm('@Html.FormatValue(item.Name, "Are you sure you want to delete {0}?")');"
-                       class="btn btn-xs btn-default" />
+                <button type="submit" name="submit"
+                       onclick="javascript: return confirm('@Html.FormatValue(item.Name, sr["Are you sure you want to delete {0}?"])');"
+                       class="btn btn-xs btn-default" >@sr["Delete"]</button>
             </form>
         </td>
         <td>
@@ -60,5 +63,5 @@
 </div>
 <div>
     <a class="btn btn-default" asp-action="CountryListPage" asp-controller="CoreData"
-       asp-route-pageNumber="@Model.CountryListReturnPageNumber">CommonResources.BackToCountryList</a> 
+       asp-route-pageNumber="@Model.CountryListReturnPageNumber">@sr["Back To Country List"]</a> 
 </div>

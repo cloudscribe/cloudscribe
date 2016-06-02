@@ -1,4 +1,8 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.Account.RegisterViewModel
+@using cloudscribe.Core.Web
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCore> sr
 @{
     
 }
@@ -17,29 +21,29 @@
 }
 <form asp-controller="Account" asp-action="Register" method="post" class="form-horizontal" role="form">
     <input asp-for="UserId" type="hidden" />
-    <h4>Create a new account.</h4>
+    <h4>@sr["Create a new account."]</h4>
     <hr />
     <div asp-validation-summary="All" class="text-danger"></div>
     <div class="form-group">
-        <label asp-for="Email" class="col-md-2 control-label"></label>
+        <label asp-for="Email" class="col-md-2 control-label">@sr["Email"]</label>
         <div class="col-md-10">
             <input asp-for="Email" class="form-control" />
             <span asp-validation-for="Email" class="text-danger"></span>
         </div>
     </div>
     <div class="form-group">
-        <label asp-for="Password" class="col-md-2 control-label"></label>
+        <label asp-for="Password" class="col-md-2 control-label">@sr["Password"]</label>
         <div class="col-md-10">
             <input asp-for="Password" class="form-control" />
             <span asp-validation-for="Password" class="text-danger"></span>
         </div>
     </div>
     <div class="form-group">
-        <label asp-for="ConfirmPassword" class="col-md-2 control-label"></label>
+        <label asp-for="ConfirmPassword" class="col-md-2 control-label">@sr["Confirm Password"]</label>
         <div class="col-md-10">
             <input asp-for="ConfirmPassword" class="form-control" 
                    data-val="true" 
-                   data-val-comparewhen="Must match password" 
+                   data-val-comparewhen='@sr["Must match password"]' 
                    data-val-comparewhen-compareproperty="#Password"
                    data-val-comparewhen-whenproperty="#UserId"
                    data-val-comparewhen-whenvalue="-1"  
@@ -57,7 +61,7 @@
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
             <div class="checkbox">
-                <input asp-for="AgreeToTerms" data-val-enforcetrue="You must agree to the terms." />
+                <input asp-for="AgreeToTerms" data-val-enforcetrue='@sr["You must agree to the terms."]' />
                 <label asp-for="AgreeToTerms"></label>
                 <span asp-validation-for="AgreeToTerms" class="text-danger"></span>
                 @Html.ValidationMessage("agreementerror", new { @class = "text-danger" })
@@ -77,7 +81,7 @@ else
     </div>
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <input type="submit" class="btn btn-default" value="Register" />
+            <button name="submit" type="submit" class="btn btn-default">@sr["Register"]</button>
         </div>
     </div>
 </form>

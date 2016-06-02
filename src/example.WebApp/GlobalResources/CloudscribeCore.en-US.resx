@@ -174,9 +174,6 @@
   <data name="Back to site list" xml:space="preserve">
     <value>Back to site list</value>
   </data>
-  <data name="Before you can Log in, we need to confirm that the email address you provided is valid. We sent an email to the address you provided with a link that you need to click in order to confirm your email address is valid." xml:space="preserve">
-    <value>Before you can Log in, we need to confirm that the email address you provided is valid. We sent an email to the address you provided with a link that you need to click in order to confirm your email address is valid.</value>
-  </data>
   <data name="City" xml:space="preserve">
     <value>City</value>
   </data>
@@ -335,5 +332,149 @@
   </data>
   <data name="Use Email For Login" xml:space="preserve">
     <value>Use Email For Login</value>
+  </data>
+  <data name="Add Phone Number" xml:space="preserve">
+    <value>Add Phone Number</value>
+  </data>
+  <data name="Are you sure you want to delete the country {0} and all of its states? You cannot undo this action." xml:space="preserve">
+    <value>Are you sure you want to delete the country {0} and all of its states? You cannot undo this action.</value>
+  </data>
+  <data name="Are you sure you want to delete {0}?" xml:space="preserve">
+    <value>Are you sure you want to delete {0}?</value>
+  </data>
+  <data name="Back To Country List" xml:space="preserve">
+    <value>Back To Country List</value>
+  </data>
+  <data name="Back To State List" xml:space="preserve">
+    <value>Back To State List</value>
+  </data>
+  <data name="Change Password" xml:space="preserve">
+    <value>Change Password</value>
+  </data>
+  <data name="Code" xml:space="preserve">
+    <value>Code</value>
+  </data>
+  <data name="Confirm New Password" xml:space="preserve">
+    <value>Confirm New Password</value>
+  </data>
+  <data name="Confirm Password" xml:space="preserve">
+    <value>Confirm Password</value>
+  </data>
+  <data name="Core Data Administration" xml:space="preserve">
+    <value>Core Data Administration</value>
+  </data>
+  <data name="Country Detail" xml:space="preserve">
+    <value>Country Detail</value>
+  </data>
+  <data name="Country List Administration" xml:space="preserve">
+    <value>Country List Administration</value>
+  </data>
+  <data name="Create a new account." xml:space="preserve">
+    <value>Create a new account.</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="Edit State" xml:space="preserve">
+    <value>Edit State</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="Forgot Password Confirmation" xml:space="preserve">
+    <value>Forgot Password Confirmation</value>
+  </data>
+  <data name="Forgot your password?" xml:space="preserve">
+    <value>Forgot your password?</value>
+  </data>
+  <data name="Log In" xml:space="preserve">
+    <value>Log In</value>
+  </data>
+  <data name="Must match password" xml:space="preserve">
+    <value>Must match password</value>
+  </data>
+  <data name="New Country" xml:space="preserve">
+    <value>New Country</value>
+  </data>
+  <data name="New Currency" xml:space="preserve">
+    <value>New Currency</value>
+  </data>
+  <data name="New Password" xml:space="preserve">
+    <value>New Password</value>
+  </data>
+  <data name="New State" xml:space="preserve">
+    <value>New State</value>
+  </data>
+  <data name="Number" xml:space="preserve">
+    <value>Number</value>
+  </data>
+  <data name="Old Password" xml:space="preserve">
+    <value>Old Password</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="Please check your email to reset your password." xml:space="preserve">
+    <value>Please check your email to reset your password.</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>Register</value>
+  </data>
+  <data name="Register as a new user?" xml:space="preserve">
+    <value>Register as a new user?</value>
+  </data>
+  <data name="Remember Me" xml:space="preserve">
+    <value>Remember Me</value>
+  </data>
+  <data name="Remember this web browser" xml:space="preserve">
+    <value>Remember this web browser</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="Reset password" xml:space="preserve">
+    <value>Reset password</value>
+  </data>
+  <data name="Reset password confirmation" xml:space="preserve">
+    <value>Reset password confirmation</value>
+  </data>
+  <data name="Reset your password." xml:space="preserve">
+    <value>Reset your password.</value>
+  </data>
+  <data name="Select Two-Factor Authentication Provider:" xml:space="preserve">
+    <value>Select Two-Factor Authentication Provider:</value>
+  </data>
+  <data name="Send Verification Code" xml:space="preserve">
+    <value>Send Verification Code</value>
+  </data>
+  <data name="State List Administration" xml:space="preserve">
+    <value>State List Administration</value>
+  </data>
+  <data name="States" xml:space="preserve">
+    <value>States</value>
+  </data>
+  <data name="Submit" xml:space="preserve">
+    <value>Submit</value>
+  </data>
+  <data name="Thanks for registering!" xml:space="preserve">
+    <value>Thanks for registering!</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>Title</value>
+  </data>
+  <data name="Use a local account to log in." xml:space="preserve">
+    <value>Use a local account to log in.</value>
+  </data>
+  <data name="Use another service to log in." xml:space="preserve">
+    <value>Use another service to log in.</value>
+  </data>
+  <data name="Verify" xml:space="preserve">
+    <value>Verify</value>
+  </data>
+  <data name="You must agree to the terms." xml:space="preserve">
+    <value>You must agree to the terms.</value>
+  </data>
+  <data name="Your password has been reset." xml:space="preserve">
+    <value>Your password has been reset.</value>
   </data>
 </root>
