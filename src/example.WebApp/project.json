@@ -99,10 +99,10 @@
     }
   },
 
-  "buildOptions": {
-    "emitEntryPoint": true,
-    "preserveCompilationContext": true
-  },
+    "buildOptions": {
+        "emitEntryPoint": true,
+        "preserveCompilationContext": true 
+    },
 
   "runtimeOptions": {
     "gcServer": true
@@ -110,10 +110,13 @@
 
   "publishOptions": {
     "include": [
-      "wwwroot",
-      "Views",
-      "appsettings.json",
-      "web.config"
+        "wwwroot",
+        "Views",
+        "sitefiles",
+        "dp_keys",
+        "nodb_storage",
+        "appsettings.json",
+        "web.config"
     ]
   },
 

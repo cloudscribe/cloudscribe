@@ -19,6 +19,8 @@
         "embed": "Views/**"
     },
 
+    
+
     "dependencies": {
         "cloudscribe.Core.Identity": "1.0.0-*",
         "cloudscribe.Core.Models": "1.0.0-*",

@@ -187,6 +187,7 @@ FakesAssemblies/
 
 src/cloudscribe-core/.vs/config/applicationhost.config
 
+src/example.WebApp/Properties/PublishProfiles*
 src/example.WebApp/wwwroot/lib*
 src/example.WebApp/wwwroot/js/*
 src/example.WebApp/wwwroot/css/site.min.css

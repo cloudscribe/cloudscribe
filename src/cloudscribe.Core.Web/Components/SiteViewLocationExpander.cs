@@ -42,8 +42,8 @@ namespace cloudscribe.Core.Web.Components
                 {
                     IEnumerable<string> themeLocations = new[]
                     {
-                        $"/tenantfiles/{tenant}/themes/{theme}/{{1}}/{{0}}.cshtml",
-                        $"/tenantfiles/{tenant}/themes/{theme}/Shared/{{0}}.cshtml"
+                        $"/sitefiles/{tenant}/themes/{theme}/{{1}}/{{0}}.cshtml",
+                        $"/sitefiles/{tenant}/themes/{theme}/Shared/{{0}}.cshtml"
                     };
 
                     viewLocations = themeLocations.Concat(viewLocations);

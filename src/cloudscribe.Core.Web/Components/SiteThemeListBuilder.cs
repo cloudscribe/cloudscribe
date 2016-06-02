@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //  Author:                     Joe Audette
 //  Created:                    2015-10-09
-//	Last Modified:              2016-04-27
+//	Last Modified:              2016-06-02
 //
 
 using cloudscribe.Core.Models;
@@ -39,30 +39,27 @@ namespace cloudscribe.Core.Web.Components
             List<SelectListItem> layouts = new List<SelectListItem>();
 
             string pathToViews = GetPathToViews();
-
-            DirectoryInfo directoryInfo
-                = new DirectoryInfo(pathToViews);
+            if(Directory.Exists(pathToViews))
+            {
+                var directoryInfo = new DirectoryInfo(pathToViews);
+                var folders = directoryInfo.GetDirectories();
+                foreach (DirectoryInfo f in folders)
+                {
+                    SelectListItem layout = new SelectListItem
+                    {
+                        Text = f.Name,
+                        Value = f.Name
+                    };
+                    layouts.Add(layout);
+                }
+            }
             
-            var folders = directoryInfo.GetDirectories();
-            foreach (DirectoryInfo f in folders)
+            layouts.Add(new SelectListItem
             {
-                SelectListItem layout = new SelectListItem
-                {
-                    Text = f.Name,
-                    Value = f.Name
-                };
-                layouts.Add(layout);
-            }
-
-            if (layouts.Count == 0)
-            {
-                layouts.Add(new SelectListItem
-                {
-                    Text = "default",
-                    Value = ""
-                });
-            }
-
+                Text = "default",
+                Value = ""
+            });
+           
             return layouts;
 
         }
@@ -71,7 +68,7 @@ namespace cloudscribe.Core.Web.Components
         {
             var tenant = contextAccessor.HttpContext.GetTenant<SiteSettings>();
             // TODO: more configurable?
-            return appBasePath + "/tenantfiles/" 
+            return appBasePath + "/sitefiles/" 
                 + tenant.AliasId
                 + "/themes/".Replace("/", Path.DirectorySeparatorChar.ToString());
         }
