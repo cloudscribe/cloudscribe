@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-06-19
-// Last Modified:		    2016-05-18
+// Last Modified:		    2016-06-03
 // 
 
 using cloudscribe.Core.Models;
@@ -38,13 +38,10 @@ namespace cloudscribe.Core.Identity
 
             multiTenantOptions = multiTenantOptionsAccessor.Value;
             
-
-            //if (debugLog) { log.LogInformation("constructor"); }
         }
 
         private MultiTenantOptions multiTenantOptions;
         private ILogger log;
-        //private bool debugLog = false;
         private IUserCommands commands;
         private IUserQueries queries;
         private ISiteSettings siteSettings = null;
@@ -63,15 +60,12 @@ namespace cloudscribe.Core.Identity
 
             if (role.SiteId == Guid.Empty){ role.SiteId = Site.Id; }
             if (role.Id == Guid.Empty) role.Id = Guid.NewGuid();
-            
-            cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
-
+            cancellationToken.ThrowIfCancellationRequested();
+            
             await commands.CreateRole(role, cancellationToken);
-
             return IdentityResult.Success;
 
-         
         }
 
         public async Task<IdentityResult> DeleteAsync(TRole role, CancellationToken cancellationToken)

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-08
-// Last Modified:			2016-05-18
+// Last Modified:			2016-06-03
 // 
 
 using cloudscribe.Core.Identity;
@@ -44,7 +44,7 @@ namespace cloudscribe.Core.Web.Controllers
             this.siteManager = siteManager;
             this.emailSender = emailSender;
             uiOptions = uiOptionsAccessor.Value;
-            this.localizer = localizer;
+            sr = localizer;
 
         }
 
@@ -52,7 +52,7 @@ namespace cloudscribe.Core.Web.Controllers
         public SiteUserManager<SiteUser> UserManager { get; private set; }
         private ISiteMessageEmailSender emailSender;
         private UIOptions uiOptions;
-        private IStringLocalizer localizer;
+        private IStringLocalizer sr; // string resources
 
         [HttpGet]
         public async Task<IActionResult> Index(
@@ -68,17 +68,15 @@ namespace cloudscribe.Core.Web.Controllers
             if ((siteId.HasValue) && (siteId.Value != Guid.Empty) && (siteId.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
             {
                 selectedSite = await siteManager.Fetch(siteId.Value);
-                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - User Management", selectedSite.SiteName);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - User Management"], selectedSite.SiteName);
             }
             else
             {
                 selectedSite = siteManager.CurrentSite;
-                ViewData["Title"] = localizer["User Management"];
+                ViewData["Title"] = sr["User Management"];
             }
             
-           // ViewData["Heading"] = ViewData["Title"];
-
-            int itemsPerPage = uiOptions.DefaultPageSize_UserList;
+            var itemsPerPage = uiOptions.DefaultPageSize_UserList;
             if (pageSize > 0)
             {
                 itemsPerPage = pageSize;
@@ -95,15 +93,13 @@ namespace cloudscribe.Core.Web.Controllers
 
             UserListViewModel model = new UserListViewModel();
             model.SiteId = selectedSite.Id;
-           // model.Heading = "User Management";
             model.UserList = siteMembers;
             model.Paging.CurrentPage = pageNumber;
             model.Paging.ItemsPerPage = itemsPerPage;
             model.Paging.TotalItems = count;
-            model.AlphaQuery = query; //TODO: sanitize
+            model.AlphaQuery = query; //TODO: sanitize?
 
             return View(model);
-
 
         }
 
@@ -126,9 +122,9 @@ namespace cloudscribe.Core.Web.Controllers
                 selectedSite = siteManager.CurrentSite;
             }
 
-            ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - User Management", selectedSite.SiteName);
+            ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - User Management"], selectedSite.SiteName);
             
-            int itemsPerPage = uiOptions.DefaultPageSize_UserList;
+            var itemsPerPage = uiOptions.DefaultPageSize_UserList;
             if (pageSize > 0)
             {
                 itemsPerPage = pageSize;
@@ -143,18 +139,15 @@ namespace cloudscribe.Core.Web.Controllers
 
             var count = await UserManager.CountUsersForAdminSearch(selectedSite.Id, query);
 
-            UserListViewModel model = new UserListViewModel();
+            var model = new UserListViewModel();
             model.SiteId = selectedSite.Id;
-            //model.Heading = "User Management";
             model.UserList = siteMembers;
             model.Paging.CurrentPage = pageNumber;
             model.Paging.ItemsPerPage = itemsPerPage;
             model.Paging.TotalItems = count;
-            model.SearchQuery = query; //TODO: sanitize
-
-
+            model.SearchQuery = query; //TODO: sanitize?
+            
             return View("Index", model);
-
         }
 
         [HttpGet]
@@ -173,16 +166,14 @@ namespace cloudscribe.Core.Web.Controllers
                 selectedSite = siteManager.CurrentSite;
             }
 
-            ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - User Management", selectedSite.SiteName);
+            ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - User Management"], selectedSite.SiteName);
             
-            List<IUserInfo> siteMembers = await UserManager.GetByIPAddress(
+            var siteMembers = await UserManager.GetByIPAddress(
                 selectedSite.Id,
                 ipQuery);
-
-
-            UserListViewModel model = new UserListViewModel();
+            
+            var model = new UserListViewModel();
             model.SiteId = selectedSite.Id;
-            //model.Heading = "User Management";
             model.UserList = siteMembers;
             //model.Paging.CurrentPage = pageNumber;
             //model.Paging.ItemsPerPage = itemsPerPage;
@@ -191,7 +182,6 @@ namespace cloudscribe.Core.Web.Controllers
             model.ShowAlphaPager = false;
 
             return View("Index", model);
-
 
         }
 
@@ -212,9 +202,9 @@ namespace cloudscribe.Core.Web.Controllers
                 selectedSite = siteManager.CurrentSite;
             }
 
-            ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - Locked Out User Accounts", selectedSite.SiteName);
+            ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - Locked Out User Accounts"], selectedSite.SiteName);
 
-            int itemsPerPage = uiOptions.DefaultPageSize_UserList;
+            var itemsPerPage = uiOptions.DefaultPageSize_UserList;
             if (pageSize > 0)
             {
                 itemsPerPage = pageSize;
@@ -227,13 +217,12 @@ namespace cloudscribe.Core.Web.Controllers
 
             var count = await UserManager.CountLockedOutUsers(selectedSite.Id);
 
-            UserListViewModel model = new UserListViewModel();
+            var model = new UserListViewModel();
             model.SiteId = selectedSite.Id;
             model.UserList = siteMembers;
             model.Paging.CurrentPage = pageNumber;
             model.Paging.ItemsPerPage = itemsPerPage;
             model.Paging.TotalItems = count;
-            
             model.ShowAlphaPager = false;
 
             return View(model);
@@ -257,9 +246,9 @@ namespace cloudscribe.Core.Web.Controllers
                 selectedSite = siteManager.CurrentSite;
             }
 
-            ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - User Accounts Pending Approval", selectedSite.SiteName);
+            ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - User Accounts Pending Approval"], selectedSite.SiteName);
 
-            int itemsPerPage = uiOptions.DefaultPageSize_UserList;
+            var itemsPerPage = uiOptions.DefaultPageSize_UserList;
             if (pageSize > 0)
             {
                 itemsPerPage = pageSize;
@@ -278,17 +267,14 @@ namespace cloudscribe.Core.Web.Controllers
             model.Paging.CurrentPage = pageNumber;
             model.Paging.ItemsPerPage = itemsPerPage;
             model.Paging.TotalItems = count;
-
             model.ShowAlphaPager = false;
 
             return View(model);
-
         }
 
 
 
         [HttpGet]
-        //[Authorize(Roles = "Admins")]
         public async Task<ActionResult> NewUser(
             Guid? siteId)
         {
@@ -297,22 +283,18 @@ namespace cloudscribe.Core.Web.Controllers
             if ((siteId.HasValue) && (siteId.Value != Guid.Empty) && (siteId.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
             {
                 selectedSite = await siteManager.Fetch(siteId.Value);
-                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - New User", selectedSite.SiteName);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - New User"], selectedSite.SiteName);
             }
             else
             {
                 selectedSite = siteManager.CurrentSite;
-                ViewData["Title"] = "New User";
+                ViewData["Title"] = sr["New User"];
             }
 
-
-            RegisterViewModel model = new RegisterViewModel();
+            var model = new RegisterViewModel();
             model.SiteId = selectedSite.Id;
-
             
-
             return View(model);
-
         }
 
         [HttpPost]
@@ -330,11 +312,10 @@ namespace cloudscribe.Core.Web.Controllers
                 selectedSite = siteManager.CurrentSite;
             }
 
-            ViewData["Title"] = "New User";
+            ViewData["Title"] = sr["New User"];
 
             if (ModelState.IsValid)
-            {
-                
+            { 
                     var user = new SiteUser()
                     {
                         SiteId = selectedSite.Id,
@@ -353,25 +334,20 @@ namespace cloudscribe.Core.Web.Controllers
                     var result = await UserManager.CreateAsync(user, model.Password);
                     if (result.Succeeded)
                     {
-                        this.AlertSuccess(string.Format("user account for <b>{0}</b> was successfully created.",
+                        this.AlertSuccess(string.Format(sr["user account for {0} was successfully created."],
                             user.DisplayName), true);
 
                         return RedirectToAction("Index", "UserAdmin", new { siteId = selectedSite.Id });
                     }
                     AddErrors(result);
-                
-
-
                 }
 
             // If we got this far, something failed, redisplay form
             return View(model);
-
         }
 
 
         [HttpGet]
-        //[Authorize(Roles = "Admins")]
         public async Task<ActionResult> UserEdit(
             Guid userId,
             Guid? siteId
@@ -382,15 +358,14 @@ namespace cloudscribe.Core.Web.Controllers
             if ((siteId.HasValue) && (siteId.Value != Guid.Empty) && (siteId.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
             {
                 selectedSite = await siteManager.Fetch(siteId.Value);
-                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - Manage User", selectedSite.SiteName);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - Manage User"], selectedSite.SiteName);
             }
             else
             {
                 selectedSite = siteManager.CurrentSite;
-                ViewData["Title"] = "Manage User";
+                ViewData["Title"] = sr["Manage User"];
             }
             
-
             var model = new EditUserViewModel();
             model.SiteId = selectedSite.Id;
             
@@ -403,7 +378,6 @@ namespace cloudscribe.Core.Web.Controllers
                 model.LastName = user.LastName;
                 model.LoginName = user.UserName;
                 model.DisplayName = user.DisplayName;
-
                 model.AccountApproved = user.AccountApproved;
                 model.Comment = user.Comment;
                 model.EmailConfirmed = user.EmailConfirmed;
@@ -415,9 +389,8 @@ namespace cloudscribe.Core.Web.Controllers
                 {
                     model.DateOfBirth = user.DateOfBirth;
                 }
-
                 
-                NavigationNodeAdjuster currentCrumbAdjuster = new NavigationNodeAdjuster(Request.HttpContext);
+                var currentCrumbAdjuster = new NavigationNodeAdjuster(Request.HttpContext);
                 currentCrumbAdjuster.KeyToAdjust = "UserEdit";
                 currentCrumbAdjuster.AdjustedText = user.DisplayName;
                 currentCrumbAdjuster.ViewFilterName = NamedNavigationFilters.Breadcrumbs; // this is default but showing here for readers of code 
@@ -426,7 +399,6 @@ namespace cloudscribe.Core.Web.Controllers
             }
 
             return View(model);
-
         }
 
         [HttpPost]
@@ -444,7 +416,7 @@ namespace cloudscribe.Core.Web.Controllers
                 selectedSite = siteManager.CurrentSite;
             }
 
-            ViewData["Title"] = "New User";
+            ViewData["Title"] = sr["New User"];
 
             if (ModelState.IsValid)
             {
@@ -454,13 +426,11 @@ namespace cloudscribe.Core.Web.Controllers
                     var user = await UserManager.Fetch(selectedSite.Id, model.UserId);
                     if (user != null)
                     {
-                        
                         user.Email = model.Email;
                         user.FirstName = model.FirstName;
                         user.LastName = model.LastName;
                         user.UserName = model.LoginName;
                         user.DisplayName = model.DisplayName;
-
                         user.AccountApproved = model.AccountApproved;
                         user.Comment = model.Comment;
                         user.EmailConfirmed = model.EmailConfirmed;
@@ -485,22 +455,17 @@ namespace cloudscribe.Core.Web.Controllers
 
                         await UserManager.UpdateAsync((SiteUser)user);
                         
-                        this.AlertSuccess(string.Format("user account for <b>{0}</b> was successfully updated.",
+                        this.AlertSuccess(string.Format(sr["user account for {0} was successfully updated."],
                              user.DisplayName), true);
                         
-
-
                         return RedirectToAction("Index", "UserAdmin", new { siteId = selectedSite.Id });
                     }
                 }
                 
-
-
             }
 
             // If we got this far, something failed, redisplay form
             return View(model);
-
         }
 
         [HttpPost]
@@ -519,14 +484,13 @@ namespace cloudscribe.Core.Web.Controllers
                 && (selectedSite.Id == siteManager.CurrentSite.Id || siteManager.CurrentSite.IsServerAdminSite)
                 )
             {
-
                 var user = await UserManager.Fetch(selectedSite.Id, userId);
                 if(user != null)
                 {
                     user.AccountApproved = true;
                     await UserManager.UpdateAsync((SiteUser)user);
 
-                    this.AlertSuccess(string.Format("user account for <b>{0}</b> was successfully approved.",
+                    this.AlertSuccess(string.Format(sr["user account for {0} was successfully approved."],
                             user.DisplayName), true);
                     
                     if(sendEmailNotification)
@@ -538,12 +502,10 @@ namespace cloudscribe.Core.Web.Controllers
                         emailSender.SendAccountConfirmationEmailAsync(
                         selectedSite,
                         user.Email,
-                        "Account Approved",
+                        sr["Account Approved"],
                         loginUrl).Forget();
                     }
-                }
-                
-
+                }   
             }
 
             return RedirectToAction("Index", "UserAdmin", new { siteId = selectedSite.Id, pageNumber = returnPageNumber });
@@ -561,24 +523,19 @@ namespace cloudscribe.Core.Web.Controllers
                 && (selectedSite.Id == siteManager.CurrentSite.Id || siteManager.CurrentSite.IsServerAdminSite)
                 )
             {
-
-                ISiteUser user = await UserManager.Fetch(selectedSite.Id, userId);
-
+                var user = await UserManager.Fetch(selectedSite.Id, userId);
                 var result = await UserManager.DeleteAsync((SiteUser)user);
                 if (result.Succeeded)
                 {
-                    this.AlertSuccess(string.Format("user account for <b>{0}</b> was successfully deleted.",
+                    this.AlertSuccess(string.Format(sr["user account for {0} was successfully deleted."],
                         user.DisplayName), true);
  
-                }
-                   
+                }        
             }
 
             return RedirectToAction("Index", "UserAdmin", new { siteId = selectedSite.Id, pageNumber = returnPageNumber });
         }
-
-
-
+        
         private void AddErrors(IdentityResult result)
         {
             foreach (var error in result.Errors)
@@ -586,6 +543,5 @@ namespace cloudscribe.Core.Web.Controllers
                 ModelState.AddModelError("", error.Description);
             }
         }
-
     }
 }

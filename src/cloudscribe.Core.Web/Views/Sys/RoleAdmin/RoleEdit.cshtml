@@ -3,7 +3,7 @@
 @using Microsoft.Extensions.Options
 @using Microsoft.Extensions.Localization
 @inject IStringLocalizer<CloudscribeCore> sr
-<h2>@Model.Heading</h2>
+<h2>@ViewData["Title"]</h2>
 <form asp-controller="RoleAdmin" asp-action="RoleEdit">
     <input asp-for="Id" type="hidden" />
     <input asp-for="SiteId" type="hidden" />

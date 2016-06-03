@@ -633,4 +633,139 @@
   <data name="You do not have a local username/password for this site. Add a local account so you can log in without an external login." xml:space="preserve">
     <value>You do not have a local username/password for this site. Add a local account so you can log in without an external login.</value>
   </data>
+  <data name="Confirm your account" xml:space="preserve">
+    <value>Confirm your account</value>
+  </data>
+  <data name="Edit Country" xml:space="preserve">
+    <value>Edit Country</value>
+  </data>
+  <data name="Edit Role" xml:space="preserve">
+    <value>Edit Role</value>
+  </data>
+  <data name="Invalid code." xml:space="preserve">
+    <value>Invalid code.</value>
+  </data>
+  <data name="Invalid login attempt." xml:space="preserve">
+    <value>Invalid login attempt.</value>
+  </data>
+  <data name="Manage User" xml:space="preserve">
+    <value>Manage User</value>
+  </data>
+  <data name="New User" xml:space="preserve">
+    <value>New User</value>
+  </data>
+  <data name="Non Role Members" xml:space="preserve">
+    <value>Non Role Members</value>
+  </data>
+  <data name="Please check your email inbox, we just sent you a link that you need to click to confirm your account" xml:space="preserve">
+    <value>Please check your email inbox, we just sent you a link that you need to click to confirm your account</value>
+  </data>
+  <data name="reCAPTCHA Error occured. Please try again" xml:space="preserve">
+    <value>reCAPTCHA Error occured. Please try again</value>
+  </data>
+  <data name="Role Management" xml:space="preserve">
+    <value>Role Management</value>
+  </data>
+  <data name="Role Members" xml:space="preserve">
+    <value>Role Members</value>
+  </data>
+  <data name="Security Code" xml:space="preserve">
+    <value>Security Code</value>
+  </data>
+  <data name="The country {0} was successfully created." xml:space="preserve">
+    <value>The country {0} was successfully created.</value>
+  </data>
+  <data name="The country {0} was successfully deleted." xml:space="preserve">
+    <value>The country {0} was successfully deleted.</value>
+  </data>
+  <data name="The country {0} was successfully updated." xml:space="preserve">
+    <value>The country {0} was successfully updated.</value>
+  </data>
+  <data name="The currency {0} was successfully created." xml:space="preserve">
+    <value>The currency {0} was successfully created.</value>
+  </data>
+  <data name="The currency {0} was successfully deleted." xml:space="preserve">
+    <value>The currency {0} was successfully deleted.</value>
+  </data>
+  <data name="The currency {0} was successfully updated." xml:space="preserve">
+    <value>The currency {0} was successfully updated.</value>
+  </data>
+  <data name="The role &lt;b&gt;{0}&lt;/b&gt; was successfully created." xml:space="preserve">
+    <value>The role &lt;b&gt;{0}&lt;/b&gt; was successfully created.</value>
+  </data>
+  <data name="The role &lt;b&gt;{0}&lt;/b&gt; was successfully deleted." xml:space="preserve">
+    <value>The role &lt;b&gt;{0}&lt;/b&gt; was successfully deleted.</value>
+  </data>
+  <data name="The role &lt;b&gt;{0}&lt;/b&gt; was successfully updated." xml:space="preserve">
+    <value>The role &lt;b&gt;{0}&lt;/b&gt; was successfully updated.</value>
+  </data>
+  <data name="The state {0} was successfully created." xml:space="preserve">
+    <value>The state {0} was successfully created.</value>
+  </data>
+  <data name="The state {0} was successfully deleted." xml:space="preserve">
+    <value>The state {0} was successfully deleted.</value>
+  </data>
+  <data name="The state {0} was successfully updated." xml:space="preserve">
+    <value>The state {0} was successfully updated.</value>
+  </data>
+  <data name="user account for {0} was successfully approved." xml:space="preserve">
+    <value>user account for {0} was successfully approved.</value>
+  </data>
+  <data name="user account for {0} was successfully created." xml:space="preserve">
+    <value>user account for {0} was successfully created.</value>
+  </data>
+  <data name="user account for {0} was successfully deleted." xml:space="preserve">
+    <value>user account for {0} was successfully deleted.</value>
+  </data>
+  <data name="user account for {0} was successfully updated." xml:space="preserve">
+    <value>user account for {0} was successfully updated.</value>
+  </data>
+  <data name="User Management" xml:space="preserve">
+    <value>User Management</value>
+  </data>
+  <data name="Your security code is: {0}" xml:space="preserve">
+    <value>Your security code is: {0}</value>
+  </data>
+  <data name="{0} - Edit Role" xml:space="preserve">
+    <value>{0} - Edit Role</value>
+  </data>
+  <data name="{0} - Locked Out User Accounts" xml:space="preserve">
+    <value>{0} - Locked Out User Accounts</value>
+  </data>
+  <data name="{0} - Manage User" xml:space="preserve">
+    <value>{0} - Manage User</value>
+  </data>
+  <data name="{0} - New Role" xml:space="preserve">
+    <value>{0} - New Role</value>
+  </data>
+  <data name="{0} - New User" xml:space="preserve">
+    <value>{0} - New User</value>
+  </data>
+  <data name="{0} - Non Role Members" xml:space="preserve">
+    <value>{0} - Non Role Members</value>
+  </data>
+  <data name="{0} - Role Management" xml:space="preserve">
+    <value>{0} - Role Management</value>
+  </data>
+  <data name="{0} - Role Members" xml:space="preserve">
+    <value>{0} - Role Members</value>
+  </data>
+  <data name="{0} - User Accounts Pending Approval" xml:space="preserve">
+    <value>{0} - User Accounts Pending Approval</value>
+  </data>
+  <data name="{0} - User Management" xml:space="preserve">
+    <value>{0} - User Management</value>
+  </data>
+  <data name="{0} - {1}" xml:space="preserve">
+    <value>{0} - {1}</value>
+  </data>
+  <data name="{0} States" xml:space="preserve">
+    <value>{0} States</value>
+  </data>
+  <data name="{0} was successfully added to the role {1}." xml:space="preserve">
+    <value>{0} was successfully added to the role {1}.</value>
+  </data>
+  <data name="{0} was successfully removed from the role {1}." xml:space="preserve">
+    <value>{0} was successfully removed from the role {1}.</value>
+  </data>
 </root>

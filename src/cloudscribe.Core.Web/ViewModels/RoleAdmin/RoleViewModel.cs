@@ -2,11 +2,10 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-04
-// Last Modified:			2016-05-15
+// Last Modified:			2016-06-03
 //
 
 using cloudscribe.Core.Models;
-//using cloudscribe.Resources;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -26,16 +25,7 @@ namespace cloudscribe.Core.Web.ViewModels.RoleAdmin
             return model;
 
         }
-
-
-        private string heading = string.Empty;
-
-        public string Heading
-        {
-            get { return heading; }
-            set { heading = value; }
-        }
-
+        
         private bool isDeletable = true;
         /// <summary>
         /// system roles cannot be deleted
@@ -71,16 +61,6 @@ namespace cloudscribe.Core.Web.ViewModels.RoleAdmin
 
         public string ConcurrencyStamp { get; set; }
 
-        /// <summary>
-        /// role name is the actual role name usedin the role cookie
-        /// once a role is created the rolename cannot be edited
-        /// only displayname can be edited
-        /// when a new role is created the displayname is used also to populate the role name
-        /// but subsequent edits of displayname do not change the rolename
-        /// this is mainly so role names we have coded against don't change while allowing the display to be customized/localized
-        /// if you really need to change the rolename, then delete the role and re-create it
-        /// certain system roles are not allowed to be deleted
-        /// </summary>
         private string normalizedRoleName = string.Empty;
         public string NormalizedRoleName
         {
@@ -90,7 +70,6 @@ namespace cloudscribe.Core.Web.ViewModels.RoleAdmin
 
         private string roleName = string.Empty;
 
-        //[Display(Name = "RoleName", ResourceType = typeof(CommonResources))]
         [Required(ErrorMessage = "Role Name is required")]
         //[StringLength(50, ErrorMessageResourceName = "RoleNameLengthError", ErrorMessageResourceType = typeof(CommonResources), MinimumLength = 3)]
         public string RoleName
