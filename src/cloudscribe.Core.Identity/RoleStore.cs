@@ -61,10 +61,8 @@ namespace cloudscribe.Core.Identity
                 throw new ArgumentNullException("role");
             }
 
-            if (role.SiteId == Guid.Empty)
-            {
-                role.SiteId = Site.Id;
-            }
+            if (role.SiteId == Guid.Empty){ role.SiteId = Site.Id; }
+            if (role.Id == Guid.Empty) role.Id = Guid.NewGuid();
             
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
@@ -154,7 +152,7 @@ namespace cloudscribe.Core.Identity
                 throw new ArgumentNullException("role");
             }
 
-            return Task.FromResult(role.NormalizedRoleName);
+            return Task.FromResult(role.RoleName);
         }
 
         public Task SetNormalizedRoleNameAsync(TRole role, string normalizedName, CancellationToken cancellationToken)

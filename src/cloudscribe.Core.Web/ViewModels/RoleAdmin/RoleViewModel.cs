@@ -81,23 +81,22 @@ namespace cloudscribe.Core.Web.ViewModels.RoleAdmin
         /// if you really need to change the rolename, then delete the role and re-create it
         /// certain system roles are not allowed to be deleted
         /// </summary>
-        private string roleName = string.Empty;
-        [Display(Name = "RoleName")]
+        private string normalizedRoleName = string.Empty;
         public string NormalizedRoleName
         {
-            get { return roleName; }
-            set { roleName = value; }
+            get { return normalizedRoleName; }
+            set { normalizedRoleName = value; }
         }
 
-        private string displayName = string.Empty;
+        private string roleName = string.Empty;
 
         //[Display(Name = "RoleName", ResourceType = typeof(CommonResources))]
-        //[Required(ErrorMessageResourceName = "RoleNameRequired", ErrorMessageResourceType = typeof(CommonResources))]
+        [Required(ErrorMessage = "Role Name is required")]
         //[StringLength(50, ErrorMessageResourceName = "RoleNameLengthError", ErrorMessageResourceType = typeof(CommonResources), MinimumLength = 3)]
         public string RoleName
         {
-            get { return displayName; }
-            set { displayName = value; }
+            get { return roleName; }
+            set { roleName = value; }
         }
 
         private int memberCount = -1;
