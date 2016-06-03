@@ -42,7 +42,7 @@
     </div>
 </div>
 <div class="form-group">
-    <label asp-for="DateOfBirth" class="col-md-2 control-label"></label>
+    <label asp-for="DateOfBirth" class="col-md-2 control-label">@sr["Date of Birth"]</label>
     <div class="col-md-10">
         <input name="DateOfBirth" value="@(Model.DateOfBirth.HasValue ? Model.DateOfBirth.Value.ToString("d") : string.Empty)" 
                class="form-control" 

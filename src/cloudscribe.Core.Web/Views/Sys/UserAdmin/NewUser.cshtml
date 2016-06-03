@@ -1,4 +1,9 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.Account.RegisterViewModel
+@using cloudscribe.Core.Web
+@using cloudscribe.Core.Web.Components
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCore> sr
 @{
     var datePickerLocalizationScriptUrl = "~/js/jqueryui-i18n/datepicker-" + System.Globalization.CultureInfo.CurrentUICulture.Name + ".js";
     var timePickerLocalizationScriptUrl = "~/js/timepicker/i18n/jquery-ui-timepicker-" + System.Globalization.CultureInfo.CurrentUICulture.Name + ".js";
@@ -6,7 +11,6 @@
 @section Styles {
     <link rel="stylesheet" href="~/lib/jquery-ui/themes/base/all.css" />
     <link rel="stylesheet" href="~/jsdev/timepicker/jquery-ui-timepicker-addon.css" />
-
 }
 <h2>@ViewBag.Title</h2>
 <form class="form-horizontal" role="form" asp-controller="UserAdmin" asp-action="NewUser">
@@ -15,41 +19,41 @@
     @if (Model.UserId != Guid.Empty)
     {
         <div class="form-group">
-            <label asp-for="UserId" class="col-md-2 control-label"></label>
+            <label asp-for="UserId" class="col-md-2 control-label">@sr["UserId"]</label>
             <div class="col-md-10">
                 <label class="control-label">@Model.UserId.ToString()</label>
             </div>
         </div>
     }
     <div class="form-group">
-        <label asp-for="Email" class="col-md-2 control-label"></label>
+        <label asp-for="Email" class="col-md-2 control-label">@sr["Email"]</label>
         <div class="col-md-10">
             <input asp-for="Email" class="form-control" />
             <span asp-validation-for="Email" class="text-danger"></span>
         </div>
     </div>
     <div class="form-group">
-        <label asp-for="LoginName" class="col-md-2 control-label"></label>
+        <label asp-for="LoginName" class="col-md-2 control-label">@sr["Login Name"]</label>
         <div class="col-md-10">
             <input asp-for="LoginName" class="form-control" />
             <span asp-validation-for="LoginName" class="text-danger"></span>
         </div>
     </div>
     <div class="form-group">
-        <label asp-for="DisplayName" class="col-md-2 control-label"></label>
+        <label asp-for="DisplayName" class="col-md-2 control-label">@sr["Display Name"]</label>
         <div class="col-md-10">
             <input asp-for="DisplayName" class="form-control" />
             <span asp-validation-for="DisplayName" class="text-danger"></span>
         </div>
     </div>
     <div class="form-group">
-        <label asp-for="FirstName" class="col-md-2 control-label"></label>
+        <label asp-for="FirstName" class="col-md-2 control-label">@sr["First Name"]</label>
         <div class="col-md-10">
             <input asp-for="FirstName" class="form-control" />
         </div>
     </div>
     <div class="form-group">
-        <label asp-for="LastName" class="col-md-2 control-label"></label>
+        <label asp-for="LastName" class="col-md-2 control-label">@sr["Last Name"]</label>
         <div class="col-md-10">
             <input asp-for="LastName" class="form-control" />
         </div>
@@ -57,14 +61,14 @@
     @if (Model.UserId == Guid.Empty)
     {
         <div class="form-group">
-            <label asp-for="Password" class="col-md-2 control-label"></label>
+            <label asp-for="Password" class="col-md-2 control-label">@sr["Password"]</label>
             <div class="col-md-10">
                 <input asp-for="Password" type="password" class="form-control" />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="ConfirmPassword" class="col-md-2 control-label"></label>
+            <label asp-for="ConfirmPassword" class="col-md-2 control-label">@sr["Confirm Password"]</label>
             <div class="col-md-10">
                 <input asp-for="ConfirmPassword" type="password" class="form-control" />
                 <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
@@ -85,41 +89,31 @@
                    data-cs-datepicker-dateformat="@ViewBag.DateFormat"
                    data-cs-datepicker-timeformat="@ViewBag.TimeFormat" />
             <span asp-validation-for="DateOfBirth" class="text-danger"></span>
-
         </div>
     </div>
-
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <input type="submit" class="btn btn-default" value="CommonResources.Save" />
+            <input type="submit" class="btn btn-default" value='@sr["Save"]' />
         </div>
     </div>
     <div asp-validation-summary="All" class="text-danger"></div>
-
 </form>
 @section Scripts {
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
-
-
     <environment names="Development">
         <script src="~/lib/jquery-ui/jquery-ui.js"></script>
-        
     </environment>
     <environment names="Staging,Production">
         <script src="//ajax.aspnetcdn.com/ajax/jquery.ui/1.11.3/jquery.ui.min.js"
                 asp-fallback-src="~/js/lib/jquery-ui/jquery-ui.min.js"
                 asp-fallback-test="window.jQuery.ui && window.jQuery.ui.version">
         </script>
-        
     </environment>
     <script src="~/jsdev/timepicker/jquery-ui-timepicker-addon.js"></script>
-
     @if (System.Globalization.CultureInfo.CurrentUICulture.Name != "en-US")
     {
         <script src="@datePickerLocalizationScriptUrl"></script>
             <script src="@timePickerLocalizationScriptUrl"></script>
-
     }
-
     <script src="~/jsdev/cloudscribe-datepicker-jqui-unobtrusive.js"></script>
 }

@@ -495,8 +495,14 @@
   <data name="Add User" xml:space="preserve">
     <value>Add User</value>
   </data>
+  <data name="All" xml:space="preserve">
+    <value>All</value>
+  </data>
   <data name="Are you sure you want to add {0}?" xml:space="preserve">
     <value>Are you sure you want to add {0}?</value>
+  </data>
+  <data name="Are you sure you want to delete the user {0}? You cannot undo this action." xml:space="preserve">
+    <value>Are you sure you want to delete the user {0}? You cannot undo this action.</value>
   </data>
   <data name="Are you sure you want to remove {0}?" xml:space="preserve">
     <value>Are you sure you want to remove {0}?</value>
@@ -510,8 +516,17 @@
   <data name="Close" xml:space="preserve">
     <value>Close</value>
   </data>
+  <data name="Cloudscribe Version" xml:space="preserve">
+    <value>Cloudscribe Version</value>
+  </data>
   <data name="Create" xml:space="preserve">
     <value>Create</value>
+  </data>
+  <data name="Database Platform" xml:space="preserve">
+    <value>Database Platform</value>
+  </data>
+  <data name="Date of Birth" xml:space="preserve">
+    <value>Date of Birth</value>
   </data>
   <data name="Disable" xml:space="preserve">
     <value>Disable</value>
@@ -527,6 +542,9 @@
   </data>
   <data name="Enabled" xml:space="preserve">
     <value>Enabled</value>
+  </data>
+  <data name="Environment Name" xml:space="preserve">
+    <value>Environment Name</value>
   </data>
   <data name="External Logins:" xml:space="preserve">
     <value>External Logins:</value>
@@ -558,6 +576,9 @@
   <data name="None" xml:space="preserve">
     <value>None</value>
   </data>
+  <data name="Operating System" xml:space="preserve">
+    <value>Operating System</value>
+  </data>
   <data name="Password:" xml:space="preserve">
     <value>Password:</value>
   </data>
@@ -579,8 +600,23 @@
   <data name="Role Name" xml:space="preserve">
     <value>Role Name</value>
   </data>
+  <data name="Runtime" xml:space="preserve">
+    <value>Runtime</value>
+  </data>
   <data name="Search" xml:space="preserve">
     <value>Search</value>
+  </data>
+  <data name="Search By IP Address" xml:space="preserve">
+    <value>Search By IP Address</value>
+  </data>
+  <data name="Server Host Name" xml:space="preserve">
+    <value>Server Host Name</value>
+  </data>
+  <data name="Server IP Address" xml:space="preserve">
+    <value>Server IP Address</value>
+  </data>
+  <data name="Server Time UTC" xml:space="preserve">
+    <value>Server Time UTC</value>
   </data>
   <data name="Set Password" xml:space="preserve">
     <value>Set Password</value>
@@ -590,6 +626,9 @@
   </data>
   <data name="Two-Factor Authentication:" xml:space="preserve">
     <value>Two-Factor Authentication:</value>
+  </data>
+  <data name="UserId" xml:space="preserve">
+    <value>UserId</value>
   </data>
   <data name="You do not have a local username/password for this site. Add a local account so you can log in without an external login." xml:space="preserve">
     <value>You do not have a local username/password for this site. Add a local account so you can log in without an external login.</value>

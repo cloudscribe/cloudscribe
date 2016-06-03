@@ -1,57 +1,56 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.SystemInfo.SystemInfoViewModel
-
-@{
-   
-}
-
+@using cloudscribe.Core.Web
+@using cloudscribe.Web.Navigation
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCore> sr
 <h1>@ViewData["Heading"]</h1>
-
 <ul class="list-unstyled">
     <li>
-        <h2 class="pull-left h4 clearfix">Server Host Name</h2>
+        <h2 class="pull-left h4 clearfix">@sr["Server Host Name"]</h2>
         <div class="padded margin10 clearfix">
             @Model.Name
         </div>
     </li>
     <li>
-        <h2 class="pull-left h4 clearfix">Server IP Address</h2>
+        <h2 class="pull-left h4 clearfix">@sr["Server IP Address"]</h2>
         <div class="padded margin10 clearfix">
             @Model.LocalAddress
         </div>
     </li>
     <li>
-        <h2 class="pull-left h4 clearfix">Operating System</h2>
+        <h2 class="pull-left h4 clearfix">@sr["Operating System"]</h2>
         <div class="padded margin10 clearfix">
             @Model.OperatingSystem
         </div>
     </li>
     <li>
-        <h2 class="pull-left h4 clearfix">Runtime</h2>
+        <h2 class="pull-left h4 clearfix">@sr["Runtime"]</h2>
         <div class="padded margin10 clearfix">
             @Model.Runtime
         </div>
     </li>
     
     <li>
-        <h2 class="pull-left h4 clearfix">Environment Name</h2>
+        <h2 class="pull-left h4 clearfix">@sr["Environment Name"]</h2>
         <div class="padded margin10 clearfix">
             @Model.EnvironmentName
         </div>
     </li>
     <li>
-        <h2 class="pull-left h4 clearfix">Cloudscribe Version</h2>
+        <h2 class="pull-left h4 clearfix">@sr["Cloudscribe Version"]</h2>
         <div class="padded margin10 clearfix">
             @Model.CloudscribeCoreVersion
         </div>
     </li>
     <li>
-        <h2 class="pull-left h4 clearfix">Database Platform</h2>
+        <h2 class="pull-left h4 clearfix">@sr["Database Platform"]</h2>
         <div class="padded margin10 clearfix">
             @Model.DatabasePlatform
         </div>
     </li>
     <li>
-        <h2 class="pull-left h4 clearfix">Server Time UTC</h2>
+        <h2 class="pull-left h4 clearfix">@sr["Server Time UTC"]</h2>
         <div class="padded margin10 clearfix">
             @Model.ServerTimeUtc
         </div>
