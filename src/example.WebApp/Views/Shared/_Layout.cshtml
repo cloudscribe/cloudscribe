@@ -32,20 +32,20 @@
                 <a href="~/@(Tenant?.SiteFolderName ?? "")" class="navbar-brand">@(Tenant?.SiteName ?? "Sample")</a>
             </div>
             <div class="navbar-collapse collapse">
-                @await Component.InvokeAsync("Navigation", new { viewName = "BootstrapTopNav", filterName = NamedNavigationFilters.TopNav, startingNodeKey = "" } ) 
+                @await Component.InvokeAsync("Navigation", new { viewName = "BootstrapTopNav", filterName = NamedNavigationFilters.TopNav, startingNodeKey = "" })
                 @await Html.PartialAsync("_LoginPartial")
             </div>
         </div>
     </div>
     <div class="container body-content">
         @await Component.InvokeAsync("Navigation", new { viewName = "BootstrapBreadcrumbs", filterName = NamedNavigationFilters.Breadcrumbs, startingNodeKey = "" })
+        @await Html.PartialAsync("AlertsPartial")
         @RenderBody()
         <hr />
         <footer class="text-center" role="contentinfo" itemscope itemtype="http://schema.org/Person" itemprop="author">
             <small>Copyright &copy; @DateTime.Now.Year - @(Tenant?.SiteName ?? "Sample")</small>
         </footer>
     </div>
-
     <environment names="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
@@ -65,4 +65,5 @@
     @RenderSection("Bottom", required: false)
     @RenderSection("scripts", required: false)
 </body>
+
 </html>
