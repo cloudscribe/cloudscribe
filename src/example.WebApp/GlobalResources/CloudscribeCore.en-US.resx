@@ -864,6 +864,9 @@
   <data name="Social Login Settings for {0} was successfully updated." xml:space="preserve">
     <value>Social Login Settings for {0} was successfully updated.</value>
   </data>
+  <data name="System Information" xml:space="preserve">
+    <value>System Information</value>
+  </data>
   <data name="The external login was removed." xml:space="preserve">
     <value>The external login was removed.</value>
   </data>
