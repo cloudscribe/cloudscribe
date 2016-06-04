@@ -14,7 +14,7 @@
             "target": "package"
         },
         "Microsoft.NETCore.Platforms": "1.0.1-rc2-*",
-        "cloudscribe.Core.Models": "1.0.0-*",
+        "cloudscribe.Core.Models": "1.0.1-*",
         "cloudscribe.Core.Web": "1.0.0-*"
     },
 

@@ -44,7 +44,7 @@
             "type": "build"
         },
         "cloudscribe.Core.Identity": "1.0.0-*",
-        "cloudscribe.Core.Models": "1.0.0-*",
+        "cloudscribe.Core.Models": "1.0.1-*",
         "cloudscribe.Core.Storage.EF": "1.0.0-*",
         "cloudscribe.Core.Storage.NoDb": "1.0.0-*",
         "cloudscribe.Core.Web": "1.0.0-*",

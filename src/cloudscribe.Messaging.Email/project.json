@@ -1,5 +1,5 @@
 ﻿{
-    "version": "1.0.0-beta3",
+    "version": "1.0.0-beta4",
     "description": "a friendly wrapper around Mailkit/Mimekit",
     "authors": [ "Joe Audette" ],
     "packOptions": {
@@ -13,7 +13,6 @@
         "releaseNotes": ""
     },
 
-
     "dependencies": {
         "NETStandard.Library": "1.5.0-rc2-24027",
         "MailKit": "1.3.0-*",
@@ -21,7 +20,7 @@
     },
 
     "frameworks": {
-        "netstandard1.5": {
+        "netstandard1.0": {
             "imports": "dnxcore50"
         }
     }

@@ -16,7 +16,7 @@
 
     "dependencies": {
         "NETStandard.Library": "1.5.0-rc2-24027",
-        "cloudscribe.Core.Models": "1.0.0-*",
+        "cloudscribe.Core.Models": "1.0.1-*",
         "NoDb": "1.0.0-*",
         "Microsoft.Extensions.Logging.Abstractions": "1.0.0-rc2-final",
         "Microsoft.Extensions.Options": "1.0.0-rc2-final",

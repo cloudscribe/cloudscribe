@@ -1,4 +1,6 @@
 
+Targets
+https://github.com/dotnet/corefx/blob/master/Documentation/architecture/net-platform-standard.md
 
 not true
 http://blog.nuget.org/20160126/nuget-contentFiles-demystified.html

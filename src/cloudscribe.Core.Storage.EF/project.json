@@ -23,7 +23,7 @@
         "Microsoft.Extensions.Configuration.Json": "1.0.0-rc2-final",
         "Microsoft.Extensions.Configuration": "1.0.0-rc2-final",
         "Microsoft.EntityFrameworkCore.SqlServer": "1.0.0-rc2-final",
-        "cloudscribe.Core.Models": "1.0.0-*",
+        "cloudscribe.Core.Models": "1.0.1-*",
         "Microsoft.EntityFrameworkCore.Tools": {
             "version": "1.0.0-preview1-final",
             "type": "build"

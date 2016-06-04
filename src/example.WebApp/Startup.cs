@@ -53,7 +53,6 @@ namespace example.WebApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             // since we are protecting some data such as social auth secrets in the db
             // we need our data protection keys to be located on disk where we can find them if 
             // we need to move to different hosting, without those key on the new host it would not be possible to decrypt
@@ -63,9 +62,6 @@ namespace example.WebApp
             services.AddDataProtection()
                 .PersistKeysToFileSystem(new System.IO.DirectoryInfo(pathToCryptoKeys));
             
-
-
-
             // waiting for rc2 compatible glimpse
             //bool enableGlimpse = Configuration.GetValue("DiagnosticOptions:EnableGlimpse", false);
 
@@ -85,7 +81,7 @@ namespace example.WebApp
             services.AddOptions();
 
             /* optional and only needed if you are using cloudscribe Logging  */
-            services.AddScoped<cloudscribe.Logging.Web.LogManager>();
+            services.AddCloudscribeLogging();
 
             /* these are optional and only needed if using cloudscribe Setup */
             //services.Configure<SetupOptions>(Configuration.GetSection("SetupOptions"));
@@ -155,6 +151,7 @@ namespace example.WebApp
                     {
                         options.AddEmbeddedViewsForNavigation();
                         options.AddEmbeddedViewsForCloudscribeCore();
+                        options.AddEmbeddedViewsForCloudscribeLogging();
                         options.ViewLocationExpanders.Add(new cloudscribe.Core.Web.Components.SiteViewLocationExpander());
                     });
 
@@ -183,7 +180,6 @@ namespace example.WebApp
                 ConfigureLogging(loggerFactory, serviceProvider);
             }
             
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -259,7 +255,7 @@ namespace example.WebApp
                     CoreEFStartup.InitializeDatabaseAsync(app.ApplicationServices).Wait();
 
                     // this one is only needed if using cloudscribe Logging with EF as the logging storage
-                    LoggingDbInitializer.InitializeDatabaseAsync(app.ApplicationServices).Wait();
+                    LoggingEFStartup.InitializeDatabaseAsync(app.ApplicationServices).Wait();
 
                     break;
             }
