@@ -6,7 +6,7 @@
 @inject IStringLocalizer<CloudscribeCore> sr
 <div class="row">
     <div class="col-md-10 col-md-push-2">
-        <h2>@ViewBag.Title</h2>
+        <h2>@ViewData["Title"]</h2>
         <form method="post" class="form-horizontal" role="form" asp-antiforgery="true">
             <div asp-validation-summary="All" class="text-danger"></div>
             <input asp-for="SiteId" type="hidden" />

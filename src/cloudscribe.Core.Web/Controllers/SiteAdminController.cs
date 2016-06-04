@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2016-05-18
+// Last Modified:			2016-06-04
 // 
 
 using cloudscribe.Core.Models;
@@ -13,14 +13,14 @@ using cloudscribe.Web.Common.Extensions;
 using cloudscribe.Web.Common.Razor;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using System;
-using System.Linq;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace cloudscribe.Core.Web.Controllers
 {
@@ -32,9 +32,9 @@ namespace cloudscribe.Core.Web.Controllers
             GeoDataManager geoDataManager,
             IOptions<MultiTenantOptions> multiTenantOptions,
             IOptions<UIOptions> uiOptionsAccessor,
-           // IOptions<LayoutSelectorOptions> layoutSeletorOptionsAccessor,
             IThemeListBuilder layoutListBuilder,
-            IMemoryCache cache
+            IMemoryCache cache,
+            IStringLocalizer<CloudscribeCore> localizer
             )
         {
             if (siteManager == null) { throw new ArgumentNullException(nameof(siteManager)); }
@@ -48,81 +48,63 @@ namespace cloudscribe.Core.Web.Controllers
             uiOptions = uiOptionsAccessor.Value;
             this.layoutListBuilder = layoutListBuilder;
             this.cache = cache;
-            //layoutOptions = layoutSeletorOptionsAccessor.Value;
-
-            //startup = startupTrigger;
+            sr = localizer;
         }
 
         private SiteManager siteManager;
         private GeoDataManager geoDataManager;
         private MultiTenantOptions multiTenantOptions;
         //private ITriggerStartup startup
-        //private LayoutSelectorOptions layoutOptions;
+        private IStringLocalizer sr;
         private IThemeListBuilder layoutListBuilder;
         private UIOptions uiOptions;
         private IMemoryCache cache;
-
-        //disable warning about not really being async
-        // we know it is not, it is not needed to hit the db in these
-#pragma warning disable 1998
-
+        
         // GET: /SiteAdmin
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            ViewData["Title"] = "Site Administration";
-            ViewData["Heading"] = "Site Administration";
+            ViewData["Title"] = sr["Site Administration"];
             // this view just has navigation map
             return View();
-
-
         }
 
         // GET: /SiteAdmin
         [HttpGet]
-        public async Task<IActionResult> Security()
+        public IActionResult Security()
         {
-            ViewData["Title"] = "Security Settings";
-            ViewData["Heading"] = "Security Settings";
+            ViewData["Title"] = sr["Security Settings"];
             // this view just has navigation map
             return View("Index");
-
-
         }
 
-#pragma warning restore 1998
 
         [HttpGet]
         [Authorize(Policy = "ServerAdminPolicy")]
         public async Task<IActionResult> SiteList(int pageNumber = 1, int pageSize = -1)
         {
-            ViewData["Title"] = "Site List";
-            ViewData["Heading"] = "Site List";
+            ViewData["Title"] = sr["Site List"];
 
             int itemsPerPage = uiOptions.DefaultPageSize_SiteList;
             if (pageSize > 0)
             {
                 itemsPerPage = pageSize;
             }
-
-
-            Guid filteredSiteId = Guid.Empty; //nothing filtered
+            
+            var filteredSiteId = Guid.Empty; //nothing filtered
             var sites = await siteManager.GetPageOtherSites(
                 filteredSiteId,
                 pageNumber,
                 itemsPerPage);
 
             var count = await siteManager.CountOtherSites(filteredSiteId);
-
-            SiteListViewModel model = new SiteListViewModel();
-            model.Heading = "Site List";
+            var model = new SiteListViewModel();
             model.Sites = sites;
             model.Paging.CurrentPage = pageNumber;
             model.Paging.ItemsPerPage = itemsPerPage;
             model.Paging.TotalItems = count;
 
             return View(model);
-
 
         }
 
@@ -139,28 +121,24 @@ namespace cloudscribe.Core.Web.Controllers
             if ((siteId.HasValue) && (siteId.Value != Guid.Empty) && (siteId.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
             {
                 selectedSite = await siteManager.Fetch(siteId.Value);
-                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - Settings", selectedSite.SiteName);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - Settings"], selectedSite.SiteName);
             }
             else
             {
                 selectedSite = siteManager.CurrentSite;
-                ViewData["Title"] = "Site Settings";
+                ViewData["Title"] = sr["Site Settings"];
             }
             
-            SiteBasicSettingsViewModel model = new SiteBasicSettingsViewModel();
+            var model = new SiteBasicSettingsViewModel();
             model.ReturnPageNumber = slp; // site list page number to return to
-
-            //model.AllTimeZones = DateTimeHelper.GetTimeZoneList();
             model.AllTimeZones = DateTimeHelper.GetTimeZoneList().Select(x =>
                                new SelectListItem
                                {
                                    Text = x.DisplayName,
-                                   Value = x.Id
-                                   ,
+                                   Value = x.Id,
                                    Selected = model.TimeZoneId == x.Id
                                });
 
-            
             model.SiteId = selectedSite.Id;
             model.SiteName = selectedSite.SiteName;
             if(selectedSite.AliasId != selectedSite.Id.ToString())
@@ -193,28 +171,9 @@ namespace cloudscribe.Core.Web.Controllers
                     model.ShowDelete = uiOptions.AllowDeleteChildSites;
                 }
             }
-
-           
-            //dpBeginDate.Text = blog.StartDate.ToLocalTime(timeZone).ToString("g");
-            //TimeZoneInfo timeZone = DateTimeHelper.GetTimeZone(model.AllTimeZones, "Eastern Standard Time");
-
-            //model.TmpDate = DateTime.UtcNow.ToLocalTime(timeZone);
-
-            //string timeFormat = CultureInfo.CurrentUICulture.DateTimeFormat.ToDatePickerWithTimeFormat();
-            //string timeFormat = "h:mm:ss TT";
-            //ViewData.Add("TimeFormat", timeFormat);
-
-            //ViewBag.TimeFormat = timeFormat;
-
-            //string dateFormat = CultureInfo.CurrentUICulture.DateTimeFormat.ToDatePickerFormat();
-
-            //ViewBag.DateFormat = dateFormat;
-
+            
             return View(model);
         }
-
-
-
 
         // Post: /SiteAdmin/SiteInfo
         [HttpPost]
@@ -238,28 +197,26 @@ namespace cloudscribe.Core.Web.Controllers
 
             if (model.SiteId == Guid.Empty)
             {
-                this.AlertDanger("oops something went wrong, site was not found.", true);
+                this.AlertDanger(sr["oops something went wrong, site was not found."], true);
 
                 return RedirectToAction("Index");
             }
 
-            //model.SiteId = Site.SiteSettings.SiteId;
-            //model.SiteGuid = Site.SiteSettings.SiteGuid;
             ISiteSettings selectedSite = null;
             if (model.SiteId == siteManager.CurrentSite.Id)
             {
                 selectedSite = siteManager.CurrentSite;
-                ViewData["Title"] = "Site Settings";
+                ViewData["Title"] = sr["Site Settings"];
             }
             else if (siteManager.CurrentSite.IsServerAdminSite)
             {
                 selectedSite = await siteManager.Fetch(model.SiteId);
-                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - Settings", selectedSite.SiteName);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - Settings"], selectedSite.SiteName);
             }
 
             if (selectedSite == null)
             {
-                this.AlertDanger("oops something went wrong.", true);
+                this.AlertDanger(sr["oops something went wrong."], true);
 
                 return RedirectToAction("Index");
             }
@@ -272,23 +229,12 @@ namespace cloudscribe.Core.Web.Controllers
                     )
                 {
                     // only the server admin site can be without a folder
-                    ModelState.AddModelError("foldererror", "Folder name is required.");
+                    ModelState.AddModelError("foldererror", sr["Folder name is required."]);
 
                     return View(model);
                 }
-
-                //TODO: since we removed the SiteFolders table, now we need to implement looking up the site directly from the
-                // Sites table SiteFolderName field
-
-                //ISiteFolder folder = await siteManager.GetSiteFolder(model.SiteFolderName);
-                //if ((folder != null) && (folder.SiteGuid != selectedSite.SiteGuid))
-                //{
-                //    ModelState.AddModelError("foldererror", "The selected folder name is already in use on another site.");
-
-                //    return View(model);
-                //}
-
-                bool folderAvailable = await siteManager.FolderNameIsAvailable(selectedSite, model.SiteFolderName);
+                
+                var folderAvailable = await siteManager.FolderNameIsAvailable(selectedSite, model.SiteFolderName);
                 if (!folderAvailable)
                 {
                     ModelState.AddModelError("foldererror", "The selected folder name is already in use on another site.");
@@ -300,7 +246,6 @@ namespace cloudscribe.Core.Web.Controllers
             else if (multiTenantOptions.Mode == MultiTenantMode.HostName)
             {
                 ISiteHost host;
-
                 if (!string.IsNullOrEmpty(model.HostName))
                 {
                     model.HostName = model.HostName.Replace("https://", string.Empty).Replace("http://", string.Empty);
@@ -311,11 +256,9 @@ namespace cloudscribe.Core.Web.Controllers
                     {
                         if (host.SiteId != selectedSite.Id)
                         {
-                            ModelState.AddModelError("hosterror", "The selected host/domain name is already in use on another site.");
-
+                            ModelState.AddModelError("hosterror", sr["The selected host/domain name is already in use on another site."]);
                             return View(model);
                         }
-
                     }
                     else
                     {
@@ -324,10 +267,8 @@ namespace cloudscribe.Core.Web.Controllers
                             model.HostName);
                     }
                 }
-
-
+                
                 selectedSite.PreferredHostName = model.HostName;
-
             }
 
             if (model.AliasId.Length > 0) selectedSite.AliasId = model.AliasId;
@@ -338,34 +279,18 @@ namespace cloudscribe.Core.Web.Controllers
             selectedSite.SiteIsClosedMessage = model.ClosedMessage;
             selectedSite.Theme = model.Theme;
             
-            
             await siteManager.Save(selectedSite);
-
-            //if ((result) && (multiTenantOptions.Mode == MultiTenantMode.FolderName))
-            //{
-            //    if (!string.IsNullOrEmpty(selectedSite.SiteFolderName))
-            //    {
-            //        bool folderEnsured = await siteManager.EnsureSiteFolder(selectedSite);
-            //    }
-
-            //}
-
             
-            this.AlertSuccess(string.Format("Basic site settings for <b>{0}</b> were successfully updated.",
+            this.AlertSuccess(string.Format(sr["Basic site settings for {0} were successfully updated."],
                         selectedSite.SiteName), true);
             
-
-
-            if ((siteManager.CurrentSite.IsServerAdminSite)
-                //&&(Site.SiteSettings.SiteGuid != selectedSite.SiteGuid)
-                )
+            if (siteManager.CurrentSite.IsServerAdminSite)
             {
                 // just edited from site list so redirect there
                 return RedirectToAction("SiteList", new { pageNumber = model.ReturnPageNumber });
             }
 
             return RedirectToAction("Index");
-
         }
 
         // GET: /SiteAdmin/NewSite
@@ -373,26 +298,20 @@ namespace cloudscribe.Core.Web.Controllers
         [Authorize(Policy = "ServerAdminPolicy")]
         public ActionResult NewSite(int slp = 1)
         {
-            ViewData["Title"] = "Create New Site";
+            ViewData["Title"] = sr["Create New Site"];
 
-            SiteBasicSettingsViewModel model = new SiteBasicSettingsViewModel();
+            var model = new SiteBasicSettingsViewModel();
             model.ReturnPageNumber = slp; //site list return page
             model.SiteId = Guid.Empty;
-            // model.SiteName = Site.SiteSettings.SiteName;
-            
             model.TimeZoneId = siteManager.CurrentSite.TimeZoneId;
-            //model.AllTimeZones = DateTimeHelper.GetTimeZoneList();
             model.AllTimeZones = DateTimeHelper.GetTimeZoneList().Select(x =>
                                new SelectListItem
                                {
                                    Text = x.DisplayName,
-                                   Value = x.Id
-                                   ,
+                                   Value = x.Id,
                                    Selected = model.TimeZoneId == x.Id
                                });
-
-
-
+            
             return View(model);
         }
 
@@ -409,59 +328,41 @@ namespace cloudscribe.Core.Web.Controllers
             }
             
             bool addHostName = false;
-            SiteSettings newSite = new SiteSettings();
+            var newSite = new SiteSettings();
             newSite.Id = Guid.NewGuid();
 
             if (multiTenantOptions.Mode == MultiTenantMode.FolderName)
             {
                 if (string.IsNullOrEmpty(model.SiteFolderName))
                 {
-                    ModelState.AddModelError("foldererror", "Folder name is required.");
-
+                    ModelState.AddModelError("foldererror", sr["Folder name is required."]);
                     return View(model);
                 }
 
-                //TODO: since we removed the sitefolders table now we need to check against the sites table to make sure a folder name is not in use
-
-                //ISiteFolder folder = await siteManager.GetSiteFolder(model.SiteFolderName);
                 bool folderAvailable = await siteManager.FolderNameIsAvailable(newSite, model.SiteFolderName);
                 if (!folderAvailable)
                 {
-                    ModelState.AddModelError("foldererror", "The selected folder name is already in use on another site.");
-
+                    ModelState.AddModelError("foldererror", sr["The selected folder name is already in use on another site."]);
                     return View(model);
                 }
-
             }
             else
             {
                 ISiteHost host;
-
                 if (!string.IsNullOrEmpty(model.HostName))
                 {
                     model.HostName = model.HostName.Replace("https://", string.Empty).Replace("http://", string.Empty);
-
                     host = await siteManager.GetSiteHost(model.HostName);
-
                     if (host != null)
                     {
-
-                        ModelState.AddModelError("hosterror", "The selected host/domain name is already in use on another site.");
-
+                        ModelState.AddModelError("hosterror", sr["The selected host/domain name is already in use on another site."]);
                         return View(model);
-
                     }
-
                     addHostName = true;
                 }
 
-
-
-
             }
-
             
-
             // only the first site created by setup page should be a server admin site
             newSite.IsServerAdminSite = false;
             newSite.SiteName = model.SiteName;
@@ -472,7 +373,7 @@ namespace cloudscribe.Core.Web.Controllers
             else
             {
                 var siteNumber = 1 + await siteManager.CountOtherSites(Guid.Empty);
-                newSite.AliasId = $"tenant-{siteNumber}";
+                newSite.AliasId = $"site-{siteNumber}";
             }
 
             if (multiTenantOptions.Mode == MultiTenantMode.FolderName)
@@ -487,34 +388,15 @@ namespace cloudscribe.Core.Web.Controllers
             newSite.SiteIsClosed = model.IsClosed;
             newSite.SiteIsClosedMessage = model.ClosedMessage;
             
-            //Site.SiteRepository.Save(newSite);
             await siteManager.CreateNewSite(newSite);
             await siteManager.CreateRequiredRolesAndAdminUser(newSite);
-
-            //if ((result) && (multiTenantOptions.Mode == MultiTenantMode.FolderName))
-            //{
-            //    //bool folderResult = await siteManager.EnsureSiteFolder(newSite);
-
-            //// for folder sites we need routes that match the folder
-            //// which are normally created during app startup
-            //// can we add routes here? or do we need to force the app to recycle?
-            //// this seems to work, but we really do need to restart
-            //// so that the per folder authentication gets setup too
-            ////cloudscribe.Web.Routing.RouteRegistrar.AddDefaultRouteForNewSiteFolder(folder.FolderName);
-
-            ////startup.TriggerStartup();
-            ////http://stackoverflow.com/questions/31339896/replacement-httpruntime-unloadappdomain-in-asp-net-5
-
-            //}
-
+            
             if (addHostName)
             {
-                await siteManager.AddHost(
-                            newSite.Id,
-                            model.HostName);
+                await siteManager.AddHost(newSite.Id, model.HostName);
             }
             
-            this.AlertSuccess(string.Format("Basic site settings for <b>{0}</b> were successfully created.",
+            this.AlertSuccess(string.Format(sr["Basic site settings for {0} were successfully created."],
                         newSite.SiteName), true);
             
             return RedirectToAction("SiteList", new { pageNumber = model.ReturnPageNumber });
@@ -526,8 +408,6 @@ namespace cloudscribe.Core.Web.Controllers
             var selectedSiteId = Guid.Empty;
             if (siteId.HasValue) { selectedSiteId = siteId.Value; }
             bool available = await siteManager.AliasIdIsAvailable(selectedSiteId, aliasId);
-
-
             return Json(available);
         }
 
@@ -542,12 +422,12 @@ namespace cloudscribe.Core.Web.Controllers
             if ((siteId.HasValue) && (siteId.Value != Guid.Empty) && (siteId.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
             {
                 selectedSite = await siteManager.Fetch(siteId.Value);
-                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - Company Info", selectedSite.SiteName);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - Company Info"], selectedSite.SiteName);
             }
             else
             {
                 selectedSite = siteManager.CurrentSite;
-                ViewData["Title"] = "Company Info";
+                ViewData["Title"] = sr["Company Info"];
             }
             
             var model = new CompanyInfoViewModel();
@@ -563,7 +443,7 @@ namespace cloudscribe.Core.Web.Controllers
             model.CompanyFax = selectedSite.CompanyFax;
             model.CompanyPublicEmail = selectedSite.CompanyPublicEmail;
 
-            model.AvailableCountries.Add(new SelectListItem { Text = "-Please select-", Value = "Selects items" });
+            model.AvailableCountries.Add(new SelectListItem { Text = sr["-Please select-"], Value = "" });
             var countries = await geoDataManager.GetAllCountries();
             var selectedCountryGuid = Guid.Empty;
             foreach (var country in countries)
@@ -576,7 +456,6 @@ namespace cloudscribe.Core.Web.Controllers
                 {
                     Text = country.Name,
                     Value = country.ISOCode2.ToString()
-
                 });
             }
 
@@ -591,12 +470,9 @@ namespace cloudscribe.Core.Web.Controllers
                         Value = state.Code
                     });
                 }
-
             }
 
-
             return View(model);
-
         }
 
         // Post: /SiteAdmin/CompanyInfo
@@ -609,17 +485,17 @@ namespace cloudscribe.Core.Web.Controllers
             if (model.SiteId == siteManager.CurrentSite.Id)
             {
                 selectedSite = siteManager.CurrentSite;
-                ViewData["Title"] = "Company Info";
+                ViewData["Title"] = sr["Company Info"];
             }
             else if (siteManager.CurrentSite.IsServerAdminSite)
             {
                 selectedSite = await siteManager.Fetch(model.SiteId);
-                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - Company Info", selectedSite.SiteName);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - Company Info"], selectedSite.SiteName);
             }
 
             if (selectedSite == null)
             {
-                this.AlertDanger("oops something went wrong.", true);
+                this.AlertDanger(sr["oops something went wrong."], true);
 
                 return RedirectToAction("Index");
             }
@@ -631,7 +507,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             if (model.SiteId == Guid.Empty)
             {
-                this.AlertDanger("oops something went wrong, site was not found.", true);
+                this.AlertDanger(sr["oops something went wrong, site was not found."], true);
 
                 return RedirectToAction("Index");
             }
@@ -649,19 +525,17 @@ namespace cloudscribe.Core.Web.Controllers
 
             await siteManager.Save(selectedSite);
             
-            this.AlertSuccess(string.Format("Company Info for <b>{0}</b> wwas successfully updated.",
+            this.AlertSuccess(string.Format(sr["Company Info for {0} wwas successfully updated."],
                         selectedSite.SiteName), true);
             
             if ((siteManager.CurrentSite.IsServerAdminSite)
                 && (siteManager.CurrentSite.Id != selectedSite.Id)
                 )
             {
-                
                 return RedirectToAction("CompanyInfo", new { siteId = model.SiteId });
             }
 
             return RedirectToAction("CompanyInfo");
-
         }
 
         [HttpGet]
@@ -675,12 +549,12 @@ namespace cloudscribe.Core.Web.Controllers
             if ((siteId.HasValue) && (siteId.Value != Guid.Empty) && (siteId.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
             {
                 selectedSite = await siteManager.Fetch(siteId.Value);
-                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - Email Settings", selectedSite.SiteName);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - Email Settings"], selectedSite.SiteName);
             }
             else
             {
                 selectedSite = siteManager.CurrentSite;
-                ViewData["Title"] = "Email Settings";
+                ViewData["Title"] = sr["Email Settings"];
             }
 
             var model = new MailSettingsViewModel();
@@ -696,7 +570,6 @@ namespace cloudscribe.Core.Web.Controllers
             model.SmtpUseSsl = selectedSite.SmtpUseSsl;
             
             return View(model);
-
         }
 
         [HttpPost]
@@ -708,18 +581,17 @@ namespace cloudscribe.Core.Web.Controllers
             if (model.SiteId == siteManager.CurrentSite.Id)
             {
                 selectedSite = siteManager.CurrentSite;
-                ViewData["Title"] = "Email Settings";
+                ViewData["Title"] = sr["Email Settings"];
             }
             else if (siteManager.CurrentSite.IsServerAdminSite)
             {
                 selectedSite = await siteManager.Fetch(model.SiteId);
-                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - Email Settings", selectedSite.SiteName);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - Email Settings"], selectedSite.SiteName);
             }
 
             if (selectedSite == null)
             {
-                this.AlertDanger("oops something went wrong.", true);
-
+                this.AlertDanger(sr["oops something went wrong."], true);
                 return RedirectToAction("Index");
             }
 
@@ -730,12 +602,10 @@ namespace cloudscribe.Core.Web.Controllers
 
             if (model.SiteId == Guid.Empty)
             {
-                this.AlertDanger("oops something went wrong, site was not found.", true);
-
+                this.AlertDanger(sr["oops something went wrong, site was not found."], true);
                 return RedirectToAction("Index");
             }
 
-            
             selectedSite.DefaultEmailFromAddress = model.DefaultEmailFromAddress;
             selectedSite.DefaultEmailFromAlias = model.DefaultEmailFromAlias;
             selectedSite.SmtpPassword = model.SmtpPassword;
@@ -748,19 +618,17 @@ namespace cloudscribe.Core.Web.Controllers
             
             await siteManager.Save(selectedSite);
             
-            this.AlertSuccess(string.Format("Email Settings for <b>{0}</b> were successfully updated.",
+            this.AlertSuccess(string.Format(sr["Email Settings for {0} were successfully updated."],
                         selectedSite.SiteName), true);
             
             if ((siteManager.CurrentSite.IsServerAdminSite)
                 && (siteManager.CurrentSite.Id != selectedSite.Id)
                 )
             {
-
                 return RedirectToAction("MailSettings", new { siteId = model.SiteId });
             }
 
             return RedirectToAction("MailSettings");
-
         }
 
         [HttpGet]
@@ -779,12 +647,12 @@ namespace cloudscribe.Core.Web.Controllers
             if ((siteId.HasValue) && (siteId.Value != Guid.Empty) && (siteId.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
             {
                 selectedSite = await siteManager.Fetch(siteId.Value);
-                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - SMS Settings", selectedSite.SiteName);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - SMS Settings"], selectedSite.SiteName);
             }
             else
             {
                 selectedSite = siteManager.CurrentSite;
-                ViewData["Title"] = "SMS Settings";
+                ViewData["Title"] = sr["SMS Settings"];
             }
 
             var model = new SmsSettingsViewModel();
@@ -794,7 +662,6 @@ namespace cloudscribe.Core.Web.Controllers
             model.SmsSecureToken = selectedSite.SmsSecureToken;
             
             return View(model);
-
         }
 
         [HttpPost]
@@ -806,18 +673,17 @@ namespace cloudscribe.Core.Web.Controllers
             if (model.SiteId == siteManager.CurrentSite.Id)
             {
                 selectedSite = siteManager.CurrentSite;
-                ViewData["Title"] = "SMS Settings";
+                ViewData["Title"] = sr["SMS Settings"];
             }
             else if (siteManager.CurrentSite.IsServerAdminSite)
             {
                 selectedSite = await siteManager.Fetch(model.SiteId);
-                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - SMS Settings", selectedSite.SiteName);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - SMS Settings"], selectedSite.SiteName);
             }
 
             if (selectedSite == null)
             {
-                this.AlertDanger("oops something went wrong.", true);
-
+                this.AlertDanger(sr["oops something went wrong."], true);
                 return RedirectToAction("Index");
             }
 
@@ -828,8 +694,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             if (model.SiteId == Guid.Empty)
             {
-                this.AlertDanger("oops something went wrong, site was not found.", true);
-
+                this.AlertDanger(sr["oops something went wrong, site was not found."], true);
                 return RedirectToAction("Index");
             }
             
@@ -839,19 +704,17 @@ namespace cloudscribe.Core.Web.Controllers
             
             await siteManager.Save(selectedSite);
             
-            this.AlertSuccess(string.Format("SMS Settings for <b>{0}</b> were successfully updated.",
+            this.AlertSuccess(string.Format(sr["SMS Settings for {0} were successfully updated."],
                         selectedSite.SiteName), true);
             
             if ((siteManager.CurrentSite.IsServerAdminSite)
                 && (siteManager.CurrentSite.Id != selectedSite.Id)
                 )
             {
-
                 return RedirectToAction("SmsSettings", new { siteId = model.SiteId });
             }
 
             return RedirectToAction("SmsSettings");
-
         }
 
         [HttpGet]
@@ -860,18 +723,17 @@ namespace cloudscribe.Core.Web.Controllers
             Guid? siteId,
             int slp = 1)
         {
-
             ISiteSettings selectedSite;
             // only server admin site can edit other sites settings
             if ((siteId.HasValue) && (siteId.Value != Guid.Empty) && (siteId.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
             {
                 selectedSite = await siteManager.Fetch(siteId.Value);
-                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - Security Settings", selectedSite.SiteName);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - Security Settings"], selectedSite.SiteName);
             }
             else
             {
                 selectedSite = siteManager.CurrentSite;
-                ViewData["Title"] = "Security Settings";
+                ViewData["Title"] = sr["Security Settings"];
             }
 
             var model = new SecuritySettingsViewModel();
@@ -887,8 +749,6 @@ namespace cloudscribe.Core.Web.Controllers
             model.AccountApprovalEmailCsv = selectedSite.AccountApprovalEmailCsv;
 
             return View(model);
-
-
         }
 
         [HttpPost]
@@ -910,8 +770,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             if (selectedSite == null)
             {
-                this.AlertDanger("oops something went wrong.", true);
-
+                this.AlertDanger(sr["oops something went wrong."], true);
                 return RedirectToAction("Index");
             }
 
@@ -922,8 +781,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             if (model.SiteId == Guid.Empty)
             {
-                this.AlertDanger("oops something went wrong, site was not found.", true);
-
+                this.AlertDanger(sr["oops something went wrong, site was not found."], true);
                 return RedirectToAction("Index");
             }
 
@@ -936,26 +794,20 @@ namespace cloudscribe.Core.Web.Controllers
             selectedSite.RequireConfirmedEmail = model.RequireConfirmedEmail;
             selectedSite.RequireConfirmedPhone = model.RequireConfirmedPhone;
             selectedSite.UseEmailForLogin = model.UseEmailForLogin;
-
-
-            await siteManager.Save(selectedSite);
-
             
-            this.AlertSuccess(string.Format("Security Settings for <b>{0}</b> wwas successfully updated.",
+            await siteManager.Save(selectedSite);
+            
+            this.AlertSuccess(string.Format(sr["Security Settings for {0} wwas successfully updated."],
                         selectedSite.SiteName), true);
             
-
-
             if ((siteManager.CurrentSite.IsServerAdminSite)
                 && (siteManager.CurrentSite.Id != selectedSite.Id)
                 )
             {
-
                 return RedirectToAction("SecuritySettings", new { siteId = model.SiteId });
             }
 
             return RedirectToAction("SecuritySettings");
-
         }
 
         [HttpGet]
@@ -963,19 +815,18 @@ namespace cloudscribe.Core.Web.Controllers
         public async Task<IActionResult> Captcha(
             Guid? siteId,
             int slp = 1)
-        {
-            
+        {  
             ISiteSettings selectedSite;
             // only server admin site can edit other sites settings
             if ((siteId.HasValue) && (siteId.Value != Guid.Empty) && (siteId.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
             {
                 selectedSite = await siteManager.Fetch(siteId.Value);
-                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - Captcha Settings", selectedSite.SiteName);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - Captcha Settings"], selectedSite.SiteName);
             }
             else
             {
                 selectedSite = siteManager.CurrentSite;
-                ViewData["Title"] = "Captcha Settings";
+                ViewData["Title"] = sr["Captcha Settings"];
             }
             
             var model = new CaptchaSettingsViewModel();
@@ -986,8 +837,6 @@ namespace cloudscribe.Core.Web.Controllers
             model.RequireCaptchaOnRegistration = selectedSite.CaptchaOnRegistration;
 
             return View("CaptchaSettings", model);
-            
-
         }
 
         // Post: /SiteAdmin/Captcha
@@ -1000,18 +849,17 @@ namespace cloudscribe.Core.Web.Controllers
             if (model.SiteId == siteManager.CurrentSite.Id)
             {
                 selectedSite = siteManager.CurrentSite;
-                ViewData["Title"] = "Captcha Settings";
+                ViewData["Title"] = sr["Captcha Settings"];
             }
             else if (siteManager.CurrentSite.IsServerAdminSite)
             {
                 selectedSite = await siteManager.Fetch(model.SiteId);
-                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - Captcha Settings", selectedSite.SiteName);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - Captcha Settings"], selectedSite.SiteName);
             }
 
             if (selectedSite == null)
             {
-                this.AlertDanger("oops something went wrong.", true);
-
+                this.AlertDanger(sr["oops something went wrong."], true);
                 return RedirectToAction("Index");
             }
 
@@ -1022,14 +870,9 @@ namespace cloudscribe.Core.Web.Controllers
 
             if (model.SiteId == Guid.Empty)
             {
-                this.AlertDanger("oops something went wrong, site was not found.", true);
-
+                this.AlertDanger(sr["oops something went wrong, site was not found."], true);
                 return RedirectToAction("Index");
             }
-
-            //model.SiteId = Site.SiteSettings.SiteId;
-            //model.SiteGuid = Site.SiteSettings.SiteGuid;
-            
 
             selectedSite.RecaptchaPublicKey = model.RecaptchaPublicKey;
             selectedSite.RecaptchaPrivateKey = model.RecaptchaPrivateKey;
@@ -1038,19 +881,17 @@ namespace cloudscribe.Core.Web.Controllers
 
             await siteManager.Save(selectedSite);
             
-            this.AlertSuccess(string.Format("Captcha Settings for <b>{0}</b> wwas successfully updated.",
+            this.AlertSuccess(string.Format(sr["Captcha Settings for {0} wwas successfully updated."],
                         selectedSite.SiteName), true);
             
             if ((siteManager.CurrentSite.IsServerAdminSite)
                 &&(siteManager.CurrentSite.Id != selectedSite.Id)
                 )
             {
-                
                 return RedirectToAction("Captcha", new { siteId = model.SiteId });
             }
 
             return RedirectToAction("Captcha");
-
         }
 
         // GET: /SiteAdmin/SocialLogins
@@ -1065,12 +906,12 @@ namespace cloudscribe.Core.Web.Controllers
             if ((siteId.HasValue) && (siteId.Value != Guid.Empty) && (siteId.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
             {
                 selectedSite = await siteManager.Fetch(siteId.Value);
-                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - Social Login Settings", selectedSite.SiteName);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - Social Login Settings"], selectedSite.SiteName);
             }
             else
             {
                 selectedSite = siteManager.CurrentSite;
-                ViewData["Title"] = "Social Login Settings";
+                ViewData["Title"] = sr["Social Login Settings"];
             }
             
             var model = new SocialLoginSettingsViewModel();
@@ -1098,21 +939,19 @@ namespace cloudscribe.Core.Web.Controllers
             if (model.SiteId == siteManager.CurrentSite.Id)
             {
                 selectedSite = siteManager.CurrentSite;
-                ViewData["Title"] = "Social Login Settings";
+                ViewData["Title"] = sr["Social Login Settings"];
             }
             else if (siteManager.CurrentSite.IsServerAdminSite)
             {
                 selectedSite = await siteManager.Fetch(model.SiteId);
-                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - Social Login Settings", selectedSite.SiteName);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - Social Login Settings"], selectedSite.SiteName);
             }
 
             if (selectedSite == null)
             {
-                this.AlertDanger("oops something went wrong.", true);
-
+                this.AlertDanger(sr["oops something went wrong."], true);
                 return RedirectToAction("Index");
             }
-
 
             if (!ModelState.IsValid)
             {
@@ -1121,15 +960,10 @@ namespace cloudscribe.Core.Web.Controllers
 
             if (model.SiteId == Guid.Empty)
             {
-                this.AlertDanger("oops something went wrong, site was not found.", true);
-
+                this.AlertDanger(sr["oops something went wrong, site was not found."], true);
                 return RedirectToAction("Index");
             }
-
-            //model.SiteId = Site.SiteSettings.SiteId;
-            //model.SiteGuid = Site.SiteSettings.SiteGuid;
             
-
             selectedSite.FacebookAppId = model.FacebookAppId;
             selectedSite.FacebookAppSecret = model.FacebookAppSecret;
             selectedSite.GoogleClientId = model.GoogleClientId;
@@ -1140,22 +974,21 @@ namespace cloudscribe.Core.Web.Controllers
             selectedSite.TwitterConsumerSecret = model.TwitterConsumerSecret;
 
             await siteManager.Save(selectedSite);
-
+            //TODO: need to wrap ICache into something more abstract and/or move it into sitemanager
+            // also need to clear using the folder name if it isn't root site or hostname if using tenants per host
             cache.Remove("root");
             
-            this.AlertSuccess(string.Format("Social Login Settings for <b>{0}</b> was successfully updated.",
+            this.AlertSuccess(string.Format(sr["Social Login Settings for {0} was successfully updated."],
                         selectedSite.SiteName), true);
             
             if ((siteManager.CurrentSite.IsServerAdminSite)
                 && (siteManager.CurrentSite.Id != selectedSite.Id)
                 )
             {
-
                 return RedirectToAction("SocialLogins", new { siteId = model.SiteId });
             }
 
             return RedirectToAction("SocialLogins");
-
         }
 
         // GET: /SiteAdmin/LoginPageInfo
@@ -1165,18 +998,17 @@ namespace cloudscribe.Core.Web.Controllers
             Guid? siteId,
             int slp = 1)
         {
-
             ISiteSettings selectedSite;
             // only server admin site can edit other sites settings
             if ((siteId.HasValue) && (siteId.Value != Guid.Empty) && (siteId.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
             {
                 selectedSite = await siteManager.Fetch(siteId.Value);
-                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - Login Page Content", selectedSite.SiteName);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - Login Page Content"], selectedSite.SiteName);
             }
             else
             {
                 selectedSite = siteManager.CurrentSite;
-                ViewData["Title"] = "Login Page Content";
+                ViewData["Title"] = sr["Login Page Content"];
             }
             
             var model = new LoginInfoViewModel();
@@ -1185,8 +1017,6 @@ namespace cloudscribe.Core.Web.Controllers
             model.LoginInfoBottom = selectedSite.LoginInfoBottom;
 
             return View(model);
-
-
         }
 
         // Post: /SiteAdmin/LoginPageInfo
@@ -1199,18 +1029,17 @@ namespace cloudscribe.Core.Web.Controllers
             if (model.SiteId == siteManager.CurrentSite.Id)
             {
                 selectedSite = siteManager.CurrentSite;
-                ViewData["Title"] = "Login Page Content";
+                ViewData["Title"] = sr["Login Page Content"];
             }
             else if (siteManager.CurrentSite.IsServerAdminSite)
             {
                 selectedSite = await siteManager.Fetch(model.SiteId);
-                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - Login Page Content", selectedSite.SiteName);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - Login Page Content"], selectedSite.SiteName);
             }
 
             if (selectedSite == null)
             {
-                this.AlertDanger("oops something went wrong.", true);
-
+                this.AlertDanger(sr["oops something went wrong."], true);
                 return RedirectToAction("Index");
             }
 
@@ -1221,8 +1050,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             if (model.SiteId == Guid.Empty)
             {
-                this.AlertDanger("oops something went wrong, site was not found.", true);
-
+                this.AlertDanger(sr["oops something went wrong, site was not found."], true);
                 return RedirectToAction("Index");
             }
             
@@ -1231,19 +1059,17 @@ namespace cloudscribe.Core.Web.Controllers
             
             await siteManager.Save(selectedSite);
             
-            this.AlertSuccess(string.Format("Login Page Info for <b>{0}</b> was successfully updated.",
+            this.AlertSuccess(string.Format(sr["Login Page Info for {0} was successfully updated."],
                         selectedSite.SiteName), true);
             
             if ((siteManager.CurrentSite.IsServerAdminSite)
                 && (siteManager.CurrentSite.Id != selectedSite.Id)
                 )
             {
-
                 return RedirectToAction("LoginPageInfo", new { siteId = model.SiteId });
             }
 
             return RedirectToAction("LoginPageInfo");
-
         }
 
         // GET: /SiteAdmin/RegisterPageInfo
@@ -1258,12 +1084,12 @@ namespace cloudscribe.Core.Web.Controllers
             if ((siteId.HasValue) && (siteId.Value != Guid.Empty) && (siteId.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
             {
                 selectedSite = await siteManager.Fetch(siteId.Value);
-                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - Registration Page Content", selectedSite.SiteName);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - Registration Page Content"], selectedSite.SiteName);
             }
             else
             {
                 selectedSite = siteManager.CurrentSite;
-                ViewData["Title"] = "Registration Page Content";
+                ViewData["Title"] = sr["Registration Page Content"];
             }
             
             var model = new RegisterInfoViewModel();
@@ -1272,7 +1098,6 @@ namespace cloudscribe.Core.Web.Controllers
             model.RegistrationAgreement = selectedSite.RegistrationAgreement;
 
             return View(model);
-
         }
 
 
@@ -1286,18 +1111,17 @@ namespace cloudscribe.Core.Web.Controllers
             if (model.SiteId == siteManager.CurrentSite.Id)
             {
                 selectedSite = siteManager.CurrentSite;
-                ViewData["Title"] = "Registration Page Content";
+                ViewData["Title"] = sr["Registration Page Content"];
             }
             else if (siteManager.CurrentSite.IsServerAdminSite)
             {
                 selectedSite = await siteManager.Fetch(model.SiteId);
-                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - Registration Page Content", selectedSite.SiteName);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - Registration Page Content"], selectedSite.SiteName);
             }
 
             if (selectedSite == null)
             {
-                this.AlertDanger("oops something went wrong.", true);
-
+                this.AlertDanger(sr["oops something went wrong."], true);
                 return RedirectToAction("Index");
             }
 
@@ -1308,8 +1132,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             if (model.SiteId == Guid.Empty)
             {
-                this.AlertDanger("oops something went wrong, site was not found.", true);
-
+                this.AlertDanger(sr["oops something went wrong, site was not found."], true);
                 return RedirectToAction("Index");
             }
             
@@ -1318,59 +1141,50 @@ namespace cloudscribe.Core.Web.Controllers
             
             await siteManager.Save(selectedSite);
             
-            this.AlertSuccess(string.Format("Registration Page Content for <b>{0}</b> was successfully updated.",
+            this.AlertSuccess(string.Format(sr["Registration Page Content for {0} was successfully updated."],
                         selectedSite.SiteName), true);
             
             if ((siteManager.CurrentSite.IsServerAdminSite)
                 && (siteManager.CurrentSite.Id != selectedSite.Id)
                 )
             {
-
                 return RedirectToAction("RegisterPageInfo", new { siteId = model.SiteId });
             }
 
             return RedirectToAction("RegisterPageInfo");
-
         }
 
 
-        // probably should hide by config by default
+        // probably should hide delete by config by default?
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "ServerAdminPolicy")]
         public async Task<ActionResult> SiteDelete(Guid siteId, int returnPageNumber = 1)
         {
-            
             var selectedSite = await siteManager.Fetch(siteId);
 
-            if (
-                (selectedSite != null)
-                //&& (selectedSite.SiteId == siteId)
-                )
+            if (selectedSite != null)
             {
 
                 if (selectedSite.IsServerAdminSite)
                 {
                     this.AlertWarning(string.Format(
-                            "The site <b>{0}</b> was not deleted because it is a server admin site.",
+                            sr["The site {0} was not deleted because it is a server admin site."],
                             selectedSite.SiteName)
                             , true);
 
                     return RedirectToAction("SiteList", new { pageNumber = returnPageNumber });
-
                 }
 
                 await siteManager.Delete(selectedSite);
 
                 this.AlertWarning(string.Format(
-                            "The site <b>{0}</b> was successfully deleted.",
+                            sr["The site {0} was successfully deleted."],
                             selectedSite.SiteName)
                             , true);
             }
-
             
-
             return RedirectToAction("SiteList", new { pageNumber = returnPageNumber });
         }
 
@@ -1382,22 +1196,25 @@ namespace cloudscribe.Core.Web.Controllers
         {
             ISiteSettings selectedSite;
             // only server admin site can edit other sites settings
-            if ((siteId.HasValue) && (siteId.Value != Guid.Empty) && (siteId.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
+            if (
+                (siteId.HasValue) && (siteId.Value != Guid.Empty) 
+                && (siteId.Value != siteManager.CurrentSite.Id) 
+                && (siteManager.CurrentSite.IsServerAdminSite)
+                )
             {
                 selectedSite = await siteManager.Fetch(siteId.Value);
                 ViewData["Title"] = string.Format(CultureInfo.InvariantCulture,
-                "Domain/Host Name Mappings for {0}",
+                sr["Domain/Host Name Mappings for {0}"],
                 selectedSite.SiteName);
             }
             else
             {
                 selectedSite = siteManager.CurrentSite;
-                ViewData["Title"] = "Domain/Host Name Mappings";
+                ViewData["Title"] = sr["Domain/Host Name Mappings"];
             }
 
             var model = new SiteHostMappingsViewModel();
             
-            //model.Heading = ViewBag.Title;
             model.HostMappings = await siteManager.GetSiteHosts(selectedSite.Id);
             if (slp > -1)
             {
@@ -1405,7 +1222,6 @@ namespace cloudscribe.Core.Web.Controllers
             }
 
             return View("SiteHosts", model);
-
         }
 
         [HttpPost]
@@ -1429,11 +1245,9 @@ namespace cloudscribe.Core.Web.Controllers
             }
 
             ISiteHost host;
-
             if (!string.IsNullOrEmpty(hostName))
             {
                 hostName = hostName.Replace("https://", string.Empty).Replace("http://", string.Empty);
-
                 host = await siteManager.GetSiteHost(hostName);
 
                 if (host != null)
@@ -1441,21 +1255,17 @@ namespace cloudscribe.Core.Web.Controllers
                     if (host.SiteId != selectedSite.Id)
                     {
                         this.AlertWarning(
-                        "failed to add the requested host name mapping becuase it is already mapped to another site.",
+                        sr["failed to add the requested host name mapping becuase it is already mapped to another site."],
                         true);
                     }
                 }
                 else
                 {
-                    await siteManager.AddHost(
-                            selectedSite.Id,
-                            hostName);
+                    await siteManager.AddHost(selectedSite.Id, hostName);
                     
-                    this.AlertSuccess(string.Format("Host/domain mapping for <b>{0}</b> was successfully created.",
+                    this.AlertSuccess(string.Format(sr["Host/domain mapping for {0} was successfully created."],
                                 selectedSite.SiteName), true);
-
                 }
-
             }
 
             return RedirectToAction("SiteHostMappings", new { siteId = siteId, slp = slp });
@@ -1495,17 +1305,13 @@ namespace cloudscribe.Core.Web.Controllers
 
                     await siteManager.DeleteHost(host.Id);
                     
-                    this.AlertSuccess(string.Format("Host/domain mapping for <b>{0}</b> was successfully removed.",
+                    this.AlertSuccess(string.Format(sr["Host/domain mapping for {0} was successfully removed."],
                                 selectedSite.SiteName), true);
                 }
-
             }
 
-
             return RedirectToAction("SiteHostMappings", new { siteId = siteId, slp = slp });
-
         }
-
-        
+  
     }
 }

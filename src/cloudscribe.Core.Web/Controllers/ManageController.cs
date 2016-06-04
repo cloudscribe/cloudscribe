@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2016-02-12
+// Last Modified:			2016-06-04
 // 
 
 using cloudscribe.Core.Models;
@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-
+using Microsoft.Extensions.Localization;
 
 namespace cloudscribe.Core.Web.Controllers
 {
@@ -27,13 +27,16 @@ namespace cloudscribe.Core.Web.Controllers
             SiteSettings currentSite,
             SiteUserManager<SiteUser> userManager,
             SiteSignInManager<SiteUser> signInManager,
-            ISmsSender smsSender)
+            ISmsSender smsSender,
+            IStringLocalizer<CloudscribeCore> localizer
+            )
         {
             Site = currentSite; 
             this.userManager = userManager;
             this.signInManager = signInManager;
            // this.emailSender = emailSender;
             this.smsSender = smsSender;
+            sr = localizer;
         }
 
         private readonly ISiteSettings Site;
@@ -41,6 +44,7 @@ namespace cloudscribe.Core.Web.Controllers
         private readonly SiteSignInManager<SiteUser> signInManager;
         //private readonly IAuthEmailSender emailSender;
         private readonly ISmsSender smsSender;
+        private IStringLocalizer sr;
 
 
         // GET: /Manage/Index
@@ -85,11 +89,11 @@ namespace cloudscribe.Core.Web.Controllers
                 if (result.Succeeded)
                 {
                     await signInManager.SignInAsync(user, isPersistent: false);
-                    this.AlertSuccess("The external login was removed.");
+                    this.AlertSuccess(sr["The external login was removed."]);
                 }
                 else
                 {
-                    this.AlertDanger("oops something went wrong, the external login was not removed, please try again.");
+                    this.AlertDanger(sr["oops something went wrong, the external login was not removed, please try again."]);
 
                 }
             }
@@ -118,7 +122,11 @@ namespace cloudscribe.Core.Web.Controllers
             // Generate the token and send it
             var user = await userManager.FindByIdAsync(HttpContext.User.GetUserId());
             var code = await userManager.GenerateChangePhoneNumberTokenAsync(user, model.Number);
-            await smsSender.SendSmsAsync(Site, model.Number, "Your security code is: " + code);
+            await smsSender.SendSmsAsync(
+                Site, 
+                model.Number,
+                string.Format(sr["Your security code is: {0}"], code)
+                );
             return RedirectToAction("VerifyPhoneNumber", new { PhoneNumber = model.Number });
 
         }
@@ -182,13 +190,13 @@ namespace cloudscribe.Core.Web.Controllers
                 {
                     await signInManager.SignInAsync(user, isPersistent: false);
 
-                    this.AlertSuccess("Your phone number was added.");
+                    this.AlertSuccess(sr["Your phone number was added."]);
 
                     return RedirectToAction("Index");
                 }
             }
             // If we got this far, something failed, redisplay the form
-            ModelState.AddModelError(string.Empty, "Failed to verify phone number");
+            ModelState.AddModelError(string.Empty, sr["Failed to verify phone number"]);
             return View(model);
 
         }
@@ -205,11 +213,11 @@ namespace cloudscribe.Core.Web.Controllers
                 if (result.Succeeded)
                 {
                     await signInManager.SignInAsync(user, isPersistent: false);
-                    this.AlertSuccess("Your phone number was removed.");
+                    this.AlertSuccess(sr["Your phone number was removed."]);
                 }
                 else
                 {
-                    this.AlertDanger("oops something went wrong please try again");
+                    this.AlertDanger(sr["oops something went wrong please try again"]);
                 }
             }
             return RedirectToAction("Index");
@@ -241,12 +249,12 @@ namespace cloudscribe.Core.Web.Controllers
                 {
                     await signInManager.SignInAsync(user, isPersistent: false);
 
-                    this.AlertSuccess("Your password has been changed.");
+                    this.AlertSuccess(sr["Your password has been changed."]);
                     return RedirectToAction("Index");
                 }
                 else
                 {
-                    this.AlertDanger("oops something went wrong please try again");
+                    this.AlertDanger(sr["oops something went wrong please try again"]);
                 }
                 AddErrors(result);
             }
@@ -281,22 +289,20 @@ namespace cloudscribe.Core.Web.Controllers
                 if (result.Succeeded)
                 {
                     await signInManager.SignInAsync(user, isPersistent: false);
-                    this.AlertSuccess("your password has been set");
+                    this.AlertSuccess(sr["your password has been set"]);
 
                     return RedirectToAction("Index");
                 }
                 else
                 {
-                    this.AlertDanger("oops something went wrong please try again");
+                    this.AlertDanger(sr["oops something went wrong please try again"]);
                 }
 
                 AddErrors(result);
                 
             }
 
-            return View(model);
-            
-            
+            return View(model);     
         }
 
 
@@ -304,7 +310,6 @@ namespace cloudscribe.Core.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> ManageLogins()
         {
-
             var user = await userManager.FindByIdAsync(HttpContext.User.GetUserId());
             if (user == null)
             {
@@ -317,9 +322,7 @@ namespace cloudscribe.Core.Web.Controllers
             {
                 CurrentLogins = userLogins,
                 OtherLogins = otherLogins
-            });
-
-            
+            });  
         }
 
 
@@ -347,13 +350,13 @@ namespace cloudscribe.Core.Web.Controllers
             var info = await signInManager.GetExternalLoginInfoAsync(User.GetUserId());
             if (info == null)
             {
-                this.AlertDanger("oops something went wrong please try again");
+                this.AlertDanger(sr["oops something went wrong please try again"]);
                 return RedirectToAction("ManageLogins");
             }
             var result = await userManager.AddLoginAsync(user, info);
             if (!result.Succeeded)
             {
-                this.AlertDanger("oops something went wrong, please try again");
+                this.AlertDanger(sr["oops something went wrong, please try again"]);
             }
 
             return RedirectToAction("ManageLogins");
