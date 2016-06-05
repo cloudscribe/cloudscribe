@@ -211,13 +211,22 @@ namespace example.WebApp
                                         && multiTenantOptions.Mode == cloudscribe.Core.Models.MultiTenantMode.FolderName
                                         && tenant.SiteFolderName.Length > 0;
                 
-                var externalCookieOptions = SetupOtherCookies(cloudscribe.Core.Identity.AuthenticationScheme.External, tenant);
+                var externalCookieOptions = SetupOtherCookies(
+                    cloudscribe.Core.Identity.AuthenticationScheme.External,
+                    multiTenantOptions.UseRelatedSitesMode,
+                    tenant);
                 builder.UseCookieAuthentication(externalCookieOptions);
 
-                var twoFactorRememberMeCookieOptions = SetupOtherCookies(cloudscribe.Core.Identity.AuthenticationScheme.TwoFactorRememberMe, tenant);
+                var twoFactorRememberMeCookieOptions = SetupOtherCookies(
+                    cloudscribe.Core.Identity.AuthenticationScheme.TwoFactorRememberMe,
+                    multiTenantOptions.UseRelatedSitesMode,
+                    tenant);
                 builder.UseCookieAuthentication(twoFactorRememberMeCookieOptions);
 
-                var twoFactorUserIdCookie = SetupOtherCookies(cloudscribe.Core.Identity.AuthenticationScheme.TwoFactorUserId, tenant);
+                var twoFactorUserIdCookie = SetupOtherCookies(
+                    cloudscribe.Core.Identity.AuthenticationScheme.TwoFactorUserId,
+                    multiTenantOptions.UseRelatedSitesMode,
+                    tenant);
                 builder.UseCookieAuthentication(twoFactorUserIdCookie);
 
                 var cookieEvents = new CookieAuthenticationEvents();
@@ -227,6 +236,7 @@ namespace example.WebApp
                     cookieEvents,
                     cookieValidator,
                     cloudscribe.Core.Identity.AuthenticationScheme.Application,
+                    multiTenantOptions.UseRelatedSitesMode,
                     tenant
                     );
                 builder.UseCookieAuthentication(appCookieOptions);
@@ -237,12 +247,9 @@ namespace example.WebApp
                 builder.UseSocialAuth(ctx.Tenant, externalCookieOptions, shouldUseFolder);
 
             });
-
-
+            
             UseMvc(app, multiTenantOptions.Mode == cloudscribe.Core.Models.MultiTenantMode.FolderName);
             
-            
-
             switch (storage)
             {
                 case "NoDb":
@@ -264,26 +271,35 @@ namespace example.WebApp
         }
 
         private CookieAuthenticationOptions SetupAppCookie(
-           // CookieAuthenticationOptions options,
             CookieAuthenticationEvents cookieEvents,
             cloudscribe.Core.Identity.SiteAuthCookieValidator siteValidator,
             string scheme, 
+            bool useRelatedSitesMode,
             cloudscribe.Core.Models.SiteSettings tenant
             )
         {
             var options = new CookieAuthenticationOptions();
-            options.AuthenticationScheme = $"{scheme}-{tenant.SiteFolderName}";
-            options.CookieName = $"{scheme}-{tenant.SiteFolderName}";
-            options.CookiePath = "/" + tenant.SiteFolderName;
-
+            if(useRelatedSitesMode)
+            {
+                options.AuthenticationScheme = scheme;
+                options.CookieName = scheme;
+                options.CookiePath = "/";
+            }
+            else
+            {
+                options.AuthenticationScheme = $"{scheme}-{tenant.SiteFolderName}";
+                options.CookieName = $"{scheme}-{tenant.SiteFolderName}";
+                options.CookiePath = "/" + tenant.SiteFolderName;
+                cookieEvents.OnValidatePrincipal = siteValidator.ValidatePrincipal;
+            }
+            
             var tenantPathBase = string.IsNullOrEmpty(tenant.SiteFolderName)
                 ? PathString.Empty
                 : new PathString("/" + tenant.SiteFolderName);
 
             options.LoginPath = tenantPathBase + "/account/login";
             options.LogoutPath = tenantPathBase + "/account/logoff";
-
-            cookieEvents.OnValidatePrincipal = siteValidator.ValidatePrincipal;
+            
             options.Events = cookieEvents;
 
             options.AutomaticAuthenticate = true;
@@ -293,20 +309,25 @@ namespace example.WebApp
         }
 
         private CookieAuthenticationOptions SetupOtherCookies(
-            //CookieAuthenticationOptions options, 
-            string scheme, 
+            string scheme,
+            bool useRelatedSitesMode,
             cloudscribe.Core.Models.SiteSettings tenant
             )
         {
             var options = new CookieAuthenticationOptions();
-            //var tenantPathBase = string.IsNullOrEmpty(tenant.SiteFolderName)
-            //    ? PathString.Empty
-            //    : new PathString("/" + tenant.SiteFolderName);
-
-            options.AuthenticationScheme = $"{scheme}-{tenant.SiteFolderName}";
-            options.CookieName = $"{scheme}-{tenant.SiteFolderName}";
-            options.CookiePath = "/" + tenant.SiteFolderName;
-
+            if(useRelatedSitesMode)
+            {
+                options.AuthenticationScheme = scheme;
+                options.CookieName = scheme;
+                options.CookiePath = "/";
+            }
+            else
+            {
+                options.AuthenticationScheme = $"{scheme}-{tenant.SiteFolderName}";
+                options.CookieName = $"{scheme}-{tenant.SiteFolderName}";
+                options.CookiePath = "/" + tenant.SiteFolderName;
+            }
+            
             return options;
 
         }

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette/Derek Gray
 // Created:				    2016-05-04
-// Last Modified:		    2016-05-18
+// Last Modified:		    2016-06-05
 // 
 
 using cloudscribe.Core.Models;
@@ -18,16 +18,18 @@ namespace cloudscribe.Core.Identity
         private CookieAuthenticationEvents cookieEvents;
         private SiteAuthCookieValidator siteValidator;
         private IHttpContextAccessor httpContextAccessor;
+        private MultiTenantOptions multiTenantOptions;
 
         public SiteIdentityOptionsResolver(
             IHttpContextAccessor httpContextAccessor,
-           // CookieAuthenticationEvents cookieEvents,
+            IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
             SiteAuthCookieValidator siteValidator
             )
         {
             this.httpContextAccessor = httpContextAccessor;
             this.cookieEvents = new CookieAuthenticationEvents();
             this.siteValidator = siteValidator;
+            multiTenantOptions = multiTenantOptionsAccessor.Value;
         }
 
         public IdentityOptions Value
@@ -37,9 +39,9 @@ namespace cloudscribe.Core.Identity
                 var context = httpContextAccessor.HttpContext;
                 var tenant = context.GetTenant<SiteSettings>();
 
-                var tenantPathBase = string.IsNullOrEmpty(tenant.SiteFolderName)
-                    ? PathString.Empty
-                    : new PathString("/" + tenant.SiteFolderName);
+                //var tenantPathBase = string.IsNullOrEmpty(tenant.SiteFolderName)
+                //    ? PathString.Empty
+                //    : new PathString("/" + tenant.SiteFolderName);
                 
                 // TODO: I'm not sure newing this up here is agood idea
                 // are we missing any default configuration thast would normally be set for identity?
@@ -67,18 +69,27 @@ namespace cloudscribe.Core.Identity
 
         private void SetupAppCookie(CookieAuthenticationOptions options, string scheme, SiteSettings tenant)
         {
-            options.AuthenticationScheme = $"{scheme}-{tenant.SiteFolderName}";
-            options.CookieName = $"{scheme}-{tenant.SiteFolderName}";
-            options.CookiePath = "/" + tenant.SiteFolderName;
-
+            if(multiTenantOptions.UseRelatedSitesMode)
+            {
+                options.AuthenticationScheme = scheme;
+                options.CookieName =scheme;
+                options.CookiePath = "/";
+            }
+            else
+            {
+                options.AuthenticationScheme = $"{scheme}-{tenant.SiteFolderName}";
+                options.CookieName = $"{scheme}-{tenant.SiteFolderName}";
+                options.CookiePath = "/" + tenant.SiteFolderName;
+                cookieEvents.OnValidatePrincipal = siteValidator.ValidatePrincipal;
+            }
+            
             var tenantPathBase = string.IsNullOrEmpty(tenant.SiteFolderName)
                 ? PathString.Empty
                 : new PathString("/" + tenant.SiteFolderName);
 
             options.LoginPath = tenantPathBase + "/account/login";
             options.LogoutPath = tenantPathBase + "/account/logoff";
-
-            cookieEvents.OnValidatePrincipal = siteValidator.ValidatePrincipal;
+            
             options.Events = cookieEvents;
 
             options.AutomaticAuthenticate = true;
@@ -87,14 +98,18 @@ namespace cloudscribe.Core.Identity
 
         private void SetupOtherCookies(CookieAuthenticationOptions options, string scheme, SiteSettings tenant)
         {
-            //var tenantPathBase = string.IsNullOrEmpty(tenant.SiteFolderName)
-            //    ? PathString.Empty
-            //    : new PathString("/" + tenant.SiteFolderName);
-
-            options.AuthenticationScheme = $"{scheme}-{tenant.SiteFolderName}";
-            options.CookieName = $"{scheme}-{tenant.SiteFolderName}";
-            options.CookiePath = "/" + tenant.SiteFolderName;
-            
+            if (multiTenantOptions.UseRelatedSitesMode)
+            {
+                options.AuthenticationScheme = scheme;
+                options.CookieName = scheme;
+                options.CookiePath = "/";
+            }
+            else
+            {
+                options.AuthenticationScheme = $"{scheme}-{tenant.SiteFolderName}";
+                options.CookieName = $"{scheme}-{tenant.SiteFolderName}";
+                options.CookiePath = "/" + tenant.SiteFolderName;
+            }  
         }
     }
 }

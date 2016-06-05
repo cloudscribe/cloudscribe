@@ -78,7 +78,7 @@ namespace cloudscribe.Core.Identity
 
         public async Task<int> CountOfRoles(Guid siteId, string searchInput)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteGuid; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             return await queries.CountOfRoles(siteId, searchInput, CancellationToken);
         }
@@ -89,7 +89,7 @@ namespace cloudscribe.Core.Identity
             int pageNumber,
             int pageSize)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteGuid; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             return await queries.GetRolesBySite(siteId, searchInput, pageNumber, pageSize, CancellationToken);
 
@@ -120,7 +120,7 @@ namespace cloudscribe.Core.Identity
             int pageNumber, 
             int pageSize)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteGuid; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             return await queries.GetUsersInRole(siteId, roleId, searchInput, pageNumber, pageSize, CancellationToken);
         }
@@ -130,7 +130,7 @@ namespace cloudscribe.Core.Identity
             Guid roleId, 
             string searchInput)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteGuid; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             return await queries.CountUsersInRole(siteId, roleId, searchInput, CancellationToken);
         }
@@ -142,7 +142,7 @@ namespace cloudscribe.Core.Identity
             int pageNumber, 
             int pageSize)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteGuid; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             return await queries.GetUsersNotInRole(siteId, roleId, searchInput, pageNumber, pageSize, CancellationToken);
         }
@@ -152,7 +152,7 @@ namespace cloudscribe.Core.Identity
             Guid roleId, 
             string searchInput)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteGuid; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             return await queries.CountUsersNotInRole(siteId, roleId, searchInput, CancellationToken);
         }

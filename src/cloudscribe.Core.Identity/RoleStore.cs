@@ -104,7 +104,7 @@ namespace cloudscribe.Core.Identity
             ThrowIfDisposed();
 
             Guid siteGuid = Site.Id;
-            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteId; }
 
             var role = await queries.FetchRole(siteGuid, normalizedRoleName, cancellationToken);
 

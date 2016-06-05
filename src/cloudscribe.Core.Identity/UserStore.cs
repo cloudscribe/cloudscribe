@@ -83,7 +83,7 @@ namespace cloudscribe.Core.Identity
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            if (debugLog) { log.LogInformation("CreateAsync"); }
+            log.LogDebug("CreateAsync"); 
             
             if (user == null)
             {
@@ -160,7 +160,7 @@ namespace cloudscribe.Core.Identity
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            if (debugLog) { log.LogInformation("UpdateAsync"); }
+            log.LogDebug("UpdateAsync"); 
             
             if (user == null)
             {
@@ -176,22 +176,10 @@ namespace cloudscribe.Core.Identity
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            if (debugLog) { log.LogInformation("UpdateAsync"); }
+            log.LogDebug("UpdateAsync"); 
 
             if (siteSettings.ReallyDeleteUsers)
             {
-                //Task[] tasks = new Task[4];
-                //cancellationToken.ThrowIfCancellationRequested();
-                //tasks[0] = repo.DeleteLoginsByUser(-1, user.Id);
-                //cancellationToken.ThrowIfCancellationRequested();
-                //tasks[1] = repo.DeleteClaimsByUser(-1, user.Id);
-                //cancellationToken.ThrowIfCancellationRequested();
-                //tasks[2] = repo.DeleteUserRoles(user.UserId);
-                //cancellationToken.ThrowIfCancellationRequested();
-                //tasks[3] = repo.Delete(user.UserId);
-                //cancellationToken.ThrowIfCancellationRequested();
-
-                //Task.WaitAll(tasks);
                 await commands.Delete(user.SiteId, user.Id, cancellationToken);
             }
             else
@@ -206,11 +194,11 @@ namespace cloudscribe.Core.Identity
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            if (debugLog) { log.LogInformation("FindByIdAsync"); }
+            log.LogDebug("FindByIdAsync"); 
             
             var userGuid = new Guid(userId);
             var siteGuid = siteSettings.Id;
-            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteId; }
 
             var siteUser = await queries.Fetch(siteGuid, userGuid, cancellationToken);
 
@@ -222,10 +210,10 @@ namespace cloudscribe.Core.Identity
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            if (debugLog) { log.LogInformation("FindByNameAsync"); }
+            log.LogDebug("FindByNameAsync"); 
             
             var siteGuid = siteSettings.Id;
-            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteId; }
 
             var siteUser = await queries.FetchByLoginName(siteGuid, normailzedUserName, true, cancellationToken);
             return (TUser)siteUser;
@@ -236,7 +224,7 @@ namespace cloudscribe.Core.Identity
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            if (debugLog) { log.LogInformation("SetEmailAsync"); }
+            log.LogDebug("SetEmailAsync"); 
             
             if (user == null)
             {
@@ -259,7 +247,7 @@ namespace cloudscribe.Core.Identity
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            if (debugLog) { log.LogInformation("SetNormalizedUserNameAsync"); }
+            log.LogDebug("SetNormalizedUserNameAsync"); 
             
             if (user == null)
             {
@@ -286,7 +274,7 @@ namespace cloudscribe.Core.Identity
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            if (debugLog) { log.LogInformation("GetUserIdAsync"); }
+            log.LogDebug("GetUserIdAsync"); 
             
             if (user == null)
             {
@@ -301,7 +289,7 @@ namespace cloudscribe.Core.Identity
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            if (debugLog) { log.LogInformation("GetUserNameAsync"); }
+            log.LogDebug("GetUserNameAsync"); 
             
             if (user == null)
             {
@@ -314,7 +302,7 @@ namespace cloudscribe.Core.Identity
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            if (debugLog) { log.LogInformation("GetUserNameAsync"); }
+            log.LogDebug("GetUserNameAsync"); 
             
             if (user == null)
             {
@@ -374,12 +362,11 @@ namespace cloudscribe.Core.Identity
         #region IUserEmailStore
 
 
-
         public Task<string> GetEmailAsync(TUser user, CancellationToken cancellationToken)
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            if (debugLog) { log.LogInformation("GetEmailAsync"); }
+            log.LogDebug("GetEmailAsync"); 
             
             if (user == null)
             {
@@ -393,7 +380,7 @@ namespace cloudscribe.Core.Identity
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            if (debugLog) { log.LogInformation("GetEmailAsync"); }
+            log.LogDebug("GetEmailAsync"); 
             
             if (user == null)
             {
@@ -409,7 +396,7 @@ namespace cloudscribe.Core.Identity
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            if (debugLog) { log.LogInformation("GetEmailConfirmedAsync"); }
+            log.LogDebug("GetEmailConfirmedAsync"); 
             
             if (user == null)
             {
@@ -425,7 +412,7 @@ namespace cloudscribe.Core.Identity
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            if (debugLog) { log.LogInformation("SetEmailAsync"); }
+            log.LogDebug("SetEmailAsync"); 
             
             if (user == null)
             {
@@ -450,7 +437,7 @@ namespace cloudscribe.Core.Identity
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            if (debugLog) { log.LogInformation("SetEmailAsync"); }
+            log.LogDebug("SetEmailAsync"); 
             
             if (user == null)
             {
@@ -476,7 +463,7 @@ namespace cloudscribe.Core.Identity
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            if (debugLog) { log.LogInformation("SetEmailConfirmedAsync"); }
+            log.LogDebug("SetEmailConfirmedAsync"); 
             
             if (user == null)
             {
@@ -502,10 +489,10 @@ namespace cloudscribe.Core.Identity
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            if (debugLog) { log.LogInformation("FindByEmailAsync"); }
+            log.LogDebug("FindByEmailAsync"); 
             
             Guid siteGuid = siteSettings.Id;
-            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteId; }
 
             ISiteUser siteUser = await queries.Fetch(siteGuid, email, cancellationToken);
 
@@ -523,13 +510,19 @@ namespace cloudscribe.Core.Identity
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            if (debugLog) { log.LogInformation("GetPasswordHashAsync"); }
+            log.LogDebug("GetPasswordHashAsync"); 
             
             if (user == null)
             {
                 throw new ArgumentNullException("user");
             }
-            
+
+            if (string.IsNullOrEmpty(user.PasswordHash))
+            {
+                string result = null;
+                return Task.FromResult(result);
+            }
+
             return Task.FromResult(user.PasswordHash);
         }
 
@@ -537,7 +530,7 @@ namespace cloudscribe.Core.Identity
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            if (debugLog) { log.LogInformation("HasPasswordAsync"); }
+            log.LogDebug("HasPasswordAsync"); 
             
             if (user == null)
             {
@@ -552,7 +545,7 @@ namespace cloudscribe.Core.Identity
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
-            if (debugLog) { log.LogInformation("SetPasswordHashAsync"); }
+            log.LogDebug("SetPasswordHashAsync"); 
             
             if (user == null)
             {
@@ -605,7 +598,7 @@ namespace cloudscribe.Core.Identity
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            if (debugLog) { log.LogInformation("GetLockoutEnabledAsync"); }
+            log.LogDebug("GetLockoutEnabledAsync"); 
             
             if (user == null)
             {
@@ -630,7 +623,7 @@ namespace cloudscribe.Core.Identity
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            if (debugLog) { log.LogInformation("GetLockoutEndDateAsync"); }
+            log.LogDebug("GetLockoutEndDateAsync"); 
             
             if (user == null)
             {
@@ -661,7 +654,7 @@ namespace cloudscribe.Core.Identity
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            if (debugLog) { log.LogInformation("GetAccessFailedCountAsync"); }
+            log.LogDebug("GetAccessFailedCountAsync"); 
             
             if (user == null)
             {
@@ -682,7 +675,7 @@ namespace cloudscribe.Core.Identity
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            if (debugLog) { log.LogInformation("IncrementAccessFailedCountAsync"); }
+            log.LogDebug("IncrementAccessFailedCountAsync"); 
             
             if (user == null)
             {
@@ -706,7 +699,7 @@ namespace cloudscribe.Core.Identity
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            if (debugLog) { log.LogInformation("ResetAccessFailedCountAsync"); }
+            log.LogDebug("ResetAccessFailedCountAsync"); 
             
             if (user == null)
             {
@@ -732,11 +725,8 @@ namespace cloudscribe.Core.Identity
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            //if (debugLog) { log.LogInformation("SetLockoutEnabledAsync"); }
-
-            // I need to figure out where this is called from or if it is called from anywhere
-            log.LogWarning("SetLockoutEnabledAsync");
-
+            log.LogDebug("SetLockoutEnabledAsync"); 
+            
             // I was confused about this property and tried to map it to IsLockedOut
             // but really IsLockedOut is determined only by the lockoutenddate
             // if it is null or less than now the user is not locked out
@@ -776,7 +766,7 @@ namespace cloudscribe.Core.Identity
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            if (debugLog) { log.LogInformation("SetLockoutEndDateAsync"); }
+            log.LogDebug("SetLockoutEndDateAsync"); 
             
             if (user == null)
             {
@@ -824,8 +814,7 @@ namespace cloudscribe.Core.Identity
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-
-            if (debugLog) { log.LogInformation("AddClaimsAsync"); }
+            log.LogDebug("AddClaimsAsync"); 
             
             if (user == null)
             {
@@ -833,7 +822,7 @@ namespace cloudscribe.Core.Identity
             }
 
             Guid siteGuid = siteSettings.Id;
-            if(multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
+            if(multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteId; }
 
             foreach (Claim claim in claims)
             {
@@ -853,7 +842,7 @@ namespace cloudscribe.Core.Identity
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            if (debugLog) { log.LogInformation("RemoveClaimAsync"); }
+            log.LogDebug("RemoveClaimAsync"); 
             
             if (user == null)
             {
@@ -861,7 +850,7 @@ namespace cloudscribe.Core.Identity
             }
 
             Guid siteGuid = siteSettings.Id;
-            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteId; }
 
             foreach (Claim claim in claims)
             {
@@ -875,7 +864,7 @@ namespace cloudscribe.Core.Identity
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            if (debugLog) { log.LogInformation("ReplaceClaimAsync"); }
+            log.LogDebug("ReplaceClaimAsync"); 
             
             if (user == null)
             {
@@ -883,7 +872,7 @@ namespace cloudscribe.Core.Identity
             }
 
             Guid siteGuid = siteSettings.Id;
-            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteId; }
 
             await commands.DeleteClaimByUser(siteGuid, user.Id, claim.Type, cancellationToken);
 
@@ -901,7 +890,7 @@ namespace cloudscribe.Core.Identity
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            if (debugLog) { log.LogInformation("GetClaimsAsync"); }
+            log.LogDebug("GetClaimsAsync"); 
             
             if (user == null)
             {
@@ -911,7 +900,7 @@ namespace cloudscribe.Core.Identity
             var claims = new List<Claim>();
             
             var siteGuid = siteSettings.Id;
-            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteId; }
 
             var userClaims = await queries.GetClaimsByUser(siteGuid, user.Id, cancellationToken);
             foreach (UserClaim uc in userClaims)
@@ -928,8 +917,7 @@ namespace cloudscribe.Core.Identity
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-
-            if (debugLog) { log.LogInformation("GetRolesAsync"); }
+            log.LogDebug("GetRolesAsync"); 
             
             if (claim == null)
             {
@@ -937,7 +925,7 @@ namespace cloudscribe.Core.Identity
             }
 
             var siteGuid = siteSettings.Id;
-            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteId; }
 
             var users = await queries.GetUsersForClaim(siteGuid, claim.Type, claim.Value, cancellationToken);
 
@@ -952,8 +940,7 @@ namespace cloudscribe.Core.Identity
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-
-            if (debugLog) { log.LogInformation("AddLoginAsync"); }
+            log.LogDebug("AddLoginAsync"); 
             
             if (user == null)
             {
@@ -961,7 +948,7 @@ namespace cloudscribe.Core.Identity
             }
 
             Guid siteGuid = siteSettings.Id;
-            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteId; }
 
             UserLogin userlogin = new UserLogin();
             userlogin.SiteId = siteGuid;
@@ -979,19 +966,15 @@ namespace cloudscribe.Core.Identity
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-
-            if (debugLog) { log.LogInformation("FindAsync called for " + loginProvider + " with providerKey " + providerKey); }
-
-            log.LogInformation("FindAsync called for " + loginProvider + " with providerKey " + providerKey);
+            log.LogDebug("FindAsync called for " + loginProvider + " with providerKey " + providerKey); 
             
             Guid siteGuid = siteSettings.Id;
-            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteId; }
 
             var userlogin = await queries.FindLogin(siteGuid, loginProvider, providerKey, cancellationToken);
             if (userlogin != null && userlogin.UserId != Guid.Empty)
             {
-                log.LogInformation("FindAsync userLogin found for " + loginProvider + " with providerKey " + providerKey);
-
+                log.LogDebug("FindAsync userLogin found for " + loginProvider + " with providerKey " + providerKey);
                 
                 cancellationToken.ThrowIfCancellationRequested();
                 var siteUser = await queries.Fetch(siteGuid, userlogin.UserId, cancellationToken);
@@ -1001,13 +984,13 @@ namespace cloudscribe.Core.Identity
                 }
                 else
                 {
-                    log.LogInformation("FindAsync siteUser not found for " + loginProvider + " with providerKey " + providerKey);
+                    log.LogDebug("FindAsync siteUser not found for " + loginProvider + " with providerKey " + providerKey);
                    
                 }
             }
             else
             {
-                log.LogInformation("FindAsync userLogin not found for " + loginProvider + " with providerKey " + providerKey);
+                log.LogDebug("FindAsync userLogin not found for " + loginProvider + " with providerKey " + providerKey);
             }
 
             return default(TUser);
@@ -1017,7 +1000,7 @@ namespace cloudscribe.Core.Identity
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            if (debugLog) { log.LogInformation("GetLoginsAsync"); }
+            log.LogDebug("GetLoginsAsync"); 
             
             if (user == null)
             {
@@ -1027,7 +1010,7 @@ namespace cloudscribe.Core.Identity
             var logins = new List<UserLoginInfo>();
             
             var siteGuid = siteSettings.Id;
-            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteId; }
 
             var userLogins = await queries.GetLoginsByUser(siteGuid, user.Id, cancellationToken);
             foreach (UserLogin ul in userLogins)
@@ -1044,7 +1027,7 @@ namespace cloudscribe.Core.Identity
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            if (debugLog) { log.LogInformation("RemoveLoginAsync"); }
+            log.LogDebug("RemoveLoginAsync"); 
             
             if (user == null)
             {
@@ -1052,7 +1035,7 @@ namespace cloudscribe.Core.Identity
             }
             
             var siteGuid = siteSettings.Id;
-            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteId; }
 
             await commands.DeleteLogin(
                 siteGuid,
@@ -1084,7 +1067,7 @@ namespace cloudscribe.Core.Identity
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            if (debugLog) { log.LogInformation("GetTwoFactorEnabledAsync"); }
+            log.LogDebug("GetTwoFactorEnabledAsync"); 
             
             if (user == null)
             {
@@ -1106,7 +1089,7 @@ namespace cloudscribe.Core.Identity
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            if (debugLog) { log.LogInformation("SetTwoFactorEnabledAsync"); }
+            log.LogDebug("SetTwoFactorEnabledAsync"); 
             
             if (user == null)
             {
@@ -1131,7 +1114,7 @@ namespace cloudscribe.Core.Identity
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            if (debugLog) { log.LogInformation("GetPhoneNumberAsync"); }
+            log.LogDebug("GetPhoneNumberAsync"); 
             
             if (user == null)
             {
@@ -1145,7 +1128,7 @@ namespace cloudscribe.Core.Identity
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            if (debugLog) { log.LogInformation("GetPhoneNumberConfirmedAsync"); }
+            log.LogDebug("GetPhoneNumberConfirmedAsync"); 
             
             if (user == null)
             {
@@ -1161,7 +1144,7 @@ namespace cloudscribe.Core.Identity
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            if (debugLog) { log.LogInformation("SetPhoneNumberAsync"); }
+            log.LogDebug("SetPhoneNumberAsync"); 
             
             if (user == null)
             {
@@ -1178,8 +1161,7 @@ namespace cloudscribe.Core.Identity
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-
-            if (debugLog) { log.LogInformation("SetPhoneNumberConfirmedAsync"); }
+            log.LogDebug("SetPhoneNumberConfirmedAsync"); 
             
             if (user == null)
             {
@@ -1201,8 +1183,7 @@ namespace cloudscribe.Core.Identity
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-
-            if (debugLog) { log.LogInformation("AddToRoleAsync"); }
+            log.LogDebug("AddToRoleAsync"); 
             
             if (user == null)
             {
@@ -1210,7 +1191,7 @@ namespace cloudscribe.Core.Identity
             }
             
             var siteGuid = siteSettings.Id;
-            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteId; }
 
             var siteRole = await queries.FetchRole(siteGuid, role, cancellationToken);
             if (siteRole != null)
@@ -1224,8 +1205,7 @@ namespace cloudscribe.Core.Identity
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-
-            if (debugLog) { log.LogInformation("GetRolesAsync"); }
+            log.LogDebug("GetRolesAsync"); 
             
             if (user == null)
             {
@@ -1235,7 +1215,7 @@ namespace cloudscribe.Core.Identity
             var roles = new List<string>();
             
             var siteGuid = siteSettings.Id;
-            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteId; }
 
             roles = await queries.GetUserRoles(siteGuid, user.Id, cancellationToken);
 
@@ -1246,8 +1226,7 @@ namespace cloudscribe.Core.Identity
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-
-            if (debugLog) { log.LogInformation("IsInRoleAsync"); }
+            log.LogDebug("IsInRoleAsync"); 
 
            
             if (user == null)
@@ -1274,10 +1253,10 @@ namespace cloudscribe.Core.Identity
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            if (debugLog) { log.LogInformation("GetRolesAsync"); }
+            log.LogDebug("GetRolesAsync"); 
            
             var siteGuid = siteSettings.Id;
-            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteId; }
 
             var users = await queries.GetUsersInRole(siteGuid, role, cancellationToken);
 
@@ -1288,14 +1267,14 @@ namespace cloudscribe.Core.Identity
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            if (debugLog) { log.LogInformation("RemoveFromRoleAsync"); }
+            log.LogDebug("RemoveFromRoleAsync"); 
             if (user == null)
             {
                 throw new ArgumentNullException("user");
             }
             
             var siteGuid = siteSettings.Id;
-            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteId; }
 
             var siteRole = await queries.FetchRole(siteGuid, role, cancellationToken);
             
@@ -1312,7 +1291,7 @@ namespace cloudscribe.Core.Identity
 
         public async Task<string> SuggestLoginNameFromEmail(Guid siteGuid, string email)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteGuid; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteId; }
 
             var login = email.Substring(0, email.IndexOf("@"));
             var offset = 1;

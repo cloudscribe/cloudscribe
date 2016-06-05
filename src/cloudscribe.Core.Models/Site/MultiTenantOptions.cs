@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-08-01
-// Last Modified:			2016-04-27
+// Last Modified:			2016-06-05
 // 
 
 using System;
@@ -27,7 +27,7 @@ namespace cloudscribe.Core.Models
         {
             get {
                 if(Mode == MultiTenantMode.None) { return false; }
-                if(relatedSiteGuid == Guid.Empty) { return false; }
+                if(relatedSiteId == Guid.Empty) { return false; }
                 return useRelatedSitesMode;
             }
             set { useRelatedSitesMode = value; }
@@ -37,12 +37,12 @@ namespace cloudscribe.Core.Models
         /// the siteId of the site whose users and roles are shared when UseRelatedSitesMode is true
         /// </summary>
         //public int RelatedSiteId { get; set; } = 1;
-        private Guid relatedSiteGuid = Guid.Empty;
-        public Guid RelatedSiteGuid
+        private Guid relatedSiteId = Guid.Empty;
+        public Guid RelatedSiteId
         {
-            get {  return relatedSiteGuid;
+            get {  return relatedSiteId;
             }
-            set { relatedSiteGuid = value; }
+            set { relatedSiteId = value; }
         } 
             
 

@@ -93,7 +93,7 @@ namespace cloudscribe.Core.Identity
         public Task<bool> LoginIsAvailable(Guid userId, string loginName)
         {
             Guid siteId = Site.Id;
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteGuid; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             return queries.LoginIsAvailable(siteId, userId, loginName, CancellationToken);
  
@@ -102,21 +102,21 @@ namespace cloudscribe.Core.Identity
         
         public Task<List<IUserInfo>> GetPage(Guid siteId, int pageNumber, int pageSize, string userNameBeginsWith, int sortMode)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteGuid; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             return queries.GetPage(siteId, pageNumber, pageSize, userNameBeginsWith, sortMode, CancellationToken);
         }
         
         public Task<int> CountUsers(Guid siteId, string userNameBeginsWith)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteGuid; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             return queries.CountUsers(siteId, userNameBeginsWith, CancellationToken);
         }
 
         public Task<int> CountLockedOutUsers(Guid siteId)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteGuid; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             return queries.CountLockedByAdmin(siteId, CancellationToken);
         }
@@ -126,14 +126,14 @@ namespace cloudscribe.Core.Identity
             int pageNumber,
             int pageSize)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteGuid; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             return queries.GetPageLockedByAdmin(siteId, pageNumber, pageSize, CancellationToken);
         }
 
         public Task<List<IUserInfo>> GetUserAdminSearchPage(Guid siteId, int pageNumber, int pageSize, string searchInput, int sortMode)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteGuid; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             return queries.GetUserAdminSearchPage(siteId, pageNumber, pageSize, searchInput, sortMode, CancellationToken);
 
@@ -141,14 +141,14 @@ namespace cloudscribe.Core.Identity
 
         public Task<int> CountUsersForAdminSearch(Guid siteId, string searchInput)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteGuid; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             return queries.CountUsersForAdminSearch(siteId, searchInput, CancellationToken);
         }
 
         public Task<int> CountNotApprovedUsers(Guid siteId)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteGuid; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             return queries.CountNotApprovedUsers(siteId, CancellationToken);
         }
@@ -158,7 +158,7 @@ namespace cloudscribe.Core.Identity
             int pageNumber,
             int pageSize)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteGuid; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             return queries.GetNotApprovedUsers(siteId, pageNumber, pageSize, CancellationToken);
 
@@ -173,7 +173,7 @@ namespace cloudscribe.Core.Identity
         
         public Task<ISiteUser> Fetch(Guid siteId, Guid userId)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteGuid; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             return queries.Fetch(siteId, userId, CancellationToken);
         }
@@ -181,14 +181,14 @@ namespace cloudscribe.Core.Identity
         
         public Task<bool> EmailExistsInDB(Guid siteId, string email)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteGuid; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             return queries.EmailExistsInDB(siteId, email, CancellationToken);
         }
 
         public Task<bool> EmailExistsInDB(Guid siteId, Guid userGuid, string email)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteGuid; }
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
             return queries.EmailExistsInDB(siteId, userGuid, email, CancellationToken);
 
