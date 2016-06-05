@@ -36,7 +36,8 @@ namespace cloudscribe.Core.Web.Controllers
             SiteUserManager<SiteUser> userManager,
             ISiteMessageEmailSender emailSender,
             IOptions<UIOptions> uiOptionsAccessor,
-            IStringLocalizer<CloudscribeCore> localizer
+            IStringLocalizer<CloudscribeCore> localizer,
+            ITimeZoneResolver timeZoneResolver
             )
         {
            
@@ -45,6 +46,7 @@ namespace cloudscribe.Core.Web.Controllers
             this.emailSender = emailSender;
             uiOptions = uiOptionsAccessor.Value;
             sr = localizer;
+            this.timeZoneResolver = timeZoneResolver;
 
         }
 
@@ -53,6 +55,7 @@ namespace cloudscribe.Core.Web.Controllers
         private ISiteMessageEmailSender emailSender;
         private UIOptions uiOptions;
         private IStringLocalizer sr; // string resources
+        private ITimeZoneResolver timeZoneResolver;
 
         [HttpGet]
         public async Task<IActionResult> Index(
@@ -91,13 +94,14 @@ namespace cloudscribe.Core.Web.Controllers
 
             var count = await UserManager.CountUsers(selectedSite.Id, query);
 
-            UserListViewModel model = new UserListViewModel();
+            var model = new UserListViewModel();
             model.SiteId = selectedSite.Id;
             model.UserList = siteMembers;
             model.Paging.CurrentPage = pageNumber;
             model.Paging.ItemsPerPage = itemsPerPage;
             model.Paging.TotalItems = count;
             model.AlphaQuery = query; //TODO: sanitize?
+            model.TimeZone = await timeZoneResolver.GetUserTimeZone();
 
             return View(model);
 
