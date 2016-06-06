@@ -206,6 +206,11 @@ namespace cloudscribe.Core.Web.Controllers
         [AllowAnonymous]
         public IActionResult Register()
         {
+            if(User.Identity.IsAuthenticated)
+            {
+                return this.RedirectToSiteRoot(Site);
+            }
+
             ViewData["Title"] = sr["Register"];
             
             var model = new RegisterViewModel();

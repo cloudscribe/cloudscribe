@@ -1,5 +1,5 @@
 ﻿{
-    "version": "1.0.0-beta9",
+    "version": "1.0.0-rc20160606",
     "description": "cloudscribe common helpers for web applications",
 
     "authors": [ "Joe Audette" ],

@@ -2,27 +2,27 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-08
-// Last Modified:			2016-06-03
+// Last Modified:			2016-06-06
 // 
 
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Models;
-using cloudscribe.Web.Common.Extensions;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.Components.Messaging;
 using cloudscribe.Core.Web.ViewModels.Account;
 using cloudscribe.Core.Web.ViewModels.UserAdmin;
+using cloudscribe.Web.Common;
+using cloudscribe.Web.Common.Extensions;
 using cloudscribe.Web.Navigation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Localization;
-using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 
 
@@ -37,8 +37,8 @@ namespace cloudscribe.Core.Web.Controllers
             ISiteMessageEmailSender emailSender,
             IOptions<UIOptions> uiOptionsAccessor,
             IStringLocalizer<CloudscribeCore> localizer,
-            ITimeZoneResolver timeZoneResolver,
-            ITimeZoneIdResolver timeZoneIdResolver
+            ITimeZoneIdResolver timeZoneIdResolver,
+            ITimeZoneHelper timeZoneHelper
             )
         {
            
@@ -47,8 +47,8 @@ namespace cloudscribe.Core.Web.Controllers
             this.emailSender = emailSender;
             uiOptions = uiOptionsAccessor.Value;
             sr = localizer;
-            this.timeZoneResolver = timeZoneResolver;
             this.timeZoneIdResolver = timeZoneIdResolver;
+            tzHelper = timeZoneHelper;
         }
 
         private SiteManager siteManager;
@@ -56,8 +56,8 @@ namespace cloudscribe.Core.Web.Controllers
         private ISiteMessageEmailSender emailSender;
         private UIOptions uiOptions;
         private IStringLocalizer sr; // string resources
-        private ITimeZoneResolver timeZoneResolver;
         private ITimeZoneIdResolver timeZoneIdResolver;
+        private ITimeZoneHelper tzHelper;
 
         [HttpGet]
         public async Task<IActionResult> Index(
@@ -103,7 +103,6 @@ namespace cloudscribe.Core.Web.Controllers
             model.Paging.ItemsPerPage = itemsPerPage;
             model.Paging.TotalItems = count;
             model.AlphaQuery = query; //TODO: sanitize?
-            model.TimeZone = await timeZoneResolver.GetUserTimeZone();
             model.TimeZoneId = await timeZoneIdResolver.GetUserTimeZoneId();
 
             return View(model);
@@ -153,7 +152,8 @@ namespace cloudscribe.Core.Web.Controllers
             model.Paging.ItemsPerPage = itemsPerPage;
             model.Paging.TotalItems = count;
             model.SearchQuery = query; //TODO: sanitize?
-            
+            model.TimeZoneId = await timeZoneIdResolver.GetUserTimeZoneId();
+
             return View("Index", model);
         }
 
@@ -187,6 +187,7 @@ namespace cloudscribe.Core.Web.Controllers
             model.Paging.TotalItems = 1;
             model.IpQuery = ipQuery; //TODO: sanitize
             model.ShowAlphaPager = false;
+            model.TimeZoneId = await timeZoneIdResolver.GetUserTimeZoneId();
 
             return View("Index", model);
 
@@ -231,6 +232,7 @@ namespace cloudscribe.Core.Web.Controllers
             model.Paging.ItemsPerPage = itemsPerPage;
             model.Paging.TotalItems = count;
             model.ShowAlphaPager = false;
+            model.TimeZoneId = await timeZoneIdResolver.GetUserTimeZoneId();
 
             return View(model);
 
@@ -275,6 +277,7 @@ namespace cloudscribe.Core.Web.Controllers
             model.Paging.ItemsPerPage = itemsPerPage;
             model.Paging.TotalItems = count;
             model.ShowAlphaPager = false;
+            model.TimeZoneId = await timeZoneIdResolver.GetUserTimeZoneId();
 
             return View(model);
         }
@@ -391,7 +394,18 @@ namespace cloudscribe.Core.Web.Controllers
                 model.IsLockedOut = user.IsLockedOut;
                 model.LastLoginDate = user.LastLoginDate;
                 model.TimeZoneId = user.TimeZoneId;
-           
+                if(string.IsNullOrEmpty(model.TimeZoneId))
+                {
+                    model.TimeZoneId = await timeZoneIdResolver.GetSiteTimeZoneId();
+                }
+                model.AllTimeZones = tzHelper.GetTimeZoneList().Select(x =>
+                               new SelectListItem
+                               {
+                                   Text = x,
+                                   Value = x,
+                                   Selected = model.TimeZoneId == x
+                               });
+
                 if (user.DateOfBirth > DateTime.MinValue)
                 {
                     model.DateOfBirth = user.DateOfBirth;
@@ -449,7 +463,7 @@ namespace cloudscribe.Core.Web.Controllers
                         }
                         user.IsLockedOut = model.IsLockedOut;
                         
-                        //user.TimeZoneId = model.TimeZoneId;
+                        user.TimeZoneId = model.TimeZoneId;
 
                         if (model.DateOfBirth.HasValue)
                         {

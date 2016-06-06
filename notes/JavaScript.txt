@@ -7,6 +7,8 @@ http://damienbod.com/2015/03/28/asp-net-5-angularjs-application-using-angular-ui
 
 https://github.com/Eonasdan/bootstrap-datetimepicker
 
+http://www.kequc.com/2016/06/03/make-your-own-tagging-system-from-scratch
+
 http://www.davepaquette.com/archive/2014/10/08/how-to-use-gulp-in-visual-studio.aspx
 http://www.davepaquette.com/archive/2015/05/05/web-optimization-development-and-production-in-asp-net-mvc6.aspx
 

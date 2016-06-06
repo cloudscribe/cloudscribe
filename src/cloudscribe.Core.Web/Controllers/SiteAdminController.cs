@@ -7,7 +7,6 @@
 
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Web.Components;
-//using cloudscribe.Core.Web.Helpers;
 using cloudscribe.Core.Web.ViewModels.SiteSettings;
 using cloudscribe.Web.Common;
 using cloudscribe.Web.Common.Extensions;
@@ -135,13 +134,6 @@ namespace cloudscribe.Core.Web.Controllers
             
             var model = new SiteBasicSettingsViewModel();
             model.ReturnPageNumber = slp; // site list page number to return to
-            //model.AllTimeZones = CommonExtensions.GetTimeZoneList().Select(x =>
-            //                   new SelectListItem
-            //                   {
-            //                       Text = x.DisplayName,
-            //                       Value = x.Id,
-            //                       Selected = model.TimeZoneId == x.Id
-            //                   });
             model.AllTimeZones = tzHelper.GetTimeZoneList().Select(x =>
                                new SelectListItem
                                {
@@ -315,13 +307,6 @@ namespace cloudscribe.Core.Web.Controllers
             model.ReturnPageNumber = slp; //site list return page
             model.SiteId = Guid.Empty;
             model.TimeZoneId = siteManager.CurrentSite.TimeZoneId;
-            //model.AllTimeZones = CommonExtensions.GetTimeZoneList().Select(x =>
-            //                   new SelectListItem
-            //                   {
-            //                       Text = x.DisplayName,
-            //                       Value = x.Id,
-            //                       Selected = model.TimeZoneId == x.Id
-            //                   });
             model.AllTimeZones = tzHelper.GetTimeZoneList().Select(x =>
                                new SelectListItem
                                {

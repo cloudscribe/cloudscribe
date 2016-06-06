@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-08
-// Last Modified:			2015-10-12
+// Last Modified:			2016-06-06
 //
 
 using cloudscribe.Core.Models;
@@ -25,7 +25,6 @@ namespace cloudscribe.Core.Web.ViewModels.UserAdmin
         public string Heading { get; set; }
         public IList<IUserInfo> UserList { get; set; }
         public PaginationSettings Paging { get; set; }
-        public TimeZoneInfo TimeZone { get; set; } = TimeZoneInfo.Utc;
         public string TimeZoneId { get; set; } = "America/New_York";
 
         private string alphaQuery = string.Empty;

@@ -1,6 +1,7 @@
 
 Targets
 https://github.com/dotnet/corefx/blob/master/Documentation/architecture/net-platform-standard.md
+https://blogs.infosupport.com/net-platform-standard-and-the-magic-of-imports/
 
 not true
 http://blog.nuget.org/20160126/nuget-contentFiles-demystified.html

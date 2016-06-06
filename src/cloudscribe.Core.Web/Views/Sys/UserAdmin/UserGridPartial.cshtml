@@ -12,6 +12,9 @@
             <a class="btn btn-xs btn-default" asp-action="NewUser" asp-controller="UserAdmin" asp-route-siteId="@Model.SiteId">@sr["New User"]</a>
         </th>
         <th>
+            @sr["Created"]
+        </th>
+        <th>
             @sr["Email"]
         </th>
         <th>
@@ -37,9 +40,10 @@
                    asp-route-userId="@item.Id">@sr["Manage"]</a>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Email)
-                <br />@item.CreatedUtc.ToLocalTime(Model.TimeZone).ToString("g")
-                <br />@tzHelper.ConvertToLocalTime(item.CreatedUtc, Model.TimeZoneId).ToString("g")
+                @tzHelper.ConvertToLocalTime(item.CreatedUtc, Model.TimeZoneId).ToString("g")
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)     
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.UserName)

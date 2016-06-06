@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2016-06-02
+// Last Modified:			2016-06-06
 // 
 
 using System;
@@ -28,10 +28,7 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
             availableLayouts = new List<SelectListItem>();
         }
 
-        
         private Guid id = Guid.Empty;
-
-        //[Display(Name = "SiteId")]
         public Guid SiteId
         {
             get { return id; }
@@ -43,7 +40,6 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
 
         [Required(ErrorMessage = "Site Name is required")]
         //[StringLengthWithConfig(MinimumLength = 3, MaximumLength = 255, MinLengthKey = "SiteNameMinLength", MaxLengthKey = "SiteNameMaxLength", ErrorMessageResourceName = "SiteNameLengthErrorFormat", ErrorMessageResourceType = typeof(CommonResources))]
-        //[Display(Name = "Site Name")]
         public string SiteName
         {
             get { return siteName; }
@@ -57,7 +53,7 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         /// is so we don't have to use an ugly guid string for folder name
         /// to host site specific files such as themes
         /// </summary>
-        [RegularExpression(@"^[a-zA-Z0-9_-]+$", ErrorMessage ="only digits, numbers, - and _ allowed, no spaces allowed"), StringLength(36)]
+        [RegularExpression(@"^[a-zA-Z0-9_-]+$", ErrorMessage = "only digits, numbers, - and _ allowed, no spaces allowed"), StringLength(36)]
         public string AliasId
         {
             get { return aliasId; }
@@ -65,8 +61,6 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         }
 
         private string siteFolderName = string.Empty;
-
-        //[Display(Name = "Site Folder Name", ResourceType = typeof(CloudscribeCore))]
         public string SiteFolderName
         {
             get { return siteFolderName; }
@@ -74,17 +68,15 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         }
 
         private string hostName = string.Empty;
-        //[Display(Name = "PreferredHostName", ResourceType = typeof(CommonResources))]
         public string HostName
         {
             get { return hostName; }
             set { hostName = value; }
         }
 
-        private string timeZoneId = "Eastern Standard Time";
+        private string timeZoneId = "America/New_York";
 
-        [Required]
-        //[Display(Name = "TimeZone", ResourceType = typeof(CommonResources))]
+        [Required(ErrorMessage = "Time zone is required")]
         public string TimeZoneId
         {
             get { return timeZoneId; }
@@ -124,10 +116,8 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         }
         
         //[AllowHtml]
-        //[Display(Name = "ClosedMessage", ResourceType = typeof(CommonResources))]
         public string ClosedMessage { get; set; } = string.Empty;
         
-        //[Display(Name = "IsClosed", ResourceType = typeof(CommonResources))]
         public bool IsClosed { get; set; } = false;
         
         

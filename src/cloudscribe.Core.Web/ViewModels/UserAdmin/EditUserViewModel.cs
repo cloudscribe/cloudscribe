@@ -2,39 +2,37 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-31
-// Last Modified:		    2016-05-11
+// Last Modified:		    2016-06-06
 // 
-// TODO: support custom profile properties that are required for registration
+// TODO: support custom profile properties that are required for registration ?
 
 using System;
 using System.ComponentModel.DataAnnotations;
-using cloudscribe.Web.Common.DataAnnotations;
+//using cloudscribe.Web.Common.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Collections.Generic;
 //using ExpressiveAnnotations.Attributes;
 
 namespace cloudscribe.Core.Web.ViewModels.Account
 {
     public class EditUserViewModel
     {
-       
-        [Display(Name = "UserId")]
-        public Guid UserId { get; set; } = Guid.Empty;
+        public EditUserViewModel()
+        {
+            allTimeZones = new List<SelectListItem>();
+        }
         
-        [Display(Name = "SiteId")]
+
+        public Guid UserId { get; set; } = Guid.Empty;
         public Guid SiteId { get; set; } = Guid.Empty;
         
-        [Required]
-        [EmailAddress(ErrorMessage = "invalid email format")]
-        //[Required(ErrorMessageResourceName = "EmailRequired", ErrorMessageResourceType = typeof(CommonResources))]
-        //[EmailAddress(ErrorMessage = "", ErrorMessageResourceName = "EmailNotValid", ErrorMessageResourceType = typeof(CommonResources))]
-        //[Display(Name = "Email", ResourceType = typeof(CommonResources))]
+        [Required(ErrorMessage = "Email is required")]
+        [EmailAddress(ErrorMessage = "Invalid email format")]
         public string Email { get; set; }
 
         public bool EmailConfirmed { get; set; }
-
         public bool IsLockedOut { get; set; }
-
         public bool AccountApproved { get; set; }
-
         public bool Trusted { get; set; }
 
         //  //[StringLength(AppSettings.PasswordMaxLength, MinimumLength = AppSettings.PasswordMinLength, ErrorMessageResourceName = "PasswordLengthErrorFormat", ErrorMessageResourceType = typeof(CommonResources))]
@@ -49,48 +47,49 @@ namespace cloudscribe.Core.Web.ViewModels.Account
         //[RequiredWhen("UserId", -1,AllowEmptyStrings =false, ErrorMessage = "Password is required.")]
         //[Required(AllowEmptyStrings = false)]
         //[DataType(DataType.Password)]
-        //[Display(Name = "Password", ResourceType = typeof(CommonResources))]
-       // public string Password { get; set; }
+        // public string Password { get; set; }
 
         //DataType(DataType.Password)]
         //[CompareWhen(WhenProperty = "UserId", WhenValue = -1, CompareProperty = "Password",ErrorMessage = "Confirm Password must match Password.")]
-        //[Display(Name = "ConfirmPassword", ResourceType = typeof(CommonResources))]
         //[Compare("Password", ErrorMessageResourceName = "ConfirmPasswordMatchErrorMessage", ErrorMessageResourceType = typeof(CommonResources))]
         //public string ConfirmPassword { get; set; }
 
 
-        
+
         // //[StringLengthWithConfig(MinimumLength = 3, MaximumLength = 255, MinLengthKey = "SiteNameMinLength", MaxLengthKey = "SiteNameMaxLength", ErrorMessageResourceName = "SiteNameLengthErrorFormat", ErrorMessageResourceType = typeof(CommonResources))]
         //[Remote("LoginNameAvailable", "Account", AdditionalFields = "UserId",
         //    ErrorMessageResourceName = "LoginNameNotAvailable", ErrorMessageResourceType = typeof(CommonResources),
         //    HttpMethod = "Post")]
-        //[Display(Name = "LoginName", ResourceType = typeof(CommonResources))]
+        [Required(ErrorMessage = "Login name is required")]
         public string LoginName { get; set; } = string.Empty;
         
         private string displayName = string.Empty;
 
         //  //[StringLengthWithConfig(MinimumLength = 3, MaximumLength = 255, MinLengthKey = "SiteNameMinLength", MaxLengthKey = "SiteNameMaxLength", ErrorMessageResourceName = "SiteNameLengthErrorFormat", ErrorMessageResourceType = typeof(CommonResources))]
-        //[Required(ErrorMessageResourceName = "DisplayNameRequired", ErrorMessageResourceType = typeof(CommonResources))]
-        //[Display(Name = "DisplayName", ResourceType = typeof(CommonResources))]
+        
+        [Required(ErrorMessage = "Display name is required")]
         public string DisplayName { get; set; } = string.Empty;
         
         //  //[StringLengthWithConfig(MinimumLength = 3, MaximumLength = 255, MinLengthKey = "SiteNameMinLength", MaxLengthKey = "SiteNameMaxLength", ErrorMessageResourceName = "SiteNameLengthErrorFormat", ErrorMessageResourceType = typeof(CommonResources))]
-        //[Display(Name = "FirstName", ResourceType = typeof(CommonResources))]
+     
         public string FirstName { get; set; } = string.Empty;
         
         //  //[StringLengthWithConfig(MinimumLength = 3, MaximumLength = 255, MinLengthKey = "SiteNameMinLength", MaxLengthKey = "SiteNameMaxLength", ErrorMessageResourceName = "SiteNameLengthErrorFormat", ErrorMessageResourceType = typeof(CommonResources))]
-        //[Display(Name = "LastName", ResourceType = typeof(CommonResources))]
         public string LastName { get; set; } = string.Empty;
         
-        //[Display(Name = "DateOfBirth", ResourceType = typeof(CommonResources))]
         public DateTime? DateOfBirth { get; set; }
-
         
         public DateTime? LastLoginDate { get; set; }
 
         public string TimeZoneId { get; set; }
 
-        [Display(Name = "Administrator Notes")]
+        private IEnumerable<SelectListItem> allTimeZones = null;
+        public IEnumerable<SelectListItem> AllTimeZones
+        {
+            get { return allTimeZones; }
+            set { allTimeZones = value; }
+        }
+
         public string Comment { get; set; }
 
 

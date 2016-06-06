@@ -1,8 +1,8 @@
 
-At some point I think we should change cloudscribe to use NodaTime for date/time
+
 http://nodatime.org/
 
-
+https://github.com/exceptionless/Exceptionless.DateTimeExtensions
 
 # Date/Time picker implementations
 

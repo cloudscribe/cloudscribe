@@ -50,7 +50,6 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<SiteDataProtector>();
             // timezone localization from NodaTime
             services.AddCloudscribeCommmon();
-            services.AddScoped<ITimeZoneResolver, RequestTimeZoneResolver>();
             services.AddScoped<ITimeZoneIdResolver, RequestTimeZoneIdResolver>();
 
             services.AddCloudscribePagination();

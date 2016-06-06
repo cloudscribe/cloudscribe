@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2016-06-04
+// Last Modified:			2016-06-06
 // 
 
 using cloudscribe.Core.Models;
@@ -17,6 +17,9 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Localization;
+using System;
+using cloudscribe.Web.Common;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace cloudscribe.Core.Web.Controllers
 {
@@ -28,7 +31,9 @@ namespace cloudscribe.Core.Web.Controllers
             SiteUserManager<SiteUser> userManager,
             SiteSignInManager<SiteUser> signInManager,
             ISmsSender smsSender,
-            IStringLocalizer<CloudscribeCore> localizer
+            IStringLocalizer<CloudscribeCore> localizer,
+            ITimeZoneIdResolver timeZoneIdResolver,
+            ITimeZoneHelper timeZoneHelper
             )
         {
             Site = currentSite; 
@@ -37,6 +42,8 @@ namespace cloudscribe.Core.Web.Controllers
            // this.emailSender = emailSender;
             this.smsSender = smsSender;
             sr = localizer;
+            this.timeZoneIdResolver = timeZoneIdResolver;
+            tzHelper = timeZoneHelper;
         }
 
         private readonly ISiteSettings Site;
@@ -45,6 +52,8 @@ namespace cloudscribe.Core.Web.Controllers
         //private readonly IAuthEmailSender emailSender;
         private readonly ISmsSender smsSender;
         private IStringLocalizer sr;
+        private ITimeZoneIdResolver timeZoneIdResolver;
+        private ITimeZoneHelper tzHelper;
 
 
         // GET: /Manage/Index
@@ -58,10 +67,54 @@ namespace cloudscribe.Core.Web.Controllers
                 PhoneNumber = user.PhoneNumber.Length > 0 ? user.PhoneNumber : null,
                 TwoFactor = user.TwoFactorEnabled,
                 Logins = await userManager.GetLoginsAsync(user),
-                BrowserRemembered = await signInManager.IsTwoFactorClientRememberedAsync(user)
+                BrowserRemembered = await signInManager.IsTwoFactorClientRememberedAsync(user),
+                TimeZone = user.TimeZoneId
             };
+
+            if(string.IsNullOrEmpty(model.TimeZone))
+            {
+                model.TimeZone = await timeZoneIdResolver.GetSiteTimeZoneId();
+            }
             
             return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> TimeZone()
+        {
+            var user = await userManager.FindByIdAsync(HttpContext.User.GetUserId());
+
+            var model = new TimeZoneViewModel();
+
+            model.TimeZoneId = user.TimeZoneId;
+            if (string.IsNullOrEmpty(model.TimeZoneId))
+            {
+                model.TimeZoneId = await timeZoneIdResolver.GetSiteTimeZoneId();
+            }
+            model.AllTimeZones = tzHelper.GetTimeZoneList().Select(x =>
+                           new SelectListItem
+                           {
+                               Text = x,
+                               Value = x,
+                               Selected = model.TimeZoneId == x
+                           });
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> TimeZone(string timeZoneId)
+        {
+            var user = await userManager.FindByIdAsync(HttpContext.User.GetUserId());
+
+            if (user != null)
+            {
+                user.TimeZoneId = timeZoneId;
+                await userManager.UpdateAsync(user);
+                this.AlertSuccess(sr["Your time zone has been updated."]);
+            }
+            return RedirectToAction("Index");
         }
 
         //

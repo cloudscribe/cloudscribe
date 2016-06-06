@@ -2,10 +2,9 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //	Author:                 Joe Audette
 //  Created:			    2011-08-19
-//	Last Modified:		    2016-06-04
+//	Last Modified:		    2016-06-06
 // 
 
-using cloudscribe.Core.Models;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.ViewModels.SystemInfo;
 using Microsoft.AspNetCore.Authorization;
@@ -20,20 +19,16 @@ namespace cloudscribe.Core.Web.Controllers
         public SystemInfoController(
             SystemInfoManager systemInfoManager,
             IOptions<UIOptions> uiOptionsAccessor,
-            ITimeZoneResolver timeZoneResolver,
             IStringLocalizer<CloudscribeCore> localizer
             )
         {
             systemInfo = systemInfoManager;
-
-            this.timeZoneResolver = timeZoneResolver;
             uiOptions = uiOptionsAccessor.Value;
             sr = localizer;
 
         }
 
         private SystemInfoManager systemInfo;
-        private ITimeZoneResolver timeZoneResolver;
         private UIOptions uiOptions;
         private IStringLocalizer sr;
 

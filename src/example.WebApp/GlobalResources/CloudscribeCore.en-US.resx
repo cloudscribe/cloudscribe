@@ -921,4 +921,10 @@
   <data name="{0} - Social Login Settings" xml:space="preserve">
     <value>{0} - Social Login Settings</value>
   </data>
+  <data name="Time Zone:" xml:space="preserve">
+    <value>Time Zone:</value>
+  </data>
+  <data name="Update Time Zone" xml:space="preserve">
+    <value>Update Time Zone</value>
+  </data>
 </root>
