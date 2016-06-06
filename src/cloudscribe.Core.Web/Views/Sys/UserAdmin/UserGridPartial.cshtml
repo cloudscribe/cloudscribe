@@ -1,9 +1,11 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.UserAdmin.UserListViewModel
 @using cloudscribe.Core.Web
 @using cloudscribe.Core.Models
+@using cloudscribe.Web.Common
 @using Microsoft.Extensions.Options
 @using Microsoft.Extensions.Localization
 @inject IStringLocalizer<CloudscribeCore> sr
+@inject ITimeZoneHelper tzHelper
 <table class="table table-striped">
     <tr>
         <th>
@@ -36,7 +38,8 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Email)
-                @item.CreatedUtc.ToLocalTime(Model.TimeZone).ToString("g")
+                <br />@item.CreatedUtc.ToLocalTime(Model.TimeZone).ToString("g")
+                <br />@tzHelper.ConvertToLocalTime(item.CreatedUtc, Model.TimeZoneId).ToString("g")
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.UserName)

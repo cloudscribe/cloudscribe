@@ -38,9 +38,17 @@ namespace cloudscribe.Core.Web.Components
             if(context.User.Identity.IsAuthenticated)
             {
                 SiteUser user = await userManager.FindByIdAsync(context.User.GetUserId());
-                if((user != null)&&(user.TimeZoneId.Length > 0))
+                if((user != null)&&(!string.IsNullOrEmpty(user.TimeZoneId)))
                 {
-                    return TimeZoneInfo.FindSystemTimeZoneById(user.TimeZoneId);
+                    try
+                    {
+                        return TimeZoneInfo.FindSystemTimeZoneById(user.TimeZoneId);
+                    }
+                    catch(Exception)
+                    {
+                        return TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
+                    }
+                    
                 }
             }
 
@@ -53,8 +61,19 @@ namespace cloudscribe.Core.Web.Components
 
             if(tenant != null)
             {
-                if((tenant.TimeZoneId.Length > 0))
-                return Task.FromResult(TimeZoneInfo.FindSystemTimeZoneById(tenant.TimeZoneId));
+                if(!string.IsNullOrEmpty(tenant.TimeZoneId))
+                {
+                    try
+                    {
+                        return Task.FromResult(TimeZoneInfo.FindSystemTimeZoneById(tenant.TimeZoneId));
+                    }
+                    catch(Exception)
+                    {
+                        return Task.FromResult(TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time"));
+                    }
+                    
+                }
+                
             }
 
             return Task.FromResult(TimeZoneInfo.Utc);

@@ -26,6 +26,7 @@ namespace cloudscribe.Core.Web.ViewModels.UserAdmin
         public IList<IUserInfo> UserList { get; set; }
         public PaginationSettings Paging { get; set; }
         public TimeZoneInfo TimeZone { get; set; } = TimeZoneInfo.Utc;
+        public string TimeZoneId { get; set; } = "America/New_York";
 
         private string alphaQuery = string.Empty;
         public string AlphaQuery

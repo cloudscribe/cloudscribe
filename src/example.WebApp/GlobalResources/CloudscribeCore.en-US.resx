@@ -150,8 +150,8 @@
   <data name="Theme" xml:space="preserve">
     <value>Theme</value>
   </data>
-  <data name="TimeZone" xml:space="preserve">
-    <value>TimeZone</value>
+  <data name="Time Zone" xml:space="preserve">
+    <value>Time Zone</value>
   </data>
   <data name="Add Host Mapping" xml:space="preserve">
     <value>Add Host Mapping</value>

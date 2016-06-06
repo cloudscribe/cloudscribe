@@ -109,10 +109,10 @@ namespace cloudscribe.Core.Models
         public bool PhoneNumberConfirmed { get; set; } = false;
         public bool AccountApproved { get; set; } = true;
 
-        private string timeZoneId = "Eastern Standard Time";
+        private string timeZoneId = string.Empty;
         public string TimeZoneId
         {
-            get { return timeZoneId ?? "Eastern Standard Time"; }
+            get { return timeZoneId ?? string.Empty; }
             set { timeZoneId = value; }
         }
 

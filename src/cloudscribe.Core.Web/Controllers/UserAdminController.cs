@@ -37,7 +37,8 @@ namespace cloudscribe.Core.Web.Controllers
             ISiteMessageEmailSender emailSender,
             IOptions<UIOptions> uiOptionsAccessor,
             IStringLocalizer<CloudscribeCore> localizer,
-            ITimeZoneResolver timeZoneResolver
+            ITimeZoneResolver timeZoneResolver,
+            ITimeZoneIdResolver timeZoneIdResolver
             )
         {
            
@@ -47,7 +48,7 @@ namespace cloudscribe.Core.Web.Controllers
             uiOptions = uiOptionsAccessor.Value;
             sr = localizer;
             this.timeZoneResolver = timeZoneResolver;
-
+            this.timeZoneIdResolver = timeZoneIdResolver;
         }
 
         private SiteManager siteManager;
@@ -56,6 +57,7 @@ namespace cloudscribe.Core.Web.Controllers
         private UIOptions uiOptions;
         private IStringLocalizer sr; // string resources
         private ITimeZoneResolver timeZoneResolver;
+        private ITimeZoneIdResolver timeZoneIdResolver;
 
         [HttpGet]
         public async Task<IActionResult> Index(
@@ -102,6 +104,7 @@ namespace cloudscribe.Core.Web.Controllers
             model.Paging.TotalItems = count;
             model.AlphaQuery = query; //TODO: sanitize?
             model.TimeZone = await timeZoneResolver.GetUserTimeZone();
+            model.TimeZoneId = await timeZoneIdResolver.GetUserTimeZoneId();
 
             return View(model);
 

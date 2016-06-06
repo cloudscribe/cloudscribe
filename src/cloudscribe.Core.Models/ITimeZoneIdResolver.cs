@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-namespace cloudscribe.Common
+namespace cloudscribe.Core.Models
 {
     public interface ITimeZoneIdResolver
     {

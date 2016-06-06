@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2016-05-15
+// Last Modified:			2016-06-06
 // 
 
 using System;
@@ -189,10 +189,10 @@ namespace cloudscribe.Core.Models
 
         
 
-        private string timeZoneId = "Eastern Standard Time";
+        private string timeZoneId = "America/New_York";
         public string TimeZoneId
         {
-            get { return timeZoneId ?? "Eastern Standard Time"; }
+            get { return timeZoneId ?? "America/New_York"; }
             set { timeZoneId = value; }
         }
 

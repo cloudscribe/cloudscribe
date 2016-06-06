@@ -37,7 +37,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.Configure<CkeditorOptions>(configuration.GetSection("CkeditorOptions"));
             services.Configure<CachingSiteResolverOptions>(configuration.GetSection("CachingSiteResolverOptions"));
             
-            services.AddScoped<ITimeZoneResolver, RequestTimeZoneResolver>();
+           
             //services.AddMultitenancy<SiteSettings, SiteResolver>();
             
             services.AddMultitenancy<SiteSettings, CachingSiteResolver>();
@@ -48,10 +48,11 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IpAddressTracker, IpAddressTracker>();
 
             services.AddScoped<SiteDataProtector>();
+            // timezone localization from NodaTime
+            services.AddCloudscribeCommmon();
+            services.AddScoped<ITimeZoneResolver, RequestTimeZoneResolver>();
+            services.AddScoped<ITimeZoneIdResolver, RequestTimeZoneIdResolver>();
 
-            
-
-            
             services.AddCloudscribePagination();
 
             services.AddScoped<IVersionProviderFactory, VersionProviderFactory>();
