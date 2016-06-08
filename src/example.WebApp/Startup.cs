@@ -26,25 +26,25 @@ namespace example.WebApp
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
-
-            appBasePath = env.ContentRootPath;
+            
+            // this file name is ignored by gitignore
+            // so you can create it and use on your local dev machine
+            // remember last config source added wins if it has the same settings
+            builder.AddJsonFile("appsettings.local.overrides.json", optional: true, reloadOnChange: true);
 
             if (env.IsDevelopment())
             {
                 // For more details on using the user secret store see http://go.microsoft.com/fwlink/?LinkID=532709
                 builder.AddUserSecrets();
             }
-
-            // this file name is ignored by gitignore
-            // so you can create it and use on your local dev machine
-            // remember last config source added wins if it has the same settings
-            builder.AddJsonFile("appsettings.local.overrides.json", optional: true);
-
+            
             // most common use of environment variables would be in azure hosting
             // since it is added last anything in env vars would trump the same setting in previous config sources
             // so no risk of messing up settings if deploying a new version to azure
             builder.AddEnvironmentVariables();
             Configuration = builder.Build();
+
+            appBasePath = env.ContentRootPath;
         }
 
         private string appBasePath;
@@ -186,12 +186,15 @@ namespace example.WebApp
                 app.UseDatabaseErrorPage();
                 app.UseBrowserLink();
             }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-            }
-
+            //else
+            //{
+            //    app.UseExceptionHandler("/Home/Error");
+            //}
+            
             app.UseStaticFiles();
+
+            // custom 404 and error page - this preserves the status code (ie 404)
+            app.UseStatusCodePagesWithReExecute("/Home/Error/{0}");
 
             app.UseSession();
 
@@ -247,7 +250,9 @@ namespace example.WebApp
                 builder.UseSocialAuth(ctx.Tenant, externalCookieOptions, shouldUseFolder);
 
             });
+
             
+
             UseMvc(app, multiTenantOptions.Mode == cloudscribe.Core.Models.MultiTenantMode.FolderName);
             
             switch (storage)
@@ -345,6 +350,11 @@ namespace example.WebApp
                         constraints: new { name = new cloudscribe.Core.Web.Components.SiteFolderRouteConstraint() });
                 }
 
+                routes.MapRoute(
+                   name: "errorhandler",
+                   template: "Home/Error/{statusCode}", 
+                   defaults: new { controller = "Home", action = "Error" }
+                   );
 
                 routes.MapRoute(
                     name: "default",

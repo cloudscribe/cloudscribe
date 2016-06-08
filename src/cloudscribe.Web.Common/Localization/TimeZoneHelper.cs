@@ -2,20 +2,18 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-06-05
-// Last Modified:			2016-06-06
+// Last Modified:			2016-06-07
 // 
 
 // http://nodatime.org/unstable/api/
 // http://nodatime.org/unstable/userguide/
 // http://blog.nodatime.org/2010/11/joys-of-datetime-arithmetic.html
 
+using Microsoft.Extensions.Logging;
+using NodaTime;
+using NodaTime.TimeZones;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using NodaTime.TimeZones;
-using NodaTime;
-using Microsoft.Extensions.Logging;
 
 namespace cloudscribe.Web.Common
 {
@@ -23,7 +21,7 @@ namespace cloudscribe.Web.Common
     {
         public TimeZoneHelper(
             IDateTimeZoneProvider timeZoneProvider,
-            ILogger<TimeZoneHelper> logger
+            ILogger<TimeZoneHelper> logger = null
             )
         {
             tzSource = timeZoneProvider;
@@ -35,20 +33,29 @@ namespace cloudscribe.Web.Common
 
         public DateTime ConvertToLocalTime(DateTime utcDateTime, string timeZoneId)
         {
-            var dUtc = new DateTime(
-                utcDateTime.Year,
-                utcDateTime.Month,
-                utcDateTime.Day,
-                utcDateTime.Hour,
-                utcDateTime.Minute,
-                utcDateTime.Second,
-                utcDateTime.Millisecond,
-                DateTimeKind.Utc);
-            
+            DateTime dUtc;
+            switch(utcDateTime.Kind)
+            {
+                case DateTimeKind.Utc:
+                dUtc = utcDateTime;
+                    break;
+                case DateTimeKind.Local:
+                    dUtc = utcDateTime.ToUniversalTime();
+                    break;
+                default: //DateTimeKind.Unspecified
+                    dUtc = DateTime.SpecifyKind(utcDateTime, DateTimeKind.Utc);
+                    break;
+
+            }
+
             var tz = tzSource.GetZoneOrNull(timeZoneId);
             if (tz == null)
             {
-                log.LogWarning("failed to find timezone for " + timeZoneId);
+                if(log != null)
+                {
+                    log.LogWarning("failed to find timezone for " + timeZoneId);
+                }
+                
                 return utcDateTime;
             }
 
@@ -77,7 +84,10 @@ namespace cloudscribe.Web.Common
             var tz = tzSource.GetZoneOrNull(timeZoneId);
             if (tz == null)
             {
-                log.LogWarning("failed to find timezone for " + timeZoneId);
+                if (log != null)
+                {
+                    log.LogWarning("failed to find timezone for " + timeZoneId);
+                }
                 return localDateTime;
             }
 

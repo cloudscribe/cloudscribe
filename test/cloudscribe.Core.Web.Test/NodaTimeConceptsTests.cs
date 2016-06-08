@@ -31,65 +31,65 @@ namespace cloudscribe.Core.Web.Test
     public class NodaTimeConceptsTests
     {
         //private static readonly bool s_isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+        // These tests pass but were just for learning,not testing my own code so commented out
+        //[Fact]
+        //public void Can_Get_List_Of_TimeZones_FromNoda()
+        //{
+        //    var tzSource = TzdbDateTimeZoneSource.Default;
+        //    Assert.True(tzSource.ZoneLocations.Count > 1);
+        //}
 
-        [Fact]
-        public void Can_Get_List_Of_TimeZones_FromNoda()
-        {
-            var tzSource = TzdbDateTimeZoneSource.Default;
-            Assert.True(tzSource.ZoneLocations.Count > 1);
-        }
+        //[Fact]
+        //public void Can_Get_America_NewYork_FromNoda()
+        //{
+        //    var tzSource = TzdbDateTimeZoneSource.Default;
+        //    var eastern  = tzSource.ForId("America/New_York");
+        //    Assert.NotNull(eastern);
+        //    Assert.Equal("America/New_York", eastern.Id);
 
-        [Fact]
-        public void Can_Get_America_NewYork_FromNoda()
-        {
-            var tzSource = TzdbDateTimeZoneSource.Default;
-            var eastern  = tzSource.ForId("America/New_York");
-            Assert.NotNull(eastern);
-            Assert.Equal("America/New_York", eastern.Id);
+        //}
 
-        }
-
-        [Fact]
-        public void Can_RoundTrip_Utc_ToTimeZone_BackTo_Utc_FromNoda()
-        {
-            //2016-06-05 14:13:53.890
-            //var d = Convert.ToDateTime("2016-06-05 14:13:53.890");
-            var dUtc = new DateTime(2016, 6, 5, 14, 13, 53, 890, DateTimeKind.Utc);
+        //[Fact]
+        //public void Can_RoundTrip_Utc_ToTimeZone_BackTo_Utc_FromNoda()
+        //{
+        //    //2016-06-05 14:13:53.890
+        //    //var d = Convert.ToDateTime("2016-06-05 14:13:53.890");
+        //    var dUtc = new DateTime(2016, 6, 5, 14, 13, 53, 890, DateTimeKind.Utc);
             
 
-            var nInst = Instant.FromDateTimeUtc(dUtc);
-            var roundTrippedUtc = nInst.ToDateTimeUtc();
-            Assert.True(dUtc == roundTrippedUtc);
+        //    var nInst = Instant.FromDateTimeUtc(dUtc);
+        //    var roundTrippedUtc = nInst.ToDateTimeUtc();
+        //    Assert.True(dUtc == roundTrippedUtc);
             
-            var tzSource = TzdbDateTimeZoneSource.Default;
-            var eastern = tzSource.ForId("America/New_York");
-            var nZ = new ZonedDateTime(nInst, eastern);
-            roundTrippedUtc = nZ.ToDateTimeUtc();
-            Assert.True(dUtc == roundTrippedUtc);
+        //    var tzSource = TzdbDateTimeZoneSource.Default;
+        //    var eastern = tzSource.ForId("America/New_York");
+        //    var nZ = new ZonedDateTime(nInst, eastern);
+        //    roundTrippedUtc = nZ.ToDateTimeUtc();
+        //    Assert.True(dUtc == roundTrippedUtc);
             
-        }
+        //}
 
-        [Fact]
-        public void Local_DateTime_FromBcl_Matches_FromNoda()
-        {
-            var dUtc = new DateTime(2016, 6, 5, 14, 13, 53, 890, DateTimeKind.Utc);
-            var nInst = Instant.FromDateTimeUtc(dUtc);
+        //[Fact]
+        //public void Local_DateTime_FromBcl_Matches_FromNoda()
+        //{
+        //    var dUtc = new DateTime(2016, 6, 5, 14, 13, 53, 890, DateTimeKind.Utc);
+        //    var nInst = Instant.FromDateTimeUtc(dUtc);
 
-            var tzSource = TzdbDateTimeZoneSource.Default;
-            var eastern = tzSource.ForId("America/New_York");
-            var nZ = new ZonedDateTime(nInst, eastern);
+        //    var tzSource = TzdbDateTimeZoneSource.Default;
+        //    var eastern = tzSource.ForId("America/New_York");
+        //    var nZ = new ZonedDateTime(nInst, eastern);
 
-            var easternTzBcl = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
-            Assert.NotNull(easternTzBcl);
-            var dLocalBcl = TimeZoneInfo.ConvertTime(DateTime.SpecifyKind(dUtc, DateTimeKind.Utc), easternTzBcl);
+        //    var easternTzBcl = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
+        //    Assert.NotNull(easternTzBcl);
+        //    var dLocalBcl = TimeZoneInfo.ConvertTime(DateTime.SpecifyKind(dUtc, DateTimeKind.Utc), easternTzBcl);
 
-            Assert.True(nZ.Year == dLocalBcl.Year);
-            Assert.True(nZ.Month == dLocalBcl.Month);
-            Assert.True(nZ.Day == dLocalBcl.Day);
-            Assert.True(nZ.Minute == dLocalBcl.Minute);
-            Assert.True(nZ.Second == dLocalBcl.Second);
-            Assert.True(nZ.Millisecond == dLocalBcl.Millisecond);
-        }
+        //    Assert.True(nZ.Year == dLocalBcl.Year);
+        //    Assert.True(nZ.Month == dLocalBcl.Month);
+        //    Assert.True(nZ.Day == dLocalBcl.Day);
+        //    Assert.True(nZ.Minute == dLocalBcl.Minute);
+        //    Assert.True(nZ.Second == dLocalBcl.Second);
+        //    Assert.True(nZ.Millisecond == dLocalBcl.Millisecond);
+        //}
 
     }
 }
