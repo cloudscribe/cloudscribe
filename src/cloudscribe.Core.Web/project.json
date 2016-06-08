@@ -16,7 +16,7 @@
     },
 
     "buildOptions": {
-        "embed": "Views/**"
+        "embed": [ "Views/**", "js/**" ]
     },
 
 

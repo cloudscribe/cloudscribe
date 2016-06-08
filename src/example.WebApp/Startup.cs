@@ -164,12 +164,15 @@ namespace example.WebApp
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        // you can add things to this method signature and they will be injected as long as they were registered during 
+        // ConfigureServices
         public void Configure(
             IApplicationBuilder app, 
             IHostingEnvironment env, 
             ILoggerFactory loggerFactory,
             IOptions<cloudscribe.Core.Models.MultiTenantOptions> multiTenantOptionsAccessor,
-            IServiceProvider serviceProvider
+            IServiceProvider serviceProvider,
+            IOptions<RequestLocalizationOptions> localizationOptionsAccessor
             )
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
@@ -198,8 +201,7 @@ namespace example.WebApp
 
             app.UseSession();
 
-            var locOptions = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
-            app.UseRequestLocalization(locOptions.Value);
+            app.UseRequestLocalization(localizationOptionsAccessor.Value);
 
             app.UseMultitenancy<cloudscribe.Core.Models.SiteSettings>();
 

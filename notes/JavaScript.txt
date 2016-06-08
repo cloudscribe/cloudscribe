@@ -1,4 +1,6 @@
 
+http://lisperator.net/uglifyjs/#demo
+
 http://tattoocoder.azurewebsites.net/angular2-aspnet5-spa-template/
 
 
