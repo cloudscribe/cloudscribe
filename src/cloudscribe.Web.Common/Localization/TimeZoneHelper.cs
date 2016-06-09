@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-06-05
-// Last Modified:			2016-06-07
+// Last Modified:			2016-06-08
 // 
 
 // http://nodatime.org/unstable/api/
@@ -45,7 +45,6 @@ namespace cloudscribe.Web.Common
                 default: //DateTimeKind.Unspecified
                     dUtc = DateTime.SpecifyKind(utcDateTime, DateTimeKind.Utc);
                     break;
-
             }
 
             var tz = tzSource.GetZoneOrNull(timeZoneId);
@@ -69,7 +68,7 @@ namespace cloudscribe.Web.Common
                 nZ.Minute,
                 nZ.Second,
                 nZ.Millisecond,
-                DateTimeKind.Local);
+                DateTimeKind.Unspecified); 
 
             return local;
         }
@@ -80,6 +79,8 @@ namespace cloudscribe.Web.Common
             ZoneLocalMappingResolver resolver = null
             )
         {
+            if (localDateTime.Kind == DateTimeKind.Utc) return localDateTime;
+
             if (resolver == null) resolver = Resolvers.LenientResolver;
             var tz = tzSource.GetZoneOrNull(timeZoneId);
             if (tz == null)
@@ -91,17 +92,8 @@ namespace cloudscribe.Web.Common
                 return localDateTime;
             }
 
-            var loc = new LocalDateTime(
-                localDateTime.Year,
-                localDateTime.Month,
-                localDateTime.Day,
-                localDateTime.Hour,
-                localDateTime.Minute,
-                localDateTime.Second,
-                localDateTime.Millisecond);
-
+            var loc = LocalDateTime.FromDateTime(localDateTime);
             var nZ = tz.ResolveLocal(loc, resolver);
-
             return nZ.ToDateTimeUtc();
         }
 

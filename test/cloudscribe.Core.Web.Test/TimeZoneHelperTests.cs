@@ -23,9 +23,7 @@ namespace cloudscribe.Core.Web.Test
             var utcNow = DateTime.UtcNow;
 
             var easternTzBcl = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
-            var bclLocal = DateTime.SpecifyKind(
-                TimeZoneInfo.ConvertTime(DateTime.SpecifyKind(utcNow, DateTimeKind.Utc), easternTzBcl),
-                DateTimeKind.Local);
+            var bclLocal = TimeZoneInfo.ConvertTime(DateTime.SpecifyKind(utcNow, DateTimeKind.Utc), easternTzBcl);
 
             var helperLocal = tzHelper.ConvertToLocalTime(utcNow, "America/New_York");
             Assert.True(bclLocal.Year == helperLocal.Year);
@@ -35,8 +33,8 @@ namespace cloudscribe.Core.Web.Test
             Assert.True(bclLocal.Minute == helperLocal.Minute);
             Assert.True(bclLocal.Second == helperLocal.Second);
             Assert.True(bclLocal.Millisecond == helperLocal.Millisecond);
-            Assert.True(bclLocal.Kind == DateTimeKind.Local);
-            Assert.True(helperLocal.Kind == DateTimeKind.Local);
+            Assert.True(bclLocal.Kind == DateTimeKind.Unspecified);
+            Assert.True(helperLocal.Kind == DateTimeKind.Unspecified);
             // this one fails but for practical results the above work andarre good enough
             //Assert.True(bclLocal.Equals(helperLocal));
 
@@ -82,7 +80,7 @@ namespace cloudscribe.Core.Web.Test
 
             var helperLocal = tzHelper.ConvertToLocalTime(utcFromDb, "America/New_York");
 
-            Assert.True(helperLocal.Kind == DateTimeKind.Local);
+            Assert.True(helperLocal.Kind == DateTimeKind.Unspecified);
             Assert.True(helperLocal.Year == 2016);
             Assert.True(helperLocal.Month == 6);
             Assert.True(helperLocal.Day == 7);
