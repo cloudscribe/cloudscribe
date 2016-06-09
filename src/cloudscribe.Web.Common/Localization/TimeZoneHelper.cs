@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-06-05
-// Last Modified:			2016-06-08
+// Last Modified:			2016-06-09
 // 
 
 // http://nodatime.org/unstable/api/
@@ -47,8 +47,8 @@ namespace cloudscribe.Web.Common
                     break;
             }
 
-            var tz = tzSource.GetZoneOrNull(timeZoneId);
-            if (tz == null)
+            var timeZone = tzSource.GetZoneOrNull(timeZoneId);
+            if (timeZone == null)
             {
                 if(log != null)
                 {
@@ -58,19 +58,17 @@ namespace cloudscribe.Web.Common
                 return utcDateTime;
             }
 
-            var nInst = Instant.FromDateTimeUtc(dUtc);
-            var nZ = new ZonedDateTime(nInst, tz);
-            var local = new DateTime(
-                nZ.Year,
-                nZ.Month,
-                nZ.Day,
-                nZ.Hour,
-                nZ.Minute,
-                nZ.Second,
-                nZ.Millisecond,
+            var instant = Instant.FromDateTimeUtc(dUtc);
+            var zoned = new ZonedDateTime(instant, timeZone);
+            return new DateTime(
+                zoned.Year,
+                zoned.Month,
+                zoned.Day,
+                zoned.Hour,
+                zoned.Minute,
+                zoned.Second,
+                zoned.Millisecond,
                 DateTimeKind.Unspecified); 
-
-            return local;
         }
 
         public DateTime ConvertToUtc(
@@ -82,8 +80,8 @@ namespace cloudscribe.Web.Common
             if (localDateTime.Kind == DateTimeKind.Utc) return localDateTime;
 
             if (resolver == null) resolver = Resolvers.LenientResolver;
-            var tz = tzSource.GetZoneOrNull(timeZoneId);
-            if (tz == null)
+            var timeZone = tzSource.GetZoneOrNull(timeZoneId);
+            if (timeZone == null)
             {
                 if (log != null)
                 {
@@ -92,9 +90,9 @@ namespace cloudscribe.Web.Common
                 return localDateTime;
             }
 
-            var loc = LocalDateTime.FromDateTime(localDateTime);
-            var nZ = tz.ResolveLocal(loc, resolver);
-            return nZ.ToDateTimeUtc();
+            var local = LocalDateTime.FromDateTime(localDateTime);
+            var zoned = timeZone.ResolveLocal(local, resolver);
+            return zoned.ToDateTimeUtc();
         }
 
         public IReadOnlyCollection<string> GetTimeZoneList()

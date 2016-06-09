@@ -34,7 +34,6 @@ namespace cloudscribe.Web.Common.Razor
             this.contextAccesor = contextAccesor;
         }
 
-
         private ICompositeViewEngine viewEngine;
         private ITempDataProvider tempDataProvider;
         private IHttpContextAccessor contextAccesor;
@@ -71,8 +70,5 @@ namespace cloudscribe.Web.Common.Razor
                 return output.GetStringBuilder().ToString();
             }
         }
-
-
-
     }
 }
