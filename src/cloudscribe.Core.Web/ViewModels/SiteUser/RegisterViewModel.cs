@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-31
-// Last Modified:		    2016-01-21
+// Last Modified:		    2016-06-10
 // 
 // TODO: support custom profile properties that are required for registration
 
@@ -40,15 +40,12 @@ namespace cloudscribe.Core.Web.ViewModels.Account
         
         //[Required(AllowEmptyStrings = false)]
         [DataType(DataType.Password)]
-        [Required]
+        [Required(ErrorMessage ="Password is required")]
         //[Display(Name = "Password", ResourceType = typeof(CommonResources))]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
-        
-        //[Display(Name = "ConfirmPassword", ResourceType = typeof(CommonResources))]
-       // [Compare("Password", ErrorMessageResourceName = "ConfirmPasswordMatchErrorMessage", ErrorMessageResourceType = typeof(CommonResources))]
-       [Compare("Password", ErrorMessage = "Confirm password doesn't match password")]
+        [Compare("Password", ErrorMessage = "Confirm password doesn't match password")]
         public string ConfirmPassword { get; set; }
 
         // http://stackoverflow.com/questions/36033022/using-remote-validation-wit-asp-net-core
@@ -86,7 +83,9 @@ namespace cloudscribe.Core.Web.ViewModels.Account
 
         [Display(Name = "AgreeToTerms")]
 
-        //[EnforceTrue(ErrorMessage = "You must agree to the terms.")]
+        public bool AgreementRequired { get; set; } = false;
+
+        [EnforceTrue("AgreementRequired", ErrorMessage = "You must agree to the terms of use.")]
         public bool AgreeToTerms { get; set; } = false;
     }
 }

@@ -215,6 +215,8 @@ namespace cloudscribe.Core.Web.Controllers
             
             var model = new RegisterViewModel();
             model.SiteId = Site.Id;
+            model.AgreementRequired = Site.RegistrationAgreement.Length > 0;
+
             if ((Site.CaptchaOnRegistration)&& (Site.RecaptchaPublicKey.Length > 0))
             {
                 model.RecaptchaSiteKey = Site.RecaptchaPublicKey;  
