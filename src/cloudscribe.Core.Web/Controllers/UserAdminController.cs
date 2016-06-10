@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-08
-// Last Modified:			2016-06-06
+// Last Modified:			2016-06-10
 // 
 
 using cloudscribe.Core.Identity;
@@ -301,7 +301,7 @@ namespace cloudscribe.Core.Web.Controllers
                 ViewData["Title"] = sr["New User"];
             }
 
-            var model = new RegisterViewModel();
+            var model = new NewUserViewModel();
             model.SiteId = selectedSite.Id;
             
             return View(model);
@@ -309,7 +309,7 @@ namespace cloudscribe.Core.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> NewUser(RegisterViewModel model)
+        public async Task<IActionResult> NewUser(NewUserViewModel model)
         {
             ISiteSettings selectedSite;
             // only server admin site can edit other sites settings

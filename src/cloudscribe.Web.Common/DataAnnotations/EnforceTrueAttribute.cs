@@ -4,13 +4,26 @@
 // Created:				    2015-09-17
 // Last Modified:		    2016-06-10
 // 
-// https://github.com/aspnet/Mvc/tree/dev/src/Microsoft.AspNetCore.Mvc.Abstractions/ModelBinding/Validation
+// from studying the source code we can see that most of the common validation attributes are here in the System.ComponentModel.DataAnnotations namespace
+// https://github.com/dotnet/corefx/blob/master/src/System.ComponentModel.Annotations/src/System/ComponentModel/DataAnnotations
+// however those do not implement IClientModelValidator so adapters are used to add those from MVC.DataAnnotations and they can be mostly found here:
 // https://github.com/aspnet/Mvc/tree/dev/src/Microsoft.AspNetCore.Mvc.DataAnnotations/Internal
-// https://github.com/aspnet/Mvc/blob/dev/src/Microsoft.AspNetCore.Mvc.ViewFeatures/RemoteAttribute.cs
+// specific examples of interest
 // https://github.com/dotnet/corefx/blob/master/src/System.ComponentModel.Annotations/src/System/ComponentModel/DataAnnotations/CompareAttribute.cs
 // https://github.com/aspnet/Mvc/blob/dev/src/Microsoft.AspNetCore.Mvc.DataAnnotations/Internal/CompareAttributeAdapter.cs
 // https://github.com/dotnet/corefx/blob/master/src/System.ComponentModel.Annotations/src/System/ComponentModel/DataAnnotations/EmailAddressAttribute.cs
 // https://github.com/aspnet/Mvc/blob/dev/src/Microsoft.AspNetCore.Mvc.DataAnnotations/Internal/RequiredAttributeAdapter.cs
+
+// other things of interest 
+// https://github.com/aspnet/Mvc/tree/dev/src/Microsoft.AspNetCore.Mvc.Abstractions/ModelBinding/Validation
+// https://github.com/aspnet/Mvc/tree/dev/src/Microsoft.AspNetCore.Mvc.DataAnnotations/Internal
+
+// there is one good example of an attribute that is fully implemented in MVC and is self contained with both server side and client side
+// without any use of an adapter [Remote(...)]
+// https://github.com/aspnet/Mvc/blob/dev/src/Microsoft.AspNetCore.Mvc.ViewFeatures/RemoteAttribute.cs
+
+// client side validation is based on jquery
+// https://github.com/aspnet/jquery-validation-unobtrusive/blob/master/jquery.validate.unobtrusive.js
 
 using Microsoft.Extensions.Localization;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;

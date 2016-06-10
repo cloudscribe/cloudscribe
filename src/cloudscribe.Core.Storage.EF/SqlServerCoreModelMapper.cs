@@ -2,14 +2,14 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-17
-// Last Modified:			2016-05-19
+// Last Modified:			2016-06-10
 // 
 
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Geography;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+//using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 //http://ef.readthedocs.org/en/latest/modeling/configuring.html
 // "If you are targeting more than one relational provider with the same model then you 
@@ -439,7 +439,6 @@ namespace cloudscribe.Core.Storage.EF
 
         public void Map(EntityTypeBuilder<SiteUser> entity)
         {
-            //entity.ToTable(tableNames.TablePrefix + tableNames.UserTableName);
             entity.ForSqlServerToTable(tableNames.TablePrefix + tableNames.UserTableName);
 
             entity.Property(p => p.Id)
@@ -493,6 +492,13 @@ namespace cloudscribe.Core.Storage.EF
             .HasMaxLength(50)
             ;
             entity.HasIndex(p => p.NormalizedUserName);
+
+            entity.Property(p => p.DisplayName)
+            .IsRequired()
+            .HasMaxLength(100)
+            ;
+
+            entity.HasIndex(p => p.DisplayName);
 
             entity.Property(p => p.EmailConfirmed)
             .IsRequired()
