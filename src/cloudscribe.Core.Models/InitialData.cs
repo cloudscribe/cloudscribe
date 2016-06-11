@@ -17,7 +17,7 @@ namespace cloudscribe.Core.Models
         {
             var newSite = new SiteSettings();
             newSite.SiteName = "Sample Site";
-            newSite.AliasId = "tenant-1";
+            newSite.AliasId = "site-1";
             newSite.IsServerAdminSite = true;
             newSite.Theme = "default";
             newSite.AllowNewRegistration = true;

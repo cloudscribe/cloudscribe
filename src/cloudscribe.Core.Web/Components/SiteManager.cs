@@ -61,22 +61,19 @@ namespace cloudscribe.Core.Web.Components
         private IUserQueries userQueries;
         private IUserCommands userCommands;
         private ISiteSettings siteSettings = null;
-        private ISiteSettings Site
-        {
-            get
-            {
-                //if (siteSettings == null) { siteSettings = resolver.Resolve(); }
-                return siteSettings;
-            }
-        }
+        //private ISiteSettings Site
+        //{
+        //    get
+        //    {
+        //        return siteSettings;
+        //    }
+        //}
 
         public ISiteSettings CurrentSite
         {
-            get { return Site; }
+            get { return siteSettings; }
         }
         
-           
-
         public Task<List<ISiteInfo>> GetPageOtherSites(
             Guid currentSiteId,
             int pageNumber,
@@ -90,40 +87,14 @@ namespace cloudscribe.Core.Web.Components
         {
             return queries.CountOtherSites(currentSiteId, CancellationToken);
         }
-
-        //public int GetSiteIdByFolderNonAsync(string folderName)
-        //{
-        //    return siteRepo.GetSiteIdByFolderNonAsync(folderName);
-        //}
-
+        
         public async Task<ISiteSettings> Fetch(Guid siteId)
         {
             var site = await queries.Fetch(siteId, CancellationToken);
             dataProtector.UnProtect(site);
             return site;
         }
-
-        //public ISiteSettings FetchNonAsync(Guid siteGuid)
-        //{
-        //    var  site = queries.FetchNonAsync(siteGuid);
-        //    dataProtector.UnProtect(site);
-        //    return site;
-        //}
-
-        //public ISiteSettings FetchNonAsync(string host)
-        //{
-        //    var site = queries.FetchNonAsync(host);
-        //    dataProtector.UnProtect(site);
-        //    return site;
-        //}
-
-        //public async Task<ISiteSettings> Fetch(Guid siteGuid)
-        //{
-        //    ISiteSettings site = await siteRepo.Fetch(siteGuid, CancellationToken);
-        //    dataProtector.UnProtect(site);
-        //    return site;
-        //}
-
+        
         public async Task<ISiteSettings> Fetch(string hostname)
         {
             var site = await queries.Fetch(hostname, CancellationToken);
@@ -235,9 +206,6 @@ namespace cloudscribe.Core.Web.Components
 
         public async Task<SiteSettings> CreateNewSite(bool isServerAdminSite)
         {
-            //string templateFolderPath = GetMessageTemplateFolder();
-            //string templateFolder = templateFolderPath;
-
             var newSite = new SiteSettings();
             newSite.Id = Guid.NewGuid();
             newSite.SiteName = "Sample Site";
@@ -246,34 +214,20 @@ namespace cloudscribe.Core.Web.Components
             newSite.AliasId = $"site-{siteNumber}";
 
             await CreateNewSite(newSite);
-
             
-
             return newSite;
-
-
         }
 
         public async Task CreateNewSite(ISiteSettings newSite)
         {
-            
             if (newSite == null) { throw new ArgumentNullException("you must pass in an instance of ISiteSettings"); }
-            //if (newSite.SiteGuid != Guid.Empty) { throw new ArgumentException("newSite should not already have a site guid"); }
-
-            //string templateFolderPath = GetMessageTemplateFolder();
-            //string templateFolder = templateFolderPath;
-
-            //SiteSettings newSite = new SiteSettings();
             
             newSite.Theme = setupOptions.DefaultLayout;
-            // TODO: more configurable options?
-            
             
             await commands.Create(newSite, CancellationToken.None);
 
             if(multiTenantOptions.Mode == MultiTenantMode.FolderName)
             cacheHelper.ClearCache("folderList");
-
 
         }
 
@@ -286,7 +240,6 @@ namespace cloudscribe.Core.Web.Components
             )
         {
             await EnsureRequiredRoles(site);
-            //await CreateAdminUser(site);
             var adminRole = await userQueries.FetchRole(site.Id, "Administrators", CancellationToken);
 
             if (adminRole == null)

@@ -50,7 +50,7 @@ h2.logitem { font-size: 1.1em;  }
 .sidebar .sidebar-search {
     padding: 15px;
 }
-
+/*
 .sidebar ul li {
     border-bottom: 1px solid #e7e7e7;
 }
@@ -58,6 +58,7 @@ h2.logitem { font-size: 1.1em;  }
 .sidebar ul li a.active {
     background-color: #eee;
 }
+    */
 
 .sidebar .arrow {
     float: right;
@@ -108,4 +109,26 @@ div.navbar-gravatar { margin: 10px 0 0 0; }
   margin:0;
 }
     
-
+/*
+    
+@media (min-width: 768px) {
+  .sidebar-nav .navbar .navbar-collapse {
+    padding: 0;
+    max-height: none;
+  }
+  .sidebar-nav .navbar ul {
+    float: none;
+  }
+  .sidebar-nav .navbar ul:not {
+    display: block;
+  }
+  .sidebar-nav .navbar li {
+    float: none;
+    display: block;
+  }
+  .sidebar-nav .navbar li a {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+}
+*/
