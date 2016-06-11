@@ -33,7 +33,7 @@ namespace cloudscribe.Core.Web.Controllers
             IOptions<MultiTenantOptions> multiTenantOptions,
             IOptions<UIOptions> uiOptionsAccessor,
             IThemeListBuilder layoutListBuilder,
-            IMemoryCache cache,
+           // IMemoryCache cache,
             IStringLocalizer<CloudscribeCore> localizer,
             ITimeZoneHelper timeZoneHelper
             )
@@ -48,7 +48,7 @@ namespace cloudscribe.Core.Web.Controllers
             this.geoDataManager = geoDataManager;
             uiOptions = uiOptionsAccessor.Value;
             this.layoutListBuilder = layoutListBuilder;
-            this.cache = cache;
+           // this.cache = cache;
             sr = localizer;
             tzHelper = timeZoneHelper;
         }
@@ -60,7 +60,7 @@ namespace cloudscribe.Core.Web.Controllers
         private IStringLocalizer sr;
         private IThemeListBuilder layoutListBuilder;
         private UIOptions uiOptions;
-        private IMemoryCache cache;
+       // private IMemoryCache cache;
         private ITimeZoneHelper tzHelper;
 
         // GET: /SiteAdmin
@@ -282,7 +282,7 @@ namespace cloudscribe.Core.Web.Controllers
             selectedSite.SiteIsClosedMessage = model.ClosedMessage;
             selectedSite.Theme = model.Theme;
             
-            await siteManager.Save(selectedSite);
+            await siteManager.Update(selectedSite);
             
             this.AlertSuccess(string.Format(sr["Basic site settings for {0} were successfully updated."],
                         selectedSite.SiteName), true);
@@ -526,7 +526,7 @@ namespace cloudscribe.Core.Web.Controllers
             selectedSite.CompanyFax = model.CompanyFax;
             selectedSite.CompanyPublicEmail = model.CompanyPublicEmail;
 
-            await siteManager.Save(selectedSite);
+            await siteManager.Update(selectedSite);
             
             this.AlertSuccess(string.Format(sr["Company Info for {0} wwas successfully updated."],
                         selectedSite.SiteName), true);
@@ -619,7 +619,7 @@ namespace cloudscribe.Core.Web.Controllers
             selectedSite.SmtpUser = model.SmtpUser;
             selectedSite.SmtpUseSsl = model.SmtpUseSsl;
             
-            await siteManager.Save(selectedSite);
+            await siteManager.Update(selectedSite);
             
             this.AlertSuccess(string.Format(sr["Email Settings for {0} were successfully updated."],
                         selectedSite.SiteName), true);
@@ -705,7 +705,7 @@ namespace cloudscribe.Core.Web.Controllers
             selectedSite.SmsClientId = model.SmsClientId;
             selectedSite.SmsSecureToken = model.SmsSecureToken;
             
-            await siteManager.Save(selectedSite);
+            await siteManager.Update(selectedSite);
             
             this.AlertSuccess(string.Format(sr["SMS Settings for {0} were successfully updated."],
                         selectedSite.SiteName), true);
@@ -798,7 +798,7 @@ namespace cloudscribe.Core.Web.Controllers
             selectedSite.RequireConfirmedPhone = model.RequireConfirmedPhone;
             selectedSite.UseEmailForLogin = model.UseEmailForLogin;
             
-            await siteManager.Save(selectedSite);
+            await siteManager.Update(selectedSite);
             
             this.AlertSuccess(string.Format(sr["Security Settings for {0} wwas successfully updated."],
                         selectedSite.SiteName), true);
@@ -882,7 +882,7 @@ namespace cloudscribe.Core.Web.Controllers
             selectedSite.CaptchaOnRegistration = model.RequireCaptchaOnRegistration;
             selectedSite.CaptchaOnLogin = model.RequireCaptchaOnLogin;
 
-            await siteManager.Save(selectedSite);
+            await siteManager.Update(selectedSite);
             
             this.AlertSuccess(string.Format(sr["Captcha Settings for {0} wwas successfully updated."],
                         selectedSite.SiteName), true);
@@ -976,10 +976,10 @@ namespace cloudscribe.Core.Web.Controllers
             selectedSite.TwitterConsumerKey = model.TwitterConsumerKey;
             selectedSite.TwitterConsumerSecret = model.TwitterConsumerSecret;
 
-            await siteManager.Save(selectedSite);
+            await siteManager.Update(selectedSite);
             //TODO: need to wrap ICache into something more abstract and/or move it into sitemanager
             // also need to clear using the folder name if it isn't root site or hostname if using tenants per host
-            cache.Remove("root");
+           // cache.Remove("root");
             
             this.AlertSuccess(string.Format(sr["Social Login Settings for {0} was successfully updated."],
                         selectedSite.SiteName), true);
@@ -1060,7 +1060,7 @@ namespace cloudscribe.Core.Web.Controllers
             selectedSite.LoginInfoTop = model.LoginInfoTop;
             selectedSite.LoginInfoBottom = model.LoginInfoBottom;
             
-            await siteManager.Save(selectedSite);
+            await siteManager.Update(selectedSite);
             
             this.AlertSuccess(string.Format(sr["Login Page Info for {0} was successfully updated."],
                         selectedSite.SiteName), true);
@@ -1142,7 +1142,7 @@ namespace cloudscribe.Core.Web.Controllers
             selectedSite.RegistrationPreamble = model.RegistrationPreamble;
             selectedSite.RegistrationAgreement = model.RegistrationAgreement;
             
-            await siteManager.Save(selectedSite);
+            await siteManager.Update(selectedSite);
             
             this.AlertSuccess(string.Format(sr["Registration Page Content for {0} was successfully updated."],
                         selectedSite.SiteName), true);
@@ -1303,7 +1303,7 @@ namespace cloudscribe.Core.Web.Controllers
                     if (selectedSite.PreferredHostName == host.HostName)
                     {
                         selectedSite.PreferredHostName = string.Empty;
-                        await siteManager.Save(selectedSite);
+                        await siteManager.Update(selectedSite);
                     }
 
                     await siteManager.DeleteHost(host.Id);

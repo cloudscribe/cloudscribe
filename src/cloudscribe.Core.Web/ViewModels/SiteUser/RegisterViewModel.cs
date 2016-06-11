@@ -48,7 +48,6 @@ namespace cloudscribe.Core.Web.ViewModels.Account
         [Remote("LoginNameAvailable", "Account", AdditionalFields = "UserId",
            ErrorMessage = "Login Name not available, please try another value",
            HttpMethod = "Post")]
-        
         //[Required]
         public string LoginName { get; set; } = string.Empty;
 

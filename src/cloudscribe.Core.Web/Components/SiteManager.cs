@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-22
-// Last Modified:			2016-05-19
+// Last Modified:			2016-06-11
 // 
 
 using cloudscribe.Core.Models;
@@ -29,7 +29,8 @@ namespace cloudscribe.Core.Web.Components
             IHttpContextAccessor contextAccessor,
             ILogger<SiteManager> logger,
             IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
-            IOptions<SiteConfigOptions> setupOptionsAccessor
+            IOptions<SiteConfigOptions> setupOptionsAccessor,
+            CacheHelper cacheHelper
             )
         {
 
@@ -45,13 +46,14 @@ namespace cloudscribe.Core.Web.Components
 
             //resolver = siteResolver;
             siteSettings = currentSite;
+            this.cacheHelper = cacheHelper;
         }
 
         private readonly HttpContext _context;
         private CancellationToken CancellationToken => _context?.RequestAborted ?? CancellationToken.None;
         private ILogger log;
         private SiteDataProtector dataProtector;
-        
+        private CacheHelper cacheHelper;
         private MultiTenantOptions multiTenantOptions;
         private SiteConfigOptions setupOptions;
         private ISiteCommands commands;
@@ -167,7 +169,7 @@ namespace cloudscribe.Core.Web.Components
 
         }
 
-        public async Task Save(ISiteSettings site)
+        public async Task Update(ISiteSettings site)
         {
             dataProtector.Protect(site);
             if(site.Id == Guid.Empty)
@@ -179,7 +181,22 @@ namespace cloudscribe.Core.Web.Components
             {
                 await commands.Update(site, CancellationToken.None);
             }
-            
+            if(multiTenantOptions.Mode == MultiTenantMode.FolderName)
+            {
+                if(string.IsNullOrEmpty(site.SiteFolderName))
+                {
+                    cacheHelper.ClearCache("root");
+                }
+                else
+                {
+                    cacheHelper.ClearCache(site.SiteFolderName);
+                }
+            }
+            else
+            {
+                if(_context != null && !string.IsNullOrEmpty(_context.Request.Host.Value))
+                cacheHelper.ClearCache(_context.Request.Host.Value);
+            }
         }
 
         public async Task Delete(ISiteSettings site)
@@ -212,6 +229,8 @@ namespace cloudscribe.Core.Web.Components
             // mp_Sites
 
             await commands.Delete(site.Id, CancellationToken.None);
+
+            cacheHelper.ClearCache("folderList");
         }
 
         public async Task<SiteSettings> CreateNewSite(bool isServerAdminSite)
@@ -227,6 +246,8 @@ namespace cloudscribe.Core.Web.Components
             newSite.AliasId = $"site-{siteNumber}";
 
             await CreateNewSite(newSite);
+
+            
 
             return newSite;
 
@@ -250,8 +271,9 @@ namespace cloudscribe.Core.Web.Components
             
             await commands.Create(newSite, CancellationToken.None);
 
+            if(multiTenantOptions.Mode == MultiTenantMode.FolderName)
+            cacheHelper.ClearCache("folderList");
 
-            
 
         }
 

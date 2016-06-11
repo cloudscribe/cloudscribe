@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-05-07
-// Last Modified:			2016-05-26
+// Last Modified:			2016-06-11
 // 
 
 
@@ -24,7 +24,7 @@ using System.Reflection;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
-    public static class ServiceCollectionExtensions
+    public static class StartupExtensions
     {
         public static IServiceCollection AddCloudscribeCore(this IServiceCollection services, IConfigurationRoot configuration)
         {
@@ -41,7 +41,7 @@ namespace Microsoft.Extensions.DependencyInjection
             //services.AddMultitenancy<SiteSettings, SiteResolver>();
             
             services.AddMultitenancy<SiteSettings, CachingSiteResolver>();
-            
+            services.AddScoped<CacheHelper, CacheHelper>();
             services.AddScoped<SiteManager, SiteManager>();
             services.AddScoped<GeoDataManager, GeoDataManager>();
             services.AddScoped<SystemInfoManager, SystemInfoManager>();
