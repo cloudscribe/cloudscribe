@@ -273,7 +273,7 @@ namespace cloudscribe.Core.Storage.EF
 
             if (item == null) { throw new InvalidOperationException("user not found"); }
 
-            item.LastLoginDate = lastLoginTime;
+            item.LastLoginUtc = lastLoginTime;
 
             int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
                 .ConfigureAwait(false);

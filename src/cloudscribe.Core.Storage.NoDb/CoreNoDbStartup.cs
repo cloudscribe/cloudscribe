@@ -74,14 +74,14 @@ namespace Microsoft.AspNetCore.Hosting // so it will show up in startup without 
                 }
             }
             
-            count = await geoQueries.GetLanguageCount();
-            if (count == 0)
-            {
-                foreach (Language c in InitialData.BuildLanguageList())
-                {
-                    await geoCommands.Add(c);
-                }
-            }
+            //count = await geoQueries.GetLanguageCount();
+            //if (count == 0)
+            //{
+            //    foreach (Language c in InitialData.BuildLanguageList())
+            //    {
+            //        await geoCommands.Add(c);
+            //    }
+            //}
 
             var all = await geoQueries.GetAllCurrencies();
             count = all.Count;

@@ -90,7 +90,7 @@ namespace cloudscribe.Core.Models.DataExtensions
             
             if (reader["LastLoginDate"] != DBNull.Value)
             {
-                user.LastLoginDate = Convert.ToDateTime(reader["LastLoginDate"]);
+                user.LastLoginUtc = Convert.ToDateTime(reader["LastLoginDate"]);
             }
 
             if (reader["IsLockedOut"] != DBNull.Value)
@@ -158,11 +158,11 @@ namespace cloudscribe.Core.Models.DataExtensions
             
             if (reader["LastLoginDate"] != DBNull.Value)
             {
-                user.LastLoginDate = Convert.ToDateTime(reader["LastLoginDate"]);
+                user.LastLoginUtc = Convert.ToDateTime(reader["LastLoginDate"]);
             }
             if (reader["LastPasswordChangedDate"] != DBNull.Value)
             {
-                user.LastPasswordChangedDate = Convert.ToDateTime(reader["LastPasswordChangedDate"]);
+                user.LastPasswordChangeUtc = Convert.ToDateTime(reader["LastPasswordChangedDate"]);
             }
             
             if (reader["FailedPasswordAttemptCount"] != DBNull.Value)

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2016-05-18
+// Last Modified:			2016-06-11
 // 
 
 using System;
@@ -57,7 +57,7 @@ namespace cloudscribe.Core.Storage.EF
 
         public DbSet<GeoCountry> Countries { get; set; }
         public DbSet<GeoZone> States { get; set; }
-        public DbSet<Language> Languages { get; set; }
+        //public DbSet<Language> Languages { get; set; }
         public DbSet<Currency> Currencies { get; set; }
         
         public DbSet<SiteSettings> Sites { get; set; }
@@ -145,10 +145,10 @@ namespace cloudscribe.Core.Storage.EF
                 mapper.Map(entity);
             });
 
-            modelBuilder.Entity<Language>(entity =>
-            {
-                mapper.Map(entity);
-            });
+            //modelBuilder.Entity<Language>(entity =>
+            //{
+            //    mapper.Map(entity);
+            //});
 
             
 

@@ -14,15 +14,8 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
                     Code = table.Column<string>(nullable: false),
-                    Created = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "getutcdate()"),
-                    DecimalPlaces = table.Column<string>(nullable: true),
-                    DecimalPointChar = table.Column<string>(nullable: true),
-                    LastModified = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "getutcdate()"),
-                    SymbolLeft = table.Column<string>(nullable: true),
-                    SymbolRight = table.Column<string>(nullable: true),
-                    ThousandsPointChar = table.Column<string>(nullable: true),
-                    Title = table.Column<string>(nullable: false),
-                    Value = table.Column<decimal>(nullable: false)
+                    CultureCode = table.Column<string>(nullable: false),
+                    Title = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -58,20 +51,6 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "cs_Language",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
-                    Code = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(nullable: false),
-                    Sort = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_cs_Language", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "cs_SiteHost",
                 columns: table => new
                 {
@@ -89,7 +68,6 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
-                    ConcurrencyStamp = table.Column<string>(nullable: true),
                     NormalizedRoleName = table.Column<string>(nullable: false),
                     RoleName = table.Column<string>(nullable: false),
                     SiteId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
@@ -202,21 +180,21 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                     AvatarUrl = table.Column<string>(nullable: true),
                     CanAutoLockout = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
                     Comment = table.Column<string>(nullable: true),
-                    ConcurrencyStamp = table.Column<string>(nullable: true),
                     Country = table.Column<string>(nullable: true),
                     CreatedUtc = table.Column<DateTime>(nullable: false),
                     DateOfBirth = table.Column<DateTime>(nullable: true),
                     DisplayInMemberList = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
-                    DisplayName = table.Column<string>(nullable: true),
+                    DisplayName = table.Column<string>(nullable: false),
                     Email = table.Column<string>(nullable: false),
                     EmailConfirmed = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     FirstName = table.Column<string>(nullable: true),
                     Gender = table.Column<string>(nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     IsLockedOut = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
-                    LastLoginDate = table.Column<DateTime>(nullable: true),
+                    LastLoginUtc = table.Column<DateTime>(nullable: true),
+                    LastModifiedUtc = table.Column<DateTime>(nullable: false),
                     LastName = table.Column<string>(nullable: true),
-                    LastPasswordChangedDate = table.Column<DateTime>(nullable: true),
+                    LastPasswordChangeUtc = table.Column<DateTime>(nullable: true),
                     LockoutEndDateUtc = table.Column<DateTime>(nullable: true),
                     MustChangePwd = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     NewEmail = table.Column<string>(nullable: true),
@@ -312,9 +290,24 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_cs_Currency_Code",
+                table: "cs_Currency",
+                column: "Code");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_cs_Currency_CultureCode",
+                table: "cs_Currency",
+                column: "CultureCode");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_cs_GeoCountry_ISOCode2",
                 table: "cs_GeoCountry",
                 column: "ISOCode2");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_cs_GeoZone_Code",
+                table: "cs_GeoZone",
+                column: "Code");
 
             migrationBuilder.CreateIndex(
                 name: "IX_cs_GeoZone_CountryId",
@@ -358,6 +351,11 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                 column: "SiteFolderName");
 
             migrationBuilder.CreateIndex(
+                name: "IX_cs_User_DisplayName",
+                table: "cs_User",
+                column: "DisplayName");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_cs_User_NormalizedEmail",
                 table: "cs_User",
                 column: "NormalizedEmail");
@@ -386,6 +384,11 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                 name: "IX_cs_UserClaim_UserId",
                 table: "cs_UserClaim",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_cs_UserLocation_IpAddress",
+                table: "cs_UserLocation",
+                column: "IpAddress");
 
             migrationBuilder.CreateIndex(
                 name: "IX_cs_UserLocation_UserId",
@@ -423,9 +426,6 @@ namespace cloudscribe.Core.Storage.EF.Migrations
 
             migrationBuilder.DropTable(
                 name: "cs_GeoZone");
-
-            migrationBuilder.DropTable(
-                name: "cs_Language");
 
             migrationBuilder.DropTable(
                 name: "cs_SiteHost");

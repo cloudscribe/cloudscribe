@@ -29,7 +29,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddNoDb<GeoCountry>();
             services.AddNoDb<GeoZone>();
-            services.AddNoDb<Language>();
+            //services.AddNoDb<Language>();
             services.AddNoDb<Currency>();
 
             services.AddScoped<IDataPlatformInfo, DataPlatformInfo>();

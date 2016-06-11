@@ -22,9 +22,9 @@ namespace cloudscribe.Core.Models.Geography
         Task Add(IGeoZone geoZone, CancellationToken cancellationToken = default(CancellationToken));
         Task Update(IGeoZone geoZone, CancellationToken cancellationToken = default(CancellationToken));
 
-        Task Add(ILanguage language, CancellationToken cancellationToken = default(CancellationToken));
-        Task Update(ILanguage language, CancellationToken cancellationToken = default(CancellationToken));
-        Task DeleteLanguage(Guid id, CancellationToken cancellationToken = default(CancellationToken));
+        //Task Add(ILanguage language, CancellationToken cancellationToken = default(CancellationToken));
+        //Task Update(ILanguage language, CancellationToken cancellationToken = default(CancellationToken));
+        //Task DeleteLanguage(Guid id, CancellationToken cancellationToken = default(CancellationToken));
 
         Task Add(ICurrency currency, CancellationToken cancellationToken = default(CancellationToken));
         Task Update(ICurrency currency, CancellationToken cancellationToken = default(CancellationToken));

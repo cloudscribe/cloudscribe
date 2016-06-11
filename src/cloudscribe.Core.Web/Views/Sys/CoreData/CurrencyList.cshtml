@@ -27,7 +27,7 @@
                 <input type="hidden" id="currencyId" name="currencyId" value="@item.Id" />
                 <a class="btn btn-xs btn-default" asp-action="CurrencyEdit"
                    asp-controller="CoreData"
-                   asp-route-currencyid="@item.Id">@sr["Edit"]t</a>
+                   asp-route-currencyid="@item.Id">@sr["Edit"]</a>
                 <button type="submit" value="submit"
                        onclick="javascript: return confirm('@Html.FormatValue(item.Title, sr["Are you sure you want to delete {0}?"])');"
                        class="btn btn-xs btn-default">

@@ -82,16 +82,16 @@ namespace Microsoft.AspNetCore.Hosting // so it will show up in startup without 
 
             
 
-            count = await db.Languages.CountAsync<Language>();
-            if (count == 0)
-            {
-                foreach (Language c in InitialData.BuildLanguageList())
-                {
-                    db.Languages.Add(c);
-                }
+            //count = await db.Languages.CountAsync<Language>();
+            //if (count == 0)
+            //{
+            //    foreach (Language c in InitialData.BuildLanguageList())
+            //    {
+            //        db.Languages.Add(c);
+            //    }
 
-                rowsAffected = await db.SaveChangesAsync();
-            }
+            //    rowsAffected = await db.SaveChangesAsync();
+            //}
 
             count = await db.Currencies.CountAsync<Currency>();
             if (count == 0)

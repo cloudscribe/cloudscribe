@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-17
-// Last Modified:			2016-06-10
+// Last Modified:			2016-06-11
 // 
 
 using cloudscribe.Core.Models;
@@ -52,8 +52,6 @@ namespace cloudscribe.Core.Storage.EF
 
         public void Map(EntityTypeBuilder<SiteSettings> entity)
         {
-
-            //entity.ToTable(tableNames.TablePrefix + tableNames.SiteTableName);
             entity.ForSqlServerToTable(tableNames.TablePrefix + tableNames.SiteTableName);
 
             entity.HasKey(p => p.Id);
@@ -67,7 +65,10 @@ namespace cloudscribe.Core.Storage.EF
             .HasMaxLength(36)
             ;
 
-            entity.Property(u => u.ConcurrencyStamp).IsConcurrencyToken();
+            //entity.Property(u => u.ConcurrencyStamp)
+            //    .IsConcurrencyToken()
+            //    .HasMaxLength(50)
+            //    ;
 
             entity.HasIndex(p => p.AliasId);
 
@@ -456,7 +457,10 @@ namespace cloudscribe.Core.Storage.EF
 
             entity.HasIndex(p => p.SiteId);
 
-            entity.Property(u => u.ConcurrencyStamp).IsConcurrencyToken();
+            //entity.Property(u => u.ConcurrencyStamp)
+            //    .IsConcurrencyToken()
+            //    .HasMaxLength(50)
+            //    ;
 
             entity.Property(p => p.AccountApproved)
             .IsRequired()
@@ -593,7 +597,7 @@ namespace cloudscribe.Core.Storage.EF
 
             entity.HasIndex(p => p.SiteId);
 
-            entity.Property(u => u.ConcurrencyStamp).IsConcurrencyToken();
+            //entity.Property(u => u.ConcurrencyStamp).IsConcurrencyToken();
 
             entity.Property(p => p.NormalizedRoleName)
             .IsRequired()
@@ -751,7 +755,8 @@ namespace cloudscribe.Core.Storage.EF
             .IsRequired()
             ;
 
-            
+            entity.HasIndex(p => p.Code);
+
         }
 
         public void Map(EntityTypeBuilder<Currency> entity)
@@ -777,67 +782,76 @@ namespace cloudscribe.Core.Storage.EF
             .IsRequired()
             ;
 
-            entity.Property(p => p.SymbolLeft)
-            .HasMaxLength(15)
+            entity.HasIndex(p => p.Code);
+
+            entity.Property(p => p.CultureCode)
+            .HasMaxLength(10)
+            .IsRequired()
             ;
 
-            entity.Property(p => p.SymbolRight)
-            .HasMaxLength(15)
-            ;
+            entity.HasIndex(p => p.CultureCode);
 
-            entity.Property(p => p.DecimalPointChar)
-            .HasMaxLength(1)
-            ;
+            //entity.Property(p => p.SymbolLeft)
+            //.HasMaxLength(15)
+            //;
 
-            entity.Property(p => p.ThousandsPointChar)
-            .HasMaxLength(1)
-            ;
+            //entity.Property(p => p.SymbolRight)
+            //.HasMaxLength(15)
+            //;
 
-            entity.Property(p => p.DecimalPlaces)
-            .HasMaxLength(1)
-            ;
+            //entity.Property(p => p.DecimalPointChar)
+            //.HasMaxLength(1)
+            //;
 
-            entity.Property(p => p.LastModified)
-            .ForSqlServerHasColumnType("datetime")
-            .ForSqlServerHasDefaultValueSql("getutcdate()")
-            ;
+            //entity.Property(p => p.ThousandsPointChar)
+            //.HasMaxLength(1)
+            //;
 
-            entity.Property(p => p.Created)
-            .ForSqlServerHasColumnType("datetime")
-            .ForSqlServerHasDefaultValueSql("getutcdate()")
-            ;
+            //entity.Property(p => p.DecimalPlaces)
+            //.HasMaxLength(1)
+            //;
+
+            //entity.Property(p => p.LastModifiedUtc)
+            //.ForSqlServerHasColumnType("datetime")
+            //.ForSqlServerHasDefaultValueSql("getutcdate()")
+            //;
+
+            //entity.Property(p => p.CreatedUtc)
+            //.ForSqlServerHasColumnType("datetime")
+            //.ForSqlServerHasDefaultValueSql("getutcdate()")
+            //;
 
         }
 
-        public void Map(EntityTypeBuilder<Language> entity)
-        {
-            //entity.ToTable(tableNames.TablePrefix + tableNames.LanguageTableName);
-            entity.ForSqlServerToTable(tableNames.TablePrefix + tableNames.LanguageTableName);
+        //public void Map(EntityTypeBuilder<Language> entity)
+        //{
+        //    //entity.ToTable(tableNames.TablePrefix + tableNames.LanguageTableName);
+        //    entity.ForSqlServerToTable(tableNames.TablePrefix + tableNames.LanguageTableName);
 
-            entity.HasKey(p => p.Id);
+        //    entity.HasKey(p => p.Id);
 
-            entity.Property(p => p.Id)
-               .ForSqlServerHasColumnType("uniqueidentifier")
-               .ForSqlServerHasDefaultValueSql("newid()")
-               ;
+        //    entity.Property(p => p.Id)
+        //       .ForSqlServerHasColumnType("uniqueidentifier")
+        //       .ForSqlServerHasDefaultValueSql("newid()")
+        //       ;
 
-            entity.Property(p => p.Name)
-            .HasMaxLength(255)
-            .IsRequired()
-            ;
+        //    entity.Property(p => p.Name)
+        //    .HasMaxLength(255)
+        //    .IsRequired()
+        //    ;
 
-            entity.Property(p => p.Code)
-            .HasMaxLength(2)
-            .IsRequired()
-            ;
+        //    entity.Property(p => p.Code)
+        //    .HasMaxLength(2)
+        //    .IsRequired()
+        //    ;
 
-            entity.Property(p => p.Sort)
-            //.HasDefaultValue(1)
-            //.ValueGeneratedNever()
+        //    entity.Property(p => p.Sort)
+        //    //.HasDefaultValue(1)
+        //    //.ValueGeneratedNever()
             
-            ;
+        //    ;
 
-        }
+        //}
         
         public void Map(EntityTypeBuilder<UserLocation> entity)
         {
@@ -862,6 +876,8 @@ namespace cloudscribe.Core.Storage.EF
             entity.Property(p => p.IpAddress)
                 .HasMaxLength(50)
              ;
+
+            entity.HasIndex(p => p.IpAddress);
 
             entity.Property(p => p.IpAddressLong)
              ;

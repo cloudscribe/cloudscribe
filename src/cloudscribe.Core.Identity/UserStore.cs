@@ -553,7 +553,7 @@ namespace cloudscribe.Core.Identity
             }
 
             user.PasswordHash = passwordHash;
-            user.LastPasswordChangedDate = DateTime.UtcNow;
+            user.LastPasswordChangeUtc = DateTime.UtcNow;
 
             // I don't think this method is expected to
             // persist this change to the db

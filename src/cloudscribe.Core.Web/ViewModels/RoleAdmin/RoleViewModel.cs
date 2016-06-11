@@ -20,7 +20,7 @@ namespace cloudscribe.Core.Web.ViewModels.RoleAdmin
             model.NormalizedRoleName = siteRole.NormalizedRoleName;
             model.RoleName = siteRole.RoleName;
             model.SiteId = siteRole.SiteId;
-            model.ConcurrencyStamp = siteRole.ConcurrencyStamp;
+            //model.ConcurrencyStamp = siteRole.ConcurrencyStamp;
             
             return model;
 
@@ -58,9 +58,7 @@ namespace cloudscribe.Core.Web.ViewModels.RoleAdmin
             get { return siteId; }
             set { siteId = value; }
         }
-
-        public string ConcurrencyStamp { get; set; }
-
+        
         private string normalizedRoleName = string.Empty;
         public string NormalizedRoleName
         {

@@ -392,7 +392,7 @@ namespace cloudscribe.Core.Web.Controllers
                 model.Comment = user.Comment;
                 model.EmailConfirmed = user.EmailConfirmed;
                 model.IsLockedOut = user.IsLockedOut;
-                model.LastLoginDate = user.LastLoginDate;
+                model.LastLoginDate = user.LastLoginUtc;
                 model.TimeZoneId = user.TimeZoneId;
                 if(string.IsNullOrEmpty(model.TimeZoneId))
                 {

@@ -22,4 +22,17 @@ http://www.designcult.org/2011/08/why-do-we-call-in-logging-in.html
 
 http://resxresourcemanager.codeplex.com/
 
+Localization of currency is straightforward if a site uses a single specific currency that is connected to the single specific CultureInfo
+
+It is challenging if you want to support additional currencies
+http://stackoverflow.com/questions/784794/best-practice-format-multiple-currencies
+http://stackoverflow.com/questions/850673/proper-currency-format-when-not-displaying-the-native-currency-of-a-culture
+
+In mojoportal I was doing something that worked but was kind of funky, I would look up the first CultureInfo I could find that supported the currency.
+I think in cloudscribe related work I want to store a specific culture code along with my currency code, and always use the specifci culture to format numbers as currency
+
+how to get a list of cultures
+http://stackoverflow.com/questions/5956898/how-to-make-a-dropdown-list-of-all-cultures-but-no-repeats
+http://www.csharp-examples.net/culture-names/
+
 

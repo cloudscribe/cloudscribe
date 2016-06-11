@@ -7,15 +7,17 @@ namespace cloudscribe.Core.Models.Geography
     public interface ICurrency
     {
         Guid Id { get; set; }
-        string Code { get; set; }
-        DateTime Created { get; set; }
-        string DecimalPlaces { get; set; }
-        string DecimalPointChar { get; set; }
-        DateTime LastModified { get; set; }
-        string SymbolLeft { get; set; }
-        string SymbolRight { get; set; }
-        string ThousandsPointChar { get; set; }
         string Title { get; set; }
-        decimal Value { get; set; }
+        string Code { get; set; }
+        string CultureCode { get; set; }
+        //DateTime CreatedUtc { get; set; }
+        //string DecimalPlaces { get; set; }
+        //string DecimalPointChar { get; set; }
+        //DateTime LastModifiedUtc { get; set; }
+        //string SymbolLeft { get; set; }
+        //string SymbolRight { get; set; }
+        //string ThousandsPointChar { get; set; }
+        
+        //decimal Value { get; set; }
     }
 }

@@ -2,10 +2,6 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Models
 {
@@ -72,6 +68,7 @@ namespace cloudscribe.Core.Models
         
         public DateTime? DateOfBirth { get; set; } 
         public DateTime CreatedUtc { get; set; } = DateTime.UtcNow;
+        public DateTime LastModifiedUtc { get; set; } = DateTime.UtcNow;
         public bool DisplayInMemberList { get; set; } = true;
 
         private string gender = string.Empty;
@@ -97,7 +94,7 @@ namespace cloudscribe.Core.Models
             set { state = value; }
         }
         
-        public DateTime? LastLoginDate { get; set; } 
+        public DateTime? LastLoginUtc { get; set; } 
 
         private string phoneNumber = string.Empty;
         public string PhoneNumber

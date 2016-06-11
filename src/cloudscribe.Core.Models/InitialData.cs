@@ -2,14 +2,12 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-12-03
-// Last Modified:			2016-05-15
+// Last Modified:			2016-06-11
 // 
 
+using cloudscribe.Core.Models.Geography;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using cloudscribe.Core.Models.Geography;
 
 namespace cloudscribe.Core.Models
 {
@@ -101,11 +99,8 @@ namespace cloudscribe.Core.Models
                 Id = new Guid("ff2dde1b-e7d7-4c3a-9ab4-6474345e0f31"),
                 Title = "US Dollar",
                 Code = "USD",
-                SymbolLeft = "$",
-                DecimalPlaces = "2",
-                DecimalPointChar = ".",
-                ThousandsPointChar = ",",
-                Value = 1
+                CultureCode = "en-US"
+               
             });
 
             list.Add(new Currency
@@ -113,49 +108,44 @@ namespace cloudscribe.Core.Models
                 Id = new Guid("6a5ef486-ee65-441f-9c63-c003e30981fe"),
                 Title = "Euro",
                 Code = "EUR",
-                SymbolLeft = "€",
-                SymbolRight = "",
-                DecimalPlaces = "2",
-                DecimalPointChar = ".",
-                ThousandsPointChar = ",",
-                Value = 1
+                CultureCode = "fr-FR"
             });
 
             return list;
 
         }
 
-        public static List<Language> BuildLanguageList()
-        {
-            List<Language> list = new List<Language>();
+        //public static List<Language> BuildLanguageList()
+        //{
+        //    List<Language> list = new List<Language>();
 
-            list.Add(new Language
-            {
-                Id = new Guid("6d81a11e-f1d3-4cd6-b713-8c7b2bb32b3f"),
-                Name = "English",
-                Code = "en",
-                Sort = 100
-            });
+        //    list.Add(new Language
+        //    {
+        //        Id = new Guid("6d81a11e-f1d3-4cd6-b713-8c7b2bb32b3f"),
+        //        Name = "English",
+        //        Code = "en",
+        //        Sort = 100
+        //    });
 
-            list.Add(new Language
-            {
-                Id = new Guid("346a1ca8-fafd-420a-bde2-c535e5bdbc26"),
-                Name = "Deutsch",
-                Code = "de",
-                Sort = 100
-            });
+        //    list.Add(new Language
+        //    {
+        //        Id = new Guid("346a1ca8-fafd-420a-bde2-c535e5bdbc26"),
+        //        Name = "Deutsch",
+        //        Code = "de",
+        //        Sort = 100
+        //    });
 
-            list.Add(new Language
-            {
-                Id = new Guid("fba6e2aa-2a69-4d89-b389-d5ae92f2aa06"),
-                Name = "Español",
-                Code = "es",
-                Sort = 100
-            });
+        //    list.Add(new Language
+        //    {
+        //        Id = new Guid("fba6e2aa-2a69-4d89-b389-d5ae92f2aa06"),
+        //        Name = "Español",
+        //        Code = "es",
+        //        Sort = 100
+        //    });
 
-            return list;
+        //    return list;
 
-        }
+        //}
 
         public static List<GeoCountry> BuildCountryList()
         {

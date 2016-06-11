@@ -145,20 +145,20 @@ namespace cloudscribe.Core.Web.Components
             await commands.DeleteCurrency(currency.Id, CancellationToken.None);
         }
 
-        public async Task Add(ILanguage language)
-        {
-            await commands.Add(language, CancellationToken.None);
-        }
+        //public async Task Add(ILanguage language)
+        //{
+        //    await commands.Add(language, CancellationToken.None);
+        //}
 
-        public async Task Update(ILanguage language)
-        {
-            await commands.Update(language, CancellationToken.None);
-        }
+        //public async Task Update(ILanguage language)
+        //{
+        //    await commands.Update(language, CancellationToken.None);
+        //}
 
-        public async Task<int> GetLanguageCount()
-        {
-            return await queries.GetLanguageCount(CancellationToken);
-        }
+        //public async Task<int> GetLanguageCount()
+        //{
+        //    return await queries.GetLanguageCount(CancellationToken);
+        //}
 
     }
 }

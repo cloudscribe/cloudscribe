@@ -8,7 +8,7 @@ using cloudscribe.Core.Storage.EF;
 namespace cloudscribe.Core.Storage.EF.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    [Migration("20160519195511_Initial")]
+    [Migration("20160611151302_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,38 +28,19 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                         .IsRequired()
                         .HasAnnotation("MaxLength", 3);
 
-                    b.Property<DateTime>("Created")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "datetime")
-                        .HasAnnotation("SqlServer:DefaultValueSql", "getutcdate()");
-
-                    b.Property<string>("DecimalPlaces")
-                        .HasAnnotation("MaxLength", 1);
-
-                    b.Property<string>("DecimalPointChar")
-                        .HasAnnotation("MaxLength", 1);
-
-                    b.Property<DateTime>("LastModified")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "datetime")
-                        .HasAnnotation("SqlServer:DefaultValueSql", "getutcdate()");
-
-                    b.Property<string>("SymbolLeft")
-                        .HasAnnotation("MaxLength", 15);
-
-                    b.Property<string>("SymbolRight")
-                        .HasAnnotation("MaxLength", 15);
-
-                    b.Property<string>("ThousandsPointChar")
-                        .HasAnnotation("MaxLength", 1);
+                    b.Property<string>("CultureCode")
+                        .IsRequired()
+                        .HasAnnotation("MaxLength", 10);
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasAnnotation("MaxLength", 50);
 
-                    b.Property<decimal>("Value");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("Code");
+
+                    b.HasIndex("CultureCode");
 
                     b.ToTable("Currencies");
 
@@ -114,35 +95,13 @@ namespace cloudscribe.Core.Storage.EF.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Code");
+
                     b.HasIndex("CountryId");
 
                     b.ToTable("States");
 
                     b.HasAnnotation("SqlServer:TableName", "cs_GeoZone");
-                });
-
-            modelBuilder.Entity("cloudscribe.Core.Models.Geography.Language", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier")
-                        .HasAnnotation("SqlServer:DefaultValueSql", "newid()");
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasAnnotation("MaxLength", 2);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasAnnotation("MaxLength", 255);
-
-                    b.Property<int>("Sort");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Languages");
-
-                    b.HasAnnotation("SqlServer:TableName", "cs_Language");
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.SiteHost", b =>
@@ -176,9 +135,6 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier")
                         .HasAnnotation("SqlServer:DefaultValueSql", "newid()");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken();
 
                     b.Property<string>("NormalizedRoleName")
                         .IsRequired()
@@ -280,8 +236,7 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                     b.Property<string>("CompanyStreetAddress2")
                         .HasAnnotation("MaxLength", 250);
 
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken();
+                    b.Property<string>("ConcurrencyStamp");
 
                     b.Property<DateTime>("CreatedUtc")
                         .ValueGeneratedOnAdd()
@@ -519,9 +474,6 @@ namespace cloudscribe.Core.Storage.EF.Migrations
 
                     b.Property<string>("Comment");
 
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken();
-
                     b.Property<string>("Country");
 
                     b.Property<DateTime>("CreatedUtc");
@@ -533,7 +485,9 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                         .HasAnnotation("SqlServer:ColumnType", "bit")
                         .HasAnnotation("SqlServer:DefaultValue", false);
 
-                    b.Property<string>("DisplayName");
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasAnnotation("MaxLength", 100);
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -558,11 +512,13 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                         .HasAnnotation("SqlServer:ColumnType", "bit")
                         .HasAnnotation("SqlServer:DefaultValue", false);
 
-                    b.Property<DateTime?>("LastLoginDate");
+                    b.Property<DateTime?>("LastLoginUtc");
+
+                    b.Property<DateTime>("LastModifiedUtc");
 
                     b.Property<string>("LastName");
 
-                    b.Property<DateTime?>("LastPasswordChangedDate");
+                    b.Property<DateTime?>("LastPasswordChangeUtc");
 
                     b.Property<DateTime?>("LockoutEndDateUtc");
 
@@ -627,6 +583,8 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                         .HasAnnotation("MaxLength", 100);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DisplayName");
 
                     b.HasIndex("NormalizedEmail");
 
@@ -722,6 +680,8 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                         .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("IpAddress");
 
                     b.HasIndex("UserId");
 

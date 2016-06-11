@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2016-05-09
+// Last Modified:			2016-06-11
 // 
 
 using cloudscribe.Core.Models.Geography;
@@ -244,69 +244,69 @@ namespace cloudscribe.Core.Storage.EF
 
         }
 
-        public async Task<ILanguage> FetchLanguage(
-            Guid languageId,
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            ThrowIfDisposed();
-            cancellationToken.ThrowIfCancellationRequested();
+        //public async Task<ILanguage> FetchLanguage(
+        //    Guid languageId,
+        //    CancellationToken cancellationToken = default(CancellationToken))
+        //{
+        //    ThrowIfDisposed();
+        //    cancellationToken.ThrowIfCancellationRequested();
 
-            var item = await dbContext.Languages.SingleOrDefaultAsync(
-                    x => x.Id == languageId,
-                    cancellationToken)
-                    .ConfigureAwait(false);
+        //    var item = await dbContext.Languages.SingleOrDefaultAsync(
+        //            x => x.Id == languageId,
+        //            cancellationToken)
+        //            .ConfigureAwait(false);
 
-            return item;
-        }
+        //    return item;
+        //}
 
-        public async Task<int> GetLanguageCount(CancellationToken cancellationToken = default(CancellationToken))
-        {
-            ThrowIfDisposed();
-            cancellationToken.ThrowIfCancellationRequested();
-            return await dbContext.Languages.CountAsync<Language>(cancellationToken);
+        //public async Task<int> GetLanguageCount(CancellationToken cancellationToken = default(CancellationToken))
+        //{
+        //    ThrowIfDisposed();
+        //    cancellationToken.ThrowIfCancellationRequested();
+        //    return await dbContext.Languages.CountAsync<Language>(cancellationToken);
 
-        }
+        //}
 
-        public async Task<List<ILanguage>> GetAllLanguages(CancellationToken cancellationToken = default(CancellationToken))
-        {
-            ThrowIfDisposed();
-            cancellationToken.ThrowIfCancellationRequested();
+        //public async Task<List<ILanguage>> GetAllLanguages(CancellationToken cancellationToken = default(CancellationToken))
+        //{
+        //    ThrowIfDisposed();
+        //    cancellationToken.ThrowIfCancellationRequested();
 
-            var query = dbContext.Languages
-                        .OrderBy(x => x.Name)
-                        .Select(x => x);
+        //    var query = dbContext.Languages
+        //                .OrderBy(x => x.Name)
+        //                .Select(x => x);
 
-            var items = await query
-                .AsNoTracking()
-                .ToListAsync<ILanguage>(cancellationToken)
-                .ConfigureAwait(false);
+        //    var items = await query
+        //        .AsNoTracking()
+        //        .ToListAsync<ILanguage>(cancellationToken)
+        //        .ConfigureAwait(false);
 
-            return items;
+        //    return items;
 
-        }
+        //}
 
-        public async Task<List<ILanguage>> GetLanguagePage(
-            int pageNumber,
-            int pageSize,
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            ThrowIfDisposed();
-            cancellationToken.ThrowIfCancellationRequested();
+        //public async Task<List<ILanguage>> GetLanguagePage(
+        //    int pageNumber,
+        //    int pageSize,
+        //    CancellationToken cancellationToken = default(CancellationToken))
+        //{
+        //    ThrowIfDisposed();
+        //    cancellationToken.ThrowIfCancellationRequested();
 
-            int offset = (pageSize * pageNumber) - pageSize;
+        //    int offset = (pageSize * pageNumber) - pageSize;
 
-            var query = dbContext.Languages
-                        .OrderBy(x => x.Name)
-                        .Skip(offset)
-                        .Take(pageSize)
-                        .Select(x => x);
+        //    var query = dbContext.Languages
+        //                .OrderBy(x => x.Name)
+        //                .Skip(offset)
+        //                .Take(pageSize)
+        //                .Select(x => x);
 
-            return await query
-                .AsNoTracking()
-                .ToListAsync<ILanguage>(cancellationToken)
-                .ConfigureAwait(false);
+        //    return await query
+        //        .AsNoTracking()
+        //        .ToListAsync<ILanguage>(cancellationToken)
+        //        .ConfigureAwait(false);
 
-        }
+        //}
 
         public async Task<ICurrency> FetchCurrency(
             Guid currencyId,

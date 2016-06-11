@@ -2,15 +2,13 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:                  Joe Audette
 // Created:                 2016-05-14
-// Last Modified:           2016-05-14
+// Last Modified:           2016-06-11
 // 
 
-using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Geography;
 using NoDb;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -23,21 +21,21 @@ namespace cloudscribe.Core.Storage.NoDb
             IProjectResolver projectResolver,
             IBasicQueries<GeoCountry> countryQueries,
             IBasicQueries<GeoZone> stateQueries,
-            IBasicQueries<Language> langQueries,
+            //IBasicQueries<Language> langQueries,
             IBasicQueries<Currency> currencyQueries
             )
         {
             this.projectResolver = projectResolver;
             this.countryQueries = countryQueries;
             this.stateQueries = stateQueries;
-            this.langQueries = langQueries;
+            //this.langQueries = langQueries;
             this.currencyQueries = currencyQueries;
         }
 
         private IProjectResolver projectResolver;
         private IBasicQueries<GeoCountry> countryQueries;
         private IBasicQueries<GeoZone> stateQueries;
-        private IBasicQueries<Language> langQueries;
+        //private IBasicQueries<Language> langQueries;
         private IBasicQueries<Currency> currencyQueries;
 
         protected string projectId;
@@ -268,64 +266,64 @@ namespace cloudscribe.Core.Storage.NoDb
 
         }
 
-        public async Task<ILanguage> FetchLanguage(
-            Guid languageId,
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            ThrowIfDisposed();
-            cancellationToken.ThrowIfCancellationRequested();
+        //public async Task<ILanguage> FetchLanguage(
+        //    Guid languageId,
+        //    CancellationToken cancellationToken = default(CancellationToken))
+        //{
+        //    ThrowIfDisposed();
+        //    cancellationToken.ThrowIfCancellationRequested();
 
-            await EnsureProjectId().ConfigureAwait(false);
+        //    await EnsureProjectId().ConfigureAwait(false);
 
-            return await langQueries.FetchAsync(
-                projectId,
-                languageId.ToString(),
-                cancellationToken).ConfigureAwait(false);
+        //    return await langQueries.FetchAsync(
+        //        projectId,
+        //        languageId.ToString(),
+        //        cancellationToken).ConfigureAwait(false);
  
-        }
+        //}
 
-        public async Task<int> GetLanguageCount(CancellationToken cancellationToken = default(CancellationToken))
-        {
-            ThrowIfDisposed();
-            cancellationToken.ThrowIfCancellationRequested();
-            await EnsureProjectId().ConfigureAwait(false);
-            var all = await langQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+        //public async Task<int> GetLanguageCount(CancellationToken cancellationToken = default(CancellationToken))
+        //{
+        //    ThrowIfDisposed();
+        //    cancellationToken.ThrowIfCancellationRequested();
+        //    await EnsureProjectId().ConfigureAwait(false);
+        //    var all = await langQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
 
-            return all.ToList().Count;
+        //    return all.ToList().Count;
 
-        }
+        //}
 
-        public async Task<List<ILanguage>> GetAllLanguages(CancellationToken cancellationToken = default(CancellationToken))
-        {
-            ThrowIfDisposed();
-            cancellationToken.ThrowIfCancellationRequested();
+        //public async Task<List<ILanguage>> GetAllLanguages(CancellationToken cancellationToken = default(CancellationToken))
+        //{
+        //    ThrowIfDisposed();
+        //    cancellationToken.ThrowIfCancellationRequested();
 
-            await EnsureProjectId().ConfigureAwait(false);
-            var all = await langQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
-            return all.OrderBy(
-                x => x.Name).ToList<ILanguage>();
+        //    await EnsureProjectId().ConfigureAwait(false);
+        //    var all = await langQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+        //    return all.OrderBy(
+        //        x => x.Name).ToList<ILanguage>();
 
-        }
+        //}
 
-        public async Task<List<ILanguage>> GetLanguagePage(
-            int pageNumber,
-            int pageSize,
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            ThrowIfDisposed();
-            cancellationToken.ThrowIfCancellationRequested();
+        //public async Task<List<ILanguage>> GetLanguagePage(
+        //    int pageNumber,
+        //    int pageSize,
+        //    CancellationToken cancellationToken = default(CancellationToken))
+        //{
+        //    ThrowIfDisposed();
+        //    cancellationToken.ThrowIfCancellationRequested();
 
-            await EnsureProjectId().ConfigureAwait(false);
-            var all = await langQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+        //    await EnsureProjectId().ConfigureAwait(false);
+        //    var all = await langQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
 
-            int offset = (pageSize * pageNumber) - pageSize;
+        //    int offset = (pageSize * pageNumber) - pageSize;
 
-            return all.OrderBy(x => x.Name)
-                    .Skip(offset)
-                    .Take(pageSize)
-                    .Select(x => x).ToList<ILanguage>();
+        //    return all.OrderBy(x => x.Name)
+        //            .Skip(offset)
+        //            .Take(pageSize)
+        //            .Select(x => x).ToList<ILanguage>();
             
-        }
+        //}
 
         public async Task<ICurrency> FetchCurrency(
             Guid currencyId,

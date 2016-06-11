@@ -110,16 +110,16 @@ namespace cloudscribe.Core.Web.Components
                     await geoDataManager.Add(c);
                 }
             }
-            int languageCount = await geoDataManager.GetLanguageCount();
-            if(languageCount == 0)
-            {
-                await output("creating initial language data", true);
-                List<Language> langs = InitialData.BuildLanguageList();
-                foreach(Language l in langs)
-                {
-                    await geoDataManager.Add(l);
-                }
-            }
+            //int languageCount = await geoDataManager.GetLanguageCount();
+            //if(languageCount == 0)
+            //{
+            //    await output("creating initial language data", true);
+            //    List<Language> langs = InitialData.BuildLanguageList();
+            //    foreach(Language l in langs)
+            //    {
+            //        await geoDataManager.Add(l);
+            //    }
+            //}
 
 
             int existingSiteCount = await siteManager.ExistingSiteCount();

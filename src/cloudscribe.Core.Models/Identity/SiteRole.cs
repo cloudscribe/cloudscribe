@@ -37,7 +37,7 @@ namespace cloudscribe.Core.Models
             set { roleName = value; }
         }
 
-        public string ConcurrencyStamp { get; set; } = Guid.NewGuid().ToString();
+        //public string ConcurrencyStamp { get; set; } = Guid.NewGuid().ToString();
 
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace cloudscribe.Core.Models
             r.Id = i.Id;
             r.NormalizedRoleName = i.NormalizedRoleName;
             r.SiteId = i.SiteId;
-            r.ConcurrencyStamp = i.ConcurrencyStamp;
+           // r.ConcurrencyStamp = i.ConcurrencyStamp;
 
 
             return r;

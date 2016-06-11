@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-17
-// Last Modified:			2016-05-12
+// Last Modified:			2016-06-11
 // 
 
 //using Microsoft.AspNet.Identity;
@@ -57,7 +57,7 @@ namespace cloudscribe.Core.Models
 
         public bool NewEmailApproved { get; set; } = false;
 
-        public DateTime? LastPasswordChangedDate { get; set; } //= DateTime.MinValue;
+        public DateTime? LastPasswordChangeUtc { get; set; } //= DateTime.MinValue;
         
         
         public bool MustChangePwd { get; set; } = false;
@@ -91,12 +91,12 @@ namespace cloudscribe.Core.Models
         
         public bool TwoFactorEnabled { get; set; } = false;
 
-        public string ConcurrencyStamp { get; set; } = Guid.NewGuid().ToString();
+        //public string ConcurrencyStamp { get; set; } = Guid.NewGuid().ToString();
 
         public static SiteUser FromISiteUser(ISiteUser user)
         {
             SiteUser u = new SiteUser();
-            u.ConcurrencyStamp = user.ConcurrencyStamp;
+           // u.ConcurrencyStamp = user.ConcurrencyStamp;
             //Guid id = user.Id;
             if (user.Id != Guid.Empty) u.Id = user.Id;
             //SiteUser u = new SiteUser(id);
@@ -109,8 +109,9 @@ namespace cloudscribe.Core.Models
             u.Comment = user.Comment;
             u.Country = user.Country;
             u.CreatedUtc = user.CreatedUtc;
+            u.LastModifiedUtc = user.LastModifiedUtc;
 
-            if(user.DateOfBirth.HasValue)
+            if (user.DateOfBirth.HasValue)
             {
                 u.DateOfBirth = user.DateOfBirth.Value;
             }
@@ -124,15 +125,15 @@ namespace cloudscribe.Core.Models
             u.IsDeleted = user.IsDeleted;
             u.IsLockedOut = user.IsLockedOut;
             
-            if(user.LastLoginDate.HasValue)
+            if(user.LastLoginUtc.HasValue)
             {
-                u.LastLoginDate = user.LastLoginDate.Value;
+                u.LastLoginUtc = user.LastLoginUtc.Value;
             }
             
             u.LastName = user.LastName;
-            if(user.LastPasswordChangedDate.HasValue)
+            if(user.LastPasswordChangeUtc.HasValue)
             {
-                u.LastPasswordChangedDate = user.LastPasswordChangedDate.Value;
+                u.LastPasswordChangeUtc = user.LastPasswordChangeUtc.Value;
             }
             
             u.LockoutEndDateUtc = user.LockoutEndDateUtc;

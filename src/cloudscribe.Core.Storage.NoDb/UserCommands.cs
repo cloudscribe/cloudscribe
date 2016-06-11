@@ -309,7 +309,7 @@ namespace cloudscribe.Core.Storage.NoDb
 
             if (item == null) { throw new InvalidOperationException("user not found"); }
 
-            item.LastLoginDate = lastLoginTime;
+            item.LastLoginUtc = lastLoginTime;
 
             await userCommands.UpdateAsync(
                     projectId,
