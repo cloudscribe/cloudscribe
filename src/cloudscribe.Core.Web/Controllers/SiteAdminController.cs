@@ -303,7 +303,7 @@ namespace cloudscribe.Core.Web.Controllers
         {
             ViewData["Title"] = sr["Create New Site"];
 
-            var model = new SiteBasicSettingsViewModel();
+            var model = new NewSiteViewModel();
             model.ReturnPageNumber = slp; //site list return page
             model.SiteId = Guid.Empty;
             model.TimeZoneId = siteManager.CurrentSite.TimeZoneId;
@@ -321,7 +321,7 @@ namespace cloudscribe.Core.Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "ServerAdminPolicy")]
-        public async Task<ActionResult> NewSite(SiteBasicSettingsViewModel model)
+        public async Task<ActionResult> NewSite(NewSiteViewModel model)
         {
             ViewData["Title"] = "Create New Site";
 
@@ -392,7 +392,13 @@ namespace cloudscribe.Core.Web.Controllers
             newSite.SiteIsClosedMessage = model.ClosedMessage;
             
             await siteManager.CreateNewSite(newSite);
-            await siteManager.CreateRequiredRolesAndAdminUser(newSite);
+            await siteManager.CreateRequiredRolesAndAdminUser(
+                newSite,
+                model.Email,
+                model.LoginName,
+                model.DisplayName,
+                model.Password
+                );
             
             if (addHostName)
             {

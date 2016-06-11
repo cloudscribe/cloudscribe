@@ -6,6 +6,8 @@ I tried to use the same ViewModel across these scenarios to be DRY
 but things get messy when something on the viewmodel is required in some view but not shown or needed in another view
 googled a bit and found this:
 http://stackoverflow.com/questions/6954102/asp-net-mvc-architecture-viewmodel-by-composition-inheritance-or-duplication
+http://stevemichelotti.com/aspnet-mvc-view-model-patterns/
+https://lostechies.com/jimmybogard/2009/06/30/how-we-do-mvc-view-models/
 and I guess I have to agree it is better to have that kind of duplication as opposed to using larger viewmodels than is required by the view
 had thought about trying to use inheritance with viewmodels inherting from each other to add fields
 it seesm there are some issues with kind of approach for client side validation though I have not tested to confirm if those issues stillexist in 

@@ -277,6 +277,47 @@ namespace cloudscribe.Core.Web.Components
 
         }
 
+        public async Task CreateRequiredRolesAndAdminUser(
+            SiteSettings site,
+            string adminEmail,
+            string adminLoginName,
+            string adminDisplayName,
+            string adminPassword
+            )
+        {
+            await EnsureRequiredRoles(site);
+            //await CreateAdminUser(site);
+            var adminRole = await userQueries.FetchRole(site.Id, "Administrators", CancellationToken);
+
+            if (adminRole == null)
+            {
+                throw new InvalidOperationException("Administrators role could nto be found so cannot create admin user");
+            }
+
+            var adminUser = new SiteUser();
+            adminUser.Id = Guid.NewGuid();
+            adminUser.SiteId = site.Id;
+            adminUser.Email = adminEmail;
+            adminUser.NormalizedEmail = adminUser.Email.ToUpperInvariant();
+            adminUser.DisplayName = adminDisplayName;
+            adminUser.UserName = adminLoginName;
+            adminUser.NormalizedUserName = adminUser.UserName.ToUpperInvariant();
+            adminUser.EmailConfirmed = true;
+            adminUser.AccountApproved = true;
+           
+            // clear text password will be hashed upon login
+            adminUser.PasswordHash =  adminPassword +"||0"; //pwd/salt/format 
+            adminUser.MustChangePwd = true; // TODO: implement logic to enforce this
+
+            await userCommands.Create(adminUser, CancellationToken.None);
+
+            await userCommands.AddUserToRole(
+                adminRole.Id,
+                adminUser.Id,
+                CancellationToken.None);
+
+        }
+
         public async Task CreateRequiredRolesAndAdminUser(SiteSettings site)
         {
             await EnsureRequiredRoles(site);
