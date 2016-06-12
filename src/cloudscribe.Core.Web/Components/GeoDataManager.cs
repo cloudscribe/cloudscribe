@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-22
-// Last Modified:			2016-05-19
+// Last Modified:			2016-06-12
 // 
 
 using cloudscribe.Core.Models.Geography;
@@ -117,48 +117,6 @@ namespace cloudscribe.Core.Web.Components
         {
             await commands.DeleteGeoZone(geoZone.Id, CancellationToken.None);
         }
-
-
-
-        public Task<List<ICurrency>> GetAllCurrencies()
-        {
-            return queries.GetAllCurrencies(CancellationToken);
-        }
-
-        public Task<ICurrency> FetchCurrency(Guid guid)
-        {
-            return queries.FetchCurrency(guid, CancellationToken);
-        }
-
-        public async Task Add(ICurrency currency)
-        {
-            await commands.Add(currency, CancellationToken.None);
-        }
-
-        public async Task Update(ICurrency currency)
-        {
-            await commands.Update(currency, CancellationToken.None);
-        }
-
-        public async Task DeleteCurrency(ICurrency currency)
-        {
-            await commands.DeleteCurrency(currency.Id, CancellationToken.None);
-        }
-
-        //public async Task Add(ILanguage language)
-        //{
-        //    await commands.Add(language, CancellationToken.None);
-        //}
-
-        //public async Task Update(ILanguage language)
-        //{
-        //    await commands.Update(language, CancellationToken.None);
-        //}
-
-        //public async Task<int> GetLanguageCount()
-        //{
-        //    return await queries.GetLanguageCount(CancellationToken);
-        //}
-
+        
     }
 }

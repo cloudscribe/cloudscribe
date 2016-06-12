@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:                  Joe Audette
 // Created:                 2016-05-14
-// Last Modified:           2016-06-11
+// Last Modified:           2016-06-12
 // 
 
 using cloudscribe.Core.Models.Geography;
@@ -20,24 +20,19 @@ namespace cloudscribe.Core.Storage.NoDb
         public GeoQueries(
             IProjectResolver projectResolver,
             IBasicQueries<GeoCountry> countryQueries,
-            IBasicQueries<GeoZone> stateQueries,
-            //IBasicQueries<Language> langQueries,
-            IBasicQueries<Currency> currencyQueries
+            IBasicQueries<GeoZone> stateQueries
             )
         {
             this.projectResolver = projectResolver;
             this.countryQueries = countryQueries;
             this.stateQueries = stateQueries;
-            //this.langQueries = langQueries;
-            this.currencyQueries = currencyQueries;
+           
         }
 
         private IProjectResolver projectResolver;
         private IBasicQueries<GeoCountry> countryQueries;
         private IBasicQueries<GeoZone> stateQueries;
-        //private IBasicQueries<Language> langQueries;
-        private IBasicQueries<Currency> currencyQueries;
-
+        
         protected string projectId;
 
         private async Task EnsureProjectId()
@@ -266,92 +261,7 @@ namespace cloudscribe.Core.Storage.NoDb
 
         }
 
-        //public async Task<ILanguage> FetchLanguage(
-        //    Guid languageId,
-        //    CancellationToken cancellationToken = default(CancellationToken))
-        //{
-        //    ThrowIfDisposed();
-        //    cancellationToken.ThrowIfCancellationRequested();
-
-        //    await EnsureProjectId().ConfigureAwait(false);
-
-        //    return await langQueries.FetchAsync(
-        //        projectId,
-        //        languageId.ToString(),
-        //        cancellationToken).ConfigureAwait(false);
- 
-        //}
-
-        //public async Task<int> GetLanguageCount(CancellationToken cancellationToken = default(CancellationToken))
-        //{
-        //    ThrowIfDisposed();
-        //    cancellationToken.ThrowIfCancellationRequested();
-        //    await EnsureProjectId().ConfigureAwait(false);
-        //    var all = await langQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
-
-        //    return all.ToList().Count;
-
-        //}
-
-        //public async Task<List<ILanguage>> GetAllLanguages(CancellationToken cancellationToken = default(CancellationToken))
-        //{
-        //    ThrowIfDisposed();
-        //    cancellationToken.ThrowIfCancellationRequested();
-
-        //    await EnsureProjectId().ConfigureAwait(false);
-        //    var all = await langQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
-        //    return all.OrderBy(
-        //        x => x.Name).ToList<ILanguage>();
-
-        //}
-
-        //public async Task<List<ILanguage>> GetLanguagePage(
-        //    int pageNumber,
-        //    int pageSize,
-        //    CancellationToken cancellationToken = default(CancellationToken))
-        //{
-        //    ThrowIfDisposed();
-        //    cancellationToken.ThrowIfCancellationRequested();
-
-        //    await EnsureProjectId().ConfigureAwait(false);
-        //    var all = await langQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
-
-        //    int offset = (pageSize * pageNumber) - pageSize;
-
-        //    return all.OrderBy(x => x.Name)
-        //            .Skip(offset)
-        //            .Take(pageSize)
-        //            .Select(x => x).ToList<ILanguage>();
-            
-        //}
-
-        public async Task<ICurrency> FetchCurrency(
-            Guid currencyId,
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            ThrowIfDisposed();
-            cancellationToken.ThrowIfCancellationRequested();
-            await EnsureProjectId().ConfigureAwait(false);
-            return await currencyQueries.FetchAsync(
-                projectId,
-                currencyId.ToString(),
-                cancellationToken).ConfigureAwait(false);
-            
-        }
-
-        public async Task<List<ICurrency>> GetAllCurrencies(CancellationToken cancellationToken = default(CancellationToken))
-        {
-            ThrowIfDisposed();
-            cancellationToken.ThrowIfCancellationRequested();
-
-            await EnsureProjectId().ConfigureAwait(false);
-            var all = await currencyQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
-
-            return all.OrderBy(x => x.Title)
-                        .Select(x => x).ToList<ICurrency>();
-            
-        }
-
+        
 
         #region IDisposable Support
 

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:                  Joe Audette
 // Created:                 2016-05-09
-// Last Modified:           2016-05-09
+// Last Modified:           2016-06-12
 // 
 
 using cloudscribe.Core.Models;
@@ -29,9 +29,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddNoDb<GeoCountry>();
             services.AddNoDb<GeoZone>();
-            //services.AddNoDb<Language>();
-            services.AddNoDb<Currency>();
-
+            
             services.AddScoped<IDataPlatformInfo, DataPlatformInfo>();
 
             services.AddScoped<IProjectRequestMap, DefaultProjectRequestMap>();

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:                  Joe Audette
 // Created:                 2016-05-14
-// Last Modified:           2016-06-11
+// Last Modified:           2016-06-12
 // 
 
 using cloudscribe.Core.Models.Geography;
@@ -21,9 +21,8 @@ namespace cloudscribe.Core.Storage.NoDb
             IBasicQueries<GeoCountry> countryQueries,
             IBasicCommands<GeoCountry> countryCommands,
             IBasicQueries<GeoZone> stateQueries,
-            IBasicCommands<GeoZone> stateCommands,
-            //IBasicCommands<Language> langCommands,
-            IBasicCommands<Currency> currencyCommands
+            IBasicCommands<GeoZone> stateCommands
+           
             )
         {
             this.projectResolver = projectResolver;
@@ -31,9 +30,7 @@ namespace cloudscribe.Core.Storage.NoDb
             this.countryCommands = countryCommands;
             this.stateQueries = stateQueries;
             this.stateCommands = stateCommands;
-            //this.langCommands = langCommands;
-            this.currencyCommands = currencyCommands;
-
+           
         }
 
         private IProjectResolver projectResolver;
@@ -41,9 +38,7 @@ namespace cloudscribe.Core.Storage.NoDb
         private IBasicCommands<GeoCountry> countryCommands;
         private IBasicQueries<GeoZone> stateQueries;
         private IBasicCommands<GeoZone> stateCommands;
-        //private IBasicCommands<Language> langCommands;
-        private IBasicCommands<Currency> currencyCommands;
-
+        
         protected string projectId;
 
         private async Task EnsureProjectId()
@@ -203,118 +198,7 @@ namespace cloudscribe.Core.Storage.NoDb
             
         }
 
-        //public async Task Add(
-        //    ILanguage language,
-        //    CancellationToken cancellationToken = default(CancellationToken))
-        //{
-        //    ThrowIfDisposed();
-        //    cancellationToken.ThrowIfCancellationRequested();
-        //    if (language == null) throw new ArgumentException("language must not be null");
-        //    if (language.Id == Guid.Empty) throw new ArgumentException("language must have a non-empty id");
-
-        //    await EnsureProjectId().ConfigureAwait(false);
-        //    var lang = Language.FromILanguage(language);
-        //    await langCommands.CreateAsync(
-        //        projectId,
-        //        lang.Id.ToString(),
-        //        lang,
-        //        cancellationToken).ConfigureAwait(false);
-
-        //}
-
-        //public async Task Update(
-        //    ILanguage language,
-        //    CancellationToken cancellationToken = default(CancellationToken))
-        //{
-        //    ThrowIfDisposed();
-        //    cancellationToken.ThrowIfCancellationRequested();
-        //    if (language == null) throw new ArgumentException("language must not be null");
-        //    if (language.Id == Guid.Empty) throw new ArgumentException("language must have a non-empty id");
-
-        //    await EnsureProjectId().ConfigureAwait(false);
-        //    var lang = Language.FromILanguage(language);
-        //    await langCommands.UpdateAsync(
-        //        projectId,
-        //        lang.Id.ToString(),
-        //        lang,
-        //        cancellationToken).ConfigureAwait(false);
-        //}
-
-        //public async Task DeleteLanguage(
-        //    Guid languageId,
-        //    CancellationToken cancellationToken = default(CancellationToken))
-        //{
-        //    ThrowIfDisposed();
-        //    cancellationToken.ThrowIfCancellationRequested();
-        //    if (languageId == Guid.Empty) throw new ArgumentException("id must be a non-empty guid");
-
-        //    await EnsureProjectId().ConfigureAwait(false);
-
-        //    await langCommands.DeleteAsync(
-        //        projectId,
-        //        languageId.ToString(),
-        //        cancellationToken).ConfigureAwait(false);
-            
-        //}
-
-        public async Task Add(
-            ICurrency currency,
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            ThrowIfDisposed();
-            cancellationToken.ThrowIfCancellationRequested();
-            if (currency == null) throw new ArgumentException("currency must not be null");
-            if (currency.Id == Guid.Empty) throw new ArgumentException("currency must have a non-empty id");
-
-            var c = Currency.FromICurrency(currency);
-
-            await EnsureProjectId().ConfigureAwait(false);
-            await currencyCommands.CreateAsync(
-                projectId,
-                c.Id.ToString(),
-                c,
-                cancellationToken).ConfigureAwait(false);
-
-        }
-
-        public async Task Update(
-            ICurrency currency,
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            ThrowIfDisposed();
-            cancellationToken.ThrowIfCancellationRequested();
-            if (currency == null) throw new ArgumentException("currency must not be null");
-            if (currency.Id == Guid.Empty) throw new ArgumentException("currency must have a non-empty id");
-
-            var c = Currency.FromICurrency(currency);
-
-            await EnsureProjectId().ConfigureAwait(false);
-
-            await currencyCommands.UpdateAsync(
-                projectId,
-                c.Id.ToString(),
-                c,
-                cancellationToken).ConfigureAwait(false);
-        }
-
-        public async Task DeleteCurrency(
-            Guid currencyId,
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            ThrowIfDisposed();
-            cancellationToken.ThrowIfCancellationRequested();
-            if (currencyId == Guid.Empty) throw new ArgumentException("id must be a non-empty guid");
-
-            await EnsureProjectId().ConfigureAwait(false);
-
-            await currencyCommands.DeleteAsync(
-                projectId,
-                currencyId.ToString(),
-                cancellationToken).ConfigureAwait(false);
-            
-        }
-
-
+        
         #region IDisposable Support
 
         private void ThrowIfDisposed()

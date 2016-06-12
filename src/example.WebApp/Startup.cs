@@ -200,7 +200,7 @@ namespace example.WebApp
             app.UseStatusCodePagesWithReExecute("/Home/Error/{0}");
 
             app.UseSession();
-
+            
             app.UseRequestLocalization(localizationOptionsAccessor.Value);
 
             app.UseMultitenancy<cloudscribe.Core.Models.SiteSettings>();

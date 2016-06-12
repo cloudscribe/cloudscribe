@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2016-06-06
+// Last Modified:			2016-06-12
 // 
 
 using System;
@@ -15,7 +15,7 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
     // https://docs.asp.net/en/latest/fundamentals/localization.html#dataannotations-localization
     // validation error messages can be localized by adding
     // ViewModels.SiteSetting.SiteBasicSettingsViewModel.fr.resx
-    // but DisplayName cannot for some reason
+    // but [DisplayName] cannot for some reason
     // so my advice is just use IStringLocalizer within the views to localize labels
     // it would be possible to use static resources with resource type but then it would be difficult 
     // for people to override or add their own translation resx files
@@ -39,7 +39,7 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         private string siteName = string.Empty;
 
         [Required(ErrorMessage = "Site Name is required")]
-        //[StringLengthWithConfig(MinimumLength = 3, MaximumLength = 255, MinLengthKey = "SiteNameMinLength", MaxLengthKey = "SiteNameMaxLength", ErrorMessageResourceName = "SiteNameLengthErrorFormat", ErrorMessageResourceType = typeof(CommonResources))]
+        [StringLength(255,ErrorMessage ="Site Name has a maximum length of 255 characters")]
         public string SiteName
         {
             get { return siteName; }
@@ -53,7 +53,8 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         /// is so we don't have to use an ugly guid string for folder name
         /// to host site specific files such as themes
         /// </summary>
-        [RegularExpression(@"^[a-zA-Z0-9_-]+$", ErrorMessage = "only digits, numbers, - and _ allowed, no spaces allowed"), StringLength(36)]
+        [RegularExpression(@"^[a-zA-Z0-9_-]+$", ErrorMessage = "For AliasId, only digits, numbers, - and _ allowed, no spaces allowed")]
+        [StringLength(36, ErrorMessage = "AliasId has a maximum length of 36 characters")]
         public string AliasId
         {
             get { return aliasId; }
@@ -61,6 +62,8 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         }
 
         private string siteFolderName = string.Empty;
+        [RegularExpression(@"^[a-zA-Z0-9_-]+$", ErrorMessage = "For Site Folder Name, only digits, numbers, - and _ allowed, no spaces allowed")]
+        [StringLength(50, ErrorMessage ="Site Folder name has a maximum length of 50 characters")]
         public string SiteFolderName
         {
             get { return siteFolderName; }
@@ -68,6 +71,7 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         }
 
         private string hostName = string.Empty;
+        [StringLength(255, ErrorMessage = "Host name has a maximum length of 255 characters")]
         public string HostName
         {
             get { return hostName; }
@@ -115,7 +119,6 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
             set { showDelete = value; }
         }
         
-        //[AllowHtml]
         public string ClosedMessage { get; set; } = string.Empty;
         
         public bool IsClosed { get; set; } = false;

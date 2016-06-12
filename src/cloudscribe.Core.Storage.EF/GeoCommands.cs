@@ -2,13 +2,12 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2016-06-11
+// Last Modified:			2016-06-12
 // 
 
 using cloudscribe.Core.Models.Geography;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -155,127 +154,7 @@ namespace cloudscribe.Core.Storage.EF
                 .ConfigureAwait(false);
             
         }
-
-        //public async Task Add(
-        //    ILanguage language,
-        //    CancellationToken cancellationToken = default(CancellationToken))
-        //{
-        //    ThrowIfDisposed();
-        //    cancellationToken.ThrowIfCancellationRequested();
-        //    if (language == null) throw new ArgumentException("language must not be null");
-        //    if (language.Id == Guid.Empty) throw new ArgumentException("language must have a non-empty id");
-
-        //    var lang = Language.FromILanguage(language);
-            
-        //    dbContext.Languages.Add(lang);
-
-        //    int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
-        //        .ConfigureAwait(false);
-            
-        //}
-
-        //public async Task Update(
-        //    ILanguage language,
-        //    CancellationToken cancellationToken = default(CancellationToken))
-        //{
-        //    ThrowIfDisposed();
-        //    cancellationToken.ThrowIfCancellationRequested();
-        //    if (language == null) throw new ArgumentException("language must not be null");
-        //    if (language.Id == Guid.Empty) throw new ArgumentException("language must have a non-empty id");
-
-        //    var lang = Language.FromILanguage(language);
-
-        //    bool tracking = dbContext.ChangeTracker.Entries<Language>().Any(x => x.Entity.Id == lang.Id);
-        //    if (!tracking)
-        //    {
-        //        dbContext.Languages.Update(lang);
-        //    }
-
-        //    int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
-        //        .ConfigureAwait(false);
-            
-        //}
-
-        //public async Task DeleteLanguage(
-        //    Guid languageId,
-        //    CancellationToken cancellationToken = default(CancellationToken))
-        //{
-        //    ThrowIfDisposed();
-        //    cancellationToken.ThrowIfCancellationRequested();
-        //    if (languageId == Guid.Empty) throw new ArgumentException("id must be a non-empty guid");
-
-        //    var itemToRemove = await dbContext.Languages.SingleOrDefaultAsync(
-        //        x => x.Id == languageId,
-        //        cancellationToken)
-        //        .ConfigureAwait(false);
-
-        //    if (itemToRemove == null) throw new InvalidOperationException("language not found");
-            
-        //    dbContext.Languages.Remove(itemToRemove);
-        //    int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
-        //        .ConfigureAwait(false);
-               
-        //}
-
-        public async Task Add(
-            ICurrency currency,
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            ThrowIfDisposed();
-            cancellationToken.ThrowIfCancellationRequested();
-            if (currency == null) throw new ArgumentException("currency must not be null");
-            if (currency.Id == Guid.Empty) throw new ArgumentException("currency must have a non-empty id");
-
-            var c = Currency.FromICurrency(currency);
-            
-            dbContext.Currencies.Add(c);
-
-            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
-                .ConfigureAwait(false);
-            
-        }
-
-        public async Task Update(
-            ICurrency currency,
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            ThrowIfDisposed();
-            cancellationToken.ThrowIfCancellationRequested();
-            if (currency == null) throw new ArgumentException("currency must not be null");
-            if (currency.Id == Guid.Empty) throw new ArgumentException("currency must have a non-empty id");
-
-            var c = Currency.FromICurrency(currency);
-
-            bool tracking = dbContext.ChangeTracker.Entries<Currency>().Any(x => x.Entity.Id == c.Id);
-            if (!tracking)
-            {
-                dbContext.Currencies.Update(c);
-            }
-
-            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
-                .ConfigureAwait(false);
-            
-        }
-
-        public async Task DeleteCurrency(
-            Guid currencyId,
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            ThrowIfDisposed();
-            cancellationToken.ThrowIfCancellationRequested();
-            if (currencyId == Guid.Empty) throw new ArgumentException("id must be a non-empty guid");
-
-            var itemToRemove = await dbContext.Currencies.SingleOrDefaultAsync(x => x.Id == currencyId, cancellationToken);
-
-            if (itemToRemove == null) throw new InvalidOperationException("currency not found");
-
-            dbContext.Currencies.Remove(itemToRemove);
-            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
-                .ConfigureAwait(false);
-            
-        }
-
-
+        
         #region IDisposable Support
 
         private void ThrowIfDisposed()

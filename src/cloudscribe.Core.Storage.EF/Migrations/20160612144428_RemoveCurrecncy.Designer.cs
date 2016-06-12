@@ -8,9 +8,10 @@ using cloudscribe.Core.Storage.EF;
 namespace cloudscribe.Core.Storage.EF.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    partial class CoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20160612144428_RemoveCurrecncy")]
+    partial class RemoveCurrecncy
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.0-rc2-20901")

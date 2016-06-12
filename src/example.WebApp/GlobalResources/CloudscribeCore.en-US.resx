@@ -927,4 +927,7 @@
   <data name="Update Time Zone" xml:space="preserve">
     <value>Update Time Zone</value>
   </data>
+  <data name="Culture Code" xml:space="preserve">
+    <value>Culture Code</value>
+  </data>
 </root>

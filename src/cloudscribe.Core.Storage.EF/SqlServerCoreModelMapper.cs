@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-17
-// Last Modified:			2016-06-11
+// Last Modified:			2016-06-12
 // 
 
 using cloudscribe.Core.Models;
@@ -758,100 +758,6 @@ namespace cloudscribe.Core.Storage.EF
             entity.HasIndex(p => p.Code);
 
         }
-
-        public void Map(EntityTypeBuilder<Currency> entity)
-        {
-            //entity.ToTable(tableNames.TablePrefix + tableNames.CurrencyTableName);
-            entity.ForSqlServerToTable(tableNames.TablePrefix + tableNames.CurrencyTableName);
-
-            entity.HasKey(p => p.Id);
-
-            entity.Property(p => p.Id)
-               .ForSqlServerHasColumnType("uniqueidentifier")
-               .ForSqlServerHasDefaultValueSql("newid()")
-               .IsRequired()
-               ;
-
-            entity.Property(p => p.Title)
-            .HasMaxLength(50)
-            .IsRequired()
-            ;
-
-            entity.Property(p => p.Code)
-            .HasMaxLength(3)
-            .IsRequired()
-            ;
-
-            entity.HasIndex(p => p.Code);
-
-            entity.Property(p => p.CultureCode)
-            .HasMaxLength(10)
-            .IsRequired()
-            ;
-
-            entity.HasIndex(p => p.CultureCode);
-
-            //entity.Property(p => p.SymbolLeft)
-            //.HasMaxLength(15)
-            //;
-
-            //entity.Property(p => p.SymbolRight)
-            //.HasMaxLength(15)
-            //;
-
-            //entity.Property(p => p.DecimalPointChar)
-            //.HasMaxLength(1)
-            //;
-
-            //entity.Property(p => p.ThousandsPointChar)
-            //.HasMaxLength(1)
-            //;
-
-            //entity.Property(p => p.DecimalPlaces)
-            //.HasMaxLength(1)
-            //;
-
-            //entity.Property(p => p.LastModifiedUtc)
-            //.ForSqlServerHasColumnType("datetime")
-            //.ForSqlServerHasDefaultValueSql("getutcdate()")
-            //;
-
-            //entity.Property(p => p.CreatedUtc)
-            //.ForSqlServerHasColumnType("datetime")
-            //.ForSqlServerHasDefaultValueSql("getutcdate()")
-            //;
-
-        }
-
-        //public void Map(EntityTypeBuilder<Language> entity)
-        //{
-        //    //entity.ToTable(tableNames.TablePrefix + tableNames.LanguageTableName);
-        //    entity.ForSqlServerToTable(tableNames.TablePrefix + tableNames.LanguageTableName);
-
-        //    entity.HasKey(p => p.Id);
-
-        //    entity.Property(p => p.Id)
-        //       .ForSqlServerHasColumnType("uniqueidentifier")
-        //       .ForSqlServerHasDefaultValueSql("newid()")
-        //       ;
-
-        //    entity.Property(p => p.Name)
-        //    .HasMaxLength(255)
-        //    .IsRequired()
-        //    ;
-
-        //    entity.Property(p => p.Code)
-        //    .HasMaxLength(2)
-        //    .IsRequired()
-        //    ;
-
-        //    entity.Property(p => p.Sort)
-        //    //.HasDefaultValue(1)
-        //    //.ValueGeneratedNever()
-            
-        //    ;
-
-        //}
         
         public void Map(EntityTypeBuilder<UserLocation> entity)
         {

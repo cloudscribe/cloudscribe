@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-12-03
-// Last Modified:			2016-05-18
+// Last Modified:			2016-06-12
 // 
 
 
@@ -79,32 +79,7 @@ namespace Microsoft.AspNetCore.Hosting // so it will show up in startup without 
 
                 rowsAffected = await db.SaveChangesAsync();
             }
-
-            
-
-            //count = await db.Languages.CountAsync<Language>();
-            //if (count == 0)
-            //{
-            //    foreach (Language c in InitialData.BuildLanguageList())
-            //    {
-            //        db.Languages.Add(c);
-            //    }
-
-            //    rowsAffected = await db.SaveChangesAsync();
-            //}
-
-            count = await db.Currencies.CountAsync<Currency>();
-            if (count == 0)
-            {
-                foreach (Currency c in InitialData.BuildCurrencyList())
-                {
-                    db.Currencies.Add(c);
-                }
-
-                rowsAffected = await db.SaveChangesAsync();
-            }
-
-                
+ 
             count = await db.Sites.CountAsync<SiteSettings>();
             SiteSettings newSite = null;
             if (count == 0)

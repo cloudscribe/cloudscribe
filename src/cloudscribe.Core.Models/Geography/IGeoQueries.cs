@@ -28,12 +28,5 @@ namespace cloudscribe.Core.Models.Geography
         Task<List<IGeoZone>> GetGeoZonesByCountry(Guid countryId, CancellationToken cancellationToken = default(CancellationToken));
         Task<List<IGeoZone>> StateAutoComplete(Guid countryId, string query, int maxRows, CancellationToken cancellationToken = default(CancellationToken));
 
-        //Task<ILanguage> FetchLanguage(Guid id, CancellationToken cancellationToken = default(CancellationToken));
-        //Task<int> GetLanguageCount(CancellationToken cancellationToken = default(CancellationToken));
-        //Task<List<ILanguage>> GetAllLanguages(CancellationToken cancellationToken = default(CancellationToken));
-        //Task<List<ILanguage>> GetLanguagePage(int pageNumber, int pageSize, CancellationToken cancellationToken = default(CancellationToken));
-
-        Task<ICurrency> FetchCurrency(Guid id, CancellationToken cancellationToken = default(CancellationToken));
-        Task<List<ICurrency>> GetAllCurrencies(CancellationToken cancellationToken = default(CancellationToken));
     }
 }

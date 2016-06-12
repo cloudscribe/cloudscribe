@@ -2,23 +2,23 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-11-15
-// Last Modified:			2016-06-03
+// Last Modified:			2016-06-12
 // 
 
-using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Geography;
+using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.ViewModels.CoreData;
 using cloudscribe.Web.Common.Extensions;
 using cloudscribe.Web.Navigation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Localization;
 
 namespace cloudscribe.Core.Web.Controllers
 {
@@ -29,6 +29,7 @@ namespace cloudscribe.Core.Web.Controllers
             SiteSettings currentSite,
             GeoDataManager geoDataManager,
             IStringLocalizer<CloudscribeCore> localizer,
+            //IOptions<RequestLocalizationOptions> localizationOptionsAccessor,
             IOptions<UIOptions> uiOptionsAccessor
             )
         {
@@ -36,12 +37,14 @@ namespace cloudscribe.Core.Web.Controllers
             dataManager = geoDataManager;
             uiOptions = uiOptionsAccessor.Value;
             sr = localizer;
+            //localizationOptions = localizationOptionsAccessor.Value;
         }
 
         private ISiteSettings Site;
         private GeoDataManager dataManager;
         private UIOptions uiOptions;
         private IStringLocalizer sr;
+        //private RequestLocalizationOptions localizationOptions;
 
 
         // GET: /CoreData/
@@ -370,90 +373,5 @@ namespace cloudscribe.Core.Web.Controllers
                 });
         }
 
-
-        [HttpGet]
-        public async Task<IActionResult> CurrencyList()
-        {
-            var model = await dataManager.GetAllCurrencies();
-
-            return View(model);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> CurrencyEdit(Guid? currencyId)
-        {
-            var model = new CurrencyViewModel();
-
-            if (currencyId.HasValue)
-            {
-                var currency = await dataManager.FetchCurrency(currencyId.Value);
-                model.CurrencyId = currency.Id;
-                model.Title = currency.Title;
-                model.Code = currency.Code;
-            }
-            
-            return View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CurrencyEdit(CurrencyViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
-            string successFormat;
-            ICurrency currency = null;
-            bool add = false;
-            if (model.CurrencyId != Guid.Empty)
-            {
-                currency = await dataManager.FetchCurrency(model.CurrencyId);
-                successFormat = sr["The currency {0} was successfully updated."];
-            }
-            else
-            {
-                add = true;
-                currency = new Currency();
-                successFormat = sr["The currency {0} was successfully created."];
-            }
-
-            currency.Code = model.Code;
-            currency.Title = model.Title;
-
-            if(add)
-            {
-                await dataManager.Add(currency);
-            }
-            else
-            {
-                await dataManager.Update(currency);
-            }
-            
-            this.AlertSuccess(string.Format(successFormat, currency.Title), true);
-            
-            return RedirectToAction("CurrencyList");
-
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CurrencyDelete(Guid currencyId)
-        {
-            var currency = await dataManager.FetchCurrency(currencyId);
-            
-            if (currency != null)
-            {
-                await dataManager.DeleteCurrency(currency);
-                
-                this.AlertWarning(string.Format(
-                        sr["The currency {0} was successfully deleted."],
-                        currency.Title)
-                        , true);
-            }
-
-            return RedirectToAction("CurrencyList");
-        }
     }
 }

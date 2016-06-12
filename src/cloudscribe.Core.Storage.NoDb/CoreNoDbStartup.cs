@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-05-15
-// Last Modified:			2016-05-15
+// Last Modified:			2016-06-12
 // 
 
 using cloudscribe.Core.Models;
@@ -69,25 +69,6 @@ namespace Microsoft.AspNetCore.Hosting // so it will show up in startup without 
                 }
 
                 foreach (GeoZone c in InitialData.BuildStateList())
-                {
-                    await geoCommands.Add(c);
-                }
-            }
-            
-            //count = await geoQueries.GetLanguageCount();
-            //if (count == 0)
-            //{
-            //    foreach (Language c in InitialData.BuildLanguageList())
-            //    {
-            //        await geoCommands.Add(c);
-            //    }
-            //}
-
-            var all = await geoQueries.GetAllCurrencies();
-            count = all.Count;
-            if (count == 0)
-            {
-                foreach (Currency c in InitialData.BuildCurrencyList())
                 {
                     await geoCommands.Add(c);
                 }
