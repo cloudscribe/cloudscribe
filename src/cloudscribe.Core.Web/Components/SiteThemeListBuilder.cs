@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //  Author:                     Joe Audette
 //  Created:                    2015-10-09
-//	Last Modified:              2016-06-02
+//	Last Modified:              2016-06-12
 //
 
 using cloudscribe.Core.Models;
@@ -34,11 +34,11 @@ namespace cloudscribe.Core.Web.Components
         private string appBasePath;
         private IHttpContextAccessor contextAccessor;
 
-        public List<SelectListItem> GetAvailableThemes()
+        public List<SelectListItem> GetAvailableThemes(string aliasId = null)
         {
             List<SelectListItem> layouts = new List<SelectListItem>();
 
-            string pathToViews = GetPathToViews();
+            string pathToViews = GetPathToViews(aliasId);
             if(Directory.Exists(pathToViews))
             {
                 var directoryInfo = new DirectoryInfo(pathToViews);
@@ -64,8 +64,15 @@ namespace cloudscribe.Core.Web.Components
 
         }
 
-        private string GetPathToViews()
+        private string GetPathToViews(string aliasId = null)
         {
+            if(!string.IsNullOrEmpty(aliasId))
+            {
+                return appBasePath + "/sitefiles/"
+               + aliasId
+               + "/themes/".Replace("/", Path.DirectorySeparatorChar.ToString());
+            }
+
             var tenant = contextAccessor.HttpContext.GetTenant<SiteSettings>();
             // TODO: more configurable?
             return appBasePath + "/sitefiles/" 

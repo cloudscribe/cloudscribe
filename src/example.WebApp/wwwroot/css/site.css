@@ -1,7 +1,6 @@
-﻿body {
-    padding-top: 50px;
-    padding-bottom: 20px;
-}
+﻿/*
+body {padding-top: 50px; padding-bottom: 20px;}
+    */
 
 /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */
@@ -47,10 +46,13 @@ textarea {
 
 h2.logitem { font-size: 1.1em;  }
 
+
+/*
+
 .sidebar .sidebar-search {
     padding: 15px;
 }
-/*
+
 .sidebar ul li {
     border-bottom: 1px solid #e7e7e7;
 }
@@ -58,7 +60,7 @@ h2.logitem { font-size: 1.1em;  }
 .sidebar ul li a.active {
     background-color: #eee;
 }
-    */
+
 
 .sidebar .arrow {
     float: right;
@@ -85,19 +87,25 @@ h2.logitem { font-size: 1.1em;  }
     padding-left: 52px;
 }
 
-ul.breadcrumb {margin-bottom:0;}
+    */
 
+
+
+ul.breadcrumb {margin-bottom:0;}
+/*
 @media(min-width:768px) {
     .sidebar {
         z-index: 1;
         position: absolute;
-        /* width: 250px; */
-        /* margin-top: 51px; */
+       
     }
     .sidebar-nav.navbar-collapse { padding: 0 0 0 0;}
 }
+*/
 
 .agreementcontainer { overflow:auto; border:1px solid #CCC; height:300px; }
+
+.navbar { min-height:50px; }
 
 div.navbar-gravatar { margin: 10px 0 0 0; }
     

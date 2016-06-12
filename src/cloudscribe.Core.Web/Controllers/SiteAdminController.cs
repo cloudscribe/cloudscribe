@@ -164,7 +164,7 @@ namespace cloudscribe.Core.Web.Controllers
             }
             
             model.Theme = selectedSite.Theme;
-            model.AvailableLayouts = layoutListBuilder.GetAvailableThemes();
+            model.AvailableLayouts = layoutListBuilder.GetAvailableThemes(selectedSite.AliasId);
             
             // can only delete from server admin site/cannot delete server admin site
             if (siteManager.CurrentSite.IsServerAdminSite)
