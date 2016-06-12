@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2016-05-12
+// Last Modified:			2016-06-12
 // 
 
 using System;
@@ -17,6 +17,12 @@ namespace cloudscribe.Core.Models
         Task<ISiteSettings> Fetch(Guid siteId, CancellationToken cancellationToken = default(CancellationToken));
         Task<ISiteSettings> Fetch(string hostName, CancellationToken cancellationToken = default(CancellationToken));
         Task<ISiteSettings> FetchByFolderName(string folderName, CancellationToken cancellationToken = default(CancellationToken));
+
+        //TODO: implement
+        //Task<bool> AliasIdIsAvailable(
+        //    Guid siteId,
+        //    string aliasId,
+        //    CancellationToken cancellationToken = default(CancellationToken));
 
         Task<int> GetCount(CancellationToken cancellationToken = default(CancellationToken));
         Task<int> CountOtherSites(Guid currentSiteGuid, CancellationToken cancellationToken = default(CancellationToken));

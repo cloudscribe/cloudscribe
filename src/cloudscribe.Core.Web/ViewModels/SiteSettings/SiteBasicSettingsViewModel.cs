@@ -35,31 +35,25 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
             set { id = value; }
 
         }
-
-        private string siteName = string.Empty;
-
+        
         [Required(ErrorMessage = "Site Name is required")]
         [StringLength(255,ErrorMessage ="Site Name has a maximum length of 255 characters")]
-        public string SiteName
-        {
-            get { return siteName; }
-            set { siteName = value; }
-        }
+        public string SiteName { get; set; }
+        
 
-        private string aliasId = string.Empty;
+        
         /// <summary>
         /// no spaces, only chars that are good for folder names
         /// this is an alternate identifier for a site whose main purpose
         /// is so we don't have to use an ugly guid string for folder name
         /// to host site specific files such as themes
+        /// TODO: need to validate this so that one site cannaot change their aliasid to match a different site
+        /// and thus steal use of their themes, unless multi-tenant options allow it
         /// </summary>
         [RegularExpression(@"^[a-zA-Z0-9_-]+$", ErrorMessage = "For AliasId, only digits, numbers, - and _ allowed, no spaces allowed")]
         [StringLength(36, ErrorMessage = "AliasId has a maximum length of 36 characters")]
-        public string AliasId
-        {
-            get { return aliasId; }
-            set { aliasId = value; }
-        }
+        public string AliasId { get; set; }
+        
 
         private string siteFolderName = string.Empty;
         [RegularExpression(@"^[a-zA-Z0-9_-]+$", ErrorMessage = "For Site Folder Name, only digits, numbers, - and _ allowed, no spaces allowed")]

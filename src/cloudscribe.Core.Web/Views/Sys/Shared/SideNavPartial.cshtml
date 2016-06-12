@@ -1,15 +1,5 @@
 ﻿@using cloudscribe.Web.Navigation
-
 @model NavigationViewModel
-
-@{
-// Copyright (c) Source Tree Solutions, LLC. All rights reserved.
-// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
-// Author: Joe Audette
-// Created 2015-09-10
-// Last Modified: 2015-09-16
-}
-
 @if ((Model.TempNode != null) && (Model.HasVisibleChildren(Model.TempNode)))
 {
     @:<ul class="nav navbar-nav nav-second-level">
@@ -30,7 +20,6 @@
                     @:
                     <li><a href="@Url.Content(Model.AdjustUrl(childNode))">@childNode.Value.Text</a></li>
                 }
-
             }
             else
             {
@@ -53,12 +42,8 @@
                         @Model.UpdateTempNode(childNode)
                         @Html.Partial("SideNavPartial", Model) @* recursion *@
                     </li>
-
                 }
-
             }
         }
-
         @:</ul>
-
 }

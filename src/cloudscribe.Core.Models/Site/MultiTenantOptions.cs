@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-08-01
-// Last Modified:			2016-06-05
+// Last Modified:			2016-06-12
 // 
 
 using System;
@@ -43,8 +43,19 @@ namespace cloudscribe.Core.Models
             get {  return relatedSiteId;
             }
             set { relatedSiteId = value; }
-        } 
-            
+        }
+
+        /// <summary>
+        /// AliasId is a string used as an alternative (to the guid siteid) to identify a site for use in the file system
+        /// it is used for locating site theme files under /sitefiles/[aliasid/themes
+        /// the default is false, in which case we enforce that a site admin cannot change his site aliasid to match
+        /// another site's aliasid. Setting this to true would allow more than one site to use the same aliasid and thus
+        /// themes would be shared.
+        /// Note that if this is true and aliasid is configured them same in more than one site, changing it back to false
+        /// will not automatically be changed, so use this carefully.
+        /// This setting is useful if the sites belong to the same client/customer and you want to use common themes amoung them.
+        /// </summary>
+        public bool AllowSharedAliasId { get; set; } = false;
 
         public string DefaultNewUserRoles { get; set; } = "Authenticated Users";
     }
