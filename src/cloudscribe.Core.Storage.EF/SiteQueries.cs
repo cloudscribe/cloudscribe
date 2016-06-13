@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2016-05-18
+// Last Modified:			2016-06-13
 // 
 
 using cloudscribe.Core.Models;
@@ -28,6 +28,9 @@ namespace cloudscribe.Core.Storage.EF
             Guid siteId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
             var item = await dbContext.Sites.AsNoTracking().SingleOrDefaultAsync(
                     x => x.Id.Equals(siteId)
                     , cancellationToken)
@@ -48,6 +51,9 @@ namespace cloudscribe.Core.Storage.EF
             string hostName,
             CancellationToken cancellationToken = default(CancellationToken))
         {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
             var host = await dbContext.SiteHosts.AsNoTracking().FirstOrDefaultAsync(
                 x => x.HostName.Equals(hostName)
                 , cancellationToken)
@@ -86,6 +92,9 @@ namespace cloudscribe.Core.Storage.EF
             string folderName,
             CancellationToken cancellationToken = default(CancellationToken))
         {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
             ISiteSettings site = null;
             if (!string.IsNullOrEmpty(folderName) && folderName != "root")
             {
@@ -94,7 +103,6 @@ namespace cloudscribe.Core.Storage.EF
                 , cancellationToken)
                 .ConfigureAwait(false);
             }
-
 
             if (site == null)
             {
@@ -151,13 +159,36 @@ namespace cloudscribe.Core.Storage.EF
 
         //}
 
+        public async Task<bool> AliasIdIsAvailable(
+            Guid siteId,
+            string aliasId,
+            CancellationToken cancellationToken = default(CancellationToken)
+            )
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var item = await dbContext.Sites.FirstOrDefaultAsync(
+                    x => x.Id != siteId
+                    && x.AliasId == aliasId
+                    ).ConfigureAwait(false);
+            // if no site exists that has that alias with a different siteid then it is available
+            if (item == null) { return true; }
+            return false;
+        }
+
         public async Task<int> GetCount(CancellationToken cancellationToken = default(CancellationToken))
         {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
             return await dbContext.Sites.CountAsync<SiteSettings>(cancellationToken).ConfigureAwait(false);
         }
 
         public async Task<List<ISiteInfo>> GetList(CancellationToken cancellationToken = default(CancellationToken))
         {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
             var query = from x in dbContext.Sites
                         orderby x.SiteName ascending
                         select new SiteInfo
@@ -183,6 +214,9 @@ namespace cloudscribe.Core.Storage.EF
             Guid currentSiteId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
             return await dbContext.Sites.CountAsync<SiteSettings>(
                 x => x.Id != currentSiteId
                 , cancellationToken);
@@ -194,6 +228,9 @@ namespace cloudscribe.Core.Storage.EF
             int pageSize,
             CancellationToken cancellationToken = default(CancellationToken))
         {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
             int offset = (pageSize * pageNumber) - pageSize;
 
             var query = from x in dbContext.Sites
@@ -224,6 +261,9 @@ namespace cloudscribe.Core.Storage.EF
 
         public async Task<List<ISiteHost>> GetAllHosts(CancellationToken cancellationToken = default(CancellationToken))
         {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
             var query = from x in dbContext.SiteHosts
                         orderby x.HostName ascending
                         select x;
@@ -249,6 +289,9 @@ namespace cloudscribe.Core.Storage.EF
 
         public async Task<int> GetHostCount(CancellationToken cancellationToken = default(CancellationToken))
         {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
             return await dbContext.SiteHosts.CountAsync<SiteHost>(cancellationToken);
         }
 
@@ -257,6 +300,9 @@ namespace cloudscribe.Core.Storage.EF
             int pageSize,
             CancellationToken cancellationToken = default(CancellationToken))
         {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
             int offset = (pageSize * pageNumber) - pageSize;
 
             var query = from x in dbContext.SiteHosts
@@ -277,6 +323,9 @@ namespace cloudscribe.Core.Storage.EF
             Guid siteId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
             var query = from x in dbContext.SiteHosts
                         where x.SiteId == siteId
                         orderby x.HostName ascending
@@ -295,6 +344,9 @@ namespace cloudscribe.Core.Storage.EF
             string hostName,
             CancellationToken cancellationToken = default(CancellationToken))
         {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
             var query = from x in dbContext.SiteHosts
                         where x.HostName == hostName
                         orderby x.HostName ascending
@@ -309,6 +361,9 @@ namespace cloudscribe.Core.Storage.EF
         public async Task<List<string>> GetAllSiteFolders(
             CancellationToken cancellationToken = default(CancellationToken))
         {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
             var query = from x in dbContext.Sites
                         where x.SiteFolderName != null && x.SiteFolderName != ""
                         orderby x.SiteFolderName ascending

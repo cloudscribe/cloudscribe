@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:                  Joe Audette
 // Created:                 2016-05-13
-// Last Modified:           2016-05-14
+// Last Modified:           2016-06-13
 // 
 
 using cloudscribe.Core.Models;
@@ -128,6 +128,28 @@ namespace cloudscribe.Core.Storage.NoDb
 
             return site;
 
+        }
+
+        public async Task<bool> AliasIdIsAvailable(
+            Guid siteId,
+            string aliasId,
+            CancellationToken cancellationToken = default(CancellationToken)
+            )
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await EnsureProjectId().ConfigureAwait(false);
+
+            var allSites = await queries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+
+            var item = allSites.Where(
+                    x => x.Id != siteId
+                    && x.AliasId == aliasId
+                    ).FirstOrDefault();
+            // if no site exists that has that alias with a different siteid then it is available
+            if (item == null) { return true; }
+            return false;
         }
 
         public async Task<int> GetCount(CancellationToken cancellationToken = default(CancellationToken))

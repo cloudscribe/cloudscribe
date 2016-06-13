@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc;
 
 namespace cloudscribe.Core.Web.ViewModels.SiteSettings
 {
@@ -25,7 +26,7 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         public SiteBasicSettingsViewModel()
         {
             allTimeZones = new List<SelectListItem>();
-            availableLayouts = new List<SelectListItem>();
+            availableThemes = new List<SelectListItem>();
         }
 
         private Guid id = Guid.Empty;
@@ -39,9 +40,9 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         [Required(ErrorMessage = "Site Name is required")]
         [StringLength(255,ErrorMessage ="Site Name has a maximum length of 255 characters")]
         public string SiteName { get; set; }
-        
 
-        
+
+
         /// <summary>
         /// no spaces, only chars that are good for folder names
         /// this is an alternate identifier for a site whose main purpose
@@ -50,44 +51,35 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         /// TODO: need to validate this so that one site cannaot change their aliasid to match a different site
         /// and thus steal use of their themes, unless multi-tenant options allow it
         /// </summary>
+        [Remote("AliasIdAvailable", "SiteAdmin", AdditionalFields = "SiteId",
+           ErrorMessage = "AliasId not available, please try another value",
+           HttpMethod = "Post")]
         [RegularExpression(@"^[a-zA-Z0-9_-]+$", ErrorMessage = "For AliasId, only digits, numbers, - and _ allowed, no spaces allowed")]
         [StringLength(36, ErrorMessage = "AliasId has a maximum length of 36 characters")]
         public string AliasId { get; set; }
-        
 
-        private string siteFolderName = string.Empty;
+
+        [Remote("FolderNameAvailable", "SiteAdmin", AdditionalFields = "SiteId",
+           ErrorMessage = "Requested Site Folder Name is not available, please try another value",
+           HttpMethod = "Post")]
         [RegularExpression(@"^[a-zA-Z0-9_-]+$", ErrorMessage = "For Site Folder Name, only digits, numbers, - and _ allowed, no spaces allowed")]
         [StringLength(50, ErrorMessage ="Site Folder name has a maximum length of 50 characters")]
-        public string SiteFolderName
-        {
-            get { return siteFolderName; }
-            set { siteFolderName = value; }
-        }
-
-        private string hostName = string.Empty;
+        public string SiteFolderName { get; set; }
+        
+        [RegularExpression(@"^[a-zA-Z0-9_-]+$", ErrorMessage = "For Host name, only digits, numbers, - and _ allowed, no spaces allowed")]
         [StringLength(255, ErrorMessage = "Host name has a maximum length of 255 characters")]
-        public string HostName
-        {
-            get { return hostName; }
-            set { hostName = value; }
-        }
-
-        private string timeZoneId = "America/New_York";
-
+        public string HostName { get; set; }
+        
         [Required(ErrorMessage = "Time zone is required")]
-        public string TimeZoneId
-        {
-            get { return timeZoneId; }
-            set { timeZoneId = value; }
-        }
-
+        public string TimeZoneId { get; set; } = "America/New_York";
+        
         public string Theme { get; set; } = string.Empty;
 
-        private List<SelectListItem> availableLayouts = null;
-        public List<SelectListItem> AvailableLayouts
+        private List<SelectListItem> availableThemes = null;
+        public List<SelectListItem> AvailableThemes
         {
-            get { return availableLayouts; }
-            set { availableLayouts = value; }
+            get { return availableThemes; }
+            set { availableThemes = value; }
         }
 
         private IEnumerable<SelectListItem> allTimeZones = null;

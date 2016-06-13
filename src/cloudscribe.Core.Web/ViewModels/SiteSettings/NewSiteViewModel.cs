@@ -18,7 +18,7 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         public NewSiteViewModel()
         {
             allTimeZones = new List<SelectListItem>();
-            availableLayouts = new List<SelectListItem>();
+            availableThemes = new List<SelectListItem>();
         }
 
         private Guid id = Guid.Empty;
@@ -46,7 +46,11 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         /// is so we don't have to use an ugly guid string for folder name
         /// to host site specific files such as themes
         /// </summary>
-        [RegularExpression(@"^[a-zA-Z0-9_-]+$", ErrorMessage = "only digits, numbers, - and _ allowed, no spaces allowed"), StringLength(36)]
+        [Remote("AliasIdAvailable", "SiteAdmin", AdditionalFields = "SiteId",
+           ErrorMessage = "AliasId not available, please try another value",
+           HttpMethod = "Post")]
+        [RegularExpression(@"^[a-zA-Z0-9_-]+$", ErrorMessage = "only digits, numbers, - and _ allowed, no spaces allowed")]
+        [StringLength(36, ErrorMessage = "AliasId has a maximum length of 36 characters")]
         public string AliasId
         {
             get { return aliasId; }
@@ -56,19 +60,16 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         // TODO: need to revive the RequiredWhen attribute
         // site folder name should be required when creating new sites in multitenat mode folder
 
-        private string siteFolderName = string.Empty;
-        public string SiteFolderName
-        {
-            get { return siteFolderName; }
-            set { siteFolderName = value; }
-        }
+        [Remote("FolderNameAvailable", "SiteAdmin", AdditionalFields = "SiteId",
+           ErrorMessage = "Requested Site Folder Name is not available, please try another value",
+           HttpMethod = "Post")]
+        [RegularExpression(@"^[a-zA-Z0-9_-]+$", ErrorMessage = "For Site Folder Name, only digits, numbers, - and _ allowed, no spaces allowed")]
+        [StringLength(50, ErrorMessage = "Site Folder name has a maximum length of 50 characters")]
+        public string SiteFolderName { get; set; }
+        
 
-        private string hostName = string.Empty;
-        public string HostName
-        {
-            get { return hostName; }
-            set { hostName = value; }
-        }
+        public string HostName { get; set; }
+        
 
         private string timeZoneId = "America/New_York";
 
@@ -81,11 +82,11 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
 
         public string Theme { get; set; } = string.Empty;
 
-        private List<SelectListItem> availableLayouts = null;
-        public List<SelectListItem> AvailableLayouts
+        private List<SelectListItem> availableThemes = null;
+        public List<SelectListItem> AvailableThemes
         {
-            get { return availableLayouts; }
-            set { availableLayouts = value; }
+            get { return availableThemes; }
+            set { availableThemes = value; }
         }
 
         private IEnumerable<SelectListItem> allTimeZones = null;

@@ -14,7 +14,6 @@ using cloudscribe.Web.Common.Razor;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using System;
@@ -33,7 +32,6 @@ namespace cloudscribe.Core.Web.Controllers
             IOptions<MultiTenantOptions> multiTenantOptions,
             IOptions<UIOptions> uiOptionsAccessor,
             IThemeListBuilder layoutListBuilder,
-           // IMemoryCache cache,
             IStringLocalizer<CloudscribeCore> localizer,
             ITimeZoneHelper timeZoneHelper
             )
@@ -48,7 +46,6 @@ namespace cloudscribe.Core.Web.Controllers
             this.geoDataManager = geoDataManager;
             uiOptions = uiOptionsAccessor.Value;
             this.layoutListBuilder = layoutListBuilder;
-           // this.cache = cache;
             sr = localizer;
             tzHelper = timeZoneHelper;
         }
@@ -60,7 +57,6 @@ namespace cloudscribe.Core.Web.Controllers
         private IStringLocalizer sr;
         private IThemeListBuilder layoutListBuilder;
         private UIOptions uiOptions;
-       // private IMemoryCache cache;
         private ITimeZoneHelper tzHelper;
 
         // GET: /SiteAdmin
@@ -164,7 +160,7 @@ namespace cloudscribe.Core.Web.Controllers
             }
             
             model.Theme = selectedSite.Theme;
-            model.AvailableLayouts = layoutListBuilder.GetAvailableThemes(selectedSite.AliasId);
+            model.AvailableThemes = layoutListBuilder.GetAvailableThemes(selectedSite.AliasId);
             
             // can only delete from server admin site/cannot delete server admin site
             if (siteManager.CurrentSite.IsServerAdminSite)
@@ -237,7 +233,7 @@ namespace cloudscribe.Core.Web.Controllers
                     return View(model);
                 }
                 
-                var folderAvailable = await siteManager.FolderNameIsAvailable(selectedSite, model.SiteFolderName);
+                var folderAvailable = await siteManager.FolderNameIsAvailable(selectedSite.Id, model.SiteFolderName);
                 if (!folderAvailable)
                 {
                     ModelState.AddModelError("foldererror", "The selected folder name is already in use on another site.");
@@ -292,7 +288,7 @@ namespace cloudscribe.Core.Web.Controllers
                 // just edited from site list so redirect there
                 return RedirectToAction("SiteList", new { pageNumber = model.ReturnPageNumber });
             }
-
+            
             return RedirectToAction("Index");
         }
 
@@ -342,7 +338,7 @@ namespace cloudscribe.Core.Web.Controllers
                     return View(model);
                 }
 
-                bool folderAvailable = await siteManager.FolderNameIsAvailable(newSite, model.SiteFolderName);
+                bool folderAvailable = await siteManager.FolderNameIsAvailable(newSite.Id, model.SiteFolderName);
                 if (!folderAvailable)
                 {
                     ModelState.AddModelError("foldererror", sr["The selected folder name is already in use on another site."]);
@@ -412,11 +408,21 @@ namespace cloudscribe.Core.Web.Controllers
 
         }
 
+        [HttpPost]
         public async Task<JsonResult> AliasIdAvailable(Guid? siteId, string aliasId)
         {
             var selectedSiteId = Guid.Empty;
             if (siteId.HasValue) { selectedSiteId = siteId.Value; }
             bool available = await siteManager.AliasIdIsAvailable(selectedSiteId, aliasId);
+            return Json(available);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> FolderNameAvailable(Guid? siteId, string folderName)
+        {
+            var selectedSiteId = Guid.Empty;
+            if (siteId.HasValue) { selectedSiteId = siteId.Value; }
+            bool available = await siteManager.FolderNameIsAvailable(selectedSiteId, folderName);
             return Json(available);
         }
 

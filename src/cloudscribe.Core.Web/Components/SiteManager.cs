@@ -108,12 +108,12 @@ namespace cloudscribe.Core.Web.Components
         /// <param name=""></param>
         /// <param name="requestedFolderName"></param>
         /// <returns></returns>
-        public async Task<bool> FolderNameIsAvailable(ISiteSettings requestingSite, string requestedFolderName)
+        public async Task<bool> FolderNameIsAvailable(Guid requestingSiteId, string requestedFolderName)
         {
             var matchingSite = await queries.FetchByFolderName(requestedFolderName, CancellationToken);
             if(matchingSite == null) { return true; }
             if(matchingSite.SiteFolderName != requestedFolderName) { return true; }
-            if(matchingSite.Id == requestingSite.Id) { return true; }
+            if(matchingSite.Id == requestingSiteId) { return true; }
 
             return false;
 
@@ -121,23 +121,12 @@ namespace cloudscribe.Core.Web.Components
 
         public async Task<bool> AliasIdIsAvailable(Guid requestingSiteId, string requestedAliasId)
         {
+            if (multiTenantOptions.AllowSharedAliasId) return true;
+
             if (string.IsNullOrWhiteSpace(requestedAliasId)) return false;
             if (requestedAliasId.Length > 36) return false;
-            var list = await queries.GetList(CancellationToken).ConfigureAwait(false);
+            return await queries.AliasIdIsAvailable(requestingSiteId, requestedAliasId, CancellationToken).ConfigureAwait(false);
             
-            foreach(var s in list)
-            {
-                if(s.AliasId == requestedAliasId)
-                {
-                    if ((requestingSiteId == s.Id)) return true;
-
-                    return false;
-
-                }
-            }
-
-            return true;
-
         }
 
         public async Task Update(ISiteSettings site)

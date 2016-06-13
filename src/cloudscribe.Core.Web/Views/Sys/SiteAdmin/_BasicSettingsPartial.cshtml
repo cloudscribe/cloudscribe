@@ -69,13 +69,13 @@
                 <span asp-validation-for="TimeZoneId" class="text-danger"></span> 
             </div>
         </div>
-        @if (Model.AvailableLayouts.Count > 0)
+        @if (Model.AvailableThemes.Count > 0)
         {
             <div class="form-group">
                 <label asp-for="Theme" class="col-md-2 control-label">@sr["Theme"]</label>
                 <div class="col-md-10">
                     <select id="Layout" asp-for="Theme"
-                            asp-items="Model.AvailableLayouts" class="form-control"></select>
+                            asp-items="Model.AvailableThemes" class="form-control"></select>
                     <span asp-validation-for="Theme" class="text-danger"></span>
                 </div>
             </div>
@@ -125,6 +125,3 @@
         <input asp-for="ReturnPageNumber" type="hidden" />
     </form>       
 }
-    @section Scripts {
-        @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
-    }
