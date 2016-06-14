@@ -28,13 +28,8 @@ namespace cloudscribe.Core.Web.ViewModels.RoleAdmin
         public RoleViewModel Role { get; set; }
         public IList<IUserInfo> Members { get; set; }
         public PaginationSettings Paging { get; set; }
-
-        private string searchQuery = string.Empty;
-        public string SearchQuery
-        {
-            get { return searchQuery; }
-            set { searchQuery = value; }
-        }
+        public string SearchQuery { get; set; } = string.Empty;
+        
 
     }
 }

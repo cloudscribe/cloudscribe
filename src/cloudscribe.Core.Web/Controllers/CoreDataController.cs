@@ -281,6 +281,12 @@ namespace cloudscribe.Core.Web.Controllers
                 if ((state != null) && (state.CountryId == countryId))
                 {
                     model = GeoZoneViewModel.FromIGeoZone(state);
+
+                    var currentCrumbAdjuster = new NavigationNodeAdjuster(Request.HttpContext);
+                    currentCrumbAdjuster.KeyToAdjust = "StateEdit";
+                    currentCrumbAdjuster.AdjustedText = model.Name;
+                    currentCrumbAdjuster.ViewFilterName = NamedNavigationFilters.Breadcrumbs; // this is default but showing here for readers of code 
+                    currentCrumbAdjuster.AddToContext();
                 }
                 else
                 {
@@ -299,13 +305,13 @@ namespace cloudscribe.Core.Web.Controllers
             model.CountryListReturnPageNumber = crp;
 
             var country = await dataManager.FetchCountry(countryId);
-            model.Country = GeoCountryViewModel.FromIGeoCountry(country);
+            model.CountryName = country.Name;
 
-            var currentCrumbAdjuster = new NavigationNodeAdjuster(Request.HttpContext);
-            currentCrumbAdjuster.KeyToAdjust = "StateEdit";
-            currentCrumbAdjuster.AdjustedText = model.Heading;
-            currentCrumbAdjuster.ViewFilterName = NamedNavigationFilters.Breadcrumbs; // this is default but showing here for readers of code 
-            currentCrumbAdjuster.AddToContext();
+            var stateListCrumbAdjuster = new NavigationNodeAdjuster(Request.HttpContext);
+            stateListCrumbAdjuster.KeyToAdjust = "StateListPage";
+            stateListCrumbAdjuster.AdjustedText = string.Format(sr["{0} States"], model.CountryName);
+            stateListCrumbAdjuster.ViewFilterName = NamedNavigationFilters.Breadcrumbs; // this is default but showing here for readers of code 
+            stateListCrumbAdjuster.AddToContext();
             
             return View(model);
 
@@ -317,7 +323,7 @@ namespace cloudscribe.Core.Web.Controllers
         {  
             if (!ModelState.IsValid)
             {
-                return PartialView(model);
+                return View(model);
             }
 
             string successFormat;

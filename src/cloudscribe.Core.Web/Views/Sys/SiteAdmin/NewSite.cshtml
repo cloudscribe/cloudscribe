@@ -16,9 +16,7 @@
     CkeditorOptions ckOptions = ckOptionsAccessor.Value;
 }
 <h2>@ViewBag.Title</h2>
-
 <form method="post" class="form-horizontal" role="form" asp-antiforgery="true">
-
     <div asp-validation-summary="All" class="text-danger"></div>
     <input asp-for="SiteId" type="hidden" />
     <input asp-for="ReturnPageNumber" type="hidden" />
@@ -99,7 +97,6 @@
                       data-ckeditor-unobtrusive-config-toolbar="Full"
                       data-ckeditor-unobtrusive-config-language="@System.Globalization.CultureInfo.CurrentUICulture.Name"></textarea>
             <span asp-validation-for="ClosedMessage" class="text-danger"></span>
-
         </div>
     </div>
     <h2 class="col-md-offset-2 col-md-10">@sr["New Site Administrator"]</h2>
@@ -137,8 +134,7 @@
                 <input asp-for="ConfirmPassword" type="password" class="form-control" />
                 <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
             </div>
-        </div>
-        
+        </div>      
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
             <button name="submit" type="submit" class="btn btn-default">@sr["Save"]</button>  

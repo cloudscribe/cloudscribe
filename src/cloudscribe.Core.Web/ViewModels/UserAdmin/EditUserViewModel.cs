@@ -25,9 +25,9 @@ namespace cloudscribe.Core.Web.ViewModels.Account
 
         public Guid UserId { get; set; } = Guid.Empty;
         public Guid SiteId { get; set; } = Guid.Empty;
-        
+
         [Required(ErrorMessage = "Email is required")]
-        [EmailAddress(ErrorMessage = "Invalid email format")]
+        [EmailAddress(ErrorMessage = "The email address does not appear as valid")]
         public string Email { get; set; }
 
         public bool EmailConfirmed { get; set; }

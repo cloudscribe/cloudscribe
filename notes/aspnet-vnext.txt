@@ -4,6 +4,8 @@ http://dotnet.github.io/docs/core-concepts/libraries/libraries-with-cli.html
 
 https://github.com/dotnet/corefx/blob/master/Documentation/architecture/net-platform-standard.md
 
+http://nblumhardt.com/2016/06/structured-logging-concepts-in-net-series-1/
+https://nblumhardt.com/2016/06/events-and-levels-structured-logging-concepts-in-net-2/
 
 http://dotnet.github.io/docs/core-concepts/index.html
 http://dotnet.github.io/docs/core-concepts/dnx-migration.html

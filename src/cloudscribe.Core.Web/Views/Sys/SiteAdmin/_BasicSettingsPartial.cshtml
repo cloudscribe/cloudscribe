@@ -17,7 +17,6 @@
     CkeditorOptions ckOptions = ckOptionsAccessor.Value;
 }
 <form method="post" class="form-horizontal" role="form" asp-antiforgery="true">
-
         <div asp-validation-summary="All" class="text-danger"></div> 
         <input asp-for="SiteId" type="hidden" />
         <input asp-for="ReturnPageNumber" type="hidden" />
@@ -98,8 +97,7 @@
                           data-ckeditor-unobtrusive-config-toolbar="Full"
                           data-ckeditor-unobtrusive-config-language="@System.Globalization.CultureInfo.CurrentUICulture.Name"
                           ></textarea>
-                <span asp-validation-for="ClosedMessage" class="text-danger"></span>
-               
+                <span asp-validation-for="ClosedMessage" class="text-danger"></span>             
             </div>
         </div>
         <div class="form-group">
@@ -114,8 +112,7 @@
                     @Html.ValidationMessage("deleteerror", new { @class = "text-danger" })
                 }
             </div>
-        </div>
-  
+        </div> 
 </form>
 @if ((Model.ShowDelete) && (Model.SiteId != Guid.Empty))
 {

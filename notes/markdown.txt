@@ -1,3 +1,7 @@
+
+http://xoofx.com/blog/2016/06/13/implementing-a-markdown-processor-for-dotnet/
+https://github.com/lunet-io/markdig
+
 markdown is used in github frequently for documentation
 it is also used on stackoverflow and other sites for users to enter text that can be safely converted to html and preventing xss
 

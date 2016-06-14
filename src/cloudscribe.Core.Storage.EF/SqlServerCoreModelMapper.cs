@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-17
-// Last Modified:			2016-06-12
+// Last Modified:			2016-06-14
 // 
 
 using cloudscribe.Core.Models;
@@ -499,10 +499,15 @@ namespace cloudscribe.Core.Storage.EF
 
             entity.Property(p => p.DisplayName)
             .IsRequired()
-            .HasMaxLength(100)
-            ;
+            .HasMaxLength(100);
 
             entity.HasIndex(p => p.DisplayName);
+
+            entity.Property(p => p.FirstName)
+            .HasMaxLength(100);
+
+            entity.Property(p => p.LastName)
+            .HasMaxLength(100);
 
             entity.Property(p => p.EmailConfirmed)
             .IsRequired()

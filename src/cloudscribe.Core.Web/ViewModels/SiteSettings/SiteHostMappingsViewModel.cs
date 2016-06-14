@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-05-05
-// Last Modified:			2016-05-11
+// Last Modified:			2016-06-14
 // 
 
 using cloudscribe.Core.Models;
@@ -18,26 +18,9 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
             HostMappings = new List<ISiteHost>();
         }
 
-        public string Heading { get; set; }
-        public IList<ISiteHost> HostMappings { get; set; }
-
-        private int siteListReturnPageNumber = 1;
-
-        public int SiteListReturnPageNumber
-        {
-            get { return siteListReturnPageNumber; }
-            set { siteListReturnPageNumber = value; }
-        }
-
-        private Guid id = Guid.Empty;
-
-        public Guid SiteId
-        {
-            get { return id; }
-            set { id = value; }
-        }
-
+        public IList<ISiteHost> HostMappings { get; set; }    
+        public int SiteListReturnPageNumber { get; set; } = 1;
+        public Guid SiteId { get; set; } = Guid.Empty;
         
-
     }
 }

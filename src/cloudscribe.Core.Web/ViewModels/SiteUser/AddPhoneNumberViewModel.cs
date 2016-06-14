@@ -2,16 +2,14 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System.ComponentModel.DataAnnotations;
-//using cloudscribe.Resources;
-
 
 namespace cloudscribe.Core.Web.ViewModels.SiteUser
 {
     public class AddPhoneNumberViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "Phone number is required to proceed")]
         [Phone]
-        //[Display(Name = "PhoneNumber", ResourceType = typeof(CommonResources))]
+        [StringLength(50, ErrorMessage = "Phone number has a maximum length of 50 characters")]
         public string Number { get; set; }
     }
 }

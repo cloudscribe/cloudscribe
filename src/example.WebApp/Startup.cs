@@ -143,7 +143,7 @@ namespace example.WebApp
                 //  return new ProviderCultureResult("en");
                 //}));
             });
-
+            
             services.AddMvc()
                     .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
                     .AddDataAnnotationsLocalization()
@@ -153,7 +153,8 @@ namespace example.WebApp
                         options.AddEmbeddedViewsForCloudscribeCore();
                         options.AddEmbeddedViewsForCloudscribeLogging();
                         options.ViewLocationExpanders.Add(new cloudscribe.Core.Web.Components.SiteViewLocationExpander());
-                    });
+                    })
+                    ;
 
             ConfigureDataStorage(services);
 

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-11-16
-// Last Modified:			2015-10-12
+// Last Modified:			2015-10-16
 //
 
 using cloudscribe.Core.Models.Geography;
@@ -18,29 +18,13 @@ namespace cloudscribe.Core.Web.ViewModels.CoreData
             Country = new GeoCountryViewModel();
             States = new List<IGeoZone>();
             Paging = new PaginationSettings();
-
         }
-
-        public string Heading { get; set; }
+        
         public GeoCountryViewModel Country { get; set; }
         public List<IGeoZone> States { get; set; }
-        public PaginationSettings Paging { get; set; }
-
-        private int returnPageNumber = 1;
-
-        public int ReturnPageNumber
-        {
-            get { return returnPageNumber; }
-            set { returnPageNumber = value; }
-        }
-
-        private int countryListReturnPageNumber = 1;
-
-        public int CountryListReturnPageNumber
-        {
-            get { return countryListReturnPageNumber; }
-            set { countryListReturnPageNumber = value; }
-        }
-
+        public PaginationSettings Paging { get; set; }  
+        public int ReturnPageNumber { get; set; } = 1;
+        public int CountryListReturnPageNumber { get; set; } = 1;
+       
     }
 }

@@ -14,12 +14,13 @@ namespace cloudscribe.Core.Web.ViewModels.SiteUser
             ExternalAuthenticationList = new List<AuthenticationDescription>();
         }
 
-        [Required]
-        [EmailAddress]
+        [Required(ErrorMessage = "Email is required")]
+        [EmailAddress(ErrorMessage = "The email address does not appear as valid")]
+        [StringLength(100, ErrorMessage = "Email has a maximum length of 100 characters")]
         [Display(Name = "Email")]
         public string Email { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Password is required")]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get; set; }

@@ -40,26 +40,8 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         [Display(Name = "Only Use Social Authentication")]
         public bool DisableDbAuth { get; set; }
 
-        //[Display(Name = "Minimum Password Length")]
-        //public int MinRequiredPasswordLength { get; set; }
-        
-        //[Display(Name = "Minimum Password Non Alphabetic Characters")]
-        //public int MinReqNonAlphaChars { get; set; }
-
-        //[Display(Name = "Max Invalid Password Attempts")]
-        //public int MaxInvalidPasswordAttempts { get; set; }
-
-        //[Display(Name = "Password Attempt Window Minutes")]
-        //public int PasswordAttemptWindowMinutes { get; set; }
-        
-        //[Display(Name = "Require Security Question and Answer")]
-        //public bool RequiresQuestionAndAnswer { get; set; }
-
         [Display(Name = "Really Delete Users")]
         public bool ReallyDeleteUsers { get; set; }
-
-        //[Display(Name = "Allow Full Name Changes")]
-        //public bool AllowUserFullNameChange { get; set; }
 
     }
 }

@@ -110,12 +110,18 @@ namespace cloudscribe.Core.Web.Components
         /// <returns></returns>
         public async Task<bool> FolderNameIsAvailable(Guid requestingSiteId, string requestedFolderName)
         {
-            var matchingSite = await queries.FetchByFolderName(requestedFolderName, CancellationToken);
+            var matchingSite = await queries.FetchByFolderName(requestedFolderName, CancellationToken).ConfigureAwait(false) ;
             if(matchingSite == null) { return true; }
             if(matchingSite.SiteFolderName != requestedFolderName) { return true; }
             if(matchingSite.Id == requestingSiteId) { return true; }
 
             return false;
+
+        }
+
+        public async Task<bool> HostNameIsAvailable(Guid requestingSiteId, string requestedHostName)
+        {
+            return await queries.HostNameIsAvailable(requestingSiteId, requestedHostName, CancellationToken).ConfigureAwait(false);
 
         }
 

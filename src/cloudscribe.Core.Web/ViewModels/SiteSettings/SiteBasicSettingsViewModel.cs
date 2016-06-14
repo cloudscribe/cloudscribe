@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2016-06-12
+// Last Modified:			2016-06-14
 // 
 
 using System;
@@ -25,23 +25,15 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
     {
         public SiteBasicSettingsViewModel()
         {
-            allTimeZones = new List<SelectListItem>();
-            availableThemes = new List<SelectListItem>();
+            AllTimeZones = new List<SelectListItem>();
+            AvailableThemes = new List<SelectListItem>();
         }
 
-        private Guid id = Guid.Empty;
-        public Guid SiteId
-        {
-            get { return id; }
-            set { id = value; }
-
-        }
+        public Guid SiteId { get; set; } = Guid.Empty;
         
         [Required(ErrorMessage = "Site Name is required")]
         [StringLength(255,ErrorMessage ="Site Name has a maximum length of 255 characters")]
         public string SiteName { get; set; }
-
-
 
         /// <summary>
         /// no spaces, only chars that are good for folder names
@@ -56,59 +48,37 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
            HttpMethod = "Post")]
         [RegularExpression(@"^[a-zA-Z0-9_-]+$", ErrorMessage = "For AliasId, only digits, numbers, - and _ allowed, no spaces allowed")]
         [StringLength(36, ErrorMessage = "AliasId has a maximum length of 36 characters")]
-        public string AliasId { get; set; }
+        public string AliasId { get; set; } = string.Empty;
 
 
         [Remote("FolderNameAvailable", "SiteAdmin", AdditionalFields = "SiteId",
            ErrorMessage = "Requested Site Folder Name is not available, please try another value",
            HttpMethod = "Post")]
         [RegularExpression(@"^[a-zA-Z0-9_-]+$", ErrorMessage = "For Site Folder Name, only digits, numbers, - and _ allowed, no spaces allowed")]
-        [StringLength(50, ErrorMessage ="Site Folder name has a maximum length of 50 characters")]
-        public string SiteFolderName { get; set; }
-        
+        [StringLength(50, ErrorMessage = "Site Folder name has a maximum length of 50 characters")]
+        public string SiteFolderName { get; set; } = string.Empty;
+
+        [Remote("HostNameAvailable", "SiteAdmin", AdditionalFields = "SiteId",
+           ErrorMessage = "Requested Host name is not available",
+           HttpMethod = "Post")]
         [RegularExpression(@"^[a-zA-Z0-9_-]+$", ErrorMessage = "For Host name, only digits, numbers, - and _ allowed, no spaces allowed")]
         [StringLength(255, ErrorMessage = "Host name has a maximum length of 255 characters")]
-        public string HostName { get; set; }
-        
-        [Required(ErrorMessage = "Time zone is required")]
-        public string TimeZoneId { get; set; } = "America/New_York";
+        public string HostName { get; set; } = string.Empty;
         
         public string Theme { get; set; } = string.Empty;
 
-        private List<SelectListItem> availableThemes = null;
-        public List<SelectListItem> AvailableThemes
-        {
-            get { return availableThemes; }
-            set { availableThemes = value; }
-        }
-
-        private IEnumerable<SelectListItem> allTimeZones = null;
-        public IEnumerable<SelectListItem> AllTimeZones
-        {
-            get { return allTimeZones; }
-            set { allTimeZones = value; }
-        }
+        public List<SelectListItem> AvailableThemes { get; set; } = null;
         
-        private int returnPageNumber = 1;
 
-        public int ReturnPageNumber
-        {
-            get { return returnPageNumber; }
-            set { returnPageNumber = value; }
-        }
-
-        private bool showDelete = false;
-
-        public bool ShowDelete
-        {
-            get { return showDelete; }
-            set { showDelete = value; }
-        }
+        [Required(ErrorMessage = "Time zone is required")]
+        public string TimeZoneId { get; set; } = "America/New_York";
         
+        public IEnumerable<SelectListItem> AllTimeZones { get; set; } = null;
+        
+        public int ReturnPageNumber { get; set; } = 1;
+        public bool ShowDelete { get; set; } = false;
         public string ClosedMessage { get; set; } = string.Empty;
-        
         public bool IsClosed { get; set; } = false;
-        
-        
+            
     }
 }

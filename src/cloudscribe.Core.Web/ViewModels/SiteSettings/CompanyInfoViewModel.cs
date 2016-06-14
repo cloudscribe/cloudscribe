@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2016-06-02
+// Last Modified:			2016-06-14
 // 
 
 using System;
@@ -20,41 +20,32 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
             AvailableStates = new List<SelectListItem>();
         }
         
-        [Display(Name = "SiteId")]
         public Guid SiteId { get; set; } = Guid.Empty;
                 
-        [Display (Name = "Name")]
+        [StringLength(250, ErrorMessage = "Company name has a maximum length of 250 characters")]
         public string CompanyName { get; set; } = string.Empty;
-
-        [Display(Name = "Address1")]
+        [StringLength(250, ErrorMessage = "Address 1 has a maximum length of 250 characters")]
         public string CompanyStreetAddress { get; set; } = string.Empty;
-
-        [Display(Name = "Address2")]
+        [StringLength(250, ErrorMessage = "Address 2 has a maximum length of 250 characters")]
         public string CompanyStreetAddress2 { get; set; } = string.Empty;
-
-        [Display(Name = "City")]
+        [StringLength(200, ErrorMessage = "City has a maximum length of 200 characters")]
         public string CompanyLocality { get; set; } = string.Empty;
 
-        [Display(Name = "Country")]
         public string CompanyCountry { get; set; } = string.Empty;
         
         public IList<SelectListItem> AvailableCountries { get; set; }
         public IList<SelectListItem> AvailableStates { get; set; }
-
-        [Display(Name = "State/Region")]
+        [StringLength(200, ErrorMessage = "State/Region has a maximum length of 200 characters")]
         public string CompanyRegion { get; set; } = string.Empty;
-
-        [Display(Name = "Postal Code")]
+        [StringLength(20, ErrorMessage = "Zip/Postal code has a maximum length of 20 characters")]
         public string CompanyPostalCode { get; set; } = string.Empty;
-
-        [Display(Name = "Phone")]
+        [StringLength(20, ErrorMessage = "Phone has a maximum length of 20 characters")]
         public string CompanyPhone { get; set; } = string.Empty;
-
-        [Display(Name = "Fax")]
+        [StringLength(20, ErrorMessage = "Fax has a maximum length of 20 characters")]
         public string CompanyFax { get; set; } = string.Empty;
         
         [EmailAddress(ErrorMessage = "The Email field is not a valid e-mail address.")]
-        [Display(Name = "Public Email")]
+        [StringLength(100, ErrorMessage = "Email has a maximum length of 100 characters")]
         public string CompanyPublicEmail { get; set; } = string.Empty;
 
     }

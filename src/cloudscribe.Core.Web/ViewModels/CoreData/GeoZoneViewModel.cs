@@ -2,11 +2,10 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-11-17
-// Last Modified:			2015-06-10
+// Last Modified:			2015-06-14
 //
 
 using cloudscribe.Core.Models.Geography;
-//using cloudscribe.Resources;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -14,75 +13,22 @@ namespace cloudscribe.Core.Web.ViewModels.CoreData
 {
     public class GeoZoneViewModel : IGeoZone
     {
-        public GeoZoneViewModel()
-        {
-            Country = new GeoCountryViewModel();
-        }
-
-        private string heading = string.Empty;
-
-        public string Heading
-        {
-            get { return heading; }
-            set { heading = value; }
-        }
-
-        public GeoCountryViewModel Country { get; set; }
-
-        private Guid id = Guid.Empty;
-
-        [Display(Name = "Guid")]
-        public Guid Id
-        {
-            get { return id; }
-            set { id = value; }
-        }
-
-        private Guid countryGuid = Guid.Empty;
-
-        [Display(Name = "CountryGuid")]
-        public Guid CountryId
-        {
-            get { return countryGuid; }
-            set { countryGuid = value; }
-        }
-
-        private string name = string.Empty;
-
-        //[Display(Name = "Name", ResourceType = typeof(CommonResources))]
-        //[Required(ErrorMessageResourceName = "NameRequired", ErrorMessageResourceType = typeof(CommonResources))]
-        public string Name
-        {
-            get { return name; }
-            set { name = value; }
-        }
-
-        private string code = string.Empty;
-
-        //[Display(Name = "Code", ResourceType = typeof(CommonResources))]
-        //[Required(ErrorMessageResourceName = "CodeRequired", ErrorMessageResourceType = typeof(CommonResources))]
-        public string Code
-        {
-            get { return code; }
-            set { code = value; }
-        }
-
-        private int returnPageNumber = 1;
-
-        public int ReturnPageNumber
-        {
-            get { return returnPageNumber; }
-            set { returnPageNumber = value; }
-        }
-
-        private int countryListReturnPageNumber = 1;
-
-        public int CountryListReturnPageNumber
-        {
-            get { return countryListReturnPageNumber; }
-            set { countryListReturnPageNumber = value; }
-        }
-
+        public string CountryName { get; set; } = string.Empty;
+        
+        public Guid Id { get; set; } = Guid.Empty;
+        public Guid CountryId { get; set; } = Guid.Empty;
+        
+        [Required(ErrorMessage = "Name is required")]
+        [StringLength(255, ErrorMessage = "Name has a maximum length of 255 characters")]
+        public string Name { get; set; } = string.Empty;
+        
+        [Required(ErrorMessage = "Code is required")]
+        [StringLength(255, ErrorMessage = "Code has a maximum length of 255 characters")]
+        public string Code { get; set; } = string.Empty;
+        
+        public int ReturnPageNumber { get; set; } = 1;     
+        public int CountryListReturnPageNumber { get; set; } = 1;
+        
         public static GeoZoneViewModel FromIGeoZone(IGeoZone geoZone)
         {
             GeoZoneViewModel model = new GeoZoneViewModel();
@@ -90,10 +36,7 @@ namespace cloudscribe.Core.Web.ViewModels.CoreData
             model.CountryId = geoZone.CountryId;
             model.Name = geoZone.Name;
             model.Code = geoZone.Code;
-
             return model;
-
         }
-
     }
 }

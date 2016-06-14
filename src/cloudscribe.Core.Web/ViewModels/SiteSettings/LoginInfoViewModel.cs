@@ -5,7 +5,6 @@
 // Last Modified:			2015-09-13
 //
 
-
 using System;
 
 namespace cloudscribe.Core.Web.ViewModels.SiteSettings
@@ -13,9 +12,7 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
     public class LoginInfoViewModel
     {
         public Guid SiteId { get; set; } = Guid.Empty;
-
         public string LoginInfoTop { get; set; } = string.Empty;
-
         public string LoginInfoBottom { get; set; } = string.Empty;
     }
 }

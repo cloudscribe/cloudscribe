@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2016-06-13
+// Last Modified:			2016-06-14
 // 
 
 using cloudscribe.Core.Models;
@@ -160,7 +160,7 @@ namespace cloudscribe.Core.Storage.EF
         //}
 
         public async Task<bool> AliasIdIsAvailable(
-            Guid siteId,
+            Guid requestingSiteId,
             string aliasId,
             CancellationToken cancellationToken = default(CancellationToken)
             )
@@ -169,11 +169,37 @@ namespace cloudscribe.Core.Storage.EF
             cancellationToken.ThrowIfCancellationRequested();
 
             var item = await dbContext.Sites.FirstOrDefaultAsync(
-                    x => x.Id != siteId
+                    x => x.Id != requestingSiteId
                     && x.AliasId == aliasId
                     ).ConfigureAwait(false);
             // if no site exists that has that alias with a different siteid then it is available
             if (item == null) { return true; }
+            return false;
+        }
+
+        public async Task<bool> HostNameIsAvailable(
+            Guid requestingSiteId,
+            string hostName,
+            CancellationToken cancellationToken = default(CancellationToken)
+            )
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var item = await dbContext.Sites.FirstOrDefaultAsync(
+                    x => x.Id != requestingSiteId
+                    && x.PreferredHostName == hostName
+                    ).ConfigureAwait(false);
+            // if no site exists that has that host with a different siteid then it is available
+            if (item == null)
+            {
+                var host = await GetSiteHost(hostName, cancellationToken).ConfigureAwait(false);
+                if(host != null)
+                {
+                    if (host.SiteId != requestingSiteId) return false;
+                }
+                return true;
+            }
             return false;
         }
 

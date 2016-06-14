@@ -426,6 +426,15 @@ namespace cloudscribe.Core.Web.Controllers
             return Json(available);
         }
 
+        [HttpPost]
+        public async Task<JsonResult> HostNameAvailable(Guid? siteId, string hostName)
+        {
+            var selectedSiteId = Guid.Empty;
+            if (siteId.HasValue) { selectedSiteId = siteId.Value; }
+            bool available = await siteManager.HostNameIsAvailable(selectedSiteId, hostName);
+            return Json(available);
+        }
+
         [HttpGet]
         [Authorize(Policy = "AdminPolicy")]
         public async Task<IActionResult> CompanyInfo(

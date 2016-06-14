@@ -1,6 +1,13 @@
 
+
+http://stackoverflow.com/questions/35307143/simple-jwt-authentication-in-asp-net-core-1-0-web-api
+
+https://stormpath.com/blog/token-authentication-asp-net-core
+
+
 ssl example
 https://github.com/aspnet/Security/blob/dev/samples/SocialSample/Program.cs
+
 
 http://moneyandstate.com/looting-of-the-fox/
 
