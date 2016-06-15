@@ -44,7 +44,7 @@
 @if (Model.Id != Guid.Empty)
 {
     <form id="deleteform" asp-controller="CoreData" asp-action="CountryDelete">
-        <input type="hidden" id="countryId" name="countryGuid" value="@Model.Id" />
+        <input type="hidden" id="countryId" name="countryId" value="@Model.Id" />
         <input type="hidden" asp-for="ReturnPageNumber" />
     </form>   
 }

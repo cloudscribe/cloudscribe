@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-11-15
-// Last Modified:			2016-06-12
+// Last Modified:			2016-06-15
 // 
 
 using cloudscribe.Core.Models;
@@ -29,7 +29,6 @@ namespace cloudscribe.Core.Web.Controllers
             SiteSettings currentSite,
             GeoDataManager geoDataManager,
             IStringLocalizer<CloudscribeCore> localizer,
-            //IOptions<RequestLocalizationOptions> localizationOptionsAccessor,
             IOptions<UIOptions> uiOptionsAccessor
             )
         {
@@ -37,15 +36,12 @@ namespace cloudscribe.Core.Web.Controllers
             dataManager = geoDataManager;
             uiOptions = uiOptionsAccessor.Value;
             sr = localizer;
-            //localizationOptions = localizationOptionsAccessor.Value;
         }
 
         private ISiteSettings Site;
         private GeoDataManager dataManager;
         private UIOptions uiOptions;
         private IStringLocalizer sr;
-        //private RequestLocalizationOptions localizationOptions;
-
 
         // GET: /CoreData/
         [HttpGet]

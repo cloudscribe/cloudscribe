@@ -1,0 +1,20 @@
+TODO:
+
+Make sure all the Security Settings under Administration > Security Settings are implemented
+Some of them may currently just update the settigns but no logic enforces the settings
+
+2016-06-15 Tested
+Uncheck "Really Delete Users" - then delete a user
+** He should still exist in the db, but does not appear in the user list, he is flagged as IsDeleted = true
+** He should not be able to login - failed
+
+
+
+
+
+Phase 2 Plans
+Support for IdentityServer4 - main goal is I should be able to mix and mingle SPA features into the same web app with MVC features, and jwt auth works in addition to cookie auth
+
+Telemetry - I would like to implement telemetry to capture activities, but I want an abstraction of my own as opposed to being strongly coupled to Application Insights
+I want to be able to log activities to an activity stream - ie into a CRM - there should be interfaces for this in cloudscribe core, but implementation will be outside or can use Application Insights
+

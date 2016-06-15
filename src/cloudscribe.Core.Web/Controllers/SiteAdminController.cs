@@ -419,7 +419,7 @@ namespace cloudscribe.Core.Web.Controllers
 
         [HttpPost]
         public async Task<JsonResult> FolderNameAvailable(Guid? siteId, string folderName)
-        {
+        {            
             var selectedSiteId = Guid.Empty;
             if (siteId.HasValue) { selectedSiteId = siteId.Value; }
             bool available = await siteManager.FolderNameIsAvailable(selectedSiteId, folderName);
