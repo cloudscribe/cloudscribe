@@ -147,7 +147,7 @@ namespace cloudscribe.Core.Web.Controllers
                         }
                     }
 
-                    if(user.IsLockedOut)
+                    if((user.IsLockedOut)||(user.IsDeleted))
                     {
                         //ModelState.AddModelError(string.Empty, "Your account must be approved by an administrator before you can log in. If an administrator approves your account, you will receive an email notifying you that your account is ready.");
                         ModelState.AddModelError(string.Empty, sr["Invalid login attempt."]);

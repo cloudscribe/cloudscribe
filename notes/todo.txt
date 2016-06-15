@@ -6,7 +6,38 @@ Some of them may currently just update the settigns but no logic enforces the se
 2016-06-15 Tested
 Uncheck "Really Delete Users" - then delete a user
 ** He should still exist in the db, but does not appear in the user list, he is flagged as IsDeleted = true
-** He should not be able to login - failed
+** He should not be able to login 
+** Currently only way to see a user flagged as deleted is dorectly in the db, not in the UI
+** Changing back to checked on Really Delete Users does not delete existing rows flagged as deleted
+-- end tested 2016-06-15
+
+Check "Require Confirmed Email" && provide smtp settings so email can be sent for verification
+** Newly registered user should not be able to login until the email is verified
+** Newly registered user should be able to re-request the verification email to be sent
+
+Check "Require Confirmed Phone" && provide SMS settings
+** Newly registered user should not be able to login until phone is verified by sms
+** User should have an opportunity to provide a phone number during registration
+
+Check "Require Approval Before Login"
+** Newly registered user shoul dnot be able to login until an admin approves the account
+
+Check "Only Use Social Authentication" and configure social auth
+** The only way for new users to register or for any user to login should be via social auth
+** definitely the admin needs to add a social auth to his own account before making this setting or he will have no way to login without changing it in the db back to allow regular login
+
+NOT IMPLEMENTED YET
+Uncheck "Allow New Registrations"
+** Register links should not be visible
+** It should not be possible to register by visiting /Account/Register
+
+Uncheck "Use Email for Login"
+** Login page label should show username as opposed to email
+** should not be possible to login using email
+
+Uncheck "Allow Persistent Login"
+** Remember me should not appear on login page
+** Auth cookie should expire when the browser is closed
 
 
 
@@ -17,4 +48,6 @@ Support for IdentityServer4 - main goal is I should be able to mix and mingle SP
 
 Telemetry - I would like to implement telemetry to capture activities, but I want an abstraction of my own as opposed to being strongly coupled to Application Insights
 I want to be able to log activities to an activity stream - ie into a CRM - there should be interfaces for this in cloudscribe core, but implementation will be outside or can use Application Insights
+
+Need some kind of help system to add contextual help for various settings that may need explanation
 

@@ -61,6 +61,8 @@ namespace cloudscribe.Core.Identity
                 context.RejectPrincipal();
             }
 
+            //TODO: should we lookup the user here and reject if locked out or deleted?
+
             return Task.FromResult(0);
         }
     }

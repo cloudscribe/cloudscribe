@@ -334,6 +334,13 @@ namespace cloudscribe.Core.Web.Controllers
             {
                 if (string.IsNullOrEmpty(model.SiteFolderName))
                 {
+                    model.AllTimeZones = tzHelper.GetTimeZoneList().Select(x =>
+                               new SelectListItem
+                               {
+                                   Text = x,
+                                   Value = x,
+                                   Selected = model.TimeZoneId == x
+                               });
                     ModelState.AddModelError("foldererror", sr["Folder name is required."]);
                     return View(model);
                 }
@@ -341,6 +348,13 @@ namespace cloudscribe.Core.Web.Controllers
                 bool folderAvailable = await siteManager.FolderNameIsAvailable(newSite.Id, model.SiteFolderName);
                 if (!folderAvailable)
                 {
+                    model.AllTimeZones = tzHelper.GetTimeZoneList().Select(x =>
+                               new SelectListItem
+                               {
+                                   Text = x,
+                                   Value = x,
+                                   Selected = model.TimeZoneId == x
+                               });
                     ModelState.AddModelError("foldererror", sr["The selected folder name is already in use on another site."]);
                     return View(model);
                 }
@@ -354,6 +368,13 @@ namespace cloudscribe.Core.Web.Controllers
                     host = await siteManager.GetSiteHost(model.HostName);
                     if (host != null)
                     {
+                        model.AllTimeZones = tzHelper.GetTimeZoneList().Select(x =>
+                               new SelectListItem
+                               {
+                                   Text = x,
+                                   Value = x,
+                                   Selected = model.TimeZoneId == x
+                               });
                         ModelState.AddModelError("hosterror", sr["The selected host/domain name is already in use on another site."]);
                         return View(model);
                     }

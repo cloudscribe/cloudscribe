@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-27
-// Last Modified:		    2016-05-18
+// Last Modified:		    2016-06-15
 // 
 
 //TODO: we need to override many or most of the methods of the base class
@@ -331,6 +331,8 @@ namespace cloudscribe.Core.Identity
                 return SignInResult.Failed;
             }
 
+            if(user.IsDeleted) return SignInResult.Failed;
+
             var error = await PreSignInCheck(user);
             if (error != null)
             {
@@ -342,6 +344,7 @@ namespace cloudscribe.Core.Identity
         private async Task<SignInResult> PreSignInCheck(TUser user)
         {
             logger.LogInformation("PreSignInCheck called");
+
 
             if (!await CanSignInAsync(user))
             {
@@ -368,6 +371,8 @@ namespace cloudscribe.Core.Identity
         private async Task<SignInResult> SignInOrTwoFactorAsync(TUser user, bool isPersistent, string loginProvider = null)
         {
             logger.LogDebug("SignInOrTwoFactorAsync called");
+
+            if (user.IsDeleted) return SignInResult.Failed;
 
             if (UserManager.SupportsUserTwoFactor &&
                 await UserManager.GetTwoFactorEnabledAsync(user) &&
@@ -448,6 +453,8 @@ namespace cloudscribe.Core.Identity
             {
                 throw new ArgumentNullException(nameof(user));
             }
+
+            if(user.IsDeleted) return SignInResult.Failed;
 
             var error = await PreSignInCheck(user);
             if (error != null)
@@ -580,6 +587,8 @@ namespace cloudscribe.Core.Identity
             {
                 return SignInResult.Failed;
             }
+
+            if (user.IsDeleted) return SignInResult.Failed;
 
             var error = await PreSignInCheck(user);
             if (error != null)
