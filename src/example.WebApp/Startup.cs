@@ -312,6 +312,7 @@ namespace example.WebApp
 
             options.AutomaticAuthenticate = true;
             options.AutomaticChallenge = true;
+           
 
             return options;
         }

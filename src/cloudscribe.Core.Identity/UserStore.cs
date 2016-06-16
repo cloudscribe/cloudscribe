@@ -214,8 +214,8 @@ namespace cloudscribe.Core.Identity
             
             var siteGuid = siteSettings.Id;
             if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteId; }
-
-            var siteUser = await queries.FetchByLoginName(siteGuid, normailzedUserName, true, cancellationToken);
+            var allowEmailFallback = siteSettings.UseEmailForLogin;
+            var siteUser = await queries.FetchByLoginName(siteGuid, normailzedUserName, allowEmailFallback, cancellationToken);
             return (TUser)siteUser;
 
         }

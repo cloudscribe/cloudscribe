@@ -436,6 +436,19 @@ namespace cloudscribe.Core.Identity
             return null;
         }
 
+
+        //public virtual async Task<SignInResult> PasswordSignInAsync(string userName, string password,
+        //    bool isPersistent, bool lockoutOnFailure)
+        //{
+        //    var user = await UserManager.FindByNameAsync(userName);
+        //    if (user == null)
+        //    {
+        //        return SignInResult.Failed;
+        //    }
+
+        //    return await PasswordSignInAsync(user, password, isPersistent, lockoutOnFailure);
+        //}
+
         /// <summary>
         /// Attempts to sign in the specified <paramref name="user"/> and <paramref name="password"/> combination
         /// as an asynchronous operation.
@@ -446,8 +459,11 @@ namespace cloudscribe.Core.Identity
         /// <param name="lockoutOnFailure">Flag indicating if the user account should be locked if the sign in fails.</param>
         /// <returns>The task object representing the asynchronous operation containing the <see name="SignInResult"/>
         /// for the sign-in attempt.</returns>
-        public override async Task<SignInResult> PasswordSignInAsync(TUser user, string password,
-            bool isPersistent, bool lockoutOnFailure)
+        public override async Task<SignInResult> PasswordSignInAsync(
+            TUser user, 
+            string password,
+            bool isPersistent, 
+            bool lockoutOnFailure)
         {
             if (user == null)
             {

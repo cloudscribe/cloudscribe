@@ -288,8 +288,8 @@
   <data name="Require Confirmed Email" xml:space="preserve">
     <value>Require Confirmed Email</value>
   </data>
-  <data name="Require Confirmed Phone - if you check this, you need to configure SMS Settings" xml:space="preserve">
-    <value>Require Confirmed Phone - if you check this, you need to configure SMS Settings</value>
+  <data name="Require Confirmed Phone" xml:space="preserve">
+    <value>Require Confirmed Phone</value>
   </data>
   <data name="Requires Authentication?" xml:space="preserve">
     <value>Requires Authentication?</value>
@@ -929,5 +929,8 @@
   </data>
   <data name="Culture Code" xml:space="preserve">
     <value>Culture Code</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Username</value>
   </data>
 </root>

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2016-06-03
+// Last Modified:			2016-06-16
 // 
 
 using cloudscribe.Core.Identity;
@@ -26,7 +26,6 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Controllers
 {
-    [Controller]
     [Authorize]
     public class AccountController : Controller
     {
@@ -74,7 +73,7 @@ namespace cloudscribe.Core.Web.Controllers
             {
                 model.RecaptchaSiteKey = Site.RecaptchaPublicKey;     
             }
-
+            model.UseEmailForLogin = Site.UseEmailForLogin;
             model.LoginInfoTop = Site.LoginInfoTop;
             model.LoginInfoBottom = Site.LoginInfoBottom;
 
@@ -94,10 +93,11 @@ namespace cloudscribe.Core.Web.Controllers
             {
                 model.RecaptchaSiteKey = Site.RecaptchaPublicKey;   
             }
-
+            model.UseEmailForLogin = Site.UseEmailForLogin;
             model.LoginInfoTop = Site.LoginInfoTop;
             model.LoginInfoBottom = Site.LoginInfoBottom;
-
+            model.ExternalAuthenticationList = signInManager.GetExternalAuthenticationSchemes();
+            
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -163,16 +163,38 @@ namespace cloudscribe.Core.Web.Controllers
                 //TODO: hide remember me in view if persistent login not allowed  site settings
                 persistent = model.RememberMe;
             }
+
+            Microsoft.AspNetCore.Identity.SignInResult result;
+            if(Site.UseEmailForLogin)
+            {
+                result = await signInManager.PasswordSignInAsync(
+                    model.Email,
+                    model.Password,
+                    persistent,
+                    lockoutOnFailure: false);
+            }
+            else
+            {
+                result = await signInManager.PasswordSignInAsync(
+                    model.UserName,
+                    model.Password,
+                    persistent,
+                    lockoutOnFailure: false);
+            }
             
-            var result = await signInManager.PasswordSignInAsync(
-                model.Email,
-                model.Password,
-                persistent,
-                lockoutOnFailure : false);
             
             if (result.Succeeded)
             {
-                var user = await userManager.FindByNameAsync(model.Email);
+                SiteUser user;
+                if(Site.UseEmailForLogin)
+                {
+                    user = await userManager.FindByNameAsync(model.Email);
+                }
+                else
+                {
+                    user = await userManager.FindByNameAsync(model.UserName);
+                }
+                
                 if(user != null)
                 {
                     await ipAddressTracker.TackUserIpAddress(Site.Id, user.Id);
@@ -206,9 +228,13 @@ namespace cloudscribe.Core.Web.Controllers
         [AllowAnonymous]
         public IActionResult Register()
         {
-            if(User.Identity.IsAuthenticated)
+            if(HttpContext.User.Identity.IsAuthenticated)
             {
                 return this.RedirectToSiteRoot(Site);
+            }
+            if(!Site.AllowNewRegistration)
+            {
+                return new StatusCodeResult(404);
             }
 
             ViewData["Title"] = sr["Register"];
@@ -288,14 +314,14 @@ namespace cloudscribe.Core.Web.Controllers
 
                 }
 
-                //if (Site.RegistrationAgreement.Length > 0)
-                //{
-                //    if (!model.AgreeToTerms)
-                //    {
-                //        ModelState.AddModelError("agreementerror", "You must agree to the terms");
-                //        isValid = false;
-                //    }
-                //}
+                if (Site.RegistrationAgreement.Length > 0)
+                {
+                    if (!model.AgreeToTerms)
+                    {
+                        ModelState.AddModelError("agreementerror", "You must agree to the terms");
+                        isValid = false;
+                    }
+                }
 
                 if (!isValid)
                 {
@@ -616,19 +642,13 @@ namespace cloudscribe.Core.Web.Controllers
             return Json(available);
         }
 
-
-        
-
-
         // GET: /Account/ForgotPassword
         [HttpGet]
         [AllowAnonymous]
         public IActionResult ForgotPassword()
         {
-
             return View();
         }
-
 
         // POST: /Account/ForgotPassword
         [HttpPost]
@@ -651,16 +671,6 @@ namespace cloudscribe.Core.Web.Controllers
                 var resetUrl = Url.Action("ResetPassword", "Account", 
                     new { userId = user.Id.ToString(), code = code }, 
                     protocol: HttpContext.Request.Scheme);
-
-                // best security practice is to not disclose the existence of user accounts
-                // so we show the same message whether the password reset request is for an
-                // actual account or not but if it is an actual account we send the email
-                // problem I have noticed is that there is a noticable delay after clicking the button 
-                // in the case where we do send an email, as such it is pretty easy to guess from this that 
-                // the account exists. I think we need to either eliminate the apparent delay by
-                // spawning a separate thread to send the email or by introducing a similar delay
-                // for non existing accounts
-                //ThreadPool.
 
                 // await emailSender.SendPasswordResetEmailAsync(
                 // not awaiting this awaitable method on purpose

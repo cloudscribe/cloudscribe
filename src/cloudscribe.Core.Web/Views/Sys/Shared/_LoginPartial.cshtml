@@ -1,9 +1,11 @@
-﻿@using cloudscribe.Core.Identity
+﻿@using cloudscribe.Core.Models
+@using cloudscribe.Core.Identity
 @using cloudscribe.Web.Common.Extensions
 @using cloudscribe.Core.Web
 @using Microsoft.Extensions.Options
 @using Microsoft.Extensions.Localization
 @inject IStringLocalizer<CloudscribeCore> sr
+@inject SiteSettings site
 @{ 
     var helloFormat = sr["Hello {0}!"];
 }
@@ -27,7 +29,10 @@
 else
 {
     <ul class="nav navbar-nav navbar-right">
-        <li><a id="registerLink" asp-controller="Account" asp-action="Register">@sr["Register"]</a></li>
+        @if (site.AllowNewRegistration)
+        {
+            <li><a id="registerLink" asp-controller="Account" asp-action="Register">@sr["Register"]</a></li>
+        }  
         <li><a id="loginLink" asp-controller="Account" asp-action="Login" asp-route-returnurl="@Context.Request.PathAndQuery()">@sr["Log in"]</a></li>
     </ul>
 }

@@ -2,11 +2,10 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-09
-// Last Modified:			2015-11-21
+// Last Modified:			2016-06-16
 // 
 
 using System.Collections.Generic;
-using cloudscribe.Core.Models.Geography;
 
 namespace cloudscribe.Core.Models
 {
@@ -36,6 +35,17 @@ namespace cloudscribe.Core.Models
             }
 
             return true;
+        }
+
+        public static bool HasAnySocialAuthEnabled(this ISiteSettings site)
+        {
+            if ((site.MicrosoftClientId.Length > 0) && (site.MicrosoftClientSecret.Length > 0)) return true;
+            if ((site.FacebookAppId.Length > 0) && (site.FacebookAppSecret.Length > 0)) return true;
+            if ((site.GoogleClientId.Length > 0) && (site.GoogleClientSecret.Length > 0)) return true;
+            if ((site.TwitterConsumerKey.Length > 0) && (site.TwitterConsumerSecret.Length > 0)) return true;
+
+
+            return false;
         }
 
         

@@ -9,7 +9,7 @@
         <h2>@ViewBag.Title</h2>
         <form method="post" class="form-horizontal" role="form" asp-antiforgery="true">
             <div asp-validation-summary="All" class="text-danger"></div>
-            <input asp-for="SiteId" type="hidden" />  
+            <input asp-for="SiteId" type="hidden" />
             <div class="form-group">
                 <div class="col-md-12">
                     <div class="checkbox">
@@ -32,7 +32,7 @@
                 <div class="col-md-12">
                     <div class="checkbox">
                         <label>
-                            <input asp-for="RequireConfirmedEmail" /> @sr["Require Confirmed Email - if you check this, you need to configure email/smtp settings"]
+                            <input asp-for="RequireConfirmedEmail" /> @sr["Require Confirmed Email"]
                         </label>
                     </div>
                 </div>
@@ -41,7 +41,7 @@
                 <div class="col-md-12">
                     <div class="checkbox">
                         <label>
-                            <input asp-for="RequireConfirmedPhone" /> @sr["Require Confirmed Phone - if you check this, you need to configure SMS Settings"]
+                            <input asp-for="RequireConfirmedPhone" /> @sr["Require Confirmed Phone"]
                         </label>
                     </div>
                 </div>
@@ -56,7 +56,7 @@
                 </div>
             </div>
             <div class="form-group">
-                
+
                 <div class="col-md-12">
                     <label asp-for="AccountApprovalEmailCsv" class="control-label">@sr["Email addresses (csv) to notify of new unapproved users"]</label>
                     <input asp-for="AccountApprovalEmailCsv" class="form-control" />
@@ -72,15 +72,18 @@
                     </div>
                 </div>
             </div>
-            <div class="form-group">
-                <div class="col-md-12">
-                    <div class="checkbox">
-                        <label>
-                            <input asp-for="DisableDbAuth" /> @sr["Only Use Social Authentication"]
-                        </label>
+            @if (Model.HasAnySocialAuthEnabled)
+            {
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <div class="checkbox">
+                            <label>
+                                <input asp-for="DisableDbAuth" /> @sr["Only Use Social Authentication"]
+                            </label>
+                        </div>
                     </div>
                 </div>
-            </div>
+            } 
             <div class="form-group">
                 <div class="col-md-12">
                     <div class="checkbox">

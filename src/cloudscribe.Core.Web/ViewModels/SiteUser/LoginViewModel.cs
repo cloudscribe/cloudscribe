@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Source Tree Solutions, LLC. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using cloudscribe.Web.Common.DataAnnotations;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http.Authentication;
@@ -14,11 +15,17 @@ namespace cloudscribe.Core.Web.ViewModels.SiteUser
             ExternalAuthenticationList = new List<AuthenticationDescription>();
         }
 
-        [Required(ErrorMessage = "Email is required")]
+        public bool UseEmailForLogin { get; set; } = true;
+
+        //[Required(ErrorMessage = "Email is required")]
+        [RequiredWhen("UseEmailForLogin", true, ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "The email address does not appear as valid")]
         [StringLength(100, ErrorMessage = "Email has a maximum length of 100 characters")]
-        [Display(Name = "Email")]
         public string Email { get; set; }
+
+        [RequiredWhen("UseEmailForLogin", false, ErrorMessage = "Username is required")]
+        [StringLength(100, ErrorMessage = "Username has a maximum length of 100 characters")]
+        public string UserName { get; set; }
 
         [Required(ErrorMessage = "Password is required")]
         [DataType(DataType.Password)]

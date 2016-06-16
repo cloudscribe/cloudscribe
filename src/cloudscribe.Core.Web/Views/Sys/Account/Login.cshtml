@@ -2,10 +2,12 @@
 @using System.Collections.Generic
 @using Microsoft.AspNetCore.Http
 @using Microsoft.AspNetCore.Http.Authentication
+@using cloudscribe.Core.Models
 @using cloudscribe.Core.Web
 @using Microsoft.Extensions.Options
 @using Microsoft.Extensions.Localization
 @inject IStringLocalizer<CloudscribeCore> sr
+@inject SiteSettings site
 @{ 
     var socFormat = sr["Log in using your {0} account"];
 }
@@ -29,13 +31,26 @@
                 <h4>@sr["Use a local account to log in."]</h4>
                 <hr />
                 <div asp-validation-summary="All" class="text-danger"></div>
-                <div class="form-group">
-                    <label asp-for="Email" class="col-md-2 control-label">@sr["Email"]</label>
-                    <div class="col-md-10">
-                        <input asp-for="Email" class="form-control" />
-                        <span asp-validation-for="Email" class="text-danger"></span>
+                @if (Model.UseEmailForLogin)
+                {
+                    <div class="form-group">
+                        <label asp-for="Email" class="col-md-2 control-label">@sr["Email"]</label>
+                        <div class="col-md-10">
+                            <input asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
                     </div>
-                </div>
+                }
+                else
+                {
+                    <div class="form-group">
+                        <label asp-for="UserName" class="col-md-2 control-label">@sr["Username"]</label>
+                        <div class="col-md-10">
+                            <input asp-for="UserName" class="form-control" />
+                            <span asp-validation-for="UserName" class="text-danger"></span>
+                        </div>
+                    </div>
+                }         
                 <div class="form-group">
                     <label asp-for="Password" class="col-md-2 control-label">@sr["Password"]</label>
                     <div class="col-md-10">
@@ -43,27 +58,31 @@
                         <span asp-validation-for="Password" class="text-danger"></span>
                     </div>
                 </div>
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <div class="checkbox">  
-                            <label>
-                                <input asp-for="RememberMe" /> @sr["Remember Me"]
-                            </label>
+                @if (site.AllowPersistentLogin)
+                {
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <div class="checkbox">
+                                <label>
+                                    <input asp-for="RememberMe" /> @sr["Remember Me"]
+                                </label>
+                            </div>
                         </div>
                     </div>
-                </div>
+                }
                 @if (Model.RecaptchaSiteKey.Length > 0)
-        {
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <div class="g-recaptcha" data-sitekey="@Model.RecaptchaSiteKey"></div>
-                @Html.ValidationMessage("recaptchaerror", new { @class = "text-danger" })
-            </div>
-        </div>
-        }
+                {
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <div class="g-recaptcha" data-sitekey="@Model.RecaptchaSiteKey"></div>
+                            @Html.ValidationMessage("recaptchaerror", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                }
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
                         <button name="submit" type="submit" class="btn btn-default">@sr["Log In"]</button>
+                        <input type="hidden" asp-for="UseEmailForLogin" />
                     </div>
                 </div>
                 <p>
@@ -73,6 +92,7 @@
                     <a asp-action="ForgotPassword">@sr["Forgot your password?"]</a>
                 </p>
             </form>
+
         </section>
     </div>
     <div class="col-md-4">
