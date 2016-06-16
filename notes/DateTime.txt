@@ -6,6 +6,8 @@ https://github.com/exceptionless/Exceptionless.DateTimeExtensions
 
 http://jeremybytes.blogspot.com/2015/05/fun-with-datetime-datetimekindunspecifi.html
 
+https://github.com/sbstjn/timesheet.js
+
 # Date/Time picker implementations
 
 notes here are mostly out of date from back when I was doing early prototyping in MVC 5

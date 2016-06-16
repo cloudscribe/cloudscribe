@@ -54,7 +54,7 @@
         "cloudscribe.Web.Localization": "1.0.0-*",
         "cloudscribe.Web.Navigation": "1.0.1-*",
         "cloudscribe.Web.Pagination": "1.0.1-*",
-        "SaasKit.Multitenancy": "1.1.2-rc2"
+        "SaasKit.Multitenancy": "1.1.3-rc2"
 
 
 
@@ -90,15 +90,15 @@
     }
   },
 
-  "frameworks": {
-    "netcoreapp1.0": {
-      "imports": [
-        "dotnet5.6",
-        "dnxcore50",
-        "portable-net45+win8"
-      ]
-    }
-  },
+    "frameworks": {
+        "netcoreapp1.0": {
+            "imports": [
+                "dotnet5.6",
+                "dnxcore50",
+                "portable-net45+win8"
+            ]
+        }
+    },
 
     "buildOptions": {
         "emitEntryPoint": true,
