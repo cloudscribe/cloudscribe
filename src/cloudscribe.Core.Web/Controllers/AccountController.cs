@@ -247,7 +247,7 @@ namespace cloudscribe.Core.Web.Controllers
             {
                 model.RecaptchaSiteKey = Site.RecaptchaPublicKey;  
             }
-
+            model.UseEmailForLogin = Site.UseEmailForLogin;
             model.RegistrationPreamble = Site.RegistrationPreamble;
             model.RegistrationAgreement = Site.RegistrationAgreement;
             
@@ -266,7 +266,7 @@ namespace cloudscribe.Core.Web.Controllers
             {
                 model.RecaptchaSiteKey = Site.RecaptchaPublicKey;     
             }
-
+            model.UseEmailForLogin = Site.UseEmailForLogin;
             model.RegistrationPreamble = Site.RegistrationPreamble;
             model.RegistrationAgreement = Site.RegistrationAgreement;
 
@@ -318,9 +318,17 @@ namespace cloudscribe.Core.Web.Controllers
                 {
                     if (!model.AgreeToTerms)
                     {
-                        ModelState.AddModelError("agreementerror", "You must agree to the terms");
+                        ModelState.AddModelError("agreementerror", sr["You must agree to the terms"]);
                         isValid = false;
                     }
+                }
+
+                var userName = model.Username.Length > 0 ? model.Username : model.Email.Replace("@", string.Empty).Replace(".", string.Empty);
+                var userNameAvailable = await userManager.LoginIsAvailable(Guid.Empty, userName);
+                if(!userNameAvailable)
+                {
+                    ModelState.AddModelError("usernameerror", sr["Username not accepted please try a different value"]);
+                    isValid = false;
                 }
 
                 if (!isValid)
@@ -330,7 +338,7 @@ namespace cloudscribe.Core.Web.Controllers
 
                 var user = new SiteUser
                 {
-                    UserName = model.LoginName.Length > 0? model.LoginName : model.Email.Replace("@",string.Empty).Replace(".",string.Empty),
+                    UserName = userName,
                     Email = model.Email,
                     FirstName = model.FirstName,
                     LastName = model.LastName,
@@ -628,15 +636,16 @@ namespace cloudscribe.Core.Web.Controllers
             return View(model);
         }
 
-
-        public async Task<JsonResult> LoginNameAvailable(Guid? userId, string loginName)
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<JsonResult> UsernameAvailable(Guid? userId, string userName)
         {
             // same validation is used when editing or creating a user
             // if editing then the loginname is valid if found attached to the selected user
             // otherwise if found it is not already in use and not available
             Guid selectedUserGuid = Guid.Empty;
             if (userId.HasValue) { selectedUserGuid = userId.Value; }
-            bool available = await userManager.LoginIsAvailable(selectedUserGuid, loginName);
+            bool available = await userManager.LoginIsAvailable(selectedUserGuid, userName);
 
 
             return Json(available);

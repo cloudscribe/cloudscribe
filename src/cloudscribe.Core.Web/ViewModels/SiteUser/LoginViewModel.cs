@@ -17,7 +17,6 @@ namespace cloudscribe.Core.Web.ViewModels.SiteUser
 
         public bool UseEmailForLogin { get; set; } = true;
 
-        //[Required(ErrorMessage = "Email is required")]
         [RequiredWhen("UseEmailForLogin", true, ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "The email address does not appear as valid")]
         [StringLength(100, ErrorMessage = "Email has a maximum length of 100 characters")]

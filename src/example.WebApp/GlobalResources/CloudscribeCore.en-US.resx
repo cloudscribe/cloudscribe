@@ -471,8 +471,8 @@
   <data name="Verify" xml:space="preserve">
     <value>Verify</value>
   </data>
-  <data name="You must agree to the terms." xml:space="preserve">
-    <value>You must agree to the terms.</value>
+  <data name="You must agree to the terms" xml:space="preserve">
+    <value>You must agree to the terms</value>
   </data>
   <data name="Your password has been reset." xml:space="preserve">
     <value>Your password has been reset.</value>
@@ -554,9 +554,6 @@
   </data>
   <data name="Last Name" xml:space="preserve">
     <value>Last Name</value>
-  </data>
-  <data name="Login Name" xml:space="preserve">
-    <value>Login Name</value>
   </data>
   <data name="Manage" xml:space="preserve">
     <value>Manage</value>
@@ -932,5 +929,8 @@
   </data>
   <data name="Username" xml:space="preserve">
     <value>Username</value>
+  </data>
+  <data name="Username not accepted please try a different value" xml:space="preserve">
+    <value>Username not accepted please try a different value</value>
   </data>
 </root>

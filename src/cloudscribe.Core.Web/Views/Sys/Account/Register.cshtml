@@ -24,6 +24,18 @@
     <h4>@sr["Create a new account."]</h4>
     <hr />
     <div asp-validation-summary="All" class="text-danger"></div>
+    @if (!Model.UseEmailForLogin)
+    {
+        <div class="form-group">
+            <label asp-for="Username" class="col-md-2 control-label">@sr["Username"]</label>
+            <div class="col-md-10">
+                <input asp-for="Username" class="form-control" />
+                <span asp-validation-for="Username" class="text-danger"></span>
+                @Html.ValidationMessage("usernameerror", new { @class = "text-danger" })
+            </div>
+        </div>
+
+    }
     <div class="form-group">
         <label asp-for="Email" class="col-md-2 control-label">@sr["Email"]</label>
         <div class="col-md-10">
@@ -41,39 +53,33 @@
     <div class="form-group">
         <label asp-for="ConfirmPassword" class="col-md-2 control-label">@sr["Confirm Password"]</label>
         <div class="col-md-10">
-            <input asp-for="ConfirmPassword" class="form-control" 
-                   data-val="true" 
-                   data-val-comparewhen='@sr["Must match password"]' 
-                   data-val-comparewhen-compareproperty="#Password"
-                   data-val-comparewhen-whenproperty="#UserId"
-                   data-val-comparewhen-whenvalue="-1"  
-                   />
+            <input asp-for="ConfirmPassword" class="form-control" />
             <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
         </div>
     </div>
-@if (Model.RegistrationAgreement.Length > 0)
-{
-    <div class="form-group">
-        <div class="col-md-12 agreementcontainer">
-            @Html.Raw(Model.RegistrationAgreement)
-        </div>   
-    </div>
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="hidden" asp-for="AgreementRequired" />
-            <div class="checkbox">
-                <input asp-for="AgreeToTerms" data-val-enforcetrue='@sr["You must agree to the terms."]' />
-                <label asp-for="AgreeToTerms">@sr["I Agree to these terms of use"]</label>
-                <span asp-validation-for="AgreeToTerms" class="text-danger"></span>
-                @Html.ValidationMessage("agreementerror", new { @class = "text-danger" })
+    @if (Model.RegistrationAgreement.Length > 0)
+    {
+        <div class="form-group">
+            <div class="col-md-12 agreementcontainer">
+                @Html.Raw(Model.RegistrationAgreement)
             </div>
         </div>
-    </div>
-}
-else
-{
-    <input name="AgreeToTerms" value="true" type="hidden" />
-}
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="hidden" asp-for="AgreementRequired" />
+                <div class="checkbox">
+                    <input asp-for="AgreeToTerms" data-val-enforcetrue='@sr["You must agree to the terms."]' />
+                    <label asp-for="AgreeToTerms">@sr["I Agree to these terms of use"]</label>
+                    <span asp-validation-for="AgreeToTerms" class="text-danger"></span>
+                    @Html.ValidationMessage("agreementerror", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <input name="AgreeToTerms" value="true" type="hidden" />
+    }
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
             <div class="g-recaptcha" data-sitekey="@Model.RecaptchaSiteKey"></div>
@@ -83,11 +89,12 @@ else
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
             <button name="submit" type="submit" class="btn btn-default">@sr["Register"]</button>
+            <input type="hidden" asp-for="UseEmailForLogin" />
         </div>
     </div>
 </form>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 <script asp-append-version="true" src="~/jsdev/cloudscribe-validation-enforcetrue.js"></script>
-<script asp-append-version="true" src="~/jsdev/cloudscribe-validation-comparewhen.js"></script>
+<script asp-append-version="true" src="~/jsdev/cloudscribe-validation-requiredwhen.js"></script>
 }

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-31
-// Last Modified:		    2016-06-10
+// Last Modified:		    2016-06-16
 // 
 // TODO: support custom profile properties that are required for registration
 
@@ -31,12 +31,14 @@ namespace cloudscribe.Core.Web.ViewModels.Account
         [DataType(DataType.Password)]
         [Compare("Password", ErrorMessage = "Confirm password doesn't match password")]
         public string ConfirmPassword { get; set; }
-        
-        [Remote("LoginNameAvailable", "Account", AdditionalFields = "UserId",
-           ErrorMessage = "Login Name not available, please try another value",
+
+        public bool UseEmailForLogin { get; set; } = true;
+
+        [Remote("UsernameAvailable", "Account", AdditionalFields = "UserId",
+           ErrorMessage = "Username not accepted, please try another value",
            HttpMethod = "Post")]
-        //[Required]
-        public string LoginName { get; set; } = string.Empty;
+        [RequiredWhen("UseEmailForLogin", false, ErrorMessage = "Username is required")]
+        public string Username { get; set; } = string.Empty;
 
         // TODO do we want unique display names?
         // people can have the same real names like John Smith and why should we prevent anyone from using their real name?

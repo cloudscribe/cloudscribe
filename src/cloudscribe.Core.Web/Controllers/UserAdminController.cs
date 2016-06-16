@@ -329,7 +329,7 @@ namespace cloudscribe.Core.Web.Controllers
                     var user = new SiteUser()
                     {
                         SiteId = selectedSite.Id,
-                        UserName = model.LoginName,
+                        UserName = model.Username,
                         Email = model.Email,
                         FirstName = model.FirstName,
                         LastName = model.LastName,
@@ -386,7 +386,7 @@ namespace cloudscribe.Core.Web.Controllers
                 model.Email = user.Email;
                 model.FirstName = user.FirstName;
                 model.LastName = user.LastName;
-                model.LoginName = user.UserName;
+                model.Username = user.UserName;
                 model.DisplayName = user.DisplayName;
                 model.AccountApproved = user.AccountApproved;
                 model.Comment = user.Comment;
@@ -450,7 +450,7 @@ namespace cloudscribe.Core.Web.Controllers
                         user.Email = model.Email;
                         user.FirstName = model.FirstName;
                         user.LastName = model.LastName;
-                        user.UserName = model.LoginName;
+                        user.UserName = model.Username;
                         user.DisplayName = model.DisplayName;
                         user.AccountApproved = model.AccountApproved;
                         user.Comment = model.Comment;
