@@ -465,8 +465,8 @@
   <data name="Use a local account to log in." xml:space="preserve">
     <value>Use a local account to log in.</value>
   </data>
-  <data name="Use another service to log in." xml:space="preserve">
-    <value>Use another service to log in.</value>
+  <data name="Use an existing account to log in" xml:space="preserve">
+    <value>Use an existing account to log in</value>
   </data>
   <data name="Verify" xml:space="preserve">
     <value>Verify</value>

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2016-06-16
+// Last Modified:			2016-06-17
 // 
 
 using cloudscribe.Core.Identity;
@@ -68,7 +68,7 @@ namespace cloudscribe.Core.Web.Controllers
             ViewData["Title"] = sr["Log in"];
             ViewData["ReturnUrl"] = returnUrl;
             LoginViewModel model = new LoginViewModel();
-            model.ExternalAuthenticationList = signInManager.GetExternalAuthenticationSchemes();
+            
             if ((Site.CaptchaOnLogin)&& (Site.RecaptchaPublicKey.Length > 0))
             {
                 model.RecaptchaSiteKey = Site.RecaptchaPublicKey;     
@@ -76,6 +76,9 @@ namespace cloudscribe.Core.Web.Controllers
             model.UseEmailForLogin = Site.UseEmailForLogin;
             model.LoginInfoTop = Site.LoginInfoTop;
             model.LoginInfoBottom = Site.LoginInfoBottom;
+            model.ExternalAuthenticationList = signInManager.GetExternalAuthenticationSchemes();
+            // don't disable db auth if there are no social auth providers configured
+            model.DisableDbAuth = Site.DisableDbAuth && Site.HasAnySocialAuthEnabled();
 
             return View(model);
         }
@@ -97,7 +100,9 @@ namespace cloudscribe.Core.Web.Controllers
             model.LoginInfoTop = Site.LoginInfoTop;
             model.LoginInfoBottom = Site.LoginInfoBottom;
             model.ExternalAuthenticationList = signInManager.GetExternalAuthenticationSchemes();
-            
+            // don't disable db auth if there are no social auth providers configured
+            model.DisableDbAuth = Site.DisableDbAuth && Site.HasAnySocialAuthEnabled();
+
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -235,6 +240,12 @@ namespace cloudscribe.Core.Web.Controllers
             if(!Site.AllowNewRegistration)
             {
                 return new StatusCodeResult(404);
+            }
+            // login is equivalent to register for new social auth users
+            // if db auth is disabled just redirect
+            if(Site.DisableDbAuth && Site.HasAnySocialAuthEnabled())
+            {
+                return RedirectToAction("Login");
             }
 
             ViewData["Title"] = sr["Register"];
@@ -520,9 +531,15 @@ namespace cloudscribe.Core.Web.Controllers
         // GET: /Account/ExternalLoginCallback
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null)
+        public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null)
         {
             log.LogDebug("ExternalLoginCallback called with returnurl " + returnUrl);
+
+            if (remoteError != null)
+            {
+                ModelState.AddModelError(string.Empty, $"Error from external provider: {remoteError}");
+                return View(nameof(Login));
+            }
 
             var info = await signInManager.GetExternalLoginInfoAsync();
             if (info == null)

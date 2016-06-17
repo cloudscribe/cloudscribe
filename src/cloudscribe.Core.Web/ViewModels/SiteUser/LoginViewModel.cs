@@ -16,6 +16,7 @@ namespace cloudscribe.Core.Web.ViewModels.SiteUser
         }
 
         public bool UseEmailForLogin { get; set; } = true;
+        public bool DisableDbAuth { get; set; } = false;
 
         [RequiredWhen("UseEmailForLogin", true, ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "The email address does not appear as valid")]

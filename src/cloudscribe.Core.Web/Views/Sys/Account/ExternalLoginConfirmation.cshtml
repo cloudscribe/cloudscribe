@@ -21,7 +21,7 @@
         logging in.
     </p>
     <div class="form-group">
-        <label asp-for="Email" class="col-md-2 control-label">@sr["Email"</label>
+        <label asp-for="Email" class="col-md-2 control-label">@sr["Email"]</label>
         <div class="col-md-10">
             <input asp-for="Email" class="form-control" />
             <span asp-validation-for="Email" class="text-danger"></span>
@@ -33,7 +33,6 @@
         </div>
     </div>
 </form>
-
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }

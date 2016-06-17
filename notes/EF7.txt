@@ -171,6 +171,7 @@ dotnet ef migrations add Initial -c LoggingDbContext
 dotnet ef migrations add RemoveCurrecncy -c CoreDbContext
 dotnet ef migrations add Limitfieldsize -c CoreDbContext
 dotnet ef migrations add cleanup20160617 -c CoreDbContext
+dotnet ef migrations add cleanup20160617-2 -c CoreDbContext
 
 
 No parameterless constructor was found on 'LoggingDbContext'. Either add a parameterless constructor to 'LoggingDbContext' or add an impleme

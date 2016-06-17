@@ -8,8 +8,10 @@
 @using Microsoft.Extensions.Localization
 @inject IStringLocalizer<CloudscribeCore> sr
 @inject SiteSettings site
-@{ 
+@{
     var socFormat = sr["Log in using your {0} account"];
+    var socialAuthoColumnWidth = 4;
+    if (Model.DisableDbAuth) { socialAuthoColumnWidth = 12; }
 }
 @if (Model.RecaptchaSiteKey.Length > 0)
 {
@@ -26,82 +28,84 @@
 }
 <div class="row">
     <div class="col-md-8">
-        <section id="loginForm">
-            <form asp-controller="Account" asp-action="Login" asp-route-returnurl='@ViewData["ReturnUrl"]' method="post" class="form-horizontal" role="form">
-                <h4>@sr["Use a local account to log in."]</h4>
-                <hr />
-                <div asp-validation-summary="All" class="text-danger"></div>
-                @if (Model.UseEmailForLogin)
+        @if (!Model.DisableDbAuth)
+        {
+            <section id="loginForm">
+                <form asp-controller="Account" asp-action="Login" asp-route-returnurl='@ViewData["ReturnUrl"]' method="post" class="form-horizontal" role="form">
+                    <h4>@sr["Use a local account to log in."]</h4>
+                    <hr />
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    @if (Model.UseEmailForLogin)
                 {
-                    <div class="form-group">
-                        <label asp-for="Email" class="col-md-2 control-label">@sr["Email"]</label>
-                        <div class="col-md-10">
-                            <input asp-for="Email" class="form-control" />
-                            <span asp-validation-for="Email" class="text-danger"></span>
-                        </div>
-                    </div>
-                }
-                else
-                {
-                    <div class="form-group">
-                        <label asp-for="UserName" class="col-md-2 control-label">@sr["Username"]</label>
-                        <div class="col-md-10">
-                            <input asp-for="UserName" class="form-control" />
-                            <span asp-validation-for="UserName" class="text-danger"></span>
-                        </div>
-                    </div>
-                }         
-                <div class="form-group">
-                    <label asp-for="Password" class="col-md-2 control-label">@sr["Password"]</label>
-                    <div class="col-md-10">
-                        <input asp-for="Password" class="form-control" />
-                        <span asp-validation-for="Password" class="text-danger"></span>
-                    </div>
-                </div>
-                @if (site.AllowPersistentLogin)
-                {
-                    <div class="form-group">
-                        <div class="col-md-offset-2 col-md-10">
-                            <div class="checkbox">
-                                <label>
-                                    <input asp-for="RememberMe" /> @sr["Remember Me"]
-                                </label>
+                        <div class="form-group">
+                            <label asp-for="Email" class="col-md-2 control-label">@sr["Email"]</label>
+                            <div class="col-md-10">
+                                <input asp-for="Email" class="form-control" />
+                                <span asp-validation-for="Email" class="text-danger"></span>
                             </div>
                         </div>
-                    </div>
-                }
-                @if (Model.RecaptchaSiteKey.Length > 0)
-                {
+                    }
+                    else
+                    {
+                        <div class="form-group">
+                            <label asp-for="UserName" class="col-md-2 control-label">@sr["Username"]</label>
+                            <div class="col-md-10">
+                                <input asp-for="UserName" class="form-control" />
+                                <span asp-validation-for="UserName" class="text-danger"></span>
+                            </div>
+                        </div>
+                    }
                     <div class="form-group">
-                        <div class="col-md-offset-2 col-md-10">
-                            <div class="g-recaptcha" data-sitekey="@Model.RecaptchaSiteKey"></div>
-                            @Html.ValidationMessage("recaptchaerror", new { @class = "text-danger" })
+                        <label asp-for="Password" class="col-md-2 control-label">@sr["Password"]</label>
+                        <div class="col-md-10">
+                            <input asp-for="Password" class="form-control" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
                         </div>
                     </div>
-                }
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <button name="submit" type="submit" class="btn btn-default">@sr["Log In"]</button>
-                        <input type="hidden" asp-for="UseEmailForLogin" />
+                    @if (site.AllowPersistentLogin)
+                {
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <div class="checkbox">
+                                    <label>
+                                        <input asp-for="RememberMe" /> @sr["Remember Me"]
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    @if (Model.RecaptchaSiteKey.Length > 0)
+                {
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <div class="g-recaptcha" data-sitekey="@Model.RecaptchaSiteKey"></div>
+                                @Html.ValidationMessage("recaptchaerror", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    }
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <button name="submit" type="submit" class="btn btn-default">@sr["Log In"]</button>
+                            <input type="hidden" asp-for="UseEmailForLogin" />
+                        </div>
                     </div>
-                </div>
-                <p>
-                    <a asp-action="Register">@sr["Register as a new user?"]</a>
-                </p>
-                <p>
-                    <a asp-action="ForgotPassword">@sr["Forgot your password?"]</a>
-                </p>
-            </form>
-
-        </section>
+                    <p>
+                        <a asp-action="Register">@sr["Register as a new user?"]</a>
+                    </p>
+                    <p>
+                        <a asp-action="ForgotPassword">@sr["Forgot your password?"]</a>
+                    </p>
+                </form>
+            </section>
+        }
     </div>
-    <div class="col-md-4">
+    <div class="col-md-@socialAuthoColumnWidth">
         @{
             var LoginProviders = Model.ExternalAuthenticationList.ToList();
             if (LoginProviders.Count > 0)
             {
                 <section id="socialLoginForm">
-                    <h4>@sr["Use another service to log in."]</h4>
+                    <h4>@sr["Use an existing account to log in"]</h4>
                     <hr />
                     <form asp-controller="Account" asp-action="ExternalLogin" asp-route-returnurl='@ViewData["ReturnUrl"]' method="post" class="form-horizontal" role="form">
                         <div id="socialLoginList">
@@ -131,5 +135,5 @@
 }
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
-<script asp-append-version="true" src="~/jsdev/cloudscribe-validation-requiredwhen.js"></script>
+    <script asp-append-version="true" src="~/jsdev/cloudscribe-validation-requiredwhen.js"></script>
 }
