@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-01-19
-// Last Modified:			2016-06-16
+// Last Modified:			2016-06-17
 // 
 
 using System;
@@ -22,8 +22,12 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         [Display(Name = "Allow New Registrations")]
         public bool AllowNewRegistration { get; set; }
 
+        public bool SmtpIsConfigured { get; set; } = false;
+
         [Display(Name = "Require Confirmed Email")]
         public bool RequireConfirmedEmail { get; set; }
+
+        public bool SmsIsConfigured { get; set; } = false;
 
         [Display(Name = "Require Confirmed Phone")]
         public bool RequireConfirmedPhone { get; set; }

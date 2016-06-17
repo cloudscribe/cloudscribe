@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2016-06-16
+// Last Modified:			2016-06-17
 // 
 
 using cloudscribe.Core.Models;
@@ -792,6 +792,9 @@ namespace cloudscribe.Core.Web.Controllers
             model.UseEmailForLogin = selectedSite.UseEmailForLogin;
             model.RequireConfirmedPhone = selectedSite.RequireConfirmedPhone;
             model.AccountApprovalEmailCsv = selectedSite.AccountApprovalEmailCsv;
+
+            model.SmtpIsConfigured = selectedSite.SmtpIsConfigured();
+            model.SmsIsConfigured = selectedSite.SmsIsConfigured();
             model.HasAnySocialAuthEnabled = selectedSite.HasAnySocialAuthEnabled();
 
             return View(model);
@@ -820,17 +823,20 @@ namespace cloudscribe.Core.Web.Controllers
                 return RedirectToAction("Index");
             }
 
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
             if (model.SiteId == Guid.Empty)
             {
                 this.AlertDanger(sr["oops something went wrong, site was not found."], true);
                 return RedirectToAction("Index");
             }
 
+            if (!ModelState.IsValid)
+            {
+                model.SmtpIsConfigured = selectedSite.SmtpIsConfigured();
+                model.SmsIsConfigured = selectedSite.SmsIsConfigured();
+                model.HasAnySocialAuthEnabled = selectedSite.HasAnySocialAuthEnabled();
+                return View(model);
+            }
+            
             selectedSite.AccountApprovalEmailCsv = model.AccountApprovalEmailCsv;
             selectedSite.AllowNewRegistration = model.AllowNewRegistration;
             selectedSite.AllowPersistentLogin = model.AllowPersistentLogin;
