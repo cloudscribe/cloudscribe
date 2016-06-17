@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-17
-// Last Modified:			2016-06-11
+// Last Modified:			2016-06-17
 // 
 
 using System;
@@ -43,8 +43,8 @@ namespace cloudscribe.Core.Models
         bool AccountApproved { get; set; }
         string AvatarUrl { get; set; }
         string Gender { get; set; }
-        string Country { get; set; }
-        string State { get; set; }
+        //string Country { get; set; }
+        //string State { get; set; }
 
     }
 

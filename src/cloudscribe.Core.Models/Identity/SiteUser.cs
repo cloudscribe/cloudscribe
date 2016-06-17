@@ -2,10 +2,9 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-17
-// Last Modified:			2016-06-11
+// Last Modified:			2016-06-17
 // 
 
-//using Microsoft.AspNet.Identity;
 using System;
 
 namespace cloudscribe.Core.Models
@@ -107,7 +106,7 @@ namespace cloudscribe.Core.Models
             u.AvatarUrl = user.AvatarUrl;
             u.CanAutoLockout = user.CanAutoLockout;
             u.Comment = user.Comment;
-            u.Country = user.Country;
+            //u.Country = user.Country;
             u.CreatedUtc = user.CreatedUtc;
             u.LastModifiedUtc = user.LastModifiedUtc;
 
@@ -152,7 +151,7 @@ namespace cloudscribe.Core.Models
             u.Signature = user.Signature;
             u.SiteId = user.SiteId;
             
-            u.State = user.State;
+            //u.State = user.State;
             u.TimeZoneId = user.TimeZoneId;
             u.Trusted = user.Trusted;
             u.TwoFactorEnabled = user.TwoFactorEnabled;

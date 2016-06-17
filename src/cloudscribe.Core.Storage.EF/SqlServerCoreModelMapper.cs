@@ -484,6 +484,10 @@ namespace cloudscribe.Core.Storage.EF
             .HasMaxLength(100)
             ;
 
+            entity.Property(p => p.NewEmail)
+            .HasMaxLength(100)
+            ;
+
             entity.HasIndex(p => p.NormalizedEmail);
 
             entity.Property(p => p.UserName)
@@ -575,7 +579,15 @@ namespace cloudscribe.Core.Storage.EF
             .HasMaxLength(100)
             ;
 
-           
+            entity.Property(p => p.SecurityStamp)
+            .HasMaxLength(50)
+            ;
+
+            entity.Property(p => p.TimeZoneId)
+            .HasMaxLength(50)
+            ;
+
+
         }
 
         public void Map(EntityTypeBuilder<SiteRole> entity)

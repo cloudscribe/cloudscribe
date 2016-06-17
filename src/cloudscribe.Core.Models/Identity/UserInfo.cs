@@ -80,19 +80,19 @@ namespace cloudscribe.Core.Models
 
         public bool IsLockedOut { get; set; } = false;
 
-        private string country = string.Empty;
-        public string Country
-        {
-            get { return country ?? string.Empty; }
-            set { country = value; }
-        }
+        //private string country = string.Empty;
+        //public string Country
+        //{
+        //    get { return country ?? string.Empty; }
+        //    set { country = value; }
+        //}
 
-        private string state = string.Empty;
-        public string State
-        {
-            get { return state ?? string.Empty; }
-            set { state = value; }
-        }
+        //private string state = string.Empty;
+        //public string State
+        //{
+        //    get { return state ?? string.Empty; }
+        //    set { state = value; }
+        //}
         
         public DateTime? LastLoginUtc { get; set; } 
 

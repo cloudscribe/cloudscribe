@@ -8,9 +8,10 @@ using cloudscribe.Core.Storage.EF;
 namespace cloudscribe.Core.Storage.EF.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    partial class CoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20160617115149_Limitfieldsize")]
+    partial class Limitfieldsize
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.0-rc2-20901")
@@ -443,6 +444,8 @@ namespace cloudscribe.Core.Storage.EF.Migrations
 
                     b.Property<string>("Comment");
 
+                    b.Property<string>("Country");
+
                     b.Property<DateTime>("CreatedUtc");
 
                     b.Property<DateTime?>("DateOfBirth");
@@ -496,8 +499,7 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                         .HasAnnotation("SqlServer:ColumnType", "bit")
                         .HasAnnotation("SqlServer:DefaultValue", false);
 
-                    b.Property<string>("NewEmail")
-                        .HasAnnotation("MaxLength", 100);
+                    b.Property<string>("NewEmail");
 
                     b.Property<bool>("NewEmailApproved")
                         .ValueGeneratedOnAdd()
@@ -527,16 +529,16 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                         .HasAnnotation("SqlServer:ColumnType", "bit")
                         .HasAnnotation("SqlServer:DefaultValue", false);
 
-                    b.Property<string>("SecurityStamp")
-                        .HasAnnotation("MaxLength", 50);
+                    b.Property<string>("SecurityStamp");
 
                     b.Property<string>("Signature");
 
                     b.Property<Guid>("SiteId")
                         .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier");
 
-                    b.Property<string>("TimeZoneId")
-                        .HasAnnotation("MaxLength", 50);
+                    b.Property<string>("State");
+
+                    b.Property<string>("TimeZoneId");
 
                     b.Property<bool>("Trusted");
 

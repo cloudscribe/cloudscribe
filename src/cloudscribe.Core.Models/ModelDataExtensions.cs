@@ -73,8 +73,8 @@ namespace cloudscribe.Core.Models.DataExtensions
                 user.DisplayInMemberList = Convert.ToBoolean(reader["DisplayInMemberList"]);
             }
             user.WebSiteUrl = reader["WebSiteURL"].ToString();
-            user.Country = reader["Country"].ToString();
-            user.State = reader["State"].ToString();
+            //user.Country = reader["Country"].ToString();
+            //user.State = reader["State"].ToString();
            
             user.AvatarUrl = reader["AvatarUrl"].ToString();
 
@@ -139,8 +139,8 @@ namespace cloudscribe.Core.Models.DataExtensions
                 user.DisplayInMemberList = Convert.ToBoolean(reader["DisplayInMemberList"]);
             }
             user.WebSiteUrl = reader["WebSiteURL"].ToString();
-            user.Country = reader["Country"].ToString();
-            user.State = reader["State"].ToString();
+            //user.Country = reader["Country"].ToString();
+            //user.State = reader["State"].ToString();
             
             user.AvatarUrl = reader["AvatarUrl"].ToString();
 

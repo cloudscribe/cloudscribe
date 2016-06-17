@@ -8,9 +8,10 @@ using cloudscribe.Core.Storage.EF;
 namespace cloudscribe.Core.Storage.EF.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    partial class CoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20160617121028_cleanup20160617")]
+    partial class cleanup20160617
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.0-rc2-20901")
@@ -443,6 +444,8 @@ namespace cloudscribe.Core.Storage.EF.Migrations
 
                     b.Property<string>("Comment");
 
+                    b.Property<string>("Country");
+
                     b.Property<DateTime>("CreatedUtc");
 
                     b.Property<DateTime?>("DateOfBirth");
@@ -534,6 +537,8 @@ namespace cloudscribe.Core.Storage.EF.Migrations
 
                     b.Property<Guid>("SiteId")
                         .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier");
+
+                    b.Property<string>("State");
 
                     b.Property<string>("TimeZoneId")
                         .HasAnnotation("MaxLength", 50);
