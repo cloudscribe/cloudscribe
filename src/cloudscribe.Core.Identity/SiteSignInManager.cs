@@ -270,7 +270,7 @@ namespace cloudscribe.Core.Identity
             //var auth = new AuthenticateContext(AuthenticationScheme.External);
 
             var auth = new AuthenticateContext(options.Cookies.ExternalCookie.AuthenticationScheme);
-            
+            // this is signing the user in which we don't always want, why they put this side effect here I don't know
             await context.Authentication.AuthenticateAsync(auth);
 
             if (auth.Principal == null)
@@ -331,7 +331,9 @@ namespace cloudscribe.Core.Identity
                 return SignInResult.Failed;
             }
 
-            if(user.IsDeleted) return SignInResult.Failed;
+            if (!user.AccountApproved) return SignInResult.NotAllowed;
+
+            if (user.IsDeleted) return SignInResult.Failed;
 
             var error = await PreSignInCheck(user);
             if (error != null)

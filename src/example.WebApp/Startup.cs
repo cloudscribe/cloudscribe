@@ -102,7 +102,9 @@ namespace example.WebApp
 
                 //options.Cookies.ApplicationCookie.DataProtectionProvider = 
                 //DataProtectionProvider.Create(new DirectoryInfo("C:\\Github\\Identity\\artifacts"));
-            });
+            })
+            
+            ;
 
             services.Configure<GlobalResourceOptions>(Configuration.GetSection("GlobalResourceOptions"));
             services.AddSingleton<IStringLocalizerFactory, GlobalResourceManagerStringLocalizerFactory>();

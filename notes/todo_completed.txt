@@ -23,3 +23,22 @@ Uncheck "Use Email for Login"
 ** Register page should show input for username
 
 -- end tested 2016-06-16
+
+2016-06-19 tested
+If the Registration Agreement is populated, the user must check the box agreeing to the terms of use in order to register
+
+Check "Only Use Social Authentication" and configure social auth
+** The only way for new users to register or for any user to login should be via social auth
+** definitely the admin needs to add a social auth to his own account before making this setting or he will have no way to login without changing it in the db back to allow regular login
+** I think we still want a visible "Register" link, but the Register action should redirect to login in this case
+
+Check "Require Approval Before Login"
+** Newly registered user should not be able to login until an admin approves the account
+** This should be true even if using social auth to create the account
+** An email should be sent to the notify list csv
+
+Check "Require Confirmed Email" && provide smtp settings so email can be sent for verification
+** Newly registered user should not be able to login until the email is verified 
+** This should be true even if using social auth to create the account
+
+-- end tested 2016-06-19

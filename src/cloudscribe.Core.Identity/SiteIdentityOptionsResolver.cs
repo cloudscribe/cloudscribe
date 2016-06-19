@@ -2,13 +2,14 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette/Derek Gray
 // Created:				    2016-05-04
-// Last Modified:		    2016-06-05
+// Last Modified:		    2016-06-19
 // 
 
 using cloudscribe.Core.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
 namespace cloudscribe.Core.Identity
@@ -19,10 +20,12 @@ namespace cloudscribe.Core.Identity
         private SiteAuthCookieValidator siteValidator;
         private IHttpContextAccessor httpContextAccessor;
         private MultiTenantOptions multiTenantOptions;
+        private TokenOptions tokenOptions;
 
         public SiteIdentityOptionsResolver(
             IHttpContextAccessor httpContextAccessor,
             IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
+            IOptions<TokenOptions> tokenOptionsAccessor,
             SiteAuthCookieValidator siteValidator
             )
         {
@@ -30,6 +33,7 @@ namespace cloudscribe.Core.Identity
             this.cookieEvents = new CookieAuthenticationEvents();
             this.siteValidator = siteValidator;
             multiTenantOptions = multiTenantOptionsAccessor.Value;
+            tokenOptions = tokenOptionsAccessor.Value;
         }
 
         public IdentityOptions Value
@@ -46,7 +50,7 @@ namespace cloudscribe.Core.Identity
                 // TODO: I'm not sure newing this up here is agood idea
                 // are we missing any default configuration thast would normally be set for identity?
                 var identityOptions = new IdentityOptions();
-
+                identityOptions.Tokens = tokenOptions;
                 /*
                 identityOptions.ClaimsIdentity = singletonOptions.ClaimsIdentity;
                 identityOptions.Cookies = singletonOptions.Cookies;

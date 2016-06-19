@@ -4,12 +4,14 @@
 @using cloudscribe.Core.Web
 @using Microsoft.Extensions.Options
 @using Microsoft.Extensions.Localization
+@using Microsoft.AspNetCore.Identity
 @inject IStringLocalizer<CloudscribeCore> sr
 @inject SiteSettings site
+@inject SiteSignInManager<SiteUser> SignInManager
 @{ 
     var helloFormat = sr["Hello {0}!"];
 }
-@if (User.Identity.IsAuthenticated)
+@if (SignInManager.IsSignedIn(User))
 {
     <form asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm" class="navbar-right">
         <ul class="nav navbar-nav navbar-right">

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-05-07
-// Last Modified:			2016-05-20
+// Last Modified:			2016-06-19
 // 
 
 using cloudscribe.Core.Identity;
@@ -77,7 +77,24 @@ namespace Microsoft.Extensions.DependencyInjection
              .AddRoleStore<RoleStore<SiteRole>>()
              .AddUserManager<SiteUserManager<SiteUser>>()
              .AddRoleManager<SiteRoleManager<SiteRole>>()
-             .AddDefaultTokenProviders();
+             ;
+
+            var dataProtectionProviderType = typeof(DataProtectorTokenProvider<SiteUser>);
+            var phoneNumberProviderType = typeof(PhoneNumberTokenProvider<SiteUser>);
+            var emailTokenProviderType = typeof(EmailTokenProvider<SiteUser>);
+            services.Configure<TokenOptions>(options =>
+            {
+                options.ProviderMap[TokenOptions.DefaultProvider] = new TokenProviderDescriptor(dataProtectionProviderType);
+                options.ProviderMap[TokenOptions.DefaultEmailProvider] = new TokenProviderDescriptor(emailTokenProviderType);
+                options.ProviderMap[TokenOptions.DefaultPhoneProvider] = new TokenProviderDescriptor(phoneNumberProviderType);
+            });
+            services.AddTransient(dataProtectionProviderType);
+            services.AddTransient(emailTokenProviderType);
+            services.AddTransient(phoneNumberProviderType);
+
+            
+
+
             return builder;
 
             //return services;

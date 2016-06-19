@@ -933,4 +933,10 @@
   <data name="Username not accepted please try a different value" xml:space="preserve">
     <value>Username not accepted please try a different value</value>
   </data>
+  <data name="Register in using your {0} account" xml:space="preserve">
+    <value>Register in using your {0} account</value>
+  </data>
+  <data name="Use an existing account" xml:space="preserve">
+    <value>Use an existing account</value>
+  </data>
 </root>

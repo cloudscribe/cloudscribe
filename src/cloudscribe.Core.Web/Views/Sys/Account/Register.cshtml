@@ -2,9 +2,10 @@
 @using cloudscribe.Core.Web
 @using Microsoft.Extensions.Options
 @using Microsoft.Extensions.Localization
+@using Microsoft.AspNetCore.Http.Authentication
 @inject IStringLocalizer<CloudscribeCore> sr
 @{
-    
+    var socFormat = sr["Register in using your {0} account"];
 }
 @if (Model.RecaptchaSiteKey.Length > 0)
 {
@@ -93,6 +94,29 @@
         </div>
     </div>
 </form>
+@{
+            var LoginProviders = Model.ExternalAuthenticationList.ToList();
+            if (LoginProviders.Count > 0)
+            {
+        <section id="socialLoginForm">
+            <h4>@sr["Use an existing account"]</h4>
+            <hr />
+            <form asp-controller="Account" asp-action="ExternalLogin" asp-route-returnurl='@ViewData["ReturnUrl"]' method="post" class="form-horizontal" role="form">
+                <div id="socialLoginList">
+                    <p>
+                        @foreach (AuthenticationDescription p in LoginProviders)
+                        {
+                            <button type="submit" class="btn btn-default" id="@p.AuthenticationScheme" name="provider" value="@p.AuthenticationScheme"
+                                    title="@string.Format(socFormat,p.DisplayName)">
+                                @p.AuthenticationScheme
+                            </button>
+                        }
+                    </p>
+                </div>
+            </form>
+        </section>
+    }
+}
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 <script asp-append-version="true" src="~/jsdev/cloudscribe-validation-enforcetrue.js"></script>

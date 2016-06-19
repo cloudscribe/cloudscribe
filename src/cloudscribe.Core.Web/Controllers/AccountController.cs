@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2016-06-17
+// Last Modified:			2016-06-19
 // 
 
 using cloudscribe.Core.Identity;
@@ -233,7 +233,7 @@ namespace cloudscribe.Core.Web.Controllers
         [AllowAnonymous]
         public IActionResult Register()
         {
-            if(HttpContext.User.Identity.IsAuthenticated)
+            if(signInManager.IsSignedIn(User))
             {
                 return this.RedirectToSiteRoot(Site);
             }
@@ -261,7 +261,8 @@ namespace cloudscribe.Core.Web.Controllers
             model.UseEmailForLogin = Site.UseEmailForLogin;
             model.RegistrationPreamble = Site.RegistrationPreamble;
             model.RegistrationAgreement = Site.RegistrationAgreement;
-            
+            model.ExternalAuthenticationList = signInManager.GetExternalAuthenticationSchemes();
+
             return View(model);
         }
 
@@ -280,6 +281,7 @@ namespace cloudscribe.Core.Web.Controllers
             model.UseEmailForLogin = Site.UseEmailForLogin;
             model.RegistrationPreamble = Site.RegistrationPreamble;
             model.RegistrationAgreement = Site.RegistrationAgreement;
+            model.ExternalAuthenticationList = signInManager.GetExternalAuthenticationSchemes();
 
             bool isValid = ModelState.IsValid;
             if (isValid)
@@ -541,6 +543,7 @@ namespace cloudscribe.Core.Web.Controllers
                 return View(nameof(Login));
             }
 
+            // this is actually signing the user in
             var info = await signInManager.GetExternalLoginInfoAsync();
             if (info == null)
             {
@@ -563,11 +566,18 @@ namespace cloudscribe.Core.Web.Controllers
 
                 return this.RedirectToSiteRoot(Site);
             }
+
             if (result.RequiresTwoFactor)
             {
                 log.LogDebug("ExternalLoginCallback ExternalLoginSignInAsync RequiresTwoFactor ");
                 return RedirectToAction("SendCode", new { ReturnUrl = returnUrl });
             }
+
+            if (result.IsNotAllowed)
+            {
+                return RedirectToAction("PendingApproval");
+            }
+            
             if (result.IsLockedOut)
             {
                 log.LogDebug("ExternalLoginCallback ExternalLoginSignInAsync IsLockedOut ");
@@ -606,10 +616,19 @@ namespace cloudscribe.Core.Web.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
+
+                var userName = model.Email.Replace("@", string.Empty).Replace(".", string.Empty);
+                var userNameAvailable = await userManager.LoginIsAvailable(Guid.Empty, userName);
+                if (!userNameAvailable)
+                {
+                    userName = model.Email;
+                }
+
                 var user = new SiteUser {
                     SiteId = Site.Id,
-                    UserName = model.Email,
-                    Email = model.Email
+                    UserName = userName,
+                    Email = model.Email,
+                    AccountApproved = Site.RequireApprovalBeforeLogin ? false : true
                 };
                 var result = await userManager.CreateAsync(user);
                 if (result.Succeeded)
@@ -623,14 +642,57 @@ namespace cloudscribe.Core.Web.Controllers
                     {
                         log.LogDebug("ExternalLoginConfirmation AddLoginAsync succeeded ");
 
-                        await signInManager.SignInAsync(user, isPersistent: false);
-
-                        if (!string.IsNullOrEmpty(returnUrl))
+                        
+                        if (Site.RequireConfirmedEmail) // require email confirmation
                         {
-                            return LocalRedirect(returnUrl);
+                            var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
+
+                            var callbackUrl = Url.Action(new UrlActionContext
+                            {
+                                Action = "ConfirmEmail",
+                                Controller = "Account",
+                                Values = new { userId = user.Id.ToString(), code = code },
+                                Protocol = HttpContext.Request.Scheme
+                            });
+
+                            emailSender.SendAccountConfirmationEmailAsync(
+                                Site,
+                                model.Email,
+                                sr["Confirm your account"],
+                                callbackUrl).Forget();
+
+                            if (this.SessionIsAvailable())
+                            {
+                                this.AlertSuccess(sr["Please check your email inbox, we just sent you a link that you need to click to confirm your account"], true);
+
+                                return Redirect("/");
+                            }
+                            else
+                            {
+                                return RedirectToAction("EmailConfirmationRequired", new { userId = user.Id, didSend = true });
+                            }
+                        }
+                        else
+                        {
+                            if (Site.RequireApprovalBeforeLogin)
+                            {
+                                emailSender.AccountPendingApprovalAdminNotification(Site, user).Forget();
+                                return RedirectToAction("PendingApproval", new { userId = user.Id, didSend = true });
+                            }
+                            else
+                            {
+                                await signInManager.SignInAsync(user, isPersistent: false);
+
+                                if (!string.IsNullOrEmpty(returnUrl))
+                                {
+                                    return LocalRedirect(returnUrl);
+                                }
+
+                                return this.RedirectToSiteRoot(Site);
+                            }
                         }
 
-                        return this.RedirectToSiteRoot(Site);
+                        
                     }
                     else
                     {
