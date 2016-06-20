@@ -65,6 +65,11 @@ namespace cloudscribe.Core.Web.Controllers
         [AllowAnonymous]
         public IActionResult Login(string returnUrl = null)
         {
+            if (signInManager.IsSignedIn(User))
+            {
+                return this.RedirectToSiteRoot(Site);
+            }
+
             ViewData["Title"] = sr["Log in"];
             ViewData["ReturnUrl"] = returnUrl;
             LoginViewModel model = new LoginViewModel();

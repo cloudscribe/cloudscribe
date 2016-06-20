@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette/Derek Gray
 // Created:				    2016-05-04
-// Last Modified:		    2016-06-19
+// Last Modified:		    2016-06-20
 // 
 
 using cloudscribe.Core.Models;
@@ -42,26 +42,27 @@ namespace cloudscribe.Core.Identity
             {
                 var context = httpContextAccessor.HttpContext;
                 var tenant = context.GetTenant<SiteSettings>();
-
-                //var tenantPathBase = string.IsNullOrEmpty(tenant.SiteFolderName)
-                //    ? PathString.Empty
-                //    : new PathString("/" + tenant.SiteFolderName);
-                
-                // TODO: I'm not sure newing this up here is agood idea
-                // are we missing any default configuration thast would normally be set for identity?
                 var identityOptions = new IdentityOptions();
-                identityOptions.Tokens = tokenOptions;
-                /*
-                identityOptions.ClaimsIdentity = singletonOptions.ClaimsIdentity;
-                identityOptions.Cookies = singletonOptions.Cookies;
-                identityOptions.Lockout = singletonOptions.Lockout;
-                identityOptions.Password = singletonOptions.Password;
-                identityOptions.SecurityStampValidationInterval = singletonOptions.SecurityStampValidationInterval;
-                identityOptions.SignIn = singletonOptions.SignIn;
-                identityOptions.Tokens = singletonOptions.Tokens;
-                identityOptions.User = singletonOptions.User;
-                */
 
+                identityOptions.Tokens = tokenOptions;
+
+                identityOptions.Password.RequiredLength = tenant.MinRequiredPasswordLength;
+                identityOptions.Password.RequireNonAlphanumeric = true; //default
+                identityOptions.Password.RequireLowercase = true; //default
+                identityOptions.Password.RequireUppercase = true; //default
+                identityOptions.Password.RequireDigit = true; // default
+
+                identityOptions.Lockout.AllowedForNewUsers = true;
+                identityOptions.Lockout.MaxFailedAccessAttempts = tenant.MaxInvalidPasswordAttempts;
+
+                identityOptions.SignIn.RequireConfirmedEmail = tenant.RequireConfirmedEmail;
+                // this is a dangerous setting -existing users including admin can't login if they don't have a phone
+                // number configured
+                identityOptions.SignIn.RequireConfirmedPhoneNumber = tenant.RequireConfirmedPhone;
+
+                identityOptions.User.RequireUniqueEmail = true;
+                identityOptions.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+"; // default value
+                
                 SetupAppCookie(identityOptions.Cookies.ApplicationCookie, AuthenticationScheme.Application, tenant);
                 SetupOtherCookies(identityOptions.Cookies.ExternalCookie, AuthenticationScheme.External, tenant);
                 SetupOtherCookies(identityOptions.Cookies.TwoFactorRememberMeCookie, AuthenticationScheme.TwoFactorRememberMe, tenant);
