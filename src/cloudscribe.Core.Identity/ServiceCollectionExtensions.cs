@@ -21,7 +21,7 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IdentityBuilder AddCloudscribeIdentity(
             this IServiceCollection services,
-            Action<IdentityOptions> setupAction
+            Action<IdentityOptions> setupAction = null
             )
         {
             services.AddSingleton<IOptions<IdentityOptions>, SiteIdentityOptionsResolver>();

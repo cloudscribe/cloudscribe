@@ -61,7 +61,7 @@ namespace example.WebApp
             string pathToCryptoKeys = appBasePath + System.IO.Path.DirectorySeparatorChar + "dp_keys" + System.IO.Path.DirectorySeparatorChar;
             services.AddDataProtection()
                 .PersistKeysToFileSystem(new System.IO.DirectoryInfo(pathToCryptoKeys));
-            
+
             // waiting for rc2 compatible glimpse
             //bool enableGlimpse = Configuration.GetValue("DiagnosticOptions:EnableGlimpse", false);
 
@@ -69,6 +69,11 @@ namespace example.WebApp
             //{
             //    services.AddGlimpse();
             //}
+
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto;
+            });
 
             services.AddMemoryCache();
             // we currently only use session for alerts, so we can fire an alert on the next request
@@ -92,19 +97,18 @@ namespace example.WebApp
             
             services.AddCloudscribeCore(Configuration);
 
-            services.AddCloudscribeIdentity(options => {
+            services.AddCloudscribeIdentity();
+            //services.AddCloudscribeIdentity(options => {
 
-                options.Cookies.ApplicationCookie.AuthenticationScheme 
-                    = cloudscribe.Core.Identity.AuthenticationScheme.Application;
-                
-                options.Cookies.ApplicationCookie.CookieName 
-                    = cloudscribe.Core.Identity.AuthenticationScheme.Application;
+            //    options.Cookies.ApplicationCookie.AuthenticationScheme 
+            //        = cloudscribe.Core.Identity.AuthenticationScheme.Application;
 
-                //options.Cookies.ApplicationCookie.DataProtectionProvider = 
-                //DataProtectionProvider.Create(new DirectoryInfo("C:\\Github\\Identity\\artifacts"));
-            })
-            
-            ;
+            //    options.Cookies.ApplicationCookie.CookieName 
+            //        = cloudscribe.Core.Identity.AuthenticationScheme.Application;
+
+            //    //options.Cookies.ApplicationCookie.DataProtectionProvider = 
+            //    //DataProtectionProvider.Create(new DirectoryInfo("C:\\Github\\Identity\\artifacts"));
+            //});
 
             services.Configure<GlobalResourceOptions>(Configuration.GetSection("GlobalResourceOptions"));
             services.AddSingleton<IStringLocalizerFactory, GlobalResourceManagerStringLocalizerFactory>();
@@ -196,7 +200,9 @@ namespace example.WebApp
             //{
             //    app.UseExceptionHandler("/Home/Error");
             //}
-            
+
+            app.UseForwardedHeaders();
+
             app.UseStaticFiles();
 
             // custom 404 and error page - this preserves the status code (ie 404)
@@ -249,7 +255,7 @@ namespace example.WebApp
                     );
                 builder.UseCookieAuthentication(appCookieOptions);
 
-                //builder.UseForwardedHeaders();
+                //
                 // known issue here is if a site is updated to populate the
                 // social auth keys, it currently requires a restart so that the middleware gets registered
                 // in order for it to work or for the social auth buttons to appear 
