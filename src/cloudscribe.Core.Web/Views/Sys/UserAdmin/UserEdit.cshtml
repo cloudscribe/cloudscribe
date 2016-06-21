@@ -149,28 +149,24 @@
                 <input asp-for="UserId" type="hidden" />
             </form>
         }
-        @section Scripts {
-            @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
-            <environment names="Development">
-                <script src="~/lib/jquery-ui/jquery-ui.js"></script>
-                <script src="~/lib/ckeditor/ckeditor.js"></script>
-                <script src="~/lib/ckeditor/adapters/jquery.js"></script>
-                <script src="~/jsdev/cloudscribe-ckeditor-unobtrusive.js"></script>
-            </environment>
-            <environment names="Staging,Production">
-                <script src="//ajax.aspnetcdn.com/ajax/jquery.ui/1.11.3/jquery.ui.min.js"
-                        asp-fallback-src="~/js/lib/jquery-ui/jquery-ui.min.js"
-                        asp-fallback-test="window.jQuery.ui && window.jQuery.ui.version">
-                </script>
-                <script src="~/js/ckeditor/ckeditor.js"></script>
-                <script src="~/js/ckeditor/adapters/jquery.js"></script>
-                <script src="~/js/cloudscribe-ckeditor-unobtrusive.js"></script>
-            </environment>
-            <script src="~/jsdev/timepicker/jquery-ui-timepicker-addon.js"></script>
-            @if (System.Globalization.CultureInfo.CurrentUICulture.Name != "en-US")
-            {
-                <script src="@datePickerLocalizationScriptUrl"></script>
-                <script src="@timePickerLocalizationScriptUrl"></script>
-            }
-            <script src="~/jsdev/cloudscribe-datepicker-jqui-unobtrusive.js"></script>
+@section Scripts {
+@{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+<script src="//cdn.ckeditor.com/4.5.9/full/ckeditor.js"></script>
+<script src="//cdn.ckeditor.com/4.5.9/full/adapters/jquery.js"></script>
+<environment names="Development">
+    <script src="~/lib/jquery-ui/jquery-ui.js"></script>         
+</environment>
+<environment names="Staging,Production">
+    <script src="//ajax.aspnetcdn.com/ajax/jquery.ui/1.11.3/jquery.ui.min.js"
+            asp-fallback-src="~/js/lib/jquery-ui/jquery-ui.min.js"
+            asp-fallback-test="window.jQuery.ui && window.jQuery.ui.version">
+    </script>    
+</environment>
+<script src="~/jsdev/timepicker/jquery-ui-timepicker-addon.js"></script>
+@if (System.Globalization.CultureInfo.CurrentUICulture.Name != "en-US")
+{
+    <script src="@datePickerLocalizationScriptUrl"></script>
+    <script src="@timePickerLocalizationScriptUrl"></script>
+}
+<script src="~/cscsr/ckunobtrusive"></script>
         }

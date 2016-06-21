@@ -10,6 +10,9 @@ Check "Require Confirmed Phone" && provide SMS settings
 
 Redesign email templating for html email to use Razor views like in cloudscribe.SimpleContent
 
+Replace jqueryui datepicker with bootstrap datetime picker?
+Replace ckeditor with bootstrap wysiwyg?
+
 
 Backlog Plans and ideas
 Support for IdentityServer4 - main goal is I should be able to mix and mingle SPA features into the same web app with MVC features, and jwt auth works in addition to cookie auth

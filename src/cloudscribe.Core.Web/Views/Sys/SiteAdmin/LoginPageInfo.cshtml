@@ -44,21 +44,11 @@
 </div>
 
 @section Scripts {
-    <environment names="Development">
-        <script src="~/jsdev/cloudscribe-cascade-unobtrusive.js"></script>
-        <script src="~/lib/ckeditor/ckeditor.js"></script>
-        <script src="~/lib/ckeditor/adapters/jquery.js"></script>
-        <script src="~/jsdev/cloudscribe-ckeditor-unobtrusive.js"></script>
-        <script src="~/lib/metisMenu/dist/metisMenu.min.js"></script>
-        <script src="~/jsdev/cloudscribe-sidemenu.js"></script>
-    </environment>
-    <environment names="Staging,Production">
-        <script src="~/js/cloudscribe-cascade-unobtrusive.js"></script>
-        <script src="~/js/ckeditor/ckeditor.js"></script>
-        <script src="~/js/ckeditor/adapters/jquery.js"></script>
-        <script src="~/js/cloudscribe-ckeditor-unobtrusive.js"></script>
-        <script src="~/js/metisMenu/dist/metisMenu.min.js"></script>
-        <script src="~/js/cloudscribe-sidemenu.js"></script>
-    </environment>
+<script src="//cdn.ckeditor.com/4.5.9/full/ckeditor.js"></script>
+<script src="//cdn.ckeditor.com/4.5.9/full/adapters/jquery.js"></script>
+<script src="~/cscsr/ckunobtrusive"></script>
+<script src="~/cscsr/metismenu"></script>
+<script src="~/cscsr/sidemenu"></script>
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+
 }

@@ -43,12 +43,102 @@ namespace cloudscribe.Core.Web.Controllers
                 "text/javascript");
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        public ContentResult jqueryvalidate()
+        {
+            return GetContentResult(
+                "cloudscribe.Core.Web.js.jquery.validate.min.js",
+                "text/javascript");
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ContentResult jqueryvalidationunobtrusive()
+        {
+            return GetContentResult(
+                "cloudscribe.Core.Web.js.jquery.validate.unobtrusive.min.js",
+                "text/javascript");
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ContentResult jqdp()
+        {
+            return GetContentResult(
+                "cloudscribe.Core.Web.js.cloudscribe-datepicker-jqui-unobtrusive.min.js",
+                "text/javascript");
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ContentResult requiredwhenvalidator()
+        {
+            return GetContentResult(
+                "cloudscribe.Core.Web.js.cloudscribe-validation-requiredwhen.min.js",
+                "text/javascript");
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ContentResult enforcetruevalidator()
+        {
+            return GetContentResult(
+                "cloudscribe.Core.Web.js.cloudscribe-validation-enforcetrue.min.js",
+                "text/javascript");
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ContentResult bootstrapmodal()
+        {
+            return GetContentResult(
+                "cloudscribe.Core.Web.js.cloudscribe-modaldialog-bootstrap.min.js",
+                "text/javascript");
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ContentResult sidemenu()
+        {
+            return GetContentResult(
+                "cloudscribe.Core.Web.js.cloudscribe-sidemenu.min.js",
+                "text/javascript");
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ContentResult metismenu()
+        {
+            return GetContentResult(
+                "cloudscribe.Core.Web.js.metisMenu.min.js",
+                "text/javascript");
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ContentResult cascade()
+        {
+            return GetContentResult(
+                "cloudscribe.Core.Web.js.cloudscribe-cascade-unobtrusive.min.js",
+                "text/javascript");
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ContentResult ckunobtrusive()
+        {
+            return GetContentResult(
+                "cloudscribe.Core.Web.js.cloudscribe-ckeditor-unobtrusive.min.js",
+                "text/javascript");
+        }
+
         //[HttpGet]
         //[AllowAnonymous]
         //public ContentResult jquerycookie()
         //{
         //    return GetContentResult(
-        //        "cloudscribe.Core.Web.js.jquery.cookie.js",
+        //        "cloudscribe.SimpleContent.Web.js.jquery.cookie.js",
         //        "text/javascript");
         //}
 

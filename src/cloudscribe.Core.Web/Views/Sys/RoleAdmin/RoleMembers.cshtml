@@ -3,10 +3,6 @@
 @using Microsoft.Extensions.Options
 @using Microsoft.Extensions.Localization
 @inject IStringLocalizer<CloudscribeCore> sr
-@section Styles {
-<link rel="stylesheet" href="~/lib/jquery-ui/themes/base/all.css" />
-<link rel="stylesheet" href="~/lib/jquery-ui/themes/base/dialog.css" />
-    }
 <h2>@Model.Heading1</h2>
 <h3>@Model.Heading2</h3>
 <form class="form-inline" role="form" asp-controller="RoleAdmin" asp-action="RoleMembers" method="get">
@@ -15,7 +11,7 @@
     <div class="input-group">
         <input name="searchInput" type="search" value="@Model.SearchQuery" class="form-control" />
         <span class="input-group-btn">
-            <button type="submit" value="CommonResources.Search" class="btn btn-default">@sr["Search"]</button>
+            <button type="submit" value="Search" class="btn btn-default">@sr["Search"]</button>
         </span>
     </div>
 </form>
@@ -93,17 +89,6 @@
         </div>
     </div>
  @section Scripts {
-<environment names="Development">
-    <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.js"></script>
-    <script src="~/lib/jquery-ui/jquery-ui.js"></script>
-    <script src="~/jsdev/cloudscribe-modaldialog-bootstrap.js"></script>
-</environment>
-<environment names="Staging,Production">
-    <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
-    <script src="//ajax.aspnetcdn.com/ajax/jquery.ui/1.11.3/jquery-ui.min.js"
-            asp-fallback-src="~/lib/jquery-ui/jquery-ui.min.js"
-            asp-fallback-test="window.jQuery.ui && window.jQuery.ui.version">
-    </script>
-    <script src="~/jsdev/cloudscribe-modaldialog-bootstrap.js"></script>
-</environment>
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+<script src="~/cscsr/bootstrapmodal"></script>
  }
