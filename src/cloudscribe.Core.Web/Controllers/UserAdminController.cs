@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-08
-// Last Modified:			2016-06-10
+// Last Modified:			2016-06-21
 // 
 
 using cloudscribe.Core.Identity;
@@ -363,6 +363,12 @@ namespace cloudscribe.Core.Web.Controllers
             Guid? siteId
             )
         {
+            if(userId == Guid.Empty)
+            {
+                return RedirectToAction("Index");
+            }
+
+            ViewData["ReturnUrl"] = Request.Path + Request.QueryString;
             ISiteSettings selectedSite;
             // only server admin site can edit other sites settings
             if ((siteId.HasValue) && (siteId.Value != Guid.Empty) && (siteId.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
@@ -452,7 +458,7 @@ namespace cloudscribe.Core.Web.Controllers
                         user.LastName = model.LastName;
                         user.UserName = model.Username;
                         user.DisplayName = model.DisplayName;
-                        user.AccountApproved = model.AccountApproved;
+                        //user.AccountApproved = model.AccountApproved;
                         user.Comment = model.Comment;
                         user.EmailConfirmed = model.EmailConfirmed;
                         if((user.IsLockedOut)&&(!model.IsLockedOut))
@@ -495,8 +501,8 @@ namespace cloudscribe.Core.Web.Controllers
         public async Task<ActionResult> ApproveUserAccount(
             Guid siteId, 
             Guid userId, 
-            bool sendEmailNotification,
-            int returnPageNumber = 1)
+            bool sendApprovalEmail,
+            string returnUrl = null)
         {
             var selectedSite = await siteManager.Fetch(siteId);
 
@@ -514,13 +520,13 @@ namespace cloudscribe.Core.Web.Controllers
                     this.AlertSuccess(string.Format(sr["user account for {0} was successfully approved."],
                             user.DisplayName), true);
                     
-                    if(sendEmailNotification)
+                    if(sendApprovalEmail)
                     {
                         var loginUrl = Url.Action("Login", "Account",
                             null,
                             protocol: HttpContext.Request.Scheme);
 
-                        emailSender.SendAccountConfirmationEmailAsync(
+                        emailSender.SendAccountApprovalNotificationAsync(
                         selectedSite,
                         user.Email,
                         sr["Account Approved"],
@@ -529,7 +535,12 @@ namespace cloudscribe.Core.Web.Controllers
                 }   
             }
 
-            return RedirectToAction("Index", "UserAdmin", new { siteId = selectedSite.Id, pageNumber = returnPageNumber });
+            if (!string.IsNullOrEmpty(returnUrl))
+            {
+                return LocalRedirect(returnUrl);
+            }
+
+            return RedirectToAction("Index", "UserAdmin", new { siteId = selectedSite.Id });
         }
 
         [HttpPost]

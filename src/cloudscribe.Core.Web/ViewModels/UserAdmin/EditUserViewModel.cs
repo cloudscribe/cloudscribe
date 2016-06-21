@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-31
-// Last Modified:		    2016-06-16
+// Last Modified:		    2016-06-21
 // 
 // TODO: support custom profile properties that are required for registration ?
 
@@ -26,13 +26,16 @@ namespace cloudscribe.Core.Web.ViewModels.Account
         public Guid UserId { get; set; } = Guid.Empty;
         public Guid SiteId { get; set; } = Guid.Empty;
 
+        public bool AccountApproved { get; set; }
+        public bool SendApprovalEmail { get; set; }
+
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "The email address does not appear as valid")]
         public string Email { get; set; }
 
         public bool EmailConfirmed { get; set; }
         public bool IsLockedOut { get; set; }
-        public bool AccountApproved { get; set; }
+        
         public bool Trusted { get; set; }
 
        

@@ -3,12 +3,12 @@ TODO:
 Make sure all the Security Settings under Administration > Security Settings are implemented
 Some of them may currently just update the settigns but no logic enforces the settings
 
-There should be a way for an admin to approve an account and generate an email to the new user letting him know of approval
 
 Check "Require Confirmed Phone" && provide SMS settings
 ** Newly registered user should not be able to login until phone is verified by sms
 ** User should have an opportunity to provide a phone number during registration
 
+Redesign email templating for html email to use Razor views like in cloudscribe.SimpleContent
 
 
 Backlog Plans and ideas

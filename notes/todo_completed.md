@@ -36,6 +36,8 @@ Check "Require Approval Before Login"
 ** Newly registered user should not be able to login until an admin approves the account
 ** This should be true even if using social auth to create the account
 ** An email should be sent to the notify list csv
+** There should be a way for an admin to approve an account and generate an email to the new user letting him know of approval
+
 
 Check "Require Confirmed Email" && provide smtp settings so email can be sent for verification
 ** Newly registered user should not be able to login until the email is verified 
