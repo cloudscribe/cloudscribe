@@ -71,3 +71,15 @@ https://github.com/adamalbrecht/ngQuickDate
 https://github.com/g00fy-/angular-datepicker
 
 https://github.com/telerik/kendo-ui-core apache 2 license
+
+http://momentjs.com/docs/#/displaying/format/
+http://eonasdan.github.io/bootstrap-datetimepicker/Options/#defaultdate
+
+data-cs-datepicker="true"
+data-cs-datepicker-show-time="false"
+data-cs-datepicker-show-time-only="false"
+data-cs-datepicker-show-month-list="true"
+data-cs-datepicker-show-year-list="true"
+data-cs-datepicker-year-range="c-100:c+0"
+data-cs-datepicker-dateformat="@ViewBag.DateFormat"
+data-cs-datepicker-timeformat="@ViewBag.TimeFormat" />

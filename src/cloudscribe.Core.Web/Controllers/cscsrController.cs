@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:                  Joe Audette
 // Created:                 2016-06-08
-// Last Modified:           2016-06-08
+// Last Modified:           2016-06-22
 // 
 
 using Microsoft.AspNetCore.Authorization;
@@ -24,7 +24,43 @@ namespace cloudscribe.Core.Web.Controllers
         //TODO: caching, what are best practices for caching static resources ?
         // seems like for embedded we could set long cache in production since it cannot change
         //https://docs.asp.net/en/latest/performance/caching/response.html
+        private ContentResult GetContentResult(string resourceName, string contentType)
+        {
+            var assembly = typeof(cscsrController).GetTypeInfo().Assembly;
+            var resourceStream = assembly.GetManifestResourceStream(resourceName);
+            string payload;
+            using (var reader = new StreamReader(resourceStream, Encoding.UTF8))
+            {
+                payload = reader.ReadToEnd();
+            }
 
+            return new ContentResult
+            {
+                ContentType = contentType,
+                Content = payload,
+                StatusCode = 200
+            };
+        }
+
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ContentResult bootstrapdatetimepickercss()
+        {
+            return GetContentResult(
+                "cloudscribe.Core.Web.css.bootstrap-datetimepicker.min.css",
+                "text/css");
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ContentResult momentwithlocalesjs()
+        {
+            return GetContentResult(
+                "cloudscribe.Core.Web.js.moment-with-locales.min.js",
+                "text/javascript");
+        }
+        
         [HttpGet]
         [AllowAnonymous]
         public ContentResult bootstrapdatetimepickerjs()
@@ -138,7 +174,7 @@ namespace cloudscribe.Core.Web.Controllers
         //public ContentResult jquerycookie()
         //{
         //    return GetContentResult(
-        //        "cloudscribe.SimpleContent.Web.js.jquery.cookie.js",
+        //        "cloudscribe.Core.Web.js.jquery.cookie.js",
         //        "text/javascript");
         //}
 
@@ -169,23 +205,7 @@ namespace cloudscribe.Core.Web.Controllers
         //        "text/javascript");
         //}
 
-        private ContentResult GetContentResult(string resourceName, string contentType)
-        {
-            var assembly = typeof(cscsrController).GetTypeInfo().Assembly;
-            var resourceStream = assembly.GetManifestResourceStream(resourceName);
-            string payload;
-            using (var reader = new StreamReader(resourceStream, Encoding.UTF8))
-            {
-                payload = reader.ReadToEnd();
-            }
 
-            return new ContentResult
-            {
-                ContentType = contentType,
-                Content = payload,
-                StatusCode = 200
-            };
-        }
 
 
 

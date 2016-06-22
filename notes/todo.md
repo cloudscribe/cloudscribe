@@ -3,15 +3,22 @@ TODO:
 Make sure all the Security Settings under Administration > Security Settings are implemented
 Some of them may currently just update the settigns but no logic enforces the settings
 
+2016-06-22 - currently blocked from testing sms 2 factor auth 
+for some stupid reason twilio has flagged my account as fraud
+waiting to see if they will step up with customer service and resolve this
+otherwise I will have to switch to another sms service provider
 
+--
 Check "Require Confirmed Phone" && provide SMS settings
 ** Newly registered user should not be able to login until phone is verified by sms
 ** User should have an opportunity to provide a phone number during registration
+--
 
 Redesign email templating for html email to use Razor views like in cloudscribe.SimpleContent
 
 Replace jqueryui datepicker with bootstrap datetime picker?
 Replace ckeditor with bootstrap wysiwyg?
+
 
 
 Backlog Plans and ideas
