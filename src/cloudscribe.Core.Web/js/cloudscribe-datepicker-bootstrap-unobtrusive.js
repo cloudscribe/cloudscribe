@@ -5,42 +5,44 @@ $(function () {
         $elems.each(function (index, ele) {
 		    var debugMode = ($(ele).data('bs-datepicker-debug') || false);
 		    var dFormat = ($(ele).data('bs-datepicker-format') || false);
-            var dviewMode = ($(ele).data('bs-datepicker-viewMode') || 'days');
-            var ddayViewHeaderFormat = ($(ele).data('bs-datepicker-dayViewHeaderFormat') || 'days');
+            var dviewMode = ($(ele).data('bs-datepicker-viewmode') || 'days');
+            var ddayViewHeaderFormat = ($(ele).data('bs-datepicker-dayviewheaderformat') || 'MMMM YYYY');
             var dstepping = ($(ele).data('bs-datepicker-stepping') || 1);
-            var dminDate = ($(ele).data('bs-datepicker-minDate') || false);
-			var dmaxDate = ($(ele).data('bs-datepicker-maxDate') || false);
-			var duseCurrent = ($(ele).data('bs-datepicker-useCurrent') || true);
-			var dcollapse = ($(ele).data('bs-datepicker-collapse') || true);
+            var dminDate = ($(ele).data('bs-datepicker-mindate') || false);
+			var dmaxDate = ($(ele).data('bs-datepicker-maxdate') || false);
+			var duseCurrent = ($(ele).data('bs-datepicker-usecurrent') == false ? false : true);
+			var dcollapse = ($(ele).data('bs-datepicker-collapse') == false ? false : true);
 			var dlocale = ($(ele).data('bs-datepicker-locale') || moment.locale());
-			var ddefaultDate = ($(ele).data('bs-datepicker-defaultDate') || false);
-			var ddisabledDates = ($(ele).data('bs-datepicker-disabledDates') || false);
-			var denabledDates = ($(ele).data('bs-datepicker-enabledDates') || false);
+			var ddefaultDate = ($(ele).data('bs-datepicker-defaultdate') || false);
+			var ddisabledDates = ($(ele).data('bs-datepicker-disableddates') || false);
+			var denabledDates = ($(ele).data('bs-datepicker-enableddates') || false);
 			//var dicons
-			var duseStrict = ($(ele).data('bs-datepicker-useStrict') || false);
-			var dsideBySide = ($(ele).data('bs-datepicker-sideBySide') || false);
-			var ddaysOfWeekDisabled = ($(ele).data('bs-datepicker-daysOfWeekDisabled') || []);
+			var duseStrict = ($(ele).data('bs-datepicker-usestrict') || false);
+			var dsideBySide = ($(ele).data('bs-datepicker-sidebyside') || false);
+			var ddaysOfWeekDisabled = ($(ele).data('bs-datepicker-daysofweekdisabled') || []);
 			var dcalendarWeeks = ($(ele).data('bs-datepicker-calendarWeeks') || false);
-			var dtoolbarPlacement = ($(ele).data('bs-datepicker-toolbarPlacement') || 'default');
-			var dshowTodayButton = ($(ele).data('bs-datepicker-showTodayButton') || false);
-			var dshowClear = ($(ele).data('bs-datepicker-showClear') || false);
-			var dshowClose = ($(ele).data('bs-datepicker-showClose') || false);
-			var dwidgetPositioning = ($(ele).data('bs-datepicker-widgetPositioning') || {horizontal: 'auto',vertical: 'auto'});
-			var dkeepOpen = ($(ele).data('bs-datepicker-keepOpen') || false);
+			var dtoolbarPlacement = ($(ele).data('bs-datepicker-toolbarplacement') || 'default');
+			var dshowTodayButton = ($(ele).data('bs-datepicker-showtodaybutton') || false);
+			var dshowClear = ($(ele).data('bs-datepicker-showclear') || false);
+			var dshowClose = ($(ele).data('bs-datepicker-showclose') || false);
+			//var dwidgetPositioning = $(ele).data('bs-datepicker-widgetpositioning');
+			var dkeepOpen = ($(ele).data('bs-datepicker-keepopen') || false);
 			var dinline = ($(ele).data('bs-datepicker-inline') || false);
-			var dkeepInvalid = ($(ele).data('bs-datepicker-keepInvalid') || false);
-			var ddisabledTimeIntervals = ($(ele).data('bs-datepicker-disabledTimeIntervals') || false);
-			var dallowInputToggle = ($(ele).data('bs-datepicker-allowInputToggle') || false);
-			var dfocusOnShow = ($(ele).data('bs-datepicker-focusOnShow') || true);
-			var denabledHours = ($(ele).data('bs-datepicker-enabledHours') || false);
-			var ddisabledHours = ($(ele).data('bs-datepicker-disabledHours') || false);
-			var dviewDate = ($(ele).data('bs-datepicker-viewDate') || false);
-            
+			var dkeepInvalid = ($(ele).data('bs-datepicker-keepinvalid') || false);
+			var ddisabledTimeIntervals = ($(ele).data('bs-datepicker-disabledtimeintervals') || false);
+			var dallowInputToggle = ($(ele).data('bs-datepicker-allowinputtoggle') || false);
+			var dfocusOnShow = ($(ele).data('bs-datepicker-focusonshow') == false ? false : true);
+			var denabledHours = ($(ele).data('bs-datepicker-enabledhours') || false);
+			var ddisabledHours = ($(ele).data('bs-datepicker-disabledhours') || false);
+			var dviewDate = ($(ele).data('bs-datepicker-viewdate') || false);
+			var posit = {horizontal: 'left',vertical: 'bottom'};
+            //if(dwidgetPositioning) { posit = $.parseJSON(dwidgetPositioning); };
+			
 			$(ele).datetimepicker({
 			    debug: debugMode,
-				widgetPositioning: dwidgetPositioning,
+				widgetPositioning: posit,
 				keepOpen: dkeepOpen,
-                allowInputToggle:dallowInputToggle
+                allowInputToggle:dallowInputToggle,
 				format: dFormat,
 				viewMode : dviewMode,
 				dayViewHeaderFormat : ddayViewHeaderFormat,

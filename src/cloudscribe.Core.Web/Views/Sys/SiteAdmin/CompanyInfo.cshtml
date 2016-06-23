@@ -99,8 +99,7 @@
     </div>
 </div>
 @section Scripts {
-@{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
-<script src="~/cscsr/cascade"></script>
-<script src="~/cscsr/metismenu"></script>
-<script src="~/cscsr/sidemenu"></script>
+@{ await Html.RenderPartialAsync("_SideMenuScriptsPartial"); }
+@{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+@{ await Html.RenderPartialAsync("_CascadeScriptsPartial"); }
 }

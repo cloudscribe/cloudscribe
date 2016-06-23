@@ -66,16 +66,16 @@ namespace cloudscribe.Core.Web.Controllers
         public ContentResult bootstrapdatetimepickerjs()
         {
             return GetContentResult(
-                "cloudscribe.Core.Web.js.bootstrap-datetimepicker.js",
+                "cloudscribe.Core.Web.js.bootstrap-datetimepicker.min.js",
                 "text/javascript");
         }
 
         [HttpGet]
         [AllowAnonymous]
-        public ContentResult bootstrapdatetimepickerjsmin()
+        public ContentResult bsdpu()
         {
             return GetContentResult(
-                "cloudscribe.Core.Web.js.bootstrap-datetimepicker.min.js",
+                "cloudscribe.Core.Web.js.cloudscribe-datepicker-bootstrap-unobtrusive.min.js",
                 "text/javascript");
         }
 

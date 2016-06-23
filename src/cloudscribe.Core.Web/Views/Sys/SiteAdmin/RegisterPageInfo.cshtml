@@ -43,10 +43,7 @@
     </div>
 </div>
 @section Scripts {
-<script src="~/cscsr/metismenu"></script>
-<script src="~/cscsr/sidemenu"></script>
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
-<script src="//cdn.ckeditor.com/4.5.9/full/ckeditor.js"></script>
-<script src="//cdn.ckeditor.com/4.5.9/full/adapters/jquery.js"></script>
-<script src="~/cscsr/ckunobtrusive"></script>
+@{ await Html.RenderPartialAsync("_SideMenuScriptsPartial"); }
+@{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+@{ await Html.RenderPartialAsync("_EditorScriptsPartial"); }
 }

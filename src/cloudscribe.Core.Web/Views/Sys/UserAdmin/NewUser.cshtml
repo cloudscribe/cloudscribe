@@ -4,13 +4,8 @@
 @using Microsoft.Extensions.Options
 @using Microsoft.Extensions.Localization
 @inject IStringLocalizer<CloudscribeCore> sr
-@{
-    var datePickerLocalizationScriptUrl = "~/js/jqueryui-i18n/datepicker-" + System.Globalization.CultureInfo.CurrentUICulture.Name + ".js";
-    var timePickerLocalizationScriptUrl = "~/js/timepicker/i18n/jquery-ui-timepicker-" + System.Globalization.CultureInfo.CurrentUICulture.Name + ".js";
-}
 @section Styles {
-    <link rel="stylesheet" href="~/lib/jquery-ui/themes/base/all.css" />
-    <link rel="stylesheet" href="~/jsdev/timepicker/jquery-ui-timepicker-addon.css" />
+@{ await Html.RenderPartialAsync("_DatePickerCssPartial"); }
 }
 <h2>@ViewBag.Title</h2>
 <form class="form-horizontal" role="form" asp-controller="UserAdmin" asp-action="NewUser">
@@ -80,14 +75,18 @@
         <div class="col-md-10">
             <input name="DateOfBirth" value="@(Model.DateOfBirth.HasValue ? Model.DateOfBirth.Value.ToString("d") : string.Empty)"
                    class="form-control"
-                   data-cs-datepicker="true"
-                   data-cs-datepicker-show-time="false"
-                   data-cs-datepicker-show-time-only="false"
-                   data-cs-datepicker-show-month-list="true"
-                   data-cs-datepicker-show-year-list="true"
-                   data-cs-datepicker-year-range="c-100:c+0"
-                   data-cs-datepicker-dateformat="@ViewBag.DateFormat"
-                   data-cs-datepicker-timeformat="@ViewBag.TimeFormat" />
+                   data-bs-datepicker="true"
+                   data-bs-datepicker-debug="false"
+                   data-bs-datepicker-keepOpen="false"
+                   data-bs-datepicker-allowInputToggle="true"
+                   data-bs-datepicker-format="L"
+                   data-bs-datepicker-viewMode="years"
+                   data-bs-datepicker-usecurrent="false"
+                   data-bs-datepicker-mindate="@DateTime.UtcNow.AddYears(-120).ToString("O")"
+                   data-bs-datepicker-maxdate="@DateTime.UtcNow.AddYears(-10).ToString("O")"
+                   data-bs-datepicker-viewDate="@DateTime.UtcNow.AddYears(-10).ToString("O")"
+                   data-cs-datepicker-timeformat="@ViewBag.TimeFormat" 
+                   />
             <span asp-validation-for="DateOfBirth" class="text-danger"></span>
         </div>
     </div>
@@ -100,20 +99,6 @@
 </form>
 @section Scripts {
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
-    <environment names="Development">
-        <script src="~/lib/jquery-ui/jquery-ui.js"></script>
-    </environment>
-    <environment names="Staging,Production">
-        <script src="//ajax.aspnetcdn.com/ajax/jquery.ui/1.11.3/jquery.ui.min.js"
-                asp-fallback-src="~/js/lib/jquery-ui/jquery-ui.min.js"
-                asp-fallback-test="window.jQuery.ui && window.jQuery.ui.version">
-        </script>
-    </environment>
-    <script src="~/jsdev/timepicker/jquery-ui-timepicker-addon.js"></script>
-    @if (System.Globalization.CultureInfo.CurrentUICulture.Name != "en-US")
-    {
-        <script src="@datePickerLocalizationScriptUrl"></script>
-            <script src="@timePickerLocalizationScriptUrl"></script>
-    }
-    <script src="~/cscsr/jqdp"></script>
+    @{ await Html.RenderPartialAsync("_EditorScriptsPartial"); }
+    @{ await Html.RenderPartialAsync("_DatePickerScriptsPartial"); }
 }

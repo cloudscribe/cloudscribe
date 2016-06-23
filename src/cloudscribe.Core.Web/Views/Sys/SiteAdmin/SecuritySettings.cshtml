@@ -111,7 +111,6 @@
     </div>
 </div>
 @section Scripts {
-<script src="~/cscsr/metismenu"></script>
-<script src="~/cscsr/sidemenu"></script>
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+@{ await Html.RenderPartialAsync("_SideMenuScriptsPartial"); }
+@{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }
