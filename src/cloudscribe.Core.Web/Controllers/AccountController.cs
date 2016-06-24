@@ -428,6 +428,11 @@ namespace cloudscribe.Core.Web.Controllers
         [AllowAnonymous]
         public IActionResult PendingApproval(Guid userId, bool didSend = false)
         {
+            if (signInManager.IsSignedIn(User))
+            {
+                return this.RedirectToSiteRoot(Site);
+            }
+
             var model = new PendingNotificationViewModel();
             model.UserId = userId;
             model.DidSend = didSend;
@@ -439,6 +444,10 @@ namespace cloudscribe.Core.Web.Controllers
         [AllowAnonymous]
         public IActionResult EmailConfirmationRequired(Guid userId, bool didSend = false)
         {
+            if (signInManager.IsSignedIn(User))
+            {
+                return this.RedirectToSiteRoot(Site);
+            }
             var model = new PendingNotificationViewModel();
             model.UserId = userId;
             model.DidSend = didSend;
@@ -486,7 +495,10 @@ namespace cloudscribe.Core.Web.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> ConfirmEmail(string userId, string code)
         {
-
+            if (signInManager.IsSignedIn(User))
+            {
+                return this.RedirectToSiteRoot(Site);
+            }
             if (userId == null || code == null)
             {
                 return View("Error");
@@ -497,13 +509,16 @@ namespace cloudscribe.Core.Web.Controllers
                 return View("Error");
             }
             var result = await userManager.ConfirmEmailAsync(user, code);
-            
-            if (Site.RequireApprovalBeforeLogin && ! user.AccountApproved)
+            if(result.Succeeded)
             {
-                emailSender.AccountPendingApprovalAdminNotification(Site, user).Forget();
+                if (Site.RequireApprovalBeforeLogin && !user.AccountApproved)
+                {
+                    emailSender.AccountPendingApprovalAdminNotification(Site, user).Forget();
 
-                return RedirectToAction("PendingApproval", new { userId = user.Id, didSend = true });
+                    return RedirectToAction("PendingApproval", new { userId = user.Id, didSend = true });
+                }
             }
+            
 
             return View(result.Succeeded ? "ConfirmEmail" : "Error");
         }

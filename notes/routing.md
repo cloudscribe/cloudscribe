@@ -20,3 +20,5 @@ http://stephenwalther.com/archive/2015/02/07/asp-net-5-deep-dive-routing
 http://stackoverflow.com/questions/32582232/imlementing-a-custom-irouter-in-asp-net-5-vnext-mvc-6
 
 http://stackoverflow.com/questions/32565768/change-route-collection-of-mvc6-after-startup#32586837
+
+http://www.hanselman.com/blog/AddingACustomInlineRouteConstraintInASPNETCore10.aspx

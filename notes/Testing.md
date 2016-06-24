@@ -27,3 +27,5 @@ http://www.seleniumhq.org/
 
 coded ui vs 2015 automation testing use of the app
 https://msdn.microsoft.com/en-us/library/dd286726.aspx?f=255&MSPPError=-2147217396
+
+http://www.hanselman.com/blog/AddingACustomInlineRouteConstraintInASPNETCore10.aspx

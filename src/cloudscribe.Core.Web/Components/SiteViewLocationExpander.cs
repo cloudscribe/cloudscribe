@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //  Author:                     Joe Audette
 //  Created:                    2016-03-03
-//	Last Modified:              2016-05-19
+//	Last Modified:              2016-06-24
 //
 
 using cloudscribe.Core.Models;
@@ -43,7 +43,8 @@ namespace cloudscribe.Core.Web.Components
                     IEnumerable<string> themeLocations = new[]
                     {
                         $"/sitefiles/{tenant}/themes/{theme}/{{1}}/{{0}}.cshtml",
-                        $"/sitefiles/{tenant}/themes/{theme}/Shared/{{0}}.cshtml"
+                        $"/sitefiles/{tenant}/themes/{theme}/Shared/{{0}}.cshtml",
+                        $"/sitefiles/{tenant}/themes/{theme}/EmailTemplates/{{0}}.cshtml"
                     };
 
                     viewLocations = themeLocations.Concat(viewLocations);

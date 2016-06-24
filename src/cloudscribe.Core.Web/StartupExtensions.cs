@@ -56,8 +56,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddScoped<IVersionProviderFactory, VersionProviderFactory>();
             services.AddScoped<IVersionProvider, CloudscribeCoreVersionProvider>();
-
-            services.AddTransient<IEmailTemplateService, HardCodedEmailTemplateService>();
+            
             services.AddTransient<ISiteMessageEmailSender, SiteEmailMessageSender>();
             //services.AddTransient<ISiteMessageEmailSender, FakeSiteEmailSender>();
             
@@ -65,6 +64,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddSingleton<IThemeListBuilder, SiteThemeListBuilder>();
             services.AddSingleton<IRazorViewEngine, CoreViewEngine>();
+            services.TryAddScoped<ViewRenderer, ViewRenderer>();
 
             services.AddScoped<INodeUrlPrefixProvider, FolderTenantNodeUrlPrefixProvider>();
             services.AddCloudscribeNavigation(configuration);

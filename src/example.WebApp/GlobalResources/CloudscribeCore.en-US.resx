@@ -939,4 +939,7 @@
   <data name="Use an existing account" xml:space="preserve">
     <value>Use an existing account</value>
   </data>
+  <data name="New Account Pending Approval" xml:space="preserve">
+    <value>New Account Pending Approval</value>
+  </data>
 </root>

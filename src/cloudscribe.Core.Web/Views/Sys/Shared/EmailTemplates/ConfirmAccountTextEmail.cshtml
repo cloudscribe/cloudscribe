@@ -1,0 +1,8 @@
+﻿@model string 
+
+@{
+    Layout = "_LayoutTextEmailNotification";
+    ViewData["Title"] = "Email Confirmation Required";
+}
+
+Please confirm your account by clicking this link: @Html.Raw(Model)

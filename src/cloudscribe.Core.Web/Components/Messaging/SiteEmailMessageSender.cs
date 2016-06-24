@@ -2,18 +2,16 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-08-11
-// Last Modified:			2016-02-03
+// Last Modified:			2016-06-24
 // 
 
 using cloudscribe.Core.Models;
 using cloudscribe.Messaging.Email;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Globalization;
+using cloudscribe.Web.Common.Razor;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
-
+using System;
+using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Components.Messaging
 {
@@ -24,23 +22,19 @@ namespace cloudscribe.Core.Web.Components.Messaging
         // because the link urls are obfuscated to some degree
 
         public SiteEmailMessageSender(
-            ILogger<SiteEmailMessageSender> logger,
-            IEmailTemplateService templateService = null)
+            ViewRenderer viewRenderer,
+            IStringLocalizer<CloudscribeCore> localizer,
+            ILogger<SiteEmailMessageSender> logger
+            )
         {
             log = logger;
-
-            if (templateService == null)
-            {
-                this.templateService = new HardCodedEmailTemplateService();
-            }
-            else
-            {
-                this.templateService = templateService;
-            }
+            sr = localizer;
+            this.viewRenderer = viewRenderer;
 
         }
 
-        private IEmailTemplateService templateService;
+        private ViewRenderer viewRenderer;
+        private IStringLocalizer sr;
         private ILogger log;
 
         private SmtpOptions GetSmptOptions(ISiteSettings siteSettings)
@@ -72,16 +66,16 @@ namespace cloudscribe.Core.Web.Components.Messaging
                 log.LogError(logMessage);
                 return;
             }
-
-            string plainTextTemplate = templateService.GetPlainTextTemplate(MessagePurpose.ConfirmAccount, CultureInfo.CurrentUICulture.Name);
-            string plainTextMessage = string.Format(plainTextTemplate, confirmationUrl);
-
-            string htmlTemplate = templateService.GetHtmlTemplate(MessagePurpose.ConfirmAccount, CultureInfo.CurrentUICulture.Name);
-            string htmlMessage = string.Format(htmlTemplate, confirmationUrl);
-
+            
             EmailSender sender = new EmailSender();
             try
             {
+                var plainTextMessage
+                = await viewRenderer.RenderViewAsString<string>("EmailTemplates/ConfirmAccountTextEmail", confirmationUrl);
+
+                var htmlMessage
+                    = await viewRenderer.RenderViewAsString<string>("EmailTemplates/ConfirmAccountHtmlEmail", confirmationUrl);
+
                 await sender.SendEmailAsync(
                     smtpOptions,
                     toAddress,
@@ -111,23 +105,7 @@ namespace cloudscribe.Core.Web.Components.Messaging
                 log.LogError(logMessage);
                 return;
             }
-
-            string plainTextTemplate = templateService.GetPlainTextTemplate(MessagePurpose.PasswordReset, CultureInfo.CurrentUICulture.Name);
-            string plainTextMessage
-                = string.Format(
-                    CultureInfo.InvariantCulture,
-                    plainTextTemplate,
-                    siteSettings.SiteName, //maybe this should be the site url?
-                    resetUrl);
-
-            string htmlTemplate = templateService.GetHtmlTemplate(MessagePurpose.PasswordReset, CultureInfo.CurrentUICulture.Name);
-            string htmlMessage
-                = string.Format(
-                    CultureInfo.InvariantCulture,
-                    htmlTemplate,
-                    siteSettings.SiteName,
-                    resetUrl);
-
+            
             EmailSender sender = new EmailSender();
             // in account controller we are calling this method without await
             // so it doesn't block the UI. Which means it is running on a background thread
@@ -136,6 +114,12 @@ namespace cloudscribe.Core.Web.Components.Messaging
             // brind down the thread or the process
             try
             {
+                var plainTextMessage
+                   = await viewRenderer.RenderViewAsString<string>("EmailTemplates/PasswordResetTextEmail", resetUrl);
+
+                var htmlMessage
+                    = await viewRenderer.RenderViewAsString<string>("EmailTemplates/PasswordResetHtmlEmail", resetUrl);
+
                 await sender.SendEmailAsync(
                     smtpOptions,
                     toAddress,
@@ -165,17 +149,16 @@ namespace cloudscribe.Core.Web.Components.Messaging
                 log.LogError(logMessage);
                 return;
             }
-
-            string plainTextTemplate = templateService.GetPlainTextTemplate(MessagePurpose.SendSecurityCode, CultureInfo.CurrentUICulture.Name);
-            string plainTextMessage = string.Format(plainTextTemplate, securityCode);
-
-            string htmlTemplate = templateService.GetHtmlTemplate(MessagePurpose.SendSecurityCode, CultureInfo.CurrentUICulture.Name);
-            string htmlMessage = string.Format(htmlTemplate, securityCode);
-
-
+            
             EmailSender sender = new EmailSender();
             try
             {
+                var plainTextMessage
+                   = await viewRenderer.RenderViewAsString<string>("EmailTemplates/SendSecurityCodeTextEmail", securityCode);
+
+                var htmlMessage
+                    = await viewRenderer.RenderViewAsString<string>("EmailTemplates/SendSecurityCodeHtmlEmail", securityCode);
+
                 await sender.SendEmailAsync(
                 smtpOptions,
                 toAddress,
@@ -188,9 +171,6 @@ namespace cloudscribe.Core.Web.Components.Messaging
             {
                 log.LogError("error sending security code email", ex);
             }
-
-
-
         }
 
         public async Task AccountPendingApprovalAdminNotification(
@@ -208,25 +188,24 @@ namespace cloudscribe.Core.Web.Components.Messaging
                 return;
             }
 
-            string subject = "New Account Pending Approval";
-            string plainTextTemplate = templateService.GetPlainTextTemplate(MessagePurpose.ConfirmAccount, CultureInfo.CurrentUICulture.Name);
-            //string plainTextMessage = string.Format(plainTextTemplate, confirmationUrl);
-            //string plainTextMessage = "U"
-            var message = $"A new user just registered at {siteSettings.SiteName} with email address {user.Email}";
-
-            //string htmlTemplate = templateService.GetHtmlTemplate(MessagePurpose.ConfirmAccount, CultureInfo.CurrentUICulture.Name);
-            //string htmlMessage = string.Format(htmlTemplate, confirmationUrl);
-
+            string subject = sr["New Account Pending Approval"];
+           
             EmailSender sender = new EmailSender();
             try
             {
+                var plainTextMessage
+                   = await viewRenderer.RenderViewAsString<ISiteUser>("EmailTemplates/AccountPendingApprovalAdminNotificationTextEmail", user);
+
+                var htmlMessage
+                    = await viewRenderer.RenderViewAsString<ISiteUser>("EmailTemplates/AccountPendingApprovalAdminNotificationHtmlEmail", user);
+
                 await sender.SendMultipleEmailAsync(
                     smtpOptions,
                     siteSettings.AccountApprovalEmailCsv,
                     siteSettings.DefaultEmailFromAddress,
                     subject,
-                    message,
-                    string.Empty).ConfigureAwait(false);
+                    plainTextMessage,
+                    htmlMessage).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -249,24 +228,7 @@ namespace cloudscribe.Core.Web.Components.Messaging
                 log.LogError(logMessage);
                 return;
             }
-
-            string plainTextTemplate = templateService.GetPlainTextTemplate(MessagePurpose.AccountApproved, CultureInfo.CurrentUICulture.Name);
-            string plainTextMessage
-                = string.Format(
-                    CultureInfo.InvariantCulture,
-                    plainTextTemplate,
-                    siteSettings.SiteName,
-                    loginUrl
-                    );
-
-            string htmlTemplate = templateService.GetHtmlTemplate(MessagePurpose.AccountApproved, CultureInfo.CurrentUICulture.Name);
-            string htmlMessage
-                = string.Format(
-                    CultureInfo.InvariantCulture,
-                    htmlTemplate,
-                    siteSettings.SiteName,
-                    loginUrl);
-
+            
             EmailSender sender = new EmailSender();
             // in account controller we are calling this method without await
             // so it doesn't block the UI. Which means it is running on a background thread
@@ -275,6 +237,12 @@ namespace cloudscribe.Core.Web.Components.Messaging
             // brind down the thread or the process
             try
             {
+                var plainTextMessage
+                   = await viewRenderer.RenderViewAsString<string>("EmailTemplates/AccountApprovedTextEmail", loginUrl);
+
+                var htmlMessage
+                    = await viewRenderer.RenderViewAsString<string>("EmailTemplates/AccountApprovedHtmlEmail", loginUrl);
+
                 await sender.SendEmailAsync(
                     smtpOptions,
                     toAddress,

@@ -66,12 +66,12 @@ http://blog.2partsmagic.com/restful-uri-design/
 This is a good URL design.
 
     The URLs are can be persistent (they contain no parts that are likely to change; name changes are rare).
-    The URLs are descriptive (users can read the URL and they’ll get an idea what the page is about).
-    The URLs are browsable (users can remove path segments from right to left, and they’ll get no 404).
+    The URLs are descriptive (users can read the URL and theyï¿½ll get an idea what the page is about).
+    The URLs are browsable (users can remove path segments from right to left, and theyï¿½ll get no 404).
 
-It’s also good that they don’t contain any "unnecessary" parts (like, for example, cryptic IDs for person/gallery names). Which, of course, means that you have to take care of edge cases like duplicate person names (maybe append an integer) or same person’s duplicate gallery names (maybe forbid these).
+Itï¿½s also good that they donï¿½t contain any "unnecessary" parts (like, for example, cryptic IDs for person/gallery names). Which, of course, means that you have to take care of edge cases like duplicate person names (maybe append an integer) or same personï¿½s duplicate gallery names (maybe forbid these).
 
-I assume that users get some kind of list of all teachers/students when visiting /teacher resp. /student. In this case, I’d probably use the plural forms /teachers* and /students*:
+I assume that users get some kind of list of all teachers/students when visiting /teacher resp. /student. In this case, Iï¿½d probably use the plural forms /teachers* and /students*:
 
 /teachers
 /teachers/john-doe
@@ -86,3 +86,5 @@ http://stackoverflow.com/questions/335575/simple-hackable-url-implementation-for
 https://msdn.microsoft.com/en-us/library/ms972974.aspx#urlrewriting_topic7
 
 http://blog.ploeh.dk/2013/05/01/rest-lesson-learned-avoid-hackable-urls/
+
+https://blog.fastmail.com/2016/06/20/everything-you-could-ever-want-to-know-and-more-about-controlling-the-referer-header/

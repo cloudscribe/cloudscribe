@@ -9,15 +9,10 @@ waiting to see if they will step up with customer service and resolve this
 otherwise I will have to switch to another sms service provider
 
 --
-Check "Require Confirmed Phone" && provide SMS settings
-** Newly registered user should not be able to login until phone is verified by sms
-** User should have an opportunity to provide a phone number during registration
+
 --
 
 Redesign email templating for html email to use Razor views like in cloudscribe.SimpleContent
-
-Replace jqueryui datepicker with bootstrap datetime picker?
-Replace ckeditor with bootstrap wysiwyg?
 
 
 
@@ -35,3 +30,12 @@ I want to be able to log activities to an activity stream - ie into a CRM - ther
 
 Need some kind of help system to add contextual help for various settings that may need explanation
 
+--
+moved this to backlog, because it is a difficult thing to implement and maybe not needed
+when I tried to enforce this I found that that user has no way to login and add a phone
+so phone should maybe only be an optional 2 factor aquth source
+for now removing the checkbox from the ui
+Check "Require Confirmed Phone" && provide SMS settings
+** Newly registered user should not be able to login until phone is verified by sms
+** User should have an opportunity to provide a phone number during registration
+--

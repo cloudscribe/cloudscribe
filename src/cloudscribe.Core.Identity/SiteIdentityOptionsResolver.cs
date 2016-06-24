@@ -57,8 +57,8 @@ namespace cloudscribe.Core.Identity
 
                 identityOptions.SignIn.RequireConfirmedEmail = tenant.RequireConfirmedEmail;
                 // this is a dangerous setting -existing users including admin can't login if they don't have a phone
-                // number configured
-                identityOptions.SignIn.RequireConfirmedPhoneNumber = tenant.RequireConfirmedPhone;
+                // number configured and there is no way for them to add the needed number
+                //identityOptions.SignIn.RequireConfirmedPhoneNumber = tenant.RequireConfirmedPhone;
 
                 identityOptions.User.RequireUniqueEmail = true;
                 identityOptions.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+"; // default value
