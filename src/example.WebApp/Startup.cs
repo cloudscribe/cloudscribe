@@ -15,6 +15,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc.Razor;
 using System.Globalization;
+using Serilog;
 
 namespace example.WebApp
 {
@@ -45,8 +46,13 @@ namespace example.WebApp
             Configuration = builder.Build();
 
             appBasePath = env.ContentRootPath;
+
+            //serilogFileLogger = new LoggerConfiguration()
+            //    .WriteTo.File("log.txt")
+            //    .CreateLogger();
         }
 
+        //private Serilog.Core.Logger serilogFileLogger;
         private string appBasePath;
         public IConfigurationRoot Configuration { get; }
 
@@ -164,6 +170,8 @@ namespace example.WebApp
 
             ConfigureDataStorage(services);
 
+            services.AddNoDbSerilogSink(Configuration);
+
             //var container = new Container();
             //container.Populate(services);
 
@@ -179,11 +187,18 @@ namespace example.WebApp
             ILoggerFactory loggerFactory,
             IOptions<cloudscribe.Core.Models.MultiTenantOptions> multiTenantOptionsAccessor,
             IServiceProvider serviceProvider,
-            IOptions<RequestLocalizationOptions> localizationOptionsAccessor
+            IOptions<RequestLocalizationOptions> localizationOptionsAccessor,
+            Serilog.Sinks.NoDb.NoDbSink serilogNoDbSink
             )
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+            //loggerFactory.AddSerilog(serilogFileLogger);
+            //var serilogConfig = new LoggerConfiguration()
+            //    .WriteTo.NoDb(serilogNoDbSink)
+            //    .CreateLogger();
+            //loggerFactory.AddSerilog(serilogConfig);
+
             var storage = Configuration["DevOptions:DbPlatform"];
             if(storage != "NoDb")
             {   

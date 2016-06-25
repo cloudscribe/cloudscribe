@@ -1,15 +1,20 @@
 TODO:
 
-Make sure all the Security Settings under Administration > Security Settings are implemented
-Some of them may currently just update the settigns but no logic enforces the settings
+## Implement a way to plugin event handlers that can execute on various actions of interest
+
+** user created, user login, user logout, user updated, pre-update, pre-delete, user deleted, added to role, removed from role, password changed, email changed
+** site created, updated, pre-update, deleted, pre-deleted
+** role created, updated deleted
+These can be injected an a dependency can be taken on IEnumerable<ISomeHandler> to fire them when the action occurs
+
+Implement logging with NoDb storage
+
+Implement a way to use NoDb with project per tenant instead of all tenants in the same project
 
 
 
+# Backlog Plans and ideas
 
-
-
-
-Backlog Plans and ideas
 Support for IdentityServer4 - main goal is I should be able to mix and mingle SPA features into the same web app with MVC features, and jwt auth works in addition to cookie auth
 
 If the Registration Agreement is populated, if the user registers with social auth this is not currently enforced, the user can register without having checked the box. Need to detect new user creation for social auth and if needed redirect to another page to require the user to agree to the terms. but to do this would require a new field on user account to indicate if he agreed - update, if the user has to confirm their email

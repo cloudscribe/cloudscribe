@@ -54,7 +54,11 @@
         "cloudscribe.Web.Localization": "1.0.0-*",
         "cloudscribe.Web.Navigation": "1.0.1-*",
         "cloudscribe.Web.Pagination": "1.0.1-*",
-        "SaasKit.Multitenancy": "1.1.3-rc2"
+        "SaasKit.Multitenancy": "1.1.3-rc2",
+        "Serilog": "2.0.0-rc-640",
+        "Serilog.Extensions.Logging": "1.0.0-rc2-10110",
+        "Serilog.Sinks.File": "2.0.0-rc-706",
+        "Serilog.Sinks.NoDb": "1.0.0-*"
 
 
 
