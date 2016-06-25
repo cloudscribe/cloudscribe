@@ -257,7 +257,7 @@ namespace cloudscribe.Core.Web.Controllers
             
             var model = new RegisterViewModel();
             model.SiteId = Site.Id;
-            model.AgreementRequired = Site.RegistrationAgreement.Length > 0;
+            
 
             if ((Site.CaptchaOnRegistration)&& (Site.RecaptchaPublicKey.Length > 0))
             {
@@ -266,6 +266,7 @@ namespace cloudscribe.Core.Web.Controllers
             model.UseEmailForLogin = Site.UseEmailForLogin;
             model.RegistrationPreamble = Site.RegistrationPreamble;
             model.RegistrationAgreement = Site.RegistrationAgreement;
+            model.AgreementRequired = Site.RegistrationAgreement.Length > 0;
             model.ExternalAuthenticationList = signInManager.GetExternalAuthenticationSchemes();
 
             return View(model);
@@ -286,6 +287,7 @@ namespace cloudscribe.Core.Web.Controllers
             model.UseEmailForLogin = Site.UseEmailForLogin;
             model.RegistrationPreamble = Site.RegistrationPreamble;
             model.RegistrationAgreement = Site.RegistrationAgreement;
+            model.AgreementRequired = Site.RegistrationAgreement.Length > 0;
             model.ExternalAuthenticationList = signInManager.GetExternalAuthenticationSchemes();
 
             bool isValid = ModelState.IsValid;
@@ -606,7 +608,12 @@ namespace cloudscribe.Core.Web.Controllers
                 ViewData["ReturnUrl"] = returnUrl;
                 ViewData["LoginProvider"] = info.LoginProvider;
                 var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-                return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = email });
+                var model = new ExternalLoginConfirmationViewModel();
+                model.Email = email;
+                model.RegistrationPreamble = Site.RegistrationPreamble;
+                model.RegistrationAgreement = Site.RegistrationAgreement;
+                model.AgreementRequired = Site.RegistrationAgreement.Length > 0;
+                return View("ExternalLoginConfirmation", model);
             }
 
         }
@@ -725,6 +732,9 @@ namespace cloudscribe.Core.Web.Controllers
             else
             {
                 log.LogDebug("ExternalLoginConfirmation called with ModelStateInvalid ");
+                model.RegistrationPreamble = Site.RegistrationPreamble;
+                model.RegistrationAgreement = Site.RegistrationAgreement;
+                model.AgreementRequired = Site.RegistrationAgreement.Length > 0;
             }
 
             ViewData["ReturnUrl"] = returnUrl;

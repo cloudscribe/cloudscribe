@@ -5,18 +5,16 @@ Some of them may currently just update the settigns but no logic enforces the se
 
 
 
-Redesign email templating for email to use Razor views like in cloudscribe.SimpleContent
 
-Show registration agree ment on social auth confirm?
-
-Implement sorting links on user list
 
 
 
 Backlog Plans and ideas
 Support for IdentityServer4 - main goal is I should be able to mix and mingle SPA features into the same web app with MVC features, and jwt auth works in addition to cookie auth
 
-If the Registration Agreement is populated, if the user registers with social auth this is not currently enforced, the user can register without having checked the box. Need to detect new user creation for social auth and if needed redirect to another page to require the user to agree to the terms. but to do this would require a new field on user account to indicate if he agreed
+If the Registration Agreement is populated, if the user registers with social auth this is not currently enforced, the user can register without having checked the box. Need to detect new user creation for social auth and if needed redirect to another page to require the user to agree to the terms. but to do this would require a new field on user account to indicate if he agreed - update, if the user has to confirm their email
+on the first social auth ie registering on the site we do have an opportunity there to also require them to agree so I implemented that.
+But I think some social auth providers may provide a pre confirmed email and may bypass that screen - not 100% sure on this
 
 Support for security questions and answers?
 
