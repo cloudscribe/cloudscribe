@@ -12,23 +12,32 @@
             <a class="btn btn-xs btn-default" asp-action="NewUser" asp-controller="UserAdmin" asp-route-siteId="@Model.SiteId">@sr["New User"]</a>
         </th>
         <th>
-            @sr["Created"]
+            <a asp-action="@Model.ActionName" asp-controller="UserAdmin"
+              asp-route-siteId="@Model.SiteId"
+              asp-route-query="@Model.AlphaQuery"
+              asp-route-pagesize="@Model.Paging.ItemsPerPage"
+              asp-route-sortmode="1">@sr["Created"]</a>
         </th>
         <th></th>
         <th>
-            @sr["Email"]
+            @sr["Email/Login"]
         </th>
         <th>
-            @sr["Login Name"]
-        </th>
-        <th>
-            @sr["Display Name"]
+            <a asp-action="@Model.ActionName" asp-controller="UserAdmin"
+               asp-route-siteId="@Model.SiteId"
+               asp-route-query="@Model.AlphaQuery"
+               asp-route-pagesize="@Model.Paging.ItemsPerPage"
+               asp-route-sortmode="0">@sr["Display Name"]</a>
         </th>
         <th>
             @sr["First Name"]
         </th>
         <th>
-            @sr["Last Name"]
+            <a asp-action="@Model.ActionName" asp-controller="UserAdmin"
+               asp-route-siteId="@Model.SiteId"
+               asp-route-query="@Model.AlphaQuery"
+               asp-route-pagesize="@Model.Paging.ItemsPerPage"
+               asp-route-sortmode="2">@sr["Last Name"]</a>
         </th>
     </tr>
     @foreach (var item in Model.UserList)
@@ -47,9 +56,7 @@
                 <img gravatar-email="@item.Email" gravatar-size="30" />
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Email)     
-            </td>
-            <td>
+                @Html.DisplayFor(modelItem => item.Email) /
                 @Html.DisplayFor(modelItem => item.UserName)
             </td>
             <td>
@@ -66,8 +73,9 @@
 </table>
 <div>
     <cs-pager cs-paging-info="@Model.Paging"
-              asp-action="Index" asp-controller="UserAdmin"
+              asp-action="@Model.ActionName" asp-controller="UserAdmin"
               asp-route-siteId="@Model.SiteId"
               asp-route-query="@Model.AlphaQuery"
+              asp-route-sortmode="@Model.SortMode"
               asp-route-pagesize="@Model.Paging.ItemsPerPage"></cs-pager>
 </div>

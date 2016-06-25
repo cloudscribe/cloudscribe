@@ -3,16 +3,13 @@ TODO:
 Make sure all the Security Settings under Administration > Security Settings are implemented
 Some of them may currently just update the settigns but no logic enforces the settings
 
-2016-06-22 - currently blocked from testing sms 2 factor auth 
-for some stupid reason twilio has flagged my account as fraud
-waiting to see if they will step up with customer service and resolve this
-otherwise I will have to switch to another sms service provider
 
---
 
---
+Redesign email templating for email to use Razor views like in cloudscribe.SimpleContent
 
-Redesign email templating for html email to use Razor views like in cloudscribe.SimpleContent
+Show registration agree ment on social auth confirm?
+
+Implement sorting links on user list
 
 
 

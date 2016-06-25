@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-08
-// Last Modified:			2016-06-21
+// Last Modified:			2016-06-25
 // 
 
 using cloudscribe.Core.Identity;
@@ -102,6 +102,7 @@ namespace cloudscribe.Core.Web.Controllers
             model.Paging.CurrentPage = pageNumber;
             model.Paging.ItemsPerPage = itemsPerPage;
             model.Paging.TotalItems = count;
+            model.SortMode = sortMode;
             model.AlphaQuery = query; //TODO: sanitize?
             model.TimeZoneId = await timeZoneIdResolver.GetUserTimeZoneId();
 
@@ -152,6 +153,8 @@ namespace cloudscribe.Core.Web.Controllers
             model.Paging.ItemsPerPage = itemsPerPage;
             model.Paging.TotalItems = count;
             model.SearchQuery = query; //TODO: sanitize?
+            model.SortMode = sortMode;
+            model.ActionName = "Search";
             model.TimeZoneId = await timeZoneIdResolver.GetUserTimeZoneId();
 
             return View("Index", model);
@@ -188,7 +191,7 @@ namespace cloudscribe.Core.Web.Controllers
             model.IpQuery = ipQuery; //TODO: sanitize
             model.ShowAlphaPager = false;
             model.TimeZoneId = await timeZoneIdResolver.GetUserTimeZoneId();
-
+            model.ActionName = "IpSearch";
             return View("Index", model);
 
         }
@@ -233,7 +236,7 @@ namespace cloudscribe.Core.Web.Controllers
             model.Paging.TotalItems = count;
             model.ShowAlphaPager = false;
             model.TimeZoneId = await timeZoneIdResolver.GetUserTimeZoneId();
-
+            model.ActionName = "LockedUsers";
             return View(model);
 
         }
@@ -278,7 +281,7 @@ namespace cloudscribe.Core.Web.Controllers
             model.Paging.TotalItems = count;
             model.ShowAlphaPager = false;
             model.TimeZoneId = await timeZoneIdResolver.GetUserTimeZoneId();
-
+            model.ActionName = "UnApprovedUsers";
             return View(model);
         }
 

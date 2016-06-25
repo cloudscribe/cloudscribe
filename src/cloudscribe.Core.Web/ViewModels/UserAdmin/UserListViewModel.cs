@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-08
-// Last Modified:			2016-06-06
+// Last Modified:			2016-06-25
 //
 
 using cloudscribe.Core.Models;
@@ -26,35 +26,13 @@ namespace cloudscribe.Core.Web.ViewModels.UserAdmin
         public IList<IUserInfo> UserList { get; set; }
         public PaginationSettings Paging { get; set; }
         public string TimeZoneId { get; set; } = "America/New_York";
-
-        private string alphaQuery = string.Empty;
-        public string AlphaQuery
-        {
-            get { return alphaQuery; }
-            set { alphaQuery = value; }
-        }
-
-        private string searchQuery = string.Empty;
-        public string SearchQuery
-        {
-            get { return searchQuery; }
-            set { searchQuery = value; }
-        }
-
-        private string ipQuery = string.Empty;
-        public string IpQuery
-        {
-            get { return ipQuery; }
-            set { ipQuery = value; }
-        }
-
-        private bool showAlphaPager = true;
-
-        public bool ShowAlphaPager
-        {
-            get { return showAlphaPager; }
-            set { showAlphaPager = value; }
-        }
+        public string AlphaQuery { get; set; } = string.Empty;
+        public string SearchQuery { get; set; } = string.Empty;
+        public string IpQuery { get; set; } = string.Empty;
+        public bool ShowAlphaPager { get; set; } = true;
+        //sortMode: 0 = DisplayName asc, 1 = JoinDate desc, 2 = Last, First
+        public int SortMode { get; set; } = 1;
+        public string ActionName { get; set; } = "Index";
 
     }
 }
