@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2016-06-19
+// Last Modified:			2016-06-25
 // 
 
 using cloudscribe.Core.Identity;
@@ -412,7 +412,6 @@ namespace cloudscribe.Core.Web.Controllers
                         else
                         {
                             await signInManager.SignInAsync(user, isPersistent: false);
-                            //return Redirect("/");
                             return this.RedirectToSiteRoot(Site);
                         }
                     }
@@ -464,13 +463,11 @@ namespace cloudscribe.Core.Web.Controllers
 
             if(user == null)
             {
-                //return Redirect("/");
                 return this.RedirectToSiteRoot(Site);
             }
 
             if(user.EmailConfirmed)
             {
-                //return Redirect("/");
                 return this.RedirectToSiteRoot(Site);
             }
 
@@ -513,13 +510,12 @@ namespace cloudscribe.Core.Web.Controllers
             {
                 if (Site.RequireApprovalBeforeLogin && !user.AccountApproved)
                 {
-                    emailSender.AccountPendingApprovalAdminNotification(Site, user).Forget();
+                    await emailSender.AccountPendingApprovalAdminNotification(Site, user).ConfigureAwait(false);
 
-                    return RedirectToAction("PendingApproval", new { userId = user.Id, didSend = true });
+                    return RedirectToAction("PendingApproval", new { userId = user.Id, didSend = true });      
                 }
             }
             
-
             return View(result.Succeeded ? "ConfirmEmail" : "Error");
         }
 

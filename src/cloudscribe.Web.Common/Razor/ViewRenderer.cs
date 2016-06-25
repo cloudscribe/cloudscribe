@@ -2,17 +2,14 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:                  Joe Audette
 // Created:                 2016-04-22
-// Last Modified:           2016-05-18
+// Last Modified:           2016-06-25
 // 
 
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Abstractions;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Routing;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -27,17 +24,19 @@ namespace cloudscribe.Web.Common.Razor
         public ViewRenderer(
             ICompositeViewEngine viewEngine,
             ITempDataProvider tempDataProvider,
-            IHttpContextAccessor contextAccesor)
+            IActionContextAccessor actionAccessor
+            )
         {
             this.viewEngine = viewEngine;
             this.tempDataProvider = tempDataProvider;
-            this.contextAccesor = contextAccesor;
+            this.actionAccessor = actionAccessor;
+            
         }
 
         private ICompositeViewEngine viewEngine;
         private ITempDataProvider tempDataProvider;
-        private IHttpContextAccessor contextAccesor;
-
+        private IActionContextAccessor actionAccessor;
+        
         public async Task<string> RenderViewAsString<TModel>(string viewName, TModel model)
         {
 
@@ -48,12 +47,13 @@ namespace cloudscribe.Web.Common.Razor
                 Model = model
             };
 
-            var actionContext = new ActionContext(contextAccesor.HttpContext, new RouteData(), new ActionDescriptor());
-            var tempData = new TempDataDictionary(contextAccesor.HttpContext, tempDataProvider);
+            var actionContext = actionAccessor.ActionContext;
             
+            var tempData = new TempDataDictionary(actionContext.HttpContext, tempDataProvider);
+
             using (StringWriter output = new StringWriter())
             {
-
+              
                 ViewEngineResult viewResult = viewEngine.FindView(actionContext, viewName, true);
 
                 ViewContext viewContext = new ViewContext(

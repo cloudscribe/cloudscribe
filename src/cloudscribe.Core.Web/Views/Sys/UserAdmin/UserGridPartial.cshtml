@@ -14,6 +14,7 @@
         <th>
             @sr["Created"]
         </th>
+        <th></th>
         <th>
             @sr["Email"]
         </th>
@@ -41,6 +42,9 @@
             </td>
             <td>
                 @tzHelper.ConvertToLocalTime(item.CreatedUtc, Model.TimeZoneId).ToString("g")
+            </td>
+            <td>
+                <img gravatar-email="@item.Email" gravatar-size="30" />
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Email)     

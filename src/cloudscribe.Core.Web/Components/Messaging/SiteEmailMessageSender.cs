@@ -71,10 +71,10 @@ namespace cloudscribe.Core.Web.Components.Messaging
             try
             {
                 var plainTextMessage
-                = await viewRenderer.RenderViewAsString<string>("EmailTemplates/ConfirmAccountTextEmail", confirmationUrl);
+                = await viewRenderer.RenderViewAsString<string>("EmailTemplates/ConfirmAccountTextEmail", confirmationUrl).ConfigureAwait(false);
 
                 var htmlMessage
-                    = await viewRenderer.RenderViewAsString<string>("EmailTemplates/ConfirmAccountHtmlEmail", confirmationUrl);
+                    = await viewRenderer.RenderViewAsString<string>("EmailTemplates/ConfirmAccountHtmlEmail", confirmationUrl).ConfigureAwait(false);
 
                 await sender.SendEmailAsync(
                     smtpOptions,
@@ -194,10 +194,10 @@ namespace cloudscribe.Core.Web.Components.Messaging
             try
             {
                 var plainTextMessage
-                   = await viewRenderer.RenderViewAsString<ISiteUser>("EmailTemplates/AccountPendingApprovalAdminNotificationTextEmail", user);
+                   = await viewRenderer.RenderViewAsString<ISiteUser>("EmailTemplates/AccountPendingApprovalAdminNotificationTextEmail", user).ConfigureAwait(false);
 
                 var htmlMessage
-                    = await viewRenderer.RenderViewAsString<ISiteUser>("EmailTemplates/AccountPendingApprovalAdminNotificationHtmlEmail", user);
+                    = await viewRenderer.RenderViewAsString<ISiteUser>("EmailTemplates/AccountPendingApprovalAdminNotificationHtmlEmail", user).ConfigureAwait(false);
 
                 await sender.SendMultipleEmailAsync(
                     smtpOptions,

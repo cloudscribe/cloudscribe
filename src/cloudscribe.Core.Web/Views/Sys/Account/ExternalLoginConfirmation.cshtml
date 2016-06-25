@@ -11,10 +11,7 @@
 <h3>Associate your @ViewData["LoginProvider"] account</h3>
 
 <form asp-controller="Account" asp-action="ExternalLoginConfirmation" asp-route-returnurl='@ViewData["ReturnUrl"]' method="post" class="form-horizontal" role="form">
-    <h4>Association Form</h4>
-    <hr />
     <div asp-validation-summary="All" class="text-danger"></div>
-
     <p class="text-info">
         You've successfully authenticated with <strong>@ViewBag.LoginProvider</strong>.
         Please enter a user name for this site below and click the Register button to finish
