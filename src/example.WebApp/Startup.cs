@@ -170,7 +170,7 @@ namespace example.WebApp
 
             ConfigureDataStorage(services);
 
-            services.AddNoDbSerilogSink(Configuration);
+            services.AddNoDbSerilogWeb(Configuration);
 
             //var container = new Container();
             //container.Populate(services);
@@ -194,10 +194,10 @@ namespace example.WebApp
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
             //loggerFactory.AddSerilog(serilogFileLogger);
-            //var serilogConfig = new LoggerConfiguration()
-            //    .WriteTo.NoDb(serilogNoDbSink)
-            //    .CreateLogger();
-            //loggerFactory.AddSerilog(serilogConfig);
+            var serilogConfig = new LoggerConfiguration()
+                .WriteTo.NoDb(serilogNoDbSink)
+                .CreateLogger();
+            loggerFactory.AddSerilog(serilogConfig);
 
             var storage = Configuration["DevOptions:DbPlatform"];
             if(storage != "NoDb")

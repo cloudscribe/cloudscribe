@@ -6,6 +6,7 @@
 // 
 
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using NoDb;
 using Serilog;
 using Serilog.Configuration;
@@ -24,6 +25,7 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddNoDbSerilogSink(this IServiceCollection services, IConfigurationRoot configuration)
         {
             services.Configure<NoDbSinkOptions>(configuration.GetSection("MultiTenantOptions"));
+            services.TryAddSingleton<IStoragePathResolver<LogEvent>, LogEventStoragePathResolver>();
             services.AddNoDb<LogEvent>();
             services.AddSingleton<NoDbSink, NoDbSink>();
 

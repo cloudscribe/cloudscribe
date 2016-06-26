@@ -58,7 +58,8 @@
         "Serilog": "2.0.0-rc-640",
         "Serilog.Extensions.Logging": "1.0.0-rc2-10110",
         "Serilog.Sinks.File": "2.0.0-rc-706",
-        "Serilog.Sinks.NoDb": "1.0.0-*"
+        "Serilog.Sinks.NoDb": "1.0.0-*",
+        "Serilog.NoDb.Web": "1.0.0-*"
 
 
 

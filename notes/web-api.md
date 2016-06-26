@@ -1,4 +1,6 @@
 
+SPA? https://medium.com/@wob/the-sad-state-of-web-development-1603a861d29f#.ks06316vl
+
 http://gunnarpeipman.com/2016/04/why-azure-rest-api-s-and-how-to-prepare-for-using-them/
 
 http://wildermuth.com/2016/03/16/Content_Negotiation_in_ASP_NET_Core
