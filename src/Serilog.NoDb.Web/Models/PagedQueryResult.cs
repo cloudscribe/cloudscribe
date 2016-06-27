@@ -2,29 +2,26 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-06-26
-// Last Modified:			2016-06-27
-// 
+// Last Modified:			2016-06-26
+//
 
-using cloudscribe.Web.Pagination;
 using Serilog.Events;
-using Serilog.NoDb.Web.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Serilog.NoDb.Web.ViewModels
+namespace Serilog.NoDb.Web.Models
 {
-    public class LogListViewModel
+    public class PagedQueryResult
     {
-        public LogListViewModel()
+        public PagedQueryResult()
         {
             Items = new List<LogEventWrapper>();
-            Paging = new PaginationSettings();
         }
 
         public List<LogEventWrapper> Items { get; set; }
-        public PaginationSettings Paging { get; set; }
-        public string TimeZoneId { get; set; } = "America/New_York";
+
+        public int TotalItems { get; set; } = 0;
     }
 }

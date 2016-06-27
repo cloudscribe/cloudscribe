@@ -5,20 +5,42 @@
 // Last Modified:			2016-06-26
 // 
 
+using Microsoft.AspNetCore.Http;
+using Serilog.Events;
+using Serilog.NoDb.Web.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Serilog.NoDb.Web.Services
 {
     public class LogManager
     {
-        public LogManager()
+        public LogManager(
+            LogQueries queries,
+            IHttpContextAccessor contextAccessor
+            )
         {
-
+            this.queries = queries;
+            httpContext = contextAccessor?.HttpContext;
         }
 
+        private LogQueries queries;
+        private readonly HttpContext httpContext;
+        private CancellationToken CancellationToken => httpContext?.RequestAborted ?? CancellationToken.None;
+
         public int LogPageSize { get; set; } = 10;
+
+        public async Task<PagedQueryResult> GetPageAsync(
+            LogEventLevel level,
+            int pageNumber,
+            int pageSize
+            )
+        {
+            return await queries.GetPageAsync(level, pageNumber, pageSize, CancellationToken);
+        }
+
     }
 }

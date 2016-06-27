@@ -1,0 +1,55 @@
+﻿@model Serilog.NoDb.Web.ViewModels.LogListViewModel
+@using cloudscribe.Core.Models
+@using cloudscribe.Web.Common
+@using cloudscribe.Logging.Web
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<LogManager> sr
+@inject ITimeZoneHelper tzHelper
+@functions
+{
+    public string GetClassFromLogLevel(string logLevel)
+    {
+        switch (logLevel)
+        {
+            case "Error":
+            case "Fatal":
+                return "bg-danger";
+
+            case "Warning":
+                return "bg-warning";
+
+            case "Information":
+            default:
+                return "bg-info";
+        }
+    }
+}
+<h1>@ViewData["Heading"]</h1>
+<ul class="list-unstyled">
+    @foreach (var item in Model.Items)
+    {
+        <li class="@GetClassFromLogLevel(item.Event.Level.ToString())">
+            <form role="form" class="form-inline" asp-controller="Log" asp-action="LogItemDelete">
+                <input type="hidden" id="key" name="key" value="@item.Key" />
+                <input type="submit" value='@sr["Delete"]' class="btn btn-xs btn-default pull-left" />
+            </form>
+            <h2 class="logitem">
+                @tzHelper.ConvertToLocalTime(item.Event.Timestamp.ToUniversalTime().UtcDateTime, Model.TimeZoneId).ToString()
+                <strong>@item.Event.Level</strong>
+                
+            </h2>
+            <p>
+                @Html.Encode(item.Event.MessageTemplate.Render(item.Event.Properties));
+            </p>
+        </li>
+    }
+</ul>
+<div>
+    <cs-pager cs-paging-info="@Model.Paging"
+              asp-action="Index" asp-controller="SystemLog"
+              asp-route-pagesize="@Model.Paging.ItemsPerPage"></cs-pager>
+</div>
+<form role="form" class="form-inline" asp-controller="SystemLog" asp-action="LogDeleteAll">
+    <a asp-action="Index" class="btn btn-sm btn-default ">@sr["Refresh"]</a>
+    <input type="submit" value='@sr["Clear Log"]' class="btn btn-sm btn-danger " />
+</form>

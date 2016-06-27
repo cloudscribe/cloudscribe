@@ -1,4 +1,6 @@
 
+https://blogs.msdn.microsoft.com/dotnet/2016/06/27/entity-framework-core-1-0-0-available/
+
 http://www.codeproject.com/Articles/114262/6-ways-of-doing-locking-in-NET-Pessimistic-and-opt
 
 https://msdn.microsoft.com/en-us/library/bb738618(v=vs.100).aspx
@@ -20,7 +22,7 @@ A concurrency conflict occurs when one user displays an entity's data in order t
 
 John clicks Save first and sees his change when the browser returns to the Index page, then Jane clicks Save. What happens next is determined by how you handle concurrency conflicts. Some of the options include the following:
 
-You can keep track of which property a user has modified and update only the corresponding columns in the database. In the example scenario, no data would be lost, because different properties were updated by the two users. The next time someone browses the English department, they'll see both John's and Jane's changes — a start date of 8/8/2013 and a budget of Zero dollars.
+You can keep track of which property a user has modified and update only the corresponding columns in the database. In the example scenario, no data would be lost, because different properties were updated by the two users. The next time someone browses the English department, they'll see both John's and Jane's changes ï¿½ a start date of 8/8/2013 and a budget of Zero dollars.
 
 This method of updating can reduce the number of conflicts that could result in data loss, but it can't avoid data loss if competing changes are made to the same property of an entity. Whether the Entity Framework works this way depends on how you implement your update code. It's often not practical in a web application, because it can require that you maintain large amounts of state in order to keep track of all original property values for an entity as well as new values. Maintaining large amounts of state can affect application performance because it either requires server resources or must be included in the web page itself (for example, in hidden fields) or in a cookie.
 

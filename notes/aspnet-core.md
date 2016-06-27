@@ -1,4 +1,11 @@
 
+https://blogs.msdn.microsoft.com/webdev/2016/06/27/announcing-asp-net-core-1-0/
+
+https://blogs.msdn.microsoft.com/dotnet/2016/06/27/announcing-net-core-1-0/
+
+
+https://docs.microsoft.com/teamblog/introducing-net-core-docs/
+
 
 http://dotnet.github.io/docs/core-concepts/libraries/libraries-with-cli.html
 

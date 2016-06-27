@@ -31,9 +31,9 @@ namespace Serilog.NoDb.Web.Controllers
 
         [Authorize(Policy = "SystemLogPolicy")]
         public async Task<IActionResult> Index(
+            string level = "Information",
             int pageNumber = 1,
-            int pageSize = -1,
-            string sort = "desc")
+            int pageSize = -1)
         {
             ViewData["Title"] = "System Log";
             ViewData["Heading"] = "System Log";
@@ -44,28 +44,33 @@ namespace Serilog.NoDb.Web.Controllers
                 itemsPerPage = pageSize;
             }
 
-            var model = new LogListViewModel();
-            if (sort == "desc")
-            {
-                //model.Items = await logManager.GetLogsDescending(pageNumber, itemsPerPage);
-            }
-            else
-            {
-                //model.Items = await logManager.GetLogsAscending(pageNumber, itemsPerPage);
-            }
+            LogEventLevel logLevel = LogEventLevel.Information;
+            Enum.TryParse<LogEventLevel>(level, out logLevel);
 
+            var model = new LogListViewModel();
+
+            var result = await logManager.GetPageAsync(logLevel, pageNumber, itemsPerPage);
+            
             model.TimeZoneId = await timeZoneIdResolver.GetUserTimeZoneId();
 
-            //var count = await logManager.GetLogItemCount();
-
+            model.Items = result.Items;
             model.Paging.CurrentPage = pageNumber;
             model.Paging.ItemsPerPage = itemsPerPage;
-            //model.Paging.TotalItems = count;
+            model.Paging.TotalItems = result.TotalItems;
 
             return View(model);
 
         }
 
+        [Authorize(Policy = "SystemLogPolicy")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult LogItemDelete(string key)
+        {
+            //await logManager.DeleteLogItem(id);
+
+            return RedirectToAction("Index");
+        }
 
     }
 }
