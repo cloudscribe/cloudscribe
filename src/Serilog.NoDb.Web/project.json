@@ -2,20 +2,21 @@
   "version": "1.0.0-*",
 
     "dependencies": {
-        "NETStandard.Library": "1.5.0-rc2-24027",
-        "Microsoft.AspNetCore.Mvc": "1.0.0-rc2-final",
-        "Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0-rc2-final",
-        "cloudscribe.Core.Models": "1.0.1-*",
-        "cloudscribe.Web.Pagination": "1.0.1-*",
+        "NETStandard.Library": "1.6.0-*",
+        "Microsoft.AspNetCore.Mvc": "1.0.0-*",
+        "Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0-*",
+        "cloudscribe.Core.Models": "1.0.2-*",
+        "cloudscribe.Web.Pagination": "1.0.2-*",
         "NoDb": "1.0.0-*",
-        "Serilog": "2.0.0-rc-640",
+        "Serilog": "2.0.0-*",
         "Serilog.Sinks.NoDb": "1.0.0-*"
     },
 
     "frameworks": {
-        "net452": { },
-        "net451" : { },
-        "netstandard1.3": {
+        "net452": {},
+        "net451": {},
+        "net46": {},
+        "netstandard1.6": {
             "imports": "dnxcore50"
         }
     }

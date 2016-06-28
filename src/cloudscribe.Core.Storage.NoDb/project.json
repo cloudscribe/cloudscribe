@@ -15,12 +15,12 @@
 
 
     "dependencies": {
-        "NETStandard.Library": "1.5.0-rc2-24027",
-        "cloudscribe.Core.Models": "1.0.1-*",
+        "NETStandard.Library": "1.6.0-*",
+        "cloudscribe.Core.Models": "1.0.2-*",
         "NoDb": "1.0.0-*",
-        "Microsoft.Extensions.Logging.Abstractions": "1.0.0-rc2-final",
-        "Microsoft.Extensions.Options": "1.0.0-rc2-final",
-        "Microsoft.AspNetCore.Http": "1.0.0-rc2-final"
+        "Microsoft.Extensions.Logging.Abstractions": "1.0.0-*",
+        "Microsoft.Extensions.Options": "1.0.0-*",
+        "Microsoft.AspNetCore.Http": "1.0.0-*"
         
     },
 
@@ -28,10 +28,10 @@
         "net46": { },
         "net451": { },
         "net452": { },
-        "netstandard1.5": {
+        "netstandard1.6": {
             "imports": "dnxcore50",
             "dependencies": {
-                "System.Linq.Queryable": "4.0.1-rc2-24027"
+                "System.Linq.Queryable": "4.0.1-*"
             }
         }
     }
