@@ -161,6 +161,8 @@ namespace example.WebApp
                     .AddDataAnnotationsLocalization()
                     .AddRazorOptions(options =>
                     {
+                        options.AddCloudscribeViewLocationFormats();
+
                         options.AddEmbeddedViewsForNavigation();
                         options.AddEmbeddedViewsForCloudscribeCore();
                         options.AddEmbeddedViewsForCloudscribeLogging();
