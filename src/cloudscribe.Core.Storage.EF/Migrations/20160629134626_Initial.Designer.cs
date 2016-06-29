@@ -8,13 +8,13 @@ using cloudscribe.Core.Storage.EF;
 namespace cloudscribe.Core.Storage.EF.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    [Migration("20160612144428_RemoveCurrecncy")]
-    partial class RemoveCurrecncy
+    [Migration("20160629134626_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .HasAnnotation("ProductVersion", "1.0.0-rc2-20901")
+                .HasAnnotation("ProductVersion", "1.0.0-rtm-21431")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("cloudscribe.Core.Models.Geography.GeoCountry", b =>
@@ -444,8 +444,6 @@ namespace cloudscribe.Core.Storage.EF.Migrations
 
                     b.Property<string>("Comment");
 
-                    b.Property<string>("Country");
-
                     b.Property<DateTime>("CreatedUtc");
 
                     b.Property<DateTime?>("DateOfBirth");
@@ -468,7 +466,8 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                         .HasAnnotation("SqlServer:ColumnType", "bit")
                         .HasAnnotation("SqlServer:DefaultValue", false);
 
-                    b.Property<string>("FirstName");
+                    b.Property<string>("FirstName")
+                        .HasAnnotation("MaxLength", 100);
 
                     b.Property<string>("Gender");
 
@@ -486,7 +485,8 @@ namespace cloudscribe.Core.Storage.EF.Migrations
 
                     b.Property<DateTime>("LastModifiedUtc");
 
-                    b.Property<string>("LastName");
+                    b.Property<string>("LastName")
+                        .HasAnnotation("MaxLength", 100);
 
                     b.Property<DateTime?>("LastPasswordChangeUtc");
 
@@ -497,7 +497,8 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                         .HasAnnotation("SqlServer:ColumnType", "bit")
                         .HasAnnotation("SqlServer:DefaultValue", false);
 
-                    b.Property<string>("NewEmail");
+                    b.Property<string>("NewEmail")
+                        .HasAnnotation("MaxLength", 100);
 
                     b.Property<bool>("NewEmailApproved")
                         .ValueGeneratedOnAdd()
@@ -527,16 +528,16 @@ namespace cloudscribe.Core.Storage.EF.Migrations
                         .HasAnnotation("SqlServer:ColumnType", "bit")
                         .HasAnnotation("SqlServer:DefaultValue", false);
 
-                    b.Property<string>("SecurityStamp");
+                    b.Property<string>("SecurityStamp")
+                        .HasAnnotation("MaxLength", 50);
 
                     b.Property<string>("Signature");
 
                     b.Property<Guid>("SiteId")
                         .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier");
 
-                    b.Property<string>("State");
-
-                    b.Property<string>("TimeZoneId");
+                    b.Property<string>("TimeZoneId")
+                        .HasAnnotation("MaxLength", 50);
 
                     b.Property<bool>("Trusted");
 

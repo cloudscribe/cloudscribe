@@ -134,18 +134,19 @@ namespace Microsoft.AspNetCore.Hosting // so it will show up in startup without 
             
             if (count == 0)
             {
-                SiteSettings site = await db.Sites.SingleOrDefaultAsync<SiteSettings>(
+                SiteSettings site = await db.Sites.FirstOrDefaultAsync<SiteSettings>(
                     s => s.Id != Guid.Empty && s.IsServerAdminSite == true);
                     
                 if (site != null)
                 {
-                    var role = await db.Roles.SingleOrDefaultAsync(
-                            x => x.SiteId == site.Id && x.NormalizedRoleName == "Administrators".ToUpperInvariant());
+                    var role = await db.Roles.FirstOrDefaultAsync(
+                            x => x.SiteId == site.Id && x.NormalizedRoleName == "ADMINISTRATORS");
 
                     if(role != null)
                     {
                         var adminUser = InitialData.BuildInitialAdmin();
                         adminUser.SiteId = site.Id;
+                        adminUser.Id = Guid.NewGuid();
                         db.Users.Add(adminUser);
                         
                         rowsAffected = await db.SaveChangesAsync();
