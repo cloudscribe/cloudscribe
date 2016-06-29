@@ -333,7 +333,8 @@ namespace example.WebApp
 
             options.LoginPath = tenantPathBase + "/account/login";
             options.LogoutPath = tenantPathBase + "/account/logoff";
-            
+            options.AccessDeniedPath = tenantPathBase + "/account/accessdenied";
+
             options.Events = cookieEvents;
 
             options.AutomaticAuthenticate = true;

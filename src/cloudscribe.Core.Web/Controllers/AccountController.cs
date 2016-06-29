@@ -545,7 +545,7 @@ namespace cloudscribe.Core.Web.Controllers
             // Request a redirect to the external login provider.
             var redirectUrl = Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl });
             var properties = signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
-            return new ChallengeResult(provider, properties);
+            return Challenge(properties, provider);
         }
 
         // GET: /Account/ExternalLoginCallback
@@ -566,7 +566,7 @@ namespace cloudscribe.Core.Web.Controllers
             if (info == null)
             {
                 log.LogDebug("ExternalLoginCallback redirecting to login because GetExternalLoginInfoAsync returned null ");
-                return RedirectToAction("Login");
+                return RedirectToAction(nameof(Login));
             }
             
             // Sign in the user with this external login provider if the user already has a login.
@@ -588,7 +588,7 @@ namespace cloudscribe.Core.Web.Controllers
             if (result.RequiresTwoFactor)
             {
                 log.LogDebug("ExternalLoginCallback ExternalLoginSignInAsync RequiresTwoFactor ");
-                return RedirectToAction("SendCode", new { ReturnUrl = returnUrl });
+                return RedirectToAction(nameof(SendCode), new { ReturnUrl = returnUrl });
             }
 
             if (result.IsNotAllowed)
@@ -626,10 +626,10 @@ namespace cloudscribe.Core.Web.Controllers
         {
             log.LogDebug("ExternalLoginConfirmation called with returnurl " + returnUrl);
 
-            if (signInManager.IsSignedIn(User))
-            {
-                return RedirectToAction("Index", "Manage");
-            }
+            //if (signInManager.IsSignedIn(User))
+            //{
+            //    return RedirectToAction("Index", "Manage");
+            //}
 
             if (ModelState.IsValid)
             {
@@ -964,7 +964,15 @@ namespace cloudscribe.Core.Web.Controllers
             }
 
         }
-        
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult AccessDenied()
+        {
+            ViewData["Title"] = sr["Oops something went wrong"];
+            return View();
+        }
+
         #region Helpers
 
 
