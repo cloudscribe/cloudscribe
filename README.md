@@ -17,13 +17,13 @@ If you start a new web application project in Visual Studio 2015 using the stand
 Eventually you will be able to start with an empty ASP.NET Core project and pull in nuget packages for cloudscribe, but for now if you want to give it a test drive see 
 [Working with the source code](https://github.com/joeaudette/cloudscribe/wiki/Working-with-the-source-Code). You can download the latest version of cloudscribe Core by clicking the download button on the right side of the page or forking or cloning this repo. 
 
-This project is in early stages, not yet ready for mission critical scenarios, but certainly ready for prototyping new web applications. We are building on a new framework from  Microsoft that is itself still in preview and changing frequently. Primarily we are targeting the new lightweight cross platform [Core .NET Framework](https://github.com/dotnet/core) aka dnxcore50 so the goal of this project is to work on Windows, Linux, or OSX. We are also targeting dnx451 aka the full desktop framework but we are avoiding taking dependencies on things that only work on the full desktop framework because we want to remain cross platform, and the full desktop .NET framework only works on Windows.
+This project is in early stages, not yet ready for mission critical scenarios, but certainly ready for prototyping new web applications. We are building on a new framework from  Microsoft that is itself still in preview and changing frequently. Primarily we are targeting the new lightweight cross platform [Core .NET Framework](https://github.com/dotnet/core) so the goal of this project is to work on Windows, Linux, or OSX. We are also targeting the full desktop framework but we are avoiding taking dependencies on things that only work on the full desktop framework because we want to remain cross platform, and the full desktop .NET framework only works on Windows.
 
 ##### Currently Working Features:
 * Site Definitions - multi-tenant based on either first folder segment or host names, default is by folder segment for now mainly because it is easier to try that without DNS, it is just a config option so it is easy to change
 * Site is a conceptual container for users, permissions, and content. 
 * Related sites mode setting allows shared users and roles across sites while still allowing permissions to be segmented/siloed by site.
-* Authentication/Authorization Framework - Mutli-Tenant Implementation of aspnet Identity without Entity Framework
+* Authentication/Authorization Framework - Multi-Tenant Implementation of aspnet Identity
 * Multi-Tenant User and Role Management
 * System Logging - implementation of ILogger that logs to the database, and a UI for viewing the log
 * [Custom RazorViewEngine view resolver, conventions](https://github.com/joeaudette/cloudscribe/wiki/Customizing-Views-and-Display-Templates)
