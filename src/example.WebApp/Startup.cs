@@ -201,10 +201,10 @@ namespace example.WebApp
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
-            var serilogConfig = new LoggerConfiguration()
-                .WriteTo.NoDb(serilogNoDbSink)
-                .CreateLogger();
-            loggerFactory.AddSerilog(serilogConfig);
+            //var serilogConfig = new LoggerConfiguration()
+            //    .WriteTo.NoDb(serilogNoDbSink)
+            //    .CreateLogger();
+            //loggerFactory.AddSerilog(serilogConfig);
 
             var storage = Configuration["DevOptions:DbPlatform"];
             if (storage != "NoDb")
@@ -492,7 +492,7 @@ namespace example.WebApp
             loggerFactory.AddConsole(minLevel: LogLevel.Warning);
 
             // a customizable filter for logging
-            LogLevel minimumLevel = LogLevel.Information;
+            LogLevel minimumLevel = LogLevel.Warning;
 
             // add exclusions to remove noise in the logs
             var excludedLoggers = new List<string>
