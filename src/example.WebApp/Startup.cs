@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc.Razor;
 using System.Globalization;
 using Serilog;
+using Microsoft.AspNetCore.Mvc;
 
 namespace example.WebApp
 {
@@ -155,7 +156,12 @@ namespace example.WebApp
                 //  return new ProviderCultureResult("en");
                 //}));
             });
-            
+
+            services.Configure<MvcOptions>(options =>
+            {
+                options.Filters.Add(new RequireHttpsAttribute());
+            });
+
             services.AddMvc()
                     .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
                     .AddDataAnnotationsLocalization()
@@ -195,18 +201,17 @@ namespace example.WebApp
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
-            //loggerFactory.AddSerilog(serilogFileLogger);
             var serilogConfig = new LoggerConfiguration()
                 .WriteTo.NoDb(serilogNoDbSink)
                 .CreateLogger();
             loggerFactory.AddSerilog(serilogConfig);
 
             var storage = Configuration["DevOptions:DbPlatform"];
-            if(storage != "NoDb")
-            {   
-                ConfigureLogging(loggerFactory, serviceProvider);
+            if (storage != "NoDb")
+            {
+                ConfigureEFLogging(loggerFactory, serviceProvider);
             }
-            
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -338,7 +343,7 @@ namespace example.WebApp
             options.Events = cookieEvents;
 
             options.AutomaticAuthenticate = true;
-            options.AutomaticChallenge = true;
+            options.AutomaticChallenge = false;
            
 
             return options;
@@ -363,7 +368,9 @@ namespace example.WebApp
                 options.CookieName = $"{scheme}-{tenant.SiteFolderName}";
                 options.CookiePath = "/" + tenant.SiteFolderName;
             }
-            
+
+            options.AutomaticAuthenticate = false;
+
             return options;
 
         }
@@ -478,21 +485,23 @@ namespace example.WebApp
             }
         }
 
-        private void ConfigureLogging(ILoggerFactory loggerFactory, IServiceProvider serviceProvider)
+        private void ConfigureEFLogging(ILoggerFactory loggerFactory, IServiceProvider serviceProvider)
         {
             //var logRepository = serviceProvider.GetService<cloudscribe.Logging.Web.ILogRepository>();
 
             loggerFactory.AddConsole(minLevel: LogLevel.Warning);
 
             // a customizable filter for logging
-            LogLevel minimumLevel = LogLevel.Warning;
+            LogLevel minimumLevel = LogLevel.Information;
 
             // add exclusions to remove noise in the logs
             var excludedLoggers = new List<string>
             {
-                "Microsoft.Data.Entity.Storage.Internal.RelationalCommandBuilderFactory",
-                "Microsoft.Data.Entity.Query.Internal.QueryCompiler",
+                "Microsoft.EntityFrameworkCore.Storage.Internal.RelationalCommandBuilderFactory",
+                "Microsoft.EntityFrameworkCore.Query.Internal.SqlServerQueryCompilationContextFactory",
                 "Microsoft.Data.Entity.DbContext",
+                "Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware",
+                "Microsoft.AspNetCore.Hosting.Internal.WebHost",
             };
 
             Func<string, LogLevel, bool> logFilter = (string loggerName, LogLevel logLevel) =>

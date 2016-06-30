@@ -94,7 +94,8 @@ namespace cloudscribe.Core.Identity
 
             options.LoginPath = tenantPathBase + "/account/login";
             options.LogoutPath = tenantPathBase + "/account/logoff";
-            
+            options.AccessDeniedPath = tenantPathBase + "/account/accessdenied";
+
             options.Events = cookieEvents;
 
             options.AutomaticAuthenticate = true;
@@ -114,7 +115,8 @@ namespace cloudscribe.Core.Identity
                 options.AuthenticationScheme = $"{scheme}-{tenant.SiteFolderName}";
                 options.CookieName = $"{scheme}-{tenant.SiteFolderName}";
                 options.CookiePath = "/" + tenant.SiteFolderName;
-            }  
+            }
+            //options.AutomaticAuthenticate = false;
         }
     }
 }
