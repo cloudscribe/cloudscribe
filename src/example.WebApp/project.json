@@ -49,17 +49,14 @@
         "cloudscribe.Core.Storage.NoDb": "1.0.0-*",
         "cloudscribe.Core.Web": "1.0.0-*",
         "cloudscribe.Logging.EF": "1.0.2-*",
+        "cloudscribe.Logging.NoDb": "1.0.0-*",
         "cloudscribe.Logging.Web": "1.0.2-*",
         "cloudscribe.Messaging.Email": "1.0.0-*",
         "cloudscribe.Web.Localization": "1.0.0-*",
         "cloudscribe.Web.Navigation": "1.0.2-*",
         "cloudscribe.Web.Pagination": "1.0.2-*",
-        "SaasKit.Multitenancy": "1.1.3-*",
-        "Serilog": "2.0.0-*",
-        "Serilog.Extensions.Logging": "1.0.0-*",
-        "Serilog.Sinks.File": "2.0.0-*",
-        "Serilog.Sinks.NoDb": "1.0.0-*",
-        "Serilog.NoDb.Web": "1.0.0-*"
+        "SaasKit.Multitenancy": "1.1.3-*"
+        
 
 
 

@@ -15,7 +15,6 @@ using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc.Razor;
 using System.Globalization;
-using Serilog;
 using Microsoft.AspNetCore.Mvc;
 
 namespace example.WebApp
@@ -48,12 +47,9 @@ namespace example.WebApp
 
             appBasePath = env.ContentRootPath;
 
-            //serilogFileLogger = new LoggerConfiguration()
-            //    .WriteTo.File("log.txt")
-            //    .CreateLogger();
+            
         }
 
-        //private Serilog.Core.Logger serilogFileLogger;
         private string appBasePath;
         public IConfigurationRoot Configuration { get; }
 
@@ -69,7 +65,7 @@ namespace example.WebApp
             services.AddDataProtection()
                 .PersistKeysToFileSystem(new System.IO.DirectoryInfo(pathToCryptoKeys));
 
-            // waiting for rc2 compatible glimpse
+            // waiting for RTM compatible glimpse
             //bool enableGlimpse = Configuration.GetValue("DiagnosticOptions:EnableGlimpse", false);
 
             //if (enableGlimpse)
@@ -93,6 +89,7 @@ namespace example.WebApp
             services.AddOptions();
 
             /* optional and only needed if you are using cloudscribe Logging  */
+            //services.AddCloudscribeLoggingNoDbStorage(Configuration);
             services.AddCloudscribeLogging();
 
             /* these are optional and only needed if using cloudscribe Setup */
@@ -178,7 +175,7 @@ namespace example.WebApp
 
             ConfigureDataStorage(services);
 
-            services.AddNoDbSerilogWeb(Configuration);
+           
 
             //var container = new Container();
             //container.Populate(services);
@@ -196,21 +193,17 @@ namespace example.WebApp
             IOptions<cloudscribe.Core.Models.MultiTenantOptions> multiTenantOptionsAccessor,
             IServiceProvider serviceProvider,
             IOptions<RequestLocalizationOptions> localizationOptionsAccessor,
-            Serilog.Sinks.NoDb.NoDbSink serilogNoDbSink
+            cloudscribe.Logging.Web.ILogRepository logRepo
             )
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
-            //var serilogConfig = new LoggerConfiguration()
-            //    .WriteTo.NoDb(serilogNoDbSink)
-            //    .CreateLogger();
-            //loggerFactory.AddSerilog(serilogConfig);
-
+           
             var storage = Configuration["DevOptions:DbPlatform"];
-            if (storage != "NoDb")
-            {
-                ConfigureEFLogging(loggerFactory, serviceProvider);
-            }
+            //if (storage != "NoDb")
+            //{
+                ConfigureLogging(loggerFactory, serviceProvider, logRepo);
+            //}
 
             if (env.IsDevelopment())
             {
@@ -301,7 +294,7 @@ namespace example.WebApp
                     CoreEFStartup.InitializeDatabaseAsync(app.ApplicationServices).Wait();
 
                     // this one is only needed if using cloudscribe Logging with EF as the logging storage
-                    LoggingEFStartup.InitializeDatabaseAsync(app.ApplicationServices).Wait();
+                    //LoggingEFStartup.InitializeDatabaseAsync(app.ApplicationServices).Wait();
 
                     break;
             }
@@ -470,6 +463,8 @@ namespace example.WebApp
             {
                 case "NoDb":
                     services.AddCloudscribeCoreNoDbStorage();
+                    // only needed if using cloudscribe logging with NoDb storage
+                    services.AddCloudscribeLoggingNoDbStorage(Configuration);
                     break;
 
                 case "ef":
@@ -479,27 +474,26 @@ namespace example.WebApp
 
                     // only needed if using cloudscribe logging with EF storage
                     services.AddCloudscribeLoggingEFStorage(connectionString);
+                    
 
 
                     break;
             }
         }
 
-        private void ConfigureEFLogging(ILoggerFactory loggerFactory, IServiceProvider serviceProvider)
+        private void ConfigureLogging(
+            ILoggerFactory loggerFactory, 
+            IServiceProvider serviceProvider
+            , cloudscribe.Logging.Web.ILogRepository logRepo
+            )
         {
-            //var logRepository = serviceProvider.GetService<cloudscribe.Logging.Web.ILogRepository>();
-
-            loggerFactory.AddConsole(minLevel: LogLevel.Warning);
-
+            
             // a customizable filter for logging
-            LogLevel minimumLevel = LogLevel.Warning;
+            LogLevel minimumLevel = LogLevel.Information;
 
             // add exclusions to remove noise in the logs
             var excludedLoggers = new List<string>
             {
-                "Microsoft.EntityFrameworkCore.Storage.Internal.RelationalCommandBuilderFactory",
-                "Microsoft.EntityFrameworkCore.Query.Internal.SqlServerQueryCompilationContextFactory",
-                "Microsoft.Data.Entity.DbContext",
                 "Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware",
                 "Microsoft.AspNetCore.Hosting.Internal.WebHost",
             };
@@ -519,7 +513,7 @@ namespace example.WebApp
                 return true;
             };
             
-            loggerFactory.AddDbLogger(serviceProvider, logFilter);
+            loggerFactory.AddDbLogger(serviceProvider, logFilter, logRepo);
         }
     }
 }

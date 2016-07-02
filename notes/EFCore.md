@@ -175,6 +175,7 @@ dotnet ef migrations add Limitfieldsize -c CoreDbContext
 dotnet ef migrations add cleanup20160617 -c CoreDbContext
 dotnet ef migrations add cleanup20160617-2 -c CoreDbContext
 
+dotnet ef migrations add changes20160701 -c LoggingDbContext
 
 No parameterless constructor was found on 'LoggingDbContext'. Either add a parameterless constructor to 'LoggingDbContext' or add an impleme
 ntation of 'IDbContextFactory<LoggingDbContext>' in the same assembly as 'LoggingDbContext'.

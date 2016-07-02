@@ -22,10 +22,13 @@ https://github.com/Lone-Coder/letsencrypt-win-simple
 Fully automated dockerized Let's Encrypt reverse proxy
 https://advancedweb.hu/2016/05/10/lets-encrypt/
 
-The OWASP Zed Attack Proxy (ZAP) is one of the world’s most popular free security tools and is actively maintained by hundreds of international volunteers*. It can help you automatically find security vulnerabilities in your web applications while you are developing and testing your applications. Its also a great tool for experienced pentesters to use for manual security testing.
+The OWASP Zed Attack Proxy (ZAP) is one of the worldï¿½s most popular free security tools and is actively maintained by hundreds of international volunteers*. It can help you automatically find security vulnerabilities in your web applications while you are developing and testing your applications. Its also a great tool for experienced pentesters to use for manual security testing.
 https://www.owasp.org/index.php/OWASP_Zed_Attack_Proxy_Project
 
 https://blog.binarymist.net/
+
+
+https://technet.microsoft.com/en-us/library/bb727085.aspx
 
 
 How you can get a free SSL certificate in 4min - letsencrypt
@@ -86,7 +89,7 @@ Any security questions or identity information presented to users to reset forgo
 * Nearly universal: The security questions should apply to a wide an audience of possible.
 * Safe: The answers to security questions should not be something that is easily guessed, or research (e.g., something that is matter of public record).
 
-For enhanced security, you may wish to consider asking the user for their email address first and then send an email that takes them to a private page that requests the other 2 (or more) identity factors. That way the email itself isn’t that useful because they still have to answer a bunch of ‘secret’ questions after they get to the landing page.
+For enhanced security, you may wish to consider asking the user for their email address first and then send an email that takes them to a private page that requests the other 2 (or more) identity factors. That way the email itself isnï¿½t that useful because they still have to answer a bunch of ï¿½secretï¿½ questions after they get to the landing page.
 
 On the other hand, if you host a web site that targets the general public, such as social networking sites, free email sites, news sites, photo sharing sites, etc., then you likely to not have this identity information and will need to use some sort of the ubiquitous "security questions". However, also be sure that you collect some means to send the password reset information to some out-of-band side-channel, such as a (different) email address, an SMS texting number, etc.
 
@@ -149,7 +152,7 @@ https://www.owasp.org/index.php/Forgot_Password_Cheat_Sheet
 
 Step 3) Send a Token Over a Side-Channel
 
-After step 2, lock out the user's account immediately. Then SMS or utilize some other multi-factor token challenge with a randomly-generated code having 8 or more characters. This introduces an “out-of-band” communication channel and adds defense-in-depth as it is another barrier for a hacker to overcome. If the bad guy has somehow managed to successfully get past steps 1 and 2, he is unlikely to have compromised the side-channel. It is also a good idea to have the random code which your system generates to only have a limited validity period, say no more than 20 minutes or so. That way if the user doesn't get around to checking their email and their email account is later compromised, the random token used to reset the password would no longer be valid if the user never reset their password and the "reset password" token was discovered by an attacker. Of course, by all means, once a user's password has been reset, the randomly-generated token should no longer be valid. 
+After step 2, lock out the user's account immediately. Then SMS or utilize some other multi-factor token challenge with a randomly-generated code having 8 or more characters. This introduces an ï¿½out-of-bandï¿½ communication channel and adds defense-in-depth as it is another barrier for a hacker to overcome. If the bad guy has somehow managed to successfully get past steps 1 and 2, he is unlikely to have compromised the side-channel. It is also a good idea to have the random code which your system generates to only have a limited validity period, say no more than 20 minutes or so. That way if the user doesn't get around to checking their email and their email account is later compromised, the random token used to reset the password would no longer be valid if the user never reset their password and the "reset password" token was discovered by an attacker. Of course, by all means, once a user's password has been reset, the randomly-generated token should no longer be valid. 
 
 Step 4) Allow user to change password in the existing session
 

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
-
+using System.Globalization;
 
 namespace cloudscribe.Core.Web.Test
 {
@@ -16,6 +16,19 @@ namespace cloudscribe.Core.Web.Test
     /// </summary>
     public class CodeWorksAsIntendedTests
     {
+        //[Fact]
+        //public void ParseExact_Works_As_I_Think()
+        //{
+        //    var folderName = "20160702";
+        //    var dt1 = new DateTime(2016, 7, 2);
+        //    var parsed = DateTime.ParseExact(folderName, "yyyyMMdd", CultureInfo.InvariantCulture);
+
+        //    Assert.True(dt1.Year == parsed.Year);
+        //    Assert.True(dt1.Month == parsed.Month);
+        //    Assert.True(dt1.Day == parsed.Day);
+
+
+        //}
 
         //[Fact]
         //public void Path_Combine_Works_As_I_Think()
