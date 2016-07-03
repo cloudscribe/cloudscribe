@@ -1,5 +1,5 @@
 ﻿{
-    "version": "1.0.0-*",
+    "version": "1.0.0-rc20160704",
     "title": "cloudscribe.Messaging.Sms",
     "description": "Sms helper for Twilio REST API",
     "authors": [ "Joe Audette" ],
