@@ -198,24 +198,15 @@ namespace example.WebApp
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
-           
-            var storage = Configuration["DevOptions:DbPlatform"];
-            //if (storage != "NoDb")
-            //{
-                ConfigureLogging(loggerFactory, serviceProvider, logRepo);
-            //}
-
+            ConfigureLogging(loggerFactory, serviceProvider, logRepo);
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
                 app.UseBrowserLink();
             }
-            //else
-            //{
-            //    app.UseExceptionHandler("/Home/Error");
-            //}
-
+           
             app.UseForwardedHeaders();
 
             app.UseStaticFiles();
@@ -229,7 +220,6 @@ namespace example.WebApp
 
             app.UseMultitenancy<cloudscribe.Core.Models.SiteSettings>();
 
-            //app.UseTenantContainers<SiteSettings>();
             var multiTenantOptions = multiTenantOptionsAccessor.Value;
 
             app.UsePerTenant<cloudscribe.Core.Models.SiteSettings>((ctx, builder) =>
@@ -270,18 +260,16 @@ namespace example.WebApp
                     );
                 builder.UseCookieAuthentication(appCookieOptions);
 
-                //
                 // known issue here is if a site is updated to populate the
                 // social auth keys, it currently requires a restart so that the middleware gets registered
                 // in order for it to work or for the social auth buttons to appear 
                 builder.UseSocialAuth(ctx.Tenant, externalCookieOptions, shouldUseFolder);
                 
             });
-
             
-
             UseMvc(app, multiTenantOptions.Mode == cloudscribe.Core.Models.MultiTenantMode.FolderName);
-            
+
+            var storage = Configuration["DevOptions:DbPlatform"];
             switch (storage)
             {
                 case "NoDb":

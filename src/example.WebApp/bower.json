@@ -5,20 +5,6 @@
         "bootstrap": "3.3.6",
         "jquery": "2.2.0",
         "jquery-validation": "1.14.0",
-        "jquery-validation-unobtrusive": "3.2.6",
-        "jquery-ajax-unobtrusive": "~3.2.3",
-        "jquery-ui": "~1.11.3",
-        "ckeditor": "~4.5.1",
-        "eonasdan-bootstrap-datetimepicker": "~4.15.35",
-        "metisMenu": "~2.1.0"
-    },
-    "resolutions": {
-        "jquery": ">= 1.7.2"
-    },
-    "exportsOverride": {
-        "jquery-ui": {
-            "js": "*.js",
-            "css": "themes/base/*.*"
-        }
+        "jquery-validation-unobtrusive": "3.2.6"
     }
 }
