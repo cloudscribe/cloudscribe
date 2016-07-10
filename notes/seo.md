@@ -88,3 +88,7 @@ https://msdn.microsoft.com/en-us/library/ms972974.aspx#urlrewriting_topic7
 http://blog.ploeh.dk/2013/05/01/rest-lesson-learned-avoid-hackable-urls/
 
 https://blog.fastmail.com/2016/06/20/everything-you-could-ever-want-to-know-and-more-about-controlling-the-referer-header/
+
+http://www.cmswire.com/customer-experience/why-businesses-should-rethink-their-facebook-relationships/
+
+http://alistapart.com/article/create-an-evolutionary-web-strategy-with-a-digital-mro-plan

@@ -2,6 +2,8 @@
 
 http://stackoverflow.com/questions/35307143/simple-jwt-authentication-in-asp-net-core-1-0-web-api
 
+https://www.troyhunt.com/everything-you-need-to-know-about-loading-a-free-lets-encrypt-certificate-into-an-azure-website/
+
 https://float-middle.com/json-web-tokens-jwt-vs-sessions/
 
 https://stormpath.com/blog/token-authentication-asp-net-core

@@ -3,8 +3,12 @@ https://blogs.msdn.microsoft.com/webdev/2016/06/27/announcing-asp-net-core-1-0/
 
 https://blogs.msdn.microsoft.com/dotnet/2016/06/27/announcing-net-core-1-0/
 
+http://mattwarren.org/2016/07/04/How-the-dotnet-CLI-tooling-runs-your-code/
+
 
 https://docs.microsoft.com/teamblog/introducing-net-core-docs/
+
+https://blogs.windows.com/msedgedev/2016/07/08/the-progress-of-web-apps/
 
 
 http://dotnet.github.io/docs/core-concepts/libraries/libraries-with-cli.html

@@ -1,5 +1,19 @@
 
 
+https://github.com/hashicorp/terraform
+
+https://continuousdelivery.com/
+
+https://getwarden.net/
+
+https://www.digitalocean.com/
+
+http://www.opencompute.org/
+
+https://www.joyent.com/
+
+https://www.heroku.com/
+
 https://codesnob.wordpress.com/2016/02/04/release-management-using-vsts/
 
 http://reynders.co/setting-up-ci-for-asp-net-core-1-web-apps-from-visual-studio-team-services-to-azure/

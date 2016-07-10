@@ -1447,13 +1447,15 @@ namespace cloudscribe.Core.Storage.NoDb
             //    + "~" + login.SiteGuid.ToString()
             //    + "~" + login.LoginProvider
             //    + "~" + login.ProviderKey;
+            var result = new List<IUserLogin>();
+            if (!Directory.Exists(folderPath)) return result;
 
             var matchPattern = "*~" + siteId.ToString() + "~*";
 
             var dir = new DirectoryInfo(folderPath);
             var matches = dir.GetFiles(matchPattern);
 
-            var result = new List<IUserLogin>();
+            
             foreach (var match in matches)
             {
                 var foundFileKey = Path.GetFileNameWithoutExtension(match.Name);

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-01-02
-// Last Modified:			2016-05-19
+// Last Modified:			2016-07-10
 // 
 
 //using cloudscribe.Core.Models;
@@ -33,16 +33,18 @@ namespace cloudscribe.Web.Common.Extensions
             string secretKey)
         {
             var response = request.Form["g-recaptcha-response"];
-            var client = new HttpClient();
-            string result = await client.GetStringAsync(
-                string.Format("https://www.google.com/recaptcha/api/siteverify?secret={0}&response={1}",
-                    secretKey,
-                    response)
-                    );
+            using (var client = new HttpClient())
+            {
+                string result = await client.GetStringAsync(
+                    string.Format("https://www.google.com/recaptcha/api/siteverify?secret={0}&response={1}",
+                        secretKey,
+                        response)
+                        );
 
-            var captchaResponse = JsonConvert.DeserializeObject<RecaptchaResponse>(result);
+                var captchaResponse = JsonConvert.DeserializeObject<RecaptchaResponse>(result);
 
-            return captchaResponse;
+                return captchaResponse;
+            }       
         }
 
         public static bool SessionIsAvailable(this Controller controller)

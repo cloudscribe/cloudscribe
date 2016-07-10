@@ -81,6 +81,7 @@ Microsoft.AspNet.Antiforgery.DefaultAntiforgeryTokenGenerator.ValidateTokens(Htt
 
 I use gulp-gzip package for make .gz files.
 And small middleware for handle requests for static files:
+https://github.com/aspnet/Home/issues/1584#issuecomment-230340750
 
 `public class CompressedStaticFileMiddleware
 {
@@ -127,3 +128,55 @@ var contentTypeProvider = options.Value.ContentTypeProvider ?? new FileExtension
         return _base.Invoke(context);
     }
 }`
+
+public class CompressedStaticFileMiddleware
+    {
+        private IHostingEnvironment _hostingEnv;
+        private StaticFileMiddleware _base;
+        public CompressedStaticFileMiddleware(RequestDelegate next, IHostingEnvironment hostingEnv, IOptions<StaticFileOptions> options, ILoggerFactory loggerFactory)
+        {
+            _hostingEnv = hostingEnv;
+            var contentTypeProvider = options.Value.ContentTypeProvider ?? new FileExtensionContentTypeProvider();
+            options.Value.ContentTypeProvider = contentTypeProvider;
+            options.Value.FileProvider = options.Value.FileProvider ?? hostingEnv.WebRootFileProvider;
+            options.Value.OnPrepareResponse = ctx =>
+            {
+                const string ext = ".gz";
+                if (ctx.File.Name.EndsWith(ext))
+                {
+                    string contentType = null;
+                    if (contentTypeProvider.TryGetContentType(ctx.File.PhysicalPath.Remove(ctx.File.PhysicalPath.Length - ext.Length, ext.Length), out contentType))
+                        ctx.Context.Response.ContentType = contentType;
+                    ctx.Context.Response.Headers.Add("Content-Encoding", new[] { "gzip" });
+                }
+            };
+
+            _base = new StaticFileMiddleware(next, hostingEnv, options, loggerFactory);
+        }
+
+        public Task Invoke(HttpContext context)
+        {
+            if (context.Request.Path.HasValue)
+            {
+                string acceptEncoding = context.Request.Headers["Accept-Encoding"];
+                if (
+                    !string.IsNullOrEmpty(acceptEncoding) &&
+                    (
+                        acceptEncoding.Contains("gzip") &&
+                        System.IO.File.Exists(
+                            System.IO.Path.Combine(
+                                _hostingEnv.WebRootPath, context.Request.Path.Value.StartsWith("/") 
+                                ? context.Request.Path.Value.Remove(0, 1) 
+                                : context.Request.Path.Value, ".gz"
+                            )
+                        )
+                    )
+                )
+                {
+                    context.Request.Path = new PathString(context.Request.Path.Value + ".gz");
+                    return _base.Invoke(context);
+                }
+            }
+            return _base.Invoke(context);
+        }
+    }
