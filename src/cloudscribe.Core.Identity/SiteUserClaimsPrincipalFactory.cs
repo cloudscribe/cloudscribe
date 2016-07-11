@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-06-27
-// Last Modified:			2016-05-28
+// Last Modified:			2016-07-11
 // 
 
 
@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,7 +26,9 @@ namespace cloudscribe.Core.Identity
             ISiteQueries siteQueries,
             SiteUserManager<TUser> userManager,
             SiteRoleManager<TRole> roleManager,
-            IOptions<IdentityOptions> optionsAccessor) 
+            IOptions<IdentityOptions> optionsAccessor,
+            IEnumerable<ICustomClaimProvider> customClaimProviders
+            ) 
             : base(userManager, roleManager, optionsAccessor)
         {
             if (siteQueries == null)
@@ -35,10 +38,12 @@ namespace cloudscribe.Core.Identity
 
             queries = siteQueries;
             options = optionsAccessor.Value;
+            this.customClaimProviders = customClaimProviders;
         }
         
         private ISiteQueries queries;
         private IdentityOptions options;
+        private IEnumerable<ICustomClaimProvider> customClaimProviders;
 
         public override async Task<ClaimsPrincipal> CreateAsync(TUser user)
         {
@@ -83,6 +88,11 @@ namespace cloudscribe.Core.Identity
             if (UserManager.SupportsUserClaim)
             {
                 id.AddClaims(await UserManager.GetClaimsAsync(user));
+            }
+
+            foreach(var provider in customClaimProviders)
+            {
+                await provider.AddClaims(user, id);
             }
 
             var principal = new ClaimsPrincipal(id);

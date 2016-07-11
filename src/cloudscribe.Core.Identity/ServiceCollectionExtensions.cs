@@ -66,6 +66,8 @@ namespace Microsoft.Extensions.DependencyInjection
             //services.TryAddScoped<SignInManager<SiteUser>, SignInManager<SiteUser>>();
             //services.TryAddScoped<RoleManager<SiteRole>, RoleManager<SiteRole>>();
 
+            services.AddScoped<ICustomClaimProvider, DoNothingCustomClaimProvider>();
+
             if (setupAction != null)
             {
                 services.Configure(setupAction);
