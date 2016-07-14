@@ -1,4 +1,10 @@
 
+https://goblincoding.com/2016/07/03/issuing-and-authenticating-jwt-tokens-in-asp-net-core-webapi-part-i/
+
+https://goblincoding.com/2016/07/07/issuing-and-authenticating-jwt-tokens-in-asp-net-core-webapi-part-ii/
+
+http://code.tutsplus.com/tutorials/securing-aspnet-web-api--cms-26012
+
 SPA? https://medium.com/@wob/the-sad-state-of-web-development-1603a861d29f#.ks06316vl
 
 http://gunnarpeipman.com/2016/04/why-azure-rest-api-s-and-how-to-prepare-for-using-them/
