@@ -43,3 +43,5 @@ http://joeduffyblog.com/2010/09/06/the-premature-optimization-is-evil-myth/
 
 
 http://shazwazza.com/post/custom-assembly-loading-with-aspnet-core/
+
+http://blog.ploeh.dk/2011/04/27/Providerisnotapattern/

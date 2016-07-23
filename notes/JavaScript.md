@@ -3,6 +3,12 @@ http://lisperator.net/uglifyjs/#demo
 
 http://www.thereformedprogrammer.net/templates-for-building-react-front-ends-in-asp-net-core-and-mvc5/?utm_source=twitterfeed&utm_medium=twitter
 
+https://www.pandastrike.com/posts/20150311-react-bad-idea
+
+http://webcomponents.org/
+
+https://github.com/Matt-Esch/virtual-dom
+
 http://tattoocoder.azurewebsites.net/angular2-aspnet5-spa-template/
 
 
@@ -29,3 +35,5 @@ https://github.com/ghiden/angucomplete-alt
 http://misoproject.com/
 http://misoproject.com/d3-chart/
 https://github.com/misoproject
+
+https://d4.js.org/

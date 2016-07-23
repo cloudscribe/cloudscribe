@@ -92,3 +92,5 @@ https://blog.fastmail.com/2016/06/20/everything-you-could-ever-want-to-know-and-
 http://www.cmswire.com/customer-experience/why-businesses-should-rethink-their-facebook-relationships/
 
 http://alistapart.com/article/create-an-evolutionary-web-strategy-with-a-digital-mro-plan
+
+https://eager.io/blog/the-history-of-the-url-path-fragment-query-auth/?h
