@@ -40,62 +40,64 @@ namespace cloudscribe.Core.Web.Test
 
         }
 
-        [Fact]
-        public void Resolves_Correct_LocalTime_From_Parsed_Utc()
-        {
-            var utcFromDb = DateTime.Parse("2016-06-07T17:28:15.8579119Z");
-            // 1:28PM Eastern is 17:28 or 5:28PM GMT // 4 hours different during daylight savings
-            // eek this is true
-            Assert.True(utcFromDb.Kind == DateTimeKind.Local);
-            Assert.True(utcFromDb.Year == 2016);
-            Assert.True(utcFromDb.Month == 6);
-            Assert.True(utcFromDb.Day == 7);
-            // really would have expected this to be utc ie it should be 17 but it isn't
-            // http://stackoverflow.com/questions/10029099/datetime-parse2012-09-30t230000-0000000z-always-converts-to-datetimekind-l
-            Assert.True(utcFromDb.Hour == 13); // and it isalready converted to eastern standard ie 1pm
-            //Assert.True(utcFromDb.Minute == 19);
+        // this test is wrong because DateTime.Parse already converts the utc to local system time
+        // TODO: rewrite this test using DateTime.ParseExact as specified in the linked stackoverflow question
+        //[Fact]
+        //public void Resolves_Correct_LocalTime_From_Parsed_Utc()
+        //{
+        //    var utcFromDb = DateTime.Parse("2016-06-07T17:28:15.8579119Z");
+        //    // 1:28PM Eastern is 17:28 or 5:28PM GMT // 4 hours different during daylight savings
+        //    // eek this is true
+        //    Assert.True(utcFromDb.Kind == DateTimeKind.Local);
+        //    Assert.True(utcFromDb.Year == 2016);
+        //    Assert.True(utcFromDb.Month == 6);
+        //    Assert.True(utcFromDb.Day == 7);
+        //    // really would have expected this to be utc ie it should be 17 but it isn't
+        //    // http://stackoverflow.com/questions/10029099/datetime-parse2012-09-30t230000-0000000z-always-converts-to-datetimekind-l
+        //    Assert.True(utcFromDb.Hour == 13); // and it isalready converted to eastern standard ie 1pm
+        //    //Assert.True(utcFromDb.Minute == 19);
 
-            var easternTzBcl = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time"); // 4hour offset
-            //var easternTzBcl = TimeZoneInfo.FindSystemTimeZoneById("Eastern Daylight Time"); // 5 hour offset
-            //var bclLocal = DateTime.SpecifyKind(
-            //    TimeZoneInfo.ConvertTime(DateTime.SpecifyKind(utcFromDb, DateTimeKind.Utc), easternTzBcl),
-            //    DateTimeKind.Local);
-            var bclLocal = TimeZoneInfo.ConvertTime(DateTime.SpecifyKind(utcFromDb, DateTimeKind.Utc), easternTzBcl);
+        //    var easternTzBcl = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time"); // 4hour offset
+        //    //var easternTzBcl = TimeZoneInfo.FindSystemTimeZoneById("Eastern Daylight Time"); // 5 hour offset
+        //    //var bclLocal = DateTime.SpecifyKind(
+        //    //    TimeZoneInfo.ConvertTime(DateTime.SpecifyKind(utcFromDb, DateTimeKind.Utc), easternTzBcl),
+        //    //    DateTimeKind.Local);
+        //    var bclLocal = TimeZoneInfo.ConvertTime(DateTime.SpecifyKind(utcFromDb, DateTimeKind.Utc), easternTzBcl);
 
-            // strange but true kind is unsepcified
-            Assert.True(bclLocal.Kind == DateTimeKind.Unspecified);
-            Assert.True(bclLocal.Year == 2016);
-            Assert.True(bclLocal.Month == 6);
-            Assert.True(bclLocal.Day == 7);
-            //Assert.True(bclLocal.Hour != 13); // clearly the hour changed
-            //Assert.True(bclLocal.Hour != 1); // in case it is as 1PM aka 13
-            //Assert.True(bclLocal.Hour != 18); // didn't add 5 hours
-            //Assert.True(bclLocal.Hour != 6); // 6PM aka 18
-            //Assert.True(bclLocal.Hour != 8); // didn't subtract 5 hours
-            Assert.True(bclLocal.Hour == 9); // so we subtracted 4 hours
+        //    // strange but true kind is unsepcified
+        //    Assert.True(bclLocal.Kind == DateTimeKind.Unspecified);
+        //    Assert.True(bclLocal.Year == 2016);
+        //    Assert.True(bclLocal.Month == 6);
+        //    Assert.True(bclLocal.Day == 7);
+        //    //Assert.True(bclLocal.Hour != 13); // clearly the hour changed
+        //    //Assert.True(bclLocal.Hour != 1); // in case it is as 1PM aka 13
+        //    //Assert.True(bclLocal.Hour != 18); // didn't add 5 hours
+        //    //Assert.True(bclLocal.Hour != 6); // 6PM aka 18
+        //    //Assert.True(bclLocal.Hour != 8); // didn't subtract 5 hours
+        //    Assert.True(bclLocal.Hour == 9); // so we subtracted 4 hours
 
 
 
-            var tzHelper = new TimeZoneHelper(new DateTimeZoneCache(TzdbDateTimeZoneSource.Default));
+        //    var tzHelper = new TimeZoneHelper(new DateTimeZoneCache(TzdbDateTimeZoneSource.Default));
 
-            var helperLocal = tzHelper.ConvertToLocalTime(utcFromDb, "America/New_York");
+        //    var helperLocal = tzHelper.ConvertToLocalTime(utcFromDb, "America/New_York");
 
-            Assert.True(helperLocal.Kind == DateTimeKind.Unspecified);
-            Assert.True(helperLocal.Year == 2016);
-            Assert.True(helperLocal.Month == 6);
-            Assert.True(helperLocal.Day == 7);
-            Assert.True(helperLocal.Hour == 13); //aka 1PM as we want even though the parsed date created local
-            //Assert.True(helperLocal.Minute == 28);
+        //    Assert.True(helperLocal.Kind == DateTimeKind.Unspecified);
+        //    Assert.True(helperLocal.Year == 2016);
+        //    Assert.True(helperLocal.Month == 6);
+        //    Assert.True(helperLocal.Day == 7);
+        //    Assert.True(helperLocal.Hour == 13); //aka 1PM as we want even though the parsed date created local
+        //    //Assert.True(helperLocal.Minute == 28);
 
-            var parsed = DateTime.Parse("2016-02-22 10:54:08");
-            // so if Z is not there it doesn't adjust it and flags it as unspecified kind
-            Assert.True(parsed.Kind == DateTimeKind.Unspecified);
-            Assert.True(parsed.Year == 2016);
-            Assert.True(parsed.Month == 2);
-            Assert.True(parsed.Day == 22);
-            Assert.True(parsed.Hour == 10);
+        //    var parsed = DateTime.Parse("2016-02-22 10:54:08");
+        //    // so if Z is not there it doesn't adjust it and flags it as unspecified kind
+        //    Assert.True(parsed.Kind == DateTimeKind.Unspecified);
+        //    Assert.True(parsed.Year == 2016);
+        //    Assert.True(parsed.Month == 2);
+        //    Assert.True(parsed.Day == 22);
+        //    Assert.True(parsed.Hour == 10);
 
-        }
+        //}
 
         //2016-06-07T13:19:00.0000000Z
 

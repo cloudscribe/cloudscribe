@@ -13,6 +13,9 @@ https://picturepan2.github.io/spectre/
 
 css minifier
 http://css.github.io/csso/csso.html
+
+https://cssminifier.com/
+
 js minifier
 http://lisperator.net/uglifyjs/#demo
 

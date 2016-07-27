@@ -2,6 +2,8 @@
 
 http://www.vodovnik.com/2015/09/20/localization-in-asp-net-5-mvc-6/
 
+http://www.lhotka.net/weblog/NETCoreUsingExistingResxResourceFile.aspx
+
 http://haacked.com/archive/2011/07/14/model-metadata-and-validation-localization-using-conventions.aspx/
 
 this is a replacement for the resx system, worth considering
