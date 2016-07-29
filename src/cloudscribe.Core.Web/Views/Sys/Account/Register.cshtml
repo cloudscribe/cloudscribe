@@ -7,6 +7,9 @@
 @{
     var socFormat = sr["Register in using your {0} account"];
 }
+@section Meta {
+    <meta name="robots" content="noindex" />
+}
 @if (Model.RecaptchaSiteKey.Length > 0)
 {
     <script src='https://www.google.com/recaptcha/api.js'></script>

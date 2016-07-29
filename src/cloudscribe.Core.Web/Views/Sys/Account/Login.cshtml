@@ -13,6 +13,9 @@
     var socialAuthoColumnWidth = 4;
     if (Model.DisableDbAuth) { socialAuthoColumnWidth = 12; }
 }
+@section Meta {
+<meta name="robots" content="noindex" />
+}
 @if (Model.RecaptchaSiteKey.Length > 0)
 {
     <script src='https://www.google.com/recaptcha/api.js'></script>
@@ -32,8 +35,6 @@
         {
             <section id="loginForm">
                 <form asp-controller="Account" asp-action="Login" asp-route-returnurl='@ViewData["ReturnUrl"]' method="post" class="form-horizontal" role="form">
-                    <h4>@sr["Use a local account to log in."]</h4>
-                    <hr />
                     <div asp-validation-summary="All" class="text-danger"></div>
                     @if (Model.UseEmailForLogin)
                 {
@@ -106,7 +107,6 @@
             {
                 <section id="socialLoginForm">
                     <h4>@sr["Use an existing account to log in"]</h4>
-                    <hr />
                     <form asp-controller="Account" asp-action="ExternalLogin" asp-route-returnurl='@ViewData["ReturnUrl"]' method="post" class="form-horizontal" role="form">
                         <div id="socialLoginList">
                             <p>

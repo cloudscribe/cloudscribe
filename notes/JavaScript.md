@@ -1,4 +1,7 @@
 
+http://www.fiyazhasan.me/configuring-typescript-for-asp-net-core-apps/
+
+
 http://lisperator.net/uglifyjs/#demo
 
 http://www.thereformedprogrammer.net/templates-for-building-react-front-ends-in-asp-net-core-and-mvc5/?utm_source=twitterfeed&utm_medium=twitter
