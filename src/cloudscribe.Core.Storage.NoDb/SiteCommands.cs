@@ -19,14 +19,14 @@ namespace cloudscribe.Core.Storage.NoDb
     public class SiteCommands : ISiteCommands
     {
         public SiteCommands(
-            IProjectResolver projectResolver,
+            //IProjectResolver projectResolver,
             IBasicQueries<SiteSettings> queries,
             IBasicCommands<SiteSettings> commands,
             IBasicQueries<SiteHost> hostQueries,
             IBasicCommands<SiteHost> hostCommands
             )
         {
-            this.projectResolver = projectResolver;
+            this.projectResolver = new DefaultProjectResolver();
             this.queries = queries;
             this.commands = commands;
             this.hostQueries = hostQueries;
@@ -63,7 +63,8 @@ namespace cloudscribe.Core.Storage.NoDb
             await EnsureProjectId().ConfigureAwait(false);
 
             var siteSettings = SiteSettings.FromISiteSettings(site);
-            await commands.CreateAsync(projectId,
+            await commands.CreateAsync(
+                projectId,
                 siteSettings.Id.ToString(),
                 siteSettings,
                 cancellationToken).ConfigureAwait(false);
@@ -84,7 +85,8 @@ namespace cloudscribe.Core.Storage.NoDb
 
             var siteSettings = SiteSettings.FromISiteSettings(site);
 
-            await commands.UpdateAsync(projectId,
+            await commands.UpdateAsync(
+                projectId,
                 siteSettings.Id.ToString(),
                 siteSettings,
                 cancellationToken).ConfigureAwait(false);

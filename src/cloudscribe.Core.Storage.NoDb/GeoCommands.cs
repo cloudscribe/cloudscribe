@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:                  Joe Audette
 // Created:                 2016-05-14
-// Last Modified:           2016-06-12
+// Last Modified:           2016-08-02
 // 
 
 using cloudscribe.Core.Models.Geography;
@@ -17,7 +17,7 @@ namespace cloudscribe.Core.Storage.NoDb
     public class GeoCommands : IGeoCommands
     {
         public GeoCommands(
-            IProjectResolver projectResolver,
+            //IProjectResolver projectResolver,
             IBasicQueries<GeoCountry> countryQueries,
             IBasicCommands<GeoCountry> countryCommands,
             IBasicQueries<GeoZone> stateQueries,
@@ -25,7 +25,7 @@ namespace cloudscribe.Core.Storage.NoDb
            
             )
         {
-            this.projectResolver = projectResolver;
+            this.projectResolver = new DefaultProjectResolver();
             this.countryQueries = countryQueries;
             this.countryCommands = countryCommands;
             this.stateQueries = stateQueries;

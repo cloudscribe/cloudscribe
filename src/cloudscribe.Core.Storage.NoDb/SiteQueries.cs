@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:                  Joe Audette
 // Created:                 2016-05-13
-// Last Modified:           2016-06-14
+// Last Modified:           2016-08-02
 // 
 
 using cloudscribe.Core.Models;
@@ -19,12 +19,12 @@ namespace cloudscribe.Core.Storage.NoDb
     public class SiteQueries : ISiteQueries
     {
         public SiteQueries(
-            IProjectResolver projectResolver,
+           // IProjectResolver projectResolver,
             IBasicQueries<SiteSettings> queries,
             IBasicQueries<SiteHost> hostQueries
             )
         {
-            this.projectResolver = projectResolver;
+            this.projectResolver = new DefaultProjectResolver();
             this.queries = queries;
             this.hostQueries = hostQueries;
 
@@ -45,7 +45,7 @@ namespace cloudscribe.Core.Storage.NoDb
 
         }
 
-
+        // need custom NoDb logic for option to lookup across projects
         public async Task<ISiteSettings> Fetch(
             Guid siteId,
             CancellationToken cancellationToken = default(CancellationToken))
@@ -62,6 +62,7 @@ namespace cloudscribe.Core.Storage.NoDb
 
         }
 
+        // need custom NoDb logic for option to lookup across projects
         public async Task<ISiteSettings> Fetch(
             string hostName,
             CancellationToken cancellationToken = default(CancellationToken))
@@ -96,6 +97,7 @@ namespace cloudscribe.Core.Storage.NoDb
             
         }
 
+        // need custom NoDb logic for option to lookup across projects
         public async Task<ISiteSettings> FetchByFolderName(
             string folderName,
             CancellationToken cancellationToken = default(CancellationToken))

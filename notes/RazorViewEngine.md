@@ -12,6 +12,7 @@ http://docs.asp.net/en/toc/mvc/migration/migratingfrommvc5.html
 http://www.davepaquette.com/archive/2015/05/11/cleaner-forms-using-tag-helpers-in-mvc6.aspx
 http://www.davepaquette.com/archive/2015/12/28/complex-custom-tag-helpers-in-mvc-6.aspx
 
+https://tuespetre.github.io/aspnetcore/performance/mvc/2016/08/01/aspnet-core-mvc-performance-squeeze.html
 
 # General Tips
 

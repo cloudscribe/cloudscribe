@@ -1,4 +1,6 @@
 
+https://blogs.msdn.microsoft.com/dotnet/2016/07/29/entity-framework-core-1-1-plans/
+
 https://blogs.msdn.microsoft.com/dotnet/2016/06/27/entity-framework-core-1-0-0-available/
 
 http://www.codeproject.com/Articles/114262/6-ways-of-doing-locking-in-NET-Pessimistic-and-opt

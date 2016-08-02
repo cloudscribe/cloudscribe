@@ -35,6 +35,8 @@ I had some doubts about commands returning only void, to me it seemed reasonable
 indicating success or failure of the command, but this article set me straight
 http://blog.iannelson.systems/back-to-basics-on-the-use-and-abuse-of-the-humble-boolean/
 
+http://dotnet.github.io/orleans/
+
 http://rob.conery.io/2014/03/04/repositories-and-unitofwork-are-not-a-good-idea/
 
 https://blog.rendle.io/do-one-thing-and-do-it-well/
