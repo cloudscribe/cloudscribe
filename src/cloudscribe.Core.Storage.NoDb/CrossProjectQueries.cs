@@ -1,38 +1,36 @@
 ﻿// Copyright (c) Source Tree Solutions, LLC. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
-// Created:					2016-08-02
-// Last Modified:			2016-08-02
+// Created:					2016-08-03
+// Last Modified:			2016-08-03
 // 
 
-
-using cloudscribe.Core.Models;
 using Microsoft.Extensions.Logging;
 using NoDb;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Storage.NoDb
 {
-    public class CrossProjectSiteQueries : BasicQueries<SiteSettings>
+    /// <summary>
+    /// this is for querying of a type across NoDb projects, ie in multiple project folders
+    /// the methods are overrides so the method signatures take a projectid,
+    /// but it is ignored and empty string or null can be passed in
+    /// we want to use a nodb project per site in cloudscribe core so for certain things like
+    /// SiteSettings and SiteHosts we need to query across projects
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public class CrossProjectQueries<T> : BasicQueries<T> where T : class
     {
-        /// <summary>
-        /// here we are not using the proejctid if any passed into the methods, since the goal is to search across projects
-        /// </summary>
-        /// <param name="logger"></param>
-        /// <param name="storageOptionsResolver"></param>
-        /// <param name="pathResolver"></param>
-        /// <param name="serializer"></param>
-        public CrossProjectSiteQueries(
-            ILogger<BasicQueries<SiteSettings>> logger,
-            IStoragePathOptionsResolver storageOptionsResolver,
-            IStoragePathResolver<SiteSettings> pathResolver,
-            IStringSerializer<SiteSettings> serializer)
-            :base(logger, pathResolver, serializer)
+        public CrossProjectQueries(
+            ILogger<BasicQueries<T>> logger,
+            IStoragePathResolver<T> pathResolver,
+            IStringSerializer<T> serializer,
+            IStoragePathOptionsResolver storageOptionsResolver
+            ) : base(logger, pathResolver, serializer)
         {
             this.storageOptionsResolver = storageOptionsResolver;
         }
@@ -51,20 +49,20 @@ namespace cloudscribe.Core.Storage.NoDb
             return projectsFolder;
         }
 
-        public override async Task<SiteSettings> FetchAsync(
+
+        public override async Task<T> FetchAsync(
             string projectId,
             string key,
             CancellationToken cancellationToken = default(CancellationToken)
             )
         {
-            if (string.IsNullOrWhiteSpace(projectId)) throw new ArgumentException("projectId must be provided");
             if (string.IsNullOrWhiteSpace(key)) throw new ArgumentException("key must be provided");
 
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
 
             //override logic to look across site folders
-            
+
             var projectsFolder = await GetProjectsFolderPath().ConfigureAwait(false);
 
             if (!Directory.Exists(projectsFolder))
@@ -72,7 +70,7 @@ namespace cloudscribe.Core.Storage.NoDb
                 return null;
             }
 
-            var typeName = typeof(SiteSettings).Name.ToLowerInvariant().Trim();
+            var typeName = typeof(T).Name.ToLowerInvariant().Trim();
             var projectsDir = new DirectoryInfo(projectsFolder);
             foreach (var projectDir in projectsDir.GetDirectories())
             {
@@ -88,18 +86,6 @@ namespace cloudscribe.Core.Storage.NoDb
 
             }
 
-
-
-            //var pathToFile = await pathResolver.ResolvePath(
-            //projectId,
-            //key,
-            //serializer.ExpectedFileExtension
-            //).ConfigureAwait(false);
-
-            //if (!File.Exists(pathToFile)) return null;
-
-            //return LoadObject(pathToFile, key);
-
             return null;
 
         }
@@ -109,8 +95,6 @@ namespace cloudscribe.Core.Storage.NoDb
             CancellationToken cancellationToken = default(CancellationToken)
             )
         {
-            if (string.IsNullOrWhiteSpace(projectId)) throw new ArgumentException("projectId must be provided");
-
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
 
@@ -123,7 +107,7 @@ namespace cloudscribe.Core.Storage.NoDb
                 return count;
             }
 
-            var typeName = typeof(SiteSettings).Name.ToLowerInvariant().Trim();
+            var typeName = typeof(T).Name.ToLowerInvariant().Trim();
             var projectsDir = new DirectoryInfo(projectsFolder);
             foreach (var projectDir in projectsDir.GetDirectories())
             {
@@ -134,30 +118,24 @@ namespace cloudscribe.Core.Storage.NoDb
                     count += typeDirectory.GetFileSystemInfos("*" + serializer.ExpectedFileExtension).Length;
 
                 }
-
             }
 
             return count;
-
-            //var pathToFolder = await pathResolver.ResolvePath(projectId).ConfigureAwait(false);
-            //if (!Directory.Exists(pathToFolder)) return 0;
-
-            //var directory = new DirectoryInfo(pathToFolder);
-            //return directory.GetFileSystemInfos("*" + serializer.ExpectedFileExtension).Length;
+            
         }
 
 
-        public override async Task<IEnumerable<SiteSettings>> GetAllAsync(
+        public override async Task<IEnumerable<T>> GetAllAsync(
             string projectId,
             CancellationToken cancellationToken = default(CancellationToken)
             )
         {
-            if (string.IsNullOrWhiteSpace(projectId)) throw new ArgumentException("projectId must be provided");
-
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
 
-            var list = new List<SiteSettings>();
+            var pathToFolder = await pathResolver.ResolvePath(projectId).ConfigureAwait(false);
+
+            var list = new List<T>();
 
             //override logic to look across site folders
 
@@ -167,7 +145,7 @@ namespace cloudscribe.Core.Storage.NoDb
                 return list;
             }
 
-            var typeName = typeof(SiteSettings).Name.ToLowerInvariant().Trim();
+            var typeName = typeof(T).Name.ToLowerInvariant().Trim();
             var projectsDir = new DirectoryInfo(projectsFolder);
             foreach (var projectDir in projectsDir.GetDirectories())
             {
@@ -177,7 +155,7 @@ namespace cloudscribe.Core.Storage.NoDb
                     foreach (string file in Directory.EnumerateFiles(
                         typeFolderPath,
                         "*" + serializer.ExpectedFileExtension,
-                        SearchOption.AllDirectories) // this is needed for blog posts which are nested in year/month folders
+                        SearchOption.AllDirectories) 
                         )
                     {
                         var key = Path.GetFileNameWithoutExtension(file);
@@ -189,25 +167,10 @@ namespace cloudscribe.Core.Storage.NoDb
 
             }
 
-
-            //var pathToFolder = await pathResolver.ResolvePath(projectId).ConfigureAwait(false);
-            
-            
-            //if (!Directory.Exists(pathToFolder)) return list;
-            //foreach (string file in Directory.EnumerateFiles(
-            //    pathToFolder,
-            //    "*" + serializer.ExpectedFileExtension,
-            //    SearchOption.AllDirectories) // this is needed for blog posts which are nested in year/month folders
-            //    )
-            //{
-            //    var key = Path.GetFileNameWithoutExtension(file);
-            //    var obj = LoadObject(file, key);
-            //    list.Add(obj);
-            //}
-
             return list;
 
         }
+
 
     }
 }

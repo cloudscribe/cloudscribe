@@ -26,29 +26,29 @@ namespace cloudscribe.Core.Storage.NoDb
             IBasicCommands<SiteHost> hostCommands
             )
         {
-            this.projectResolver = new DefaultProjectResolver();
+            //this.projectResolver = new DefaultProjectResolver();
             this.queries = queries;
             this.commands = commands;
             this.hostQueries = hostQueries;
             this.hostCommands = hostCommands;
         }
 
-        private IProjectResolver projectResolver;
+        //private IProjectResolver projectResolver;
         private IBasicQueries<SiteSettings> queries;
         private IBasicCommands<SiteSettings> commands;
         private IBasicQueries<SiteHost> hostQueries;
         private IBasicCommands<SiteHost> hostCommands;
 
-        protected string projectId;
+        //protected string projectId;
 
-        private async Task EnsureProjectId()
-        {
-            if (string.IsNullOrEmpty(projectId))
-            {
-                projectId = await projectResolver.ResolveProjectId().ConfigureAwait(false);
-            }
+        //private async Task EnsureProjectId()
+        //{
+        //    if (string.IsNullOrEmpty(projectId))
+        //    {
+        //        projectId = await projectResolver.ResolveProjectId().ConfigureAwait(false);
+        //    }
 
-        }
+        //}
 
         public async Task Create(
             ISiteSettings site,
@@ -60,9 +60,11 @@ namespace cloudscribe.Core.Storage.NoDb
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
-            await EnsureProjectId().ConfigureAwait(false);
-
+            //await EnsureProjectId().ConfigureAwait(false);
+            
             var siteSettings = SiteSettings.FromISiteSettings(site);
+            var projectId = siteSettings.Id.ToString();
+
             await commands.CreateAsync(
                 projectId,
                 siteSettings.Id.ToString(),
@@ -81,9 +83,10 @@ namespace cloudscribe.Core.Storage.NoDb
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
-            await EnsureProjectId().ConfigureAwait(false);
+            //await EnsureProjectId().ConfigureAwait(false);
 
             var siteSettings = SiteSettings.FromISiteSettings(site);
+            var projectId = siteSettings.Id.ToString();
 
             await commands.UpdateAsync(
                 projectId,
@@ -102,7 +105,8 @@ namespace cloudscribe.Core.Storage.NoDb
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
-            await EnsureProjectId().ConfigureAwait(false);
+            //await EnsureProjectId().ConfigureAwait(false);
+            var projectId = siteId.ToString();
 
             await commands.DeleteAsync(
                 projectId,
@@ -123,7 +127,8 @@ namespace cloudscribe.Core.Storage.NoDb
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
-            await EnsureProjectId().ConfigureAwait(false);
+            //await EnsureProjectId().ConfigureAwait(false);
+            var projectId = siteId.ToString();
 
             var host = new SiteHost();
             host.SiteId = siteId;
@@ -138,6 +143,7 @@ namespace cloudscribe.Core.Storage.NoDb
         }
 
         public async Task DeleteHost(
+            Guid siteId,
             Guid hostId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -146,7 +152,8 @@ namespace cloudscribe.Core.Storage.NoDb
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
-            await EnsureProjectId().ConfigureAwait(false);
+            //await EnsureProjectId().ConfigureAwait(false);
+            var projectId = siteId.ToString();
 
             await hostCommands.DeleteAsync(
                 projectId,
@@ -164,7 +171,8 @@ namespace cloudscribe.Core.Storage.NoDb
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
-            await EnsureProjectId().ConfigureAwait(false);
+            //await EnsureProjectId().ConfigureAwait(false);
+            var projectId = siteId.ToString();
 
             var allHosts = await hostQueries.GetAllAsync(
                 projectId,

@@ -11,7 +11,7 @@ $(function () {
                 $.getJSON(serviceUrl + $parent.val(), function (data) {
                     var items = '<option>' + selectLabel + '</option>';
                     $.each(data, function (i, item) {
-                        items += "<option value='" + item.Value + "'>" + item.Text + "</option>";
+                        items += "<option value='" + item.value + "'>" + item.text + "</option>";
                     });
                     $(ele).html(items);
                     if (origVal.length > 0) {

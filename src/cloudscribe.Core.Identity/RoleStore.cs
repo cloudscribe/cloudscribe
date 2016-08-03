@@ -79,8 +79,8 @@ namespace cloudscribe.Core.Identity
             }
 
             // remove all users form the role
-            await commands.DeleteUserRolesByRole(role.Id, cancellationToken);
-            await commands.DeleteRole(role.Id, cancellationToken);
+            await commands.DeleteUserRolesByRole(role.SiteId, role.Id, cancellationToken);
+            await commands.DeleteRole(role.SiteId, role.Id, cancellationToken);
 
             return IdentityResult.Success; 
             
@@ -93,7 +93,7 @@ namespace cloudscribe.Core.Identity
             if (string.IsNullOrWhiteSpace(roleId)) throw new ArgumentException("invalid roleid");
             if(roleId.Length != 36) throw new ArgumentException("invalid roleid");
             var roleGuid = new Guid(roleId);
-            var role = await queries.FetchRole(roleGuid, cancellationToken);
+            var role = await queries.FetchRole(Site.Id, roleGuid, cancellationToken);
 
             return (TRole)role;
         }

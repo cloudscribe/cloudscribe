@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2016-05-18
+// Last Modified:			2016-08-03
 // 
 
 
@@ -115,7 +115,7 @@ namespace cloudscribe.Core.Storage.EF
             {
                 await DeleteLoginsByUser(itemToRemove.SiteId, itemToRemove.Id, false);
                 await DeleteClaimsByUser(itemToRemove.SiteId, itemToRemove.Id, false);
-                await DeleteUserRoles(itemToRemove.Id, false);
+                await DeleteUserRoles(siteId, itemToRemove.Id, false);
 
 
                 dbContext.Users.Remove(itemToRemove);
@@ -149,6 +149,7 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task FlagAsDeleted(
+            Guid siteId,
             Guid userId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -170,6 +171,7 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task FlagAsNotDeleted(
+            Guid siteId,
             Guid userId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -193,6 +195,7 @@ namespace cloudscribe.Core.Storage.EF
 
 
         public async Task LockoutAccount(
+            Guid siteId,
             Guid userId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -214,6 +217,7 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task UnLockAccount(
+            Guid siteId,
             Guid userId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -237,6 +241,7 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task UpdateFailedPasswordAttemptCount(
+            Guid siteId,
             Guid userId,
             int failedPasswordAttemptCount,
             CancellationToken cancellationToken = default(CancellationToken))
@@ -259,6 +264,7 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task UpdateLastLoginTime(
+            Guid siteId,
             Guid userId,
             DateTime lastLoginTime,
             CancellationToken cancellationToken = default(CancellationToken))
@@ -347,6 +353,7 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task DeleteRole(
+            Guid siteId,
             Guid roleId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -383,6 +390,7 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task AddUserToRole(
+            Guid siteId,
             Guid roleId,
             Guid userId,
             CancellationToken cancellationToken = default(CancellationToken)
@@ -402,6 +410,7 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task RemoveUserFromRole(
+            Guid siteId,
             Guid roleId,
             Guid userId,
             CancellationToken cancellationToken = default(CancellationToken))
@@ -423,15 +432,17 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task DeleteUserRoles(
+            Guid siteId,
             Guid userId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            await DeleteUserRoles(userId, true, cancellationToken).ConfigureAwait(false) ;
+            await DeleteUserRoles(siteId, userId, true, cancellationToken).ConfigureAwait(false) ;
         }
 
         private async Task DeleteUserRoles(
+            Guid siteId,
             Guid userId,
             bool saveChanges,
             CancellationToken cancellationToken = default(CancellationToken))
@@ -455,6 +466,7 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task DeleteUserRolesByRole(
+            Guid siteId,
             Guid roleId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -538,6 +550,7 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task DeleteClaim(
+            Guid siteId,
             Guid claimId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -784,6 +797,7 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task DeleteUserLocation(
+            Guid siteId,
             Guid userLocationId,
             CancellationToken cancellationToken = default(CancellationToken)
             )
@@ -805,6 +819,7 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task DeleteUserLocationsByUser(
+            Guid siteId,
             Guid userId,
             CancellationToken cancellationToken = default(CancellationToken)
             )

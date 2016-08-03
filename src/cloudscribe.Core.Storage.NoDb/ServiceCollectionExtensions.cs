@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:                  Joe Audette
 // Created:                 2016-05-09
-// Last Modified:           2016-06-12
+// Last Modified:           2016-08-03
 // 
 
 using cloudscribe.Core.Models;
@@ -18,8 +18,13 @@ namespace Microsoft.Extensions.DependencyInjection
             this IServiceCollection services
             )
         {
+
+            services.AddScoped<IBasicQueries<SiteSettings>, CrossProjectQueries<SiteSettings>>();
+            services.AddScoped<IBasicQueries<SiteHost>, CrossProjectQueries<SiteHost>>();
+
             services.AddNoDb<SiteSettings>();
             services.AddNoDb<SiteHost>();
+
             services.AddNoDb<SiteUser>();
             services.AddNoDb<SiteRole>();
             services.AddNoDb<UserRole>();
@@ -31,9 +36,8 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddNoDb<GeoZone>();
             
             services.AddScoped<IDataPlatformInfo, DataPlatformInfo>();
-
-            services.AddScoped<IProjectRequestMap, DefaultProjectRequestMap>();
-            services.AddScoped<IProjectResolver, DefaultProjectResolver>();
+            
+            //services.AddScoped<IProjectResolver, DefaultProjectResolver>();
             services.AddScoped<ISiteCommands, SiteCommands>();
             services.AddScoped<ISiteQueries, SiteQueries>();
 

@@ -131,7 +131,7 @@ namespace cloudscribe.Core.Identity
                     role = await queries.FetchRole(siteUser.SiteId, defaultRoles, cancellationToken);
                     if ((role != null) && (role.Id != Guid.Empty))
                     {
-                        await commands.AddUserToRole(role.Id, siteUser.Id, cancellationToken);
+                        await commands.AddUserToRole(role.SiteId, role.Id, siteUser.Id, cancellationToken);
                     }
                 }
                 else
@@ -144,7 +144,7 @@ namespace cloudscribe.Core.Identity
                             role = await queries.FetchRole(siteUser.SiteId, roleName, cancellationToken);
                             if ((role != null) && (role.Id != Guid.Empty))
                             {
-                                await commands.AddUserToRole(role.Id, siteUser.Id, cancellationToken);
+                                await commands.AddUserToRole(role.SiteId, role.Id, siteUser.Id, cancellationToken);
                             }
                         }
                     }
@@ -184,7 +184,7 @@ namespace cloudscribe.Core.Identity
             }
             else
             {
-                await commands.FlagAsDeleted(user.Id, cancellationToken);
+                await commands.FlagAsDeleted(user.SiteId, user.Id, cancellationToken);
             }
 
             return IdentityResult.Success;
@@ -684,7 +684,7 @@ namespace cloudscribe.Core.Identity
 
             user.AccessFailedCount += 1;
             cancellationToken.ThrowIfCancellationRequested();
-            await commands.UpdateFailedPasswordAttemptCount(user.Id, user.AccessFailedCount, cancellationToken);
+            await commands.UpdateFailedPasswordAttemptCount(user.SiteId, user.Id, user.AccessFailedCount, cancellationToken);
             return user.AccessFailedCount;
         }
 
@@ -710,7 +710,7 @@ namespace cloudscribe.Core.Identity
             // EF implementation doesn't save here
             // but we have to since our save doesn't update this
             // we have specific methods as shown here
-            await commands.UpdateFailedPasswordAttemptCount(user.Id, user.AccessFailedCount, cancellationToken);
+            await commands.UpdateFailedPasswordAttemptCount(user.SiteId, user.Id, user.AccessFailedCount, cancellationToken);
 
         }
 
@@ -1196,7 +1196,7 @@ namespace cloudscribe.Core.Identity
             var siteRole = await queries.FetchRole(siteGuid, role, cancellationToken);
             if (siteRole != null)
             {
-                await commands.AddUserToRole(siteRole.Id, user.Id, cancellationToken);
+                await commands.AddUserToRole(siteRole.SiteId, siteRole.Id, user.Id, cancellationToken);
             }
 
         }
@@ -1273,14 +1273,14 @@ namespace cloudscribe.Core.Identity
                 throw new ArgumentNullException("user");
             }
             
-            var siteGuid = siteSettings.Id;
-            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteId; }
+            var siteId = siteSettings.Id;
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
-            var siteRole = await queries.FetchRole(siteGuid, role, cancellationToken);
+            var siteRole = await queries.FetchRole(siteId, role, cancellationToken);
             
             if (siteRole != null)
             {  
-                await commands.RemoveUserFromRole(siteRole.Id, user.Id, cancellationToken);
+                await commands.RemoveUserFromRole(siteId, siteRole.Id, user.Id, cancellationToken);
             }
 
         }

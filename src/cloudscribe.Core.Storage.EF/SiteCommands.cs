@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2016-05-18
+// Last Modified:			2016-08-03
 // 
 
 using cloudscribe.Core.Models;
@@ -94,6 +94,7 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task DeleteHost(
+            Guid siteId,
             Guid hostId,
             CancellationToken cancellationToken = default(CancellationToken))
         {

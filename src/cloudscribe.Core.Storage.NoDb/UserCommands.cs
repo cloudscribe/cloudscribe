@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:                  Joe Audette
 // Created:                 2016-04-26
-// Last Modified:           2016-05-14
+// Last Modified:           2016-08-03
 // 
 
 using cloudscribe.Core.Models;
@@ -18,7 +18,7 @@ namespace cloudscribe.Core.Storage.NoDb
     public class UserCommands : IUserCommands
     {
         public UserCommands(
-            IProjectResolver projectResolver,
+            //IProjectResolver projectResolver,
             IBasicCommands<SiteUser> userCommands,
             IBasicCommands<SiteRole> roleCommands,
             IBasicCommands<UserRole> userRoleCommands,
@@ -33,7 +33,7 @@ namespace cloudscribe.Core.Storage.NoDb
             IStoragePathResolver<UserLogin> loginPathResolver
             )
         {
-            this.projectResolver = projectResolver;
+            //this.projectResolver = projectResolver;
             this.userCommands = userCommands;
             this.roleCommands = roleCommands;
             this.userRoleCommands = userRoleCommands;
@@ -50,7 +50,7 @@ namespace cloudscribe.Core.Storage.NoDb
 
         }
 
-        private IProjectResolver projectResolver;
+        //private IProjectResolver projectResolver;
         private IBasicCommands<SiteUser> userCommands;
         private IBasicCommands<SiteRole> roleCommands;
         private IBasicCommands<UserRole> userRoleCommands;
@@ -65,16 +65,16 @@ namespace cloudscribe.Core.Storage.NoDb
         private IBasicQueries<UserClaim> claimQueries;
         private IBasicQueries<UserLocation> locationQueries;
 
-        protected string projectId;
+        //protected string projectId;
 
-        private async Task EnsureProjectId()
-        {
-            if (string.IsNullOrEmpty(projectId))
-            {
-                projectId = await projectResolver.ResolveProjectId().ConfigureAwait(false);
-            }
+        //private async Task EnsureProjectId()
+        //{
+        //    if (string.IsNullOrEmpty(projectId))
+        //    {
+        //        projectId = await projectResolver.ResolveProjectId().ConfigureAwait(false);
+        //    }
 
-        }
+        //}
 
         #region User
 
@@ -86,7 +86,8 @@ namespace cloudscribe.Core.Storage.NoDb
             if (user.SiteId == Guid.Empty) { throw new ArgumentException("user must have a siteid"); }
             if (user.Id == Guid.Empty) { throw new ArgumentException("user must have a non-empty id"); }
 
-            await EnsureProjectId().ConfigureAwait(false);
+            //await EnsureProjectId().ConfigureAwait(false);
+            var projectId = user.SiteId.ToString();
 
             var siteUser = SiteUser.FromISiteUser(user);
             
@@ -106,8 +107,9 @@ namespace cloudscribe.Core.Storage.NoDb
             if (user.SiteId == Guid.Empty) { throw new ArgumentException("user must have a siteid"); }
             if (user.Id == Guid.Empty) { throw new ArgumentException("user must have a non-empty id"); }
 
-            await EnsureProjectId().ConfigureAwait(false);
- 
+            //await EnsureProjectId().ConfigureAwait(false);
+            var projectId = user.SiteId.ToString();
+
             var siteUser = SiteUser.FromISiteUser(user);
             await userCommands.UpdateAsync(
                     projectId,
@@ -122,8 +124,9 @@ namespace cloudscribe.Core.Storage.NoDb
             Guid userId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            
-            await EnsureProjectId().ConfigureAwait(false);
+
+            //await EnsureProjectId().ConfigureAwait(false);
+            var projectId = siteId.ToString();
 
             await userCommands.DeleteAsync(projectId, userId.ToString(), cancellationToken).ConfigureAwait(false);
  
@@ -133,7 +136,9 @@ namespace cloudscribe.Core.Storage.NoDb
             Guid siteId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            await EnsureProjectId().ConfigureAwait(false);
+            //await EnsureProjectId().ConfigureAwait(false);
+            var projectId = siteId.ToString();
+
             await DeleteLoginsBySite(siteId);
             await DeleteClaimsBySite(siteId);
             await DeleteUserRolesBySite(siteId);
@@ -155,13 +160,15 @@ namespace cloudscribe.Core.Storage.NoDb
         }
 
         public async Task FlagAsDeleted(
+            Guid siteId,
             Guid userId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            
-            await EnsureProjectId().ConfigureAwait(false);
+
+            //await EnsureProjectId().ConfigureAwait(false);
+            var projectId = siteId.ToString();
 
             var item
                 = await userQueries.FetchAsync(
@@ -182,13 +189,15 @@ namespace cloudscribe.Core.Storage.NoDb
         }
 
         public async Task FlagAsNotDeleted(
+            Guid siteId,
             Guid userId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
-            await EnsureProjectId().ConfigureAwait(false);
+            //await EnsureProjectId().ConfigureAwait(false);
+            var projectId = siteId.ToString();
 
             var item
                 = await userQueries.FetchAsync(
@@ -209,13 +218,15 @@ namespace cloudscribe.Core.Storage.NoDb
         }
 
         public async Task LockoutAccount(
+            Guid siteId,
             Guid userId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
-            await EnsureProjectId().ConfigureAwait(false);
+            //await EnsureProjectId().ConfigureAwait(false);
+            var projectId = siteId.ToString();
 
             var item
                 = await userQueries.FetchAsync(
@@ -236,13 +247,15 @@ namespace cloudscribe.Core.Storage.NoDb
         }
 
         public async Task UnLockAccount(
+            Guid siteId,
             Guid userId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
-            await EnsureProjectId().ConfigureAwait(false);
+            //await EnsureProjectId().ConfigureAwait(false);
+            var projectId = siteId.ToString();
 
             var item
                 = await userQueries.FetchAsync(
@@ -264,6 +277,7 @@ namespace cloudscribe.Core.Storage.NoDb
         }
 
         public async Task UpdateFailedPasswordAttemptCount(
+            Guid siteId,
             Guid userId,
             int failedPasswordAttemptCount,
             CancellationToken cancellationToken = default(CancellationToken))
@@ -271,7 +285,8 @@ namespace cloudscribe.Core.Storage.NoDb
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
-            await EnsureProjectId().ConfigureAwait(false);
+            //await EnsureProjectId().ConfigureAwait(false);
+            var projectId = siteId.ToString();
 
             var item
                 = await userQueries.FetchAsync(
@@ -292,6 +307,7 @@ namespace cloudscribe.Core.Storage.NoDb
         }
 
         public async Task UpdateLastLoginTime(
+            Guid siteId,
             Guid userId,
             DateTime lastLoginTime,
             CancellationToken cancellationToken = default(CancellationToken))
@@ -299,7 +315,8 @@ namespace cloudscribe.Core.Storage.NoDb
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
-            await EnsureProjectId().ConfigureAwait(false);
+            //await EnsureProjectId().ConfigureAwait(false);
+            var projectId = siteId.ToString();
 
             var item
                 = await userQueries.FetchAsync(
@@ -335,8 +352,9 @@ namespace cloudscribe.Core.Storage.NoDb
             if (role.SiteId == Guid.Empty) { throw new ArgumentException("SiteId must be provided"); }
             if (role.Id == Guid.Empty) { throw new ArgumentException("Id must be provided"); }
 
-            await EnsureProjectId().ConfigureAwait(false);
-            
+            //await EnsureProjectId().ConfigureAwait(false);
+            var projectId = role.SiteId.ToString();
+
             var siteRole = SiteRole.FromISiteRole(role);
             
             if (siteRole.NormalizedRoleName.Length == 0)
@@ -363,8 +381,9 @@ namespace cloudscribe.Core.Storage.NoDb
             if (role.SiteId == Guid.Empty) { throw new ArgumentException("SiteId must be provided"); }
             if (role.Id == Guid.Empty) { throw new ArgumentException("Id must be provided"); }
 
-            await EnsureProjectId().ConfigureAwait(false);
-            
+            //await EnsureProjectId().ConfigureAwait(false);
+            var projectId = role.SiteId.ToString();
+
             var siteRole = SiteRole.FromISiteRole(role);
 
             await roleCommands.UpdateAsync(
@@ -376,6 +395,7 @@ namespace cloudscribe.Core.Storage.NoDb
         }
 
         public async Task DeleteRole(
+            Guid siteId,
             Guid roleId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -384,7 +404,8 @@ namespace cloudscribe.Core.Storage.NoDb
 
             if (roleId == Guid.Empty) { throw new ArgumentException("Id must be provided"); }
 
-            await EnsureProjectId().ConfigureAwait(false);
+            //await EnsureProjectId().ConfigureAwait(false);
+            var projectId = siteId.ToString();
 
             await roleCommands.DeleteAsync(
                 projectId,
@@ -401,8 +422,9 @@ namespace cloudscribe.Core.Storage.NoDb
 
             if (siteId == Guid.Empty) { throw new ArgumentException("siteId must be provided"); }
 
-            await EnsureProjectId().ConfigureAwait(false);
-            
+            //await EnsureProjectId().ConfigureAwait(false);
+            var projectId = siteId.ToString();
+
             var all = await roleQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
             var filtered = all.Where(x => x.SiteId == siteId);
 
@@ -419,6 +441,7 @@ namespace cloudscribe.Core.Storage.NoDb
         }
 
         public async Task AddUserToRole(
+            Guid siteId,
             Guid roleId,
             Guid userId,
             CancellationToken cancellationToken = default(CancellationToken)
@@ -430,7 +453,8 @@ namespace cloudscribe.Core.Storage.NoDb
             if (roleId == Guid.Empty) { throw new ArgumentException("roleId must be provided"); }
             if (userId == Guid.Empty) { throw new ArgumentException("userId must be provided"); }
 
-            await EnsureProjectId().ConfigureAwait(false);
+            //await EnsureProjectId().ConfigureAwait(false);
+            var projectId = siteId.ToString();
 
             UserRole ur = new UserRole();
             ur.RoleId = roleId;
@@ -447,6 +471,7 @@ namespace cloudscribe.Core.Storage.NoDb
         }
 
         public async Task RemoveUserFromRole(
+            Guid siteId,
             Guid roleId,
             Guid userId,
             CancellationToken cancellationToken = default(CancellationToken))
@@ -457,7 +482,8 @@ namespace cloudscribe.Core.Storage.NoDb
             if (roleId == Guid.Empty) { throw new ArgumentException("roleId must be provided"); }
             if (userId == Guid.Empty) { throw new ArgumentException("userId must be provided"); }
 
-            await EnsureProjectId().ConfigureAwait(false);
+            //await EnsureProjectId().ConfigureAwait(false);
+            var projectId = siteId.ToString();
 
             var key = userId.ToString() + "~" + roleId.ToString();
 
@@ -468,6 +494,7 @@ namespace cloudscribe.Core.Storage.NoDb
         }
 
         public async Task DeleteUserRoles(
+            Guid siteId,
             Guid userId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -476,7 +503,8 @@ namespace cloudscribe.Core.Storage.NoDb
 
             if (userId == Guid.Empty) { throw new ArgumentException("userId must be provided"); }
 
-            await EnsureProjectId().ConfigureAwait(false);
+            //await EnsureProjectId().ConfigureAwait(false);
+            var projectId = siteId.ToString();
 
             var all = await userRoleQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
             var filtered = all.Where(
@@ -497,6 +525,7 @@ namespace cloudscribe.Core.Storage.NoDb
         }
 
         public async Task DeleteUserRolesByRole(
+            Guid siteId,
             Guid roleId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -505,8 +534,9 @@ namespace cloudscribe.Core.Storage.NoDb
 
             if (roleId == Guid.Empty) { throw new ArgumentException("roleId must be provided"); }
 
-            await EnsureProjectId().ConfigureAwait(false);
-            
+            //await EnsureProjectId().ConfigureAwait(false);
+            var projectId = siteId.ToString();
+
             var all = await userRoleQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
             var filtered = all.Where(
                 x => x.RoleId == roleId
@@ -534,7 +564,8 @@ namespace cloudscribe.Core.Storage.NoDb
 
             if (siteId == Guid.Empty) { throw new ArgumentException("siteId must be provided"); }
 
-            await EnsureProjectId().ConfigureAwait(false);
+            //await EnsureProjectId().ConfigureAwait(false);
+            var projectId = siteId.ToString();
 
             var allRoles = await roleQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
             var siteRoles = allRoles.Where(
@@ -580,7 +611,8 @@ namespace cloudscribe.Core.Storage.NoDb
             if (userClaim.SiteId == Guid.Empty) { throw new ArgumentException("userClaim must have n SiteId"); }
             if (userClaim.UserId == Guid.Empty) { throw new ArgumentException("userClaim must have a UserId"); }
 
-            await EnsureProjectId().ConfigureAwait(false);
+            //await EnsureProjectId().ConfigureAwait(false);
+            var projectId = userClaim.SiteId.ToString();
 
             var claim = UserClaim.FromIUserClaim(userClaim);
             
@@ -604,7 +636,8 @@ namespace cloudscribe.Core.Storage.NoDb
             if (userClaim.SiteId == Guid.Empty) { throw new ArgumentException("userClaim must have n SiteId"); }
             if (userClaim.UserId == Guid.Empty) { throw new ArgumentException("userClaim must have a UserId"); }
 
-            await EnsureProjectId().ConfigureAwait(false);
+            //await EnsureProjectId().ConfigureAwait(false);
+            var projectId = userClaim.SiteId.ToString();
 
             var claim = UserClaim.FromIUserClaim(userClaim);
             await claimCommands.UpdateAsync(
@@ -616,6 +649,7 @@ namespace cloudscribe.Core.Storage.NoDb
         }
 
         public async Task DeleteClaim(
+            Guid siteId,
             Guid claimId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -624,7 +658,8 @@ namespace cloudscribe.Core.Storage.NoDb
 
             if (claimId == Guid.Empty) { throw new ArgumentException("id must be provided"); }
 
-            await EnsureProjectId().ConfigureAwait(false);
+            //await EnsureProjectId().ConfigureAwait(false);
+            var projectId = siteId.ToString();
 
             await claimCommands.DeleteAsync(
                 projectId,
@@ -644,7 +679,8 @@ namespace cloudscribe.Core.Storage.NoDb
             if (siteId == Guid.Empty) { throw new ArgumentException("SiteId must be provided"); }
             if (userId == Guid.Empty) { throw new ArgumentException("UserId must be provided"); }
 
-            await EnsureProjectId().ConfigureAwait(false);
+            //await EnsureProjectId().ConfigureAwait(false);
+            var projectId = siteId.ToString();
 
             var all = await claimQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
             var filtered = all.Where(
@@ -675,7 +711,8 @@ namespace cloudscribe.Core.Storage.NoDb
             if (userId == Guid.Empty) { throw new ArgumentException("UserId must be provided"); }
             if (string.IsNullOrWhiteSpace(claimType)) throw new ArgumentException("claimType must be provided");
 
-            await EnsureProjectId().ConfigureAwait(false);
+            //await EnsureProjectId().ConfigureAwait(false);
+            var projectId = siteId.ToString();
 
             var all = await claimQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
             var filtered = all.Where(
@@ -703,7 +740,8 @@ namespace cloudscribe.Core.Storage.NoDb
 
             if (siteId == Guid.Empty) { throw new ArgumentException("SiteId must be provided"); }
 
-            await EnsureProjectId().ConfigureAwait(false);
+            //await EnsureProjectId().ConfigureAwait(false);
+            var projectId = siteId.ToString();
 
             var all = await claimQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
             var filtered = all.Where(x =>
@@ -741,7 +779,8 @@ namespace cloudscribe.Core.Storage.NoDb
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
-            await EnsureProjectId().ConfigureAwait(false);
+            //await EnsureProjectId().ConfigureAwait(false);
+            var projectId = userLogin.SiteId.ToString();
 
             var login = UserLogin.FromIUserLogin(userLogin);
 
@@ -778,7 +817,8 @@ namespace cloudscribe.Core.Storage.NoDb
             if (string.IsNullOrWhiteSpace(loginProvider)) throw new ArgumentException("loginProvider not valid");
             if (string.IsNullOrWhiteSpace(providerKey)) throw new ArgumentException("providerKey not valid");
 
-            await EnsureProjectId().ConfigureAwait(false);
+            //await EnsureProjectId().ConfigureAwait(false);
+            var projectId = siteId.ToString();
 
             var key = userId.ToString()
                 + "~" + siteId.ToString()
@@ -803,7 +843,8 @@ namespace cloudscribe.Core.Storage.NoDb
             if (siteId == Guid.Empty) throw new ArgumentException("siteId must be provided");
             if (userId == Guid.Empty) throw new ArgumentException("userId must be provided");
 
-            await EnsureProjectId().ConfigureAwait(false);
+            //await EnsureProjectId().ConfigureAwait(false);
+            var projectId = siteId.ToString();
 
             var folderPath = await loginPathResolver.ResolvePath(projectId).ConfigureAwait(false);
 
@@ -841,7 +882,8 @@ namespace cloudscribe.Core.Storage.NoDb
 
             if (siteId == Guid.Empty) throw new ArgumentException("siteId must be provided");
 
-            await EnsureProjectId().ConfigureAwait(false);
+            //await EnsureProjectId().ConfigureAwait(false);
+            var projectId = siteId.ToString();
 
             var folderPath = await loginPathResolver.ResolvePath(projectId).ConfigureAwait(false);
 
@@ -887,7 +929,8 @@ namespace cloudscribe.Core.Storage.NoDb
             if (userLocation.UserId == Guid.Empty) throw new ArgumentException("UserId must not be empty guid");
             if (userLocation.SiteId == Guid.Empty) throw new ArgumentException("SiteId must not be empty guid");
 
-            await EnsureProjectId().ConfigureAwait(false);
+            //await EnsureProjectId().ConfigureAwait(false);
+            var projectId = userLocation.SiteId.ToString();
 
             var ul = UserLocation.FromIUserLocation(userLocation);
            
@@ -911,8 +954,9 @@ namespace cloudscribe.Core.Storage.NoDb
             if (userLocation.Id == Guid.Empty) throw new ArgumentException("Id must not be empty guid");
             if (userLocation.UserId == Guid.Empty) throw new ArgumentException("UserId must not be empty guid");
             if (userLocation.SiteId == Guid.Empty) throw new ArgumentException("SiteId must not be empty guid");
-            
-            await EnsureProjectId().ConfigureAwait(false);
+
+            //await EnsureProjectId().ConfigureAwait(false);
+            var projectId = userLocation.SiteId.ToString();
 
             var ul = UserLocation.FromIUserLocation(userLocation);
 
@@ -925,14 +969,16 @@ namespace cloudscribe.Core.Storage.NoDb
         }
 
         public async Task DeleteUserLocation(
+            Guid siteId,
             Guid userLocationId,
             CancellationToken cancellationToken = default(CancellationToken)
             )
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-           
-            await EnsureProjectId().ConfigureAwait(false);
+
+            //await EnsureProjectId().ConfigureAwait(false);
+            var projectId = siteId.ToString();
 
             await locationCommands.DeleteAsync(
                 projectId,
@@ -942,6 +988,7 @@ namespace cloudscribe.Core.Storage.NoDb
         }
 
         public async Task DeleteUserLocationsByUser(
+            Guid siteId,
             Guid userId,
             CancellationToken cancellationToken = default(CancellationToken)
             )
@@ -950,8 +997,9 @@ namespace cloudscribe.Core.Storage.NoDb
             cancellationToken.ThrowIfCancellationRequested();
 
             if (userId == Guid.Empty) throw new ArgumentException("userId must not be empty guid");
-            
-            await EnsureProjectId().ConfigureAwait(false);
+
+            //await EnsureProjectId().ConfigureAwait(false);
+            var projectId = siteId.ToString();
 
             var all = await locationQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
             var filtered = all.Where(x => x.UserId == userId);
@@ -975,8 +1023,9 @@ namespace cloudscribe.Core.Storage.NoDb
             cancellationToken.ThrowIfCancellationRequested();
 
             if (siteId == Guid.Empty) throw new ArgumentException("userId must not be empty guid");
-            
-            await EnsureProjectId().ConfigureAwait(false);
+
+            //await EnsureProjectId().ConfigureAwait(false);
+            var projectId = siteId.ToString();
 
             var all = await locationQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
             var filtered = all.Where(x => x.SiteId == siteId);

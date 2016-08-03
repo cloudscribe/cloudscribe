@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2016-01-31
-// Last Modified:		    2016-05-10
+// Last Modified:		    2016-08-03
 // 
 
 
@@ -36,7 +36,7 @@ namespace cloudscribe.Core.Web.Components
         private readonly HttpContext context;
         private CancellationToken CancellationToken => context?.RequestAborted ?? CancellationToken.None;
 
-        public async Task TackUserIpAddress(Guid siteGuid, Guid userGuid)
+        public async Task TackUserIpAddress(Guid siteId, Guid userGuid)
         {
            
             if (context == null) { return; }
@@ -60,11 +60,11 @@ namespace cloudscribe.Core.Web.Components
                 //string hostName = context.Connection. 
                 //doesnt seem a good way to get client host name but that doesn't often have any meaning value anyway
 
-                var userLocation = await queries.FetchLocationByUserAndIpv4Address(userGuid, ip4aslong, CancellationToken);
+                var userLocation = await queries.FetchLocationByUserAndIpv4Address(siteId, userGuid, ip4aslong, CancellationToken);
                 if (userLocation == null)
                 {
                     userLocation = new UserLocation();
-                    userLocation.SiteId = siteGuid;
+                    userLocation.SiteId = siteId;
                     userLocation.UserId = userGuid;
                     userLocation.IpAddress = ipv4Address;
                     userLocation.IpAddressLong = ip4aslong;

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2016-06-17
+// Last Modified:			2016-08-03
 // 
 
 
@@ -899,6 +899,7 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task<ISiteRole> FetchRole(
+            Guid siteId,
             Guid roleId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -1267,6 +1268,7 @@ namespace cloudscribe.Core.Storage.EF
         #region UserLocation
 
         public async Task<IUserLocation> FetchLocationByUserAndIpv4Address(
+            Guid siteId,
             Guid userId,
             long ipv4AddressAsLong,
             CancellationToken cancellationToken = default(CancellationToken))
@@ -1287,6 +1289,7 @@ namespace cloudscribe.Core.Storage.EF
         }
         
         public Task<int> CountUserLocationsByUser(
+            Guid siteId,
             Guid userId,
             CancellationToken cancellationToken = default(CancellationToken)
             )
@@ -1299,6 +1302,7 @@ namespace cloudscribe.Core.Storage.EF
         }
 
         public async Task<IList<IUserLocation>> GetUserLocationsByUser(
+            Guid siteId,
             Guid userId,
             int pageNumber,
             int pageSize,
