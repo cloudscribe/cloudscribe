@@ -52,9 +52,9 @@ namespace cloudscribe.Core.Models
             string ipv4Address,
             CancellationToken cancellationToken = default(CancellationToken));
 
-        Task<List<IUserInfo>> GetCrossSiteUserListByEmail(
-            string email,
-            CancellationToken cancellationToken = default(CancellationToken));
+        //Task<List<IUserInfo>> GetCrossSiteUserListByEmail(
+        //    string email,
+        //    CancellationToken cancellationToken = default(CancellationToken));
 
 
 
@@ -160,6 +160,7 @@ namespace cloudscribe.Core.Models
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task<ISiteRole> FetchRole(
+            Guid siteId,
             Guid roleId,
             CancellationToken cancellationToken = default(CancellationToken));
 
@@ -241,15 +242,18 @@ namespace cloudscribe.Core.Models
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task<IUserLocation> FetchLocationByUserAndIpv4Address(
+            Guid siteId,
             Guid userId,
             long ipv4AddressAsLong,
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task<int> CountUserLocationsByUser(
+            Guid siteId,
             Guid userId,
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task<IList<IUserLocation>> GetUserLocationsByUser(
+            Guid siteId,
             Guid userId,
             int pageNumber,
             int pageSize,

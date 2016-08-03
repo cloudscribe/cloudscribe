@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-05-15
-// Last Modified:			2016-06-12
+// Last Modified:			2016-08-03
 // 
 
 using cloudscribe.Core.Models;
@@ -28,7 +28,7 @@ namespace Microsoft.AspNetCore.Hosting // so it will show up in startup without 
                 var geoQueries = serviceScope.ServiceProvider.GetService<IGeoQueries>();
                 var geoCommands = serviceScope.ServiceProvider.GetService<IGeoCommands>();
                 var roleQueries = serviceScope.ServiceProvider.GetService<IBasicQueries<SiteRole>>();
-                var projectResolver = serviceScope.ServiceProvider.GetService<IProjectResolver>();
+                //var projectResolver = serviceScope.ServiceProvider.GetService<IProjectResolver>();
                 var userBasic = serviceScope.ServiceProvider.GetService<IBasicQueries<SiteUser>>();
 
                 await EnsureData(
@@ -39,8 +39,7 @@ namespace Microsoft.AspNetCore.Hosting // so it will show up in startup without 
                     geoQueries,
                     geoCommands,
                     roleQueries,
-                    userBasic,
-                    projectResolver
+                    userBasic
                     );
 
             }
@@ -55,8 +54,8 @@ namespace Microsoft.AspNetCore.Hosting // so it will show up in startup without 
             IGeoQueries geoQueries,
             IGeoCommands geoCommands,
             IBasicQueries<SiteRole> roleQueries,
-            IBasicQueries<SiteUser> userBasic,
-            IProjectResolver projectResolver
+            IBasicQueries<SiteUser> userBasic
+            
             )
         {
             
@@ -76,33 +75,49 @@ namespace Microsoft.AspNetCore.Hosting // so it will show up in startup without 
             
             count = await siteQueries.GetCount();
             SiteSettings newSite = null;
+            
+            Guid siteId = Guid.Empty;
             if (count == 0)
             {
                 // create first site
                 newSite = InitialData.BuildInitialSite();
                 await siteCommands.Create(newSite);
+                siteId = newSite.Id;
+                
+            }
+            else if(count == 1)
+            {
+                var allSites = await siteQueries.GetList().ConfigureAwait(false);
+                var site = allSites[0];
+                if (site != null) siteId = site.Id;
+            }
+            else
+            {
+                return;
             }
 
             // ensure roles
-            var projectId = await projectResolver.ResolveProjectId();
-            
+            //var projectId = await projectResolver.ResolveProjectId();
+            var projectId = siteId.ToString(); ;
+
+
             count = await roleQueries.GetCountAsync(projectId);
             if (count == 0)
             {
                 var adminRole = InitialData.BuildAdminRole();
-                adminRole.SiteId = newSite.Id;
+                adminRole.SiteId = siteId;
                 await userCommands.CreateRole(adminRole);
                 
                 var roleAdminRole = InitialData.BuildRoleAdminRole();
-                roleAdminRole.SiteId = newSite.Id;
+                roleAdminRole.SiteId = siteId;
                 await userCommands.CreateRole(roleAdminRole);
                 
                 var contentAdminRole = InitialData.BuildContentAdminsRole();
-                contentAdminRole.SiteId = newSite.Id;
+                contentAdminRole.SiteId = siteId;
                 await userCommands.CreateRole(contentAdminRole);
 
                 var authenticatedUserRole = InitialData.BuildAuthenticatedRole();
-                authenticatedUserRole.SiteId = newSite.Id;
+                authenticatedUserRole.SiteId = siteId;
                 await userCommands.CreateRole(authenticatedUserRole);
                 
             }
@@ -117,16 +132,16 @@ namespace Microsoft.AspNetCore.Hosting // so it will show up in startup without 
                 if (role != null)
                 {
                     var adminUser = InitialData.BuildInitialAdmin();
-                    adminUser.SiteId = newSite.Id;
+                    adminUser.SiteId = siteId;
                     await userCommands.Create(adminUser);
                     
-                    await userCommands.AddUserToRole(role.Id, adminUser.Id);
+                    await userCommands.AddUserToRole(siteId, role.Id, adminUser.Id);
 
-                    role = await userQueries.FetchRole(newSite.Id, "Authenticated Users");
+                    role = await userQueries.FetchRole(siteId, "Authenticated Users");
                     
                     if (role != null)
                     {
-                        await userCommands.AddUserToRole(role.Id, adminUser.Id);
+                        await userCommands.AddUserToRole(siteId, role.Id, adminUser.Id);
                     }
                 }
                 

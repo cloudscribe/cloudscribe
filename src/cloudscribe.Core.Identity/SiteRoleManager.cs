@@ -98,12 +98,12 @@ namespace cloudscribe.Core.Identity
         
         public async Task DeleteUserRolesByRole(Guid roleId)
         {
-            await commands.DeleteUserRolesByRole(roleId, CancellationToken);
+            await commands.DeleteUserRolesByRole(Site.Id, roleId, CancellationToken);
         }
 
         public async Task DeleteRole(Guid roleId)
         {
-            await commands.DeleteRole(roleId, CancellationToken);
+            await commands.DeleteRole(Site.Id, roleId, CancellationToken);
         }
 
         //public async Task<bool> RoleExists(Guid siteId, string roleName)
@@ -163,7 +163,7 @@ namespace cloudscribe.Core.Identity
             if (role == null) { throw new ArgumentNullException(nameof(role)); }
             if(role.SiteId != user.SiteId) { throw new ArgumentException("user and role must have the same siteid"); }
 
-            await commands.AddUserToRole(role.Id, user.Id, CancellationToken);
+            await commands.AddUserToRole(role.SiteId, role.Id, user.Id, CancellationToken);
             
             user.RolesChanged = true;
             await commands.Update(user, CancellationToken);
@@ -176,7 +176,7 @@ namespace cloudscribe.Core.Identity
             if (user == null) { throw new ArgumentNullException(nameof(user)); }
             if (role == null) { throw new ArgumentNullException(nameof(role)); }
 
-            await commands.RemoveUserFromRole(role.Id, user.Id, CancellationToken);
+            await commands.RemoveUserFromRole(role.SiteId, role.Id, user.Id, CancellationToken);
             
             user.RolesChanged = true;
             await commands.Update(user, CancellationToken);

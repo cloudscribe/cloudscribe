@@ -1355,7 +1355,7 @@ namespace cloudscribe.Core.Web.Controllers
                         await siteManager.Update(selectedSite);
                     }
 
-                    await siteManager.DeleteHost(host.Id);
+                    await siteManager.DeleteHost(host.SiteId, host.Id);
                     
                     this.AlertSuccess(string.Format(sr["Host/domain mapping for {0} was successfully removed."],
                                 selectedSite.SiteName), true);

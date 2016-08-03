@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-18
-// Last Modified:			2016-05-12
+// Last Modified:			2016-08-03
 // 
 
 using System;
@@ -32,38 +32,46 @@ namespace cloudscribe.Core.Models
 
 
         Task FlagAsDeleted(
+            Guid siteId,
             Guid userId,
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task FlagAsNotDeleted(
+            Guid siteId,
             Guid userId,
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task LockoutAccount(
+            Guid siteId,
             Guid userId,
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task UnLockAccount(
+            Guid siteId,
             Guid userId,
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task UpdateFailedPasswordAttemptCount(
+            Guid siteId,
             Guid userId,
             int failedPasswordAttemptCount,
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task UpdateLastLoginTime(
+            Guid siteId,
             Guid userId,
             DateTime lastLoginTime,
             CancellationToken cancellationToken = default(CancellationToken));
 
         //roles
         Task AddUserToRole(
+            Guid siteId,
             Guid roleId,
             Guid userId,
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task DeleteRole(
+            Guid siteId,
             Guid roleId,
             CancellationToken cancellationToken = default(CancellationToken));
 
@@ -72,10 +80,12 @@ namespace cloudscribe.Core.Models
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task DeleteUserRoles(
+            Guid siteId,
             Guid userId,
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task DeleteUserRolesByRole(
+            Guid siteId,
             Guid roleId,
             CancellationToken cancellationToken = default(CancellationToken));
 
@@ -84,6 +94,7 @@ namespace cloudscribe.Core.Models
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task RemoveUserFromRole(
+            Guid siteId,
             Guid roleId,
             Guid userId,
             CancellationToken cancellationToken = default(CancellationToken));
@@ -98,6 +109,7 @@ namespace cloudscribe.Core.Models
 
         //claims
         Task DeleteClaim(
+            Guid siteId,
             Guid claimId,
             CancellationToken cancellationToken = default(CancellationToken));
 
@@ -154,10 +166,12 @@ namespace cloudscribe.Core.Models
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task DeleteUserLocation(
+            Guid siteId,
             Guid userLocationId,
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task DeleteUserLocationsByUser(
+            Guid siteId,
             Guid userId,
             CancellationToken cancellationToken = default(CancellationToken));
 

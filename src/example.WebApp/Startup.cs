@@ -46,9 +46,12 @@ namespace example.WebApp
             Configuration = builder.Build();
 
             appBasePath = env.ContentRootPath;
+            environment = env;
 
-            
+
         }
+
+        private IHostingEnvironment environment;
 
         private string appBasePath;
         public IConfigurationRoot Configuration { get; }
@@ -325,7 +328,12 @@ namespace example.WebApp
 
             options.AutomaticAuthenticate = true;
             options.AutomaticChallenge = false;
-           
+
+            options.CookieSecure = environment.IsDevelopment()
+            ? CookieSecurePolicy.SameAsRequest
+            : CookieSecurePolicy.Always;
+
+
 
             return options;
         }
@@ -351,6 +359,11 @@ namespace example.WebApp
             }
 
             options.AutomaticAuthenticate = false;
+
+            // should we do this for external cookies?
+            //options.CookieSecure = environment.IsDevelopment()
+            //? CookieSecurePolicy.SameAsRequest
+            //: CookieSecurePolicy.Always;
 
             return options;
 

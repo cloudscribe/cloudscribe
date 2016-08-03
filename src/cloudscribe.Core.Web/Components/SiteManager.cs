@@ -260,6 +260,7 @@ namespace cloudscribe.Core.Web.Components
             await userCommands.Create(adminUser, CancellationToken.None);
 
             await userCommands.AddUserToRole(
+                site.Id,
                 adminRole.Id,
                 adminUser.Id,
                 CancellationToken.None);
@@ -313,6 +314,7 @@ namespace cloudscribe.Core.Web.Components
             await userCommands.Create(adminUser, CancellationToken.None);
             
             await userCommands.AddUserToRole(
+                site.Id,
                 adminRole.Id,
                 adminUser.Id,
                 CancellationToken.None);
@@ -379,9 +381,9 @@ namespace cloudscribe.Core.Web.Components
             await commands.AddHost(siteId, hostName, CancellationToken);
         }
 
-        public async Task DeleteHost(Guid hostId)
+        public async Task DeleteHost(Guid siteId, Guid hostId)
         {
-            await commands.DeleteHost(hostId, CancellationToken);
+            await commands.DeleteHost(siteId, hostId, CancellationToken);
         }
 
         public Task<int> GetUserCount(Guid siteId)

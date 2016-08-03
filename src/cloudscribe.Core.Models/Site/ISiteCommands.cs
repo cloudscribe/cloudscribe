@@ -18,7 +18,7 @@ namespace cloudscribe.Core.Models
         Task Update(ISiteSettings site, CancellationToken cancellationToken = default(CancellationToken));
         Task Delete(Guid siteId, CancellationToken cancellationToken = default(CancellationToken));
         Task AddHost(Guid siteId, string hostName, CancellationToken cancellationToken = default(CancellationToken));
-        Task DeleteHost(Guid hostId, CancellationToken cancellationToken = default(CancellationToken));
+        Task DeleteHost(Guid siteId, Guid hostId, CancellationToken cancellationToken = default(CancellationToken));
         Task DeleteHostsBySite(Guid siteId, CancellationToken cancellationToken = default(CancellationToken));
     }
 }
