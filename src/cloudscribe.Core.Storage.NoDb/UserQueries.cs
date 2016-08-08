@@ -1124,7 +1124,14 @@ namespace cloudscribe.Core.Storage.NoDb
 
             var listQuery = from x in filteredRoles
                             orderby x.NormalizedRoleName ascending
-                            select x;
+                            select new SiteRole
+                            {
+                                Id = x.Id,
+                                SiteId = x.SiteId,
+                                NormalizedRoleName = x.NormalizedRoleName,
+                                RoleName = x.RoleName,
+                                MemberCount = allUserRoles.Count<UserRole>(u => u.RoleId == x.Id)
+                            };
 
             return listQuery
                 .Skip(offset)
