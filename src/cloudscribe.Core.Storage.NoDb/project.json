@@ -1,5 +1,5 @@
 ﻿{
-    "version": "1.0.0-rc20160807",
+    "version": "1.0.0-rc20160809",
     "description": "experimental NoDb implementation of cloudscribe core commands and queries",
     "authors": [ "Joe Audette" ],
     "packOptions": {
@@ -17,7 +17,7 @@
     "dependencies": {
         "NETStandard.Library": "1.6.0-*",
         "cloudscribe.Core.Models": "1.0.2-*",
-        "NoDb": "1.0.0-*",
+        "NoDb": "1.0.1-*",
         "Microsoft.Extensions.Logging.Abstractions": "1.0.0-*",
         "Microsoft.Extensions.Options": "1.0.0-*",
         "Microsoft.AspNetCore.Http": "1.0.0-*"
