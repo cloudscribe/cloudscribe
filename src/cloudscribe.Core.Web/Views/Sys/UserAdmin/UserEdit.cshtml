@@ -149,8 +149,11 @@
                 <input asp-for="UserId" type="hidden" />
             </form>
         }
-@section Scripts {
-@{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
-@{ await Html.RenderPartialAsync("_EditorScriptsPartial"); }
-@{ await Html.RenderPartialAsync("_DatePickerScriptsPartial"); }
-}
+<div class="col-md-offset-2 col-md-10">
+    @{ await Html.RenderPartialAsync("UserClaims", Model); }
+</div>
+    @section Scripts {
+        @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+        @{ await Html.RenderPartialAsync("_EditorScriptsPartial"); }
+        @{ await Html.RenderPartialAsync("_DatePickerScriptsPartial"); }
+    }
