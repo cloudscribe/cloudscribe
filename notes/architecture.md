@@ -47,3 +47,23 @@ http://joeduffyblog.com/2010/09/06/the-premature-optimization-is-evil-myth/
 http://shazwazza.com/post/custom-assembly-loading-with-aspnet-core/
 
 http://blog.ploeh.dk/2011/04/27/Providerisnotapattern/
+
+Why scaling and parallelism remain hard even with new tools and languages
+https://www.erlang-solutions.com/blog/the-continuing-headaches-of-distributed-programming.html
+
+## Micro Services Architecture
+
+https://github.com/AdaptiveConsulting/ReactiveTraderCloud
+
+https://msdn.microsoft.com/en-us/library/hh242985(v=vs.103).aspx
+
+http://docs.geteventstore.com/introduction/3.8.1//
+
+http://weareadaptive.com/2014/04/18/asynchrony-concurrency/
+
+https://github.com/Reactive-Extensions/Rx.NET
+
+observables https://msdn.microsoft.com/library/dd990377.aspx
+schedulers https://msdn.microsoft.com/en-us/library/hh242963.aspx
+querying observable sequences with linq
+https://msdn.microsoft.com/en-us/library/hh242983.aspx

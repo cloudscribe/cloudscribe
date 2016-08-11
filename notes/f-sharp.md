@@ -14,3 +14,7 @@ https://jeremybytes.blogspot.co.uk/2016/07/struggling-with-readability-in.html
 https://tech.jet.com/blog/2016/07-13-workshop-recap-expressing-intent-f-tomas-petricek/
 
 https://medium.com/@machadoiuri/my-first-month-working-with-f-daily-c8c1b9c84dd8#.zigechz4l
+
+http://blog.ploeh.dk/2016/08/09/untyped-f-http-route-defaults-for-aspnet-web-api/
+
+https://www.pluralsight.com/courses/functional-architecture-fsharp

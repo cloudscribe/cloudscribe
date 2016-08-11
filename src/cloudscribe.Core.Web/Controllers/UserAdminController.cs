@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-08
-// Last Modified:			2016-06-25
+// Last Modified:			2016-08-11
 // 
 
 using cloudscribe.Core.Identity;
@@ -23,6 +23,7 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Globalization;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 
@@ -419,7 +420,10 @@ namespace cloudscribe.Core.Web.Controllers
                 {
                     model.DateOfBirth = user.DateOfBirth;
                 }
-                
+
+                model.UserClaims = await UserManager.GetClaimsAsync((SiteUser)user);
+
+
                 var currentCrumbAdjuster = new NavigationNodeAdjuster(Request.HttpContext);
                 currentCrumbAdjuster.KeyToAdjust = "UserEdit";
                 currentCrumbAdjuster.AdjustedText = user.DisplayName;
@@ -570,7 +574,78 @@ namespace cloudscribe.Core.Web.Controllers
 
             return RedirectToAction("Index", "UserAdmin", new { siteId = selectedSite.Id, pageNumber = returnPageNumber });
         }
-        
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddClaim(
+            //Guid siteId,
+            Guid  userId, 
+            string claimType, 
+            string claimValue)
+        {
+            ISiteSettings selectedSite;
+            // only server admin site can edit other sites settings
+            //if ((siteId != siteManager.CurrentSite.Id) && (siteId != Guid.Empty) && (siteManager.CurrentSite.IsServerAdminSite))
+            //{
+            //    selectedSite = await siteManager.Fetch(siteId);
+            //}
+            //else
+            //{
+                selectedSite = siteManager.CurrentSite;
+            //}
+
+            var user = await UserManager.Fetch(selectedSite.Id, userId);
+
+            if(user != null)
+            {
+                var claim = new Claim(claimType, claimValue);
+                var result = await UserManager.AddClaimAsync((SiteUser)user, claim);
+                if(result.Succeeded)
+                {
+                    this.AlertSuccess(string.Format(sr["The claim {0} was successfully added."],
+                             claimType), true);
+                }
+            }
+            
+            return RedirectToAction("UserEdit", "UserAdmin", new { siteId = selectedSite.Id, userId = userId });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RemoveClaim(
+            //Guid siteId,
+            Guid userId,
+            string claimType,
+            string claimValue)
+        {
+            ISiteSettings selectedSite;
+            // only server admin site can edit other sites settings
+            //if ((siteId != siteManager.CurrentSite.Id) && (siteId != Guid.Empty) && (siteManager.CurrentSite.IsServerAdminSite))
+            //{
+            //    selectedSite = await siteManager.Fetch(siteId);
+            //}
+            //else
+            //{
+            selectedSite = siteManager.CurrentSite;
+            //}
+
+            var user = await UserManager.Fetch(selectedSite.Id, userId);
+
+            if (user != null)
+            {
+                var claim = new Claim(claimType, claimValue);
+                var result = await UserManager.RemoveClaimAsync((SiteUser)user, claim);
+                if (result.Succeeded)
+                {
+                    this.AlertSuccess(string.Format(sr["The claim {0} was successfully removed."],
+                             claimType), true);
+                }
+            }
+
+            return RedirectToAction("UserEdit", "UserAdmin", new { siteId = selectedSite.Id, userId = userId });
+        }
+
+
         private void AddErrors(IdentityResult result)
         {
             foreach (var error in result.Errors)
