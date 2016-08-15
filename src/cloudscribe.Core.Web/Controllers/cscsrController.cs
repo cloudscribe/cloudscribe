@@ -90,6 +90,15 @@ namespace cloudscribe.Core.Web.Controllers
 
         [HttpGet]
         [AllowAnonymous]
+        public ContentResult jqueryajax()
+        {
+            return GetContentResult(
+                "cloudscribe.Core.Web.js.jquery.unobtrusive-ajax.min.js",
+                "text/javascript");
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
         public ContentResult jqueryvalidationunobtrusive()
         {
             return GetContentResult(

@@ -1,6 +1,6 @@
 ﻿{
-    "version": "1.0.0-rc20160809",
-    "description": "experimental NoDb implementation of cloudscribe core commands and queries",
+    "version": "1.0.0-rc20160810",
+    "description": "NoDb implementation of cloudscribe core commands and queries",
     "authors": [ "Joe Audette" ],
     "packOptions": {
         "owners": [ "Source Tree Solutions" ],
