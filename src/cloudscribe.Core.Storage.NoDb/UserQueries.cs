@@ -1415,7 +1415,7 @@ namespace cloudscribe.Core.Storage.NoDb
                         select x
                         ;
 
-            return query.ToList() as IList<ISiteUser>;
+            return query.ToList<ISiteUser>();
 
 
         }
