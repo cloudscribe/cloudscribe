@@ -4,6 +4,8 @@ https://blog.mariusschulz.com/2016/07/19/securing-authentication-cookies-in-asp-
 
 http://stackoverflow.com/questions/35307143/simple-jwt-authentication-in-asp-net-core-1-0-web-api
 
+http://benjamincollins.com/blog/practical-permission-based-authorization-in-asp-net-core/
+
 https://goblincoding.com/2016/07/03/issuing-and-authenticating-jwt-tokens-in-asp-net-core-webapi-part-i/
 https://goblincoding.com/2016/07/07/issuing-and-authenticating-jwt-tokens-in-asp-net-core-webapi-part-ii/
 

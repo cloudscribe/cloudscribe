@@ -97,6 +97,63 @@ namespace cloudscribe.Core.Web.Controllers
         }
 
 
+        //http://stackoverflow.com/questions/3575690/how-to-populate-a-series-of-checkboxes-from-a-hidden-csv-field-using-jquery
+        //http://stackoverflow.com/questions/4276329/how-to-re-populate-hidden-csv-field-on-form-submit-using-jquery
+
+        [HttpGet]
+        [Authorize(Policy = "RoleAdminPolicy")]
+        public async Task<IActionResult> Modal(
+            Guid? siteId,
+            string searchInput = "",
+            bool ajaxGrid = false,
+            int pageNumber = 1,
+            int pageSize = -1)
+        {
+            ISiteSettings selectedSite;
+            // only server admin site can edit other sites settings
+            if ((siteId.HasValue) && (siteId.Value != Guid.Empty) && (siteId.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
+            {
+                selectedSite = await siteManager.Fetch(siteId.Value);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - Role Management"], selectedSite.SiteName);
+            }
+            else
+            {
+                selectedSite = siteManager.CurrentSite;
+                ViewData["Title"] = sr["Role Management"];
+            }
+
+            var model = new RoleListViewModel();
+            model.SiteId = selectedSite.Id;
+
+            int itemsPerPage = uiOptions.DefaultPageSize_RoleList;
+            if (pageSize > 0)
+            {
+                itemsPerPage = pageSize;
+            }
+
+            var totalItems = await RoleManager.CountOfRoles(
+                selectedSite.Id,
+                searchInput);
+
+            model.SiteRoles = await RoleManager.GetRolesBySite(
+                selectedSite.Id,
+                searchInput,
+                pageNumber,
+                itemsPerPage);
+
+            model.Paging.CurrentPage = pageNumber;
+            model.Paging.ItemsPerPage = itemsPerPage;
+            model.Paging.TotalItems = totalItems;
+
+            if(ajaxGrid)
+            {
+                return PartialView("ModalListPartial", model);
+            }
+            return PartialView(model);
+
+        }
+
+
         [HttpGet]
         [Authorize(Policy = "RoleAdminPolicy")]
         public async Task<IActionResult> RoleEdit(
@@ -161,6 +218,14 @@ namespace cloudscribe.Core.Web.Controllers
             var role = SiteRole.FromISiteRole(model);
             if (model.Id == Guid.Empty)
             {
+                var exists = await RoleManager.RoleExistsAsync(model.RoleName);
+
+                if(exists)
+                {
+                    ModelState.AddModelError("roleerror", sr["The role name is already in use."]);
+                    return View(model);
+                }
+
                 role.SiteId = selectedSite.Id;
                 successFormat = sr["The role <b>{0}</b> was successfully created."];
                 await RoleManager.CreateAsync(role);

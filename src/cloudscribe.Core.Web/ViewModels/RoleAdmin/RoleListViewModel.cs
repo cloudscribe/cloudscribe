@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-04
-// Last Modified:			2015-10-12
+// Last Modified:			2016-08-17
 //
 
 using cloudscribe.Core.Models;
@@ -22,6 +22,8 @@ namespace cloudscribe.Core.Web.ViewModels.RoleAdmin
 
         public Guid SiteId { get; set; } = Guid.Empty;
         public string Heading { get; set; }
+
+        public string SearchQuery { get; set; }
         public IList<ISiteRole> SiteRoles { get; set; }
         public PaginationSettings Paging { get; set; }
 
