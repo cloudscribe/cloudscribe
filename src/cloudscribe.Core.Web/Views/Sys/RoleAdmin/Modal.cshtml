@@ -11,11 +11,9 @@
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h2 class="modal-title" id="myModalLabel">@Model.Heading</h2>
+            <h2 class="modal-title" id="myModalLabel">@sr["Select Roles"]</h2>
         </div>
         <div class="modal-body">
-            <h3>@Model.Heading</h3>
-
             <div id="gridcontainer">
                 @{await Html.RenderPartialAsync("ModalListPartial", Model); }
             </div>

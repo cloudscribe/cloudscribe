@@ -211,3 +211,6 @@ http://blogs.msdn.com/b/webdev/archive/2014/01/06/implementing-custom-password-p
 http://stackoverflow.com/questions/31476361/sharing-authentication-cookie-in-asp-net-5-across-subdomains
 
 http://stackoverflow.com/questions/30768015/configure-the-authorization-server-endpoint
+
+
+http://www.asp.net/aspnet/overview/web-development-best-practices/what-not-to-do-in-aspnet-and-what-to-do-instead#validation

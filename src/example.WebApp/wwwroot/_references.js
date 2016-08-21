@@ -8,6 +8,7 @@
 /// <reference path="jsdev/cloudscribe-datepicker-jqui-unobtrusive.js" />
 /// <reference path="jsdev/cloudscribe-modaldialog-bootstrap.js" />
 /// <reference path="jsdev/cloudscribe-modaldialog-jqui.js" />
+/// <reference path="jsdev/cloudscribe-role-selector.js" />
 /// <reference path="jsdev/cloudscribe-sidemenu.js" />
 /// <reference path="jsdev/cloudscribe-validation-comparewhen.js" />
 /// <reference path="jsdev/cloudscribe-validation-enforcetrue.js" />

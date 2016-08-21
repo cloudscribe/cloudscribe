@@ -93,12 +93,20 @@
     </div>
 <div>
     <input type="text" id="mycsv" class="form-control" />
-    <a class="btn btn-xs btn-default" title="Select Roles" asp-action="Modal" asp-controller="RoleAdmin"
+    <a id="mymodal" class="btn btn-xs btn-default" title="Select Roles" 
+       asp-action="Modal" asp-controller="RoleAdmin"
        asp-route-siteId="@Model.Role.SiteId"
-       bs-modal-link="true">@sr["Select Roles"]</a>
+       data-ajax="true"
+       data-ajax-begin="roleSelector.prepareModal('roledialog', 'mycsv')" 
+       data-ajax-failure="roleSelector.clearModal()" 
+       data-ajax-method="GET" data-ajax-mode="replace" 
+       data-ajax-success="roleSelector.openModal()" 
+       data-ajax-update="#roledialog"
+       >@sr["Select Roles"]</a>
 </div>
  @section Scripts {
 @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 <script src="~/cscsr/jqueryajax"></script>
 <script src="~/cscsr/bootstrapmodal"></script>
+<script src="~/cscsr/roleselectorjs"></script>
  }

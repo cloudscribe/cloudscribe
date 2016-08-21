@@ -26,7 +26,6 @@
             <input id="@role.Id" name="selectedroles" data-rolename="@role.RoleName" type="checkbox" />
             <label for="@role.Id">@role.RoleName</label>
         </li>
-
     }
 </ul>
 <div>
@@ -34,5 +33,6 @@
               asp-action="Modal" asp-controller="RoleAdmin"
               asp-route-siteId="@Model.SiteId"
               asp-route-ajaxgrid="true"
-              cs-ajax-target="#gridcontainer"></cs-pager>
+              cs-ajax-target="#gridcontainer"
+              cs-ajax-success="roleSelector.syncChanges"></cs-pager>
 </div>

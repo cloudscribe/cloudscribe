@@ -6,3 +6,5 @@ https://weblog.west-wind.com/posts/2016/Jul/09/Moving-to-Lets-Encrypt-SSL-Certif
 http://certify.webprofusion.com/
 
 https://letsencrypt.org/2016/07/26/full-ipv6-support.html
+
+https://letsencrypt.org/docs/rate-limits/

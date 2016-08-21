@@ -99,6 +99,7 @@ namespace cloudscribe.Core.Web.Controllers
 
         //http://stackoverflow.com/questions/3575690/how-to-populate-a-series-of-checkboxes-from-a-hidden-csv-field-using-jquery
         //http://stackoverflow.com/questions/4276329/how-to-re-populate-hidden-csv-field-on-form-submit-using-jquery
+        //https://blog4rami.wordpress.com/2014/01/09/preserving-check-box-states-pagedlist-mvc3/
 
         [HttpGet]
         [Authorize(Policy = "RoleAdminPolicy")]

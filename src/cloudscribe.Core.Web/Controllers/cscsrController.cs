@@ -126,6 +126,15 @@ namespace cloudscribe.Core.Web.Controllers
 
         [HttpGet]
         [AllowAnonymous]
+        public ContentResult roleselectorjs()
+        {
+            return GetContentResult(
+                "cloudscribe.Core.Web.js.cloudscribe-role-selector.min.js",
+                "text/javascript");
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
         public ContentResult enforcetruevalidator()
         {
             return GetContentResult(
