@@ -1,5 +1,5 @@
 ﻿{
-    "version": "1.0.0-rc20160810",
+    "version": "1.0.0-rc20160821",
     "description": "NoDb implementation of cloudscribe core commands and queries",
     "authors": [ "Joe Audette" ],
     "packOptions": {
