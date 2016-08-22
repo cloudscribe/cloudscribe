@@ -1,20 +1,24 @@
 ﻿var roleSelector = {
+    modalId: "roledialog",
     modalSelector: "#roledialog",
-    targetSelector:"#hdnSelected",
-    prepareModal: function (dialogDivId, targetId) {
-        this.modalSelector = "#" + dialogDivId;
+    targetSelector: "#hdnSelected",
+    labelSelector: "#selectedRoles",
+    prepareModal: function (targetId, labelId, dialogDivId) {
+        this.modalId = dialogDivId ? dialogDivId : "roledialog";
+        this.modalSelector = dialogDivId ? "#" + dialogDivId : "#roledialog";
+        this.labelSelector = labelId ? "#" + labelId : "#selectedRoles";
         this.targetSelector = "#" + targetId;
-        var $wrapper = $("<div/>", { id: dialogDivId, class: "modal fade", tabindex: "-1" });
+        var $wrapper = $("<div/>", { id: this.modalId, class: "modal fade", tabindex: "-1" });
         $(document.body).append($wrapper);
 
         $(this.modalSelector).on('show.bs.modal', function (e) {
             roleSelector.syncChanges();
         });
     },
-    clearModal: function() {
+    clearModal: function () {
         $(this.modalSelector).remove();
     },
-    openModal:function() {
+    openModal: function () {
         var div = $(this.modalSelector);
         div.modal({ show: true, backdrop: true });
 
@@ -26,21 +30,19 @@
         roleSelector.bindClose();
     },
 
-    bindClose: function()
-    {
+    bindClose: function () {
         $(".closeModal").click(function () {
             $(this).closest(".modal").modal("hide")
         });
     },
-    syncChanges: function() {
+    syncChanges: function () {
         //alert('sync it');
         var csvValue = $(roleSelector.targetSelector).val();
         var roles;
         if (csvValue) {
             roles = csvValue.split(',');
         }
-        else
-        {
+        else {
             roles = [];
         }
         // check the boxes for any in the array
@@ -53,14 +55,17 @@
             var unchecked = $(":checkbox:not(checked)").map(function () {
                 return $(this).data("rolename");
             }).get();
-        
+
             var filtered = $(roles).not(unchecked).get();
             roles = filtered;
             var newSelection = $(":checkbox:checked").map(function () {
                 return $(this).data("rolename");
             }).get();
-            var result = roleSelector.uniqueMerge(roles, newSelection);
-            $(roleSelector.targetSelector).val(result.join(","));
+            var resultArray = roleSelector.uniqueMerge(roles, newSelection);
+            resultArray.sort();
+            var result = resultArray.join(",");
+            $(roleSelector.targetSelector).val(result);
+            $(roleSelector.labelSelector).html(result);
         });
 
     },

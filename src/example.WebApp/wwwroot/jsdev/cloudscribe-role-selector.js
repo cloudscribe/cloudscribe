@@ -1,10 +1,14 @@
 ﻿var roleSelector = {
+    modalId:"roledialog",
     modalSelector: "#roledialog",
     targetSelector:"#hdnSelected",
-    prepareModal: function (dialogDivId, targetId) {
-        this.modalSelector = "#" + dialogDivId;
+    labelSelector:"#selectedRoles",
+    prepareModal: function (targetId, labelId, dialogDivId) {
+        this.modalId = dialogDivId ?  dialogDivId : "roledialog";
+        this.modalSelector = dialogDivId ? "#" + dialogDivId : "#roledialog";
+        this.labelSelector = labelId ? "#" + labelId : "#selectedRoles";
         this.targetSelector = "#" + targetId;
-        var $wrapper = $("<div/>", { id: dialogDivId, class: "modal fade", tabindex: "-1" });
+        var $wrapper = $("<div/>", { id: this.modalId, class: "modal fade", tabindex: "-1" });
         $(document.body).append($wrapper);
 
         $(this.modalSelector).on('show.bs.modal', function (e) {
@@ -59,8 +63,11 @@
             var newSelection = $(":checkbox:checked").map(function () {
                 return $(this).data("rolename");
             }).get();
-            var result = roleSelector.uniqueMerge(roles, newSelection);
-            $(roleSelector.targetSelector).val(result.join(","));
+            var resultArray = roleSelector.uniqueMerge(roles, newSelection);
+            resultArray.sort();
+            var result = resultArray.join(",");
+            $(roleSelector.targetSelector).val(result);
+            $(roleSelector.labelSelector).html(result);
         });
 
     },
