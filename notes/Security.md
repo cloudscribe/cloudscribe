@@ -1,4 +1,5 @@
 
+http://blog.securityps.com/2016/08/aspnet-core-basic-security-settings.html
 
 https://blog.mariusschulz.com/2016/07/19/securing-authentication-cookies-in-asp-net-core
 
