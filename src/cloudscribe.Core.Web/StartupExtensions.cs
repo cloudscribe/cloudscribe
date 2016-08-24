@@ -15,11 +15,13 @@ using cloudscribe.Core.Web.Components.Messaging;
 using cloudscribe.Core.Web.Navigation;
 using cloudscribe.Web.Common.Razor;
 using cloudscribe.Web.Navigation;
+using cloudscribe.Web.Navigation.Caching;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Options;
 using System.Reflection;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -66,6 +68,8 @@ namespace Microsoft.Extensions.DependencyInjection
             //services.AddSingleton<IRazorViewEngine, CoreViewEngine>();
             services.TryAddScoped<ViewRenderer, ViewRenderer>();
 
+            services.AddSingleton<IOptions<NavigationOptions>, SiteNavigationOptionsResolver>();
+            services.AddScoped<ITreeCacheKeyResolver, SiteNavigationCacheKeyResolver>();
             services.AddScoped<INodeUrlPrefixProvider, FolderTenantNodeUrlPrefixProvider>();
             services.AddCloudscribeNavigation(configuration);
 
