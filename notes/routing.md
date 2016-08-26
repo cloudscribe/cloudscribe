@@ -28,3 +28,5 @@ http://stackoverflow.com/questions/32582232/imlementing-a-custom-irouter-in-asp-
 http://stackoverflow.com/questions/32565768/change-route-collection-of-mvc6-after-startup#32586837
 
 http://www.hanselman.com/blog/AddingACustomInlineRouteConstraintInASPNETCore10.aspx
+
+http://www.strathweb.com/2016/04/request-islocal-in-asp-net-core/

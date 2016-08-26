@@ -1,7 +1,13 @@
 
+
+http://www.stum.de/2016/08/24/thoughts-on-orms-2016-edition/
+
+
 https://blogs.msdn.microsoft.com/dotnet/2016/07/29/entity-framework-core-1-1-plans/
 
 https://blogs.msdn.microsoft.com/dotnet/2016/06/27/entity-framework-core-1-0-0-available/
+
+http://6figuredev.com/technology/generic-repository-dependency-injection-with-net-core/
 
 http://www.codeproject.com/Articles/114262/6-ways-of-doing-locking-in-NET-Pessimistic-and-opt
 
