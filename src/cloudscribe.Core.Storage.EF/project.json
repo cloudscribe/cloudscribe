@@ -1,5 +1,5 @@
 ﻿{
-    "version": "1.0.0-rc20160821",
+    "version": "1.0.0-rc20160828",
     "description": "Entity Framework Core implementation of cloudscribe core commands and queries",
     "authors": [ "Joe Audette" ],
     "buildOptions": {

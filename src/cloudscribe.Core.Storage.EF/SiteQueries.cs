@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2016-06-14
+// Last Modified:			2016-08-28
 // 
 
 using cloudscribe.Core.Models;
@@ -219,8 +219,8 @@ namespace cloudscribe.Core.Storage.EF
                         orderby x.SiteName ascending
                         select new SiteInfo
                         {
-                            //SiteId = x.SiteId,
                             Id = x.Id,
+                            AliasId = x.AliasId,
                             IsServerAdminSite = x.IsServerAdminSite,
                             PreferredHostName = x.PreferredHostName,
                             SiteFolderName = x.SiteFolderName,
@@ -263,11 +263,10 @@ namespace cloudscribe.Core.Storage.EF
 
                         where (x.Id != currentSiteId)
                         orderby x.SiteName ascending
-                        //select x;
                         select new SiteInfo
                         {
-                            //SiteId = x.SiteId,
                             Id = x.Id,
+                            AliasId = x.AliasId,
                             IsServerAdminSite = x.IsServerAdminSite,
                             PreferredHostName = x.PreferredHostName,
                             SiteFolderName = x.SiteFolderName,

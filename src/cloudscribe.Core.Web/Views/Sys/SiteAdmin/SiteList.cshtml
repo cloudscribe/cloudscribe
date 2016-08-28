@@ -51,6 +51,7 @@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.SiteName) @sr["Id:"] @item.Id
+            @sr["AliasId:"] @item.AliasId
         </td>
         <td>
             @if (options.Mode == MultiTenantMode.FolderName)

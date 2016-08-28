@@ -206,7 +206,7 @@ namespace cloudscribe.Core.Web.Components
             newSite.SiteName = "Sample Site";
             newSite.IsServerAdminSite = isServerAdminSite;
             var siteNumber = 1 + await queries.CountOtherSites(Guid.Empty);
-            newSite.AliasId = $"site-{siteNumber}";
+            newSite.AliasId = $"s{siteNumber}";
 
             await CreateNewSite(newSite);
             

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2016-06-17
+// Last Modified:			2016-08-28
 // 
 
 using cloudscribe.Core.Models;
@@ -140,10 +140,10 @@ namespace cloudscribe.Core.Web.Controllers
 
             model.SiteId = selectedSite.Id;
             model.SiteName = selectedSite.SiteName;
-            if(selectedSite.AliasId != selectedSite.Id.ToString())
-            {
-                model.AliasId = selectedSite.AliasId;
-            }
+            //if(selectedSite.AliasId != selectedSite.Id.ToString())
+            //{
+            model.AliasId = selectedSite.AliasId;
+            //}
             
             model.TimeZoneId = selectedSite.TimeZoneId;
             
@@ -270,7 +270,7 @@ namespace cloudscribe.Core.Web.Controllers
                 selectedSite.PreferredHostName = model.HostName;
             }
 
-            if (model.AliasId.Length > 0) selectedSite.AliasId = model.AliasId;
+            //if (model.AliasId.Length > 0) selectedSite.AliasId = model.AliasId;
             selectedSite.SiteName = model.SiteName;
             selectedSite.TimeZoneId = model.TimeZoneId;
             selectedSite.SiteFolderName = model.SiteFolderName;
