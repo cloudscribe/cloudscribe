@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:                  Joe Audette
 // Created:                 2016-05-13
-// Last Modified:           2016-08-03
+// Last Modified:           2016-08-28
 // 
 
 using cloudscribe.Core.Models;
@@ -216,6 +216,7 @@ namespace cloudscribe.Core.Storage.NoDb
                         select new SiteInfo
                         {
                             Id = x.Id,
+                            AliasId = x.AliasId,
                             IsServerAdminSite = x.IsServerAdminSite,
                             PreferredHostName = x.PreferredHostName,
                             SiteFolderName = x.SiteFolderName,
@@ -264,6 +265,7 @@ namespace cloudscribe.Core.Storage.NoDb
                         select new SiteInfo
                         {
                             Id = x.Id,
+                            AliasId = x.AliasId,
                             IsServerAdminSite = x.IsServerAdminSite,
                             PreferredHostName = x.PreferredHostName,
                             SiteFolderName = x.SiteFolderName,

@@ -30,7 +30,7 @@
     <div class="form-group">
         <label asp-for="AliasId" class="col-md-2 control-label">@sr["AliasId"]</label>
         <div class="col-md-10">
-            <input asp-for="AliasId" class="form-control" />
+            <span class="form-control">@Model.AliasId</span>
             <span asp-validation-for="AliasId" class="text-danger"></span>
         </div>
     </div>

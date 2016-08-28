@@ -32,13 +32,8 @@ namespace cloudscribe.Core.Models
         /// </summary>
         public string AliasId
         {
-            get { return aliasId ?? Id.ToString(); }
-            set {
-                if (value != Id.ToString())
-                {
-                    aliasId = value;
-                }  
-            }
+            get { return aliasId ; }
+            set {  aliasId = value; }
         }
 
         private string siteName = string.Empty;
