@@ -4,6 +4,7 @@ using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Geography;
 using cloudscribe.Core.Storage.EF;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -36,6 +37,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddScoped<IGeoCommands, GeoCommands>();
             services.AddScoped<IGeoQueries, GeoQueries>();
+
+            services.TryAddScoped<CoreTableNames, CoreTableNames>();
 
             return services;
         }

@@ -1,6 +1,14 @@
 
 http://blog.securityps.com/2016/08/aspnet-core-basic-security-settings.html
 
+http://andrewlock.net/exploring-the-cookieauthenticationmiddleware-in-asp-net-core/
+
+http://andrewlock.net/a-look-behind-the-jwt-bearer-authentication-middleware-in-asp-net-core/
+
+http://en.هشام.com/post/secure-your-aspnet-core-application-from-image-hotlinking
+
+https://dev.to/ben/the-targetblank-vulnerability-by-example
+
 https://blog.mariusschulz.com/2016/07/19/securing-authentication-cookies-in-asp-net-core
 
 http://stackoverflow.com/questions/35307143/simple-jwt-authentication-in-asp-net-core-1-0-web-api

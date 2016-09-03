@@ -67,3 +67,7 @@ observables https://msdn.microsoft.com/library/dd990377.aspx
 schedulers https://msdn.microsoft.com/en-us/library/hh242963.aspx
 querying observable sequences with linq
 https://msdn.microsoft.com/en-us/library/hh242983.aspx
+
+http://blog.runnable.com/post/149676042396/lessons-learned-while-building-microservices
+
+https://jackmott.github.io/programming/2016/08/30/think-before-you-parallelize.html
