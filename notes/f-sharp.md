@@ -35,3 +35,11 @@ https://vimeo.com/97514630
 
 5 reason to move from c# to f#
 https://www.youtube.com/embed/-0BB3lU_qr4
+
+http://www.jason-down.com/2016/09/02/recursion-and-pattern-matching/
+
+https://docs.microsoft.com/teamblog/announcing-fsharp-docs/
+
+https://docs.microsoft.com/en-us/dotnet/articles/fsharp/index
+
+http://alxandr.me/2016/09/01/Crazy-things-you-can-do-with-the-F-ternary-operator.html

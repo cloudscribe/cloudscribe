@@ -363,6 +363,11 @@ namespace cloudscribe.Core.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> ManageLogins()
         {
+            if(!Site.HasAnySocialAuthEnabled())
+            {
+                return RedirectToAction("Index");
+            }
+
             var user = await userManager.FindByIdAsync(HttpContext.User.GetUserId());
             if (user == null)
             {

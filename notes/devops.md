@@ -28,3 +28,4 @@ https://msdn.microsoft.com/Library/vs/alm/Build/azure/deploy-aspnet5
 https://azure.microsoft.com/en-us/documentation/articles/web-sites-publish-source-control/?cdn=disable
 
 http://www.talmeida.net/blog/2015/10/26/deploying-miniblog-from-github-to-an-azure-web-app-automatically-using-visual-studio-online-build
+
