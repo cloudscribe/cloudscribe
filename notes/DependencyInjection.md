@@ -2,6 +2,8 @@
 
 http://stackoverflow.com/questions/37512862/asp-net-core-identitydbcontext-using-dependency-injection
 
+http://odetocode.com/blogs/scott/archive/2016/02/18/avoiding-the-service-locator-pattern-in-asp-net-core.aspx
+
 http://dotnetliberty.com/index.php/2016/04/11/asp-net-core-custom-service-based-on-request/
 
 http://odetocode.com/blogs/scott/archive/2016/02/18/avoiding-the-service-locator-pattern-in-asp-net-core.aspx

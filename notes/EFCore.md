@@ -2,6 +2,9 @@
 
 http://www.stum.de/2016/08/24/thoughts-on-orms-2016-edition/
 
+a good example of the friction of relational storage vs document storage
+http://stackoverflow.com/questions/37370476/how-to-persist-a-list-of-strings-with-entity-framework-core
+
 
 https://blogs.msdn.microsoft.com/dotnet/2016/07/29/entity-framework-core-1-1-plans/
 
@@ -177,6 +180,8 @@ Options:
 
 dotnet ef migrations add Initial -c CoreDbContext
 dotnet ef migrations add Initial -c LoggingDbContext
+
+dotnet ef migrations add Initial -c SimpleContentDbContext
 
 dotnet ef migrations add RemoveCurrecncy -c CoreDbContext
 dotnet ef migrations add Limitfieldsize -c CoreDbContext

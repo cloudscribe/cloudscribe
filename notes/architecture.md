@@ -71,3 +71,6 @@ https://msdn.microsoft.com/en-us/library/hh242983.aspx
 http://blog.runnable.com/post/149676042396/lessons-learned-while-building-microservices
 
 https://jackmott.github.io/programming/2016/08/30/think-before-you-parallelize.html
+
+ASP.NET Core - Feature Slices for ASP.NET Core MVC
+https://msdn.microsoft.com/magazine/mt763233
