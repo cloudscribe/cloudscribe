@@ -2,12 +2,13 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-05-07
-// Last Modified:			2016-06-19
+// Last Modified:			2016-09-12
 // 
 
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Models;
 using Microsoft.AspNetCore.Antiforgery.Internal;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -101,5 +102,82 @@ namespace Microsoft.Extensions.DependencyInjection
 
             //return services;
         }
+
+        public static CookieAuthenticationOptions SetupAppCookie(
+            this IApplicationBuilder app,
+           SiteAuthCookieValidator siteValidator,
+           string scheme,
+           bool useRelatedSitesMode,
+           SiteSettings tenant,
+           CookieSecurePolicy cookieSecure = CookieSecurePolicy.SameAsRequest
+           )
+        {
+            var cookieEvents = new CookieAuthenticationEvents();
+            var options = new CookieAuthenticationOptions();
+            if (useRelatedSitesMode)
+            {
+                options.AuthenticationScheme = scheme;
+                options.CookieName = scheme;
+                options.CookiePath = "/";
+            }
+            else
+            {
+                options.AuthenticationScheme = $"{scheme}-{tenant.SiteFolderName}";
+                options.CookieName = $"{scheme}-{tenant.SiteFolderName}";
+                options.CookiePath = "/" + tenant.SiteFolderName;
+                cookieEvents.OnValidatePrincipal = siteValidator.ValidatePrincipal;
+            }
+
+            var tenantPathBase = string.IsNullOrEmpty(tenant.SiteFolderName)
+                ? PathString.Empty
+                : new PathString("/" + tenant.SiteFolderName);
+
+            options.LoginPath = tenantPathBase + "/account/login";
+            options.LogoutPath = tenantPathBase + "/account/logoff";
+            options.AccessDeniedPath = tenantPathBase + "/account/accessdenied";
+
+            options.Events = cookieEvents;
+
+            options.AutomaticAuthenticate = true;
+            options.AutomaticChallenge = false;
+            
+            options.CookieSecure = cookieSecure;
+                
+            return options;
+        }
+
+        public static CookieAuthenticationOptions SetupOtherCookies(
+            this IApplicationBuilder app,
+            string scheme,
+            bool useRelatedSitesMode,
+            SiteSettings tenant,
+            CookieSecurePolicy cookieSecure = CookieSecurePolicy.None
+            )
+        {
+            var options = new CookieAuthenticationOptions();
+            if (useRelatedSitesMode)
+            {
+                options.AuthenticationScheme = scheme;
+                options.CookieName = scheme;
+                options.CookiePath = "/";
+            }
+            else
+            {
+                options.AuthenticationScheme = $"{scheme}-{tenant.SiteFolderName}";
+                options.CookieName = $"{scheme}-{tenant.SiteFolderName}";
+                options.CookiePath = "/" + tenant.SiteFolderName;
+            }
+
+            options.AutomaticAuthenticate = false;
+
+            if(cookieSecure != CookieSecurePolicy.None)
+            {
+                options.CookieSecure = cookieSecure;
+            }
+
+            return options;
+
+        }
+
     }
 }
