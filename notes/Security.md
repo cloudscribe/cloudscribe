@@ -1,6 +1,8 @@
 
 http://blog.securityps.com/2016/08/aspnet-core-basic-security-settings.html
 
+https://www.smashingmagazine.com/2016/09/content-security-policy-your-future-best-friend/
+
 http://andrewlock.net/exploring-the-cookieauthenticationmiddleware-in-asp-net-core/
 
 http://andrewlock.net/a-look-behind-the-jwt-bearer-authentication-middleware-in-asp-net-core/
