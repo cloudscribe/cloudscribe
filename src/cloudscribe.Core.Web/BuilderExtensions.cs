@@ -1,11 +1,63 @@
 ﻿
 
+using cloudscribe.Core.Identity;
 using cloudscribe.Core.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace Microsoft.AspNetCore.Builder
 {
     public static class BuilderExtensions
     {
+        public static IApplicationBuilder UseCloudscribeCoreDefaultAuthentication(
+           this IApplicationBuilder builder,
+           ILoggerFactory loggerFactory,
+           bool useRelatedSitesMode,
+           bool useFolder,
+           SiteSettings tenant,
+           CookieSecurePolicy applicationCookieSecure = CookieSecurePolicy.SameAsRequest
+           )
+        {
+            var externalCookieOptions = builder.SetupOtherCookies(
+                    AuthenticationScheme.External,
+                    useRelatedSitesMode,
+                    tenant);
+            builder.UseCookieAuthentication(externalCookieOptions);
+
+            var twoFactorRememberMeCookieOptions = builder.SetupOtherCookies(
+                AuthenticationScheme.TwoFactorRememberMe,
+                useRelatedSitesMode,
+                tenant);
+            builder.UseCookieAuthentication(twoFactorRememberMeCookieOptions);
+
+            var twoFactorUserIdCookie = builder.SetupOtherCookies(
+                AuthenticationScheme.TwoFactorUserId,
+                useRelatedSitesMode,
+                tenant);
+            builder.UseCookieAuthentication(twoFactorUserIdCookie);
+
+            //var cookieEvents = new CookieAuthenticationEvents();
+            var logger = loggerFactory.CreateLogger<SiteAuthCookieValidator>();
+            var cookieValidator = new SiteAuthCookieValidator(logger);
+            var appCookieOptions = builder.SetupAppCookie(
+                cookieValidator,
+                AuthenticationScheme.Application,
+                useRelatedSitesMode,
+                tenant,
+                CookieSecurePolicy.Always
+                );
+            builder.UseCookieAuthentication(appCookieOptions);
+
+            // known issue here is if a site is updated to populate the
+            // social auth keys, it currently requires a restart so that the middleware gets registered
+            // in order for it to work or for the social auth buttons to appear 
+            builder.UseSocialAuth(tenant, externalCookieOptions, useFolder);
+
+
+            return builder;
+        }
+
         public static IApplicationBuilder UseSocialAuth(
             this IApplicationBuilder app,
             SiteSettings site,
@@ -95,6 +147,81 @@ namespace Microsoft.AspNetCore.Builder
             return app;
         }
 
+        public static CookieAuthenticationOptions SetupAppCookie(
+            this IApplicationBuilder app,
+           SiteAuthCookieValidator siteValidator,
+           string scheme,
+           bool useRelatedSitesMode,
+           SiteSettings tenant,
+           CookieSecurePolicy cookieSecure = CookieSecurePolicy.SameAsRequest
+           )
+        {
+            var cookieEvents = new CookieAuthenticationEvents();
+            var options = new CookieAuthenticationOptions();
+            if (useRelatedSitesMode)
+            {
+                options.AuthenticationScheme = scheme;
+                options.CookieName = scheme;
+                options.CookiePath = "/";
+            }
+            else
+            {
+                options.AuthenticationScheme = $"{scheme}-{tenant.SiteFolderName}";
+                options.CookieName = $"{scheme}-{tenant.SiteFolderName}";
+                options.CookiePath = "/" + tenant.SiteFolderName;
+                cookieEvents.OnValidatePrincipal = siteValidator.ValidatePrincipal;
+            }
+
+            var tenantPathBase = string.IsNullOrEmpty(tenant.SiteFolderName)
+                ? PathString.Empty
+                : new PathString("/" + tenant.SiteFolderName);
+
+            options.LoginPath = tenantPathBase + "/account/login";
+            options.LogoutPath = tenantPathBase + "/account/logoff";
+            options.AccessDeniedPath = tenantPathBase + "/account/accessdenied";
+
+            options.Events = cookieEvents;
+
+            options.AutomaticAuthenticate = true;
+            options.AutomaticChallenge = false;
+
+            options.CookieSecure = cookieSecure;
+
+            return options;
+        }
+
+        public static CookieAuthenticationOptions SetupOtherCookies(
+            this IApplicationBuilder app,
+            string scheme,
+            bool useRelatedSitesMode,
+            SiteSettings tenant,
+            CookieSecurePolicy cookieSecure = CookieSecurePolicy.None
+            )
+        {
+            var options = new CookieAuthenticationOptions();
+            if (useRelatedSitesMode)
+            {
+                options.AuthenticationScheme = scheme;
+                options.CookieName = scheme;
+                options.CookiePath = "/";
+            }
+            else
+            {
+                options.AuthenticationScheme = $"{scheme}-{tenant.SiteFolderName}";
+                options.CookieName = $"{scheme}-{tenant.SiteFolderName}";
+                options.CookiePath = "/" + tenant.SiteFolderName;
+            }
+
+            options.AutomaticAuthenticate = false;
+
+            if (cookieSecure != CookieSecurePolicy.None)
+            {
+                options.CookieSecure = cookieSecure;
+            }
+
+            return options;
+
+        }
 
         //public static IApplicationBuilder UseWhen(this IApplicationBuilder app
         //    , Func<HttpContext, bool> condition

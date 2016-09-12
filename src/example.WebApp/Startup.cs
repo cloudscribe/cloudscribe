@@ -232,41 +232,12 @@ namespace example.WebApp
                 var shouldUseFolder = !multiTenantOptions.UseRelatedSitesMode
                                         && multiTenantOptions.Mode == cloudscribe.Core.Models.MultiTenantMode.FolderName
                                         && tenant.SiteFolderName.Length > 0;
-                
-                var externalCookieOptions = app.SetupOtherCookies(
-                    cloudscribe.Core.Identity.AuthenticationScheme.External,
+
+                builder.UseCloudscribeCoreDefaultAuthentication(
+                    loggerFactory,
                     multiTenantOptions.UseRelatedSitesMode,
+                    shouldUseFolder,
                     tenant);
-                builder.UseCookieAuthentication(externalCookieOptions);
-
-                var twoFactorRememberMeCookieOptions = app.SetupOtherCookies(
-                    cloudscribe.Core.Identity.AuthenticationScheme.TwoFactorRememberMe,
-                    multiTenantOptions.UseRelatedSitesMode,
-                    tenant);
-                builder.UseCookieAuthentication(twoFactorRememberMeCookieOptions);
-
-                var twoFactorUserIdCookie = app.SetupOtherCookies(
-                    cloudscribe.Core.Identity.AuthenticationScheme.TwoFactorUserId,
-                    multiTenantOptions.UseRelatedSitesMode,
-                    tenant);
-                builder.UseCookieAuthentication(twoFactorUserIdCookie);
-
-                //var cookieEvents = new CookieAuthenticationEvents();
-                var logger = loggerFactory.CreateLogger<cloudscribe.Core.Identity.SiteAuthCookieValidator>();
-                var cookieValidator = new cloudscribe.Core.Identity.SiteAuthCookieValidator(logger);
-                var appCookieOptions = app.SetupAppCookie(
-                    cookieValidator,
-                    cloudscribe.Core.Identity.AuthenticationScheme.Application,
-                    multiTenantOptions.UseRelatedSitesMode,
-                    tenant,
-                    CookieSecurePolicy.Always
-                    );
-                builder.UseCookieAuthentication(appCookieOptions);
-
-                // known issue here is if a site is updated to populate the
-                // social auth keys, it currently requires a restart so that the middleware gets registered
-                // in order for it to work or for the social auth buttons to appear 
-                builder.UseSocialAuth(ctx.Tenant, externalCookieOptions, shouldUseFolder);
                 
             });
             
@@ -285,7 +256,7 @@ namespace example.WebApp
                     CoreEFStartup.InitializeDatabaseAsync(app.ApplicationServices).Wait();
 
                     // this one is only needed if using cloudscribe Logging with EF as the logging storage
-                    //LoggingEFStartup.InitializeDatabaseAsync(app.ApplicationServices).Wait();
+                    LoggingEFStartup.InitializeDatabaseAsync(app.ApplicationServices).Wait();
 
                     break;
             }
