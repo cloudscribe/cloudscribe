@@ -23,6 +23,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
 using System.Reflection;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -103,6 +104,46 @@ namespace Microsoft.Extensions.DependencyInjection
             options.AreaViewLocationFormats.Add("/Areas/{2}/Views/Sys/{1}/{0}" + RazorViewEngine.ViewExtension);
             options.AreaViewLocationFormats.Add("/Areas/{2}/Views/Sys/Shared/{0}" + RazorViewEngine.ViewExtension);
             options.AreaViewLocationFormats.Add("/Views/Sys/Shared/{0}" + RazorViewEngine.ViewExtension);
+
+            return options;
+        }
+
+        public static AuthorizationOptions AddCloudscribeCoreDefaultPolicies(this AuthorizationOptions options)
+        {
+            options.AddPolicy(
+                    "ServerAdminPolicy",
+                    authBuilder =>
+                    {
+                        authBuilder.RequireRole("ServerAdmins");
+                    });
+
+            options.AddPolicy(
+                "CoreDataPolicy",
+                authBuilder =>
+                {
+                    authBuilder.RequireRole("ServerAdmins");
+                });
+
+            options.AddPolicy(
+                "AdminPolicy",
+                authBuilder =>
+                {
+                    authBuilder.RequireRole("ServerAdmins", "Administrators");
+                });
+
+            options.AddPolicy(
+                "UserManagementPolicy",
+                authBuilder =>
+                {
+                    authBuilder.RequireRole("ServerAdmins", "Administrators");
+                });
+
+            options.AddPolicy(
+                "RoleAdminPolicy",
+                authBuilder =>
+                {
+                    authBuilder.RequireRole("Role Administrators", "Administrators");
+                });
 
             return options;
         }

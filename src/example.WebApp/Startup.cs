@@ -233,33 +233,33 @@ namespace example.WebApp
                                         && multiTenantOptions.Mode == cloudscribe.Core.Models.MultiTenantMode.FolderName
                                         && tenant.SiteFolderName.Length > 0;
                 
-                var externalCookieOptions = SetupOtherCookies(
+                var externalCookieOptions = app.SetupOtherCookies(
                     cloudscribe.Core.Identity.AuthenticationScheme.External,
                     multiTenantOptions.UseRelatedSitesMode,
                     tenant);
                 builder.UseCookieAuthentication(externalCookieOptions);
 
-                var twoFactorRememberMeCookieOptions = SetupOtherCookies(
+                var twoFactorRememberMeCookieOptions = app.SetupOtherCookies(
                     cloudscribe.Core.Identity.AuthenticationScheme.TwoFactorRememberMe,
                     multiTenantOptions.UseRelatedSitesMode,
                     tenant);
                 builder.UseCookieAuthentication(twoFactorRememberMeCookieOptions);
 
-                var twoFactorUserIdCookie = SetupOtherCookies(
+                var twoFactorUserIdCookie = app.SetupOtherCookies(
                     cloudscribe.Core.Identity.AuthenticationScheme.TwoFactorUserId,
                     multiTenantOptions.UseRelatedSitesMode,
                     tenant);
                 builder.UseCookieAuthentication(twoFactorUserIdCookie);
 
-                var cookieEvents = new CookieAuthenticationEvents();
+                //var cookieEvents = new CookieAuthenticationEvents();
                 var logger = loggerFactory.CreateLogger<cloudscribe.Core.Identity.SiteAuthCookieValidator>();
                 var cookieValidator = new cloudscribe.Core.Identity.SiteAuthCookieValidator(logger);
-                var appCookieOptions = SetupAppCookie(
-                    cookieEvents,
+                var appCookieOptions = app.SetupAppCookie(
                     cookieValidator,
                     cloudscribe.Core.Identity.AuthenticationScheme.Application,
                     multiTenantOptions.UseRelatedSitesMode,
-                    tenant
+                    tenant,
+                    CookieSecurePolicy.Always
                     );
                 builder.UseCookieAuthentication(appCookieOptions);
 
@@ -292,83 +292,7 @@ namespace example.WebApp
 
            
         }
-
-        private CookieAuthenticationOptions SetupAppCookie(
-            CookieAuthenticationEvents cookieEvents,
-            cloudscribe.Core.Identity.SiteAuthCookieValidator siteValidator,
-            string scheme, 
-            bool useRelatedSitesMode,
-            cloudscribe.Core.Models.SiteSettings tenant
-            )
-        {
-            var options = new CookieAuthenticationOptions();
-            if(useRelatedSitesMode)
-            {
-                options.AuthenticationScheme = scheme;
-                options.CookieName = scheme;
-                options.CookiePath = "/";
-            }
-            else
-            {
-                options.AuthenticationScheme = $"{scheme}-{tenant.SiteFolderName}";
-                options.CookieName = $"{scheme}-{tenant.SiteFolderName}";
-                options.CookiePath = "/" + tenant.SiteFolderName;
-                cookieEvents.OnValidatePrincipal = siteValidator.ValidatePrincipal;
-            }
-            
-            var tenantPathBase = string.IsNullOrEmpty(tenant.SiteFolderName)
-                ? PathString.Empty
-                : new PathString("/" + tenant.SiteFolderName);
-
-            options.LoginPath = tenantPathBase + "/account/login";
-            options.LogoutPath = tenantPathBase + "/account/logoff";
-            options.AccessDeniedPath = tenantPathBase + "/account/accessdenied";
-
-            options.Events = cookieEvents;
-
-            options.AutomaticAuthenticate = true;
-            options.AutomaticChallenge = false;
-
-            options.CookieSecure = environment.IsDevelopment()
-            ? CookieSecurePolicy.SameAsRequest
-            : CookieSecurePolicy.Always;
-
-
-
-            return options;
-        }
-
-        private CookieAuthenticationOptions SetupOtherCookies(
-            string scheme,
-            bool useRelatedSitesMode,
-            cloudscribe.Core.Models.SiteSettings tenant
-            )
-        {
-            var options = new CookieAuthenticationOptions();
-            if(useRelatedSitesMode)
-            {
-                options.AuthenticationScheme = scheme;
-                options.CookieName = scheme;
-                options.CookiePath = "/";
-            }
-            else
-            {
-                options.AuthenticationScheme = $"{scheme}-{tenant.SiteFolderName}";
-                options.CookieName = $"{scheme}-{tenant.SiteFolderName}";
-                options.CookiePath = "/" + tenant.SiteFolderName;
-            }
-
-            options.AutomaticAuthenticate = false;
-
-            // should we do this for external cookies?
-            //options.CookieSecure = environment.IsDevelopment()
-            //? CookieSecurePolicy.SameAsRequest
-            //: CookieSecurePolicy.Always;
-
-            return options;
-
-        }
-
+        
         private void UseMvc(IApplicationBuilder app, bool useFolders)
         {
             app.UseMvc(routes =>
@@ -401,54 +325,15 @@ namespace example.WebApp
         {
             services.AddAuthorization(options =>
             {
-                options.AddPolicy(
-                    "ServerAdminPolicy",
-                    authBuilder =>
-                    {
-                        authBuilder.RequireRole("ServerAdmins");
-                    });
-
-                options.AddPolicy(
-                    "CoreDataPolicy",
-                    authBuilder =>
-                    {
-                        authBuilder.RequireRole("ServerAdmins");
-                    });
-
-                options.AddPolicy(
-                    "AdminPolicy",
-                    authBuilder =>
-                    {
-                        authBuilder.RequireRole("ServerAdmins", "Administrators");
-                    });
-
-                options.AddPolicy(
-                    "UserManagementPolicy",
-                    authBuilder =>
-                    {
-                        authBuilder.RequireRole("ServerAdmins", "Administrators");
-                    });
-
-                options.AddPolicy(
-                    "RoleAdminPolicy",
-                    authBuilder =>
-                    {
-                        authBuilder.RequireRole("Role Administrators", "Administrators");
-                    });
-
-                options.AddPolicy(
-                    "SystemLogPolicy",
-                    authBuilder =>
-                    {
-                        authBuilder.RequireRole("ServerAdmins");
-                    });
-
-                options.AddPolicy(
-                    "SetupSystemPolicy",
-                    authBuilder =>
-                    {
-                        authBuilder.RequireRole("ServerAdmins, Administrators");
-                    });
+                options.AddCloudscribeCoreDefaultPolicies();
+                options.AddCloudscribeLoggingDefaultPolicy();
+                
+                //options.AddPolicy(
+                //    "SetupSystemPolicy",
+                //    authBuilder =>
+                //    {
+                //        authBuilder.RequireRole("ServerAdmins, Administrators");
+                //    });
 
             });
 
