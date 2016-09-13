@@ -55,7 +55,7 @@
         "cloudscribe.Web.Localization": "1.0.0-*",
         "cloudscribe.Web.Navigation": "1.0.2-*",
         "cloudscribe.Web.Pagination": "1.0.2-*",
-        "SaasKit.Multitenancy": "1.1.3-*"
+        "SaasKit.Multitenancy": "1.1.4-*"
         
 
 
