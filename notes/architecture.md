@@ -74,3 +74,5 @@ https://jackmott.github.io/programming/2016/08/30/think-before-you-parallelize.h
 
 ASP.NET Core - Feature Slices for ASP.NET Core MVC
 https://msdn.microsoft.com/magazine/mt763233
+
+http://stackoverflow.com/questions/148747/what-is-the-difference-between-a-framework-and-a-library
