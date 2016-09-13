@@ -187,6 +187,15 @@ namespace cloudscribe.Core.Web.Controllers
                 "text/javascript");
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        public ContentResult ckeditorconfig()
+        {
+            return GetContentResult(
+                "cloudscribe.Core.Web.js.cloudscribe-ckeditor-config.js",
+                "text/javascript");
+        }
+
         //[HttpGet]
         //[AllowAnonymous]
         //public ContentResult jquerycookie()
