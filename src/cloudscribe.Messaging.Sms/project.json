@@ -1,5 +1,5 @@
 ﻿{
-    "version": "1.0.0-rc20160704",
+    "version": "1.0.0-rc20160916",
     "title": "cloudscribe.Messaging.Sms",
     "description": "Sms helper for Twilio REST API",
     "authors": [ "Joe Audette" ],
@@ -16,8 +16,8 @@
     
 
     "dependencies": {
-        "NETStandard.Library": "1.5.0-*",
-        "Microsoft.Extensions.Logging.Abstractions": "1.0.0-*"
+        "NETStandard.Library": "1.6.0-*",
+        "Microsoft.Extensions.Logging.Abstractions": "1.0.*"
       
     },
 
@@ -28,7 +28,7 @@
         "netstandard1.6": {
             "imports": "dnxcore50",
             "dependencies": {
-                "System.Net.Http": "4.0.1-*"
+                "System.Net.Http": "4.1.*"
             }
         }
     }
