@@ -1,5 +1,5 @@
 {
-    "version": "1.0.0-rc20160828",
+    "version": "1.0.0-rc20160916",
     "description": "Entity Framework Core implementation of cloudscribe core commands and queries",
     "authors": [ "Joe Audette" ],
     "buildOptions": {
@@ -20,17 +20,16 @@
 
     "dependencies": {
         "NETStandard.Library": "1.6.0-*",
-        "Microsoft.Extensions.Configuration.Json": "1.0.0-*",
-        "Microsoft.Extensions.Configuration": "1.0.0-*",
-        "Microsoft.EntityFrameworkCore.SqlServer": "1.0.0-*",
+        "Microsoft.Extensions.Configuration.Json": "1.0.*",
+        "Microsoft.Extensions.Configuration": "1.0.*",
+        "Microsoft.EntityFrameworkCore.SqlServer": "1.0.*",
         "cloudscribe.Core.Models": "1.0.2-*",
         "Microsoft.EntityFrameworkCore.Tools": {
             "version": "1.0.0-preview2-final",
             "type": "build"
         },
-        "Microsoft.AspNetCore.Hosting": "1.0.0",
-
-        "Microsoft.Extensions.DependencyInjection.Abstractions": "1.0.0"
+        "Microsoft.AspNetCore.Hosting": "1.0.*",
+        "Microsoft.Extensions.DependencyInjection.Abstractions": "1.0.*"
     },
 
     "tools": {

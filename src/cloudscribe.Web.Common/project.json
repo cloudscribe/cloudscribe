@@ -1,5 +1,5 @@
 ﻿{
-    "version": "1.0.0-rc20160704",
+    "version": "1.0.0-rc20160916",
     "description": "cloudscribe common helpers for web applications",
 
     "authors": [ "Joe Audette" ],
@@ -16,11 +16,11 @@
 
 
     "dependencies": {
-        "Microsoft.AspNetCore.Http": "1.0.0-*",
-        "Microsoft.AspNetCore.Mvc.Core": "1.0.0-*",
-        "Microsoft.AspNetCore.Mvc.Razor": "1.0.0-*",
-        "Microsoft.AspNetCore.Mvc.ViewFeatures": "1.0.0-*",
-        "Microsoft.Extensions.Logging.Abstractions": "1.0.0-*",
+        "Microsoft.AspNetCore.Http": "1.0.*",
+        "Microsoft.AspNetCore.Mvc.Core": "1.0.*",
+        "Microsoft.AspNetCore.Mvc.Razor": "1.0.*",
+        "Microsoft.AspNetCore.Mvc.ViewFeatures": "1.0.*",
+        "Microsoft.Extensions.Logging.Abstractions": "1.0.*",
         "NETStandard.Library": "1.6.0-*",
         "System.Text.Encodings.Web": "4.0.0-*",
         "NodaTime": "2.0.0-alpha20160523"
