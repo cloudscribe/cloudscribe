@@ -7,6 +7,8 @@ http://andrewlock.net/exploring-the-cookieauthenticationmiddleware-in-asp-net-co
 
 http://andrewlock.net/a-look-behind-the-jwt-bearer-authentication-middleware-in-asp-net-core/
 
+http://andrewlock.net/a-look-behind-the-jwt-bearer-authentication-middleware-in-asp-net-core/
+
 http://en.هشام.com/post/secure-your-aspnet-core-application-from-image-hotlinking
 
 https://dev.to/ben/the-targetblank-vulnerability-by-example

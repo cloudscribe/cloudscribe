@@ -7,6 +7,10 @@ https://blogs.msdn.microsoft.com/dotnet/2016/06/27/announcing-net-core-1-0/
 
 http://mattwarren.org/2016/07/04/How-the-dotnet-CLI-tooling-runs-your-code/
 
+https://luisfsgoncalves.wordpress.com/2016/09/10/customizing-asp-net-core-mvc-filters-constraints-and-conventions/
+
+https://damienbod.com/2016/09/09/asp-net-core-action-arguments-validation-using-an-actionfilter/
+
 
 https://docs.microsoft.com/teamblog/introducing-net-core-docs/
 

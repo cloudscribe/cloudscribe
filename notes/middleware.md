@@ -3,6 +3,8 @@ http://docs.asp.net/en/latest/fundamentals/middleware.html
 
 https://www.jeffogata.com/asp-net-core-middleware/
 
+https://www.billboga.com/posts/using-aspnet-cores-middleware-to-modify-response-body
+
 https://github.com/ClintBailiff/MiddlewareDemo
 http://odetocode.com/blogs/scott/archive/2015/10/06/authorization-policies-and-middleware-in-asp-net-5.aspx
 
