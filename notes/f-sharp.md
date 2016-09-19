@@ -3,6 +3,10 @@ http://fsharp.org/
 
 http://dungpa.github.io/fsharp-cheatsheet/
 
+http://stackoverflow.com/questions/38078526/cant-reference-an-f-class-library
+
+http://kalapos.azurewebsites.net/referencing-an-f-library-from-c-on-net-core
+
 https://en.wikibooks.org/wiki/F_Sharp_Programming
 
 http://ionide.io/
@@ -43,3 +47,19 @@ https://docs.microsoft.com/teamblog/announcing-fsharp-docs/
 https://docs.microsoft.com/en-us/dotnet/articles/fsharp/index
 
 http://alxandr.me/2016/09/01/Crazy-things-you-can-do-with-the-F-ternary-operator.html
+
+https://medium.com/@cscalfani/goodbye-object-oriented-programming-a59cda4c0e53#.tf8xilhuk
+
+http://anthonylloyd.github.io/blog/2016/09/09/managing-complexity
+
+https://tech.jet.com/blog/2016/09-07-event-sourcing-awesome/
+
+http://gregshackles.com/getting-started-with-azure-functions-and-f/
+
+https://funcxz.github.io/functional%20exercises/2016/09/06/size-of-blobs-in-azure-storage-account
+
+http://www.jason-down.com/2016/09/02/recursion-and-pattern-matching/
+
+https://channel9.msdn.com/Shows/On-NET/Phillip-Carter-F
+
+http://fsharp.github.io/FSharp.Data/

@@ -76,3 +76,5 @@ ASP.NET Core - Feature Slices for ASP.NET Core MVC
 https://msdn.microsoft.com/magazine/mt763233
 
 http://stackoverflow.com/questions/148747/what-is-the-difference-between-a-framework-and-a-library
+
+https://medium.com/@cscalfani/goodbye-object-oriented-programming-a59cda4c0e53#.tf8xilhuk

@@ -29,3 +29,4 @@ https://azure.microsoft.com/en-us/documentation/articles/web-sites-publish-sourc
 
 http://www.talmeida.net/blog/2015/10/26/deploying-miniblog-from-github-to-an-azure-web-app-automatically-using-visual-studio-online-build
 
+https://stefanprodan.com/2016/aspnetcore-cd-pipeline-docker-hub/
