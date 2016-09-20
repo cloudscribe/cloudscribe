@@ -1,4 +1,9 @@
 
+
+https://blogs.msdn.microsoft.com/webdev/2016/09/19/introducing-identityserver4-for-authentication-and-access-control-in-asp-net-core/
+
+https://identityserver4.readthedocs.io/en/dev/quickstarts/0_overview.html
+
 http://stackoverflow.com/questions/27677345/what-are-a-security-token-and-security-stamp-in-asp-net-identity
 
 http://www.dotnetcurry.com/aspnet/1223/secure-aspnet-web-api-using-tokens-owin-angularjs
