@@ -13,27 +13,31 @@ namespace Microsoft.AspNetCore.Builder
         public static IApplicationBuilder UseCloudscribeCoreDefaultAuthentication(
            this IApplicationBuilder builder,
            ILoggerFactory loggerFactory,
-           bool useRelatedSitesMode,
-           bool useFolder,
+           MultiTenantOptions multiTenantOptions,
            SiteSettings tenant,
            CookieSecurePolicy applicationCookieSecure = CookieSecurePolicy.SameAsRequest
            )
         {
+
+            var useFolder = !multiTenantOptions.UseRelatedSitesMode
+                                        && multiTenantOptions.Mode == cloudscribe.Core.Models.MultiTenantMode.FolderName
+                                        && tenant.SiteFolderName.Length > 0;
+
             var externalCookieOptions = builder.SetupOtherCookies(
                     AuthenticationScheme.External,
-                    useRelatedSitesMode,
+                    multiTenantOptions.UseRelatedSitesMode,
                     tenant);
             builder.UseCookieAuthentication(externalCookieOptions);
 
             var twoFactorRememberMeCookieOptions = builder.SetupOtherCookies(
                 AuthenticationScheme.TwoFactorRememberMe,
-                useRelatedSitesMode,
+                multiTenantOptions.UseRelatedSitesMode,
                 tenant);
             builder.UseCookieAuthentication(twoFactorRememberMeCookieOptions);
 
             var twoFactorUserIdCookie = builder.SetupOtherCookies(
                 AuthenticationScheme.TwoFactorUserId,
-                useRelatedSitesMode,
+                multiTenantOptions.UseRelatedSitesMode,
                 tenant);
             builder.UseCookieAuthentication(twoFactorUserIdCookie);
 
@@ -43,7 +47,7 @@ namespace Microsoft.AspNetCore.Builder
             var appCookieOptions = builder.SetupAppCookie(
                 cookieValidator,
                 AuthenticationScheme.Application,
-                useRelatedSitesMode,
+                multiTenantOptions.UseRelatedSitesMode,
                 tenant,
                 CookieSecurePolicy.Always
                 );

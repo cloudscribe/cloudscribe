@@ -1,4 +1,6 @@
 
+http://en.xn--mgbz4cf.com/post/secure-your-aspnet-core-application-from-image-hotlinking
+
 http://blog.securityps.com/2016/08/aspnet-core-basic-security-settings.html
 
 https://www.smashingmagazine.com/2016/09/content-security-policy-your-future-best-friend/
@@ -16,6 +18,10 @@ https://dev.to/ben/the-targetblank-vulnerability-by-example
 https://blog.mariusschulz.com/2016/07/19/securing-authentication-cookies-in-asp-net-core
 
 http://stackoverflow.com/questions/35307143/simple-jwt-authentication-in-asp-net-core-1-0-web-api
+
+## Authorization
+https://blogs.msdn.microsoft.com/webdev/2016/03/15/get-started-with-asp-net-core-authorization-part-1-of-2/
+https://blogs.msdn.microsoft.com/webdev/2016/03/23/get-started-with-asp-net-core-authorization-part-2-of-2/
 
 http://benjamincollins.com/blog/practical-permission-based-authorization-in-asp-net-core/
 

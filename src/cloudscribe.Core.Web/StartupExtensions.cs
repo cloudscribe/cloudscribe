@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-05-07
-// Last Modified:			2016-06-28
+// Last Modified:			2016-09-28
 // 
 
 
@@ -73,6 +73,8 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<ITreeCacheKeyResolver, SiteNavigationCacheKeyResolver>();
             services.AddScoped<INodeUrlPrefixProvider, FolderTenantNodeUrlPrefixProvider>();
             services.AddCloudscribeNavigation(configuration);
+
+            services.AddCloudscribeIdentity();
 
             return services;
         }

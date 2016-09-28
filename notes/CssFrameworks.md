@@ -1,4 +1,6 @@
 
+5 principles of modern css
+https://gist.github.com/alekseykulikov/68a5d6ddae569f6d0456b0e9d603e892
 
 http://www.khalidabuhakmeh.com/using-semantic-ui-with-asp-net-core
 

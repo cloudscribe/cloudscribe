@@ -10,6 +10,9 @@ https://optimizely.github.io/nuclear-js/
 
 http://www.fiyazhasan.me/building-apps-with-polymer-and-asp-net-core-part-iii/
 
+polymer group
+https://groups.google.com/forum/#!forum/polymer-dev
+
 ## Testing
 
 using the shop app sample, when I run polymer test, which internally uses selenium, it fails with an error saying java is not installed in your path, please install java.

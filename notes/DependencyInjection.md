@@ -1,4 +1,5 @@
 
+http://www.maherjendoubi.io/new-asp-net-core-feature-coming-to-1-1-better-integration-of-3rd-party-ioc-containers-in-startup-class/
 
 http://stackoverflow.com/questions/37512862/asp-net-core-identitydbcontext-using-dependency-injection
 

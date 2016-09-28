@@ -1,9 +1,59 @@
+# F# 
+
+## Language
 
 http://fsharp.org/
 
 http://dungpa.github.io/fsharp-cheatsheet/
 
+https://docs.microsoft.com/en-us/dotnet/articles/fsharp/
+
+https://docs.microsoft.com/en-us/dotnet/articles/fsharp/tour
+
+https://docs.microsoft.com/en-us/dotnet/articles/fsharp/language-reference/computation-expressions
+
+## Functional Thinking
+
+https://medium.com/@cscalfani/so-you-want-to-be-a-functional-programmer-part-1-1f15e387e536#.7bkef6jn2
+https://medium.com/@cscalfani/so-you-want-to-be-a-functional-programmer-part-2-7005682cec4a#.l8e829csl
+https://medium.com/@cscalfani/so-you-want-to-be-a-functional-programmer-part-3-1b0fd14eb1a7#.oc8njnxbt
+https://medium.com/@cscalfani/so-you-want-to-be-a-functional-programmer-part-4-18fbe3ea9e49#.prcqec89k
+
+In Functional Programming, you don’t just write Pure Functions.
+Functional Languages cannot eliminate Side Effects, they can only confine them. Since programs have to interface to the real world, some parts of every program must be impure. The goal is to minimize the amount of impure code and segregate it from the rest of our program.
+
+Functional Programming uses recursion to do looping.
+
+Higher-order Functions either take functions as parameters, return functions or both.
+
+In Functional Programming, functions are our building blocks. We write them to do very specific tasks and then we put them together like Lego™ blocks.
+This is called Function Composition.
+
+http://blog.ploeh.dk/2016/09/26/decoupling-decisions-from-effects/
+
+
+## Resources
+
+F# Webstack group
+https://groups.google.com/forum/#!forum/web-stack-fs
+F# Discussions
+https://groups.google.com/forum/#!forum/fsharp-opensource
+
+fsharp.slack.com
+
+### Async
+http://tomasp.net/blog/csharp-async-gotchas.aspx/
+http://www.developerfusion.com/article/139804/an-introduction-to-f-agents
+
+
+### C# Interop
+
+http://theburningmonk.com/2012/09/f-make-extension-methods-visible-to-c/
+
 http://stackoverflow.com/questions/38078526/cant-reference-an-f-class-library
+
+
+https://medium.com/@odytrice/f-series-building-real-world-applications-in-f-b45b62ac653d#.yxzuq0y5z
 
 http://kalapos.azurewebsites.net/referencing-an-f-library-from-c-on-net-core
 
@@ -31,14 +81,9 @@ https://www.pluralsight.com/courses/functional-architecture-fsharp
 
 https://docs.microsoft.com/en-us/dotnet/articles/fsharp/tutorials/getting-started/getting-started-cross-platform-tooling
 
-Michael Newton - F# for the curly brace developer 42 minutes
-https://www.youtube.com/watch?v=4t95-S7GQe4
+https://medium.com/@cscalfani/why-programmers-need-limits-3d96e1a0a6db#.7y9t80t8c
 
-Robert C. Martin - Functional Programming: What? Why? When?
-https://vimeo.com/97514630
 
-5 reason to move from c# to f#
-https://www.youtube.com/embed/-0BB3lU_qr4
 
 http://www.jason-down.com/2016/09/02/recursion-and-pattern-matching/
 
@@ -60,6 +105,42 @@ https://funcxz.github.io/functional%20exercises/2016/09/06/size-of-blobs-in-azur
 
 http://www.jason-down.com/2016/09/02/recursion-and-pattern-matching/
 
-https://channel9.msdn.com/Shows/On-NET/Phillip-Carter-F
+
 
 http://fsharp.github.io/FSharp.Data/
+
+## Async
+
+http://blog.ploeh.dk/2016/03/21/composition-with-an-either-computation-expression/
+http://blog.ploeh.dk/2016/04/11/async-as-surrogate-io/
+
+http://blog.ploeh.dk/2013/08/23/how-to-create-a-pure-f-aspnet-web-api-project/
+
+https://github.com/isaacabraham/sudoku-solver
+
+http://stackoverflow.com/questions/18115812/async-controller-actions-in-f
+
+http://www.fssnip.net/5q
+
+http://www.fssnip.net/4z
+
+## Videos
+
+Michael Newton - F# for the curly brace developer 42 minutes
+https://www.youtube.com/watch?v=4t95-S7GQe4
+
+Robert C. Martin - Functional Programming: What? Why? When?
+https://vimeo.com/97514630
+
+5 reason to move from c# to f#
+https://www.youtube.com/embed/-0BB3lU_qr4
+
+https://channel9.msdn.com/Shows/On-NET/Phillip-Carter-F
+
+F# in the real world
+https://vimeo.com/183301783
+
+## Sample Apps
+
+http://blog.tamizhvendan.in/blog/2014/12/10/web-application-development-in-fsharp-using-asp-dot-net-mvc/
+https://github.com/tamizhvendan/fsharp-phonecat
