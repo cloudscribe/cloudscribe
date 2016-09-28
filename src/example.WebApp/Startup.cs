@@ -103,20 +103,8 @@ namespace example.WebApp
             /* end cloudscribe Setup */
             
             services.AddCloudscribeCore(Configuration);
-
-            services.AddCloudscribeIdentity();
-            //services.AddCloudscribeIdentity(options => {
-
-            //    options.Cookies.ApplicationCookie.AuthenticationScheme 
-            //        = cloudscribe.Core.Identity.AuthenticationScheme.Application;
-
-            //    options.Cookies.ApplicationCookie.CookieName 
-            //        = cloudscribe.Core.Identity.AuthenticationScheme.Application;
-
-            //    //options.Cookies.ApplicationCookie.DataProtectionProvider = 
-            //    //DataProtectionProvider.Create(new DirectoryInfo("C:\\Github\\Identity\\artifacts"));
-            //});
-
+            
+            
             services.Configure<GlobalResourceOptions>(Configuration.GetSection("GlobalResourceOptions"));
             services.AddSingleton<IStringLocalizerFactory, GlobalResourceManagerStringLocalizerFactory>();
             
@@ -155,6 +143,11 @@ namespace example.WebApp
                 //  // My custom request culture logic
                 //  return new ProviderCultureResult("en");
                 //}));
+            });
+
+            services.AddRouting(options =>
+            {
+                options.LowercaseUrls = true;
             });
 
             services.Configure<MvcOptions>(options =>
@@ -227,17 +220,10 @@ namespace example.WebApp
 
             app.UsePerTenant<cloudscribe.Core.Models.SiteSettings>((ctx, builder) =>
             {
-                var tenant = ctx.Tenant;
-
-                var shouldUseFolder = !multiTenantOptions.UseRelatedSitesMode
-                                        && multiTenantOptions.Mode == cloudscribe.Core.Models.MultiTenantMode.FolderName
-                                        && tenant.SiteFolderName.Length > 0;
-
                 builder.UseCloudscribeCoreDefaultAuthentication(
                     loggerFactory,
-                    multiTenantOptions.UseRelatedSitesMode,
-                    shouldUseFolder,
-                    tenant);
+                    multiTenantOptions,
+                    ctx.Tenant);
                 
             });
             

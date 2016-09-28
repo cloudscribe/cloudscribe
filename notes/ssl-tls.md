@@ -8,3 +8,5 @@ http://certify.webprofusion.com/
 https://letsencrypt.org/2016/07/26/full-ipv6-support.html
 
 https://letsencrypt.org/docs/rate-limits/
+
+https://tech.slashdot.org/story/16/09/26/2028215/mozillas-proposed-conclusion-game-over-for-wosign-and-startcom

@@ -1,4 +1,19 @@
 
+## My Thoughts around IdentityServer4
+
+All the samples separate the OP (OpenID Connect provider) aka Identity Server, into a separate web app which is great for scalability. The samples often have multiple clients and maybe an api so you spin up 3 or 4 web apps which is a good way to show how the distributed system can work.
+
+Being able to separate those services to different end points is crucial for the scalability.
+
+From my point of view, it is good to build all apps with scalability in mind, but that doesn't mean all apps really need it or will see the work load to justify it. So the kind of starter template I want for Identity server is a way to run all the parts from a single endpoint in such a way that you can still separate them to different endpoints later if the need for scale merits it. It is too much ceremony to have a bunch of separate web apps for every project, and of course costs to deploy multiple end points is higher. I want a pattern to build apps at a single endpoint where the pieces are composed together from nugets. But, this must be done in such a way that by packaging and configuration changes the pieces can be split apart later and one by one separate pieces can be moved to different endpoints if the workload gets to the point where that is needed.
+
+Within a single web deployement there can be the identity server, mvc web app, various apis, as a single endpoint, with different urls of course but deployed as a single web application in a single IIS web site or nginx/docker web setup. There could also be within the same deployment SPA apps with a single html page each that talks to apis. At any point where the load merits it the spa apps could be separated to their own end points but until then they can be packaged together under one website.
+
+
+
+https://identityserver4.readthedocs.io/en/dev/intro/big_picture.html
+
+https://identityserver4.readthedocs.io/en/dev/quickstarts/6_aspnet_identity.html
 
 https://blogs.msdn.microsoft.com/webdev/2016/09/19/introducing-identityserver4-for-authentication-and-access-control-in-asp-net-core/
 
