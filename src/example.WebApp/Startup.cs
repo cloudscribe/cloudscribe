@@ -16,6 +16,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc.Razor;
 using System.Globalization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace example.WebApp
 {
@@ -226,10 +228,18 @@ namespace example.WebApp
                     ctx.Tenant);
                 
             });
-            
-            UseMvc(app, multiTenantOptions.Mode == cloudscribe.Core.Models.MultiTenantMode.FolderName);
 
             var storage = Configuration["DevOptions:DbPlatform"];
+
+            //if(storage == "ef")
+            //{
+            //    app.UseIdentityServer();
+            //}
+            
+
+            UseMvc(app, multiTenantOptions.Mode == cloudscribe.Core.Models.MultiTenantMode.FolderName);
+
+            
             switch (storage)
             {
                 case "NoDb":
@@ -317,7 +327,18 @@ namespace example.WebApp
 
                     // only needed if using cloudscribe logging with EF storage
                     services.AddCloudscribeLoggingEFStorage(connectionString);
-                    
+
+                    //var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
+
+                    //services.AddIdentityServer()
+                    //    .AddCloudscribeIdentity<cloudscribe.Core.Models.SiteUser>()
+                    //    .AddConfigurationStore(builder =>
+                    //        builder.UseSqlServer(connectionString, options =>
+                    //            options.MigrationsAssembly(migrationsAssembly)))
+                    //    .AddOperationalStore(builder =>
+                    //        builder.UseSqlServer(connectionString, options =>
+                    //            options.MigrationsAssembly(migrationsAssembly)));
+
 
 
                     break;

@@ -70,6 +70,14 @@ namespace cloudscribe.Core.Web.Controllers
                 return this.RedirectToSiteRoot(Site);
             }
 
+            // TODO: identityserver integration point
+            //var context = await _interaction.GetAuthorizationContextAsync(returnUrl);
+            //if (context?.IdP != null)
+            //{
+            //    // if IdP is passed, then bypass showing the login screen
+            //    return ExternalLogin(context.IdP, returnUrl);
+            //}
+
             ViewData["Title"] = sr["Log in"];
             ViewData["ReturnUrl"] = returnUrl;
             LoginViewModel model = new LoginViewModel();
@@ -533,7 +541,51 @@ namespace cloudscribe.Core.Web.Controllers
             return this.RedirectToSiteRoot(Site);
         }
 
+        // TODO: identityserver integration point
         
+        //[HttpGet]
+        //public async Task<IActionResult> Logout(string logoutId)
+        //{
+        //    var context = await _interaction.GetLogoutContextAsync(logoutId);
+        //    if (context?.ClientId != null)
+        //    {
+        //        // if the logout request is authenticated, it's safe to automatically sign-out
+        //        return await Logout(new LogoutViewModel { LogoutId = logoutId });
+        //    }
+
+        //    var vm = new LogoutViewModel
+        //    {
+        //        LogoutId = logoutId
+        //    };
+
+        //    return View(vm);
+        //}
+
+       
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Logout(LogoutViewModel model)
+        //{
+        //    // delete authentication cookies
+        //    await _signInManager.SignOutAsync();
+
+        //    // set this so UI rendering sees an anonymous user
+        //    HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity());
+
+        //    // get context information (client name, post logout redirect URI and iframe for federated signout)
+        //    var logout = await _interaction.GetLogoutContextAsync(model.LogoutId);
+
+        //    var vm = new LoggedOutViewModel
+        //    {
+        //        PostLogoutRedirectUri = logout?.PostLogoutRedirectUri,
+        //        ClientName = logout?.ClientId,
+        //        SignOutIframeUrl = logout?.SignOutIFrameUrl
+        //    };
+
+        //    return View("LoggedOut", vm);
+        //}
+
+
         // POST: /Account/ExternalLogin
         [HttpPost]
         [AllowAnonymous]

@@ -31,6 +31,8 @@ This is called Function Composition.
 
 http://blog.ploeh.dk/2016/09/26/decoupling-decisions-from-effects/
 
+http://degoes.net/articles/modern-fp-part-2
+
 
 ## Resources
 
@@ -49,6 +51,8 @@ http://www.developerfusion.com/article/139804/an-introduction-to-f-agents
 ### C# Interop
 
 http://theburningmonk.com/2012/09/f-make-extension-methods-visible-to-c/
+
+http://stackoverflow.com/questions/17254855/what-is-the-simplest-way-to-access-data-of-an-f-discriminated-union-type-in-c
 
 http://stackoverflow.com/questions/38078526/cant-reference-an-f-class-library
 
