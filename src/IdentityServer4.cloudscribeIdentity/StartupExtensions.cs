@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.Extensions.FileProviders;
+using System.Reflection;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -16,5 +19,16 @@ namespace Microsoft.Extensions.DependencyInjection
 
             return services;
         }
+
+        public static RazorViewEngineOptions AddEmbeddedViewsForCloudscribeIdentityServerIntegration(this RazorViewEngineOptions options)
+        {
+            options.FileProviders.Add(new EmbeddedFileProvider(
+                    typeof(Integration).GetTypeInfo().Assembly,
+                    "IdentityServer4.cloudscribeIdentity"
+                ));
+
+            return options;
+        }
+
     }
 }

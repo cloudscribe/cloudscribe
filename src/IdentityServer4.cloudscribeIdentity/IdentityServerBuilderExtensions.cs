@@ -9,7 +9,7 @@ using IdentityServer4.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using cloudscribe.Core.Models;
-//using cloudscribe.Core.Identity;
+using cloudscribe.Core.Identity;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -18,7 +18,7 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IIdentityServerBuilder AddCloudscribeIdentity<TUser>(this IIdentityServerBuilder builder)
             where TUser : SiteUser
         {
-            return builder.AddCloudscribeIdentity<TUser>("Identity.Application");
+            return builder.AddCloudscribeIdentity<TUser>(AuthenticationScheme.Application + "-");
         }
 
         public static IIdentityServerBuilder AddCloudscribeIdentity<TUser>(this IIdentityServerBuilder builder, string authenticationScheme)
@@ -31,7 +31,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             builder.Services.Configure<IdentityOptions>(options =>
             {
-                options.Cookies.ApplicationCookie.AuthenticationScheme = authenticationScheme;
+                //options.Cookies.ApplicationCookie.AuthenticationScheme = authenticationScheme;
                 options.ClaimsIdentity.UserIdClaimType = JwtClaimTypes.Subject;
                 options.ClaimsIdentity.UserNameClaimType = JwtClaimTypes.Name;
                 options.ClaimsIdentity.RoleClaimType = JwtClaimTypes.Role;

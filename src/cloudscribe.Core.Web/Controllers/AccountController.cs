@@ -565,6 +565,7 @@ namespace cloudscribe.Core.Web.Controllers
             return View(vm);
         }
 
+        // identityserver integration point
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout(IdentityServerLogoutViewModel model)

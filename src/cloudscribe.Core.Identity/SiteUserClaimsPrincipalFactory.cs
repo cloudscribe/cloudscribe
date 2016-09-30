@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-06-27
-// Last Modified:			2016-07-11
+// Last Modified:			2016-09-30
 // 
 
 
@@ -61,7 +61,9 @@ namespace cloudscribe.Core.Identity
                 Options.ClaimsIdentity.RoleClaimType);
 
             id.AddClaim(new Claim(Options.ClaimsIdentity.UserIdClaimType, userId));
+            id.AddClaim(new Claim("sub", userId)); //JwtClaimTypes.Subject
             id.AddClaim(new Claim(Options.ClaimsIdentity.UserNameClaimType, userName));
+            id.AddClaim(new Claim("name", userName)); //needed by identtyserver integration
 
             if (UserManager.SupportsUserSecurityStamp)
             {
