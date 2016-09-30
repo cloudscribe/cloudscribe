@@ -88,8 +88,8 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddTransient(emailTokenProviderType);
             services.TryAddTransient(phoneNumberProviderType);
 
-            
 
+            services.TryAddScoped<IIdentityServerIntegration, NotIntegratedIdentityServerIntegration>();
 
             return builder;
 

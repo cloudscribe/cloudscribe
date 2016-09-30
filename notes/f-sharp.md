@@ -33,6 +33,12 @@ http://blog.ploeh.dk/2016/09/26/decoupling-decisions-from-effects/
 
 http://degoes.net/articles/modern-fp-part-2
 
+http://gettingsharper.de/2015/03/10/dependency-injection-a-functional-way/
+Reader Monad Gist
+https://gist.github.com/danieljsummers/eca04e64b903f08aecfb15e8f2536dd6
+
+http://learnyouahaskell.com/functors-applicative-functors-and-monoids
+
 
 ## Resources
 
