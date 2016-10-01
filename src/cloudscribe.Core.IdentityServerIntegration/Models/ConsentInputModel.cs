@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace IdentityServer4.cloudscribeIdentity.Models
+namespace cloudscribe.Core.IdentityServerIntegration.Models
 {
     public class ConsentInputModel
     {

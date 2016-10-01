@@ -3,13 +3,14 @@
 
 
 using IdentityModel;
-using IdentityServer4.cloudscribeIdentity;
+using cloudscribe.Core.IdentityServerIntegration;
 using IdentityServer4.Configuration;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Identity;
+using Microsoft.AspNetCore.Http;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -40,7 +41,12 @@ namespace Microsoft.Extensions.DependencyInjection
             builder.AddResourceOwnerValidator<ResourceOwnerPasswordValidator<TUser>>();
             builder.Services.AddTransient<IProfileService, ProfileService<TUser>>();
 
-            builder.Services.AddTransient<ISecurityStampValidator, IdentityServer4.cloudscribeIdentity.SecurityStampValidator<TUser>>();
+            builder.Services.AddTransient<ISecurityStampValidator, cloudscribe.Core.IdentityServerIntegration.SecurityStampValidator<TUser>>();
+
+            //builder.Services.AddSingleton<IdentityServerOptions>(container => {
+            //    var tenant = container.Resolve<IHttpContextAccessor>().HttpContext.GetCurrentRequesrtTenant();
+            //    return CreateFooFromTenant(tenant);
+            //});
 
             return builder;
         }

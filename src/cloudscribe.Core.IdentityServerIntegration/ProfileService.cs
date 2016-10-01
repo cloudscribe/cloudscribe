@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Identity;
 
-namespace IdentityServer4.cloudscribeIdentity
+namespace cloudscribe.Core.IdentityServerIntegration
 {
     public class ProfileService<TUser> : IProfileService
         where TUser : SiteUser

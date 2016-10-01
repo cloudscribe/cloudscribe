@@ -61,7 +61,7 @@
         "cloudscribe.Web.Pagination": "1.0.*",
         "SaasKit.Multitenancy": "1.1.*",
         "IdentityServer4": "1.0.0-*",
-        "IdentityServer4.cloudscribeIdentity": "1.0.0-*",
+        "cloudscribe.Core.IdentityServerIntegration": "1.0.0-*",
         "IdentityModel": "2.0.0-*",
         "IdentityServer4.AccessTokenValidation": "1.0.1-*",
         "IdentityServer4.EntityFramework": "1.0.0-*"

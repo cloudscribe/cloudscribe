@@ -386,15 +386,10 @@ namespace cloudscribe.Core.Web.Controllers
             // only the first site created by setup page should be a server admin site
             newSite.IsServerAdminSite = false;
             newSite.SiteName = model.SiteName;
-            if (!string.IsNullOrWhiteSpace(model.AliasId))
-            {
-                newSite.AliasId = model.AliasId;
-            }
-            else
-            {
-                var siteNumber = 1 + await siteManager.CountOtherSites(Guid.Empty);
-                newSite.AliasId = $"site-{siteNumber}";
-            }
+            
+            var siteNumber = 1 + await siteManager.CountOtherSites(Guid.Empty);
+            newSite.AliasId = $"s-{siteNumber}";
+            
 
             if (multiTenantOptions.Mode == MultiTenantMode.FolderName)
             {

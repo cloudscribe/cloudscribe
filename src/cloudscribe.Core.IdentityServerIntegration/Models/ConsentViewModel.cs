@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using IdentityServer4.Models;
 
-namespace IdentityServer4.cloudscribeIdentity.Models
+namespace cloudscribe.Core.IdentityServerIntegration.Models
 {
     public class ConsentViewModel : ConsentInputModel
     {

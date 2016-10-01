@@ -7,8 +7,8 @@
 
   <Import Project="$(VSToolsPath)\DotNet\Microsoft.DotNet.Props" Condition="'$(VSToolsPath)' != ''" />
   <PropertyGroup Label="Globals">
-    <ProjectGuid>fa05a842-811b-4d98-a7f3-929fbb4dbdd4</ProjectGuid>
-    <RootNamespace>IdentityServer4.cloudscribeIdentity</RootNamespace>
+    <ProjectGuid>061e1c0e-3214-47b7-810f-04def8324bf4</ProjectGuid>
+    <RootNamespace>cloudscribe.Core.IdentityServerIntegration</RootNamespace>
     <BaseIntermediateOutputPath Condition="'$(BaseIntermediateOutputPath)'=='' ">.\obj</BaseIntermediateOutputPath>
     <OutputPath Condition="'$(OutputPath)'=='' ">.\bin\</OutputPath>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>

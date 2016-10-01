@@ -1,5 +1,5 @@
 ﻿using cloudscribe.Core.Identity;
-using IdentityServer4.cloudscribeIdentity;
+using cloudscribe.Core.IdentityServerIntegration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +8,8 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.FileProviders;
 using System.Reflection;
+
+// https://github.com/IdentityServer/IdentityServer4/issues/19
 
 namespace Microsoft.Extensions.DependencyInjection
 {

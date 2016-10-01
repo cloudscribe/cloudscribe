@@ -8,9 +8,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using IdentityServer4.Models;
 using IdentityServer4.Stores;
-using IdentityServer4.cloudscribeIdentity.Models;
+using cloudscribe.Core.IdentityServerIntegration.Models;
 
-namespace IdentityServer4.cloudscribeIdentity.Controllers
+namespace cloudscribe.Core.IdentityServerIntegration
 {
     /// <summary>
     /// This controller implements the consent logic

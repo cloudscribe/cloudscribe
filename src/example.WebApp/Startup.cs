@@ -255,15 +255,17 @@ namespace example.WebApp
                 
             });
 
-           
+
 
             // todo how to make this multi tenant for folders?
+            // https://github.com/IdentityServer/IdentityServer4/issues/19
             //https://github.com/IdentityServer/IdentityServer4/blob/dev/src/IdentityServer4/Configuration/IdentityServerApplicationBuilderExtensions.cs
             //https://github.com/IdentityServer/IdentityServer4/blob/dev/src/IdentityServer4/Hosting/IdentityServerMiddleware.cs
             // perhaps will need to plugin custom IEndpointRouter?
             if (storage == "ef")
             {
-                app.UseIdentityServer();
+                // with this uncommented it breaks folder tenants
+                //app.UseIdentityServer();
             }
 
 

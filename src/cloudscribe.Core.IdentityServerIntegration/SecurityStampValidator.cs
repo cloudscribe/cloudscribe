@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.Builder;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Identity;
 
-namespace IdentityServer4.cloudscribeIdentity
+namespace cloudscribe.Core.IdentityServerIntegration
 {
     public class SecurityStampValidator<TUser> : ISecurityStampValidator where TUser : SiteUser
     {

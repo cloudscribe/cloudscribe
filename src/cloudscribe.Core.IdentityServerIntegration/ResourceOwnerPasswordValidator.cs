@@ -7,7 +7,7 @@ using static IdentityModel.OidcConstants;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Identity;
 
-namespace IdentityServer4.cloudscribeIdentity
+namespace cloudscribe.Core.IdentityServerIntegration
 {
     public class ResourceOwnerPasswordValidator<TUser> : IResourceOwnerPasswordValidator
         where TUser : SiteUser

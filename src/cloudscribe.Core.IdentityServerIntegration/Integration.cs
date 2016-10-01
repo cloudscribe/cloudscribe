@@ -2,7 +2,7 @@
 using IdentityServer4.Services;
 using System.Threading.Tasks;
 
-namespace IdentityServer4.cloudscribeIdentity
+namespace cloudscribe.Core.IdentityServerIntegration
 {
     public class Integration : IIdentityServerIntegration
     {
