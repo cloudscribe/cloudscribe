@@ -143,3 +143,44 @@ internally we could ignore the options or use them depending on context
 
 public abstract class AuthenticationMiddleware<TOptions> where TOptions : AuthenticationOptions, new()
 https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication/AuthenticationMiddleware.cs
+
+{"issuer":"https://localhost:44399",
+"authorization_endpoint":"https://localhost:44399/connect/authorize",
+"token_endpoint":"https://localhost:44399/connect/token",
+"userinfo_endpoint":"https://localhost:44399/connect/userinfo",
+"end_session_endpoint":"https://localhost:44399/connect/endsession",
+"check_session_iframe":"https://localhost:44399/connect/checksession",
+"revocation_endpoint":"https://localhost:44399/connect/revocation",
+"introspection_endpoint":"https://localhost:44399/connect/introspect",
+"frontchannel_logout_supported":true,"frontchannel_logout_session_supported":true,
+"scopes_supported":["openid","profile","offline_access","api1"],
+"claims_supported":["sub","name","family_name","given_name","middle_name","nickname","preferred_username","profile","picture","website","gender","birthdate","zoneinfo","locale","updated_at"],
+"response_types_supported":["code","token","id_token","id_token token","code id_token","code token","code id_token token"],
+"response_modes_supported":["form_post","query","fragment"],
+"grant_types_supported":["authorization_code","client_credentials","refresh_token","implicit","password"],
+"subject_types_supported":["public"],
+"id_token_signing_alg_values_supported":["RS256"],
+"token_endpoint_auth_methods_supported":["client_secret_basic","client_secret_post"],
+"code_challenge_methods_supported":["plain","S256"]
+}
+
+{"issuer":"https://localhost:44399/two",
+"authorization_endpoint":"https://localhost:44399/two/connect/authorize",
+"token_endpoint":"https://localhost:44399/two/connect/token",
+"userinfo_endpoint":"https://localhost:44399/two/connect/userinfo",
+"end_session_endpoint":"https://localhost:44399/two/connect/endsession",
+"check_session_iframe":"https://localhost:44399/two/connect/checksession",
+"revocation_endpoint":"https://localhost:44399/two/connect/revocation",
+"introspection_endpoint":"https://localhost:44399/two/connect/introspect",
+"frontchannel_logout_supported":true,
+"frontchannel_logout_session_supported":true,
+"scopes_supported":["openid","profile","offline_access","api1"],
+"claims_supported":["sub","name","family_name","given_name","middle_name","nickname","preferred_username","profile","picture","website","gender","birthdate","zoneinfo","locale","updated_at"],
+"response_types_supported":["code","token","id_token","id_token token","code id_token","code token","code id_token token"],
+"response_modes_supported":["form_post","query","fragment"],
+"grant_types_supported":["authorization_code","client_credentials","refresh_token","implicit","password"],
+"subject_types_supported":["public"],
+"id_token_signing_alg_values_supported":["RS256"],
+"token_endpoint_auth_methods_supported":["client_secret_basic","client_secret_post"],
+"code_challenge_methods_supported":["plain","S256"]}
+
