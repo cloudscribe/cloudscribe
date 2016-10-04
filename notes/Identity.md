@@ -10,6 +10,10 @@ From my point of view, it is good to build all apps with scalability in mind, bu
 Within a single web deployement there can be the identity server, mvc web app, various apis, as a single endpoint, with different urls of course but deployed as a single web application in a single IIS web site or nginx/docker web setup. There could also be within the same deployment SPA apps with a single html page each that talks to apis. At any point where the load merits it the spa apps could be separated to their own end points but until then they can be packaged together under one website.
 
 
+A signing certificate is a dedicated certificate used to sign tokens, allowing for client applications to verify that the contents of the token have not been altered in transit. This involves a private key used to sign the token and a public key to verify the signature. This public key is accessible to client applications via the jwks_uri in the OpenID Connect discovery document.
+When you go to create and use your own signing certificate, feel free to use a self-signed certificate. This certificate does not need to be issued by a trusted certificate authority.
+https://www.scottbrady91.com/Identity-Server/Getting-Started-with-IdentityServer-4
+
 
 https://identityserver4.readthedocs.io/en/dev/intro/big_picture.html
 

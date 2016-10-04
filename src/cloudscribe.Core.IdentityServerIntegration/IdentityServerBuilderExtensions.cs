@@ -54,24 +54,19 @@ namespace Microsoft.Extensions.DependencyInjection
                     resolver.GetRequiredService<ILogger<MultiTenantEndpointRouter>>());
             });
 
-            //builder.Services.Configure<IdentityOptions>(options =>
-            //{
-            //    //options.Cookies.ApplicationCookie.AuthenticationScheme = authenticationScheme;
-            //    options.ClaimsIdentity.UserIdClaimType = JwtClaimTypes.Subject;
-            //    options.ClaimsIdentity.UserNameClaimType = JwtClaimTypes.Name;
-            //    options.ClaimsIdentity.RoleClaimType = JwtClaimTypes.Role;
-            //});
+            builder.Services.Configure<IdentityOptions>(options =>
+            {
+                options.Cookies.ApplicationCookie.AuthenticationScheme = authenticationScheme;
+                options.ClaimsIdentity.UserIdClaimType = JwtClaimTypes.Subject;
+                options.ClaimsIdentity.UserNameClaimType = JwtClaimTypes.Name;
+                options.ClaimsIdentity.RoleClaimType = JwtClaimTypes.Role;
+            });
 
             builder.AddResourceOwnerValidator<ResourceOwnerPasswordValidator<TUser>>();
             builder.Services.AddTransient<IProfileService, ProfileService<TUser>>();
 
             builder.Services.AddTransient<ISecurityStampValidator, cloudscribe.Core.IdentityServerIntegration.SecurityStampValidator<TUser>>();
-
-            //builder.Services.AddSingleton<IdentityServerOptions>(container => {
-            //    var tenant = container.Resolve<IHttpContextAccessor>().HttpContext.GetCurrentRequesrtTenant();
-            //    return CreateFooFromTenant(tenant);
-            //});
-
+            
             return builder;
         }
 

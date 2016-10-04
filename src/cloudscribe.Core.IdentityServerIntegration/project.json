@@ -1,6 +1,6 @@
 ﻿{
     "version": "1.0.0-*",
-    "description": "cloudscribe mulyi-tenant identity integration for IdentityServer4",
+    "description": "cloudscribe multi-tenant identity integration for IdentityServer4",
     "authors": [ "Joe Audette" ],
     "packOptions": {
         "owners": [ "Source Tree Solutions" ],

@@ -489,14 +489,16 @@ namespace example.WebApp
                     services.AddCloudscribeIdentityServerIntegration();
                     var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
 
-                    services.AddIdentityServer()
-                        .AddCloudscribeIdentity<cloudscribe.Core.Models.SiteUser>()
+                    services.AddIdentityServer() 
                         .AddConfigurationStore(builder =>
                             builder.UseSqlServer(connectionString, options =>
                                 options.MigrationsAssembly(migrationsAssembly)))
                         .AddOperationalStore(builder =>
                             builder.UseSqlServer(connectionString, options =>
-                                options.MigrationsAssembly(migrationsAssembly)));
+                                options.MigrationsAssembly(migrationsAssembly)))
+                        .AddCloudscribeIdentity<cloudscribe.Core.Models.SiteUser>()
+                        .SetTemporarySigningCredential()
+                                ;
 
 
 
