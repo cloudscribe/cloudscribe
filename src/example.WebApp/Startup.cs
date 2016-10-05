@@ -19,7 +19,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using IdentityServer4.Models;
-using IdentityServer4.EntityFramework.Mappers;
+//using IdentityServer4.EntityFramework.Mappers;
 
 namespace example.WebApp
 {
@@ -226,7 +226,9 @@ namespace example.WebApp
                     // this one is only needed if using cloudscribe Logging with EF as the logging storage
                     LoggingEFStartup.InitializeDatabaseAsync(app.ApplicationServices).Wait();
 
-                    InitializeIdentityServerDatabase(app);
+                    CloudscribeIdentityServerIntegrationEFCoreStorage.InitializeDatabaseAsync(app.ApplicationServices).Wait();
+
+                    //InitializeIdentityServerDatabase(app);
 
                     break;
             }
@@ -282,33 +284,33 @@ namespace example.WebApp
             
         }
 
-        private void InitializeIdentityServerDatabase(IApplicationBuilder app)
-        {
-            using (var scope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-            {
-                scope.ServiceProvider.GetRequiredService<IdentityServer4.EntityFramework.DbContexts.PersistedGrantDbContext>().Database.Migrate();
+        //private void InitializeIdentityServerDatabase(IApplicationBuilder app)
+        //{
+        //    using (var scope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+        //    {
+        //        scope.ServiceProvider.GetRequiredService<IdentityServer4.EntityFramework.DbContexts.PersistedGrantDbContext>().Database.Migrate();
 
-                var context = scope.ServiceProvider.GetRequiredService<IdentityServer4.EntityFramework.DbContexts.ConfigurationDbContext>();
-                context.Database.Migrate();
-                if (!context.Clients.Any())
-                {
-                    foreach (var client in GetClients())
-                    {
-                        context.Clients.Add(client.ToEntity());
-                    }
-                    context.SaveChanges();
-                }
+        //        var context = scope.ServiceProvider.GetRequiredService<IdentityServer4.EntityFramework.DbContexts.ConfigurationDbContext>();
+        //        context.Database.Migrate();
+        //        if (!context.Clients.Any())
+        //        {
+        //            foreach (var client in GetClients())
+        //            {
+        //                context.Clients.Add(client.ToEntity());
+        //            }
+        //            context.SaveChanges();
+        //        }
 
-                if (!context.Scopes.Any())
-                {
-                    foreach (var client in GetScopes())
-                    {
-                        context.Scopes.Add(client.ToEntity());
-                    }
-                    context.SaveChanges();
-                }
-            }
-        }
+        //        if (!context.Scopes.Any())
+        //        {
+        //            foreach (var client in GetScopes())
+        //            {
+        //                context.Scopes.Add(client.ToEntity());
+        //            }
+        //            context.SaveChanges();
+        //        }
+        //    }
+        //}
 
         // scopes define the resources in your system
         private IEnumerable<Scope> GetScopes()
@@ -497,7 +499,8 @@ namespace example.WebApp
 
 
                     services.AddCloudscribeIdentityServerIntegration();
-                    //services.AddIdentityServer()
+                    services.AddIdentityServer()
+                        .AddCloudscribeCoreEFIdentityServerStorage(connectionString);
 
                     //var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
 

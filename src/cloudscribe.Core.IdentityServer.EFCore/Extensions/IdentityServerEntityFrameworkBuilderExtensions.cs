@@ -23,22 +23,33 @@ namespace Microsoft.Extensions.DependencyInjection
             string connectionString
             )
         {
-            builder.AddConfigurationStore(contextBuilder =>
-                            contextBuilder.UseSqlServer(connectionString));
+            //builder.AddConfigurationStore(contextBuilder =>
+            //                contextBuilder.UseSqlServer(connectionString));
+            builder.AddConfigurationStore(connectionString);
 
-            builder.AddOperationalStore(contextBuilder =>
-                            contextBuilder.UseSqlServer(connectionString));
+            //builder.AddOperationalStore(contextBuilder =>
+            //                contextBuilder.UseSqlServer(connectionString));
+            builder.AddOperationalStore(connectionString);
 
 
             return builder;
         }
 
         public static IIdentityServerBuilder AddConfigurationStore(
-            this IIdentityServerBuilder builder, Action<DbContextOptionsBuilder> optionsAction = null)
+            this IIdentityServerBuilder builder, 
+            string connectionString,
+            Action<DbContextOptionsBuilder> optionsAction = null)
         {
-            builder.Services.TryAddScoped<IConfigurationModelMapper, SqlServerConfigurationModelMapper>();
-            
-            builder.Services.AddDbContext<ConfigurationDbContext>(optionsAction);
+            builder.Services.AddScoped<IConfigurationModelMapper, SqlServerConfigurationModelMapper>();
+
+            //builder.Services.AddDbContext<ConfigurationDbContext>(optionsAction);
+            builder.Services.AddEntityFrameworkSqlServer()
+                .AddDbContext<ConfigurationDbContext>((serviceProvider, options) =>
+                options.UseSqlServer(connectionString)
+                       .UseInternalServiceProvider(serviceProvider)
+                       );
+
+
             builder.Services.AddScoped<IConfigurationDbContext, ConfigurationDbContext>();
 
             builder.Services.AddTransient<IClientStore, ClientStore>();
@@ -68,10 +79,18 @@ namespace Microsoft.Extensions.DependencyInjection
 
         public static IIdentityServerBuilder AddOperationalStore(
             this IIdentityServerBuilder builder,
+            string connectionString,
             Action<DbContextOptionsBuilder> optionsAction = null)
         {
-            builder.Services.TryAddScoped<IPersistedGrantModelMapper, SqlServerPersistedGrantModelMapper>();
-            builder.Services.AddDbContext<PersistedGrantDbContext>(optionsAction);
+            builder.Services.AddScoped<IPersistedGrantModelMapper, SqlServerPersistedGrantModelMapper>();
+            //builder.Services.AddDbContext<PersistedGrantDbContext>(optionsAction);
+
+            builder.Services.AddEntityFrameworkSqlServer()
+                .AddDbContext<PersistedGrantDbContext>((serviceProvider, options) =>
+                options.UseSqlServer(connectionString)
+                       .UseInternalServiceProvider(serviceProvider)
+                       );
+
             builder.Services.AddScoped<IPersistedGrantDbContext, PersistedGrantDbContext>();
 
             builder.Services.AddTransient<IPersistedGrantStore, PersistedGrantStore>();
