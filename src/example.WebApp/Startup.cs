@@ -266,7 +266,17 @@ namespace example.WebApp
 
             });
 
-            
+            //
+            app.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions
+            {
+                //Authority = "http://localhost:5000",
+                Authority = "https://localhost:44399",
+                ScopeName = "api1",
+
+                RequireHttpsMetadata = true
+            });
+
+
             UseMvc(app, multiTenantOptions.Mode == cloudscribe.Core.Models.MultiTenantMode.FolderName);
 
             
@@ -487,18 +497,20 @@ namespace example.WebApp
 
 
                     services.AddCloudscribeIdentityServerIntegration();
-                    var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
+                    //services.AddIdentityServer()
 
-                    services.AddIdentityServer() 
-                        .AddConfigurationStore(builder =>
-                            builder.UseSqlServer(connectionString, options =>
-                                options.MigrationsAssembly(migrationsAssembly)))
-                        .AddOperationalStore(builder =>
-                            builder.UseSqlServer(connectionString, options =>
-                                options.MigrationsAssembly(migrationsAssembly)))
-                        .AddCloudscribeIdentity<cloudscribe.Core.Models.SiteUser>()
-                        .SetTemporarySigningCredential()
-                                ;
+                    //var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
+
+                    //services.AddIdentityServer() 
+                    //    .AddConfigurationStore(builder =>
+                    //        builder.UseSqlServer(connectionString, options =>
+                    //            options.MigrationsAssembly(migrationsAssembly)))
+                    //    .AddOperationalStore(builder =>
+                    //        builder.UseSqlServer(connectionString, options =>
+                    //            options.MigrationsAssembly(migrationsAssembly)))
+                    //    .AddCloudscribeIdentity<cloudscribe.Core.Models.SiteUser>()
+                    //    .SetTemporarySigningCredential()
+                    //            ;
 
 
 

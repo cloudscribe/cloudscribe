@@ -17,7 +17,7 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddCloudscribeIdentityServerIntegration(this IServiceCollection services)
         {
-            services.TryAddScoped<IIdentityServerIntegration, Integration>();
+            services.AddScoped<IIdentityServerIntegration, Integration>();
 
             return services;
         }
@@ -26,7 +26,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             options.FileProviders.Add(new EmbeddedFileProvider(
                     typeof(Integration).GetTypeInfo().Assembly,
-                    "IdentityServer4.cloudscribeIdentity"
+                    "cloudscribe.Core.IdentityServerIntegration"
                 ));
 
             return options;

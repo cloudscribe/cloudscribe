@@ -12,11 +12,27 @@ using IdentityServer4.Stores;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
+using System.Threading.Tasks;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
     public static class IdentityServerEntityFrameworkBuilderExtensions
     {
+        public static IIdentityServerBuilder AddCloudscribeCoreEFIdentityServerStorage(
+            this IIdentityServerBuilder builder,
+            string connectionString
+            )
+        {
+            builder.AddConfigurationStore(contextBuilder =>
+                            contextBuilder.UseSqlServer(connectionString));
+
+            builder.AddOperationalStore(contextBuilder =>
+                            contextBuilder.UseSqlServer(connectionString));
+
+
+            return builder;
+        }
+
         public static IIdentityServerBuilder AddConfigurationStore(
             this IIdentityServerBuilder builder, Action<DbContextOptionsBuilder> optionsAction = null)
         {
@@ -62,5 +78,8 @@ namespace Microsoft.Extensions.DependencyInjection
             
             return builder;
         }
+
+        
+
     }
 }

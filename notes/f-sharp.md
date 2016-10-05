@@ -20,6 +20,11 @@ https://medium.com/@cscalfani/so-you-want-to-be-a-functional-programmer-part-3-1
 https://medium.com/@cscalfani/so-you-want-to-be-a-functional-programmer-part-4-18fbe3ea9e49#.prcqec89k
 https://medium.com/@cscalfani/so-you-want-to-be-a-functional-programmer-part-5-c70adc9cf56a
 
+Can programming be liberated from function abstraction?
+http://tomasp.net/blog/2016/no-functions/
+
+http://sidburn.github.io/blog/2016/09/25/function-application-and-composition
+
 In Functional Programming, you don’t just write Pure Functions.
 Functional Languages cannot eliminate Side Effects, they can only confine them. Since programs have to interface to the real world, some parts of every program must be impure. The goal is to minimize the amount of impure code and segregate it from the rest of our program.
 
